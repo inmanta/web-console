@@ -63,7 +63,7 @@ describe("HistorySection infinite query", () => {
     expect(buttonNext).toBeNull();
   });
 
-  it("should render with functional button to fetch newer versions", async () => {
+  it("should render with functional button to fetch newer versions", async() => {
     const { component, fetchPreviousPage } = setup(false, true);
 
     render(component);
@@ -77,7 +77,7 @@ describe("HistorySection infinite query", () => {
     expect(fetchPreviousPage).toHaveBeenCalled();
   });
 
-  it("should render with functional button to fetch previous versions", async () => {
+  it("should render with functional button to fetch previous versions", async() => {
     const { component, fetchNextPage } = setup(true, false);
 
     render(component);

@@ -38,7 +38,7 @@ export const ResourceStatusBar: React.FC<Props> = ({
   );
 };
 
-function getResourcesInDoneState (
+function getResourcesInDoneState(
   by_state: Record<string, ParsedNumber>,
 ): number {
   return Object.entries(by_state)
@@ -47,7 +47,7 @@ function getResourcesInDoneState (
     .reduce((acc, current) => acc + current, 0);
 }
 
-export function infoToLegendItem (
+export function infoToLegendItem(
   info: InfoWithTotal,
   onClick: (ids: Resource.Status[]) => void,
 ): LegendItemDetails {
@@ -60,7 +60,7 @@ export function infoToLegendItem (
   };
 }
 
-function addTotal (
+function addTotal(
   info: Info,
   byState: Record<string, ParsedNumber>,
 ): InfoWithTotal {

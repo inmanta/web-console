@@ -17,7 +17,7 @@ import {
 import { useGetInstanceWithRelations } from "./useGetInstanceWithRelations";
 
 export const server = setupServer(
-  http.get("/lsm/v1/service_inventory", async (params) => {
+  http.get("/lsm/v1/service_inventory", async(params) => {
     if (params.request.url.match(/test_id/)) {
       return HttpResponse.json({
         data: {
@@ -124,7 +124,7 @@ describe("useGetInstanceWithRelations", () => {
   afterEach(() => server.resetHandlers());
   // Clean up after the tests are finished.
   afterAll(() => server.close());
-  test("if the fetched instance has referenced instance(s), then query will return the given instance with that related instance(s)", async () => {
+  test("if the fetched instance has referenced instance(s), then query will return the given instance with that related instance(s)", async() => {
     const { result } = renderHook(
       () =>
         useGetInstanceWithRelations("test_id", false, testService).useOneTime(),
@@ -144,7 +144,7 @@ describe("useGetInstanceWithRelations", () => {
     ).toEqual("test_mpn_id");
   });
 
-  test("if the fetched instance has inter-service relation(s) in the model, then query will return the given instance with that related instance(s)", async () => {
+  test("if the fetched instance has inter-service relation(s) in the model, then query will return the given instance with that related instance(s)", async() => {
     const { result } = renderHook(
       () =>
         useGetInstanceWithRelations("child_id", false, childModel).useOneTime(),
@@ -164,9 +164,9 @@ describe("useGetInstanceWithRelations", () => {
     ).toEqual("test_mpn_id");
   });
 
-  test("if the fetched instance has inter-service relation(s) in the model, and they are stored in the array in the instance, then query will return the given instance with that related instance(s)", async () => {
+  test("if the fetched instance has inter-service relation(s) in the model, and they are stored in the array in the instance, then query will return the given instance with that related instance(s)", async() => {
     server.use(
-      http.get("/lsm/v1/service_inventory", async (params) => {
+      http.get("/lsm/v1/service_inventory", async(params) => {
         if (params.request.url.match(/test_id/)) {
           return HttpResponse.json({
             data: {
@@ -229,7 +229,7 @@ describe("useGetInstanceWithRelations", () => {
     ).toEqual("test_mpn_id");
   });
 
-  test("when instance returned has not referenced instance(s), then the query will return the given instance without interServiceRelations", async () => {
+  test("when instance returned has not referenced instance(s), then the query will return the given instance without interServiceRelations", async() => {
     const { result } = renderHook(
       () =>
         useGetInstanceWithRelations(

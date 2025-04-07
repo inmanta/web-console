@@ -26,7 +26,7 @@ export interface ModifierHandler {
  * @returns {boolean} boolean value
  */
 export class CreateModifierHandler implements ModifierHandler {
-  validateModifier (modifier: string): boolean {
+  validateModifier(modifier: string): boolean {
     return modifier !== "r";
   }
 }
@@ -41,7 +41,7 @@ export class CreateModifierHandler implements ModifierHandler {
  * @returns {boolean} boolean value
  */
 export class EditModifierHandler implements ModifierHandler {
-  validateModifier (modifier: string, embeddedEntity?: boolean): boolean {
+  validateModifier(modifier: string, embeddedEntity?: boolean): boolean {
     // Allow filling in the rw attributes of a new embedded entity
     if (embeddedEntity) {
       return modifier !== "r";

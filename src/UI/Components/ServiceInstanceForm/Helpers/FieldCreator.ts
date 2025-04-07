@@ -17,7 +17,7 @@ import { ModifierHandler } from "./ModifierHandler";
  * @param {ModifierHandler} ModifierHandler
  */
 export class FieldCreator {
-  constructor (
+  constructor(
     private readonly fieldModifierHandler: ModifierHandler,
     private fieldsForEditForm: boolean = false,
   ) {}
@@ -29,7 +29,7 @@ export class FieldCreator {
    * @returns {Array<Field>} An array of objects containing `fieldsFromAttributes` + `fieldsFromEmbeddedEntities` + `fieldsFromRelations`
    * These can be mapped to the result coming from the API to generate the form.
    */
-  create (
+  create(
     service: Pick<
       ServiceModel,
       "attributes" | "embedded_entities" | "inter_service_relations"
@@ -71,11 +71,11 @@ export class FieldCreator {
     ];
   }
 
-  private isOptional (entity: Pick<RelationAttribute, "lower_limit">): boolean {
+  private isOptional(entity: Pick<RelationAttribute, "lower_limit">): boolean {
     return entity.lower_limit === 0;
   }
 
-  private isList (entity: Pick<RelationAttribute, "upper_limit">): boolean {
+  private isList(entity: Pick<RelationAttribute, "upper_limit">): boolean {
     return !entity.upper_limit || entity.upper_limit > 1;
   }
 
@@ -85,7 +85,7 @@ export class FieldCreator {
    *
    * @return This will return you an Entity with a nested fields Array which can contain again new Entities.
    */
-  private embeddedEntityToField (entity: EmbeddedEntity): Field | null {
+  private embeddedEntityToField(entity: EmbeddedEntity): Field | null {
     if (!this.fieldModifierHandler.validateModifier(entity.modifier, true)) {
       return null;
     }
@@ -137,7 +137,7 @@ export class FieldCreator {
     };
   }
 
-  private interServiceRelationToFields (
+  private interServiceRelationToFields(
     interServiceRelation: InterServiceRelation,
     embedded?: boolean,
   ): Field | null {
@@ -172,7 +172,7 @@ export class FieldCreator {
     };
   }
 
-  attributesToFields (
+  attributesToFields(
     attributes: AttributeModel[],
     embedded?: boolean,
   ): Field[] {
@@ -275,13 +275,13 @@ export class FieldCreator {
       });
   }
 
-  private isTextFieldOptional (attribute: AttributeModel): boolean {
+  private isTextFieldOptional(attribute: AttributeModel): boolean {
     return (
       attribute.type.includes("?") ||
       (attribute.default_value_set && attribute.default_value === "")
     );
   }
-  private shouldFieldBeDisabled (
+  private shouldFieldBeDisabled(
     object: AttributeModel | InterServiceRelation | EmbeddedEntity,
   ): boolean {
     return this.fieldsForEditForm && object.modifier !== "rw+";

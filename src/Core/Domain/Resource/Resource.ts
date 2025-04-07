@@ -139,7 +139,7 @@ export class IdParser {
   private static readonly parseIdRegex =
     /^(?<id>(?<type>(?<ns>[\w-]+(::[\w-]+)*)::(?<class>[\w-]+))\[(?<hostname>[^,]+),(?<attr>[^=]+)=(?<value>[^\]]+)\])(,v=(?<version>[0-9]+))?$/;
 
-  public static parse (idStr: string): Maybe.Maybe<Id> {
+  public static parse(idStr: string): Maybe.Maybe<Id> {
     const groups = idStr.match(IdParser.parseIdRegex)?.groups;
 
     if (!groups) {
@@ -154,7 +154,7 @@ export class IdParser {
     });
   }
 
-  public static getAgentName (idStr: string): Maybe.Maybe<Id["agentName"]> {
+  public static getAgentName(idStr: string): Maybe.Maybe<Id["agentName"]> {
     const id = IdParser.parse(idStr);
 
     return Maybe.isSome(id) ? Maybe.some(id.value.agentName) : Maybe.none();

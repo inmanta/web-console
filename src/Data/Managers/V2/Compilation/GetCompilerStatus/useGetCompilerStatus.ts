@@ -11,7 +11,7 @@ interface GetCompilerStatus {
   useContinuous: () => UseQueryResult<HookResponse, CustomError>;
 }
 
-function getUrl (env: string): string {
+function getUrl(env: string): string {
   return `/api/v1/notify/${env}`;
 }
 

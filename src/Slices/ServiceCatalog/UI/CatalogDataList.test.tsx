@@ -32,21 +32,21 @@ const Component = (services: ServiceModel[]) => {
   );
 };
 
-test("GIVEN CatalogDataList WHEN no services ('[]') THEN no services are shown", async () => {
+test("GIVEN CatalogDataList WHEN no services ('[]') THEN no services are shown", async() => {
   render(Component([]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
 
   expect(within(list).queryByRole("listitem")).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN CatalogDataList WHEN 1 service THEN 1 service is shown", async () => {
+test("GIVEN CatalogDataList WHEN 1 service THEN 1 service is shown", async() => {
   render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
@@ -55,14 +55,14 @@ test("GIVEN CatalogDataList WHEN 1 service THEN 1 service is shown", async () =>
     within(list).getByRole("listitem", { name: Service.a.name }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", async () => {
+test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", async() => {
   render(Component([Service.a, Service.b]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
@@ -74,14 +74,14 @@ test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", async ()
     within(list).getByRole("listitem", { name: Service.b.name }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN CatalogDataList WHEN service THEN service inventory has correct link", async () => {
+test("GIVEN CatalogDataList WHEN service THEN service inventory has correct link", async() => {
   render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
@@ -98,14 +98,14 @@ test("GIVEN CatalogDataList WHEN service THEN service inventory has correct link
     `/lsm/catalog/${Service.a.name}/inventory`,
   );
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN CatalogDataList WHEN service THEN service details has correct link", async () => {
+test("GIVEN CatalogDataList WHEN service THEN service details has correct link", async() => {
   render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
@@ -127,14 +127,14 @@ test("GIVEN CatalogDataList WHEN service THEN service details has correct link",
     `/lsm/catalog/${Service.a.name}/details`,
   );
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN CatalogDataList WHEN description available THEN should show description", async () => {
+test("GIVEN CatalogDataList WHEN description available THEN should show description", async() => {
   render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
@@ -145,7 +145,7 @@ test("GIVEN CatalogDataList WHEN description available THEN should show descript
 
   expect(description).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();

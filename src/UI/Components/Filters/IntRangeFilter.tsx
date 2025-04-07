@@ -131,7 +131,7 @@ export const IntRangeFilter: React.FC<Props> = ({
   );
 };
 
-function insertNewValue (
+function insertNewValue(
   intRangeFilters: IntRange.Type[],
   value: number | undefined,
   operator: RangeOperator.Operator,

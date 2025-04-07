@@ -8,7 +8,7 @@ import history from "../Routing/history";
  * @param  blocker
  * @param  when
  */
-function useConfirmExit (confirmExit: () => boolean, when = true) {
+function useConfirmExit(confirmExit: () => boolean, when = true) {
   useEffect(() => {
     if (!when) {
       return;
@@ -36,11 +36,11 @@ function useConfirmExit (confirmExit: () => boolean, when = true) {
  * @param  message
  * @param  when
  */
-export function usePrompt (message: string, when = true) {
+export function usePrompt(message: string, when = true) {
   useEffect(() => {
     if (when) {
       Object.defineProperty(window, "onbeforeunload", {
-        value: function () {
+        value: function() {
           return message;
         },
         configurable: true,

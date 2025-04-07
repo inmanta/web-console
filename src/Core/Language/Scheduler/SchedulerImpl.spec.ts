@@ -5,10 +5,10 @@ const jestOptions = { legacyFakeTimers: true };
 
 jest.useFakeTimers(jestOptions);
 
-test("GIVEN a Scheduler WHEN registering a task after a cycle THEN executes all registered tasks", async () => {
+test("GIVEN a Scheduler WHEN registering a task after a cycle THEN executes all registered tasks", async() => {
   const scheduler = new SchedulerImpl(5000);
-  const taskA = { effect: jest.fn(async () => undefined), update: jest.fn() };
-  const taskB = { effect: jest.fn(async () => undefined), update: jest.fn() };
+  const taskA = { effect: jest.fn(async() => undefined), update: jest.fn() };
+  const taskB = { effect: jest.fn(async() => undefined), update: jest.fn() };
 
   scheduler.register("taskA", taskA);
 
@@ -37,10 +37,10 @@ test("GIVEN a Scheduler WHEN registering a task after a cycle THEN executes all 
   expect(taskB.update).toHaveBeenCalledTimes(1);
 });
 
-test("Given a Scheduler WHEN unregistering a task before the first cycle THEN the task is not executed", async () => {
+test("Given a Scheduler WHEN unregistering a task before the first cycle THEN the task is not executed", async() => {
   const scheduler = new SchedulerImpl(5000);
-  const taskA = { effect: jest.fn(async () => undefined), update: jest.fn() };
-  const taskB = { effect: jest.fn(async () => undefined), update: jest.fn() };
+  const taskA = { effect: jest.fn(async() => undefined), update: jest.fn() };
+  const taskB = { effect: jest.fn(async() => undefined), update: jest.fn() };
 
   scheduler.register("taskA", taskA);
   scheduler.register("taskB", taskB);
@@ -71,9 +71,9 @@ test("Given a Scheduler WHEN unregistering a task before the first cycle THEN th
   expect(taskB.update).toHaveBeenCalledTimes(2);
 });
 
-test("GIVEN a Scheduler WHEN unregistering a task during a cycle THEN the task is not executed at the end of that cycle", async () => {
+test("GIVEN a Scheduler WHEN unregistering a task during a cycle THEN the task is not executed at the end of that cycle", async() => {
   const scheduler = new SchedulerImpl(5000);
-  const taskA = { effect: jest.fn(async () => undefined), update: jest.fn() };
+  const taskA = { effect: jest.fn(async() => undefined), update: jest.fn() };
 
   scheduler.register("taskA", taskA);
 
@@ -94,10 +94,10 @@ test("GIVEN a Scheduler WHEN unregistering a task during a cycle THEN the task i
   expect(taskA.update).toHaveBeenCalledTimes(1);
 });
 
-test("GIVEN a Scheduler WHEN unregistering the first task THEN the first task is not executed but the remaining tasks are executed", async () => {
+test("GIVEN a Scheduler WHEN unregistering the first task THEN the first task is not executed but the remaining tasks are executed", async() => {
   const scheduler = new SchedulerImpl(5000);
-  const taskA = { effect: jest.fn(async () => undefined), update: jest.fn() };
-  const taskB = { effect: jest.fn(async () => undefined), update: jest.fn() };
+  const taskA = { effect: jest.fn(async() => undefined), update: jest.fn() };
+  const taskB = { effect: jest.fn(async() => undefined), update: jest.fn() };
 
   scheduler.register("taskA", taskA);
   scheduler.register("taskB", taskB);
@@ -125,10 +125,10 @@ test("GIVEN a Scheduler WHEN unregistering the first task THEN the first task is
   expect(taskB.update).toHaveBeenCalledTimes(2);
 });
 
-test("GIVEN a Scheduler WHEN unregistering a task during its ongoing effect THEN the task's update is not executed", async () => {
+test("GIVEN a Scheduler WHEN unregistering a task during its ongoing effect THEN the task's update is not executed", async() => {
   const scheduler = new SchedulerImpl(5000);
 
-  const slowEffect = async () =>
+  const slowEffect = async() =>
     new Promise<void>((resolve) => {
       window.setTimeout(() => {
         resolve();
@@ -136,7 +136,7 @@ test("GIVEN a Scheduler WHEN unregistering a task during its ongoing effect THEN
     });
 
   const taskA = { effect: jest.fn(slowEffect), update: jest.fn() };
-  const taskB = { effect: jest.fn(async () => undefined), update: jest.fn() };
+  const taskB = { effect: jest.fn(async() => undefined), update: jest.fn() };
 
   scheduler.register("taskA", taskA);
   scheduler.register("taskB", taskB);
@@ -161,10 +161,10 @@ test("GIVEN a Scheduler WHEN unregistering a task during its ongoing effect THEN
   expect(taskB.update).toHaveBeenCalledTimes(1);
 });
 
-test("GIVEN a Scheduler WHEN unregistering + reregistering a task during its ongoing effect THEN the task's update is not executed", async () => {
+test("GIVEN a Scheduler WHEN unregistering + reregistering a task during its ongoing effect THEN the task's update is not executed", async() => {
   const scheduler = new SchedulerImpl(5000);
 
-  const slowEffect = async () =>
+  const slowEffect = async() =>
     new Promise<void>((resolve) => {
       window.setTimeout(() => {
         resolve();
@@ -172,8 +172,8 @@ test("GIVEN a Scheduler WHEN unregistering + reregistering a task during its ong
     });
 
   const taskA = { effect: jest.fn(slowEffect), update: jest.fn() };
-  const taskA2 = { effect: jest.fn(async () => undefined), update: jest.fn() };
-  const taskB = { effect: jest.fn(async () => undefined), update: jest.fn() };
+  const taskA2 = { effect: jest.fn(async() => undefined), update: jest.fn() };
+  const taskB = { effect: jest.fn(async() => undefined), update: jest.fn() };
 
   scheduler.register("taskA", taskA);
   scheduler.register("taskB", taskB);
@@ -191,10 +191,10 @@ test("GIVEN a Scheduler WHEN unregistering + reregistering a task during its ong
   expect(taskB.update).toHaveBeenCalledTimes(1);
 });
 
-test("GIVEN a Scheduler WHEN pausing and resuming THEN tasks are being cleared and populated back as they were and then they continue to work as intended", async () => {
+test("GIVEN a Scheduler WHEN pausing and resuming THEN tasks are being cleared and populated back as they were and then they continue to work as intended", async() => {
   const scheduler = new SchedulerImpl(5000);
 
-  const taskB = { effect: jest.fn(async () => undefined), update: jest.fn() };
+  const taskB = { effect: jest.fn(async() => undefined), update: jest.fn() };
 
   scheduler.register("taskB", taskB);
 

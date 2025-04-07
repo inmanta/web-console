@@ -22,7 +22,7 @@ interface IconButton extends ui.widgets.button {
  *
  */
 const IconButton = ui.widgets.button.extend({
-  render: function () {
+  render: function() {
     const size = this.options.size || 20;
     const imageEl = document.createElement("img");
 
@@ -42,7 +42,7 @@ const IconButton = ui.widgets.button.extend({
    *
    * @param {string} icon - The source of the icon to set. Defaults to an empty string, which will clear the current icon.
    */
-  setIcon: function (icon = "") {
+  setIcon: function(icon = "") {
     this.el.querySelector("img").src = icon;
   },
 
@@ -55,7 +55,7 @@ const IconButton = ui.widgets.button.extend({
    * @param {string} tooltip - The text of the tooltip to set. Defaults to an empty string, which will clear the current tooltip.
    * @param {string} direction - The position of the tooltip. Defaults to "right".
    */
-  setTooltip: function (tooltip = "", direction = "right") {
+  setTooltip: function(tooltip = "", direction = "right") {
     this.el.dataset.tooltip = tooltip;
     this.el.dataset.tooltipPosition = direction;
   },
@@ -76,7 +76,7 @@ const IconButton = ui.widgets.button.extend({
 export class ZoomHandlerService {
   toolbar: ui.Toolbar;
 
-  constructor (
+  constructor(
     private element: HTMLElement,
     private scroller: ui.PaperScroller,
   ) {
@@ -170,7 +170,7 @@ export class ZoomHandlerService {
    * This method is responsible for adjusting the zoom level of the canvas so that it shows all it's elements on the screen.
    * It uses the zoomToFit method of the scroller object, which is a joint.ui.PaperScroller.
    */
-  fitToScreen () {
+  fitToScreen() {
     this.scroller.zoomToFit({ useModelGeometry: true, padding: 20 });
 
     const sliderWrapper = document.getElementById("zoomSlider");
@@ -188,7 +188,7 @@ export class ZoomHandlerService {
     this.updateSliderProgressBar(slider as HTMLInputElement);
   }
 
-  updateSliderOnInput (event) {
+  updateSliderOnInput(event) {
     if (!event.target) {
       return;
     }
@@ -205,7 +205,7 @@ export class ZoomHandlerService {
    *
    * @param {HTMLInputElement} slider - The zoom slider, which is an HTML input element.
    */
-  updateSliderProgressBar (slider: HTMLInputElement) {
+  updateSliderProgressBar(slider: HTMLInputElement) {
     const value =
       ((Number(slider.value) - Number(slider.min)) /
         (Number(slider.max) - Number(slider.min))) *
@@ -226,7 +226,7 @@ export class ZoomHandlerService {
    *
    * This method is responsible for switching the document between fullscreen mode and normal mode.
    */
-  toggleFullscreen () {
+  toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
     } else if (document.exitFullscreen) {
@@ -243,7 +243,7 @@ export class ZoomHandlerService {
    * @param {string} selector - The CSS selector of the element to change.
    * @param {string} display - The new display style for the element.
    */
-  changeDisplay (selector: string, display: string) {
+  changeDisplay(selector: string, display: string) {
     const element: HTMLElement | null = document.querySelector(selector);
 
     if (element) {
@@ -259,7 +259,7 @@ export class ZoomHandlerService {
    *
    * @method
    */
-  updateFullscreenStyling () {
+  updateFullscreenStyling() {
     const fullscreenButton = this.toolbar.getWidgetByName(
       "fullscreen",
     ) as IconButton;
@@ -299,7 +299,7 @@ export class ZoomHandlerService {
     }
   }
 
-  remove () {
+  remove() {
     this.toolbar.remove();
 
     document.removeEventListener(

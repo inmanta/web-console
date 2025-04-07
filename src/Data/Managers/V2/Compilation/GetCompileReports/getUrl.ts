@@ -4,7 +4,7 @@ import { CompileStatus, RangeOperator } from "@/Core";
 import { Filter } from "@/Slices/CompileReports/Core/Query";
 import { CompileReportsParams } from "./useGetCompileReports";
 
-export function getUrl (
+export function getUrl(
   params: CompileReportsParams,
   timezone = moment.tz.guess(),
 ): string {
@@ -48,7 +48,7 @@ const filterToParam = (filter: Filter, timezone: string) => {
   };
 };
 
-function translateStatusFilter (status?: CompileStatus) {
+function translateStatusFilter(status?: CompileStatus) {
   if (!status) return {};
   switch (status) {
     case CompileStatus.success:

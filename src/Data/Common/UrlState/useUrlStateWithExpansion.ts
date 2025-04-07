@@ -14,7 +14,7 @@ export const useUrlStateWithExpansion = provide(
   handleUrlStateWithExpansionWrapped,
 );
 
-export function handleUrlStateWithExpansion (
+export function handleUrlStateWithExpansion(
   config: Config,
   location: Location,
   replace: Replace,
@@ -33,7 +33,7 @@ export function handleUrlStateWithExpansion (
   );
 }
 
-function handleUrlStateWithExpansionWrapped (
+function handleUrlStateWithExpansionWrapped(
   config: Config,
   location: Location,
   replace: Replace,

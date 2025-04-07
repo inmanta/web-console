@@ -97,7 +97,7 @@ export const AttributesFilter: React.FC<Props> = ({
   );
 };
 
-function createNewSets (
+function createNewSets(
   { empty, notEmpty }: AttributeSets,
   { id, rule }: Raw,
 ): AttributeSets {
@@ -132,7 +132,7 @@ function createNewSets (
   }
 }
 
-function getChips ({ empty, notEmpty }: AttributeSets): Pretty[] {
+function getChips({ empty, notEmpty }: AttributeSets): Pretty[] {
   const prettyEmpty = empty
     .map((id) => ({ id, rule: AttributeRule.Empty }))
     .map(rawToPretty);
@@ -143,7 +143,7 @@ function getChips ({ empty, notEmpty }: AttributeSets): Pretty[] {
   return [...prettyEmpty, ...prettyNotEmpty];
 }
 
-function rawToPretty ({ id, rule }: Raw): Pretty {
+function rawToPretty({ id, rule }: Raw): Pretty {
   switch (id) {
     case ServiceInstanceParams.AttributeSet.Active:
       return rule === AttributeRule.Empty
@@ -160,7 +160,7 @@ function rawToPretty ({ id, rule }: Raw): Pretty {
   }
 }
 
-function prettyToRaw (pretty: Pretty): Raw {
+function prettyToRaw(pretty: Pretty): Raw {
   switch (pretty) {
     case "Active (empty)":
       return {
@@ -195,7 +195,7 @@ function prettyToRaw (pretty: Pretty): Raw {
   }
 }
 
-function getRuleForAttributeSet (
+function getRuleForAttributeSet(
   { empty, notEmpty }: AttributeSets,
   attributeSet: ServiceInstanceParams.AttributeSet | undefined,
 ): AttributeRule | undefined {

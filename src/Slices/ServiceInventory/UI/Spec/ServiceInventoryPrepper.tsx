@@ -19,7 +19,7 @@ interface Handles {
 }
 
 export class ServiceInventoryPrepper {
-  prep (service: ServiceModel = Service.a): Handles {
+  prep(service: ServiceModel = Service.a): Handles {
     const client = new QueryClient();
     const store = getStoreInstance();
 

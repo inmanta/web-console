@@ -28,7 +28,7 @@ export class InstanceStencilTab {
    * @param {ui.PaperScroller} scroller - The jointJS scroller associated with the stencil.
    * @param {ServiceModel} service - The service model used to populate the stencil with corresponding Elements.
    */
-  constructor (
+  constructor(
     stencilElement: HTMLElement,
     scroller: ui.PaperScroller,
     service: ServiceModel,

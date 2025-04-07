@@ -110,7 +110,7 @@ export const toggleLooseElement = (
  *
  * @returns {void}
  */
-export function showLinkTools (
+export function showLinkTools(
   paper: dia.Paper,
   graph: dia.Graph,
   linkView: dia.LinkView,

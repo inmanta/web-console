@@ -4,7 +4,7 @@ import { userEvent } from "@testing-library/user-event";
 
 import { ClipboardCopyButton } from "./ClipboardCopyButton";
 
-test("Given a ClipboardCopyButton, when the button is hovered, then a tooltip should be shown", async () => {
+test("Given a ClipboardCopyButton, when the button is hovered, then a tooltip should be shown", async() => {
   render(
     <ClipboardCopyButton
       tooltipContent={"Tooltip content"}

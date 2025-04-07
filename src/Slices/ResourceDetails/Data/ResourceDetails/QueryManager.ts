@@ -3,7 +3,7 @@ import { StateHelper, Scheduler, ApiHelper } from "@/Core";
 import { QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export function ResourceDetailsQueryManager (
+export function ResourceDetailsQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetResourceDetails">,
   scheduler: Scheduler,

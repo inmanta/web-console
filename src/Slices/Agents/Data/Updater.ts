@@ -4,12 +4,12 @@ import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
 export class GetAgentsUpdater implements UpdaterWithEnv<"GetAgents"> {
-  constructor (
+  constructor(
     private readonly store: Store,
     private readonly apiHelper: ApiHelper,
   ) {}
 
-  async update (
+  async update(
     query: Query.SubQuery<"GetAgents">,
     environment: string,
   ): Promise<void> {

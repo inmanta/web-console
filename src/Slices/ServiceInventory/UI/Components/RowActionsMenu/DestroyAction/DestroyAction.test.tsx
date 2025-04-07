@@ -23,7 +23,7 @@ jest.mock("@/Data/Managers/V2/ServiceInstance", () => ({
   useDestroyInstance: () => ({ mutate: mockedMutate }),
 }));
 
-function setup () {
+function setup() {
   const apiHelper = new DeferredApiHelper();
 
   const storeInstance = getStoreInstance();
@@ -84,7 +84,7 @@ function setup () {
 }
 
 describe("DeleteModal ", () => {
-  it("Shows form when clicking on modal button", async () => {
+  it("Shows form when clicking on modal button", async() => {
     const { component } = setup();
 
     render(component());
@@ -98,7 +98,7 @@ describe("DeleteModal ", () => {
     expect(await screen.findByText(words("no"))).toBeVisible();
   });
 
-  it("Closes modal when cancelled", async () => {
+  it("Closes modal when cancelled", async() => {
     const { component } = setup();
 
     render(component());
@@ -115,7 +115,7 @@ describe("DeleteModal ", () => {
     expect(screen.queryByText(words("yes"))).not.toBeInTheDocument();
   });
 
-  it("Sends request when submitted", async () => {
+  it("Sends request when submitted", async() => {
     const { component } = setup();
 
     render(component());
@@ -133,7 +133,7 @@ describe("DeleteModal ", () => {
     expect(mockedMutate).toHaveBeenCalled();
   });
 
-  it("Doesn't take environment halted status in account", async () => {
+  it("Doesn't take environment halted status in account", async() => {
     const { component, storeInstance } = setup();
     const { rerender } = render(component());
 

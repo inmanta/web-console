@@ -23,7 +23,7 @@ const axe = configureAxe({
   },
 });
 
-function setup (
+function setup(
   details = {
     halted: false,
     server_compile: true,
@@ -68,7 +68,7 @@ describe("CatalogActions", () => {
     server.close();
   });
 
-  test("Given CatalogUpdateButton, when user clicks on button, it should display a modal.", async () => {
+  test("Given CatalogUpdateButton, when user clicks on button, it should display a modal.", async() => {
     const { component } = setup();
 
     render(component);
@@ -85,14 +85,14 @@ describe("CatalogActions", () => {
       await screen.findByText(words("catalog.update.modal.title")),
     ).toBeVisible();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given CatalogUpdateButton, when user cancels the modal, it should not fire the API call and close the modal.", async () => {
+  test("Given CatalogUpdateButton, when user cancels the modal, it should not fire the API call and close the modal.", async() => {
     server.use(
       http.post("/lsm/v1/exporter/export_service_definition", () => {
         return HttpResponse.json({ status: 200 });
@@ -113,7 +113,7 @@ describe("CatalogActions", () => {
 
     expect(cancelButton).toBeVisible();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -126,7 +126,7 @@ describe("CatalogActions", () => {
     ).toBeNull();
   });
 
-  test("Given CatalogUpdateButton, when user confirms update, it should fire the API call, if success, show a toaster on success and close the modal.", async () => {
+  test("Given CatalogUpdateButton, when user confirms update, it should fire the API call, if success, show a toaster on success and close the modal.", async() => {
     const { component } = setup();
 
     server.use(
@@ -137,7 +137,7 @@ describe("CatalogActions", () => {
 
     render(component);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -162,7 +162,7 @@ describe("CatalogActions", () => {
     ).toBeVisible();
   });
 
-  test("Given CatalogUpdateButton, when user confirms the update, it should fire the API call, if failure, it should show an error toast and close the modal.", async () => {
+  test("Given CatalogUpdateButton, when user confirms the update, it should fire the API call, if failure, it should show an error toast and close the modal.", async() => {
     server.use(
       http.post("/lsm/v1/exporter/export_service_definition", () => {
         return HttpResponse.json(
@@ -190,7 +190,7 @@ describe("CatalogActions", () => {
     expect(await screen.findByText("Something went wrong")).toBeVisible();
   });
 
-  test("Given API documentation button, it has the right href link.", async () => {
+  test("Given API documentation button, it has the right href link.", async() => {
     const { component } = setup();
 
     render(component);

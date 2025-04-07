@@ -27,7 +27,7 @@ export interface TreeTableHelper {
 
 export abstract class BaseTreeTableHelper<A extends AttributeTree>
 implements TreeTableHelper {
-  constructor (
+  constructor(
     private readonly pathHelper: PathHelper,
     private readonly expansionManager: TreeExpansionManager,
     private readonly attributeHelper: AttributeHelper<A>,
@@ -36,15 +36,15 @@ implements TreeTableHelper {
       node: Extract<MultiAttributeNode<A["target"]>, { kind: "Leaf" }>,
     ) => Cell[],
   ) {}
-  abstract getColumns (): string[];
+  abstract getColumns(): string[];
 
-  getExpansionState (): ExpansionState {
+  getExpansionState(): ExpansionState {
     return this.expansionManager.create(
       this.attributeHelper.getPaths(this.attributes),
     );
   }
 
-  createRows (
+  createRows(
     expansionState: ExpansionState,
     setState: (state: ExpansionState) => void,
   ): { rows: TreeRow[]; openAll: () => void; closeAll: () => void } {
@@ -87,10 +87,10 @@ implements TreeTableHelper {
       closeAll: createCloseAll,
     };
   }
-  getEmptyAttributeSets (): string[] {
+  getEmptyAttributeSets(): string[] {
     return [];
   }
-  getAttributes (): Attributes {
+  getAttributes(): Attributes {
     return this.attributes as Attributes;
   }
 }

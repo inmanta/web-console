@@ -26,7 +26,7 @@ const getServiceModelError = http.get(
 
 const getServiceModelWithDocumentation = http.get(
   "/lsm/v1/service_catalog/mobileCore",
-  async () => {
+  async() => {
     return HttpResponse.json({
       data: serviceModelWithDocumentation,
     });
@@ -35,7 +35,7 @@ const getServiceModelWithDocumentation = http.get(
 
 const getServiceModelWithConfig = http.get(
   "/lsm/v1/service_catalog/mobileCore",
-  async () => {
+  async() => {
     return HttpResponse.json({
       data: serviceModelWithConfig,
     });
@@ -44,7 +44,7 @@ const getServiceModelWithConfig = http.get(
 
 const getHistoryLogs = http.get(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
-  async () => {
+  async() => {
     return HttpResponse.json(logsResponse);
   },
 );
@@ -58,7 +58,7 @@ const getHistoryLogsError = http.get(
 
 const getHistoryLogsDelayed = http.get(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
-  async () => {
+  async() => {
     await delay(500);
 
     return HttpResponse.json(logsResponse);
@@ -67,7 +67,7 @@ const getHistoryLogsDelayed = http.get(
 
 const getHistoryLogsWithDocumentation = http.get(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
-  async () => {
+  async() => {
     return HttpResponse.json(logsWithDocumentationResponse);
   },
 );
@@ -90,7 +90,7 @@ const getInstanceError = http.get(
 
 const getInstanceDataDelayed = http.get(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab",
-  async () => {
+  async() => {
     delay(300);
 
     return HttpResponse.json({
@@ -101,7 +101,7 @@ const getInstanceDataDelayed = http.get(
 
 const getInstanceDataWithDocumentation = http.get(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab",
-  async () => {
+  async() => {
     return HttpResponse.json({
       data: instanceDataWithDocumentation,
     });
@@ -157,56 +157,56 @@ const getResourcesVersionError = http.get(
 
 const destroyInstance = http.delete(
   "/lsm/v2/service_inventory/mobileCore/1d96a1ab/expert",
-  async () => {
+  async() => {
     return HttpResponse.json({ status: 200 });
   },
 );
 
 const destroyInstanceFailed = http.delete(
   "/lsm/v2/service_inventory/mobileCore/1d96a1ab/expert",
-  async () => {
+  async() => {
     return HttpResponse.error();
   },
 );
 
 const deleteInstance = http.delete(
   "lsm/v1/service_inventory/mobileCore/1d96a1ab",
-  async () => {
+  async() => {
     return HttpResponse.json({ status: 200 });
   },
 );
 
 const deleteInstanceFailed = http.delete(
   "lsm/v1/service_inventory/mobileCore/1d96a1ab",
-  async () => {
+  async() => {
     return HttpResponse.error();
   },
 );
 
 const postForceStateUpdate = http.post(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab/expert/state",
-  async () => {
+  async() => {
     return HttpResponse.json({ status: 200 });
   },
 );
 
 const postForceStateUpdateFailed = http.post(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab/expert/state",
-  async () => {
+  async() => {
     return HttpResponse.error();
   },
 );
 
 const postStateUpdate = http.post(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab/state",
-  async () => {
+  async() => {
     return HttpResponse.json({ status: 200 });
   },
 );
 
 const postStateUpdateFailed = http.post(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab/state",
-  async () => {
+  async() => {
     return HttpResponse.error();
   },
 );

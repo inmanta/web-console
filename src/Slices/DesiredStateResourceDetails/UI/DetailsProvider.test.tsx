@@ -23,7 +23,7 @@ const axe = configureAxe({
   },
 });
 
-function setup () {
+function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
@@ -44,7 +44,7 @@ function setup () {
   return { component, apiHelper, scheduler };
 }
 
-test("GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows details", async () => {
+test("GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows details", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -56,7 +56,7 @@ test("GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows
     },
   ]);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: VersionedResourceDetails.a }));
   });
 
@@ -65,7 +65,7 @@ test("GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows
   ).toBeVisible();
   expect(screen.getByText("requires")).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();

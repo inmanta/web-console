@@ -62,7 +62,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
    *
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
-  const onConfirm = async (type: EnvActions): Promise<void> => {
+  const onConfirm = async(type: EnvActions): Promise<void> => {
     setIsBusy(true);
     setErrorMessage(null);
     const error =

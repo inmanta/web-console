@@ -74,7 +74,7 @@ describe("NotificationCenterPage", () => {
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  test("Given Notification Center page THEN fetches notifications", async () => {
+  test("Given Notification Center page THEN fetches notifications", async() => {
     server.use(
       http.get("/api/v2/notification", () => {
         return HttpResponse.json({ data: Mock.list, links, metadata });
@@ -88,14 +88,14 @@ describe("NotificationCenterPage", () => {
       await screen.findAllByRole("listitem", { name: "NotificationItem" }),
     ).toHaveLength(4);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given Notification Center page When user filters on severity Then executes correct request", async () => {
+  test("Given Notification Center page When user filters on severity Then executes correct request", async() => {
     server.use(
       http.get("/api/v2/notification", ({ request }) => {
         if (request.url.includes("filter.severity=message")) {
@@ -139,14 +139,14 @@ describe("NotificationCenterPage", () => {
       await screen.findAllByRole("listitem", { name: "NotificationItem" }),
     ).toHaveLength(4);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given Notification Center page When user filters on read THEN executes correct request", async () => {
+  test("Given Notification Center page When user filters on read THEN executes correct request", async() => {
     server.use(
       http.get("/api/v2/notification", ({ request }) => {
         if (request.url.includes("filter.read=true")) {
@@ -192,14 +192,14 @@ describe("NotificationCenterPage", () => {
       await screen.findAllByRole("listitem", { name: "NotificationItem" }),
     ).toHaveLength(4);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given Notification Center page When user filters on message Then executes correct request", async () => {
+  test("Given Notification Center page When user filters on message Then executes correct request", async() => {
     server.use(
       http.get("/api/v2/notification", ({ request }) => {
         if (request.url.includes("filter.message=abc")) {
@@ -238,14 +238,14 @@ describe("NotificationCenterPage", () => {
       await screen.findAllByRole("listitem", { name: "NotificationItem" }),
     ).toHaveLength(4);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given Notification Center page When user filters on title Then executes correct request", async () => {
+  test("Given Notification Center page When user filters on title Then executes correct request", async() => {
     server.use(
       http.get("/api/v2/notification", ({ request }) => {
         if (request.url.includes("filter.title=abc")) {
@@ -282,14 +282,14 @@ describe("NotificationCenterPage", () => {
       await screen.findAllByRole("listitem", { name: "NotificationItem" }),
     ).toHaveLength(4);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given Notification Center page When user clicks next page Then fetches next page", async () => {
+  test("Given Notification Center page When user clicks next page Then fetches next page", async() => {
     const { component } = setup(["/?state.NotificationCenter.pageSize=20"]);
 
     server.use(
@@ -322,7 +322,7 @@ describe("NotificationCenterPage", () => {
       }),
     ).toHaveLength(2);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();

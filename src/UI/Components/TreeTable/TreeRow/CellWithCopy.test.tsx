@@ -14,7 +14,7 @@ import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceCont
 import { DependencyProvider } from "@/UI/Dependency";
 import { CellWithCopy } from "./CellWithCopy";
 
-function setup (props) {
+function setup(props) {
   const store = getStoreInstance();
 
   const onClickFn = jest.fn();
@@ -72,7 +72,7 @@ describe("CellWithCopy", () => {
     server.close();
   });
 
-  test("Given CellWithCopy When a cell has a simple value only Then it is shown", async () => {
+  test("Given CellWithCopy When a cell has a simple value only Then it is shown", async() => {
     const props = { label: "attribute", value: "someValue" };
     const { component } = setup(props);
 
@@ -81,7 +81,7 @@ describe("CellWithCopy", () => {
     expect(await screen.findByText(props.value)).toBeVisible();
   });
 
-  test("Given CellWithCopy When a cell has on click Then it is rendered as a link", async () => {
+  test("Given CellWithCopy When a cell has on click Then it is rendered as a link", async() => {
     const props = { label: "attribute", value: "someValue", hasRelation: true };
     const { component, onClickFn } = setup(props);
 
@@ -95,7 +95,7 @@ describe("CellWithCopy", () => {
     expect(onClickFn).toHaveBeenCalledWith(props.value);
   });
 
-  test("Given CellWithCopy When a cell has entity and on click Then it is rendered as a link", async () => {
+  test("Given CellWithCopy When a cell has entity and on click Then it is rendered as a link", async() => {
     const props = {
       label: "attribute",
       value: "someValue",
@@ -115,7 +115,7 @@ describe("CellWithCopy", () => {
     expect(onClickFn).toHaveBeenCalledWith(props.value, props.serviceName);
   });
 
-  test("Given CellWithCopy When a cell has entity, multiple values and on click Then multiple links are rendered", async () => {
+  test("Given CellWithCopy When a cell has entity, multiple values and on click Then multiple links are rendered", async() => {
     const [someValue, someOtherValue] = ["someValue", "someOtherValue"];
     const props = {
       label: "attribute",

@@ -7,7 +7,7 @@ import {
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export function ResourceHistoryQueryManager (
+export function ResourceHistoryQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetResourceHistory">,
   scheduler: Scheduler,

@@ -20,7 +20,7 @@ import {
 import { FactsTab } from "./FactsTab";
 import { sortFactRows } from "./FactsTable";
 
-function setup () {
+function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
@@ -52,7 +52,7 @@ function setup () {
   return { component, apiHelper, scheduler };
 }
 
-test("Given the FactsTab When the backend response is an error Then shows failed view", async () => {
+test("Given the FactsTab When the backend response is an error Then shows failed view", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -68,7 +68,7 @@ test("Given the FactsTab When the backend response is an error Then shows failed
   ).toBeInTheDocument();
 });
 
-test("Given the FactsTab When the backend response is successful Then shows success table", async () => {
+test("Given the FactsTab When the backend response is successful Then shows success table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -91,7 +91,7 @@ test("Given the FactsTab When the backend response is successful Then shows succ
   ).toBeInTheDocument();
 });
 
-test("Given sortFactRows When sorting by different columns Then the result is correct", async () => {
+test("Given sortFactRows When sorting by different columns Then the result is correct", async() => {
   const sortedByNameAsc = sortFactRows(Mock.response.data, "name", "asc");
 
   expect(sortedByNameAsc[0].name).toEqual("awsDevice");

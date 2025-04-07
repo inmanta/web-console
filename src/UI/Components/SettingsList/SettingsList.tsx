@@ -59,7 +59,7 @@ export const SettingsList: React.FC<Props> = ({
   );
 };
 
-function configToSettings (config: Config): Setting[] {
+function configToSettings(config: Config): Setting[] {
   return Object.entries(config).map(([name, value]) => ({
     name,
     value,

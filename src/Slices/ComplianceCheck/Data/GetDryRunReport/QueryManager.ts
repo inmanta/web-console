@@ -5,7 +5,7 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export function GetDryRunReportQueryManager (
+export function GetDryRunReportQueryManager(
   apiHelper: ApiHelper,
   store: Store,
 ) {

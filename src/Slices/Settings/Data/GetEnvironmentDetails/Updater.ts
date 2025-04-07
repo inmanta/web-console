@@ -13,14 +13,14 @@ export class EnvironmentDetailsUpdater
 implements Updater<"GetEnvironmentDetails"> {
   stateHelper: StateHelperInterface<"GetEnvironmentDetails">;
 
-  constructor (
+  constructor(
     store: Store,
     private readonly apiHelper: ApiHelper,
   ) {
     this.stateHelper = StateHelper(store);
   }
 
-  async update (query: Query.SubQuery<"GetEnvironmentDetails">): Promise<void> {
+  async update(query: Query.SubQuery<"GetEnvironmentDetails">): Promise<void> {
     this.stateHelper.set(RemoteData.loading(), query);
     this.stateHelper.set(
       RemoteData.fromEither(

@@ -18,14 +18,14 @@ type Update = (
 type Reset = (id: string) => Promise<Maybe.Type<string>>;
 
 export class InputInfoCreator {
-  constructor (
+  constructor(
     private readonly setValues: (values: EnvironmentSettings.ValuesMap) => void,
     private readonly update: Update,
     private readonly reset: Reset,
     private readonly setError: (message: string) => void,
   ) {}
 
-  create (
+  create(
     settingsMap: EnvironmentSettings.ValuesMap,
     definitionMap: EnvironmentSettings.DefinitionMap,
     values: EnvironmentSettings.ValuesMap,
@@ -42,20 +42,20 @@ export class InputInfoCreator {
       .sort(this.compare);
   }
 
-  private compare (
+  private compare(
     a: EnvironmentSettings.InputInfo,
     b: EnvironmentSettings.InputInfo,
   ): number {
     return a.name < b.name ? -1 : 1;
   }
 
-  private definitionToInputInfo (
+  private definitionToInputInfo(
     initial: EnvironmentSettings.Value,
     value: EnvironmentSettings.Value | undefined,
     definition: EnvironmentSettings.Definition,
     setValue: (value: EnvironmentSettings.Value) => void,
   ): EnvironmentSettings.InputInfo {
-    const update = async (value: EnvironmentSettings.Value) => {
+    const update = async(value: EnvironmentSettings.Value) => {
       const error = await this.update(definition.name, value);
 
       this.setError(Maybe.withFallback(error, ""));
@@ -63,7 +63,7 @@ export class InputInfoCreator {
       return error;
     };
 
-    const reset = async () => {
+    const reset = async() => {
       if (initial === definition.default && value !== definition.default) {
         setValue(definition.default);
 

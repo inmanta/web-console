@@ -1,43 +1,43 @@
 import { FeatureManager, JsonParserId, StatusLicense } from "@/Core";
 
 export class DummyFeatureManager implements FeatureManager {
-  getCommitHash (): string {
+  getCommitHash(): string {
     throw new Error("Method not implemented.");
   }
-  getAppVersion (): string {
+  getAppVersion(): string {
     throw new Error("Method not implemented");
   }
-  getJsonParser (): JsonParserId {
+  getJsonParser(): JsonParserId {
     throw new Error("Method not implemented.");
   }
-  getServerVersion (): string {
+  getServerVersion(): string {
     throw new Error("Method not implemented.");
   }
-  isComposerEnabled (): boolean {
+  isComposerEnabled(): boolean {
     throw new Error("Method not implemented.");
   }
-  isOrderViewEnabled (): boolean {
+  isOrderViewEnabled(): boolean {
     throw new Error("Method not implemented.");
   }
-  isLicencedFeatureEnabled (): boolean {
+  isLicencedFeatureEnabled(): boolean {
     throw new Error("Method not implemented.");
   }
-  isResourceDiscoveryEnabled (): boolean {
+  isResourceDiscoveryEnabled(): boolean {
     throw new Error("Method not implemented.");
   }
-  getEdition (): string {
+  getEdition(): string {
     throw new Error("Method not implemented.");
   }
-  isSupportEnabled (): boolean {
+  isSupportEnabled(): boolean {
     throw new Error("Method not implemented.");
   }
-  isLsmEnabled (): boolean {
+  isLsmEnabled(): boolean {
     throw new Error("Method not implemented.");
   }
-  getServerMajorVersion (): string {
+  getServerMajorVersion(): string {
     throw new Error("Method not implemented.");
   }
-  getLicenseInformation (): StatusLicense {
+  getLicenseInformation(): StatusLicense {
     throw new Error("Method not implemented.");
   }
 }

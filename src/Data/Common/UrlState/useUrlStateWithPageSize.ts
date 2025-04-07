@@ -5,7 +5,7 @@ import { handleUrlState } from "./useUrlState";
 
 export const useUrlStateWithPageSize = provide(handleUrlStateWithPageSize);
 
-export function handleUrlStateWithPageSize (
+export function handleUrlStateWithPageSize(
   config: Pick<StateConfig<PageSize.Type>, "route">,
   location: Location,
   replace: Replace,

@@ -51,7 +51,7 @@ export const LineChart: React.FC<LineChartProps> = ({
   };
 
   useEffect(() => {
-    function handleResize () {
+    function handleResize() {
       // Set window width to state if width from ref is available
       if (
         ref.current?.parentElement?.getBoundingClientRect().width !== undefined

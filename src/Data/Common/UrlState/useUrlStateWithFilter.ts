@@ -43,7 +43,7 @@ const parseValue = (
   }
 };
 
-export function handleUrlStateWithFilter<Data> (
+export function handleUrlStateWithFilter<Data>(
   config: Pick<StateConfig<Data>, "route"> &
     Keys & {
       default?: Data;

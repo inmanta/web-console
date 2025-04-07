@@ -8,7 +8,7 @@ implements TablePresenter<CompileReport, CompileReportRow> {
   readonly columnHeads: string[];
   readonly numberOfColumns: number;
 
-  constructor (private datePresenter: DatePresenter) {
+  constructor(private datePresenter: DatePresenter) {
     this.columnHeads = [
       words("compileReports.columns.requested"),
       words("compileReports.columns.status"),
@@ -19,7 +19,7 @@ implements TablePresenter<CompileReport, CompileReportRow> {
     this.numberOfColumns = this.columnHeads.length + 2;
   }
 
-  createRows (sourceData: CompileReport[]): CompileReportRow[] {
+  createRows(sourceData: CompileReport[]): CompileReportRow[] {
     return sourceData.map((compileReport) => ({
       id: compileReport.id,
       requested: compileReport.requested,
@@ -42,7 +42,7 @@ implements TablePresenter<CompileReport, CompileReportRow> {
     }));
   }
 
-  private getStatusFromReport ({
+  private getStatusFromReport({
     completed,
     success,
     started,
@@ -58,11 +58,11 @@ implements TablePresenter<CompileReport, CompileReportRow> {
     }
   }
 
-  getColumnHeadDisplayNames (): string[] {
+  getColumnHeadDisplayNames(): string[] {
     return this.columnHeads;
   }
 
-  getNumberOfColumns (): number {
+  getNumberOfColumns(): number {
     return this.numberOfColumns;
   }
 }

@@ -145,9 +145,9 @@ export default [
 
       "@stylistic/indent": ["error", 2],
       "@stylistic/semi": ["warn", "always"],
-      "@stylistic/quotes": ["warn", "double"],
+      "@stylistic/quotes": ["warn", "double", { "avoidEscape": true }],
       "@stylistic/space-before-blocks": ["warn", "always"],
-      "@stylistic/space-before-function-paren": ["warn", "always"],
+      "@stylistic/space-before-function-paren": ["warn", "never"],
       "@stylistic/space-infix-ops": "warn",
       "@stylistic/keyword-spacing": "warn",
       "@stylistic/brace-style": ["warn", "1tbs", { "allowSingleLine": true }],

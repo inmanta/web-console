@@ -13,8 +13,8 @@ type ApiData = RemoteData.Type<
   Query.ApiResponse<"GetCallbacks">
 >;
 
-export function CallbacksStateHelper (store: Store) {
-  function sanitize (data: ApiData, service_entity: string): Data {
+export function CallbacksStateHelper(store: Store) {
+  function sanitize(data: ApiData, service_entity: string): Data {
     if (!RemoteData.isSuccess(data)) return data;
     const allCallbacks = data.value.data;
     const serviceCallbacks = allCallbacks.filter(

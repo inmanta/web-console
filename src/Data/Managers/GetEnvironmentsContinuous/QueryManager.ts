@@ -3,7 +3,7 @@ import { StateHelper, ApiHelper, Scheduler } from "@/Core";
 import { QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "@S/Settings/Data/GetProjects/getUrl";
 
-export function GetEnvironmentsContinuousQueryManager (
+export function GetEnvironmentsContinuousQueryManager(
   apiHelper: ApiHelper,
   scheduler: Scheduler,
   stateHelper: StateHelper<"GetEnvironmentsContinuous">,

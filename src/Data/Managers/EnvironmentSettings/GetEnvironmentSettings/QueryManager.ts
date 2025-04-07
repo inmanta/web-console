@@ -2,7 +2,7 @@ import { identity } from "lodash-es";
 import { ApiHelper, StateHelperWithEnv } from "@/Core";
 import { QueryManager } from "@/Data/Managers/Helpers";
 
-export function GetEnvironmentSettingsQueryManager (
+export function GetEnvironmentSettingsQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<"GetEnvironmentSettings">,
 ) {

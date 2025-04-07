@@ -26,7 +26,7 @@ import { Link, ServiceEntityBlock } from "../shapes";
  *
  * @returns {ServiceEntityBlock} created JointJS shape
  */
-export function createComposerEntity ({
+export function createComposerEntity({
   serviceModel,
   isCore,
   isInEditMode,

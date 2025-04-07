@@ -7,10 +7,10 @@ import {
 } from "@/Core";
 import { useStoreState } from "@/Data/Store";
 
-export function EnvironmentModifierImpl (): EnvironmentModifier {
+export function EnvironmentModifierImpl(): EnvironmentModifier {
   let environment: Maybe.Type<string> = Maybe.none();
 
-  function useCurrentEnvironment (): EnvironmentDetails | null {
+  function useCurrentEnvironment(): EnvironmentDetails | null {
     const storeState = useStoreState(
       (state) => state.environment.environmentDetailsById,
     );
@@ -26,7 +26,7 @@ export function EnvironmentModifierImpl (): EnvironmentModifier {
     return null;
   }
 
-  function useEnvironmentSettings (): EnvironmentSettings.EnvironmentSettings | null {
+  function useEnvironmentSettings(): EnvironmentSettings.EnvironmentSettings | null {
     const storeState = useStoreState(
       (state) => state.environment.settingsByEnv,
     );
@@ -42,11 +42,11 @@ export function EnvironmentModifierImpl (): EnvironmentModifier {
     return null;
   }
 
-  function setEnvironment (environmentToSet: string): void {
+  function setEnvironment(environmentToSet: string): void {
     environment = Maybe.some(environmentToSet);
   }
 
-  function useIsHalted (): boolean {
+  function useIsHalted(): boolean {
     const environmentDetails = useCurrentEnvironment();
 
     if (environmentDetails === null) return false;
@@ -54,7 +54,7 @@ export function EnvironmentModifierImpl (): EnvironmentModifier {
     return environmentDetails.halted;
   }
 
-  function useSetting (
+  function useSetting(
     settingName: keyof EnvironmentSettings.DefinitionMap,
   ): boolean {
     const environmentDetails = useCurrentEnvironment();
@@ -72,15 +72,15 @@ export function EnvironmentModifierImpl (): EnvironmentModifier {
     }
   }
 
-  function useIsServerCompileEnabled (): boolean {
+  function useIsServerCompileEnabled(): boolean {
     return useSetting("server_compile");
   }
 
-  function useIsProtectedEnvironment (): boolean {
+  function useIsProtectedEnvironment(): boolean {
     return useSetting("protected_environment");
   }
 
-  function useIsExpertModeEnabled (): boolean {
+  function useIsExpertModeEnabled(): boolean {
     return useSetting("enable_lsm_expert_mode");
   }
 

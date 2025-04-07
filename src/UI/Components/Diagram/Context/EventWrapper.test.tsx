@@ -39,33 +39,33 @@ describe("looseElement event handler - triggered when entity is being added to t
     );
   };
 
-  it("looseElement Event handler can successfully add and remove items", async () => {
+  it("looseElement Event handler can successfully add and remove items", async() => {
     render(setup(<TestingComponent />));
 
     expect(screen.getByTestId("looseElement")).toHaveTextContent("0");
 
-    await act(async () => {
+    await act(async() => {
       dispatchLooseElement(EventActionEnum.ADD, "1");
     });
     expect(screen.getByTestId("looseElement")).toHaveTextContent("1");
 
-    await act(async () => {
+    await act(async() => {
       dispatchLooseElement(EventActionEnum.REMOVE, "1");
     });
     expect(screen.getByTestId("looseElement")).toHaveTextContent("0");
   });
 
-  it("looseElement Event handler won't duplicate the same id", async () => {
+  it("looseElement Event handler won't duplicate the same id", async() => {
     render(setup(<TestingComponent />));
 
     expect(screen.getByTestId("looseElement")).toHaveTextContent("0");
 
-    await act(async () => {
+    await act(async() => {
       dispatchLooseElement(EventActionEnum.ADD, "1");
     });
     expect(screen.getByTestId("looseElement")).toHaveTextContent("1");
 
-    await act(async () => {
+    await act(async() => {
       dispatchLooseElement(EventActionEnum.ADD, "1");
     });
     expect(screen.getByTestId("looseElement")).toHaveTextContent("1");
@@ -83,12 +83,12 @@ describe("dictToDisplay - event handler that accepts dictionary value to display
     );
   };
 
-  it("dictToDisplay Event handler assign the data correctly to the Context", async () => {
+  it("dictToDisplay Event handler assign the data correctly to the Context", async() => {
     render(setup(<TestingComponent />));
 
     expect(screen.getByTestId("dictToDisplay")).toHaveTextContent("null");
 
-    await act(async () => {
+    await act(async() => {
       document.dispatchEvent(
         new CustomEvent("openDictsModal", {
           detail: JSON.stringify({ test: "value" }),
@@ -102,7 +102,7 @@ describe("dictToDisplay - event handler that accepts dictionary value to display
 });
 
 describe("cellToEdit - event handler that receives cell object from the canvas to pass it to the Right Sidebar component", () => {
-  it("sendCellToSidebar Event handler assign the data correctly to the Context", async () => {
+  it("sendCellToSidebar Event handler assign the data correctly to the Context", async() => {
     defineObjectsForJointJS();
     const { result } = renderHook(
       () => {
@@ -127,14 +127,14 @@ describe("cellToEdit - event handler that receives cell object from the canvas t
 
     graph.addCell(cell);
 
-    await act(async () => {
+    await act(async() => {
       dispatchSendCellToSidebar(paper.findViewByModel(cell));
     });
 
     expect(result.current).not.toBeNull();
     expect(result.current?.model.id).toEqual(cell.id);
 
-    await act(async () => {
+    await act(async() => {
       dispatchSendCellToSidebar(null);
     });
 
@@ -177,12 +177,12 @@ describe("updateServiceOrderItems - event handler that keeps track of the elemen
     );
   };
 
-  it("updateServiceOrderItems Event handler won't assign the data when update is for the the inter-service relation instance that aren't added in the Context", async () => {
-    await act(async () => render(setup(<InstancesComponent />)));
+  it("updateServiceOrderItems Event handler won't assign the data when update is for the the inter-service relation instance that aren't added in the Context", async() => {
+    await act(async() => render(setup(<InstancesComponent />)));
 
     expect(screen.getByTestId("instancesIds")).toHaveTextContent("[\"1\",\"2\"]");
 
-    await act(async () => {
+    await act(async() => {
       const cell = new ServiceEntityBlock()
         .set("sanitizedAttrs", "value3")
         .set("id", "3");
@@ -193,12 +193,12 @@ describe("updateServiceOrderItems - event handler that keeps track of the elemen
     expect(screen.getByTestId("instancesIds")).toHaveTextContent("[\"1\",\"2\"]");
   });
 
-  it("updateServiceOrderItems Event handler will add instance to the Context", async () => {
-    await act(async () => render(setup(<InstancesComponent />)));
+  it("updateServiceOrderItems Event handler will add instance to the Context", async() => {
+    await act(async() => render(setup(<InstancesComponent />)));
 
     expect(screen.getByTestId("instancesIds")).toHaveTextContent("[\"1\",\"2\"]");
 
-    await act(async () => {
+    await act(async() => {
       const cell = new ServiceEntityBlock()
         .set("sanitizedAttrs", "value3")
         .set("id", "3");
@@ -212,12 +212,12 @@ describe("updateServiceOrderItems - event handler that keeps track of the elemen
     expect(screen.getByTestId("3")).toHaveTextContent("value3");
   });
 
-  it("updateServiceOrderItems Event handler updates correctly the instance", async () => {
-    await act(async () => render(setup(<InstancesComponent />)));
+  it("updateServiceOrderItems Event handler updates correctly the instance", async() => {
+    await act(async() => render(setup(<InstancesComponent />)));
 
     expect(screen.getByTestId("2")).toHaveTextContent("value2");
 
-    await act(async () => {
+    await act(async() => {
       const cell = new ServiceEntityBlock()
         .set("sanitizedAttrs", "updatedValue2")
         .set("id", "2");
@@ -264,27 +264,27 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
     );
   };
 
-  it("updateStencil Event handler assign the data correctly to the Context", async () => {
+  it("updateStencil Event handler assign the data correctly to the Context", async() => {
     render(setup(<TestingComponent />));
 
     expect(screen.getByTestId("test-current")).toHaveTextContent("0");
     expect(screen.getByTestId("test2-current")).toHaveTextContent("0");
 
-    await act(async () => {
+    await act(async() => {
       dispatchUpdateStencil("test", EventActionEnum.ADD);
     });
 
     expect(screen.getByTestId("test-current")).toHaveTextContent("1");
     expect(screen.getByTestId("test2-current")).toHaveTextContent("0");
 
-    await act(async () => {
+    await act(async() => {
       dispatchUpdateStencil("test2", EventActionEnum.ADD);
     });
 
     expect(screen.getByTestId("test-current")).toHaveTextContent("1");
     expect(screen.getByTestId("test2-current")).toHaveTextContent("1");
 
-    await act(async () => {
+    await act(async() => {
       dispatchUpdateStencil("test3", EventActionEnum.ADD);
     });
 
@@ -292,14 +292,14 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
     expect(screen.getByTestId("test2-current")).toHaveTextContent("1");
     expect(screen.queryByTestId("test23-current")).toBeNull();
 
-    await act(async () => {
+    await act(async() => {
       dispatchUpdateStencil("test", EventActionEnum.REMOVE);
     });
 
     expect(screen.getByTestId("test-current")).toHaveTextContent("0");
     expect(screen.getByTestId("test2-current")).toHaveTextContent("1");
 
-    await act(async () => {
+    await act(async() => {
       dispatchUpdateStencil("test2", EventActionEnum.REMOVE);
     });
 
@@ -307,7 +307,7 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
     expect(screen.getByTestId("test2-current")).toHaveTextContent("0");
   });
 
-  it("updateStencil Event handler correctly apply classNames to the elements in the DOM", async () => {
+  it("updateStencil Event handler correctly apply classNames to the elements in the DOM", async() => {
     render(setup(<TestingComponent />));
 
     expect(screen.getByTestId("body_test")).not.toHaveClass(
@@ -329,7 +329,7 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
       "stencil_text-disabled",
     );
 
-    await act(async () => {
+    await act(async() => {
       dispatchUpdateStencil("test", EventActionEnum.ADD);
     });
 
@@ -344,7 +344,7 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
       "stencil_text-disabled",
     );
 
-    await act(async () => {
+    await act(async() => {
       dispatchUpdateStencil("test2", EventActionEnum.ADD);
     });
 
@@ -359,7 +359,7 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
       "stencil_text-disabled",
     );
 
-    await act(async () => {
+    await act(async() => {
       dispatchUpdateStencil("test", EventActionEnum.REMOVE);
     });
 
@@ -377,7 +377,7 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
 });
 
 describe("addInterServiceRelationToTracker - eventHandler that adds to the Map inter-service relations with defined minimal count to the Map- it doesn't take care of verifying values, that is taken care of outside of the event handler", () => {
-  it("adds successfully interServiceRelation to the Map", async () => {
+  it("adds successfully interServiceRelation to the Map", async() => {
     const { result } = renderHook(
       () => {
         const { interServiceRelationsOnCanvas } = useContext(CanvasContext);
@@ -395,7 +395,7 @@ describe("addInterServiceRelationToTracker - eventHandler that adds to the Map i
 
     expect(result.current).toStrictEqual(new Map());
 
-    await act(async () => {
+    await act(async() => {
       dispatchAddInterServiceRelationToTracker("1", "test", [
         { currentAmount: 0, min: 1, name: "test2" },
       ]);
@@ -411,7 +411,7 @@ describe("addInterServiceRelationToTracker - eventHandler that adds to the Map i
 });
 
 describe("removeInterServiceRelationFromTracker - event handler that removes inter-service relations from the tracker, it happens when cell with given ID is removed from the canvas", () => {
-  it("removes successfully the interServiceRationTracker from the Map", async () => {
+  it("removes successfully the interServiceRationTracker from the Map", async() => {
     const { result } = renderHook(
       () => {
         const {
@@ -446,7 +446,7 @@ describe("removeInterServiceRelationFromTracker - event handler that removes int
       }),
     );
 
-    await act(async () => {
+    await act(async() => {
       dispatchRemoveInterServiceRelationFromTracker("1");
     });
 
@@ -455,7 +455,7 @@ describe("removeInterServiceRelationFromTracker - event handler that removes int
 });
 
 describe("updateInterServiceRelations", () => {
-  it("updates successfully the interServiceRationTracker in the Map", async () => {
+  it("updates successfully the interServiceRationTracker in the Map", async() => {
     const { result } = renderHook(
       () => {
         const {
@@ -486,7 +486,7 @@ describe("updateInterServiceRelations", () => {
     const name = "test2";
     const id = "1";
 
-    await act(async () => {
+    await act(async() => {
       dispatchUpdateInterServiceRelations(EventActionEnum.ADD, name, id);
     });
 
@@ -497,7 +497,7 @@ describe("updateInterServiceRelations", () => {
       }),
     );
 
-    await act(async () => {
+    await act(async() => {
       dispatchUpdateInterServiceRelations(EventActionEnum.REMOVE, name, id);
     });
 

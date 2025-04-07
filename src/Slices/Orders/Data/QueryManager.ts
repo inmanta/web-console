@@ -7,7 +7,7 @@ import {
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export function GetOrdersQueryManager (
+export function GetOrdersQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<"GetOrders">,
   scheduler: Scheduler,

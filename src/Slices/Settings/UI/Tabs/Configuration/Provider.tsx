@@ -9,7 +9,7 @@ interface Props {
   settings: EnvironmentSettings.EnvironmentSettings;
 }
 
-function reducer (
+function reducer(
   state: { settings: EnvironmentSettings.ValuesMap; resetedValueName: string },
   action: {
     type: string;

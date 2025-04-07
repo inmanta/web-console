@@ -7,7 +7,7 @@ import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 
-function setup () {
+function setup() {
   const component = (
     <MemoryRouter>
       <DependencyProvider dependencies={dependencies}>
@@ -26,7 +26,7 @@ it.each`
   ${"abcd"}     | ${0}
 `(
   "Given the environment overview When filtering by name $filterValue Then $numberOfResults results should be rendered",
-  async ({ filterValue, numberOfResults }) => {
+  async({ filterValue, numberOfResults }) => {
     const { component } = setup();
 
     render(component);
@@ -45,7 +45,7 @@ it.each`
   },
 );
 
-test("Given environments overview When filtering by project Then only the matching environments should be rendered", async () => {
+test("Given environments overview When filtering by project Then only the matching environments should be rendered", async() => {
   const { component } = setup();
 
   render(component);
@@ -66,7 +66,7 @@ test("Given environments overview When filtering by project Then only the matchi
   expect(screen.queryAllByTestId("Environment card")).toHaveLength(2);
 });
 
-test("Given environments overview When filtering by name and project Then only the environments that match both should be rendered", async () => {
+test("Given environments overview When filtering by name and project Then only the environments that match both should be rendered", async() => {
   const { component } = setup();
 
   render(component);
@@ -92,7 +92,7 @@ test("Given environments overview When filtering by name and project Then only t
   expect(await screen.findByTestId("Environment card")).toBeVisible();
 });
 
-test("Given environments overview When rendering environment with icon Then the icon is shown, otherwise, show default icon", async () => {
+test("Given environments overview When rendering environment with icon Then the icon is shown, otherwise, show default icon", async() => {
   const { component } = setup();
 
   render(component);

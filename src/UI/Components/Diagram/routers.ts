@@ -16,7 +16,7 @@ export const routerNamespace = { ...routers };
  * @param {number} padding - padding of the Link
  * @returns {g.Point} - Point object with x and y coordinates
  */
-function getOutsidePoint (
+function getOutsidePoint(
   bbox: g.Rect,
   angle: number,
   anchor: g.Point,
@@ -46,7 +46,7 @@ function getOutsidePoint (
 /**
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#routers.custom
  */
-const customRouter = function (
+const customRouter = function(
   vertices: Array<g.Point>,
   routerOptions: RouterOptions,
   linkView: dia.LinkView,

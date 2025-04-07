@@ -4,7 +4,7 @@ import { QueryManager } from "@/Data/Managers/Helpers";
 import { Store } from "@/Data/Store";
 import { GetOrderDetailsStateHelper } from "./StateHelper";
 
-export function GetOrderDetailsQueryManager (
+export function GetOrderDetailsQueryManager(
   apiHelper: ApiHelper,
   store: Store,
   scheduler: Scheduler,

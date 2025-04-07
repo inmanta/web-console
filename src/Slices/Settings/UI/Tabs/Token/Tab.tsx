@@ -23,7 +23,7 @@ export const Tab: React.FC = () => {
       setClientTypes(toggleValueInList(clientType, clientTypes));
     };
 
-  const onGenerate = async () => {
+  const onGenerate = async() => {
     setError(Maybe.none());
     setToken(Maybe.none());
     setIsBusy(true);

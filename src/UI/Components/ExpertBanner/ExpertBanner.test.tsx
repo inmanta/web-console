@@ -45,7 +45,7 @@ describe("Given ExpertBanner", () => {
     expect(screen.getByText("Disable expert mode")).toBeVisible();
   });
 
-  it("When expert_mode is set to true AND user clicks to disable expert mode it Then should fire mutation function", async () => {
+  it("When expert_mode is set to true AND user clicks to disable expert mode it Then should fire mutation function", async() => {
     const mutateSpy = jest.fn();
     const spy = jest
       .spyOn(useUpdateEnvConfig, "useUpdateEnvConfig")
@@ -84,11 +84,11 @@ describe("Given ExpertBanner", () => {
     spy.mockRestore();
   });
 
-  it("When expert_mode is set to true AND user clicks to disable expert mode it AND something was wrong with the request Then AlertToast with error message should open", async () => {
+  it("When expert_mode is set to true AND user clicks to disable expert mode it AND something was wrong with the request Then AlertToast with error message should open", async() => {
     const server = setupServer(
       http.post(
         "/api/v2/environment_settings/enable_lsm_expert_mode",
-        async () => {
+        async() => {
           return HttpResponse.json(
             {
               message: "Request or referenced resource does not exist",

@@ -8,12 +8,12 @@ import {
 import { getUrl } from "@S/ServiceDetails/Data/Callbacks/getUrl";
 
 export class CallbacksUpdater implements UpdaterWithEnv<"GetCallbacks"> {
-  constructor (
+  constructor(
     private readonly stateHelper: StateHelperWithEnv<"GetCallbacks">,
     private readonly apiHelper: ApiHelper,
   ) {}
 
-  async update (
+  async update(
     query: Query.SubQuery<"GetCallbacks">,
     environment: string,
   ): Promise<void> {

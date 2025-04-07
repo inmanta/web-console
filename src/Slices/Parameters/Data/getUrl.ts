@@ -2,7 +2,7 @@ import moment from "moment-timezone";
 import qs from "qs";
 import { Query, RangeOperator } from "@/Core";
 
-export function getUrl (
+export function getUrl(
   { pageSize, filter, sort, currentPage }: Query.SubQuery<"GetParameters">,
   timezone = moment.tz.guess(),
 ): string {

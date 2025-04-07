@@ -125,7 +125,7 @@ beforeAll(() => {
 });
 
 describe("Canvas.tsx", () => {
-  it("renders canvas correctly", async () => {
+  it("renders canvas correctly", async() => {
     const component = setup(mockedInstanceTwoServiceModel, mockedInstanceTwo, [
       mockedInstanceTwoServiceModel,
     ]);
@@ -154,7 +154,7 @@ describe("Canvas.tsx", () => {
     );
   });
 
-  it("renders shapes dict Value that can be viewed in dict Modal", async () => {
+  it("renders shapes dict Value that can be viewed in dict Modal", async() => {
     const component = setup(mockedInstanceTwoServiceModel, mockedInstanceTwo, [
       mockedInstanceTwoServiceModel,
     ]);
@@ -165,7 +165,7 @@ describe("Canvas.tsx", () => {
       "itemLabel_dictOne_value",
     );
 
-    await act(async () => {
+    await act(async() => {
       await user.click(dictValue.children[0]);
     });
 
@@ -185,7 +185,7 @@ describe("Canvas.tsx", () => {
 
     const copyButton = await screen.findByLabelText("Copy to clipboard");
 
-    await act(async () => {
+    await act(async() => {
       await user.click(copyButton);
     });
 
@@ -197,14 +197,14 @@ describe("Canvas.tsx", () => {
 
     const closeButton = await screen.findByLabelText("Close");
 
-    await act(async () => {
+    await act(async() => {
       await user.click(closeButton);
     });
 
     expect(modal).not.toBeVisible();
   });
 
-  it("renders right sidebar without buttons and left sidebar when not editable", async () => {
+  it("renders right sidebar without buttons and left sidebar when not editable", async() => {
     const component = setup(
       mockedInstanceTwoServiceModel,
       mockedInstanceTwo,
@@ -215,7 +215,7 @@ describe("Canvas.tsx", () => {
     render(component);
     const headerLabel = await screen.findByJointSelector("headerLabel");
 
-    await act(async () => {
+    await act(async() => {
       await user.click(headerLabel);
     });
 
@@ -225,7 +225,7 @@ describe("Canvas.tsx", () => {
     expect(screen.getByTestId("left_sidebar")).not.toBeVisible(); // Left sidebar is set to display:none when not editable
   });
 
-  it("renders right sidebar with buttons when editable", async () => {
+  it("renders right sidebar with buttons when editable", async() => {
     const component = setup(
       mockedInstanceTwoServiceModel,
       mockedInstanceTwo,
@@ -236,7 +236,7 @@ describe("Canvas.tsx", () => {
     render(component);
     const headerLabel = await screen.findByJointSelector("headerLabel");
 
-    await act(async () => {
+    await act(async() => {
       await user.click(headerLabel);
     });
 

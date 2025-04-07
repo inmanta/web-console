@@ -22,7 +22,7 @@ test("GIVEN ErrorBoundary WHEN no error is thrown THEN error page should NOT be 
   expect(consoleError).not.toHaveBeenCalled();
 });
 
-test("GIVEN ErrorBoundary WHEN an error is thrown THEN error page should be shown.", async () => {
+test("GIVEN ErrorBoundary WHEN an error is thrown THEN error page should be shown.", async() => {
   // because we know we are throwing an unhandeled error here, we spy on the console error to avoid spamming the logs in the test-output.
 
   jest.spyOn(console, "error").mockImplementation(() => {});

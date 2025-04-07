@@ -4,25 +4,25 @@ import { CatalogAttributeTree } from "@/UI/Components/TreeTable/types";
 
 export class CatalogAttributeHelper
 implements AttributeHelper<CatalogAttributeTree> {
-  constructor (private readonly separator: string) {}
+  constructor(private readonly separator: string) {}
 
-  public getPaths (container: CatalogAttributeTree["source"]): string[] {
+  public getPaths(container: CatalogAttributeTree["source"]): string[] {
     return Object.keys(this.getNodesFromEntities("", container)).sort(
       (pathA, pathB) => pathA.localeCompare(pathB),
     );
   }
 
-  public getMultiAttributeNodes (
+  public getMultiAttributeNodes(
     container: CatalogAttributeTree["source"],
   ): MultiAttributeNodeDict<CatalogAttributeTree["target"]> {
     return this.getNodesFromEntities("", container);
   }
 
-  public getAttributeAnnotations (_key: string) {
+  public getAttributeAnnotations(_key: string) {
     return {};
   }
 
-  private getNodesFromEntities (
+  private getNodesFromEntities(
     prefix: string,
     container: CatalogAttributeTree["source"],
   ): MultiAttributeNodeDict<CatalogAttributeTree["target"]> {

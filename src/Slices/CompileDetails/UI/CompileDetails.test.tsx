@@ -21,7 +21,7 @@ const axe = configureAxe({
   },
 });
 
-function setup () {
+function setup() {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -53,7 +53,7 @@ describe("CompileDetails", () => {
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  test("CompileDetailsView shows failed view", async () => {
+  test("CompileDetailsView shows failed view", async() => {
     server.use(
       http.get("api/v2/compilereport/123", () => {
         return HttpResponse.json(
@@ -79,7 +79,7 @@ describe("CompileDetails", () => {
     ).toBeInTheDocument();
   });
 
-  test("CompileDetailsView shows completed table with success: true", async () => {
+  test("CompileDetailsView shows completed table with success: true", async() => {
     server.use(
       http.get("api/v2/compilereport/123", () => {
         return HttpResponse.json({ data: Mock.data });
@@ -100,14 +100,14 @@ describe("CompileDetails", () => {
     ).toBeInTheDocument();
     expect(await screen.findAllByLabelText("done-state")).toHaveLength(3);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("CompileDetailsView shows completed table with success: false, error indication should appear", async () => {
+  test("CompileDetailsView shows completed table with success: false, error indication should appear", async() => {
     server.use(
       http.get("api/v2/compilereport/123", () => {
         return HttpResponse.json({ data: Mock.DataFailed });
@@ -129,7 +129,7 @@ describe("CompileDetails", () => {
 
     expect(await screen.findByLabelText("error-state")).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();

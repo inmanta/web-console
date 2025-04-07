@@ -26,7 +26,7 @@ import {
 import { usePrevious } from "./usePrevious";
 import { urlEncodeParams } from "./utils";
 
-export function ContinuousWithEnv<Kind extends Query.Kind> (
+export function ContinuousWithEnv<Kind extends Query.Kind>(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<Kind>,
   scheduler: Scheduler,
@@ -36,7 +36,7 @@ export function ContinuousWithEnv<Kind extends Query.Kind> (
   getUrl: GetUrlWithEnv<Kind>,
   toUsed: ToUsed<Kind>,
 ): ContinuousQueryManager<Kind> {
-  async function update (
+  async function update(
     query: Query.SubQuery<Kind>,
     url: string,
     environment: string,
@@ -48,7 +48,7 @@ export function ContinuousWithEnv<Kind extends Query.Kind> (
     );
   }
 
-  function useContinuous (query: Query.SubQuery<Kind>): Data<Kind> {
+  function useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
     const [url, setUrl] = useState(getUrl(urlEncodeParams(query), environment));
@@ -62,7 +62,7 @@ export function ContinuousWithEnv<Kind extends Query.Kind> (
     );
 
     const task = {
-      effect: async () =>
+      effect: async() =>
         RemoteData.fromEither(await apiHelper.get(url, environment)),
       update: (data) => stateHelper.set(data, query, environment),
     };
@@ -93,7 +93,7 @@ export function ContinuousWithEnv<Kind extends Query.Kind> (
     ];
   }
 
-  function matches (
+  function matches(
     query: Query.SubQuery<Kind>,
     matchingKind: QueryManagerKind,
   ): boolean {

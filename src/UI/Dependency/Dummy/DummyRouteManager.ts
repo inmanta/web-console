@@ -8,40 +8,40 @@ import {
 } from "@/Core";
 
 export class DummyRouteManager implements RouteManager {
-  getCrumbs (): Crumb[] {
+  getCrumbs(): Crumb[] {
     throw new Error("Method not implemented.");
   }
   getRoute<K extends RouteKind>(): Route<K> {
     throw new Error("Method not implemented.");
   }
-  getUrlForApiUri (): string | undefined {
+  getUrlForApiUri(): string | undefined {
     throw new Error("Method not implemented.");
   }
-  useUrl (): string {
+  useUrl(): string {
     throw new Error("Method not implemented.");
   }
-  isBaseUrlDefined (): boolean {
+  isBaseUrlDefined(): boolean {
     throw new Error("Method not implemented.");
   }
-  getRouteMatchFromUrl (): RouteMatch | undefined {
+  getRouteMatchFromUrl(): RouteMatch | undefined {
     throw new Error("Method not implemented.");
   }
-  getLineageFromRoute (): Route[] {
+  getLineageFromRoute(): Route[] {
     throw new Error("Method not implemented.");
   }
-  getRelatedUrlWithoutParams (): string {
+  getRelatedUrlWithoutParams(): string {
     throw new Error("Method not implemented.");
   }
-  getUrl (): string {
+  getUrl(): string {
     throw new Error("Method not implemented.");
   }
-  getRoutes (): Route[] {
+  getRoutes(): Route[] {
     throw new Error("Method not implemented.");
   }
-  getRouteDictionary (): Record<RouteKind, Route> {
+  getRouteDictionary(): Record<RouteKind, Route> {
     throw new Error("Method not implemented.");
   }
-  getParamsFromUrl (): RouteKindWithId<"CompileDetails"> | undefined {
+  getParamsFromUrl(): RouteKindWithId<"CompileDetails"> | undefined {
     throw new Error("Method not implemented.");
   }
 }

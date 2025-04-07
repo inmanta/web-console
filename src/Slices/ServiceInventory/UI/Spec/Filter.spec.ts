@@ -4,7 +4,7 @@ import { words } from "@/UI";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 import { filterServer } from "./serverSetup";
 
-test("GIVEN The Service Inventory WHEN the user filters on something THEN a data update is triggered", async () => {
+test("GIVEN The Service Inventory WHEN the user filters on something THEN a data update is triggered", async() => {
   const { component } = new ServiceInventoryPrepper().prep();
 
   filterServer.listen();

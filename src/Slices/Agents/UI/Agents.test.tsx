@@ -31,7 +31,7 @@ const axe = configureAxe({
   },
 });
 
-function setup () {
+function setup() {
   const apiHelper = new DeferredApiHelper();
 
   const scheduler = new StaticScheduler();
@@ -64,7 +64,7 @@ function setup () {
   return { component, apiHelper, scheduler, store };
 }
 
-test("AgentsView shows empty table", async () => {
+test("AgentsView shows empty table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -85,14 +85,14 @@ test("AgentsView shows empty table", async () => {
     await screen.findByRole("generic", { name: "AgentsView-Empty" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("AgentsView shows failed table", async () => {
+test("AgentsView shows failed table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -107,14 +107,14 @@ test("AgentsView shows failed table", async () => {
     await screen.findByRole("region", { name: "AgentsView-Failed" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("AgentsView shows success table", async () => {
+test("AgentsView shows success table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -129,19 +129,19 @@ test("AgentsView shows success table", async () => {
     await screen.findByRole("grid", { name: "AgentsView-Success" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("When using the name filter then only the matching agents should be fetched and shown", async () => {
+test("When using the name filter then only the matching agents should be fetched and shown", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
@@ -172,7 +172,7 @@ test("When using the name filter then only the matching agents should be fetched
     "/api/v2/agents?limit=20&filter.name=internal&sort=name.asc",
   );
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({
         ...AgentsMock.response,
@@ -187,19 +187,19 @@ test("When using the name filter then only the matching agents should be fetched
 
   expect(rowsAfter).toHaveLength(3);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("When using the status filter with the 'up' option then the agents in the 'up' state should be fetched and shown", async () => {
+test("When using the status filter with the 'up' option then the agents in the 'up' state should be fetched and shown", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
@@ -226,7 +226,7 @@ test("When using the status filter with the 'up' option then the agents in the '
 
   await userEvent.click(input);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -242,7 +242,7 @@ test("When using the status filter with the 'up' option then the agents in the '
     "/api/v2/agents?limit=20&filter.status=up&sort=name.asc",
   );
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({
         ...AgentsMock.response,
@@ -258,12 +258,12 @@ test("When using the status filter with the 'up' option then the agents in the '
   expect(rowsAfter).toHaveLength(3);
 });
 
-test("Given the Agents view with filters, When pausing an agent, then the correct request is fired", async () => {
+test("Given the Agents view with filters, When pausing an agent, then the correct request is fired", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
@@ -273,7 +273,7 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
 
   await userEvent.type(input, "aws{enter}");
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   const rows = await screen.findAllByRole("row", {
@@ -294,7 +294,7 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
     url: "/api/v2/agent/aws/pause",
     body: null,
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Maybe.none());
   });
   expect(apiHelper.resolvedRequests).toHaveLength(3);
@@ -304,25 +304,25 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
     environment: "env",
     url: "/api/v2/agents?limit=20&filter.name=aws&sort=name.asc",
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   expect(apiHelper.resolvedRequests).toHaveLength(4);
   expect(apiHelper.pendingRequests).toHaveLength(0);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given the Agents view with filters, When unpausing an agent, then the correct request is fired", async () => {
+test("Given the Agents view with filters, When unpausing an agent, then the correct request is fired", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
@@ -332,7 +332,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
 
   await userEvent.type(input, "bru{enter}");
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   const rows = await screen.findAllByRole("row", {
@@ -344,7 +344,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
 
   await userEvent.click(unpauseAgentButton);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -359,7 +359,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
     url: "/api/v2/agent/bru-23-r321/unpause",
     body: null,
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Maybe.none());
   });
   expect(apiHelper.resolvedRequests).toHaveLength(3);
@@ -369,19 +369,19 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
     environment: "env",
     url: "/api/v2/agents?limit=20&filter.name=bru&sort=name.asc",
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   expect(apiHelper.resolvedRequests).toHaveLength(4);
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
 
-test("Given the Agents view When pausing an agent results in an error, then the error is shown", async () => {
+test("Given the Agents view When pausing an agent results in an error, then the error is shown", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   const rows = await screen.findAllByRole("row", {
@@ -391,7 +391,7 @@ test("Given the Agents view When pausing an agent results in an error, then the 
     name: words("agents.actions.pause"),
   });
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -408,14 +408,14 @@ test("Given the Agents view When pausing an agent results in an error, then the 
     url: "/api/v2/agent/aws/pause",
     body: null,
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Maybe.some("something happened"));
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   expect(await screen.findByText("something happened")).toBeVisible();
 });
 
-test("Given the Agents view with the environment halted, When setting keep_paused_on_resume on an agent, Then the correct request is fired", async () => {
+test("Given the Agents view with the environment halted, When setting keep_paused_on_resume on an agent, Then the correct request is fired", async() => {
   const { component, apiHelper, store } = setup();
 
   store.dispatch.environment.setEnvironmentDetailsById({
@@ -424,7 +424,7 @@ test("Given the Agents view with the environment halted, When setting keep_pause
   });
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
@@ -443,7 +443,7 @@ test("Given the Agents view with the environment halted, When setting keep_pause
     url: "/api/v2/agent/aws/keep_paused_on_resume",
     body: null,
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Maybe.none());
   });
 
@@ -453,20 +453,20 @@ test("Given the Agents view with the environment halted, When setting keep_pause
     environment: "env",
     url: "/api/v2/agents?limit=20&sort=name.asc",
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
   expect(apiHelper.pendingRequests).toHaveLength(0);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given the Agents view with the environment halted, When setting unpause_on_resume on an agent, Then the correct request is fired", async () => {
+test("Given the Agents view with the environment halted, When setting unpause_on_resume on an agent, Then the correct request is fired", async() => {
   const { component, apiHelper, store } = setup();
 
   store.dispatch.environment.setEnvironmentDetailsById({
@@ -475,13 +475,13 @@ test("Given the Agents view with the environment halted, When setting unpause_on
   });
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
@@ -500,7 +500,7 @@ test("Given the Agents view with the environment halted, When setting unpause_on
     url: "/api/v2/agent/ecx/unpause_on_resume",
     body: null,
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Maybe.none());
   });
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -509,18 +509,18 @@ test("Given the Agents view with the environment halted, When setting unpause_on
     environment: "env",
     url: "/api/v2/agents?limit=20&sort=name.asc",
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
 
-test("Given the Agents view with the environment NOT halted, THEN the on resume column shouldn't be shown", async () => {
+test("Given the Agents view with the environment NOT halted, THEN the on resume column shouldn't be shown", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
@@ -534,14 +534,14 @@ test("Given the Agents view with the environment NOT halted, THEN the on resume 
 
   expect(onResumeColumnHeader).toBeUndefined();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given the Agents view with the environment halted, THEN the on resume column should be shown", async () => {
+test("Given the Agents view with the environment halted, THEN the on resume column should be shown", async() => {
   const { component, apiHelper, store } = setup();
 
   store.dispatch.environment.setEnvironmentDetailsById({
@@ -550,7 +550,7 @@ test("Given the Agents view with the environment halted, THEN the on resume colu
   });
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
@@ -564,20 +564,20 @@ test("Given the Agents view with the environment halted, THEN the on resume colu
 
   expect(onResumeColumnHeader).toBeDefined();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN AgentsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+test("GIVEN AgentsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   //mock that response has more than one site
-  await act(async () => {
+  await act(async() => {
     apiHelper.resolve(
       Either.right({
         ...AgentsMock.response,
@@ -603,7 +603,7 @@ test("GIVEN AgentsView WHEN sorting changes AND we are not on the first page THE
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=name.asc)/);
 
-  await act(async () => {
+  await act(async() => {
     apiHelper.resolve(
       Either.right({
         ...AgentsMock.response,

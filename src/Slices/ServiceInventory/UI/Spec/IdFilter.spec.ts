@@ -4,7 +4,7 @@ import { ServiceInstance } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 import { filterServer } from "./serverSetup";
 
-test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 instance is shown", async () => {
+test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 instance is shown", async() => {
   filterServer.listen();
   const { component } = new ServiceInventoryPrepper().prep();
 

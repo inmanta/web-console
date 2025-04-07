@@ -85,7 +85,7 @@ export const DestroyAction: React.FC<Props> = ({
   /**
    * async method sending out the request to destroy the instance
    */
-  const onSubmitDestroy = async (): Promise<void> => {
+  const onSubmitDestroy = async(): Promise<void> => {
     mutate();
   };
 

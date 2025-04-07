@@ -7,8 +7,8 @@ type Data = RemoteData.Type<
   Query.Data<"GetEnvironmentsContinuous">
 >;
 
-export function GetEnvironmentsContinuousStateHelper (store: Store) {
-  function getData (
+export function GetEnvironmentsContinuousStateHelper(store: Store) {
+  function getData(
     state: State,
     { details }: Query.SubQuery<"GetEnvironmentsContinuous">,
   ): Data {
@@ -17,7 +17,7 @@ export function GetEnvironmentsContinuousStateHelper (store: Store) {
       : state.environment.environments;
   }
 
-  function setData (
+  function setData(
     store: Dispatch,
     { details }: Query.SubQuery<"GetEnvironmentsContinuous">,
     data: Data,

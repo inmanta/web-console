@@ -17,7 +17,7 @@ import { InventoryAttributeTree } from "@/UI/Components/TreeTable/types";
 
 export class InventoryAttributeHelper
 implements AttributeHelper<InventoryAttributeTree> {
-  constructor (
+  constructor(
     private readonly separator: string,
     private readonly service?: ServiceModel,
   ) {}
@@ -28,7 +28,7 @@ implements AttributeHelper<InventoryAttributeTree> {
    * @param {Attributes} attributes
    * @returns {string[]}
    */
-  public getPaths (attributes: Attributes): string[] {
+  public getPaths(attributes: Attributes): string[] {
     return Object.keys(
       this.getSingleAttributeNodes("", {
         ...attributes.candidate,
@@ -38,7 +38,7 @@ implements AttributeHelper<InventoryAttributeTree> {
     );
   }
 
-  public getMultiAttributeNodes (
+  public getMultiAttributeNodes(
     attributes: Attributes,
   ): MultiAttributeNodeDict<InventoryAttributes> {
     return this.mergeNodes(
@@ -48,7 +48,7 @@ implements AttributeHelper<InventoryAttributeTree> {
     );
   }
 
-  public getAttributeAnnotations (key: string) {
+  public getAttributeAnnotations(key: string) {
     if (this.service && this.service.attributes) {
       const attr = this.service.attributes.find(
         (attribute) => attribute.name === key,
@@ -60,7 +60,7 @@ implements AttributeHelper<InventoryAttributeTree> {
     return {};
   }
 
-  private findKeyInService (
+  private findKeyInService(
     prefix: string,
     key: string,
   ):
@@ -80,7 +80,7 @@ implements AttributeHelper<InventoryAttributeTree> {
     return val;
   }
 
-  private findInServiceLike (
+  private findInServiceLike(
     service: Pick<EntityLike, "embedded_entities" | "inter_service_relations">,
     prefix: string[],
     key: string,
@@ -107,7 +107,7 @@ implements AttributeHelper<InventoryAttributeTree> {
     return undefined;
   }
 
-  private findInRelations (
+  private findInRelations(
     service: Pick<EntityLike, "inter_service_relations">,
     key: string,
   ):
@@ -120,7 +120,7 @@ implements AttributeHelper<InventoryAttributeTree> {
     return matchingRelation;
   }
 
-  private findAttributeType (
+  private findAttributeType(
     service: ServiceModel | EmbeddedEntity | undefined,
     prefix: string[],
     key: string,
@@ -148,7 +148,7 @@ implements AttributeHelper<InventoryAttributeTree> {
     return adequateAttribute?.type;
   }
 
-  private getSingleAttributeNodes (
+  private getSingleAttributeNodes(
     prefix: string,
     subject: unknown,
   ): AttributeNodeDict {
@@ -215,7 +215,7 @@ implements AttributeHelper<InventoryAttributeTree> {
    * - ["hello"]
    * - null
    */
-  private isNested (value: unknown): value is Record<string, unknown> {
+  private isNested(value: unknown): value is Record<string, unknown> {
     return (
       typeof value === "object" &&
       value !== null &&
@@ -224,7 +224,7 @@ implements AttributeHelper<InventoryAttributeTree> {
     );
   }
 
-  private mergeNodes (
+  private mergeNodes(
     candidateNodes: AttributeNodeDict,
     activeNodes: AttributeNodeDict,
     rollbackNodes: AttributeNodeDict,
@@ -287,7 +287,7 @@ implements AttributeHelper<InventoryAttributeTree> {
  * @param {TreeNode | undefined} rollbackNode
  * @returns {boolean}
  */
-export function isMultiLeaf (
+export function isMultiLeaf(
   candidateNode: TreeNode | undefined,
   activeNode: TreeNode | undefined,
   rollbackNode: TreeNode | undefined,
@@ -302,7 +302,7 @@ export function isMultiLeaf (
  * @param {TreeNode | undefined} node
  * @returns {string | undefined}
  */
-function getType (node: TreeNode | undefined): string | undefined {
+function getType(node: TreeNode | undefined): string | undefined {
   if (typeof node === "undefined") return undefined;
   if (node.kind !== "Leaf") return undefined;
 
@@ -316,7 +316,7 @@ function getType (node: TreeNode | undefined): string | undefined {
  * @param {TreeNode | undefined} node
  * @returns {unknown}
  */
-export function getValue (node: TreeNode | undefined): unknown {
+export function getValue(node: TreeNode | undefined): unknown {
   if (typeof node === "undefined") return undefined;
   if (node.kind !== "Leaf") return undefined;
 
@@ -330,7 +330,7 @@ export function getValue (node: TreeNode | undefined): unknown {
  * @param {TreeNode | undefined} node
  * @returns {boolean}
  */
-export function isLeaf (node: TreeNode | undefined): boolean {
+export function isLeaf(node: TreeNode | undefined): boolean {
   if (typeof node === "undefined") return true;
 
   return node.kind === "Leaf";
@@ -343,7 +343,7 @@ export function isLeaf (node: TreeNode | undefined): boolean {
  * @param {TreeNode | undefined} node
  * @returns {boolean | undefined}
  */
-function getHasRelation (node: TreeNode | undefined): boolean | undefined {
+function getHasRelation(node: TreeNode | undefined): boolean | undefined {
   if (typeof node === "undefined") return undefined;
   if (node.kind !== "Leaf") return undefined;
 
@@ -357,7 +357,7 @@ function getHasRelation (node: TreeNode | undefined): boolean | undefined {
  * @param {TreeNode | undefined} node
  * @returns {string | undefined}
  */
-function getEntity (node: TreeNode | undefined): string | undefined {
+function getEntity(node: TreeNode | undefined): string | undefined {
   if (typeof node === "undefined") return undefined;
   if (node.kind !== "Leaf") return undefined;
 
@@ -371,7 +371,7 @@ function getEntity (node: TreeNode | undefined): string | undefined {
  * @param {(string | undefined)[] } entities
  * @returns {string | undefined}
  */
-function chooseEntity (entities: (string | undefined)[]): string | undefined {
+function chooseEntity(entities: (string | undefined)[]): string | undefined {
   // If there is an entity for either of the { candidate, active, rollback } attributes, it will be the same
   const notUndefined = entities.filter(isNotUndefined);
 

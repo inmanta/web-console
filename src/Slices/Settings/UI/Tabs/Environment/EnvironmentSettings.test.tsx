@@ -29,7 +29,7 @@ const axe = configureAxe({
   },
 });
 
-function setup () {
+function setup() {
   const selectedEnvironment = Environment.filterable[0];
   const apiHelper = new DeferredApiHelper();
 
@@ -60,7 +60,7 @@ function setup () {
   return { component, apiHelper, selectedEnvironment };
 }
 
-test("Given environment settings When clicking on the edit name button Then the input field is shown", async () => {
+test("Given environment settings When clicking on the edit name button Then the input field is shown", async() => {
   const { component } = setup();
 
   render(component);
@@ -79,14 +79,14 @@ test("Given environment settings When clicking on the edit name button Then the 
     screen.queryByRole("generic", { name: "Name-value" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given environment settings When submitting the edited name Then the backend request is fired", async () => {
+test("Given environment settings When submitting the edited name Then the backend request is fired", async() => {
   const { component, apiHelper, selectedEnvironment } = setup();
 
   render(component);
@@ -112,15 +112,15 @@ test("Given environment settings When submitting the edited name Then the backen
     },
     url: `/api/v2/environment/${selectedEnvironment.id}`,
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Maybe.none());
   });
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(1);
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: Environment.filterable[0] }));
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: Project.filterable }));
   });
   expect(apiHelper.resolvedRequests).toHaveLength(3);
@@ -132,14 +132,14 @@ test("Given environment settings When submitting the edited name Then the backen
     screen.queryByRole("textbox", { name: "Name-input" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given environment settings When canceling a name edit Then the backend request is not fired", async () => {
+test("Given environment settings When canceling a name edit Then the backend request is not fired", async() => {
   const { component, apiHelper, selectedEnvironment } = setup();
 
   render(component);
@@ -167,7 +167,7 @@ test("Given environment settings When canceling a name edit Then the backend req
     screen.queryByRole("textbox", { name: "Name-input" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -180,7 +180,7 @@ test.each`
   ${"by starting a new edit"} | ${"Name-toggle-edit"}
 `(
   "Given environment settings When a name edit yields an error Then the error message is shown and can be closed $displayName",
-  async ({ elementName }) => {
+  async({ elementName }) => {
     const { component, apiHelper } = setup();
 
     render(component);
@@ -197,15 +197,15 @@ test.each`
 
     expect(apiHelper.pendingRequests).toHaveLength(1);
 
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(Maybe.some("Invalid environment name"));
     });
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(
         Either.right({ data: Environment.filterable[0] }),
       );
     });
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(Either.right({ data: Project.filterable }));
     });
 
@@ -224,7 +224,7 @@ test.each`
       screen.queryByRole("generic", { name: "Name-error-message" }),
     ).not.toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -232,7 +232,7 @@ test.each`
   },
 );
 
-test("Given environment settings When clicking on the edit repository settings button Then the input fields are shown", async () => {
+test("Given environment settings When clicking on the edit repository settings button Then the input fields are shown", async() => {
   const { component } = setup();
 
   render(component);
@@ -261,14 +261,14 @@ test("Given environment settings When clicking on the edit repository settings b
     screen.queryByRole("generic", { name: "repo_url-value" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given environment settings When submitting the edited repository settings Then the backend request is fired", async () => {
+test("Given environment settings When submitting the edited repository settings Then the backend request is fired", async() => {
   const { component, apiHelper, selectedEnvironment } = setup();
 
   render(component);
@@ -312,17 +312,17 @@ test("Given environment settings When submitting the edited repository settings 
     },
     url: `/api/v2/environment/${selectedEnvironment.id}`,
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Maybe.none());
   });
 
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: Environment.filterable[0] }));
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: Project.filterable }));
   });
 
@@ -341,14 +341,14 @@ test("Given environment settings When submitting the edited repository settings 
     screen.queryByRole("textbox", { name: "repo_url-value" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given environment settings When canceling a repository edit Then the backend request is not fired", async () => {
+test("Given environment settings When canceling a repository edit Then the backend request is not fired", async() => {
   const { component, apiHelper, selectedEnvironment } = setup();
 
   render(component);
@@ -385,7 +385,7 @@ test("Given environment settings When canceling a repository edit Then the backe
     screen.queryByRole("textbox", { name: "repo_url-input" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -398,7 +398,7 @@ test.each`
   ${"by starting a new edit"} | ${"Repository Settings-toggle-edit"}
 `(
   "Given environment settings When a repo edit yields an error Then the error message is shown and can be closed $displayName",
-  async ({ elementName }) => {
+  async({ elementName }) => {
     const { component, apiHelper } = setup();
 
     render(component);
@@ -417,15 +417,15 @@ test.each`
 
     expect(apiHelper.pendingRequests).toHaveLength(1);
 
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(Maybe.some("Invalid branch"));
     });
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(
         Either.right({ data: Environment.filterable[0] }),
       );
     });
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(Either.right({ data: Project.filterable }));
     });
 
@@ -448,7 +448,7 @@ test.each`
       }),
     ).not.toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -456,7 +456,7 @@ test.each`
   },
 );
 
-test("Given environment settings When clicking on the edit project button Then the select field is shown", async () => {
+test("Given environment settings When clicking on the edit project button Then the select field is shown", async() => {
   const { component } = setup();
 
   render(component);
@@ -479,14 +479,14 @@ test("Given environment settings When clicking on the edit project button Then t
     screen.queryByRole("generic", { name: "Project Name-value" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given environment settings When submitting the edited project name Then the backend request is fired", async () => {
+test("Given environment settings When submitting the edited project name Then the backend request is fired", async() => {
   const { component, apiHelper, selectedEnvironment } = setup();
 
   render(component);
@@ -520,17 +520,17 @@ test("Given environment settings When submitting the edited project name Then th
     url: `/api/v2/environment/${selectedEnvironment.id}`,
   });
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Maybe.none());
   });
 
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: Environment.filterable[0] }));
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: Project.filterable }));
   });
 
@@ -543,14 +543,14 @@ test("Given environment settings When submitting the edited project name Then th
     screen.queryByRole("textbox", { name: "Project Name-typeahead" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given environment settings When canceling a project name edit Then the backend request is not fired", async () => {
+test("Given environment settings When canceling a project name edit Then the backend request is not fired", async() => {
   const { component, apiHelper, selectedEnvironment } = setup();
 
   render(component);
@@ -579,7 +579,7 @@ test("Given environment settings When canceling a project name edit Then the bac
     screen.queryByRole("textbox", { name: "Project Name-typeahead" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -592,7 +592,7 @@ test.each`
   ${"by starting a new edit"} | ${"Project Name-toggle-edit"}
 `(
   "Given environment settings When a project name edit yields an error Then the error message is shown and can be closed $displayName",
-  async ({ elementName }) => {
+  async({ elementName }) => {
     const { component, apiHelper } = setup();
 
     render(component);
@@ -617,15 +617,15 @@ test.each`
 
     expect(apiHelper.pendingRequests).toHaveLength(1);
 
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(Maybe.some("Invalid project id"));
     });
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(
         Either.right({ data: Environment.filterable[0] }),
       );
     });
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(Either.right({ data: Project.filterable }));
     });
 
@@ -646,7 +646,7 @@ test.each`
       screen.queryByRole("generic", { name: "Project Name-error-message" }),
     ).not.toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -654,7 +654,7 @@ test.each`
   },
 );
 
-test("Given environment settings When clicking on the edit description button Then the textarea field is shown", async () => {
+test("Given environment settings When clicking on the edit description button Then the textarea field is shown", async() => {
   const { component } = setup();
 
   render(component);
@@ -674,14 +674,14 @@ test("Given environment settings When clicking on the edit description button Th
     screen.queryByRole("generic", { name: "Description-value" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given environment settings When clicking on the edit icon button Then the image field is shown", async () => {
+test("Given environment settings When clicking on the edit icon button Then the image field is shown", async() => {
   const { component } = setup();
 
   render(component);
@@ -699,7 +699,7 @@ test("Given environment settings When clicking on the edit icon button Then the 
     screen.queryByRole("img", { name: "Icon-value" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();

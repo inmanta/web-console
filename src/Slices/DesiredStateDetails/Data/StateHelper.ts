@@ -1,7 +1,7 @@
 import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export function GetVersionResourcesStateHelper (store: Store) {
+export function GetVersionResourcesStateHelper(store: Store) {
   return PrimaryStateHelperWithEnv<"GetVersionResources">(
     store,
     (data, query, environment) => {

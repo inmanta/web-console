@@ -9,7 +9,7 @@ import { StaticScheduler } from "./StaticScheduler";
 
 export class DynamicQueryManagerResolverImpl implements QueryManagerResolver {
   private scheduler: Scheduler = new StaticScheduler();
-  constructor (
+  constructor(
     private readonly managers: QueryManager[],
     private externalScheduler?: Scheduler,
   ) {
@@ -18,30 +18,30 @@ export class DynamicQueryManagerResolverImpl implements QueryManagerResolver {
     }
   }
 
-  get (): QueryManager[] {
+  get(): QueryManager[] {
     return this.managers;
   }
-  resumeContinuous (): void {
+  resumeContinuous(): void {
     this.scheduler.pauseTasks();
   }
 
-  pauseContinuous (): void {
+  pauseContinuous(): void {
     this.scheduler.resumeTasks();
   }
-  resolve (): void {
+  resolve(): void {
     throw new Error("Method not implemented.");
   }
 }
 
 export class DynamicCommandManagerResolverImpl
 implements CommandManagerResolver {
-  constructor (private readonly managers: CommandManager[]) {}
+  constructor(private readonly managers: CommandManager[]) {}
 
-  get (): CommandManager[] {
+  get(): CommandManager[] {
     return this.managers;
   }
 
-  resolve (): void {
+  resolve(): void {
     throw new Error("Method not implemented.");
   }
 }

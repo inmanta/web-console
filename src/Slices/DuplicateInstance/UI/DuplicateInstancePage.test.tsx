@@ -29,7 +29,7 @@ const axe = configureAxe({
   },
 });
 
-function setup (entity = "a") {
+function setup(entity = "a") {
   const store = getStoreInstance();
 
   const component = (
@@ -68,7 +68,7 @@ describe("DuplicateInstancePage", () => {
 
   afterAll(() => server.close());
 
-  test("Duplicate Instance View shows failed state", async () => {
+  test("Duplicate Instance View shows failed state", async() => {
     server.use(
       http.get(
         "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
@@ -88,14 +88,14 @@ describe("DuplicateInstancePage", () => {
       await screen.findByRole("region", { name: "DuplicateInstance-Failed" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("DuplicateInstance View shows success form", async () => {
+  test("DuplicateInstance View shows success form", async() => {
     const mockFn = jest.fn();
 
     jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
@@ -128,7 +128,7 @@ describe("DuplicateInstancePage", () => {
 
     await userEvent.click(screen.getByText(words("confirm")));
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -180,7 +180,7 @@ describe("DuplicateInstancePage", () => {
     );
   });
 
-  test("Given the DuplicateInstance View When changing a embedded entity Then the correct request is fired", async () => {
+  test("Given the DuplicateInstance View When changing a embedded entity Then the correct request is fired", async() => {
     const mockFn = jest.fn();
 
     jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
@@ -201,7 +201,7 @@ describe("DuplicateInstancePage", () => {
       await screen.findByRole("generic", { name: "DuplicateInstance-Success" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -272,7 +272,7 @@ describe("DuplicateInstancePage", () => {
     );
   });
 
-  test("Given the DuplicateInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
+  test("Given the DuplicateInstance View When changing an embedded entity Then the inputs are displayed correctly", async() => {
     const mockFn = jest.fn();
 
     jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);

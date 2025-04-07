@@ -5,9 +5,9 @@ interface FileManager {
 }
 
 export class PrimaryArchiveHelper implements ArchiveHelper {
-  constructor (private readonly fileManager: FileManager) {}
+  constructor(private readonly fileManager: FileManager) {}
 
-  triggerDownload (blob: Blob): void {
+  triggerDownload(blob: Blob): void {
     this.fileManager.download(blob, "support-archive.zip");
   }
 }

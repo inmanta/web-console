@@ -24,7 +24,7 @@ describe("MarkdownContainer", () => {
     expect(screen.queryByRole("script")).not.toBeInTheDocument();
   });
 
-  it("renders the Markdown content with Mermaid diagrams correctly", async () => {
+  it("renders the Markdown content with Mermaid diagrams correctly", async() => {
     const markdownContent =
       "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```";
     const webTitle = "Container_id";

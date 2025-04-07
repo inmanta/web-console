@@ -4,7 +4,7 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export function GetFactsQueryManager (
+export function GetFactsQueryManager(
   store: Store,
   apiHelper: ApiHelper,
   scheduler: Scheduler,

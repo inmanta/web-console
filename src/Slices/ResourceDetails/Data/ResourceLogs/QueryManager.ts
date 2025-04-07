@@ -8,7 +8,7 @@ import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
 import { getUrl } from "./getUrl";
 
-export function ResourceLogsQueryManager (
+export function ResourceLogsQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetResourceLogs">,
   scheduler: Scheduler,
@@ -41,6 +41,6 @@ export function ResourceLogsQueryManager (
   );
 }
 
-function stringifyFilter (filter: ResourceLogFilter | undefined): string {
+function stringifyFilter(filter: ResourceLogFilter | undefined): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

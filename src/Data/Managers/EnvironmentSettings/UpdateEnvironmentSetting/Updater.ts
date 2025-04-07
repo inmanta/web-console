@@ -8,12 +8,12 @@ import { GetEnvironmentSetting } from "@/Data/Managers/EnvironmentSettings/GetEn
 
 export class EnvironmentSettingUpdater
 implements UpdaterWithEnv<"GetEnvironmentSetting"> {
-  constructor (
+  constructor(
     private readonly apiHelper: ApiHelper,
     private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentSetting">,
   ) {}
 
-  async update (
+  async update(
     query: GetEnvironmentSetting,
     environment: string,
   ): Promise<void> {

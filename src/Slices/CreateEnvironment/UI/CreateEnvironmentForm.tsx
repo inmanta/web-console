@@ -60,7 +60,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
     });
   };
 
-  const onSubmitCreate = async () => {
+  const onSubmitCreate = async() => {
     if (projectName && createEnvironmentBody.name) {
       const matchingProject = projects.find(
         (project) => project.name === projectName,

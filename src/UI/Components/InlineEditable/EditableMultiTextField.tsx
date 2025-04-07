@@ -36,7 +36,7 @@ export const EditableMultiTextField: React.FC<Props> = ({
   const [editable, setEditable] = useState(initiallyEditable);
   const [fieldValues, setFieldValues] = useState(initialValues);
   const [submitError, setSubmitError] = useState("");
-  const onSubmitRequest = async (values: Record<string, string>) => {
+  const onSubmitRequest = async(values: Record<string, string>) => {
     setEditable(false);
     const error = await onSubmit(values);
 

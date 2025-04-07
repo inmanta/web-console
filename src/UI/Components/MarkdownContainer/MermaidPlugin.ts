@@ -25,7 +25,7 @@ const mermaid = Mermaid as unknown as MermaidAPI;
  * @param baseId - The base id to use for the mermaid elements.
  * @param options - The options to use for rendering the mermaid diagrams.
  */
-export default function mermaidPlugin (
+export default function mermaidPlugin(
   md: MarkdownIt,
   baseId: string,
   options: any,
@@ -36,7 +36,7 @@ export default function mermaidPlugin (
     ...options,
   });
 
-  function getLangName (info: string): string {
+  function getLangName(info: string): string {
     return info.split(/\s+/g)[0];
   }
 
@@ -44,7 +44,7 @@ export default function mermaidPlugin (
   const defaultFenceRenderer = md.renderer.rules.fence;
 
   // Render custom code types as SVGs, letting the fence parser do all the heavy lifting.
-  async function customFenceRenderer (
+  async function customFenceRenderer(
     tokens: any[],
     idx: number,
     options: any,

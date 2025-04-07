@@ -14,7 +14,7 @@ test.each`
   ${"/settings"}                                          | ${"/settings"}
 `(
   "GIVEN RouteManager.getRelatedUrlWithoutParams WHEN $inputUrl THEN returns $outputUrl",
-  async ({ inputUrl, outputUrl }) => {
+  async({ inputUrl, outputUrl }) => {
     expect(routeManager.getRelatedUrlWithoutParams(inputUrl)).toEqual(
       outputUrl,
     );

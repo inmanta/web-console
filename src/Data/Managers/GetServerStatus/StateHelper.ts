@@ -2,7 +2,7 @@ import { RemoteData, ServerStatus } from "@/Core";
 import { PrimaryStateHelper } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export function GetServerStatusStateHelper (store: Store) {
+export function GetServerStatusStateHelper(store: Store) {
   return PrimaryStateHelper<"GetServerStatus">(
     store,
     (data) => {

@@ -22,7 +22,7 @@ export interface UrlParams extends ServiceInstanceParams {
  * @param {boolean} [includeDeploymentProgress=true] - Whether to include deployment progress in the response.
  * @returns {string} The constructed URL.
  */
-export function getUrl (
+export function getUrl(
   { name, filter, sort, pageSize, currentPage }: UrlParams,
   includeDeploymentProgress = true,
 ): string {

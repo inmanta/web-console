@@ -3,7 +3,7 @@ import { CommandManagerWithoutEnv } from "@/Data/Common";
 import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
 
 export class CreateEnvironmentCommandManager extends CommandManagerWithoutEnv<"CreateEnvironment"> {
-  constructor (
+  constructor(
     private readonly apiHelper: ApiHelper,
     private readonly environmentsUpdater: Updater<"GetEnvironments">,
   ) {
@@ -13,7 +13,7 @@ export class CreateEnvironmentCommandManager extends CommandManagerWithoutEnv<"C
     );
   }
 
-  private async submit (
+  private async submit(
     command: Command.SubCommand<"CreateEnvironment">,
     body: CreateEnvironmentParams,
   ): Promise<
@@ -34,7 +34,7 @@ export class CreateEnvironmentCommandManager extends CommandManagerWithoutEnv<"C
     return result;
   }
 
-  private getUrl (): string {
+  private getUrl(): string {
     return "/api/v2/environment";
   }
 }

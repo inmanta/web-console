@@ -38,7 +38,7 @@ import { StatusPage } from "@S/Status/UI";
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;
 
-  constructor (private readonly routeDictionary: RouteDictionary) {
+  constructor(private readonly routeDictionary: RouteDictionary) {
     this.pageDictionary = {
       /**
        * Main
@@ -175,7 +175,7 @@ export class PrimaryPageManager implements PageManager {
     };
   }
 
-  getPages (): Page[] {
+  getPages(): Page[] {
     return Object.values(this.pageDictionary);
   }
 }

@@ -257,22 +257,22 @@ export const CodeHighlighter: React.FC<Props> = ({
   );
 };
 
-function isScrollable (element) {
+function isScrollable(element) {
   return (
     element.scrollWidth > element.clientWidth ||
     element.scrollHeight > element.clientHeight
   );
 }
 
-function isEmpty (code: string) {
+function isEmpty(code: string) {
   return !(code && code.length > 0);
 }
 
-function isShortSingleLine (code: string) {
+function isShortSingleLine(code: string) {
   return !code.includes("\n") && code.length < 60;
 }
 
-function getNumberOfLines (code: string) {
+function getNumberOfLines(code: string) {
   return (code.match(/\n/g) || []).length;
 }
 

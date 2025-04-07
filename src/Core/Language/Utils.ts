@@ -17,7 +17,7 @@ export type ParsedNumber = number | bigint;
  * - If it is present, remove it.
  * - If it is missing, add it.
  */
-export function toggleValueInList<T> (value: T, list: T[]): T[] {
+export function toggleValueInList<T>(value: T, list: T[]): T[] {
   const index = list.indexOf(value);
 
   if (index === -1) {
@@ -86,7 +86,7 @@ export const keepKeys = (
     return acc;
   }, {});
 
-export const resolvePromiseRecord = async (
+export const resolvePromiseRecord = async(
   record: Record<string, Promise<unknown>>,
 ): Promise<Record<string, unknown>> => {
   const list = Object.entries(record);

@@ -28,7 +28,7 @@ const axe = configureAxe({
   },
 });
 
-function setup () {
+function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
@@ -58,7 +58,7 @@ function setup () {
   return { component, apiHelper };
 }
 
-test("Home view shows failed table", async () => {
+test("Home view shows failed table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -73,14 +73,14 @@ test("Home view shows failed table", async () => {
     await screen.findByRole("region", { name: "Overview-Failed" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Home View shows success table", async () => {
+test("Home View shows success table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -99,7 +99,7 @@ test("Home View shows success table", async () => {
     await screen.findByRole("generic", { name: "Overview-Success" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();

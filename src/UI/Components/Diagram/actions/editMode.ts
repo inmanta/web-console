@@ -25,7 +25,7 @@ import { connectEntities, createComposerEntity } from "./general";
  *
  * @returns {ServiceEntityBlock} appendedInstance to allow connect related by inter-service relations Instances added concurrently
  */
-export function appendInstance (
+export function appendInstance(
   paper: dia.Paper,
   graph: dia.Graph,
   instanceWithRelations: InstanceWithRelations,
@@ -197,7 +197,7 @@ export function appendInstance (
  *
  * @returns {ServiceEntityBlock[]} - returns array of created embedded entities, that are connected to given entity
  */
-function addEmbeddedEntities (
+function addEmbeddedEntities(
   graph: dia.Graph,
   paper: dia.Paper,
   instanceAsTable: ServiceEntityBlock,
@@ -269,7 +269,7 @@ function addEmbeddedEntities (
  *
  * @returns {ServiceEntityBlock[]} created JointJS shapes
  */
-export function appendEmbeddedEntity (
+export function appendEmbeddedEntity(
   paper: dia.Paper,
   graph: dia.Graph,
   embeddedEntity: EmbeddedEntity,
@@ -288,7 +288,7 @@ export function appendEmbeddedEntity (
    * @param {InstanceAttributeModel} entityInstance instance of entity Attributes
    * @returns {ServiceEntityBlock} appended embedded entity to the graph
    */
-  function appendSingleEntity (
+  function appendSingleEntity(
     entityInstance: InstanceAttributeModel,
   ): ServiceEntityBlock {
     //Create shape for Entity
@@ -362,7 +362,7 @@ export function appendEmbeddedEntity (
  * @param {"candidate" | "active"=} presentedAttrs *optional* indentify used set of attributes if they are taken from Service Instance
  * @returns {void}
  */
-export function addInfoIcon (
+export function addInfoIcon(
   instanceAsTable: ServiceEntityBlock,
   presentedAttrs: "candidate" | "active",
 ): void {

@@ -8,7 +8,7 @@ import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { Filter } from "@S/Events/Core/Query";
 import { getUrl } from "./getUrl";
 
-export function EventsQueryManager (
+export function EventsQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetInstanceEvents">,
   scheduler: Scheduler,
@@ -42,6 +42,6 @@ export function EventsQueryManager (
   );
 }
 
-function stringifyFilter (filter: Filter | undefined): string {
+function stringifyFilter(filter: Filter | undefined): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

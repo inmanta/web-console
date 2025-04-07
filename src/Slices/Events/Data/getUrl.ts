@@ -2,7 +2,7 @@ import moment from "moment-timezone";
 import qs from "qs";
 import { Query, RangeOperator } from "@/Core";
 
-export function getUrl (
+export function getUrl(
   {
     service_entity,
     id,

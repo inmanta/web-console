@@ -25,7 +25,7 @@ describe("Page Actions - Success", () => {
   // Clean up after the tests are finished.
   afterAll(() => server.close());
 
-  it("Expert actions - Force State", async () => {
+  it("Expert actions - Force State", async() => {
     const component = setupServiceInstanceDetails(true);
 
     render(component);
@@ -74,7 +74,7 @@ describe("Page Actions - Success", () => {
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
   });
 
-  it("Expert actions - Destroy", async () => {
+  it("Expert actions - Destroy", async() => {
     const component = setupServiceInstanceDetails(true);
 
     render(component);
@@ -114,7 +114,7 @@ describe("Page Actions - Success", () => {
     );
   });
 
-  it("Normal Instance Actions Enabled - delete action", async () => {
+  it("Normal Instance Actions Enabled - delete action", async() => {
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -165,7 +165,7 @@ describe("Page Actions - Success", () => {
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
   });
 
-  it("Normal Instance Actions Enabled - update state action", async () => {
+  it("Normal Instance Actions Enabled - update state action", async() => {
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -228,7 +228,7 @@ describe("Page Actions - Failed", () => {
   // Clean up after the tests are finished.
   afterAll(() => server.close());
 
-  it("Expert actions - Force State", async () => {
+  it("Expert actions - Force State", async() => {
     const component = setupServiceInstanceDetails(true);
 
     render(component);
@@ -279,7 +279,7 @@ describe("Page Actions - Failed", () => {
     ).toBeVisible();
   });
 
-  it("Expert actions - Destroy", async () => {
+  it("Expert actions - Destroy", async() => {
     const component = setupServiceInstanceDetails(true);
 
     render(component);
@@ -319,7 +319,7 @@ describe("Page Actions - Failed", () => {
     await waitFor(() => expect(mockedUsedNavigate).not.toHaveBeenCalled());
   });
 
-  it("Normal Instance Actions Enabled - delete action", async () => {
+  it("Normal Instance Actions Enabled - delete action", async() => {
     const component = setupServiceInstanceDetails();
 
     render(component);
@@ -372,7 +372,7 @@ describe("Page Actions - Failed", () => {
     ).toBeVisible();
   });
 
-  it("Normal Instance Actions Enabled - update state action", async () => {
+  it("Normal Instance Actions Enabled - update state action", async() => {
     const component = setupServiceInstanceDetails();
 
     render(component);

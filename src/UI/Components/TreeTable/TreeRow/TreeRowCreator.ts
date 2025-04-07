@@ -10,7 +10,7 @@ import { AttributeTree } from "@/UI/Components/TreeTable/types";
 import { Cell, TreeRow } from "./TreeRow";
 
 export class TreeRowCreator<T extends AttributeTree["target"]> {
-  constructor (
+  constructor(
     private readonly pathHelper: PathHelper,
     private readonly isExpandedByParent: (path: string) => boolean,
     private readonly isChildExpanded: (path: string) => boolean,
@@ -94,7 +94,7 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
    * @param {MultiAttributeNode<T>} node
    * @returns {TreeRow} a TreeRow object
    */
-  create (
+  create(
     path: string,
     node: MultiAttributeNode<T>,
     annotations?: AttributeAnnotations,
@@ -163,7 +163,7 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
   }
 }
 
-function format (value: unknown): string {
+function format(value: unknown): string {
   if (typeof value === "string") return value;
   if (typeof value === "number") return value.toString();
   if (typeof value === "boolean") return value ? "true" : "false";
@@ -177,7 +177,7 @@ function format (value: unknown): string {
   return "";
 }
 
-export function extractCatalogValues (
+export function extractCatalogValues(
   node: Extract<MultiAttributeNode<CatalogAttributes>, { kind: "Leaf" }>,
 ): Cell[] {
   return [
@@ -197,7 +197,7 @@ export function extractCatalogValues (
   ];
 }
 
-export function extractInventoryValues (
+export function extractInventoryValues(
   node: Extract<MultiAttributeNode<InventoryAttributes>, { kind: "Leaf" }>,
 ): Cell[] {
   return [

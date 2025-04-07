@@ -88,10 +88,10 @@ const setup = (
   return { component, apiHelper, scheduler };
 };
 
-it("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads without errors", async () => {
+it("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads without errors", async() => {
   // Provide the server-side API with the request handlers to get the schema
   const server = setupServer(
-    http.get("/lsm/v1/service_catalog/:id/schema", async ({ params }) => {
+    http.get("/lsm/v1/service_catalog/:id/schema", async({ params }) => {
       expect(params.id).toEqual("service_entity");
 
       return HttpResponse.json({
@@ -129,7 +129,7 @@ it("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads wit
 
   const EditorToggle = screen.getByRole("button", { name: "JSON-Editor" });
 
-  await act(async () => {
+  await act(async() => {
     fireEvent.click(EditorToggle);
   });
 

@@ -9,11 +9,11 @@ import {
 import { useStoreState } from "@/Data/Store";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
-export function EnvironmentHandlerImpl (
+export function EnvironmentHandlerImpl(
   useLocation: () => Location,
   routeManager: RouteManager,
 ): EnvironmentHandler {
-  function set (
+  function set(
     navigate: Navigate,
     location: Location,
     environmentId: string,
@@ -29,7 +29,7 @@ export function EnvironmentHandlerImpl (
     }
   }
 
-  function useId (): string {
+  function useId(): string {
     const environment = useSelected();
 
     if (typeof environment === "undefined") {
@@ -39,7 +39,7 @@ export function EnvironmentHandlerImpl (
     return environment.id;
   }
 
-  function useSelected (): FlatEnvironment | undefined {
+  function useSelected(): FlatEnvironment | undefined {
     const allEnvironments = useStoreState(
       (state) => state.environment.environments,
     );
@@ -48,7 +48,7 @@ export function EnvironmentHandlerImpl (
     return determineSelected(allEnvironments, search);
   }
 
-  function determineSelected (
+  function determineSelected(
     allEnvironments: RemoteData.Type<string, FlatEnvironment[]>,
     search: string,
   ): FlatEnvironment | undefined {

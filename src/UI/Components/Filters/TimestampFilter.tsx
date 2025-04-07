@@ -136,7 +136,7 @@ export const TimestampFilter: React.FC<Props> = ({
   );
 };
 
-function insertNewTimestamp (
+function insertNewTimestamp(
   timestampFilters: DateRange.Type[],
   date: Date | undefined,
   operator: RangeOperator.Operator,

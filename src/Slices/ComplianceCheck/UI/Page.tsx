@@ -92,7 +92,7 @@ export const View: React.FC<Props> = ({ version }) => {
     setUpdatedList(false);
   }, [updatedList, data]);
 
-  const updateList = async () => {
+  const updateList = async() => {
     await (refetch as () => Promise<void>)();
     setUpdatedList(true);
   };

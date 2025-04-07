@@ -6,7 +6,7 @@ import { DiffPageFilter } from "./DiffPageFilter";
 const mockStatuses: Diff.Status[] = ["added", "modified", "deleted"];
 
 describe("DiffPageFilter", () => {
-  it("renders without errors", async () => {
+  it("renders without errors", async() => {
     const { container } = render(
       <DiffPageFilter
         statuses={mockStatuses}

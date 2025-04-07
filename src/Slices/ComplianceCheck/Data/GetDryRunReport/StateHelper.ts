@@ -2,7 +2,7 @@ import { RemoteData } from "@/Core";
 import { PrimaryStateHelper } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export function StateHelper (store: Store) {
+export function StateHelper(store: Store) {
   return PrimaryStateHelper<"GetDryRunReport">(
     store,
     (apiData, { reportId }) => {

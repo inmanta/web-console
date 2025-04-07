@@ -17,7 +17,7 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "@S/ServiceDetails/UI/Page";
 
-function setup () {
+function setup() {
   const store = getStoreInstance();
 
   const component = (
@@ -63,7 +63,7 @@ describe("ServiceCatalog", () => {
     server.close();
   });
 
-  test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", async () => {
+  test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", async() => {
     const { component } = setup();
 
     render(component);
@@ -75,7 +75,7 @@ describe("ServiceCatalog", () => {
     expect(screen.getByTestId("ServiceConfig")).toBeVisible();
   });
 
-  test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async () => {
+  test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async() => {
     const { component } = setup();
 
     render(component);

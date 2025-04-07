@@ -64,7 +64,7 @@ export const EnvironmentsOverview: React.FC<Props> = ({
   );
 };
 
-function filterByName (
+function filterByName(
   filterableEnvironments: FlatEnvironment[],
   environmentFilter: string,
 ): FlatEnvironment[] {
@@ -77,7 +77,7 @@ function filterByName (
   });
 }
 
-function filterByProject (
+function filterByProject(
   filterableEnvironments: FlatEnvironment[],
   projectFilter: string[],
 ): FlatEnvironment[] {

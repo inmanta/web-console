@@ -55,7 +55,7 @@ describe("Dashboard", () => {
     expect(screen.getByLabelText("Metrics-Loading")).toBeInTheDocument();
   });
 
-  it("should show error state when API call fails", async () => {
+  it("should show error state when API call fails", async() => {
     server.use(
       http.get("/api/v2/metrics", () => {
         return HttpResponse.error();
@@ -71,7 +71,7 @@ describe("Dashboard", () => {
     });
   });
 
-  it("should show metrics data when API call succeeds", async () => {
+  it("should show metrics data when API call succeeds", async() => {
     const { component } = setup();
 
     render(component);
@@ -89,7 +89,7 @@ describe("Dashboard", () => {
     ).toBeInTheDocument();
   });
 
-  it("should show LSM section when LSM is enabled", async () => {
+  it("should show LSM section when LSM is enabled", async() => {
     const { component } = setup(true);
 
     render(component);
@@ -103,7 +103,7 @@ describe("Dashboard", () => {
     ).toBeInTheDocument();
   });
 
-  it("should not show LSM section when LSM is disabled", async () => {
+  it("should not show LSM section when LSM is disabled", async() => {
     const { component } = setup(false);
 
     render(component);
@@ -117,7 +117,7 @@ describe("Dashboard", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("should update date range when refresh button is clicked", async () => {
+  it("should update date range when refresh button is clicked", async() => {
     let counter = 0;
 
     server.use(

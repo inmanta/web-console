@@ -3,7 +3,7 @@ import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { DictEditor } from "./DictEditor";
 
-function setup () {
+function setup() {
   const setValue = jest.fn();
   const setNewEntry = jest.fn();
   const isDeleteEntryAllowed = () => true;
@@ -36,7 +36,7 @@ test("GIVEN DictEditor WHEN given data THEN shows keys and values", () => {
   expect(valueInput).toHaveValue("valA");
 });
 
-test("GIVEN DictEditor WHEN deleteEntry clicked THEN that entry is removed", async () => {
+test("GIVEN DictEditor WHEN deleteEntry clicked THEN that entry is removed", async() => {
   const { component, setValue } = setup();
   const { rerender } = render(component({ keyA: "valA", keyB: "valB" }));
 

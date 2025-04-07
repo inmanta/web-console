@@ -6,7 +6,7 @@ const searchHelper = new SearchHelper();
 
 export const useUrlState = provide(handleUrlState);
 
-export function handleUrlState<Data> (
+export function handleUrlState<Data>(
   config: StateConfig<Data>,
   location: Location,
   replace: Replace,

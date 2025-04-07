@@ -1,4 +1,4 @@
-export function getResourceIdFromResourceVersionId (
+export function getResourceIdFromResourceVersionId(
   resourceVersionId: string,
 ): string {
   const indexOfVersionSeparator = resourceVersionId.lastIndexOf("],");

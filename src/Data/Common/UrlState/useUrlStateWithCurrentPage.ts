@@ -46,7 +46,7 @@ export interface CurrentPage {
  * @param replace function based on reactRouter navigate() to change/update url
  * @returns main handleUrlState instance set up for given configuration
  */
-export function handleUrlStateWithCurrentPage (
+export function handleUrlStateWithCurrentPage(
   config: Pick<StateConfig<CurrentPage>, "route">,
   location: Location,
   replace: Replace,

@@ -1,7 +1,7 @@
 import qs from "qs";
 import { Query, Sort } from "@/Core";
 
-export function getUrl ({
+export function getUrl({
   pageSize,
   sort,
   filter,

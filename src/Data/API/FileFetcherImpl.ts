@@ -8,7 +8,7 @@ interface RawResponse {
 export class FileFetcherImpl implements FileFetcher {
   private environment: Maybe.Type<string> = Maybe.none();
 
-  constructor (
+  constructor(
     private readonly apiHelper: ApiHelper,
     environment?: string,
   ) {
@@ -16,24 +16,24 @@ export class FileFetcherImpl implements FileFetcher {
     this.environment = Maybe.some(environment);
   }
 
-  private getEnvironment (): string {
+  private getEnvironment(): string {
     if (Maybe.isSome(this.environment)) return this.environment.value;
     throw new Error("Environment not set");
   }
 
-  setEnvironment (environment: string): void {
+  setEnvironment(environment: string): void {
     this.environment = Maybe.some(environment);
   }
 
-  private sanitizeFileId (fileId): string {
+  private sanitizeFileId(fileId): string {
     return window.encodeURIComponent(fileId);
   }
 
-  private getUrl (fileId: string): string {
+  private getUrl(fileId: string): string {
     return `/api/v1/file/${this.sanitizeFileId(fileId)}`;
   }
 
-  async get (fileId: string): Promise<Either.Type<string, string>> {
+  async get(fileId: string): Promise<Either.Type<string, string>> {
     return this.unpack(
       await this.apiHelper.get<RawResponse>(
         this.getUrl(fileId),
@@ -42,7 +42,7 @@ export class FileFetcherImpl implements FileFetcher {
     );
   }
 
-  private unpack (
+  private unpack(
     either: Either.Type<string, RawResponse>,
   ): Either.Type<string, string> {
     if (Either.isRight(either)) {
@@ -61,7 +61,7 @@ export class FileFetcherImpl implements FileFetcher {
     return either;
   }
 
-  private decodeBase64String (data: string): string {
+  private decodeBase64String(data: string): string {
     try {
       return window.atob(data);
     } catch (_e) {

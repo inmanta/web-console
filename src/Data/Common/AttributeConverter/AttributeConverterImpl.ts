@@ -13,14 +13,14 @@ import {
 } from "./AttributeConverter";
 import { parseNumberWithType } from "./parseNumberWithType";
 
-function isNumberArray (type: string): boolean {
+function isNumberArray(type: string): boolean {
   return (
     ["float", "int"].filter((numberLike) => type.includes(`${numberLike}[]`))
       .length > 0
   );
 }
 
-function isNumberType (type: string): boolean {
+function isNumberType(type: string): boolean {
   return (
     ["float", "int"].filter((numberLike) => type.includes(numberLike)).length >
       0 && !isNumberArray(type)
@@ -31,7 +31,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
   /**
    * Determines what kind of input should be used for a Service Attribute
    */
-  getInputType (attributeModel: AttributeModel): InputType {
+  getInputType(attributeModel: AttributeModel): InputType {
     if (attributeModel.type.includes("bool")) return "bool";
 
     return this.matchTextInputWithPatternflyInput(attributeModel.type);
@@ -40,7 +40,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
   /**
    * Determines the default value for an attribute, taking into account the form input that will be rendered
    */
-  getFormDefaultValue (
+  getFormDefaultValue(
     inputType: InputType,
     defaultValueSet: boolean,
     defaultValue:
@@ -66,7 +66,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
     }
   }
 
-  private matchTextInputWithPatternflyInput (type: string): TextInputTypes {
+  private matchTextInputWithPatternflyInput(type: string): TextInputTypes {
     if (isNumberType(type)) {
       return TextInputTypes.number;
     }
@@ -78,7 +78,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
    * Updates to an instance should be applied (compared) to the candidate attribute set, if it's not empty,
    * and to the active attribute set otherwise
    */
-  getCurrentAttributes (
+  getCurrentAttributes(
     instance: Pick<
       ServiceInstanceModel,
       "candidate_attributes" | "active_attributes"
@@ -97,7 +97,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
    * @param value The value of an attribute
    * @param type The expected inmanta type
    */
-  ensureAttributeType (
+  ensureAttributeType(
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     value: any,
     type: string,
@@ -145,7 +145,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
    * Creates a type-correct object from the attribute list, that can be used for communication with the backend
    * @param attributes The results from a form
    */
-  parseAttributesToCorrectTypes (
+  parseAttributesToCorrectTypes(
     attributes: FormAttributeResult[],
   ): InstanceAttributeModel {
     const attributesTypeCorrect = Object.assign(
@@ -169,7 +169,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
    * @param attributesAfterChanges The attributes with the changes
    * @param originalAttributes The attributes to compare to
    */
-  calculateDiff (
+  calculateDiff(
     attributesAfterChanges: InstanceAttributeModel,
     originalAttributes: InstanceAttributeModel | null,
   ): InstanceAttributeModel {
@@ -200,7 +200,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
   }
 }
 
-export function toOptionalBoolean (
+export function toOptionalBoolean(
   value?: string | null | boolean,
 ): boolean | null {
   if (typeof value === "boolean") {

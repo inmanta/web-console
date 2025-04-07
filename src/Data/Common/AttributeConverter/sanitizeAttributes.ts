@@ -8,7 +8,7 @@ import { AttributeResultConverterImpl } from "./AttributeConverterImpl";
  * @param formState values of each form field
  * @returns the sanitized attribute values
  */
-export function sanitizeAttributes (
+export function sanitizeAttributes(
   fields: Field[],
   formState: InstanceAttributeModel,
 ): InstanceAttributeModel {

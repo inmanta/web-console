@@ -17,7 +17,7 @@ export class InventoryTreeTableHelper extends BaseTreeTableHelper<InventoryAttri
     words("attributesTab.rollback"),
   ];
 
-  constructor (
+  constructor(
     pathHelper: PathHelper,
     expansionManager: TreeExpansionManager,
     attributeHelper: AttributeHelper<InventoryAttributeTree>,
@@ -32,18 +32,18 @@ export class InventoryTreeTableHelper extends BaseTreeTableHelper<InventoryAttri
     );
   }
 
-  public getColumns (): string[] {
+  public getColumns(): string[] {
     return this.columns;
   }
 
-  public getEmptyAttributeSets (): string[] {
+  public getEmptyAttributeSets(): string[] {
     const emptySets = Object.entries(this.attributes)
       .filter(([, value]) => this.isEmpty(value))
       .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1));
 
     return emptySets;
   }
-  private isEmpty (attributeSet: Record<string, unknown>): boolean {
+  private isEmpty(attributeSet: Record<string, unknown>): boolean {
     return !attributeSet || isObjectEmpty(attributeSet);
   }
 }

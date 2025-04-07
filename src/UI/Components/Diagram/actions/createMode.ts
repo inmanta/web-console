@@ -18,7 +18,7 @@ import { connectEntities, createComposerEntity } from "./general";
  * @param {ServiceModel} serviceModel - The service model to use for populating the graph.
  * @returns {void}
  */
-export function populateGraphWithDefault (
+export function populateGraphWithDefault(
   graph: dia.Graph,
   serviceModel: ServiceModel,
 ): void {
@@ -57,7 +57,7 @@ export function populateGraphWithDefault (
  * @param {ServiceModel | EmbeddedEntity} service - The service model or embedded entity used to generate the default entities.
  * @returns {ServiceEntityBlock[]} An array of service entity blocks that have been added to the graph.
  */
-export function addDefaultEntities (
+export function addDefaultEntities(
   graph: dia.Graph,
   service: ServiceModel | EmbeddedEntity,
 ): ServiceEntityBlock[] {

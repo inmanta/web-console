@@ -26,7 +26,7 @@ const axe = configureAxe({
   },
 });
 
-function setup () {
+function setup() {
   const apiHelper = new DeferredApiHelper();
 
   const scheduler = new StaticScheduler();
@@ -51,7 +51,7 @@ function setup () {
   return { component, apiHelper, datePresenter };
 }
 
-test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async () => {
+test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async() => {
   const { component, apiHelper, datePresenter } = setup();
 
   render(component);
@@ -62,7 +62,7 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
     url: "/api/v2/dryrun/123",
     environment: "env",
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Mock.listResponse));
   });
 
@@ -86,7 +86,7 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
     url: `/api/v2/dryrun/123/${Mock.b.id}`,
     environment: "env",
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
@@ -94,25 +94,25 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
 
   expect(blocks).toHaveLength(11);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN ComplianceCheck page When a report is selected from the list THEN the user sees the selected dry run report", async () => {
+test("GIVEN ComplianceCheck page When a report is selected from the list THEN the user sees the selected dry run report", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Mock.listResponse));
   });
   // The first dryrun is selected by default
@@ -123,7 +123,7 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     url: `/api/v2/dryrun/123/${Mock.b.id}`,
     environment: "env",
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
@@ -147,7 +147,7 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     url: `/api/v2/dryrun/123/${Mock.c.id}`,
     environment: "env",
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
   // Verify that it's selected
@@ -167,7 +167,7 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     url: `/api/v2/dryrun/123/${Mock.b.id}`,
     environment: "env",
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
   // Verify that it's selected
@@ -178,23 +178,23 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     "true",
   );
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new dry run is selected", async () => {
+test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new dry run is selected", async() => {
   const { component, apiHelper, datePresenter } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Mock.listResponse));
   });
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
@@ -210,7 +210,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
     url: "/api/v2/dryrun/123",
     environment: "env",
   });
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({}));
   });
 
@@ -221,7 +221,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
     environment: "env",
   });
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({ data: [Mock.a, ...Mock.listOfReports] }),
     );
@@ -247,16 +247,16 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   });
 });
 
-test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
+test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async() => {
   const { apiHelper, component } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Mock.listResponse));
   });
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
@@ -266,7 +266,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" }),
   ).toHaveLength(11);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -292,7 +292,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
 
   await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
 
-  await act(async () => {
+  await act(async() => {
     await userEvent.click(statusOptions[0]);
   });
 
@@ -304,29 +304,29 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
+test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resources matching the search value", async() => {
   const { apiHelper, component } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Mock.listResponse));
   });
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
   await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -358,7 +358,7 @@ test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resour
 
   expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();

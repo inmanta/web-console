@@ -2,7 +2,7 @@ import { identity } from "lodash-es";
 import { ApiHelper, StateHelperWithEnv } from "@/Core";
 import { QueryManager } from "@/Data/Managers/Helpers";
 
-export function GetDesiredStateDiffQueryManager (
+export function GetDesiredStateDiffQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<"GetDesiredStateDiff">,
 ) {

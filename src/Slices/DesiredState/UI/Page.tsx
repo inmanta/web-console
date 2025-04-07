@@ -68,7 +68,7 @@ export const Page: React.FC = () => {
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
   const setDeleteModal = (version: ParsedNumber) => {
-    const onSubmit = async () => {
+    const onSubmit = async() => {
       await deleteVersion.mutate(version.toString());
       refetch();
       closeModal();

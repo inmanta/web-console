@@ -35,7 +35,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
 import { ConfigSectionContent } from "./ConfigSectionContent";
 
-function setup (
+function setup(
   environmentModifier: EnvironmentModifier = new MockEnvironmentModifier(),
 ) {
   const client = new QueryClient();
@@ -114,7 +114,7 @@ describe("ConfigSectionContent", () => {
     server.close();
   });
 
-  test("ConfigTab can reset all settings", async () => {
+  test("ConfigTab can reset all settings", async() => {
     const mockFn = jest.fn().mockImplementation((_url, body) => {
       data = {
         ...data,
@@ -156,7 +156,7 @@ describe("ConfigSectionContent", () => {
     ).toBeVisible();
   });
 
-  test("ConfigTab can change 1 toggle", async () => {
+  test("ConfigTab can change 1 toggle", async() => {
     data = {
       auto_creating: false,
       auto_designed: true,
@@ -194,7 +194,7 @@ describe("ConfigSectionContent", () => {
     );
   });
 
-  test("ConfigTab handles hooks with environment modifier correctly", async () => {
+  test("ConfigTab handles hooks with environment modifier correctly", async() => {
     const environmentModifier = EnvironmentModifierImpl();
 
     environmentModifier.setEnvironment(Service.a.environment);

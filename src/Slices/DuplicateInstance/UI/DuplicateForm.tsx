@@ -67,7 +67,7 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
     },
   });
 
-  const onSubmit = async (
+  const onSubmit = async(
     attributes: InstanceAttributeModel,
     setIsDirty: (values: boolean) => void,
   ) => {

@@ -1,7 +1,7 @@
 import { ApiHelper, Maybe, Updater, UpdaterWithEnv } from "@/Core";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
-export function ResetEnvironmentSettingCommandManager (
+export function ResetEnvironmentSettingCommandManager(
   apiHelper: ApiHelper,
   updater: UpdaterWithEnv<"GetEnvironmentSetting">,
   environmentUpdater: Updater<"GetEnvironmentDetails">,
@@ -9,7 +9,7 @@ export function ResetEnvironmentSettingCommandManager (
   return CommandManagerWithEnv<"ResetEnvironmentSetting">(
     "ResetEnvironmentSetting",
     (command, environment) => {
-      return async (id) => {
+      return async(id) => {
         const error = await apiHelper.delete(
           `/api/v2/environment_settings/${id}`,
           environment,

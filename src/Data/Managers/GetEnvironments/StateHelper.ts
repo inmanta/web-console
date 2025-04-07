@@ -7,8 +7,8 @@ type Data = RemoteData.Type<
   Query.Data<"GetEnvironments">
 >;
 
-export function GetEnvironmentsStateHelper (store: Store) {
-  function getData (
+export function GetEnvironmentsStateHelper(store: Store) {
+  function getData(
     state: State,
     { details }: Query.SubQuery<"GetEnvironments">,
   ): Data {
@@ -17,7 +17,7 @@ export function GetEnvironmentsStateHelper (store: Store) {
       : state.environment.environments;
   }
 
-  function setData (
+  function setData(
     store: Dispatch,
     { details }: Query.SubQuery<"GetEnvironments">,
     data: Data,

@@ -19,7 +19,7 @@ implements TablePresenter<ServiceInstanceModel, Row> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
-  constructor (
+  constructor(
     private serviceIdentity?: string,
     private serviceIdentityDisplayName?: string | null,
   ) {
@@ -45,22 +45,22 @@ implements TablePresenter<ServiceInstanceModel, Row> {
     this.numberOfColumns = this.columnHeads.length + 1;
   }
 
-  public createRows (
+  public createRows(
     instances: ServiceInstanceModelWithTargetStates[],
     service: ServiceModel,
   ): Row[] {
     return instances.map((instance) => this.instanceToRow(instance, service));
   }
 
-  public getColumnHeadDisplayNames (): string[] {
+  public getColumnHeadDisplayNames(): string[] {
     return this.columnHeads.map((columnhead) => columnhead.displayName);
   }
 
-  public getColumnHeads (): ColumnHead[] {
+  public getColumnHeads(): ColumnHead[] {
     return this.columnHeads;
   }
 
-  public getColumnNameForIndex (index: number): string | undefined {
+  public getColumnNameForIndex(index: number): string | undefined {
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
@@ -68,13 +68,13 @@ implements TablePresenter<ServiceInstanceModel, Row> {
     return undefined;
   }
 
-  public getIndexForColumnName (columnName?: string): number {
+  public getIndexForColumnName(columnName?: string): number {
     return this.columnHeads.findIndex(
       (columnHead) => columnHead.apiName === columnName,
     );
   }
 
-  public getSortableColumnNames (): string[] {
+  public getSortableColumnNames(): string[] {
     const sortableColumns = ["state", "created_at", "last_updated"];
 
     if (this.serviceIdentity) {
@@ -84,7 +84,7 @@ implements TablePresenter<ServiceInstanceModel, Row> {
     return sortableColumns;
   }
 
-  public getIdColumnName (): string {
+  public getIdColumnName(): string {
     if (this.serviceIdentityDisplayName && this.serviceIdentity) {
       return this.serviceIdentityDisplayName;
     } else if (this.serviceIdentity) {
@@ -94,7 +94,7 @@ implements TablePresenter<ServiceInstanceModel, Row> {
     }
   }
 
-  public getIdColumnApiName (): string {
+  public getIdColumnApiName(): string {
     if (this.serviceIdentity) {
       return this.serviceIdentity;
     } else {
@@ -102,15 +102,15 @@ implements TablePresenter<ServiceInstanceModel, Row> {
     }
   }
 
-  public shouldUseServiceIdentity (): boolean {
+  public shouldUseServiceIdentity(): boolean {
     return !!this.serviceIdentity;
   }
 
-  public getNumberOfColumns (): number {
+  public getNumberOfColumns(): number {
     return this.numberOfColumns;
   }
 
-  private instanceToRow (
+  private instanceToRow(
     instance: ServiceInstanceModel,
     service: ServiceModel,
   ): Row {

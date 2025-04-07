@@ -5,7 +5,7 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export function EnvironmentDetailsContinuousQueryManager (
+export function EnvironmentDetailsContinuousQueryManager(
   store: Store,
   apiHelper: ApiHelper,
   scheduler: Scheduler,

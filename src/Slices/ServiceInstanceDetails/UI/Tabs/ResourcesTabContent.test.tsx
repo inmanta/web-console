@@ -33,7 +33,7 @@ const setup = (instance: ServiceInstanceModel) => {
 
 //Note: success view is test in the Page.test.tsx file as we cover there logic for redirecting to the proper tab when changing version
 
-it("should render error view correctly", async () => {
+it("should render error view correctly", async() => {
   const server = errorServerInstance;
 
   server.listen();
@@ -48,7 +48,7 @@ it("should render error view correctly", async () => {
   server.close();
 });
 
-it("in case of version conflict, should render loading view correctly", async () => {
+it("in case of version conflict, should render loading view correctly", async() => {
   const server = versionErrorResourceServerInstance;
 
   server.listen();
@@ -60,7 +60,7 @@ it("in case of version conflict, should render loading view correctly", async ()
   server.close();
 });
 
-it("should render information about no resources correctly", async () => {
+it("should render information about no resources correctly", async() => {
   const server = emptyResourcesServer;
 
   server.listen();
@@ -75,7 +75,7 @@ it("should render information about no resources correctly", async () => {
   server.close();
 });
 
-it("should render information about no deployment progress data correctly", async () => {
+it("should render information about no deployment progress data correctly", async() => {
   const server = defaultServer;
 
   server.listen();

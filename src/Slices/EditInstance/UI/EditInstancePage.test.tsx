@@ -47,7 +47,7 @@ const axeLimited = configureAxe({
   },
 });
 
-function setup (entity = "a", multiNested = false) {
+function setup(entity = "a", multiNested = false) {
   const store = getStoreInstance();
 
   const service = multiNested
@@ -114,11 +114,11 @@ describe("EditInstancePage", () => {
     ),
     http.patch(
       "/lsm/v1/service_inventory/service_name_a/service_instance_id_a",
-      async () => {},
+      async() => {},
     ),
     http.patch(
       "/lsm/v2/service_inventory/service_name_d/service_instance_id_a",
-      async () => {},
+      async() => {},
     ),
   );
 
@@ -129,7 +129,7 @@ describe("EditInstancePage", () => {
     server.close();
   });
 
-  test("Edit Instance View shows failed state", async () => {
+  test("Edit Instance View shows failed state", async() => {
     const { component } = setup("b");
 
     render(component);
@@ -142,14 +142,14 @@ describe("EditInstancePage", () => {
       await screen.findByRole("region", { name: "EditInstance-Failed" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("EditInstance View shows success form", async () => {
+  test("EditInstance View shows success form", async() => {
     const { component } = setup();
 
     render(component);
@@ -166,14 +166,14 @@ describe("EditInstancePage", () => {
 
     await userEvent.click(screen.getByText(words("confirm")));
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given the EditInstance View When changing a v1 embedded entity Then the correct request is fired", async () => {
+  test("Given the EditInstance View When changing a v1 embedded entity Then the correct request is fired", async() => {
     const patchMock = jest.fn();
 
     jest.spyOn(queryModule, "usePatch").mockReturnValue(patchMock);
@@ -204,14 +204,14 @@ describe("EditInstancePage", () => {
       { attributes: { bandwidth: "22" } },
     );
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given the EditInstance View When changing a v2 embedded entity Then the correct request  with correct body is fired", async () => {
+  test("Given the EditInstance View When changing a v2 embedded entity Then the correct request  with correct body is fired", async() => {
     const patchMock = jest.fn();
 
     jest.spyOn(queryModule, "usePatch").mockReturnValue(patchMock);
@@ -265,14 +265,14 @@ describe("EditInstancePage", () => {
       body,
     );
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given the EditInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
+  test("Given the EditInstance View When changing an embedded entity Then the inputs are displayed correctly", async() => {
     const { component } = setup("ServiceWithAllAttrs");
 
     render(component);
@@ -531,14 +531,14 @@ describe("EditInstancePage", () => {
       }),
     ).toBeEnabled();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axeLimited(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given the EditInstance View When adding new nested embedded entity Then the inputs for it are displayed correctly", async () => {
+  test("Given the EditInstance View When adding new nested embedded entity Then the inputs for it are displayed correctly", async() => {
     const { component } = setup("ServiceWithAllAttrs");
 
     render(component);
@@ -709,14 +709,14 @@ describe("EditInstancePage", () => {
       }),
     ).toBeEnabled();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axeLimited(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("GIVEN the EditInstance View WHEN changing an embedded entity with nested embedded entities THEN the new fields are enabled", async () => {
+  test("GIVEN the EditInstance View WHEN changing an embedded entity with nested embedded entities THEN the new fields are enabled", async() => {
     const { component } = setup("a", true);
 
     render(component);

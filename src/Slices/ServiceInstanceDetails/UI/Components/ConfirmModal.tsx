@@ -37,7 +37,7 @@ export const ConfirmationModal: React.FC<Props> = ({
   id,
   children,
 }) => {
-  const handleConfirm = async () => {
+  const handleConfirm = async() => {
     await onConfirm();
   };
 

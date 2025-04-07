@@ -14,12 +14,12 @@ import {
 import { DependencyContext } from "@/UI";
 import { ReadOnlyToUsed } from "./types";
 
-export function ReadOnlyWithEnv<Kind extends Query.Kind> (
+export function ReadOnlyWithEnv<Kind extends Query.Kind>(
   stateHelper: StateHelperWithEnv<Kind>,
   kind: Kind,
   toUsed: ReadOnlyToUsed<Kind>,
 ): ReadOnlyQueryManager<Kind> {
-  function useReadOnly (
+  function useReadOnly(
     query: Query.SubQuery<Kind>,
   ): RemoteData.Type<Query.Error<Kind>, Query.UsedData<Kind>> {
     const { environmentHandler } = useContext(DependencyContext);
@@ -31,7 +31,7 @@ export function ReadOnlyWithEnv<Kind extends Query.Kind> (
     );
   }
 
-  function matches (
+  function matches(
     query: Query.SubQuery<Kind>,
     matchingKind: QueryManagerKind,
   ): boolean {

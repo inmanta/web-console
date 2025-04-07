@@ -10,7 +10,7 @@ export class SchedulerImpl implements Scheduler {
   private nextUpdates: Record<string, Task["update"]> = {};
   private ongoing = false;
 
-  constructor (
+  constructor(
     private readonly delay: number,
     private readonly taskWrapper?: (task: Task) => Task,
     tasks?: Dictionary<Task>,
@@ -19,7 +19,7 @@ export class SchedulerImpl implements Scheduler {
       typeof tasks !== "undefined" ? tasks : new DictionaryImpl<Task>();
   }
 
-  pauseTasks (): void {
+  pauseTasks(): void {
     const tasksToPause = this.tasks.toObject();
 
     Object.keys(tasksToPause).forEach((key) => {
@@ -31,7 +31,7 @@ export class SchedulerImpl implements Scheduler {
     this.revalidateTicker();
   }
 
-  resumeTasks (): void {
+  resumeTasks(): void {
     const tasksToResume = this.pausedTasks.toObject();
 
     Object.keys(tasksToResume).forEach((key) => {
@@ -41,14 +41,14 @@ export class SchedulerImpl implements Scheduler {
     this.revalidateTicker();
   }
 
-  unregister (id: string): void {
+  unregister(id: string): void {
     this.tasks.drop(id);
     this.nextEffects = omit(this.nextEffects, [id]);
     this.nextUpdates = omit(this.nextUpdates, [id]);
     this.revalidateTicker();
   }
 
-  register (id: string, task: Task): void {
+  register(id: string, task: Task): void {
     const setCompleted = this.tasks.set(id, this.wrapTask(task));
 
     if (!setCompleted) {
@@ -57,13 +57,13 @@ export class SchedulerImpl implements Scheduler {
     this.revalidateTicker();
   }
 
-  private wrapTask (task: Task): Task {
+  private wrapTask(task: Task): Task {
     if (!this.taskWrapper) return task;
 
     return this.taskWrapper(task);
   }
 
-  private async execute (): Promise<void> {
+  private async execute(): Promise<void> {
     if (this.tasks.isEmpty()) {
       this.ongoing = false;
 
@@ -89,7 +89,7 @@ export class SchedulerImpl implements Scheduler {
     }, this.delay);
   }
 
-  private revalidateTicker (): void {
+  private revalidateTicker(): void {
     if (this.tasks.isEmpty()) return;
     if (this.ongoing) return;
 

@@ -59,7 +59,7 @@ export class StencilSidebar {
    * @param {Inventories} serviceInventories - The service inventories used to create the inventory stencil tab.
    * @param {ServiceModel} service - The service model used to create the instance stencil tab.
    */
-  constructor (
+  constructor(
     stencilElement: HTMLElement,
     scroller: ui.PaperScroller,
     serviceInventories: Inventories,
@@ -121,7 +121,7 @@ export class StencilSidebar {
     this.tabsToolbar.render();
   }
 
-  remove (): void {
+  remove(): void {
     this.instanceTab.stencil.remove();
     this.inventoryTab.stencil.remove();
     this.tabsToolbar.remove();

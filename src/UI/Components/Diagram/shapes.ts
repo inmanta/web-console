@@ -18,7 +18,7 @@ import { ColumnData, EntityType, HeaderColor } from "./interfaces";
  * actions that are in ServiceEntity returns updated state of the object, we follow convention introduced by JointJS team in their demos
  */
 export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
-  defaults () {
+  defaults() {
     return util.defaultsDeep(
       {
         type: "app.ServiceEntityBlock",
@@ -82,7 +82,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     );
   }
 
-  protected _setColumns (data: Array<ColumnData> = [], initialSetting = true) {
+  protected _setColumns(data: Array<ColumnData> = [], initialSetting = true) {
     const names: Array<{
       id: string;
       label: string;
@@ -188,7 +188,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     return this;
   }
 
-  preinitialize (): void {
+  preinitialize(): void {
     this.markup = [
       {
         tagName: "rect",
@@ -223,12 +223,12 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   }
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  initialize (...args: any[]) {
+  initialize(...args: any[]) {
     super.initialize(...args);
     this._setColumns(this.get("columns"));
   }
 
-  onColumnsChange () {
+  onColumnsChange() {
     if (this.hasChanged("columns")) {
       this._setColumns(this.get("columns"));
     }
@@ -241,7 +241,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @param {object} [options] - Optional settings for the attribute update.
    * @returns {this} The current instance for method chaining.
    */
-  setName (name: string, displayText: string | null, options?: object): this {
+  setName(name: string, displayText: string | null, options?: object): this {
     const usedName = displayText || name; // displayText is used to display the name of the embedded entity, this value is nullable, that's why we fallback it to name
     const shortenName = util.breakText(
       usedName,
@@ -274,7 +274,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    *
    * @returns {Map<dia.Cell.ID, string> | null} - Map of relations
    */
-  getRelations (): Map<dia.Cell.ID, string> | null {
+  getRelations(): Map<dia.Cell.ID, string> | null {
     const relations = this.get("relatedTo");
 
     return relations || null;
@@ -286,7 +286,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @param {dia.Cell.ID} id - The identifier of the relation.
    * @param {string} relationName - The name of the relation.
    */
-  addRelation (id: dia.Cell.ID, relationName: string): void {
+  addRelation(id: dia.Cell.ID, relationName: string): void {
     const currentRelation = this.getRelations();
 
     if (currentRelation) {
@@ -304,7 +304,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @param {string} id - The identifier of the relation to remove.
    * @returns {boolean} True if the relation was removed, false otherwise.
    */
-  removeRelation (id: string): boolean {
+  removeRelation(id: string): boolean {
     const currentRelation = this.getRelations();
     let wasThereRelationToRemove = false;
 
@@ -321,7 +321,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    *
    * @returns {string} The name of the entity.
    */
-  getName (): string {
+  getName(): string {
     return this.get("entityName");
   }
 
@@ -331,7 +331,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @param {EntityType} type - The type of the entity.
    * @returns {this} updated entity block - this.attr(x, y) returns updated object - or the current entity block as default scenario
    */
-  setTabColor (type: EntityType): this {
+  setTabColor(type: EntityType): this {
     switch (type) {
       case EntityType.CORE:
         return this.attr(["header", "fill"], HeaderColor.CORE);
@@ -351,7 +351,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @param {boolean} [initializeButton=true] - Flag indicating whether to initialize a button to expand/collapse.
    * @returns {this} The updated entity block.
    */
-  appendColumns (data: Array<ColumnData>, initializeButton = true): this {
+  appendColumns(data: Array<ColumnData>, initializeButton = true): this {
     this._setColumns(data, initializeButton);
 
     if (initializeButton && this.get("isCollapsed")) {
@@ -368,7 +368,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @param {boolean} [shouldBeCollapsed=true] - Flag indicating whether the entity should be collapsed.
    * @returns {this} The updated entity block.
    */
-  updateColumns (data: Array<ColumnData>, shouldBeCollapsed = true): this {
+  updateColumns(data: Array<ColumnData>, shouldBeCollapsed = true): this {
     this._setColumns(data, shouldBeCollapsed);
 
     return this;
@@ -382,7 +382,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    *
    * @returns {void}
    */
-  appendButton (): void {
+  appendButton(): void {
     this.set("padding", {
       bottom: 44,
       left: 10,
@@ -428,7 +428,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    *
    * @returns {dia.Cell.JSON<any, dia.Element.Attributes>} The JSON representation of the entity.
    */
-  toJSON (): dia.Cell.JSON<any, dia.Element.Attributes> {
+  toJSON(): dia.Cell.JSON<any, dia.Element.Attributes> {
     const json = super.toJSON();
 
     // keeping only the `items` attribute as columns are omitted in our use-case
@@ -472,7 +472,7 @@ export const Link = shapes.standard.Link.define(
     // static
     attributes: {
       "auto-orient": {
-        qualify: function () {
+        qualify: function() {
           return (this as any).model.isLink();
         },
         set: updateLabelPosition,
@@ -482,7 +482,7 @@ export const Link = shapes.standard.Link.define(
 );
 
 const LinkView = dia.LinkView.extend({
-  update (...theArgs) {
+  update(...theArgs) {
     dia.LinkView.prototype.update.apply(this, theArgs as []);
     this.updateLabels();
   },

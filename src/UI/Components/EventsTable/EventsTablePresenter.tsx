@@ -13,17 +13,17 @@ implements TablePresenter<InstanceEvent, EventRow> {
   ];
   readonly numberOfColumns = this.columnHeads.length + 1;
 
-  public getColumnHeadDisplayNames (): string[] {
+  public getColumnHeadDisplayNames(): string[] {
     return this.columnHeads;
   }
 
-  public getNumberOfColumns (): number {
+  public getNumberOfColumns(): number {
     return this.numberOfColumns;
   }
-  public createRows (events: InstanceEvent[]): EventRow[] {
+  public createRows(events: InstanceEvent[]): EventRow[] {
     return events.map((instance) => this.instanceToRow(instance));
   }
-  private instanceToRow (event: InstanceEvent): EventRow {
+  private instanceToRow(event: InstanceEvent): EventRow {
     const {
       id,
       service_instance_id,

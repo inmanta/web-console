@@ -5,7 +5,7 @@ import { Store } from "@/Data/Store";
 import { GetDesiredStateResourceDetailsStateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export function GetDesiredStateResourceDetailsQueryManager (
+export function GetDesiredStateResourceDetailsQueryManager(
   apiHelper: ApiHelper,
   store: Store,
   scheduler: Scheduler,

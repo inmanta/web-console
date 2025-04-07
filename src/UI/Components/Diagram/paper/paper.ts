@@ -33,7 +33,7 @@ export class ComposerPaper {
    * @param {dia.Graph} graph - The JointJS graph.
    * @param {boolean} editable - Indicates if the paper is editable.
    */
-  constructor (
+  constructor(
     connectionRules: ConnectionRules,
     graph: dia.Graph,
     editable: boolean,

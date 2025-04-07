@@ -14,12 +14,12 @@ implements TablePresenter<CompileStageReport, CompileStageReportRow> {
     words("compileDetails.stages.columns.duration"),
   ];
 
-  constructor (
+  constructor(
     private readonly datePresenter: DatePresenter,
     private readonly compileStarted?: string | null,
   ) {}
 
-  createRows (sourceData: CompileStageReport[]): CompileStageReportRow[] {
+  createRows(sourceData: CompileStageReport[]): CompileStageReportRow[] {
     return sourceData.map((report) => {
       return {
         name: report.name,
@@ -42,10 +42,10 @@ implements TablePresenter<CompileStageReport, CompileStageReportRow> {
       };
     });
   }
-  getColumnHeadDisplayNames (): string[] {
+  getColumnHeadDisplayNames(): string[] {
     return this.columnHeads;
   }
-  getNumberOfColumns (): number {
+  getNumberOfColumns(): number {
     return this.columnHeads.length + 1;
   }
 }

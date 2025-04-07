@@ -2,7 +2,7 @@ import { RemoteData } from "@/Core";
 import { PrimaryStateHelper } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export function EventsStateHelper (store: Store) {
+export function EventsStateHelper(store: Store) {
   return PrimaryStateHelper<"GetInstanceEvents">(
     store,
     (data, { id }) => {

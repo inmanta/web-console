@@ -32,7 +32,7 @@ test("SummaryChart renders with no instances", () => {
   ).toBeVisible();
 });
 
-test("SummaryChart displays only labels summary of the categories that can exist", async () => {
+test("SummaryChart displays only labels summary of the categories that can exist", async() => {
   const testFn = jest.fn();
 
   render(
@@ -60,7 +60,7 @@ test("SummaryChart displays only labels summary of the categories that can exist
   expect(screen.queryByText("warning: 0")).toBeVisible();
 });
 
-test("SummaryChart labels displayed are being clickable with callback passing labels array for the filtering", async () => {
+test("SummaryChart labels displayed are being clickable with callback passing labels array for the filtering", async() => {
   const testFn = jest.fn();
 
   render(

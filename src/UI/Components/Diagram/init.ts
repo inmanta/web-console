@@ -36,7 +36,7 @@ import { toggleDisabledStencil } from "./stencil/helpers";
  *
  * @returns {DiagramHandlers} An object containing handlers for various diagram actions.
  */
-export function diagramInit (
+export function diagramInit(
   canvasRef: RefObject<HTMLDivElement>,
   setScroller,
   connectionRules: ConnectionRules,
@@ -60,7 +60,7 @@ export function diagramInit (
     baseHeight: 1000,
     inertia: { friction: 0.8 },
     autoResizePaper: true,
-    contentOptions: function () {
+    contentOptions: function() {
       return {
         useModelGeometry: true,
         allowNewOrigin: "any",
@@ -73,7 +73,7 @@ export function diagramInit (
   setScroller(scroller);
 
   //trigger highlighter when user drag element from stencil
-  graph.on("add", function (cell) {
+  graph.on("add", function(cell) {
     //if it's a link, we don't want to assert any highlighting, if the canvas is not editable then there shouldn't be any highlighting in the first place as there are no loose elements by default and no way to add them
     if (cell.get("type") === "Link" || !editable) {
       return;

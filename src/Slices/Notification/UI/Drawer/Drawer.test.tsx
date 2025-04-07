@@ -26,7 +26,7 @@ const axe = configureAxe({
   },
 });
 
-function setup () {
+function setup() {
   const client = new QueryClient({
     defaultOptions: {
       queries: {
@@ -79,7 +79,7 @@ const server = setupServer(
     return HttpResponse.json({ data: response, links, metadata });
   }),
 
-  http.patch("/api/v2/notification/:id", async ({ params, request }) => {
+  http.patch("/api/v2/notification/:id", async({ params, request }) => {
     const id = params.id;
 
     const item = response.find((item) => item.id === id);
@@ -110,7 +110,7 @@ describe("Drawer", () => {
     server.close();
   });
 
-  test("Given Drawer Then a list of notifications are shown", async () => {
+  test("Given Drawer Then a list of notifications are shown", async() => {
     const { component } = setup();
 
     render(component);
@@ -123,14 +123,14 @@ describe("Drawer", () => {
       await screen.findAllByRole("listitem", { name: "NotificationItem" }),
     ).toHaveLength(4);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given Drawer When clicking on 'Clear all' Then all notifications are cleared", async () => {
+  test("Given Drawer When clicking on 'Clear all' Then all notifications are cleared", async() => {
     const { component } = setup();
 
     render(component);
@@ -147,14 +147,14 @@ describe("Drawer", () => {
       ).toStrictEqual([]);
     });
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given Drawer When user clicks on 'Read all' Then all notifications are read", async () => {
+  test("Given Drawer When user clicks on 'Read all' Then all notifications are read", async() => {
     const { component } = setup();
 
     render(component);
@@ -175,18 +175,18 @@ describe("Drawer", () => {
       await screen.findAllByRole("listitem", { name: "NotificationItem" }),
     ).toHaveLength(4);
 
-    notifications.forEach(async (notification) => {
+    notifications.forEach(async(notification) => {
       expect(notification).toHaveTextContent("read");
     });
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given Drawer When user clicks a notification Then it becomes read", async () => {
+  test("Given Drawer When user clicks a notification Then it becomes read", async() => {
     const { component } = setup();
 
     render(component);
@@ -207,19 +207,19 @@ describe("Drawer", () => {
 
     expect(updatedItems[0]).toHaveTextContent("read");
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given Drawer When user clicks a notification with an uri then go to the uri", async () => {
+  test("Given Drawer When user clicks a notification with an uri then go to the uri", async() => {
     const { component, history } = setup();
 
     render(component);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -234,7 +234,7 @@ describe("Drawer", () => {
     );
   });
 
-  test("Given Drawer When user clicks a notification without an uri then nothing happens", async () => {
+  test("Given Drawer When user clicks a notification without an uri then nothing happens", async() => {
     const { component, history } = setup();
 
     render(component);
@@ -243,7 +243,7 @@ describe("Drawer", () => {
       name: "NotificationItem",
     });
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -254,7 +254,7 @@ describe("Drawer", () => {
     expect(history.location.pathname).toBe("/");
   });
 
-  test("Given Drawer When user clicks a notification toggle with an uri then do not go to uri", async () => {
+  test("Given Drawer When user clicks a notification toggle with an uri then do not go to uri", async() => {
     const { component, history } = setup();
 
     render(component);
@@ -263,7 +263,7 @@ describe("Drawer", () => {
       name: "NotificationListActions",
     });
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -274,7 +274,7 @@ describe("Drawer", () => {
     expect(history.location.pathname).toBe("/");
   });
 
-  test("Given Drawer When user clicks on 'unread' for 1 notification Then it becomes unread", async () => {
+  test("Given Drawer When user clicks on 'unread' for 1 notification Then it becomes unread", async() => {
     const { component } = setup();
 
     render(component);
@@ -299,14 +299,14 @@ describe("Drawer", () => {
 
     expect(updatedItems[2]).toHaveTextContent("unread");
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cleared", async () => {
+  test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cleared", async() => {
     const { component } = setup();
 
     render(component);
@@ -329,7 +329,7 @@ describe("Drawer", () => {
       await screen.findAllByRole("listitem", { name: "NotificationItem" }),
     ).toHaveLength(3);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();

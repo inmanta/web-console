@@ -1,7 +1,7 @@
 import qs from "qs";
 import { GetNotificationsParams } from "./useGetNotifications";
 
-export function getUrl ({
+export function getUrl({
   filter,
   pageSize,
   currentPage,

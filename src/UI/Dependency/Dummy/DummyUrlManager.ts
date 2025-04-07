@@ -1,19 +1,19 @@
 import { UrlManager } from "@/Core";
 
 export class DummyUrlManager implements UrlManager {
-  getApiUrl (): string {
+  getApiUrl(): string {
     throw new Error("Method not implemented.");
   }
-  getDocumentationLink (): string {
+  getDocumentationLink(): string {
     throw new Error("Method not implemented.");
   }
-  getLSMAPILink (): string {
+  getLSMAPILink(): string {
     throw new Error("Method not implemented.");
   }
-  getGeneralAPILink (): string {
+  getGeneralAPILink(): string {
     throw new Error("Method not implemented.");
   }
-  setEnvironment (): void {
+  setEnvironment(): void {
     throw new Error("Method not implemented.");
   }
 }

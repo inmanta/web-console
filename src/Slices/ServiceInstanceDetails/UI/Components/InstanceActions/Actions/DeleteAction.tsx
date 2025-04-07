@@ -68,7 +68,7 @@ export const DeleteAction: React.FC<Props> = ({
   /**
    * async method sending out the request to delete the instance
    */
-  const onSubmitDelete = async (): Promise<void> => {
+  const onSubmitDelete = async(): Promise<void> => {
     mutate();
   };
 

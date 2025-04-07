@@ -45,7 +45,7 @@ test.each`
   ${"?state.Inventory.filter.success=true&state.Inventory.filter.details=true"} | ${"success=true&details=true"} | ${{ success: true, details: true }}   | ${"success=true&details=true"}
 `(
   "GIVEN handleUrlState with Filter WHEN search is $searchText THEN returns $valueText",
-  async ({ search, expectedValue }) => {
+  async({ search, expectedValue }) => {
     const [value] = handleUrlStateWithFilter(
       {
         route: "Inventory",
@@ -64,7 +64,7 @@ test.each`
   },
 );
 
-test("GIVEN handleUrlState with Filter WHEN search is empty THEN returns default value", async () => {
+test("GIVEN handleUrlState with Filter WHEN search is empty THEN returns default value", async() => {
   const [value] = handleUrlStateWithFilter(
     {
       route: "Inventory",

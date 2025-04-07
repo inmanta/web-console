@@ -48,7 +48,7 @@ interface Leaf {
   type?: string;
 }
 
-export function isRowOfMultipleValues (row: Flat | Leaf): boolean {
+export function isRowOfMultipleValues(row: Flat | Leaf): boolean {
   const values = row.valueCells.map(({ value }) => value);
   const nonEmptyValues = values.filter((value) => value.length > 0);
 

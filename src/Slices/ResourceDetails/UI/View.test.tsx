@@ -25,7 +25,7 @@ import { View } from "./View";
 
 expect.extend(toHaveNoViolations);
 
-function setup () {
+function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
@@ -59,7 +59,7 @@ function setup () {
   return { component, scheduler, apiHelper };
 }
 
-test("GIVEN The Resource details view THEN details data is fetched immediately", async () => {
+test("GIVEN The Resource details view THEN details data is fetched immediately", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -69,7 +69,7 @@ test("GIVEN The Resource details view THEN details data is fetched immediately",
     `/api/v2/resource/${Resource.encodedId}`,
   );
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
@@ -77,19 +77,19 @@ test("GIVEN The Resource details view THEN details data is fetched immediately",
     await screen.findByText(ResourceDetails.a.attributes.path),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN The Resource details view WHEN the user clicks on the requires tab THEN the requires table is shown", async () => {
+test("GIVEN The Resource details view WHEN the user clicks on the requires tab THEN the requires table is shown", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
@@ -106,24 +106,24 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
     await screen.findByRole("grid", { name: "ResourceRequires-Success" }),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN The Resource details view THEN shows status label", async () => {
+test("GIVEN The Resource details view THEN shows status label", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
   expect(screen.getByTestId("Status-deployed")).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();

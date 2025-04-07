@@ -1,19 +1,19 @@
 import { EnvironmentHandler, FlatEnvironment } from "@/Core";
 
-export function DummyEnvironmentHandler (): EnvironmentHandler {
-  function useId (): string {
+export function DummyEnvironmentHandler(): EnvironmentHandler {
+  function useId(): string {
     throw new Error("Method not implemented.");
   }
 
-  function set (): void {
+  function set(): void {
     throw new Error("Method not implemented.");
   }
 
-  function useSelected (): FlatEnvironment {
+  function useSelected(): FlatEnvironment {
     throw new Error("Method not implemented.");
   }
 
-  function determineSelected (): FlatEnvironment | undefined {
+  function determineSelected(): FlatEnvironment | undefined {
     throw new Error("Method not implemented.");
   }
 

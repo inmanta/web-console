@@ -73,19 +73,19 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
   );
 };
 
-function indexToColumnName (index: number): string {
+function indexToColumnName(index: number): string {
   const columns = factsColumnHeads.map((head) => head.apiName);
 
   return columns[index];
 }
 
-function columnNameToIndex (columnName: string): number {
+function columnNameToIndex(columnName: string): number {
   const columns = factsColumnHeads.map((head) => head.apiName);
 
   return columns.indexOf(columnName);
 }
 
-export function sortFactRows (
+export function sortFactRows(
   rows: FactRow[],
   columnName: string,
   direction: Order,
@@ -114,7 +114,7 @@ export function sortFactRows (
   });
 }
 
-function coalesceDateToMin (date?: string) {
+function coalesceDateToMin(date?: string) {
   const definedDate = date ? date : 0;
 
   return new Date(definedDate).getTime();

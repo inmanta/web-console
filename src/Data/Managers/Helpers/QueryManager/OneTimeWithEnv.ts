@@ -19,7 +19,7 @@ import { Data, GetDependenciesWithEnv, GetUrlWithEnv, ToUsed } from "./types";
 import { usePrevious } from "./usePrevious";
 import { urlEncodeParams } from "./utils";
 
-export function OneTimeWithEnv<Kind extends Query.Kind> (
+export function OneTimeWithEnv<Kind extends Query.Kind>(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<Kind>,
   getDependencies: GetDependenciesWithEnv<Kind>,
@@ -28,7 +28,7 @@ export function OneTimeWithEnv<Kind extends Query.Kind> (
   toUsed: ToUsed<Kind>,
   strategy: "MERGE" | "RELOAD" = "RELOAD",
 ): OneTimeQueryManager<Kind> {
-  async function update (
+  async function update(
     query: Query.SubQuery<Kind>,
     url: string,
     environment: string,
@@ -40,7 +40,7 @@ export function OneTimeWithEnv<Kind extends Query.Kind> (
     );
   }
 
-  function useOneTime (query: Query.SubQuery<Kind>): Data<Kind> {
+  function useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
     const [url, setUrl] = useState(getUrl(urlEncodeParams(query), environment));
@@ -79,7 +79,7 @@ export function OneTimeWithEnv<Kind extends Query.Kind> (
     ];
   }
 
-  function matches (
+  function matches(
     query: Query.SubQuery<Kind>,
     matchingKind: QueryManagerKind,
   ): boolean {

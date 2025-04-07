@@ -7,7 +7,7 @@ import {
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export function GetVersionResourcesQueryManager (
+export function GetVersionResourcesQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<"GetVersionResources">,
   scheduler: Scheduler,

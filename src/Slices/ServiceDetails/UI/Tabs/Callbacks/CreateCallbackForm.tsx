@@ -50,7 +50,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
       eventTypes.length <= 0 ? undefined : (eventTypes as EventType[]),
   });
 
-  const onCreate = async () => {
+  const onCreate = async() => {
     setError(null);
     const error = await create();
 

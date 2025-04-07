@@ -34,7 +34,7 @@ import { EnvironmentControls } from "./EnvironmentControls";
 
 expect.extend(toHaveNoViolations);
 
-function setup () {
+function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
@@ -94,24 +94,24 @@ function setup () {
   };
 }
 
-test("GIVEN EnvironmentControls WHEN rendered THEN it should be accessible", async () => {
+test("GIVEN EnvironmentControls WHEN rendered THEN it should be accessible", async() => {
   const { component, apiHelper } = setup();
   const { container } = render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
   });
 
   expect(await axe(container)).toHaveNoViolations();
 });
 
-test("EnvironmentControls halt the environment when clicked and the environment is running", async () => {
+test("EnvironmentControls halt the environment when clicked and the environment is running", async() => {
   const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
 
   const { component, apiHelper } = setup();
 
   render(component);
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
   });
   const stopButton = await screen.findByText("STOP");
@@ -133,12 +133,12 @@ test("EnvironmentControls halt the environment when clicked and the environment 
   expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
 });
 
-test("EnvironmentControls don\\t trigger backend call when dialog is not confirmed", async () => {
+test("EnvironmentControls don\\t trigger backend call when dialog is not confirmed", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
   });
 
@@ -153,14 +153,14 @@ test("EnvironmentControls don\\t trigger backend call when dialog is not confirm
   expect(fetchMock.mock.calls).toHaveLength(0);
 });
 
-test("EnvironmentControls resume the environment when clicked and the environment is halted", async () => {
+test("EnvironmentControls resume the environment when clicked and the environment is halted", async() => {
   const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
 
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({ data: { ...EnvironmentDetails.a, halted: true } }),
     );

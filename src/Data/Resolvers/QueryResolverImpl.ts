@@ -14,9 +14,9 @@ type Data<K extends Query.Kind> = RemoteData.Type<
 >;
 
 export class QueryResolverImpl implements QueryResolver {
-  constructor (public readonly managerResolver: QueryManagerResolver) {}
+  constructor(public readonly managerResolver: QueryManagerResolver) {}
 
-  private getOneTimeQueryManager (
+  private getOneTimeQueryManager(
     query: Query.Type,
   ): OneTimeQueryManager<typeof query.kind> {
     const manager = this.managerResolver
@@ -29,21 +29,21 @@ export class QueryResolverImpl implements QueryResolver {
     throw new Error(`Can't find OneTimeQueryManager for query ${query.kind}`);
   }
 
-  pauseAllContinuousManagers (): void {
+  pauseAllContinuousManagers(): void {
     this.managerResolver.pauseContinuous();
   }
 
-  resumeAllContinuousManagers (): void {
+  resumeAllContinuousManagers(): void {
     this.managerResolver.resumeContinuous();
   }
 
-  useOneTime (query: Query.Type): [Data<typeof query.kind>, () => void] {
+  useOneTime(query: Query.Type): [Data<typeof query.kind>, () => void] {
     const helper = this.getOneTimeQueryManager(query);
 
     return helper.useOneTime(query);
   }
 
-  private getContinuousQueryManager (
+  private getContinuousQueryManager(
     query: Query.Type,
   ): ContinuousQueryManager<typeof query.kind> {
     const manager = this.managerResolver
@@ -58,13 +58,13 @@ export class QueryResolverImpl implements QueryResolver {
     );
   }
 
-  useContinuous (query: Query.Type): [Data<typeof query.kind>, () => void] {
+  useContinuous(query: Query.Type): [Data<typeof query.kind>, () => void] {
     const helper = this.getContinuousQueryManager(query);
 
     return helper.useContinuous(query);
   }
 
-  private getReadOnlyQueryManager (
+  private getReadOnlyQueryManager(
     query: Query.Type,
   ): ReadOnlyQueryManager<typeof query.kind> {
     const manager = this.managerResolver
@@ -77,7 +77,7 @@ export class QueryResolverImpl implements QueryResolver {
     throw new Error(`Can't find ReadOnlyQueryManager for query ${query.kind}`);
   }
 
-  useReadOnly (query: Query.Type): Data<typeof query.kind> {
+  useReadOnly(query: Query.Type): Data<typeof query.kind> {
     const helper = this.getReadOnlyQueryManager(query);
 
     return helper.useReadOnly(query);

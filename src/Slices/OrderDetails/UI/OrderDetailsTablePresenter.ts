@@ -14,7 +14,7 @@ implements TablePresenter<ServiceOrderItem, ServiceOrderItem> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
-  constructor () {
+  constructor() {
     this.columnHeads = [
       {
         displayName: words("orders.column.instanceId"),
@@ -43,7 +43,7 @@ implements TablePresenter<ServiceOrderItem, ServiceOrderItem> {
    * @param sourceData ServiceOrderItem[]
    * @returns ServiceOrderItem[]
    */
-  createRows (sourceData: ServiceOrderItem[]): ServiceOrderItem[] {
+  createRows(sourceData: ServiceOrderItem[]): ServiceOrderItem[] {
     return sourceData;
   }
 
@@ -53,7 +53,7 @@ implements TablePresenter<ServiceOrderItem, ServiceOrderItem> {
    *
    * @returns string[]
    */
-  getColumnHeadDisplayNames (): string[] {
+  getColumnHeadDisplayNames(): string[] {
     return this.columnHeads.map(({ displayName }) => displayName);
   }
 
@@ -63,7 +63,7 @@ implements TablePresenter<ServiceOrderItem, ServiceOrderItem> {
    *
    * @returns string[]
    */
-  getSortableColumnNames (): string[] {
+  getSortableColumnNames(): string[] {
     const sortableColumns = [];
 
     return sortableColumns;
@@ -75,7 +75,7 @@ implements TablePresenter<ServiceOrderItem, ServiceOrderItem> {
    *
    * @returns ColumnHead[]
    */
-  getColumnHeads (): ColumnHead[] {
+  getColumnHeads(): ColumnHead[] {
     return this.columnHeads;
   }
 
@@ -85,7 +85,7 @@ implements TablePresenter<ServiceOrderItem, ServiceOrderItem> {
    *
    * @returns number
    */
-  getNumberOfColumns (): number {
+  getNumberOfColumns(): number {
     return this.numberOfColumns;
   }
 
@@ -96,7 +96,7 @@ implements TablePresenter<ServiceOrderItem, ServiceOrderItem> {
    * @param index number
    * @returns string | undefined
    */
-  getColumnNameForIndex (index: number): string | undefined {
+  getColumnNameForIndex(index: number): string | undefined {
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
@@ -111,7 +111,7 @@ implements TablePresenter<ServiceOrderItem, ServiceOrderItem> {
    * @param columnName string
    * @returns number
    */
-  getIndexForColumnName (columnName?: string): number {
+  getIndexForColumnName(columnName?: string): number {
     return this.columnHeads.findIndex(
       (columnHead) => columnHead.apiName === columnName,
     );

@@ -78,11 +78,11 @@ const StyledPopoverBody = styled.div`
   white-space: pre-wrap;
 `;
 
-function formatValue (value: string): string {
+function formatValue(value: string): string {
   return isJson(value) ? JSON.stringify(JSON.parse(value), null, 2) : value;
 }
 
-function isJson (value: string): boolean {
+function isJson(value: string): boolean {
   try {
     JSON.parse(value);
   } catch (_e) {
@@ -92,17 +92,17 @@ function isJson (value: string): boolean {
   return true;
 }
 
-function shouldRenderLink (value: string, hasRelation?: boolean): boolean {
+function shouldRenderLink(value: string, hasRelation?: boolean): boolean {
   return !!(hasRelation && value.length > 0 && value !== "{}");
 }
 
-function splitValue (value: string): string[] {
+function splitValue(value: string): string[] {
   const parts = value.split(",").map((val) => val.trim());
 
   return parts;
 }
 
-function isValueOfMultipleIds (value: string): boolean {
+function isValueOfMultipleIds(value: string): boolean {
   return splitValue(value).length > 0;
 }
 

@@ -14,7 +14,7 @@ export class CatalogTreeTableHelper extends BaseTreeTableHelper<CatalogAttribute
     words("catalog.table.description"),
   ];
 
-  constructor (
+  constructor(
     pathHelper: PathHelper,
     expansionManager: TreeExpansionManager,
     attributeHelper: AttributeHelper<CatalogAttributeTree>,
@@ -29,7 +29,7 @@ export class CatalogTreeTableHelper extends BaseTreeTableHelper<CatalogAttribute
     );
   }
 
-  public getColumns (): string[] {
+  public getColumns(): string[] {
     return this.columns;
   }
 }

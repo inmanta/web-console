@@ -2,7 +2,7 @@ import { Either } from "@/Core";
 import { DeferredApiHelper } from "@/Test";
 import { FileFetcherImpl } from "./FileFetcherImpl";
 
-test("GIVEN FileFetcher WHEN executing get THEN the result is correctly returned", async () => {
+test("GIVEN FileFetcher WHEN executing get THEN the result is correctly returned", async() => {
   const apiHelper = new DeferredApiHelper();
   const fileFetcher = new FileFetcherImpl(apiHelper, "env");
   const fetchResult = fileFetcher.get("id1");

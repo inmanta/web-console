@@ -34,11 +34,11 @@ export class DeferredApiHelper implements ApiHelper {
   private readonly _pendingRequests: PendingRequest[] = [];
   readonly resolvedRequests: ResolvedRequest[] = [];
 
-  get pendingRequests (): Request[] {
+  get pendingRequests(): Request[] {
     return this._pendingRequests.map((p) => p.request);
   }
 
-  private resolvePendingRequest (
+  private resolvePendingRequest(
     { resolve, promise, request }: PendingRequest,
     data: unknown,
   ): Promise<unknown> {
@@ -51,7 +51,7 @@ export class DeferredApiHelper implements ApiHelper {
   /**
    * Resolves the first pending request
    */
-  resolve (data: unknown): Promise<unknown> {
+  resolve(data: unknown): Promise<unknown> {
     const pendingRequest = this._pendingRequests.shift();
 
     if (typeof pendingRequest === "undefined") {
@@ -61,7 +61,7 @@ export class DeferredApiHelper implements ApiHelper {
     return this.resolvePendingRequest(pendingRequest, data);
   }
 
-  private extractPendingRequest (request: Request): PendingRequest | undefined {
+  private extractPendingRequest(request: Request): PendingRequest | undefined {
     return remove(this._pendingRequests, (req) =>
       isEqual(req.request, request),
     )[0];
@@ -70,7 +70,7 @@ export class DeferredApiHelper implements ApiHelper {
   /**
    * Resolves the first pending request that matches the subject
    */
-  resolveRequest (subject: Request, data: unknown): Promise<unknown> {
+  resolveRequest(subject: Request, data: unknown): Promise<unknown> {
     const pendingRequest = this.extractPendingRequest(subject);
 
     if (typeof pendingRequest === "undefined") {
@@ -83,18 +83,18 @@ export class DeferredApiHelper implements ApiHelper {
   /**
    * Removes first pending request
    */
-  ignore (): void {
+  ignore(): void {
     this._pendingRequests.shift();
   }
 
   /**
    * Removes first pending request that matches the subject
    */
-  ignoreRequest (subject: Request): void {
+  ignoreRequest(subject: Request): void {
     this.extractPendingRequest(subject);
   }
 
-  delete (url: string, environment: string): Promise<Maybe.Type<string>> {
+  delete(url: string, environment: string): Promise<Maybe.Type<string>> {
     const { promise, resolve } = new Deferred();
 
     this._pendingRequests.push({
@@ -240,7 +240,7 @@ export class DeferredApiHelper implements ApiHelper {
     return promise as Promise<Maybe.Type<string>>;
   }
 
-  head (url: string): Promise<number> {
+  head(url: string): Promise<number> {
     const { promise, resolve } = new Deferred();
 
     this._pendingRequests.push({

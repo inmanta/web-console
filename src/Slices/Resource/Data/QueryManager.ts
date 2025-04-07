@@ -9,7 +9,7 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export function GetResourcesQueryManager (
+export function GetResourcesQueryManager(
   store: Store,
   apiHelper: ApiHelper,
   scheduler: Scheduler,
@@ -43,6 +43,6 @@ export function GetResourcesQueryManager (
   );
 }
 
-function stringifyFilter (filter: Resource.Filter | undefined): string {
+function stringifyFilter(filter: Resource.Filter | undefined): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

@@ -22,7 +22,7 @@ export class InventoryStencilTab {
    * @param {ui.PaperScroller} scroller - The jointJS scroller associated with the stencil.
    * @param {Inventories} serviceInventories - The service inventories used to populate the stencil with corresponding Elements.
    */
-  constructor (
+  constructor(
     stencilElement: HTMLElement,
     scroller: ui.PaperScroller,
     serviceInventories: Inventories,

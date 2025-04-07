@@ -26,7 +26,7 @@ const axe = configureAxe({
 });
 const server = setupServer();
 
-function setup () {
+function setup() {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -76,7 +76,7 @@ describe("CompileReports", () => {
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  test("CompileReportsView shows empty table", async () => {
+  test("CompileReportsView shows empty table", async() => {
     server.use(
       http.get("/api/v2/compilereport", () => {
         return HttpResponse.json({
@@ -98,14 +98,14 @@ describe("CompileReports", () => {
       await screen.findByRole("generic", { name: "CompileReportsView-Empty" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("CompileReportsView shows failed table", async () => {
+  test("CompileReportsView shows failed table", async() => {
     server.use(
       http.get("/api/v2/compilereport", () => {
         return HttpResponse.json(
@@ -130,14 +130,14 @@ describe("CompileReports", () => {
       await screen.findByRole("region", { name: "CompileReportsView-Error" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("CompileReportsView shows success table", async () => {
+  test("CompileReportsView shows success table", async() => {
     server.use(
       http.get("/api/v2/compilereport", () => {
         return HttpResponse.json(Mock.response);
@@ -155,14 +155,14 @@ describe("CompileReports", () => {
       await screen.findByRole("grid", { name: "CompileReportsView-Success" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("CompileReportsView shows updated table", async () => {
+  test("CompileReportsView shows updated table", async() => {
     let delay = 0;
 
     server.use(
@@ -199,14 +199,14 @@ describe("CompileReports", () => {
       await screen.findByRole("grid", { name: "CompileReportsView-Success" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("When using the status filter with the Success option then the successful compile reports should be fetched and shown", async () => {
+  test("When using the status filter with the Success option then the successful compile reports should be fetched and shown", async() => {
     server.use(
       http.get("/api/v2/compilereport", ({ request }) => {
         if (request.url.includes("filter.success=true")) {
@@ -254,14 +254,14 @@ describe("CompileReports", () => {
 
     expect(rowsAfter).toHaveLength(3);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("When using the status filter with the In Progress opiton then the compile reports of in progress compiles should be fetched and shown", async () => {
+  test("When using the status filter with the In Progress opiton then the compile reports of in progress compiles should be fetched and shown", async() => {
     server.use(
       http.get("/api/v2/compilereport", ({ request }) => {
         if (request.url.includes("filter.started=true")) {
@@ -315,14 +315,14 @@ describe("CompileReports", () => {
 
     expect(rowsAfter).toHaveLength(3);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("When using the Date filter then the compile reports within the range selected range should be fetched and shown", async () => {
+  test("When using the Date filter then the compile reports within the range selected range should be fetched and shown", async() => {
     server.use(
       http.get("/api/v2/compilereport", ({ request }) => {
         if (
@@ -380,7 +380,7 @@ describe("CompileReports", () => {
 
     // The chips are hidden in small windows, so resize it
     window = Object.assign(window, { innerWidth: 1200 });
-    await act(async () => {
+    await act(async() => {
       window.dispatchEvent(new Event("resize"));
     });
 
@@ -391,14 +391,14 @@ describe("CompileReports", () => {
       await screen.findByText("to | 2021/09/30 00:00:00", { exact: false }),
     ).toBeVisible();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given CompileReportsView When recompile is triggered Then table is updated", async () => {
+  test("Given CompileReportsView When recompile is triggered Then table is updated", async() => {
     let update = false;
 
     server.use(
@@ -432,7 +432,7 @@ describe("CompileReports", () => {
 
     expect(button).toBeEnabled();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -447,7 +447,7 @@ describe("CompileReports", () => {
     expect(updatedRows).toHaveLength(8);
   });
 
-  test("GIVEN CompileReportsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  test("GIVEN CompileReportsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async() => {
     server.use(
       http.get("/api/v2/compilereport", ({ request }) => {
         if (request.url.includes("end=fake-first-param")) {

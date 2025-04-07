@@ -37,25 +37,25 @@ const setup = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
 };
 
 describe("Login", () => {
-  it("login form is properly rendered", async () => {
+  it("login form is properly rendered", async() => {
     render(setup({ method: "database" }));
 
     expect(screen.getByLabelText("input-username")).toBeInTheDocument();
     expect(screen.getByLabelText("input-password")).toBeInTheDocument();
     expect(screen.getByLabelText("login-button")).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  it("if user login with valid credentials we should set the cookie and reload the page", async () => {
+  it("if user login with valid credentials we should set the cookie and reload the page", async() => {
     const spiedCreateCookie = jest.spyOn(CookieHelper, "createCookie");
 
     const server = setupServer(
-      http.post("/api/v2/login", async ({ request }) => {
+      http.post("/api/v2/login", async({ request }) => {
         const reqBody = await request.json();
 
         expect(reqBody).toEqual({
@@ -118,7 +118,7 @@ describe("Login", () => {
 
     await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith("/"));
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -127,9 +127,9 @@ describe("Login", () => {
     server.close();
   });
 
-  it("If the user try to login with invalid credentials it should show error message", async () => {
+  it("If the user try to login with invalid credentials it should show error message", async() => {
     const server = setupServer(
-      http.post("/api/v2/login", async ({ request }) => {
+      http.post("/api/v2/login", async({ request }) => {
         const reqBody = await request.json();
 
         expect(reqBody).toEqual({
@@ -171,7 +171,7 @@ describe("Login", () => {
       );
     });
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -180,9 +180,9 @@ describe("Login", () => {
     server.close();
   });
 
-  it("If the user try to login with empty credentials it should show error message", async () => {
+  it("If the user try to login with empty credentials it should show error message", async() => {
     const server = setupServer(
-      http.post("/api/v2/login", async ({ request }) => {
+      http.post("/api/v2/login", async({ request }) => {
         const reqBody = await request.json();
 
         expect(reqBody).toEqual({
@@ -217,7 +217,7 @@ describe("Login", () => {
       );
     });
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();

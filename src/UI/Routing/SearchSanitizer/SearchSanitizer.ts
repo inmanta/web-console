@@ -19,12 +19,12 @@ export class SearchSanitizer {
   searchHelper: SearchHelper;
   pageStateSanitizer: PageStateSanitizer;
 
-  constructor (private readonly routeManager: RouteManager) {
+  constructor(private readonly routeManager: RouteManager) {
     this.searchHelper = new SearchHelper();
     this.pageStateSanitizer = new PageStateSanitizer(routeManager);
   }
 
-  private getValidKeys (routeKind: RouteKind): string[] {
+  private getValidKeys(routeKind: RouteKind): string[] {
     const route = this.routeManager.getRoute(routeKind);
 
     if (route.environmentRole === "Forbidden")
@@ -37,7 +37,7 @@ export class SearchSanitizer {
    * Sanitizes the search string.
    * This maintains the original order of the search params.
    */
-  sanitize (routeKind: RouteKind, search: string): string {
+  sanitize(routeKind: RouteKind, search: string): string {
     const parsedSearch = this.searchHelper.parse(search);
     const sanitizedSearch = keepKeys(
       this.getValidKeys(routeKind),
@@ -61,7 +61,7 @@ export class SearchSanitizer {
   /**
    * Checks if the search string contains illegal values.
    */
-  isSanitized (routeKind: RouteKind, search: string): boolean {
+  isSanitized(routeKind: RouteKind, search: string): boolean {
     const parsedSearch = this.searchHelper.parse(search);
 
     if (getKeysExcluding(this.getValidKeys(routeKind), parsedSearch).length > 0)

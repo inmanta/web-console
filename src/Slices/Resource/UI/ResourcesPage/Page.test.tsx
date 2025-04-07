@@ -35,7 +35,7 @@ const axe = configureAxe({
   },
 });
 
-function setup (entries?: string[]) {
+function setup(entries?: string[]) {
   const apiHelper = new DeferredApiHelper();
 
   const scheduler = new StaticScheduler();
@@ -75,7 +75,7 @@ function setup (entries?: string[]) {
   };
 }
 
-test("ResourcesView shows empty table", async () => {
+test("ResourcesView shows empty table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -84,7 +84,7 @@ test("ResourcesView shows empty table", async () => {
     await screen.findByRole("region", { name: "ResourcesView-Loading" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     apiHelper.resolve(
       Either.right({
         data: [],
@@ -104,14 +104,14 @@ test("ResourcesView shows empty table", async () => {
     await screen.findByRole("generic", { name: "ResourcesView-Empty" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("ResourcesView shows failed table", async () => {
+test("ResourcesView shows failed table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -120,7 +120,7 @@ test("ResourcesView shows failed table", async () => {
     await screen.findByRole("region", { name: "ResourcesView-Loading" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.left("error"));
   });
 
@@ -128,14 +128,14 @@ test("ResourcesView shows failed table", async () => {
     await screen.findByRole("region", { name: "ResourcesView-Failed" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("ResourcesView shows success table", async () => {
+test("ResourcesView shows success table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -144,7 +144,7 @@ test("ResourcesView shows success table", async () => {
     await screen.findByRole("region", { name: "ResourcesView-Loading" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
@@ -152,19 +152,19 @@ test("ResourcesView shows success table", async () => {
     await screen.findByRole("grid", { name: "ResourcesView-Success" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requires is shown", async () => {
+test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requires is shown", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
@@ -180,7 +180,7 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
 
   await userEvent.click(toggleButton);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(ResourceDetails.response));
   });
 
@@ -188,19 +188,19 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
     await screen.findByRole("grid", { name: "ResourceRequires-Success" }),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("ResourcesView shows next page of resources", async () => {
+test("ResourcesView shows next page of resources", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({
         data: Resource.response.data.slice(0, 3),
@@ -225,7 +225,7 @@ test("ResourcesView shows next page of resources", async () => {
 
   await userEvent.click(button);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({
         data: Resource.response.data.slice(3),
@@ -244,19 +244,19 @@ test("ResourcesView shows next page of resources", async () => {
     }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("ResourcesView shows sorting buttons for sortable columns", async () => {
+test("ResourcesView shows sorting buttons for sortable columns", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
@@ -274,19 +274,19 @@ test("ResourcesView shows sorting buttons for sortable columns", async () => {
     }),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("ResourcesView sets sorting parameters correctly on click", async () => {
+test("ResourcesView sets sorting parameters correctly on click", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
@@ -298,20 +298,20 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
 
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=agent.asc");
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN ResourcesView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+test("GIVEN ResourcesView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   //mock that response has more than one site
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({
         data: Resource.response.data.slice(0, 3),
@@ -334,7 +334,7 @@ test("GIVEN ResourcesView WHEN sorting changes AND we are not on the first page 
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=resource_type.asc)/);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({
         data: Resource.response.data.slice(0, 3),
@@ -369,12 +369,12 @@ it.each`
   ${"search"} | ${"tmp"}    | ${words("resources.filters.value.placeholder")} | ${"resource_id_value"}
 `(
   "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the resources with that $filterUrlName should be fetched and shown",
-  async ({ filterType, filterValue, placeholderText, filterUrlName }) => {
+  async({ filterType, filterValue, placeholderText, filterUrlName }) => {
     const { component, apiHelper } = setup();
 
     render(component);
 
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(Either.right(Resource.response));
     });
 
@@ -403,7 +403,7 @@ it.each`
       `filter.${filterUrlName}=${filterValue}`,
     );
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -418,7 +418,7 @@ it.each`
   ${"tmp"}       | ${words("resources.filters.value.placeholder")} | ${"resource_id_value"} | ${"File"}      | ${words("resources.filters.type.placeholder")}  | ${"resource_type"}
 `(
   "when using the search filters of type $filterType with value $filterValueOne and text $placeholderTextOne combined with $filterType with value $filterValueTwo and text $placeholderText then the resources with that $filterUrlNameOne and $filterUrlNameTwo should be fetched and shown",
-  async ({
+  async({
     filterValueOne,
     placeholderTextOne,
     filterUrlNameOne,
@@ -430,7 +430,7 @@ it.each`
 
     render(component);
 
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(Either.right(Resource.response));
     });
 
@@ -459,7 +459,7 @@ it.each`
       `filter.${filterUrlNameTwo}=${filterValueTwo}`,
     );
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -467,7 +467,7 @@ it.each`
   },
 );
 
-test("when using the all filters then the resources with that filter values should be fetched and shown", async () => {
+test("when using the all filters then the resources with that filter values should be fetched and shown", async() => {
   const filterValueOne = "agent";
   const filterUrlNameOne = "agent";
   const filterValueTwo = "Directory";
@@ -478,7 +478,7 @@ test("when using the all filters then the resources with that filter values shou
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
@@ -520,7 +520,7 @@ test("when using the all filters then the resources with that filter values shou
     `filter.${filterUrlNameThree}=${filterValueThree}`,
   );
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
@@ -533,12 +533,12 @@ test.each`
   ${"unavailable"} | ${"exclude"}
 `(
   "When using the Deploy state filter with value $filterValue and option $option then the matching resources should be fetched and shown",
-  async ({ filterValue, option }) => {
+  async({ filterValue, option }) => {
     const { component, apiHelper } = setup();
 
     render(component);
 
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(Either.right(Resource.response));
     });
 
@@ -570,7 +570,7 @@ test.each`
       }&sort=resource_type.asc`,
     );
 
-    await act(async () => {
+    await act(async() => {
       await apiHelper.resolve(
         Either.right({
           data: Resource.response.data.slice(4),
@@ -586,7 +586,7 @@ test.each`
 
     expect(rowsAfter).toHaveLength(2);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -594,7 +594,7 @@ test.each`
   },
 );
 
-test("When clicking the clear and reset filters then the state filter is updated correctly", async () => {
+test("When clicking the clear and reset filters then the state filter is updated correctly", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -603,7 +603,7 @@ test("When clicking the clear and reset filters then the state filter is updated
     "/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc",
   );
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
@@ -624,7 +624,7 @@ test("When clicking the clear and reset filters then the state filter is updated
     "/api/v2/resource?deploy_summary=True&limit=20&&sort=resource_type.asc",
   );
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({
         data: Resource.response.data.slice(4),
@@ -642,19 +642,19 @@ test("When clicking the clear and reset filters then the state filter is updated
     "/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc",
   );
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("ResourcesView shows deploy state bar", async () => {
+test("ResourcesView shows deploy state bar", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
@@ -668,14 +668,14 @@ test("ResourcesView shows deploy state bar", async () => {
     }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar", async () => {
+test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -684,7 +684,7 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
     await screen.findByRole("region", { name: "ResourcesView-Loading" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({
         ...Resource.response,
@@ -746,7 +746,7 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
     screen.queryByRole("navigation", { name: "bottom-Pagination" }),
   ).not.toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({
         ...Resource.response,
@@ -770,14 +770,14 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
     }),
   ).toHaveAttribute("data-value", "2");
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar", async () => {
+test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar", async() => {
   const { component, apiHelper, scheduler } = setup();
 
   render(component);
@@ -786,7 +786,7 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
     await screen.findByRole("region", { name: "ResourcesView-Loading" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({
         ...Resource.response,
@@ -835,7 +835,7 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
     screen.getByRole("navigation", { name: "bottom-Pagination" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({
         ...Resource.response,
@@ -859,19 +859,19 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
     }),
   ).toHaveAttribute("data-value", "2");
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("ResourcesView shows deploy state bar with available status without processing_events status", async () => {
+test("ResourcesView shows deploy state bar with available status without processing_events status", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
@@ -891,19 +891,19 @@ test("ResourcesView shows deploy state bar with available status without process
 
   expect(screen.queryByTestId("Status-processing_events")).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given the ResourcesView When clicking on deploy, then the approriate backend request is fired", async () => {
+test("Given the ResourcesView When clicking on deploy, then the approriate backend request is fired", async() => {
   const { component, apiHelper, environment } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
@@ -936,19 +936,19 @@ test("Given the ResourcesView When clicking on deploy, then the approriate backe
     },
   ]);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given the ResourcesView When clicking on repair, then the approriate backend request is fired", async () => {
+test("Given the ResourcesView When clicking on repair, then the approriate backend request is fired", async() => {
   const { component, apiHelper, environment } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
@@ -979,14 +979,14 @@ test("Given the ResourcesView When clicking on repair, then the approriate backe
     },
   ]);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("Given the ResourcesView When environment is halted, then deploy and repair buttons are disabled", async () => {
+test("Given the ResourcesView When environment is halted, then deploy and repair buttons are disabled", async() => {
   const { component, apiHelper, environment, store, environmentModifier } =
     setup();
 
@@ -998,7 +998,7 @@ test("Given the ResourcesView When environment is halted, then deploy and repair
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
@@ -1017,7 +1017,7 @@ test("Given the ResourcesView When environment is halted, then deploy and repair
     }),
   ).toBeDisabled();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();

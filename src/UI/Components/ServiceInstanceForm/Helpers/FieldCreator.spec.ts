@@ -240,7 +240,7 @@ test.each`
   ${optionalEmbedded_base}
 `(
   "GIVEN FieldCreator WHEN embeddedEntities are processed for edit form THEN the field is marked as disabled correctly",
-  async ({ embeddedEntity }) => {
+  async({ embeddedEntity }) => {
     const fields = new FieldCreator(new CreateModifierHandler(), true).create({
       attributes: [],
       embedded_entities: [embeddedEntity],
@@ -278,7 +278,7 @@ test.each`
   ${editableOptionalEmbedded_base}
 `(
   "GIVEN FieldCreator WHEN editableEmbeddedEntities are processed for edit form THEN the field is marked as disabled correctly",
-  async ({ embeddedEntity }) => {
+  async({ embeddedEntity }) => {
     const fields = new FieldCreator(new CreateModifierHandler(), true).create({
       attributes: [],
       embedded_entities: [embeddedEntity],

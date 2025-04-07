@@ -3,7 +3,7 @@ import { ApiHelper, StateHelperWithEnv } from "@/Core";
 import { QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "@S/ServiceDetails/Data/Callbacks/getUrl";
 
-export function CallbacksQueryManager (
+export function CallbacksQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<"GetCallbacks">,
 ) {

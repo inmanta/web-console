@@ -5,7 +5,7 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export function EnvironmentDetailsOneTimeQueryManager (
+export function EnvironmentDetailsOneTimeQueryManager(
   store: Store,
   apiHelper: ApiHelper,
 ) {

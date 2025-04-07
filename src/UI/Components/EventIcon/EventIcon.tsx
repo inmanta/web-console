@@ -25,7 +25,7 @@ export const EventIcon: React.FC<Props> = ({ eventType }) => {
   );
 };
 
-function getIconFor (eventType: EventType): React.ReactElement {
+function getIconFor(eventType: EventType): React.ReactElement {
   switch (eventType) {
     case EventType.AUTO_TRANSITION:
       return <AutomationIcon />;

@@ -38,7 +38,7 @@ const attribute2: AttributeModel = {
   default_value: null,
 };
 
-function setup (service: ServiceModel) {
+function setup(service: ServiceModel) {
   const store = getStoreInstance();
 
   const environmentHandler = EnvironmentHandlerImpl(
@@ -81,7 +81,7 @@ function setup (service: ServiceModel) {
   return component;
 }
 
-test("GIVEN AttributeTable WHEN passed no attributes THEN the empty container is shown", async () => {
+test("GIVEN AttributeTable WHEN passed no attributes THEN the empty container is shown", async() => {
   const component = setup({
     ...Service.a,
     attributes: [],
@@ -91,14 +91,14 @@ test("GIVEN AttributeTable WHEN passed no attributes THEN the empty container is
   render(component);
   expect(screen.getByText("No attributes found for the service")).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async () => {
+test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async() => {
   const component = setup({
     ...Service.a,
     attributes: [attribute1],
@@ -111,14 +111,14 @@ test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async (
     await screen.findByRole("row", { name: "Row-order_id" }),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", async () => {
+test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", async() => {
   const component = setup({
     ...Service.a,
     attributes: [attribute1, attribute2],
@@ -134,14 +134,14 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
     await screen.findByRole("row", { name: "Row-service_mtu" }),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities THEN the rows are shown", async () => {
+test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities THEN the rows are shown", async() => {
   const component = setup({
     ...Service.a,
     attributes: [],
@@ -153,14 +153,14 @@ test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities 
     await screen.findByRole("row", { name: "Row-circuits" }),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", async () => {
+test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", async() => {
   const component = setup({
     ...Service.a,
     attributes: [attribute1, attribute2],
@@ -176,14 +176,14 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
     await screen.findByRole("row", { name: "Row-service_mtu" }),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows are shown and availalbe to expand/collapse one", async () => {
+test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows are shown and availalbe to expand/collapse one", async() => {
   const component = setup({
     ...Service.a,
     name: "service_name_a",
@@ -215,7 +215,7 @@ test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows 
 
   expect(row).not.toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();

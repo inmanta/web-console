@@ -41,7 +41,7 @@ export const useUpdateNotification = (
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: UpdateNotificationParams) => {
+    mutationFn: async(params: UpdateNotificationParams) => {
       await Promise.all(
         params.ids.map((id) =>
           patch(`/api/v2/notification/${id}`, params.body),

@@ -122,13 +122,13 @@ describe("ComposerActions.", () => {
   const server = setupServer(
     http.post(
       "/lsm/v1/service_inventory/child-service}/*/metadata/coordinates",
-      async () => {
+      async() => {
         return HttpResponse.json({
           data: [],
         });
       },
     ),
-    http.post("/lsm/v2/order", async () => {
+    http.post("/lsm/v2/order", async() => {
       return HttpResponse.json({
         data: [],
       });
@@ -195,9 +195,9 @@ describe("ComposerActions.", () => {
     expect(screen.getByRole("button", { name: "Deploy" })).toBeEnabled();
   });
 
-  it("shows success message and redirects when deploy button is clicked", async () => {
+  it("shows success message and redirects when deploy button is clicked", async() => {
     server.use(
-      http.post("/lsm/v2/order", async () => {
+      http.post("/lsm/v2/order", async() => {
         return HttpResponse.json({
           data: {
             id: "test",
@@ -218,9 +218,9 @@ describe("ComposerActions.", () => {
     );
   });
 
-  it("shows error message about coordinates when there is no diagramHandlers", async () => {
+  it("shows error message about coordinates when there is no diagramHandlers", async() => {
     server.use(
-      http.post("/lsm/v2/order", async () => {
+      http.post("/lsm/v2/order", async() => {
         await delay();
 
         return HttpResponse.json({
@@ -243,9 +243,9 @@ describe("ComposerActions.", () => {
     ).toBeVisible();
   });
 
-  it("shows error message when deploy button is clicked and request fails", async () => {
+  it("shows error message when deploy button is clicked and request fails", async() => {
     server.use(
-      http.post("/lsm/v2/order", async () => {
+      http.post("/lsm/v2/order", async() => {
         return HttpResponse.json(
           {
             message: "Failed to deploy instance.",

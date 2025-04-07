@@ -39,9 +39,9 @@ export const useGetInventoryList = (
    * @returns A promise that resolves to an object mapping service names to arrays of service instances.
    * @throws Will throw an error if the fetch operation for any service fails.
    */
-  const fetchAllServices = async (): Promise<Inventories> => {
+  const fetchAllServices = async(): Promise<Inventories> => {
     const responses = await Promise.all(
-      serviceNames.map(async (serviceName) =>
+      serviceNames.map(async(serviceName) =>
         get(`/lsm/v1/service_inventory/${serviceName}?limit=1000`),
       ),
     );

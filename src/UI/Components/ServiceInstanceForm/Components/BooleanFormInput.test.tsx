@@ -18,21 +18,21 @@ const InputSetup = ({ attributeName = "bool_param", isOptional = false }) => {
 };
 
 describe("BooleanFormInput", () => {
-  it("Should render radio button input for boolean parameters", async () => {
+  it("Should render radio button input for boolean parameters", async() => {
     render(<InputSetup />);
     const radioButtons = await screen.findAllByRole("radio");
 
     expect(radioButtons.length).toEqual(2);
   });
 
-  it("Should render radio button input for optional boolean parameters", async () => {
+  it("Should render radio button input for optional boolean parameters", async() => {
     render(<InputSetup isOptional />);
     const radioButtons = await screen.findAllByRole("radio");
 
     expect(radioButtons.length).toEqual(3);
   });
 
-  it("Should render radio button input for optional boolean parameters", async () => {
+  it("Should render radio button input for optional boolean parameters", async() => {
     render(<InputSetup attributeName="opt_bool_param" isOptional />);
 
     expect(await screen.findByTestId("opt_bool_param-false")).toBeChecked();

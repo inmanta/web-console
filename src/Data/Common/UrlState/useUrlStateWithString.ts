@@ -4,7 +4,7 @@ import { handleUrlState } from "./useUrlState";
 
 export const useUrlStateWithString = provide(handleUrlStateWithString);
 
-export function handleUrlStateWithString<Data extends string> (
+export function handleUrlStateWithString<Data extends string>(
   config: Pick<StateConfig<Data>, "default" | "key" | "route">,
   location: Location,
   replace: Replace,

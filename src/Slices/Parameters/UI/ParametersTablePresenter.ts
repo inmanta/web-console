@@ -7,7 +7,7 @@ implements TablePresenter<Parameter, Parameter> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
-  constructor () {
+  constructor() {
     this.columnHeads = [
       { displayName: words("parameters.columns.name"), apiName: "name" },
       {
@@ -26,27 +26,27 @@ implements TablePresenter<Parameter, Parameter> {
     this.numberOfColumns = this.columnHeads.length + 1;
   }
 
-  createRows (sourceData: Parameter[]): Parameter[] {
+  createRows(sourceData: Parameter[]): Parameter[] {
     return sourceData;
   }
 
-  getColumnHeadDisplayNames (): string[] {
+  getColumnHeadDisplayNames(): string[] {
     return this.columnHeads.map(({ displayName }) => displayName);
   }
-  getSortableColumnNames (): string[] {
+  getSortableColumnNames(): string[] {
     const sortableColumns = ["name", "source", "updated"];
 
     return sortableColumns;
   }
-  getColumnHeads (): ColumnHead[] {
+  getColumnHeads(): ColumnHead[] {
     return this.columnHeads;
   }
 
-  getNumberOfColumns (): number {
+  getNumberOfColumns(): number {
     return this.numberOfColumns;
   }
 
-  getColumnNameForIndex (index: number): string | undefined {
+  getColumnNameForIndex(index: number): string | undefined {
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
@@ -54,7 +54,7 @@ implements TablePresenter<Parameter, Parameter> {
     return undefined;
   }
 
-  getIndexForColumnName (columnName?: string): number {
+  getIndexForColumnName(columnName?: string): number {
     return this.columnHeads.findIndex(
       (columnHead) => columnHead.apiName === columnName,
     );

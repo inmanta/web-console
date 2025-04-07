@@ -16,7 +16,7 @@ const axe = configureAxe({
 });
 
 describe("Test GraphCard with LineChart component", () => {
-  it("Line Chart version", async () => {
+  it("Line Chart version", async() => {
     const availableKeys = Object.keys(mockedMetrics.metrics);
 
     render(
@@ -42,14 +42,14 @@ describe("Test GraphCard with LineChart component", () => {
       }),
     ).toBeVisible();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  it("Area Chart version", async () => {
+  it("Area Chart version", async() => {
     const availableKeys = Object.keys(mockedMetrics.metrics);
 
     render(
@@ -75,7 +75,7 @@ describe("Test GraphCard with LineChart component", () => {
       }),
     ).toBeVisible();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();

@@ -1,9 +1,9 @@
 import { getKeysExcluding, RouteManager, RouteKind } from "@/Core";
 
 export class PageStateSanitizer {
-  constructor (private readonly routeManager: RouteManager) {}
+  constructor(private readonly routeManager: RouteManager) {}
 
-  isSanitized (
+  isSanitized(
     routeKind: RouteKind,
     pageState: Record<string, unknown>,
   ): boolean {
@@ -17,7 +17,7 @@ export class PageStateSanitizer {
     return true;
   }
 
-  sanitize (
+  sanitize(
     routeKind: RouteKind,
     pageState: Record<string, unknown>,
   ): Record<string, unknown> {

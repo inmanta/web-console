@@ -6,7 +6,7 @@ import { BooleanToggleInput } from "./BooleanToggleInput";
 describe("BooleanFormInput", () => {
   const handleClick = jest.fn();
 
-  it("Should render toggle button input that reponds to the user input", async () => {
+  it("Should render toggle button input that reponds to the user input", async() => {
     render(
       <BooleanToggleInput
         attributeName="bool_param"

@@ -3,12 +3,12 @@ import { BaseUrlManager } from "@/Core";
 export class PrimaryBaseUrlManager implements BaseUrlManager {
   private readonly anchor = "/console";
 
-  constructor (
+  constructor(
     private readonly origin: string,
     private readonly pathname: string,
   ) {}
 
-  getBasePathname (): string {
+  getBasePathname(): string {
     const { pathname, anchor } = this;
 
     if (!pathname.includes(anchor)) return anchor;
@@ -18,7 +18,7 @@ export class PrimaryBaseUrlManager implements BaseUrlManager {
     return `${pre}${anchor}`;
   }
 
-  getBaseUrl (forcedUrl?: string): string {
+  getBaseUrl(forcedUrl?: string): string {
     const { anchor, origin } = this;
     const basePathname = this.getBasePathname().replace(anchor, "");
 

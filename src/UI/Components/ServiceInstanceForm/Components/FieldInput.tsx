@@ -84,7 +84,7 @@ export const FieldInput: React.FC<Props> = ({
 
   // Get the controlled value for the field
   // If the value is an object or an array, it needs to be converted.
-  function getControlledValue (value) {
+  function getControlledValue(value) {
     if (value === null || value === undefined) {
       return "";
     } else if (Array.isArray(value)) {

@@ -24,7 +24,7 @@ const axe = configureAxe({
   },
 });
 
-function setup () {
+function setup() {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -60,7 +60,7 @@ describe("DesiredStatesView", () => {
 
   const server = setupServer();
 
-  server.events.on("request:start", async ({ request }) => {
+  server.events.on("request:start", async({ request }) => {
     switch (request.method) {
       case "GET":
         GETRequestsFired++;
@@ -91,9 +91,9 @@ describe("DesiredStatesView", () => {
     server.close();
   });
 
-  it("DesiredStatesView shows empty table", async () => {
+  it("DesiredStatesView shows empty table", async() => {
     server.use(
-      http.get("/api/v2/desiredstate", async () => {
+      http.get("/api/v2/desiredstate", async() => {
         return HttpResponse.json({
           data: [],
           links: { self: "" },
@@ -114,16 +114,16 @@ describe("DesiredStatesView", () => {
       await screen.findByRole("generic", { name: "DesiredStatesView-Empty" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  it("DesiredStatesView shows failed table", async () => {
+  it("DesiredStatesView shows failed table", async() => {
     server.use(
-      http.get("/api/v2/desiredstate", async () => {
+      http.get("/api/v2/desiredstate", async() => {
         return HttpResponse.json({ message: "Not Found" }, { status: 404 });
       }),
     );
@@ -140,16 +140,16 @@ describe("DesiredStatesView", () => {
       await screen.findByRole("region", { name: "DesiredStatesView-Failed" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  it("AgentsView shows success table", async () => {
+  it("AgentsView shows success table", async() => {
     server.use(
-      http.get("/api/v2/desiredstate", async () => {
+      http.get("/api/v2/desiredstate", async() => {
         return HttpResponse.json(DesiredStateVersions.response);
       }),
     );
@@ -166,16 +166,16 @@ describe("DesiredStatesView", () => {
       await screen.findByRole("grid", { name: "DesiredStatesView-Success" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  it("When using the status filter then only the matching desired states should be fetched and shown", async () => {
+  it("When using the status filter then only the matching desired states should be fetched and shown", async() => {
     server.use(
-      http.get("/api/v2/desiredstate", async ({ request }) => {
+      http.get("/api/v2/desiredstate", async({ request }) => {
         //we are expecting that at some point the request will have the filters applied for status and we mock the adequate response
         if (
           request.url.split("?")[1] ===
@@ -234,16 +234,16 @@ describe("DesiredStatesView", () => {
 
     expect(rowsAfter).toHaveLength(3);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  it("When using the Date filter then the desired state versions within the range selected range should be fetched and shown", async () => {
+  it("When using the Date filter then the desired state versions within the range selected range should be fetched and shown", async() => {
     server.use(
-      http.get("/api/v2/desiredstate", async ({ request }) => {
+      http.get("/api/v2/desiredstate", async({ request }) => {
         //we are expecting that at some point the request will have the filters applied for date and we mock the adequate response
         if (
           request.url.split("?")[1] ===
@@ -300,7 +300,7 @@ describe("DesiredStatesView", () => {
 
     // The chips are hidden in small windows, so resize it
     window = Object.assign(window, { innerWidth: 1200 });
-    await act(async () => {
+    await act(async() => {
       window.dispatchEvent(new Event("resize"));
     });
 
@@ -311,16 +311,16 @@ describe("DesiredStatesView", () => {
       await screen.findByText("to | 2021/12/07 00:00:00", { exact: false }),
     ).toBeVisible();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  it("When using the Version filter then the desired state versions within the range selected range should be fetched and shown", async () => {
+  it("When using the Version filter then the desired state versions within the range selected range should be fetched and shown", async() => {
     server.use(
-      http.get("/api/v2/desiredstate", async ({ request }) => {
+      http.get("/api/v2/desiredstate", async({ request }) => {
         //we are expecting that at some point the request will have the filters applied for version and we mock the adequate response
         if (
           request.url.split("?")[1] ===
@@ -377,26 +377,26 @@ describe("DesiredStatesView", () => {
 
     // The chips are hidden in small windows, so resize it
     window = Object.assign(window, { innerWidth: 1200 });
-    await act(async () => {
+    await act(async() => {
       await window.dispatchEvent(new Event("resize"));
     });
 
     expect(await screen.findByText("from | 3", { exact: false })).toBeVisible();
     expect(await screen.findByText("to | 5", { exact: false })).toBeVisible();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  it("Given the Desired states view When promoting a version, then the correct request is be fired", async () => {
+  it("Given the Desired states view When promoting a version, then the correct request is be fired", async() => {
     server.use(
-      http.get("/api/v2/desiredstate", async () => {
+      http.get("/api/v2/desiredstate", async() => {
         return HttpResponse.json(DesiredStateVersions.response);
       }),
-      http.post("/api/v2/desiredstate/9/promote", async () => {
+      http.post("/api/v2/desiredstate/9/promote", async() => {
         return HttpResponse.json({ status: 200 });
       }),
     );
@@ -451,7 +451,7 @@ describe("DesiredStatesView", () => {
 
     expect(rowsAfter).toHaveLength(9);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -461,9 +461,9 @@ describe("DesiredStatesView", () => {
     expect(GETRequestsFired).toBe(2);
   });
 
-  it("Given the Desired states view with filters When promoting a version, then the correct request is be fired", async () => {
+  it("Given the Desired states view with filters When promoting a version, then the correct request is be fired", async() => {
     server.use(
-      http.get("/api/v2/desiredstate", async ({ request }) => {
+      http.get("/api/v2/desiredstate", async({ request }) => {
         //we are expecting that at some point the request will have the filters applied for status and we mock the adequate response
         if (
           request.url.split("?")[1] ===
@@ -477,7 +477,7 @@ describe("DesiredStatesView", () => {
           return HttpResponse.json(DesiredStateVersions.response);
         }
       }),
-      http.post("/api/v2/desiredstate/9/promote", async () => {
+      http.post("/api/v2/desiredstate/9/promote", async() => {
         return HttpResponse.json({ status: 200 });
       }),
     );
@@ -542,7 +542,7 @@ describe("DesiredStatesView", () => {
 
     expect(rowsAfter).toHaveLength(3);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -551,12 +551,12 @@ describe("DesiredStatesView", () => {
     expect(GETRequestsFired).toBe(3);
   });
 
-  it("Given the Desired states view When promoting a version results in an error, then the error is shown", async () => {
+  it("Given the Desired states view When promoting a version results in an error, then the error is shown", async() => {
     server.use(
-      http.get("/api/v2/desiredstate", async () => {
+      http.get("/api/v2/desiredstate", async() => {
         return HttpResponse.json(DesiredStateVersions.response);
       }),
-      http.post("/api/v2/desiredstate/9/promote", async () => {
+      http.post("/api/v2/desiredstate/9/promote", async() => {
         return HttpResponse.json(
           { message: "something happened" },
           { status: 500 },
@@ -586,9 +586,9 @@ describe("DesiredStatesView", () => {
     expect(await screen.findByText("something happened")).toBeVisible();
   });
 
-  it("DesiredStatesView shows CompileWidget", async () => {
+  it("DesiredStatesView shows CompileWidget", async() => {
     server.use(
-      http.get("/api/v2/desiredstate", async () => {
+      http.get("/api/v2/desiredstate", async() => {
         return HttpResponse.json(DesiredStateVersions.response);
       }),
     );
@@ -602,9 +602,9 @@ describe("DesiredStatesView", () => {
   });
 
   describe("DeleteModal ", () => {
-    it("Shows form when clicking on modal button", async () => {
+    it("Shows form when clicking on modal button", async() => {
       server.use(
-        http.get("/api/v2/desiredstate", async () => {
+        http.get("/api/v2/desiredstate", async() => {
           return HttpResponse.json(DesiredStateVersions.response);
         }),
       );
@@ -629,16 +629,16 @@ describe("DesiredStatesView", () => {
       expect(await screen.findByText("Yes")).toBeVisible();
       expect(await screen.findByText("No")).toBeVisible();
 
-      await act(async () => {
+      await act(async() => {
         const results = await axe(document.body);
 
         expect(results).toHaveNoViolations();
       });
     });
 
-    it("Closes modal when cancelled(both cancel buttons scenario)", async () => {
+    it("Closes modal when cancelled(both cancel buttons scenario)", async() => {
       server.use(
-        http.get("/api/v2/desiredstate", async () => {
+        http.get("/api/v2/desiredstate", async() => {
           return HttpResponse.json(DesiredStateVersions.response);
         }),
       );
@@ -681,19 +681,19 @@ describe("DesiredStatesView", () => {
 
       expect(screen.queryByText("Yes")).not.toBeInTheDocument();
 
-      await act(async () => {
+      await act(async() => {
         const results = await axe(document.body);
 
         expect(results).toHaveNoViolations();
       });
     });
 
-    it("Sends request when submitted then request is executed and modal closed", async () => {
+    it("Sends request when submitted then request is executed and modal closed", async() => {
       server.use(
-        http.get("/api/v2/desiredstate", async () => {
+        http.get("/api/v2/desiredstate", async() => {
           return HttpResponse.json(DesiredStateVersions.response);
         }),
-        http.delete("/api/v1/version/9", async () => {
+        http.delete("/api/v1/version/9", async() => {
           return HttpResponse.json({ status: 204 });
         }),
       );
@@ -728,7 +728,7 @@ describe("DesiredStatesView", () => {
       //delete request is fired and it will retrigger the get request,
       expect(DELETERequestsFired).toBe(1);
       expect(GETRequestsFired).toBe(3);
-      await act(async () => {
+      await act(async() => {
         const results = await axe(document.body);
 
         expect(results).toHaveNoViolations();

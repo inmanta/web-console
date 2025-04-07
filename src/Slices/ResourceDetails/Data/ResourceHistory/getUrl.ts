@@ -1,6 +1,6 @@
 import { Query } from "@/Core";
 
-export function getUrl ({
+export function getUrl({
   id,
   pageSize,
   sort,

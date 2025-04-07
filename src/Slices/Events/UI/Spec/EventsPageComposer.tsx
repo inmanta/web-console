@@ -20,7 +20,7 @@ interface Handles {
 }
 
 export class EventsPageComposer {
-  compose (service: ServiceModel = Service.a): Handles {
+  compose(service: ServiceModel = Service.a): Handles {
     const store = getStoreInstance();
     const scheduler = new SchedulerImpl(5000);
     const apiHelper = new DeferredApiHelper();

@@ -16,7 +16,7 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { InstanceCellButton } from "./InstanceCellButton";
 
-function setup (serviceName: string, id: string) {
+function setup(serviceName: string, id: string) {
   const store = getStoreInstance();
 
   const handleClick = jest.fn();
@@ -86,7 +86,7 @@ describe("InstanceCellButton", () => {
     server.close();
   });
 
-  test("Given the InstanceCellButton When an instance has an identity Then it is shown instead of the id", async () => {
+  test("Given the InstanceCellButton When an instance has an identity Then it is shown instead of the id", async() => {
     const { component } = setup("service_name_a", "service_instance_id_a");
 
     render(component);
@@ -98,7 +98,7 @@ describe("InstanceCellButton", () => {
     ).toBeVisible();
   });
 
-  test("Given the InstanceCellButton When an instance doesn't have an identity Then the id is shown", async () => {
+  test("Given the InstanceCellButton When an instance doesn't have an identity Then the id is shown", async() => {
     const { component } = setup("service_name_a", "service_instance_id_b");
 
     render(component);
@@ -106,7 +106,7 @@ describe("InstanceCellButton", () => {
     expect(await screen.findByText("service_instance_id_b")).toBeVisible();
   });
 
-  test("Given the InstanceCellButton When the instance request fails Then the id is shown", async () => {
+  test("Given the InstanceCellButton When the instance request fails Then the id is shown", async() => {
     const { component } = setup("service_name_a", "service_instance_id_c");
 
     render(component);

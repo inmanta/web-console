@@ -50,7 +50,7 @@ import { Status } from "@S/Status";
 import { UserManagement } from "@S/UserManagement";
 import { encodeParams } from "./Utils";
 
-export function PrimaryRouteManager (baseUrl: string): RouteManager {
+export function PrimaryRouteManager(baseUrl: string): RouteManager {
   const routeDictionary: RouteDictionary = {
     /**
      * Main
@@ -103,11 +103,11 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
     Parameters: Parameters.route(baseUrl),
   };
 
-  function isBaseUrlDefined (): boolean {
+  function isBaseUrlDefined(): boolean {
     return baseUrl !== "";
   }
 
-  function getLineageFromRoute (route: Route, routes: Route[] = []): Route[] {
+  function getLineageFromRoute(route: Route, routes: Route[] = []): Route[] {
     if (route.parent) {
       return getLineageFromRoute(getRoute(route.parent), [route, ...routes]);
     }
@@ -115,7 +115,7 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
     return [route, ...routes];
   }
 
-  function getRelatedUrlWithoutParams (pathname: string): string {
+  function getRelatedUrlWithoutParams(pathname: string): string {
     const routeMatch = getRouteMatchFromUrl(pathname);
 
     if (typeof routeMatch === "undefined") {
@@ -131,29 +131,29 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
     return getUrl(parent.kind, undefined);
   }
 
-  function getParentWithoutParams (route: Route): Route | undefined {
+  function getParentWithoutParams(route: Route): Route | undefined {
     const lineage = getLineageFromRoute(route);
 
     return lineage.reverse().find((route) => !routeHasParams(route));
   }
 
-  function routeHasParams (route: Route): boolean {
+  function routeHasParams(route: Route): boolean {
     return route.path.includes(":");
   }
 
-  function getRoutes (): Route[] {
+  function getRoutes(): Route[] {
     return Object.values(routeDictionary);
   }
 
-  function getRouteDictionary (): RouteDictionary {
+  function getRouteDictionary(): RouteDictionary {
     return routeDictionary;
   }
 
-  function getRoute<K extends RouteKind> (kind: K): Route<K> {
+  function getRoute<K extends RouteKind>(kind: K): Route<K> {
     return routeDictionary[kind] as Route<K>;
   }
 
-  function getUrl<K extends RouteKind> (
+  function getUrl<K extends RouteKind>(
     kind: K,
     params: RouteParams<K>,
   ): string {
@@ -165,7 +165,7 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
     );
   }
 
-  function getUrlForApiUri (uri: string): string | undefined {
+  function getUrlForApiUri(uri: string): string | undefined {
     if (uri.length <= 0) return undefined;
     const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
@@ -176,7 +176,7 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
     return getUrl("CompileDetails", { id: match.params.id });
   }
 
-  function getParamsFromUrl (
+  function getParamsFromUrl(
     uri: string,
   ): RouteKindWithId<"CompileDetails"> | undefined {
     if (uri.length <= 0) return undefined;
@@ -193,7 +193,7 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
     };
   }
 
-  function getRouteMatchFromUrl (url: string): RouteMatch | undefined {
+  function getRouteMatchFromUrl(url: string): RouteMatch | undefined {
     const routeMatchPairs = getRoutes().map((route) => [
       route,
       matchPath(route.path, url),
@@ -214,7 +214,7 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
     };
   }
 
-  function useUrl (kind: RouteKind, params: RouteParams<RouteKind>): string {
+  function useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
     const { search } = useLocation();
     const route = getRoute(kind);
     const path = generatePath(
@@ -225,7 +225,7 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
     return `${path}${search}`;
   }
 
-  function getCrumbs (url: string): Crumb[] {
+  function getCrumbs(url: string): Crumb[] {
     const routeMatch = getRouteMatchFromUrl(url);
 
     if (typeof routeMatch === "undefined") return [];

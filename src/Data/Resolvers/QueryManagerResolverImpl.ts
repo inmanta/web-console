@@ -67,7 +67,7 @@ import {
 export class QueryManagerResolverImpl implements QueryManagerResolver {
   private managers: QueryManager[] = [];
 
-  constructor (
+  constructor(
     private readonly store: Store,
     private readonly apiHelper: ApiHelper,
     private readonly scheduler: Scheduler,
@@ -76,21 +76,21 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
     this.managers = this.getManagers();
   }
 
-  get (): QueryManager[] {
+  get(): QueryManager[] {
     return this.managers;
   }
 
-  pauseContinuous (): void {
+  pauseContinuous(): void {
     this.scheduler.pauseTasks();
     this.slowScheduler.pauseTasks();
   }
 
-  resumeContinuous (): void {
+  resumeContinuous(): void {
     this.scheduler.resumeTasks();
     this.slowScheduler.resumeTasks();
   }
 
-  private getManagers (): QueryManager[] {
+  private getManagers(): QueryManager[] {
     return [
       GetProjectsQueryManager(this.store, this.apiHelper),
       GetEnvironmentsContinuousQueryManager(

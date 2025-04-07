@@ -1,4 +1,4 @@
-function getLinkToNextPage (headerObj) {
+function getLinkToNextPage(headerObj) {
   /**
    *  Takes the Header object and returns the URL to the next page or null if no such page exists.
    *
@@ -15,7 +15,7 @@ function getLinkToNextPage (headerObj) {
     const refName = splittedHeaderParts[1].trim();
     const refLink = splittedHeaderParts[0].trim();
 
-    if (refName === "rel=\"next\"") {
+    if (refName === 'rel="next"') {
       // The link is represented as '<url>'. This chops off the '<' and '>' characters.
       return refLink.slice(1, refLink.length - 1);
     }
@@ -24,7 +24,7 @@ function getLinkToNextPage (headerObj) {
   return null;
 }
 
-async function getOldDevVersions () {
+async function getOldDevVersions() {
   /**
    *  Return a list of development packages that is older than 30 days.
    *  The list of packages return by this method is not necessarily complete.

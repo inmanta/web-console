@@ -106,7 +106,7 @@ export const environmentSlice: EnvironmentSlice = {
   }),
 };
 
-function mergeData (
+function mergeData(
   prev: EnvironmentSettingsData,
   next: EnvironmentSettingsData,
 ): EnvironmentSettingsData {

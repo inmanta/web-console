@@ -29,7 +29,7 @@ const axe = configureAxe({
   },
 });
 
-function setup () {
+function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
@@ -56,7 +56,7 @@ function setup () {
   return { component, apiHelper, scheduler };
 }
 
-test("GIVEN DesiredStateDetails page THEN shows loading resource table", async () => {
+test("GIVEN DesiredStateDetails page THEN shows loading resource table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -73,19 +73,19 @@ test("GIVEN DesiredStateDetails page THEN shows loading resource table", async (
     screen.getByRole("region", { name: "VersionResourcesTable-Loading" }),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN DesiredStateDetails page WHEN api returns no items THEN shows empty resource table", async () => {
+test("GIVEN DesiredStateDetails page WHEN api returns no items THEN shows empty resource table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(
       Either.right({ ...Resource.responseFromVersion, data: [] }),
     );
@@ -95,19 +95,19 @@ test("GIVEN DesiredStateDetails page WHEN api returns no items THEN shows empty 
     screen.getByRole("generic", { name: "VersionResourcesTable-Empty" }),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN DesiredStateDetails page WHEN api returns error THEN shows error", async () => {
+test("GIVEN DesiredStateDetails page WHEN api returns error THEN shows error", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.left("error"));
   });
 
@@ -115,19 +115,19 @@ test("GIVEN DesiredStateDetails page WHEN api returns error THEN shows error", a
     screen.getByRole("region", { name: "VersionResourcesTable-Failed" }),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN DesiredStateDetails page WHEN api returns items THEN shows success resource table", async () => {
+test("GIVEN DesiredStateDetails page WHEN api returns items THEN shows success resource table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(Resource.responseFromVersion));
   });
 
@@ -135,20 +135,20 @@ test("GIVEN DesiredStateDetails page WHEN api returns items THEN shows success r
     screen.getByRole("grid", { name: "VersionResourcesTable-Success" }),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("GIVEN DesiredStateDetails page WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+test("GIVEN DesiredStateDetails page WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   //mock that response has more than one site
-  await act(async () => {
+  await act(async() => {
     apiHelper.resolve(
       Either.right({
         ...Resource.responseFromVersion,
@@ -174,7 +174,7 @@ test("GIVEN DesiredStateDetails page WHEN sorting changes AND we are not on the 
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=resource_type.asc)/);
 
-  await act(async () => {
+  await act(async() => {
     apiHelper.resolve(
       Either.right({
         ...Resource.responseFromVersion,

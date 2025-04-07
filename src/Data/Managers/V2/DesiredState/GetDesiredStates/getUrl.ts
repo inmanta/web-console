@@ -10,7 +10,7 @@ import { Query, RangeOperator } from "@/Core";
  * @param timezone - The timezone to use for date conversions (default: guessed timezone).
  * @returns The constructed URL for fetching desired states.
  */
-export function getUrl (
+export function getUrl(
   { pageSize, filter, currentPage }: Query.SubQuery<"GetDesiredStates">,
   timezone = moment.tz.guess(),
 ): string {

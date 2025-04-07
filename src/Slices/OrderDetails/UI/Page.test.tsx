@@ -21,7 +21,7 @@ const DetailsPage = (
   </Page>
 );
 
-test("OrderDetailsView shows failed view", async () => {
+test("OrderDetailsView shows failed view", async() => {
   const { component, apiHelper } = baseSetup(DetailsPage);
 
   render(component);
@@ -32,7 +32,7 @@ test("OrderDetailsView shows failed view", async () => {
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.left("error"));
   });
 
@@ -40,14 +40,14 @@ test("OrderDetailsView shows failed view", async () => {
     await screen.findByRole("region", { name: "OrderDetailsView-Failed" }),
   ).toBeInTheDocument();
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("OrderDetailsView shows view for a failed order", async () => {
+test("OrderDetailsView shows view for a failed order", async() => {
   const { component, apiHelper } = baseSetup(DetailsPage);
 
   render(component);
@@ -58,7 +58,7 @@ test("OrderDetailsView shows view for a failed order", async () => {
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: responseOrderFailed }));
   });
 
@@ -84,14 +84,14 @@ test("OrderDetailsView shows view for a failed order", async () => {
 
   expect(serviceOrderItemRows).toHaveLength(1);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("OrderDetailsView shows view for a partial order", async () => {
+test("OrderDetailsView shows view for a partial order", async() => {
   const { component, apiHelper } = baseSetup(DetailsPage);
 
   render(component);
@@ -102,7 +102,7 @@ test("OrderDetailsView shows view for a partial order", async () => {
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: responsePartialOrder }));
   });
 
@@ -143,14 +143,14 @@ test("OrderDetailsView shows view for a partial order", async () => {
 
   expect(rowDependencies).not.toHaveTextContent(/Empty/);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("OrderDetailsView shows view for a in progress order", async () => {
+test("OrderDetailsView shows view for a in progress order", async() => {
   const { component, apiHelper } = baseSetup(DetailsPage);
 
   render(component);
@@ -161,7 +161,7 @@ test("OrderDetailsView shows view for a in progress order", async () => {
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: responseInProgressOrder }));
   });
 
@@ -201,14 +201,14 @@ test("OrderDetailsView shows view for a in progress order", async () => {
 
   expect(rowDependencies).toHaveTextContent(/Empty/);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();
   });
 });
 
-test("OrderDetailsView shows view for completed order", async () => {
+test("OrderDetailsView shows view for completed order", async() => {
   const { component, apiHelper } = baseSetup(DetailsPage);
 
   render(component);
@@ -219,7 +219,7 @@ test("OrderDetailsView shows view for completed order", async () => {
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right({ data: responseCompletedOrder }));
   });
 
@@ -261,7 +261,7 @@ test("OrderDetailsView shows view for completed order", async () => {
 
   expect(rowDependencies).toHaveTextContent(/Empty/);
 
-  await act(async () => {
+  await act(async() => {
     const results = await axe(document.body);
 
     expect(results).toHaveNoViolations();

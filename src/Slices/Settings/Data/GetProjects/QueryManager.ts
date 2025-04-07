@@ -5,7 +5,7 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export function GetProjectsQueryManager (store: Store, apiHelper: ApiHelper) {
+export function GetProjectsQueryManager(store: Store, apiHelper: ApiHelper) {
   return QueryManager.OneTime<"GetProjects">(
     apiHelper,
     StateHelper(store),

@@ -3,7 +3,7 @@ import { userEvent } from "@testing-library/user-event";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 import { filterServer } from "./serverSetup";
 
-test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN only deleted instances are shown", async () => {
+test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN only deleted instances are shown", async() => {
   filterServer.listen();
   const { component } = new ServiceInventoryPrepper().prep();
 

@@ -193,7 +193,7 @@ interface ChartData {
  * @param {InstancesByLabel} by_label - The instances grouped by label.
  * @returns {ChartData[]} - The chart data.
  */
-function getChartData (by_label: InstancesByLabel): ChartData[] {
+function getChartData(by_label: InstancesByLabel): ChartData[] {
   return orderedLabels.map((label) => ({
     x: label === "no_label" ? words("catalog.summary.noLabel") : label,
     y: by_label[label],

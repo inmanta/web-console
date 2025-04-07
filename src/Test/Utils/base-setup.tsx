@@ -20,7 +20,7 @@ import { UrlManagerImpl } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 
-export function baseSetup (Page: React.ReactNode, halted: boolean = false) {
+export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
   const apiHelper = new DeferredApiHelper();
 
   const scheduler = new StaticScheduler();

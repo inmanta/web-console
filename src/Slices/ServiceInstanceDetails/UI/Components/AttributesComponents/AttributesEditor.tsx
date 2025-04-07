@@ -108,7 +108,7 @@ export const AttributesEditor: React.FC<Props> = ({
   /**
    * onConfirm async method sending the patch request to Expert edit the attributes
    */
-  const onConfirm = async (): Promise<void> => {
+  const onConfirm = async(): Promise<void> => {
     const message = words("instanceDetails.API.message.update")(username);
 
     const patchAttributes: ExpertPatchAttributes = {

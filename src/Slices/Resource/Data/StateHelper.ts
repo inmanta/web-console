@@ -2,7 +2,7 @@ import { RemoteData, Resource } from "@/Core";
 import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export function StateHelper (store: Store) {
+export function StateHelper(store: Store) {
   return PrimaryStateHelperWithEnv<"GetResources">(
     store,
     (data, query, environment) => {

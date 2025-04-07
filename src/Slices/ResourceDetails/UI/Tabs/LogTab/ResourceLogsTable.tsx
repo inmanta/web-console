@@ -66,6 +66,6 @@ export const ResourceLogsTable: React.FC<Props> = ({
   );
 };
 
-function getUniqueId (log: ResourceLog): string {
+function getUniqueId(log: ResourceLog): string {
   return `${log.action_id}_${log.timestamp}`;
 }

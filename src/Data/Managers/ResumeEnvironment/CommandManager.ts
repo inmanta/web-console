@@ -1,7 +1,7 @@
 import { ApiHelper, RemoteData, StateHelper, Updater } from "@/Core";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
-export function ResumeEnvironmentCommandManager (
+export function ResumeEnvironmentCommandManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetEnvironmentDetails">,
   updater: Updater<"GetEnvironmentDetails">,
@@ -9,7 +9,7 @@ export function ResumeEnvironmentCommandManager (
   return CommandManagerWithEnv<"ResumeEnvironment">(
     "ResumeEnvironment",
     (command, environment) => {
-      return async () => {
+      return async() => {
         stateHelper.set(RemoteData.loading(), {
           kind: "GetEnvironmentDetails",
           details: false,

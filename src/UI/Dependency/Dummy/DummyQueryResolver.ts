@@ -6,22 +6,22 @@ type Data = RemoteData.Type<
 >;
 
 export class DummyQueryResolver implements QueryResolver {
-  useReadOnly (): Data {
+  useReadOnly(): Data {
     throw new Error("Method not implemented.");
   }
-  useOneTime (): [Data, () => void] {
-    throw new Error("Method not implemented.");
-  }
-
-  useContinuous (): [Data, () => void] {
+  useOneTime(): [Data, () => void] {
     throw new Error("Method not implemented.");
   }
 
-  pauseAllContinuousManagers (): void {
+  useContinuous(): [Data, () => void] {
     throw new Error("Method not implemented.");
   }
 
-  resumeAllContinuousManagers (): void {
+  pauseAllContinuousManagers(): void {
+    throw new Error("Method not implemented.");
+  }
+
+  resumeAllContinuousManagers(): void {
     throw new Error("Method not implemented.");
   }
 }

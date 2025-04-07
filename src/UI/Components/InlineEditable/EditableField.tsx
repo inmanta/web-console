@@ -55,7 +55,7 @@ export const EditableField: React.FC<Props> = ({
   const [editable, setEditable] = useState(initiallyEditable);
   const [submitError, setSubmitError] = useState("");
   const [value, setValue] = useState(initialValue);
-  const onSubmitRequest = async (value: string) => {
+  const onSubmitRequest = async(value: string) => {
     setEditable(false);
     const error = await onSubmit(value);
 

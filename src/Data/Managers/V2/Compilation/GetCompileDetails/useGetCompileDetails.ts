@@ -15,7 +15,7 @@ interface GetCompileDetails {
   useContinuous: () => UseQueryResult<ResponseBody, CustomError>;
 }
 
-function getUrl (params: CompileDetailsParams): string {
+function getUrl(params: CompileDetailsParams): string {
   return `/api/v2/compilereport/${params.id}`;
 }
 

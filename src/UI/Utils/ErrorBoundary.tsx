@@ -21,16 +21,16 @@ class ErrorBoundary extends Component<Props, State> {
     hasError: false,
   };
 
-  public static getDerivedStateFromError (error: Error): State {
+  public static getDerivedStateFromError(error: Error): State {
     // Update state so the next render will show the fallback UI.
     return { hasError: true, error: error };
   }
 
-  public componentDidCatch (error: Error, errorInfo: ErrorInfo) {
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("Uncaught error:", error, errorInfo);
   }
 
-  public render () {
+  public render() {
     if (this.state.hasError) {
       return (
         <React.Fragment>

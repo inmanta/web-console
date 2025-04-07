@@ -7,7 +7,7 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
-  constructor (isHalted: boolean) {
+  constructor(isHalted: boolean) {
     this.columnHeads = [
       { displayName: words("agents.columns.name"), apiName: "name" },
       { displayName: words("agents.columns.status"), apiName: "status" },
@@ -22,22 +22,22 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
     this.numberOfColumns = this.columnHeads.length + 3;
   }
 
-  createRows (sourceData: Agent[]): AgentRow[] {
+  createRows(sourceData: Agent[]): AgentRow[] {
     return sourceData.map((agent) => omit(agent, ["environment"]));
   }
 
-  getColumnHeadDisplayNames (): string[] {
+  getColumnHeadDisplayNames(): string[] {
     return this.columnHeads.map((columnHead) => columnHead.displayName);
   }
 
-  getNumberOfColumns (): number {
+  getNumberOfColumns(): number {
     return this.numberOfColumns;
   }
-  getColumnHeads (): ColumnHead[] {
+  getColumnHeads(): ColumnHead[] {
     return this.columnHeads;
   }
 
-  getColumnNameForIndex (index: number): string | undefined {
+  getColumnNameForIndex(index: number): string | undefined {
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
@@ -45,13 +45,13 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
     return undefined;
   }
 
-  getIndexForColumnName (columnName?: string): number {
+  getIndexForColumnName(columnName?: string): number {
     return this.columnHeads.findIndex(
       (columnHead) => columnHead.apiName === columnName,
     );
   }
 
-  getSortableColumnNames (): string[] {
+  getSortableColumnNames(): string[] {
     const sortableColumns = ["name", "status"];
 
     return sortableColumns;

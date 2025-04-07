@@ -19,7 +19,7 @@ export const OnResumeToggle: React.FC<Props> = ({ name, unpauseOnResume }) => {
   });
   const { filter, sort, pageSize, currentPage, setErrorMessage } =
     useContext(GetAgentsContext);
-  const onChange = async () => {
+  const onChange = async() => {
     const result = await agentActionTrigger({
       kind: "GetAgents",
       filter,

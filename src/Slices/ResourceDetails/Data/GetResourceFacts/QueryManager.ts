@@ -2,7 +2,7 @@ import { identity } from "lodash-es";
 import { StateHelper, Scheduler, ApiHelper } from "@/Core";
 import { QueryManager } from "@/Data/Managers/Helpers";
 
-export function GetResourceFactsQueryManager (
+export function GetResourceFactsQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetResourceFacts">,
   scheduler: Scheduler,

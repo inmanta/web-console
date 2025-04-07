@@ -42,9 +42,9 @@ const setup = () => {
 };
 
 describe("UserManagementPage", () => {
-  it("should render empty view when no users are returned by API", async () => {
+  it("should render empty view when no users are returned by API", async() => {
     const server = setupServer(
-      http.get("/api/v2/user", async () => {
+      http.get("/api/v2/user", async() => {
         return HttpResponse.json({
           data: [],
         });
@@ -70,7 +70,7 @@ describe("UserManagementPage", () => {
 
     expect(addUserButton).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -79,9 +79,9 @@ describe("UserManagementPage", () => {
     server.close();
   });
 
-  it("should display user list when users are returned by API", async () => {
+  it("should display user list when users are returned by API", async() => {
     const server = setupServer(
-      http.get("/api/v2/user", async () => {
+      http.get("/api/v2/user", async() => {
         return HttpResponse.json({
           data: [
             { username: "test_user", auth_method: "database" },
@@ -113,7 +113,7 @@ describe("UserManagementPage", () => {
 
     expect(screen.getAllByText("Delete")).toHaveLength(2);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -122,9 +122,9 @@ describe("UserManagementPage", () => {
     server.close();
   });
 
-  it("should display error view when API call fails", async () => {
+  it("should display error view when API call fails", async() => {
     const server = setupServer(
-      http.get("/api/v2/user", async () => {
+      http.get("/api/v2/user", async() => {
         return HttpResponse.json(
           {
             message: "Access to this resource is unauthorized",
@@ -155,7 +155,7 @@ describe("UserManagementPage", () => {
 
     expect(errorMessage).toBeVisible();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -164,18 +164,18 @@ describe("UserManagementPage", () => {
     server.close();
   });
 
-  it("should sent request to add user to the list", async () => {
+  it("should sent request to add user to the list", async() => {
     const data: UserInfo[] = [
       { username: "test_user", auth_method: "database" },
       { username: "test_user2", auth_method: "oidc" },
     ];
     const server = setupServer(
-      http.get("/api/v2/user", async () => {
+      http.get("/api/v2/user", async() => {
         return HttpResponse.json({
           data,
         });
       }),
-      http.post("/api/v2/user", async ({ request }): Promise<HttpResponse> => {
+      http.post("/api/v2/user", async({ request }): Promise<HttpResponse> => {
         const reqBody = await request.json();
 
         if (typeof reqBody !== "object") {
@@ -207,7 +207,7 @@ describe("UserManagementPage", () => {
           auth_method: "database",
         });
       }),
-      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
+      http.delete("/api/v2/user/test_user", async(): Promise<HttpResponse> => {
         data.splice(0, 1);
 
         return HttpResponse.json({ status: 204 });
@@ -257,7 +257,7 @@ describe("UserManagementPage", () => {
 
     expect(screen.getByText("new_user")).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -266,18 +266,18 @@ describe("UserManagementPage", () => {
     server.close();
   });
 
-  it("should sent request to remove user from the list", async () => {
+  it("should sent request to remove user from the list", async() => {
     const data: UserInfo[] = [
       { username: "test_user", auth_method: "database" },
       { username: "test_user2", auth_method: "oidc" },
     ];
     const server = setupServer(
-      http.get("/api/v2/user", async (): Promise<HttpResponse> => {
+      http.get("/api/v2/user", async(): Promise<HttpResponse> => {
         return HttpResponse.json({
           data,
         });
       }),
-      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
+      http.delete("/api/v2/user/test_user", async(): Promise<HttpResponse> => {
         data.splice(0, 1);
 
         return HttpResponse.json({ status: 204 });
@@ -309,7 +309,7 @@ describe("UserManagementPage", () => {
 
     expect(updatedRows).toHaveLength(1);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();

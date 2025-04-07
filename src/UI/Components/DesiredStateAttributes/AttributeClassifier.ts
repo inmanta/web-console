@@ -2,7 +2,7 @@ import { Maybe, Formatter } from "@/Core";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 
 export class AttributeClassifier {
-  constructor (
+  constructor(
     private readonly jsonFormatter: Formatter<unknown>,
     private readonly xmlFormatter: Formatter,
     private readonly multilineClassifier: (
@@ -14,7 +14,7 @@ export class AttributeClassifier {
       key === "version" || key === "requires",
   ) {}
 
-  classify (attributesObject: Record<string, unknown>): ClassifiedAttribute[] {
+  classify(attributesObject: Record<string, unknown>): ClassifiedAttribute[] {
     return Object.entries(attributesObject)
       .map(([key, value]) => this.classifyKeyValue(key, value))
       .filter(Maybe.isSome)
@@ -22,7 +22,7 @@ export class AttributeClassifier {
       .sort((a, b) => (a.key < b.key ? -1 : 1));
   }
 
-  private classifyKeyValue (
+  private classifyKeyValue(
     key: string,
     value: unknown,
   ): Maybe.Type<ClassifiedAttribute> {
@@ -65,31 +65,31 @@ export class AttributeClassifier {
     });
   }
 
-  private isUndefined (value: unknown): boolean {
+  private isUndefined(value: unknown): boolean {
     return value === "<<undefined>>";
   }
 
-  private isPassword (key: string): boolean {
+  private isPassword(key: string): boolean {
     return key.indexOf("password") >= 0;
   }
 
-  private isObject (value: unknown): boolean {
+  private isObject(value: unknown): boolean {
     return typeof value === "object";
   }
 
-  private isString (value: unknown): value is string {
+  private isString(value: unknown): value is string {
     return typeof value === "string";
   }
 
-  private isMultiLine (value: string): boolean {
+  private isMultiLine(value: string): boolean {
     return value.length > 80 || value.indexOf("\n") >= 0;
   }
 
-  private isFile (key: string): boolean {
+  private isFile(key: string): boolean {
     return key === "hash";
   }
 
-  private isXml (value: string): boolean {
+  private isXml(value: string): boolean {
     const trimmedValue = value.trimStart().trimEnd();
 
     return trimmedValue.startsWith("<") && trimmedValue.endsWith(">");

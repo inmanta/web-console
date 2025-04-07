@@ -21,7 +21,7 @@ expect.extend(toHaveNoViolations);
 
 const [env1] = Environment.filterable.map((env) => env.id);
 
-function setup () {
+function setup() {
   const store = getStoreInstance();
 
   const environmentHandler = EnvironmentHandlerImpl(
@@ -76,7 +76,7 @@ describe("ServiceCatalog", () => {
     server.close();
   });
 
-  test("ServiceCatalog shows empty state", async () => {
+  test("ServiceCatalog shows empty state", async() => {
     server.use(
       http.get("/lsm/v1/service_catalog", () => {
         return HttpResponse.json({ data: [] });
@@ -95,14 +95,14 @@ describe("ServiceCatalog", () => {
       await screen.findByRole("generic", { name: "ServiceCatalog-Empty" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("ServiceCatalog shows success state", async () => {
+  test("ServiceCatalog shows success state", async() => {
     server.use(
       http.get("/lsm/v1/service_catalog", () => {
         return HttpResponse.json({ data: [Service.a] });
@@ -117,14 +117,14 @@ describe("ServiceCatalog", () => {
       await screen.findByRole("generic", { name: "ServiceCatalog-Success" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("GIVEN ServiceCatalog WHEN service is deleted THEN UI is updated", async () => {
+  test("GIVEN ServiceCatalog WHEN service is deleted THEN UI is updated", async() => {
     const data = [Service.a];
 
     server.use(
@@ -158,14 +158,14 @@ describe("ServiceCatalog", () => {
       await screen.findByRole("generic", { name: "ServiceCatalog-Empty" }),
     ).toBeInTheDocument();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("GIVEN ServiceCatalog WHEN update fo catalog is triggered successfully THEN UI is updated", async () => {
+  test("GIVEN ServiceCatalog WHEN update fo catalog is triggered successfully THEN UI is updated", async() => {
     const data: ServiceModel[] = [];
 
     server.use(

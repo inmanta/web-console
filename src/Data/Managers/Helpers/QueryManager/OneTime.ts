@@ -17,7 +17,7 @@ import {
 import { GetDependencies, Data, GetUrl, ToUsed } from "./types";
 import { urlEncodeParams } from "./utils";
 
-export function OneTime<Kind extends Query.Kind> (
+export function OneTime<Kind extends Query.Kind>(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<Kind>,
   getDependencies: GetDependencies<Kind>,
@@ -26,7 +26,7 @@ export function OneTime<Kind extends Query.Kind> (
   toUsed: ToUsed<Kind>,
   strategy: "MERGE" | "RELOAD",
 ): OneTimeQueryManager<Kind> {
-  async function update (
+  async function update(
     query: Query.SubQuery<Kind>,
     url: string,
   ): Promise<void> {
@@ -36,7 +36,7 @@ export function OneTime<Kind extends Query.Kind> (
     );
   }
 
-  function useOneTime (query: Query.SubQuery<Kind>): Data<Kind> {
+  function useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
     const [url, setUrl] = useState(getUrl(urlEncodeParams(query)));
 
     useEffect(() => {
@@ -62,7 +62,7 @@ export function OneTime<Kind extends Query.Kind> (
     ];
   }
 
-  function matches (
+  function matches(
     query: Query.SubQuery<Kind>,
     matchingKind: QueryManagerKind,
   ): boolean {

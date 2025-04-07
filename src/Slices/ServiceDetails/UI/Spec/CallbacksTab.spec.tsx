@@ -33,7 +33,7 @@ import { Page } from "@S/ServiceDetails/UI/Page";
 
 const server = setupServer();
 
-function setup () {
+function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
 
@@ -86,7 +86,7 @@ function setup () {
   };
 }
 
-test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab", async () => {
+test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab", async() => {
   server.use(
     http.get("/lsm/v1/service_catalog/service_name_a", () => {
       return HttpResponse.json({ data: Service.a });
@@ -107,7 +107,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
     screen.getByRole("region", { name: "Callbacks-Loading" }),
   ).toBeVisible();
 
-  await act(async () => {
+  await act(async() => {
     apiHelper.resolve(Either.right({ data: Callback.list }));
   });
 

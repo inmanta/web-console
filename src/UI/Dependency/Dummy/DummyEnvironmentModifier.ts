@@ -1,19 +1,19 @@
 import { EnvironmentModifier } from "@/Core";
 
 export class DummyEnvironmentModifier implements EnvironmentModifier {
-  useIsProtectedEnvironment (): boolean {
+  useIsProtectedEnvironment(): boolean {
     throw new Error("Method not implemented.");
   }
-  useIsServerCompileEnabled (): boolean {
+  useIsServerCompileEnabled(): boolean {
     throw new Error("Method not implemented.");
   }
-  setEnvironment (): void {
+  setEnvironment(): void {
     throw new Error("Method not implemented.");
   }
-  useIsHalted (): boolean {
+  useIsHalted(): boolean {
     throw new Error("Method not implemented.");
   }
-  useIsExpertModeEnabled (): boolean {
+  useIsExpertModeEnabled(): boolean {
     throw new Error("Method not implemented.");
   }
 }

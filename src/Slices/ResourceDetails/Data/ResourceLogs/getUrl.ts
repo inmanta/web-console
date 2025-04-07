@@ -2,7 +2,7 @@ import moment from "moment-timezone";
 import qs from "qs";
 import { Query, DateRange, RangeOperator } from "@/Core";
 
-export function getUrl ({
+export function getUrl({
   id,
   sort,
   filter,

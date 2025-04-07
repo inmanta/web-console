@@ -14,7 +14,7 @@ implements TablePresenter<ServiceOrder, ServiceOrder> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
-  constructor () {
+  constructor() {
     this.columnHeads = [
       {
         displayName: words("orders.column.created_at"),
@@ -47,7 +47,7 @@ implements TablePresenter<ServiceOrder, ServiceOrder> {
    * @param sourceData ServiceOrder[]
    * @returns ServiceOrder[]
    */
-  createRows (sourceData: ServiceOrder[]): ServiceOrder[] {
+  createRows(sourceData: ServiceOrder[]): ServiceOrder[] {
     return sourceData;
   }
 
@@ -57,7 +57,7 @@ implements TablePresenter<ServiceOrder, ServiceOrder> {
    *
    * @returns string[]
    */
-  getColumnHeadDisplayNames (): string[] {
+  getColumnHeadDisplayNames(): string[] {
     return this.columnHeads.map(({ displayName }) => displayName);
   }
 
@@ -67,7 +67,7 @@ implements TablePresenter<ServiceOrder, ServiceOrder> {
    *
    * @returns string[]
    */
-  getSortableColumnNames (): string[] {
+  getSortableColumnNames(): string[] {
     const sortableColumns = ["created_at"];
 
     return sortableColumns;
@@ -79,7 +79,7 @@ implements TablePresenter<ServiceOrder, ServiceOrder> {
    *
    * @returns ColumnHead[]
    */
-  getColumnHeads (): ColumnHead[] {
+  getColumnHeads(): ColumnHead[] {
     return this.columnHeads;
   }
 
@@ -89,7 +89,7 @@ implements TablePresenter<ServiceOrder, ServiceOrder> {
    *
    * @returns number
    */
-  getNumberOfColumns (): number {
+  getNumberOfColumns(): number {
     return this.numberOfColumns;
   }
 
@@ -100,7 +100,7 @@ implements TablePresenter<ServiceOrder, ServiceOrder> {
    * @param index number
    * @returns string | undefined
    */
-  getColumnNameForIndex (index: number): string | undefined {
+  getColumnNameForIndex(index: number): string | undefined {
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
@@ -115,7 +115,7 @@ implements TablePresenter<ServiceOrder, ServiceOrder> {
    * @param columnName string
    * @returns number
    */
-  getIndexForColumnName (columnName?: string): number {
+  getIndexForColumnName(columnName?: string): number {
     return this.columnHeads.findIndex(
       (columnHead) => columnHead.apiName === columnName,
     );

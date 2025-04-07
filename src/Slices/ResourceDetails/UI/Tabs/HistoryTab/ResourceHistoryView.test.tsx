@@ -22,7 +22,7 @@ import {
 import { ResourceHistory } from "@S/ResourceDetails/Data/Mock";
 import { ResourceHistoryView } from "./ResourceHistoryView";
 
-function setup () {
+function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
@@ -62,7 +62,7 @@ function setup () {
   return { component, apiHelper, scheduler };
 }
 
-test("ResourceHistoryView shows empty table", async () => {
+test("ResourceHistoryView shows empty table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -84,7 +84,7 @@ test("ResourceHistoryView shows empty table", async () => {
   ).toBeInTheDocument();
 });
 
-test("ResourceHistoryView shows failed table", async () => {
+test("ResourceHistoryView shows failed table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -100,7 +100,7 @@ test("ResourceHistoryView shows failed table", async () => {
   ).toBeInTheDocument();
 });
 
-test("ResourceHistoryView shows success table", async () => {
+test("ResourceHistoryView shows success table", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -123,7 +123,7 @@ test("ResourceHistoryView shows success table", async () => {
   ).toBeInTheDocument();
 });
 
-test("ResourceHistoryView shows sorting buttons for sortable columns", async () => {
+test("ResourceHistoryView shows sorting buttons for sortable columns", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -131,7 +131,7 @@ test("ResourceHistoryView shows sorting buttons for sortable columns", async () 
   expect(await screen.findByRole("button", { name: /Date/i })).toBeVisible();
 });
 
-test("ResourceHistoryView sets sorting parameters correctly on click", async () => {
+test("ResourceHistoryView sets sorting parameters correctly on click", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -145,12 +145,12 @@ test("ResourceHistoryView sets sorting parameters correctly on click", async () 
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=date.asc");
 });
 
-test("GIVEN The ResourceHistoryView WHEN the user clicks on the expansion toggle THEN the tabs are shown", async () => {
+test("GIVEN The ResourceHistoryView WHEN the user clicks on the expansion toggle THEN the tabs are shown", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
-  await act(async () => {
+  await act(async() => {
     await apiHelper.resolve(Either.right(ResourceHistory.response));
   });
 
@@ -162,13 +162,13 @@ test("GIVEN The ResourceHistoryView WHEN the user clicks on the expansion toggle
   expect(screen.getAllByRole("tab", { name: "Requires" })[0]).toBeVisible();
 });
 
-test("GIVEN The ResourceHistoryView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+test("GIVEN The ResourceHistoryView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async() => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   //mock that response has more than one site
-  await act(async () => {
+  await act(async() => {
     apiHelper.resolve(
       Either.right({
         ...ResourceHistory.response,
@@ -196,7 +196,7 @@ test("GIVEN The ResourceHistoryView WHEN sorting changes AND we are not on the f
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=date.desc)/);
 
-  await act(async () => {
+  await act(async() => {
     apiHelper.resolve(
       Either.right({
         ...ResourceHistory.response,

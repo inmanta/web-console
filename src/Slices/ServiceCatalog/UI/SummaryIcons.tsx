@@ -33,7 +33,7 @@ export const SummaryIcons: React.FC<Props> = ({ summary }) => {
   );
 };
 
-function getLabelforName (labelName: string, value: number): ReactElement {
+function getLabelforName(labelName: string, value: number): ReactElement {
   switch (labelName) {
     case "danger":
       return (

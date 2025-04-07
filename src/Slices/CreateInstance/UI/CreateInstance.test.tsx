@@ -24,7 +24,7 @@ const axe = configureAxe({
   },
 });
 
-function setup (service) {
+function setup(service) {
   const store = getStoreInstance();
 
   const component = (
@@ -70,7 +70,7 @@ describe("CreateInstance", () => {
 
   afterAll(() => server.close());
 
-  test("Given the CreateInstance View When creating an instance with attributes Then the correct request is fired", async () => {
+  test("Given the CreateInstance View When creating an instance with attributes Then the correct request is fired", async() => {
     const postMock = jest.fn();
 
     jest.spyOn(queryModule, "usePost").mockReturnValue(postMock);
@@ -97,7 +97,7 @@ describe("CreateInstance", () => {
 
     expect(networkField).toBeValid();
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -179,12 +179,12 @@ describe("CreateInstance", () => {
   //   );
   // });
 
-  test("Given the CreateInstance View When creating entity with default values Then the inputs have correct values set", async () => {
+  test("Given the CreateInstance View When creating entity with default values Then the inputs have correct values set", async() => {
     const { component } = setup(Service.ServiceWithAllAttrs);
 
     render(component);
 
-    await act(async () => {
+    await act(async() => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();

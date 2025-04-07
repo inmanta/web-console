@@ -2,7 +2,7 @@ import { RemoteData } from "@/Core";
 import { PrimaryStateHelper } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export function ResourceHistoryStateHelper (store: Store) {
+export function ResourceHistoryStateHelper(store: Store) {
   return PrimaryStateHelper<"GetResourceHistory">(
     store,
     (data, query) => {

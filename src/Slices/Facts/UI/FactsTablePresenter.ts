@@ -9,7 +9,7 @@ export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
-  constructor () {
+  constructor() {
     this.columnHeads = [
       { displayName: words("facts.column.name"), apiName: "name" },
       { displayName: words("facts.column.updated"), apiName: "updated" },
@@ -19,22 +19,22 @@ export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
     this.numberOfColumns = this.columnHeads.length + 1;
   }
 
-  createRows (sourceData: Fact[]): Fact[] {
+  createRows(sourceData: Fact[]): Fact[] {
     return sourceData.map((fact) => ({
       ...fact,
       updated: fact.updated ? datePresenter.getFull(fact.updated) : undefined,
     }));
   }
 
-  getColumnHeadDisplayNames (): string[] {
+  getColumnHeadDisplayNames(): string[] {
     return this.columnHeads.map((columnHead) => columnHead.displayName);
   }
 
-  public getColumnHeads (): ColumnHead[] {
+  public getColumnHeads(): ColumnHead[] {
     return this.columnHeads;
   }
 
-  public getColumnNameForIndex (index: number): string | undefined {
+  public getColumnNameForIndex(index: number): string | undefined {
     if (index > -1 && index < this.getNumberOfColumns()) {
       return this.getColumnHeads()[index].apiName;
     }
@@ -42,17 +42,17 @@ export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
     return undefined;
   }
 
-  public getIndexForColumnName (columnName?: string): number {
+  public getIndexForColumnName(columnName?: string): number {
     return this.columnHeads.findIndex(
       (columnHead) => columnHead.apiName === columnName,
     );
   }
 
-  public getSortableColumnNames (): string[] {
+  public getSortableColumnNames(): string[] {
     return ["name", "resource_id"];
   }
 
-  getNumberOfColumns (): number {
+  getNumberOfColumns(): number {
     return this.numberOfColumns;
   }
 }

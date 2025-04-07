@@ -7,7 +7,7 @@ test.each`
   ${"?state.Inventory.pageSize=10"} | ${"10"}    | ${PageSize.from("10")} | ${"10"}
 `(
   "GIVEN handleUrlState with PageSize WHEN search is $searchText THEN returns $valueText",
-  async ({ search, expectedValue }) => {
+  async({ search, expectedValue }) => {
     const [value] = handleUrlStateWithPageSize(
       { route: "Inventory" },
       { pathname: "", search, hash: "" },

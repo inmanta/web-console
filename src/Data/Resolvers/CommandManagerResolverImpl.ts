@@ -38,18 +38,18 @@ import { ClearEnvironmentCommandManager } from "@S/Settings/Data/ClearEnvironmen
 export class CommandManagerResolverImpl implements CommandManagerResolver {
   private managers: CommandManager[] = [];
 
-  constructor (
+  constructor(
     private readonly store: Store,
     private readonly apiHelper: ApiHelper,
   ) {
     this.managers = this.getManagers();
   }
 
-  get (): CommandManager[] {
+  get(): CommandManager[] {
     return this.managers;
   }
 
-  private getManagers (): CommandManager[] {
+  private getManagers(): CommandManager[] {
     const environmentDetailsStateHelper = GetEnvironmentDetailsStateHelper(
       this.store,
     );

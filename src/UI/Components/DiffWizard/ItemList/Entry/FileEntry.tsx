@@ -19,7 +19,7 @@ export const FileEntry: React.FC<EntryInfo> = ({
     RemoteData.RemoteData<string, Diff.Values>
   >(RemoteData.notAsked());
 
-  const onShow = async () => {
+  const onShow = async() => {
     setFiles(RemoteData.loading());
     const [from, to] = await Promise.all([
       fromValue.length > 0

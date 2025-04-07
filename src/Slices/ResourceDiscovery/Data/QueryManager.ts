@@ -7,7 +7,7 @@ import {
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export function GetDiscoveredResourcesQueryManager (
+export function GetDiscoveredResourcesQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<"GetDiscoveredResources">,
   scheduler: Scheduler,

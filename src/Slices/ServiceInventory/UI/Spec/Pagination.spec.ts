@@ -3,7 +3,7 @@ import { userEvent } from "@testing-library/user-event";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 import { paginationServer } from "./serverSetup";
 
-test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user clicks on prev THEN first page is shown", async () => {
+test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user clicks on prev THEN first page is shown", async() => {
   paginationServer.listen();
   const { component } = new ServiceInventoryPrepper().prep();
 

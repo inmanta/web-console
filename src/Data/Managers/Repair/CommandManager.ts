@@ -1,7 +1,7 @@
 import { ApiHelper } from "@/Core";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
-export function RepairCommandManager (apiHelper: ApiHelper) {
+export function RepairCommandManager(apiHelper: ApiHelper) {
   return CommandManagerWithEnv<"Repair">(
     "Repair",
     (command, environment) => (agents) =>
