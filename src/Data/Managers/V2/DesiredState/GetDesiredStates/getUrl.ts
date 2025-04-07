@@ -1,6 +1,7 @@
 import moment from "moment-timezone";
 import qs from "qs";
-import { Query, RangeOperator } from "@/Core";
+import { RangeOperator } from "@/Core";
+import { GetDesiredStatesParams } from "./useGetDesiredStates";
 
 /**
  * Constructs the URL for fetching desired states based on the provided query parameters.
@@ -11,7 +12,7 @@ import { Query, RangeOperator } from "@/Core";
  * @returns The constructed URL for fetching desired states.
  */
 export function getUrl(
-  { pageSize, filter, currentPage }: Query.SubQuery<"GetDesiredStates">,
+  { pageSize, filter, currentPage }: GetDesiredStatesParams,
   timezone = moment.tz.guess(),
 ): string {
   const defaultFilter = {};

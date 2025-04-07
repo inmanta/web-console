@@ -1,4 +1,4 @@
-import { PageSize, Query } from "@/Core";
+import { PageSize } from "@/Core";
 import { getUrl } from "./getUrl";
 import { GetVersionResourcesParams } from "./useGetVersionResources";
 
