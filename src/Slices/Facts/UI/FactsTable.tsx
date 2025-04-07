@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   OnSort,
   Table,
@@ -6,12 +6,12 @@ import {
   Th,
   Thead,
   Tr,
-} from '@patternfly/react-table';
-import { Sort } from '@/Core';
-import { Fact } from '@S/Facts/Core/Domain';
-import { SortKey } from '@S/Facts/Core/Query';
-import { FactsRow } from './FactsRow';
-import { FactsTablePresenter } from './FactsTablePresenter';
+} from "@patternfly/react-table";
+import { Sort } from "@/Core";
+import { Fact } from "@S/Facts/Core/Domain";
+import { SortKey } from "@S/Facts/Core/Query";
+import { FactsRow } from "./FactsRow";
+import { FactsTablePresenter } from "./FactsTablePresenter";
 
 interface Props {
   rows: Fact[];

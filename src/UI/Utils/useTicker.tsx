@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 // These values are in milliseconds
 const ONE_HOUR = 3600000;
@@ -6,15 +6,15 @@ const ONE_MINUTE = 60000;
 const TEN_SECONDS = 10000;
 const ONE_SECOND = 1000;
 
-type Interval = 'OneSecond' | 'TenSeconds' | 'OneMinute';
+type Interval = "OneSecond" | "TenSeconds" | "OneMinute";
 
-type IntervalWithNever = Interval | 'Never';
+type IntervalWithNever = Interval | "Never";
 
 const getIntervalForDiff = (diff: number): IntervalWithNever => {
-  if (diff > ONE_HOUR) return 'OneMinute';
-  if (diff > ONE_MINUTE) return 'TenSeconds';
+  if (diff > ONE_HOUR) return "OneMinute";
+  if (diff > ONE_MINUTE) return "TenSeconds";
 
-  return 'OneSecond';
+  return "OneSecond";
 };
 
 const intervalValueMap: Record<Interval, number> = {
@@ -48,7 +48,7 @@ export const useTickerWithInterval = (interval: IntervalWithNever): number => {
   const [now, setNow] = useState(0);
 
   useEffect(() => {
-    if (interval === 'Never') return;
+    if (interval === "Never") return;
     const timeout = setTimeout(() => {
       setNow(Date.now());
     }, intervalValueMap[interval]);

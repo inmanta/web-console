@@ -1,18 +1,18 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionToggle,
-} from '@patternfly/react-core';
-import { InstanceAttributeModel, ServiceInstanceModel } from '@/Core';
-import { InstanceLog } from '@/Core/Domain/HistoryLog';
-import { MarkdownCard } from '@/Slices/ServiceInventory/UI/Tabs/MarkdownCard';
-import { words } from '@/UI';
-import { ErrorView, LoadingView } from '@/UI/Components';
-import { DynamicFAIcon } from '@/UI/Components/FaIcon';
-import { InstanceDetailsContext } from '../../Core/Context';
-import { TabContentWrapper } from '.';
+} from "@patternfly/react-core";
+import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
+import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
+import { words } from "@/UI";
+import { ErrorView, LoadingView } from "@/UI/Components";
+import { DynamicFAIcon } from "@/UI/Components/FaIcon";
+import { InstanceDetailsContext } from "../../Core/Context";
+import { TabContentWrapper } from ".";
 
 // Interface representing the needed properties to display the documentation sections.
 export interface DocAttributeDescriptors {
@@ -65,7 +65,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
       return (
         <TabContentWrapper id="documentation">
           <ErrorView
-            message={words('instanceDetails.tabs.documentation.noData')}
+            message={words("instanceDetails.tabs.documentation.noData")}
           />
         </TabContentWrapper>
       );
@@ -122,7 +122,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
         ))}
         {sections.length === 0 && (
           <ErrorView
-            message={words('instanceDetails.tabs.documentation.noData')}
+            message={words("instanceDetails.tabs.documentation.noData")}
           />
         )}
       </Accordion>
@@ -151,7 +151,7 @@ const getDocumentationSections = (
       iconName: iconName,
       value:
         attributeSet[attributeName] ||
-        words('instanceDetails.documentation.noAttributeForVersion')(
+        words("instanceDetails.documentation.noAttributeForVersion")(
           attributeName,
         ),
     };

@@ -1,14 +1,14 @@
-import React from 'react';
-import { Flex, FlexItem, Switch } from '@patternfly/react-core';
-import { EnvironmentSettings } from '@/Core';
-import { Warning } from './Warning';
+import React from "react";
+import { Flex, FlexItem, Switch } from "@patternfly/react-core";
+import { EnvironmentSettings } from "@/Core";
+import { Warning } from "./Warning";
 
 interface Props {
   info: EnvironmentSettings.BooleanInputInfo;
 }
 
 export const BooleanInput: React.FC<Props> = ({ info }) => (
-  <Flex direction={{ default: 'row' }}>
+  <Flex direction={{ default: "row" }}>
     <FlexItem>
       <Switch
         isChecked={info.value}
@@ -17,7 +17,7 @@ export const BooleanInput: React.FC<Props> = ({ info }) => (
       />
     </FlexItem>
 
-    <FlexItem style={{ minWidth: '20px' }}>
+    <FlexItem style={{ minWidth: "20px" }}>
       {info.isUpdateable(info) && <Warning />}
     </FlexItem>
   </Flex>

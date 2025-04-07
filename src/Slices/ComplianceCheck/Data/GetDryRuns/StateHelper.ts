@@ -1,9 +1,9 @@
-import { RemoteData } from '@/Core';
-import { PrimaryStateHelperWithEnv } from '@/Data/Common';
-import { Store } from '@/Data/Store';
+import { RemoteData } from "@/Core";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
+import { Store } from "@/Data/Store";
 
 export function StateHelper (store: Store) {
-  return PrimaryStateHelperWithEnv<'GetDryRuns'>(
+  return PrimaryStateHelperWithEnv<"GetDryRuns">(
     store,
     (apiData, { version }, environment) => {
       const data = RemoteData.mapSuccess((response) => response.data, apiData);

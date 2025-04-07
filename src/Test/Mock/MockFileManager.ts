@@ -1,4 +1,4 @@
-import { FileManager } from '@/Core';
+import { FileManager } from "@/Core";
 
 export class MockFileManager implements FileManager {
   download (): void {

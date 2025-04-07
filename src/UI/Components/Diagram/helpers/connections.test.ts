@@ -1,28 +1,28 @@
-import { dia } from '@inmanta/rappid';
-import { InstanceAttributeModel, ServiceModel } from '@/Core';
-import { Service } from '@/Test';
+import { dia } from "@inmanta/rappid";
+import { InstanceAttributeModel, ServiceModel } from "@/Core";
+import { Service } from "@/Test";
 import {
   a as InstanceAttributesA,
   b as InstanceAttributesB,
-} from '@/Test/Data/ServiceInstance/Attributes';
+} from "@/Test/Data/ServiceInstance/Attributes";
 import {
   ConnectionRules,
   EmbeddedRule,
   InterServiceRule,
   TypeEnum,
-} from '@/UI/Components/Diagram/interfaces';
-import { createComposerEntity } from '../actions/general';
-import { Link, ServiceEntityBlock } from '../shapes';
-import { defineObjectsForJointJS } from '../testSetup';
+} from "@/UI/Components/Diagram/interfaces";
+import { createComposerEntity } from "../actions/general";
+import { Link, ServiceEntityBlock } from "../shapes";
+import { defineObjectsForJointJS } from "../testSetup";
 import {
   createConnectionRules,
   checkWhetherConnectionRulesAreExhausted,
   checkIfConnectionIsAllowed,
-} from './connections';
+} from "./connections";
 
 defineObjectsForJointJS();
 
-describe('createConnectionRules', () => {
+describe("createConnectionRules", () => {
   const rulesForSecondTest = {
     service_name_a: [],
   };
@@ -31,62 +31,62 @@ describe('createConnectionRules', () => {
     allocated: [],
     circuits: [
       {
-        name: 'allocated',
+        name: "allocated",
         lowerLimit: 1,
         upperLimit: 1,
-        modifier: 'r',
-        kind: 'Embedded',
+        modifier: "r",
+        kind: "Embedded",
       },
       {
-        name: 'customer_endpoint',
+        name: "customer_endpoint",
         lowerLimit: 1,
         upperLimit: 1,
-        modifier: 'rw',
-        kind: 'Embedded',
+        modifier: "rw",
+        kind: "Embedded",
       },
       {
-        name: 'csp_endpoint',
+        name: "csp_endpoint",
         lowerLimit: 1,
         upperLimit: 1,
-        modifier: 'rw',
-        kind: 'Embedded',
+        modifier: "rw",
+        kind: "Embedded",
       },
     ],
     csp_endpoint: [
       {
-        name: 'allocated',
+        name: "allocated",
         lowerLimit: 1,
         upperLimit: 1,
-        modifier: 'r',
-        kind: 'Embedded',
+        modifier: "r",
+        kind: "Embedded",
       },
     ],
     customer_endpoint: [
       {
-        name: 'allocated',
+        name: "allocated",
         lowerLimit: 1,
         upperLimit: 1,
-        modifier: 'r',
-        kind: 'Embedded',
+        modifier: "r",
+        kind: "Embedded",
       },
     ],
     service_name_a: [
       {
-        name: 'circuits',
+        name: "circuits",
         lowerLimit: 1,
         upperLimit: 4,
-        modifier: 'rw+',
-        kind: 'Embedded',
+        modifier: "rw+",
+        kind: "Embedded",
       },
     ],
     with_relations: [
       {
-        name: 'test_entity',
-        attributeName: 'test_entity',
+        name: "test_entity",
+        attributeName: "test_entity",
         lowerLimit: 1,
         upperLimit: 5,
-        modifier: 'rw+',
-        kind: 'Inter-Service',
+        modifier: "rw+",
+        kind: "Inter-Service",
       },
     ],
   };
@@ -94,71 +94,71 @@ describe('createConnectionRules', () => {
   const rulesForFourthTests = {
     another_embedded: [
       {
-        name: 'another_embedded_single',
+        name: "another_embedded_single",
         lowerLimit: null,
         upperLimit: 1,
-        modifier: 'rw+',
-        kind: 'Embedded',
+        modifier: "rw+",
+        kind: "Embedded",
       },
     ],
     another_embedded_single: [
       {
-        attributeName: 'related_service',
-        name: 'test_entity',
+        attributeName: "related_service",
+        name: "test_entity",
         lowerLimit: null,
         upperLimit: null,
-        modifier: 'rw',
-        kind: 'Inter-Service',
+        modifier: "rw",
+        kind: "Inter-Service",
       },
     ],
     editable_embedded_entity_relation_with_rw_attributes: [],
     embedded: [
       {
-        name: 'embedded_single',
+        name: "embedded_single",
         lowerLimit: null,
         upperLimit: 1,
-        modifier: 'rw',
-        kind: 'Embedded',
+        modifier: "rw",
+        kind: "Embedded",
       },
     ],
     embedded_single: [],
     not_editable: [],
     test_service: [
       {
-        name: 'embedded',
+        name: "embedded",
         lowerLimit: null,
         upperLimit: 2,
-        modifier: 'rw+',
-        kind: 'Embedded',
+        modifier: "rw+",
+        kind: "Embedded",
       },
       {
-        name: 'another_embedded',
+        name: "another_embedded",
         lowerLimit: null,
         upperLimit: null,
-        modifier: 'rw+',
-        kind: 'Embedded',
+        modifier: "rw+",
+        kind: "Embedded",
       },
       {
-        name: 'not_editable',
+        name: "not_editable",
         lowerLimit: 1,
         upperLimit: 1,
-        modifier: 'rw',
-        kind: 'Embedded',
+        modifier: "rw",
+        kind: "Embedded",
       },
       {
-        name: 'editable_embedded_entity_relation_with_rw_attributes',
+        name: "editable_embedded_entity_relation_with_rw_attributes",
         lowerLimit: 1,
         upperLimit: 4,
-        modifier: 'rw+',
-        kind: 'Embedded',
+        modifier: "rw+",
+        kind: "Embedded",
       },
       {
-        attributeName: 'related',
-        name: 'subnet',
+        attributeName: "related",
+        name: "subnet",
         lowerLimit: null,
         upperLimit: null,
-        modifier: 'rw',
-        kind: 'Inter-Service',
+        modifier: "rw",
+        kind: "Inter-Service",
       },
     ],
   };
@@ -170,7 +170,7 @@ describe('createConnectionRules', () => {
     ${[Service.a, Service.withRelationsOnly]}                                 | ${rulesForThirdTest}
     ${[Service.nestedEditable]}                                               | ${rulesForFourthTests}
   `(
-    'returns correct rules for given services',
+    "returns correct rules for given services",
     ({
       services,
       expectedRules,
@@ -185,38 +185,38 @@ describe('createConnectionRules', () => {
   );
 });
 
-describe('checkWhetherConnectionRulesAreExhausted', () => {
+describe("checkWhetherConnectionRulesAreExhausted", () => {
   const mockedMatchingEmbedded = {
-    getName: () => 'testEmbedded',
+    getName: () => "testEmbedded",
   } as ServiceEntityBlock;
   const mockedEmbedded = {
-    getName: () => 'testEmbeddedOne',
+    getName: () => "testEmbeddedOne",
   } as ServiceEntityBlock;
 
   const mockedMatchingInterService = {
-    getName: () => 'testInterService',
+    getName: () => "testInterService",
   } as ServiceEntityBlock;
   const mockedInterService = {
-    getName: () => 'testInterServiceOne',
+    getName: () => "testInterServiceOne",
   } as ServiceEntityBlock;
 
   const embeddedRule: EmbeddedRule = {
     kind: TypeEnum.EMBEDDED,
-    name: 'testEmbedded',
+    name: "testEmbedded",
     lowerLimit: 0,
     upperLimit: 1,
-    modifier: 'rw',
+    modifier: "rw",
   };
   const relationRule: InterServiceRule = {
     kind: TypeEnum.INTERSERVICE,
-    name: 'testInterService',
+    name: "testInterService",
     lowerLimit: 0,
     upperLimit: 1,
-    modifier: 'rw',
-    attributeName: 'attr',
+    modifier: "rw",
+    attributeName: "attr",
   };
 
-  it('assert connections exhaustion when rule has modifier set to \'rw\'', () => {
+  it("assert connections exhaustion when rule has modifier set to 'rw'", () => {
     //editMode set to true
     expect(
       checkWhetherConnectionRulesAreExhausted([], embeddedRule, true),
@@ -320,14 +320,14 @@ describe('checkWhetherConnectionRulesAreExhausted', () => {
     ).toBeTruthy();
   });
 
-  it('assert connections exhaustion when rule has modifier set to \'rw+\' ', () => {
+  it("assert connections exhaustion when rule has modifier set to 'rw+' ", () => {
     const rwEmbeddedRule: EmbeddedRule = {
       ...embeddedRule,
-      modifier: 'rw+',
+      modifier: "rw+",
     };
     const rwRelationRule: InterServiceRule = {
       ...relationRule,
-      modifier: 'rw+',
+      modifier: "rw+",
     };
 
     //editMode set to true
@@ -433,7 +433,7 @@ describe('checkWhetherConnectionRulesAreExhausted', () => {
     ).toBeTruthy();
   });
 
-  it('assert connections exhaustion when rule has upper limit set to null or undefined', () => {
+  it("assert connections exhaustion when rule has upper limit set to null or undefined", () => {
     const EmbeddedRuleUndefinedLimit: EmbeddedRule = {
       ...embeddedRule,
       upperLimit: undefined,
@@ -564,7 +564,7 @@ describe('checkWhetherConnectionRulesAreExhausted', () => {
   });
 });
 
-describe('checkIfConnectionIsAllowed', () => {
+describe("checkIfConnectionIsAllowed", () => {
   const serviceA = createComposerEntity({
     serviceModel: Service.a,
     isCore: false,
@@ -572,7 +572,7 @@ describe('checkIfConnectionIsAllowed', () => {
     attributes: InstanceAttributesA,
   });
 
-  it('WHEN one element has rule describing other THEN return true', () => {
+  it("WHEN one element has rule describing other THEN return true", () => {
     const rules = createConnectionRules([Service.a], {});
     const graph = new dia.Graph();
     const paper = new dia.Paper({
@@ -584,7 +584,7 @@ describe('checkIfConnectionIsAllowed', () => {
       isCore: false,
       isInEditMode: false,
       attributes: (
-        InstanceAttributesA['circuits'] as InstanceAttributeModel[]
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
       )[0],
       isEmbeddedEntity: true,
     });
@@ -601,7 +601,7 @@ describe('checkIfConnectionIsAllowed', () => {
     expect(result).toBeTruthy();
   });
 
-  it('WHEN one element has not rule describing other THEN returns false', () => {
+  it("WHEN one element has not rule describing other THEN returns false", () => {
     const rules = createConnectionRules([Service.a, Service.b], {});
     const graph = new dia.Graph();
     const paper = new dia.Paper({
@@ -627,7 +627,7 @@ describe('checkIfConnectionIsAllowed', () => {
     expect(result).toBeFalsy();
   });
 
-  it('WHEN one element has rule describing other, and the other is blocked from editing THEN return true', () => {
+  it("WHEN one element has rule describing other, and the other is blocked from editing THEN return true", () => {
     const rules = createConnectionRules([Service.a], {});
     const graph = new dia.Graph();
     const paper = new dia.Paper({
@@ -639,7 +639,7 @@ describe('checkIfConnectionIsAllowed', () => {
       isCore: false,
       isInEditMode: false,
       attributes: (
-        InstanceAttributesA['circuits'] as InstanceAttributeModel[]
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
       )[0],
       isBlockedFromEditing: true,
     });
@@ -656,21 +656,21 @@ describe('checkIfConnectionIsAllowed', () => {
     expect(result).toBeTruthy();
   });
 
-  it('WHEN one element has rule describing other, but is blocked from editing THEN return false', () => {
+  it("WHEN one element has rule describing other, but is blocked from editing THEN return false", () => {
     const rules = createConnectionRules([Service.a], {});
     const graph = new dia.Graph();
     const paper = new dia.Paper({
       model: graph,
     });
 
-    serviceA.set('isBlockedFromEditing', true);
+    serviceA.set("isBlockedFromEditing", true);
 
     const serviceB = createComposerEntity({
       serviceModel: Service.a.embedded_entities[0],
       isCore: false,
       isInEditMode: false,
       attributes: (
-        InstanceAttributesA['circuits'] as InstanceAttributeModel[]
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
       )[0],
       isEmbeddedEntity: true,
       holderName: Service.a.name,
@@ -688,10 +688,10 @@ describe('checkIfConnectionIsAllowed', () => {
     expect(result).toBeFalsy();
 
     //set back to default
-    serviceA.set('isBlockedFromEditing', false);
+    serviceA.set("isBlockedFromEditing", false);
   });
 
-  it('WHEN one element has rule describing other, but the other is and embedded entity already connected to parent THEN return false', () => {
+  it("WHEN one element has rule describing other, but the other is and embedded entity already connected to parent THEN return false", () => {
     const rules = createConnectionRules([Service.a], {});
     const graph = new dia.Graph();
     const paper = new dia.Paper({
@@ -710,10 +710,10 @@ describe('checkIfConnectionIsAllowed', () => {
       isCore: true,
       isInEditMode: false,
       attributes: (
-        InstanceAttributesA['circuits'] as InstanceAttributeModel[]
+        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
       )[0],
       isEmbeddedEntity: true,
-      holderName: 'service_name_a',
+      holderName: "service_name_a",
     });
 
     graph.addCells([serviceA, connectedCoreEntity, connectedEmbeddedEntity]);

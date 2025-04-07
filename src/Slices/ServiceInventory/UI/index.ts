@@ -1,1 +1,1 @@
-export { Page as ServiceInventoryPage } from './Page';
+export { Page as ServiceInventoryPage } from "./Page";

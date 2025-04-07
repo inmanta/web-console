@@ -3,16 +3,16 @@ import {
   ApiHelper,
   stringifyObjectOrUndefined,
   StateHelperWithEnv,
-} from '@/Core';
-import { getPaginationHandlers, QueryManager } from '@/Data/Managers/Helpers';
-import { getUrl } from './getUrl';
+} from "@/Core";
+import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
+import { getUrl } from "./getUrl";
 
 export function GetVersionResourcesQueryManager (
   apiHelper: ApiHelper,
-  stateHelper: StateHelperWithEnv<'GetVersionResources'>,
+  stateHelper: StateHelperWithEnv<"GetVersionResources">,
   scheduler: Scheduler,
 ) {
-  return QueryManager.ContinuousWithEnv<'GetVersionResources'>(
+  return QueryManager.ContinuousWithEnv<"GetVersionResources">(
     apiHelper,
     stateHelper,
     scheduler,
@@ -25,10 +25,10 @@ export function GetVersionResourcesQueryManager (
       sort?.order,
       stringifyObjectOrUndefined(currentPage.value),
     ],
-    'GetVersionResources',
+    "GetVersionResources",
     getUrl,
     ({ data, links, metadata }) => {
-      if (typeof links === 'undefined') return { data, handlers: {}, metadata };
+      if (typeof links === "undefined") return { data, handlers: {}, metadata };
 
       return {
         data,

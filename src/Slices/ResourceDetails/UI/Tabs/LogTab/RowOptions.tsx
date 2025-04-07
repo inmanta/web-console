@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dropdown,
   DropdownItem,
   MenuToggle,
   MenuToggleElement,
-} from '@patternfly/react-core';
-import { EllipsisVIcon, FilterIcon } from '@patternfly/react-icons';
-import { words } from '@/UI/words';
+} from "@patternfly/react-core";
+import { EllipsisVIcon, FilterIcon } from "@patternfly/react-icons";
+import { words } from "@/UI/words";
 
 export type ToggleActionType = (actionType: string) => void;
 
@@ -23,7 +23,7 @@ export const RowOptions: React.FC<{
     <Dropdown
       onSelect={() => setIsOpen(false)}
       onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-      popperProps={{ position: 'center' }}
+      popperProps={{ position: "center" }}
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
         <MenuToggle
           ref={toggleRef}
@@ -41,7 +41,7 @@ export const RowOptions: React.FC<{
         onClick={() => toggleActionType(action)}
         icon={<FilterIcon />}
       >
-        {words('resources.logs.filterOnAction')(action)}
+        {words("resources.logs.filterOnAction")(action)}
       </DropdownItem>
     </Dropdown>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   ListItem,
   DescriptionList,
@@ -14,10 +14,10 @@ import {
   List,
   FlexItem,
   Flex,
-} from '@patternfly/react-core';
-import { t_global_font_size_200 } from '@patternfly/react-tokens';
-import { uniqueId } from 'lodash';
-import { DetailTuple } from './StatusList';
+} from "@patternfly/react-core";
+import { t_global_font_size_200 } from "@patternfly/react-tokens";
+import { uniqueId } from "lodash";
+import { DetailTuple } from "./StatusList";
 
 interface Props {
   name: string;
@@ -47,7 +47,7 @@ export const StatusItem: React.FC<Props> = ({
       <DataListItemCells
         dataListCells={[
           <DataListCell key={uniqueId()}>
-            <Flex alignItems={{ default: 'alignItemsCenter' }}>
+            <Flex alignItems={{ default: "alignItemsCenter" }}>
               <FlexItem>
                 <Title headingLevel="h2">
                   {icon} {name}
@@ -70,7 +70,7 @@ export const StatusItem: React.FC<Props> = ({
             {details.length > 0 && (
               <List isPlain>
                 {details.map(([key, value]) => {
-                  if (typeof value === 'object') {
+                  if (typeof value === "object") {
                     return (
                       <NestedListItem
                         key={`${key}-${value}`}
@@ -84,7 +84,7 @@ export const StatusItem: React.FC<Props> = ({
                         <DescriptionList
                           isHorizontal
                           horizontalTermWidthModifier={{
-                            default: '25ch',
+                            default: "25ch",
                           }}
                           isCompact
                         >
@@ -148,12 +148,12 @@ const NestedListItem: React.FC<NestedListItemProps> = ({
       </ListItem>
       <List key={`${name}-nested-list`} isPlain={false}>
         {Object.entries(properties).map(([subKey, subValue]) => (
-          <ListItem key={name + '_' + subKey}>
+          <ListItem key={name + "_" + subKey}>
             <DescriptionList
               isHorizontal
               isCompact
               horizontalTermWidthModifier={{
-                default: '25ch',
+                default: "25ch",
               }}
             >
               <DescriptionListGroup>

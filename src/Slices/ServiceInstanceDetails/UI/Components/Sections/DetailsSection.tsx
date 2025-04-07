@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardBody,
@@ -13,11 +13,11 @@ import {
   Flex,
   FlexItem,
   Content,
-} from '@patternfly/react-core';
-import { DeploymentProgressBar } from '@/Slices/ServiceInventory/UI/Components';
-import { words } from '@/UI';
-import { DateWithTooltip, TextWithCopy } from '@/UI/Components';
-import { InstanceDetailsContext } from '../../../Core/Context';
+} from "@patternfly/react-core";
+import { DeploymentProgressBar } from "@/Slices/ServiceInventory/UI/Components";
+import { words } from "@/UI";
+import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
+import { InstanceDetailsContext } from "../../../Core/Context";
 
 /**
  * The DetailsSection Component
@@ -44,14 +44,14 @@ export const DetailsSection: React.FC = () => {
           onExpand={onExpand}
           isToggleRightAligned
           toggleButtonProps={{
-            id: 'toggle-button-details',
-            'aria-label': 'Details',
-            'aria-labelledby': 'details-expandable-card toggle-button',
-            'aria-expanded': isExpanded,
+            id: "toggle-button-details",
+            "aria-label": "Details",
+            "aria-labelledby": "details-expandable-card toggle-button",
+            "aria-expanded": isExpanded,
           }}
         >
           <Title headingLevel="h2">
-            {words('instanceDetails.details.title')}
+            {words("instanceDetails.details.title")}
           </Title>
         </CardHeader>
         <CardExpandableContent>
@@ -62,13 +62,13 @@ export const DetailsSection: React.FC = () => {
                 <DescriptionListDescription>
                   <TextWithCopy
                     value={instance.id}
-                    tooltipContent={words('id.copy')}
+                    tooltipContent={words("id.copy")}
                   />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>
-                  {words('instanceDetails.details.created')}
+                  {words("instanceDetails.details.created")}
                 </DescriptionListTerm>
                 <DescriptionListDescription>
                   <DateWithTooltip timestamp={instance.created_at} />
@@ -76,7 +76,7 @@ export const DetailsSection: React.FC = () => {
               </DescriptionListGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>
-                  {words('instanceDetails.details.updated')}
+                  {words("instanceDetails.details.updated")}
                 </DescriptionListTerm>
                 <DescriptionListDescription>
                   <DateWithTooltip timestamp={instance.last_updated} />
@@ -84,11 +84,11 @@ export const DetailsSection: React.FC = () => {
               </DescriptionListGroup>
               <DescriptionListGroup>
                 <DescriptionListTerm>
-                  {words('instanceDetails.tabs.resources.deploymentProgress')}
+                  {words("instanceDetails.tabs.resources.deploymentProgress")}
                 </DescriptionListTerm>
                 <DescriptionListDescription>
                   <Flex>
-                    <FlexItem flex={{ default: 'flex_1' }}>
+                    <FlexItem flex={{ default: "flex_1" }}>
                       <DeploymentProgressBar
                         progress={instance.deployment_progress}
                       />
@@ -96,14 +96,14 @@ export const DetailsSection: React.FC = () => {
                     {instance.deployment_progress && (
                       <FlexItem>
                         <Content>
-                          {Number(instance.deployment_progress.deployed)} /{' '}
+                          {Number(instance.deployment_progress.deployed)} /{" "}
                           {Number(instance.deployment_progress.total)}
                         </Content>
                       </FlexItem>
                     )}
                   </Flex>
                 </DescriptionListDescription>
-              </DescriptionListGroup>{' '}
+              </DescriptionListGroup>{" "}
             </DescriptionList>
           </CardBody>
         </CardExpandableContent>

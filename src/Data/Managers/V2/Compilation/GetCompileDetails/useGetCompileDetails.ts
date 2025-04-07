@@ -1,6 +1,6 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import { CompileDetails } from '@/Slices/CompileDetails/Core/Domain';
-import { CustomError, useGet } from '../../helpers';
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { CompileDetails } from "@/Slices/CompileDetails/Core/Domain";
+import { CustomError, useGet } from "../../helpers";
 
 interface CompileDetailsParams {
   id: string;
@@ -38,13 +38,13 @@ export const useGetCompileDetails = (
   return {
     useOneTime: (): UseQueryResult<ResponseBody, CustomError> =>
       useQuery({
-        queryKey: ['get_compile_details-one_time', params.id],
+        queryKey: ["get_compile_details-one_time", params.id],
         queryFn: () => get(url),
         select: (data) => data,
       }),
     useContinuous: (): UseQueryResult<ResponseBody, CustomError> =>
       useQuery({
-        queryKey: ['get_compile_details-continuous', params.id],
+        queryKey: ["get_compile_details-continuous", params.id],
         queryFn: () => get(url),
         refetchInterval: 5000,
         select: (data) => data,

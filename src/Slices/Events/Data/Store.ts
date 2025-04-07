@@ -1,9 +1,9 @@
-import { Action, action } from 'easy-peasy';
-import { Query, RemoteData } from '@/Core';
+import { Action, action } from "easy-peasy";
+import { Query, RemoteData } from "@/Core";
 
 type Data = RemoteData.Type<
-  Query.Error<'GetInstanceEvents'>,
-  Query.ApiResponse<'GetInstanceEvents'>
+  Query.Error<"GetInstanceEvents">,
+  Query.ApiResponse<"GetInstanceEvents">
 >;
 
 /**

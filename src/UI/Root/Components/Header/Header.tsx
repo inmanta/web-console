@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 import {
   Toolbar,
   Masthead,
@@ -12,14 +12,14 @@ import {
   ToolbarGroup,
   ToolbarItem,
   Tooltip,
-} from '@patternfly/react-core';
-import { BarsIcon } from '@patternfly/react-icons';
-import { Badge } from '@/Slices/Notification/UI/Badge';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { DocumentationLinks } from './Actions/DocumentationLinks';
-import { StatusButton } from './Actions/StatusButton';
-import { EnvSelectorWithProvider } from './EnvSelector';
+} from "@patternfly/react-core";
+import { BarsIcon } from "@patternfly/react-icons";
+import { Badge } from "@/Slices/Notification/UI/Badge";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { DocumentationLinks } from "./Actions/DocumentationLinks";
+import { StatusButton } from "./Actions/StatusButton";
+import { EnvSelectorWithProvider } from "./EnvSelector";
 
 /**
  * Properties for the Header component.
@@ -61,8 +61,8 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
               aria-label="Inmanta-logo"
               href={
                 noEnv
-                  ? routeManager.getUrl('Home', undefined)
-                  : routeManager.getUrl('Dashboard', undefined) +
+                  ? routeManager.getUrl("Home", undefined)
+                  : routeManager.getUrl("Dashboard", undefined) +
                     `?env=${environmentHandler.useId()}`
               }
             >
@@ -75,13 +75,13 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
             <ToolbarContent>
               <ToolbarGroup
                 variant="action-group-plain"
-                align={{ default: 'alignEnd' }}
-                gap={{ default: 'gapNone', md: 'gapMd' }}
+                align={{ default: "alignEnd" }}
+                gap={{ default: "gapNone", md: "gapMd" }}
               >
                 {!noEnv && (
                   <ToolbarItem>
                     <Tooltip
-                      content={words('dashboard.notifications.tooltip')}
+                      content={words("dashboard.notifications.tooltip")}
                       position="bottom"
                       entryDelay={500}
                     >
@@ -118,7 +118,7 @@ const LogoImage: React.FC = () => (
   >
     <mask
       id="mask0_1495_21356"
-      style={{ maskType: 'luminance' }}
+      style={{ maskType: "luminance" }}
       maskUnits="userSpaceOnUse"
       x="0"
       y="-1"
@@ -138,7 +138,7 @@ const LogoImage: React.FC = () => (
     </g>
     <mask
       id="mask1_1495_21356"
-      style={{ maskType: 'luminance' }}
+      style={{ maskType: "luminance" }}
       maskUnits="userSpaceOnUse"
       x="0"
       y="-1"
@@ -158,7 +158,7 @@ const LogoImage: React.FC = () => (
     </g>
     <mask
       id="mask2_1495_21356"
-      style={{ maskType: 'luminance' }}
+      style={{ maskType: "luminance" }}
       maskUnits="userSpaceOnUse"
       x="0"
       y="-1"
@@ -178,7 +178,7 @@ const LogoImage: React.FC = () => (
     </g>
     <mask
       id="mask3_1495_21356"
-      style={{ maskType: 'luminance' }}
+      style={{ maskType: "luminance" }}
       maskUnits="userSpaceOnUse"
       x="0"
       y="-1"
@@ -198,7 +198,7 @@ const LogoImage: React.FC = () => (
     </g>
     <mask
       id="mask4_1495_21356"
-      style={{ maskType: 'luminance' }}
+      style={{ maskType: "luminance" }}
       maskUnits="userSpaceOnUse"
       x="0"
       y="-1"
@@ -218,7 +218,7 @@ const LogoImage: React.FC = () => (
     </g>
     <mask
       id="mask5_1495_21356"
-      style={{ maskType: 'luminance' }}
+      style={{ maskType: "luminance" }}
       maskUnits="userSpaceOnUse"
       x="0"
       y="-1"

@@ -1,6 +1,6 @@
-import React from 'react';
-import { FormGroup } from '@patternfly/react-core';
-import { ImageUpload } from '@/UI/Components';
+import React from "react";
+import { FormGroup } from "@patternfly/react-core";
+import { ImageUpload } from "@/UI/Components";
 
 interface Props {
   label: string;

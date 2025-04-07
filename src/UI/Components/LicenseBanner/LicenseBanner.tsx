@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { Banner, Flex } from '@patternfly/react-core';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
+import React, { useContext } from "react";
+import { Banner, Flex } from "@patternfly/react-core";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 /**
  * @returns Either a banner informing the user his/her license has expired.
@@ -16,7 +16,7 @@ export const LicenseBanner: React.FC = () => {
 
   return expirationMessage ? (
     <Banner isSticky color="red" aria-label="licenceExpired">
-      <Flex justifyContent={{ default: 'justifyContentCenter' }}>
+      <Flex justifyContent={{ default: "justifyContentCenter" }}>
         {expirationMessage}
       </Flex>
     </Banner>
@@ -57,14 +57,14 @@ const getExpirationMessage = (entitlementDate, certificateDate) => {
   const diffTimeEntitlement = checkExpiration(entitlementDate);
 
   if (diffTimeCertificate < 0) {
-    return words('banner.certificate.expired')(Math.abs(diffTimeCertificate));
+    return words("banner.certificate.expired")(Math.abs(diffTimeCertificate));
   }
   if (diffTimeCertificate < 15) {
-    return words('banner.certificate.will.expire')(
+    return words("banner.certificate.will.expire")(
       Math.abs(diffTimeCertificate),
     );
   } else if (diffTimeEntitlement < 0) {
-    return words('banner.entitlement.expired')(Math.abs(diffTimeEntitlement));
+    return words("banner.entitlement.expired")(Math.abs(diffTimeEntitlement));
   }
 
   return null;

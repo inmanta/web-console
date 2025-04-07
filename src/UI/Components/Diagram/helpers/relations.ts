@@ -1,12 +1,12 @@
-import { dia } from '@inmanta/rappid';
+import { dia } from "@inmanta/rappid";
 import {
   EmbeddedEntity,
   InstanceAttributeModel,
   InterServiceRelation,
   ServiceInstanceModel,
   ServiceModel,
-} from '@/Core';
-import { ServiceEntityBlock } from '../shapes';
+} from "@/Core";
+import { ServiceEntityBlock } from "../shapes";
 
 /**
  * Extracts the IDs of the relations of a service instance.
@@ -30,7 +30,7 @@ export const extractRelationsIds = (
   const extractRelation = (attributes: InstanceAttributeModel): string[] =>
     relationKeys
       .map((key) => String(attributes[key]))
-      .filter((attribute) => attribute !== 'undefined');
+      .filter((attribute) => attribute !== "undefined");
 
   if (instance.candidate_attributes !== null) {
     return extractRelation(instance.candidate_attributes);

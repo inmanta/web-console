@@ -1,14 +1,14 @@
-import React from 'react';
-import { useGetServiceModels } from '@/Data/Managers/V2/Service';
+import React from "react";
+import { useGetServiceModels } from "@/Data/Managers/V2/Service";
 import {
   EmptyView,
   ErrorView,
   LoadingView,
   PageContainer,
-} from '@/UI/Components';
-import { CatalogActions } from '@/UI/Components/CatalogActions';
-import { words } from '@/UI/words';
-import { CatalogDataList } from './CatalogDataList';
+} from "@/UI/Components";
+import { CatalogActions } from "@/UI/Components/CatalogActions";
+import { words } from "@/UI/words";
+import { CatalogDataList } from "./CatalogDataList";
 
 export const Page: React.FC = () => {
   const { data, isError, error, isSuccess, refetch } =
@@ -33,7 +33,7 @@ export const Page: React.FC = () => {
         <>
           <EmptyView
             aria-label="ServiceCatalog-Empty"
-            message={words('catalog.empty.message')}
+            message={words("catalog.empty.message")}
           />
         </>
       ) : (
@@ -47,7 +47,7 @@ export const Page: React.FC = () => {
     <PageContainer
       pageTitle={
         <>
-          {words('catalog.title')}
+          {words("catalog.title")}
           <CatalogActions />
         </>
       }

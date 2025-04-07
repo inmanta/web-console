@@ -1,6 +1,6 @@
-import React from 'react';
-import { Switch } from '@patternfly/react-core';
-import { words } from '@/UI/words';
+import React from "react";
+import { Switch } from "@patternfly/react-core";
+import { words } from "@/UI/words";
 
 interface Props {
   name: string;
@@ -19,7 +19,7 @@ export const BooleanSwitch: React.FC<Props> = ({
 }) => (
   <Switch
     id={name}
-    label={getLabel ? getLabel(isChecked) : words('setting.label.true')}
+    label={getLabel ? getLabel(isChecked) : words("setting.label.true")}
     isChecked={isChecked}
     onChange={(_event, checked) => onChange(checked)}
     aria-label={isChecked ? `${name}-True` : `${name}-False`}

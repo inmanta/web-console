@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { DropEvent, FileRejection } from 'react-dropzone';
+import React, { useEffect, useState } from "react";
+import { DropEvent, FileRejection } from "react-dropzone";
 import {
   Alert,
   AlertActionCloseButton,
   FileUpload,
   FileUploadProps,
-} from '@patternfly/react-core';
-import { Maybe } from '@/Core';
-import { ImageHelper } from '@/Data';
-import { words } from '@/UI/words';
-import { ImagePreview } from './ImagePreview';
+} from "@patternfly/react-core";
+import { Maybe } from "@/Core";
+import { ImageHelper } from "@/Data";
+import { words } from "@/UI/words";
+import { ImagePreview } from "./ImagePreview";
 
 interface Props {
-  'aria-label'?: string;
+  "aria-label"?: string;
   initial?: string;
   onComplete: (dataUrl: string) => void;
 }
@@ -26,10 +26,10 @@ interface Props {
 export const ImageUpload: React.FC<Props> = ({
   initial,
   onComplete,
-  'aria-label': ariaLabel,
+  "aria-label": ariaLabel,
   ...props
 }) => {
-  const initialDataUrl = initial ? ImageHelper.addDataScheme(initial) : '';
+  const initialDataUrl = initial ? ImageHelper.addDataScheme(initial) : "";
   const [filename, setFilename] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [dataUrl, setDataUrl] = useState(initialDataUrl);
@@ -38,10 +38,10 @@ export const ImageUpload: React.FC<Props> = ({
   const setFilenameFromDataUrl = (dataUrl: string) => {
     const extension = ImageHelper.getExtensionFromDataUrl(dataUrl);
 
-    setFilename(extension ? `icon.${extension}` : 'icon');
+    setFilename(extension ? `icon.${extension}` : "icon");
   };
 
-  const onDataChange: FileUploadProps['onDataChange'] = (
+  const onDataChange: FileUploadProps["onDataChange"] = (
     _event,
     newDataUrl,
   ) => {
@@ -50,20 +50,20 @@ export const ImageUpload: React.FC<Props> = ({
     setFilenameFromDataUrl(newDataUrl);
   };
 
-  const onClear: FileUploadProps['onClearClick'] = () => {
+  const onClear: FileUploadProps["onClearClick"] = () => {
     setError(null);
     setIsLoading(false);
     setFilename(null);
-    setDataUrl('');
-    onComplete('');
+    setDataUrl("");
+    onComplete("");
   };
 
-  const onReadStarted: FileUploadProps['onReadStarted'] = () => {
+  const onReadStarted: FileUploadProps["onReadStarted"] = () => {
     setError(null);
     setIsLoading(true);
   };
 
-  const onReadFinished: FileUploadProps['onReadFinished'] = () => {
+  const onReadFinished: FileUploadProps["onReadFinished"] = () => {
     setError(null);
     setIsLoading(false);
   };
@@ -77,19 +77,19 @@ export const ImageUpload: React.FC<Props> = ({
       const errors = ImageHelper.validateFile(file);
 
       if (Maybe.isNone(errors)) {
-        setError(words('error.image.unknown')(file.name));
+        setError(words("error.image.unknown")(file.name));
 
         return;
       }
 
-      if (errors.value === 'TYPE') {
-        setError(words('error.image.type')(file.name, file.type));
+      if (errors.value === "TYPE") {
+        setError(words("error.image.type")(file.name, file.type));
 
         return;
       }
 
       setError(
-        words('error.image.size')(file.name, ImageHelper.formatFileSize(file)),
+        words("error.image.size")(file.name, ImageHelper.formatFileSize(file)),
       );
     });
 
@@ -97,12 +97,12 @@ export const ImageUpload: React.FC<Props> = ({
   };
 
   const validated =
-    error !== null ? 'error' : dataUrl !== '' ? 'success' : 'default';
+    error !== null ? "error" : dataUrl !== "" ? "success" : "default";
 
   useEffect(() => {
-    if (initialDataUrl === '') {
+    if (initialDataUrl === "") {
       setFilename(null);
-      setDataUrl('');
+      setDataUrl("");
     } else {
       setFilenameFromDataUrl(initialDataUrl);
       setDataUrl(initialDataUrl);
@@ -115,7 +115,7 @@ export const ImageUpload: React.FC<Props> = ({
         hideDefaultPreview
         id="file-upload"
         type="dataURL"
-        filename={filename || ''}
+        filename={filename || ""}
         filenameAriaLabel={ariaLabel}
         filenamePlaceholder="Drag and drop an image or select one"
         onDataChange={onDataChange}
@@ -125,7 +125,7 @@ export const ImageUpload: React.FC<Props> = ({
         isLoading={isLoading}
         browseButtonText="Select"
         dropzoneProps={{
-          accept: { 'image/jpeg': ['.webp', '.svg', '.png', '.jpg', '.jpeg'] },
+          accept: { "image/jpeg": [".webp", ".svg", ".png", ".jpg", ".jpeg"] },
           maxSize: 64000,
           onDropRejected,
         }}
@@ -136,7 +136,7 @@ export const ImageUpload: React.FC<Props> = ({
           <Alert
             isInline
             variant="danger"
-            title={words('error.image.title')}
+            title={words("error.image.title")}
             actionClose={
               <AlertActionCloseButton onClose={() => setError(null)} />
             }

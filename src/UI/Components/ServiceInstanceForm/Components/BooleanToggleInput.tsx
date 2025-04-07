@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 import {
   FormGroup,
   FormHelperText,
   HelperText,
   HelperTextItem,
   Switch,
-} from '@patternfly/react-core';
+} from "@patternfly/react-core";
 
 interface Props {
   isChecked: boolean | undefined;

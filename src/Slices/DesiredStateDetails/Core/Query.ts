@@ -1,8 +1,8 @@
-import { Pagination, PageSize, Sort, Resource } from '@/Core/Domain';
-import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
+import { Pagination, PageSize, Sort, Resource } from "@/Core/Domain";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 export interface Query {
-  kind: 'GetVersionResources';
+  kind: "GetVersionResources";
   version: string;
   filter?: Resource.FilterFromVersion;
   sort?: Sort.Type<Resource.SortKeyFromVersion>;

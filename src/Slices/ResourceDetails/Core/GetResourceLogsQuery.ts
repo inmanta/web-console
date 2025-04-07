@@ -1,9 +1,9 @@
-import { Pagination, PageSize, Sort } from '@/Core/Domain';
-import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
-import { ResourceLog, ResourceLogFilter } from './ResourceLog';
+import { Pagination, PageSize, Sort } from "@/Core/Domain";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { ResourceLog, ResourceLogFilter } from "./ResourceLog";
 
 export interface Query {
-  kind: 'GetResourceLogs';
+  kind: "GetResourceLogs";
   id: string;
   filter?: ResourceLogFilter;
   sort?: Sort.Type;

@@ -1,5 +1,5 @@
-import { FlexItem } from '@patternfly/react-core';
-import styled from 'styled-components';
+import { FlexItem } from "@patternfly/react-core";
+import styled from "styled-components";
 
 // Will be removed when collapsible sections in the service inventory are removed
 export const InlineEditButtonFiller = styled.div`

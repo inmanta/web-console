@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 import {
   DescriptionList,
   DescriptionListTerm,
   DescriptionListGroup,
   DescriptionListDescription,
-} from '@patternfly/react-core';
-import styled from 'styled-components';
-import { ServiceOrder } from '@/Slices/Orders/Core/Query';
-import { OrderProgressBar } from '@/Slices/Orders/UI/OrderProgressBar';
-import { OrderStatusLabel } from '@/Slices/Orders/UI/OrderStatusLabel';
-import { words } from '@/UI';
-import { DateWithTooltip } from '@/UI/Components';
+} from "@patternfly/react-core";
+import styled from "styled-components";
+import { ServiceOrder } from "@/Slices/Orders/Core/Query";
+import { OrderProgressBar } from "@/Slices/Orders/UI/OrderProgressBar";
+import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
+import { words } from "@/UI";
+import { DateWithTooltip } from "@/UI/Components";
 
 interface Props {
   serviceOrder: ServiceOrder;
@@ -28,16 +28,16 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
       <DescriptionList
         isHorizontal
         columnModifier={{
-          default: '2Col',
+          default: "2Col",
         }}
         horizontalTermWidthModifier={{
-          default: '20ch',
+          default: "20ch",
         }}
         aria-label="OrderDetails-Heading"
       >
         <DescriptionListGroup aria-label="OrderState">
           <DescriptionListTerm>
-            {words('orders.column.status')}
+            {words("orders.column.status")}
           </DescriptionListTerm>
           <DescriptionListDescription>
             <OrderStatusLabel status={serviceOrder.status.state} />
@@ -45,7 +45,7 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
         </DescriptionListGroup>
         <DescriptionListGroup aria-label="OrderCreatedAt">
           <DescriptionListTerm>
-            {words('orders.column.created_at')}
+            {words("orders.column.created_at")}
           </DescriptionListTerm>
           <DescriptionListDescription>
             <DateWithTooltip timestamp={serviceOrder.created_at} />
@@ -53,7 +53,7 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
         </DescriptionListGroup>
         <DescriptionListGroup aria-label="OrderDescription">
           <DescriptionListTerm>
-            {words('orders.column.description')}
+            {words("orders.column.description")}
           </DescriptionListTerm>
           <DescriptionListDescription>
             {serviceOrder.description || serviceOrder.id}
@@ -61,13 +61,13 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
         </DescriptionListGroup>
         <DescriptionListGroup aria-label="OrderCompletedAt">
           <DescriptionListTerm>
-            {words('orders.column.completed_at')}
+            {words("orders.column.completed_at")}
           </DescriptionListTerm>
           <DescriptionListDescription>
             {serviceOrder.completed_at ? (
               <DateWithTooltip timestamp={serviceOrder.completed_at} />
             ) : (
-              ''
+              ""
             )}
           </DescriptionListDescription>
         </DescriptionListGroup>
@@ -75,13 +75,13 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
       <ProgressDescriptionList
         isHorizontal
         horizontalTermWidthModifier={{
-          default: '20ch',
+          default: "20ch",
         }}
         aria-label="OrderDetails-Heading-Progress"
       >
         <DescriptionListGroup aria-label="OrderProgress">
           <DescriptionListTerm>
-            {words('orders.column.progress')}
+            {words("orders.column.progress")}
           </DescriptionListTerm>
           <DescriptionListDescription>
             <OrderProgressBar

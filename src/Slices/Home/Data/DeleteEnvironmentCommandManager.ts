@@ -1,12 +1,12 @@
-import { ApiHelper, Maybe, Updater } from '@/Core';
-import { CommandManagerWithoutEnv } from '@/Data/Common';
+import { ApiHelper, Maybe, Updater } from "@/Core";
+import { CommandManagerWithoutEnv } from "@/Data/Common";
 
-export class DeleteEnvironmentCommandManager extends CommandManagerWithoutEnv<'DeleteEnvironment'> {
+export class DeleteEnvironmentCommandManager extends CommandManagerWithoutEnv<"DeleteEnvironment"> {
   constructor (
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<'GetEnvironments'>,
+    private readonly updater: Updater<"GetEnvironments">,
   ) {
-    super('DeleteEnvironment', ({ id }) => async () => {
+    super("DeleteEnvironment", ({ id }) => async () => {
       const error = await this.apiHelper.delete(
         `/api/v2/environment/${id}`,
         id,
@@ -14,7 +14,7 @@ export class DeleteEnvironmentCommandManager extends CommandManagerWithoutEnv<'D
 
       if (Maybe.isSome(error)) return error;
       await this.updater.update({
-        kind: 'GetEnvironments',
+        kind: "GetEnvironments",
         details: true,
       });
 

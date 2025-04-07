@@ -1,1 +1,1 @@
-export * from './MultiTextSelect';
+export * from "./MultiTextSelect";

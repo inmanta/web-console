@@ -1,7 +1,7 @@
-import { ColumnHead, TablePresenter } from '@/UI/Presenters';
-import { MomentDatePresenter } from '@/UI/Utils';
-import { words } from '@/UI/words';
-import { Fact } from '@S/Facts/Core/Domain';
+import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { MomentDatePresenter } from "@/UI/Utils";
+import { words } from "@/UI/words";
+import { Fact } from "@S/Facts/Core/Domain";
 
 const datePresenter = new MomentDatePresenter();
 
@@ -11,10 +11,10 @@ export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
 
   constructor () {
     this.columnHeads = [
-      { displayName: words('facts.column.name'), apiName: 'name' },
-      { displayName: words('facts.column.updated'), apiName: 'updated' },
-      { displayName: words('facts.column.value'), apiName: 'value' },
-      { displayName: words('facts.column.resourceId'), apiName: 'resource_id' },
+      { displayName: words("facts.column.name"), apiName: "name" },
+      { displayName: words("facts.column.updated"), apiName: "updated" },
+      { displayName: words("facts.column.value"), apiName: "value" },
+      { displayName: words("facts.column.resourceId"), apiName: "resource_id" },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
   }
@@ -49,7 +49,7 @@ export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
   }
 
   public getSortableColumnNames (): string[] {
-    return ['name', 'resource_id'];
+    return ["name", "resource_id"];
   }
 
   getNumberOfColumns (): number {

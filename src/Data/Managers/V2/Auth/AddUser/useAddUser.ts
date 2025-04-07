@@ -1,10 +1,10 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { usePostWithoutEnv } from '../../helpers';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { usePostWithoutEnv } from "../../helpers";
 
 interface AddUSerResponse {
   data: {
-    username: 'string';
-    auth_method: 'database';
+    username: "string";
+    auth_method: "database";
   };
 }
 
@@ -22,11 +22,11 @@ export const useAddUser = () => {
   const post = usePostWithoutEnv()<AddUserBody>;
 
   return useMutation<AddUSerResponse, Error, AddUserBody>({
-    mutationFn: (body) => post('/api/v2/user', body),
-    mutationKey: ['add_user'],
+    mutationFn: (body) => post("/api/v2/user", body),
+    mutationKey: ["add_user"],
     onSuccess: () => {
       //refetch the users query to update the list
-      client.invalidateQueries({ queryKey: ['get_users-one_time'] });
+      client.invalidateQueries({ queryKey: ["get_users-one_time"] });
     },
   });
 };

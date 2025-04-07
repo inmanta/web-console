@@ -1,4 +1,4 @@
-import { InstanceSummary } from '@/Core';
+import { InstanceSummary } from "@/Core";
 
 export const a: InstanceSummary = {
   by_label: {

@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import { Flex, FlexItem, Label } from '@patternfly/react-core';
-import { useUrlStateWithString } from '@/Data';
-import { words } from '@/UI';
-import { InstanceDetailsContext } from '../../../Core/Context';
-import { InstanceActions } from '../InstanceActions';
+import React, { useContext } from "react";
+import { Flex, FlexItem, Label } from "@patternfly/react-core";
+import { useUrlStateWithString } from "@/Data";
+import { words } from "@/UI";
+import { InstanceDetailsContext } from "../../../Core/Context";
+import { InstanceActions } from "../InstanceActions";
 
 interface Props {
   title: string;
@@ -30,17 +30,17 @@ export const VersionedPageTitleWithActions: React.FC<Props> = ({ title }) => {
 
   const [selectedVersion] = useUrlStateWithString<string>({
     default: String(instance.version),
-    key: 'version',
-    route: 'InstanceDetails',
+    key: "version",
+    route: "InstanceDetails",
   });
 
   const isLatest = selectedVersion === String(instance.version);
 
   return (
-    <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
+    <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
       <Flex
-        alignItems={{ default: 'alignItemsCenter' }}
-        gap={{ default: 'gapSm' }}
+        alignItems={{ default: "alignItemsCenter" }}
+        gap={{ default: "gapSm" }}
       >
         {title}
         {!isLatest && [
@@ -49,7 +49,7 @@ export const VersionedPageTitleWithActions: React.FC<Props> = ({ title }) => {
             key="selected-version"
             color="purple"
           >
-            {words('instanceDetails.title.tag')(selectedVersion)}
+            {words("instanceDetails.title.tag")(selectedVersion)}
           </Label>,
         ]}
         {instance.deleted && (

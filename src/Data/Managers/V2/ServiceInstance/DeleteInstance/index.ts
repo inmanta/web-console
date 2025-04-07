@@ -1,1 +1,1 @@
-export * from './useDeleteInstance';
+export * from "./useDeleteInstance";

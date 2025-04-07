@@ -1,6 +1,6 @@
-import React from 'react';
-import { Label } from '@patternfly/react-core';
-import { AgentStatus } from '@S/Agents/Core/Domain';
+import React from "react";
+import { Label } from "@patternfly/react-core";
+import { AgentStatus } from "@S/Agents/Core/Domain";
 
 export const AgentStatusLabel: React.FC<{ status: AgentStatus }> = ({
   status,

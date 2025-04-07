@@ -1,1 +1,1 @@
-export * as Home from './Core/Route';
+export * as Home from "./Core/Route";

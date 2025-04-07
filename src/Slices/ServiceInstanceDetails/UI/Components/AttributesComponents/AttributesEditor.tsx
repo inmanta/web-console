@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   Button,
   Flex,
@@ -6,20 +6,20 @@ import {
   FormSelect,
   FormSelectOption,
   Content,
-} from '@patternfly/react-core';
-import styled from 'styled-components';
-import { v4 as uuidv4 } from 'uuid';
-import { InstanceAttributeModel } from '@/Core';
+} from "@patternfly/react-core";
+import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
+import { InstanceAttributeModel } from "@/Core";
 import {
   ExpertPatchAttributes,
   usePatchAttributesExpert,
-} from '@/Data/Managers/V2/ServiceInstance';
-import { InstanceDetailsContext } from '@/Slices/ServiceInstanceDetails/Core/Context';
-import { AttributeSets } from '@/Slices/ServiceInstanceDetails/Utils';
-import { DependencyContext, words } from '@/UI';
-import { JSONEditor } from '@/UI/Components/JSONEditor';
-import { ConfirmationModal } from '../ConfirmModal';
-import { ToastAlertMessage } from '../ToastAlert';
+} from "@/Data/Managers/V2/ServiceInstance";
+import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
+import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
+import { DependencyContext, words } from "@/UI";
+import { JSONEditor } from "@/UI/Components/JSONEditor";
+import { ConfirmationModal } from "../ConfirmModal";
+import { ToastAlertMessage } from "../ToastAlert";
 
 interface Props {
   dropdownOptions: string[];
@@ -51,14 +51,14 @@ export const AttributesEditor: React.FC<Props> = ({
   const username = authHelper.getUser();
 
   const [selectedSet, setSelectedSet] = useState(dropdownOptions[0]);
-  const [editorDataOriginal, setEditorDataOriginal] = useState<string>('');
+  const [editorDataOriginal, setEditorDataOriginal] = useState<string>("");
 
   const { environmentModifier } = useContext(DependencyContext);
   const [isEditorValid, setIsEditorValid] = useState<boolean>(true);
   const [editorState, setEditorState] = useState<string>(editorDataOriginal);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const { mutate, isPending } = usePatchAttributesExpert(
     instance.id,
@@ -109,7 +109,7 @@ export const AttributesEditor: React.FC<Props> = ({
    * onConfirm async method sending the patch request to Expert edit the attributes
    */
   const onConfirm = async (): Promise<void> => {
-    const message = words('instanceDetails.API.message.update')(username);
+    const message = words("instanceDetails.API.message.update")(username);
 
     const patchAttributes: ExpertPatchAttributes = {
       comment: message,
@@ -119,8 +119,8 @@ export const AttributesEditor: React.FC<Props> = ({
       edit: [
         {
           edit_id: `${instance.id}_version=${instance.version}`,
-          operation: 'replace',
-          target: '.',
+          operation: "replace",
+          target: ".",
           value: editorState,
         },
       ],
@@ -143,7 +143,7 @@ export const AttributesEditor: React.FC<Props> = ({
 
   return (
     <>
-      <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
+      <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
         <FlexItem>
           <StyledSelect
             value={selectedSet}
@@ -181,7 +181,7 @@ export const AttributesEditor: React.FC<Props> = ({
         readOnly={!environmentModifier.useIsExpertModeEnabled()}
       />
       <ConfirmationModal
-        title={words('instanceDetails.expert.editModal.title')}
+        title={words("instanceDetails.expert.editModal.title")}
         onConfirm={onConfirm}
         id="Confirm-Expert-Edit"
         isModalOpen={isModalOpen}
@@ -189,7 +189,7 @@ export const AttributesEditor: React.FC<Props> = ({
         isPending={isPending}
       >
         <Content component="p">
-          {words('instanceDetails.expert.editModal.message')(selectedSet)}
+          {words("instanceDetails.expert.editModal.message")(selectedSet)}
         </Content>
       </ConfirmationModal>
       {errorMessage && (

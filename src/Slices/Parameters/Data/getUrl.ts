@@ -1,9 +1,9 @@
-import moment from 'moment-timezone';
-import qs from 'qs';
-import { Query, RangeOperator } from '@/Core';
+import moment from "moment-timezone";
+import qs from "qs";
+import { Query, RangeOperator } from "@/Core";
 
 export function getUrl (
-  { pageSize, filter, sort, currentPage }: Query.SubQuery<'GetParameters'>,
+  { pageSize, filter, sort, currentPage }: Query.SubQuery<"GetParameters">,
   timezone = moment.tz.guess(),
 ): string {
   const filterParam =
@@ -20,16 +20,16 @@ export function getUrl (
                 )}:${moment
                   .tz(timestampWithOperator.date, timezone)
                   .utc()
-                  .format('YYYY-MM-DD+HH:mm:ss')}`,
+                  .format("YYYY-MM-DD+HH:mm:ss")}`,
             ),
           },
         },
-        { allowDots: true, arrayFormat: 'repeat' },
+        { allowDots: true, arrayFormat: "repeat" },
       )}`
-      : '';
-  const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : '';
+      : "";
+  const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
   return `/api/v2/parameters?limit=${pageSize.value}${sortParam}${filterParam}${
-    currentPage.value ? `&${currentPage.value}` : ''
+    currentPage.value ? `&${currentPage.value}` : ""
   }`;
 }

@@ -1,9 +1,9 @@
-import { ServiceInstanceIdentifier } from '@/Core/Domain';
-import { Diagnostics, RawDiagnostics } from './Domain';
+import { ServiceInstanceIdentifier } from "@/Core/Domain";
+import { Diagnostics, RawDiagnostics } from "./Domain";
 
 /** Diagnostics describe the status of an instance with regards to the diagnose call */
 export interface Query extends ServiceInstanceIdentifier {
-  kind: 'GetDiagnostics';
+  kind: "GetDiagnostics";
 }
 
 export interface Manifest {

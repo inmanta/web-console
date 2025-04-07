@@ -1,1 +1,1 @@
-export * from './useGetInventoryList';
+export * from "./useGetInventoryList";

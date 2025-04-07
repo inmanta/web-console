@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 import {
   FormGroup,
   FormHelperText,
   HelperText,
   HelperTextItem,
   Radio,
-} from '@patternfly/react-core';
-import { words } from '@/UI/words';
+} from "@patternfly/react-core";
+import { words } from "@/UI/words";
 
 interface Props {
   isChecked: boolean | null;
@@ -44,32 +44,32 @@ export const BooleanFormInput: React.FC<Props> = ({
           isDisabled={shouldBeDisabled}
           isChecked={isChecked === true}
           onChange={(event, value) => handleInputChange(value, event)}
-          label={words('true')}
+          label={words("true")}
           name={`${attributeName}`}
           id={`${attributeName}-true`}
           data-testid={`${attributeName}-true`}
-          value={'true'}
+          value={"true"}
         />
         <Radio
           isDisabled={shouldBeDisabled}
           isChecked={isChecked === false}
           onChange={(event) => handleInputChange(false, event)}
-          label={words('false')}
+          label={words("false")}
           name={`${attributeName}`}
           id={`${attributeName}-false`}
           data-testid={`${attributeName}-false`}
-          value={'false'}
+          value={"false"}
         />
         {isOptional && (
           <Radio
             isDisabled={shouldBeDisabled}
             isChecked={isChecked === null}
             onChange={(event, _value) => handleInputChange(null, event)}
-            label={words('null')}
+            label={words("null")}
             name={`${attributeName}`}
             id={`${attributeName}-none`}
             data-testid={`${attributeName}-none`}
-            value={'null'}
+            value={"null"}
           />
         )}
       </FormGroup>

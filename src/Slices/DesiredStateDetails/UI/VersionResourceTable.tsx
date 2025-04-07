@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   OnSort,
   Table,
@@ -6,10 +6,10 @@ import {
   Th,
   Thead,
   Tr,
-} from '@patternfly/react-table';
-import { Resource, Sort } from '@/Core';
-import { Row } from './Row';
-import { VersionResourceTablePresenter } from './VersionResourceTablePresenter';
+} from "@patternfly/react-table";
+import { Resource, Sort } from "@/Core";
+import { Row } from "./Row";
+import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 
 interface Props {
   version: string;

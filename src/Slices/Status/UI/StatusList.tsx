@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
-import { DataList, Icon } from '@patternfly/react-core';
+import React, { useContext } from "react";
+import { DataList, Icon } from "@patternfly/react-core";
 import {
   ClusterIcon,
   DesktopIcon,
   IntegrationIcon,
   ModuleIcon,
   TagIcon,
-} from '@patternfly/react-icons';
-import { omit } from 'lodash-es';
-import { ServerStatus } from '@/Core';
-import { DependencyContext } from '@/UI/Dependency';
-import { StatusItem } from './StatusItem';
+} from "@patternfly/react-icons";
+import { omit } from "lodash-es";
+import { ServerStatus } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
+import { StatusItem } from "./StatusItem";
 
 interface Props {
   status: ServerStatus;
@@ -45,13 +45,13 @@ export const StatusList: React.FC<Props> = ({
       <StatusItem
         name={status.product}
         details={toDetails(
-          omit(status, ['product', 'extensions', 'slices', 'features']),
+          omit(status, ["product", "extensions", "slices", "features"]),
         )}
         icon={
           <Icon size="lg">
             <TagIcon
               style={{
-                color: 'var(--pf-t--global--icon--color--brand--default)',
+                color: "var(--pf-t--global--icon--color--brand--default)",
               }}
             />
           </Icon>
@@ -59,7 +59,7 @@ export const StatusList: React.FC<Props> = ({
       />
       <StatusItem
         name="API"
-        details={[['url', apiUrl]]}
+        details={[["url", apiUrl]]}
         icon={
           <Icon size="lg" status="custom">
             <ClusterIcon />
@@ -68,7 +68,7 @@ export const StatusList: React.FC<Props> = ({
       />
       <StatusItem
         name="Web Console"
-        details={[['commit hash', featureManager.getCommitHash()]]}
+        details={[["commit hash", featureManager.getCommitHash()]]}
         icon={
           <Icon size="lg" status="info">
             <DesktopIcon />
@@ -79,13 +79,13 @@ export const StatusList: React.FC<Props> = ({
         <StatusItem
           key={`extension-${extension.name}`}
           name={extension.name}
-          details={toDetails(omit(extension, 'name'))}
+          details={toDetails(omit(extension, "name"))}
           icon={
             <Icon size="lg">
               <IntegrationIcon
                 style={{
                   color:
-                    'var(--pf-t--global--icon--color--severity--none--default)',
+                    "var(--pf-t--global--icon--color--severity--none--default)",
                 }}
               />
             </Icon>
@@ -157,5 +157,5 @@ const stringifyRecordAttributes = (
  * @returns {value is Record<string, unknown>} True if the value is a Record<string, unknown>, otherwise false.
  */
 const isRecord = (value: unknown): value is Record<string, unknown> => {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 };

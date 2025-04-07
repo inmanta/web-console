@@ -1,15 +1,15 @@
-import { dia } from '@inmanta/rappid';
-import { DirectedGraph } from '@joint/layout-directed-graph';
-import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from '@/Core';
+import { dia } from "@inmanta/rappid";
+import { DirectedGraph } from "@joint/layout-directed-graph";
+import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
   FieldCreator,
   createFormState,
-} from '@/UI/Components/ServiceInstanceForm';
-import { dispatchUpdateStencil } from '../Context/dispatchers';
-import { EventActionEnum } from '../interfaces';
-import { ServiceEntityBlock } from '../shapes';
-import { connectEntities, createComposerEntity } from './general';
+} from "@/UI/Components/ServiceInstanceForm";
+import { dispatchUpdateStencil } from "../Context/dispatchers";
+import { EventActionEnum } from "../interfaces";
+import { ServiceEntityBlock } from "../shapes";
+import { connectEntities, createComposerEntity } from "./general";
 
 /**
  * Populates a graph with default required entities derived from a service model.
@@ -39,14 +39,14 @@ export function populateGraphWithDefault (
   const defaultEntities = addDefaultEntities(graph, serviceModel);
 
   defaultEntities.forEach((entity) => {
-    entity.set('embeddedTo', coreEntity.id);
+    entity.set("embeddedTo", coreEntity.id);
   });
   connectEntities(graph, coreEntity, defaultEntities);
 
   DirectedGraph.layout(graph, {
     nodeSep: 80,
     edgeSep: 80,
-    rankDir: 'BT',
+    rankDir: "BT",
   });
 }
 
@@ -118,7 +118,7 @@ const addSingleEntity = (
   const subEmbeddedEntities = addDefaultEntities(graph, model);
 
   subEmbeddedEntities.forEach((entity) => {
-    entity.set('embeddedTo', embeddedEntity.id);
+    entity.set("embeddedTo", embeddedEntity.id);
   });
   connectEntities(graph, embeddedEntity, subEmbeddedEntities);
 

@@ -1,4 +1,4 @@
-import { ParsedNumber } from '@/Core/Language';
+import { ParsedNumber } from "@/Core/Language";
 
 export type AttributeValidation =
   | EnumValidation
@@ -8,7 +8,7 @@ export type AttributeValidation =
   | IpValidation;
 
 interface EnumValidation {
-  validation_type: 'enum' | 'enum?';
+  validation_type: "enum" | "enum?";
   validation_parameters: {
     names: Record<string, string | ParsedNumber>;
     value: string;
@@ -21,7 +21,7 @@ interface NoValidation {
 }
 
 interface StringValidation {
-  validation_type: 'pydantic.constr' | 'pydantic.constr?';
+  validation_type: "pydantic.constr" | "pydantic.constr?";
   validation_parameters: {
     regex?: string;
     strict?: boolean;
@@ -30,7 +30,7 @@ interface StringValidation {
 }
 
 interface IntValidation {
-  validation_type: 'pydantic.conint' | 'pydantic.conint?' | 'pydantic.conint[]';
+  validation_type: "pydantic.conint" | "pydantic.conint?" | "pydantic.conint[]";
   validation_parameters: {
     gt?: ParsedNumber;
     ge?: ParsedNumber;
@@ -41,14 +41,14 @@ interface IntValidation {
 
 interface IpValidation {
   validation_type:
-    | 'pydantic.IPvAnyInterface'
-    | 'pydantic.IPvAnyAddress'
-    | 'ipaddress.IPv4Address'
-    | 'ipaddress.IPv4Address?'
-    | 'ipaddress.IPv4Interface'
-    | 'pydantic.constr[]'
-    | 'ipaddress.IPv4Network'
-    | 'pydantic.PositiveInt?'
-    | 'pydantic.PositiveInt';
+    | "pydantic.IPvAnyInterface"
+    | "pydantic.IPvAnyAddress"
+    | "ipaddress.IPv4Address"
+    | "ipaddress.IPv4Address?"
+    | "ipaddress.IPv4Interface"
+    | "pydantic.constr[]"
+    | "ipaddress.IPv4Network"
+    | "pydantic.PositiveInt?"
+    | "pydantic.PositiveInt";
   validation_parameters: { [key: string]: string } | null;
 }

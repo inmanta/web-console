@@ -1,19 +1,19 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { dia } from '@inmanta/rappid';
-import { Alert, Button, Flex, FlexItem, Form } from '@patternfly/react-core';
-import { set } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
-import { Field, InstanceAttributeModel, ServiceModel } from '@/Core';
-import { sanitizeAttributes } from '@/Data';
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { dia } from "@inmanta/rappid";
+import { Alert, Button, Flex, FlexItem, Form } from "@patternfly/react-core";
+import { set } from "lodash";
+import { v4 as uuidv4 } from "uuid";
+import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
+import { sanitizeAttributes } from "@/Data";
 import {
   CreateModifierHandler,
   FieldCreator,
-} from '@/UI/Components/ServiceInstanceForm';
-import { FieldInput } from '@/UI/Components/ServiceInstanceForm/Components';
-import { words } from '@/UI/words';
-import { CanvasContext } from '../Context';
-import { updateServiceOrderItems } from '../helpers';
-import { ActionEnum } from '../interfaces';
+} from "@/UI/Components/ServiceInstanceForm";
+import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
+import { words } from "@/UI/words";
+import { CanvasContext } from "../Context";
+import { updateServiceOrderItems } from "../helpers";
+import { ActionEnum } from "../interfaces";
 
 interface Props {
   cellToEdit: dia.CellView;
@@ -128,9 +128,9 @@ export const EntityForm: React.FC<Props> = ({
    */
   const createFieldsAndState = useCallback(() => {
     const { model } = cellToEdit;
-    const serviceModel = model.get('serviceModel') as ServiceModel;
-    const isEdited = model.get('isInEditMode') as boolean;
-    const instanceAttributes = model.get('instanceAttributes');
+    const serviceModel = model.get("serviceModel") as ServiceModel;
+    const isEdited = model.get("isInEditMode") as boolean;
+    const instanceAttributes = model.get("instanceAttributes");
 
     const fieldCreator = new FieldCreator(
       new CreateModifierHandler(),
@@ -158,7 +158,7 @@ export const EntityForm: React.FC<Props> = ({
           formState,
         );
 
-        shape.set('sanitizedAttrs', sanitizedAttrs);
+        shape.set("sanitizedAttrs", sanitizedAttrs);
         setServiceOrderItems((prev) => {
           if (prev.has(String(shape.id))) {
             return updateServiceOrderItems(shape, ActionEnum.UPDATE, prev);
@@ -186,11 +186,11 @@ export const EntityForm: React.FC<Props> = ({
           <Alert
             variant="info"
             isInline
-            title={words('instanceComposer.formModal.noAttributes')}
+            title={words("instanceComposer.formModal.noAttributes")}
           />
         </FlexItem>
       )}
-      <FlexItem flex={{ default: 'flex_1' }}>
+      <FlexItem flex={{ default: "flex_1" }}>
         <Form
           data-testid="entity-form"
           onSubmit={(event) => {
@@ -215,7 +215,7 @@ export const EntityForm: React.FC<Props> = ({
         </Form>
       </FlexItem>
       {showButtons && (
-        <Flex justifyContent={{ default: 'justifyContentCenter' }}>
+        <Flex justifyContent={{ default: "justifyContentCenter" }}>
           <FlexItem>
             <Button
               variant="danger"
@@ -223,7 +223,7 @@ export const EntityForm: React.FC<Props> = ({
               onClick={onRemove}
               isDisabled={!isRemovable}
             >
-              {words('remove')}
+              {words("remove")}
             </Button>
           </FlexItem>
           <FlexItem>
@@ -233,7 +233,7 @@ export const EntityForm: React.FC<Props> = ({
               isDisabled={!isDirty}
               onClick={onCancel}
             >
-              {words('cancel')}
+              {words("cancel")}
             </Button>
           </FlexItem>
         </Flex>

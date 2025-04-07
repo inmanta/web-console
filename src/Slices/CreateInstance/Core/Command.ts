@@ -2,11 +2,11 @@ import {
   InstanceAttributeModel,
   ServiceInstanceModel,
   Field,
-} from '@/Core/Domain';
-import { Either } from '@/Core/Language';
+} from "@/Core/Domain";
+import { Either } from "@/Core/Language";
 
 export interface Command {
-  kind: 'CreateInstance';
+  kind: "CreateInstance";
   service_entity: string;
 }
 

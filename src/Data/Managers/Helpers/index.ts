@@ -1,2 +1,2 @@
-export * from './Pagination';
-export * as QueryManager from './QueryManager';
+export * from "./Pagination";
+export * as QueryManager from "./QueryManager";

@@ -5,7 +5,7 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from "react";
 import {
   RemoteData,
   Query,
@@ -14,17 +14,17 @@ import {
   Scheduler,
   ApiHelper,
   StateHelperWithEnv,
-} from '@/Core';
-import { DependencyContext } from '@/UI';
+} from "@/Core";
+import { DependencyContext } from "@/UI";
 import {
   Data,
   GetUniqueWithEnv,
   GetDependenciesWithEnv,
   GetUrlWithEnv,
   ToUsed,
-} from './types';
-import { usePrevious } from './usePrevious';
-import { urlEncodeParams } from './utils';
+} from "./types";
+import { usePrevious } from "./usePrevious";
+import { urlEncodeParams } from "./utils";
 
 export function ContinuousWithEnv<Kind extends Query.Kind> (
   apiHelper: ApiHelper,
@@ -97,7 +97,7 @@ export function ContinuousWithEnv<Kind extends Query.Kind> (
     query: Query.SubQuery<Kind>,
     matchingKind: QueryManagerKind,
   ): boolean {
-    return query.kind === kind && matchingKind === 'Continuous';
+    return query.kind === kind && matchingKind === "Continuous";
   }
 
   return {

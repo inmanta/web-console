@@ -1,4 +1,4 @@
-import { ParsedNumber } from '@/Core/Language';
+import { ParsedNumber } from "@/Core/Language";
 
 export interface Handlers {
   prev?: string;

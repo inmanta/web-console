@@ -2,8 +2,8 @@ import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
-} from '@tanstack/react-query';
-import { CustomError, useGetZipWithoutEnv } from '../../helpers';
+} from "@tanstack/react-query";
+import { CustomError, useGetZipWithoutEnv } from "../../helpers";
 
 /**
  * React Query hook for downloading support archive.
@@ -17,7 +17,7 @@ export const useCreateSupportArchive = (
 
   return useMutation({
     mutationFn: async () => {
-      const response = await get('/api/v2/support');
+      const response = await get("/api/v2/support");
 
       return response;
     },

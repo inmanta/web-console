@@ -1,7 +1,7 @@
-import { Maybe } from '@/Core/Language';
+import { Maybe } from "@/Core/Language";
 
 export interface Repair {
-  kind: 'Repair';
+  kind: "Repair";
 }
 
 export interface RepairManifest {

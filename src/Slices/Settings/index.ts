@@ -1,1 +1,1 @@
-export * as Settings from './Core/Route';
+export * as Settings from "./Core/Route";

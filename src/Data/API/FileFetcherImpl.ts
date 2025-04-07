@@ -1,4 +1,4 @@
-import { FileFetcher, Either, Maybe, ApiHelper } from '@/Core';
+import { FileFetcher, Either, Maybe, ApiHelper } from "@/Core";
 
 interface RawResponse {
   content?: string;
@@ -12,13 +12,13 @@ export class FileFetcherImpl implements FileFetcher {
     private readonly apiHelper: ApiHelper,
     environment?: string,
   ) {
-    if (typeof environment === 'undefined') return;
+    if (typeof environment === "undefined") return;
     this.environment = Maybe.some(environment);
   }
 
   private getEnvironment (): string {
     if (Maybe.isSome(this.environment)) return this.environment.value;
-    throw new Error('Environment not set');
+    throw new Error("Environment not set");
   }
 
   setEnvironment (environment: string): void {
@@ -48,14 +48,14 @@ export class FileFetcherImpl implements FileFetcher {
     if (Either.isRight(either)) {
       const response = either.value;
 
-      if (typeof response.message !== 'undefined') {
+      if (typeof response.message !== "undefined") {
         return Either.left(response.message);
       }
-      if (typeof response.content !== 'undefined') {
+      if (typeof response.content !== "undefined") {
         return Either.right(this.decodeBase64String(response.content));
       }
 
-      return Either.left('No data');
+      return Either.left("No data");
     }
 
     return either;

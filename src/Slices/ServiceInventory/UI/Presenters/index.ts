@@ -1,2 +1,2 @@
-export * from './AttributesPresenter';
-export * from './InventoryTablePresenter';
+export * from "./AttributesPresenter";
+export * from "./InventoryTablePresenter";

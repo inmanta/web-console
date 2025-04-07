@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, ToolbarItem, Tooltip } from '@patternfly/react-core';
-import { BookIcon, FileCodeIcon } from '@patternfly/react-icons';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+import { Button, ToolbarItem, Tooltip } from "@patternfly/react-core";
+import { BookIcon, FileCodeIcon } from "@patternfly/react-icons";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 export const DocumentationLinks: React.FC = () => {
   const { urlManager } = useContext(DependencyContext);
@@ -12,7 +12,7 @@ export const DocumentationLinks: React.FC = () => {
     <>
       <ToolbarItem>
         <Tooltip
-          content={words('dashboard.documentation.tooltip')}
+          content={words("dashboard.documentation.tooltip")}
           position="bottom"
           entryDelay={500}
         >
@@ -27,7 +27,7 @@ export const DocumentationLinks: React.FC = () => {
       </ToolbarItem>
       <ToolbarItem>
         <Tooltip
-          content={words('dashboard.API.tooltip')}
+          content={words("dashboard.API.tooltip")}
           position="bottom"
           entryDelay={500}
         >

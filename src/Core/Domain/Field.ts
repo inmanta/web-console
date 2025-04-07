@@ -1,6 +1,6 @@
-import { TextInputTypes } from '@patternfly/react-core';
-import { ParsedNumber } from '@/Core/Language';
-import { FormSuggestion } from './ServiceInstanceModel';
+import { TextInputTypes } from "@patternfly/react-core";
+import { ParsedNumber } from "@/Core/Language";
+import { FormSuggestion } from "./ServiceInstanceModel";
 
 /**
  * A field contains all the information required to setup a form field for an AttributeModel.
@@ -30,59 +30,59 @@ interface BaseField {
 }
 
 export interface BooleanField extends BaseField {
-  kind: 'Boolean';
+  kind: "Boolean";
   defaultValue: unknown;
   type: string;
 }
 
 export interface TextField extends BaseField {
-  kind: 'Text';
+  kind: "Text";
   defaultValue: unknown;
   inputType: TextInputTypes;
   type: string;
 }
 
 export interface Textarea extends BaseField {
-  kind: 'Textarea';
+  kind: "Textarea";
   defaultValue: unknown;
   inputType: TextInputTypes;
   type: string;
 }
 
 interface TextListField extends BaseField {
-  kind: 'TextList';
+  kind: "TextList";
   defaultValue: unknown;
   inputType: TextInputTypes;
   type: string;
 }
 
 export interface EnumField extends BaseField {
-  kind: 'Enum';
+  kind: "Enum";
   defaultValue: unknown;
   type: string;
   options: Record<string, string | ParsedNumber>;
 }
 
 export interface NestedField extends BaseField {
-  kind: 'Nested';
+  kind: "Nested";
   fields: Field[];
 }
 
 export interface DictListField extends BaseField {
-  kind: 'DictList';
+  kind: "DictList";
   fields: Field[];
   min: ParsedNumber;
   max?: ParsedNumber | null;
 }
 
 interface RelationListField extends BaseField {
-  kind: 'RelationList';
+  kind: "RelationList";
   serviceEntity: string;
   min: ParsedNumber;
   max?: ParsedNumber | null;
 }
 
 interface InterServiceRelationField extends BaseField {
-  kind: 'InterServiceRelation';
+  kind: "InterServiceRelation";
   serviceEntity: string;
 }

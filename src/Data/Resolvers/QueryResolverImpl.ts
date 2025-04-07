@@ -6,7 +6,7 @@ import {
   ContinuousQueryManager,
   ReadOnlyQueryManager,
   QueryManagerResolver,
-} from '@/Core';
+} from "@/Core";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
   Query.Error<K>,
@@ -21,9 +21,9 @@ export class QueryResolverImpl implements QueryResolver {
   ): OneTimeQueryManager<typeof query.kind> {
     const manager = this.managerResolver
       .get()
-      .find((helper) => helper.matches(query, 'OneTime'));
+      .find((helper) => helper.matches(query, "OneTime"));
 
-    if (typeof manager !== 'undefined') {
+    if (typeof manager !== "undefined") {
       return manager as OneTimeQueryManager<typeof query.kind>;
     }
     throw new Error(`Can't find OneTimeQueryManager for query ${query.kind}`);
@@ -48,9 +48,9 @@ export class QueryResolverImpl implements QueryResolver {
   ): ContinuousQueryManager<typeof query.kind> {
     const manager = this.managerResolver
       .get()
-      .find((helper) => helper.matches(query, 'Continuous'));
+      .find((helper) => helper.matches(query, "Continuous"));
 
-    if (typeof manager !== 'undefined') {
+    if (typeof manager !== "undefined") {
       return manager as ContinuousQueryManager<typeof query.kind>;
     }
     throw new Error(
@@ -69,9 +69,9 @@ export class QueryResolverImpl implements QueryResolver {
   ): ReadOnlyQueryManager<typeof query.kind> {
     const manager = this.managerResolver
       .get()
-      .find((helper) => helper.matches(query, 'ReadOnly'));
+      .find((helper) => helper.matches(query, "ReadOnly"));
 
-    if (typeof manager !== 'undefined') {
+    if (typeof manager !== "undefined") {
       return manager as ReadOnlyQueryManager<typeof query.kind>;
     }
     throw new Error(`Can't find ReadOnlyQueryManager for query ${query.kind}`);

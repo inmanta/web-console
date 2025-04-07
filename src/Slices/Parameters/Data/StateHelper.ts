@@ -1,9 +1,9 @@
-import { RemoteData } from '@/Core';
-import { PrimaryStateHelperWithEnv } from '@/Data/Common';
-import { Store } from '@/Data/Store';
+import { RemoteData } from "@/Core";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
+import { Store } from "@/Data/Store";
 
 export function GetParametersStateHelper (store: Store) {
-  return PrimaryStateHelperWithEnv<'GetParameters'>(
+  return PrimaryStateHelperWithEnv<"GetParameters">(
     store,
     (data, query, environment) => {
       const value = RemoteData.mapSuccess((wrapped) => wrapped, data);

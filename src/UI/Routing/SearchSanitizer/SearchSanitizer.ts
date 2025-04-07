@@ -4,9 +4,9 @@ import {
   keepKeys,
   RouteManager,
   RouteKind,
-} from '@/Core';
-import { PageStateSanitizer } from '@/UI/Routing/PageStateSanitizer';
-import { SearchHelper } from '@/UI/Routing/SearchHelper';
+} from "@/Core";
+import { PageStateSanitizer } from "@/UI/Routing/PageStateSanitizer";
+import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
 /**
  * SearchSanitizer has utilities to sanitize the search string.
@@ -15,7 +15,7 @@ import { SearchHelper } from '@/UI/Routing/SearchHelper';
  * But also pageState of child pages we no longer need.
  */
 export class SearchSanitizer {
-  private readonly validKeys = ['env', 'state'];
+  private readonly validKeys = ["env", "state"];
   searchHelper: SearchHelper;
   pageStateSanitizer: PageStateSanitizer;
 
@@ -27,8 +27,8 @@ export class SearchSanitizer {
   private getValidKeys (routeKind: RouteKind): string[] {
     const route = this.routeManager.getRoute(routeKind);
 
-    if (route.environmentRole === 'Forbidden')
-      return this.validKeys.filter((k) => k !== 'env');
+    if (route.environmentRole === "Forbidden")
+      return this.validKeys.filter((k) => k !== "env");
 
     return this.validKeys;
   }
@@ -45,10 +45,10 @@ export class SearchSanitizer {
     );
     const { state } = sanitizedSearch;
 
-    if (typeof state === 'undefined')
+    if (typeof state === "undefined")
       return this.searchHelper.stringify(sanitizedSearch);
     if (!isObject(state)) {
-      return this.searchHelper.stringify(keepKeys(['env'], sanitizedSearch));
+      return this.searchHelper.stringify(keepKeys(["env"], sanitizedSearch));
     }
 
     return this.searchHelper.stringify(
@@ -68,7 +68,7 @@ export class SearchSanitizer {
       return false;
     const { state } = parsedSearch;
 
-    if (typeof state === 'undefined') return true;
+    if (typeof state === "undefined") return true;
     if (!isObject(state)) return false;
 
     return this.pageStateSanitizer.isSanitized(routeKind, state);

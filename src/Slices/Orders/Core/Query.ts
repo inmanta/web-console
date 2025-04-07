@@ -1,8 +1,8 @@
-import { PageSize, Pagination, Sort } from '@/Core/Domain';
-import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
+import { PageSize, Pagination, Sort } from "@/Core/Domain";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 export interface Query {
-  kind: 'GetOrders';
+  kind: "GetOrders";
   sort?: Sort.Sort<SortKey>;
   pageSize: PageSize.PageSize;
   currentPage: CurrentPage;
@@ -70,21 +70,21 @@ export interface ServiceOrderItemConfig {
 }
 
 export type ServiceOrderState =
-  | 'success'
-  | 'failed'
-  | 'in_progress'
-  | 'partial';
+  | "success"
+  | "failed"
+  | "in_progress"
+  | "partial";
 export type ServiceOrderItemState =
-  | 'completed'
-  | 'failed'
-  | 'in_progress'
-  | 'acknowledged';
+  | "completed"
+  | "failed"
+  | "in_progress"
+  | "acknowledged";
 
 type FailureType =
-  | 'INVALID_ORDER_ITEM'
-  | 'VALIDATION_COMPILE_FAILED'
-  | 'EXECUTION_FAILED'
-  | 'EXECUTION_SKIPPED';
-export type ServiceOrderItemAction = 'delete' | 'create' | 'update';
+  | "INVALID_ORDER_ITEM"
+  | "VALIDATION_COMPILE_FAILED"
+  | "EXECUTION_FAILED"
+  | "EXECUTION_SKIPPED";
+export type ServiceOrderItemAction = "delete" | "create" | "update";
 
-export type SortKey = 'created_at';
+export type SortKey = "created_at";

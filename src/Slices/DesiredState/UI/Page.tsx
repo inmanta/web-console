@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { ParsedNumber, RemoteData } from '@/Core';
-import { useUrlStateWithFilter, useUrlStateWithPageSize } from '@/Data';
-import { useUrlStateWithCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
-import { getPaginationHandlers } from '@/Data/Managers/Helpers';
+import React, { useContext, useEffect, useState } from "react";
+import { ParsedNumber, RemoteData } from "@/Core";
+import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { getPaginationHandlers } from "@/Data/Managers/Helpers";
 import {
   useDeleteDesiredStateVersion,
   useGetDesiredStates,
-} from '@/Data/Managers/V2/DesiredState';
+} from "@/Data/Managers/V2/DesiredState";
 import {
   ToastAlert,
   PageContainer,
@@ -15,15 +15,15 @@ import {
   EmptyView,
   LoadingView,
   ErrorView,
-} from '@/UI/Components';
-import { ModalContext } from '@/UI/Root/Components/ModalProvider';
-import { words } from '@/UI/words';
-import { Filter } from '@S/DesiredState/Core/Query';
-import { DesiredStateVersionStatus } from '../Core/Domain';
-import { TableControls } from './Components';
-import { DesiredStatesTable } from './DesiredStatesTable';
-import { GetDesiredStatesContext } from './GetDesiredStatesContext';
-import { CompareSelection } from './Utils';
+} from "@/UI/Components";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { words } from "@/UI/words";
+import { Filter } from "@S/DesiredState/Core/Query";
+import { DesiredStateVersionStatus } from "../Core/Domain";
+import { TableControls } from "./Components";
+import { DesiredStatesTable } from "./DesiredStatesTable";
+import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
+import { CompareSelection } from "./Utils";
 
 /**
  * The Page component that renders the desired state page.
@@ -34,13 +34,13 @@ export const Page: React.FC = () => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const deleteVersion = useDeleteDesiredStateVersion();
 
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: 'DesiredState',
+    route: "DesiredState",
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: 'DesiredState',
+    route: "DesiredState",
   });
   const [filter, setFilter] = useUrlStateWithFilter<Filter>({
     default: {
@@ -50,12 +50,12 @@ export const Page: React.FC = () => {
         DesiredStateVersionStatus.retired,
       ],
     },
-    route: 'DesiredState',
-    keys: { date: 'DateRange', version: 'IntRange' },
+    route: "DesiredState",
+    keys: { date: "DateRange", version: "IntRange" },
   });
 
   const [compareSelection, setCompareSelection] = useState<CompareSelection>({
-    kind: 'None',
+    kind: "None",
   });
 
   const { data, refetch, isError, error, isSuccess } =
@@ -75,10 +75,10 @@ export const Page: React.FC = () => {
     };
 
     triggerModal({
-      title: words('inventory.deleteVersion.title'),
+      title: words("inventory.deleteVersion.title"),
       content: (
         <>
-          {words('inventory.deleteVersion.header')(version)}
+          {words("inventory.deleteVersion.header")(version)}
           <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
         </>
       ),
@@ -95,8 +95,8 @@ export const Page: React.FC = () => {
     return (
       <ErrorView
         data-testid="ErrorView"
-        title={words('error')}
-        message={words('error.general')(error.message)}
+        title={words("error")}
+        message={words("error.general")(error.message)}
         ariaLabel="DesiredStatesView-Failed"
         retry={refetch}
       />
@@ -105,12 +105,12 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     const handlers =
-      typeof data.links === 'undefined'
+      typeof data.links === "undefined"
         ? {}
         : getPaginationHandlers(data.links, data.metadata);
 
     return (
-      <PageContainer pageTitle={words('desiredState.title')}>
+      <PageContainer pageTitle={words("desiredState.title")}>
         <GetDesiredStatesContext.Provider
           value={{
             filter,
@@ -139,13 +139,13 @@ export const Page: React.FC = () => {
           />
           <ToastAlert
             data-testid="ToastAlert"
-            title={words('desiredState.actions.promote.failed')}
+            title={words("desiredState.actions.promote.failed")}
             message={errorMessage}
             setMessage={setErrorMessage}
           />
           {data.data.length <= 0 ? (
             <EmptyView
-              message={words('desiredState.empty.message')}
+              message={words("desiredState.empty.message")}
               aria-label="DesiredStatesView-Empty"
             />
           ) : (

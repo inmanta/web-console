@@ -1,5 +1,5 @@
-import { FeatureManager, RouteManager } from '@/Core';
-import { words } from '@/UI/words';
+import { FeatureManager, RouteManager } from "@/Core";
+import { words } from "@/UI/words";
 
 /**
  * Interface that represents a Group of links in the sidebar navigation
@@ -32,21 +32,21 @@ export const envrionment = (
   routeManager: RouteManager,
   isEnvPresent: boolean,
 ): Group => ({
-  id: words('navigation.environment'),
-  title: words('navigation.environment'),
+  id: words("navigation.environment"),
+  title: words("navigation.environment"),
   links: [
     {
-      id: 'Dashboard',
-      label: routeManager.getRoute('Dashboard').generateLabel(undefined),
-      url: routeManager.getRoute('Dashboard').path,
+      id: "Dashboard",
+      label: routeManager.getRoute("Dashboard").generateLabel(undefined),
+      url: routeManager.getRoute("Dashboard").path,
       external: false,
       locked: !isEnvPresent,
       statusIndication: false,
     },
     {
-      id: 'Settings',
-      label: routeManager.getRoute('Settings').generateLabel(undefined),
-      url: routeManager.getRoute('Settings').path,
+      id: "Settings",
+      label: routeManager.getRoute("Settings").generateLabel(undefined),
+      url: routeManager.getRoute("Settings").path,
       external: false,
       locked: !isEnvPresent,
       statusIndication: false,
@@ -67,13 +67,13 @@ export const lifecycleServiceManager = (
   isEnvPresent: boolean,
   featureManager: FeatureManager,
 ): Group => ({
-  id: 'LifecycleServiceManager',
-  title: words('navigation.lifecycleServiceManager'),
+  id: "LifecycleServiceManager",
+  title: words("navigation.lifecycleServiceManager"),
   links: [
     {
-      id: 'Catalog',
-      label: routeManager.getRoute('Catalog').generateLabel(undefined),
-      url: routeManager.getRoute('Catalog').path,
+      id: "Catalog",
+      label: routeManager.getRoute("Catalog").generateLabel(undefined),
+      url: routeManager.getRoute("Catalog").path,
       external: false,
       locked: !isEnvPresent,
       statusIndication: false,
@@ -81,9 +81,9 @@ export const lifecycleServiceManager = (
     ...(featureManager.isOrderViewEnabled()
       ? [
         {
-          id: 'Orders',
-          label: routeManager.getRoute('Orders').generateLabel(undefined),
-          url: routeManager.getRoute('Orders').path,
+          id: "Orders",
+          label: routeManager.getRoute("Orders").generateLabel(undefined),
+          url: routeManager.getRoute("Orders").path,
           external: false,
           locked: !isEnvPresent,
           statusIndication: false,
@@ -104,29 +104,29 @@ export const orchestrationEngine = (
   routeManager: RouteManager,
   isEnvPresent: boolean,
 ): Group => ({
-  id: 'OrchestrationEngine',
-  title: words('navigation.orchestrationEngine'),
+  id: "OrchestrationEngine",
+  title: words("navigation.orchestrationEngine"),
   links: [
     {
-      id: 'DesiredState',
-      label: routeManager.getRoute('DesiredState').generateLabel(undefined),
-      url: routeManager.getRoute('DesiredState').path,
+      id: "DesiredState",
+      label: routeManager.getRoute("DesiredState").generateLabel(undefined),
+      url: routeManager.getRoute("DesiredState").path,
       external: false,
       locked: !isEnvPresent,
       statusIndication: false,
     },
     {
-      id: 'CompileReports',
-      label: routeManager.getRoute('CompileReports').generateLabel(undefined),
-      url: routeManager.getRoute('CompileReports').path,
+      id: "CompileReports",
+      label: routeManager.getRoute("CompileReports").generateLabel(undefined),
+      url: routeManager.getRoute("CompileReports").path,
       external: false,
       locked: !isEnvPresent,
       statusIndication: true,
     },
     {
-      id: 'Parameters',
-      label: routeManager.getRoute('Parameters').generateLabel(undefined),
-      url: routeManager.getRoute('Parameters').path,
+      id: "Parameters",
+      label: routeManager.getRoute("Parameters").generateLabel(undefined),
+      url: routeManager.getRoute("Parameters").path,
       external: false,
       locked: !isEnvPresent,
       statusIndication: false,
@@ -147,13 +147,13 @@ export const resourceManager = (
   isEnvPresent: boolean,
   featureManager: FeatureManager,
 ): Group => ({
-  id: 'ResourceManager',
-  title: words('navigation.resourceManager'),
+  id: "ResourceManager",
+  title: words("navigation.resourceManager"),
   links: [
     {
-      id: 'Resources',
-      label: routeManager.getRoute('Resources').generateLabel(undefined),
-      url: routeManager.getRoute('Resources').path,
+      id: "Resources",
+      label: routeManager.getRoute("Resources").generateLabel(undefined),
+      url: routeManager.getRoute("Resources").path,
       external: false,
       locked: !isEnvPresent,
       statusIndication: false,
@@ -161,11 +161,11 @@ export const resourceManager = (
     ...(featureManager.isResourceDiscoveryEnabled()
       ? [
         {
-          id: 'Discovered Resources',
+          id: "Discovered Resources",
           label: routeManager
-            .getRoute('DiscoveredResources')
+            .getRoute("DiscoveredResources")
             .generateLabel(undefined),
-          url: routeManager.getRoute('DiscoveredResources').path,
+          url: routeManager.getRoute("DiscoveredResources").path,
           external: false,
           locked: !isEnvPresent,
           statusIndication: false,
@@ -173,17 +173,17 @@ export const resourceManager = (
       ]
       : []),
     {
-      id: 'Agents',
-      label: routeManager.getRoute('Agents').generateLabel(undefined),
-      url: routeManager.getRoute('Agents').path,
+      id: "Agents",
+      label: routeManager.getRoute("Agents").generateLabel(undefined),
+      url: routeManager.getRoute("Agents").path,
       external: false,
       locked: !isEnvPresent,
       statusIndication: false,
     },
     {
-      id: 'Facts',
-      label: routeManager.getRoute('Facts').generateLabel(undefined),
-      url: routeManager.getRoute('Facts').path,
+      id: "Facts",
+      label: routeManager.getRoute("Facts").generateLabel(undefined),
+      url: routeManager.getRoute("Facts").path,
       external: false,
       locked: !isEnvPresent,
       statusIndication: false,

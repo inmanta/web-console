@@ -1,7 +1,7 @@
-import React from 'react';
-import { ActionList, ActionListItem, Button } from '@patternfly/react-core';
-import { SaveIcon, UndoIcon } from '@patternfly/react-icons';
-import { EnvironmentSettings } from '@/Core';
+import React from "react";
+import { ActionList, ActionListItem, Button } from "@patternfly/react-core";
+import { SaveIcon, UndoIcon } from "@patternfly/react-icons";
+import { EnvironmentSettings } from "@/Core";
 
 type Info<Properties extends keyof EnvironmentSettings.InputInfo> = Pick<
   EnvironmentSettings.InputInfo,
@@ -9,7 +9,7 @@ type Info<Properties extends keyof EnvironmentSettings.InputInfo> = Pick<
 >;
 
 interface Props {
-  info: Info<'value' | 'initial' | 'update' | 'reset' | 'default'>;
+  info: Info<"value" | "initial" | "update" | "reset" | "default">;
 }
 
 export const InputActions: React.FC<Props> = ({ info }) => (
@@ -24,7 +24,7 @@ export const InputActions: React.FC<Props> = ({ info }) => (
 );
 
 const InputUpdateAction: React.FC<{
-  info: Info<'value' | 'initial' | 'update'>;
+  info: Info<"value" | "initial" | "update">;
 }> = ({ info }) => (
   <Button
     variant="secondary"
@@ -37,7 +37,7 @@ const InputUpdateAction: React.FC<{
 );
 
 const InputResetAction: React.FC<{
-  info: Info<'reset'>;
+  info: Info<"reset">;
 }> = ({ info }) => (
   <Button
     icon={<UndoIcon />}

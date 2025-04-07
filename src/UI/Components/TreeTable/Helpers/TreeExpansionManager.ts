@@ -1,4 +1,4 @@
-import { fromEntries } from '@/Core';
+import { fromEntries } from "@/Core";
 
 export interface ExpansionState {
   [id: string]: boolean;
@@ -69,7 +69,7 @@ export class TreeExpansionManager {
 
   merge (state: ExpansionState, keys: string[]): ExpansionState {
     const entries = keys.map((key) => {
-      if (typeof state[key] === 'undefined') return [key, false];
+      if (typeof state[key] === "undefined") return [key, false];
 
       return [key, state[key]];
     });

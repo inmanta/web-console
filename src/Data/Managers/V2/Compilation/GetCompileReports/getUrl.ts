@@ -1,8 +1,8 @@
-import moment from 'moment-timezone';
-import qs from 'qs';
-import { CompileStatus, RangeOperator } from '@/Core';
-import { Filter } from '@/Slices/CompileReports/Core/Query';
-import { CompileReportsParams } from './useGetCompileReports';
+import moment from "moment-timezone";
+import qs from "qs";
+import { CompileStatus, RangeOperator } from "@/Core";
+import { Filter } from "@/Slices/CompileReports/Core/Query";
+import { CompileReportsParams } from "./useGetCompileReports";
 
 export function getUrl (
   params: CompileReportsParams,
@@ -14,21 +14,21 @@ export function getUrl (
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
         { filter: filterToParam(filter, timezone) },
-        { allowDots: true, arrayFormat: 'repeat' },
+        { allowDots: true, arrayFormat: "repeat" },
       )}`
-      : '';
-  const filterParam = serializedFilters.length > 1 ? serializedFilters : '';
-  const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : '';
+      : "";
+  const filterParam = serializedFilters.length > 1 ? serializedFilters : "";
+  const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
   return `/api/v2/compilereport?limit=${
     pageSize.value
   }${sortParam}${filterParam}${
-    currentPage.value ? `&${currentPage.value}` : ''
+    currentPage.value ? `&${currentPage.value}` : ""
   }`;
 }
 
 const filterToParam = (filter: Filter, timezone: string) => {
-  if (typeof filter === 'undefined') return {};
+  if (typeof filter === "undefined") return {};
   const { status, requested } = filter;
   const serializedTimestampOperatorFilters = requested?.map(
     (timestampWithOperator) =>
@@ -37,7 +37,7 @@ const filterToParam = (filter: Filter, timezone: string) => {
       )}:${moment
         .tz(timestampWithOperator.date, timezone)
         .utc()
-        .format('YYYY-MM-DD+HH:mm:ss')}`,
+        .format("YYYY-MM-DD+HH:mm:ss")}`,
   );
 
   const statusFilter = translateStatusFilter(status);

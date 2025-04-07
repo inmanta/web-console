@@ -1,17 +1,17 @@
-import React, { act } from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-import { Attributes, EntityLike, ServiceModel } from '@/Core';
-import { dependencies } from '@/Test';
-import { DependencyProvider } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { CatalogAttributeHelper, CatalogTreeTableHelper } from './Catalog';
-import { PathHelper, TreeExpansionManager } from './Helpers';
+import React, { act } from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { Attributes, EntityLike, ServiceModel } from "@/Core";
+import { dependencies } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { CatalogAttributeHelper, CatalogTreeTableHelper } from "./Catalog";
+import { PathHelper, TreeExpansionManager } from "./Helpers";
 import {
   InventoryAttributeHelper,
   InventoryTreeTableHelper,
-} from './Inventory';
-import { TreeTable } from './TreeTable';
+} from "./Inventory";
+import { TreeTable } from "./TreeTable";
 
 function inventorySetup (
   attributes: Attributes,
@@ -28,9 +28,9 @@ function inventorySetup (
       <TreeTable
         treeTableHelper={
           new InventoryTreeTableHelper(
-            new PathHelper('$'),
-            new TreeExpansionManager('$'),
-            new InventoryAttributeHelper('$', service),
+            new PathHelper("$"),
+            new TreeExpansionManager("$"),
+            new InventoryAttributeHelper("$", service),
             attributes,
           )
         }
@@ -42,43 +42,43 @@ function inventorySetup (
 
   return component;
 }
-test('TreeTable 1st level of nested property can be expanded', async () => {
+test("TreeTable 1st level of nested property can be expanded", async () => {
   // Arrange
   render(
     inventorySetup({
       candidate: null,
-      active: { a: { b: { c: 'd' } } },
+      active: { a: { b: { c: "d" } } },
       rollback: null,
     }),
   );
   expect(
-    screen.queryByRole('row', { name: 'Row-a$b' }),
+    screen.queryByRole("row", { name: "Row-a$b" }),
   ).not.toBeInTheDocument();
 
   // Act
-  fireEvent.click(screen.getByRole('button', { name: 'Toggle-a' }));
+  fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
 
   // Assert
-  expect(screen.getByRole('row', { name: 'Row-a$b' })).toBeVisible();
+  expect(screen.getByRole("row", { name: "Row-a$b" })).toBeVisible();
 });
 
-test('TreeTable with 1st level of attributes containing annotations should not render a value but be a link to the right tab.', async () => {
+test("TreeTable with 1st level of attributes containing annotations should not render a value but be a link to the right tab.", async () => {
   const serviceModel: ServiceModel = {
-    name: 'service',
-    environment: 'env',
+    name: "service",
+    environment: "env",
     attributes: [
       {
-        name: 'documentation',
-        type: 'string',
-        description: 'description',
-        modifier: 'rw',
-        default_value: '',
+        name: "documentation",
+        type: "string",
+        description: "description",
+        modifier: "rw",
+        default_value: "",
         default_value_set: false,
         attribute_annotations: {
-          web_presentation: 'documentation',
-          web_content_type: 'text/markdown',
-          web_icon: 'FaBook',
-          web_title: 'Documentation',
+          web_presentation: "documentation",
+          web_content_type: "text/markdown",
+          web_icon: "FaBook",
+          web_title: "Documentation",
         },
       },
     ],
@@ -86,7 +86,7 @@ test('TreeTable with 1st level of attributes containing annotations should not r
     inter_service_relations: [],
     config: {},
     lifecycle: {
-      initial_state: 'initial',
+      initial_state: "initial",
       states: [],
       transfers: [],
     },
@@ -102,7 +102,7 @@ test('TreeTable with 1st level of attributes containing annotations should not r
       {
         candidate: null,
         active: {
-          documentation: '```mermaid\ngraph LR\n    A --> B\n    B --> C\n```',
+          documentation: "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```",
         },
         rollback: null,
       },
@@ -112,8 +112,8 @@ test('TreeTable with 1st level of attributes containing annotations should not r
   );
 
   // expect to find a row with a link to the documentation tab
-  const documentationButton = screen.getByRole('button', {
-    name: 'documentation',
+  const documentationButton = screen.getByRole("button", {
+    name: "documentation",
   });
 
   expect(documentationButton).toBeInTheDocument();
@@ -125,26 +125,26 @@ test('TreeTable with 1st level of attributes containing annotations should not r
   expect(setTab).toHaveBeenCalled();
 });
 
-test('TreeTable 2nd level of nested property can be expanded', async () => {
+test("TreeTable 2nd level of nested property can be expanded", async () => {
   // Arrange
   render(
     inventorySetup({
       candidate: null,
-      active: { a: { b: { c: 'd' } } },
+      active: { a: { b: { c: "d" } } },
       rollback: null,
     }),
   );
-  fireEvent.click(screen.getByRole('button', { name: 'Toggle-a' }));
+  fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
 
   expect(
-    screen.queryByRole('row', { name: 'Row-a$b$c' }),
+    screen.queryByRole("row", { name: "Row-a$b$c" }),
   ).not.toBeInTheDocument();
 
   // Act
-  fireEvent.click(screen.getByRole('button', { name: 'Toggle-a$b' }));
+  fireEvent.click(screen.getByRole("button", { name: "Toggle-a$b" }));
 
   // Assert
-  expect(screen.getByRole('row', { name: 'Row-a$b$c' })).toBeVisible();
+  expect(screen.getByRole("row", { name: "Row-a$b$c" })).toBeVisible();
 });
 
 function catalogSetup (service: EntityLike) {
@@ -157,9 +157,9 @@ function catalogSetup (service: EntityLike) {
       <TreeTable
         treeTableHelper={
           new CatalogTreeTableHelper(
-            new PathHelper('$'),
-            new TreeExpansionManager('$'),
-            new CatalogAttributeHelper('$'),
+            new PathHelper("$"),
+            new TreeExpansionManager("$"),
+            new CatalogAttributeHelper("$"),
             service,
           )
         }
@@ -170,19 +170,19 @@ function catalogSetup (service: EntityLike) {
 
   return component;
 }
-test('TreeTable with catalog entries can be expanded', async () => {
+test("TreeTable with catalog entries can be expanded", async () => {
   const service = {
     attributes: [],
     embedded_entities: [
       {
-        name: 'a',
-        description: '',
-        attributes: [{ name: 'b', type: 'int?', description: 'desc' }],
+        name: "a",
+        description: "",
+        attributes: [{ name: "b", type: "int?", description: "desc" }],
         embedded_entities: [
           {
-            name: 'c',
-            description: 'desc',
-            attributes: [{ name: 'd', type: 'int', description: 'desc' }],
+            name: "c",
+            description: "desc",
+            attributes: [{ name: "d", type: "int", description: "desc" }],
             embedded_entities: [],
           },
         ],
@@ -191,60 +191,60 @@ test('TreeTable with catalog entries can be expanded', async () => {
   };
 
   render(catalogSetup(service));
-  fireEvent.click(screen.getByRole('button', { name: 'Toggle-a' }));
+  fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
 
   expect(
-    screen.queryByRole('row', { name: 'Row-a$c$d' }),
+    screen.queryByRole("row", { name: "Row-a$c$d" }),
   ).not.toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole('button', { name: 'Toggle-a$c' }));
+  fireEvent.click(screen.getByRole("button", { name: "Toggle-a$c" }));
 
-  expect(screen.getByRole('row', { name: 'Row-a$c$d' })).toBeVisible();
+  expect(screen.getByRole("row", { name: "Row-a$c$d" })).toBeVisible();
 });
 
-test('TreeTable with catalog entries all can be expanded at once', async () => {
+test("TreeTable with catalog entries all can be expanded at once", async () => {
   const service = {
     attributes: [],
     embedded_entities: [
       {
-        name: 'a',
-        description: '',
-        attributes: [{ name: 'b', type: 'int?', description: 'desc' }],
+        name: "a",
+        description: "",
+        attributes: [{ name: "b", type: "int?", description: "desc" }],
         embedded_entities: [
           {
-            name: 'c',
-            description: 'desc',
-            attributes: [{ name: 'd', type: 'int', description: 'desc' }],
+            name: "c",
+            description: "desc",
+            attributes: [{ name: "d", type: "int", description: "desc" }],
             embedded_entities: [],
           },
           {
-            name: 'e',
-            description: 'desc',
-            attributes: [{ name: 'f', type: 'int', description: 'desc' }],
+            name: "e",
+            description: "desc",
+            attributes: [{ name: "f", type: "int", description: "desc" }],
             embedded_entities: [],
           },
         ],
       },
       {
-        name: 'g',
-        description: '',
-        attributes: [{ name: 'h', type: 'int?', description: 'desc' }],
+        name: "g",
+        description: "",
+        attributes: [{ name: "h", type: "int?", description: "desc" }],
         embedded_entities: [
           {
-            name: 'i',
-            description: 'desc',
-            attributes: [{ name: 'j', type: 'int', description: 'desc' }],
+            name: "i",
+            description: "desc",
+            attributes: [{ name: "j", type: "int", description: "desc" }],
             embedded_entities: [
               {
-                name: 'k',
-                description: 'desc',
-                attributes: [{ name: 'l', type: 'int', description: 'desc' }],
+                name: "k",
+                description: "desc",
+                attributes: [{ name: "l", type: "int", description: "desc" }],
                 embedded_entities: [],
               },
               {
-                name: 'm',
-                description: 'desc',
-                attributes: [{ name: 'n', type: 'int', description: 'desc' }],
+                name: "m",
+                description: "desc",
+                attributes: [{ name: "n", type: "int", description: "desc" }],
                 embedded_entities: [],
               },
             ],
@@ -257,17 +257,17 @@ test('TreeTable with catalog entries all can be expanded at once', async () => {
   render(catalogSetup(service));
 
   //get buttons from dropdown
-  const dropdown = screen.getByRole('button', {
-    name: 'expand-collapse-dropdown-toggle',
+  const dropdown = screen.getByRole("button", {
+    name: "expand-collapse-dropdown-toggle",
   });
 
   await userEvent.click(dropdown);
 
-  await userEvent.click(screen.getByRole('option', { name: 'Expand all' }));
+  await userEvent.click(screen.getByRole("option", { name: "Expand all" }));
 
-  const row1 = screen.getByRole('row', { name: 'Row-a$c$d' });
-  const row2 = screen.getByRole('row', { name: 'Row-a$e$f' });
-  const row3 = screen.getByRole('row', { name: 'Row-g$i$m$n' });
+  const row1 = screen.getByRole("row", { name: "Row-a$c$d" });
+  const row2 = screen.getByRole("row", { name: "Row-a$e$f" });
+  const row3 = screen.getByRole("row", { name: "Row-g$i$m$n" });
 
   expect(row1).toBeVisible();
   expect(row2).toBeVisible();
@@ -276,7 +276,7 @@ test('TreeTable with catalog entries all can be expanded at once', async () => {
   fireEvent.click(dropdown);
 
   await userEvent.click(
-    screen.getByRole('option', { name: words('inventory.tabs.collapse') }),
+    screen.getByRole("option", { name: words("inventory.tabs.collapse") }),
   );
 
   expect(row1).not.toBeVisible();

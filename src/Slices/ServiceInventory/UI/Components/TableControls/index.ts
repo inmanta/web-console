@@ -1,1 +1,1 @@
-export * from './TableControls';
+export * from "./TableControls";

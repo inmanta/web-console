@@ -2,9 +2,9 @@ import {
   UseMutationResult,
   useMutation,
   useQueryClient,
-} from '@tanstack/react-query';
-import { Config } from '@/Core';
-import { usePost } from '../../helpers';
+} from "@tanstack/react-query";
+import { Config } from "@/Core";
+import { usePost } from "../../helpers";
 
 interface Body {
   current_version: number;
@@ -30,13 +30,13 @@ export const usePostInstanceConfig = (
   return useMutation({
     mutationFn: (body) =>
       post(`/lsm/v1/service_inventory/${service_entity}/${id}/config`, body),
-    mutationKey: ['post_instance_config'],
+    mutationKey: ["post_instance_config"],
     onSuccess: () => {
       client.refetchQueries({
-        queryKey: ['get_instance_config-one_time', service_entity, id],
+        queryKey: ["get_instance_config-one_time", service_entity, id],
       });
       client.refetchQueries({
-        queryKey: ['get_instance-continuous', service_entity, id],
+        queryKey: ["get_instance-continuous", service_entity, id],
       });
     },
   });

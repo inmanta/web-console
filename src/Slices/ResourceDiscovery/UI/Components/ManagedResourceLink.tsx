@@ -1,10 +1,10 @@
-import React from 'react';
-import { words } from '@/UI';
-import { ResourceLink } from '@/UI/Components';
+import React from "react";
+import { words } from "@/UI";
+import { ResourceLink } from "@/UI/Components";
 
 interface Props {
   resourceUri: string | null;
-  type: 'managed' | 'discovery';
+  type: "managed" | "discovery";
 }
 
 /**

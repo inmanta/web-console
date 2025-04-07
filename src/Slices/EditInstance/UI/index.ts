@@ -1,1 +1,1 @@
-export { Page as EditInstancePage } from './Page';
+export { Page as EditInstancePage } from "./Page";

@@ -1,1 +1,1 @@
-export type Origin = 'drawer' | 'center';
+export type Origin = "drawer" | "center";

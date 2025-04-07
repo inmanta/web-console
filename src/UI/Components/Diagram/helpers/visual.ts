@@ -1,17 +1,17 @@
-import { dia, g, highlighters, linkTools } from '@inmanta/rappid';
-import { t_global_border_radius_small } from '@patternfly/react-tokens';
+import { dia, g, highlighters, linkTools } from "@inmanta/rappid";
+import { t_global_border_radius_small } from "@patternfly/react-tokens";
 import {
   ConnectionRules,
   LabelLinkView,
   EventActionEnum,
   ActionEnum,
-} from '@/UI/Components/Diagram/interfaces';
+} from "@/UI/Components/Diagram/interfaces";
 import {
   dispatchLooseElement,
   dispatchUpdateInterServiceRelations,
   dispatchUpdateServiceOrderItems,
-} from '../Context/dispatchers';
-import { ServiceEntityBlock } from '../shapes';
+} from "../Context/dispatchers";
+import { ServiceEntityBlock } from "../shapes";
 
 /**
  * Updates the position of a label relative to a link's target or source side.
@@ -23,15 +23,15 @@ import { ServiceEntityBlock } from '../shapes';
  * @returns {{ textAnchor: "start" | "end", x: number, y: number }} - An object containing the updated attributes for the label.
  */
 export const updateLabelPosition = (
-  side: 'target' | 'source',
+  side: "target" | "source",
   _refBBox: g.Rect,
   _node: SVGSVGElement,
   _attrs: { [key: string]: unknown },
   linkView: LabelLinkView, //dia.LinkView & dia.Link doesn't have sourceView or targetView properties in the model
-): { textAnchor: 'start' | 'end'; x: number; y: number } => {
+): { textAnchor: "start" | "end"; x: number; y: number } => {
   let textAnchor, tx, ty, viewCoordinates, anchorCoordinates;
 
-  if (side === 'target') {
+  if (side === "target") {
     viewCoordinates = linkView.targetView.model.position();
     anchorCoordinates = linkView.targetPoint;
   } else {
@@ -40,21 +40,21 @@ export const updateLabelPosition = (
   }
   if (viewCoordinates && anchorCoordinates) {
     if (viewCoordinates.x !== anchorCoordinates.x) {
-      textAnchor = 'start';
+      textAnchor = "start";
       tx = 15;
     } else {
-      textAnchor = 'end';
+      textAnchor = "end";
       tx = -15;
     }
   }
   const isTargetBelow =
-    linkView.getEndAnchor('target').y < linkView.getEndAnchor('source').y;
+    linkView.getEndAnchor("target").y < linkView.getEndAnchor("source").y;
 
   switch (side) {
-    case 'target':
+    case "target":
       ty = isTargetBelow ? -15 : 15;
       break;
-    case 'source':
+    case "source":
       ty = isTargetBelow ? 15 : -15;
       break;
   }
@@ -75,18 +75,18 @@ export const toggleLooseElement = (
 ): void => {
   switch (kind) {
     case EventActionEnum.ADD:
-      highlighters.mask.add(cellView, 'root', 'loose_element', {
+      highlighters.mask.add(cellView, "root", "loose_element", {
         padding: 0,
-        className: 'loose_element-highlight',
+        className: "loose_element-highlight",
         attrs: {
-          'stroke-width': 3,
+          "stroke-width": 3,
           rx: t_global_border_radius_small.value,
-          filter: 'drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))',
+          filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
         },
       });
       break;
     case EventActionEnum.REMOVE:
-      const highlighter = dia.HighlighterView.get(cellView, 'loose_element');
+      const highlighter = dia.HighlighterView.get(cellView, "loose_element");
 
       if (highlighter) {
         highlighter.remove();
@@ -144,12 +144,12 @@ export function showLinkTools (
     );
 
     const isElementInEditMode: boolean | undefined =
-      cellOne.get('isInEditMode');
+      cellOne.get("isInEditMode");
 
     if (
       isElementInEditMode &&
       elementConnectionRule &&
-      elementConnectionRule.modifier !== 'rw+'
+      elementConnectionRule.modifier !== "rw+"
     ) {
       return true;
     }
@@ -167,26 +167,26 @@ export function showLinkTools (
   const tools = new dia.ToolsView({
     tools: [
       new linkTools.Remove({
-        distance: '50%',
+        distance: "50%",
         markup: [
           {
-            tagName: 'circle',
-            selector: 'button',
+            tagName: "circle",
+            selector: "button",
             attributes: {
               r: 7,
-              class: 'joint-link_remove-circle',
-              'stroke-width': 2,
-              cursor: 'pointer',
+              class: "joint-link_remove-circle",
+              "stroke-width": 2,
+              cursor: "pointer",
             },
           },
           {
-            tagName: 'path',
-            selector: 'icon',
+            tagName: "path",
+            selector: "icon",
             attributes: {
-              d: 'M -3 -3 3 3 M -3 3 3 -3',
-              class: 'joint-link_remove-path',
-              'stroke-width': 2,
-              'pointer-events': 'none',
+              d: "M -3 -3 3 3 M -3 3 3 -3",
+              class: "joint-link_remove-path",
+              "stroke-width": 2,
+              "pointer-events": "none",
             },
           },
         ],
@@ -239,12 +239,12 @@ const removeConnectionData = (
     const disconnectedCellNeighbors = graph.getNeighbors(cellToDisconnect);
 
     //check if the cell that we are connected is also connected to the other cell as embedded Entity
-    const embeddedToID = cellToDisconnect.get('embeddedTo');
+    const embeddedToID = cellToDisconnect.get("embeddedTo");
 
     //filter out every cell that is either embedded entity to the cellToDisconnect or is core or the cellToDisconnect is embedded to it
     const interServiceRelations = disconnectedCellNeighbors.filter(
       (cell) =>
-        !(cell.get('embeddedTo') === cellToDisconnect.id) ||
+        !(cell.get("embeddedTo") === cellToDisconnect.id) ||
         !(embeddedToID === cell.id),
     );
 
@@ -258,7 +258,7 @@ const removeConnectionData = (
 
     dispatchUpdateInterServiceRelations(
       EventActionEnum.REMOVE,
-      cellToDisconnect.get('entityName'),
+      cellToDisconnect.get("entityName"),
       elementCell.id,
     );
 
@@ -286,7 +286,7 @@ export const moveCellsFromColliding = (graph: dia.Graph, cells: dia.Cell[]) => {
         // an overlap found, change the position
         const coordinates = cell.position();
 
-        cell.set('position', {
+        cell.set("position", {
           x: coordinates.x,
           y: coordinates.y + 50,
         });

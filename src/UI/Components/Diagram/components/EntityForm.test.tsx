@@ -1,26 +1,26 @@
-import React from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
-import { dia } from '@inmanta/rappid';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-import { StoreProvider } from 'easy-peasy';
-import { RemoteData } from '@/Core';
-import { getStoreInstance } from '@/Data';
-import { dependencies } from '@/Test';
-import { testClient } from '@/Test/Utils/react-query-setup';
-import { DependencyProvider, EnvironmentHandlerImpl } from '@/UI/Dependency';
-import { PrimaryRouteManager } from '@/UI/Routing';
-import { CanvasContext, defaultCanvasContext } from '../Context';
-import { parentModel } from '../Mocks';
-import { createComposerEntity } from '../actions';
-import { getCellsCoordinates } from '../helpers';
-import { ComposerPaper } from '../paper';
-import { ServiceEntityBlock } from '../shapes';
-import { defineObjectsForJointJS } from '../testSetup';
-import { EntityForm } from './EntityForm';
+import React from "react";
+import { MemoryRouter, useLocation } from "react-router-dom";
+import { dia } from "@inmanta/rappid";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
+import { RemoteData } from "@/Core";
+import { getStoreInstance } from "@/Data";
+import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { PrimaryRouteManager } from "@/UI/Routing";
+import { CanvasContext, defaultCanvasContext } from "../Context";
+import { parentModel } from "../Mocks";
+import { createComposerEntity } from "../actions";
+import { getCellsCoordinates } from "../helpers";
+import { ComposerPaper } from "../paper";
+import { ServiceEntityBlock } from "../shapes";
+import { defineObjectsForJointJS } from "../testSetup";
+import { EntityForm } from "./EntityForm";
 
-describe('EntityForm.', () => {
+describe("EntityForm.", () => {
   const setup = (
     showButtons: boolean,
     isRemovable: boolean,
@@ -34,38 +34,38 @@ describe('EntityForm.', () => {
       serviceModel: parentModel,
       isCore: true,
       isInEditMode,
-      attributes: { name: '', service_id: '', should_deploy_fail: false },
+      attributes: { name: "", service_id: "", should_deploy_fail: false },
     });
 
     graph.addCell(cell);
     const cellView = paper.findViewByModel(cell);
     const environmentHandler = EnvironmentHandlerImpl(
       useLocation,
-      PrimaryRouteManager(''),
+      PrimaryRouteManager(""),
     );
     const store = getStoreInstance();
 
     store.dispatch.environment.setEnvironments(
       RemoteData.success([
         {
-          id: 'aaa',
-          name: 'env-a',
-          project_id: 'ppp',
-          repo_branch: 'branch',
-          repo_url: 'repo',
-          projectName: 'project',
+          id: "aaa",
+          name: "env-a",
+          project_id: "ppp",
+          repo_branch: "branch",
+          repo_url: "repo",
+          projectName: "project",
           halted: false,
           settings: {
             enable_lsm_expert_mode: false,
           },
         },
         {
-          id: 'bbb',
-          name: 'env-b',
-          project_id: 'ppp',
-          repo_branch: 'branch',
-          repo_url: 'repo',
-          projectName: 'project',
+          id: "bbb",
+          name: "env-b",
+          project_id: "ppp",
+          repo_branch: "branch",
+          repo_url: "repo",
+          projectName: "project",
           halted: false,
           settings: {
             enable_lsm_expert_mode: false,
@@ -78,7 +78,7 @@ describe('EntityForm.', () => {
 
     const component = (
       <QueryClientProvider client={testClient}>
-        <MemoryRouter initialEntries={[{ search: '?env=aaa' }]}>
+        <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
           <StoreProvider store={store}>
             <DependencyProvider
               dependencies={{ ...dependencies, environmentHandler }}
@@ -123,7 +123,7 @@ describe('EntityForm.', () => {
     defineObjectsForJointJS();
   });
 
-  it('when isRemovable is set to false then Remove button is disabled', () => {
+  it("when isRemovable is set to false then Remove button is disabled", () => {
     const showButtons = true;
     const isRemovable = false;
     const isDisabled = false;
@@ -132,10 +132,10 @@ describe('EntityForm.', () => {
 
     render(component);
 
-    expect(screen.getByRole('button', { name: 'Remove' })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Remove" })).toBeDisabled();
   });
 
-  it('when Remove is clicked then onRemove is being called', async () => {
+  it("when Remove is clicked then onRemove is being called", async () => {
     const showButtons = true;
     const isRemovable = true;
     const isDisabled = false;
@@ -144,14 +144,14 @@ describe('EntityForm.', () => {
 
     render(component);
 
-    expect(screen.getByRole('button', { name: 'Remove' })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Remove" })).toBeEnabled();
 
-    await userEvent.click(screen.getByRole('button', { name: 'Remove' }));
+    await userEvent.click(screen.getByRole("button", { name: "Remove" }));
 
     expect(onRemove).toHaveBeenCalled();
   });
 
-  it('when isDisabled is set to false, then all inputs are disabled', () => {
+  it("when isDisabled is set to false, then all inputs are disabled", () => {
     const showButtons = true;
     const isRemovable = false;
     const isDisabled = true;
@@ -160,12 +160,12 @@ describe('EntityForm.', () => {
 
     render(component);
 
-    expect(screen.getByLabelText('TextInput-service_id')).toBeDisabled();
-    expect(screen.getByLabelText('TextInput-name')).toBeDisabled();
-    expect(screen.getByLabelText('Toggle-should_deploy_fail')).toBeDisabled();
+    expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
+    expect(screen.getByLabelText("TextInput-name")).toBeDisabled();
+    expect(screen.getByLabelText("Toggle-should_deploy_fail")).toBeDisabled();
   });
 
-  it('when showButtons is set to false, then all buttons are hidden', () => {
+  it("when showButtons is set to false, then all buttons are hidden", () => {
     const showButtons = false;
     const isRemovable = false;
     const isDisabled = true;
@@ -174,11 +174,11 @@ describe('EntityForm.', () => {
 
     render(component);
 
-    expect(screen.queryByText('Remove')).toBeNull();
-    expect(screen.queryByText('Cancel')).toBeNull();
+    expect(screen.queryByText("Remove")).toBeNull();
+    expect(screen.queryByText("Cancel")).toBeNull();
   });
 
-  it('when form state will get updated cancel button will change state form disabled to enabled and when clicked then form is being cleared to initial state and cancel button will be back disabled', async () => {
+  it("when form state will get updated cancel button will change state form disabled to enabled and when clicked then form is being cleared to initial state and cancel button will be back disabled", async () => {
     const showButtons = true;
     const isRemovable = false;
     const isDisabled = false;
@@ -191,45 +191,45 @@ describe('EntityForm.', () => {
 
     render(component);
 
-    expect(screen.getByRole('button', { name: 'Cancel' })).toBeDisabled();
-    expect(screen.getByLabelText('TextInput-service_id')).toHaveValue('');
-    expect(screen.getByLabelText('TextInput-name')).toHaveValue('');
+    expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled();
+    expect(screen.getByLabelText("TextInput-service_id")).toHaveValue("");
+    expect(screen.getByLabelText("TextInput-name")).toHaveValue("");
 
-    await userEvent.type(screen.getByLabelText('TextInput-service_id'), 't');
+    await userEvent.type(screen.getByLabelText("TextInput-service_id"), "t");
 
     expect(editEntity).toHaveBeenCalledWith(expect.any(Object), parentModel, {
-      name: '',
-      service_id: 't',
+      name: "",
+      service_id: "t",
       should_deploy_fail: false,
     });
 
     await userEvent.type(
-      screen.getByLabelText('TextInput-service_id'),
-      'est_id',
+      screen.getByLabelText("TextInput-service_id"),
+      "est_id",
     );
 
-    await userEvent.type(screen.getByLabelText('TextInput-name'), 'test_name');
+    await userEvent.type(screen.getByLabelText("TextInput-name"), "test_name");
 
-    expect(screen.getByRole('button', { name: 'Cancel' })).toBeEnabled();
-    expect(screen.getByLabelText('TextInput-service_id')).toHaveValue(
-      'test_id',
+    expect(screen.getByRole("button", { name: "Cancel" })).toBeEnabled();
+    expect(screen.getByLabelText("TextInput-service_id")).toHaveValue(
+      "test_id",
     );
-    expect(screen.getByLabelText('TextInput-name')).toHaveValue('test_name');
+    expect(screen.getByLabelText("TextInput-name")).toHaveValue("test_name");
 
-    await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
 
     expect(editEntity).toHaveBeenCalledWith(expect.any(Object), parentModel, {
-      name: '',
-      service_id: '',
+      name: "",
+      service_id: "",
       should_deploy_fail: false,
     });
 
-    expect(screen.getByRole('button', { name: 'Cancel' })).toBeDisabled();
-    expect(screen.getByLabelText('TextInput-service_id')).toHaveValue('');
-    expect(screen.getByLabelText('TextInput-name')).toHaveValue('');
+    expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled();
+    expect(screen.getByLabelText("TextInput-service_id")).toHaveValue("");
+    expect(screen.getByLabelText("TextInput-name")).toHaveValue("");
   });
 
-  it('when isInEditMode is true, then rw inputs are disabled', () => {
+  it("when isInEditMode is true, then rw inputs are disabled", () => {
     const showButtons = true;
     const isRemovable = false;
     const isDisabled = false;
@@ -244,8 +244,8 @@ describe('EntityForm.', () => {
 
     render(component);
 
-    expect(screen.getByLabelText('TextInput-service_id')).toBeDisabled();
-    expect(screen.getByLabelText('TextInput-name')).toBeDisabled();
-    expect(screen.getByLabelText('Toggle-should_deploy_fail')).toBeEnabled();
+    expect(screen.getByLabelText("TextInput-service_id")).toBeDisabled();
+    expect(screen.getByLabelText("TextInput-name")).toBeDisabled();
+    expect(screen.getByLabelText("Toggle-should_deploy_fail")).toBeEnabled();
   });
 });

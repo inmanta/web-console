@@ -1,6 +1,6 @@
-import { words } from '@/UI';
-import { Metric, MetricName, StackedMetric } from '../Core/Domain';
-import { colorTheme } from './themes';
+import { words } from "@/UI";
+import { Metric, MetricName, StackedMetric } from "../Core/Domain";
+import { colorTheme } from "./themes";
 
 export const formatLegendData = (metrics, isStacked) => {
   if (isStacked) {
@@ -23,7 +23,7 @@ export const formatLegendData = (metrics, isStacked) => {
       {
         childName: metrics.name,
         name: words(`dashboard.${metrics.name as MetricName}.label.x`).split(
-          '[',
+          "[",
         )[0],
         symbol: {
           fill:
@@ -71,7 +71,7 @@ export const formatMetricsToStacked = (
     }
   } else {
     tempCharState = [
-      metrics.name.includes('service_count')
+      metrics.name.includes("service_count")
         ? formatValues(metrics as Metric)
         : (metrics as Metric),
     ];

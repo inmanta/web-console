@@ -1,5 +1,5 @@
-import { ReactElement } from 'react';
-import { ActionPresenter } from '@/UI/Presenters';
+import { ReactElement } from "react";
+import { ActionPresenter } from "@/UI/Presenters";
 
 export class DummyExpertActionPresenter implements ActionPresenter {
   getAvailableStates (): string[] {

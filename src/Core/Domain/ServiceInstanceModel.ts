@@ -1,4 +1,4 @@
-import { ParsedNumber } from '@/Core/Language';
+import { ParsedNumber } from "@/Core/Language";
 
 /**
  * Type representing an instance attribute model.
@@ -98,4 +98,4 @@ export interface FormSuggestion {
  * Type representing a form suggestion type.
  * Can be either "literal" or "parameters".
  */
-type FormSuggestionType = 'literal' | 'parameters';
+type FormSuggestionType = "literal" | "parameters";

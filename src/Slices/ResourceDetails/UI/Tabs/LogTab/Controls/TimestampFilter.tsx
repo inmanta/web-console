@@ -1,8 +1,8 @@
-import React from 'react';
-import { DateRange } from '@/Core';
-import { TimestampFilter as TimestampFilterWidget } from '@/UI/Components';
-import { MomentDatePresenter } from '@/UI/Utils';
-import { ResourceLogFilter } from '@S/ResourceDetails/Core/ResourceLog';
+import React from "react";
+import { DateRange } from "@/Core";
+import { TimestampFilter as TimestampFilterWidget } from "@/UI/Components";
+import { MomentDatePresenter } from "@/UI/Utils";
+import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
 
 interface Props {
   filter: ResourceLogFilter;

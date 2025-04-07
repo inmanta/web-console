@@ -1,23 +1,23 @@
-import { dia, shapes } from '@inmanta/rappid';
+import { dia, shapes } from "@inmanta/rappid";
 import {
   dispatchSendCellToSidebar,
   dispatchUpdateInterServiceRelations,
   dispatchUpdateServiceOrderItems,
-} from '../Context/dispatchers';
-import { anchorNamespace } from '../anchors';
-import createHalo from '../halo';
-import { checkIfConnectionIsAllowed } from '../helpers';
-import { showLinkTools, toggleLooseElement } from '../helpers';
-import collapseButton from '../icons/collapse-icon.svg';
-import expandButton from '../icons/expand-icon.svg';
+} from "../Context/dispatchers";
+import { anchorNamespace } from "../anchors";
+import createHalo from "../halo";
+import { checkIfConnectionIsAllowed } from "../helpers";
+import { showLinkTools, toggleLooseElement } from "../helpers";
+import collapseButton from "../icons/collapse-icon.svg";
+import expandButton from "../icons/expand-icon.svg";
 import {
   ActionEnum,
   ConnectionRules,
   EventActionEnum,
   TypeEnum,
-} from '../interfaces';
-import { routerNamespace } from '../routers';
-import { Link, ServiceEntityBlock } from '../shapes';
+} from "../interfaces";
+import { routerNamespace } from "../routers";
+import { Link, ServiceEntityBlock } from "../shapes";
 
 /**
  * Represents the ComposerPaper class. which initializes the JointJS paper object and sets up the event listeners.
@@ -45,30 +45,30 @@ export class ComposerPaper {
       gridSize: 1,
       interactive: { linkMove: false },
       defaultConnectionPoint: {
-        name: 'boundary',
+        name: "boundary",
         args: {
           extrapolate: true,
           sticky: true,
         },
       },
-      defaultConnector: { name: 'rounded' },
+      defaultConnector: { name: "rounded" },
       async: true,
       frozen: true,
       sorting: dia.Paper.sorting.APPROX,
       cellViewNamespace: shapes,
       routerNamespace: routerNamespace,
-      defaultRouter: { name: 'customRouter' },
+      defaultRouter: { name: "customRouter" },
       anchorNamespace: anchorNamespace,
-      defaultAnchor: { name: 'customAnchor' },
+      defaultAnchor: { name: "customAnchor" },
       snapLinks: true,
       linkPinning: false,
       magnetThreshold: 0,
-      background: { color: 'transparent' },
+      background: { color: "transparent" },
       highlighting: {
         connecting: {
-          name: 'addClass',
+          name: "addClass",
           options: {
-            className: 'column-connected',
+            className: "column-connected",
           },
         },
       },
@@ -103,10 +103,10 @@ export class ComposerPaper {
 
     //Event that is triggered when user clicks on the cell's dictionary icon. It's used to open the dictionary modal.
     this.paper.on(
-      'element:showDict',
+      "element:showDict",
       (_elementView: dia.ElementView, event: dia.Event) => {
         document.dispatchEvent(
-          new CustomEvent('openDictsModal', {
+          new CustomEvent("openDictsModal", {
             detail: event.target.parentElement.attributes.dict.value,
           }),
         );
@@ -115,40 +115,40 @@ export class ComposerPaper {
 
     //Event that is triggered when user clicks on the toggle button for the cells that have more than 4 attributes. It's used to collapse or expand the cell.
     this.paper.on(
-      'element:toggleButton:pointerdown',
+      "element:toggleButton:pointerdown",
       (elementView: dia.ElementView, event: dia.Event) => {
         event.preventDefault();
         const elementAsShape = elementView.model as ServiceEntityBlock;
 
-        const isCollapsed = elementAsShape.get('isCollapsed');
-        const originalAttrs = elementAsShape.get('dataToDisplay');
+        const isCollapsed = elementAsShape.get("isCollapsed");
+        const originalAttrs = elementAsShape.get("dataToDisplay");
 
         elementAsShape.appendColumns(
           isCollapsed ? originalAttrs : originalAttrs.slice(0, 4),
           false,
         );
         elementAsShape.attr(
-          'toggleButton/xlink:href',
+          "toggleButton/xlink:href",
           isCollapsed ? collapseButton : expandButton,
         );
 
         const bbox = elementAsShape.getBBox();
 
-        elementAsShape.attr('toggleButton/y', bbox.height - 24);
-        elementAsShape.attr('spacer/y', bbox.height - 33);
-        elementAsShape.attr('buttonBody/y', bbox.height - 32);
+        elementAsShape.attr("toggleButton/y", bbox.height - 24);
+        elementAsShape.attr("spacer/y", bbox.height - 33);
+        elementAsShape.attr("buttonBody/y", bbox.height - 32);
 
-        elementAsShape.set('isCollapsed', !isCollapsed);
+        elementAsShape.set("isCollapsed", !isCollapsed);
       },
     );
 
     //Event that is triggered when user clicks on the blank space of the paper. It's used to clear the sidebar.
-    this.paper.on('blank:pointerdown', () => {
+    this.paper.on("blank:pointerdown", () => {
       dispatchSendCellToSidebar(null);
     });
 
     //Event that is triggered when user clicks on the cell. It's used to send the cell data to the sidebar and create a Halo around the cell. with option to link it to another cell
-    this.paper.on('cell:pointerup', (cellView: dia.CellView) => {
+    this.paper.on("cell:pointerup", (cellView: dia.CellView) => {
       //We don't want interaction at all if cellView is a Link
       if (cellView.model instanceof dia.Link) {
         return;
@@ -162,7 +162,7 @@ export class ComposerPaper {
     });
 
     //Event that is triggered when user clicks on the link. It's used to show the link tools and the link labels for connected cells
-    this.paper.on('link:mouseenter', (linkView: dia.LinkView) => {
+    this.paper.on("link:mouseenter", (linkView: dia.LinkView) => {
       const { model } = linkView;
       const source = model.source();
       const target = model.target();
@@ -175,16 +175,16 @@ export class ComposerPaper {
       const targetCell = graph.getCell(target.id) as ServiceEntityBlock;
 
       // source or target cell have name starting with "_" means that it shouldn't have label when hovering
-      if (!(sourceCell.getName()[0] === '_')) {
+      if (!(sourceCell.getName()[0] === "_")) {
         model.appendLabel({
           attrs: {
             rect: {
-              fill: 'none',
+              fill: "none",
             },
             text: {
               text: sourceCell.getName(),
-              autoOrient: 'target',
-              class: 'joint-label-text',
+              autoOrient: "target",
+              class: "joint-label-text",
             },
           },
           position: {
@@ -193,16 +193,16 @@ export class ComposerPaper {
         });
       }
 
-      if (!(targetCell.getName()[0] === '_')) {
+      if (!(targetCell.getName()[0] === "_")) {
         model.appendLabel({
           attrs: {
             rect: {
-              fill: 'none',
+              fill: "none",
             },
             text: {
               text: targetCell.getName(),
-              autoOrient: 'source',
-              class: 'joint-label-text',
+              autoOrient: "source",
+              class: "joint-label-text",
             },
           },
           position: {
@@ -212,9 +212,9 @@ export class ComposerPaper {
       }
 
       if (
-        model.get('isBlockedFromEditing') ||
+        model.get("isBlockedFromEditing") ||
         !editable ||
-        !model.get('isRelationshipConnection')
+        !model.get("isRelationshipConnection")
       ) {
         return;
       }
@@ -223,13 +223,13 @@ export class ComposerPaper {
     });
 
     //Event that is triggered when user leaves the link. It's used to remove the link tools and the link labels for connected cells
-    this.paper.on('link:mouseleave', (linkView: dia.LinkView) => {
+    this.paper.on("link:mouseleave", (linkView: dia.LinkView) => {
       linkView.removeTools();
       linkView.model.labels([]);
     });
 
     //Event that is triggered when user drags the link from one cell to another. It's used to update the connection between the cells
-    this.paper.on('link:connect', (linkView: dia.LinkView) => {
+    this.paper.on("link:connect", (linkView: dia.LinkView) => {
       const { model } = linkView;
       //only id values are stored in the linkView
       const source = model.source();
@@ -271,7 +271,7 @@ export class ComposerPaper {
               connectingCell.id,
               cellConnectionRule.attributeName,
             );
-            model.set('isRelationshipConnection', true);
+            model.set("isRelationshipConnection", true);
 
             dispatchUpdateInterServiceRelations(
               EventActionEnum.ADD,
@@ -288,11 +288,11 @@ export class ComposerPaper {
         }
 
         if (
-          elementCell.get('isEmbeddedEntity') &&
-          elementCell.get('embeddedTo') !== null &&
-          elementCell.get('holderName') === connectingCellName
+          elementCell.get("isEmbeddedEntity") &&
+          elementCell.get("embeddedTo") !== null &&
+          elementCell.get("holderName") === connectingCellName
         ) {
-          elementCell.set('embeddedTo', connectingCell.id);
+          elementCell.set("embeddedTo", connectingCell.id);
           toggleLooseElement(
             this.paper.findViewByModel(elementCell),
             EventActionEnum.REMOVE,

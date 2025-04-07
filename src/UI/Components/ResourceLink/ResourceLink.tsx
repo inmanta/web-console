@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { Button, Truncate } from '@patternfly/react-core';
-import { Link } from '@/UI/Components/Link';
-import { DependencyContext } from '@/UI/Dependency';
+import React, { useContext } from "react";
+import { Button, Truncate } from "@patternfly/react-core";
+import { Link } from "@/UI/Components/Link";
+import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   resourceId: string;
@@ -13,7 +13,7 @@ export const ResourceLink: React.FC<Props> = ({ resourceId, linkText }) => {
 
   return (
     <Link
-      pathname={routeManager.getUrl('ResourceDetails', {
+      pathname={routeManager.getUrl("ResourceDetails", {
         resourceId,
       })}
       envOnly

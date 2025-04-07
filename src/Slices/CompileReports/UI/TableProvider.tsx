@@ -1,9 +1,9 @@
-import React from 'react';
-import { Sort } from '@/Core';
-import { MomentDatePresenter } from '@/UI/Utils';
-import { CompileReport } from '@S/CompileReports/Core/Domain';
-import { CompileReportsTable } from './CompileReportsTable';
-import { CompileReportsTablePresenter } from './CompileReportsTablePresenter';
+import React from "react";
+import { Sort } from "@/Core";
+import { MomentDatePresenter } from "@/UI/Utils";
+import { CompileReport } from "@S/CompileReports/Core/Domain";
+import { CompileReportsTable } from "./CompileReportsTable";
+import { CompileReportsTablePresenter } from "./CompileReportsTablePresenter";
 
 interface Props {
   compileReports: CompileReport[];

@@ -1,6 +1,6 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import { ParsedNumber } from '@/Core';
-import { CustomError, useGet } from '../../helpers';
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { ParsedNumber } from "@/Core";
+import { CustomError, useGet } from "../../helpers";
 
 /**
  *  Interface containing the metadata.
@@ -40,7 +40,7 @@ export const useGetMetadata = (
             `/lsm/v1/service_inventory/${service_entity}/${service_id}/metadata/${key}?current_version=${instanceVersion}`,
           ),
         queryKey: [
-          'get_metadata',
+          "get_metadata",
           service_entity,
           service_id,
           key,

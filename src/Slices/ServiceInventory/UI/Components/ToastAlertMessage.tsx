@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 import {
   Alert,
   AlertActionCloseButton,
   AlertGroup,
-} from '@patternfly/react-core';
+} from "@patternfly/react-core";
 
 interface ToastAlertMessageProps {
   stateErrorMessage: string;
@@ -25,7 +25,7 @@ export const ToastAlertMessage: React.FC<ToastAlertMessageProps> = ({
         actionClose={
           <AlertActionCloseButton
             data-testid={`${id}-close-error-message`}
-            onClose={() => setStateErrorMessage('')}
+            onClose={() => setStateErrorMessage("")}
           />
         }
       />

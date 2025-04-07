@@ -1,7 +1,7 @@
-import React from 'react';
-import { Tooltip } from '@patternfly/react-core';
-import styled from 'styled-components';
-import { words } from '@/UI/words';
+import React from "react";
+import { Tooltip } from "@patternfly/react-core";
+import styled from "styled-components";
+import { words } from "@/UI/words";
 
 interface Props {
   isDisabled?: boolean;
@@ -15,7 +15,7 @@ export const ActionDisabledTooltip: React.FC<
   children,
   isDisabled,
   testingId,
-  tooltipContent = words('inventory.statustab.actionDisabled'),
+  tooltipContent = words("inventory.statustab.actionDisabled"),
 }) => {
   if (isDisabled) {
     return (

@@ -1,1 +1,1 @@
-export * from './DestroyAction';
+export * from "./DestroyAction";

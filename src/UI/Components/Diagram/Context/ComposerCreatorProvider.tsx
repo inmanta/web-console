@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { FlexItem, Flex } from '@patternfly/react-core';
-import { useGetServiceModels } from '@/Data/Managers/V2/Service';
-import { useGetInventoryList } from '@/Data/Managers/V2/ServiceInstance';
-import { words } from '@/UI';
-import { ErrorView, LoadingView, PageContainer } from '@/UI/Components';
-import { Canvas } from '@/UI/Components/Diagram/Canvas';
-import { ComposerActions } from '../components';
-import { findInterServiceRelations } from '../helpers';
-import { CanvasProvider } from './CanvasProvider';
-import { InstanceComposerContext } from './Context';
+import React, { useEffect, useState } from "react";
+import { FlexItem, Flex } from "@patternfly/react-core";
+import { useGetServiceModels } from "@/Data/Managers/V2/Service";
+import { useGetInventoryList } from "@/Data/Managers/V2/ServiceInstance";
+import { words } from "@/UI";
+import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+import { Canvas } from "@/UI/Components/Diagram/Canvas";
+import { ComposerActions } from "../components";
+import { findInterServiceRelations } from "../helpers";
+import { CanvasProvider } from "./CanvasProvider";
+import { InstanceComposerContext } from "./Context";
 
 /**
  * Props interface for the ComposerCreatorProvider component
@@ -58,19 +58,19 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
   }, [serviceModels.isSuccess, serviceName, serviceModels.data]);
 
   if (serviceModels.isError) {
-    const message = words('error.general')(serviceModels.error.message);
+    const message = words("error.general")(serviceModels.error.message);
     const retry = serviceModels.refetch;
-    const ariaLabel = 'ComposerCreatorProvider-ServiceModelsQuery_failed';
+    const ariaLabel = "ComposerCreatorProvider-ServiceModelsQuery_failed";
 
     return renderErrorView(message, ariaLabel, retry);
   }
 
   if (relatedInventoriesQuery.isError) {
-    const message = words('error.general')(
+    const message = words("error.general")(
       relatedInventoriesQuery.error.message,
     );
     const retry = relatedInventoriesQuery.refetch;
-    const ariaLabel = 'ComposerCreatorProvider-RelatedInventoriesQuery_failed';
+    const ariaLabel = "ComposerCreatorProvider-RelatedInventoriesQuery_failed";
 
     return renderErrorView(message, ariaLabel, retry);
   }
@@ -81,11 +81,11 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
     );
 
     if (!mainService) {
-      const message = words('instanceComposer.noServiceModel.errorMessage')(
+      const message = words("instanceComposer.noServiceModel.errorMessage")(
         serviceName,
       );
       const retry = serviceModels.refetch;
-      const ariaLabel = 'ComposerCreatorProvider-NoServiceModel_failed';
+      const ariaLabel = "ComposerCreatorProvider-NoServiceModel_failed";
 
       return renderErrorView(message, ariaLabel, retry);
     }
@@ -102,8 +102,8 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
         <CanvasProvider>
           <PageContainer
             pageTitle={
-              <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
-                <FlexItem> {words('instanceComposer.title')}</FlexItem>
+              <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
+                <FlexItem> {words("instanceComposer.title")}</FlexItem>
                 <FlexItem>
                   <ComposerActions serviceName={serviceName} editable />
                 </FlexItem>
@@ -136,7 +136,7 @@ export const renderErrorView = (
 ): React.ReactElement => (
   <ErrorView
     data-testid="ErrorView"
-    title={words('error')}
+    title={words("error")}
     message={message}
     ariaLabel={ariaLabel}
     retry={retry}

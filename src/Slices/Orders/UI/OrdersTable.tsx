@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   OnSort,
   Table,
@@ -6,12 +6,12 @@ import {
   Th,
   Thead,
   Tr,
-} from '@patternfly/react-table';
-import { Sort } from '@/Core';
-import { words } from '@/UI';
-import { ServiceOrder, SortKey } from '../Core/Query';
-import { OrdersRow } from './OrdersRow';
-import { OrdersTablePresenter } from './OrdersTablePresenter';
+} from "@patternfly/react-table";
+import { Sort } from "@/Core";
+import { words } from "@/UI";
+import { ServiceOrder, SortKey } from "../Core/Query";
+import { OrdersRow } from "./OrdersRow";
+import { OrdersTablePresenter } from "./OrdersTablePresenter";
 
 interface Props {
   tablePresenter: OrdersTablePresenter;
@@ -78,7 +78,7 @@ export const OrdersTable: React.FC<Props> = ({
           {heads}
           <Th
             aria-hidden
-            screenReaderText={words('common.emptyColumnHeader')}
+            screenReaderText={words("common.emptyColumnHeader")}
           />
         </Tr>
       </Thead>

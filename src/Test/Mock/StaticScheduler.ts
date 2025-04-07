@@ -1,4 +1,4 @@
-import { Scheduler, Task } from '@/Core';
+import { Scheduler, Task } from "@/Core";
 
 export class StaticScheduler implements Scheduler {
   private state: Record<string, Task> = {};

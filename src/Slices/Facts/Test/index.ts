@@ -1,1 +1,1 @@
-export * as Mock from './Mock';
+export * as Mock from "./Mock";

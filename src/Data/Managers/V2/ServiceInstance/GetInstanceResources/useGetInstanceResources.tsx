@@ -1,6 +1,6 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import { InstanceResourceModel } from '@/Core';
-import { CustomError, useGet } from '../../helpers';
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { InstanceResourceModel } from "@/Core";
+import { CustomError, useGet } from "../../helpers";
 
 /**
  * Return Signature of the useGetInstanceResources React Query
@@ -33,7 +33,7 @@ export const useGetInstanceResources = (
     useOneTime: (): UseQueryResult<InstanceResourceModel[], CustomError> =>
       useQuery({
         queryKey: [
-          'get_instance_resources-one_time',
+          "get_instance_resources-one_time",
           id,
           version,
           service_entity,
@@ -44,7 +44,7 @@ export const useGetInstanceResources = (
     useContinuous: (): UseQueryResult<InstanceResourceModel[], CustomError> =>
       useQuery({
         queryKey: [
-          'get_instance_resources-continuous',
+          "get_instance_resources-continuous",
           id,
           version,
           service_entity,

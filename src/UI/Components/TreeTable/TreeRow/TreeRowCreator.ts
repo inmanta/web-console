@@ -1,22 +1,22 @@
-import { AttributeAnnotations } from '@/Core';
-import { Attributes } from '@/Core/Domain/InventoryTable';
+import { AttributeAnnotations } from "@/Core";
+import { Attributes } from "@/Core/Domain/InventoryTable";
 import {
   CatalogAttributes,
   InventoryAttributes,
   MultiAttributeNode,
-} from '@/UI/Components/TreeTable/Helpers/AttributeNode';
-import { PathHelper } from '@/UI/Components/TreeTable/Helpers/PathHelper';
-import { AttributeTree } from '@/UI/Components/TreeTable/types';
-import { Cell, TreeRow } from './TreeRow';
+} from "@/UI/Components/TreeTable/Helpers/AttributeNode";
+import { PathHelper } from "@/UI/Components/TreeTable/Helpers/PathHelper";
+import { AttributeTree } from "@/UI/Components/TreeTable/types";
+import { Cell, TreeRow } from "./TreeRow";
 
-export class TreeRowCreator<T extends AttributeTree['target']> {
+export class TreeRowCreator<T extends AttributeTree["target"]> {
   constructor (
     private readonly pathHelper: PathHelper,
     private readonly isExpandedByParent: (path: string) => boolean,
     private readonly isChildExpanded: (path: string) => boolean,
     private readonly createOnToggle: (path: string) => () => void,
     private readonly extractValues: (
-      node: Extract<MultiAttributeNode<T>, { kind: 'Leaf' }>,
+      node: Extract<MultiAttributeNode<T>, { kind: "Leaf" }>,
     ) => Cell[],
     private readonly attributes: Attributes,
   ) {}
@@ -29,10 +29,10 @@ export class TreeRowCreator<T extends AttributeTree['target']> {
    * @returns {string | undefined}
    */
   getBranchWarningObject = (path: string): string | undefined => {
-    const pathArr = path.split('$');
+    const pathArr = path.split("$");
 
     if (!pathArr || !pathArr.length) {
-      return '';
+      return "";
     }
 
     const candidate = (this.attributes.candidate as unknown) || {};
@@ -40,17 +40,17 @@ export class TreeRowCreator<T extends AttributeTree['target']> {
     const rollback = (this.attributes.rollback as unknown) || {};
 
     const candidateValue = pathArr.reduce(
-      (obj, key) => (obj && obj[key] !== 'undefined' ? obj[key] : undefined),
+      (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
       candidate,
     );
 
     const activeValue = pathArr.reduce(
-      (obj, key) => (obj && obj[key] !== 'undefined' ? obj[key] : undefined),
+      (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
       active,
     );
 
     const rollBackValue = pathArr.reduce(
-      (obj, key) => (obj && obj[key] !== 'undefined' ? obj[key] : undefined),
+      (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
       rollback,
     );
 
@@ -60,20 +60,20 @@ export class TreeRowCreator<T extends AttributeTree['target']> {
      * That's when we want to display a warning to the user to inform there is a mismatch.
      */
     if (
-      typeof candidateValue === 'string' ||
-      typeof activeValue === 'string' ||
-      typeof rollBackValue === 'string'
+      typeof candidateValue === "string" ||
+      typeof activeValue === "string" ||
+      typeof rollBackValue === "string"
     ) {
       const candidateStringified =
-        typeof candidateValue !== 'undefined'
+        typeof candidateValue !== "undefined"
           ? JSON.stringify(candidateValue)
           : candidateValue;
       const activeStringified =
-        typeof activeValue !== 'undefined'
+        typeof activeValue !== "undefined"
           ? JSON.stringify(activeValue)
           : activeValue;
       const rollbackStringified =
-        typeof rollBackValue !== 'undefined'
+        typeof rollBackValue !== "undefined"
           ? JSON.stringify(rollBackValue)
           : rollBackValue;
 
@@ -99,15 +99,15 @@ export class TreeRowCreator<T extends AttributeTree['target']> {
     node: MultiAttributeNode<T>,
     annotations?: AttributeAnnotations,
   ): TreeRow {
-    if (node.kind === 'Leaf') {
+    if (node.kind === "Leaf") {
       if (this.pathHelper.isNested(path)) {
         return {
-          kind: 'Leaf',
+          kind: "Leaf",
           id: path,
           isExpandedByParent: this.isExpandedByParent(path),
           level: this.pathHelper.getLevel(path),
           primaryCell: {
-            label: 'name',
+            label: "name",
             value: this.pathHelper.getSelf(path),
             ...(annotations && { annotations: annotations }),
           },
@@ -116,10 +116,10 @@ export class TreeRowCreator<T extends AttributeTree['target']> {
         };
       } else {
         return {
-          kind: 'Flat',
+          kind: "Flat",
           id: path,
           primaryCell: {
-            label: 'name',
+            label: "name",
             value: path,
             ...(annotations && { annotations: annotations }),
           },
@@ -132,14 +132,14 @@ export class TreeRowCreator<T extends AttributeTree['target']> {
 
       if (this.pathHelper.isNested(path)) {
         return {
-          kind: 'Branch',
+          kind: "Branch",
           id: path,
           isExpandedByParent: this.isExpandedByParent(path),
           isChildExpanded: this.isChildExpanded(path),
           onToggle: this.createOnToggle(path),
           level: this.pathHelper.getLevel(path),
           primaryCell: {
-            label: 'name',
+            label: "name",
             value: this.pathHelper.getSelf(path),
             ...(annotations && { annotations: annotations }),
             warning: warning,
@@ -147,12 +147,12 @@ export class TreeRowCreator<T extends AttributeTree['target']> {
         };
       } else {
         return {
-          kind: 'Root',
+          kind: "Root",
           id: path,
           isChildExpanded: this.isChildExpanded(path),
           onToggle: this.createOnToggle(path),
           primaryCell: {
-            label: 'name',
+            label: "name",
             value: path,
             warning: warning,
             ...(annotations && { annotations: annotations }),
@@ -164,57 +164,57 @@ export class TreeRowCreator<T extends AttributeTree['target']> {
 }
 
 function format (value: unknown): string {
-  if (typeof value === 'string') return value;
-  if (typeof value === 'number') return value.toString();
-  if (typeof value === 'boolean') return value ? 'true' : 'false';
-  if (typeof value === 'undefined') return '';
-  if (typeof value === 'object') {
-    if (value === null) return 'null';
-    if (Object.keys(value).length === 0) return '{}';
-    if (Array.isArray(value)) return value.join(', ');
+  if (typeof value === "string") return value;
+  if (typeof value === "number") return value.toString();
+  if (typeof value === "boolean") return value ? "true" : "false";
+  if (typeof value === "undefined") return "";
+  if (typeof value === "object") {
+    if (value === null) return "null";
+    if (Object.keys(value).length === 0) return "{}";
+    if (Array.isArray(value)) return value.join(", ");
   }
 
-  return '';
+  return "";
 }
 
 export function extractCatalogValues (
-  node: Extract<MultiAttributeNode<CatalogAttributes>, { kind: 'Leaf' }>,
+  node: Extract<MultiAttributeNode<CatalogAttributes>, { kind: "Leaf" }>,
 ): Cell[] {
   return [
     {
-      label: 'type',
+      label: "type",
       value: format(node.value.type),
       hasRelation: node.hasRelation,
     },
     {
-      label: 'modifier',
+      label: "modifier",
       value: format(node.value.modifier),
     },
     {
-      label: 'description',
+      label: "description",
       value: format(node.value.description),
     },
   ];
 }
 
 export function extractInventoryValues (
-  node: Extract<MultiAttributeNode<InventoryAttributes>, { kind: 'Leaf' }>,
+  node: Extract<MultiAttributeNode<InventoryAttributes>, { kind: "Leaf" }>,
 ): Cell[] {
   return [
     {
-      label: 'candidate',
+      label: "candidate",
       value: format(node.value.candidate),
       hasRelation: node.hasRelation,
       serviceName: node.entity,
     },
     {
-      label: 'active',
+      label: "active",
       value: format(node.value.active),
       hasRelation: node.hasRelation,
       serviceName: node.entity,
     },
     {
-      label: 'rollback',
+      label: "rollback",
       value: format(node.value.rollback),
       hasRelation: node.hasRelation,
       serviceName: node.entity,

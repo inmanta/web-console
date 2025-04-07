@@ -1,1 +1,1 @@
-export * as TriggerDryRun from './CommandManager';
+export * as TriggerDryRun from "./CommandManager";

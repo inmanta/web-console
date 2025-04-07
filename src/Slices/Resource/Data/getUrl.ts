@@ -1,12 +1,12 @@
-import qs from 'qs';
-import { Query } from '@/Core';
+import qs from "qs";
+import { Query } from "@/Core";
 
 export function getUrl ({
   filter,
   pageSize,
   sort,
   currentPage,
-}: Query.SubQuery<'GetResources'>): string {
+}: Query.SubQuery<"GetResources">): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
@@ -18,14 +18,14 @@ export function getUrl ({
             resource_id_value: filter.value,
           },
         },
-        { allowDots: true, arrayFormat: 'repeat' },
+        { allowDots: true, arrayFormat: "repeat" },
       )}`
-      : '';
-  const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : '';
+      : "";
+  const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
   return `/api/v2/resource?deploy_summary=True&limit=${
     pageSize.value
   }${filterParam}${sortParam}${
-    currentPage.value ? `&${currentPage.value}` : ''
+    currentPage.value ? `&${currentPage.value}` : ""
   }`;
 }

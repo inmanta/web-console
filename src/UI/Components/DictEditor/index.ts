@@ -1,1 +1,1 @@
-export * from './DictEditor';
+export * from "./DictEditor";

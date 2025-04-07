@@ -1,4 +1,4 @@
-import { CommandManager, Command } from '@/Core';
+import { CommandManager, Command } from "@/Core";
 
 export class MockCommandManager implements CommandManager {
   matches (): boolean {

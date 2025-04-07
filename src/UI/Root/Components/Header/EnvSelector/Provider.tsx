@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
-import { DependencyContext } from '@/UI/Dependency';
-import { EnvSelectorWithData } from './EnvSelectorWithData';
-import { EnvironmentSelectorItem } from './EnvSelectorWrapper';
+import React, { useContext } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { DependencyContext } from "@/UI/Dependency";
+import { EnvSelectorWithData } from "./EnvSelectorWithData";
+import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 
 export const Provider: React.FC = () => {
   const client = useQueryClient();
@@ -12,8 +12,8 @@ export const Provider: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const selected = environmentHandler.useSelected();
-  const [data] = queryResolver.useOneTime<'GetEnvironments'>({
-    kind: 'GetEnvironments',
+  const [data] = queryResolver.useOneTime<"GetEnvironments">({
+    kind: "GetEnvironments",
     details: false,
   });
 
@@ -28,8 +28,8 @@ export const Provider: React.FC = () => {
     const newLocation = {
       ...location,
       pathname: featureManager.isLsmEnabled()
-        ? routeManager.getUrl('Catalog', undefined)
-        : routeManager.getUrl('CompileReports', undefined),
+        ? routeManager.getUrl("Catalog", undefined)
+        : routeManager.getUrl("CompileReports", undefined),
     };
 
     client.clear();

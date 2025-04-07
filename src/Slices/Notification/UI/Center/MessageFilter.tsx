@@ -1,7 +1,7 @@
-import React from 'react';
-import { NotificationFilter } from '@/Data/Managers/V2/Notification/GetNotifications';
-import { FreeTextFilter } from '@/UI/Components/Filters';
-import { words } from '@/UI/words';
+import React from "react";
+import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
+import { FreeTextFilter } from "@/UI/Components/Filters";
+import { words } from "@/UI/words";
 
 interface Props {
   filter: NotificationFilter;
@@ -19,8 +19,8 @@ export const MessageFilter: React.FC<Props> = ({ filter, setFilter }) => {
   return (
     <FreeTextFilter
       searchEntries={filter.message}
-      filterPropertyName={'Message'}
-      placeholder={words('notification.message.placeholder')}
+      filterPropertyName={"Message"}
+      placeholder={words("notification.message.placeholder")}
       update={update}
     />
   );

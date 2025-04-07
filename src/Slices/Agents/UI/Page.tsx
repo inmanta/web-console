@@ -1,43 +1,43 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from "react";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
   useUrlStateWithSort,
-} from '@/Data';
-import { useUrlStateWithCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
+} from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EmptyView,
   ToastAlert,
   PageContainer,
   RemoteDataView,
   OldPaginationWidget,
-} from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { Filter } from '@S/Agents/Core/Query';
-import { AgentsTableControls } from './AgentsTableControls';
-import { GetAgentsContext } from './GetAgentsContext';
-import { TableProvider } from './TableProvider';
+} from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { Filter } from "@S/Agents/Core/Query";
+import { AgentsTableControls } from "./AgentsTableControls";
+import { GetAgentsContext } from "./GetAgentsContext";
+import { TableProvider } from "./TableProvider";
 
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: 'Agents',
+    route: "Agents",
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: 'Agents',
+    route: "Agents",
   });
   const [filter, setFilter] = useUrlStateWithFilter<Filter>({
-    route: 'Agents',
+    route: "Agents",
   });
   const [sort, setSort] = useUrlStateWithSort<string>({
-    default: { name: 'name', order: 'asc' },
-    route: 'Agents',
+    default: { name: "name", order: "asc" },
+    route: "Agents",
   });
-  const [data, retry] = queryResolver.useContinuous<'GetAgents'>({
-    kind: 'GetAgents',
+  const [data, retry] = queryResolver.useContinuous<"GetAgents">({
+    kind: "GetAgents",
     filter,
     sort,
     pageSize,
@@ -46,12 +46,12 @@ export const Page: React.FC = () => {
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
-    setCurrentPage({ kind: 'CurrentPage', value: '' });
+    setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
   return (
-    <PageContainer pageTitle={words('agents.title')}>
+    <PageContainer pageTitle={words("agents.title")}>
       <AgentsTableControls
         filter={filter}
         setFilter={setFilter}
@@ -69,7 +69,7 @@ export const Page: React.FC = () => {
       >
         <ToastAlert
           data-testid="ToastAlert"
-          title={words('agents.actions.failed')}
+          title={words("agents.actions.failed")}
           message={errorMessage}
           setMessage={setErrorMessage}
         />
@@ -80,7 +80,7 @@ export const Page: React.FC = () => {
           SuccessView={(agents) =>
             agents.data.length <= 0 ? (
               <EmptyView
-                message={words('agents.empty.message')}
+                message={words("agents.empty.message")}
                 aria-label="AgentsView-Empty"
               />
             ) : (

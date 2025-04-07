@@ -1,7 +1,7 @@
-import React, { PropsWithChildren, createContext, useState } from 'react';
-import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
+import React, { PropsWithChildren, createContext, useState } from "react";
+import { Modal, ModalVariant } from "@patternfly/react-core/deprecated";
 
-type IconVariant = 'success' | 'danger' | 'warning' | 'info' | 'custom';
+type IconVariant = "success" | "danger" | "warning" | "info" | "custom";
 
 /**
  * `Params` is an interface for the parameters accepted by the `triggerModal` function.
@@ -66,13 +66,13 @@ export const ModalContext =
  */
 export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState<React.ReactNode>();
   const [content, setContent] = useState<React.ReactNode>();
   const [actions, setAction] = useState<React.ReactNode>([]);
   const [variant, setVariant] = useState<ModalVariant>(ModalVariant.small);
   const [iconVariant, setIconVariant] = useState<IconVariant | undefined>(
-    'info',
+    "info",
   );
 
   /**

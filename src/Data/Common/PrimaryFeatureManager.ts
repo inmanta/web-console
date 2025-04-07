@@ -10,8 +10,8 @@ import {
   StatusLicense,
   EXTENSION_LIST,
   FEATURE_LIST,
-} from '@/Core';
-import { VoidLogger } from './VoidLogger';
+} from "@/Core";
+import { VoidLogger } from "./VoidLogger";
 
 /**
  * Represents the primary feature manager.
@@ -27,11 +27,11 @@ export class PrimaryFeatureManager implements FeatureManager {
    * @param appVersion - The version of the application. Defaults to an empty string.
    */
   constructor (
-    private readonly stateHelper: StateHelper<'GetServerStatus'>,
+    private readonly stateHelper: StateHelper<"GetServerStatus">,
     private readonly logger: Logger = new VoidLogger(),
-    private readonly jsonParserId: JsonParserId = 'Native',
-    private readonly commitHash: string = '',
-    private readonly appVersion: string = '',
+    private readonly jsonParserId: JsonParserId = "Native",
+    private readonly commitHash: string = "",
+    private readonly appVersion: string = "",
   ) {
     this.logger.log(
       `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`,
@@ -55,10 +55,10 @@ export class PrimaryFeatureManager implements FeatureManager {
   }
 
   private get (): ServerStatus {
-    const serverStatus = this.stateHelper.getOnce({ kind: 'GetServerStatus' });
+    const serverStatus = this.stateHelper.getOnce({ kind: "GetServerStatus" });
 
     if (!RemoteData.isSuccess(serverStatus)) {
-      throw new Error('ServerStatus has not yet been set.');
+      throw new Error("ServerStatus has not yet been set.");
     }
 
     return serverStatus.value;
@@ -152,7 +152,7 @@ export class PrimaryFeatureManager implements FeatureManager {
   getServerMajorVersion (): string {
     const serverStatus = this.get();
 
-    return serverStatus.version.split('.')[0];
+    return serverStatus.version.split(".")[0];
   }
 
   /**
@@ -162,8 +162,8 @@ export class PrimaryFeatureManager implements FeatureManager {
   getServerVersion (): string {
     const fullVersion = this.get().version;
 
-    return fullVersion.indexOf('.dev') > -1
-      ? fullVersion.substring(0, fullVersion.indexOf('.dev'))
+    return fullVersion.indexOf(".dev") > -1
+      ? fullVersion.substring(0, fullVersion.indexOf(".dev"))
       : fullVersion;
   }
 
@@ -182,7 +182,7 @@ export class PrimaryFeatureManager implements FeatureManager {
   getLicenseInformation (): StatusLicense | undefined {
     const serverStatus = this.get();
     const licenceInformation = serverStatus.slices.find(
-      (slice) => slice.name === 'license.license',
+      (slice) => slice.name === "license.license",
     );
 
     return licenceInformation?.status;

@@ -1,13 +1,13 @@
-import { forIn, mapValues, omit } from 'lodash-es';
-import { Dictionary, DictionaryImpl } from '@/Core/Language/Dictionary';
-import { resolvePromiseRecord } from '@/Core/Language/Utils';
-import { Scheduler, Task } from './Scheduler';
+import { forIn, mapValues, omit } from "lodash-es";
+import { Dictionary, DictionaryImpl } from "@/Core/Language/Dictionary";
+import { resolvePromiseRecord } from "@/Core/Language/Utils";
+import { Scheduler, Task } from "./Scheduler";
 
 export class SchedulerImpl implements Scheduler {
   tasks: Dictionary<Task>;
   private pausedTasks: Dictionary<Task> = new DictionaryImpl<Task>();
-  private nextEffects: Record<string, ReturnType<Task['effect']>> = {};
-  private nextUpdates: Record<string, Task['update']> = {};
+  private nextEffects: Record<string, ReturnType<Task["effect"]>> = {};
+  private nextUpdates: Record<string, Task["update"]> = {};
   private ongoing = false;
 
   constructor (
@@ -16,7 +16,7 @@ export class SchedulerImpl implements Scheduler {
     tasks?: Dictionary<Task>,
   ) {
     this.tasks =
-      typeof tasks !== 'undefined' ? tasks : new DictionaryImpl<Task>();
+      typeof tasks !== "undefined" ? tasks : new DictionaryImpl<Task>();
   }
 
   pauseTasks (): void {
@@ -77,7 +77,7 @@ export class SchedulerImpl implements Scheduler {
     forIn(await resolvePromiseRecord(this.nextEffects), (data, key) => {
       const update = this.nextUpdates[key];
 
-      if (typeof update === 'undefined') return;
+      if (typeof update === "undefined") return;
       update(data);
     });
 

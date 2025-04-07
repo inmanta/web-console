@@ -1,1 +1,1 @@
-export * as Resource from './Core/Route';
+export * as Resource from "./Core/Route";

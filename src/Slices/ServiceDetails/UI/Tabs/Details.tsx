@@ -1,8 +1,8 @@
-import React from 'react';
-import { Flex, FlexItem, Title } from '@patternfly/react-core';
-import { InstanceSummary } from '@/Core';
-import { EmptyView, SummaryChart } from '@/UI/Components';
-import { words } from '@/UI/words';
+import React from "react";
+import { Flex, FlexItem, Title } from "@patternfly/react-core";
+import { InstanceSummary } from "@/Core";
+import { EmptyView, SummaryChart } from "@/UI/Components";
+import { words } from "@/UI/words";
 
 interface Props {
   instanceSummary?: InstanceSummary | null;
@@ -10,10 +10,10 @@ interface Props {
 
 export const Details: React.FC<Props> = ({ instanceSummary }) => {
   return (
-    <Flex spaceItems={{ default: 'spaceItemsXl' }}>
-      <Flex direction={{ default: 'column' }} rowGap={{ default: 'rowGapMd' }}>
+    <Flex spaceItems={{ default: "spaceItemsXl" }}>
+      <Flex direction={{ default: "column" }} rowGap={{ default: "rowGapMd" }}>
         <FlexItem>
-          <Title headingLevel="h3">{words('catalog.summary.title')}</Title>
+          <Title headingLevel="h3">{words("catalog.summary.title")}</Title>
         </FlexItem>
         <FlexItem>
           {instanceSummary ? (
@@ -22,7 +22,7 @@ export const Details: React.FC<Props> = ({ instanceSummary }) => {
               total={instanceSummary.total.toString()}
             />
           ) : (
-            <EmptyView message={words('catalog.summary.empty')} />
+            <EmptyView message={words("catalog.summary.empty")} />
           )}
         </FlexItem>
       </Flex>

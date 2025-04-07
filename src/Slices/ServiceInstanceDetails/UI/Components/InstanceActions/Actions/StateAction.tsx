@@ -1,10 +1,10 @@
-import React, { useCallback, useContext, useState } from 'react';
-import { DropdownGroup, DropdownItem, Content } from '@patternfly/react-core';
-import { ParsedNumber } from '@/Core';
-import { usePostStateTransfer } from '@/Data/Managers/V2/ServiceInstance';
-import { DependencyContext, words } from '@/UI';
-import { ConfirmationModal } from '../../ConfirmModal';
-import { ToastAlertMessage } from '../../ToastAlert';
+import React, { useCallback, useContext, useState } from "react";
+import { DropdownGroup, DropdownItem, Content } from "@patternfly/react-core";
+import { ParsedNumber } from "@/Core";
+import { usePostStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
+import { DependencyContext, words } from "@/UI";
+import { ConfirmationModal } from "../../ConfirmModal";
+import { ToastAlertMessage } from "../../ToastAlert";
 
 interface Props {
   targets: string[];
@@ -40,9 +40,9 @@ export const StateAction: React.FC<Props> = ({
   setInterfaceBlocked,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [confirmationText, setConfirmationText] = useState<string>('');
-  const [targetState, setTargetState] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [confirmationText, setConfirmationText] = useState<string>("");
+  const [targetState, setTargetState] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const { authHelper } = useContext(DependencyContext);
 
@@ -69,7 +69,7 @@ export const StateAction: React.FC<Props> = ({
   const onSelect = (value: string) => {
     setTargetState(value);
     setConfirmationText(
-      words('inventory.statustab.confirmMessage')(
+      words("inventory.statustab.confirmMessage")(
         instance_display_identity,
         value,
       ),
@@ -86,7 +86,7 @@ export const StateAction: React.FC<Props> = ({
    */
   const onSubmit = async (): Promise<void> => {
     const username = authHelper.getUser();
-    const message = words('instanceDetails.API.message.update')(username);
+    const message = words("instanceDetails.API.message.update")(username);
 
     mutate({
       message: message,
@@ -106,7 +106,7 @@ export const StateAction: React.FC<Props> = ({
 
   return (
     <>
-      <DropdownGroup label={words('instanceDetails.setState.label')}>
+      <DropdownGroup label={words("instanceDetails.setState.label")}>
         {targets.map((target) => (
           <DropdownItem onClick={() => onSelect(target)} key={target}>
             {target}
@@ -114,7 +114,7 @@ export const StateAction: React.FC<Props> = ({
         ))}
       </DropdownGroup>
       <ConfirmationModal
-        title={words('instanceDetails.stateTransfer.confirmTitle')}
+        title={words("instanceDetails.stateTransfer.confirmTitle")}
         onConfirm={onSubmit}
         id={instance_display_identity}
         isModalOpen={isModalOpen}

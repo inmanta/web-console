@@ -1,19 +1,19 @@
-import React, { useContext } from 'react';
-import { InstanceAttributeModel } from '@/Core';
-import { useUrlStateWithString } from '@/Data';
-import { InstanceDetailsContext } from '@/Slices/ServiceInstanceDetails/Core/Context';
+import React, { useContext } from "react";
+import { InstanceAttributeModel } from "@/Core";
+import { useUrlStateWithString } from "@/Data";
+import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import {
   AttributeSets,
   AttributeViews,
   AttributeViewToggles,
   getAttributeSetsFromInstance,
   getAvailableAttributesSets,
-} from '@/Slices/ServiceInstanceDetails/Utils';
-import { LoadingView } from '@/UI/Components';
-import { AttributesCompare } from './AttributesCompare';
-import { AttributesEditor } from './AttributesEditor';
-import { AttributesTable } from './AttributesTable';
-import { NoDataState } from './NoDataState';
+} from "@/Slices/ServiceInstanceDetails/Utils";
+import { LoadingView } from "@/UI/Components";
+import { AttributesCompare } from "./AttributesCompare";
+import { AttributesEditor } from "./AttributesEditor";
+import { AttributesTable } from "./AttributesTable";
+import { NoDataState } from "./NoDataState";
 
 interface Props {
   selectedView: AttributeViews;
@@ -34,8 +34,8 @@ export const AttributesViewProvider: React.FC<Props> = ({ selectedView }) => {
 
   const [selectedVersion] = useUrlStateWithString<string>({
     default: String(instance.version),
-    key: 'version',
-    route: 'InstanceDetails',
+    key: "version",
+    route: "InstanceDetails",
   });
   const isLatest = selectedVersion === String(instance.version);
 

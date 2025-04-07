@@ -1,7 +1,7 @@
-import { Action, action } from 'easy-peasy';
-import { RemoteData, Query } from '@/Core';
+import { Action, action } from "easy-peasy";
+import { RemoteData, Query } from "@/Core";
 
-type Data = RemoteData.Type<Query.Error<'GetAgents'>, Query.Data<'GetAgents'>>;
+type Data = RemoteData.Type<Query.Error<"GetAgents">, Query.Data<"GetAgents">>;
 
 export interface AgentsSlice {
   listByEnv: Record<string, Data>;

@@ -1,12 +1,12 @@
-import React, { useCallback, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Alert, DropdownItem, Content } from '@patternfly/react-core';
-import { TrashAltIcon } from '@patternfly/react-icons';
-import { ParsedNumber } from '@/Core';
-import { useDestroyInstance } from '@/Data/Managers/V2/ServiceInstance';
-import { DependencyContext, words } from '@/UI';
-import { ConfirmationModal } from '../../ConfirmModal';
-import { ToastAlertMessage } from '../../ToastAlert';
+import React, { useCallback, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Alert, DropdownItem, Content } from "@patternfly/react-core";
+import { TrashAltIcon } from "@patternfly/react-icons";
+import { ParsedNumber } from "@/Core";
+import { useDestroyInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { DependencyContext, words } from "@/UI";
+import { ConfirmationModal } from "../../ConfirmModal";
+import { ToastAlertMessage } from "../../ToastAlert";
 
 interface Props {
   instance_display_identity: string;
@@ -39,7 +39,7 @@ export const DestroyAction: React.FC<Props> = ({
   setInterfaceBlocked,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const navigate = useNavigate();
 
@@ -47,7 +47,7 @@ export const DestroyAction: React.FC<Props> = ({
 
   const environment = environmentHandler.useId();
   const username = authHelper.getUser();
-  const message = words('instanceDetails.API.message.update')(username);
+  const message = words("instanceDetails.API.message.update")(username);
 
   const { mutate, isPending } = useDestroyInstance(
     instance_id,
@@ -97,10 +97,10 @@ export const DestroyAction: React.FC<Props> = ({
         icon={<TrashAltIcon />}
         onClick={() => onDestroySelect()}
       >
-        {words('inventory.destroyInstance.button')}
+        {words("inventory.destroyInstance.button")}
       </DropdownItem>
       <ConfirmationModal
-        title={words('inventory.destroyInstance.title')}
+        title={words("inventory.destroyInstance.title")}
         onConfirm={onSubmitDestroy}
         id={instance_display_identity}
         isModalOpen={isModalOpen}
@@ -108,7 +108,7 @@ export const DestroyAction: React.FC<Props> = ({
         isPending={isPending}
       >
         <Content component="p">
-          {words('inventory.destroyInstance.header')(
+          {words("inventory.destroyInstance.header")(
             instance_display_identity,
             service_entity,
           )}
@@ -116,7 +116,7 @@ export const DestroyAction: React.FC<Props> = ({
         <br />
         <Alert
           variant="danger"
-          title={words('instanceDetails.expert.confirm.warning')}
+          title={words("instanceDetails.expert.confirm.warning")}
           isInline
         />
       </ConfirmationModal>

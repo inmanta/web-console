@@ -1,16 +1,16 @@
-import { RemoteData, Query } from '@/Core';
-import { PrimaryStateHelper } from '@/Data/Common';
-import { Store, State, Dispatch } from '@/Data/Store';
+import { RemoteData, Query } from "@/Core";
+import { PrimaryStateHelper } from "@/Data/Common";
+import { Store, State, Dispatch } from "@/Data/Store";
 
 type Data = RemoteData.Type<
-  Query.Error<'GetEnvironments'>,
-  Query.Data<'GetEnvironments'>
+  Query.Error<"GetEnvironments">,
+  Query.Data<"GetEnvironments">
 >;
 
 export function GetEnvironmentsStateHelper (store: Store) {
   function getData (
     state: State,
-    { details }: Query.SubQuery<'GetEnvironments'>,
+    { details }: Query.SubQuery<"GetEnvironments">,
   ): Data {
     return details
       ? state.environment.environmentsWithDetails
@@ -19,7 +19,7 @@ export function GetEnvironmentsStateHelper (store: Store) {
 
   function setData (
     store: Dispatch,
-    { details }: Query.SubQuery<'GetEnvironments'>,
+    { details }: Query.SubQuery<"GetEnvironments">,
     data: Data,
   ) {
     if (details) {
@@ -32,7 +32,7 @@ export function GetEnvironmentsStateHelper (store: Store) {
     }
   }
 
-  return PrimaryStateHelper<'GetEnvironments'>(
+  return PrimaryStateHelper<"GetEnvironments">(
     store,
     (data, query) => {
       const unwrapped = RemoteData.mapSuccess((wrapped) => {

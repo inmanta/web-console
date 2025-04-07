@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Button, Tooltip } from '@patternfly/react-core';
-import { ActionDisabledTooltip } from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { CompileReportsIndication } from './CompileReportsIndication';
+import React, { useContext, useEffect, useState } from "react";
+import { Button, Tooltip } from "@patternfly/react-core";
+import { ActionDisabledTooltip } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { CompileReportsIndication } from "./CompileReportsIndication";
 
 interface Props {
-  kind: 'Deploy' | 'Repair';
+  kind: "Deploy" | "Repair";
   tooltip: string;
   textContent: string;
 }
@@ -41,7 +41,7 @@ export const ResourcePageActionButton: React.FC<Props> = ({
   return isHalted ? (
     <ActionDisabledTooltip
       testingId={textContent}
-      tooltipContent={words('environment.halt.tooltip')}
+      tooltipContent={words("environment.halt.tooltip")}
       isDisabled
     >
       <Button variant="secondary" isDisabled>

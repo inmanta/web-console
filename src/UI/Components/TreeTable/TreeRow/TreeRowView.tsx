@@ -1,20 +1,20 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 import {
   Button,
   Icon,
   Split,
   SplitItem,
   Tooltip,
-} from '@patternfly/react-core';
-import { ExclamationTriangleIcon, InfoAltIcon } from '@patternfly/react-icons';
-import { Tr, Td } from '@patternfly/react-table';
-import styled from 'styled-components';
-import { ParsedNumber, Attributes, AttributeAnnotations } from '@/Core';
-import { Toggle } from '@/UI/Components/Toggle';
-import { ClipboardCopyButton } from '../../ClipboardCopyButton';
-import { CellWithCopy } from './CellWithCopy';
-import { Indent } from './Indent';
-import { TreeRow } from './TreeRow';
+} from "@patternfly/react-core";
+import { ExclamationTriangleIcon, InfoAltIcon } from "@patternfly/react-icons";
+import { Tr, Td } from "@patternfly/react-table";
+import styled from "styled-components";
+import { ParsedNumber, Attributes, AttributeAnnotations } from "@/Core";
+import { Toggle } from "@/UI/Components/Toggle";
+import { ClipboardCopyButton } from "../../ClipboardCopyButton";
+import { CellWithCopy } from "./CellWithCopy";
+import { Indent } from "./Indent";
+import { TreeRow } from "./TreeRow";
 
 /**
  * RowProps is an interface that defines the props of the TreeRowView component.
@@ -31,7 +31,7 @@ interface RowProps {
 }
 
 const warningMessage =
-  'This attribute migrated to a different/new Type and can’t be displayed properly into the table. You can copy the object for further comparison through the Copy button. It will store the value of each state in your clipboard.';
+  "This attribute migrated to a different/new Type and can’t be displayed properly into the table. You can copy the object for further comparison through the Copy button. It will store the value of each state in your clipboard.";
 
 /**
  * TreeRowView is a component that renders a row in the tree table for the Attributes.
@@ -49,12 +49,12 @@ export const TreeRowView: React.FC<RowProps> = ({
   setTab = () => {},
 }) => {
   switch (row.kind) {
-    case 'Flat':
+    case "Flat":
       return (
         <Tr aria-label={`Row-${row.id}`}>
           <Td dataLabel={row.primaryCell.label}>
             <Indent level={0} noToggle>
-              {annotations?.web_presentation !== 'documentation' ? (
+              {annotations?.web_presentation !== "documentation" ? (
                 row.primaryCell.value
               ) : (
                 <DocumentationCell
@@ -65,21 +65,21 @@ export const TreeRowView: React.FC<RowProps> = ({
               )}
             </Indent>
           </Td>
-          {annotations?.web_presentation !== 'documentation' &&
+          {annotations?.web_presentation !== "documentation" &&
             row.valueCells.map(({ label, value, hasRelation, serviceName }) => (
               <CellWithCopy
                 label={label}
-                value={label === 'description' && value === 'null' ? '' : value}
+                value={label === "description" && value === "null" ? "" : value}
                 hasRelation={hasRelation}
                 serviceName={serviceName}
-                className={'pf-v6-c-truncate'}
+                className={"pf-v6-c-truncate"}
                 key={`${label}-${value}`}
               />
             ))}
         </Tr>
       );
 
-    case 'Root':
+    case "Root":
       return (
         <Tr aria-label={`Row-${row.id}`}>
           <Td dataLabel="name" colSpan={4}>
@@ -91,9 +91,9 @@ export const TreeRowView: React.FC<RowProps> = ({
                     onToggle={row.onToggle}
                     aria-label={`Toggle-${row.id}`}
                   />
-                  {row.primaryCell.label === 'description' &&
-                  row.primaryCell.value === 'null'
-                    ? ''
+                  {row.primaryCell.label === "description" &&
+                  row.primaryCell.value === "null"
+                    ? ""
                     : row.primaryCell.value}
                   {row.primaryCell.warning ? (
                     <Spacer>
@@ -107,7 +107,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                       ></ClipboardCopyButton>
                     </Spacer>
                   ) : (
-                    ''
+                    ""
                   )}
                 </SplitItem>
               </Split>
@@ -116,7 +116,7 @@ export const TreeRowView: React.FC<RowProps> = ({
         </Tr>
       );
 
-    case 'Branch':
+    case "Branch":
       return (
         <Tr aria-label={`Row-${row.id}`} isExpanded={row.isExpandedByParent}>
           <Td colSpan={4} dataLabel={row.primaryCell.label}>
@@ -126,9 +126,9 @@ export const TreeRowView: React.FC<RowProps> = ({
                 onToggle={row.onToggle}
                 aria-label={`Toggle-${row.id}`}
               />
-              {row.primaryCell.label === 'description' &&
-              row.primaryCell.value === 'null'
-                ? ''
+              {row.primaryCell.label === "description" &&
+              row.primaryCell.value === "null"
+                ? ""
                 : row.primaryCell.value}
               {row.primaryCell.warning ? (
                 <Spacer>
@@ -142,14 +142,14 @@ export const TreeRowView: React.FC<RowProps> = ({
                   ></ClipboardCopyButton>
                 </Spacer>
               ) : (
-                ''
+                ""
               )}
             </Indent>
           </Td>
         </Tr>
       );
 
-    case 'Leaf':
+    case "Leaf":
       return (
         <Tr aria-label={`Row-${row.id}`} isExpanded={row.isExpandedByParent}>
           <Td dataLabel={row.primaryCell.label}>
@@ -160,10 +160,10 @@ export const TreeRowView: React.FC<RowProps> = ({
           {row.valueCells.map(({ label, value, hasRelation, serviceName }) => (
             <CellWithCopy
               label={label}
-              value={label === 'description' && value === 'null' ? '' : value}
+              value={label === "description" && value === "null" ? "" : value}
               hasRelation={hasRelation}
               serviceName={serviceName}
-              className={'pf-v6-c-truncate'}
+              className={"pf-v6-c-truncate"}
               key={`${label}-${value}`}
             />
           ))}
@@ -194,7 +194,7 @@ interface DocumentationCellProps {
  */
 const DocumentationCell: FC<DocumentationCellProps> = ({
   value,
-  tabKey = '',
+  tabKey = "",
   setTab,
 }) => (
   <Button

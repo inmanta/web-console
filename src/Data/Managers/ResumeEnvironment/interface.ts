@@ -1,7 +1,7 @@
-import { Maybe } from '@/Core/Language';
+import { Maybe } from "@/Core/Language";
 
 export interface ResumeEnvironment {
-  kind: 'ResumeEnvironment';
+  kind: "ResumeEnvironment";
 }
 
 export interface ResumeEnvironmentManifest {

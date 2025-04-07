@@ -6,14 +6,14 @@ import {
   PageSize,
   EventType,
   DateRange,
-} from '@/Core/Domain';
-import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
+} from "@/Core/Domain";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 /**
  * The events query describes events belonging to one specific service instance
  */
 export interface Query extends ServiceInstanceIdentifier, EventParams {
-  kind: 'GetInstanceEvents';
+  kind: "GetInstanceEvents";
 }
 
 export interface Manifest {
@@ -52,11 +52,11 @@ export interface Filter {
 }
 
 export enum FilterKind {
-  EventType = 'EventType',
-  Version = 'Version',
-  Source = 'Source',
-  Destination = 'Destination',
-  Date = 'Date',
+  EventType = "EventType",
+  Version = "Version",
+  Source = "Source",
+  Destination = "Destination",
+  Date = "Date",
 }
 
 export const FilterList: FilterKind[] = [

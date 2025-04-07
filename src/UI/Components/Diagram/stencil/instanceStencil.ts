@@ -1,18 +1,18 @@
-import { dia, ui } from '@inmanta/rappid';
-import { t_global_background_color_primary_default } from '@patternfly/react-tokens';
-import { ServiceModel } from '@/Core';
+import { dia, ui } from "@inmanta/rappid";
+import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
+import { ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
   FieldCreator,
   createFormState,
-} from '../../ServiceInstanceForm';
+} from "../../ServiceInstanceForm";
 import {
   dispatchUpdateServiceOrderItems,
   dispatchUpdateStencil,
-} from '../Context/dispatchers';
-import { createComposerEntity } from '../actions/general';
-import { ActionEnum, EventActionEnum } from '../interfaces';
-import { transformEmbeddedToStencilElements } from './helpers';
+} from "../Context/dispatchers";
+import { createComposerEntity } from "../actions/general";
+import { ActionEnum, EventActionEnum } from "../interfaces";
+import { transformEmbeddedToStencilElements } from "./helpers";
 
 /**
  * Class initializing the Service Instance Stencil Tab.
@@ -34,7 +34,7 @@ export class InstanceStencilTab {
     service: ServiceModel,
   ) {
     this.stencil = new ui.Stencil({
-      id: 'instance-stencil',
+      id: "instance-stencil",
       paper: scroller,
       width: 240,
       height: 400,
@@ -44,10 +44,10 @@ export class InstanceStencilTab {
         sorting: dia.Paper.sorting.NONE,
       },
       canDrag: (cellView) => {
-        return !cellView.model.get('disabled');
+        return !cellView.model.get("disabled");
       },
       dragStartClone: (cell: dia.Cell) => {
-        const serviceModel = cell.get('serviceModel');
+        const serviceModel = cell.get("serviceModel");
 
         const fieldCreator = new FieldCreator(new CreateModifierHandler());
         const fields = fieldCreator.attributesToFields(serviceModel.attributes);
@@ -58,15 +58,15 @@ export class InstanceStencilTab {
           isInEditMode: false,
           attributes: createFormState(fields),
           isEmbeddedEntity: true,
-          holderName: cell.get('holderName'),
+          holderName: cell.get("holderName"),
         });
       },
       dragEndClone: (el) =>
-        el.clone().set('items', el.get('items')).set('id', el.get('id')), //cloned element loses key value pairs, so we need to set them again
+        el.clone().set("items", el.get("items")).set("id", el.get("id")), //cloned element loses key value pairs, so we need to set them again
       layout: {
         columns: 1,
-        rowHeight: 'compact',
-        horizontalAlign: 'left',
+        rowHeight: "compact",
+        horizontalAlign: "left",
         marginY: 10,
         // reset defaults
         resizeToFit: false,
@@ -80,10 +80,10 @@ export class InstanceStencilTab {
     this.stencil.render();
     this.stencil.load(transformEmbeddedToStencilElements(service));
 
-    this.stencil.on('element:drop', (elementView) => {
-      if (elementView.model.get('isEmbeddedEntity')) {
+    this.stencil.on("element:drop", (elementView) => {
+      if (elementView.model.get("isEmbeddedEntity")) {
         dispatchUpdateStencil(
-          elementView.model.get('name'),
+          elementView.model.get("name"),
           EventActionEnum.ADD,
         );
       }

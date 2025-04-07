@@ -1,14 +1,14 @@
-import { isEqual, identity } from 'lodash-es';
-import { toggleValueInList } from '@/Core';
-import { provide, Location, Replace, StateConfig, Update } from './helpers';
-import { handleUrlState } from './useUrlState';
+import { isEqual, identity } from "lodash-es";
+import { toggleValueInList } from "@/Core";
+import { provide, Location, Replace, StateConfig, Update } from "./helpers";
+import { handleUrlState } from "./useUrlState";
 
 type IsExpanded = (id: string) => boolean;
 
 type OnExpansion = (id: string) => () => void;
 
-type Config = Pick<StateConfig<string[]>, 'route'> &
-  Partial<Pick<StateConfig<string[]>, 'key'>>;
+type Config = Pick<StateConfig<string[]>, "route"> &
+  Partial<Pick<StateConfig<string[]>, "key">>;
 
 export const useUrlStateWithExpansion = provide(
   handleUrlStateWithExpansionWrapped,
@@ -22,7 +22,7 @@ export function handleUrlStateWithExpansion (
   return handleUrlState<string[]>(
     {
       default: [],
-      key: config.key || 'expansion',
+      key: config.key || "expansion",
       route: config.route,
       serialize: identity,
       parse: identity,

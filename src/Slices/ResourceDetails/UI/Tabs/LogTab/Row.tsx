@@ -1,11 +1,11 @@
-import React from 'react';
-import { Tbody, Td, Tr, ExpandableRowContent } from '@patternfly/react-table';
-import { LogLevelString } from '@/Core';
-import { CodeText } from '@/UI/Components';
-import { MomentDatePresenter } from '@/UI/Utils';
-import { ResourceLog } from '@S/ResourceDetails/Core/ResourceLog';
-import { Details } from './Details';
-import { RowOptions, ToggleActionType } from './RowOptions';
+import React from "react";
+import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
+import { LogLevelString } from "@/Core";
+import { CodeText } from "@/UI/Components";
+import { MomentDatePresenter } from "@/UI/Utils";
+import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
+import { Details } from "./Details";
+import { RowOptions, ToggleActionType } from "./RowOptions";
 
 interface Props {
   log: ResourceLog;
@@ -62,11 +62,11 @@ export const Row: React.FC<Props> = ({
 const getClassForLevel = (level: string): string => {
   switch (level) {
     case LogLevelString.WARNING:
-      return 'warning';
+      return "warning";
     case LogLevelString.ERROR:
     case LogLevelString.CRITICAL:
-      return 'danger';
+      return "danger";
     default:
-      return '';
+      return "";
   }
 };

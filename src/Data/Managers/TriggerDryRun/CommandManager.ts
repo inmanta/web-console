@@ -1,9 +1,9 @@
-import { ApiHelper } from '@/Core';
-import { CommandManagerWithEnv } from '@/Data/Common';
+import { ApiHelper } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function CommandManager (apiHelper: ApiHelper) {
-  return CommandManagerWithEnv<'TriggerDryRun'>(
-    'TriggerDryRun',
+  return CommandManagerWithEnv<"TriggerDryRun">(
+    "TriggerDryRun",
     ({ version }, environment) =>
       () =>
         apiHelper.postWithoutResponse(

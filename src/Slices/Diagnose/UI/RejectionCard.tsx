@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardBody,
@@ -9,14 +9,14 @@ import {
   DropdownList,
   MenuToggle,
   MenuToggleElement,
-} from '@patternfly/react-core';
-import { EllipsisVIcon } from '@patternfly/react-icons';
-import { Link } from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { Rejection } from '@S/Diagnose/Core/Domain';
-import { Pre } from './Pre';
-import { Traceback } from './Traceback';
+} from "@patternfly/react-core";
+import { EllipsisVIcon } from "@patternfly/react-icons";
+import { Link } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { Rejection } from "@S/Diagnose/Core/Domain";
+import { Pre } from "./Pre";
+import { Traceback } from "./Traceback";
 
 interface Props {
   rejection: Rejection;
@@ -31,21 +31,21 @@ export const RejectionCard: React.FC<Props> = ({
     <DropdownList>
       <DropdownItem key="compileReportLink">
         <Link
-          pathname={routeManager.getUrl('CompileDetails', {
+          pathname={routeManager.getUrl("CompileDetails", {
             id: compile_id,
           })}
         >
-          {words('diagnose.links.compileReport')}
+          {words("diagnose.links.compileReport")}
         </Link>
       </DropdownItem>
       {model_version ? (
         <DropdownItem key="modelVersionLink">
           <Link
-            pathname={routeManager.getUrl('DesiredStateDetails', {
+            pathname={routeManager.getUrl("DesiredStateDetails", {
               version: model_version.toString(),
             })}
           >
-            {words('diagnose.links.modelVersionDetails')}
+            {words("diagnose.links.modelVersionDetails")}
           </Link>
         </DropdownItem>
       ) : null}
@@ -77,7 +77,7 @@ export const RejectionCard: React.FC<Props> = ({
                 isOpen={isOpen}
                 isPlain
                 onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-                popperProps={{ position: 'center' }}
+                popperProps={{ position: "center" }}
               >
                 {dropdownItems}
               </Dropdown>
@@ -87,7 +87,7 @@ export const RejectionCard: React.FC<Props> = ({
           className: undefined,
         }}
       >
-        <CardTitle>{words('diagnose.rejection.title')}</CardTitle>
+        <CardTitle>{words("diagnose.rejection.title")}</CardTitle>
       </CardHeader>
       {error && <CardTitle>{error.type}</CardTitle>}
       <CardBody>

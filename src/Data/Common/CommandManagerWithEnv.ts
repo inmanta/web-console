@@ -1,6 +1,6 @@
-import { useContext } from 'react';
-import { Command, CommandManager } from '@/Core';
-import { DependencyContext } from '@/UI';
+import { useContext } from "react";
+import { Command, CommandManager } from "@/Core";
+import { DependencyContext } from "@/UI";
 
 export function CommandManagerWithEnv<Kind extends Command.Kind> (
   kind: Kind,

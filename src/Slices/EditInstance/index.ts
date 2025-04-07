@@ -1,1 +1,1 @@
-export * as EditInstance from './Core/Route';
+export * as EditInstance from "./Core/Route";

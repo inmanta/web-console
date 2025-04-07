@@ -1,1 +1,1 @@
-export * as CompileDetails from './Core/Route';
+export * as CompileDetails from "./Core/Route";

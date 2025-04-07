@@ -1,6 +1,6 @@
-import React from 'react';
-import { Flex, FlexItem } from '@patternfly/react-core';
-import { Config } from '@/Core';
+import React from "react";
+import { Flex, FlexItem } from "@patternfly/react-core";
+import { Config } from "@/Core";
 
 interface Props {
   config: Config;
@@ -35,15 +35,15 @@ export const SettingsList: React.FC<Props> = ({
   return (
     <Flex aria-label="SettingsList">
       <Flex
-        direction={{ default: 'column' }}
-        justifyContent={{ default: 'justifyContentSpaceBetween' }}
-        alignSelf={{ default: 'alignSelfStretch' }}
+        direction={{ default: "column" }}
+        justifyContent={{ default: "justifyContentSpaceBetween" }}
+        alignSelf={{ default: "alignSelfStretch" }}
       >
         {settings.map(({ name }) => (
           <FlexItem key={name}>{name}</FlexItem>
         ))}
       </Flex>
-      <Flex direction={{ default: 'column' }}>
+      <Flex direction={{ default: "column" }}>
         {settings.map(({ name, value }) => (
           <FlexItem key={name}>
             <Switch

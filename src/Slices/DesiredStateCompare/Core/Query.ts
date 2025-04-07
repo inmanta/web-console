@@ -1,7 +1,7 @@
-import { Diff } from '@/Core/Domain';
+import { Diff } from "@/Core/Domain";
 
 export interface Query extends Diff.Identifiers {
-  kind: 'GetDesiredStateDiff';
+  kind: "GetDesiredStateDiff";
 }
 
 export interface Manifest {

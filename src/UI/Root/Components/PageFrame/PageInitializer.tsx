@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { DependencyContext } from '@/UI/Dependency';
+import React, { useContext } from "react";
+import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   environment: string;
@@ -8,8 +8,8 @@ interface Props {
 export const PageInitializer: React.FC<Props> = ({ environment }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  queryResolver.useOneTime<'GetEnvironmentSettings'>({
-    kind: 'GetEnvironmentSettings',
+  queryResolver.useOneTime<"GetEnvironmentSettings">({
+    kind: "GetEnvironmentSettings",
     environment: environment,
   });
 

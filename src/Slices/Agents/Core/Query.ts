@@ -1,9 +1,9 @@
-import { Pagination, Sort, PageSize } from '@/Core/Domain';
-import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
-import { Agent, AgentStatus } from './Domain';
+import { Pagination, Sort, PageSize } from "@/Core/Domain";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { Agent, AgentStatus } from "./Domain";
 
 export interface Query {
-  kind: 'GetAgents';
+  kind: "GetAgents";
   filter?: Filter;
   sort?: Sort.Sort;
   pageSize: PageSize.PageSize;

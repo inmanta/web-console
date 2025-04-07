@@ -1,4 +1,4 @@
-import { dia, shapes, util } from '@inmanta/rappid';
+import { dia, shapes, util } from "@inmanta/rappid";
 import {
   t_chart_global_fill_color_white,
   t_global_background_color_primary_default,
@@ -6,10 +6,10 @@ import {
   t_global_font_family_mono,
   t_global_font_size_body_default,
   t_global_font_size_body_lg,
-} from '@patternfly/react-tokens';
-import { updateLabelPosition } from './helpers';
-import expandButton from './icons/expand-icon.svg';
-import { ColumnData, EntityType, HeaderColor } from './interfaces';
+} from "@patternfly/react-tokens";
+import { updateLabelPosition } from "./helpers";
+import expandButton from "./icons/expand-icon.svg";
+import { ColumnData, EntityType, HeaderColor } from "./interfaces";
 
 /**
  * https://resources.jointjs.com/tutorial/custom-elements
@@ -21,7 +21,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   defaults () {
     return util.defaultsDeep(
       {
-        type: 'app.ServiceEntityBlock',
+        type: "app.ServiceEntityBlock",
         columns: [],
         padding: { top: 40, bottom: 10, left: 10, right: 10 },
         size: { width: 264 },
@@ -32,49 +32,49 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         isCollapsed: false,
         attrs: {
           body: {
-            class: 'joint-entityBlock-body',
+            class: "joint-entityBlock-body",
             strokeWidth: 0,
-            cursor: 'default',
+            cursor: "default",
             rx: t_global_border_radius_small.value,
             fill: t_global_background_color_primary_default.var,
           },
           header: {
             strokeWidth: 0,
-            cursor: 'grab',
-            d: 'M1,0 h257 q6,0 6,6 v24 h-264 v-24 q0,-6 6,-6',
+            cursor: "grab",
+            d: "M1,0 h257 q6,0 6,6 v24 h-264 v-24 q0,-6 6,-6",
           },
           headerLabel: {
             fontFamily: t_global_font_family_mono.var,
-            textTransform: 'uppercase',
+            textTransform: "uppercase",
             fill: t_chart_global_fill_color_white.var,
             fontSize: t_global_font_size_body_lg.var,
             textWrap: {
               ellipsis: true,
               height: 30,
             },
-            cursor: 'grab',
+            cursor: "grab",
           },
           group_1: {
-            cursor: 'default',
+            cursor: "default",
           },
           itemBodies: {
-            cursor: 'default',
+            cursor: "default",
           },
           itemLabels: {
-            class: 'joint-entityBlock-itemLabels',
+            class: "joint-entityBlock-itemLabels",
             fontSize: t_global_font_size_body_default.var,
             //pointerEvents: "none",
-            cursor: 'default',
+            cursor: "default",
             itemText: {
               textWrap: false,
             },
           },
           itemLabels_1: {
-            class: 'joint-entityBlock-itemLabels-one',
+            class: "joint-entityBlock-itemLabels-one",
             fontSize: t_global_font_size_body_default.var,
-            textAnchor: 'end',
-            x: 'calc(0.5 * w - 10)',
-            cursor: 'default',
+            textAnchor: "end",
+            x: "calc(0.5 * w - 10)",
+            cursor: "default",
           },
         },
       },
@@ -95,8 +95,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     let dataToIterate = [...data];
 
     if (initialSetting && data.length > 4) {
-      this.set('dataToDisplay', data);
-      this.set('isCollapsed', true);
+      this.set("dataToDisplay", data);
+      this.set("isCollapsed", true);
       dataToIterate = data.slice(0, 4);
     }
 
@@ -115,37 +115,37 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         item.name.toString(),
         { width: 90, height: 22 },
         {
-          'font-size': this.attr('itemLabels_1/fontSize'),
-          'font-family': this.attr('itemLabels_1/fontFamily'),
+          "font-size": this.attr("itemLabels_1/fontSize"),
+          "font-family": this.attr("itemLabels_1/fontFamily"),
         },
         {
           ellipsis: true,
         },
       );
 
-      if (truncatedName.includes('\u2026')) {
+      if (truncatedName.includes("\u2026")) {
         this.attr(`itemLabel_${item.name}/data-tooltip`, item.name);
-        this.attr(`itemLabel_${item.name}/data-tooltip-position`, 'right');
+        this.attr(`itemLabel_${item.name}/data-tooltip-position`, "right");
 
-        names.push({ ...nameObject, label: item.name.slice(0, 15) + '\u2026' });
+        names.push({ ...nameObject, label: item.name.slice(0, 15) + "\u2026" });
       } else {
         names.push(nameObject);
       }
 
       const value: { id: string; label: string } = {
         id: `${item.name}_value`,
-        label: '',
+        label: "",
       };
 
       if (
-        typeof item.value === 'object' &&
+        typeof item.value === "object" &&
         !Array.isArray(item.value) &&
         item.value !== null
       ) {
-        value.label = '{...}';
+        value.label = "{...}";
 
         ///Add event and add data to display in Dictionary Modal
-        this.attr(`itemLabel_${item.name}_value/event`, 'element:showDict');
+        this.attr(`itemLabel_${item.name}_value/event`, "element:showDict");
         this.attr(
           `itemLabel_${item.name}_value/dict`,
           JSON.stringify({
@@ -153,28 +153,28 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             value: item.value,
           }),
         );
-        this.attr(`itemLabel_${item.name}_value/cursor`, 'pointer');
+        this.attr(`itemLabel_${item.name}_value/cursor`, "pointer");
       } else {
         value.label = String(item.value);
 
         if (item.value !== undefined && item.value !== null) {
           //reproduce internal formatting of the text base on actual dimensions, if text includes elipsis add Tooltip
           const reproducedDisplayText = util.breakText(
-            item.value.toString().replace(/\s+/g, ' '),
+            item.value.toString().replace(/\s+/g, " "),
             { width: 90, height: 22 },
             {
-              'font-size': this.attr('itemLabels_1/fontSize'),
-              'font-family': this.attr('itemLabels_1/fontFamily'),
+              "font-size": this.attr("itemLabels_1/fontSize"),
+              "font-family": this.attr("itemLabels_1/fontFamily"),
             },
             {
               ellipsis: true,
             },
           );
 
-          if (reproducedDisplayText.includes('\u2026')) {
+          if (reproducedDisplayText.includes("\u2026")) {
             value.label =
-              item.value.toString().replace(/\s+/g, ' ').slice(0, 16) +
-              '\u2026';
+              item.value.toString().replace(/\s+/g, " ").slice(0, 16) +
+              "\u2026";
             this.attr(`itemLabel_${item.name}_value/data-tooltip`, item.value);
           }
         }
@@ -182,7 +182,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       values.push(value);
     });
 
-    this.set('items', [names, values]);
+    this.set("items", [names, values]);
     this.removeInvalidLinks();
 
     return this;
@@ -191,33 +191,33 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   preinitialize (): void {
     this.markup = [
       {
-        tagName: 'rect',
-        selector: 'body',
+        tagName: "rect",
+        selector: "body",
       },
       {
-        tagName: 'path',
-        selector: 'header',
+        tagName: "path",
+        selector: "header",
       },
 
       {
-        tagName: 'text',
-        selector: 'headerLabel',
+        tagName: "text",
+        selector: "headerLabel",
       },
       {
-        tagName: 'image',
-        selector: 'info',
+        tagName: "image",
+        selector: "info",
       },
       {
-        tagName: 'rect',
-        selector: 'spacer',
+        tagName: "rect",
+        selector: "spacer",
       },
       {
-        tagName: 'rect',
-        selector: 'buttonBody',
+        tagName: "rect",
+        selector: "buttonBody",
       },
       {
-        tagName: 'image',
-        selector: 'toggleButton',
+        tagName: "image",
+        selector: "toggleButton",
       },
     ];
   }
@@ -225,12 +225,12 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   initialize (...args: any[]) {
     super.initialize(...args);
-    this._setColumns(this.get('columns'));
+    this._setColumns(this.get("columns"));
   }
 
   onColumnsChange () {
-    if (this.hasChanged('columns')) {
-      this._setColumns(this.get('columns'));
+    if (this.hasChanged("columns")) {
+      this._setColumns(this.get("columns"));
     }
   }
 
@@ -247,25 +247,25 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       usedName,
       { width: 140, height: 30 },
       {
-        'font-size': this.attr('headerLabel/fontSize'),
-        'font-family': this.attr('headerLabel/fontFamily'),
+        "font-size": this.attr("headerLabel/fontSize"),
+        "font-family": this.attr("headerLabel/fontFamily"),
       },
       {
         ellipsis: true,
       },
     );
 
-    this.set('entityName', name); //regardless of the type, name is still assigned to the entityName attribute, which is then used in all of the logic regarding the keeping track of the loose elements or the stencil state
-    this.attr(['headerLabel', 'data-testid'], 'header-' + usedName);
+    this.set("entityName", name); //regardless of the type, name is still assigned to the entityName attribute, which is then used in all of the logic regarding the keeping track of the loose elements or the stencil state
+    this.attr(["headerLabel", "data-testid"], "header-" + usedName);
 
-    if (shortenName.includes('\u2026')) {
+    if (shortenName.includes("\u2026")) {
       return this.attr(
-        ['headerLabel', 'text'],
-        usedName.replace(/\s+/g, ' ').slice(0, 16) + '\u2026',
+        ["headerLabel", "text"],
+        usedName.replace(/\s+/g, " ").slice(0, 16) + "\u2026",
         options,
       );
     } else {
-      return this.attr(['headerLabel', 'text'], shortenName, options);
+      return this.attr(["headerLabel", "text"], shortenName, options);
     }
   }
 
@@ -275,7 +275,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @returns {Map<dia.Cell.ID, string> | null} - Map of relations
    */
   getRelations (): Map<dia.Cell.ID, string> | null {
-    const relations = this.get('relatedTo');
+    const relations = this.get("relatedTo");
 
     return relations || null;
   }
@@ -290,11 +290,11 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     const currentRelation = this.getRelations();
 
     if (currentRelation) {
-      this.set('relatedTo', currentRelation.set(id, relationName));
+      this.set("relatedTo", currentRelation.set(id, relationName));
     } else {
       const relationMap = new Map();
 
-      this.set('relatedTo', relationMap.set(id, relationName));
+      this.set("relatedTo", relationMap.set(id, relationName));
     }
   }
 
@@ -310,7 +310,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
     if (currentRelation) {
       wasThereRelationToRemove = currentRelation.delete(id);
-      this.set('relatedTo', currentRelation);
+      this.set("relatedTo", currentRelation);
     }
 
     return wasThereRelationToRemove;
@@ -322,7 +322,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @returns {string} The name of the entity.
    */
   getName (): string {
-    return this.get('entityName');
+    return this.get("entityName");
   }
 
   /**
@@ -334,11 +334,11 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   setTabColor (type: EntityType): this {
     switch (type) {
       case EntityType.CORE:
-        return this.attr(['header', 'fill'], HeaderColor.CORE);
+        return this.attr(["header", "fill"], HeaderColor.CORE);
       case EntityType.EMBEDDED:
-        return this.attr(['header', 'fill'], HeaderColor.EMBEDDED);
+        return this.attr(["header", "fill"], HeaderColor.EMBEDDED);
       case EntityType.RELATION:
-        return this.attr(['header', 'fill'], HeaderColor.RELATION);
+        return this.attr(["header", "fill"], HeaderColor.RELATION);
       default:
         return this;
     }
@@ -354,7 +354,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   appendColumns (data: Array<ColumnData>, initializeButton = true): this {
     this._setColumns(data, initializeButton);
 
-    if (initializeButton && this.get('isCollapsed')) {
+    if (initializeButton && this.get("isCollapsed")) {
       this.appendButton();
     }
 
@@ -383,7 +383,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @returns {void}
    */
   appendButton (): void {
-    this.set('padding', {
+    this.set("padding", {
       bottom: 44,
       left: 10,
       right: 10,
@@ -392,30 +392,30 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
     const bbox = this.getBBox();
 
-    this.attr('spacer', {
-      class: 'joint-entityBlock-spacer',
+    this.attr("spacer", {
+      class: "joint-entityBlock-spacer",
       opacity: 0.1,
       strokeWidth: 1,
       y: bbox.height - 33,
       width: 264,
       height: 1,
-      cursor: 'default',
+      cursor: "default",
     });
-    this.attr('buttonBody', {
-      event: 'element:toggleButton:pointerdown',
-      preserveAspectRatio: 'none',
-      cursor: 'pointer',
+    this.attr("buttonBody", {
+      event: "element:toggleButton:pointerdown",
+      preserveAspectRatio: "none",
+      cursor: "pointer",
       opacity: 0,
       y: bbox.height - 32,
       width: 264,
       height: 32,
       rx: t_global_border_radius_small.value,
     });
-    this.attr('toggleButton', {
-      event: 'element:toggleButton:pointerdown',
-      'xlink:href': expandButton,
-      preserveAspectRatio: 'none',
-      cursor: 'pointer',
+    this.attr("toggleButton", {
+      event: "element:toggleButton:pointerdown",
+      "xlink:href": expandButton,
+      preserveAspectRatio: "none",
+      cursor: "pointer",
       y: bbox.height - 24,
       x: bbox.width / 2 - 8,
       width: 16,
@@ -439,7 +439,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 }
 
 export const Link = shapes.standard.Link.define(
-  'Link',
+  "Link",
   {
     // attributes
     z: -1,
@@ -449,16 +449,16 @@ export const Link = shapes.standard.Link.define(
         strokeWidth: 10,
       },
       line: {
-        class: 'joint-link-line',
+        class: "joint-link-line",
         targetMarker: {
-          class: 'joint-link-marker',
-          type: 'path',
-          d: 'M 0 -5 10 0 0 5 z',
+          class: "joint-link-marker",
+          type: "path",
+          d: "M 0 -5 10 0 0 5 z",
         },
         sourceMarker: {
-          class: 'joint-link-marker',
-          type: 'path',
-          d: 'M 0 -5 10 0 0 5 z',
+          class: "joint-link-marker",
+          type: "path",
+          d: "M 0 -5 10 0 0 5 z",
         },
         connection: true,
         strokeWidth: 2,
@@ -471,7 +471,7 @@ export const Link = shapes.standard.Link.define(
   {
     // static
     attributes: {
-      'auto-orient': {
+      "auto-orient": {
         qualify: function () {
           return (this as any).model.isLink();
         },

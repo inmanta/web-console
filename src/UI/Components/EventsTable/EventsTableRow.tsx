@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 import {
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-} from '@patternfly/react-core';
-import { ExpandableRowContent, Tbody, Td, Tr } from '@patternfly/react-table';
-import { EventRow } from '@/Core';
-import { DateWithTooltip } from '@/UI/Components/DateWithTooltip';
-import { EventIcon } from '@/UI/Components/EventIcon';
-import { words } from '@/UI/words';
-import { CompileReportLink } from './CompileReportLink';
+} from "@patternfly/react-core";
+import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
+import { EventRow } from "@/Core";
+import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
+import { EventIcon } from "@/UI/Components/EventIcon";
+import { words } from "@/UI/words";
+import { CompileReportLink } from "./CompileReportLink";
 
 interface Props {
   index: number;
@@ -31,7 +31,7 @@ export const EventsTableRow: React.FC<Props> = ({
     <Tr
       id={`event-row-${row.id}`}
       aria-label="Event table row"
-      className={row.isErrorTransition ? 'warning' : ''}
+      className={row.isErrorTransition ? "warning" : ""}
       isStriped={row.ignoredTransition}
     >
       <Td
@@ -54,7 +54,7 @@ export const EventsTableRow: React.FC<Props> = ({
     <Tr
       isExpanded={isExpanded}
       data-testid={`details_${row.id}`}
-      className={row.isErrorTransition ? 'warning' : ''}
+      className={row.isErrorTransition ? "warning" : ""}
       isStriped={row.ignoredTransition}
     >
       <Td colSpan={numberOfColumns}>
@@ -62,7 +62,7 @@ export const EventsTableRow: React.FC<Props> = ({
           <DescriptionList>
             <DescriptionListGroup>
               <DescriptionListTerm>
-                {words('events.column.message')}
+                {words("events.column.message")}
               </DescriptionListTerm>
               <DescriptionListDescription>
                 {row.message}
@@ -70,13 +70,13 @@ export const EventsTableRow: React.FC<Props> = ({
             </DescriptionListGroup>
             <DescriptionListGroup>
               <DescriptionListTerm>
-                {words('events.details.title')}
+                {words("events.details.title")}
               </DescriptionListTerm>
               <DescriptionListDescription>
                 <pre
                   style={{
-                    whiteSpace: 'pre-wrap',
-                    fontFamily: 'Liberation Mono',
+                    whiteSpace: "pre-wrap",
+                    fontFamily: "Liberation Mono",
                   }}
                 >
                   <code>{JSON.stringify(row.fullJson, null, 2)}</code>

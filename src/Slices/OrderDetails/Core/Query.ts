@@ -1,7 +1,7 @@
-import { ServiceOrder } from '@/Slices/Orders/Core/Query';
+import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 
 export interface Query {
-  kind: 'GetOrderDetails';
+  kind: "GetOrderDetails";
   id: string;
 }
 

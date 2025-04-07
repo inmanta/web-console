@@ -1,2 +1,2 @@
-export * from './CommandManager';
-export * from './Updater';
+export * from "./CommandManager";
+export * from "./Updater";

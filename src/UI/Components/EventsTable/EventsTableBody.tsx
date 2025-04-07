@@ -1,8 +1,8 @@
-import React from 'react';
-import { EventRow, InstanceEvent, RouteKind } from '@/Core';
-import { useUrlStateWithExpansion } from '@/Data';
-import { TablePresenter } from '@/UI/Presenters';
-import { EventsTableRow } from './EventsTableRow';
+import React from "react";
+import { EventRow, InstanceEvent, RouteKind } from "@/Core";
+import { useUrlStateWithExpansion } from "@/Data";
+import { TablePresenter } from "@/UI/Presenters";
+import { EventsTableRow } from "./EventsTableRow";
 
 interface Props {
   events: InstanceEvent[];

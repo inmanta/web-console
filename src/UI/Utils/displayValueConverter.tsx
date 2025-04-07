@@ -8,14 +8,14 @@ export const convertToTitleCase = (rawString: string) => {
   const transformedString = rawString
     .toLowerCase()
     .replace(/[-_]+(.)/g, (_, char) => {
-      return ' ' + char;
+      return " " + char;
     }) // replace underscore or hyphens into white space and avoid multiple white spaces
-    .replace(/[-_]/g, '') // remove any trailing underscores and hyphens
-    .split(' ')
+    .replace(/[-_]/g, "") // remove any trailing underscores and hyphens
+    .split(" ")
     .map((word) => {
       return word.length ? word.replace(word[0], word[0].toUpperCase()) : word;
     })
-    .join(' ');
+    .join(" ");
 
   return transformedString.trimStart().trimEnd(); // trim start and end of string from trailing white spaces
 };

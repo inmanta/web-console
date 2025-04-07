@@ -1,5 +1,5 @@
-import qs from 'qs';
-import { GetNotificationsParams } from './useGetNotifications';
+import qs from "qs";
+import { GetNotificationsParams } from "./useGetNotifications";
 
 export function getUrl ({
   filter,
@@ -18,11 +18,11 @@ export function getUrl ({
             severity: filter.severity,
           },
         },
-        { allowDots: true, arrayFormat: 'repeat' },
+        { allowDots: true, arrayFormat: "repeat" },
       )}`
-      : '';
+      : "";
 
   return `/api/v2/notification?limit=${pageSize.value}${filterParam}${
-    currentPage.value ? `&${currentPage.value}` : ''
+    currentPage.value ? `&${currentPage.value}` : ""
   }`;
 }

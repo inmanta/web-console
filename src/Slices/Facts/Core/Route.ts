@@ -1,11 +1,11 @@
-import { Route } from '@/Core';
+import { Route } from "@/Core";
 
-export const path = '/facts';
+export const path = "/facts";
 
-export const route = (base: string): Route<'Facts'> => ({
-  kind: 'Facts',
-  parent: 'Home',
+export const route = (base: string): Route<"Facts"> => ({
+  kind: "Facts",
+  parent: "Home",
   path: `${base}${path}`,
-  generateLabel: () => 'Facts',
-  environmentRole: 'Required',
+  generateLabel: () => "Facts",
+  environmentRole: "Required",
 });

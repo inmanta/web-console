@@ -1,12 +1,12 @@
-import React, { act } from 'react';
-import { Page } from '@patternfly/react-core';
-import { render, screen } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-import { axe, toHaveNoViolations } from 'jest-axe';
-import { Either } from '@/Core';
-import { baseSetup } from '@/Test/Utils/base-setup';
-import { emptyResponse, orderResponse } from '../Data/Mock';
-import { OrdersPage } from '.';
+import React, { act } from "react";
+import { Page } from "@patternfly/react-core";
+import { render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { axe, toHaveNoViolations } from "jest-axe";
+import { Either } from "@/Core";
+import { baseSetup } from "@/Test/Utils/base-setup";
+import { emptyResponse, orderResponse } from "../Data/Mock";
+import { OrdersPage } from ".";
 
 expect.extend(toHaveNoViolations);
 
@@ -16,20 +16,20 @@ const OrderPage = (
   </Page>
 );
 
-test('OrdersView shows empty table', async () => {
+test("OrdersView shows empty table", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);
 
   render(component);
 
   expect(
-    await screen.findByRole('region', { name: 'OrdersView-Loading' }),
+    await screen.findByRole("region", { name: "OrdersView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
-    method: 'GET',
-    url: '/lsm/v2/order?limit=20&sort=created_at.desc',
-    environment: 'env',
+    method: "GET",
+    url: "/lsm/v2/order?limit=20&sort=created_at.desc",
+    environment: "env",
   });
 
   await act(async () => {
@@ -37,7 +37,7 @@ test('OrdersView shows empty table', async () => {
   });
 
   expect(
-    await screen.findByRole('generic', { name: 'OrdersView-Empty' }),
+    await screen.findByRole("generic", { name: "OrdersView-Empty" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -47,28 +47,28 @@ test('OrdersView shows empty table', async () => {
   });
 });
 
-test('OrdersView shows failed table', async () => {
+test("OrdersView shows failed table", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);
 
   render(component);
 
   expect(
-    await screen.findByRole('region', { name: 'OrdersView-Loading' }),
+    await screen.findByRole("region", { name: "OrdersView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
-    method: 'GET',
-    url: '/lsm/v2/order?limit=20&sort=created_at.desc',
-    environment: 'env',
+    method: "GET",
+    url: "/lsm/v2/order?limit=20&sort=created_at.desc",
+    environment: "env",
   });
 
   await act(async () => {
-    await apiHelper.resolve(Either.left('error'));
+    await apiHelper.resolve(Either.left("error"));
   });
 
   expect(
-    await screen.findByRole('region', { name: 'OrdersView-Failed' }),
+    await screen.findByRole("region", { name: "OrdersView-Failed" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -78,20 +78,20 @@ test('OrdersView shows failed table', async () => {
   });
 });
 
-test('OrdersView shows success table', async () => {
+test("OrdersView shows success table", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);
 
   render(component);
 
   expect(
-    await screen.findByRole('region', { name: 'OrdersView-Loading' }),
+    await screen.findByRole("region", { name: "OrdersView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
-    method: 'GET',
-    url: '/lsm/v2/order?limit=20&sort=created_at.desc',
-    environment: 'env',
+    method: "GET",
+    url: "/lsm/v2/order?limit=20&sort=created_at.desc",
+    environment: "env",
   });
 
   await act(async () => {
@@ -99,11 +99,11 @@ test('OrdersView shows success table', async () => {
   });
 
   expect(
-    await screen.findByRole('generic', { name: 'OrdersView-Success' }),
+    await screen.findByRole("generic", { name: "OrdersView-Success" }),
   ).toBeInTheDocument();
 
-  const rows = await screen.findAllByRole('row', {
-    name: 'ServiceOrderRow',
+  const rows = await screen.findAllByRole("row", {
+    name: "ServiceOrderRow",
   });
 
   expect(rows).toHaveLength(4);
@@ -115,20 +115,20 @@ test('OrdersView shows success table', async () => {
   });
 });
 
-test('OrdersView shows updated table', async () => {
+test("OrdersView shows updated table", async () => {
   const { component, apiHelper, scheduler } = baseSetup(OrderPage);
 
   render(component);
 
   expect(
-    await screen.findByRole('region', { name: 'OrdersView-Loading' }),
+    await screen.findByRole("region", { name: "OrdersView-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
-    method: 'GET',
-    url: '/lsm/v2/order?limit=20&sort=created_at.desc',
-    environment: 'env',
+    method: "GET",
+    url: "/lsm/v2/order?limit=20&sort=created_at.desc",
+    environment: "env",
   });
 
   await act(async () => {
@@ -136,7 +136,7 @@ test('OrdersView shows updated table', async () => {
   });
 
   expect(
-    await screen.findByRole('generic', { name: 'OrdersView-Empty' }),
+    await screen.findByRole("generic", { name: "OrdersView-Empty" }),
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -146,7 +146,7 @@ test('OrdersView shows updated table', async () => {
   });
 
   expect(
-    await screen.findByRole('generic', { name: 'OrdersView-Success' }),
+    await screen.findByRole("generic", { name: "OrdersView-Success" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -156,7 +156,7 @@ test('OrdersView shows updated table', async () => {
   });
 });
 
-test('GIVEN OrdersView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page', async () => {
+test("GIVEN OrdersView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = baseSetup(OrderPage);
 
   render(component);
@@ -168,7 +168,7 @@ test('GIVEN OrdersView WHEN sorting changes AND we are not on the first page THE
         ...orderResponse,
         links: {
           ...orderResponse.links,
-          next: '/fake-link?end=fake-first-param',
+          next: "/fake-link?end=fake-first-param",
         },
         metadata: {
           total: 103,
@@ -180,7 +180,7 @@ test('GIVEN OrdersView WHEN sorting changes AND we are not on the first page THE
     );
   });
 
-  const nextPageButton = screen.getByLabelText('Go to next page');
+  const nextPageButton = screen.getByLabelText("Go to next page");
 
   expect(nextPageButton).toBeEnabled();
 
@@ -205,7 +205,7 @@ test('GIVEN OrdersView WHEN sorting changes AND we are not on the first page THE
   });
 
   //sort on the second page
-  await userEvent.click(screen.getByText('Created at'));
+  await userEvent.click(screen.getByText("Created at"));
 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting

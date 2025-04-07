@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { ClipboardCopyButton } from '../ClipboardCopyButton';
+import React from "react";
+import styled from "styled-components";
+import { ClipboardCopyButton } from "../ClipboardCopyButton";
 
 interface Props {
   value: string;

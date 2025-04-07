@@ -1,1 +1,1 @@
-export * from './ManagedResourceLink';
+export * from "./ManagedResourceLink";

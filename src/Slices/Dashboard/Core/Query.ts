@@ -1,7 +1,7 @@
-import { BackendMetricData } from './Domain';
+import { BackendMetricData } from "./Domain";
 
 export interface Query {
-  kind: 'GetMetrics';
+  kind: "GetMetrics";
   startDate: string;
   endDate: string;
   isLsmAvailable: boolean;

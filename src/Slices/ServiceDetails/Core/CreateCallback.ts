@@ -1,8 +1,8 @@
-import { Maybe } from '@/Core/Language';
-import { CreateCallbackBody } from './Callback';
+import { Maybe } from "@/Core/Language";
+import { CreateCallbackBody } from "./Callback";
 
 export interface Command extends CreateCallbackBody {
-  kind: 'CreateCallback';
+  kind: "CreateCallback";
 }
 
 export interface Manifest {

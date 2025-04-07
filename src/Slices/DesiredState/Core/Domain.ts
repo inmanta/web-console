@@ -1,4 +1,4 @@
-import { ParsedNumber } from '@/Core/Language';
+import { ParsedNumber } from "@/Core/Language";
 
 interface DesiredStateLabel {
   name: string;
@@ -14,8 +14,8 @@ export interface DesiredStateVersion {
 }
 
 export enum DesiredStateVersionStatus {
-  active = 'active',
-  candidate = 'candidate',
-  retired = 'retired',
-  skipped_candidate = 'skipped_candidate',
+  active = "active",
+  candidate = "candidate",
+  retired = "retired",
+  skipped_candidate = "skipped_candidate",
 }

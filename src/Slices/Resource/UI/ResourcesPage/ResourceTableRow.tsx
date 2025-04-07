@@ -1,13 +1,13 @@
-import React from 'react';
-import { Tbody, Tr, Td, ExpandableRowContent } from '@patternfly/react-table';
-import { Resource } from '@/Core';
+import React from "react";
+import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
+import { Resource } from "@/Core";
 import {
   labelColorConfig,
   ResourceLink,
   ResourceStatusLabel,
-} from '@/UI/Components';
-import { words } from '@/UI/words';
-import { RequiresTableWithData } from './Components';
+} from "@/UI/Components";
+import { words } from "@/UI/words";
+import { RequiresTableWithData } from "./Components";
 
 interface Props {
   row: Resource.Row;
@@ -28,7 +28,7 @@ export const ResourceTableRow: React.FC<Props> = ({
     <Tr aria-label="Resource Table Row">
       <Td
         className="toggle-cell" // This is to enforce the same width when there is no expandable content.
-        aria-label={`Toggle-${row.id}${row.numberOfDependencies <= 0 ? '-hidden' : ''}`}
+        aria-label={`Toggle-${row.id}${row.numberOfDependencies <= 0 ? "-hidden" : ""}`}
         expand={
           row.numberOfDependencies > 0
             ? {
@@ -39,19 +39,19 @@ export const ResourceTableRow: React.FC<Props> = ({
             : undefined
         }
       ></Td>
-      <Td dataLabel={words('resources.column.type')} modifier="breakWord">
+      <Td dataLabel={words("resources.column.type")} modifier="breakWord">
         {row.type}
       </Td>
-      <Td dataLabel={words('resources.column.agent')} modifier="breakWord">
+      <Td dataLabel={words("resources.column.agent")} modifier="breakWord">
         {row.agent}
       </Td>
-      <Td dataLabel={words('resources.column.value')} modifier="breakWord">
+      <Td dataLabel={words("resources.column.value")} modifier="breakWord">
         {row.value}
       </Td>
-      <Td dataLabel={words('resources.column.requires')}>
+      <Td dataLabel={words("resources.column.requires")}>
         {row.numberOfDependencies as React.ReactNode}
       </Td>
-      <Td dataLabel={words('resources.column.deployState')}>
+      <Td dataLabel={words("resources.column.deployState")}>
         <ResourceStatusLabel
           status={labelColorConfig[row.deployState]}
           label={row.deployState}
@@ -60,7 +60,7 @@ export const ResourceTableRow: React.FC<Props> = ({
       <Td isActionCell width={10}>
         <ResourceLink
           resourceId={row.id}
-          linkText={words('resources.link.details')}
+          linkText={words("resources.link.details")}
         />
       </Td>
     </Tr>

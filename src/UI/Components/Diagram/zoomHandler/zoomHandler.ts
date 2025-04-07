@@ -1,8 +1,8 @@
-import { ui } from '@inmanta/rappid';
-import { words } from '@/UI/words';
-import exitFullscreen from '../icons/exit-fullscreen.svg';
-import fitToScreen from '../icons/fit-to-screen.svg';
-import requestFullscreen from '../icons/request-fullscreen.svg';
+import { ui } from "@inmanta/rappid";
+import { words } from "@/UI/words";
+import exitFullscreen from "../icons/exit-fullscreen.svg";
+import fitToScreen from "../icons/fit-to-screen.svg";
+import requestFullscreen from "../icons/request-fullscreen.svg";
 
 /**
  * Interface for a button with an icon and a tooltip.
@@ -24,7 +24,7 @@ interface IconButton extends ui.widgets.button {
 const IconButton = ui.widgets.button.extend({
   render: function () {
     const size = this.options.size || 20;
-    const imageEl = document.createElement('img');
+    const imageEl = document.createElement("img");
 
     imageEl.style.width = `${size}px`;
     imageEl.style.height = `${size}px`;
@@ -42,8 +42,8 @@ const IconButton = ui.widgets.button.extend({
    *
    * @param {string} icon - The source of the icon to set. Defaults to an empty string, which will clear the current icon.
    */
-  setIcon: function (icon = '') {
-    this.el.querySelector('img').src = icon;
+  setIcon: function (icon = "") {
+    this.el.querySelector("img").src = icon;
   },
 
   /**
@@ -55,7 +55,7 @@ const IconButton = ui.widgets.button.extend({
    * @param {string} tooltip - The text of the tooltip to set. Defaults to an empty string, which will clear the current tooltip.
    * @param {string} direction - The position of the tooltip. Defaults to "right".
    */
-  setTooltip: function (tooltip = '', direction = 'right') {
+  setTooltip: function (tooltip = "", direction = "right") {
     this.el.dataset.tooltip = tooltip;
     this.el.dataset.tooltipPosition = direction;
   },
@@ -87,40 +87,40 @@ export class ZoomHandlerService {
       },
       tools: [
         {
-          type: 'icon-button',
-          name: 'fullscreen',
-          tooltip: words('instanceComposer.zoomHandler.fullscreen.toggle'),
+          type: "icon-button",
+          name: "fullscreen",
+          tooltip: words("instanceComposer.zoomHandler.fullscreen.toggle"),
           attrs: {
             button: {
-              'data-testid': 'fullscreen',
-              class: 'pf-v6-c-button pf-m-control',
+              "data-testid": "fullscreen",
+              class: "pf-v6-c-button pf-m-control",
             },
           },
         },
         {
-          type: 'icon-button',
-          name: 'fit-to-screen',
-          tooltip: words('instanceComposer.zoomHandler.zoomToFit'),
+          type: "icon-button",
+          name: "fit-to-screen",
+          tooltip: words("instanceComposer.zoomHandler.zoomToFit"),
           attrs: {
             button: {
-              'data-testid': 'fit-to-screen',
-              class: 'pf-v6-c-button pf-m-control',
+              "data-testid": "fit-to-screen",
+              class: "pf-v6-c-button pf-m-control",
             },
           },
         },
         {
-          id: 'zoomSlider',
-          type: 'zoom-slider',
+          id: "zoomSlider",
+          type: "zoom-slider",
           min: 0.2 * 100,
           max: 5 * 100,
           attrs: {
             input: {
-              'data-tooltip': words('instanceComposer.zoomHandler.zoom'),
-              'data-tooltip-position': 'bottom',
-              'data-testid': 'slider-input',
+              "data-tooltip": words("instanceComposer.zoomHandler.zoom"),
+              "data-tooltip-position": "bottom",
+              "data-testid": "slider-input",
             },
             output: {
-              'data-testid': 'slider-output',
+              "data-testid": "slider-output",
             },
           },
         },
@@ -133,34 +133,34 @@ export class ZoomHandlerService {
     });
 
     this.toolbar.render();
-    this.toolbar.el.dataset.testid = 'zoomHandler';
+    this.toolbar.el.dataset.testid = "zoomHandler";
     this.updateFullscreenStyling(); //set the icon of the button as adding icons through object properties wasn't loading the icons properly
     this.element.appendChild(this.toolbar.el);
 
     new ui.Tooltip({
-      rootTarget: '.zoom-handler',
-      target: '[data-tooltip]',
+      rootTarget: ".zoom-handler",
+      target: "[data-tooltip]",
       padding: 16,
     });
 
     const fullscreenButton = this.toolbar.getWidgetByName(
-      'fit-to-screen',
+      "fit-to-screen",
     ) as IconButton;
 
     fullscreenButton.setIcon(`${fitToScreen}`); //set the icon of the button as adding icons through object properties wasn't loading the icons properly
 
-    this.toolbar.on('fit-to-screen:pointerclick', () => this.fitToScreen());
-    this.toolbar.on('fullscreen:pointerclick', () => this.toggleFullscreen());
+    this.toolbar.on("fit-to-screen:pointerclick", () => this.fitToScreen());
+    this.toolbar.on("fullscreen:pointerclick", () => this.toggleFullscreen());
 
     this.updateFullscreenStyling = this.updateFullscreenStyling.bind(this);
     this.updateSliderOnInput = this.updateSliderOnInput.bind(this);
 
-    document.addEventListener('fullscreenchange', this.updateFullscreenStyling);
+    document.addEventListener("fullscreenchange", this.updateFullscreenStyling);
 
-    const zoomSlider = document.getElementById('zoomSlider');
+    const zoomSlider = document.getElementById("zoomSlider");
 
     if (zoomSlider) {
-      zoomSlider.addEventListener('input', this.updateSliderOnInput);
+      zoomSlider.addEventListener("input", this.updateSliderOnInput);
     }
   }
 
@@ -173,7 +173,7 @@ export class ZoomHandlerService {
   fitToScreen () {
     this.scroller.zoomToFit({ useModelGeometry: true, padding: 20 });
 
-    const sliderWrapper = document.getElementById('zoomSlider');
+    const sliderWrapper = document.getElementById("zoomSlider");
 
     if (!sliderWrapper) {
       return;
@@ -212,7 +212,7 @@ export class ZoomHandlerService {
       100;
 
     slider.style.setProperty(
-      '--slider-background',
+      "--slider-background",
       `linear-gradient(to right, 
         var(--pf-t--global--border--color--brand--default) 0%, 
         var(--pf-t--global--border--color--brand--default), ${value.toFixed(0)}%, 
@@ -261,40 +261,40 @@ export class ZoomHandlerService {
    */
   updateFullscreenStyling () {
     const fullscreenButton = this.toolbar.getWidgetByName(
-      'fullscreen',
+      "fullscreen",
     ) as IconButton;
 
-    const canvas = document.querySelector('#canvas-wrapper');
-    const banners = document.querySelectorAll('.pf-v6-c-banner'); // TODO: Needs to be updated to avoid targetting a class
+    const canvas = document.querySelector("#canvas-wrapper");
+    const banners = document.querySelectorAll(".pf-v6-c-banner"); // TODO: Needs to be updated to avoid targetting a class
 
     if (canvas) {
-      canvas.classList.toggle('fullscreen', !!document.fullscreenElement);
+      canvas.classList.toggle("fullscreen", !!document.fullscreenElement);
     }
 
     if (banners) {
       banners.forEach(
         (el) =>
           ((el as HTMLElement).style.display = document.fullscreenElement
-            ? 'none'
-            : 'block'),
+            ? "none"
+            : "block"),
       );
     }
 
     if (document.fullscreenElement) {
-      this.changeDisplay('#page-sidebar', 'none');
-      this.changeDisplay('#page-header', 'none');
+      this.changeDisplay("#page-sidebar", "none");
+      this.changeDisplay("#page-header", "none");
 
       fullscreenButton.setIcon(`${exitFullscreen}`);
       fullscreenButton.setTooltip(
-        words('instanceComposer.zoomHandler.fullscreen.exit'),
+        words("instanceComposer.zoomHandler.fullscreen.exit"),
       );
     } else {
-      this.changeDisplay('#page-sidebar', 'flex');
-      this.changeDisplay('#page-header', 'grid');
+      this.changeDisplay("#page-sidebar", "flex");
+      this.changeDisplay("#page-header", "grid");
 
       fullscreenButton.setIcon(`${requestFullscreen}`);
       fullscreenButton.setTooltip(
-        words('instanceComposer.zoomHandler.fullscreen.toggle'),
+        words("instanceComposer.zoomHandler.fullscreen.toggle"),
       );
     }
   }
@@ -303,14 +303,14 @@ export class ZoomHandlerService {
     this.toolbar.remove();
 
     document.removeEventListener(
-      'fullscreenchange',
+      "fullscreenchange",
       this.updateFullscreenStyling,
     );
 
-    const zoomSlider = document.getElementById('zoomSlider');
+    const zoomSlider = document.getElementById("zoomSlider");
 
     if (zoomSlider) {
-      zoomSlider.removeEventListener('input', this.updateSliderOnInput);
+      zoomSlider.removeEventListener("input", this.updateSliderOnInput);
     }
   }
 }

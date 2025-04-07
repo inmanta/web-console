@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 import {
   Alert,
   AlertActionCloseButton,
   AlertGroup,
   AlertVariant,
-} from '@patternfly/react-core';
-import styled from 'styled-components';
+} from "@patternfly/react-core";
+import styled from "styled-components";
 
 interface Props {
   title: string;
@@ -27,7 +27,7 @@ export const ToastAlert: React.FC<Props> = ({
         variant={type}
         title={title}
         component="h3"
-        actionClose={<AlertActionCloseButton onClose={() => setMessage('')} />}
+        actionClose={<AlertActionCloseButton onClose={() => setMessage("")} />}
       >
         <StyledMessage>{message}</StyledMessage>
       </Alert>

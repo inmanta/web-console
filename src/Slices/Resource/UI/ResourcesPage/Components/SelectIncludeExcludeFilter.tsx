@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   MenuToggle,
   MenuToggleElement,
   Select,
   ToolbarFilter,
-} from '@patternfly/react-core';
+} from "@patternfly/react-core";
 import {
   CheckCircleIcon,
   CheckIcon,
   SearchIcon,
   TimesCircleIcon,
   TimesIcon,
-} from '@patternfly/react-icons';
-import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
-import { uniq } from 'lodash-es';
-import styled from 'styled-components';
-import { toggleValueInList } from '@/Core';
+} from "@patternfly/react-icons";
+import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
+import { uniq } from "lodash-es";
+import styled from "styled-components";
+import { toggleValueInList } from "@/Core";
 
 interface Props {
   filterPropertyName: string;
@@ -175,7 +175,7 @@ const ensureInvertedFilterIsNotPresent = (
 };
 
 const invertFilter = (selection: string) =>
-  selection.startsWith('!') ? selection.slice(1) : `!${selection}`;
+  selection.startsWith("!") ? selection.slice(1) : `!${selection}`;
 
 const UnborderedRow = styled(Tr)`
   &&& {

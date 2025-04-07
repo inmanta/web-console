@@ -1,8 +1,8 @@
-import React from 'react';
-import { ServiceModel } from '@/Core';
-import { useGetServiceModel } from '@/Data/Managers/V2/Service';
-import { ErrorView } from '@/UI/Components/ErrorView';
-import { LoadingView } from '@/UI/Components/LoadingView';
+import React from "react";
+import { ServiceModel } from "@/Core";
+import { useGetServiceModel } from "@/Data/Managers/V2/Service";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
 
 interface Props {
   serviceName: string;

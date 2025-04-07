@@ -1,26 +1,26 @@
-import React, { useContext, useEffect } from 'react';
-import { Resource } from '@/Core';
+import React, { useContext, useEffect } from "react";
+import { Resource } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
   useUrlStateWithSort,
-} from '@/Data';
-import { useUrlStateWithCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
-import { DependencyContext } from '@/UI';
+} from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { DependencyContext } from "@/UI";
 import {
   EmptyView,
   PageContainer,
   OldPaginationWidget,
   RemoteDataView,
-} from '@/UI/Components';
-import { useRouteParams } from '@/UI/Routing';
-import { words } from '@/UI/words';
-import { Controls } from './Controls';
-import { VersionResourceTable } from './VersionResourceTable';
-import { VersionResourceTablePresenter } from './VersionResourceTablePresenter';
+} from "@/UI/Components";
+import { useRouteParams } from "@/UI/Routing";
+import { words } from "@/UI/words";
+import { Controls } from "./Controls";
+import { VersionResourceTable } from "./VersionResourceTable";
+import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 
 export const Provider: React.FC = () => {
-  const { version } = useRouteParams<'DesiredStateDetails'>();
+  const { version } = useRouteParams<"DesiredStateDetails">();
 
   return <Page version={version} />;
 };
@@ -29,23 +29,23 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
   const { queryResolver } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: 'DesiredStateDetails',
+    route: "DesiredStateDetails",
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: 'DesiredStateDetails',
+    route: "DesiredStateDetails",
   });
   const [sort, setSort] = useUrlStateWithSort<Resource.SortKeyFromVersion>({
-    default: { name: 'resource_type', order: 'asc' },
-    route: 'DesiredStateDetails',
+    default: { name: "resource_type", order: "asc" },
+    route: "DesiredStateDetails",
   });
   const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterFromVersion>(
     {
-      route: 'DesiredStateDetails',
+      route: "DesiredStateDetails",
     },
   );
 
-  const [data, retry] = queryResolver.useContinuous<'GetVersionResources'>({
-    kind: 'GetVersionResources',
+  const [data, retry] = queryResolver.useContinuous<"GetVersionResources">({
+    kind: "GetVersionResources",
     version,
     pageSize,
     filter,
@@ -57,12 +57,12 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
-    setCurrentPage({ kind: 'CurrentPage', value: '' });
+    setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
   return (
-    <PageContainer pageTitle={words('desiredState.details.title')}>
+    <PageContainer pageTitle={words("desiredState.details.title")}>
       <Controls
         paginationWidget={
           <OldPaginationWidget
@@ -82,7 +82,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
         SuccessView={(resources) =>
           resources.data.length <= 0 ? (
             <EmptyView
-              message={words('resources.empty.message')}
+              message={words("resources.empty.message")}
               aria-label="VersionResourcesTable-Empty"
             />
           ) : (

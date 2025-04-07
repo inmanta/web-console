@@ -5,7 +5,7 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   RemoteData,
   Query,
@@ -14,9 +14,9 @@ import {
   StateHelper,
   Scheduler,
   ApiHelper,
-} from '@/Core';
-import { GetDependencies, Data, GetUnique, GetUrl, ToUsed } from './types';
-import { urlEncodeParams } from './utils';
+} from "@/Core";
+import { GetDependencies, Data, GetUnique, GetUrl, ToUsed } from "./types";
+import { urlEncodeParams } from "./utils";
 
 export function Continuous<Kind extends Query.Kind> (
   apiHelper: ApiHelper,
@@ -74,7 +74,7 @@ export function Continuous<Kind extends Query.Kind> (
     query: Query.SubQuery<Kind>,
     matchingKind: QueryManagerKind,
   ): boolean {
-    return query.kind === kind && matchingKind === 'Continuous';
+    return query.kind === kind && matchingKind === "Continuous";
   }
 
   return {

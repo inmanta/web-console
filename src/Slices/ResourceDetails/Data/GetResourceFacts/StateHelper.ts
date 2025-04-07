@@ -1,9 +1,9 @@
-import { RemoteData } from '@/Core';
-import { PrimaryStateHelper } from '@/Data/Common';
-import { Store } from '@/Data/Store';
+import { RemoteData } from "@/Core";
+import { PrimaryStateHelper } from "@/Data/Common";
+import { Store } from "@/Data/Store";
 
 export function GetResourceFactsStateHelper (store: Store) {
-  return PrimaryStateHelper<'GetResourceFacts'>(
+  return PrimaryStateHelper<"GetResourceFacts">(
     store,
     (data, { resourceId }) => {
       const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { toggleValueInList } from '@/Core';
+import { useState } from "react";
+import { toggleValueInList } from "@/Core";
 
 type IsExpanded = (id: string) => boolean;
 

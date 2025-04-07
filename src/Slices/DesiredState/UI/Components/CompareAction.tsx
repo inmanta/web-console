@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
-import { DropdownItem } from '@patternfly/react-core';
-import { Maybe } from '@/Core';
-import { Link } from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { GetDesiredStatesContext } from '@S/DesiredState/UI/GetDesiredStatesContext';
-import { sanitizeFromTo } from './fromTo';
+import React, { useContext } from "react";
+import { DropdownItem } from "@patternfly/react-core";
+import { Maybe } from "@/Core";
+import { Link } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { GetDesiredStatesContext } from "@S/DesiredState/UI/GetDesiredStatesContext";
+import { sanitizeFromTo } from "./fromTo";
 
 interface Props {
   version: number;
@@ -27,7 +27,7 @@ export const CompareAction: React.FC<Props> = ({ version, isDisabled }) => {
         }
         isDisabled={isDisabled}
       >
-        {words('desiredState.compare.action.compare')}
+        {words("desiredState.compare.action.compare")}
       </DropdownItem>
       <CompareWithSelected
         selection={compareSelection}
@@ -59,7 +59,7 @@ const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
   ) {
     return (
       <DropdownItem isDisabled>
-        {words('desiredState.compare.action.compareWithSelected')}
+        {words("desiredState.compare.action.compareWithSelected")}
       </DropdownItem>
     );
   }
@@ -68,11 +68,11 @@ const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
     <DropdownItem>
       <Link
         pathname={routeManager.getUrl(
-          'DesiredStateCompare',
+          "DesiredStateCompare",
           sanitizeFromTo(selection.value, version),
         )}
       >
-        {words('desiredState.compare.action.compareWithSelected')}
+        {words("desiredState.compare.action.compareWithSelected")}
       </Link>
     </DropdownItem>
   );
@@ -86,11 +86,11 @@ const CompareWithCurrentState: React.FC<{ version: string }> = ({
   return (
     <DropdownItem>
       <Link
-        pathname={routeManager.getUrl('ComplianceCheck', {
+        pathname={routeManager.getUrl("ComplianceCheck", {
           version,
         })}
       >
-        {words('desiredState.compare.action.compareWithCurrentState')}
+        {words("desiredState.compare.action.compareWithCurrentState")}
       </Link>
     </DropdownItem>
   );

@@ -3,7 +3,7 @@ import {
   CommandResolver,
   CommandManager,
   CommandManagerResolver,
-} from '@/Core';
+} from "@/Core";
 
 export class CommandResolverImpl implements CommandResolver {
   constructor (private readonly managerResolver: CommandManagerResolver) {}
@@ -19,7 +19,7 @@ export class CommandResolverImpl implements CommandResolver {
       .get()
       .find((manager) => manager.matches(command));
 
-    if (typeof manager !== 'undefined') return manager;
+    if (typeof manager !== "undefined") return manager;
     throw new Error(`Can't find CommandManager for command ${command.kind}`);
   }
 }

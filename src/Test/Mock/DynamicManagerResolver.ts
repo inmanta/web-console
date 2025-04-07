@@ -4,8 +4,8 @@ import {
   CommandManagerResolver,
   QueryManagerResolver,
   Scheduler,
-} from '@/Core';
-import { StaticScheduler } from './StaticScheduler';
+} from "@/Core";
+import { StaticScheduler } from "./StaticScheduler";
 
 export class DynamicQueryManagerResolverImpl implements QueryManagerResolver {
   private scheduler: Scheduler = new StaticScheduler();
@@ -29,7 +29,7 @@ export class DynamicQueryManagerResolverImpl implements QueryManagerResolver {
     this.scheduler.resumeTasks();
   }
   resolve (): void {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
 }
 
@@ -42,6 +42,6 @@ implements CommandManagerResolver {
   }
 
   resolve (): void {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
 }

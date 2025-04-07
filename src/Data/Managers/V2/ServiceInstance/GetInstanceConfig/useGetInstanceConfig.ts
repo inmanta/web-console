@@ -1,6 +1,6 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import { Config } from '@/Core';
-import { CustomError, useGet } from '../../helpers';
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { Config } from "@/Core";
+import { CustomError, useGet } from "../../helpers";
 
 /**
  * Return Signature of the useGetInstanceConfig React Query
@@ -30,13 +30,13 @@ export const useGetInstanceConfig = (
   return {
     useOneTime: (): UseQueryResult<Config, CustomError> =>
       useQuery({
-        queryKey: ['get_instance_config-one_time', service, id],
+        queryKey: ["get_instance_config-one_time", service, id],
         queryFn: () => get(url),
         select: (data) => data.data,
       }),
     useContinuous: (): UseQueryResult<Config, CustomError> =>
       useQuery({
-        queryKey: ['get_instance_config-continuous', service, id],
+        queryKey: ["get_instance_config-continuous", service, id],
         queryFn: () => get(url),
         refetchInterval: 5000,
         select: (data) => data.data,

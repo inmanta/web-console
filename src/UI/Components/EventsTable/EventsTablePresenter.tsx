@@ -1,15 +1,15 @@
-import { EventRow, InstanceEvent } from '@/Core';
-import { TablePresenter } from '@/UI/Presenters';
-import { words } from '@/UI/words';
+import { EventRow, InstanceEvent } from "@/Core";
+import { TablePresenter } from "@/UI/Presenters";
+import { words } from "@/UI/words";
 
 export class EventsTablePresenter
 implements TablePresenter<InstanceEvent, EventRow> {
   readonly columnHeads = [
-    words('events.column.eventType'),
-    words('events.column.date'),
-    words('events.column.instanceVersion'),
-    words('events.column.sourceState'),
-    words('events.column.destinationState'),
+    words("events.column.eventType"),
+    words("events.column.date"),
+    words("events.column.instanceVersion"),
+    words("events.column.sourceState"),
+    words("events.column.destinationState"),
   ];
   readonly numberOfColumns = this.columnHeads.length + 1;
 

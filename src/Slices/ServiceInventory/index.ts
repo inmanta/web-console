@@ -1,1 +1,1 @@
-export * as ServiceInventory from './Core/Route';
+export * as ServiceInventory from "./Core/Route";

@@ -1,6 +1,6 @@
-import { ColumnHead, TablePresenter } from '@/UI/Presenters';
-import { words } from '@/UI/words';
-import { ServiceOrder } from '../Core/Query';
+import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { words } from "@/UI/words";
+import { ServiceOrder } from "../Core/Query";
 
 /**
  * OrdersTablePresenter @Class
@@ -17,24 +17,24 @@ implements TablePresenter<ServiceOrder, ServiceOrder> {
   constructor () {
     this.columnHeads = [
       {
-        displayName: words('orders.column.created_at'),
-        apiName: 'created_at',
+        displayName: words("orders.column.created_at"),
+        apiName: "created_at",
       },
       {
-        displayName: words('orders.column.completed_at'),
-        apiName: 'completed_at',
+        displayName: words("orders.column.completed_at"),
+        apiName: "completed_at",
       },
       {
-        displayName: words('orders.column.status'),
-        apiName: 'status',
+        displayName: words("orders.column.status"),
+        apiName: "status",
       },
       {
-        displayName: words('orders.column.progress'),
-        apiName: 'progress',
+        displayName: words("orders.column.progress"),
+        apiName: "progress",
       },
       {
-        displayName: words('orders.column.description'),
-        apiName: 'description',
+        displayName: words("orders.column.description"),
+        apiName: "description",
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
@@ -68,7 +68,7 @@ implements TablePresenter<ServiceOrder, ServiceOrder> {
    * @returns string[]
    */
   getSortableColumnNames (): string[] {
-    const sortableColumns = ['created_at'];
+    const sortableColumns = ["created_at"];
 
     return sortableColumns;
   }

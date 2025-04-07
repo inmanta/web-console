@@ -1,1 +1,1 @@
-export { Page as ServiceDetailsPage } from './Page';
+export { Page as ServiceDetailsPage } from "./Page";

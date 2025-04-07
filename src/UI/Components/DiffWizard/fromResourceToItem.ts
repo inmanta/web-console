@@ -1,5 +1,5 @@
-import { Diff } from '@/Core';
-import { Item } from './types';
+import { Diff } from "@/Core";
+import { Item } from "./types";
 
 export const fromResourceToItem = (resource: Diff.Resource): Item => {
   return {

@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { DependencyContext, useRouteParams, words } from '@/UI';
-import { EmptyView } from '@/UI/Components';
-import { ComposerCreatorProvider } from '@/UI/Components/Diagram/Context/ComposerCreatorProvider';
+import React, { useContext } from "react";
+import { DependencyContext, useRouteParams, words } from "@/UI";
+import { EmptyView } from "@/UI/Components";
+import { ComposerCreatorProvider } from "@/UI/Components/Diagram/Context/ComposerCreatorProvider";
 
 /**
  * Renders the Page component for the Instance Composer Creator Page.
@@ -11,12 +11,12 @@ import { ComposerCreatorProvider } from '@/UI/Components/Diagram/Context/Compose
  * @returns {React.FC} The Page component.
  */
 export const Page: React.FC = () => {
-  const { service: serviceName } = useRouteParams<'InstanceComposer'>();
+  const { service: serviceName } = useRouteParams<"InstanceComposer">();
   const { featureManager } = useContext(DependencyContext);
 
   if (!featureManager.isComposerEnabled()) {
     <EmptyView
-      message={words('instanceComposer.disabled')}
+      message={words("instanceComposer.disabled")}
       aria-label="ComposerCreateView-Empty"
     />;
   }

@@ -1,5 +1,5 @@
-import { Field, InstanceAttributeModel } from '@/Core';
-import { AttributeResultConverterImpl } from './AttributeConverterImpl';
+import { Field, InstanceAttributeModel } from "@/Core";
+import { AttributeResultConverterImpl } from "./AttributeConverterImpl";
 
 /**
  * Creates a type-correct object based on the fields and form values.
@@ -17,9 +17,9 @@ export function sanitizeAttributes (
 
   fields.forEach((field) => {
     switch (field.kind) {
-      case 'Enum':
-      case 'Boolean':
-      case 'Text': {
+      case "Enum":
+      case "Boolean":
+      case "Text": {
         sanitized[field.name] = converter.ensureAttributeType(
           formState[field.name],
           field.type,
@@ -28,7 +28,7 @@ export function sanitizeAttributes (
         return;
       }
 
-      case 'Nested': {
+      case "Nested": {
         if (formState[field.name] == null) {
           return;
         }
@@ -39,13 +39,13 @@ export function sanitizeAttributes (
 
         return;
       }
-      case 'RelationList': {
+      case "RelationList": {
         sanitized[field.name] = formState[field.name];
 
         return;
       }
 
-      case 'DictList': {
+      case "DictList": {
         const list = formState[field.name];
 
         if (!Array.isArray(list)) return;

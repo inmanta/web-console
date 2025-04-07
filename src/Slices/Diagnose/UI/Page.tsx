@@ -1,26 +1,26 @@
-import React from 'react';
+import React from "react";
 
-import { useUrlStateWithString } from '@/Data';
-import { useGetInstance } from '@/Data/Managers/V2/ServiceInstance';
+import { useUrlStateWithString } from "@/Data";
+import { useGetInstance } from "@/Data/Managers/V2/ServiceInstance";
 import {
   Description,
   ErrorView,
   LoadingView,
   PageContainer,
-} from '@/UI/Components';
-import { useRouteParams } from '@/UI/Routing';
-import { words } from '@/UI/words';
-import { Diagnose } from './Diagnose';
-import { LookBackSlider } from './LookBackSlider';
+} from "@/UI/Components";
+import { useRouteParams } from "@/UI/Routing";
+import { words } from "@/UI/words";
+import { Diagnose } from "./Diagnose";
+import { LookBackSlider } from "./LookBackSlider";
 
 export const Page: React.FC = () => {
-  const { service, instance } = useRouteParams<'Diagnose'>();
+  const { service, instance } = useRouteParams<"Diagnose">();
 
   const [amountOfVersionToLookBehind, setAmountOfVersionToLookBehind] =
     useUrlStateWithString<string>({
-      default: '1',
-      key: 'lookBehind',
-      route: 'Diagnose',
+      default: "1",
+      key: "lookBehind",
+      route: "Diagnose",
     });
   const { data, error, isError, isSuccess } = useGetInstance(
     service,
@@ -40,14 +40,14 @@ export const Page: React.FC = () => {
     const versionAsNumber = Number(data.version);
 
     return (
-      <PageContainer pageTitle={words('diagnose.title')}>
+      <PageContainer pageTitle={words("diagnose.title")}>
         <LookBackSlider
           instanceVersion={versionAsNumber}
           initialLookBehind={Number(amountOfVersionToLookBehind)}
           setSelectedVersion={handleSliding}
         />
         <Description withSpace>
-          {words('diagnose.main.subtitle')(id)}
+          {words("diagnose.main.subtitle")(id)}
         </Description>
         <Diagnose
           serviceName={service}

@@ -14,7 +14,7 @@ import {
   chart_global_danger_Color_100,
   chart_global_warning_Color_100,
   chart_theme_gray_ColorScale_300,
-} from '@patternfly/react-tokens';
+} from "@patternfly/react-tokens";
 
 /**
  * Matching the colors in the color config for Resource.Status to the Patternfly color tokens.

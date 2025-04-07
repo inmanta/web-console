@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   Content,
@@ -6,8 +6,8 @@ import {
   FlexItem,
   Slider,
   SliderOnChangeEvent,
-} from '@patternfly/react-core';
-import { words } from '@/UI/words';
+} from "@patternfly/react-core";
+import { words } from "@/UI/words";
 
 interface Props {
   instanceVersion: number;
@@ -66,18 +66,18 @@ export const LookBackSlider: React.FC<Props> = ({
   };
 
   return (
-    <Flex gap={{ default: 'gapSm' }} direction={{ default: 'column' }}>
+    <Flex gap={{ default: "gapSm" }} direction={{ default: "column" }}>
       <FlexItem>
-        <Content component="h2">{words('diagnose.slider.title')}</Content>
+        <Content component="h2">{words("diagnose.slider.title")}</Content>
         <Content component="small">
-          {words('diagnose.slider.description')}
+          {words("diagnose.slider.description")}
         </Content>
       </FlexItem>
       <FlexItem>
-        <Flex alignItems={{ default: 'alignItemsCenter' }}>
+        <Flex alignItems={{ default: "alignItemsCenter" }}>
           <FlexItem
-            flex={{ default: 'flex_2' }}
-            spacer={{ default: 'spacerSm' }}
+            flex={{ default: "flex_2" }}
+            spacer={{ default: "spacerSm" }}
           >
             <Slider
               value={valueContinuous}
@@ -91,7 +91,7 @@ export const LookBackSlider: React.FC<Props> = ({
               aria-label="LookBack-Slider"
             />
           </FlexItem>
-          <FlexItem flex={{ default: 'flex_4' }}></FlexItem>
+          <FlexItem flex={{ default: "flex_4" }}></FlexItem>
         </Flex>
       </FlexItem>
       <FlexItem>
@@ -99,7 +99,7 @@ export const LookBackSlider: React.FC<Props> = ({
           variant="primary"
           onClick={() => setSelectedVersion(valueContinuous)}
         >
-          {words('diagnose.action')}
+          {words("diagnose.action")}
         </Button>
       </FlexItem>
     </Flex>

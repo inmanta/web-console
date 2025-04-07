@@ -1,9 +1,9 @@
-import { ColumnHead, DatePresenter, TablePresenter } from '@/UI/Presenters';
-import { words } from '@/UI/words';
+import { ColumnHead, DatePresenter, TablePresenter } from "@/UI/Presenters";
+import { words } from "@/UI/words";
 import {
   ResourceHistory,
   ResourceHistoryRow,
-} from '@S/ResourceDetails/Core/ResourceHistory';
+} from "@S/ResourceDetails/Core/ResourceHistory";
 
 export class ResourceHistoryTablePresenter
 implements TablePresenter<ResourceHistory, ResourceHistoryRow> {
@@ -13,12 +13,12 @@ implements TablePresenter<ResourceHistory, ResourceHistoryRow> {
   constructor (private readonly datePresenter: DatePresenter) {
     this.columnHeads = [
       {
-        displayName: words('resources.history.column.date'),
-        apiName: 'date',
+        displayName: words("resources.history.column.date"),
+        apiName: "date",
       },
       {
-        displayName: words('resources.column.requires'),
-        apiName: 'requires',
+        displayName: words("resources.column.requires"),
+        apiName: "requires",
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
@@ -57,7 +57,7 @@ implements TablePresenter<ResourceHistory, ResourceHistoryRow> {
   }
 
   public getSortableColumnNames (): string[] {
-    const sortableColumns = ['date'];
+    const sortableColumns = ["date"];
 
     return sortableColumns;
   }

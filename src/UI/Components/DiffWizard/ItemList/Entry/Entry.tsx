@@ -1,7 +1,7 @@
-import React from 'react';
-import { Classification, EntryInfo } from '@/UI/Components/DiffWizard/types';
-import { DefaultEntry } from './DefaultEntry';
-import { FileEntry } from './FileEntry';
+import React from "react";
+import { Classification, EntryInfo } from "@/UI/Components/DiffWizard/types";
+import { DefaultEntry } from "./DefaultEntry";
+import { FileEntry } from "./FileEntry";
 
 type Classify = (title: string, from: string, to: string) => Classification;
 
@@ -21,7 +21,7 @@ export const Entry: React.FC<Props> = ({
 
   const classification = classify(title, fromValue, toValue);
 
-  if (classification === 'Default') {
+  if (classification === "Default") {
     return <DefaultEntry {...{ title, fromValue, toValue }} />;
   }
 

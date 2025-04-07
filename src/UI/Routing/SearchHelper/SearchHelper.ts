@@ -1,12 +1,12 @@
-import qs from 'qs';
-import { keepKeys } from '@/Core';
+import qs from "qs";
+import { keepKeys } from "@/Core";
 
 export class SearchHelper {
   /**
    * Clears the leading question mark character from the search string if present.
    */
   private clearQuestionMark (search: string): string {
-    if (search.startsWith('?')) return search.slice(1);
+    if (search.startsWith("?")) return search.slice(1);
 
     return search;
   }
@@ -33,7 +33,7 @@ export class SearchHelper {
       encodeValuesOnly: true,
     });
 
-    return params.length > 0 ? `?${params}` : '';
+    return params.length > 0 ? `?${params}` : "";
   }
 
   /**
@@ -42,6 +42,6 @@ export class SearchHelper {
   keepEnvOnly (search: string): string {
     const parsedSearch = this.parse(search);
 
-    return this.stringify(keepKeys(['env'], parsedSearch));
+    return this.stringify(keepKeys(["env"], parsedSearch));
   }
 }

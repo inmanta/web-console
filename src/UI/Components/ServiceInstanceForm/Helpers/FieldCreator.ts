@@ -6,9 +6,9 @@ import {
   Field,
   InterServiceRelation,
   RelationAttribute,
-} from '@/Core';
-import { AttributeInputConverterImpl } from '@/Data';
-import { ModifierHandler } from './ModifierHandler';
+} from "@/Core";
+import { AttributeInputConverterImpl } from "@/Data";
+import { ModifierHandler } from "./ModifierHandler";
 
 /**
  * Create form fields based on a ServiceModel.
@@ -32,7 +32,7 @@ export class FieldCreator {
   create (
     service: Pick<
       ServiceModel,
-      'attributes' | 'embedded_entities' | 'inter_service_relations'
+      "attributes" | "embedded_entities" | "inter_service_relations"
     >,
   ): Field[] {
     const fieldsFromAttributes: Field[] = this.attributesToFields(
@@ -71,11 +71,11 @@ export class FieldCreator {
     ];
   }
 
-  private isOptional (entity: Pick<RelationAttribute, 'lower_limit'>): boolean {
+  private isOptional (entity: Pick<RelationAttribute, "lower_limit">): boolean {
     return entity.lower_limit === 0;
   }
 
-  private isList (entity: Pick<RelationAttribute, 'upper_limit'>): boolean {
+  private isList (entity: Pick<RelationAttribute, "upper_limit">): boolean {
     return !entity.upper_limit || entity.upper_limit > 1;
   }
 
@@ -109,7 +109,7 @@ export class FieldCreator {
 
     if (this.isList(entity))
       return {
-        kind: 'DictList',
+        kind: "DictList",
         name: entity.name,
         description: entity.description,
         isOptional: this.isOptional(entity),
@@ -124,7 +124,7 @@ export class FieldCreator {
       };
 
     return {
-      kind: 'Nested',
+      kind: "Nested",
       name: entity.name,
       description: entity.description,
       isOptional: this.isOptional(entity),
@@ -152,7 +152,7 @@ export class FieldCreator {
 
     if (interServiceRelation.upper_limit === 1)
       return {
-        kind: 'InterServiceRelation',
+        kind: "InterServiceRelation",
         name: interServiceRelation.name,
         description: interServiceRelation.description,
         isOptional: this.isOptional(interServiceRelation),
@@ -161,7 +161,7 @@ export class FieldCreator {
       };
 
     return {
-      kind: 'RelationList',
+      kind: "RelationList",
       name: interServiceRelation.name,
       description: interServiceRelation.description,
       isOptional: this.isOptional(interServiceRelation),
@@ -193,29 +193,29 @@ export class FieldCreator {
           attribute.default_value,
         );
 
-        if (type === 'bool') {
+        if (type === "bool") {
           return {
-            kind: 'Boolean',
+            kind: "Boolean",
             name: attribute.name,
             defaultValue: defaultValue,
             description: attribute.description,
             type: attribute.type,
-            isOptional: attribute.type.includes('?'),
+            isOptional: attribute.type.includes("?"),
             isDisabled: this.shouldFieldBeDisabled(attribute),
           };
         }
 
         if (
-          attribute.validation_type === 'enum' ||
-          attribute.validation_type === 'enum?'
+          attribute.validation_type === "enum" ||
+          attribute.validation_type === "enum?"
         ) {
           return {
-            kind: 'Enum',
+            kind: "Enum",
             name: attribute.name,
             defaultValue: defaultValue,
             description: attribute.description,
             type: attribute.type,
-            isOptional: attribute.type.includes('?'),
+            isOptional: attribute.type.includes("?"),
             options: attribute.validation_parameters.names,
             isDisabled: this.shouldFieldBeDisabled(attribute),
             suggestion:
@@ -223,9 +223,9 @@ export class FieldCreator {
           };
         }
 
-        if (attribute.type === 'string[]' || attribute.type === 'string[]?') {
+        if (attribute.type === "string[]" || attribute.type === "string[]?") {
           return {
-            kind: 'TextList',
+            kind: "TextList",
             name: attribute.name,
             defaultValue: defaultValue,
             inputType: type,
@@ -240,14 +240,14 @@ export class FieldCreator {
 
         // WORKAROUND TO ADD SUPPORT FOR TEXTAREA
         if (
-          (attribute.type === 'string' || attribute.type === 'string?') &&
-          (attribute.validation_type === 'pydantic.constr' ||
-            attribute.validation_type === 'pydantic.constr?') &&
+          (attribute.type === "string" || attribute.type === "string?") &&
+          (attribute.validation_type === "pydantic.constr" ||
+            attribute.validation_type === "pydantic.constr?") &&
           attribute.validation_parameters.max_length &&
           attribute.validation_parameters.max_length > 255
         ) {
           return {
-            kind: 'Textarea',
+            kind: "Textarea",
             name: attribute.name,
             defaultValue: defaultValue,
             inputType: type,
@@ -261,7 +261,7 @@ export class FieldCreator {
         }
 
         return {
-          kind: 'Text',
+          kind: "Text",
           name: attribute.name,
           defaultValue: defaultValue,
           inputType: type,
@@ -277,13 +277,13 @@ export class FieldCreator {
 
   private isTextFieldOptional (attribute: AttributeModel): boolean {
     return (
-      attribute.type.includes('?') ||
-      (attribute.default_value_set && attribute.default_value === '')
+      attribute.type.includes("?") ||
+      (attribute.default_value_set && attribute.default_value === "")
     );
   }
   private shouldFieldBeDisabled (
     object: AttributeModel | InterServiceRelation | EmbeddedEntity,
   ): boolean {
-    return this.fieldsForEditForm && object.modifier !== 'rw+';
+    return this.fieldsForEditForm && object.modifier !== "rw+";
   }
 }

@@ -1,1 +1,1 @@
-export * from './useGetServiceConfig';
+export * from "./useGetServiceConfig";

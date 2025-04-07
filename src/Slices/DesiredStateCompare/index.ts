@@ -1,1 +1,1 @@
-export * as DesiredStateCompare from './Core/Route';
+export * as DesiredStateCompare from "./Core/Route";

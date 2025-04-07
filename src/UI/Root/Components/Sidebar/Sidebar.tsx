@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 import {
   PageSidebar,
   Stack,
   StackItem,
   PageSidebarBody,
-} from '@patternfly/react-core';
-import { EnvironmentControls } from './EnvironmentControls';
-import { Navigation } from './Navigation';
+} from "@patternfly/react-core";
+import { EnvironmentControls } from "./EnvironmentControls";
+import { Navigation } from "./Navigation";
 
 export const Sidebar: React.FC<{
   environment: string | undefined;

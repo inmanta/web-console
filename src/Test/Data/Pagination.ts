@@ -1,4 +1,4 @@
-import { Pagination } from '@/Core';
+import { Pagination } from "@/Core";
 
 export const metadata: Pagination.Metadata = {
   total: 22,
@@ -8,11 +8,11 @@ export const metadata: Pagination.Metadata = {
 };
 
 export const links: Pagination.Links = {
-  self: 'fake-url',
-  next: 'next-url?end=fake-param',
+  self: "fake-url",
+  next: "next-url?end=fake-param",
 };
 
 export const handlers: Pagination.Handlers = {
-  prev: '',
-  next: '',
+  prev: "",
+  next: "",
 };

@@ -1,13 +1,13 @@
-import React from 'react';
-import { Tooltip } from '@patternfly/react-core';
-import { Tbody, Td, Tr } from '@patternfly/react-table';
-import { DateWithTooltip } from '@/UI/Components';
-import { words } from '@/UI/words';
+import React from "react";
+import { Tooltip } from "@patternfly/react-core";
+import { Tbody, Td, Tr } from "@patternfly/react-table";
+import { DateWithTooltip } from "@/UI/Components";
+import { words } from "@/UI/words";
 import {
   DesiredStateVersion,
   DesiredStateVersionStatus,
-} from '@S/DesiredState/Core/Domain';
-import { Actions, ResourcesLink, DesiredStateStatusLabel } from './Components';
+} from "@S/DesiredState/Core/Domain";
+import { Actions, ResourcesLink, DesiredStateStatusLabel } from "./Components";
 
 interface Props {
   row: DesiredStateVersion;
@@ -16,19 +16,19 @@ interface Props {
 export const DesiredStatesTableRow: React.FC<Props> = ({ row }) => (
   <Tbody isExpanded={false}>
     <Tr aria-label="DesiredStates Table Row">
-      <Td dataLabel={words('desiredState.columns.date')} width={20}>
+      <Td dataLabel={words("desiredState.columns.date")} width={20}>
         <DateWithTooltip timestamp={row.date} />
       </Td>
-      <Td dataLabel={words('desiredState.columns.version')} width={20}>
+      <Td dataLabel={words("desiredState.columns.version")} width={20}>
         {row.version as React.ReactNode}
       </Td>
-      <Td dataLabel={words('desiredState.columns.status')} width={20}>
+      <Td dataLabel={words("desiredState.columns.status")} width={20}>
         <DesiredStateStatusLabel status={row.status} />
       </Td>
-      <Td dataLabel={words('desiredState.columns.resources')} width={20}>
+      <Td dataLabel={words("desiredState.columns.resources")} width={20}>
         {row.total as React.ReactNode}
       </Td>
-      <Td dataLabel={words('desiredState.columns.labels')} width={20}>
+      <Td dataLabel={words("desiredState.columns.labels")} width={20}>
         {row.labels && row.labels.length > 0
           ? row.labels.map(({ name, message }, idx) => (
             <Tooltip

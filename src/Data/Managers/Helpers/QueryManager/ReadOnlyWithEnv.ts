@@ -3,16 +3,16 @@
  * When you edit this file, turn the rule off so you know you are not missing anything.
  */
 
-import { useContext } from 'react';
+import { useContext } from "react";
 import {
   RemoteData,
   Query,
   QueryManagerKind,
   StateHelperWithEnv,
   ReadOnlyQueryManager,
-} from '@/Core';
-import { DependencyContext } from '@/UI';
-import { ReadOnlyToUsed } from './types';
+} from "@/Core";
+import { DependencyContext } from "@/UI";
+import { ReadOnlyToUsed } from "./types";
 
 export function ReadOnlyWithEnv<Kind extends Query.Kind> (
   stateHelper: StateHelperWithEnv<Kind>,
@@ -35,7 +35,7 @@ export function ReadOnlyWithEnv<Kind extends Query.Kind> (
     query: Query.SubQuery<Kind>,
     matchingKind: QueryManagerKind,
   ): boolean {
-    return query.kind === kind && matchingKind === 'ReadOnly';
+    return query.kind === kind && matchingKind === "ReadOnly";
   }
 
   return {

@@ -1,7 +1,7 @@
-import { State } from 'easy-peasy';
-import { isEqual } from 'lodash-es';
-import { Query, RemoteData, StateHelper, StateHelperWithEnv } from '@/Core';
-import { Store, StoreModel, useStoreState } from '@/Data/Store';
+import { State } from "easy-peasy";
+import { isEqual } from "lodash-es";
+import { Query, RemoteData, StateHelper, StateHelperWithEnv } from "@/Core";
+import { Store, StoreModel, useStoreState } from "@/Data/Store";
 
 type Data<Kind extends Query.Kind> = RemoteData.Type<
   Query.Error<Kind>,
@@ -30,7 +30,7 @@ export function PrimaryStateHelper<Kind extends Query.Kind> (
   }
 
   function enforce (value: undefined | Data<Kind>): Data<Kind> {
-    if (typeof value === 'undefined') return RemoteData.notAsked();
+    if (typeof value === "undefined") return RemoteData.notAsked();
 
     return value;
   }
@@ -78,7 +78,7 @@ export function PrimaryStateHelperWithEnv<Kind extends Query.Kind> (
   }
 
   function enforce (value: undefined | Data<Kind>): Data<Kind> {
-    if (typeof value === 'undefined') return RemoteData.notAsked();
+    if (typeof value === "undefined") return RemoteData.notAsked();
 
     return value;
   }

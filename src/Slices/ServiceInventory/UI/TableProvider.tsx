@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 import {
   ServiceModel,
   ServiceInstanceModelWithTargetStates,
   Sort,
-} from '@/Core';
-import { InventoryTable } from './InventoryTable';
-import { InventoryTablePresenter } from './Presenters';
+} from "@/Core";
+import { InventoryTable } from "./InventoryTable";
+import { InventoryTablePresenter } from "./Presenters";
 
 interface Props {
   instances: ServiceInstanceModelWithTargetStates[];

@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dropdown,
   DropdownItem,
   MenuToggle,
   MenuToggleElement,
-} from '@patternfly/react-core';
-import { EllipsisVIcon } from '@patternfly/react-icons';
-import { useUpdateNotification } from '@/Data/Managers/V2/Notification/UpdateNotification';
-import { words } from '@/UI/words';
+} from "@patternfly/react-core";
+import { EllipsisVIcon } from "@patternfly/react-icons";
+import { useUpdateNotification } from "@/Data/Managers/V2/Notification/UpdateNotification";
+import { words } from "@/UI/words";
 
 /**
  * Props for the ActionList component.
@@ -46,7 +46,7 @@ export const ActionList: React.FC<Props> = ({ read, id, onUpdate }) => {
       isOpen={isOpen}
       onSelect={() => setIsOpen(false)}
       onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-      popperProps={{ position: 'center' }}
+      popperProps={{ position: "center" }}
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
         <MenuToggle
           ref={toggleRef}
@@ -64,7 +64,7 @@ export const ActionList: React.FC<Props> = ({ read, id, onUpdate }) => {
         isDisabled={read}
         onClick={onRead}
       >
-        {words('notification.read')}
+        {words("notification.read")}
       </DropdownItem>
       <DropdownItem
         key="unread"
@@ -72,7 +72,7 @@ export const ActionList: React.FC<Props> = ({ read, id, onUpdate }) => {
         isDisabled={!read}
         onClick={onUnread}
       >
-        {words('notification.unread')}
+        {words("notification.unread")}
       </DropdownItem>
     </Dropdown>
   );

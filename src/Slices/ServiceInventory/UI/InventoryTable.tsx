@@ -1,8 +1,8 @@
-import React from 'react';
-import { Table, Thead, Tr, Th, OnSort } from '@patternfly/react-table';
-import { Row, ServiceModel, Sort } from '@/Core';
-import { InstanceRow } from './InstanceRow';
-import { InventoryTablePresenter } from './Presenters';
+import React from "react";
+import { Table, Thead, Tr, Th, OnSort } from "@patternfly/react-table";
+import { Row, ServiceModel, Sort } from "@/Core";
+import { InstanceRow } from "./InstanceRow";
+import { InventoryTablePresenter } from "./Presenters";
 
 interface Props {
   rows: Row[];
@@ -31,7 +31,7 @@ export const InventoryTable: React.FC<Props> = ({
     switch (apiName) {
       case tablePresenter.getIdColumnApiName():
         return 20;
-      case 'deployment_progress':
+      case "deployment_progress":
         return 30;
       default:
         return undefined;

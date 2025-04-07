@@ -3,7 +3,7 @@ import {
   matchPath,
   PathMatch,
   useLocation,
-} from 'react-router-dom';
+} from "react-router-dom";
 import {
   RouteDictionary,
   RouteManager,
@@ -13,42 +13,42 @@ import {
   RouteMatch,
   Crumb,
   RouteKindWithId,
-} from '@/Core';
-import { Dashboard } from '@/Slices/Dashboard';
-import { DuplicateInstance } from '@/Slices/DuplicateInstance';
-import { InstanceComposer } from '@/Slices/InstanceComposerCreator';
-import { InstanceComposerEditor } from '@/Slices/InstanceComposerEditor';
-import { InstanceComposerViewer } from '@/Slices/InstanceComposerViewer';
-import { ServiceDetails } from '@/Slices/ServiceDetails';
-import { InstanceDetails } from '@/Slices/ServiceInstanceDetails';
-import { Agents } from '@S/Agents';
-import { CompileDetails } from '@S/CompileDetails';
-import { CompileReports } from '@S/CompileReports';
-import { ComplianceCheck } from '@S/ComplianceCheck';
-import { CreateEnvironment } from '@S/CreateEnvironment';
-import { CreateInstance } from '@S/CreateInstance';
-import { DesiredState } from '@S/DesiredState';
-import { DesiredStateCompare } from '@S/DesiredStateCompare';
-import { DesiredStateDetails } from '@S/DesiredStateDetails';
-import { DesiredStateResourceDetails } from '@S/DesiredStateResourceDetails';
-import { Diagnose } from '@S/Diagnose';
-import { EditInstance } from '@S/EditInstance';
-import { Events } from '@S/Events';
-import { Facts } from '@S/Facts';
-import { Home } from '@S/Home';
-import { Notification } from '@S/Notification';
-import { OrderDetails } from '@S/OrderDetails';
-import { Orders } from '@S/Orders';
-import { Parameters } from '@S/Parameters';
-import { Resource } from '@S/Resource';
-import { ResourceDetails } from '@S/ResourceDetails';
-import { DiscoveredResources } from '@S/ResourceDiscovery';
-import { ServiceCatalog } from '@S/ServiceCatalog';
-import { ServiceInventory } from '@S/ServiceInventory';
-import { Settings } from '@S/Settings';
-import { Status } from '@S/Status';
-import { UserManagement } from '@S/UserManagement';
-import { encodeParams } from './Utils';
+} from "@/Core";
+import { Dashboard } from "@/Slices/Dashboard";
+import { DuplicateInstance } from "@/Slices/DuplicateInstance";
+import { InstanceComposer } from "@/Slices/InstanceComposerCreator";
+import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
+import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
+import { ServiceDetails } from "@/Slices/ServiceDetails";
+import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
+import { Agents } from "@S/Agents";
+import { CompileDetails } from "@S/CompileDetails";
+import { CompileReports } from "@S/CompileReports";
+import { ComplianceCheck } from "@S/ComplianceCheck";
+import { CreateEnvironment } from "@S/CreateEnvironment";
+import { CreateInstance } from "@S/CreateInstance";
+import { DesiredState } from "@S/DesiredState";
+import { DesiredStateCompare } from "@S/DesiredStateCompare";
+import { DesiredStateDetails } from "@S/DesiredStateDetails";
+import { DesiredStateResourceDetails } from "@S/DesiredStateResourceDetails";
+import { Diagnose } from "@S/Diagnose";
+import { EditInstance } from "@S/EditInstance";
+import { Events } from "@S/Events";
+import { Facts } from "@S/Facts";
+import { Home } from "@S/Home";
+import { Notification } from "@S/Notification";
+import { OrderDetails } from "@S/OrderDetails";
+import { Orders } from "@S/Orders";
+import { Parameters } from "@S/Parameters";
+import { Resource } from "@S/Resource";
+import { ResourceDetails } from "@S/ResourceDetails";
+import { DiscoveredResources } from "@S/ResourceDiscovery";
+import { ServiceCatalog } from "@S/ServiceCatalog";
+import { ServiceInventory } from "@S/ServiceInventory";
+import { Settings } from "@S/Settings";
+import { Status } from "@S/Status";
+import { UserManagement } from "@S/UserManagement";
+import { encodeParams } from "./Utils";
 
 export function PrimaryRouteManager (baseUrl: string): RouteManager {
   const routeDictionary: RouteDictionary = {
@@ -104,7 +104,7 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
   };
 
   function isBaseUrlDefined (): boolean {
-    return baseUrl !== '';
+    return baseUrl !== "";
   }
 
   function getLineageFromRoute (route: Route, routes: Route[] = []): Route[] {
@@ -118,15 +118,15 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
   function getRelatedUrlWithoutParams (pathname: string): string {
     const routeMatch = getRouteMatchFromUrl(pathname);
 
-    if (typeof routeMatch === 'undefined') {
-      return getUrl('Home', undefined);
+    if (typeof routeMatch === "undefined") {
+      return getUrl("Home", undefined);
     }
     const { route } = routeMatch;
 
     if (!routeHasParams(route)) return pathname;
     const parent = getParentWithoutParams(route);
 
-    if (typeof parent === 'undefined') return getUrl('Home', undefined);
+    if (typeof parent === "undefined") return getUrl("Home", undefined);
 
     return getUrl(parent.kind, undefined);
   }
@@ -138,7 +138,7 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
   }
 
   function routeHasParams (route: Route): boolean {
-    return route.path.includes(':');
+    return route.path.includes(":");
   }
 
   function getRoutes (): Route[] {
@@ -167,20 +167,20 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
 
   function getUrlForApiUri (uri: string): string | undefined {
     if (uri.length <= 0) return undefined;
-    const pattern = '/api/v2/compilereport/:id';
+    const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
 
     if (match === null) return undefined;
     if (match.params.id === undefined) return undefined;
 
-    return getUrl('CompileDetails', { id: match.params.id });
+    return getUrl("CompileDetails", { id: match.params.id });
   }
 
   function getParamsFromUrl (
     uri: string,
-  ): RouteKindWithId<'CompileDetails'> | undefined {
+  ): RouteKindWithId<"CompileDetails"> | undefined {
     if (uri.length <= 0) return undefined;
-    const pattern = '/api/v2/compilereport/:id';
+    const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
 
     if (match === null) return undefined;
@@ -188,7 +188,7 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
     const params = { id: match.params.id };
 
     return {
-      kind: 'CompileDetails',
+      kind: "CompileDetails",
       params,
     };
   }
@@ -202,7 +202,7 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
       (pair): pair is [Route, PathMatch] => pair[1] !== null,
     );
 
-    if (typeof routeWithMatch === 'undefined') return undefined;
+    if (typeof routeWithMatch === "undefined") return undefined;
     const [route, match] = routeWithMatch;
 
     return {
@@ -228,7 +228,7 @@ export function PrimaryRouteManager (baseUrl: string): RouteManager {
   function getCrumbs (url: string): Crumb[] {
     const routeMatch = getRouteMatchFromUrl(url);
 
-    if (typeof routeMatch === 'undefined') return [];
+    if (typeof routeMatch === "undefined") return [];
     const { route, params } = routeMatch;
     const lineage = getLineageFromRoute(route);
 

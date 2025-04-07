@@ -1,1 +1,1 @@
-export { Page as AgentsPage } from './Page';
+export { Page as AgentsPage } from "./Page";

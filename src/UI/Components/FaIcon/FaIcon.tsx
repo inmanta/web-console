@@ -1,8 +1,8 @@
-import React, { CSSProperties, SVGAttributes } from 'react';
-import { IconContext } from 'react-icons';
-import loadable from '@loadable/component';
-import { Icon } from '@patternfly/react-core';
-import * as fa from 'react-icons/fa';
+import React, { CSSProperties, SVGAttributes } from "react";
+import { IconContext } from "react-icons";
+import loadable from "@loadable/component";
+import { Icon } from "@patternfly/react-core";
+import * as fa from "react-icons/fa";
 
 interface Props {
   icon: string;
@@ -29,7 +29,7 @@ interface Props {
 export const DynamicFAIcon = ({ ...props }: Props) => {
   const FAIcon = loadable(() =>
     Promise.resolve(
-      fa[props.icon as keyof typeof fa] || fa['FaQuestionCircle'],
+      fa[props.icon as keyof typeof fa] || fa["FaQuestionCircle"],
     ),
   );
 

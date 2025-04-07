@@ -1,7 +1,7 @@
-import { Fact } from '@S/Facts/Core/Domain';
+import { Fact } from "@S/Facts/Core/Domain";
 
 export interface Query {
-  kind: 'GetResourceFacts';
+  kind: "GetResourceFacts";
   resourceId: string;
 }
 

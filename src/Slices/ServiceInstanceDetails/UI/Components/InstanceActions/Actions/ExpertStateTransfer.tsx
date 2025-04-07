@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   Alert,
   DropdownGroup,
@@ -8,13 +8,13 @@ import {
   FormSelect,
   FormSelectOption,
   Content,
-} from '@patternfly/react-core';
-import { uniqueId } from 'lodash';
-import { ParsedNumber } from '@/Core';
-import { usePostExpertStateTransfer } from '@/Data/Managers/V2/ServiceInstance';
-import { DependencyContext, words } from '@/UI';
-import { ConfirmationModal } from '../../ConfirmModal';
-import { ToastAlertMessage } from '../../ToastAlert';
+} from "@patternfly/react-core";
+import { uniqueId } from "lodash";
+import { ParsedNumber } from "@/Core";
+import { usePostExpertStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
+import { DependencyContext, words } from "@/UI";
+import { ConfirmationModal } from "../../ConfirmModal";
+import { ToastAlertMessage } from "../../ToastAlert";
 
 interface Props {
   targets: string[];
@@ -51,25 +51,25 @@ export const ExpertStateTransfer: React.FC<Props> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const [targetState, setTargetState] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [targetState, setTargetState] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [selectedOperation, setSelectedOperation] = useState<string>();
 
   /**
    * The available expert state operation allowed by the Backend.
    */
   const expertStateOperations = [
-    'clear candidate',
-    'clear active',
-    'clear rollback',
-    'promote',
-    'rollback',
+    "clear candidate",
+    "clear active",
+    "clear rollback",
+    "promote",
+    "rollback",
   ];
 
   const { authHelper } = useContext(DependencyContext);
 
   const username = authHelper.getUser();
-  const message = words('instanceDetails.API.message.update')(username);
+  const message = words("instanceDetails.API.message.update")(username);
 
   const { mutate, isError, error, isSuccess, isPending } =
     usePostExpertStateTransfer(instance_id, service_entity);
@@ -128,7 +128,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
 
   return (
     <>
-      <DropdownGroup label={words('instanceDetails.forceState.label')}>
+      <DropdownGroup label={words("instanceDetails.forceState.label")}>
         {targets.map((target) => (
           <DropdownItem
             isDanger
@@ -140,15 +140,15 @@ export const ExpertStateTransfer: React.FC<Props> = ({
         ))}
       </DropdownGroup>
       <ConfirmationModal
-        title={words('inventory.statustab.confirmTitle')}
+        title={words("inventory.statustab.confirmTitle")}
         onConfirm={onSubmitForceState}
-        id={'Expert-State-Transfer-Confirmation-modal'}
+        id={"Expert-State-Transfer-Confirmation-modal"}
         isModalOpen={isModalOpen}
         onCancel={closeModal}
         isPending={isPending}
       >
         <Content component="p">
-          {words('instanceDetails.expert.confirm.state.message')(
+          {words("instanceDetails.expert.confirm.state.message")(
             instance_display_identity,
             targetState,
           )}
@@ -156,7 +156,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
         <br />
         <Form>
           <FormGroup
-            label={words('instanceDetails.operation.selectLabel')}
+            label={words("instanceDetails.operation.selectLabel")}
             fieldId="operation"
           >
             <FormSelect
@@ -166,7 +166,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
             >
               <FormSelectOption
                 key="no-op"
-                label={words('instanceDetails.state.noOperation')}
+                label={words("instanceDetails.state.noOperation")}
               />
               {expertStateOperations.map((operation, index) => (
                 <FormSelectOption
@@ -181,7 +181,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
         <br />
         <Alert
           variant="danger"
-          title={words('instanceDetails.expert.confirm.warning')}
+          title={words("instanceDetails.expert.confirm.warning")}
           isInline
         />
       </ConfirmationModal>

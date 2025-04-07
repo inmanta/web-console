@@ -2,9 +2,9 @@ import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
-} from '@tanstack/react-query';
-import { ParsedNumber } from '@/Core';
-import { useDelete } from '../../helpers';
+} from "@tanstack/react-query";
+import { ParsedNumber } from "@/Core";
+import { useDelete } from "../../helpers";
 
 /**
  * React Query hook for destroying an instance.
@@ -26,7 +26,7 @@ export const useDestroyInstance = (
       deleteFn(
         `/lsm/v2/service_inventory/${service_entity}/${instance_id}/expert?current_version=${version}`,
       ),
-    mutationKey: ['destroy_instance'],
+    mutationKey: ["destroy_instance"],
     ...options,
   });
 };

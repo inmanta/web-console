@@ -1,1 +1,1 @@
-export * as RemoteData from './RemoteData';
+export * as RemoteData from "./RemoteData";

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ActionGroup,
   Alert,
@@ -6,20 +6,20 @@ import {
   Form,
   ToggleGroup,
   ToggleGroupItem,
-} from '@patternfly/react-core';
-import { set } from 'lodash-es';
-import styled from 'styled-components';
-import { InstanceAttributeModel, Field } from '@/Core';
-import { ActionDisabledTooltip } from '@/UI/Components/ActionDisabledTooltip';
-import { usePrompt } from '@/UI/Utils/usePrompt';
-import { words } from '@/UI/words';
-import { JSONEditor } from '../JSONEditor';
-import { FieldInput } from './Components';
+} from "@patternfly/react-core";
+import { set } from "lodash-es";
+import styled from "styled-components";
+import { InstanceAttributeModel, Field } from "@/Core";
+import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
+import { usePrompt } from "@/UI/Utils/usePrompt";
+import { words } from "@/UI/words";
+import { JSONEditor } from "../JSONEditor";
+import { FieldInput } from "./Components";
 import {
   createDuplicateFormState,
   createEditFormState,
   createFormState,
-} from './Helpers';
+} from "./Helpers";
 
 interface Props {
   service_entity: string;
@@ -31,7 +31,7 @@ interface Props {
   onCancel(): void;
   originalAttributes?: InstanceAttributeModel;
   isSubmitDisabled?: boolean;
-  apiVersion?: 'v1' | 'v2';
+  apiVersion?: "v1" | "v2";
   isEdit?: boolean;
   isDirty: boolean;
   setIsDirty: React.Dispatch<React.SetStateAction<boolean>>;
@@ -83,7 +83,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   onCancel,
   originalAttributes,
   isSubmitDisabled,
-  apiVersion = 'v1',
+  apiVersion = "v1",
   isEdit = false,
   isDirty,
   setIsDirty,
@@ -100,7 +100,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   const [isForm, setIsForm] = useState(true);
   const [isEditorValid, setIsEditorValid] = useState(true);
 
-  usePrompt(words('notification.instanceForm.prompt'), isDirty);
+  usePrompt(words("notification.instanceForm.prompt"), isDirty);
 
   /**
    * Get an update for the form state based on the provided path and value.
@@ -184,7 +184,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     <StyledForm onSubmit={preventDefault}>
       <ToggleGroup aria-label="form-editor-toggle-group">
         <ToggleGroupItem
-          text={words('inventory.form.button')}
+          text={words("inventory.form.button")}
           key={0}
           buttonId="formButton"
           isSelected={isForm}
@@ -192,7 +192,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           onChange={() => setIsForm(true)}
         />
         <ToggleGroupItem
-          text={words('inventory.editor.button')}
+          text={words("inventory.editor.button")}
           key={1}
           buttonId="editorButton"
           isSelected={!isForm}
@@ -223,15 +223,15 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         <Alert
           variant="info"
           isInline
-          title={words('inventory.editInstance.noAttributes')}
+          title={words("inventory.editInstance.noAttributes")}
         />
       )}
 
       <ActionGroup>
         <ActionDisabledTooltip
           isDisabled={isSubmitDisabled}
-          testingId={words('confirm')}
-          tooltipContent={words('environment.halt.tooltip')}
+          testingId={words("confirm")}
+          tooltipContent={words("environment.halt.tooltip")}
         >
           <Button
             variant="primary"
@@ -239,7 +239,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
             isDisabled={isSubmitDisabled || !isEditorValid}
             aria-label="submit"
           >
-            {words('confirm')}
+            {words("confirm")}
           </Button>
         </ActionDisabledTooltip>
 
@@ -253,7 +253,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
             setShouldCancel(true);
           }}
         >
-          {words('cancel')}
+          {words("cancel")}
         </Button>
       </ActionGroup>
     </StyledForm>

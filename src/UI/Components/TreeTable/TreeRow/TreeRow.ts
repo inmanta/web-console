@@ -1,4 +1,4 @@
-import { AttributeAnnotations } from '@/Core';
+import { AttributeAnnotations } from "@/Core";
 
 export type TreeRow = Flat | Root | Branch | Leaf;
 
@@ -13,7 +13,7 @@ export interface Cell {
 }
 
 interface Flat {
-  kind: 'Flat';
+  kind: "Flat";
   id: string;
   primaryCell: Cell;
   valueCells: Cell[];
@@ -21,7 +21,7 @@ interface Flat {
 }
 
 interface Root {
-  kind: 'Root';
+  kind: "Root";
   id: string;
   onToggle: () => void;
   isChildExpanded: boolean;
@@ -29,7 +29,7 @@ interface Root {
 }
 
 interface Branch {
-  kind: 'Branch';
+  kind: "Branch";
   id: string;
   isExpandedByParent: boolean;
   isChildExpanded: boolean;
@@ -39,7 +39,7 @@ interface Branch {
 }
 
 interface Leaf {
-  kind: 'Leaf';
+  kind: "Leaf";
   id: string;
   isExpandedByParent: boolean;
   level: number;

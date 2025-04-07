@@ -1,5 +1,5 @@
-import { useCallback, useEffect } from 'react';
-import history from '../Routing/history';
+import { useCallback, useEffect } from "react";
+import history from "../Routing/history";
 
 /**
  * Blocks all navigation attempts. This is useful for preventing the page from
@@ -39,7 +39,7 @@ function useConfirmExit (confirmExit: () => boolean, when = true) {
 export function usePrompt (message: string, when = true) {
   useEffect(() => {
     if (when) {
-      Object.defineProperty(window, 'onbeforeunload', {
+      Object.defineProperty(window, "onbeforeunload", {
         value: function () {
           return message;
         },
@@ -49,7 +49,7 @@ export function usePrompt (message: string, when = true) {
     }
 
     return () => {
-      Object.defineProperty(window, 'onbeforeunload', {
+      Object.defineProperty(window, "onbeforeunload", {
         value: null,
         configurable: true,
         enumerable: true,

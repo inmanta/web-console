@@ -1,29 +1,29 @@
 export type Status =
-  | 'added'
-  | 'modified'
-  | 'deleted'
-  | 'unmodified'
-  | 'agent_down'
-  | 'undefined'
-  | 'skipped_for_undefined';
+  | "added"
+  | "modified"
+  | "deleted"
+  | "unmodified"
+  | "agent_down"
+  | "undefined"
+  | "skipped_for_undefined";
 
 export const statuses: Status[] = [
-  'added',
-  'modified',
-  'deleted',
-  'unmodified',
-  'agent_down',
-  'undefined',
-  'skipped_for_undefined',
+  "added",
+  "modified",
+  "deleted",
+  "unmodified",
+  "agent_down",
+  "undefined",
+  "skipped_for_undefined",
 ];
 
 export const defaultStatuses: Status[] = [
-  'added',
-  'modified',
-  'deleted',
-  'agent_down',
-  'undefined',
-  'skipped_for_undefined',
+  "added",
+  "modified",
+  "deleted",
+  "agent_down",
+  "undefined",
+  "skipped_for_undefined",
 ];
 
 interface ValueSet {

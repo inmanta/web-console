@@ -1,23 +1,23 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from "react";
 import {
   Flex,
   FlexItem,
   Label,
   Stack,
   StackItem,
-} from '@patternfly/react-core';
-import { RemoteData } from '@/Core';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { HaltButton } from './HaltButton';
-import { ResumeButton } from './ResumeButton';
+} from "@patternfly/react-core";
+import { RemoteData } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { HaltButton } from "./HaltButton";
+import { ResumeButton } from "./ResumeButton";
 
 export const EnvironmentControls: React.FC = () => {
   const { queryResolver, environmentHandler } = useContext(DependencyContext);
 
   const id = environmentHandler.useId();
-  const [data] = queryResolver.useContinuous<'GetEnvironmentDetails'>({
-    kind: 'GetEnvironmentDetails',
+  const [data] = queryResolver.useContinuous<"GetEnvironmentDetails">({
+    kind: "GetEnvironmentDetails",
     details: false,
     id,
   });
@@ -28,12 +28,12 @@ export const EnvironmentControls: React.FC = () => {
         notAsked: () => null,
         loading: () => null,
         failed: () => {
-          document.dispatchEvent(new CustomEvent('status-down'));
+          document.dispatchEvent(new CustomEvent("status-down"));
 
           return null;
         },
         success: () => {
-          document.dispatchEvent(new CustomEvent('status-up'));
+          document.dispatchEvent(new CustomEvent("status-up"));
 
           return null;
         },
@@ -53,7 +53,7 @@ export const EnvironmentControls: React.FC = () => {
             <StackItem>
               {data.halted && (
                 <Label status="warning">
-                  {words('environment.halt.label')}
+                  {words("environment.halt.label")}
                 </Label>
               )}
             </StackItem>

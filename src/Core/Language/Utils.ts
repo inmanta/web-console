@@ -36,7 +36,7 @@ export const isNotNull = <T>(value: T | null): value is NonNullable<T> =>
 
 export const isNotUndefined = <T>(
   value: T | undefined,
-): value is NonNullable<T> => typeof value !== 'undefined';
+): value is NonNullable<T> => typeof value !== "undefined";
 
 export const objectHasKey = <
   X extends Record<string, unknown>,
@@ -47,7 +47,7 @@ export const objectHasKey = <
 ): obj is X & Record<Y, unknown> => prop in obj;
 
 export const isObject = (value: unknown): value is Record<string, unknown> => {
-  if (typeof value !== 'object') return false;
+  if (typeof value !== "object") return false;
   if (Array.isArray(value)) return false;
   if (value === null) return false;
   if (Object.keys(value).length <= 0) return false;
@@ -56,7 +56,7 @@ export const isObject = (value: unknown): value is Record<string, unknown> => {
 };
 
 export const stringifyList = (items: string[]): string =>
-  items.length <= 0 ? '' : items.reduce((acc, curr) => `${acc}, ${curr}`);
+  items.length <= 0 ? "" : items.reduce((acc, curr) => `${acc}, ${curr}`);
 
 export const isObjectEmpty = (
   obj: Record<string, unknown>,
@@ -105,14 +105,14 @@ export const resolvePromiseRecord = async (
 };
 
 export const stringifyObjectOrUndefined = (obj: unknown): string => {
-  return typeof obj === 'undefined' ? 'undefined' : JSON.stringify(obj);
+  return typeof obj === "undefined" ? "undefined" : JSON.stringify(obj);
 };
 
 export const stringToBoolean = (value: unknown): boolean | undefined => {
   switch (value) {
-    case 'true':
+    case "true":
       return true;
-    case 'false':
+    case "false":
       return false;
     default:
       return undefined;

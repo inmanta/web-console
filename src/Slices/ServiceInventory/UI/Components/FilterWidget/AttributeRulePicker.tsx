@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   MenuToggle,
   MenuToggleElement,
   Select,
   SelectOption,
-} from '@patternfly/react-core';
+} from "@patternfly/react-core";
 
 export enum AttributeRule {
-  Empty = 'empty',
-  NotEmpty = 'not empty',
+  Empty = "empty",
+  NotEmpty = "not empty",
 }
 
 interface Props {
@@ -33,11 +33,11 @@ export const AttributeRulePicker: React.FC<Props> = ({
       disabled={isDisabled}
       style={
         {
-          width: '200px',
+          width: "200px",
         } as React.CSSProperties
       }
     >
-      {rule || 'Select a quality...'}
+      {rule || "Select a quality..."}
     </MenuToggle>
   );
 

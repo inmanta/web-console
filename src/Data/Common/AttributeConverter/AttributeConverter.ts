@@ -1,12 +1,12 @@
-import { TextInputTypes } from '@patternfly/react-core';
+import { TextInputTypes } from "@patternfly/react-core";
 import {
   AttributeModel,
   FormAttributeResult,
   InstanceAttributeModel,
   ServiceInstanceModel,
-} from '@/Core';
+} from "@/Core";
 
-export type InputType = TextInputTypes | 'bool';
+export type InputType = TextInputTypes | "bool";
 
 export interface AttributeInputConverter {
   /**
@@ -41,7 +41,7 @@ export interface AttributeInputConverter {
   getCurrentAttributes(
     instance: Pick<
       ServiceInstanceModel,
-      'candidate_attributes' | 'active_attributes'
+      "candidate_attributes" | "active_attributes"
     >,
   ): InstanceAttributeModel | null;
 }

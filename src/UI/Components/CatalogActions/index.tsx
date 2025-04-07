@@ -1,1 +1,1 @@
-export * from './CatalogActions';
+export * from "./CatalogActions";

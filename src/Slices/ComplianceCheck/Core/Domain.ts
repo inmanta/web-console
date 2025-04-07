@@ -1,5 +1,5 @@
-import { Diff } from '@/Core/Domain/Diff';
-import { ParsedNumber } from '@/Core/Language';
+import { Diff } from "@/Core/Domain/Diff";
+import { ParsedNumber } from "@/Core/Language";
 
 export interface DryRun extends Progress {
   id: string;

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { EnvSelector } from './EnvSelector';
+import React, { useEffect, useState } from "react";
+import { EnvSelector } from "./EnvSelector";
 
 interface Props {
   selectorItems: EnvironmentSelectorItem[];

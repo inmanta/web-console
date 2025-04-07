@@ -1,16 +1,16 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from "react";
 import {
   Alert,
   AlertActionCloseButton,
   Button,
   Spinner,
-} from '@patternfly/react-core';
-import { DownloadIcon } from '@patternfly/react-icons';
-import { RemoteData } from '@/Core';
-import { CodeHighlighter } from '@/UI/Components/CodeHighlighter';
-import { TextWithCopy } from '@/UI/Components/TextWithCopy';
-import { DependencyContext } from '@/UI/Dependency';
-import { Delayed } from '@/UI/Utils';
+} from "@patternfly/react-core";
+import { DownloadIcon } from "@patternfly/react-icons";
+import { RemoteData } from "@/Core";
+import { CodeHighlighter } from "@/UI/Components/CodeHighlighter";
+import { TextWithCopy } from "@/UI/Components/TextWithCopy";
+import { DependencyContext } from "@/UI/Dependency";
+import { Delayed } from "@/UI/Utils";
 
 export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
   const { fileFetcher } = useContext(DependencyContext);

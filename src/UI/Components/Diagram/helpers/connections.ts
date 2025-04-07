@@ -1,13 +1,13 @@
-import { dia } from '@inmanta/rappid';
-import { EmbeddedEntity, ServiceModel } from '@/Core';
+import { dia } from "@inmanta/rappid";
+import { EmbeddedEntity, ServiceModel } from "@/Core";
 import {
   ConnectionRules,
   EmbeddedRule,
   InterServiceRule,
   TypeEnum,
-} from '@/UI/Components/Diagram/interfaces';
+} from "@/UI/Components/Diagram/interfaces";
 
-import { ServiceEntityBlock } from '../shapes';
+import { ServiceEntityBlock } from "../shapes";
 
 /**
  * Create object that holds all of the possible interservice relation connections
@@ -112,17 +112,17 @@ export const checkIfConnectionIsAllowed = (
     ) as ServiceEntityBlock[];
 
     const isTargetInEditMode: boolean | undefined =
-      targetAsElement.get('isInEditMode');
+      targetAsElement.get("isInEditMode");
     const isSourceInEditMode: boolean | undefined =
-      sourceAsElement.get('isInEditMode');
+      sourceAsElement.get("isInEditMode");
 
     const isSourceBlockedFromEditing: boolean | undefined = sourceAsElement.get(
-      'isBlockedFromEditing',
+      "isBlockedFromEditing",
     );
 
     if (isSourceBlockedFromEditing) {
-      const targetHolder = targetAsElement.get('holderName');
-      const isTargetEmbedded = targetAsElement.get('isEmbeddedEntity');
+      const targetHolder = targetAsElement.get("holderName");
+      const isTargetEmbedded = targetAsElement.get("isEmbeddedEntity");
 
       if (isTargetEmbedded && targetHolder === sourceName) {
         return false; // if source is blocked from editing then we can't connect embedded entities to it
@@ -199,7 +199,7 @@ export const checkWhetherConnectionRulesAreExhausted = (
   );
 
   //if is in edit mode and its modifier is r/rw then the connections are basically exhausted
-  if (editMode && rule && rule.modifier !== 'rw+') {
+  if (editMode && rule && rule.modifier !== "rw+") {
     return true;
   }
   //undefined and null are equal to no limit
@@ -226,15 +226,15 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   connectedElementsToSource: ServiceEntityBlock[],
   target: dia.Element,
 ): boolean => {
-  const isSourceEmbedded = source.get('isEmbeddedEntity');
-  const sourceHolderName = source.get('holderName');
-  const isTargetBlocked = target.get('isBlockedFromEditing');
+  const isSourceEmbedded = source.get("isEmbeddedEntity");
+  const sourceHolderName = source.get("holderName");
+  const isTargetBlocked = target.get("isBlockedFromEditing");
 
   //if source Embbedded and target is blocked then return true as we can't add anything to it in composer
   if (isSourceEmbedded && isTargetBlocked) {
     return true;
   }
-  const targetName = target.get('entityName');
+  const targetName = target.get("entityName");
 
   if (isSourceEmbedded && sourceHolderName !== undefined) {
     //if source is embedded entity then check if it is already connected according to it's parent rules

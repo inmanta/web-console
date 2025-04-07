@@ -1,1 +1,1 @@
-export * as Command from './Command';
+export * as Command from "./Command";

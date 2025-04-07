@@ -1,4 +1,4 @@
-import { Logger } from '@/Core';
+import { Logger } from "@/Core";
 
 export class PrimaryLogger implements Logger {
   log (text: string): void {

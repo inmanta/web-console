@@ -1,4 +1,4 @@
-import { Command, CommandManager } from '@/Core';
+import { Command, CommandManager } from "@/Core";
 
 export class CommandManagerWithoutEnv<Kind extends Command.Kind>
 implements CommandManager {

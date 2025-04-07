@@ -1,7 +1,7 @@
-import React from 'react';
-import { EmptyState, Spinner, Title } from '@patternfly/react-core';
-import { Delayed } from '@/UI/Utils';
-import { words } from '@/UI/words';
+import React from "react";
+import { EmptyState, Spinner, Title } from "@patternfly/react-core";
+import { Delayed } from "@/UI/Utils";
+import { words } from "@/UI/words";
 
 interface Props {
   instant?: boolean;
@@ -22,7 +22,7 @@ export const LoadingView: React.FC<Props> = ({
   >
     <Delayed delay={instant ? undefined : 200}>
       <Title size="lg" headingLevel="h2">
-        {words('loading')}
+        {words("loading")}
       </Title>
     </Delayed>
   </EmptyState>

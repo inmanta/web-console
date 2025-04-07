@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   OnSort,
   Table,
@@ -6,12 +6,12 @@ import {
   Th,
   Thead,
   Tr,
-} from '@patternfly/react-table';
-import { Resource, Sort } from '@/Core';
-import { useExpansion } from '@/Data';
-import { words } from '@/UI';
-import { ResourceTableRow } from './ResourceTableRow';
-import { ResourcesTablePresenter } from './ResourcesTablePresenter';
+} from "@patternfly/react-table";
+import { Resource, Sort } from "@/Core";
+import { useExpansion } from "@/Data";
+import { words } from "@/UI";
+import { ResourceTableRow } from "./ResourceTableRow";
+import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
 
 interface Props {
   rows: Resource.Row[];
@@ -34,7 +34,7 @@ export const ResourcesTable: React.FC<Props> = ({
     });
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
-  const smallHeaders = ['requires', 'status'];
+  const smallHeaders = ["requires", "status"];
   const heads = tablePresenter
     .getColumnHeads()
     .map(({ apiName, displayName }, columnIndex) => {
@@ -53,8 +53,8 @@ export const ResourcesTable: React.FC<Props> = ({
         : {};
 
       const widthModifier = smallHeaders.includes(apiName)
-        ? 'fitContent'
-        : 'nowrap';
+        ? "fitContent"
+        : "nowrap";
 
       return (
         <Th key={displayName} {...sortParams} modifier={widthModifier}>
@@ -69,7 +69,7 @@ export const ResourcesTable: React.FC<Props> = ({
         <Tr>
           <Th
             modifier="fitContent"
-            screenReaderText={words('common.emptyColumnHeader')}
+            screenReaderText={words("common.emptyColumnHeader")}
           />
           {heads}
         </Tr>

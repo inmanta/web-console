@@ -1,26 +1,26 @@
-import React, { act } from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { Page } from '@patternfly/react-core';
-import { render, screen, within } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-import { StoreProvider } from 'easy-peasy';
-import { axe, toHaveNoViolations } from 'jest-axe';
-import { Either } from '@/Core';
-import { QueryResolverImpl, getStoreInstance } from '@/Data';
+import React, { act } from "react";
+import { MemoryRouter } from "react-router-dom";
+import { Page } from "@patternfly/react-core";
+import { render, screen, within } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
+import { Either } from "@/Core";
+import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   DynamicQueryManagerResolverImpl,
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
-} from '@/Test';
-import { words } from '@/UI';
-import { DependencyProvider } from '@/UI/Dependency';
+} from "@/Test";
+import { words } from "@/UI";
+import { DependencyProvider } from "@/UI/Dependency";
 import {
   GetParametersQueryManager,
   GetParametersStateHelper,
-} from '@S/Parameters/Data';
-import * as Parameters from '@S/Parameters/Data/Mock';
-import { ParametersPage } from '.';
+} from "@S/Parameters/Data";
+import * as Parameters from "@S/Parameters/Data/Mock";
+import { ParametersPage } from ".";
 
 expect.extend(toHaveNoViolations);
 
@@ -58,7 +58,7 @@ function setup () {
   return { component, apiHelper, scheduler };
 }
 
-test('When using the name filter then only the matching parameters should be fetched and shown', async () => {
+test("When using the name filter then only the matching parameters should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -67,20 +67,20 @@ test('When using the name filter then only the matching parameters should be fet
     await apiHelper.resolve(Either.right(Parameters.response));
   });
 
-  const initialRows = await screen.findAllByRole('row', {
-    name: 'Parameters Table Row',
+  const initialRows = await screen.findAllByRole("row", {
+    name: "Parameters Table Row",
   });
 
   expect(initialRows).toHaveLength(10);
 
   const input = screen.getByPlaceholderText(
-    words('parameters.filters.name.placeholder'),
+    words("parameters.filters.name.placeholder"),
   );
 
-  await userEvent.type(input, 'param{enter}');
+  await userEvent.type(input, "param{enter}");
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    '/api/v2/parameters?limit=20&sort=name.asc&filter.name=param',
+    "/api/v2/parameters?limit=20&sort=name.asc&filter.name=param",
   );
 
   await act(async () => {
@@ -92,8 +92,8 @@ test('When using the name filter then only the matching parameters should be fet
     );
   });
 
-  const rowsAfter = await screen.findAllByRole('row', {
-    name: 'Parameters Table Row',
+  const rowsAfter = await screen.findAllByRole("row", {
+    name: "Parameters Table Row",
   });
 
   expect(rowsAfter).toHaveLength(3);
@@ -105,7 +105,7 @@ test('When using the name filter then only the matching parameters should be fet
   });
 });
 
-test('When using the source filter then only the matching parameters should be fetched and shown', async () => {
+test("When using the source filter then only the matching parameters should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -114,31 +114,31 @@ test('When using the source filter then only the matching parameters should be f
     await apiHelper.resolve(Either.right(Parameters.response));
   });
 
-  const initialRows = await screen.findAllByRole('row', {
-    name: 'Parameters Table Row',
+  const initialRows = await screen.findAllByRole("row", {
+    name: "Parameters Table Row",
   });
 
   expect(initialRows).toHaveLength(10);
 
   await userEvent.click(
-    within(screen.getByRole('toolbar', { name: 'FilterBar' })).getByRole(
-      'button',
-      { name: 'FilterPicker' },
+    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+      "button",
+      { name: "FilterPicker" },
     ),
   );
 
   await userEvent.click(
-    screen.getByRole('option', { name: words('parameters.columns.source') }),
+    screen.getByRole("option", { name: words("parameters.columns.source") }),
   );
 
   const input = screen.getByPlaceholderText(
-    words('parameters.filters.source.placeholder'),
+    words("parameters.filters.source.placeholder"),
   );
 
-  await userEvent.type(input, 'plugin{enter}');
+  await userEvent.type(input, "plugin{enter}");
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    '/api/v2/parameters?limit=20&sort=name.asc&filter.source=plugin',
+    "/api/v2/parameters?limit=20&sort=name.asc&filter.source=plugin",
   );
 
   await act(async () => {
@@ -150,8 +150,8 @@ test('When using the source filter then only the matching parameters should be f
     );
   });
 
-  const rowsAfter = await screen.findAllByRole('row', {
-    name: 'Parameters Table Row',
+  const rowsAfter = await screen.findAllByRole("row", {
+    name: "Parameters Table Row",
   });
 
   expect(rowsAfter).toHaveLength(3);
@@ -163,7 +163,7 @@ test('When using the source filter then only the matching parameters should be f
   });
 });
 
-test('When using the Updated filter then the parameters within the range selected range should be fetched and shown', async () => {
+test("When using the Updated filter then the parameters within the range selected range should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -172,37 +172,37 @@ test('When using the Updated filter then the parameters within the range selecte
     await apiHelper.resolve(Either.right(Parameters.response));
   });
 
-  const initialRows = await screen.findAllByRole('row', {
-    name: 'Parameters Table Row',
+  const initialRows = await screen.findAllByRole("row", {
+    name: "Parameters Table Row",
   });
 
   expect(initialRows).toHaveLength(10);
 
   await userEvent.click(
-    within(screen.getByRole('toolbar', { name: 'FilterBar' })).getByRole(
-      'button',
-      { name: 'FilterPicker' },
+    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
+      "button",
+      { name: "FilterPicker" },
     ),
   );
 
   await userEvent.click(
-    screen.getByRole('option', {
-      name: words('parameters.columns.updated.tests'),
+    screen.getByRole("option", {
+      name: words("parameters.columns.updated.tests"),
     }),
   );
 
-  const fromDatePicker = screen.getByLabelText('From Date Picker');
+  const fromDatePicker = screen.getByLabelText("From Date Picker");
 
-  await userEvent.type(fromDatePicker, '2022/01/31');
+  await userEvent.type(fromDatePicker, "2022/01/31");
 
-  const toDatePicker = screen.getByLabelText('To Date Picker');
+  const toDatePicker = screen.getByLabelText("To Date Picker");
 
-  await userEvent.type(toDatePicker, '2022-02-01');
+  await userEvent.type(toDatePicker, "2022-02-01");
 
-  await userEvent.click(screen.getByLabelText('Apply date filter'));
+  await userEvent.click(screen.getByLabelText("Apply date filter"));
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
-    '/api/v2/parameters?limit=20&sort=name.asc&filter.updated=ge%3A2022-01-30%2B23%3A00%3A00&filter.updated=le%3A2022-01-31%2B23%3A00%3A00',
+    "/api/v2/parameters?limit=20&sort=name.asc&filter.updated=ge%3A2022-01-30%2B23%3A00%3A00&filter.updated=le%3A2022-01-31%2B23%3A00%3A00",
   );
 
   await act(async () => {
@@ -214,8 +214,8 @@ test('When using the Updated filter then the parameters within the range selecte
     );
   });
 
-  const rowsAfter = await screen.findAllByRole('row', {
-    name: 'Parameters Table Row',
+  const rowsAfter = await screen.findAllByRole("row", {
+    name: "Parameters Table Row",
   });
 
   expect(rowsAfter).toHaveLength(3);
@@ -223,14 +223,14 @@ test('When using the Updated filter then the parameters within the range selecte
   // The chips are hidden in small windows, so resize it
   window = Object.assign(window, { innerWidth: 1200 });
   await act(async () => {
-    window.dispatchEvent(new Event('resize'));
+    window.dispatchEvent(new Event("resize"));
   });
 
   expect(
-    await screen.findByText('from | 2022/01/31 00:00:00', { exact: false }),
+    await screen.findByText("from | 2022/01/31 00:00:00", { exact: false }),
   ).toBeVisible();
   expect(
-    await screen.findByText('to | 2022/02/01 00:00:00', { exact: false }),
+    await screen.findByText("to | 2022/02/01 00:00:00", { exact: false }),
   ).toBeVisible();
 
   await act(async () => {
@@ -240,7 +240,7 @@ test('When using the Updated filter then the parameters within the range selecte
   });
 });
 
-test('GIVEN ParametersView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page', async () => {
+test("GIVEN ParametersView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -252,7 +252,7 @@ test('GIVEN ParametersView WHEN sorting changes AND we are not on the first page
         ...Parameters.response,
         links: {
           ...Parameters.response.links,
-          next: '/fake-link?end=fake-first-param',
+          next: "/fake-link?end=fake-first-param",
         },
         metadata: {
           total: 103,
@@ -264,9 +264,9 @@ test('GIVEN ParametersView WHEN sorting changes AND we are not on the first page
     );
   });
 
-  expect(screen.getByLabelText('Go to next page')).toBeEnabled();
+  expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
-  await userEvent.click(screen.getByLabelText('Go to next page'));
+  await userEvent.click(screen.getByLabelText("Go to next page"));
 
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
@@ -277,8 +277,8 @@ test('GIVEN ParametersView WHEN sorting changes AND we are not on the first page
   });
 
   //sort on the second page
-  const resourceIdButton = await screen.findByRole('button', {
-    name: 'Name',
+  const resourceIdButton = await screen.findByRole("button", {
+    name: "Name",
   });
 
   expect(resourceIdButton).toBeVisible();

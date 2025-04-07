@@ -1,19 +1,19 @@
-const { defineConfig } = require('cypress');
+const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
   env: {
-    edition: 'iso',
+    edition: "iso",
   },
   video: false,
-  reporter: 'junit',
+  reporter: "junit",
   viewportWidth: 1500,
   viewportHeight: 900,
   reporterOptions: {
-    mochaFile: 'cypress/reports/junit/test-report-[hash].xml',
+    mochaFile: "cypress/reports/junit/test-report-[hash].xml",
   },
   e2e: {
-    baseUrl: 'http://127.0.0.1:8888',
-    supportFile: 'cypress/support/e2e.js',
+    baseUrl: "http://127.0.0.1:8888",
+    supportFile: "cypress/support/e2e.js",
     defaultCommandTimeout: 10000,
     requestTimeout: 10000,
   },

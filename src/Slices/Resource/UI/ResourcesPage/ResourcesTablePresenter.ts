@@ -1,6 +1,6 @@
-import { Resource } from '@/Core';
-import { ColumnHead, TablePresenter } from '@/UI/Presenters';
-import { words } from '@/UI/words';
+import { Resource } from "@/Core";
+import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { words } from "@/UI/words";
 
 export class ResourcesTablePresenter
 implements TablePresenter<Resource.Resource, Resource.Row> {
@@ -9,22 +9,22 @@ implements TablePresenter<Resource.Resource, Resource.Row> {
 
   constructor () {
     this.columnHeads = [
-      { displayName: words('resources.column.type'), apiName: 'resource_type' },
+      { displayName: words("resources.column.type"), apiName: "resource_type" },
       {
-        displayName: words('resources.column.agent'),
-        apiName: 'agent',
+        displayName: words("resources.column.agent"),
+        apiName: "agent",
       },
       {
-        displayName: words('resources.column.value'),
-        apiName: 'resource_id_value',
+        displayName: words("resources.column.value"),
+        apiName: "resource_id_value",
       },
       {
-        displayName: words('resources.column.requires'),
-        apiName: 'requires',
+        displayName: words("resources.column.requires"),
+        apiName: "requires",
       },
       {
-        displayName: words('resources.column.deployState'),
-        apiName: 'status',
+        displayName: words("resources.column.deployState"),
+        apiName: "status",
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 2;
@@ -64,10 +64,10 @@ implements TablePresenter<Resource.Resource, Resource.Row> {
 
   public getSortableColumnNames (): string[] {
     const sortableColumns = [
-      'resource_type',
-      'agent',
-      'resource_id_value',
-      'status',
+      "resource_type",
+      "agent",
+      "resource_id_value",
+      "status",
     ];
 
     return sortableColumns;

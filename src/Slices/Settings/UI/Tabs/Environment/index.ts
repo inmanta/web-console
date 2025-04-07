@@ -1,1 +1,1 @@
-export { Tab as EnvironmentTab } from './Tab';
+export { Tab as EnvironmentTab } from "./Tab";

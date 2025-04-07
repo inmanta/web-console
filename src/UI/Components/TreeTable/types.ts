@@ -1,8 +1,8 @@
-import { Attributes, EntityLike } from '@/Core';
+import { Attributes, EntityLike } from "@/Core";
 import {
   CatalogAttributes,
   InventoryAttributes,
-} from './Helpers/AttributeNode';
+} from "./Helpers/AttributeNode";
 
 export type AttributeTree = InventoryAttributeTree | CatalogAttributeTree;
 

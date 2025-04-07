@@ -1,1 +1,1 @@
-export { Page as DuplicateInstancePage } from './Page';
+export { Page as DuplicateInstancePage } from "./Page";

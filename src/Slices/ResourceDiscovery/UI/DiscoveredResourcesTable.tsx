@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   OnSort,
   Table,
@@ -6,13 +6,13 @@ import {
   Th,
   Thead,
   Tr,
-} from '@patternfly/react-table';
-import { Sort } from '@/Core';
-import { useExpansion } from '@/Data';
-import { words } from '@/UI';
-import { DiscoveredResource, SortKey } from '../Core/Query';
-import { DiscoveredResourceRow } from './DiscoveredResourcesRow';
-import { DiscoveredResourcesTablePresenter } from './DiscoveredResourcesTablePresenter';
+} from "@patternfly/react-table";
+import { Sort } from "@/Core";
+import { useExpansion } from "@/Data";
+import { words } from "@/UI";
+import { DiscoveredResource, SortKey } from "../Core/Query";
+import { DiscoveredResourceRow } from "./DiscoveredResourcesRow";
+import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
 
 interface Props {
   tablePresenter: DiscoveredResourcesTablePresenter;
@@ -67,7 +67,7 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
         <Tr>
           <Th
             modifier="fitContent"
-            screenReaderText={words('common.emptyColumnHeader')}
+            screenReaderText={words("common.emptyColumnHeader")}
           />
           {heads}
         </Tr>

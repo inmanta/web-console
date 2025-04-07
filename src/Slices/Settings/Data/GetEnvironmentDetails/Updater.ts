@@ -4,14 +4,14 @@ import {
   RemoteData,
   Updater,
   StateHelper as StateHelperInterface,
-} from '@/Core';
-import { Store } from '@/Data/Store';
-import { StateHelper } from './StateHelper';
-import { getUrl } from './getUrl';
+} from "@/Core";
+import { Store } from "@/Data/Store";
+import { StateHelper } from "./StateHelper";
+import { getUrl } from "./getUrl";
 
 export class EnvironmentDetailsUpdater
-implements Updater<'GetEnvironmentDetails'> {
-  stateHelper: StateHelperInterface<'GetEnvironmentDetails'>;
+implements Updater<"GetEnvironmentDetails"> {
+  stateHelper: StateHelperInterface<"GetEnvironmentDetails">;
 
   constructor (
     store: Store,
@@ -20,7 +20,7 @@ implements Updater<'GetEnvironmentDetails'> {
     this.stateHelper = StateHelper(store);
   }
 
-  async update (query: Query.SubQuery<'GetEnvironmentDetails'>): Promise<void> {
+  async update (query: Query.SubQuery<"GetEnvironmentDetails">): Promise<void> {
     this.stateHelper.set(RemoteData.loading(), query);
     this.stateHelper.set(
       RemoteData.fromEither(

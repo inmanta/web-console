@@ -4,15 +4,15 @@
  * This function sets up mock implementations for various properties and methods used by JointJS library that aren't supported by default in the Jest environment.
  */
 export const defineObjectsForJointJS = () => {
-  Object.defineProperty(document.documentElement, 'requestFullscreen', {
+  Object.defineProperty(document.documentElement, "requestFullscreen", {
     writable: true,
     value: jest.fn(),
   });
-  Object.defineProperty(document, 'exitFullscreen', {
+  Object.defineProperty(document, "exitFullscreen", {
     writable: true,
     value: jest.fn(),
   });
-  Object.defineProperty(window, 'SVGAngle', {
+  Object.defineProperty(window, "SVGAngle", {
     writable: true,
     value: jest.fn().mockImplementation(() => ({
       new: jest.fn(),
@@ -24,7 +24,7 @@ export const defineObjectsForJointJS = () => {
       SVG_ANGLETYPE_GRAD: 4,
     })),
   });
-  Object.defineProperty(window, 'ResizeObserver', {
+  Object.defineProperty(window, "ResizeObserver", {
     writable: true,
     value: jest.fn().mockImplementation(() => ({
       disconnect: jest.fn(),
@@ -32,7 +32,7 @@ export const defineObjectsForJointJS = () => {
       unobserve: jest.fn(),
     })),
   });
-  Object.defineProperty(global.SVGSVGElement.prototype, 'createSVGMatrix', {
+  Object.defineProperty(global.SVGSVGElement.prototype, "createSVGMatrix", {
     writable: true,
     value: jest.fn().mockImplementation(() => ({
       martix: jest.fn(() => [[]]),
@@ -73,7 +73,7 @@ export const defineObjectsForJointJS = () => {
     })),
   });
 
-  Object.defineProperty(global.SVGSVGElement.prototype, 'createSVGPoint', {
+  Object.defineProperty(global.SVGSVGElement.prototype, "createSVGPoint", {
     writable: true,
     value: jest.fn().mockImplementation(() => ({
       x: 0,
@@ -85,7 +85,7 @@ export const defineObjectsForJointJS = () => {
     })),
   });
 
-  Object.defineProperty(global.SVGSVGElement.prototype, 'createSVGTransform', {
+  Object.defineProperty(global.SVGSVGElement.prototype, "createSVGTransform", {
     writable: true,
     value: jest.fn().mockImplementation(() => ({
       angle: 0,
@@ -104,12 +104,12 @@ export const defineObjectsForJointJS = () => {
   });
   window.SVGPathElement = jest.fn();
 
-  Object.defineProperty(global.SVGElement.prototype, 'getComputedTextLength', {
+  Object.defineProperty(global.SVGElement.prototype, "getComputedTextLength", {
     writable: true,
     value: jest.fn().mockReturnValue(0),
   });
 
-  Object.defineProperty(global.SVGElement.prototype, 'getBBox', {
+  Object.defineProperty(global.SVGElement.prototype, "getBBox", {
     writable: true,
     value: jest.fn().mockReturnValue({
       x: 0,
@@ -117,12 +117,12 @@ export const defineObjectsForJointJS = () => {
     }),
   });
 
-  Object.defineProperty(global.SVGElement.prototype, 'getScreenCTM', {
+  Object.defineProperty(global.SVGElement.prototype, "getScreenCTM", {
     writable: true,
     value: jest.fn().mockReturnValue(0),
   });
 
-  Object.defineProperty(Document.prototype, 'elementFromPoint', {
+  Object.defineProperty(Document.prototype, "elementFromPoint", {
     writable: true,
     value: jest.fn().mockReturnValue(null),
   });

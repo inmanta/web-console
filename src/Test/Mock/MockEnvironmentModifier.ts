@@ -1,4 +1,4 @@
-import { EnvironmentModifier } from '@/Core';
+import { EnvironmentModifier } from "@/Core";
 
 interface Details {
   server_compile: boolean;

@@ -1,4 +1,4 @@
-import { Either, Maybe } from '@/Core/Language';
+import { Either, Maybe } from "@/Core/Language";
 
 export interface ErrorWithHTTPCode {
   message: string;

@@ -1,1 +1,1 @@
-export * from './JSONEditor';
+export * from "./JSONEditor";

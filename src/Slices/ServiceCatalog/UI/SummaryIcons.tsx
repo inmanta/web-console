@@ -1,8 +1,8 @@
-import React, { ReactElement } from 'react';
-import { Label, FlexItem, Flex, Tooltip } from '@patternfly/react-core';
-import { InfoAltIcon, OutlinedCircleIcon } from '@patternfly/react-icons';
-import { InstanceSummary } from '@/Core';
-import { words } from '@/UI/words';
+import React, { ReactElement } from "react";
+import { Label, FlexItem, Flex, Tooltip } from "@patternfly/react-core";
+import { InfoAltIcon, OutlinedCircleIcon } from "@patternfly/react-icons";
+import { InstanceSummary } from "@/Core";
+import { words } from "@/UI/words";
 
 interface Props {
   summary: InstanceSummary;
@@ -19,9 +19,9 @@ export const SummaryIcons: React.FC<Props> = ({ summary }) => {
         <FlexItem key={labelName}>
           <Tooltip
             content={
-              labelName !== 'no_label'
+              labelName !== "no_label"
                 ? labelName
-                : words('catalog.summary.noLabel')
+                : words("catalog.summary.noLabel")
             }
             entryDelay={200}
           >
@@ -35,25 +35,25 @@ export const SummaryIcons: React.FC<Props> = ({ summary }) => {
 
 function getLabelforName (labelName: string, value: number): ReactElement {
   switch (labelName) {
-    case 'danger':
+    case "danger":
       return (
         <Label status="danger" variant="outline">
           {value}
         </Label>
       );
-    case 'warning':
+    case "warning":
       return (
         <Label status="warning" variant="outline">
           {value}
         </Label>
       );
-    case 'success':
+    case "success":
       return (
         <Label status="success" variant="outline">
           {value}
         </Label>
       );
-    case 'info':
+    case "info":
       return (
         <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
           {value}

@@ -1,9 +1,9 @@
-import React from 'react';
-import { Skeleton } from '@patternfly/react-core';
-import { Tr, Td } from '@patternfly/react-table';
-import { range } from 'lodash-es';
-import styled from 'styled-components';
-import { RequiresTableWrapper } from './RequiresTableWrapper';
+import React from "react";
+import { Skeleton } from "@patternfly/react-core";
+import { Tr, Td } from "@patternfly/react-table";
+import { range } from "lodash-es";
+import styled from "styled-components";
+import { RequiresTableWrapper } from "./RequiresTableWrapper";
 
 interface Props {
   numberOfRows: number;

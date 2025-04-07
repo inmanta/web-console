@@ -1,6 +1,6 @@
-import { UseMutationResult, useMutation } from '@tanstack/react-query';
-import { ParsedNumber } from '@/Core';
-import { usePost } from '../../helpers';
+import { UseMutationResult, useMutation } from "@tanstack/react-query";
+import { ParsedNumber } from "@/Core";
+import { usePost } from "../../helpers";
 
 interface PostMetadataInfo {
   service_entity: string;
@@ -31,6 +31,6 @@ export const usePostMetadata = (): UseMutationResult<
         `/lsm/v1/service_inventory/${info.service_entity}/${info.service_id}/metadata/${info.key}`,
         info,
       ),
-    mutationKey: ['post_metadata'],
+    mutationKey: ["post_metadata"],
   });
 };

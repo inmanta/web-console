@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   OnSort,
   Table,
@@ -7,15 +7,15 @@ import {
   Th,
   Thead,
   Tr,
-} from '@patternfly/react-table';
-import { Sort } from '@/Core';
-import { words } from '@/UI/words';
-import { EventsTablePresenter } from './EventsTablePresenter';
+} from "@patternfly/react-table";
+import { Sort } from "@/Core";
+import { words } from "@/UI/words";
+import { EventsTablePresenter } from "./EventsTablePresenter";
 
 interface Props {
   tablePresenter: EventsTablePresenter;
   wrapInTd?: boolean;
-  'aria-label'?: string;
+  "aria-label"?: string;
   sort?: Sort.Type;
   setSort?: (sort: Sort.Type) => void;
 }
@@ -42,12 +42,12 @@ export const EventsTableWrapper: React.FC<React.PropsWithChildren<Props>> = ({
     );
 
   return (
-    <Table aria-label={props['aria-label']}>
+    <Table aria-label={props["aria-label"]}>
       <Thead>
         <Tr>
           <Th
             aria-hidden
-            screenReaderText={words('common.emptyColumnHeader')}
+            screenReaderText={words("common.emptyColumnHeader")}
           />
           {heads}
         </Tr>
@@ -66,7 +66,7 @@ export const EventsTableWrapper: React.FC<React.PropsWithChildren<Props>> = ({
 };
 
 const HeadsWithSort: React.FC<
-  Required<Pick<Props, 'setSort' | 'sort' | 'tablePresenter'>>
+  Required<Pick<Props, "setSort" | "sort" | "tablePresenter">>
 > = ({ sort, setSort, tablePresenter }) => {
   const onSort: OnSort = (event, index, order) => {
     setSort({ name: sort.name, order });

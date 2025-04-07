@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 import {
   Toolbar,
   ToolbarItem,
   ToolbarContent,
   ToolbarGroup,
-} from '@patternfly/react-core';
-import { CompileWidget } from '@/UI/Components';
-import { Filter } from '@S/DesiredState/Core/Query';
-import { CompareSelectionWidget } from './CompareSelectionWidget';
-import { FilterWidget } from './FilterWidget';
+} from "@patternfly/react-core";
+import { CompileWidget } from "@/UI/Components";
+import { Filter } from "@S/DesiredState/Core/Query";
+import { CompareSelectionWidget } from "./CompareSelectionWidget";
+import { FilterWidget } from "./FilterWidget";
 
 interface Props {
   filter: Filter;

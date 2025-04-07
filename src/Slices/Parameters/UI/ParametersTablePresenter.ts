@@ -1,6 +1,6 @@
-import { Parameter } from '@/Core';
-import { ColumnHead, TablePresenter } from '@/UI/Presenters';
-import { words } from '@/UI/words';
+import { Parameter } from "@/Core";
+import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { words } from "@/UI/words";
 
 export class ParametersTablePresenter
 implements TablePresenter<Parameter, Parameter> {
@@ -9,18 +9,18 @@ implements TablePresenter<Parameter, Parameter> {
 
   constructor () {
     this.columnHeads = [
-      { displayName: words('parameters.columns.name'), apiName: 'name' },
+      { displayName: words("parameters.columns.name"), apiName: "name" },
       {
-        displayName: words('parameters.columns.updated'),
-        apiName: 'updated',
+        displayName: words("parameters.columns.updated"),
+        apiName: "updated",
       },
       {
-        displayName: words('parameters.columns.source'),
-        apiName: 'source',
+        displayName: words("parameters.columns.source"),
+        apiName: "source",
       },
       {
-        displayName: words('parameters.columns.value'),
-        apiName: 'value',
+        displayName: words("parameters.columns.value"),
+        apiName: "value",
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
@@ -34,7 +34,7 @@ implements TablePresenter<Parameter, Parameter> {
     return this.columnHeads.map(({ displayName }) => displayName);
   }
   getSortableColumnNames (): string[] {
-    const sortableColumns = ['name', 'source', 'updated'];
+    const sortableColumns = ["name", "source", "updated"];
 
     return sortableColumns;
   }

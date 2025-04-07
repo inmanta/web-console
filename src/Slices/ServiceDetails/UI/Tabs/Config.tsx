@@ -1,8 +1,8 @@
-import React from 'react';
-import { Card, CardBody } from '@patternfly/react-core';
-import { useGetServiceConfig } from '@/Data/Managers/V2/Service';
-import { ErrorView, LoadingView } from '@/UI/Components';
-import { ConfigList } from './ConfigList';
+import React from "react";
+import { Card, CardBody } from "@patternfly/react-core";
+import { useGetServiceConfig } from "@/Data/Managers/V2/Service";
+import { ErrorView, LoadingView } from "@/UI/Components";
+import { ConfigList } from "./ConfigList";
 
 interface Props {
   serviceName: string;

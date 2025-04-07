@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useGetCurrentUser } from '@/Data/Managers/V2/Auth';
-import { AuthContext } from '../AuthContext';
+import React, { useContext, useEffect, useState } from "react";
+import { useGetCurrentUser } from "@/Data/Managers/V2/Auth";
+import { AuthContext } from "../AuthContext";
 
 /**
  * Component that implements a authentication provider when jwt authentication is enabled.

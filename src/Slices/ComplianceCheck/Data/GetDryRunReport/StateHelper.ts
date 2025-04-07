@@ -1,9 +1,9 @@
-import { RemoteData } from '@/Core';
-import { PrimaryStateHelper } from '@/Data/Common';
-import { Store } from '@/Data/Store';
+import { RemoteData } from "@/Core";
+import { PrimaryStateHelper } from "@/Data/Common";
+import { Store } from "@/Data/Store";
 
 export function StateHelper (store: Store) {
-  return PrimaryStateHelper<'GetDryRunReport'>(
+  return PrimaryStateHelper<"GetDryRunReport">(
     store,
     (apiData, { reportId }) => {
       const data = RemoteData.mapSuccess((response) => response.data, apiData);

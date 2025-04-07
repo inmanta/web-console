@@ -1,8 +1,8 @@
-import { AttributesSummary, Pairs, InstanceAttributeModel } from '@/Core';
+import { AttributesSummary, Pairs, InstanceAttributeModel } from "@/Core";
 
 type Attribute = null | unknown;
 
-type Value = InstanceAttributeModel['key'];
+type Value = InstanceAttributeModel["key"];
 
 export class AttributesPresenter {
   getSummary (
@@ -32,7 +32,7 @@ export class AttributesPresenter {
 
   private printValue (value: Value): string {
     return Array.isArray(value)
-      ? value.map((element) => JSON.stringify(element)).join(', ')
+      ? value.map((element) => JSON.stringify(element)).join(", ")
       : JSON.stringify(value);
   }
 }

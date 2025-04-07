@@ -1,11 +1,11 @@
-import { InstanceAttributeModel, ServiceInstanceModel } from '@/Core';
-import { InstanceLog } from '@/Core/Domain/HistoryLog';
+import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 
 // A type for the possible AttributeSets.
 export type AttributeSets =
-  | 'active_attributes'
-  | 'candidate_attributes'
-  | 'rollback_attributes';
+  | "active_attributes"
+  | "candidate_attributes"
+  | "rollback_attributes";
 
 // Interface representing the TreeRowData, meant to populate a TreeTable
 export interface TreeRowData {
@@ -17,13 +17,13 @@ export interface TreeRowData {
 
 // The available views mapped to toggleKeys for the AttributesTabContent.
 export enum AttributeViewToggles {
-  TABLE = 'Table',
-  COMPARE = 'Compare',
-  EDITOR = 'JSON',
+  TABLE = "Table",
+  COMPARE = "Compare",
+  EDITOR = "JSON",
 }
 
 // Type representing the possible views for the AttributesTabContent.
-export type AttributeViews = 'Table' | 'Compare' | 'JSON';
+export type AttributeViews = "Table" | "Compare" | "JSON";
 
 /**
  * Method to get the attributeSets for a given version.
@@ -44,15 +44,15 @@ export const getAvailableAttributesSets = (
   const sets = {};
 
   if (selectedLog.active_attributes) {
-    sets['active_attributes'] = selectedLog.active_attributes;
+    sets["active_attributes"] = selectedLog.active_attributes;
   }
 
   if (selectedLog.candidate_attributes) {
-    sets['candidate_attributes'] = selectedLog.candidate_attributes;
+    sets["candidate_attributes"] = selectedLog.candidate_attributes;
   }
 
   if (selectedLog.rollback_attributes) {
-    sets['rollback_attributes'] = selectedLog.rollback_attributes;
+    sets["rollback_attributes"] = selectedLog.rollback_attributes;
   }
 
   return sets;
@@ -72,15 +72,15 @@ export const getAttributeSetsFromInstance = (
   const sets = {};
 
   if (instance.active_attributes) {
-    sets['active_attributes'] = instance.active_attributes;
+    sets["active_attributes"] = instance.active_attributes;
   }
 
   if (instance.candidate_attributes) {
-    sets['candidate_attributes'] = instance.candidate_attributes;
+    sets["candidate_attributes"] = instance.candidate_attributes;
   }
 
   if (instance.rollback_attributes) {
-    sets['rollback_attributes'] = instance.rollback_attributes;
+    sets["rollback_attributes"] = instance.rollback_attributes;
   }
 
   return sets;
@@ -94,7 +94,7 @@ export const getAttributeSetsFromInstance = (
  */
 export const formatTreeRowData = (
   attributes: Record<string, unknown>,
-  path: string = '',
+  path: string = "",
 ): TreeRowData[] => {
   const result: TreeRowData[] = [];
 
@@ -113,28 +113,28 @@ export const formatTreeRowData = (
       // If we are facing an object (Arrays are also considered as objects in JS),
       // it means we need to display a collapsible section.
       // The children property tells whether a section is a value, or a collapsible section.
-      if (value && typeof value === 'object') {
+      if (value && typeof value === "object") {
         // In case we are dealing with an array of arrays, we want to keep track of the index to display it in the table.
         if (Array.isArray(value)) {
           for (let index = 0; index < value.length; index++) {
             const item = value[index];
 
-            if (typeof item === 'object' && item !== null) {
+            if (typeof item === "object" && item !== null) {
               // If the item is an object, we need to add the properties into the children
               node?.children?.push({
                 name: `${index}`,
-                id: path + key + '.' + index,
+                id: path + key + "." + index,
                 value: item,
                 children: formatTreeRowData(
                   item as Record<string, unknown>,
-                  path + key + '.' + index + '.',
+                  path + key + "." + index + ".",
                 ),
               });
             } else {
               // If the item is a primitive value, add it directly. They don't need a collapsible section.
               node?.children?.push({
                 name: `${index}`,
-                id: path + key + '.' + index,
+                id: path + key + "." + index,
                 value: item,
               });
             }
@@ -144,7 +144,7 @@ export const formatTreeRowData = (
           node?.children?.push(
             ...formatTreeRowData(
               value as Record<string, unknown>,
-              path + key + '.',
+              path + key + ".",
             ),
           );
         }
@@ -166,16 +166,16 @@ export const formatTreeRowData = (
  */
 export const sortTreeRows = (
   tableData: TreeRowData[],
-  direction: 'asc' | 'desc',
+  direction: "asc" | "desc",
 ): TreeRowData[] => {
   // Helper function to compare values based on direction
   const compare = (a: TreeRowData, b: TreeRowData) => {
     if (a.name < b.name) {
-      return direction === 'asc' ? -1 : 1;
+      return direction === "asc" ? -1 : 1;
     }
 
     if (a.name > b.name) {
-      return direction === 'asc' ? 1 : -1;
+      return direction === "asc" ? 1 : -1;
     }
 
     return 0;

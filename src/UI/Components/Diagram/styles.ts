@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import editBttn from './icons/edit-button.svg';
-import linkBttn from './icons/link-button.svg';
-import removeBttn from './icons/remove-button.svg';
+import styled from "styled-components";
+import editBttn from "./icons/edit-button.svg";
+import linkBttn from "./icons/link-button.svg";
+import removeBttn from "./icons/remove-button.svg";
 
 export const CanvasWrapper = styled.div`
   display: flex;

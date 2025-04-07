@@ -1,1 +1,1 @@
-export * from './usePostInstance';
+export * from "./usePostInstance";

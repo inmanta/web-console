@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router';
-import { RouteManager, RouteKind } from '@/Core';
-import { DependencyContext } from '@/UI/Dependency';
-import { SearchSanitizer } from './SearchSanitizer';
+import React, { useContext, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router";
+import { RouteManager, RouteKind } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
+import { SearchSanitizer } from "./SearchSanitizer";
 
 export const Provider: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
@@ -40,7 +40,7 @@ const getSearchResult = (
 ): [string | null, RouteKind | null] => {
   const match = routeManager.getRouteMatchFromUrl(pathname);
 
-  if (typeof match === 'undefined') return [null, null];
+  if (typeof match === "undefined") return [null, null];
 
   return [sanitizer.sanitize(match.route.kind, search), match.route.kind];
 };

@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import { Button, Tooltip } from '@patternfly/react-core';
-import { StopIcon } from '@patternfly/react-icons';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { ModalContext } from '../../ModalProvider';
+import React, { useContext } from "react";
+import { Button, Tooltip } from "@patternfly/react-core";
+import { StopIcon } from "@patternfly/react-icons";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { ModalContext } from "../../ModalProvider";
 
 /**
  * `HaltButton` is a React functional component that renders a button with a tooltip.
@@ -14,8 +14,8 @@ export const HaltButton: React.FC = () => {
   const { queryResolver, commandResolver } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
   const haltEnvironmentTrigger =
-    commandResolver.useGetTrigger<'HaltEnvironment'>({
-      kind: 'HaltEnvironment',
+    commandResolver.useGetTrigger<"HaltEnvironment">({
+      kind: "HaltEnvironment",
     });
 
   /**
@@ -30,8 +30,8 @@ export const HaltButton: React.FC = () => {
    */
   const handleModalToggle = (): void => {
     triggerModal({
-      content: words('environment.halt.details'),
-      title: words('environment.halt.title'),
+      content: words("environment.halt.details"),
+      title: words("environment.halt.title"),
       actions: [
         <Button
           key="confirm"
@@ -40,16 +40,16 @@ export const HaltButton: React.FC = () => {
             queryResolver.pauseAllContinuousManagers();
             haltEnvironmentTrigger().then((_result) => {
               queryResolver.resumeAllContinuousManagers();
-              document.dispatchEvent(new CustomEvent('halt-event'));
+              document.dispatchEvent(new CustomEvent("halt-event"));
             });
             closeModal();
-            document.dispatchEvent(new CustomEvent('halt-event'));
+            document.dispatchEvent(new CustomEvent("halt-event"));
           }}
         >
-          {words('yes')}
+          {words("yes")}
         </Button>,
         <Button key="cancel" variant="link" onClick={closeModal}>
-          {words('no')}
+          {words("no")}
         </Button>,
       ],
     });
@@ -57,7 +57,7 @@ export const HaltButton: React.FC = () => {
 
   return (
     <Tooltip
-      content={<div>{words('environment.halt.button.tooltip')}</div>}
+      content={<div>{words("environment.halt.button.tooltip")}</div>}
       position="right"
     >
       <Button
@@ -66,7 +66,7 @@ export const HaltButton: React.FC = () => {
         icon={<StopIcon />}
         onClick={handleModalToggle}
       >
-        {words('environment.halt.button')}
+        {words("environment.halt.button")}
       </Button>
     </Tooltip>
   );

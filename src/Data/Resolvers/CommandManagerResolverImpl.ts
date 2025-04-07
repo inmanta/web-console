@@ -1,4 +1,4 @@
-import { ApiHelper, CommandManager, CommandManagerResolver } from '@/Core';
+import { ApiHelper, CommandManager, CommandManagerResolver } from "@/Core";
 import {
   HaltEnvironmentCommandManager,
   ResumeEnvironmentCommandManager,
@@ -14,26 +14,26 @@ import {
   DeployCommandManager,
   ControlAgentCommandManager,
   TriggerDryRun,
-} from '@/Data/Managers';
-import { Store } from '@/Data/Store';
+} from "@/Data/Managers";
+import { Store } from "@/Data/Store";
 import {
   EnvironmentDetailsUpdater,
   GetEnvironmentDetailsStateHelper,
-} from '@/Slices/Settings/Data/GetEnvironmentDetails';
-import { GetProjectsStateHelper } from '@/Slices/Settings/Data/GetProjects';
-import { GetAgentsUpdater } from '@S/Agents/Data/Updater';
+} from "@/Slices/Settings/Data/GetEnvironmentDetails";
+import { GetProjectsStateHelper } from "@/Slices/Settings/Data/GetProjects";
+import { GetAgentsUpdater } from "@S/Agents/Data/Updater";
 import {
   CreateEnvironmentCommandManager,
   CreateProjectCommandManager,
-} from '@S/CreateEnvironment/Data';
-import { DeleteEnvironmentCommandManager, ProjectsUpdater } from '@S/Home/Data';
+} from "@S/CreateEnvironment/Data";
+import { DeleteEnvironmentCommandManager, ProjectsUpdater } from "@S/Home/Data";
 import {
   CallbacksStateHelper,
   CallbacksUpdater,
   CreateCallbackCommandManager,
   DeleteCallbackCommandManager,
-} from '@S/ServiceDetails/Data';
-import { ClearEnvironmentCommandManager } from '@S/Settings/Data/ClearEnvironmentCommandManager';
+} from "@S/ServiceDetails/Data";
+import { ClearEnvironmentCommandManager } from "@S/Settings/Data/ClearEnvironmentCommandManager";
 
 export class CommandManagerResolverImpl implements CommandManagerResolver {
   private managers: CommandManager[] = [];

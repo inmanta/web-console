@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 import {
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
-} from '@patternfly/react-core';
-import { words } from '@/UI';
-import { SimpleFreeTextFilter, SelectOptionFilter } from '@/UI/Components';
+} from "@patternfly/react-core";
+import { words } from "@/UI";
+import { SimpleFreeTextFilter, SelectOptionFilter } from "@/UI/Components";
 
 interface Props {
   projectFilter?: string[];
@@ -36,8 +36,8 @@ export const FilterToolbar: React.FC<Props> = ({
           <ToolbarItem>
             <SimpleFreeTextFilter
               isVisible={true}
-              filterPropertyName={'environment'}
-              placeholder={words('home.filters.env.placeholder')}
+              filterPropertyName={"environment"}
+              placeholder={words("home.filters.env.placeholder")}
               update={setEnvironmentFilter}
               searchEntry={environmentFilter}
             />
@@ -47,9 +47,9 @@ export const FilterToolbar: React.FC<Props> = ({
               isVisible={true}
               possibleStates={projectNames}
               selectedStates={projectFilter ? projectFilter : []}
-              filterPropertyName={'project'}
+              filterPropertyName={"project"}
               update={setProjectFilter}
-              placeholder={words('home.filters.project.placeholder')}
+              placeholder={words("home.filters.project.placeholder")}
             />
           </ToolbarItem>
         </ToolbarGroup>
@@ -66,7 +66,7 @@ export const EmptyFilterToolbar: React.FC = () => (
         aria-label="FilterBar"
         role="toolbar"
       >
-        <ToolbarItem style={{ height: '36px' }} />
+        <ToolbarItem style={{ height: "36px" }} />
       </ToolbarGroup>
     </ToolbarContent>
   </Toolbar>

@@ -1,9 +1,9 @@
-import React from 'react';
-import { PageSection } from '@patternfly/react-core';
-import { FlatEnvironment } from '@/Core';
-import { useUrlStateWithFilter } from '@/Data';
-import { CardView } from './CardView';
-import { FilterToolbar } from './FilterToolbar';
+import React from "react";
+import { PageSection } from "@patternfly/react-core";
+import { FlatEnvironment } from "@/Core";
+import { useUrlStateWithFilter } from "@/Data";
+import { CardView } from "./CardView";
+import { FilterToolbar } from "./FilterToolbar";
 
 interface Props {
   environments: FlatEnvironment[];
@@ -21,7 +21,7 @@ export const EnvironmentsOverview: React.FC<Props> = ({
   const projectNames = Array.from(
     new Set(environments.map((environment) => environment.projectName)),
   );
-  const [filter, setFilter] = useUrlStateWithFilter<Filters>({ route: 'Home' });
+  const [filter, setFilter] = useUrlStateWithFilter<Filters>({ route: "Home" });
   const setProjectFilter = (projectFilter?: string[]) =>
     setFilter({ ...filter, projectFilter });
   const projectFilter = filter.projectFilter ? filter.projectFilter : [];
@@ -29,12 +29,12 @@ export const EnvironmentsOverview: React.FC<Props> = ({
     setFilter({
       ...filter,
       environmentFilter:
-        environmentFilter === '' ? undefined : environmentFilter,
+        environmentFilter === "" ? undefined : environmentFilter,
     });
   };
   const environmentFilter = filter.environmentFilter
     ? filter.environmentFilter
-    : '';
+    : "";
   const filteredByProjectName = filterByProject(environments, projectFilter);
   const filteredByEnvName = filterByName(
     filteredByProjectName,

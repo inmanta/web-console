@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
-import { useLocation, NavLink } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbItem } from '@patternfly/react-core';
-import { DependencyContext } from '@/UI/Dependency';
-import { SearchSanitizer } from '@/UI/Routing';
+import React, { useContext } from "react";
+import { useLocation, NavLink } from "react-router-dom";
+import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core";
+import { DependencyContext } from "@/UI/Dependency";
+import { SearchSanitizer } from "@/UI/Routing";
 
 export const PageBreadcrumbs: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
@@ -16,7 +16,7 @@ export const PageBreadcrumbs: React.FC = () => {
         <BreadcrumbItem
           key={crumb.kind}
           isActive={crumb.active}
-          aria-label={'BreadcrumbItem'}
+          aria-label={"BreadcrumbItem"}
         >
           {crumb.active ? (
             crumb.label

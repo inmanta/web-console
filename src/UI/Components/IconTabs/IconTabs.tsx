@@ -1,5 +1,5 @@
-import React from 'react';
-import { Tabs, Tab, TabTitleText, TabTitleIcon } from '@patternfly/react-core';
+import React from "react";
+import { Tabs, Tab, TabTitleText, TabTitleIcon } from "@patternfly/react-core";
 
 export interface TabDescriptor<K extends string> {
   id: K;

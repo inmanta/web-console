@@ -1,20 +1,20 @@
-import React from 'react';
-import { Card, CardBody } from '@patternfly/react-core';
-import { ListIcon, ModuleIcon } from '@patternfly/react-icons';
+import React from "react";
+import { Card, CardBody } from "@patternfly/react-core";
+import { ListIcon, ModuleIcon } from "@patternfly/react-icons";
 
-import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { JsonFormatter, XmlFormatter } from '@/Data';
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import { JsonFormatter, XmlFormatter } from "@/Data";
 import {
   AttributeClassifier,
   AttributeList,
   IconTabs,
   TabDescriptor,
-} from '@/UI/Components';
-import { words } from '@/UI/words';
+} from "@/UI/Components";
+import { words } from "@/UI/words";
 
 export enum TabKey {
-  Attributes = 'Attributes',
-  Requires = 'Requires',
+  Attributes = "Attributes",
+  Requires = "Requires",
 }
 
 interface Props {
@@ -43,14 +43,14 @@ const attributesTab = (
   attributes: Record<string, unknown>,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
-  title: words('resources.history.tabs.attributes'),
+  title: words("resources.history.tabs.attributes"),
   icon: <ListIcon />,
   view: <AttributesTab attributes={attributes} />,
 });
 
 const requiresTab = (requires: string[]): TabDescriptor<TabKey> => ({
   id: TabKey.Requires,
-  title: words('resources.history.tabs.requires'),
+  title: words("resources.history.tabs.requires"),
   icon: <ModuleIcon />,
   view: <RequiresTab requires={requires} />,
 });
@@ -74,10 +74,10 @@ const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({
 };
 
 const RequiresTab: React.FC<{ requires: string[] }> = ({ requires }) => (
-  <Table aria-label={words('resources.history.tabs.requires')}>
+  <Table aria-label={words("resources.history.tabs.requires")}>
     <Thead>
       <Tr>
-        <Th>{words('resources.history.tabs.requires')}</Th>
+        <Th>{words("resources.history.tabs.requires")}</Th>
       </Tr>
     </Thead>
     <Tbody>
@@ -90,7 +90,7 @@ const RequiresTab: React.FC<{ requires: string[] }> = ({ requires }) => (
       ) : (
         <Tr key="empty-row">
           <Td key="empty-row-data">
-            {words('resources.requires.empty.message')}
+            {words("resources.requires.empty.message")}
           </Td>
         </Tr>
       )}

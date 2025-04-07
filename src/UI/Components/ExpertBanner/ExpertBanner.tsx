@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react';
-import { Banner, Button, Flex, Spinner } from '@patternfly/react-core';
-import { useUpdateEnvConfig } from '@/Data/Managers/V2/Environment';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { ToastAlert } from '../ToastAlert';
+import React, { useContext, useState } from "react";
+import { Banner, Button, Flex, Spinner } from "@patternfly/react-core";
+import { useUpdateEnvConfig } from "@/Data/Managers/V2/Environment";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { ToastAlert } from "../ToastAlert";
 
 /**
  * A React component that displays a banner when the expert mode is enabled.
@@ -27,7 +27,7 @@ export const ExpertBanner: React.FC = () => {
       {errorMessage && (
         <ToastAlert
           data-testid="ToastAlert"
-          title={words('error')}
+          title={words("error")}
           message={errorMessage}
           setMessage={setMessage}
         />
@@ -39,22 +39,22 @@ export const ExpertBanner: React.FC = () => {
         aria-label="expertModeActive"
       >
         <Flex
-          justifyContent={{ default: 'justifyContentCenter' }}
-          gap={{ default: 'gapXs' }}
+          justifyContent={{ default: "justifyContentCenter" }}
+          gap={{ default: "gapXs" }}
         >
-          {words('banner.expertMode')}
+          {words("banner.expertMode")}
           <Button
             variant="link"
             isInline
             onClick={() => {
               setIsLoading(true);
               mutate({
-                id: 'enable_lsm_expert_mode',
+                id: "enable_lsm_expert_mode",
                 updatedValue: { value: false },
               });
             }}
           >
-            {words('banner.disableExpertMode')}
+            {words("banner.disableExpertMode")}
           </Button>
           {isLoading && <Spinner isInline size="sm" />}
         </Flex>

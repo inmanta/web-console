@@ -1,27 +1,27 @@
-import { isObjectEmpty } from '@/Core';
+import { isObjectEmpty } from "@/Core";
 import {
   AttributeHelper,
   PathHelper,
   TreeExpansionManager,
   BaseTreeTableHelper,
-} from '@/UI/Components/TreeTable/Helpers';
-import { extractInventoryValues } from '@/UI/Components/TreeTable/TreeRow';
-import { InventoryAttributeTree } from '@/UI/Components/TreeTable/types';
-import { words } from '@/UI/words';
+} from "@/UI/Components/TreeTable/Helpers";
+import { extractInventoryValues } from "@/UI/Components/TreeTable/TreeRow";
+import { InventoryAttributeTree } from "@/UI/Components/TreeTable/types";
+import { words } from "@/UI/words";
 
 export class InventoryTreeTableHelper extends BaseTreeTableHelper<InventoryAttributeTree> {
   private readonly columns = [
-    words('attribute.name'),
-    words('attributesTab.candidate'),
-    words('attributesTab.active'),
-    words('attributesTab.rollback'),
+    words("attribute.name"),
+    words("attributesTab.candidate"),
+    words("attributesTab.active"),
+    words("attributesTab.rollback"),
   ];
 
   constructor (
     pathHelper: PathHelper,
     expansionManager: TreeExpansionManager,
     attributeHelper: AttributeHelper<InventoryAttributeTree>,
-    attributes: InventoryAttributeTree['source'],
+    attributes: InventoryAttributeTree["source"],
   ) {
     super(
       pathHelper,

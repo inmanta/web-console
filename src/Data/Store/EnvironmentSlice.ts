@@ -1,9 +1,9 @@
-import { Action, action } from 'easy-peasy';
-import { FlatEnvironment, Query, RemoteData } from '@/Core';
+import { Action, action } from "easy-peasy";
+import { FlatEnvironment, Query, RemoteData } from "@/Core";
 
 type EnvironmentSettingsData = RemoteData.Type<
-  Query.Error<'GetEnvironmentSettings'>,
-  Query.Data<'GetEnvironmentSettings'>
+  Query.Error<"GetEnvironmentSettings">,
+  Query.Data<"GetEnvironmentSettings">
 >;
 
 export interface EnvironmentSlice {
@@ -20,8 +20,8 @@ export interface EnvironmentSlice {
   environmentDetailsById: Record<
     string,
     RemoteData.Type<
-      Query.Error<'GetEnvironmentDetails'>,
-      Query.Data<'GetEnvironmentDetails'>
+      Query.Error<"GetEnvironmentDetails">,
+      Query.Data<"GetEnvironmentDetails">
     >
   >;
   setEnvironmentDetailsById: Action<
@@ -29,22 +29,22 @@ export interface EnvironmentSlice {
     {
       id: string;
       value: RemoteData.Type<
-        Query.Error<'GetEnvironmentDetails'>,
-        Query.Data<'GetEnvironmentDetails'>
+        Query.Error<"GetEnvironmentDetails">,
+        Query.Data<"GetEnvironmentDetails">
       >;
     }
   >;
   environmentMetricsById: Record<
     string,
-    RemoteData.Type<Query.Error<'GetMetrics'>, Query.Data<'GetMetrics'>>
+    RemoteData.Type<Query.Error<"GetMetrics">, Query.Data<"GetMetrics">>
   >;
   setEnvironmentMetricsById: Action<
     EnvironmentSlice,
     {
       id: string;
       value: RemoteData.Type<
-        Query.Error<'GetMetrics'>,
-        Query.Data<'GetMetrics'>
+        Query.Error<"GetMetrics">,
+        Query.Data<"GetMetrics">
       >;
     }
   >;
@@ -52,8 +52,8 @@ export interface EnvironmentSlice {
   environmentDetailsWithIconById: Record<
     string,
     RemoteData.Type<
-      Query.Error<'GetEnvironmentDetails'>,
-      Query.Data<'GetEnvironmentDetails'>
+      Query.Error<"GetEnvironmentDetails">,
+      Query.Data<"GetEnvironmentDetails">
     >
   >;
   setEnvironmentDetailsWithIconById: Action<
@@ -61,8 +61,8 @@ export interface EnvironmentSlice {
     {
       id: string;
       value: RemoteData.Type<
-        Query.Error<'GetEnvironmentDetails'>,
-        Query.Data<'GetEnvironmentDetails'>
+        Query.Error<"GetEnvironmentDetails">,
+        Query.Data<"GetEnvironmentDetails">
       >;
     }
   >;

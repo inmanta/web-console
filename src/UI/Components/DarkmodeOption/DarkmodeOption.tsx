@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { DropdownItem } from '@patternfly/react-core';
-import { words } from '@/UI/words';
+import React, { useState, useEffect } from "react";
+import { DropdownItem } from "@patternfly/react-core";
+import { words } from "@/UI/words";
 
-const storageKey = 'theme-preference';
+const storageKey = "theme-preference";
 
 /**
  * Retrieves the user's theme preference from localStorage or the system's color scheme.
@@ -12,9 +12,9 @@ export const getThemePreference = () => {
   if (localStorage.getItem(storageKey)) {
     return localStorage.getItem(storageKey);
   } else {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
   }
 };
 
@@ -26,8 +26,8 @@ export const setThemePreference = (theme: string) => {
   localStorage.setItem(storageKey, theme);
   // Target the html tag and update the theme class "pf-v6-theme-dark" "pf-v6-theme-light" depending on the theme.
   document.documentElement.classList.remove(
-    'pf-v6-theme-dark',
-    'pf-v6-theme-light',
+    "pf-v6-theme-dark",
+    "pf-v6-theme-light",
   );
   document.documentElement.classList.add(`pf-v6-theme-${theme}`);
 };
@@ -38,21 +38,21 @@ export const setThemePreference = (theme: string) => {
  * @returns {React.FC} The rendered component.
  */
 export const DarkmodeOption: React.FC = () => {
-  const [theme, setTheme] = useState<string>(getThemePreference() || 'light');
+  const [theme, setTheme] = useState<string>(getThemePreference() || "light");
 
   useEffect(() => {
     setThemePreference(theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    const newTheme = theme === "dark" ? "light" : "dark";
 
     setTheme(newTheme);
   };
 
   return (
     <DropdownItem key="darkmode-toggle" onClick={toggleTheme}>
-      {words('theme.toggle')(theme)}
+      {words("theme.toggle")(theme)}
     </DropdownItem>
   );
 };

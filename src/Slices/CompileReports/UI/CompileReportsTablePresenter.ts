@@ -1,7 +1,7 @@
-import { CompileStatus } from '@/Core';
-import { DatePresenter, TablePresenter } from '@/UI/Presenters';
-import { words } from '@/UI/words';
-import { CompileReport, CompileReportRow } from '@S/CompileReports/Core/Domain';
+import { CompileStatus } from "@/Core";
+import { DatePresenter, TablePresenter } from "@/UI/Presenters";
+import { words } from "@/UI/words";
+import { CompileReport, CompileReportRow } from "@S/CompileReports/Core/Domain";
 
 export class CompileReportsTablePresenter
 implements TablePresenter<CompileReport, CompileReportRow> {
@@ -10,11 +10,11 @@ implements TablePresenter<CompileReport, CompileReportRow> {
 
   constructor (private datePresenter: DatePresenter) {
     this.columnHeads = [
-      words('compileReports.columns.requested'),
-      words('compileReports.columns.status'),
-      words('compileReports.columns.message'),
-      words('compileReports.columns.waitTime'),
-      words('compileReports.columns.compileTime'),
+      words("compileReports.columns.requested"),
+      words("compileReports.columns.status"),
+      words("compileReports.columns.message"),
+      words("compileReports.columns.waitTime"),
+      words("compileReports.columns.compileTime"),
     ];
     this.numberOfColumns = this.columnHeads.length + 2;
   }
@@ -29,15 +29,15 @@ implements TablePresenter<CompileReport, CompileReportRow> {
             compileReport.completed,
             compileReport.started,
           )
-          : '',
+          : "",
       waitTime: compileReport.started
         ? this.datePresenter.diff(
           compileReport.started,
           compileReport.requested,
         )
-        : '',
+        : "",
       completed: compileReport.completed,
-      message: compileReport.metadata['message'] as string,
+      message: compileReport.metadata["message"] as string,
       status: this.getStatusFromReport(compileReport),
     }));
   }

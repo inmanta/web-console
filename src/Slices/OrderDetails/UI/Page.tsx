@@ -1,25 +1,25 @@
-import React, { useContext } from 'react';
-import { useRouteParams } from '@/UI';
-import { EmptyView, PageContainer, RemoteDataView } from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { OrderDetailsHeading } from './OrderDetailsHeading';
-import { OrderDetailsTable } from './OrderDetailsTable';
-import { OrderDetailsTablePresenter } from './OrderDetailsTablePresenter';
+import React, { useContext } from "react";
+import { useRouteParams } from "@/UI";
+import { EmptyView, PageContainer, RemoteDataView } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { OrderDetailsHeading } from "./OrderDetailsHeading";
+import { OrderDetailsTable } from "./OrderDetailsTable";
+import { OrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";
 
 export const Page: React.FC = () => {
   const { queryResolver, featureManager } = useContext(DependencyContext);
-  const { id } = useRouteParams<'OrderDetails'>();
+  const { id } = useRouteParams<"OrderDetails">();
 
-  const [data, retry] = queryResolver.useContinuous<'GetOrderDetails'>({
-    kind: 'GetOrderDetails',
+  const [data, retry] = queryResolver.useContinuous<"GetOrderDetails">({
+    kind: "GetOrderDetails",
     id: id,
   });
 
   const disabledOrderDetailsView = !featureManager.isOrderViewEnabled();
 
   return (
-    <PageContainer pageTitle={words('ordersDetails.title')}>
+    <PageContainer pageTitle={words("ordersDetails.title")}>
       <RemoteDataView
         data={data}
         label="OrderDetailsView"
@@ -29,8 +29,8 @@ export const Page: React.FC = () => {
             <EmptyView
               message={
                 disabledOrderDetailsView
-                  ? words('orders.disabled')
-                  : words('orderDetails.table.empty')
+                  ? words("orders.disabled")
+                  : words("orderDetails.table.empty")
               }
               aria-label="OrderDetailsView-Empty"
             />

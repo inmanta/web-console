@@ -1,9 +1,9 @@
-import React from 'react';
-import styled from 'styled-components';
-import { ParsedNumber, Resource } from '@/Core';
-import { words } from '@/UI';
-import { LegendBar, LegendItemDetails } from '@/UI/Components/LegendBar';
-import { colorConfig } from './ColorConfig';
+import React from "react";
+import styled from "styled-components";
+import { ParsedNumber, Resource } from "@/Core";
+import { words } from "@/UI";
+import { LegendBar, LegendItemDetails } from "@/UI/Components/LegendBar";
+import { colorConfig } from "./ColorConfig";
 
 interface Props {
   summary: Resource.DeploySummary;
@@ -33,7 +33,7 @@ export const ResourceStatusBar: React.FC<Props> = ({
       total={{
         format: (total) => `${done} / ${total}`,
       }}
-      aria-label={words('resources.deploySummary.title')}
+      aria-label={words("resources.deploySummary.title")}
     />
   );
 };

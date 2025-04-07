@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
-import { RemoteData } from '@/Core';
+import React, { useContext } from "react";
+import { RemoteData } from "@/Core";
 import {
   RequiresTable,
   LoadingRequiresTable,
   ErrorView,
-} from '@/UI/Components';
-import { EmptyView } from '@/UI/Components/EmptyView';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
+} from "@/UI/Components";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props {
   id: string;
@@ -17,8 +17,8 @@ interface Props {
 export const RequiresTableWithData: React.FC<Props> = ({ id, deps }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useContinuous<'GetResourceDetails'>({
-    kind: 'GetResourceDetails',
+  const [data] = queryResolver.useContinuous<"GetResourceDetails">({
+    kind: "GetResourceDetails",
     id,
   });
 
@@ -33,14 +33,14 @@ export const RequiresTableWithData: React.FC<Props> = ({ id, deps }) => {
       ),
       failed: (error) => (
         <ErrorView
-          message={words('error.general')(error)}
+          message={words("error.general")(error)}
           ariaLabel="ResourceRequires-Failed"
         />
       ),
       success: (resourceDetails) =>
         Object.keys(resourceDetails.requires_status).length <= 0 ? (
           <EmptyView
-            message={words('resources.requires.empty.message')}
+            message={words("resources.requires.empty.message")}
             aria-label="ResourceRequires-Empty"
           />
         ) : (

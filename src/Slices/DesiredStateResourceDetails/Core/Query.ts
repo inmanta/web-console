@@ -1,7 +1,7 @@
-import { Resource } from '@/Core/Domain';
+import { Resource } from "@/Core/Domain";
 
 export interface Query {
-  kind: 'GetVersionedResourceDetails';
+  kind: "GetVersionedResourceDetails";
   id: string;
   version: string;
 }

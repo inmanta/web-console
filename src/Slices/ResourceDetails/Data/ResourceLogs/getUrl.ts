@@ -1,6 +1,6 @@
-import moment from 'moment-timezone';
-import qs from 'qs';
-import { Query, DateRange, RangeOperator } from '@/Core';
+import moment from "moment-timezone";
+import qs from "qs";
+import { Query, DateRange, RangeOperator } from "@/Core";
 
 export function getUrl ({
   id,
@@ -8,7 +8,7 @@ export function getUrl ({
   filter,
   pageSize,
   currentPage,
-}: Query.SubQuery<'GetResourceLogs'>): string {
+}: Query.SubQuery<"GetResourceLogs">): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
@@ -20,22 +20,22 @@ export function getUrl ({
             timestamp: serializeTimestampFilter(filter.timestamp),
           },
         },
-        { allowDots: true, arrayFormat: 'repeat' },
+        { allowDots: true, arrayFormat: "repeat" },
       )}`
-      : '';
-  const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : '';
+      : "";
+  const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
   return `/api/v2/resource/${id}/logs?limit=${
     pageSize.value
   }${filterParam}${sortParam}${
-    currentPage.value ? `&${currentPage.value}` : ''
+    currentPage.value ? `&${currentPage.value}` : ""
   }`;
 }
 
 const serializeTimestampFilter = (
   filter?: DateRange.Type[],
 ): string[] | undefined => {
-  if (typeof filter === 'undefined') return undefined;
+  if (typeof filter === "undefined") return undefined;
 
   return filter.map(
     (timestampWithOperator) =>
@@ -44,6 +44,6 @@ const serializeTimestampFilter = (
       )}:${moment
         .tz(timestampWithOperator.date, moment.tz.guess())
         .utc()
-        .format('YYYY-MM-DD+HH:mm:ss')}`,
+        .format("YYYY-MM-DD+HH:mm:ss")}`,
   );
 };

@@ -1,5 +1,5 @@
-import { isNotUndefined, ParsedNumber } from '@/Core/Language';
-import { isValidOperator, Operator } from './RangeOperator';
+import { isNotUndefined, ParsedNumber } from "@/Core/Language";
+import { isValidOperator, Operator } from "./RangeOperator";
 
 export interface IntRange {
   value: ParsedNumber;
@@ -15,8 +15,8 @@ export const serializeList = (ranges: IntRange[]): string[] =>
   ranges.map(serialize);
 
 const parse = (candidate: unknown): IntRange | undefined => {
-  if (typeof candidate !== 'string') return undefined;
-  const [operator, valueString] = candidate.split('__');
+  if (typeof candidate !== "string") return undefined;
+  const [operator, valueString] = candidate.split("__");
 
   if (!isValidOperator(operator) || !isValidNumber(valueString))
     return undefined;
@@ -34,4 +34,4 @@ export const parseList = (candidate: unknown): IntRange[] | undefined => {
 };
 
 const isValidNumber = (value: unknown): value is number =>
-  typeof value === 'string' && !isNaN(parseInt(value, 10));
+  typeof value === "string" && !isNaN(parseInt(value, 10));

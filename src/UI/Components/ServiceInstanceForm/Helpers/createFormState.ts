@@ -1,6 +1,6 @@
-import { times, cloneDeep } from 'lodash-es';
-import { FieldLikeWithFormState, InstanceAttributeModel } from '@/Core';
-import { tryParseJSON } from '../Components';
+import { times, cloneDeep } from "lodash-es";
+import { FieldLikeWithFormState, InstanceAttributeModel } from "@/Core";
+import { tryParseJSON } from "../Components";
 
 /**
  * Create an form state based on the provided fields.
@@ -13,23 +13,23 @@ export const createFormState = (
 ): InstanceAttributeModel => {
   const returnValue = fields.reduce((acc, curr) => {
     switch (curr.kind) {
-      case 'Boolean':
-      case 'Enum':
-      case 'Text':
-      case 'Textarea':
-      case 'TextList': {
+      case "Boolean":
+      case "Enum":
+      case "Text":
+      case "Textarea":
+      case "TextList": {
         acc[curr.name] = convertValueOnType(curr.type, curr.defaultValue);
 
         return acc;
       }
 
-      case 'InterServiceRelation': {
-        acc[curr.name] = '';
+      case "InterServiceRelation": {
+        acc[curr.name] = "";
 
         return acc;
       }
 
-      case 'Nested': {
+      case "Nested": {
         if (curr.isOptional) {
           acc[curr.name] = null;
         } else {
@@ -39,13 +39,13 @@ export const createFormState = (
         return acc;
       }
 
-      case 'RelationList': {
+      case "RelationList": {
         acc[curr.name] = [];
 
         return acc;
       }
 
-      case 'DictList': {
+      case "DictList": {
         if (curr.min <= 0) {
           acc[curr.name] = [];
         } else {
@@ -77,21 +77,21 @@ export const createFormState = (
  */
 export const createEditFormState = (
   fields: FieldLikeWithFormState[],
-  apiVersion: 'v1' | 'v2',
+  apiVersion: "v1" | "v2",
   originalAttributes?: InstanceAttributeModel | null,
 ): InstanceAttributeModel => {
-  if (apiVersion === 'v2' && originalAttributes) {
+  if (apiVersion === "v2" && originalAttributes) {
     return originalAttributes;
   }
 
   return fields.reduce((acc, curr) => {
     if (originalAttributes?.[curr.name] !== undefined) {
       switch (curr.kind) {
-        case 'Boolean':
-        case 'Enum':
-        case 'Textarea':
-        case 'TextList':
-        case 'Text': {
+        case "Boolean":
+        case "Enum":
+        case "Textarea":
+        case "TextList":
+        case "Text": {
           acc[curr.name] = convertValueOnType(
             curr.type,
             originalAttributes?.[curr.name],
@@ -100,15 +100,15 @@ export const createEditFormState = (
           return acc;
         }
 
-        case 'InterServiceRelation': {
+        case "InterServiceRelation": {
           acc[curr.name] = originalAttributes?.[curr.name]
             ? originalAttributes?.[curr.name]
-            : '';
+            : "";
 
           return acc;
         }
 
-        case 'Nested': {
+        case "Nested": {
           if (curr.isOptional && originalAttributes?.[curr.name] === null) {
             acc[curr.name] = null;
           } else {
@@ -122,13 +122,13 @@ export const createEditFormState = (
           return acc;
         }
 
-        case 'RelationList': {
+        case "RelationList": {
           acc[curr.name] = (originalAttributes?.[curr.name] as string[]) || [];
 
           return acc;
         }
 
-        case 'DictList': {
+        case "DictList": {
           acc[curr.name] = (
             originalAttributes?.[curr.name] as InstanceAttributeModel[]
           ).map((nestedOriginalAttributes) =>
@@ -168,11 +168,11 @@ export const createDuplicateFormState = (
   return fields.reduce((acc, curr) => {
     if (originalAttributes?.[curr.name] !== undefined) {
       switch (curr.kind) {
-        case 'Boolean':
-        case 'Enum':
-        case 'Textarea':
-        case 'TextList':
-        case 'Text': {
+        case "Boolean":
+        case "Enum":
+        case "Textarea":
+        case "TextList":
+        case "Text": {
           acc[curr.name] = convertValueOnType(
             curr.type,
             originalAttributes?.[curr.name],
@@ -181,15 +181,15 @@ export const createDuplicateFormState = (
           return acc;
         }
 
-        case 'InterServiceRelation': {
+        case "InterServiceRelation": {
           acc[curr.name] = originalAttributes?.[curr.name]
             ? originalAttributes?.[curr.name]
-            : '';
+            : "";
 
           return acc;
         }
 
-        case 'Nested': {
+        case "Nested": {
           if (curr.isOptional && originalAttributes?.[curr.name] === null) {
             acc[curr.name] = null;
           } else {
@@ -202,13 +202,13 @@ export const createDuplicateFormState = (
           return acc;
         }
 
-        case 'RelationList': {
+        case "RelationList": {
           acc[curr.name] = (originalAttributes?.[curr.name] as string[]) || [];
 
           return acc;
         }
 
-        case 'DictList': {
+        case "DictList": {
           acc[curr.name] = (
             originalAttributes?.[curr.name] as InstanceAttributeModel[]
           ).map((nestedOriginalAttributes) =>
@@ -245,19 +245,19 @@ export const createDuplicateFormState = (
  * convertValueOnType("dict", "") // returns null
  */
 const convertValueOnType = (type: string, value: unknown) => {
-  if (type.includes('int') || type.includes('float')) {
+  if (type.includes("int") || type.includes("float")) {
     //empty string assertion and `Number(value)` is for converting input form to JSON Editor
-    if (type.includes('[]')) {
-      if (typeof value === 'string') {
-        return value === '' ? null : tryParseJSON(value);
+    if (type.includes("[]")) {
+      if (typeof value === "string") {
+        return value === "" ? null : tryParseJSON(value);
       }
 
       return value === null ? null : cloneDeep(value);
     }
 
-    return value === '' || value === null ? null : Number(value);
-  } else if (type.includes('dict')) {
-    return value === '' ? null : cloneDeep(tryParseJSON(value));
+    return value === "" || value === null ? null : Number(value);
+  } else if (type.includes("dict")) {
+    return value === "" ? null : cloneDeep(tryParseJSON(value));
   } else {
     return cloneDeep(value);
   }

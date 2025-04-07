@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import { Button } from '@patternfly/react-core';
-import { Td, Tr } from '@patternfly/react-table';
-import { useRemoveUser, UserInfo } from '@/Data/Managers/V2/Auth';
-import { words } from '@/UI';
-import { ConfirmUserActionForm } from '@/UI/Components';
-import { ModalContext } from '@/UI/Root/Components/ModalProvider';
+import React, { useContext } from "react";
+import { Button } from "@patternfly/react-core";
+import { Td, Tr } from "@patternfly/react-table";
+import { useRemoveUser, UserInfo } from "@/Data/Managers/V2/Auth";
+import { words } from "@/UI";
+import { ConfirmUserActionForm } from "@/UI/Components";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
 interface Props {
   user: UserInfo;
@@ -28,10 +28,10 @@ export const UserInfoRow: React.FC<Props> = ({ user }) => {
    */
   const openModal = (): void => {
     triggerModal({
-      title: words('userManagement.deleteUser.title'),
+      title: words("userManagement.deleteUser.title"),
       content: (
         <>
-          <p>{words('userManagement.deleteUserMessage')(user.username)}</p>
+          <p>{words("userManagement.deleteUserMessage")(user.username)}</p>
           <ConfirmUserActionForm
             onSubmit={() => {
               mutate(user.username);
@@ -49,7 +49,7 @@ export const UserInfoRow: React.FC<Props> = ({ user }) => {
       <Td dataLabel={user.username}>{user.username}</Td>
       <Td dataLabel={`${user.username}-actions`}>
         <Button variant="danger" onClick={openModal}>
-          {words('delete')}
+          {words("delete")}
         </Button>
       </Td>
     </Tr>

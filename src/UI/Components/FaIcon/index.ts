@@ -1,1 +1,1 @@
-export * from './FaIcon';
+export * from "./FaIcon";

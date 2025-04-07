@@ -1,1 +1,1 @@
-export * from './useGetInstance';
+export * from "./useGetInstance";

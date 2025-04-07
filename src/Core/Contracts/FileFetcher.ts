@@ -1,4 +1,4 @@
-import { Either } from '@/Core/Language';
+import { Either } from "@/Core/Language";
 
 export interface FileFetcher {
   setEnvironment(environment: string): void;

@@ -1,5 +1,5 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import { RouteKind } from '@/Core';
+import { useNavigate, useLocation } from "react-router-dom";
+import { RouteKind } from "@/Core";
 
 export interface Location {
   pathname: string;

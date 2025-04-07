@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { RemoteDataView } from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { CallbacksTable } from './CallbacksTable';
+import React, { useContext } from "react";
+import { RemoteDataView } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { CallbacksTable } from "./CallbacksTable";
 
 interface Props {
   service_entity: string;
@@ -9,8 +9,8 @@ interface Props {
 
 export const CallbacksView: React.FC<Props> = ({ service_entity }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [data, retry] = queryResolver.useOneTime<'GetCallbacks'>({
-    kind: 'GetCallbacks',
+  const [data, retry] = queryResolver.useOneTime<"GetCallbacks">({
+    kind: "GetCallbacks",
     service_entity,
   });
 

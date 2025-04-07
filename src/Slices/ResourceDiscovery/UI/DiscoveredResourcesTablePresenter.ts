@@ -1,6 +1,6 @@
-import { ColumnHead, TablePresenter } from '@/UI/Presenters';
-import { words } from '@/UI/words';
-import { DiscoveredResource } from '../Core/Query';
+import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { words } from "@/UI/words";
+import { DiscoveredResource } from "../Core/Query";
 
 export class DiscoveredResourcesTablePresenter
 implements TablePresenter<DiscoveredResource, DiscoveredResource> {
@@ -10,16 +10,16 @@ implements TablePresenter<DiscoveredResource, DiscoveredResource> {
   constructor () {
     this.columnHeads = [
       {
-        displayName: words('discovered.column.resource_id'),
-        apiName: 'discovered_resource_id',
+        displayName: words("discovered.column.resource_id"),
+        apiName: "discovered_resource_id",
       },
       {
-        displayName: words('discovered.column.managed_resource'),
-        apiName: 'managed_resource_id',
+        displayName: words("discovered.column.managed_resource"),
+        apiName: "managed_resource_id",
       },
       {
-        displayName: words('discovered.column.discovery_resource'),
-        apiName: 'discovery_resource_uri',
+        displayName: words("discovered.column.discovery_resource"),
+        apiName: "discovery_resource_uri",
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
@@ -32,7 +32,7 @@ implements TablePresenter<DiscoveredResource, DiscoveredResource> {
     return this.columnHeads.map(({ displayName }) => displayName);
   }
   getSortableColumnNames (): string[] {
-    const sortableColumns = ['discovered_resource_id'];
+    const sortableColumns = ["discovered_resource_id"];
 
     return sortableColumns;
   }

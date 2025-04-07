@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Tbody,
   Table,
@@ -6,17 +6,17 @@ import {
   Th,
   Thead,
   Tr,
-} from '@patternfly/react-table';
-import { words } from '@/UI/words';
+} from "@patternfly/react-table";
+import { words } from "@/UI/words";
 
 export const RequiresTableWrapper: React.FC<
   React.PropsWithChildren<unknown>
 > = ({ children, ...props }) => (
-  <Table aria-label={props['aria-label']} variant={TableVariant.compact}>
+  <Table aria-label={props["aria-label"]} variant={TableVariant.compact}>
     <Thead>
       <Tr>
-        <Th>{words('resources.requires.resource')}</Th>
-        <Th width={15}>{words('resources.requires.deployState')}</Th>
+        <Th>{words("resources.requires.resource")}</Th>
+        <Th width={15}>{words("resources.requires.deployState")}</Th>
       </Tr>
     </Thead>
     <Tbody>{children}</Tbody>

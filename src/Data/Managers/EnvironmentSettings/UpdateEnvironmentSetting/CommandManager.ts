@@ -1,13 +1,13 @@
-import { ApiHelper, Maybe, Updater, UpdaterWithEnv } from '@/Core';
-import { CommandManagerWithEnv } from '@/Data/Common';
+import { ApiHelper, Maybe, Updater, UpdaterWithEnv } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function UpdateEnvironmentSettingCommandManager (
   apiHelper: ApiHelper,
-  updater: UpdaterWithEnv<'GetEnvironmentSetting'>,
-  environmentUpdater: Updater<'GetEnvironmentDetails'>,
+  updater: UpdaterWithEnv<"GetEnvironmentSetting">,
+  environmentUpdater: Updater<"GetEnvironmentDetails">,
 ) {
-  return CommandManagerWithEnv<'UpdateEnvironmentSetting'>(
-    'UpdateEnvironmentSetting',
+  return CommandManagerWithEnv<"UpdateEnvironmentSetting">(
+    "UpdateEnvironmentSetting",
     (command, environment) => {
       return async (id, value) => {
         const error = await apiHelper.postWithoutResponse(
@@ -18,15 +18,15 @@ export function UpdateEnvironmentSettingCommandManager (
 
         if (Maybe.isNone(error)) {
           await updater.update(
-            { kind: 'GetEnvironmentSetting', id },
+            { kind: "GetEnvironmentSetting", id },
             environment,
           );
           await environmentUpdater.update({
-            kind: 'GetEnvironmentDetails',
+            kind: "GetEnvironmentDetails",
             details: false,
             id: environment,
           });
-          document.dispatchEvent(new Event('settings-update'));
+          document.dispatchEvent(new Event("settings-update"));
         }
 
         return error;

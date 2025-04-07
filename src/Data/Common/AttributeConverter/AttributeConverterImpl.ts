@@ -1,28 +1,28 @@
-import { TextInputTypes } from '@patternfly/react-core';
-import { cloneDeep, isEmpty, isEqual, merge } from 'lodash-es';
+import { TextInputTypes } from "@patternfly/react-core";
+import { cloneDeep, isEmpty, isEqual, merge } from "lodash-es";
 import {
   AttributeModel,
   FormAttributeResult,
   InstanceAttributeModel,
   ServiceInstanceModel,
-} from '@/Core';
+} from "@/Core";
 import {
   AttributeInputConverter,
   AttributeResultConverter,
   InputType,
-} from './AttributeConverter';
-import { parseNumberWithType } from './parseNumberWithType';
+} from "./AttributeConverter";
+import { parseNumberWithType } from "./parseNumberWithType";
 
 function isNumberArray (type: string): boolean {
   return (
-    ['float', 'int'].filter((numberLike) => type.includes(`${numberLike}[]`))
+    ["float", "int"].filter((numberLike) => type.includes(`${numberLike}[]`))
       .length > 0
   );
 }
 
 function isNumberType (type: string): boolean {
   return (
-    ['float', 'int'].filter((numberLike) => type.includes(numberLike)).length >
+    ["float", "int"].filter((numberLike) => type.includes(numberLike)).length >
       0 && !isNumberArray(type)
   );
 }
@@ -32,7 +32,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
    * Determines what kind of input should be used for a Service Attribute
    */
   getInputType (attributeModel: AttributeModel): InputType {
-    if (attributeModel.type.includes('bool')) return 'bool';
+    if (attributeModel.type.includes("bool")) return "bool";
 
     return this.matchTextInputWithPatternflyInput(attributeModel.type);
   }
@@ -58,11 +58,11 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
     | undefined {
     if (defaultValueSet && defaultValue !== null) {
       return defaultValue;
-    } else if (inputType === 'bool') {
+    } else if (inputType === "bool") {
       return null;
     } else {
       // Use empty string for the empty state when it's not a boolean, for booleans it's handled differently
-      return '';
+      return "";
     }
   }
 
@@ -81,7 +81,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
   getCurrentAttributes (
     instance: Pick<
       ServiceInstanceModel,
-      'candidate_attributes' | 'active_attributes'
+      "candidate_attributes" | "active_attributes"
     >,
   ): InstanceAttributeModel | null {
     return instance.candidate_attributes &&
@@ -105,14 +105,14 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
     let parsedValue = value;
 
     try {
-      if (type.includes('bool')) {
+      if (type.includes("bool")) {
         parsedValue = toOptionalBoolean(value);
-      } else if (type.includes('?') && value === '') {
+      } else if (type.includes("?") && value === "") {
         parsedValue = null;
-      } else if ((isNumberType(type) || isNumberArray(type)) && value === '') {
+      } else if ((isNumberType(type) || isNumberArray(type)) && value === "") {
         parsedValue = null;
       } else if (isNumberArray(type)) {
-        const parts = value.split(',').map((piece) => {
+        const parts = value.split(",").map((piece) => {
           const trimmed = piece.trim();
           const converted = Number(trimmed);
 
@@ -126,11 +126,11 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
         parsedValue = parts;
       } else if (isNumberType(type)) {
         parsedValue = parseNumberWithType(type, value);
-      } else if (type.includes('[]')) {
-        const parts = value.split(',').map((piece) => piece.trim());
+      } else if (type.includes("[]")) {
+        const parts = value.split(",").map((piece) => piece.trim());
 
         parsedValue = parts;
-      } else if (type.includes('dict')) {
+      } else if (type.includes("dict")) {
         parsedValue = JSON.parse(value);
       }
     } catch (_error) {
@@ -203,12 +203,12 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
 export function toOptionalBoolean (
   value?: string | null | boolean,
 ): boolean | null {
-  if (typeof value === 'boolean') {
+  if (typeof value === "boolean") {
     return value;
   }
-  if (value?.toLocaleLowerCase() === 'true') {
+  if (value?.toLocaleLowerCase() === "true") {
     return true;
-  } else if (value?.toLocaleLowerCase() === 'false') {
+  } else if (value?.toLocaleLowerCase() === "false") {
     return false;
   } else {
     return null;

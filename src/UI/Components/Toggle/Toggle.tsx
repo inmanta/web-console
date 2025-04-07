@@ -1,6 +1,6 @@
-import React from 'react';
-import { Button } from '@patternfly/react-core';
-import { AngleDownIcon, AngleRightIcon } from '@patternfly/react-icons';
+import React from "react";
+import { Button } from "@patternfly/react-core";
+import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
 
 interface ToggleProps {
   expanded: boolean;

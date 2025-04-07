@@ -1,10 +1,10 @@
-import { createContext } from 'react';
-import { PageSize, Sort } from '@/Core';
+import { createContext } from "react";
+import { PageSize, Sort } from "@/Core";
 import {
   CurrentPage,
   initialCurrentPage,
-} from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
-import { Filter } from '@S/Agents/Core/Query';
+} from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { Filter } from "@S/Agents/Core/Query";
 
 interface GetAgentsProvider {
   filter: Filter;
@@ -16,10 +16,10 @@ interface GetAgentsProvider {
 
 export const GetAgentsContext = createContext<GetAgentsProvider>({
   filter: {},
-  sort: { name: 'name', order: 'asc' },
+  sort: { name: "name", order: "asc" },
   pageSize: PageSize.initial,
   currentPage: initialCurrentPage,
   setErrorMessage: () => {
-    throw Error('Method not implemented');
+    throw Error("Method not implemented");
   },
 });

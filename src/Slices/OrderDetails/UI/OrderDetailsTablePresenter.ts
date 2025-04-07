@@ -1,6 +1,6 @@
-import { ServiceOrderItem } from '@/Slices/Orders/Core/Query';
-import { ColumnHead, TablePresenter } from '@/UI/Presenters';
-import { words } from '@/UI/words';
+import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
+import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { words } from "@/UI/words";
 
 /**
  * OrderDetailsTablePresenter @Class
@@ -17,20 +17,20 @@ implements TablePresenter<ServiceOrderItem, ServiceOrderItem> {
   constructor () {
     this.columnHeads = [
       {
-        displayName: words('orders.column.instanceId'),
-        apiName: 'instance_id',
+        displayName: words("orders.column.instanceId"),
+        apiName: "instance_id",
       },
       {
-        displayName: words('orders.column.serviceEntity'),
-        apiName: 'service_entity',
+        displayName: words("orders.column.serviceEntity"),
+        apiName: "service_entity",
       },
       {
-        displayName: words('orders.column.action'),
-        apiName: 'action',
+        displayName: words("orders.column.action"),
+        apiName: "action",
       },
       {
-        displayName: words('orders.column.status'),
-        apiName: 'status',
+        displayName: words("orders.column.status"),
+        apiName: "status",
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;

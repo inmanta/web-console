@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   ToolbarFilter,
   ToolbarItem,
   Flex,
   FlexItem,
-} from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
-import { reject } from 'lodash-es';
-import { DateRange, RangeOperator } from '@/Core';
-import { DatePresenter } from '@/UI/Presenters';
-import { words } from '@/UI/words';
-import { TimestampPicker } from './TimestampPicker';
+} from "@patternfly/react-core";
+import { SearchIcon } from "@patternfly/react-icons";
+import { reject } from "lodash-es";
+import { DateRange, RangeOperator } from "@/Core";
+import { DatePresenter } from "@/UI/Presenters";
+import { words } from "@/UI/words";
+import { TimestampPicker } from "./TimestampPicker";
 
 interface Props {
   datePresenter: DatePresenter;
@@ -74,7 +74,7 @@ export const TimestampFilter: React.FC<Props> = ({
     return `${operator} | ${datePresenter.getFull(date.toISOString())}`;
   };
   const prettyToRaw = (pretty: string): DateRange.Type => {
-    const [operator, date] = pretty.split('|');
+    const [operator, date] = pretty.split("|");
 
     return {
       date: datePresenter.parseFull(date),
@@ -84,8 +84,8 @@ export const TimestampFilter: React.FC<Props> = ({
 
   return (
     <Flex
-      style={{ gap: 'var(--pf-t--global--spacer--md)' }}
-      flexWrap={{ lg: 'nowrap' }}
+      style={{ gap: "var(--pf-t--global--spacer--md)" }}
+      flexWrap={{ lg: "nowrap" }}
     >
       {isVisible && (
         <>
@@ -101,7 +101,7 @@ export const TimestampFilter: React.FC<Props> = ({
             </ToolbarItem>
           </FlexItem>
           <FlexItem>
-            <ToolbarItem>{words('events.filters.date.to')}</ToolbarItem>
+            <ToolbarItem>{words("events.filters.date.to")}</ToolbarItem>
           </FlexItem>
           <FlexItem>
             <ToolbarItem>

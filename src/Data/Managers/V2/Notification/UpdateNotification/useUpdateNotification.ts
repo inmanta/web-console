@@ -3,8 +3,8 @@ import {
   useMutation,
   UseMutationOptions,
   useQueryClient,
-} from '@tanstack/react-query';
-import { usePatch } from '../../helpers';
+} from "@tanstack/react-query";
+import { usePatch } from "../../helpers";
 
 /**
  * Body parameters for updating a notification.
@@ -51,7 +51,7 @@ export const useUpdateNotification = (
     onSuccess: () => {
       // Invalidate relevant queries based on origin
       queryClient.invalidateQueries({
-        queryKey: ['get_notifications'],
+        queryKey: ["get_notifications"],
       });
     },
     ...options,

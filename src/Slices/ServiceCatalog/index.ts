@@ -1,1 +1,1 @@
-export * as ServiceCatalog from './Core/Route';
+export * as ServiceCatalog from "./Core/Route";

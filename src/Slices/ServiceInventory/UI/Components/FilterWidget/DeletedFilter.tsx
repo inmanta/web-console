@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   MenuToggle,
   MenuToggleElement,
   Select,
   SelectOption,
   ToolbarFilter,
-} from '@patternfly/react-core';
-import { ServiceInstanceParams } from '@/Core';
+} from "@patternfly/react-core";
+import { ServiceInstanceParams } from "@/Core";
 
 interface Props {
   isVisible: boolean;
@@ -40,11 +40,11 @@ export const DeletedFilter: React.FC<Props> = ({
       aria-label="Select Deleted"
       style={
         {
-          width: '200px',
+          width: "200px",
         } as React.CSSProperties
       }
     >
-      {deleted || 'Select a rule...'}
+      {deleted || "Select a rule..."}
     </MenuToggle>
   );
 

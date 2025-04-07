@@ -1,5 +1,5 @@
-import { CommandManager } from './CommandManager';
-import { QueryManager } from './QueryManager';
+import { CommandManager } from "./CommandManager";
+import { QueryManager } from "./QueryManager";
 
 interface CommandManagerResolver {
   get(): CommandManager[];

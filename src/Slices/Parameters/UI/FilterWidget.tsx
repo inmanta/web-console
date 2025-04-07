@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { ToolbarGroup } from '@patternfly/react-core';
-import { DateRange } from '@/Core';
-import { FilterPicker } from '@/UI/Components';
-import { FreeTextFilter, TimestampFilter } from '@/UI/Components/Filters';
-import { MomentDatePresenter } from '@/UI/Utils';
-import { words } from '@/UI/words';
-import { FilterKind, Filter, FilterList } from '@S/Parameters/Core/Query';
+import React, { useState } from "react";
+import { ToolbarGroup } from "@patternfly/react-core";
+import { DateRange } from "@/Core";
+import { FilterPicker } from "@/UI/Components";
+import { FreeTextFilter, TimestampFilter } from "@/UI/Components/Filters";
+import { MomentDatePresenter } from "@/UI/Utils";
+import { words } from "@/UI/words";
+import { FilterKind, Filter, FilterList } from "@S/Parameters/Core/Query";
 
 interface Props {
   filter: Filter;
@@ -38,14 +38,14 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
         isHidden={filterKind !== FilterKind.Name}
         searchEntries={filter.name}
         filterPropertyName={FilterKind.Name}
-        placeholder={words('parameters.filters.name.placeholder')}
+        placeholder={words("parameters.filters.name.placeholder")}
         update={updateName}
       />
       <FreeTextFilter
         isHidden={filterKind !== FilterKind.Source}
         searchEntries={filter.source}
         filterPropertyName={FilterKind.Source}
-        placeholder={words('parameters.filters.source.placeholder')}
+        placeholder={words("parameters.filters.source.placeholder")}
         update={updateSource}
       />
       <TimestampFilter

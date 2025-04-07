@@ -1,9 +1,9 @@
-import { Action, action } from 'easy-peasy';
-import { RemoteData, Query } from '@/Core';
+import { Action, action } from "easy-peasy";
+import { RemoteData, Query } from "@/Core";
 
 type Data = RemoteData.Type<
-  Query.Error<'GetResourceDetails'>,
-  Query.Data<'GetResourceDetails'>
+  Query.Error<"GetResourceDetails">,
+  Query.Data<"GetResourceDetails">
 >;
 
 /**

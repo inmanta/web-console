@@ -1,13 +1,13 @@
-import React, { act } from 'react';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
-import { StoreProvider } from 'easy-peasy';
-import { Config, EnvironmentDetails, RemoteData } from '@/Core';
-import { getStoreInstance } from '@/Data';
-import { dependencies, ServiceInstance } from '@/Test';
-import { testClient } from '@/Test/Utils/react-query-setup';
-import { DependencyProvider, EnvironmentModifierImpl } from '@/UI/Dependency';
-import { ConfigDetails } from './ConfigDetails';
+import React, { act } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
+import { Config, EnvironmentDetails, RemoteData } from "@/Core";
+import { getStoreInstance } from "@/Data";
+import { dependencies, ServiceInstance } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
+import { ConfigDetails } from "./ConfigDetails";
 
 function setup () {
   const store = getStoreInstance();
@@ -47,7 +47,7 @@ function setup () {
   };
 }
 
-it('Config Details takes environment halted status in account', async () => {
+it("Config Details takes environment halted status in account", async () => {
   const { component, store } = setup();
   const { rerender } = render(component({}));
 
@@ -59,6 +59,6 @@ it('Config Details takes environment halted status in account', async () => {
   });
   rerender(component({ enabled: true }));
   expect(
-    await screen.findByRole('switch', { name: 'enabled-True' }),
+    await screen.findByRole("switch", { name: "enabled-True" }),
   ).toBeDisabled();
 });

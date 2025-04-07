@@ -1,1 +1,1 @@
-export * from './useGetJSONSchema';
+export * from "./useGetJSONSchema";

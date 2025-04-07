@@ -1,7 +1,7 @@
-import { BaseUrlManager } from '@/Core';
+import { BaseUrlManager } from "@/Core";
 
 export class PrimaryBaseUrlManager implements BaseUrlManager {
-  private readonly anchor = '/console';
+  private readonly anchor = "/console";
 
   constructor (
     private readonly origin: string,
@@ -20,7 +20,7 @@ export class PrimaryBaseUrlManager implements BaseUrlManager {
 
   getBaseUrl (forcedUrl?: string): string {
     const { anchor, origin } = this;
-    const basePathname = this.getBasePathname().replace(anchor, '');
+    const basePathname = this.getBasePathname().replace(anchor, "");
 
     return forcedUrl || `${origin}${basePathname}`;
   }

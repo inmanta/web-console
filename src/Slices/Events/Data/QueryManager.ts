@@ -3,17 +3,17 @@ import {
   Scheduler,
   ApiHelper,
   stringifyObjectOrUndefined,
-} from '@/Core';
-import { getPaginationHandlers, QueryManager } from '@/Data/Managers/Helpers';
-import { Filter } from '@S/Events/Core/Query';
-import { getUrl } from './getUrl';
+} from "@/Core";
+import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
+import { Filter } from "@S/Events/Core/Query";
+import { getUrl } from "./getUrl";
 
 export function EventsQueryManager (
   apiHelper: ApiHelper,
-  stateHelper: StateHelper<'GetInstanceEvents'>,
+  stateHelper: StateHelper<"GetInstanceEvents">,
   scheduler: Scheduler,
 ) {
-  return QueryManager.ContinuousWithEnv<'GetInstanceEvents'>(
+  return QueryManager.ContinuousWithEnv<"GetInstanceEvents">(
     apiHelper,
     stateHelper,
     scheduler,
@@ -26,10 +26,10 @@ export function EventsQueryManager (
       pageSize.value,
       stringifyObjectOrUndefined(currentPage.value),
     ],
-    'GetInstanceEvents',
+    "GetInstanceEvents",
     (query) => getUrl(query),
     ({ data, links, metadata }) => {
-      if (typeof links === 'undefined') {
+      if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
 
@@ -43,5 +43,5 @@ export function EventsQueryManager (
 }
 
 function stringifyFilter (filter: Filter | undefined): string {
-  return typeof filter === 'undefined' ? 'undefined' : JSON.stringify(filter);
+  return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

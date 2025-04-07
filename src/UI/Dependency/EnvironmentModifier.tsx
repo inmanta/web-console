@@ -4,8 +4,8 @@ import {
   EnvironmentSettings,
   Maybe,
   RemoteData,
-} from '@/Core';
-import { useStoreState } from '@/Data/Store';
+} from "@/Core";
+import { useStoreState } from "@/Data/Store";
 
 export function EnvironmentModifierImpl (): EnvironmentModifier {
   let environment: Maybe.Type<string> = Maybe.none();
@@ -73,15 +73,15 @@ export function EnvironmentModifierImpl (): EnvironmentModifier {
   }
 
   function useIsServerCompileEnabled (): boolean {
-    return useSetting('server_compile');
+    return useSetting("server_compile");
   }
 
   function useIsProtectedEnvironment (): boolean {
-    return useSetting('protected_environment');
+    return useSetting("protected_environment");
   }
 
   function useIsExpertModeEnabled (): boolean {
-    return useSetting('enable_lsm_expert_mode');
+    return useSetting("enable_lsm_expert_mode");
   }
 
   return {

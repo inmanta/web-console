@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
-import { FormSuggestion } from '@/Core';
-import { useGet } from '../../helpers';
+import { useQuery } from "@tanstack/react-query";
+import { FormSuggestion } from "@/Core";
+import { useGet } from "../../helpers";
 
 interface ResponseData {
   parameter: Record<string, Record<string, unknown>>;
@@ -24,17 +24,17 @@ export const useSuggestedValues = (
   if (!suggestions) {
     return {
       useOneTime: () => {
-        return { data: null, status: 'success', error: null, isLoading: false };
+        return { data: null, status: "success", error: null, isLoading: false };
       },
     };
   }
 
-  if (suggestions.type === 'literal') {
+  if (suggestions.type === "literal") {
     return {
       useOneTime: () => {
         return {
           data: suggestions.values,
-          status: 'success',
+          status: "success",
           error: null,
           isLoading: false,
         };
@@ -49,7 +49,7 @@ export const useSuggestedValues = (
      */
     useOneTime: () =>
       useQuery({
-        queryKey: ['get_parameter-one_time', suggestions.parameter_name],
+        queryKey: ["get_parameter-one_time", suggestions.parameter_name],
         queryFn: () => get(`/api/v1/parameter/${suggestions.parameter_name}`),
         select: (data) => data.parameter,
       }),

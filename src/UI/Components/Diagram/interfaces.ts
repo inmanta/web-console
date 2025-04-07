@@ -1,19 +1,19 @@
-import { dia, g } from '@inmanta/rappid';
+import { dia, g } from "@inmanta/rappid";
 import {
   t_chart_color_yellow_300,
   t_chart_color_blue_400,
   t_chart_color_purple_300,
-} from '@patternfly/react-tokens';
+} from "@patternfly/react-tokens";
 import {
   EmbeddedEntity,
   InstanceAttributeModel,
   ParsedNumber,
   ServiceModel,
-} from '@/Core';
+} from "@/Core";
 import {
   ServiceOrderItemAction,
   ServiceOrderItemConfig,
-} from '@/Slices/Orders/Core/Query';
+} from "@/Slices/Orders/Core/Query";
 
 /**
  * Enum representing header colors for different types of entities.
@@ -28,18 +28,18 @@ const HeaderColor = {
  * Enum representing types of actions possible to perform on entities.
  */
 enum ActionEnum {
-  UPDATE = 'update',
-  CREATE = 'create',
-  DELETE = 'delete',
+  UPDATE = "update",
+  CREATE = "create",
+  DELETE = "delete",
 }
 
 /**
  * Enum representing types of entities on the canvas.
  */
 enum EntityType {
-  CORE = 'core',
-  EMBEDDED = 'embedded',
-  RELATION = 'relation',
+  CORE = "core",
+  EMBEDDED = "embedded",
+  RELATION = "relation",
 }
 
 /**
@@ -96,16 +96,16 @@ interface InterServiceRule extends Rule {
  * Enum representing the types of embedded events.
  */
 enum EventActionEnum {
-  REMOVE = 'remove',
-  ADD = 'add',
+  REMOVE = "remove",
+  ADD = "add",
 }
 
 /**
  * Enum representing the types of entities.
  */
 enum TypeEnum {
-  EMBEDDED = 'Embedded',
-  INTERSERVICE = 'Inter-Service',
+  EMBEDDED = "Embedded",
+  INTERSERVICE = "Inter-Service",
 }
 
 /**
@@ -199,7 +199,7 @@ interface ComposerEntityOptions {
   holderName?: string;
 
   /** Optional identifier of the entity to which this entity is embedded. */
-  embeddedTo?: 'string' | dia.Cell.ID;
+  embeddedTo?: "string" | dia.Cell.ID;
 
   /** Optional flag indicating if the entity is blocked from editing. */
   isBlockedFromEditing?: boolean;

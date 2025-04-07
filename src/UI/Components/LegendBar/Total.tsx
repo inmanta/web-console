@@ -1,6 +1,6 @@
-import React from 'react';
-import { Tooltip } from '@patternfly/react-core';
-import styled from 'styled-components';
+import React from "react";
+import { Tooltip } from "@patternfly/react-core";
+import styled from "styled-components";
 
 export interface Total {
   format(total: number): string;

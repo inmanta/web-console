@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useRef } from 'react';
-import { PageSection } from '@patternfly/react-core';
-import { Diff, Maybe, ParsedNumber, RemoteData } from '@/Core';
-import { EmptyView, RemoteDataView, DiffWizard } from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { LoadingIndicator } from './Components';
-import { MaybeReport } from './types';
+import React, { useContext, useEffect, useRef } from "react";
+import { PageSection } from "@patternfly/react-core";
+import { Diff, Maybe, ParsedNumber, RemoteData } from "@/Core";
+import { EmptyView, RemoteDataView, DiffWizard } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { LoadingIndicator } from "./Components";
+import { MaybeReport } from "./types";
 
 interface Props {
   report: MaybeReport;
@@ -40,8 +40,8 @@ const DiffView: React.FC<{
   const prevId = useRef(id);
   const refs: DiffWizard.Refs = useRef({});
   const { queryResolver } = useContext(DependencyContext);
-  const [reportData, refetch] = queryResolver.useOneTime<'GetDryRunReport'>({
-    kind: 'GetDryRunReport',
+  const [reportData, refetch] = queryResolver.useOneTime<"GetDryRunReport">({
+    kind: "GetDryRunReport",
     reportId: id,
     version,
   });
@@ -70,7 +70,7 @@ const DiffView: React.FC<{
         <DiffWizard.Controls
           data={diffData}
           refs={refs}
-          from={'current'}
+          from={"current"}
           to={version}
         />
       </PageSection>
@@ -83,7 +83,7 @@ const DiffView: React.FC<{
                 <LoadingIndicator progress={getProgress(data.summary)} />
               )}
               {data.diff.length <= 0 ? (
-                <EmptyView message={words('desiredState.compare.empty')} />
+                <EmptyView message={words("desiredState.compare.empty")} />
               ) : (
                 <DiffWizard.ItemList
                   items={data.diff

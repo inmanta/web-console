@@ -1,20 +1,20 @@
-import React from 'react';
+import React from "react";
 import {
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
   Label,
-} from '@patternfly/react-core';
-import { InfoAltIcon } from '@patternfly/react-icons';
-import { Tr, Td } from '@patternfly/react-table';
-import styled from 'styled-components';
-import { ServiceOrderItem } from '@/Slices/Orders/Core/Query';
-import { OrderStatusLabel } from '@/Slices/Orders/UI/OrderStatusLabel';
-import { CodeHighlighter, TextWithCopy, Toggle } from '@/UI/Components';
-import { words } from '@/UI/words';
-import { OrderDependencies } from './OrderDependencies';
-import { OrderStateDetails } from './OrderStateDetails';
+} from "@patternfly/react-core";
+import { InfoAltIcon } from "@patternfly/react-icons";
+import { Tr, Td } from "@patternfly/react-table";
+import styled from "styled-components";
+import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
+import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
+import { CodeHighlighter, TextWithCopy, Toggle } from "@/UI/Components";
+import { words } from "@/UI/words";
+import { OrderDependencies } from "./OrderDependencies";
+import { OrderStateDetails } from "./OrderStateDetails";
 
 interface Props {
   row: ServiceOrderItem;
@@ -47,22 +47,22 @@ export const OrderDetailsRow: React.FC<Props> = ({
           <Toggle
             expanded={isExpanded}
             onToggle={onToggle}
-            aria-label={'Toggle-DetailsRow'}
+            aria-label={"Toggle-DetailsRow"}
           />
         </Td>
-        <Td width={35} dataLabel={words('orders.column.instanceId')}>
+        <Td width={35} dataLabel={words("orders.column.instanceId")}>
           <TextWithCopy
             value={row.instance_id}
-            tooltipContent={words('serviceIdentity.copy')}
+            tooltipContent={words("serviceIdentity.copy")}
           />
         </Td>
-        <Td width={25} dataLabel={words('orders.column.serviceEntity')}>
+        <Td width={25} dataLabel={words("orders.column.serviceEntity")}>
           {row.service_entity}
         </Td>
-        <Td width={20} dataLabel={words('orders.column.action')}>
+        <Td width={20} dataLabel={words("orders.column.action")}>
           {row.action.toUpperCase()}
         </Td>
-        <Td style={{ width: '50px' }} dataLabel={words('orders.column.status')}>
+        <Td style={{ width: "50px" }} dataLabel={words("orders.column.status")}>
           <OrderStatusLabel status={row.status.state} />
         </Td>
       </Tr>
@@ -73,12 +73,12 @@ export const OrderDetailsRow: React.FC<Props> = ({
               isFillColumns
               isHorizontal
               horizontalTermWidthModifier={{
-                default: '25ch',
+                default: "25ch",
               }}
             >
               <TopAlignedLayout aria-label="Expanded-Details">
                 <DescriptionListTerm>
-                  {words('orders.row.details')}
+                  {words("orders.row.details")}
                 </DescriptionListTerm>
                 <DescriptionListDescription>
                   <OrderStateDetails state={row.status} />
@@ -86,7 +86,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
               </TopAlignedLayout>
               <TopAlignedLayout aria-label="Expanded-Dependencies">
                 <DescriptionListTerm>
-                  {words('orders.row.dependencies')}
+                  {words("orders.row.dependencies")}
                 </DescriptionListTerm>
                 <DescriptionListDescription>
                   <OrderDependencies
@@ -96,7 +96,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
               </TopAlignedLayout>
               <TopAlignedLayout aria-label="Expanded-Config">
                 <DescriptionListTerm>
-                  {words('orders.row.config')}
+                  {words("orders.row.config")}
                 </DescriptionListTerm>
                 <DescriptionListDescription>
                   {row.config && Object.keys(row.config).length ? (
@@ -111,7 +111,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
                       variant="outline"
                       icon={<InfoAltIcon />}
                     >
-                      {words('orders.row.empty')}
+                      {words("orders.row.empty")}
                     </Label>
                   )}
                 </DescriptionListDescription>
@@ -119,7 +119,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
               {(row.attributes || row.edits) && (
                 <TopAlignedLayout aria-label="Expanded-Body">
                   <DescriptionListTerm>
-                    {words('orders.row.body')}
+                    {words("orders.row.body")}
                   </DescriptionListTerm>
                   <DescriptionListDescription>
                     <CodeHighlighter

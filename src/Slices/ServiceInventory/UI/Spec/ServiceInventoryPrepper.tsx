@@ -1,18 +1,18 @@
-import React from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { StoreProvider } from 'easy-peasy';
-import { RemoteData, ServiceModel } from '@/Core';
-import { getStoreInstance } from '@/Data';
-import { AuthProvider } from '@/Data/Auth/AuthProvider';
+import React from "react";
+import { MemoryRouter, useLocation } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { StoreProvider } from "easy-peasy";
+import { RemoteData, ServiceModel } from "@/Core";
+import { getStoreInstance } from "@/Data";
+import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import {
   dependencies,
   Environment,
   MockEnvironmentModifier,
   Service,
-} from '@/Test';
-import { DependencyProvider, EnvironmentHandlerImpl } from '@/UI/Dependency';
-import { ServiceInventory } from '@S/ServiceInventory/UI/ServiceInventory';
+} from "@/Test";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { ServiceInventory } from "@S/ServiceInventory/UI/ServiceInventory";
 
 interface Handles {
   component: React.ReactElement;
@@ -33,7 +33,7 @@ export class ServiceInventoryPrepper {
     );
     const component = (
       <QueryClientProvider client={client}>
-        <MemoryRouter initialEntries={[{ search: '?env=123' }]}>
+        <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
           <AuthProvider config={undefined}>
             <DependencyProvider
               dependencies={{

@@ -1,7 +1,7 @@
-import { createContext } from 'react';
-import { UseInfiniteQueryResult, UseQueryResult } from '@tanstack/react-query';
-import { ServiceInstanceModel, ServiceModel } from '@/Core';
-import { InstanceLog } from '@/Core/Domain/HistoryLog';
+import { createContext } from "react";
+import { UseInfiniteQueryResult, UseQueryResult } from "@tanstack/react-query";
+import { ServiceInstanceModel, ServiceModel } from "@/Core";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
 
 /**
  * The InstanceProviderInterface

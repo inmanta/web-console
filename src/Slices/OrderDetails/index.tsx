@@ -1,1 +1,1 @@
-export * as OrderDetails from './Core/Route';
+export * as OrderDetails from "./Core/Route";

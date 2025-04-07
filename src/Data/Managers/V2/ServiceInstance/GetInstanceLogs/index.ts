@@ -1,1 +1,1 @@
-export * from './useGetInstanceLogs';
+export * from "./useGetInstanceLogs";

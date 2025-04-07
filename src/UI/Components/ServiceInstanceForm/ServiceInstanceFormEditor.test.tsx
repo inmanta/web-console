@@ -6,14 +6,14 @@
  * Only the loading and hook are tested here.
  */
 
-import React, { act } from 'react';
-import '@testing-library/jest-dom';
-import { Route, Routes } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { StoreProvider } from 'easy-peasy';
-import { http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
+import React, { act } from "react";
+import "@testing-library/jest-dom";
+import { Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import {
   BooleanField,
   DictListField,
@@ -22,18 +22,18 @@ import {
   NestedField,
   TextField,
   Textarea,
-} from '@/Core';
+} from "@/Core";
 import {
   getStoreInstance,
   QueryResolverImpl,
   QueryManagerResolverImpl,
-} from '@/Data';
-import * as Test from '@/Test';
-import { DeferredApiHelper, StaticScheduler, dependencies } from '@/Test';
-import { DependencyProvider } from '@/UI';
-import CustomRouter from '@/UI/Routing/CustomRouter';
-import history from '@/UI/Routing/history';
-import { ServiceInstanceForm } from './ServiceInstanceForm';
+} from "@/Data";
+import * as Test from "@/Test";
+import { DeferredApiHelper, StaticScheduler, dependencies } from "@/Test";
+import { DependencyProvider } from "@/UI";
+import CustomRouter from "@/UI/Routing/CustomRouter";
+import history from "@/UI/Routing/history";
+import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 const setup = (
   fields: (
@@ -88,11 +88,11 @@ const setup = (
   return { component, apiHelper, scheduler };
 };
 
-it('GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads without errors', async () => {
+it("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads without errors", async () => {
   // Provide the server-side API with the request handlers to get the schema
   const server = setupServer(
-    http.get('/lsm/v1/service_catalog/:id/schema', async ({ params }) => {
-      expect(params.id).toEqual('service_entity');
+    http.get("/lsm/v1/service_catalog/:id/schema", async ({ params }) => {
+      expect(params.id).toEqual("service_entity");
 
       return HttpResponse.json({
         data: {
@@ -102,13 +102,13 @@ it('GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads wit
             name: {
               maxLength: 12,
               minLength: 2,
-              title: 'Name',
-              type: 'string',
+              title: "Name",
+              type: "string",
             },
           },
-          required: ['name'],
-          title: 'service_entity',
-          type: 'object',
+          required: ["name"],
+          title: "service_entity",
+          type: "object",
         },
       });
     }),
@@ -122,19 +122,19 @@ it('GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads wit
   render(component);
 
   expect(
-    screen.getByRole('generic', {
+    screen.getByRole("generic", {
       name: `TextFieldInput-${Test.Field.text.name}`,
     }),
   ).toBeVisible();
 
-  const EditorToggle = screen.getByRole('button', { name: 'JSON-Editor' });
+  const EditorToggle = screen.getByRole("button", { name: "JSON-Editor" });
 
   await act(async () => {
     fireEvent.click(EditorToggle);
   });
 
   // Expect the view to display a spinner.
-  expect(screen.getByTestId('loading-spinner')).toBeVisible();
+  expect(screen.getByTestId("loading-spinner")).toBeVisible();
 
   server.close();
 });

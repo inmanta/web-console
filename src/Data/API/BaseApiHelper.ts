@@ -1,4 +1,4 @@
-import { identity } from 'lodash-es';
+import { identity } from "lodash-es";
 import {
   ApiHelper,
   Either,
@@ -6,16 +6,16 @@ import {
   objectHasKey,
   isObject,
   ErrorWithHTTPCode,
-} from '@/Core';
-import { words } from '@/UI/words';
-import { AuthContextInterface } from '../Auth/AuthContext';
-import { BigIntJsonParser } from './BigIntJsonParser';
+} from "@/Core";
+import { words } from "@/UI/words";
+import { AuthContextInterface } from "../Auth/AuthContext";
+import { BigIntJsonParser } from "./BigIntJsonParser";
 
 /**
  * Helper class for making API calls.
  */
 export const BaseApiHelper = (
-  baseUrl: string = 'http://localhost:8888',
+  baseUrl: string = "http://localhost:8888",
   authHelper: AuthContextInterface,
 ): ApiHelper => {
   const jsonParser = new BigIntJsonParser();
@@ -28,7 +28,7 @@ export const BaseApiHelper = (
   async function head (url: string): Promise<number> {
     try {
       const response = await fetch(getFullUrl(url), {
-        method: 'HEAD',
+        method: "HEAD",
         headers: getHeaders(),
       });
 
@@ -58,7 +58,7 @@ export const BaseApiHelper = (
 
   function getHeaders (environment?: string): Record<string, string> {
     return {
-      ...(environment ? { 'X-Inmanta-Tid': environment } : {}),
+      ...(environment ? { "X-Inmanta-Tid": environment } : {}),
       ...getBearerToken(),
     };
   }
@@ -73,12 +73,12 @@ export const BaseApiHelper = (
     let errorMessage = message;
 
     if (response.status === 401 || response.status === 403) {
-      errorMessage += ` ${words('error.authorizationFailed')}`;
+      errorMessage += ` ${words("error.authorizationFailed")}`;
 
       authHelper.login();
     }
 
-    return words('error.server.intro')(
+    return words("error.server.intro")(
       `${response.status} ${response.statusText} \n${errorMessage}`,
     );
   }
@@ -90,9 +90,9 @@ export const BaseApiHelper = (
    */
   function errorHasMessage (error: unknown): error is { message: string } {
     if (!isObject(error)) return false;
-    if (!objectHasKey(error, 'message')) return false;
+    if (!objectHasKey(error, "message")) return false;
 
-    return typeof error.message === 'string';
+    return typeof error.message === "string";
   }
 
   /**
@@ -191,10 +191,10 @@ export const BaseApiHelper = (
   ): Promise<Either.Type<string, Data>> {
     return executeJson<Data>(getFullUrl(url), {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...getHeaders(environment),
       },
-      method: 'POST',
+      method: "POST",
       body: jsonParser.stringify(body),
     });
   }
@@ -213,10 +213,10 @@ export const BaseApiHelper = (
   ): Promise<Maybe.Type<string>> {
     return executeWithoutResponse(getFullUrl(url), {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...getHeaders(environment),
       },
-      method: 'POST',
+      method: "POST",
       body: jsonParser.stringify(body),
     });
   }
@@ -233,10 +233,10 @@ export const BaseApiHelper = (
   ): Promise<Maybe.Type<string>> {
     return executeWithoutResponse(getFullUrl(url), {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...getHeaders(),
       },
-      method: 'POST',
+      method: "POST",
       body: jsonParser.stringify(body),
     });
   }
@@ -253,10 +253,10 @@ export const BaseApiHelper = (
   ): Promise<Either.Type<string, Data>> {
     return executeJson(getFullUrl(url), {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...getHeaders(),
       },
-      method: 'PUT',
+      method: "PUT",
       body: jsonParser.stringify(body),
     });
   }
@@ -275,10 +275,10 @@ export const BaseApiHelper = (
   ): Promise<Maybe.Type<string>> {
     return executeWithoutResponse(getFullUrl(url), {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...getHeaders(environment),
       },
-      method: 'PATCH',
+      method: "PATCH",
       body: jsonParser.stringify(body),
     });
   }
@@ -295,10 +295,10 @@ export const BaseApiHelper = (
   ): Promise<Maybe.Type<string>> {
     return executeWithoutResponse(getFullUrl(url), {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...getHeaders(environment),
       },
-      method: 'DELETE',
+      method: "DELETE",
     });
   }
 
@@ -341,7 +341,7 @@ export const BaseApiHelper = (
         })
         .catch(() => {
           throw new Error(
-            '\nConnection to the server was either denied or blocked. \nPlease check server status.',
+            "\nConnection to the server was either denied or blocked. \nPlease check server status.",
           );
         });
 
@@ -393,7 +393,7 @@ export const BaseApiHelper = (
         })
         .catch(() => {
           throw new Error(
-            '\nConnection to the server was either denied or blocked. \nPlease check server status.',
+            "\nConnection to the server was either denied or blocked. \nPlease check server status.",
           );
         });
       if (response.ok) {

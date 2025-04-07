@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dropdown,
   DropdownItem,
   DropdownList,
   MenuToggle,
   MenuToggleElement,
-} from '@patternfly/react-core';
-import { EllipsisVIcon } from '@patternfly/react-icons';
-import { Tbody, Thead, Tr, Th, Table } from '@patternfly/react-table';
-import { ParsedNumber } from '@/Core';
-import { words } from '@/UI/words';
-import { ColumnHeaders } from './ColumnHeaders';
-import { TreeTableHelper } from './Helpers/TreeTableHelper';
-import { TreeRowView, Indent } from './TreeRow';
+} from "@patternfly/react-core";
+import { EllipsisVIcon } from "@patternfly/react-icons";
+import { Tbody, Thead, Tr, Th, Table } from "@patternfly/react-table";
+import { ParsedNumber } from "@/Core";
+import { words } from "@/UI/words";
+import { ColumnHeaders } from "./ColumnHeaders";
+import { TreeTableHelper } from "./Helpers/TreeTableHelper";
+import { TreeRowView, Indent } from "./TreeRow";
 
 interface Props {
   treeTableHelper: TreeTableHelper;
@@ -45,7 +45,7 @@ export const TreeTable: React.FC<Props> = ({
   return (
     <Table
       variant="compact"
-      data-testid={id ? `attributes-tree-table-${id}` : 'attributes-tree-table'}
+      data-testid={id ? `attributes-tree-table-${id}` : "attributes-tree-table"}
     >
       <Thead>
         <Tr>
@@ -72,7 +72,7 @@ export const TreeTable: React.FC<Props> = ({
                 />
               )}
               isOpen={isOpen}
-              popperProps={{ position: 'right' }}
+              popperProps={{ position: "right" }}
             >
               <DropdownList>
                 <DropdownItem
@@ -80,14 +80,14 @@ export const TreeTable: React.FC<Props> = ({
                   component="button"
                   onClick={openAll}
                 >
-                  {words('inventory.tabs.expand')}
+                  {words("inventory.tabs.expand")}
                 </DropdownItem>
                 <DropdownItem
                   key="closeAll"
                   component="button"
                   onClick={closeAll}
                 >
-                  {words('inventory.tabs.collapse')}
+                  {words("inventory.tabs.collapse")}
                 </DropdownItem>
               </DropdownList>
             </Dropdown>

@@ -1,8 +1,8 @@
-import React, { ReactElement } from 'react';
-import { RemoteData } from '@/Core';
-import { ErrorView } from '@/UI/Components/ErrorView';
-import { LoadingView } from '@/UI/Components/LoadingView';
-import { words } from '@/UI/words';
+import React, { ReactElement } from "react";
+import { RemoteData } from "@/Core";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { words } from "@/UI/words";
 
 interface Props<T> {
   data: RemoteData.RemoteData<string, T>;
@@ -26,8 +26,8 @@ export const RemoteDataView = <T,>({
       failed: (error) => (
         <ErrorView
           data-testid="ErrorView"
-          title={words('error')}
-          message={words('error.general')(error)}
+          title={words("error")}
+          message={words("error.general")(error)}
           ariaLabel={label ? `${label}-Failed` : undefined}
           retry={retry}
         />

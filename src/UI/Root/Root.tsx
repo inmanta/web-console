@@ -1,24 +1,24 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { LoginPage } from '@/Slices/Login';
-import { DependencyContext } from '@/UI/Dependency';
-import { RouteOutlet, SearchSanitizer } from '@/UI/Routing';
-import { GlobalStyles } from '@/UI/Styles';
-import { NotFoundPage } from '@S/NotFound/UI';
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { LoginPage } from "@/Slices/Login";
+import { DependencyContext } from "@/UI/Dependency";
+import { RouteOutlet, SearchSanitizer } from "@/UI/Routing";
+import { GlobalStyles } from "@/UI/Styles";
+import { NotFoundPage } from "@S/NotFound/UI";
 import {
   getThemePreference,
   setThemePreference,
-} from '../Components/DarkmodeOption';
-import { PageFrame } from './Components';
-import { PrimaryPageManager } from './PrimaryPageManager';
+} from "../Components/DarkmodeOption";
+import { PageFrame } from "./Components";
+import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
 
   const themePreference = getThemePreference();
 
-  setThemePreference(themePreference || 'light');
+  setThemePreference(themePreference || "light");
 
   const pageManager = useMemo(
     () => new PrimaryPageManager(routeManager.getRouteDictionary()),
@@ -48,7 +48,7 @@ export const Root: React.FC = () => {
               <Route
                 path="/"
                 element={
-                  <Navigate to={routeManager.getUrl('Home', undefined)} />
+                  <Navigate to={routeManager.getUrl("Home", undefined)} />
                 }
               />
             )}

@@ -1,15 +1,15 @@
-import { ApiHelper, Query, RemoteData, StateHelper, Updater } from '@/Core';
-import { getUrl } from '@S/Settings/Data/GetProjects/getUrl';
+import { ApiHelper, Query, RemoteData, StateHelper, Updater } from "@/Core";
+import { getUrl } from "@S/Settings/Data/GetProjects/getUrl";
 
 export class EnvironmentsUpdater
-implements Updater<'GetEnvironmentsContinuous'> {
+implements Updater<"GetEnvironmentsContinuous"> {
   constructor (
-    private readonly stateHelper: StateHelper<'GetEnvironmentsContinuous'>,
+    private readonly stateHelper: StateHelper<"GetEnvironmentsContinuous">,
     private readonly apiHelper: ApiHelper,
   ) {}
 
   async update (
-    query: Query.SubQuery<'GetEnvironmentsContinuous'>,
+    query: Query.SubQuery<"GetEnvironmentsContinuous">,
   ): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(

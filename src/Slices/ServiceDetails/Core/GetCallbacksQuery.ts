@@ -1,7 +1,7 @@
-import { Callback } from './Callback';
+import { Callback } from "./Callback";
 
 export interface Query {
-  kind: 'GetCallbacks';
+  kind: "GetCallbacks";
   service_entity: string;
 }
 

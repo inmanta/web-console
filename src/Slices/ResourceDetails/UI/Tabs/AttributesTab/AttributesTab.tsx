@@ -1,15 +1,15 @@
-import React from 'react';
-import { Card, CardBody } from '@patternfly/react-core';
-import { Query, RemoteData } from '@/Core';
-import { JsonFormatter, XmlFormatter } from '@/Data';
+import React from "react";
+import { Card, CardBody } from "@patternfly/react-core";
+import { Query, RemoteData } from "@/Core";
+import { JsonFormatter, XmlFormatter } from "@/Data";
 import {
   AttributeClassifier,
   AttributeList,
   RemoteDataView,
-} from '@/UI/Components';
+} from "@/UI/Components";
 
 interface Props {
-  data: Query.UsedApiData<'GetResourceDetails'>;
+  data: Query.UsedApiData<"GetResourceDetails">;
 }
 
 export const AttributesTab: React.FC<Props> = ({ data }) => {

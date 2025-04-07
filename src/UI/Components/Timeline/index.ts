@@ -1,1 +1,1 @@
-export { Provider as Timeline } from './Provider';
+export { Provider as Timeline } from "./Provider";

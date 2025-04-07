@@ -1,8 +1,8 @@
-import React from 'react';
-import { useGetDiagnostics } from '@/Data/Managers/V2/ServiceInstance';
-import { EmptyView, ErrorView, LoadingView } from '@/UI/Components';
-import { words } from '@/UI/words';
-import { DiagnoseCardLayout } from './DiagnoseCardLayout';
+import React from "react";
+import { useGetDiagnostics } from "@/Data/Managers/V2/ServiceInstance";
+import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import { words } from "@/UI/words";
+import { DiagnoseCardLayout } from "./DiagnoseCardLayout";
 
 interface Props {
   serviceName: string;
@@ -30,7 +30,7 @@ export const Diagnose: React.FC<Props> = ({
     if (data.failures.length <= 0 && data.rejections.length === 0) {
       return (
         <div aria-label="Diagnostics-Empty">
-          <EmptyView message={words('diagnose.empty')(instanceIdentity)} />
+          <EmptyView message={words("diagnose.empty")(instanceIdentity)} />
         </div>
       );
     }

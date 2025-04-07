@@ -3,9 +3,9 @@ import {
   UseMutationResult,
   useMutation,
   useQueryClient,
-} from '@tanstack/react-query';
-import { ParsedNumber } from '@/Core';
-import { usePost } from '../../helpers';
+} from "@tanstack/react-query";
+import { ParsedNumber } from "@/Core";
+import { usePost } from "../../helpers";
 
 /**
  * Required attributes to construct the post request to force update the state of an instance in Expert mode
@@ -38,16 +38,16 @@ export const usePostExpertStateTransfer = (
         `/lsm/v1/service_inventory/${service_entity}/${instance_id}/expert/state`,
         data,
       ),
-    mutationKey: ['post_state_transfer_expert'],
+    mutationKey: ["post_state_transfer_expert"],
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: [service_entity, instance_id],
       });
       client.invalidateQueries({
-        queryKey: ['get_service_instances-one_time'],
+        queryKey: ["get_service_instances-one_time"],
       });
       client.invalidateQueries({
-        queryKey: ['get_service_instances-continuous'],
+        queryKey: ["get_service_instances-continuous"],
       });
     },
     ...options,

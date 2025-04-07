@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Brand,
   Bullseye,
@@ -15,12 +15,12 @@ import {
   Label,
   PageSection,
   Title,
-} from '@patternfly/react-core';
-import { PlusCircleIcon } from '@patternfly/react-icons';
-import { FlatEnvironment } from '@/Core';
-import { DependencyContext } from '@/UI';
-import { words } from '@/UI/words';
-import fallBackImage from '@images/inmanta-wings.svg';
+} from "@patternfly/react-core";
+import { PlusCircleIcon } from "@patternfly/react-icons";
+import { FlatEnvironment } from "@/Core";
+import { DependencyContext } from "@/UI";
+import { words } from "@/UI/words";
+import fallBackImage from "@images/inmanta-wings.svg";
 
 interface Props {
   environments: FlatEnvironment[];
@@ -28,13 +28,13 @@ interface Props {
 
 export const CardView: React.FC<Props> = ({ environments, ...props }) => {
   const { routeManager } = useContext(DependencyContext);
-  const pathname = routeManager.getUrl('Dashboard', undefined);
+  const pathname = routeManager.getUrl("Dashboard", undefined);
 
   return (
     <PageSection hasBodyWrapper={false}>
       <Gallery hasGutter {...props}>
         <CreateNewEnvironmentCard
-          url={routeManager.getUrl('CreateEnvironment', undefined)}
+          url={routeManager.getUrl("CreateEnvironment", undefined)}
         />
         {environments.map((environment) => (
           <EnvironmentCard
@@ -55,8 +55,8 @@ const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => {
     <Card isClickable isCompact variant="secondary">
       <CardHeader
         selectableActions={{
-          selectableActionAriaLabelledby: 'Create-environment',
-          selectableActionAriaLabel: 'Create environment',
+          selectableActionAriaLabelledby: "Create-environment",
+          selectableActionAriaLabel: "Create environment",
           onClickAction: () => {
             navigate(url);
           },
@@ -66,7 +66,7 @@ const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => {
         <Content>
           <EmptyState variant={EmptyStateVariant.xs} icon={PlusCircleIcon}>
             <Title headingLevel="h2" size="md">
-              {words('home.create.env.desciption')}
+              {words("home.create.env.desciption")}
             </Title>
           </EmptyState>
         </Content>
@@ -94,7 +94,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
     >
       <CardHeader
         selectableActions={{
-          selectableActionAriaLabelledby: 'Select-environment',
+          selectableActionAriaLabelledby: "Select-environment",
           selectableActionAriaLabel: `Select-environment-${environment.name}`,
           onClickAction: () => {
             navigate(`${pathname}?env=${environment.id}`);
@@ -104,7 +104,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
         <Brand
           src={environment.icon ? `data:${environment.icon}` : fallBackImage}
           alt={`${environment.name}-environment-logo`}
-          style={{ maxHeight: '50px', maxWidth: '200px' }}
+          style={{ maxHeight: "50px", maxWidth: "200px" }}
         />
         <CardTitle>
           <Title headingLevel="h3">{environment.name}</Title>

@@ -1,50 +1,50 @@
-import { isEqual, pickBy } from 'lodash-es';
+import { isEqual, pickBy } from "lodash-es";
 import {
   isObject,
   DateRange,
   isNotUndefined,
   IntRange,
   stringToBoolean,
-} from '@/Core';
-import { provide, Location, StateConfig, Update, Replace } from './helpers';
-import { handleUrlState } from './useUrlState';
+} from "@/Core";
+import { provide, Location, StateConfig, Update, Replace } from "./helpers";
+import { handleUrlState } from "./useUrlState";
 
 interface Keys {
-  keys?: Record<string, 'IntRange' | 'DateRange' | 'Boolean'>;
+  keys?: Record<string, "IntRange" | "DateRange" | "Boolean">;
 }
 
 export const useUrlStateWithFilter = provide(handleUrlStateWithFilter);
 
 const serializeValue = (
-  kind: 'IntRange' | 'DateRange' | 'Boolean',
+  kind: "IntRange" | "DateRange" | "Boolean",
   value: unknown,
 ): string | string[] => {
   switch (kind) {
-    case 'Boolean':
+    case "Boolean":
       return `${value}`;
-    case 'DateRange':
+    case "DateRange":
       return DateRange.serializeList(value as DateRange.DateRange[]);
-    case 'IntRange':
+    case "IntRange":
       return IntRange.serializeList(value as IntRange.IntRange[]);
   }
 };
 
 const parseValue = (
-  kind: 'IntRange' | 'DateRange' | 'Boolean',
+  kind: "IntRange" | "DateRange" | "Boolean",
   value: unknown,
 ): boolean | undefined | DateRange.DateRange[] | IntRange.IntRange[] => {
   switch (kind) {
-    case 'Boolean':
+    case "Boolean":
       return stringToBoolean(value);
-    case 'DateRange':
+    case "DateRange":
       return DateRange.parseList(value);
-    case 'IntRange':
+    case "IntRange":
       return IntRange.parseList(value);
   }
 };
 
 export function handleUrlStateWithFilter<Data> (
-  config: Pick<StateConfig<Data>, 'route'> &
+  config: Pick<StateConfig<Data>, "route"> &
     Keys & {
       default?: Data;
     },
@@ -81,7 +81,7 @@ export function handleUrlStateWithFilter<Data> (
   return handleUrlState<Data>(
     {
       default: config.default || ({} as Data),
-      key: 'filter',
+      key: "filter",
       route: config.route,
       equals: (a: Data, b: Data): boolean =>
         isEqual(

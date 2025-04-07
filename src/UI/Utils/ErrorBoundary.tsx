@@ -1,7 +1,7 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Button, ClipboardCopy, Content } from '@patternfly/react-core';
-import styled from 'styled-components';
-import { ErrorView } from '../Components';
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Button, ClipboardCopy, Content } from "@patternfly/react-core";
+import styled from "styled-components";
+import { ErrorView } from "../Components";
 
 interface Props {
   children?: ReactNode;
@@ -27,7 +27,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch (error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+    console.error("Uncaught error:", error, errorInfo);
   }
 
   public render () {
@@ -37,27 +37,27 @@ class ErrorBoundary extends Component<Props, State> {
           <ErrorView
             ariaLabel="ErrorBoundary"
             message={
-              this.state.error?.message || 'Something unexpected happened.'
+              this.state.error?.message || "Something unexpected happened."
             }
           ></ErrorView>
           <this.StyledClipboardContainer>
             <ClipboardCopy
               isCode
               isExpanded
-              variant={'expansion'}
+              variant={"expansion"}
               isReadOnly
               hoverTip="Copy"
               clickTip="Copied"
             >
               {this.state.error?.stack ||
-                'We couldn\'t retrieve the error trace.'}
+                "We couldn't retrieve the error trace."}
             </ClipboardCopy>
             <this.StyledCenteredContainer>
               <Button variant="primary" onClick={() => location.reload()}>
                 Reload the page
               </Button>
               <Content component="p">
-                If this error keeps happening, please contact{' '}
+                If this error keeps happening, please contact{" "}
                 <a href="mailto:support@inmanta.com">support@inmanta.com</a> for
                 more assistance.
               </Content>

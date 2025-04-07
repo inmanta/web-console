@@ -1,1 +1,1 @@
-export { Page as NotificationCenterPage } from './Page';
+export { Page as NotificationCenterPage } from "./Page";

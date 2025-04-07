@@ -1,6 +1,6 @@
-import React from 'react';
-import { PageContainer } from '@/UI/Components';
-import { words } from '@/UI/words';
+import React from "react";
+import { PageContainer } from "@/UI/Components";
+import { words } from "@/UI/words";
 
 interface Props {
   name: string;
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const Wrapper: React.FC<Props> = ({ children, name, ...props }) => (
-  <PageContainer {...props} pageTitle={words('ServiceDetails.title')(name)}>
+  <PageContainer {...props} pageTitle={words("ServiceDetails.title")(name)}>
     {children}
   </PageContainer>
 );

@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
-import { RemoteData } from '@/Core';
-import { DependencyContext } from '@/UI';
-import { ErrorView, LoadingView } from '@/UI/Components';
-import { Provider } from './Provider';
+import React, { useContext } from "react";
+import { RemoteData } from "@/Core";
+import { DependencyContext } from "@/UI";
+import { ErrorView, LoadingView } from "@/UI/Components";
+import { Provider } from "./Provider";
 
 interface Props {
   environmentId: string;
@@ -10,8 +10,8 @@ interface Props {
 
 export const Tab: React.FC<Props> = ({ environmentId }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [settings] = queryResolver.useOneTime<'GetEnvironmentSettings'>({
-    kind: 'GetEnvironmentSettings',
+  const [settings] = queryResolver.useOneTime<"GetEnvironmentSettings">({
+    kind: "GetEnvironmentSettings",
     environment: environmentId,
   });
 

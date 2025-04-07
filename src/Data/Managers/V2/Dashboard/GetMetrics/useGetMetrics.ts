@@ -1,7 +1,7 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import { BackendMetricData } from '@/Slices/Dashboard/Core/Domain';
-import { CustomError, useGet } from '../../helpers';
-import { getUrl } from './getUrl';
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { BackendMetricData } from "@/Slices/Dashboard/Core/Domain";
+import { CustomError, useGet } from "../../helpers";
+import { getUrl } from "./getUrl";
 export interface GetMetricsParams {
   startDate: string;
   endDate: string;
@@ -35,7 +35,7 @@ export const useGetMetrics = (): GetMetrics => {
       params: GetMetricsParams,
     ): UseQueryResult<BackendMetricData, CustomError> =>
       useQuery({
-        queryKey: ['get_metrics-one_time', params],
+        queryKey: ["get_metrics-one_time", params],
         queryFn: () => get(getUrl(params)),
         select: (data) => data.data,
       }),
@@ -44,7 +44,7 @@ export const useGetMetrics = (): GetMetrics => {
       params: GetMetricsParams,
     ): UseQueryResult<BackendMetricData, CustomError> =>
       useQuery({
-        queryKey: ['get_metrics-continuous', params],
+        queryKey: ["get_metrics-continuous", params],
         queryFn: () => get(getUrl(params)),
         select: (data) => data.data,
         refetchInterval: 5000,

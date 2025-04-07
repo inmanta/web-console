@@ -3,8 +3,8 @@ import {
   UseMutationResult,
   useMutation,
   useQueryClient,
-} from '@tanstack/react-query';
-import { usePost } from '../../helpers';
+} from "@tanstack/react-query";
+import { usePost } from "../../helpers";
 
 /**
  * React Query hook for promoting a version of desired state
@@ -19,15 +19,15 @@ export const usePromoteDesiredStateVersion = (
 
   return useMutation({
     mutationFn: (version) => post(`/api/v2/desiredstate/${version}/promote`),
-    mutationKey: ['promote_version'],
+    mutationKey: ["promote_version"],
     ...options,
     onSuccess: () => {
       // Refetch the desired state queries to update the list
       client.invalidateQueries({
-        queryKey: ['get_desired_states-continuous'],
+        queryKey: ["get_desired_states-continuous"],
       });
       client.invalidateQueries({
-        queryKey: ['get_desired_states-one_time'],
+        queryKey: ["get_desired_states-one_time"],
       });
     },
   });

@@ -1,15 +1,15 @@
-import React from 'react';
-import { ServiceModel } from '@/Core';
-import { useNavigateTo } from '@/UI';
-import { TreeTable, TreeTableCellContext } from '@/UI/Components';
+import React from "react";
+import { ServiceModel } from "@/Core";
+import { useNavigateTo } from "@/UI";
+import { TreeTable, TreeTableCellContext } from "@/UI/Components";
 import {
   CatalogAttributeHelper,
   CatalogTreeTableHelper,
-} from '@/UI/Components/TreeTable/Catalog';
+} from "@/UI/Components/TreeTable/Catalog";
 import {
   PathHelper,
   TreeExpansionManager,
-} from '@/UI/Components/TreeTable/Helpers';
+} from "@/UI/Components/TreeTable/Helpers";
 
 interface Props {
   service: ServiceModel;
@@ -29,7 +29,7 @@ export const AttributeTable: React.FunctionComponent<Props> = ({ service }) => {
         value={{
           onClick: (value) =>
             navigate(
-              'ServiceDetails',
+              "ServiceDetails",
               { service: value },
               `?env=${service?.environment}`,
             ),
@@ -38,9 +38,9 @@ export const AttributeTable: React.FunctionComponent<Props> = ({ service }) => {
         <TreeTable
           treeTableHelper={
             new CatalogTreeTableHelper(
-              new PathHelper('$'),
-              new TreeExpansionManager('$'),
-              new CatalogAttributeHelper('$'),
+              new PathHelper("$"),
+              new TreeExpansionManager("$"),
+              new CatalogAttributeHelper("$"),
               service,
             )
           }

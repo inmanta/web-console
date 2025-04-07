@@ -1,5 +1,5 @@
-import { HttpResponse, delay, http } from 'msw';
-import { setupServer } from 'msw/node';
+import { HttpResponse, delay, http } from "msw";
+import { setupServer } from "msw/node";
 import {
   logsResponse,
   instanceData,
@@ -9,23 +9,23 @@ import {
   serviceModelWithConfig,
   serviceModelWithDocumentation,
   logsWithDocumentationResponse,
-} from './mockData';
+} from "./mockData";
 
-const getServiceModel = http.get('/lsm/v1/service_catalog/mobileCore', () => {
+const getServiceModel = http.get("/lsm/v1/service_catalog/mobileCore", () => {
   return HttpResponse.json({
     data: serviceModel,
   });
 });
 
 const getServiceModelError = http.get(
-  '/lsm/v1/service_catalog/mobileCore',
+  "/lsm/v1/service_catalog/mobileCore",
   () => {
-    return HttpResponse.json({ message: 'Not Found' }, { status: 404 });
+    return HttpResponse.json({ message: "Not Found" }, { status: 404 });
   },
 );
 
 const getServiceModelWithDocumentation = http.get(
-  '/lsm/v1/service_catalog/mobileCore',
+  "/lsm/v1/service_catalog/mobileCore",
   async () => {
     return HttpResponse.json({
       data: serviceModelWithDocumentation,
@@ -34,7 +34,7 @@ const getServiceModelWithDocumentation = http.get(
 );
 
 const getServiceModelWithConfig = http.get(
-  '/lsm/v1/service_catalog/mobileCore',
+  "/lsm/v1/service_catalog/mobileCore",
   async () => {
     return HttpResponse.json({
       data: serviceModelWithConfig,
@@ -43,21 +43,21 @@ const getServiceModelWithConfig = http.get(
 );
 
 const getHistoryLogs = http.get(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab/log',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
   async () => {
     return HttpResponse.json(logsResponse);
   },
 );
 
 const getHistoryLogsError = http.get(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab/log',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
   () => {
-    return HttpResponse.json({ message: 'Not Found' }, { status: 404 });
+    return HttpResponse.json({ message: "Not Found" }, { status: 404 });
   },
 );
 
 const getHistoryLogsDelayed = http.get(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab/log',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
   async () => {
     await delay(500);
 
@@ -66,14 +66,14 @@ const getHistoryLogsDelayed = http.get(
 );
 
 const getHistoryLogsWithDocumentation = http.get(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab/log',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
   async () => {
     return HttpResponse.json(logsWithDocumentationResponse);
   },
 );
 
 const getInstanceData = http.get(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab",
   () => {
     return HttpResponse.json({
       data: instanceData,
@@ -82,14 +82,14 @@ const getInstanceData = http.get(
 );
 
 const getInstanceError = http.get(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab",
   () => {
-    return HttpResponse.json({ message: 'Not Found' }, { status: 404 });
+    return HttpResponse.json({ message: "Not Found" }, { status: 404 });
   },
 );
 
 const getInstanceDataDelayed = http.get(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab",
   async () => {
     delay(300);
 
@@ -100,7 +100,7 @@ const getInstanceDataDelayed = http.get(
 );
 
 const getInstanceDataWithDocumentation = http.get(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab",
   async () => {
     return HttpResponse.json({
       data: instanceDataWithDocumentation,
@@ -109,7 +109,7 @@ const getInstanceDataWithDocumentation = http.get(
 );
 
 const getJSONSchema = http.get(
-  '/lsm/v1/service_catalog/mobileCore/schema',
+  "/lsm/v1/service_catalog/mobileCore/schema",
   () => {
     return HttpResponse.json({
       data: JSONSchema,
@@ -118,16 +118,16 @@ const getJSONSchema = http.get(
 );
 
 const getResources = http.get(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources",
   () => {
     return HttpResponse.json({
-      data: [{ resource_id: 'test_resource[],', resource_state: 'deployed' }],
+      data: [{ resource_id: "test_resource[],", resource_state: "deployed" }],
     });
   },
 );
 
 const getResourcesEmpty = http.get(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources",
   () => {
     return HttpResponse.json({
       data: [],
@@ -136,19 +136,19 @@ const getResourcesEmpty = http.get(
 );
 
 const getResourcesError = http.get(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources",
   () => {
-    return HttpResponse.json({ message: 'Not Found' }, { status: 404 });
+    return HttpResponse.json({ message: "Not Found" }, { status: 404 });
   },
 );
 
 const getResourcesVersionError = http.get(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources",
   () => {
     return HttpResponse.json(
       {
         message:
-          'Request conflicts with the current state of the resource: The given current version (31) doesn\'t match the actual current version (32) of service instance 5ec0ebc2-1c26-4d89-9442-7e50ab062bea in environment test-123(c102f3c3-7e1e-48f3-b497-4229b2082a30)',
+          "Request conflicts with the current state of the resource: The given current version (31) doesn't match the actual current version (32) of service instance 5ec0ebc2-1c26-4d89-9442-7e50ab062bea in environment test-123(c102f3c3-7e1e-48f3-b497-4229b2082a30)",
       },
       { status: 409 },
     );
@@ -156,56 +156,56 @@ const getResourcesVersionError = http.get(
 );
 
 const destroyInstance = http.delete(
-  '/lsm/v2/service_inventory/mobileCore/1d96a1ab/expert',
+  "/lsm/v2/service_inventory/mobileCore/1d96a1ab/expert",
   async () => {
     return HttpResponse.json({ status: 200 });
   },
 );
 
 const destroyInstanceFailed = http.delete(
-  '/lsm/v2/service_inventory/mobileCore/1d96a1ab/expert',
+  "/lsm/v2/service_inventory/mobileCore/1d96a1ab/expert",
   async () => {
     return HttpResponse.error();
   },
 );
 
 const deleteInstance = http.delete(
-  'lsm/v1/service_inventory/mobileCore/1d96a1ab',
+  "lsm/v1/service_inventory/mobileCore/1d96a1ab",
   async () => {
     return HttpResponse.json({ status: 200 });
   },
 );
 
 const deleteInstanceFailed = http.delete(
-  'lsm/v1/service_inventory/mobileCore/1d96a1ab',
+  "lsm/v1/service_inventory/mobileCore/1d96a1ab",
   async () => {
     return HttpResponse.error();
   },
 );
 
 const postForceStateUpdate = http.post(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab/expert/state',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/expert/state",
   async () => {
     return HttpResponse.json({ status: 200 });
   },
 );
 
 const postForceStateUpdateFailed = http.post(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab/expert/state',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/expert/state",
   async () => {
     return HttpResponse.error();
   },
 );
 
 const postStateUpdate = http.post(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab/state',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/state",
   async () => {
     return HttpResponse.json({ status: 200 });
   },
 );
 
 const postStateUpdateFailed = http.post(
-  '/lsm/v1/service_inventory/mobileCore/1d96a1ab/state',
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/state",
   async () => {
     return HttpResponse.error();
   },

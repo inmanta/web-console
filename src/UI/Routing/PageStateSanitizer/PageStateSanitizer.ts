@@ -1,4 +1,4 @@
-import { getKeysExcluding, RouteManager, RouteKind } from '@/Core';
+import { getKeysExcluding, RouteManager, RouteKind } from "@/Core";
 
 export class PageStateSanitizer {
   constructor (private readonly routeManager: RouteManager) {}

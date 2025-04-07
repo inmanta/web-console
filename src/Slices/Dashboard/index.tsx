@@ -1,1 +1,1 @@
-export * as Dashboard from './Core/Route';
+export * as Dashboard from "./Core/Route";

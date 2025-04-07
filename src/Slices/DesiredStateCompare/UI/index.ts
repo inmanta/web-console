@@ -1,1 +1,1 @@
-export { Page as DesiredStateComparePage } from './Page';
+export { Page as DesiredStateComparePage } from "./Page";

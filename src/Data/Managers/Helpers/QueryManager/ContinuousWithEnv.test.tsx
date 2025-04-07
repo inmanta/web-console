@@ -1,20 +1,20 @@
-import React, { useContext, act } from 'react';
-import { MemoryRouter, useLocation, useNavigate } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-import { StoreProvider } from 'easy-peasy';
-import { Either, PageSize, RemoteData } from '@/Core';
-import { QueryManagerResolverImpl, QueryResolverImpl } from '@/Data';
-import { getStoreInstance } from '@/Data/Store';
-import { DeferredApiHelper, dependencies, StaticScheduler } from '@/Test';
+import React, { useContext, act } from "react";
+import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
+import { Either, PageSize, RemoteData } from "@/Core";
+import { QueryManagerResolverImpl, QueryResolverImpl } from "@/Data";
+import { getStoreInstance } from "@/Data/Store";
+import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import {
   DependencyContext,
   DependencyProvider,
   EnvironmentHandlerImpl,
-} from '@/UI/Dependency';
-import { PrimaryRouteManager } from '@/UI/Routing';
+} from "@/UI/Dependency";
+import { PrimaryRouteManager } from "@/UI/Routing";
 
-test('GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api call uses the correct url', async () => {
+test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api call uses the correct url", async () => {
   const apiHelper = new DeferredApiHelper();
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
@@ -25,24 +25,24 @@ test('GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
-        id: 'aaa',
-        name: 'env-a',
-        project_id: 'ppp',
-        repo_branch: 'branch',
-        repo_url: 'repo',
-        projectName: 'project',
+        id: "aaa",
+        name: "env-a",
+        project_id: "ppp",
+        repo_branch: "branch",
+        repo_url: "repo",
+        projectName: "project",
         halted: false,
         settings: {
           enable_lsm_expert_mode: false,
         },
       },
       {
-        id: 'bbb',
-        name: 'env-b',
-        project_id: 'ppp',
-        repo_branch: 'branch',
-        repo_url: 'repo',
-        projectName: 'project',
+        id: "bbb",
+        name: "env-b",
+        project_id: "ppp",
+        repo_branch: "branch",
+        repo_url: "repo",
+        projectName: "project",
         halted: false,
         settings: {
           enable_lsm_expert_mode: false,
@@ -56,7 +56,7 @@ test('GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   }) => {
     const environmentHandler = EnvironmentHandlerImpl(
       useLocation,
-      PrimaryRouteManager(''),
+      PrimaryRouteManager(""),
     );
 
     return (
@@ -69,7 +69,7 @@ test('GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   };
 
   const component = (
-    <MemoryRouter initialEntries={[{ search: '?env=aaa' }]}>
+    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
       <StoreProvider store={store}>
         <Wrapper>
           <Component />
@@ -82,23 +82,23 @@ test('GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
-    method: 'GET',
-    url: '/api/v2/parameters?limit=100&1',
-    environment: 'aaa',
+    method: "GET",
+    url: "/api/v2/parameters?limit=100&1",
+    environment: "aaa",
   });
 
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: null }));
   });
 
-  const button = screen.getByRole('button', { name: 'change-env' });
+  const button = screen.getByRole("button", { name: "change-env" });
 
   await userEvent.click(button);
 
   expect(apiHelper.pendingRequests[0]).toEqual({
-    method: 'GET',
-    url: '/api/v2/parameters?limit=100&1',
-    environment: 'bbb',
+    method: "GET",
+    url: "/api/v2/parameters?limit=100&1",
+    environment: "bbb",
   });
 });
 
@@ -107,10 +107,10 @@ const Component: React.FC = () => {
 
   const { queryResolver } = useContext(DependencyContext);
 
-  queryResolver.useContinuous<'GetParameters'>({
-    kind: 'GetParameters',
-    pageSize: PageSize.from('100'),
-    currentPage: { kind: 'CurrentPage', value: '1' },
+  queryResolver.useContinuous<"GetParameters">({
+    kind: "GetParameters",
+    pageSize: PageSize.from("100"),
+    currentPage: { kind: "CurrentPage", value: "1" },
   });
 
   return (

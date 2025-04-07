@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Bullseye,
   CodeBlock,
@@ -10,32 +10,32 @@ import {
   Flex,
   FlexItem,
   Icon,
-} from '@patternfly/react-core';
+} from "@patternfly/react-core";
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
-} from '@patternfly/react-icons';
-import { Timeline } from '@/UI/Components/Timeline';
-import { words } from '@/UI/words';
-import { CompileDetails } from '@S/CompileDetails/Core/Domain';
+} from "@patternfly/react-icons";
+import { Timeline } from "@/UI/Components/Timeline";
+import { words } from "@/UI/words";
+import { CompileDetails } from "@S/CompileDetails/Core/Domain";
 
 interface Props {
   compileDetails: Pick<
     CompileDetails,
-    | 'completed'
-    | 'started'
-    | 'requested'
-    | 'do_export'
-    | 'force_update'
-    | 'success'
-    | 'metadata'
-    | 'environment_variables'
+    | "completed"
+    | "started"
+    | "requested"
+    | "do_export"
+    | "force_update"
+    | "success"
+    | "metadata"
+    | "environment_variables"
   >;
 }
 
 export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
   return (
-    <Flex rowGap={{ default: 'rowGapXl' }} direction={{ default: 'column' }}>
+    <Flex rowGap={{ default: "rowGapXl" }} direction={{ default: "column" }}>
       <FlexItem>
         <Bullseye>
           <Timeline
@@ -50,11 +50,11 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
         <DescriptionList
           isHorizontal
           isFillColumns
-          columnModifier={{ default: '2Col' }}
+          columnModifier={{ default: "2Col" }}
         >
           <DescriptionListGroup>
             <DescriptionListTerm>
-              {words('compileDetails.status.export')}
+              {words("compileDetails.status.export")}
             </DescriptionListTerm>
             <DescriptionListDescription>
               {compileDetails.do_export.toString()}
@@ -62,7 +62,7 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>
-              {words('compileDetails.status.update')}
+              {words("compileDetails.status.update")}
             </DescriptionListTerm>
             <DescriptionListDescription>
               {compileDetails.force_update.toString()}
@@ -70,7 +70,7 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>
-              {words('compileDetails.status.success')}
+              {words("compileDetails.status.success")}
             </DescriptionListTerm>
             <DescriptionListDescription>
               {compileDetails.success ? (
@@ -82,29 +82,29 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
                   <ExclamationCircleIcon />
                 </Icon>
               ) : (
-                ''
+                ""
               )}
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>
-              {words('compileDetails.status.message')}
+              {words("compileDetails.status.message")}
             </DescriptionListTerm>
             <DescriptionListDescription>
-              {compileDetails.metadata['message'] as string}
+              {compileDetails.metadata["message"] as string}
             </DescriptionListDescription>
           </DescriptionListGroup>
-          {compileDetails.metadata['type'] ? (
+          {compileDetails.metadata["type"] ? (
             <DescriptionListGroup>
               <DescriptionListTerm>
-                {words('compileDetails.status.trigger')}
+                {words("compileDetails.status.trigger")}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                {compileDetails.metadata['type'] as string}
+                {compileDetails.metadata["type"] as string}
               </DescriptionListDescription>
             </DescriptionListGroup>
           ) : (
-            ''
+            ""
           )}
         </DescriptionList>
       </FlexItem>
@@ -112,7 +112,7 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
         <DescriptionList isHorizontal isAutoFit>
           <DescriptionListGroup>
             <DescriptionListTerm>
-              {words('compileDetails.status.envVars')}
+              {words("compileDetails.status.envVars")}
             </DescriptionListTerm>
             <DescriptionListDescription>
               <CodeBlock>

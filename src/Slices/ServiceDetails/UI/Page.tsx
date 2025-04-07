@@ -1,12 +1,12 @@
-import React from 'react';
-import { ServiceModel } from '@/Core';
-import { ServiceProvider } from '@/UI/Components';
-import { useRouteParams } from '@/UI/Routing';
-import { ServiceDetails } from './ServiceDetails';
-import { Wrapper } from './Wrapper';
+import React from "react";
+import { ServiceModel } from "@/Core";
+import { ServiceProvider } from "@/UI/Components";
+import { useRouteParams } from "@/UI/Routing";
+import { ServiceDetails } from "./ServiceDetails";
+import { Wrapper } from "./Wrapper";
 
 export const Page: React.FC = () => {
-  const { service: serviceName } = useRouteParams<'ServiceDetails'>();
+  const { service: serviceName } = useRouteParams<"ServiceDetails">();
 
   return (
     <ServiceProvider

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { PageSize, ServiceInstanceParams } from '@/Core';
-import { initialCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
-import { useGetInstances } from '@/Data/Managers/V2/ServiceInstance';
-import { AutoCompleteInput } from './AutoCompleteInput';
+import React, { useState } from "react";
+import { PageSize, ServiceInstanceParams } from "@/Core";
+import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { useGetInstances } from "@/Data/Managers/V2/ServiceInstance";
+import { AutoCompleteInput } from "./AutoCompleteInput";
 
 interface Props {
   serviceName: string;
@@ -47,7 +47,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
   const [filter, setFilter] = useState<ServiceInstanceParams.Filter>({});
   const { data, isLoading, isSuccess } = useGetInstances(serviceName, {
     filter,
-    pageSize: PageSize.from('250'),
+    pageSize: PageSize.from("250"),
     currentPage: initialCurrentPage,
   }).useContinuous();
 

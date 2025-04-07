@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import React, { useEffect, useRef, useState } from "react";
+import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
   Dropdown,
   DropdownItem,
@@ -10,7 +10,7 @@ import {
   MenuToggle,
   MenuToggleElement,
   Tooltip,
-} from '@patternfly/react-core';
+} from "@patternfly/react-core";
 import {
   CloseIcon,
   CompressArrowsAltIcon,
@@ -21,24 +21,24 @@ import {
   ListOlIcon,
   LongArrowAltDownIcon,
   TextWidthIcon,
-} from '@patternfly/react-icons';
-import copy from 'copy-to-clipboard';
-import bash from 'react-syntax-highlighter/dist/esm/languages/hljs/bash';
-import json from 'react-syntax-highlighter/dist/esm/languages/hljs/json';
-import xml from 'react-syntax-highlighter/dist/esm/languages/hljs/xml';
-import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/docco';
-import styled from 'styled-components';
-import { scrollRowIntoView } from '@/UI/Utils';
-import { words } from '@/UI/words';
+} from "@patternfly/react-icons";
+import copy from "copy-to-clipboard";
+import bash from "react-syntax-highlighter/dist/esm/languages/hljs/bash";
+import json from "react-syntax-highlighter/dist/esm/languages/hljs/json";
+import xml from "react-syntax-highlighter/dist/esm/languages/hljs/xml";
+import docco from "react-syntax-highlighter/dist/esm/styles/hljs/docco";
+import styled from "styled-components";
+import { scrollRowIntoView } from "@/UI/Utils";
+import { words } from "@/UI/words";
 
-SyntaxHighlighter.registerLanguage('json', json);
-SyntaxHighlighter.registerLanguage('xml', xml);
-SyntaxHighlighter.registerLanguage('bash', bash);
+SyntaxHighlighter.registerLanguage("json", json);
+SyntaxHighlighter.registerLanguage("xml", xml);
+SyntaxHighlighter.registerLanguage("bash", bash);
 
 interface Props {
   keyId: string;
   code: string;
-  language: 'json' | 'xml' | 'text' | 'python' | 'bash';
+  language: "json" | "xml" | "text" | "python" | "bash";
   scrollBottom?: boolean;
   close?: () => void;
 }
@@ -56,7 +56,7 @@ export const CodeHighlighter: React.FC<Props> = ({
   const [wrapLongLines, setWraplongLines] = useState(true);
   const codeBlockRef = useRef<HTMLDivElement>(null);
   const [allowScrollState, setAllowScrollState] = useState(true);
-  const minHeight = '10em';
+  const minHeight = "10em";
   const [height, setHeight] = useState(minHeight);
 
   const onCopy = () => {
@@ -70,14 +70,14 @@ export const CodeHighlighter: React.FC<Props> = ({
   const dropdownActions = [
     <ToggleTooltip
       enabled={wrapLongLines}
-      enabledContent={words('codehighlighter.lineWrapping.off')}
-      disabledContent={words('codehighlighter.lineWrapping.on')}
+      enabledContent={words("codehighlighter.lineWrapping.off")}
+      disabledContent={words("codehighlighter.lineWrapping.on")}
       key={`wraplonglines-${keyId}`}
     >
       <DropdownItem
         onClick={() => setWraplongLines(!wrapLongLines)}
         icon={
-          <Icon style={{ opacity: wrapLongLines ? '1' : '0.4' }}>
+          <Icon style={{ opacity: wrapLongLines ? "1" : "0.4" }}>
             <TextWidthIcon />
           </Icon>
         }
@@ -85,14 +85,14 @@ export const CodeHighlighter: React.FC<Props> = ({
     </ToggleTooltip>,
     <ToggleTooltip
       enabled={showLineNumbers}
-      enabledContent={words('codehighlighter.lineNumbers.off')}
-      disabledContent={words('codehighlighter.lineNumbers.on')}
+      enabledContent={words("codehighlighter.lineNumbers.off")}
+      disabledContent={words("codehighlighter.lineNumbers.on")}
       key={`showlinenumbers-${keyId}`}
     >
       <DropdownItem
         onClick={() => setShowLineNumbers(!showLineNumbers)}
         icon={
-          <Icon style={{ opacity: showLineNumbers ? '1' : '0.4' }}>
+          <Icon style={{ opacity: showLineNumbers ? "1" : "0.4" }}>
             <ListOlIcon />
           </Icon>
         }
@@ -101,7 +101,7 @@ export const CodeHighlighter: React.FC<Props> = ({
   ];
 
   const resumeAutoScroll = () => {
-    const preBlock = codeBlockRef.current?.querySelector('pre');
+    const preBlock = codeBlockRef.current?.querySelector("pre");
 
     preBlock && preBlock.scrollTo(0, preBlock.scrollHeight);
 
@@ -126,8 +126,8 @@ export const CodeHighlighter: React.FC<Props> = ({
       )}
       <ToggleTooltip
         enabled={zoomed}
-        enabledContent={words('codehighlighter.zoom.off')}
-        disabledContent={words('codehighlighter.zoom.on')}
+        enabledContent={words("codehighlighter.zoom.off")}
+        disabledContent={words("codehighlighter.zoom.on")}
       >
         {zoomed ? (
           <Icon onClick={() => setZoomed(false)}>
@@ -140,7 +140,7 @@ export const CodeHighlighter: React.FC<Props> = ({
         )}
       </ToggleTooltip>
       {scrollBottom && (
-        <Tooltip content={words('codehighlighter.scrollToBottom')}>
+        <Tooltip content={words("codehighlighter.scrollToBottom")}>
           <Icon onClick={resumeAutoScroll}>
             <LongArrowAltDownIcon />
           </Icon>
@@ -165,11 +165,11 @@ export const CodeHighlighter: React.FC<Props> = ({
   useEffect(() => {
     if (zoomed) {
       if (getNumberOfLines(code) < 10) {
-        setHeight('fit-content');
+        setHeight("fit-content");
       } else {
-        setHeight('90vh');
+        setHeight("90vh");
       }
-      scrollRowIntoView(codeBlockRef, { block: 'start', behavior: 'smooth' });
+      scrollRowIntoView(codeBlockRef, { block: "start", behavior: "smooth" });
     } else {
       setHeight(minHeight);
     }
@@ -178,15 +178,15 @@ export const CodeHighlighter: React.FC<Props> = ({
 
   // block scroll if the user scrolls.
   useEffect(() => {
-    const preBlock = codeBlockRef.current?.querySelector('pre');
+    const preBlock = codeBlockRef.current?.querySelector("pre");
 
-    if (scrollBottom && preBlock?.firstChild?.nodeName === 'CODE') {
-      preBlock?.addEventListener('wheel', blockScrollPosition);
+    if (scrollBottom && preBlock?.firstChild?.nodeName === "CODE") {
+      preBlock?.addEventListener("wheel", blockScrollPosition);
     }
 
     return () => {
       if (!allowScrollState) {
-        preBlock?.removeEventListener('wheel', blockScrollPosition);
+        preBlock?.removeEventListener("wheel", blockScrollPosition);
       }
     };
   });
@@ -196,7 +196,7 @@ export const CodeHighlighter: React.FC<Props> = ({
   // The method "setScrollPositionBottom" doesn't need to be included in the dependencies.
   useEffect(() => {
     if (!isEmpty(code)) {
-      const preBlock = codeBlockRef.current?.querySelector('pre');
+      const preBlock = codeBlockRef.current?.querySelector("pre");
 
       setScrollPositionBottom(preBlock);
     }
@@ -209,40 +209,40 @@ export const CodeHighlighter: React.FC<Props> = ({
       <span ref={codeBlockRef}>
         {isEmpty(code) ? (
           <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
-            {words('empty')}
+            {words("empty")}
           </Label>
         ) : isShortSingleLine(code) ? (
           <pre>{code}</pre>
         ) : (
           <BorderedArea>
-            <Flex flexWrap={{ default: 'nowrap' }}>
-              <FlexItemWithOverflow grow={{ default: 'grow' }}>
+            <Flex flexWrap={{ default: "nowrap" }}>
+              <FlexItemWithOverflow grow={{ default: "grow" }}>
                 <SyntaxHighlighter
                   language={language}
                   style={docco}
                   customStyle={{
                     backgroundColor:
-                      'var(--pf-t--global--background--color--secondary--default)',
-                    color: 'var(--pf-t--global--text--color--regular)',
+                      "var(--pf-t--global--background--color--secondary--default)",
+                    color: "var(--pf-t--global--text--color--regular)",
                     height: height,
                     minHeight,
-                    resize: 'vertical',
-                    scrollbarGutter: 'stable',
+                    resize: "vertical",
+                    scrollbarGutter: "stable",
                     borderRight:
-                      'var(--pf-t--global--border--color--brand--default)',
+                      "var(--pf-t--global--border--color--brand--default)",
                   }}
                   showLineNumbers={showLineNumbers}
                   showInlineLineNumbers
                   lineNumberStyle={{
-                    whiteSpace: 'nowrap',
-                    marginRight: '1em',
+                    whiteSpace: "nowrap",
+                    marginRight: "1em",
                     paddingRight: 0,
-                    minWidth: '1.25em',
+                    minWidth: "1.25em",
                   }}
                   wrapLongLines={wrapLongLines}
                   wrapLines
                   lineProps={{
-                    style: { wordBreak: 'break-word', flexWrap: 'wrap' },
+                    style: { wordBreak: "break-word", flexWrap: "wrap" },
                   }}
                 >
                   {code}
@@ -269,7 +269,7 @@ function isEmpty (code: string) {
 }
 
 function isShortSingleLine (code: string) {
-  return !code.includes('\n') && code.length < 60;
+  return !code.includes("\n") && code.length < 60;
 }
 
 function getNumberOfLines (code: string) {

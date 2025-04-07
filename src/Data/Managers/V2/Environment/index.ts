@@ -1,1 +1,1 @@
-export * from './UpdateEnvConfig';
+export * from "./UpdateEnvConfig";

@@ -1,4 +1,4 @@
-import { Query, RemoteData } from '@/Core';
+import { Query, RemoteData } from "@/Core";
 
 export type Data<Kind extends Query.Kind> = [
   RemoteData.Type<Query.Error<Kind>, Query.UsedData<Kind>>,

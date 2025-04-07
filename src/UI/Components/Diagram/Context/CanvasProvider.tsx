@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { dia } from '@inmanta/rappid';
-import { Field, InstanceAttributeModel } from '@/Core';
-import { DiagramHandlers } from '../init';
+import React, { useEffect, useState } from "react";
+import { dia } from "@inmanta/rappid";
+import { Field, InstanceAttributeModel } from "@/Core";
+import { DiagramHandlers } from "../init";
 import {
   ComposerServiceOrderItem,
   DictDialogData,
   StencilState,
   RelationCounterForCell,
-} from '../interfaces';
-import { CanvasContext } from './Context';
+} from "../interfaces";
+import { CanvasContext } from "./Context";
 
 /**
  * CanvasProvider component

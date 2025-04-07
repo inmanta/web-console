@@ -1,7 +1,7 @@
-import React, { forwardRef } from 'react';
-import { Link as RRLink, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
-import { SearchHelper } from '@/UI';
+import React, { forwardRef } from "react";
+import { Link as RRLink, useLocation } from "react-router-dom";
+import styled from "styled-components";
+import { SearchHelper } from "@/UI";
 
 interface Props {
   isDisabled?: boolean;
@@ -10,7 +10,7 @@ interface Props {
   search?: string;
   className?: string;
   children?: React.ReactNode;
-  variant?: 'plain' | 'default';
+  variant?: "plain" | "default";
 }
 
 export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
@@ -22,7 +22,7 @@ export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
       envOnly,
       search: newSearch,
       className,
-      variant = 'default',
+      variant = "default",
     },
     ref,
   ) => {
@@ -48,12 +48,12 @@ export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
   },
 );
 
-const StyledRRLink = styled(RRLink)<{ $variant?: 'plain' | 'default' }>`
+const StyledRRLink = styled(RRLink)<{ $variant?: "plain" | "default" }>`
   display: inline-block;
   width: 100%;
   color: ${({ $variant }) =>
-    $variant === 'plain'
-      ? 'inherit'
-      : 'var(--pf-t--global--text--color--link--default)'};
-  ${({ $variant }) => ($variant === 'plain' ? 'text-decoration:none' : '')};
+    $variant === "plain"
+      ? "inherit"
+      : "var(--pf-t--global--text--color--link--default)"};
+  ${({ $variant }) => ($variant === "plain" ? "text-decoration:none" : "")};
 `;

@@ -1,24 +1,24 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from "react";
 import {
   TextInput,
   Button,
   Alert,
   AlertActionCloseButton,
   SelectOptionProps,
-} from '@patternfly/react-core';
-import inlineStyles from '@patternfly/react-styles/css/components/InlineEdit/inline-edit';
-import { ExpandableRowContent, Tbody, Td, Tr } from '@patternfly/react-table';
-import styled from 'styled-components';
+} from "@patternfly/react-core";
+import inlineStyles from "@patternfly/react-styles/css/components/InlineEdit/inline-edit";
+import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
+import styled from "styled-components";
 import {
   Maybe,
   LogLevelsList,
   EventTypesList,
   LogLevelString,
   EventType,
-} from '@/Core';
-import { MultiTextSelect, SingleTextSelect } from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
+} from "@/Core";
+import { MultiTextSelect, SingleTextSelect } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props {
   service_entity: string;
@@ -39,9 +39,9 @@ export const CreateCallbackForm: React.FC<Props> = ({
     return { value: option, children: option };
   });
 
-  const create = commandResolver.useGetTrigger<'CreateCallback'>({
-    kind: 'CreateCallback',
-    callback_url: url || '',
+  const create = commandResolver.useGetTrigger<"CreateCallback">({
+    kind: "CreateCallback",
+    callback_url: url || "",
     callback_id: id || undefined,
     service_entity,
     minimal_log_level:
@@ -78,7 +78,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
         <Td className={inlineStyles.inlineEditInput}>
           <TextInput
             aria-label="callbackUrl"
-            value={url || ''}
+            value={url || ""}
             type="text"
             onChange={(_event, val) => setUrl(val)}
           />
@@ -86,7 +86,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
         <Td className={inlineStyles.inlineEditInput}>
           <TextInput
             aria-label="callbackId"
-            value={id || ''}
+            value={id || ""}
             type="text"
             onChange={(_event, val) => setId(val)}
           />
@@ -117,7 +117,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
         </StyledTd>
         <Td>
           <Button variant="secondary" onClick={onCreate}>
-            {words('catalog.callbacks.add')}
+            {words("catalog.callbacks.add")}
           </Button>
         </Td>
       </Tr>
@@ -131,7 +131,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
                 variant="danger"
                 title="Something went wrong"
                 actionClose={
-                  <AlertActionCloseButton onClose={() => setError('')} />
+                  <AlertActionCloseButton onClose={() => setError("")} />
                 }
               >
                 <p>{error}</p>

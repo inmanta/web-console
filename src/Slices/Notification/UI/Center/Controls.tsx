@@ -1,10 +1,10 @@
-import React from 'react';
-import { Toolbar, ToolbarItem, ToolbarContent } from '@patternfly/react-core';
-import { NotificationFilter } from '@/Data/Managers/V2/Notification/GetNotifications';
-import { MessageFilter } from './MessageFilter';
-import { ReadFilter } from './ReadFilter';
-import { SeverityFilter } from './SeverityFilter';
-import { TitleFilter } from './TitleFilter';
+import React from "react";
+import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
+import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
+import { MessageFilter } from "./MessageFilter";
+import { ReadFilter } from "./ReadFilter";
+import { SeverityFilter } from "./SeverityFilter";
+import { TitleFilter } from "./TitleFilter";
 
 interface Props {
   paginationWidget: React.ReactNode;

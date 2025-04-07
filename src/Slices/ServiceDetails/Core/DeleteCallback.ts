@@ -1,7 +1,7 @@
-import { Maybe } from '@/Core/Language';
+import { Maybe } from "@/Core/Language";
 
 export interface Command {
-  kind: 'DeleteCallback';
+  kind: "DeleteCallback";
   callbackId: string;
   service_entity: string;
 }

@@ -2,15 +2,15 @@
  * React Query hook to fetch user information from the API.
  * @returns An object containing a custom hook to fetch user information.
  */
-import { useQuery } from '@tanstack/react-query';
-import { useGetWithoutEnv } from '../../helpers';
+import { useQuery } from "@tanstack/react-query";
+import { useGetWithoutEnv } from "../../helpers";
 
 /**
  * Represents the user information.
  */
 export interface UserInfo {
   username: string;
-  auth_method: 'oidc' | 'database';
+  auth_method: "oidc" | "database";
 }
 
 /**
@@ -27,8 +27,8 @@ export const useGetUsers = () => {
      */
     useOneTime: () =>
       useQuery({
-        queryKey: ['get_users-one_time'],
-        queryFn: () => get('/api/v2/user'),
+        queryKey: ["get_users-one_time"],
+        queryFn: () => get("/api/v2/user"),
         select: (data) => data.data,
       }),
   };

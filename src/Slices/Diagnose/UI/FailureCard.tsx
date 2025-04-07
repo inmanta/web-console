@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardBody,
@@ -9,14 +9,14 @@ import {
   DropdownList,
   MenuToggle,
   MenuToggleElement,
-} from '@patternfly/react-core';
-import { EllipsisVIcon } from '@patternfly/react-icons';
-import { Link } from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { getResourceIdFromResourceVersionId } from '@/UI/Utils';
-import { words } from '@/UI/words';
-import { Failure } from '@S/Diagnose/Core/Domain';
-import { Pre } from './Pre';
+} from "@patternfly/react-core";
+import { EllipsisVIcon } from "@patternfly/react-icons";
+import { Link } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
+import { words } from "@/UI/words";
+import { Failure } from "@S/Diagnose/Core/Domain";
+import { Pre } from "./Pre";
 
 interface Props {
   resourceId: string;
@@ -30,20 +30,20 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
     <DropdownList>
       <DropdownItem key="resourceDetailsLink">
         <Link
-          pathname={routeManager.getUrl('ResourceDetails', {
+          pathname={routeManager.getUrl("ResourceDetails", {
             resourceId: getResourceIdFromResourceVersionId(resourceId),
           })}
         >
-          {words('diagnose.links.resourceDetails')}
+          {words("diagnose.links.resourceDetails")}
         </Link>
       </DropdownItem>
       <DropdownItem key="modelVersionLink">
         <Link
-          pathname={routeManager.getUrl('DesiredStateDetails', {
+          pathname={routeManager.getUrl("DesiredStateDetails", {
             version: failure.model_version.toString(),
           })}
         >
-          {words('diagnose.links.modelVersionDetails')}
+          {words("diagnose.links.modelVersionDetails")}
         </Link>
       </DropdownItem>
     </DropdownList>
@@ -72,7 +72,7 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
                   />
                 )}
                 isOpen={isOpen}
-                popperProps={{ position: 'right' }}
+                popperProps={{ position: "right" }}
                 onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
               >
                 {dropdownItems}
@@ -83,7 +83,7 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
           className: undefined,
         }}
       >
-        <CardTitle>{words('diagnose.failure.title')}</CardTitle>
+        <CardTitle>{words("diagnose.failure.title")}</CardTitle>
       </CardHeader>
       <CardTitle>{resourceId}</CardTitle>
       <CardBody>

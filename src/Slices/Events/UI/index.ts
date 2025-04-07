@@ -1,1 +1,1 @@
-export { Page as EventsPage } from './Page';
+export { Page as EventsPage } from "./Page";

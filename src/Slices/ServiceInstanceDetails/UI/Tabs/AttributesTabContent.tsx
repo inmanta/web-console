@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Stack, ToggleGroup, ToggleGroupItem } from '@patternfly/react-core';
-import styled from 'styled-components';
-import { AttributeViewToggles } from '../../Utils';
-import { AttributesViewProvider } from '../Components/AttributesComponents';
-import { TabContentWrapper } from './TabContentWrapper';
+import React, { useState } from "react";
+import { Stack, ToggleGroup, ToggleGroupItem } from "@patternfly/react-core";
+import styled from "styled-components";
+import { AttributeViewToggles } from "../../Utils";
+import { AttributesViewProvider } from "../Components/AttributesComponents";
+import { TabContentWrapper } from "./TabContentWrapper";
 
 /**
  * The AttributesTabContent Component
@@ -23,7 +23,7 @@ export const AttributesTabContent: React.FC = () => {
   };
 
   return (
-    <TabContentWrapper id={'Attribute-content'}>
+    <TabContentWrapper id={"Attribute-content"}>
       <Stack hasGutter>
         <StyledToggleGroup aria-label="toggle-group-attributes" isCompact>
           <ToggleGroupItem

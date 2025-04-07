@@ -1,8 +1,8 @@
-import React from 'react';
-import { Pagination as PaginationComponent } from '@patternfly/react-core';
-import { PageSize, Pagination } from '@/Core';
-import { PaginationPageSizes } from '@/Core/Domain/PageSize';
-import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
+import React from "react";
+import { Pagination as PaginationComponent } from "@patternfly/react-core";
+import { PageSize, Pagination } from "@/Core";
+import { PaginationPageSizes } from "@/Core/Domain/PageSize";
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 type Data = {
   handlers: Pagination.Handlers;
@@ -14,7 +14,7 @@ interface Props {
   pageSize: PageSize.Type;
   setPageSize: (size: PageSize.Type) => void;
   setCurrentPage: (currentPage: CurrentPage) => void;
-  variant?: 'top' | 'bottom';
+  variant?: "top" | "bottom";
 }
 
 /**
@@ -27,7 +27,7 @@ export const Provider: React.FC<Props> = ({
   pageSize,
   setPageSize,
   setCurrentPage,
-  variant = 'top',
+  variant = "top",
 }) => {
   const { handlers, metadata } = data;
 
@@ -36,7 +36,7 @@ export const Provider: React.FC<Props> = ({
       itemCount={Number(metadata.total)}
       perPage={Number(pageSize.value)}
       titles={{
-        perPageSuffix: '',
+        perPageSuffix: "",
         paginationAriaLabel: `${variant}-Pagination`,
       }}
       page={
@@ -44,14 +44,14 @@ export const Provider: React.FC<Props> = ({
       }
       onNextClick={() =>
         setCurrentPage({
-          kind: 'CurrentPage',
-          value: handlers.next ? handlers.next : '',
+          kind: "CurrentPage",
+          value: handlers.next ? handlers.next : "",
         })
       }
       onPreviousClick={() =>
         setCurrentPage({
-          kind: 'CurrentPage',
-          value: handlers.prev ? handlers.prev : '',
+          kind: "CurrentPage",
+          value: handlers.prev ? handlers.prev : "",
         })
       }
       aria-label={`PaginationWidget-${variant}`}
@@ -62,8 +62,8 @@ export const Provider: React.FC<Props> = ({
       ) => {
         //default Pagination value are set to match PageSize.Type, but they are converted to numbers "under the hood"
         setPageSize({
-          kind: 'PageSize',
-          value: newPerPage.toString() as unknown as PageSize.PageSize['value'],
+          kind: "PageSize",
+          value: newPerPage.toString() as unknown as PageSize.PageSize["value"],
         });
       }}
       perPageOptions={PaginationPageSizes}

@@ -1,13 +1,13 @@
-import React, { useContext, useState } from 'react';
-import { MenuItem, Content } from '@patternfly/react-core';
-import { WarningTriangleIcon } from '@patternfly/react-icons';
-import { useQueryClient } from '@tanstack/react-query';
-import { VersionedServiceInstanceIdentifier } from '@/Core';
-import { useDestroyInstance } from '@/Data/Managers/V2/ServiceInstance';
-import { DependencyContext } from '@/UI';
-import { ToastAlert, ConfirmUserActionForm } from '@/UI/Components';
-import { ModalContext } from '@/UI/Root/Components/ModalProvider';
-import { words } from '@/UI/words';
+import React, { useContext, useState } from "react";
+import { MenuItem, Content } from "@patternfly/react-core";
+import { WarningTriangleIcon } from "@patternfly/react-icons";
+import { useQueryClient } from "@tanstack/react-query";
+import { VersionedServiceInstanceIdentifier } from "@/Core";
+import { useDestroyInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { DependencyContext } from "@/UI";
+import { ToastAlert, ConfirmUserActionForm } from "@/UI/Components";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { words } from "@/UI/words";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
@@ -33,10 +33,10 @@ export const DestroyAction: React.FC<Props> = ({
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { authHelper } = useContext(DependencyContext);
   const client = useQueryClient();
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   const username = authHelper.getUser();
-  const message = words('instanceDetails.API.message.update')(username);
+  const message = words("instanceDetails.API.message.update")(username);
 
   const { mutate } = useDestroyInstance(id, service_entity, version, message, {
     onError: (error) => {
@@ -44,10 +44,10 @@ export const DestroyAction: React.FC<Props> = ({
     },
     onSuccess: () => {
       client.invalidateQueries({
-        queryKey: ['get_instances-one_time', service_entity],
+        queryKey: ["get_instances-one_time", service_entity],
       });
       client.refetchQueries({
-        queryKey: ['get_instances-continuous', service_entity],
+        queryKey: ["get_instances-continuous", service_entity],
       });
     },
   });
@@ -70,19 +70,19 @@ export const DestroyAction: React.FC<Props> = ({
    */
   const openModal = (): void => {
     triggerModal({
-      title: words('inventory.destroyInstance.title'),
-      iconVariant: 'danger',
+      title: words("inventory.destroyInstance.title"),
+      iconVariant: "danger",
       content: (
         <>
           <Content component="p">
-            {words('inventory.destroyInstance.header')(
+            {words("inventory.destroyInstance.header")(
               instance_identity,
               service_entity,
             )}
           </Content>
           <br />
           <Content component="p">
-            {words('inventory.destroyInstance.text')}
+            {words("inventory.destroyInstance.text")}
           </Content>
           <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
         </>
@@ -94,7 +94,7 @@ export const DestroyAction: React.FC<Props> = ({
     <>
       <ToastAlert
         data-testid="ToastAlert"
-        title={words('inventory.destroyInstance.failed')}
+        title={words("inventory.destroyInstance.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}
       />
@@ -102,13 +102,13 @@ export const DestroyAction: React.FC<Props> = ({
         itemId="expert-destroy"
         style={{
           backgroundColor:
-            'var(--pf-t--global--color--nonstatus--red--default)',
+            "var(--pf-t--global--color--nonstatus--red--default)",
         }}
         isDanger
         onClick={openModal}
         icon={<WarningTriangleIcon />}
       >
-        {words('inventory.destroyInstance.button')}
+        {words("inventory.destroyInstance.button")}
       </MenuItem>
     </>
   );

@@ -1,1 +1,1 @@
-export * from './useGetMetrics';
+export * from "./useGetMetrics";

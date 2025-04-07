@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Table,
   TableVariant,
@@ -6,12 +6,12 @@ import {
   Th,
   Thead,
   Tr,
-} from '@patternfly/react-table';
-import { useExpansion } from '@/Data';
-import { ServiceOrderItem } from '@/Slices/Orders/Core/Query';
-import { words } from '@/UI';
-import { OrderDetailsRow } from './OrderDetailsRow';
-import { OrderDetailsTablePresenter } from './OrderDetailsTablePresenter';
+} from "@patternfly/react-table";
+import { useExpansion } from "@/Data";
+import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
+import { words } from "@/UI";
+import { OrderDetailsRow } from "./OrderDetailsRow";
+import { OrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";
 
 interface Props {
   tablePresenter: OrderDetailsTablePresenter;
@@ -43,9 +43,9 @@ export const OrderDetailsTable: React.FC<Props> = ({
       <Thead>
         <Tr>
           <Th
-            style={{ width: '15px' }}
+            style={{ width: "15px" }}
             aria-hidden
-            screenReaderText={words('common.emptyColumnHeader')}
+            screenReaderText={words("common.emptyColumnHeader")}
           />
           {heads}
         </Tr>

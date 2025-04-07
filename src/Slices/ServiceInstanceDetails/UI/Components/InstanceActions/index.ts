@@ -1,1 +1,1 @@
-export * from './InstanceActions';
+export * from "./InstanceActions";

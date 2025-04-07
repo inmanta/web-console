@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react';
-import { Button, ToolbarGroup } from '@patternfly/react-core';
-import { Maybe } from '@/Core';
-import { ToastAlert } from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
+import React, { useContext, useState } from "react";
+import { Button, ToolbarGroup } from "@patternfly/react-core";
+import { Maybe } from "@/Core";
+import { ToastAlert } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props {
   version: string;
@@ -15,9 +15,9 @@ export const TriggerDryRunAction: React.FC<Props> = ({
   updateList,
 }) => {
   const { commandResolver } = useContext(DependencyContext);
-  const [errorMessage, setErrorMessage] = useState('');
-  const trigger = commandResolver.useGetTrigger<'TriggerDryRun'>({
-    kind: 'TriggerDryRun',
+  const [errorMessage, setErrorMessage] = useState("");
+  const trigger = commandResolver.useGetTrigger<"TriggerDryRun">({
+    kind: "TriggerDryRun",
     version,
   });
 
@@ -31,14 +31,14 @@ export const TriggerDryRunAction: React.FC<Props> = ({
   };
 
   return (
-    <ToolbarGroup align={{ default: 'alignEnd' }}>
+    <ToolbarGroup align={{ default: "alignEnd" }}>
       <ToastAlert
-        title={words('desiredState.complianceCheck.action.dryRun.failed')}
+        title={words("desiredState.complianceCheck.action.dryRun.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}
       />
       <Button variant="secondary" onClick={onTrigger}>
-        {words('desiredState.complianceCheck.action.dryRun')}
+        {words("desiredState.complianceCheck.action.dryRun")}
       </Button>
     </ToolbarGroup>
   );

@@ -1,1 +1,1 @@
-export { Tab as ConfigurationTab } from './Tab';
+export { Tab as ConfigurationTab } from "./Tab";

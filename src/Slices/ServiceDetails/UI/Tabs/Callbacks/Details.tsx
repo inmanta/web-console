@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -6,10 +6,10 @@ import {
   DescriptionListTerm,
   List,
   ListItem,
-} from '@patternfly/react-core';
-import styled from 'styled-components';
-import { EventTypesList } from '@/Core';
-import { words } from '@/UI/words';
+} from "@patternfly/react-core";
+import styled from "styled-components";
+import { EventTypesList } from "@/Core";
+import { words } from "@/UI/words";
 
 interface Props {
   event_types: string[];
@@ -20,7 +20,7 @@ export const Details: React.FC<Props> = ({ event_types }) => {
     <DescriptionList>
       <DescriptionListGroup>
         <DescriptionListTerm>
-          {words('catalog.callbacks.eventTypes')}
+          {words("catalog.callbacks.eventTypes")}
         </DescriptionListTerm>
         <DescriptionListDescription>
           <CheckedList all={EventTypesList} available={event_types} />

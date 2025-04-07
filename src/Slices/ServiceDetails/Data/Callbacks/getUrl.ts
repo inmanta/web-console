@@ -1,1 +1,1 @@
-export const getUrl = (): string => '/lsm/v1/callbacks';
+export const getUrl = (): string => "/lsm/v1/callbacks";

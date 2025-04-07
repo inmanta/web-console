@@ -1,37 +1,37 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
   useUrlStateWithSort,
-} from '@/Data';
-import { useUrlStateWithCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
-import { useGetCompileReports } from '@/Data/Managers/V2/Compilation/GetCompileReports/useGetCompileReports';
+} from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { useGetCompileReports } from "@/Data/Managers/V2/Compilation/GetCompileReports/useGetCompileReports";
 import {
   EmptyView,
   PageContainer,
   ErrorView,
   PaginationWidget,
   LoadingView,
-} from '@/UI/Components';
-import { words } from '@/UI/words';
-import { Filter } from '@S/CompileReports/Core/Query';
-import { CompileReportsTableControls } from './CompileReportsTableControls';
-import { TableProvider } from './TableProvider';
+} from "@/UI/Components";
+import { words } from "@/UI/words";
+import { Filter } from "@S/CompileReports/Core/Query";
+import { CompileReportsTableControls } from "./CompileReportsTableControls";
+import { TableProvider } from "./TableProvider";
 
 export const Page: React.FC = () => {
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: 'CompileReports',
+    route: "CompileReports",
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: 'CompileReports',
+    route: "CompileReports",
   });
   const [filter, setFilter] = useUrlStateWithFilter<Filter>({
-    route: 'CompileReports',
-    keys: { requested: 'DateRange', success: 'Boolean' },
+    route: "CompileReports",
+    keys: { requested: "DateRange", success: "Boolean" },
   });
   const [sort, setSort] = useUrlStateWithSort<string>({
-    default: { name: 'requested', order: 'desc' },
-    route: 'CompileReports',
+    default: { name: "requested", order: "desc" },
+    route: "CompileReports",
   });
   const { data, refetch, isSuccess, isError, error } = useGetCompileReports({
     filter,
@@ -42,13 +42,13 @@ export const Page: React.FC = () => {
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
-    setCurrentPage({ kind: 'CurrentPage', value: '' });
+    setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
   if (isError) {
     return (
-      <PageContainer pageTitle={words('compileReports.title')}>
+      <PageContainer pageTitle={words("compileReports.title")}>
         <ErrorView
           message={error.message}
           retry={() => refetch()}
@@ -60,7 +60,7 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     return (
-      <PageContainer pageTitle={words('compileReports.title')}>
+      <PageContainer pageTitle={words("compileReports.title")}>
         <CompileReportsTableControls
           filter={filter}
           setFilter={setFilter}
@@ -76,7 +76,7 @@ export const Page: React.FC = () => {
         />
         {data.data.length <= 0 ? (
           <EmptyView
-            message={words('compileReports.empty.message')}
+            message={words("compileReports.empty.message")}
             aria-label="CompileReportsView-Empty"
           />
         ) : (
@@ -92,7 +92,7 @@ export const Page: React.FC = () => {
   }
 
   return (
-    <PageContainer pageTitle={words('compileReports.title')}>
+    <PageContainer pageTitle={words("compileReports.title")}>
       <LoadingView ariaLabel="CompileReportsView-Loading" />
     </PageContainer>
   );

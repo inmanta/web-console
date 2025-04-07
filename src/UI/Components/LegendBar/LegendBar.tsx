@@ -1,8 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Item, Props as ItemProps } from './Item';
-import { LoneItem } from './LoneItem';
-import { Total } from './Total';
+import React from "react";
+import styled from "styled-components";
+import { Item, Props as ItemProps } from "./Item";
+import { LoneItem } from "./LoneItem";
+import { Total } from "./Total";
 
 interface Props {
   items: ItemProps[];
@@ -28,7 +28,7 @@ export const LegendBar: React.FC<Props> = ({
     <Container {...props}>
       <Bar>
         {items.length <= 0 ? (
-          <LoneItem key="none" label={label || ''} />
+          <LoneItem key="none" label={label || ""} />
         ) : (
           items.map((item) => <Item key={item.id} {...item} />)
         )}

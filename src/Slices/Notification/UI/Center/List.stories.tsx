@@ -1,12 +1,12 @@
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { dependencies, MockCommandManager } from '@/Test';
-import { DependencyProvider, PrimaryRouteManager } from '@/UI';
-import * as Mock from '@S/Notification/Core/Mock';
-import { List } from './List';
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import { dependencies, MockCommandManager } from "@/Test";
+import { DependencyProvider, PrimaryRouteManager } from "@/UI";
+import * as Mock from "@S/Notification/Core/Mock";
+import { List } from "./List";
 
 export default {
-  title: 'Notification/Center/List',
+  title: "Notification/Center/List",
   component: List,
 };
 
@@ -15,7 +15,7 @@ export const Default = () => (
     <DependencyProvider
       dependencies={{
         ...dependencies,
-        routeManager: PrimaryRouteManager(''),
+        routeManager: PrimaryRouteManager(""),
         commandResolver: new MockCommandManager(),
       }}
     >

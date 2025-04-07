@@ -1,4 +1,4 @@
-import { Resource } from '@/Core/Domain/Resource';
+import { Resource } from "@/Core/Domain/Resource";
 
 export interface InstanceResourceModel {
   resource_id: string;

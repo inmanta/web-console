@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Bullseye,
   Button,
@@ -8,13 +8,13 @@ import {
   CardHeader,
   CardTitle,
   Divider,
-} from '@patternfly/react-core';
-import styled from 'styled-components';
-import { Maybe, Resource } from '@/Core';
-import { StatusDescriptor } from '@/UI/Components/DiffWizard/StatusDescriptor';
-import { Classification, Item, Refs } from '@/UI/Components/DiffWizard/types';
-import { words } from '@/UI/words';
-import { Entry } from './Entry/Entry';
+} from "@patternfly/react-core";
+import styled from "styled-components";
+import { Maybe, Resource } from "@/Core";
+import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
+import { Classification, Item, Refs } from "@/UI/Components/DiffWizard/types";
+import { words } from "@/UI/words";
+import { Entry } from "./Entry/Entry";
 
 type Classify = (
   title: string,
@@ -50,9 +50,9 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
           onExpand={onExpand}
           toggleButtonProps={{
             id: `${item.id}-toggle-button`,
-            'aria-label': 'Details',
-            'aria-labelledby': 'toggle-button',
-            'aria-expanded': isExpanded,
+            "aria-label": "Details",
+            "aria-labelledby": "toggle-button",
+            "aria-expanded": isExpanded,
           }}
         >
           <CardTitle id={item.id}>
@@ -74,44 +74,44 @@ const Body: React.FC<{ item: Item; classify?: Classify }> = ({
   classify,
 }) => {
   switch (item.status) {
-    case 'deleted':
+    case "deleted":
       return (
         <BodyWithToggle
           item={item}
-          message={words('desiredState.compare.deleted')}
-          actionLabel={words('desiredState.compare.deleted.action')}
+          message={words("desiredState.compare.deleted")}
+          actionLabel={words("desiredState.compare.deleted.action")}
           classify={classify}
         />
       );
-    case 'added':
-    case 'modified':
+    case "added":
+    case "modified":
       return <BodyWithChanges item={item} classify={classify} />;
 
-    case 'unmodified':
+    case "unmodified":
       return (
-        <BodyWithMessage message={words('desiredState.compare.unmodified')} />
+        <BodyWithMessage message={words("desiredState.compare.unmodified")} />
       );
-    case 'agent_down': {
+    case "agent_down": {
       const agent = Maybe.withFallback(
         Resource.IdParser.getAgentName(item.id),
-        '???',
+        "???",
       );
 
       return (
         <BodyWithMessage
-          message={words('desiredState.compare.agent_down')(agent)}
+          message={words("desiredState.compare.agent_down")(agent)}
         />
       );
     }
 
-    case 'undefined':
+    case "undefined":
       return (
-        <BodyWithMessage message={words('desiredState.compare.undefined')} />
+        <BodyWithMessage message={words("desiredState.compare.undefined")} />
       );
-    case 'skipped_for_undefined':
+    case "skipped_for_undefined":
       return (
         <BodyWithMessage
-          message={words('desiredState.compare.skipped_for_undefined')}
+          message={words("desiredState.compare.skipped_for_undefined")}
         />
       );
     default:
@@ -142,7 +142,7 @@ const BodyWithToggle: React.FC<{
 };
 
 const BodyWithChanges: React.FC<{
-  item: Pick<Item, 'entries' | 'id'>;
+  item: Pick<Item, "entries" | "id">;
   classify?: Classify;
 }> = ({ item, classify }) => (
   <CardBody>

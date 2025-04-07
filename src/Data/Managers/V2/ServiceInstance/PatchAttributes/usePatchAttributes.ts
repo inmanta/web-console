@@ -2,11 +2,11 @@ import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
-} from '@tanstack/react-query';
-import { Config, Field, InstanceAttributeModel } from '@/Core';
+} from "@tanstack/react-query";
+import { Config, Field, InstanceAttributeModel } from "@/Core";
 
-import { usePatch } from '../../helpers';
-import { BodyV1, BodyV2, getBodyV1, getBodyV2 } from './helpers';
+import { usePatch } from "../../helpers";
+import { BodyV1, BodyV2, getBodyV1, getBodyV2 } from "./helpers";
 
 interface MutationBody {
   fields: Field[];
@@ -37,14 +37,14 @@ export const usePatchAttributes = (
     mutationFn: (body) => {
       const { fields, currentAttributes, updatedAttributes } = body;
       const convertedBody =
-        apiVersion === 'v2'
+        apiVersion === "v2"
           ? getBodyV2(fields, updatedAttributes, id, version)
           : getBodyV1(fields, currentAttributes, updatedAttributes);
 
       return patch(url, convertedBody);
     },
     mutationKey: [
-      'post_instance_config',
+      "post_instance_config",
       service_entity,
       id,
       version,

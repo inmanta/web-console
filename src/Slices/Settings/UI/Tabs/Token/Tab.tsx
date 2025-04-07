@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react';
-import { ClientType, Either, Maybe, toggleValueInList } from '@/Core';
-import { DependencyContext } from '@/UI';
-import { TokenForm } from './TokenForm';
+import React, { useContext, useState } from "react";
+import { ClientType, Either, Maybe, toggleValueInList } from "@/Core";
+import { DependencyContext } from "@/UI";
+import { TokenForm } from "./TokenForm";
 
 export const Tab: React.FC = () => {
   const { commandResolver } = useContext(DependencyContext);
@@ -9,8 +9,8 @@ export const Tab: React.FC = () => {
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState<Maybe.Maybe<string>>(Maybe.none());
   const [token, setToken] = useState<Maybe.Maybe<string>>(Maybe.none());
-  const trigger = commandResolver.useGetTrigger<'GenerateToken'>({
-    kind: 'GenerateToken',
+  const trigger = commandResolver.useGetTrigger<"GenerateToken">({
+    kind: "GenerateToken",
   });
 
   const isClientTypeSelected = (clientType: ClientType): boolean =>

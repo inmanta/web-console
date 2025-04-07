@@ -4,10 +4,10 @@ import {
   ServiceInstanceModelWithTargetStates,
   ServiceModel,
   getUuidFromRaw,
-} from '@/Core';
-import { isTransferDisabled } from '@/Slices/ServiceInstanceDetails/Utils';
-import { TablePresenter, ColumnHead } from '@/UI/Presenters';
-import { words } from '@/UI/words';
+} from "@/Core";
+import { isTransferDisabled } from "@/Slices/ServiceInstanceDetails/Utils";
+import { TablePresenter, ColumnHead } from "@/UI/Presenters";
+import { words } from "@/UI/words";
 
 /**
  * The TablePresenter is responsible for formatting the domain data.
@@ -28,18 +28,18 @@ implements TablePresenter<ServiceInstanceModel, Row> {
         displayName: this.getIdColumnName(),
         apiName: this.getIdColumnApiName(),
       },
-      { displayName: words('inventory.column.state'), apiName: 'state' },
+      { displayName: words("inventory.column.state"), apiName: "state" },
       {
-        displayName: words('inventory.collumn.deploymentProgress'),
-        apiName: 'deployment_progress',
+        displayName: words("inventory.collumn.deploymentProgress"),
+        apiName: "deployment_progress",
       },
       {
-        displayName: words('inventory.column.createdAt'),
-        apiName: 'created_at',
+        displayName: words("inventory.column.createdAt"),
+        apiName: "created_at",
       },
       {
-        displayName: words('inventory.column.updatedAt'),
-        apiName: 'last_updated',
+        displayName: words("inventory.column.updatedAt"),
+        apiName: "last_updated",
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
@@ -75,7 +75,7 @@ implements TablePresenter<ServiceInstanceModel, Row> {
   }
 
   public getSortableColumnNames (): string[] {
-    const sortableColumns = ['state', 'created_at', 'last_updated'];
+    const sortableColumns = ["state", "created_at", "last_updated"];
 
     if (this.serviceIdentity) {
       sortableColumns.push(this.serviceIdentity);
@@ -90,7 +90,7 @@ implements TablePresenter<ServiceInstanceModel, Row> {
     } else if (this.serviceIdentity) {
       return this.serviceIdentity;
     } else {
-      return words('inventory.column.id');
+      return words("inventory.column.id");
     }
   }
 
@@ -98,7 +98,7 @@ implements TablePresenter<ServiceInstanceModel, Row> {
     if (this.serviceIdentity) {
       return this.serviceIdentity;
     } else {
-      return 'id';
+      return "id";
     }
   }
 
@@ -138,8 +138,8 @@ implements TablePresenter<ServiceInstanceModel, Row> {
       deploymentProgress: deployment_progress,
       serviceIdentityValue: service_identity_attribute_value,
       deleted,
-      editDisabled: isTransferDisabled(instance, 'on_update', service),
-      deleteDisabled: isTransferDisabled(instance, 'on_delete', service),
+      editDisabled: isTransferDisabled(instance, "on_update", service),
+      deleteDisabled: isTransferDisabled(instance, "on_delete", service),
     };
   }
 }

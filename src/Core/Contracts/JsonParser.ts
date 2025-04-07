@@ -3,7 +3,7 @@ export interface JsonParser {
   parse(text: string): any;
 }
 
-export type JsonParserId = 'BigInt' | 'Native';
+export type JsonParserId = "BigInt" | "Native";
 
 export const isJsonParserId = (id: string): id is JsonParserId =>
-  ['BigInt', 'Native'].includes(id);
+  ["BigInt", "Native"].includes(id);

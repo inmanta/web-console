@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from "react";
 import {
   Divider,
   Dropdown,
@@ -7,23 +7,23 @@ import {
   DropdownList,
   MenuToggle,
   MenuToggleElement,
-} from '@patternfly/react-core';
-import { CopyIcon, EyeIcon, ToolsIcon } from '@patternfly/react-icons';
-import styled from 'styled-components';
-import { InstanceDetailsContext } from '@/Slices/ServiceInstanceDetails/Core/Context';
+} from "@patternfly/react-core";
+import { CopyIcon, EyeIcon, ToolsIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
+import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import {
   getAvailableStateTargets,
   getExpertStateTargets,
   isTransferDisabled,
-} from '@/Slices/ServiceInstanceDetails/Utils';
-import { DependencyContext, words } from '@/UI';
-import { Link } from '@/UI/Components';
+} from "@/Slices/ServiceInstanceDetails/Utils";
+import { DependencyContext, words } from "@/UI";
+import { Link } from "@/UI/Components";
 import {
   DeleteAction,
   DestroyAction,
   ExpertStateTransfer,
   StateAction,
-} from './Actions';
+} from "./Actions";
 
 /**
  * The InstanceActions Component
@@ -45,10 +45,10 @@ export const InstanceActions: React.FC = () => {
 
   const editDisabled =
     instance.deleted ||
-    isTransferDisabled(instance, 'on_update', serviceModelQuery.data);
+    isTransferDisabled(instance, "on_update", serviceModelQuery.data);
   const deleteDisabled =
     instance.deleted ||
-    isTransferDisabled(instance, 'on_delete', serviceModelQuery.data);
+    isTransferDisabled(instance, "on_delete", serviceModelQuery.data);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isExpertDropdownOpen, setIsExpertDropdownOpen] =
@@ -71,7 +71,7 @@ export const InstanceActions: React.FC = () => {
       aria-label="Actions-Toggle"
       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
     >
-      {words('instanceDetails.actions')}
+      {words("instanceDetails.actions")}
     </MenuToggle>
   );
 
@@ -83,7 +83,7 @@ export const InstanceActions: React.FC = () => {
       aria-label="Expert-Actions-Toggle"
       onClick={() => setIsExpertDropdownOpen(!isExpertDropdownOpen)}
     >
-      {words('instanceDetails.expertActions')}
+      {words("instanceDetails.expertActions")}
     </ExpertMenu>
   );
 
@@ -133,7 +133,7 @@ export const InstanceActions: React.FC = () => {
           !blockedInterface && setIsDropdownOpen(isOpen)
         }
         toggle={toggle}
-        popperProps={{ position: 'right' }}
+        popperProps={{ position: "right" }}
       >
         <DropdownList>
           {featureManager.isComposerEnabled() ? (
@@ -145,12 +145,12 @@ export const InstanceActions: React.FC = () => {
             >
               <Link
                 variant="plain"
-                pathname={routeManager.getUrl('InstanceComposerEditor', {
+                pathname={routeManager.getUrl("InstanceComposerEditor", {
                   service: instance.service_entity,
                   instance: instance.id,
                 })}
               >
-                {words('instanceComposer.editButton')}
+                {words("instanceComposer.editButton")}
               </Link>
             </DropdownItem>
           ) : (
@@ -162,12 +162,12 @@ export const InstanceActions: React.FC = () => {
             >
               <Link
                 variant="plain"
-                pathname={routeManager.getUrl('InstanceComposerViewer', {
+                pathname={routeManager.getUrl("InstanceComposerViewer", {
                   service: instance.service_entity,
                   instance: instance.id,
                 })}
               >
-                {words('instanceComposer.showButton')}
+                {words("instanceComposer.showButton")}
               </Link>
             </DropdownItem>
           )}
@@ -178,24 +178,24 @@ export const InstanceActions: React.FC = () => {
           >
             <Link
               variant="plain"
-              pathname={routeManager.getUrl('EditInstance', {
+              pathname={routeManager.getUrl("EditInstance", {
                 service: instance.service_entity,
                 instance: instance.id,
               })}
               isDisabled={editDisabled}
             >
-              {words('inventory.editInstance.button')}
+              {words("inventory.editInstance.button")}
             </Link>
           </DropdownItem>
           <DropdownItem key="Duplicate" icon={<CopyIcon />}>
             <Link
               variant="plain"
-              pathname={routeManager.getUrl('DuplicateInstance', {
+              pathname={routeManager.getUrl("DuplicateInstance", {
                 service: instance.service_entity,
                 instance: instance.id,
               })}
             >
-              {words('inventory.duplicateInstance.button')}
+              {words("inventory.duplicateInstance.button")}
             </Link>
           </DropdownItem>
           <DeleteAction

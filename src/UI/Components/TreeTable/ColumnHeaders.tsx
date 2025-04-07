@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Button } from '@patternfly/react-core';
-import { ArrowsAltHIcon, CompressAltIcon } from '@patternfly/react-icons';
-import { Th } from '@patternfly/react-table';
-import styled from 'styled-components';
-import { ColumnExpansionHelper } from './Helpers';
+import React, { useState } from "react";
+import { Button } from "@patternfly/react-core";
+import { ArrowsAltHIcon, CompressAltIcon } from "@patternfly/react-icons";
+import { Th } from "@patternfly/react-table";
+import styled from "styled-components";
+import { ColumnExpansionHelper } from "./Helpers";
 
 interface Props {
   columns: string[];

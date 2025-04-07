@@ -1,12 +1,12 @@
-import React from 'react';
-import { Grid, GridItem } from '@patternfly/react-core';
-import styled from 'styled-components';
+import React from "react";
+import { Grid, GridItem } from "@patternfly/react-core";
+import styled from "styled-components";
 import {
   ConfigSection,
   DetailsSection,
   HistorySection,
-} from './Components/Sections';
-import { TabView } from './Tabs';
+} from "./Components/Sections";
+import { TabView } from "./Tabs";
 
 /**
  * The ServiceInstanceDetailsLayout component
@@ -31,7 +31,7 @@ export const ServiceInstanceDetailsLayout: React.FC = () => {
         rowSpan={12}
         sm={12}
         id="side-section"
-        order={{ default: '-1', lg: '1' }}
+        order={{ default: "-1", lg: "1" }}
       >
         <Grid hasGutter rowSpan={12}>
           <GridItem>
@@ -51,7 +51,7 @@ export const ServiceInstanceDetailsLayout: React.FC = () => {
         rowSpan={12}
         sm={12}
         id="main-section"
-        order={{ default: '1', lg: '-1' }}
+        order={{ default: "1", lg: "-1" }}
       >
         <TabView />
       </GridItem>

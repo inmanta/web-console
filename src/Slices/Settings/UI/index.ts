@@ -1,1 +1,1 @@
-export { Page as SettingsPage } from './Page';
+export { Page as SettingsPage } from "./Page";

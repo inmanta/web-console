@@ -1,21 +1,21 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Content,
   PageSection,
   Toolbar,
   ToolbarContent,
-} from '@patternfly/react-core';
-import { Diff, Maybe, RemoteData } from '@/Core';
-import { DiffWizard, ToastAlert } from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { useRouteParams } from '@/UI/Routing';
-import { words } from '@/UI/words';
-import { SelectReportAction, TriggerDryRunAction } from './Components';
-import { DiffPageSection } from './DiffPageSection';
-import { MaybeReport } from './types';
+} from "@patternfly/react-core";
+import { Diff, Maybe, RemoteData } from "@/Core";
+import { DiffWizard, ToastAlert } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { useRouteParams } from "@/UI/Routing";
+import { words } from "@/UI/words";
+import { SelectReportAction, TriggerDryRunAction } from "./Components";
+import { DiffPageSection } from "./DiffPageSection";
+import { MaybeReport } from "./types";
 
 export const Page: React.FC = () => {
-  const { version } = useRouteParams<'ComplianceCheck'>();
+  const { version } = useRouteParams<"ComplianceCheck">();
 
   return <View version={version} />;
 };
@@ -26,17 +26,17 @@ interface Props {
 
 export const View: React.FC<Props> = ({ version }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [data, refetch] = queryResolver.useContinuous<'GetDryRuns'>({
-    kind: 'GetDryRuns',
+  const [data, refetch] = queryResolver.useContinuous<"GetDryRuns">({
+    kind: "GetDryRuns",
     version: parseInt(version),
   });
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [updatedList, setUpdatedList] = useState(false);
   const [statuses, setStatuses] = useState(Diff.defaultStatuses);
   const [selectedReport, setSelectedReport] = useState<MaybeReport>(
     Maybe.none(),
   );
-  const [searchFilter, setSearchFilter] = useState('');
+  const [searchFilter, setSearchFilter] = useState("");
   const firstReport = useRef<MaybeReport>(Maybe.none());
 
   /**
@@ -101,14 +101,14 @@ export const View: React.FC<Props> = ({ version }) => {
     <>
       <ToastAlert
         data-testid="ToastAlert"
-        title={words('desiredState.complianceCheck.failed')}
+        title={words("desiredState.complianceCheck.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}
       />
       <PageSection>
         <Content>
           <Content component="h1">
-            {words('desiredState.complianceCheck.title')}
+            {words("desiredState.complianceCheck.title")}
           </Content>
         </Content>
       </PageSection>

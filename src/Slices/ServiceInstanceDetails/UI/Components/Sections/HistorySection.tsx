@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 import {
   Button,
   Divider,
@@ -9,20 +9,20 @@ import {
   PanelMain,
   PanelMainBody,
   Title,
-} from '@patternfly/react-core';
-import { Table, Tbody, Td, Tr } from '@patternfly/react-table';
-import { ServiceModel } from '@/Core';
-import { InstanceLog } from '@/Core/Domain/HistoryLog';
-import { useUrlStateWithString } from '@/Data';
-import { DependencyContext, words } from '@/UI';
+} from "@patternfly/react-core";
+import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
+import { ServiceModel } from "@/Core";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
+import { useUrlStateWithString } from "@/Data";
+import { DependencyContext, words } from "@/UI";
 import {
   DateWithTooltip,
   ErrorView,
   InstanceStateLabel,
   Link,
   LoadingView,
-} from '@/UI/Components';
-import { InstanceDetailsContext } from '../../../Core/Context';
+} from "@/UI/Components";
+import { InstanceDetailsContext } from "../../../Core/Context";
 
 /**
  * The HistorySection Component
@@ -41,29 +41,29 @@ export const HistorySection: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
   const [selectedVersion, setSelectedVersion] = useUrlStateWithString<string>({
     default: String(instance.version),
-    key: 'version',
-    route: 'InstanceDetails',
+    key: "version",
+    route: "InstanceDetails",
   });
 
   return (
     <Panel variant="raised" isScrollable>
       <PanelHeader>
-        <Flex justifyContent={{ default: 'justifyContentSpaceBetween' }}>
+        <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
           <FlexItem>
             <Title headingLevel="h2">
-              {words('instanceDetails.history.title')}
+              {words("instanceDetails.history.title")}
             </Title>
           </FlexItem>
           <FlexItem>
             <Link
-              pathname={routeManager.getUrl('Diagnose', {
+              pathname={routeManager.getUrl("Diagnose", {
                 service: instance.service_entity,
                 instance: instance.id,
               })}
               isDisabled={instance.deleted}
             >
               <Button variant="secondary">
-                {words('instanceDetails.history.diagnose')}
+                {words("instanceDetails.history.diagnose")}
               </Button>
             </Link>
           </FlexItem>
@@ -77,7 +77,7 @@ export const HistorySection: React.FC = () => {
             logsQuery.isFetchNextPageError ||
             logsQuery.isFetchPreviousPageError) && (
             <ErrorView
-              message={words('instanceDetails.history.error')}
+              message={words("instanceDetails.history.error")}
               ariaLabel="History-Error"
             />
           )}
@@ -88,7 +88,7 @@ export const HistorySection: React.FC = () => {
                   <Tr isBorderRow>
                     <Td colSpan={3}>
                       <Flex
-                        justifyContent={{ default: 'justifyContentCenter' }}
+                        justifyContent={{ default: "justifyContentCenter" }}
                       >
                         <Button
                           variant="tertiary"
@@ -96,7 +96,7 @@ export const HistorySection: React.FC = () => {
                           isLoading={logsQuery.isFetchingPreviousPage}
                           onClick={() => logsQuery.fetchPreviousPage()}
                         >
-                          {words('load.next')}
+                          {words("load.next")}
                         </Button>
                       </Flex>
                     </Td>
@@ -110,7 +110,7 @@ export const HistorySection: React.FC = () => {
                     onRowClick={() => setSelectedVersion(String(log.version))}
                     isRowSelected={String(log.version) === selectedVersion}
                     aria-label="History-Row"
-                    className={log.deleted ? 'danger' : ''}
+                    className={log.deleted ? "danger" : ""}
                   >
                     <HistoryRowContent log={log} />
                   </Tr>
@@ -119,7 +119,7 @@ export const HistorySection: React.FC = () => {
                   <Tr>
                     <Td colSpan={3}>
                       <Flex
-                        justifyContent={{ default: 'justifyContentCenter' }}
+                        justifyContent={{ default: "justifyContentCenter" }}
                       >
                         <Button
                           variant="tertiary"
@@ -127,7 +127,7 @@ export const HistorySection: React.FC = () => {
                           isLoading={logsQuery.isFetchingNextPage}
                           onClick={() => logsQuery.fetchNextPage()}
                         >
-                          {words('load.previous')}
+                          {words("load.previous")}
                         </Button>
                       </Flex>
                     </Td>

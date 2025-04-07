@@ -1,40 +1,40 @@
-import { StateModel } from '@/Core';
+import { StateModel } from "@/Core";
 
 const a: StateModel = {
-  name: 'start',
-  label: 'info',
+  name: "start",
+  label: "info",
   export_resources: false,
   purge_resources: false,
   deleted: false,
 };
 
 const b: StateModel = {
-  name: 'creating',
-  label: 'info',
+  name: "creating",
+  label: "info",
   export_resources: false,
   purge_resources: false,
   deleted: false,
 };
 
 const c: StateModel = {
-  name: 'acknowledged',
-  label: 'info',
+  name: "acknowledged",
+  label: "info",
   export_resources: false,
   purge_resources: false,
   deleted: false,
 };
 
 const d: StateModel = {
-  name: 'rejected',
-  label: 'warning',
+  name: "rejected",
+  label: "warning",
   export_resources: false,
   purge_resources: false,
   deleted: false,
 };
 
 const e: StateModel = {
-  name: 'terminated',
-  label: 'warning',
+  name: "terminated",
+  label: "warning",
   export_resources: false,
   purge_resources: false,
   deleted: true,
@@ -44,8 +44,8 @@ export const list = [a, b, c, d, e];
 
 export const nestedEditable: StateModel[] = [
   {
-    name: 'a',
-    label: 'success',
+    name: "a",
+    label: "success",
     export_resources: false,
     validate_self: null,
     validate_others: null,
@@ -54,8 +54,8 @@ export const nestedEditable: StateModel[] = [
     values: {},
   },
   {
-    name: 'b',
-    label: 'success',
+    name: "b",
+    label: "success",
     export_resources: false,
     validate_self: null,
     validate_others: null,
@@ -64,8 +64,8 @@ export const nestedEditable: StateModel[] = [
     values: {},
   },
   {
-    name: 'c',
-    label: 'info',
+    name: "c",
+    label: "info",
     export_resources: false,
     validate_self: null,
     validate_others: null,

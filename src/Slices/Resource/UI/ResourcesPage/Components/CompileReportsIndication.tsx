@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes } from "styled-components";
 
 //Indication colors based on <Label color="blue" /> component
 const pendingAnimation = keyframes`

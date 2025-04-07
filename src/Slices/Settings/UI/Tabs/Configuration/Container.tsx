@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, AlertActionCloseButton, Stack } from '@patternfly/react-core';
-import { Tbody, Table } from '@patternfly/react-table';
-import { EnvironmentSettings } from '@/Core';
-import { words } from '@/UI';
-import { InputRow } from './Components';
+import React, { useEffect, useState } from "react";
+import { Alert, AlertActionCloseButton, Stack } from "@patternfly/react-core";
+import { Tbody, Table } from "@patternfly/react-table";
+import { EnvironmentSettings } from "@/Core";
+import { words } from "@/UI";
+import { InputRow } from "./Components";
 
 interface Props {
   infos: EnvironmentSettings.InputInfo[];
@@ -28,15 +28,15 @@ export const Container: React.FC<Props> = ({
       }, 2000);
     };
 
-    document.addEventListener('settings-update', updateSuccessBanner);
+    document.addEventListener("settings-update", updateSuccessBanner);
 
     return () => {
-      document.removeEventListener('settings-update', updateSuccessBanner);
+      document.removeEventListener("settings-update", updateSuccessBanner);
     };
   }, [setShowUpdateBanner]);
 
   return (
-    <Stack hasGutter style={{ maxWidth: '1000px' }} className={className}>
+    <Stack hasGutter style={{ maxWidth: "1000px" }} className={className}>
       {errorMessage && (
         <Alert
           variant="danger"
@@ -49,7 +49,7 @@ export const Container: React.FC<Props> = ({
       {showUpdateBanner && (
         <Alert
           variant="success"
-          title={words('settings.update')}
+          title={words("settings.update")}
           aria-live="polite"
           actionClose={
             <AlertActionCloseButton

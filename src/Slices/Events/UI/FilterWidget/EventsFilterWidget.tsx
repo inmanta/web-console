@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { ToolbarGroup } from '@patternfly/react-core';
-import { EventType, DateRange } from '@/Core';
-import { FilterPicker } from '@/UI/Components';
-import { SelectOptionFilter, TimestampFilter } from '@/UI/Components/Filters';
-import { MomentDatePresenter } from '@/UI/Utils';
-import { words } from '@/UI/words';
-import { Filter, FilterKind, FilterList } from '@S/Events/Core/Query';
-import { VersionFilter } from './VersionFilter';
+import React, { useState } from "react";
+import { ToolbarGroup } from "@patternfly/react-core";
+import { EventType, DateRange } from "@/Core";
+import { FilterPicker } from "@/UI/Components";
+import { SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
+import { MomentDatePresenter } from "@/UI/Utils";
+import { words } from "@/UI/words";
+import { Filter, FilterKind, FilterList } from "@S/Events/Core/Query";
+import { VersionFilter } from "./VersionFilter";
 
 interface Props {
   filter: Filter;
@@ -63,7 +63,7 @@ export const EventsFilterWidget: React.FC<Props> = ({
       />
       <SelectOptionFilter
         filterPropertyName={FilterKind.EventType}
-        placeholder={words('events.filters.eventType.placeholder')}
+        placeholder={words("events.filters.eventType.placeholder")}
         isVisible={filterKind === FilterKind.EventType}
         possibleStates={eventTypes}
         selectedStates={filter.event_type ? filter.event_type : []}
@@ -71,7 +71,7 @@ export const EventsFilterWidget: React.FC<Props> = ({
       />
       <SelectOptionFilter
         filterPropertyName={FilterKind.Source}
-        placeholder={words('events.filters.source.placeholder')}
+        placeholder={words("events.filters.source.placeholder")}
         isVisible={filterKind === FilterKind.Source}
         possibleStates={states}
         selectedStates={filter.source ? filter.source : []}
@@ -79,7 +79,7 @@ export const EventsFilterWidget: React.FC<Props> = ({
       />
       <SelectOptionFilter
         filterPropertyName={FilterKind.Destination}
-        placeholder={words('events.filters.destination.placeholder')}
+        placeholder={words("events.filters.destination.placeholder")}
         isVisible={filterKind === FilterKind.Destination}
         possibleStates={states}
         selectedStates={filter.destination ? filter.destination : []}

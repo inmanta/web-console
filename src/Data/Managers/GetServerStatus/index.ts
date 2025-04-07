@@ -1,3 +1,3 @@
-export * from './ContinuousQueryManager';
-export * from './OneTimeQueryManager';
-export * from './StateHelper';
+export * from "./ContinuousQueryManager";
+export * from "./OneTimeQueryManager";
+export * from "./StateHelper";

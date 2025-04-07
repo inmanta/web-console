@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 import {
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-} from '@patternfly/react-core';
-import { isObjectEmpty, Maybe } from '@/Core';
-import { JsonFormatter, XmlFormatter } from '@/Data';
-import { AttributeClassifier, AttributeList, CodeText } from '@/UI/Components';
-import { ResourceLog } from '@S/ResourceDetails/Core/ResourceLog';
+} from "@patternfly/react-core";
+import { isObjectEmpty, Maybe } from "@/Core";
+import { JsonFormatter, XmlFormatter } from "@/Data";
+import { AttributeClassifier, AttributeList, CodeText } from "@/UI/Components";
+import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
 
 interface Props {
   log: ResourceLog;
@@ -41,5 +41,5 @@ export const Details: React.FC<Props> = ({ log }) => {
 const classifier = new AttributeClassifier(
   new JsonFormatter(),
   new XmlFormatter(),
-  (key: string, value: string) => Maybe.some({ kind: 'Python', key, value }),
+  (key: string, value: string) => Maybe.some({ kind: "Python", key, value }),
 );

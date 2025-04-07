@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   MenuToggle,
   MenuToggleElement,
   Select,
   SelectOption,
   ToolbarItem,
-} from '@patternfly/react-core';
-import { FilterIcon } from '@patternfly/react-icons';
-import styled from 'styled-components';
+} from "@patternfly/react-core";
+import { FilterIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
 
 interface Props {
   filterKind: string;
@@ -33,11 +33,11 @@ export const FilterPicker: React.FC<Props> = ({
       ref={toggleRef}
       onClick={() => setIsOpen((value) => !value)}
       isExpanded={isOpen}
-      aria-label={'FilterPicker'}
+      aria-label={"FilterPicker"}
       icon={<FilterIcon />}
       style={
         {
-          minWidth: '150px',
+          minWidth: "150px",
         } as React.CSSProperties
       }
     >

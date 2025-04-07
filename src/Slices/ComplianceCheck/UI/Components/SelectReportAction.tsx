@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Label,
   MenuToggle,
@@ -8,11 +8,11 @@ import {
   SelectOption,
   Spinner,
   ToolbarGroup,
-} from '@patternfly/react-core';
-import { Maybe, RemoteData } from '@/Core';
-import { MomentDatePresenter } from '@/UI/Utils';
-import { Progress as DomainProgress } from '@S/ComplianceCheck/Core/Domain';
-import { MaybeReport, RemoteReportList } from '../types';
+} from "@patternfly/react-core";
+import { Maybe, RemoteData } from "@/Core";
+import { MomentDatePresenter } from "@/UI/Utils";
+import { Progress as DomainProgress } from "@S/ComplianceCheck/Core/Domain";
+import { MaybeReport, RemoteReportList } from "../types";
 
 interface Props {
   setSelectedReport(report: MaybeReport): void;
@@ -40,7 +40,7 @@ export const SelectReportAction: React.FC<Props> = ({
   };
 
   return (
-    <ToolbarGroup align={{ default: 'alignStart' }}>
+    <ToolbarGroup align={{ default: "alignStart" }}>
       <Picker
         reportsData={reportsData}
         selectedReport={selectedReport}
@@ -79,11 +79,11 @@ const Picker: React.FC<PickerProps> = ({
       isExpanded={isOpen}
       style={
         {
-          width: '300px',
+          width: "300px",
         } as React.CSSProperties
       }
     >
-      <Progress report={reportsData.value[0]} />{' '}
+      <Progress report={reportsData.value[0]} />{" "}
       {datePresenter.getFull(selectedReport.value.date)}
     </MenuToggle>
   );

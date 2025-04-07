@@ -1,1 +1,1 @@
-export * as Diagnose from './Core/Route';
+export * as Diagnose from "./Core/Route";

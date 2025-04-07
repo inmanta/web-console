@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   Flex,
@@ -6,11 +6,11 @@ import {
   TextInput,
   ToolbarFilter,
   ToolbarItem,
-} from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
-import { reject } from 'lodash-es';
-import { IntRange, RangeOperator } from '@/Core';
-import { words } from '@/UI/words';
+} from "@patternfly/react-core";
+import { SearchIcon } from "@patternfly/react-icons";
+import { reject } from "lodash-es";
+import { IntRange, RangeOperator } from "@/Core";
+import { words } from "@/UI/words";
 
 interface Props {
   categoryName: string;
@@ -72,7 +72,7 @@ export const IntRangeFilter: React.FC<Props> = ({
     return `${operator} | ${value}`;
   };
   const prettyToRaw = (pretty: string): IntRange.Type => {
-    const [operator, value] = pretty.split('|');
+    const [operator, value] = pretty.split("|");
 
     return {
       value: parseInt(value, 10),
@@ -88,7 +88,7 @@ export const IntRangeFilter: React.FC<Props> = ({
             <FlexItem>
               <ToolbarItem>
                 <TextInput
-                  value={from || ''}
+                  value={from || ""}
                   onChange={(_event, value: string) => onFromChange(value)}
                   type="number"
                   aria-label={`${categoryName} range from`}
@@ -96,12 +96,12 @@ export const IntRangeFilter: React.FC<Props> = ({
               </ToolbarItem>
             </FlexItem>
             <FlexItem>
-              <ToolbarItem>{words('events.filters.date.to')}</ToolbarItem>
+              <ToolbarItem>{words("events.filters.date.to")}</ToolbarItem>
             </FlexItem>
             <FlexItem>
               <ToolbarItem>
                 <TextInput
-                  value={to || ''}
+                  value={to || ""}
                   onChange={(_event, value: string) => onToChange(value)}
                   type="number"
                   aria-label={`${categoryName} range to`}

@@ -1,5 +1,5 @@
-import { createGlobalStyle } from 'styled-components';
-import { MarkdownStyles } from './MarkdownStyles';
+import { createGlobalStyle } from "styled-components";
+import { MarkdownStyles } from "./MarkdownStyles";
 
 export const GlobalStyles = createGlobalStyle`
   html {

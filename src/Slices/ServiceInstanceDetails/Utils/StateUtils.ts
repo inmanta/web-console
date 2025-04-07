@@ -1,4 +1,4 @@
-import { ServiceInstanceModel, ServiceModel, TransferModel } from '@/Core';
+import { ServiceInstanceModel, ServiceModel, TransferModel } from "@/Core";
 
 /**
  * Method to check whether the transfer is disabled on an instance for on_update or on_delete
@@ -10,10 +10,10 @@ import { ServiceInstanceModel, ServiceModel, TransferModel } from '@/Core';
  */
 export const isTransferDisabled = (
   instance: ServiceInstanceModel,
-  transferType: 'on_update' | 'on_delete',
+  transferType: "on_update" | "on_delete",
   serviceEntity?: ServiceModel,
 ): boolean => {
-  if (typeof instance === 'undefined' || !serviceEntity) {
+  if (typeof instance === "undefined" || !serviceEntity) {
     return true;
   }
 

@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react';
-import { Tbody, Td, Tr } from '@patternfly/react-table';
-import { DateWithTooltip } from '@/UI/Components';
-import { scrollRowIntoView } from '@/UI/Utils';
-import { words } from '@/UI/words';
-import { ResourceHistoryRow } from '@S/ResourceDetails/Core/ResourceHistory';
-import { TabKey, Tabs } from './Tabs';
+import React, { useRef, useState } from "react";
+import { Tbody, Td, Tr } from "@patternfly/react-table";
+import { DateWithTooltip } from "@/UI/Components";
+import { scrollRowIntoView } from "@/UI/Utils";
+import { words } from "@/UI/words";
+import { ResourceHistoryRow } from "@S/ResourceDetails/Core/ResourceHistory";
+import { TabKey, Tabs } from "./Tabs";
 
 interface Props {
   row: ResourceHistoryRow;
@@ -41,14 +41,14 @@ export const ResourceHistoryTableRow: React.FC<Props> = ({
             onToggle,
           }}
         />
-        <Td dataLabel={words('resources.history.column.date')}>
+        <Td dataLabel={words("resources.history.column.date")}>
           <DateWithTooltip timestamp={row.date} />
         </Td>
         <Td
-          dataLabel={words('resources.column.requires')}
+          dataLabel={words("resources.column.requires")}
           onClick={openTabAndScrollTo(TabKey.Requires)}
         >
-          <span ref={rowRef} style={{ cursor: 'pointer' }}>
+          <span ref={rowRef} style={{ cursor: "pointer" }}>
             {row.numberOfDependencies as React.ReactNode}
           </span>
         </Td>

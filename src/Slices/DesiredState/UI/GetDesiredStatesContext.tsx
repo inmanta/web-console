@@ -1,11 +1,11 @@
-import { createContext } from 'react';
-import { PageSize, ParsedNumber } from '@/Core';
+import { createContext } from "react";
+import { PageSize, ParsedNumber } from "@/Core";
 import {
   CurrentPage,
   initialCurrentPage,
-} from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
-import { Filter } from '@S/DesiredState/Core/Query';
-import { CompareSelection } from './Utils';
+} from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { Filter } from "@S/DesiredState/Core/Query";
+import { CompareSelection } from "./Utils";
 
 interface GetDesiredStatesProvider {
   filter: Filter;
@@ -22,9 +22,9 @@ export const GetDesiredStatesContext = createContext<GetDesiredStatesProvider>({
   pageSize: PageSize.initial,
   currentPage: initialCurrentPage,
   setErrorMessage: () => {
-    throw Error('Method not implemented');
+    throw Error("Method not implemented");
   },
-  compareSelection: { kind: 'None' },
+  compareSelection: { kind: "None" },
   setCompareSelection: () => undefined,
   setDeleteModal: () => undefined,
 });

@@ -1,5 +1,5 @@
-import { RemoteData } from '@/Core/Language';
-import { Query } from '@/Core/Query';
+import { RemoteData } from "@/Core/Language";
+import { Query } from "@/Core/Query";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
   Query.Error<K>,
@@ -8,7 +8,7 @@ type Data<K extends Query.Kind> = RemoteData.Type<
 
 type Pair<K extends Query.Kind> = [Data<K>, () => void];
 
-export type QueryManagerKind = 'OneTime' | 'Continuous' | 'ReadOnly';
+export type QueryManagerKind = "OneTime" | "Continuous" | "ReadOnly";
 
 /**
  * The QueryManager defines data hooks for a specific 'kind' of query.

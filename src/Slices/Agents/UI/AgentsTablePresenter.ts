@@ -1,7 +1,7 @@
-import { omit } from 'lodash-es';
-import { ColumnHead, TablePresenter } from '@/UI/Presenters';
-import { words } from '@/UI/words';
-import { Agent, AgentRow } from '@S/Agents/Core/Domain';
+import { omit } from "lodash-es";
+import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { words } from "@/UI/words";
+import { Agent, AgentRow } from "@S/Agents/Core/Domain";
 
 export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
   readonly columnHeads: ColumnHead[];
@@ -9,11 +9,11 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
 
   constructor (isHalted: boolean) {
     this.columnHeads = [
-      { displayName: words('agents.columns.name'), apiName: 'name' },
-      { displayName: words('agents.columns.status'), apiName: 'status' },
+      { displayName: words("agents.columns.name"), apiName: "name" },
+      { displayName: words("agents.columns.status"), apiName: "status" },
       {
-        displayName: words('agents.columns.unpause'),
-        apiName: 'unpause_on_resume',
+        displayName: words("agents.columns.unpause"),
+        apiName: "unpause_on_resume",
       },
     ];
     if (!isHalted) {
@@ -23,7 +23,7 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
   }
 
   createRows (sourceData: Agent[]): AgentRow[] {
-    return sourceData.map((agent) => omit(agent, ['environment']));
+    return sourceData.map((agent) => omit(agent, ["environment"]));
   }
 
   getColumnHeadDisplayNames (): string[] {
@@ -52,7 +52,7 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
   }
 
   getSortableColumnNames (): string[] {
-    const sortableColumns = ['name', 'status'];
+    const sortableColumns = ["name", "status"];
 
     return sortableColumns;
   }

@@ -1,11 +1,11 @@
 export type MetricName =
-  | 'lsm.service_count'
-  | 'lsm.service_instance_count'
-  | 'orchestrator.compile_time'
-  | 'orchestrator.compile_waiting_time'
-  | 'orchestrator.compile_rate'
-  | 'resource.agent_count'
-  | 'resource.resource_count';
+  | "lsm.service_count"
+  | "lsm.service_instance_count"
+  | "orchestrator.compile_time"
+  | "orchestrator.compile_waiting_time"
+  | "orchestrator.compile_rate"
+  | "resource.agent_count"
+  | "resource.resource_count";
 export interface Metric {
   name: string;
   data: (number | null)[];
@@ -54,16 +54,16 @@ export interface LineChartProps {
 }
 
 interface BackendMetric {
-  'lsm.service_count': (number | null)[];
-  'orchestrator.compile_time': (number | null)[];
-  'orchestrator.compile_waiting_time': (number | null)[];
-  'orchestrator.compile_rate': (number | null)[];
-  'resource.agent_count': ({
+  "lsm.service_count": (number | null)[];
+  "orchestrator.compile_time": (number | null)[];
+  "orchestrator.compile_waiting_time": (number | null)[];
+  "orchestrator.compile_rate": (number | null)[];
+  "resource.agent_count": ({
     up: number | null;
     down: number | null;
     paused?: number | null;
   } | null)[];
-  'resource.resource_count': ({
+  "resource.resource_count": ({
     skipped?: number;
     deploying?: number;
     undefined?: number;
@@ -75,7 +75,7 @@ interface BackendMetric {
     failed?: number;
     deployed?: number;
   } | null)[];
-  'lsm.service_instance_count': ({
+  "lsm.service_instance_count": ({
     danger: number;
     info: number;
     no_label: number;

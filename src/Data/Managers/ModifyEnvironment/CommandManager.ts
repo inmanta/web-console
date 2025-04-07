@@ -1,13 +1,13 @@
-import { ModifyEnvironmentParams, ApiHelper, Updater } from '@/Core';
-import { CommandManagerWithEnv } from '@/Data/Common';
+import { ModifyEnvironmentParams, ApiHelper, Updater } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function ModifyEnvironmentCommandManager (
   apiHelper: ApiHelper,
-  updater: Updater<'GetEnvironmentDetails'>,
-  listUpdater: Updater<'GetEnvironments'>,
+  updater: Updater<"GetEnvironmentDetails">,
+  listUpdater: Updater<"GetEnvironments">,
 ) {
-  return CommandManagerWithEnv<'ModifyEnvironment'>(
-    'ModifyEnvironment',
+  return CommandManagerWithEnv<"ModifyEnvironment">(
+    "ModifyEnvironment",
     (command, environment) => async (body: ModifyEnvironmentParams) => {
       const error = await apiHelper.postWithoutResponseAndEnvironment(
         `/api/v2/environment/${environment}`,
@@ -15,12 +15,12 @@ export function ModifyEnvironmentCommandManager (
       );
 
       await updater.update({
-        kind: 'GetEnvironmentDetails',
+        kind: "GetEnvironmentDetails",
         details: true,
         id: environment,
       });
       await listUpdater.update({
-        kind: 'GetEnvironments',
+        kind: "GetEnvironments",
         details: true,
       });
 

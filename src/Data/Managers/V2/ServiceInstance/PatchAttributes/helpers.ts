@@ -1,14 +1,14 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import {
   Field,
   InstanceAttributeModel,
   ParsedNumber,
   PatchField,
-} from '@/Core';
+} from "@/Core";
 import {
   AttributeResultConverterImpl,
   sanitizeAttributes,
-} from '@/Data/Common';
+} from "@/Data/Common";
 
 export interface BodyV1 {
   attributes: InstanceAttributeModel;
@@ -73,8 +73,8 @@ export const getBodyV2 = (
   const patchData = [
     {
       edit_id: `${service_id}_version=${version}`,
-      operation: 'replace',
-      target: '.',
+      operation: "replace",
+      target: ".",
       value: parsedAttributes,
     },
   ];

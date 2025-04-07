@@ -3,16 +3,16 @@ import {
   ApiHelper,
   StateHelperWithEnv,
   stringifyObjectOrUndefined,
-} from '@/Core';
-import { getPaginationHandlers, QueryManager } from '@/Data/Managers/Helpers';
-import { getUrl } from './getUrl';
+} from "@/Core";
+import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
+import { getUrl } from "./getUrl";
 
 export function GetDiscoveredResourcesQueryManager (
   apiHelper: ApiHelper,
-  stateHelper: StateHelperWithEnv<'GetDiscoveredResources'>,
+  stateHelper: StateHelperWithEnv<"GetDiscoveredResources">,
   scheduler: Scheduler,
 ) {
-  return QueryManager.ContinuousWithEnv<'GetDiscoveredResources'>(
+  return QueryManager.ContinuousWithEnv<"GetDiscoveredResources">(
     apiHelper,
     stateHelper,
     scheduler,
@@ -25,10 +25,10 @@ export function GetDiscoveredResourcesQueryManager (
       stringifyObjectOrUndefined(filter),
       stringifyObjectOrUndefined(currentPage.value),
     ],
-    'GetDiscoveredResources',
+    "GetDiscoveredResources",
     (query) => getUrl(query),
     ({ data, links, metadata }) => {
-      if (typeof links === 'undefined') {
+      if (typeof links === "undefined") {
         return { data: data, handlers: {}, metadata };
       }
 

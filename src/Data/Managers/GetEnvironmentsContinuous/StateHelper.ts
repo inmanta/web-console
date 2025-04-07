@@ -1,16 +1,16 @@
-import { RemoteData, Query } from '@/Core';
-import { PrimaryStateHelper } from '@/Data/Common';
-import { Store, State, Dispatch } from '@/Data/Store';
+import { RemoteData, Query } from "@/Core";
+import { PrimaryStateHelper } from "@/Data/Common";
+import { Store, State, Dispatch } from "@/Data/Store";
 
 type Data = RemoteData.Type<
-  Query.Error<'GetEnvironmentsContinuous'>,
-  Query.Data<'GetEnvironmentsContinuous'>
+  Query.Error<"GetEnvironmentsContinuous">,
+  Query.Data<"GetEnvironmentsContinuous">
 >;
 
 export function GetEnvironmentsContinuousStateHelper (store: Store) {
   function getData (
     state: State,
-    { details }: Query.SubQuery<'GetEnvironmentsContinuous'>,
+    { details }: Query.SubQuery<"GetEnvironmentsContinuous">,
   ): Data {
     return details
       ? state.environment.environmentsWithDetails
@@ -19,7 +19,7 @@ export function GetEnvironmentsContinuousStateHelper (store: Store) {
 
   function setData (
     store: Dispatch,
-    { details }: Query.SubQuery<'GetEnvironmentsContinuous'>,
+    { details }: Query.SubQuery<"GetEnvironmentsContinuous">,
     data: Data,
   ) {
     if (details) {
@@ -32,7 +32,7 @@ export function GetEnvironmentsContinuousStateHelper (store: Store) {
     }
   }
 
-  return PrimaryStateHelper<'GetEnvironmentsContinuous'>(
+  return PrimaryStateHelper<"GetEnvironmentsContinuous">(
     store,
     (data, query) => {
       const unwrapped = RemoteData.mapSuccess((wrapped) => {

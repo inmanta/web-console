@@ -1,16 +1,16 @@
-import React, { useCallback, useContext, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { InstanceAttributeModel, ServiceModel } from '@/Core';
-import { usePostInstance } from '@/Data/Managers/V2/ServiceInstance';
+import React, { useCallback, useContext, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { InstanceAttributeModel, ServiceModel } from "@/Core";
+import { usePostInstance } from "@/Data/Managers/V2/ServiceInstance";
 import {
   CreateModifierHandler,
   Description,
   ToastAlert,
   FieldCreator,
   ServiceInstanceForm,
-} from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
+} from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props {
   serviceEntity: ServiceModel;
@@ -33,10 +33,10 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.create(serviceEntity);
   const location = useLocation();
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const isHalted = environmentModifier.useIsHalted();
   const navigate = useNavigate();
-  const url = routeManager.useUrl('Inventory', {
+  const url = routeManager.useUrl("Inventory", {
     service: serviceEntity.name,
   });
 
@@ -48,7 +48,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
       setErrorMessage(error.message);
     },
     onSuccess: ({ data }) => {
-      const newUrl = routeManager.getUrl('InstanceDetails', {
+      const newUrl = routeManager.getUrl("InstanceDetails", {
         service: serviceEntity.name,
         instance: data.service_identity_attribute_value || data.id,
         instanceId: data.id,
@@ -72,13 +72,13 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
       {errorMessage && (
         <ToastAlert
           data-testid="ToastAlert"
-          title={words('inventory.addInstance.failed')}
+          title={words("inventory.addInstance.failed")}
           message={errorMessage}
           setMessage={setErrorMessage}
         />
       )}
       <Description withSpace>
-        {words('inventory.addInstance.title')(serviceEntity.name)}
+        {words("inventory.addInstance.title")(serviceEntity.name)}
       </Description>
       <ServiceInstanceForm
         service_entity={serviceEntity.name}

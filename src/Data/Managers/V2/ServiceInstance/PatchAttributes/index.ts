@@ -1,1 +1,1 @@
-export * from './usePatchAttributes';
+export * from "./usePatchAttributes";

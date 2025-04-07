@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import { Bullseye, Spinner } from '@patternfly/react-core';
-import { useKeycloak, ReactKeycloakProvider } from '@react-keycloak/web';
-import Keycloak from 'keycloak-js';
-import { AuthContext } from '../AuthContext';
-import { KeycloakAuthConfig } from '../types';
+import React, { useEffect } from "react";
+import { Bullseye, Spinner } from "@patternfly/react-core";
+import { useKeycloak, ReactKeycloakProvider } from "@react-keycloak/web";
+import Keycloak from "keycloak-js";
+import { AuthContext } from "../AuthContext";
+import { KeycloakAuthConfig } from "../types";
 
 /**
  * KeycloakProvider component provides authentication functionality using Keycloak, by using Instance provider by 3rd party library and passing it to  our auth context implementation.
@@ -86,9 +86,9 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
     <ReactKeycloakProvider
       authClient={keycloakInstance}
       initOptions={{
-        onLoad: 'login-required',
+        onLoad: "login-required",
         checkLoginIframe: false,
-        flow: 'implicit',
+        flow: "implicit",
       }}
       LoadingComponent={
         <Bullseye>

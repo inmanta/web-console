@@ -1,10 +1,10 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { Label, NavItem, Tooltip } from '@patternfly/react-core';
-import { LockIcon } from '@patternfly/react-icons';
-import { useGetCompilerStatus } from '@/Data/Managers/V2/Compilation/GetCompilerStatus';
-import { CompileReportsIndication } from '@/Slices/Resource/UI/ResourcesPage/Components/CompileReportsIndication';
-import { SearchHelper } from '@/UI/Routing';
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { Label, NavItem, Tooltip } from "@patternfly/react-core";
+import { LockIcon } from "@patternfly/react-icons";
+import { useGetCompilerStatus } from "@/Data/Managers/V2/Compilation/GetCompilerStatus";
+import { CompileReportsIndication } from "@/Slices/Resource/UI/ResourcesPage/Components/CompileReportsIndication";
+import { SearchHelper } from "@/UI/Routing";
 
 interface Label {
   label: string;
@@ -64,7 +64,7 @@ const LockedItem: React.FC<Label> = ({ label }) => (
     preventDefault
     icon={
       <Tooltip
-        content={'Select an environment to enable this link'}
+        content={"Select an environment to enable this link"}
         position="right"
       >
         <LockIcon />
@@ -103,7 +103,7 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
       >
         {label}
         {isSuccess && data.isCompiling && (
-          <Tooltip key={'ongoing-compilation-tooltip'} content={'Compiling'}>
+          <Tooltip key={"ongoing-compilation-tooltip"} content={"Compiling"}>
             <CompileReportsIndication
               role="presentation"
               aria-label="CompileReportsIndication"

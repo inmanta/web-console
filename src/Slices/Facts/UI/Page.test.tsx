@@ -1,21 +1,21 @@
-import React, { act } from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { Page } from '@patternfly/react-core';
-import { render, screen, within } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-import { StoreProvider } from 'easy-peasy';
-import { axe, toHaveNoViolations } from 'jest-axe';
-import { Either } from '@/Core';
+import React, { act } from "react";
+import { MemoryRouter } from "react-router-dom";
+import { Page } from "@patternfly/react-core";
+import { render, screen, within } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
+import { axe, toHaveNoViolations } from "jest-axe";
+import { Either } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
   QueryManagerResolverImpl,
-} from '@/Data';
-import { DeferredApiHelper, dependencies, StaticScheduler } from '@/Test';
-import { words } from '@/UI';
-import { DependencyProvider } from '@/UI/Dependency';
-import { Mock } from '@S/Facts/Test';
-import { FactsPage } from '.';
+} from "@/Data";
+import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
+import { words } from "@/UI";
+import { DependencyProvider } from "@/UI/Dependency";
+import { Mock } from "@S/Facts/Test";
+import { FactsPage } from ".";
 
 expect.extend(toHaveNoViolations);
 
@@ -47,16 +47,16 @@ function setup () {
   };
 }
 
-test('GIVEN Facts page THEN shows table', async () => {
+test("GIVEN Facts page THEN shows table", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
-    method: 'GET',
-    url: '/api/v2/facts?limit=20&sort=name.asc',
-    environment: 'env',
+    method: "GET",
+    url: "/api/v2/facts?limit=20&sort=name.asc",
+    environment: "env",
   });
 
   apiHelper.resolve(
@@ -68,15 +68,15 @@ test('GIVEN Facts page THEN shows table', async () => {
         after: 0,
         page_size: 8,
       },
-      links: { self: '' },
+      links: { self: "" },
     }),
   );
 
-  const rows = await screen.findAllByRole('row', { name: 'FactsRow' });
+  const rows = await screen.findAllByRole("row", { name: "FactsRow" });
 
   expect(rows).toHaveLength(8);
   expect(
-    within(rows[0]).getByRole('cell', { name: '2021/03/18 18:10:43' }),
+    within(rows[0]).getByRole("cell", { name: "2021/03/18 18:10:43" }),
   ).toBeVisible();
 
   await act(async () => {
@@ -86,7 +86,7 @@ test('GIVEN Facts page THEN shows table', async () => {
   });
 });
 
-test('GIVEN Facts page THEN sets sorting parameters correctly on click', async () => {
+test("GIVEN Facts page THEN sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -99,18 +99,18 @@ test('GIVEN Facts page THEN sets sorting parameters correctly on click', async (
         after: 0,
         page_size: 8,
       },
-      links: { self: '' },
+      links: { self: "" },
     }),
   );
-  const resourceIdButton = await screen.findByRole('button', {
-    name: words('facts.column.resourceId'),
+  const resourceIdButton = await screen.findByRole("button", {
+    name: words("facts.column.resourceId"),
   });
 
   expect(resourceIdButton).toBeVisible();
 
   await userEvent.click(resourceIdButton);
 
-  expect(apiHelper.pendingRequests[0].url).toContain('&sort=resource_id.asc');
+  expect(apiHelper.pendingRequests[0].url).toContain("&sort=resource_id.asc");
 
   await act(async () => {
     const results = await axe(document.body);
@@ -121,10 +121,10 @@ test('GIVEN Facts page THEN sets sorting parameters correctly on click', async (
 
 test.each`
   filterValue      | placeholderText                                  | filterUrlName
-  ${'awsDeviceV2'} | ${words('facts.filters.name.placeholder')}       | ${'name'}
-  ${'id123'}       | ${words('facts.filters.resourceId.placeholder')} | ${'resource_id'}
+  ${"awsDeviceV2"} | ${words("facts.filters.name.placeholder")}       | ${"name"}
+  ${"id123"}       | ${words("facts.filters.resourceId.placeholder")} | ${"resource_id"}
 `(
-  'When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the facts with that $filterUrlName should be fetched and shown',
+  "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the facts with that $filterUrlName should be fetched and shown",
   async ({ filterValue, placeholderText, filterUrlName }) => {
     const { component, apiHelper } = setup();
 
@@ -139,12 +139,12 @@ test.each`
           after: 0,
           page_size: 8,
         },
-        links: { self: '' },
+        links: { self: "" },
       }),
     );
 
     expect(
-      await screen.findAllByRole('row', { name: 'FactsRow' }),
+      await screen.findAllByRole("row", { name: "FactsRow" }),
     ).toHaveLength(8);
 
     const input = await screen.findByPlaceholderText(placeholderText);
@@ -164,12 +164,12 @@ test.each`
           after: 0,
           page_size: 20,
         },
-        links: { self: '' },
+        links: { self: "" },
       }),
     );
 
     expect(
-      await screen.findAllByRole('row', { name: 'FactsRow' }),
+      await screen.findAllByRole("row", { name: "FactsRow" }),
     ).toHaveLength(4);
 
     await act(async () => {
@@ -180,7 +180,7 @@ test.each`
   },
 );
 
-test('GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page', async () => {
+test("GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -197,16 +197,16 @@ test('GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN
           page_size: 100,
         },
         links: {
-          self: '',
-          next: '/fake-link?end=fake-first-param',
+          self: "",
+          next: "/fake-link?end=fake-first-param",
         },
       }),
     );
   });
 
-  expect(screen.getByLabelText('Go to next page')).toBeEnabled();
+  expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
-  await userEvent.click(screen.getByLabelText('Go to next page'));
+  await userEvent.click(screen.getByLabelText("Go to next page"));
 
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
@@ -223,15 +223,15 @@ test('GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN
           page_size: 100,
         },
         links: {
-          self: '',
-          next: '/fake-link?end=fake-first-param',
+          self: "",
+          next: "/fake-link?end=fake-first-param",
         },
       }),
     );
   });
 
   //sort on the second page
-  const resourceIdButton = await screen.findByText('Name');
+  const resourceIdButton = await screen.findByText("Name");
 
   expect(resourceIdButton).toBeVisible();
 

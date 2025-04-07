@@ -1,20 +1,20 @@
-import { Feature, FeatureManager, JsonParserId, StatusLicense } from '@/Core';
+import { Feature, FeatureManager, JsonParserId, StatusLicense } from "@/Core";
 
 export class MockFeatureManager implements FeatureManager {
   getCommitHash (): string {
-    return '123456abcdef';
+    return "123456abcdef";
   }
 
   getAppVersion (): string {
-    return '1.10.11';
+    return "1.10.11";
   }
 
   getJsonParser (): JsonParserId {
-    return 'Native';
+    return "Native";
   }
 
   getServerVersion (): string {
-    return '4.1';
+    return "4.1";
   }
 
   isLicencedFeatureEnabled (_feature: Feature): boolean {
@@ -38,7 +38,7 @@ export class MockFeatureManager implements FeatureManager {
   }
 
   getServerMajorVersion (): string {
-    return '4';
+    return "4";
   }
 
   isLsmEnabled (): boolean {
@@ -46,32 +46,32 @@ export class MockFeatureManager implements FeatureManager {
   }
 
   getEdition (): string {
-    return 'Standard Edition';
+    return "Standard Edition";
   }
 
   getLicenseInformation (): StatusLicense {
     return {
-      cert_valid_until: '2025-10-01T08:59:00.000000',
-      entitlement_valid_until: '2021-11-01T19:04:14.000000',
+      cert_valid_until: "2025-10-01T08:59:00.000000",
+      entitlement_valid_until: "2021-11-01T19:04:14.000000",
     };
   }
 }
 
 export class MockEditableFeatureManager implements FeatureManager {
   getCommitHash (): string {
-    return '123456abcdef';
+    return "123456abcdef";
   }
 
   getAppVersion (): string {
-    return '@inmanta/1.10.11';
+    return "@inmanta/1.10.11";
   }
 
   getJsonParser (): JsonParserId {
-    return 'Native';
+    return "Native";
   }
 
   getServerVersion (): string {
-    return '4.1';
+    return "4.1";
   }
 
   isLicencedFeatureEnabled (_feature: Feature): boolean {
@@ -95,7 +95,7 @@ export class MockEditableFeatureManager implements FeatureManager {
   }
 
   getServerMajorVersion (): string {
-    return '4';
+    return "4";
   }
 
   isLsmEnabled (): boolean {
@@ -103,32 +103,32 @@ export class MockEditableFeatureManager implements FeatureManager {
   }
 
   getEdition (): string {
-    return 'Open Source';
+    return "Open Source";
   }
 
   getLicenseInformation (): StatusLicense {
     return {
-      cert_valid_until: '2025-10-01T08:59:00.000000',
-      entitlement_valid_until: '2021-11-01T19:04:14.000000',
+      cert_valid_until: "2025-10-01T08:59:00.000000",
+      entitlement_valid_until: "2021-11-01T19:04:14.000000",
     };
   }
 }
 
 export class MockLimitedFeatureManager implements FeatureManager {
   getCommitHash (): string {
-    return '123456abcdef';
+    return "123456abcdef";
   }
 
   getAppVersion (): string {
-    return '@inmanta/1.10.11';
+    return "@inmanta/1.10.11";
   }
 
   getJsonParser (): JsonParserId {
-    return 'Native';
+    return "Native";
   }
 
   getServerVersion (): string {
-    return '4.1';
+    return "4.1";
   }
 
   isLicencedFeatureEnabled (_feature: Feature): boolean {
@@ -152,7 +152,7 @@ export class MockLimitedFeatureManager implements FeatureManager {
   }
 
   getServerMajorVersion (): string {
-    return '4';
+    return "4";
   }
 
   isLsmEnabled (): boolean {
@@ -160,13 +160,13 @@ export class MockLimitedFeatureManager implements FeatureManager {
   }
 
   getEdition (): string {
-    return 'Open Source';
+    return "Open Source";
   }
 
   getLicenseInformation (): StatusLicense {
     return {
-      cert_valid_until: '2025-10-01T08:59:00.000000',
-      entitlement_valid_until: '2021-11-01T19:04:14.000000',
+      cert_valid_until: "2025-10-01T08:59:00.000000",
+      entitlement_valid_until: "2021-11-01T19:04:14.000000",
     };
   }
 }

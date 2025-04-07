@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   ToolbarFilter,
@@ -6,10 +6,10 @@ import {
   TextInput,
   ButtonVariant,
   InputGroupItem,
-} from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
-import { uniq } from 'lodash-es';
-import { toggleValueInList } from '@/Core';
+} from "@patternfly/react-core";
+import { SearchIcon } from "@patternfly/react-icons";
+import { uniq } from "lodash-es";
+import { toggleValueInList } from "@/Core";
 
 interface Props {
   versions: string[];
@@ -22,12 +22,12 @@ export const VersionFilter: React.FC<Props> = ({
   isVisible,
   update,
 }) => {
-  const [idInput, setIdInput] = useState('');
+  const [idInput, setIdInput] = useState("");
 
   const onIdInput = (event) => {
-    if ((event.key && event.key !== 'Enter') || idInput === '') return;
+    if ((event.key && event.key !== "Enter") || idInput === "") return;
     update(uniq(toggleValueInList(idInput, versions)));
-    setIdInput('');
+    setIdInput("");
   };
   const removeChip = (cat, id) => {
     update(versions.filter((value) => value !== id));

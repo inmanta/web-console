@@ -4,18 +4,18 @@ function getLinkToNextPage (headerObj) {
    *
    *  Format of link_header: '<URL>; rel="next", <URL>; rel="last"' where URL is a URL to a certain page.
    */
-  if (!headerObj.has('link')) {
+  if (!headerObj.has("link")) {
     return null;
   }
-  const linkHeader = headerObj.get('link');
-  const splittedLinkHeader = linkHeader.trim().split(',');
+  const linkHeader = headerObj.get("link");
+  const splittedLinkHeader = linkHeader.trim().split(",");
 
   for (let i = 0; i < splittedLinkHeader.length; i++) {
-    const splittedHeaderParts = splittedLinkHeader[i].trim().split(';');
+    const splittedHeaderParts = splittedLinkHeader[i].trim().split(";");
     const refName = splittedHeaderParts[1].trim();
     const refLink = splittedHeaderParts[0].trim();
 
-    if (refName === 'rel="next"') {
+    if (refName === "rel=\"next\"") {
       // The link is represented as '<url>'. This chops off the '<' and '>' characters.
       return refLink.slice(1, refLink.length - 1);
     }
@@ -31,7 +31,7 @@ async function getOldDevVersions () {
    *  This is intentional, because we don't want to execute too many requests at once.
    */
   let queryUrl =
-    'https://api.github.com/orgs/inmanta/packages/npm/web-console/versions?per_page=100';
+    "https://api.github.com/orgs/inmanta/packages/npm/web-console/versions?per_page=100";
   let result = [];
 
   while (true) {
@@ -41,10 +41,10 @@ async function getOldDevVersions () {
       {
         headers: {
           Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-          Accept: 'application/vnd.github+json',
-          'X-GitHub-Api-Version': '2022-11-28',
+          Accept: "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
         },
-        method: 'GET',
+        method: "GET",
       },
       (error) => console.log(error),
     );
@@ -52,11 +52,11 @@ async function getOldDevVersions () {
     const response_headers = queryResults.headers;
 
     if (!packages || !packages.length) {
-      throw Error('Unable to find web-console packages');
+      throw Error("Unable to find web-console packages");
     }
 
     // Take the dev versions only
-    const devVersions = packages.filter((pkg) => pkg.name.includes('dev'));
+    const devVersions = packages.filter((pkg) => pkg.name.includes("dev"));
     const devVersionsWithDate = devVersions.map((devPackageVersion) => {
       return {
         id: devPackageVersion.id,
@@ -92,7 +92,7 @@ async function getOldDevVersions () {
       console.log(`Fetching the next page from ${queryUrl}`);
     } else {
       if (result.length === 0) {
-        console.log('No dev version exist');
+        console.log("No dev version exist");
       }
 
       return result;
@@ -103,7 +103,7 @@ async function getOldDevVersions () {
 getOldDevVersions().then(
   (oldDevVersions) => {
     if (oldDevVersions.length == 0) {
-      console.log('No old versions found matching the criteria');
+      console.log("No old versions found matching the criteria");
 
       return;
     }
@@ -122,10 +122,10 @@ getOldDevVersions().then(
         {
           headers: {
             Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-            Accept: 'application/vnd.github+json',
-            'X-GitHub-Api-Version': '2022-11-28',
+            Accept: "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
           },
-          method: 'DELETE',
+          method: "DELETE",
         },
       ).then(
         (response) => {

@@ -2,8 +2,8 @@ import {
   UseMutationResult,
   useMutation,
   useQueryClient,
-} from '@tanstack/react-query';
-import { usePost } from '../../helpers';
+} from "@tanstack/react-query";
+import { usePost } from "../../helpers";
 
 /**
  * React Query hook for updating environment catalog.
@@ -20,11 +20,11 @@ export const useExportCatalog = (): UseMutationResult<
   const post = usePost()<void>;
 
   return useMutation({
-    mutationFn: () => post('/lsm/v1/exporter/export_service_definition'),
-    mutationKey: ['update_catalog'],
+    mutationFn: () => post("/lsm/v1/exporter/export_service_definition"),
+    mutationKey: ["update_catalog"],
     onSuccess: () => {
-      client.invalidateQueries({ queryKey: ['get_service_models-one_time'] });
-      client.invalidateQueries({ queryKey: ['get_service_models-continuous'] });
+      client.invalidateQueries({ queryKey: ["get_service_models-one_time"] });
+      client.invalidateQueries({ queryKey: ["get_service_models-continuous"] });
     },
   });
 };

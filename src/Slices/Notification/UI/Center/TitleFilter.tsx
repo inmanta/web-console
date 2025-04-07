@@ -1,7 +1,7 @@
-import React from 'react';
-import { NotificationFilter } from '@/Data/Managers/V2/Notification/GetNotifications';
-import { FreeTextFilter } from '@/UI/Components/Filters';
-import { words } from '@/UI/words';
+import React from "react";
+import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
+import { FreeTextFilter } from "@/UI/Components/Filters";
+import { words } from "@/UI/words";
 
 /**
  * Props for the TitleFilter component.
@@ -29,8 +29,8 @@ export const TitleFilter: React.FC<Props> = ({ filter, setFilter }) => {
   return (
     <FreeTextFilter
       searchEntries={filter.title}
-      filterPropertyName={'Title'}
-      placeholder={words('notification.title.placeholder')}
+      filterPropertyName={"Title"}
+      placeholder={words("notification.title.placeholder")}
       update={update}
     />
   );

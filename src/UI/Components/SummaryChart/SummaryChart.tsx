@@ -1,15 +1,15 @@
-import React, { useContext } from 'react';
-import { ChartDonut, ChartLegend } from '@patternfly/react-charts';
+import React, { useContext } from "react";
+import { ChartDonut, ChartLegend } from "@patternfly/react-charts";
 import {
   t_global_color_status_success_default,
   chart_color_blue_300,
   t_global_color_status_danger_default,
   t_global_color_status_warning_default,
   t_global_color_nonstatus_gray_default,
-} from '@patternfly/react-tokens';
-import { InstancesByLabel } from '@/Core';
-import { ServiceInventoryContext } from '@/Slices/ServiceInventory/UI/ServiceInventory';
-import { words } from '@/UI/words';
+} from "@patternfly/react-tokens";
+import { InstancesByLabel } from "@/Core";
+import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
+import { words } from "@/UI/words";
 
 /**
  * @interface Props
@@ -38,9 +38,9 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
       symbol: { fill: color },
     }))
     .filter(({ name }) => {
-      let label = name.split(':')[0];
+      let label = name.split(":")[0];
 
-      label = label === 'no label' ? 'no_label' : label;
+      label = label === "no label" ? "no_label" : label;
 
       return labelFiltering[label] && labelFiltering[label].length > 0;
     });
@@ -48,31 +48,31 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
 
   return (
     <ChartDonut
-      ariaTitle={words('catalog.summary.title')}
+      ariaTitle={words("catalog.summary.title")}
       constrainToVisibleArea={true}
       data={chartData}
       legendComponent={
         <ChartLegend
-          name={'legend'}
+          name={"legend"}
           data={legendData}
           style={{
             labels: {
               fontSize: 16,
-              fill: 'var(--pf-t--global--text--color--subtle)',
+              fill: "var(--pf-t--global--text--color--subtle)",
             },
           }}
           events={[
             {
-              target: 'labels',
+              target: "labels",
               eventHandlers: {
                 onClick: () => {
                   return [
                     {
-                      target: 'labels',
+                      target: "labels",
                       mutation: (props) => {
-                        let label = props.datum.name.split(':')[0];
+                        let label = props.datum.name.split(":")[0];
 
-                        label = label === 'no label' ? 'no_label' : label;
+                        label = label === "no label" ? "no_label" : label;
                         labelFiltering.onClick(labelFiltering[label]);
                       },
                     },
@@ -81,9 +81,9 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                 onMouseEnter: () => {
                   return [
                     {
-                      target: 'labels',
+                      target: "labels",
                       mutation: () => ({
-                        style: { cursor: 'pointer', fontWeight: 700 },
+                        style: { cursor: "pointer", fontWeight: 700 },
                       }),
                     },
                   ];
@@ -91,7 +91,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                 onMouseLeave: () => {
                   return [
                     {
-                      target: 'labels',
+                      target: "labels",
                       mutation: () => ({
                         style: { fontWeight: 500 },
                       }),
@@ -113,21 +113,21 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
         top: 20,
       }}
       colorScale={colorScale}
-      subTitle={words('catalog.instances')}
+      subTitle={words("catalog.instances")}
       title={total}
       width={350}
       events={[
         {
-          target: 'data',
+          target: "data",
           eventHandlers: {
             onClick: () => {
               return [
                 {
-                  target: 'data',
+                  target: "data",
                   mutation: (props) => {
                     let label = props.datum.x;
 
-                    label = label === 'no label' ? 'no_label' : label;
+                    label = label === "no label" ? "no_label" : label;
                     labelFiltering.onClick(labelFiltering[label]);
                   },
                 },
@@ -136,21 +136,21 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
             onMouseEnter: () => {
               return [
                 {
-                  target: 'data',
+                  target: "data",
                   mutation: (props) => {
                     let label = props.datum.x;
 
-                    label = label === 'no label' ? 'no_label' : label;
+                    label = label === "no label" ? "no_label" : label;
 
                     return {
                       style: {
                         ...props.style,
-                        color: 'var(--pf-t--global--text--color--subtle)',
+                        color: "var(--pf-t--global--text--color--subtle)",
                         cursor:
                           labelFiltering[label] &&
                           labelFiltering[label].length > 0
-                            ? 'pointer'
-                            : 'default',
+                            ? "pointer"
+                            : "default",
                       },
                     };
                   },
@@ -172,7 +172,7 @@ const colorsForChart = {
   no_label: t_global_color_nonstatus_gray_default,
 };
 
-const orderedLabels = ['danger', 'warning', 'success', 'info', 'no_label'];
+const orderedLabels = ["danger", "warning", "success", "info", "no_label"];
 
 /**
  * @interface ChartData
@@ -195,7 +195,7 @@ interface ChartData {
  */
 function getChartData (by_label: InstancesByLabel): ChartData[] {
   return orderedLabels.map((label) => ({
-    x: label === 'no_label' ? words('catalog.summary.noLabel') : label,
+    x: label === "no_label" ? words("catalog.summary.noLabel") : label,
     y: by_label[label],
     color: colorsForChart[label].var,
   }));

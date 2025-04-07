@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Drawer } from './Drawer';
+import React, { useEffect, useRef, useState } from "react";
+import { Drawer } from "./Drawer";
 
 type UseDrawer = (env: boolean) => {
   notificationDrawer: JSX.Element | undefined;
@@ -16,7 +16,7 @@ export const useDrawer: UseDrawer = (env) => {
   const onDrawerOpen = () => {
     if (!drawerRef.current) return;
     const firstTabbableItem =
-      drawerRef.current.querySelector<HTMLDivElement>('a, button');
+      drawerRef.current.querySelector<HTMLDivElement>("a, button");
 
     if (!firstTabbableItem) return;
     firstTabbableItem.focus();

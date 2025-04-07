@@ -1,1 +1,1 @@
-export * from './useGetInstanceResources';
+export * from "./useGetInstanceResources";

@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { useLocation } from 'react-router-dom';
-import { isJsonParserId, JsonParserId, SchedulerImpl } from '@/Core';
+import React, { useContext } from "react";
+import { useLocation } from "react-router-dom";
+import { isJsonParserId, JsonParserId, SchedulerImpl } from "@/Core";
 import {
   PrimaryFeatureManager,
   GetServerStatusStateHelper,
@@ -14,7 +14,7 @@ import {
   PrimaryArchiveHelper,
   PrimaryFileManager,
   PrimaryLogger,
-} from '@/Data';
+} from "@/Data";
 import {
   PrimaryBaseUrlManager,
   PrimaryRouteManager,
@@ -22,10 +22,10 @@ import {
   EnvironmentHandlerImpl,
   EnvironmentModifierImpl,
   UrlManagerImpl,
-} from '@/UI';
-import { AuthContext } from './Data/Auth/';
-import { UpdateBanner } from './UI/Components/UpdateBanner';
-import { ModalProvider } from './UI/Root/Components/ModalProvider';
+} from "@/UI";
+import { AuthContext } from "./Data/Auth/";
+import { UpdateBanner } from "./UI/Components/UpdateBanner";
+import { ModalProvider } from "./UI/Root/Components/ModalProvider";
 
 interface Props {
   store: Store;
@@ -103,11 +103,11 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
 };
 
 const getJsonParserId = (container: unknown): JsonParserId | undefined => {
-  if (typeof container !== 'object') return undefined;
+  if (typeof container !== "object") return undefined;
   if (container === null) return undefined;
-  const id = container['jsonParserId'];
+  const id = container["jsonParserId"];
 
-  if (typeof id !== 'string') return undefined;
+  if (typeof id !== "string") return undefined;
   if (!isJsonParserId(id)) return undefined;
 
   return id;

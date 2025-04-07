@@ -1,36 +1,36 @@
-import React, { useContext, useEffect } from 'react';
-import { useUrlStateWithPageSize, useUrlStateWithSort } from '@/Data';
-import { useUrlStateWithCurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
+import React, { useContext, useEffect } from "react";
+import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
+import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EmptyView,
   PageContainer,
   OldPaginationWidget,
   RemoteDataView,
-} from '@/UI/Components';
-import { DependencyContext } from '@/UI/Dependency';
-import { words } from '@/UI/words';
-import { SortKey } from '../Core/Query';
-import { OrdersTable } from './OrdersTable';
-import { OrdersTablePresenter } from './OrdersTablePresenter';
-import { TableControls } from './TableControls';
+} from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { SortKey } from "../Core/Query";
+import { OrdersTable } from "./OrdersTable";
+import { OrdersTablePresenter } from "./OrdersTablePresenter";
+import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
   const { queryResolver, featureManager } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: 'Orders',
+    route: "Orders",
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: 'Orders',
+    route: "Orders",
   });
 
   const [sort, setSort] = useUrlStateWithSort<SortKey>({
-    default: { name: 'created_at', order: 'desc' },
-    route: 'Orders',
+    default: { name: "created_at", order: "desc" },
+    route: "Orders",
   });
 
-  const [data, retry] = queryResolver.useContinuous<'GetOrders'>({
-    kind: 'GetOrders',
+  const [data, retry] = queryResolver.useContinuous<"GetOrders">({
+    kind: "GetOrders",
     sort,
     pageSize,
     currentPage,
@@ -40,12 +40,12 @@ export const Page: React.FC = () => {
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
-    setCurrentPage({ kind: 'CurrentPage', value: '' });
+    setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
   return (
-    <PageContainer pageTitle={words('orders.title')}>
+    <PageContainer pageTitle={words("orders.title")}>
       <TableControls
         paginationWidget={
           <OldPaginationWidget
@@ -65,8 +65,8 @@ export const Page: React.FC = () => {
             <EmptyView
               message={
                 disabledOrderView
-                  ? words('orders.disabled')
-                  : words('orders.table.empty')
+                  ? words("orders.disabled")
+                  : words("orders.table.empty")
               }
               aria-label="OrdersView-Empty"
             />

@@ -1,10 +1,10 @@
-import { dia } from '@inmanta/rappid';
+import { dia } from "@inmanta/rappid";
 import {
   ActionEnum,
   EventActionEnum,
   InterServiceRelationOnCanvasWithMin,
-} from '../interfaces';
-import { ServiceEntityBlock } from '../shapes';
+} from "../interfaces";
+import { ServiceEntityBlock } from "../shapes";
 
 /**
  * Dispatches an event to update inter-service relations.
@@ -21,7 +21,7 @@ export const dispatchUpdateInterServiceRelations = (
   id: string | dia.Cell.ID,
 ): void => {
   document.dispatchEvent(
-    new CustomEvent('updateInterServiceRelations', {
+    new CustomEvent("updateInterServiceRelations", {
       detail: {
         action,
         name,
@@ -44,7 +44,7 @@ export const dispatchUpdateServiceOrderItems = (
   action: ActionEnum,
 ): void => {
   document.dispatchEvent(
-    new CustomEvent('updateServiceOrderItems', {
+    new CustomEvent("updateServiceOrderItems", {
       detail: { cell, action },
     }),
   );
@@ -65,7 +65,7 @@ export const dispatchAddInterServiceRelationToTracker = (
   relations: InterServiceRelationOnCanvasWithMin[],
 ): void => {
   document.dispatchEvent(
-    new CustomEvent('addInterServiceRelationToTracker', {
+    new CustomEvent("addInterServiceRelationToTracker", {
       detail: {
         id,
         name,
@@ -86,7 +86,7 @@ export const dispatchRemoveInterServiceRelationFromTracker = (
   id: string | dia.Cell.ID,
 ): void => {
   document.dispatchEvent(
-    new CustomEvent('removeInterServiceRelationFromTracker', {
+    new CustomEvent("removeInterServiceRelationFromTracker", {
       detail: {
         id,
       },
@@ -107,7 +107,7 @@ export const dispatchUpdateStencil = (
   action?: EventActionEnum,
 ): void => {
   document.dispatchEvent(
-    new CustomEvent('updateStencil', {
+    new CustomEvent("updateStencil", {
       detail: {
         name,
         action,
@@ -129,7 +129,7 @@ export const dispatchLooseElement = (
   id: string | dia.Cell.ID,
 ): void => {
   document.dispatchEvent(
-    new CustomEvent('looseElement', {
+    new CustomEvent("looseElement", {
       detail: JSON.stringify({
         kind,
         id,
@@ -147,7 +147,7 @@ export const dispatchLooseElement = (
  */
 export const dispatchSendCellToSidebar = (cell: dia.CellView | null) => {
   document.dispatchEvent(
-    new CustomEvent('sendCellToSidebar', {
+    new CustomEvent("sendCellToSidebar", {
       detail: cell,
     }),
   );

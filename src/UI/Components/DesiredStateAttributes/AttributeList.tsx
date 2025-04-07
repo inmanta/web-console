@@ -1,33 +1,33 @@
-import React from 'react';
+import React from "react";
 import {
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-} from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
-import styled from 'styled-components';
-import { CodeHighlighter } from '@/UI/Components/CodeHighlighter';
-import { TextWithCopy } from '@/UI/Components/TextWithCopy';
-import { ClassifiedAttribute } from './ClassifiedAttribute';
-import { FileBlock } from './FileBlock';
+} from "@patternfly/react-core";
+import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
+import { CodeHighlighter } from "@/UI/Components/CodeHighlighter";
+import { TextWithCopy } from "@/UI/Components/TextWithCopy";
+import { ClassifiedAttribute } from "./ClassifiedAttribute";
+import { FileBlock } from "./FileBlock";
 
 interface Props {
   attributes: ClassifiedAttribute[];
   variant?: AttributeTextVariant;
 }
 
-type AttributeTextVariant = 'default' | 'monospace';
+type AttributeTextVariant = "default" | "monospace";
 
 export const AttributeList: React.FC<Props> = ({
   attributes,
-  variant = 'default',
+  variant = "default",
 }) => (
   <DescriptionList
     isHorizontal
     isAutoColumnWidths
     horizontalTermWidthModifier={{
-      default: '25ch',
+      default: "25ch",
     }}
   >
     {attributes.map((attribute) => (
@@ -46,19 +46,19 @@ const AttributeValue: React.FC<{
   variant?: AttributeTextVariant;
 }> = ({ attribute, variant }) => {
   switch (attribute.kind) {
-    case 'Undefined':
+    case "Undefined":
       return (
         <TextContainer $variant={variant}>
           <OutlinedQuestionCircleIcon /> undefined
         </TextContainer>
       );
 
-    case 'Password':
+    case "Password":
       return (
         <TextContainer $variant={variant}>{attribute.value}</TextContainer>
       );
 
-    case 'SingleLine':
+    case "SingleLine":
       return (
         <TextWithCopy
           value={attribute.value}
@@ -68,7 +68,7 @@ const AttributeValue: React.FC<{
         </TextWithCopy>
       );
 
-    case 'MultiLine':
+    case "MultiLine":
       return (
         <MultiTextWithCopy
           value={attribute.value}
@@ -78,19 +78,19 @@ const AttributeValue: React.FC<{
         </MultiTextWithCopy>
       );
 
-    case 'File':
+    case "File":
       return <FileBlock hash={attribute.value} />;
 
-    case 'Json':
+    case "Json":
       return (
         <CodeHighlighter keyId="json" code={attribute.value} language="json" />
       );
 
-    case 'Xml':
+    case "Xml":
       return (
         <CodeHighlighter keyId="xml" code={attribute.value} language="xml" />
       );
-    case 'Python':
+    case "Python":
       return (
         <CodeHighlighter
           keyId="python"
@@ -109,7 +109,7 @@ const MultiTextWithCopy = styled(TextWithCopy)`
 
 const TextContainer = styled.span<{ $variant?: AttributeTextVariant }>`
   ${(p) =>
-    p.$variant === 'monospace'
-      ? 'font-family: var(--pf-t--global--font--family--mono)'
-      : 'inherit'};
+    p.$variant === "monospace"
+      ? "font-family: var(--pf-t--global--font--family--mono)"
+      : "inherit"};
 `;

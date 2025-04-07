@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   NotificationBadge,
   NotificationBadgeVariant,
-} from '@patternfly/react-core';
-import { UseQueryResult } from '@tanstack/react-query';
-import { PageSize } from '@/Core';
+} from "@patternfly/react-core";
+import { UseQueryResult } from "@tanstack/react-query";
+import { PageSize } from "@/Core";
 import {
   NotificationResponse,
   useGetNotifications,
-} from '@/Data/Managers/V2/Notification/GetNotifications';
-import { ToastAlert } from '@/UI/Components';
-import { words } from '@/UI/words';
-import { Notification } from '@S/Notification/Core/Domain';
+} from "@/Data/Managers/V2/Notification/GetNotifications";
+import { ToastAlert } from "@/UI/Components";
+import { words } from "@/UI/words";
+import { Notification } from "@S/Notification/Core/Domain";
 
 /**
  * Notification badge component that displays a visual indicator for notifications.
@@ -21,9 +21,9 @@ import { Notification } from '@S/Notification/Core/Domain';
  */
 export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   const response = useGetNotifications({
-    pageSize: PageSize.from('250'),
-    origin: 'drawer',
-    currentPage: { kind: 'CurrentPage', value: '' },
+    pageSize: PageSize.from("250"),
+    origin: "drawer",
+    currentPage: { kind: "CurrentPage", value: "" },
   }).useContinuous();
 
   return <View {...{ response, onClick }} />;
@@ -45,7 +45,7 @@ interface Props {
  * Handles loading, error, and success states.
  */
 const View: React.FC<Props> = ({ response, onClick }) => {
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!response.isError) return;
@@ -71,7 +71,7 @@ const View: React.FC<Props> = ({ response, onClick }) => {
         <ToastAlert
           data-testid="ToastAlert"
           message={error}
-          title={words('error')}
+          title={words("error")}
           setMessage={setError}
         />
         <NotificationBadge
@@ -127,7 +127,7 @@ const isUnreadError = (notification: Notification) =>
  * @returns {boolean} True if the notification has error severity
  */
 const isError = (notification: Notification) =>
-  notification.severity === 'error';
+  notification.severity === "error";
 
 /**
  * Checks if a notification is unread.

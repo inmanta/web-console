@@ -1,6 +1,6 @@
-import moment from 'moment-timezone';
-import { DateInfo } from '@/Core';
-import { DatePresenter } from '@/UI/Presenters';
+import moment from "moment-timezone";
+import { DateInfo } from "@/Core";
+import { DatePresenter } from "@/UI/Presenters";
 
 export class MomentDatePresenter implements DatePresenter {
   format (timestamp: string, template: string): string {
@@ -24,15 +24,15 @@ export class MomentDatePresenter implements DatePresenter {
   }
 
   getFull (timestamp: string): string {
-    return this.format(timestamp, 'YYYY/MM/DD HH:mm:ss');
+    return this.format(timestamp, "YYYY/MM/DD HH:mm:ss");
   }
 
   getDate (timestamp: string): string {
-    return this.format(timestamp, 'YYYY/MM/DD');
+    return this.format(timestamp, "YYYY/MM/DD");
   }
 
   getTime (timestamp: string): string {
-    return this.format(timestamp, 'HH:mm:SSS');
+    return this.format(timestamp, "HH:mm:SSS");
   }
 
   private getRelative (timestamp: string): string {
@@ -40,7 +40,7 @@ export class MomentDatePresenter implements DatePresenter {
   }
 
   parseFull (timestamp: string): Date {
-    return moment.tz(timestamp, 'YYYY/MM/DD HH:mm:ss', this.timezone).toDate();
+    return moment.tz(timestamp, "YYYY/MM/DD HH:mm:ss", this.timezone).toDate();
   }
 
   toUnixMs (timestamp: string): number {

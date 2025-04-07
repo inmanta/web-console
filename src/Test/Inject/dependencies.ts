@@ -1,14 +1,14 @@
-import { PrimaryArchiveHelper, defaultAuthContext } from '@/Data';
+import { PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
 import {
   MockEnvironmentHandler,
   MockFeatureManager,
   MockFileManager,
-} from '@/Test/Mock';
-import { PrimaryRouteManager, EnvironmentModifierImpl } from '@/UI';
-import { UrlManagerImpl } from '@/UI/Utils';
+} from "@/Test/Mock";
+import { PrimaryRouteManager, EnvironmentModifierImpl } from "@/UI";
+import { UrlManagerImpl } from "@/UI/Utils";
 
-const baseUrl = '';
-const env = 'env';
+const baseUrl = "";
+const env = "env";
 const routeManager = PrimaryRouteManager(baseUrl);
 const featureManager = new MockFeatureManager();
 const environmentModifier = EnvironmentModifierImpl();

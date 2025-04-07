@@ -1,1 +1,1 @@
-export * from './useUpdateNotification';
+export * from "./useUpdateNotification";

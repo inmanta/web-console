@@ -1,6 +1,6 @@
-import { CurrentPage } from '@/Data/Common/UrlState/useUrlStateWithCurrentPage';
-import { PageSize } from './PageSize';
-import { Sort } from './Sort';
+import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { PageSize } from "./PageSize";
+import { Sort } from "./Sort";
 
 export interface ServiceInstanceParams {
   filter?: Filter;
@@ -10,9 +10,9 @@ export interface ServiceInstanceParams {
 }
 
 export enum AttributeSet {
-  Active = 'active_attributes',
-  Candidate = 'candidate_attributes',
-  Rollback = 'rollback_attributes',
+  Active = "active_attributes",
+  Candidate = "candidate_attributes",
+  Rollback = "rollback_attributes",
 }
 
 export interface Filter {
@@ -24,13 +24,13 @@ export interface Filter {
   id_or_service_identity?: string[];
 }
 
-export type DeletedRule = 'Include' | 'Only' | undefined;
+export type DeletedRule = "Include" | "Only" | undefined;
 
 export enum Kind {
-  State = 'State',
-  Id = 'Id',
-  AttributeSet = 'AttributeSet',
-  Deleted = 'Deleted',
+  State = "State",
+  Id = "Id",
+  AttributeSet = "AttributeSet",
+  Deleted = "Deleted",
 }
 
 export const List: Kind[] = [

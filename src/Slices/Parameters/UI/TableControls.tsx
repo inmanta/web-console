@@ -1,8 +1,8 @@
-import React from 'react';
-import { Toolbar, ToolbarItem, ToolbarContent } from '@patternfly/react-core';
-import { Filter } from '@S/Parameters/Core/Query';
+import React from "react";
+import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
+import { Filter } from "@S/Parameters/Core/Query";
 
-import { FilterWidget } from './FilterWidget';
+import { FilterWidget } from "./FilterWidget";
 
 interface Props {
   filter: Filter;

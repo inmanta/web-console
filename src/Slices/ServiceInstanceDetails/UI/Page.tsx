@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useUrlStateWithString } from '@/Data';
-import { useGetServiceModel } from '@/Data/Managers/V2/Service';
+import React, { useEffect, useState } from "react";
+import { useUrlStateWithString } from "@/Data";
+import { useGetServiceModel } from "@/Data/Managers/V2/Service";
 import {
   useGetInstance,
   useGetInfiniteInstanceLogs,
-} from '@/Data/Managers/V2/ServiceInstance';
-import { useRouteParams, words } from '@/UI';
-import { ErrorView, LoadingView, PageContainer } from '@/UI/Components';
-import { InstanceDetailsContext } from '../Core/Context';
-import { VersionedPageTitleWithActions } from './Components/Sections';
-import { ServiceInstanceDetailsLayout } from './ServiceInstanceDetailsLayout';
+} from "@/Data/Managers/V2/ServiceInstance";
+import { useRouteParams, words } from "@/UI";
+import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+import { InstanceDetailsContext } from "../Core/Context";
+import { VersionedPageTitleWithActions } from "./Components/Sections";
+import { ServiceInstanceDetailsLayout } from "./ServiceInstanceDetailsLayout";
 
 interface Props {
   service: string;
@@ -49,10 +49,10 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
       <PageContainer pageTitle={pageTitle}>
         <ErrorView
           ariaLabel="Instance-Details-Error"
-          title={words('instanceDetails.page.errorFallback.title')}
+          title={words("instanceDetails.page.errorFallback.title")}
           message={
             instanceDetails.error?.message ||
-            words('instanceDetails.page.errorFallback')
+            words("instanceDetails.page.errorFallback")
           }
           retry={instanceDetails.refetch}
         />
@@ -88,8 +88,8 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
     <PageContainer pageTitle={pageTitle}>
       <ErrorView
         ariaLabel="Instance-Details-Error"
-        title={words('instanceDetails.page.noData.errorTitle')}
-        message={words('instanceDetails.page.noData')}
+        title={words("instanceDetails.page.noData.errorTitle")}
+        message={words("instanceDetails.page.noData")}
         retry={instanceDetails.refetch}
       />
     </PageContainer>
@@ -105,23 +105,23 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
  * @returns {React.FC} A React Component to wrap the ServiceInstanceDetails.
  */
 export const Page: React.FC = () => {
-  const { service, instance, instanceId } = useRouteParams<'InstanceDetails'>();
+  const { service, instance, instanceId } = useRouteParams<"InstanceDetails">();
   const [selectedVersion] = useUrlStateWithString<string>({
-    default: '',
-    key: 'version',
-    route: 'InstanceDetails',
+    default: "",
+    key: "version",
+    route: "InstanceDetails",
   });
-  const [initialVersion, setInitialVersion] = useState('-1');
+  const [initialVersion, setInitialVersion] = useState("-1");
 
   useEffect(() => {
-    if (initialVersion === '-1') {
+    if (initialVersion === "-1") {
       setInitialVersion(selectedVersion);
     }
   }, [selectedVersion, initialVersion]);
 
   //if the initial version is -1, return null,
   //  it is done to avoid passing empty string to the InfiniteQuery before the version is set from the url, otherwise we would get inadequate data at initial load, and only after the update the correct one.
-  if (initialVersion === '-1') {
+  if (initialVersion === "-1") {
     return null;
   }
 

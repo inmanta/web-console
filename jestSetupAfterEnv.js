@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
 
 /**
  * Sometimes tests can take longer than the default 5000ms timeout.

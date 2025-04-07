@@ -1,19 +1,19 @@
-import React, { act } from 'react';
-import { useLocation } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
-import { StoreProvider } from 'easy-peasy';
-import { configureAxe, toHaveNoViolations } from 'jest-axe';
-import { HttpResponse, http } from 'msw';
-import { setupServer } from 'msw/node';
-import { RemoteData } from '@/Core';
-import { getStoreInstance } from '@/Data';
-import { Service, dependencies } from '@/Test';
-import { DependencyProvider, EnvironmentHandlerImpl } from '@/UI/Dependency';
-import CustomRouter from '@/UI/Routing/CustomRouter';
-import history from '@/UI/Routing/history';
-import { failureAndRejection } from '@S/Diagnose/Data/Mock';
-import { Diagnose } from './Diagnose';
+import React, { act } from "react";
+import { useLocation } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
+import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
+import { RemoteData } from "@/Core";
+import { getStoreInstance } from "@/Data";
+import { Service, dependencies } from "@/Test";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import CustomRouter from "@/UI/Routing/CustomRouter";
+import history from "@/UI/Routing/history";
+import { failureAndRejection } from "@S/Diagnose/Data/Mock";
+import { Diagnose } from "./Diagnose";
 
 expect.extend(toHaveNoViolations);
 
@@ -42,12 +42,12 @@ function setup () {
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
-        id: 'aaa',
-        name: 'env-a',
-        project_id: 'ppp',
-        repo_branch: 'branch',
-        repo_url: 'repo',
-        projectName: 'project',
+        id: "aaa",
+        name: "env-a",
+        project_id: "ppp",
+        repo_branch: "branch",
+        repo_url: "repo",
+        projectName: "project",
         halted: false,
         settings: {
           enable_lsm_expert_mode: false,
@@ -55,12 +55,12 @@ function setup () {
       },
     ]),
   );
-  history.push('/?env=aaa');
+  history.push("/?env=aaa");
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <CustomRouter history={history}>
-        {' '}
+        {" "}
         <DependencyProvider
           dependencies={{ ...dependencies, environmentHandler }}
         >
@@ -68,8 +68,8 @@ function setup () {
             <Diagnose
               serviceName={Service.a.name}
               lookBehind="1"
-              instanceId={'4a4a6d14-8cd0-4a16-bc38-4b768eb004e3'}
-              instanceIdentity={'4a4a6d14-8cd0-4a16-bc38-4b768eb004e3'}
+              instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
+              instanceIdentity={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
             />
           </StoreProvider>
         </DependencyProvider>
@@ -82,7 +82,7 @@ function setup () {
 
 const server = setupServer(
   http.get(
-    '/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose',
+    "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose",
     () => {
       return HttpResponse.json({
         data: {
@@ -94,7 +94,7 @@ const server = setupServer(
   ),
 );
 
-describe('Diagnose', () => {
+describe("Diagnose", () => {
   // Establish API mocking before all tests.
   beforeAll(() => server.listen());
   // Reset any request handlers that we may add during the tests,
@@ -103,17 +103,17 @@ describe('Diagnose', () => {
   // Clean up after the tests are finished.
   afterAll(() => server.close());
 
-  test('Diagnose View shows empty table', async () => {
+  test("Diagnose View shows empty table", async () => {
     const { component } = setup();
 
     render(component);
 
     expect(
-      screen.getByRole('region', { name: 'Diagnostics-Loading' }),
+      screen.getByRole("region", { name: "Diagnostics-Loading" }),
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole('generic', { name: 'Diagnostics-Empty' }),
+      await screen.findByRole("generic", { name: "Diagnostics-Empty" }),
     ).toBeInTheDocument();
 
     await act(async () => {
@@ -123,14 +123,14 @@ describe('Diagnose', () => {
     });
   });
 
-  test('Diagnose View shows failed table', async () => {
+  test("Diagnose View shows failed table", async () => {
     server.use(
       http.get(
-        '/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose',
+        "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose",
         () => {
           return HttpResponse.json(
             {
-              message: 'Something went wrong',
+              message: "Something went wrong",
             },
             {
               status: 400,
@@ -145,7 +145,7 @@ describe('Diagnose', () => {
     render(component);
 
     expect(
-      await screen.findByRole('region', { name: 'Diagnostics-Error' }),
+      await screen.findByRole("region", { name: "Diagnostics-Error" }),
     ).toBeInTheDocument();
 
     await act(async () => {
@@ -155,10 +155,10 @@ describe('Diagnose', () => {
     });
   });
 
-  test('Diagnose View shows success table', async () => {
+  test("Diagnose View shows success table", async () => {
     server.use(
       http.get(
-        '/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose',
+        "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose",
         () => {
           return HttpResponse.json({ data: failureAndRejection });
         },
@@ -169,7 +169,7 @@ describe('Diagnose', () => {
     render(component);
 
     expect(
-      await screen.findByRole('generic', { name: 'Diagnostics-Success' }),
+      await screen.findByRole("generic", { name: "Diagnostics-Success" }),
     ).toBeInTheDocument();
 
     await act(async () => {

@@ -1,4 +1,4 @@
-import { FeatureManager, UrlManager } from '@/Core';
+import { FeatureManager, UrlManager } from "@/Core";
 
 export class UrlManagerImpl implements UrlManager {
   constructor (
@@ -7,7 +7,7 @@ export class UrlManagerImpl implements UrlManager {
   ) {}
 
   getDocumentationLink (): string {
-    if (this.featureManager.getEdition().includes('Open Source')) {
+    if (this.featureManager.getEdition().includes("Open Source")) {
       return `https://docs.inmanta.com/community/${this.featureManager.getServerVersion()}`;
     }
 

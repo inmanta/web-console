@@ -1,1 +1,1 @@
-export * from './useGetInstanceWithRelations';
+export * from "./useGetInstanceWithRelations";
