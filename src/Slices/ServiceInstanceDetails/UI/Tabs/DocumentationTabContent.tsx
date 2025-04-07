@@ -99,7 +99,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
           onClick={() => {
             navigateTo("MarkdownPreviewer", {
               service: instance.service_entity,
-              instance: instance.id,
+              instance: instance.service_identity_attribute_value || instance.id,
               instanceId: instance.id,
             });
           }}

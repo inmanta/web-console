@@ -20,6 +20,7 @@ import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Home } from "@S/Home";
 import { InstanceComposerEditor } from "@S/InstanceComposerEditor";
+import { MarkdownPreviewer } from "@/Slices/MarkdownPreviewer";
 import { Notification } from "@S/Notification";
 import { OrderDetails } from "@S/OrderDetails";
 import { Orders } from "@S/Orders";
@@ -65,6 +66,7 @@ export const paths: Paths = {
   Orders: Orders.path,
   OrderDetails: OrderDetails.path,
   InstanceDetails: InstanceDetails.path,
+  MarkdownPreviewer: MarkdownPreviewer.path,
 
   /**
    * Resource Manager

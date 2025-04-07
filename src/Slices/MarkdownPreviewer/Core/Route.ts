@@ -1,6 +1,6 @@
 import { Route } from "@/Core";
 
-export const path = "/lsm/catalog/:service/inventory/:instance/markdownpreview/:instanceId";
+export const path = "/lsm/catalog/:service/inventory/:instance/:instanceId/markdownpreview";
 
 export const route = (base: string): Route<"MarkdownPreviewer"> => ({
     kind: "MarkdownPreviewer",
