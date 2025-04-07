@@ -154,7 +154,6 @@ describe("DesiredStateDetails", () => {
   test("GIVEN DesiredStateDetails page WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
     server.use(
       http.get("/api/v2/desiredstate/123", ({ request }) => {
-        console.log(request.url.includes("&end=fake-first-param"));
         if (request.url.includes("&end=fake-first-param")) {
           return HttpResponse.json({
             ...Resource.responseFromVersion,
@@ -179,8 +178,8 @@ describe("DesiredStateDetails", () => {
     const { component } = setup();
 
     render(component);
-    await screen.findByRole("grid", { name: "VersionResourcesTable-Success" }),
-      expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(6);
+    await screen.findByRole("grid", { name: "VersionResourcesTable-Success" });
+    expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(6);
     expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
     //go to next page
@@ -193,8 +192,8 @@ describe("DesiredStateDetails", () => {
     //sort on the second page
     await userEvent.click(screen.getByRole("button", { name: "Type" }));
 
-    await screen.findByRole("grid", { name: "VersionResourcesTable-Success" }),
-      expect(screen.getByLabelText("Go to next page")).toBeEnabled();
+    await screen.findByRole("grid", { name: "VersionResourcesTable-Success" });
     expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(6);
+    expect(screen.getByLabelText("Go to next page")).toBeEnabled();
   });
 });
