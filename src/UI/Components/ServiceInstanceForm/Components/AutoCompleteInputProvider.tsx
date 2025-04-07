@@ -71,6 +71,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
       />
     );
   }
+
   if (isSuccess) {
     const options = data.data.map(
       ({ id, service_identity_attribute_value }) => {

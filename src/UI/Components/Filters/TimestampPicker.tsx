@@ -48,6 +48,7 @@ export const TimestampPicker: React.FC<Props> = ({
       inputDate.setHours(timestamp.getHours());
       inputDate.setMinutes(timestamp.getMinutes());
     }
+
     if (
       inputDate &&
       isValidDate(inputDate) &&
@@ -59,6 +60,7 @@ export const TimestampPicker: React.FC<Props> = ({
 
   const onTimeChange = (_event, time) => {
     setTimeText(time);
+
     if (timestamp && isValidDate(timestamp) && time.split(":").length === 2) {
       const [hour, minute] = time.split(":");
       const updatedDate = new Date(timestamp);
@@ -66,9 +68,11 @@ export const TimestampPicker: React.FC<Props> = ({
       if (hour.length === 2) {
         updatedDate.setHours(hour);
       }
+
       if (minute.length === 2) {
         updatedDate.setMinutes(minute);
       }
+
       onChange(updatedDate);
     }
   };

@@ -24,6 +24,7 @@ export function GetEnvironmentsStateHelper(store: Store) {
   ) {
     if (details) {
       store.environment.setEnvironmentsWithDetails(data);
+
       if (RemoteData.isSuccess(data)) {
         store.environment.setEnvironments(data);
       }

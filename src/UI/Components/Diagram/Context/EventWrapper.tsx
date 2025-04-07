@@ -54,6 +54,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     } else {
       newSet.add(eventData.id);
     }
+
     setLooseElement(newSet);
   };
 

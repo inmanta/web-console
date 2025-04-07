@@ -44,6 +44,7 @@ const getEnvironmentId = (
   environment: FlatEnvironment | undefined,
 ): Either.Type<string, string | undefined> => {
   if (environmentRole === "Forbidden") return Either.right(undefined);
+
   if (environmentRole === "Required") {
     if (environment) return Either.right(environment.id);
 

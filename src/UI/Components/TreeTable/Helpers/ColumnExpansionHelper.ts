@@ -29,6 +29,7 @@ export class ColumnExpansionHelper {
 
       return Object.fromEntries(columns.map((k) => [k, equalColumnWidth]));
     }
+
     const nonCollapsedWidth =
       (this.sumColumnWidth - emptyColumns.length * this.minColumnWidth) /
       (this.numberOfColumns - emptyColumns.length);

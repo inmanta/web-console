@@ -13,11 +13,13 @@ export class FileFetcherImpl implements FileFetcher {
     environment?: string,
   ) {
     if (typeof environment === "undefined") return;
+
     this.environment = Maybe.some(environment);
   }
 
   private getEnvironment(): string {
     if (Maybe.isSome(this.environment)) return this.environment.value;
+
     throw new Error("Environment not set");
   }
 
@@ -51,6 +53,7 @@ export class FileFetcherImpl implements FileFetcher {
       if (typeof response.message !== "undefined") {
         return Either.left(response.message);
       }
+
       if (typeof response.content !== "undefined") {
         return Either.right(this.decodeBase64String(response.content));
       }

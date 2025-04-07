@@ -390,6 +390,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
 
   const onAdd = () => {
     setShowList(true);
+
     if (formState !== null) {
       getUpdate(makePath(path, field.name), createFormState(field.fields));
     }

@@ -38,9 +38,11 @@ const fillCreateEnvForm = ({
     projectName,
   );
   cy.get('[role="option"]').contains(projectName).click();
+
   if (shouldPassEnvName) {
     cy.get('[aria-label="Name-input"]').type(envName);
   }
+
   if (!fillOptionalInputs) {
     cy.get('[aria-label="Description-input"]').type("Test description");
     cy.get('[aria-label="Repository-input"]').type("repository");
@@ -120,6 +122,7 @@ describe("Environment", () => {
 
     cy.get("button").contains("Submit").click();
     cy.wait(1000);
+
     // test to check redirection to right page. OSS it should be the Desired state page instead of the service catalog.
     if (Cypress.env("edition") === "iso") {
       cy.get("h1").contains("Service Catalog").should("to.be.visible");

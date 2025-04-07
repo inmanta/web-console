@@ -121,6 +121,7 @@ export const connectEntities = (
     if (isBlocked) {
       link.set("isBlockedFromEditing", isBlocked);
     }
+
     link.source(source);
     link.target(target);
     graph.addCell(link);

@@ -53,6 +53,7 @@ export function handleUrlStateWithFilter<Data>(
 ): [Data, Update<Data>] {
   const serialize = (data: Data): Data => {
     if (config.keys === undefined) return data;
+
     const serialized = Object.entries(config.keys)
       .map(([key, kind]) => {
         if (data[key] === undefined) return {};
@@ -66,7 +67,9 @@ export function handleUrlStateWithFilter<Data>(
 
   const parse = (value: unknown): Data | undefined => {
     if (config.keys === undefined) return value as Data;
+
     if (!isObject(value)) return undefined;
+
     const parsed = Object.entries(config.keys)
       .map(([key, kind]) => {
         if (value[key] === undefined) return {};

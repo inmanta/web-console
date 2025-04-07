@@ -69,9 +69,11 @@ implements AttributeHelper<InventoryAttributeTree> {
     if (!this.service) {
       return;
     }
+
     if (prefix.length === 0) {
       return this.findInRelations(this.service, key);
     }
+
     const prefixParts = prefix
       .split(this.separator)
       .filter((part) => isNaN(part as unknown as number));
@@ -304,6 +306,7 @@ export function isMultiLeaf(
  */
 function getType(node: TreeNode | undefined): string | undefined {
   if (typeof node === "undefined") return undefined;
+
   if (node.kind !== "Leaf") return undefined;
 
   return node.type;
@@ -318,6 +321,7 @@ function getType(node: TreeNode | undefined): string | undefined {
  */
 export function getValue(node: TreeNode | undefined): unknown {
   if (typeof node === "undefined") return undefined;
+
   if (node.kind !== "Leaf") return undefined;
 
   return node.value;
@@ -345,6 +349,7 @@ export function isLeaf(node: TreeNode | undefined): boolean {
  */
 function getHasRelation(node: TreeNode | undefined): boolean | undefined {
   if (typeof node === "undefined") return undefined;
+
   if (node.kind !== "Leaf") return undefined;
 
   return node.hasRelation;
@@ -359,6 +364,7 @@ function getHasRelation(node: TreeNode | undefined): boolean | undefined {
  */
 function getEntity(node: TreeNode | undefined): string | undefined {
   if (typeof node === "undefined") return undefined;
+
   if (node.kind !== "Leaf") return undefined;
 
   return node.entity;

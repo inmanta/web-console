@@ -60,6 +60,7 @@ export const RightSidebar: React.FC<Props> = ({ editable }) => {
     if (!cellToEdit) {
       return;
     }
+
     const { model } = cellToEdit;
 
     //logic of deleting cell stayed in the halo which triggers the event

@@ -40,6 +40,7 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
     ) {
       return;
     }
+
     if (typeTextInput.length) {
       newFilter = {
         ...newFilter,
@@ -55,6 +56,7 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
           : [agentTextInput],
       };
     }
+
     if (valueTextInput.length) {
       newFilter = {
         ...newFilter,
@@ -64,6 +66,7 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
           : [valueTextInput],
       };
     }
+
     setFilter(newFilter);
     setTypeTextInput("");
     setAgentTextInput("");

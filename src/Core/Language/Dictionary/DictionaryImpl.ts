@@ -18,6 +18,7 @@ export class DictionaryImpl<Value> implements Dictionary<Value> {
 
   set(key: string, value: Value): boolean {
     if (!this.isFree(key)) return false;
+
     this.state[key] = { value };
 
     return true;

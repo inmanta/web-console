@@ -90,6 +90,7 @@ export const EntityForm: React.FC<Props> = ({
         } else {
           selection.push(value as string);
         }
+
         updatedValue = set(clone, path, selection);
 
         return updatedValue;

@@ -25,6 +25,7 @@ export const createConnectionRules = (
     if (rules[service.name] === undefined) {
       rules[service.name] = [];
     }
+
     const tempRules: (EmbeddedRule | InterServiceRule)[] = [];
 
     service.embedded_entities.map((entity) => {
@@ -202,6 +203,7 @@ export const checkWhetherConnectionRulesAreExhausted = (
   if (editMode && rule && rule.modifier !== "rw+") {
     return true;
   }
+
   //undefined and null are equal to no limit
   if (rule.upperLimit !== undefined && rule.upperLimit !== null) {
     return targetConnectionsForGivenRule.length >= rule.upperLimit;
@@ -234,6 +236,7 @@ const doesElementIsEmbeddedWithExhaustedConnections = (
   if (isSourceEmbedded && isTargetBlocked) {
     return true;
   }
+
   const targetName = target.get("entityName");
 
   if (isSourceEmbedded && sourceHolderName !== undefined) {

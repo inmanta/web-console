@@ -90,6 +90,7 @@ export const BaseApiHelper = (
    */
   function errorHasMessage(error: unknown): error is { message: string } {
     if (!isObject(error)) return false;
+
     if (!objectHasKey(error, "message")) return false;
 
     return typeof error.message === "string";
@@ -396,6 +397,7 @@ export const BaseApiHelper = (
             "\nConnection to the server was either denied or blocked. \nPlease check server status.",
           );
         });
+
       if (response.ok) {
         const data = await transform(response);
 

@@ -20,6 +20,7 @@ export class CommandResolverImpl implements CommandResolver {
       .find((manager) => manager.matches(command));
 
     if (typeof manager !== "undefined") return manager;
+
     throw new Error(`Can't find CommandManager for command ${command.kind}`);
   }
 }

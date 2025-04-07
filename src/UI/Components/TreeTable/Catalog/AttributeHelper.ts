@@ -61,6 +61,7 @@ implements AttributeHelper<CatalogAttributeTree> {
 
       entries = { ...entries, ...entriesFromRelations };
     }
+
     if (container.embedded_entities.length > 0) {
       container.embedded_entities.forEach((entity) => {
         entries[`${prefix}${entity.name}`] = { kind: "Branch" };

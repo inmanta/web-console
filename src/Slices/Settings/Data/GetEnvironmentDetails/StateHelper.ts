@@ -27,6 +27,7 @@ export function StateHelper(store: Store) {
         id,
         value: data,
       });
+
       if (RemoteData.isSuccess(data)) {
         store.environment.setEnvironmentDetailsById({
           id,

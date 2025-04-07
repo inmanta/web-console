@@ -45,6 +45,7 @@ export function getUrl(
 
 const filterToRaw = (filter: Filter) => {
   if (typeof filter === "undefined") return {};
+
   const {
     state,
     deleted,

@@ -153,6 +153,7 @@ export const SingleTextSelect: React.FC<Props> = ({
           setInputValue(getDisplayValue(String(value)));
           setSelected(String(value));
         }
+
         break;
     }
 

@@ -29,6 +29,7 @@ export function getUrl(
 
 const filterToParam = (filter: Filter, timezone: string) => {
   if (typeof filter === "undefined") return {};
+
   const { status, requested } = filter;
   const serializedTimestampOperatorFilters = requested?.map(
     (timestampWithOperator) =>
@@ -50,6 +51,7 @@ const filterToParam = (filter: Filter, timezone: string) => {
 
 function translateStatusFilter(status?: CompileStatus) {
   if (!status) return {};
+
   switch (status) {
     case CompileStatus.success:
       return { success: true };

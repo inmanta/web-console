@@ -201,6 +201,7 @@ export const createStencilState = (
       max: entity.modifier === "rw" && isInEditMode ? 0 : entity.upper_limit,
       currentAmount: 0,
     };
+
     if (entity.embedded_entities) {
       stencilState = {
         ...stencilState,

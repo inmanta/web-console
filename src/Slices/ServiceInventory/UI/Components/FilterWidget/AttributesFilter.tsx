@@ -200,7 +200,9 @@ function getRuleForAttributeSet(
   attributeSet: ServiceInstanceParams.AttributeSet | undefined,
 ): AttributeRule | undefined {
   if (typeof attributeSet === "undefined") return undefined;
+
   if (empty.includes(attributeSet)) return AttributeRule.Empty;
+
   if (notEmpty.includes(attributeSet)) return AttributeRule.NotEmpty;
 
   return undefined;

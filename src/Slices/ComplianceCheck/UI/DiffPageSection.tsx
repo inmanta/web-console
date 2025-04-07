@@ -53,7 +53,9 @@ const DiffView: React.FC<{
 
       return;
     }
+
     if (todo <= 0 && !RemoteData.isSuccess(reportData)) return;
+
     refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todo, id]); //keeping refetch in the dependency creates issue with call on every update of the data, but we want to align it with the continuous call

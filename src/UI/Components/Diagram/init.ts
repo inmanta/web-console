@@ -103,6 +103,7 @@ export function diagramInit(
   if (canvasRef.current) {
     canvasRef.current.appendChild(scroller.el);
   }
+
   scroller.render().center();
   scroller.centerContent();
 
@@ -130,6 +131,7 @@ export function diagramInit(
           if (stencilName) {
             toggleDisabledStencil(stencilName, true);
           }
+
           cell.set("items", copy.items); // converted cells lacks "items" attribute
         }
       });

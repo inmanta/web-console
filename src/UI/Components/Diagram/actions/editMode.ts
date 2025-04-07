@@ -134,6 +134,7 @@ export function appendInstance(
             );
           }
         }
+
         //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
         //as the fact that we have that cell as interServiceRelation tells us that either that or its embedded entities has connection
         if (!isConnected) {
@@ -162,6 +163,7 @@ export function appendInstance(
             }
           });
         }
+
         connectEntities(
           graph,
           instanceAsTable,

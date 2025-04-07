@@ -89,6 +89,7 @@ export const ResourceHistoryView: React.FC<Props> = ({
                 />
               );
             }
+
             const tablePresenter = new ResourceHistoryTablePresenter(
               new MomentDatePresenter(),
             );

@@ -16,6 +16,7 @@ export const serializeList = (ranges: IntRange[]): string[] =>
 
 const parse = (candidate: unknown): IntRange | undefined => {
   if (typeof candidate !== "string") return undefined;
+
   const [operator, valueString] = candidate.split("__");
 
   if (!isValidOperator(operator) || !isValidNumber(valueString))

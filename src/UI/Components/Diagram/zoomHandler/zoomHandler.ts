@@ -192,6 +192,7 @@ export class ZoomHandlerService {
     if (!event.target) {
       return;
     }
+
     const slider: HTMLInputElement = event.target;
 
     this.updateSliderProgressBar(slider);

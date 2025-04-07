@@ -49,11 +49,13 @@ export const LookBackSlider: React.FC<Props> = ({
     } else {
       if (inputValue > instanceVersion - 1) {
         newValue = instanceVersion - 1;
+
         if (setLocalInputValue) {
           setLocalInputValue(instanceVersion - 1);
         }
       } else if (inputValue < 1) {
         newValue = 1;
+
         if (setLocalInputValue) {
           setLocalInputValue(1);
         }
@@ -61,6 +63,7 @@ export const LookBackSlider: React.FC<Props> = ({
         newValue = inputValue;
       }
     }
+
     setInputValueContinuous(newValue);
     setValueContinuous(newValue);
   };

@@ -34,6 +34,7 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
     if (!notification.read) {
       onUpdate({ read: true });
     }
+
     if (detailsLink) {
       navigate(detailsLink.kind, { id: detailsLink.params.id });
     }

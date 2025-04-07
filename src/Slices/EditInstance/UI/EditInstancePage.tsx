@@ -34,6 +34,7 @@ export const EditInstancePage: React.FC<{
       </Wrapper>
     );
   }
+
   if (isSuccess) {
     const { service_identity_attribute_value } = data;
     const identifier = service_identity_attribute_value

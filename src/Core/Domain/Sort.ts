@@ -19,6 +19,7 @@ export const parse = <Key extends string = string>(
   value: unknown,
 ): Sort<Key> | undefined => {
   if (typeof value !== "string") return undefined;
+
   const [name, order] = value.split(".");
 
   if (!orderIsValid(order)) return undefined;

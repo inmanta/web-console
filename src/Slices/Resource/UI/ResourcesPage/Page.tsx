@@ -66,6 +66,7 @@ export const Page: React.FC = () => {
 
   useEffect(() => {
     if (RemoteData.isLoading(data)) return;
+
     setStaleData(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(data)]);

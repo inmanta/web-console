@@ -31,6 +31,7 @@ export function handleUrlState<Data>(
 
   const setValue = (newValue: Data) => {
     if (areEqual(newValue, currentValue)) return;
+
     const serialized = getSerializedValue(newValue);
     const newSearch = searchHelper.stringify({
       ...parsedSearch,

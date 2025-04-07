@@ -16,9 +16,11 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
         apiName: "unpause_on_resume",
       },
     ];
+
     if (!isHalted) {
       this.columnHeads.pop();
     }
+
     this.numberOfColumns = this.columnHeads.length + 3;
   }
 

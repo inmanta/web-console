@@ -434,6 +434,7 @@ describe("Scenario 4 Desired State", () => {
         expect($expandableRow.eq(0), "first-row").to.have.text(
           "This resource has not been modified.",
         );
+
         if (isIso) {
           expect($expandableRow.eq(1), "second-row").to.contain(
             "next_version-3+4",

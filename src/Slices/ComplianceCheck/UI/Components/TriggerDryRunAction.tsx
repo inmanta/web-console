@@ -27,6 +27,7 @@ export const TriggerDryRunAction: React.FC<Props> = ({
     if (Maybe.isSome(error)) {
       setErrorMessage(error.value);
     }
+
     updateList();
   };
 

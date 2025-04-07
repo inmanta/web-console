@@ -27,6 +27,7 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
       />
     </Wrapper>;
   }
+
   if (isSuccess) {
     return <Dependant service={data} />;
   }

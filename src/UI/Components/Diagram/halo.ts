@@ -65,6 +65,7 @@ const createHalo = (
         toggleLooseElement(paper.findViewByModel(element), EventActionEnum.ADD);
         didElementChange = true;
       }
+
       if (element.id === cellView.model.get("embeddedTo")) {
         didElementChange = true;
       }
@@ -83,6 +84,7 @@ const createHalo = (
             elementAsService.id,
           );
         }
+
         didElementChange = didElementChange || wasThereRelationToRemove;
       }
 
@@ -125,6 +127,7 @@ const createHalo = (
       if (!isAllowed) {
         return;
       }
+
       //if shape isn't found then it means it's not connected, so available to highlight
       const unconnectedShape = connectedElements.find((connectedElement) => {
         return connectedElement.cid === element.model.cid;
@@ -167,6 +170,7 @@ const createHalo = (
       if (highlighter) {
         highlighter.remove();
       }
+
       const looseElementHighlight = dia.HighlighterView.get(
         shape,
         "loose_element",

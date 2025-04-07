@@ -64,6 +64,7 @@ export const formatMetricsToStacked = (
             object === null ? null : Math.round(object[key]),
           );
         });
+
         if (max < tempMax) {
           max = tempMax;
         }
@@ -114,6 +115,7 @@ export const interpolateMetrics = (metrics: (number | null)[]) => {
     if (nextNumber === -1) {
       newMetric.push(null);
     }
+
     //if null value is on the start or end of metrics then there is no value to interpolate (from or to), then push null
     if (value === null && (index === 0 || index === metrics.length - 1)) {
       newMetric.push(null);
@@ -123,6 +125,7 @@ export const interpolateMetrics = (metrics: (number | null)[]) => {
       //if null and there is a value to interpolate from then look for next non-nullish value
     } else if (value === null && newMetric[index - 1] !== null) {
       nextNumber = metrics.slice(index).findIndex((value) => value !== null);
+
       //if no number is found then push null
       if (nextNumber === -1) {
         newMetric.push(null);

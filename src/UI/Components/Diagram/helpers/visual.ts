@@ -38,6 +38,7 @@ export const updateLabelPosition = (
     viewCoordinates = linkView.sourceView.model.position();
     anchorCoordinates = linkView.sourcePoint;
   }
+
   if (viewCoordinates && anchorCoordinates) {
     if (viewCoordinates.x !== anchorCoordinates.x) {
       textAnchor = "start";
@@ -47,6 +48,7 @@ export const updateLabelPosition = (
       tx = -15;
     }
   }
+
   const isTargetBelow =
     linkView.getEndAnchor("target").y < linkView.getEndAnchor("source").y;
 
@@ -91,10 +93,12 @@ export const toggleLooseElement = (
       if (highlighter) {
         highlighter.remove();
       }
+
       break;
     default:
       break;
   }
+
   dispatchLooseElement(kind, cellView.model.id);
 };
 

@@ -165,12 +165,18 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
 
 function format(value: unknown): string {
   if (typeof value === "string") return value;
+
   if (typeof value === "number") return value.toString();
+
   if (typeof value === "boolean") return value ? "true" : "false";
+
   if (typeof value === "undefined") return "";
+
   if (typeof value === "object") {
     if (value === null) return "null";
+
     if (Object.keys(value).length === 0) return "{}";
+
     if (Array.isArray(value)) return value.join(", ");
   }
 

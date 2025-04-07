@@ -49,6 +49,7 @@ export const paginationServer = setupServer(
     if (startParam === "fake-param") {
       return HttpResponse.json(firstPage);
     }
+
     if (endParam === "fake-param") {
       return HttpResponse.json(secondPage);
     }
@@ -79,6 +80,7 @@ export const filterServer = setupServer(
     if (stateParam === "creating") {
       return HttpResponse.json({ ...firstPage, data: [ServiceInstance.a] });
     }
+
     const idParam = url.searchParams.get("filter.id_or_service_identity");
 
     if (idParam === ServiceInstance.c.id) {

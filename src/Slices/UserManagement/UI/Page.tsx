@@ -35,6 +35,7 @@ export const UserManagementPage: React.FC = () => {
   };
 
   if (isLoading) return <LoadingView ariaLabel="UserManagement-Loading" />;
+
   if (isError)
     return (
       <ErrorView

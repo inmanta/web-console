@@ -50,6 +50,7 @@ export function OneTime<Kind extends Query.Kind>(
       ) {
         stateHelper.set(RemoteData.loading(), query);
       }
+
       update(query, url);
     }, [url]);
 

@@ -104,6 +104,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       if (!item.name) {
         return;
       }
+
       const nameObject = {
         id: item.name,
         label: item.name,
@@ -179,6 +180,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           }
         }
       }
+
       values.push(value);
     });
 

@@ -55,6 +55,7 @@ export const InlineInput: React.FC<Props> = ({
     } else {
       formattedValue = value;
     }
+
     input = (
       <TextListFormInput
         aria-label="new-attribute-input"

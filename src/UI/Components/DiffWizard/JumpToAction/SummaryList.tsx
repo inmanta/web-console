@@ -16,7 +16,9 @@ interface Props {
 export const SummaryList: React.FC<Props> = ({ items, refs }) => {
   const onSelect = (itemId: string) => {
     if (itemId === undefined) return;
+
     if (refs.current[itemId] === undefined) return;
+
     refs.current[itemId].scrollIntoView({
       behavior: "smooth",
     });

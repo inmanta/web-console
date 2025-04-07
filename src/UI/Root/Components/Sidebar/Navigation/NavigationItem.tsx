@@ -32,9 +32,11 @@ export const NavigationItem: React.FC<Link> = ({
   if (locked) {
     return <LockedItem label={label} key={id} />;
   }
+
   if (external) {
     return <ExternalItem label={label} url={url} key={id} />;
   }
+
   if (statusIndication) {
     return <CompileReportItem label={label} url={url} key={id} />;
   }

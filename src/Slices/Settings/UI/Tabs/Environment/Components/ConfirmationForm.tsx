@@ -72,6 +72,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
       if (type === "delete") {
         redirectToHome();
       }
+
       closeModal();
     } else {
       setIsBusy(false);
@@ -83,7 +84,9 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
     <Form
       onSubmit={(event) => {
         event.preventDefault();
+
         if (validated !== "success" || isBusy) return;
+
         onConfirm(type);
       }}
     >

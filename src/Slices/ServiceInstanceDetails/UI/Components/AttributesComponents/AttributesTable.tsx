@@ -159,6 +159,7 @@ export const AttributesTable: React.FC<Props> = ({
       default:
         break;
     }
+
     setIsToggleOpen(false);
   };
 

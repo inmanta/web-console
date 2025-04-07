@@ -176,6 +176,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
     if (!originalAttributes) {
       return attributesAfterChanges;
     }
+
     // Make sure that we include values of nested embedded entities when checking the difference if only a part of them has changed
     // Otherwise a partial update might not be valid or might remove previously set nested attributes
     const richDiff = cloneDeep(originalAttributes);
@@ -206,6 +207,7 @@ export function toOptionalBoolean(
   if (typeof value === "boolean") {
     return value;
   }
+
   if (value?.toLocaleLowerCase() === "true") {
     return true;
   } else if (value?.toLocaleLowerCase() === "false") {

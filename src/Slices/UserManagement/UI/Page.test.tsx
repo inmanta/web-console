@@ -200,6 +200,7 @@ describe("UserManagementPage", () => {
             },
           );
         }
+
         data.push({ username: reqBody?.username, auth_method: "database" });
 
         return HttpResponse.json({

@@ -13,6 +13,7 @@ export class DeleteEnvironmentCommandManager extends CommandManagerWithoutEnv<"D
       );
 
       if (Maybe.isSome(error)) return error;
+
       await this.updater.update({
         kind: "GetEnvironments",
         details: true,

@@ -26,6 +26,7 @@ export class QueryResolverImpl implements QueryResolver {
     if (typeof manager !== "undefined") {
       return manager as OneTimeQueryManager<typeof query.kind>;
     }
+
     throw new Error(`Can't find OneTimeQueryManager for query ${query.kind}`);
   }
 
@@ -53,6 +54,7 @@ export class QueryResolverImpl implements QueryResolver {
     if (typeof manager !== "undefined") {
       return manager as ContinuousQueryManager<typeof query.kind>;
     }
+
     throw new Error(
       `Can't find ContinuousQueryManager for query ${query.kind}`,
     );
@@ -74,6 +76,7 @@ export class QueryResolverImpl implements QueryResolver {
     if (typeof manager !== "undefined") {
       return manager as ReadOnlyQueryManager<typeof query.kind>;
     }
+
     throw new Error(`Can't find ReadOnlyQueryManager for query ${query.kind}`);
   }
 

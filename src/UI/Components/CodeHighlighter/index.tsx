@@ -169,6 +169,7 @@ export const CodeHighlighter: React.FC<Props> = ({
       } else {
         setHeight("90vh");
       }
+
       scrollRowIntoView(codeBlockRef, { block: "start", behavior: "smooth" });
     } else {
       setHeight(minHeight);

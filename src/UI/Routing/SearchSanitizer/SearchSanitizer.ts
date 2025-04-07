@@ -47,6 +47,7 @@ export class SearchSanitizer {
 
     if (typeof state === "undefined")
       return this.searchHelper.stringify(sanitizedSearch);
+
     if (!isObject(state)) {
       return this.searchHelper.stringify(keepKeys(["env"], sanitizedSearch));
     }
@@ -66,9 +67,11 @@ export class SearchSanitizer {
 
     if (getKeysExcluding(this.getValidKeys(routeKind), parsedSearch).length > 0)
       return false;
+
     const { state } = parsedSearch;
 
     if (typeof state === "undefined") return true;
+
     if (!isObject(state)) return false;
 
     return this.pageStateSanitizer.isSanitized(routeKind, state);

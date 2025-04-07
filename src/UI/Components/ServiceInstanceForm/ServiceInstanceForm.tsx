@@ -117,6 +117,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       if (!isDirty) {
         setIsDirty(true);
       }
+
       if (multi) {
         setFormState((prev) => {
           const clone = { ...prev };
@@ -250,6 +251,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
             if (isDirty) {
               setIsDirty(false);
             }
+
             setShouldCancel(true);
           }}
         >

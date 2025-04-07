@@ -12,7 +12,9 @@ export class PrimaryBaseUrlManager implements BaseUrlManager {
     const { pathname, anchor } = this;
 
     if (!pathname.includes(anchor)) return anchor;
+
     if (pathname.split(anchor).length > 2) return anchor;
+
     const [pre] = pathname.split(anchor);
 
     return `${pre}${anchor}`;

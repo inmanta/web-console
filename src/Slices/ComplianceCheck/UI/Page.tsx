@@ -44,6 +44,7 @@ export const View: React.FC<Props> = ({ version }) => {
    */
   useEffect(() => {
     if (!RemoteData.isFailed(data)) return;
+
     setErrorMessage(data.value);
   }, [data]);
 
@@ -66,6 +67,7 @@ export const View: React.FC<Props> = ({ version }) => {
    */
   useEffect(() => {
     if (!RemoteData.isSuccess(data) || data.value.length <= 0) return;
+
     if (Maybe.isSome(selectedReport)) {
       const fetchedSelectedReport = data.value.find(
         (report) => report.id === selectedReport.value.id,
@@ -86,9 +88,11 @@ export const View: React.FC<Props> = ({ version }) => {
 
   useEffect(() => {
     if (!updatedList) return;
+
     if (RemoteData.isSuccess(data)) {
       setSelectedReport(firstReport.current);
     }
+
     setUpdatedList(false);
   }, [updatedList, data]);
 

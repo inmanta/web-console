@@ -28,6 +28,7 @@ function getOutsidePoint(
   if (angle) {
     ref.rotate(center, angle);
   }
+
   const point = new g.Point(bbox.x, ref.y);
 
   if (point.equals(anchor)) {
@@ -36,6 +37,7 @@ function getOutsidePoint(
   }
 
   point.move(ref, ref.x < center.x ? padding : -bbox.width - padding);
+
   if (angle) {
     point.rotate(center, -angle);
   }

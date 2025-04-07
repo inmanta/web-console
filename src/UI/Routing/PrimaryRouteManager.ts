@@ -121,9 +121,11 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     if (typeof routeMatch === "undefined") {
       return getUrl("Home", undefined);
     }
+
     const { route } = routeMatch;
 
     if (!routeHasParams(route)) return pathname;
+
     const parent = getParentWithoutParams(route);
 
     if (typeof parent === "undefined") return getUrl("Home", undefined);
@@ -167,10 +169,12 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
 
   function getUrlForApiUri(uri: string): string | undefined {
     if (uri.length <= 0) return undefined;
+
     const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
 
     if (match === null) return undefined;
+
     if (match.params.id === undefined) return undefined;
 
     return getUrl("CompileDetails", { id: match.params.id });
@@ -180,11 +184,14 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     uri: string,
   ): RouteKindWithId<"CompileDetails"> | undefined {
     if (uri.length <= 0) return undefined;
+
     const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
 
     if (match === null) return undefined;
+
     if (match.params.id === undefined) return undefined;
+
     const params = { id: match.params.id };
 
     return {
@@ -203,6 +210,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     );
 
     if (typeof routeWithMatch === "undefined") return undefined;
+
     const [route, match] = routeWithMatch;
 
     return {
@@ -229,6 +237,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     const routeMatch = getRouteMatchFromUrl(url);
 
     if (typeof routeMatch === "undefined") return [];
+
     const { route, params } = routeMatch;
     const lineage = getLineageFromRoute(route);
 

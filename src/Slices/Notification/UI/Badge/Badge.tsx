@@ -49,6 +49,7 @@ const View: React.FC<Props> = ({ response, onClick }) => {
 
   useEffect(() => {
     if (!response.isError) return;
+
     setError(response.error.message);
   }, [response]);
 
@@ -106,6 +107,7 @@ const getVariantFromNotifications = (
   if (notifications.some(isUnreadError)) {
     return NotificationBadgeVariant.attention;
   }
+
   if (notifications.some(isUnread)) return NotificationBadgeVariant.unread;
 
   return NotificationBadgeVariant.read;

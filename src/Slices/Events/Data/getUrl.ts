@@ -33,6 +33,7 @@ type Filter = NonNullable<Query.SubQuery<"GetInstanceEvents">["filter"]>;
 
 const filterToParam = (filter: Filter, timezone: string) => {
   if (typeof filter === "undefined") return {};
+
   const { source, destination, version, event_type, timestamp } = filter;
   const serializedTimestampOperatorFilters = timestamp?.map(
     (timestampWithOperator) =>

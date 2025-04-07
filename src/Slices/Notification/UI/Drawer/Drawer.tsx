@@ -113,6 +113,7 @@ const View: React.FC<ViewProps> = ({
 
   const onClearAll = () => {
     if (!response.isSuccess) return;
+
     getOnUpdate(response.data.data.map((notification) => notification.id))({
       read: true,
       cleared: true,
@@ -121,6 +122,7 @@ const View: React.FC<ViewProps> = ({
 
   const onReadAll = () => {
     if (!response.isSuccess) return;
+
     getOnUpdate(
       response.data.data
         .filter((notification) => !notification.read)

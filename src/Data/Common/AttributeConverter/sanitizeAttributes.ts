@@ -32,6 +32,7 @@ export function sanitizeAttributes(
         if (formState[field.name] == null) {
           return;
         }
+
         sanitized[field.name] = sanitizeAttributes(
           field.fields,
           formState[field.name] as InstanceAttributeModel,
@@ -49,6 +50,7 @@ export function sanitizeAttributes(
         const list = formState[field.name];
 
         if (!Array.isArray(list)) return;
+
         if (field.max && list.length > field.max) {
           sanitized[field.name] = list
             .slice(0, Number(field.max) + 1)

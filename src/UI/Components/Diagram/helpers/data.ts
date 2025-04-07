@@ -67,6 +67,7 @@ export const shapesDataTransform = (
             areEmbeddedEdited =
               !parentInstance.action && updatedInstance.action !== null;
           }
+
           if (
             updatedInstance.action !== "delete" &&
             updatedInstance.attributes
@@ -129,6 +130,7 @@ export const shapesDataTransform = (
         },
       ];
     }
+
     delete parentInstance.attributes;
   }
 
@@ -310,6 +312,7 @@ export const updateServiceOrderItems = (
       } else {
         copiedInstances.delete(String(cell.id));
       }
+
       break;
   }
 

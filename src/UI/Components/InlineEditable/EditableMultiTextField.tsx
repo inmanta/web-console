@@ -46,6 +46,7 @@ export const EditableMultiTextField: React.FC<Props> = ({
   };
   const onKeyDown = (event) => {
     if (event.key && event.key !== "Enter") return;
+
     onSubmitRequest(fieldValues);
   };
   const onEditClick = () => {

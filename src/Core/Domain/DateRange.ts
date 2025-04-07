@@ -16,6 +16,7 @@ export const serializeList = (ranges: DateRange[]): string[] =>
 
 const parse = (candidate: unknown): DateRange | undefined => {
   if (typeof candidate !== "string") return undefined;
+
   const [operator, dateString] = candidate.split("__");
 
   if (!isValidOperator(operator) || !isValidDate(dateString)) return undefined;

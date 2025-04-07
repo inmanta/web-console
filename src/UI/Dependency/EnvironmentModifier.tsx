@@ -62,6 +62,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
 
     if (environmentDetails === null || environmentSettings === null)
       return false;
+
     if (
       environmentDetails.settings[settingName] !== undefined &&
       environmentDetails.settings[settingName] !== null

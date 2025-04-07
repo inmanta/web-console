@@ -27,6 +27,7 @@ export const Page: React.FC = () => {
       />
     );
   }
+
   if (isSuccess) {
     component =
       data.length <= 0 ? (

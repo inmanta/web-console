@@ -19,7 +19,9 @@ export const Tab: React.FC = () => {
   const getClientTypeSelector =
     (clientType: ClientType) => (selected: boolean) => {
       if (selected && clientTypes.includes(clientType)) return;
+
       if (!selected && !clientTypes.includes(clientType)) return;
+
       setClientTypes(toggleValueInList(clientType, clientTypes));
     };
 

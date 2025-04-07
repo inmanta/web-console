@@ -79,6 +79,7 @@ test("GIVEN BaseApiHelper WHEN response json contains large integers THEN intege
   const response = await apiHelper.get<{ foo: number }>("", "");
 
   if (response.kind === "Left") return;
+
   expect(response.value.foo).toEqual(9223372036854775807n);
 });
 
@@ -89,5 +90,6 @@ test("GIVEN BaseApiHelper with getWithHTTPCode WHEN request fails with 409 THEN 
   const response = await apiHelper.getWithHTTPCode<{ foo: number }>("", "");
 
   if (response.kind === "Right") return;
+
   expect(response.value.status).toEqual(409);
 });

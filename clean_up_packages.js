@@ -7,6 +7,7 @@ function getLinkToNextPage(headerObj) {
   if (!headerObj.has("link")) {
     return null;
   }
+
   const linkHeader = headerObj.get("link");
   const splittedLinkHeader = linkHeader.trim().split(",");
 
@@ -78,7 +79,9 @@ async function getOldDevVersions() {
       // Don't go further back in history to limit the amount of requests.
       return result;
     }
+
     result = result.concat(oldDevVersions);
+
     if (result.length > 5) {
       // Return as soon as we have at least five packages to not execute too many requests at once.
       return result;
@@ -107,10 +110,12 @@ getOldDevVersions().then(
 
       return;
     }
+
     // Make sure we're not starting too many requests at once
     if (oldDevVersions.length > 5) {
       oldDevVersions = oldDevVersions.slice(0, 5);
     }
+
     oldDevVersions.map((oldDevVersion) => {
       const idToDelete = oldDevVersion.id;
 

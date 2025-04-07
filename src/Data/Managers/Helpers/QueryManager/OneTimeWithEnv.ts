@@ -60,6 +60,7 @@ export function OneTimeWithEnv<Kind extends Query.Kind>(
       ) {
         stateHelper.set(RemoteData.loading(), query, environment);
       }
+
       // If the environment changed, use the url derived from the query
       // Otherwise the url has changed, use it to not lose e.g. paging state
       const urlToUse =

@@ -119,7 +119,7 @@ export default [
         {
           blankLine: "always",
           prev: "*",
-          next: ["enum", "interface", "type", "return", "function", "class"],
+          next: ["enum", "interface", "type", "return", "function", "class", "if", "for", "while", "do", "switch", "try"],
         },
         { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
         {
@@ -127,6 +127,8 @@ export default [
           prev: ["const", "let", "var"],
           next: ["const", "let", "var"],
         },
+        { blankLine: "always", prev: ["if", "for", "while", "do", "switch", "try"], next: "*" },
+        { blankLine: "always", prev: "*", next: ["if", "for", "while", "do", "switch", "try"] },
       ],
 
       "@stylistic/lines-around-comment": [

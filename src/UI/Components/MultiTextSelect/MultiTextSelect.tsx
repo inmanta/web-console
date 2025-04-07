@@ -153,9 +153,11 @@ export const MultiTextSelect: React.FC<Props> = ({
         } else if (isOpen && focusedItem.value !== "no results") {
           onSelect(focusedItem.value as string);
         }
+
         if (inputValue && checkIfOptionMatchInput(options, inputValue)) {
           onSelect(inputValue);
         }
+
         break;
       case "Tab":
       case "Escape":

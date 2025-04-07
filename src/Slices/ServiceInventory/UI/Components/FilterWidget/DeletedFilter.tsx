@@ -27,6 +27,7 @@ export const DeletedFilter: React.FC<Props> = ({
     } else {
       update(selection);
     }
+
     setFilterOpen(false);
   };
 

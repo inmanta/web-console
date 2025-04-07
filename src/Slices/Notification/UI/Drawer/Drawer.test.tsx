@@ -89,6 +89,7 @@ const server = setupServer(
       if (req["read"] !== undefined) {
         item.read = req["read"];
       }
+
       if (req["cleared"]) {
         response = response.filter((item) => item.id !== id);
       }
