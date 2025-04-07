@@ -1,10 +1,7 @@
 import React from "react";
+import { useGetDesiredStateResourceDetails } from "@/Data/Managers/V2/DesiredState";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { Details } from "./Details";
-import {
-  useGetDesiredStateResourceDetails,
-  useGetVersionResources,
-} from "@/Data/Managers/V2/DesiredState";
 
 interface Props {
   version: string;

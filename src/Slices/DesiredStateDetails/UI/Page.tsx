@@ -6,6 +6,7 @@ import {
   useUrlStateWithSort,
 } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { useGetVersionResources } from "@/Data/Managers/V2/DesiredState";
 import {
   EmptyView,
   PageContainer,
@@ -18,7 +19,6 @@ import { words } from "@/UI/words";
 import { Controls } from "./Controls";
 import { VersionResourceTable } from "./VersionResourceTable";
 import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
-import { useGetVersionResources } from "@/Data/Managers/V2/DesiredState";
 
 export const Provider: React.FC = () => {
   const { version } = useRouteParams<"DesiredStateDetails">();
@@ -101,5 +101,6 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
       </PageContainer>
     );
   }
+
   return <LoadingView ariaLabel="VersionResourcesTable-Loading" />;
 };
