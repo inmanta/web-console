@@ -4,6 +4,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionToggle,
+  Button,
 } from "@patternfly/react-core";
 import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
@@ -11,6 +12,7 @@ import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
+import { useNavigateTo } from "@/UI/Routing";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { TabContentWrapper } from ".";
 
@@ -48,6 +50,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
 }) => {
   const { logsQuery, instance } = useContext(InstanceDetailsContext);
   const [expanded, setExpanded] = useState(0);
+  const navigateTo = useNavigateTo();
 
   const isLatest = selectedVersion === String(instance.version);
   let selectedSet: InstanceAttributeModel | void;
@@ -88,9 +91,29 @@ export const DocumentationTabContent: React.FC<Props> = ({
     }
   };
 
+  const MarkdownPreviewerButton = () => {
+    return (
+      <div style={{ marginBottom: "1rem" }}>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            navigateTo("MarkdownPreviewer", {
+              service: instance.service_entity,
+              instance: instance.id,
+              instanceId: instance.id,
+            });
+          }}
+        >
+          Open in Previewer
+        </Button>
+      </div>
+    );
+  };
+
   if (sections.length === 1) {
     return (
       <TabContentWrapper id="documentation">
+        <MarkdownPreviewerButton />
         <MarkdownCard
           attributeValue={sections[0].value}
           web_title={sections[0].title}

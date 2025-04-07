@@ -21,6 +21,7 @@ import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
 import { ServiceDetails } from "@/Slices/ServiceDetails";
 import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
+import { MarkdownPreviewer } from "@/Slices/MarkdownPreviewer";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
@@ -77,6 +78,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     InstanceComposerEditor: InstanceComposerEditor.route(baseUrl),
     InstanceComposerViewer: InstanceComposerViewer.route(baseUrl),
     Inventory: ServiceInventory.route(baseUrl),
+    MarkdownPreviewer: MarkdownPreviewer.route(baseUrl),
     ServiceDetails: ServiceDetails.route(baseUrl),
     Orders: Orders.route(baseUrl),
     OrderDetails: OrderDetails.route(baseUrl),

@@ -34,6 +34,7 @@ import { ServiceCatalogPage } from "@S/ServiceCatalog/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
+import { MarkdownPreviewerPage } from "@/Slices/MarkdownPreviewer/UI";
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;
@@ -171,6 +172,10 @@ export class PrimaryPageManager implements PageManager {
       ComplianceCheck: {
         ...this.routeDictionary.ComplianceCheck,
         element: <ComplianceCheckPage />,
+      },
+      MarkdownPreviewer: {
+        ...this.routeDictionary.MarkdownPreviewer,
+        element: <MarkdownPreviewerPage />,
       },
     };
   }

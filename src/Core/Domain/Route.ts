@@ -27,6 +27,7 @@ export const kinds = [
   "Orders",
   "OrderDetails",
   "ServiceDetails",
+  "MarkdownPreviewer",
 
   /**
    * Resource Manager
@@ -91,6 +92,7 @@ interface RouteParamKeysManifest {
   InstanceComposerEditor: "service" | "instance";
   InstanceComposerViewer: "service" | "instance";
   Inventory: "service";
+  MarkdownPreviewer: "service" | "instance" | "instanceId";
   ResourceDetails: "resourceId";
   ResourceHistory: "resourceId";
   ResourceLogs: "resourceId";
@@ -100,8 +102,8 @@ interface RouteParamKeysManifest {
 
 export type RouteParams<K extends RouteKind> =
   K extends keyof RouteParamKeysManifest
-    ? Record<RouteParamKeysManifest[K], string>
-    : undefined;
+  ? Record<RouteParamKeysManifest[K], string>
+  : undefined;
 
 export interface RouteMatch {
   params: RouteParams<RouteKind>;
