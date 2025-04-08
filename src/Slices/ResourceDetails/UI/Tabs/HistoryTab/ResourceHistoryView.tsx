@@ -11,12 +11,7 @@ import { Details } from "@/Core/Domain/Resource/Resource";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGetResourceHistory } from "@/Data/Managers/V2/Resource/GetResourceHistory/useGetResourceHistory";
-import {
-  EmptyView,
-  ErrorView,
-  LoadingView,
-  PaginationWidget,
-} from "@/UI/Components";
+import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { ResourceHistoryTable } from "./ResourceHistoryTable";
@@ -28,10 +23,7 @@ interface Props {
   details: Details;
 }
 
-export const ResourceHistoryView: React.FC<Props> = ({
-  resourceId,
-  details,
-}) => {
+export const ResourceHistoryView: React.FC<Props> = ({ resourceId, details }) => {
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "ResourceDetails",
   });
@@ -56,18 +48,10 @@ export const ResourceHistoryView: React.FC<Props> = ({
   }, [sort.order]);
 
   if (isError) {
-    return (
-      <ErrorView
-        message={error.message}
-        retry={refetch}
-        ariaLabel="ResourceHistory-Error"
-      />
-    );
+    return <ErrorView message={error.message} retry={refetch} ariaLabel="ResourceHistory-Error" />;
   }
   if (isSuccess) {
-    const tablePresenter = new ResourceHistoryTablePresenter(
-      new MomentDatePresenter(),
-    );
+    const tablePresenter = new ResourceHistoryTablePresenter(new MomentDatePresenter());
     const rows = tablePresenter.createRows(data.data);
 
     return (

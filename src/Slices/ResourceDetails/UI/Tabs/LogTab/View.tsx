@@ -1,18 +1,9 @@
 import React, { useEffect } from "react";
 import { toggleValueInList } from "@/Core";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGetResourceLogs } from "@/Data/Managers/V2/Resource";
-import {
-  EmptyView,
-  ErrorView,
-  LoadingView,
-  PaginationWidget,
-} from "@/UI/Components";
+import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
 import { Controls } from "./Controls";
@@ -72,13 +63,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
   }, [sort.order]);
 
   if (isError) {
-    return (
-      <ErrorView
-        message={error.message}
-        ariaLabel="ResourceLogs-Error"
-        retry={refetch}
-      />
-    );
+    return <ErrorView message={error.message} ariaLabel="ResourceLogs-Error" retry={refetch} />;
   }
 
   if (isSuccess) {

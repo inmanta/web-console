@@ -4,12 +4,7 @@ import { ListIcon, ModuleIcon } from "@patternfly/react-icons";
 
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { JsonFormatter, XmlFormatter } from "@/Data";
-import {
-  AttributeClassifier,
-  AttributeList,
-  IconTabs,
-  TabDescriptor,
-} from "@/UI/Components";
+import { AttributeClassifier, AttributeList, IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 export enum TabKey {
@@ -37,12 +32,7 @@ interface Props {
  *
  * @returns {React.FC<Props>} A React Component displaying the tabs of the history tab
  */
-export const Tabs: React.FC<Props> = ({
-  attributes,
-  requires,
-  activeTab,
-  setActiveTab,
-}) => {
+export const Tabs: React.FC<Props> = ({ attributes, requires, activeTab, setActiveTab }) => {
   return (
     <IconTabs
       activeTab={activeTab}
@@ -62,9 +52,7 @@ export const Tabs: React.FC<Props> = ({
  *
  * @returns {TabDescriptor<TabKey>} A TabDescriptor
  */
-const attributesTab = (
-  attributes: Record<string, unknown>,
-): TabDescriptor<TabKey> => ({
+const attributesTab = (attributes: Record<string, unknown>): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("resources.history.tabs.attributes"),
   icon: <ListIcon />,
@@ -88,13 +76,8 @@ const requiresTab = (requires: string[]): TabDescriptor<TabKey> => ({
  *
  * @returns {React.FC<{ attributes: Record<string, unknown> }>} A React Component displaying the attributes of the resource
  */
-const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({
-  attributes,
-}) => {
-  const classifier = new AttributeClassifier(
-    new JsonFormatter(),
-    new XmlFormatter(),
-  );
+const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({ attributes }) => {
+  const classifier = new AttributeClassifier(new JsonFormatter(), new XmlFormatter());
   const classifiedAttributes = classifier.classify(attributes);
 
   return (
@@ -132,9 +115,7 @@ const RequiresTab: React.FC<{ requires: string[] }> = ({ requires }) => (
         ))
       ) : (
         <Tr key="empty-row">
-          <Td key="empty-row-data">
-            {words("resources.requires.empty.message")}
-          </Td>
+          <Td key="empty-row-data">{words("resources.requires.empty.message")}</Td>
         </Tr>
       )}
     </Tbody>
