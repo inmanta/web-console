@@ -1,25 +1,12 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
-import { FlatCompat } from "@eslint/eslintrc";
-import js from "@eslint/js";
+import { fixupPluginRules } from "@eslint/compat";
 import stylisticTs from "@stylistic/eslint-plugin-ts";
 import tsParser from "@typescript-eslint/parser";
-import eslintConfigPrettier from "eslint-config-prettier";
 import _import from "eslint-plugin-import";
 import jestDom from "eslint-plugin-jest-dom";
 import eslintPluginReact from "eslint-plugin-react";
 import eslintPluginReactHooks from "eslint-plugin-react-hooks";
 import testingLibrary from "eslint-plugin-testing-library";
 import tseslint from "typescript-eslint";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
 
 export default [
   {
@@ -29,8 +16,6 @@ export default [
 
   // Apply recommended configurations
   ...tseslint.configs.recommended,
-  ...fixupConfigRules(compat.extends("plugin:prettier/recommended")),
-  eslintConfigPrettier,
   {
     plugins: {
       "jest-dom": fixupPluginRules(jestDom),
@@ -55,7 +40,7 @@ export default [
 
     settings: {
       react: {
-        version: "detect", // Tells eslint-plugin-react to automatically detect the version of React to use
+        version: "detect",
       },
 
       "import/parsers": {
@@ -64,9 +49,8 @@ export default [
 
       "import/resolver": {
         typescript: {
-          alwaysTryTypes: true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+          alwaysTryTypes: true,
         },
-
         webpack: "webpack",
       },
     },
@@ -91,10 +75,7 @@ export default [
         { allowShortCircuit: true, allowTernary: true },
       ],
 
-      "@typescript-eslint/no-empty-function": [
-        "error",
-        { allow: ["arrowFunctions"] },
-      ],
+      "@typescript-eslint/no-empty-function": ["error", { allow: ["arrowFunctions"] }],
 
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
@@ -112,7 +93,6 @@ export default [
             "object",
             "type",
           ],
-
           pathGroups: [
             {
               pattern: "@/**",
@@ -124,32 +104,15 @@ export default [
               position: "before",
             },
           ],
-
           pathGroupsExcludedImportTypes: ["react"],
-
           alphabetize: {
             order: "asc",
           },
         },
       ],
 
-      "@stylistic/padding-line-between-statements": [
-        "warn",
-        {
-          blankLine: "always",
-          prev: "*",
-          next: ["enum", "interface", "type", "return"],
-        },
-        { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
-        {
-          blankLine: "any",
-          prev: ["const", "let", "var"],
-          next: ["const", "let", "var"],
-        },
-      ],
-
       "@stylistic/lines-around-comment": [
-        "warn",
+        "error",
         {
           beforeBlockComment: true,
           allowEnumStart: true,
@@ -161,19 +124,31 @@ export default [
           allowArrayStart: true,
         },
       ],
+
+      "@stylistic/semi": ["warn", "always"],
+      "@stylistic/quotes": ["warn", "double", { avoidEscape: true }],
+      "@stylistic/space-before-blocks": ["warn", "always"],
+      "@stylistic/space-infix-ops": "warn",
+      "@stylistic/keyword-spacing": "warn",
+      "@stylistic/comma-spacing": "warn",
+      "@stylistic/func-call-spacing": "warn",
     },
   },
 
   {
     files: ["**/*.tsx"],
-
     rules: {
       "react/prop-types": "off",
     },
   },
   {
+    files: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "cypress/**/*"],
+    rules: {
+      "@stylistic/quotes": ["warn", "double", { avoidEscape: true }],
+    },
+  },
+  {
     files: ["**/*webpack*", "**/*jest.polyfills*", "**/*cypress.config*"],
-
     rules: {
       "@typescript-eslint/no-var-requires": "off",
       "@typescript-eslint/no-require-imports": "off",
@@ -181,7 +156,6 @@ export default [
   },
   {
     files: ["cypress/**/*"],
-
     rules: {
       "testing-library/await-async-utils": "off",
     },

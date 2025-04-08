@@ -16,13 +16,9 @@ import { RelationCounterForCell } from "../interfaces";
 export const ErrorsContainer: React.FC = () => {
   const { isDirty, interServiceRelationsOnCanvas } = useContext(CanvasContext);
 
-  const interServiceRelationsThatAreMissing = Array.from(
-    interServiceRelationsOnCanvas,
-  ).filter(
+  const interServiceRelationsThatAreMissing = Array.from(interServiceRelationsOnCanvas).filter(
     ([_key, value]) =>
-      value.relations.filter(
-        (relation) => relation.currentAmount < relation.min,
-      ).length > 0,
+      value.relations.filter((relation) => relation.currentAmount < relation.min).length > 0
   );
 
   //dirty flag is set to false on initial load for edited instances, that solves issue of flickering as we are starting canvas from empty state and populate it from ground up
@@ -32,9 +28,7 @@ export const ErrorsContainer: React.FC = () => {
 
   return (
     <ErrorMessageContainer
-      title={words("validation.title")(
-        interServiceRelationsThatAreMissing.length,
-      )}
+      title={words("validation.title")(interServiceRelationsThatAreMissing.length)}
     >
       {interServiceRelationsThatAreMissing.map(([id, value]) => (
         <MissingRelationsForGivenCell key={id} entity={value} />
@@ -66,11 +60,7 @@ const MissingRelationsForGivenCell: React.FC<Props> = ({ entity }) => {
       key={`missingRelationsParagraph-${name}_${relation.name}_${index}`}
       aria-label={`missingRelationsParagraph-${name}_${relation.name}_${index}`}
     >
-      {words("instanceComposer.missingRelations")(
-        name,
-        Number(relation.min),
-        relation.name,
-      )}
+      {words("instanceComposer.missingRelations")(name, Number(relation.min), relation.name)}
     </Content>
   ));
 };

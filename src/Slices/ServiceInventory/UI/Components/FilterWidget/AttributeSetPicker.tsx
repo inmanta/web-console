@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  MenuToggle,
-  MenuToggleElement,
-  Select,
-  SelectOption,
-} from "@patternfly/react-core";
+import { MenuToggle, MenuToggleElement, Select, SelectOption } from "@patternfly/react-core";
 import { ServiceInstanceParams } from "@/Core";
 
 interface Props {
@@ -12,10 +7,7 @@ interface Props {
   onChange: (id: ServiceInstanceParams.AttributeSet) => void;
 }
 
-export const AttributeSetPicker: React.FC<Props> = ({
-  attributeSet,
-  onChange,
-}) => {
+export const AttributeSetPicker: React.FC<Props> = ({ attributeSet, onChange }) => {
   const [isFilterOpen, setFilterOpen] = useState(false);
 
   const onSelect = (_event, selection) => {
@@ -47,10 +39,7 @@ export const AttributeSetPicker: React.FC<Props> = ({
       selected={attributeSet}
       isOpen={isFilterOpen}
     >
-      <SelectOption
-        key={1}
-        value={ServiceInstanceParams.AttributeSet.Candidate}
-      >
+      <SelectOption key={1} value={ServiceInstanceParams.AttributeSet.Candidate}>
         Candidate
       </SelectOption>
       <SelectOption key={2} value={ServiceInstanceParams.AttributeSet.Active}>

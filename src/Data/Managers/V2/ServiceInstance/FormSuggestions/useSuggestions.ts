@@ -16,9 +16,7 @@ interface ResponseData {
  *
  * @returns The result of the query, {data, status, error, isLoading}.
  */
-export const useSuggestedValues = (
-  suggestions: FormSuggestion | null | undefined,
-) => {
+export const useSuggestedValues = (suggestions: FormSuggestion | null | undefined) => {
   const get = useGet()<ResponseData>;
 
   if (!suggestions) {
@@ -51,7 +49,6 @@ export const useSuggestedValues = (
       useQuery({
         queryKey: ["get_parameter-one_time", suggestions.parameter_name],
         queryFn: () => get(`/api/v1/parameter/${suggestions.parameter_name}`),
-        retry: false,
         select: (data) => data.parameter,
       }),
   };

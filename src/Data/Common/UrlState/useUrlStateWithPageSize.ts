@@ -8,10 +8,9 @@ export const useUrlStateWithPageSize = provide(handleUrlStateWithPageSize);
 export function handleUrlStateWithPageSize(
   config: Pick<StateConfig<PageSize.Type>, "route">,
   location: Location,
-  replace: Replace,
+  replace: Replace
 ): [PageSize.Type, Update<PageSize.Type>] {
-  const defaultPageSize =
-    config.route === "ResourceDetails" ? from("100") : PageSize.initial;
+  const defaultPageSize = config.route === "ResourceDetails" ? from("100") : PageSize.initial;
 
   return handleUrlState<PageSize.Type>(
     {
@@ -23,6 +22,6 @@ export function handleUrlStateWithPageSize(
       equals: PageSize.equals,
     },
     location,
-    replace,
+    replace
   );
 }

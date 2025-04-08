@@ -1,11 +1,5 @@
 import React, { useContext, useState } from "react";
-import {
-  Button,
-  Divider,
-  DrilldownMenu,
-  MenuItem,
-  Content,
-} from "@patternfly/react-core";
+import { Button, Divider, DrilldownMenu, MenuItem, Content } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
 import { usePostExpertStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
@@ -113,18 +107,11 @@ export const ForceStateAction: React.FC<Props> = ({
       content: (
         <>
           <Content component="p">
-            {words("inventory.statustab.forceState.message")(
-              instance_identity,
-              targetState,
-            )}
+            {words("inventory.statustab.forceState.message")(instance_identity, targetState)}
           </Content>
           <br />
-          <Content component="p">
-            {words("inventory.statustab.forceState.confirmMessage")}
-          </Content>
-          <Content component="p">
-            {words("inventory.statustab.forceState.confirmQuestion")}
-          </Content>
+          <Content component="p">{words("inventory.statustab.forceState.confirmMessage")}</Content>
+          <Content component="p">{words("inventory.statustab.forceState.confirmQuestion")}</Content>
         </>
       ),
     });
@@ -152,9 +139,7 @@ export const ForceStateAction: React.FC<Props> = ({
       <ActionDisabledTooltip
         testingId={words("inventory.statustab.forceState")}
         tooltipContent={
-          isHalted
-            ? words("environment.halt.tooltip")
-            : words("inventory.statustab.actionDisabled")
+          isHalted ? words("environment.halt.tooltip") : words("inventory.statustab.actionDisabled")
         }
       >
         <MenuItem
@@ -164,18 +149,13 @@ export const ForceStateAction: React.FC<Props> = ({
           icon={<WarningTriangleIcon />}
           direction="down"
           style={{
-            backgroundColor:
-              "var(--pf-t--global--color--nonstatus--red--default)",
+            backgroundColor: "var(--pf-t--global--color--nonstatus--red--default)",
           }}
           drilldownMenu={
-            <DrilldownMenu
-              id="drilldownMenuExpertState"
-              aria-label="drilldownMenuExpertState"
-            >
+            <DrilldownMenu id="drilldownMenuExpertState" aria-label="drilldownMenuExpertState">
               <MenuItem
                 style={{
-                  backgroundColor:
-                    "var(--pf-t--global--color--nonstatus--red--default)",
+                  backgroundColor: "var(--pf-t--global--color--nonstatus--red--default)",
                 }}
                 icon={<WarningTriangleIcon />}
                 itemId="group:expertstate_breadcrumb"

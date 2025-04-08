@@ -75,15 +75,10 @@ export const DestroyAction: React.FC<Props> = ({
       content: (
         <>
           <Content component="p">
-            {words("inventory.destroyInstance.header")(
-              instance_identity,
-              service_entity,
-            )}
+            {words("inventory.destroyInstance.header")(instance_identity, service_entity)}
           </Content>
           <br />
-          <Content component="p">
-            {words("inventory.destroyInstance.text")}
-          </Content>
+          <Content component="p">{words("inventory.destroyInstance.text")}</Content>
           <ConfirmUserActionForm onSubmit={onSubmit} onCancel={closeModal} />
         </>
       ),
@@ -101,8 +96,7 @@ export const DestroyAction: React.FC<Props> = ({
       <MenuItem
         itemId="expert-destroy"
         style={{
-          backgroundColor:
-            "var(--pf-t--global--color--nonstatus--red--default)",
+          backgroundColor: "var(--pf-t--global--color--nonstatus--red--default)",
         }}
         isDanger
         onClick={openModal}

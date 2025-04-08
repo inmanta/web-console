@@ -1,12 +1,7 @@
 import React from "react";
 import { HelperText, HelperTextItem, TextArea } from "@patternfly/react-core";
 import styled from "styled-components";
-import {
-  EditableField,
-  EditViewComponent,
-  FieldProps,
-  StaticViewComponent,
-} from "./EditableField";
+import { EditableField, EditViewComponent, FieldProps, StaticViewComponent } from "./EditableField";
 import { InlineAreaValue } from "./InlineFillers";
 
 export const EditableTextAreaField: React.FC<FieldProps> = ({

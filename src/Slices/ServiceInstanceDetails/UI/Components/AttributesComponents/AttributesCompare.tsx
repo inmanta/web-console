@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DiffEditor } from "@monaco-editor/react";
-import {
-  Divider,
-  Flex,
-  FlexItem,
-  FormSelect,
-  FormSelectOption,
-} from "@patternfly/react-core";
+import { Divider, Flex, FlexItem, FormSelect, FormSelectOption } from "@patternfly/react-core";
 import styled from "styled-components";
 import { InstanceAttributeModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
@@ -33,11 +27,12 @@ interface Props {
  *  @prop {InstanceLog[]} instanceLogs - The instanceLogs containing the versions with the attributesSets
  *  @prop {string} selectedVersion - the selected version of the InstanceDetails Page.
  * @returns {React.FC<Props>} A React Component displaying the AttributeSets in a DiffEditor
+ *
+ * @note See https://github.com/microsoft/vscode/pull/230713
+ * The DiffEditor doesn't make correct use of the cleanup lyfecycles. It doesn't dispose of the model as it should, creating a memory leak.
+ * There's a PR in progress on the Monaco library side.
  */
-export const AttributesCompare: React.FC<Props> = ({
-  instanceLogs,
-  selectedVersion,
-}) => {
+export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersion }) => {
   const [leftVersion, setLeftVersion] = useState<string>(selectedVersion);
   const [rightVersion, setRightVersion] = useState<string>(selectedVersion);
 
@@ -48,11 +43,8 @@ export const AttributesCompare: React.FC<Props> = ({
     Partial<Record<AttributeSets, InstanceAttributeModel>>
   >({});
 
-  const [leftSelectedSet, setLeftSelectedSet] =
-    useState<AttributeSets>("active_attributes");
-  const [rightSelectedSet, setRightSelectedSet] = useState<AttributeSets>(
-    "candidate_attributes",
-  );
+  const [leftSelectedSet, setLeftSelectedSet] = useState<AttributeSets>("active_attributes");
+  const [rightSelectedSet, setRightSelectedSet] = useState<AttributeSets>("candidate_attributes");
 
   const [availabelVersions, setAvailableVersions] = useState<string[]>([]);
 
@@ -68,10 +60,7 @@ export const AttributesCompare: React.FC<Props> = ({
 
   useEffect(() => {
     if (rightVersion) {
-      const availableSets = getAvailableAttributesSets(
-        instanceLogs,
-        rightVersion,
-      );
+      const availableSets = getAvailableAttributesSets(instanceLogs, rightVersion);
 
       setRightAttributesSets(availableSets);
 
@@ -87,10 +76,7 @@ export const AttributesCompare: React.FC<Props> = ({
 
   useEffect(() => {
     if (leftVersion) {
-      const availableSets = getAvailableAttributesSets(
-        instanceLogs,
-        leftVersion,
-      );
+      const availableSets = getAvailableAttributesSets(instanceLogs, leftVersion);
 
       setLeftAttributesSets(availableSets);
 
@@ -113,10 +99,7 @@ export const AttributesCompare: React.FC<Props> = ({
               value={leftVersion}
               aria-label="left-side-version-select"
               ouiaId="left-side-version-select"
-              onChange={(
-                _event: React.FormEvent<HTMLSelectElement>,
-                value: string,
-              ) => {
+              onChange={(_event: React.FormEvent<HTMLSelectElement>, value: string) => {
                 setLeftVersion(value);
               }}
             >
@@ -130,10 +113,7 @@ export const AttributesCompare: React.FC<Props> = ({
               value={leftSelectedSet}
               aria-label="left-side-attribute-set-select"
               ouiaId="left-side-attribute-set-select"
-              onChange={(
-                _event: React.FormEvent<HTMLSelectElement>,
-                value: string,
-              ) => {
+              onChange={(_event: React.FormEvent<HTMLSelectElement>, value: string) => {
                 setLeftSelectedSet(value as AttributeSets);
               }}
             >
@@ -160,10 +140,7 @@ export const AttributesCompare: React.FC<Props> = ({
               value={rightVersion}
               aria-label="right-side-version-select"
               ouiaId="right-side-version-select"
-              onChange={(
-                _event: React.FormEvent<HTMLSelectElement>,
-                value: string,
-              ) => {
+              onChange={(_event: React.FormEvent<HTMLSelectElement>, value: string) => {
                 setRightVersion(value);
               }}
             >
@@ -177,10 +154,7 @@ export const AttributesCompare: React.FC<Props> = ({
               value={rightSelectedSet}
               aria-label="right-side-attribute-set-select"
               ouiaId="right-side-attribute-set-select"
-              onChange={(
-                _event: React.FormEvent<HTMLSelectElement>,
-                value: string,
-              ) => {
+              onChange={(_event: React.FormEvent<HTMLSelectElement>, value: string) => {
                 setRightSelectedSet(value as AttributeSets);
               }}
             >
@@ -195,17 +169,16 @@ export const AttributesCompare: React.FC<Props> = ({
           </FlexItem>
         </Flex>
       </Flex>
-
       <DiffEditor
         height={"calc(100vh - 525px)"}
+        options={{
+          readOnly: true,
+          renderSideBySide: true,
+        }}
         theme={`vs-${preferedTheme}`}
         language="json"
         original={JSON.stringify(leftAttributesSets[leftSelectedSet], null, 2)}
-        modified={JSON.stringify(
-          rightAttributesSets[rightSelectedSet],
-          null,
-          2,
-        )}
+        modified={JSON.stringify(rightAttributesSets[rightSelectedSet], null, 2)}
       />
     </>
   );

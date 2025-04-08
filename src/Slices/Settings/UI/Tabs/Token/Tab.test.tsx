@@ -3,11 +3,7 @@ import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { CommandResolverImpl, GenerateTokenCommandManager } from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicCommandManagerResolverImpl,
-} from "@/Test";
+import { DeferredApiHelper, dependencies, DynamicCommandManagerResolverImpl } from "@/Test";
 import { DependencyProvider, words } from "@/UI";
 import { Tab } from "./Tab";
 
@@ -15,7 +11,7 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const commandManager = GenerateTokenCommandManager(apiHelper);
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([commandManager]),
+    new DynamicCommandManagerResolverImpl([commandManager])
   );
 
   const component = (
@@ -45,7 +41,7 @@ test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is execu
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
     body: { client_types: [] },
-    url: `/api/v2/environment_auth`,
+    url: "/api/v2/environment_auth",
     environment: "env",
   });
 });
@@ -60,13 +56,13 @@ test("GIVEN TokenTab WHEN api clientType is selected and generate button is clic
   await userEvent.click(
     screen.getByRole("button", {
       name: words("settings.tabs.token.generate"),
-    }),
+    })
   );
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
     body: { client_types: ["agent"] },
-    url: `/api/v2/environment_auth`,
+    url: "/api/v2/environment_auth",
     environment: "env",
   });
 });
@@ -79,7 +75,7 @@ test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
   await userEvent.click(
     screen.getByRole("button", {
       name: words("settings.tabs.token.generate"),
-    }),
+    })
   );
 
   await act(async () => {
@@ -106,7 +102,7 @@ test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async () =
   await userEvent.click(
     screen.getByRole("button", {
       name: words("settings.tabs.token.generate"),
-    }),
+    })
   );
 
   await act(async () => {

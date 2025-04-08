@@ -26,7 +26,7 @@ interface Props {
  * @component SummaryChart
  * @desc A donut chart component with a legend that displays the instances grouped by label.
  * @param {Props} props - The component props.
- * @returns {JSX.Element} - The rendered SummaryChart component.
+ * @returns {React.FC<Props>} - The rendered SummaryChart component.
  */
 export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
   const { labelFiltering } = useContext(ServiceInventoryContext);
@@ -147,8 +147,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                         ...props.style,
                         color: "var(--pf-t--global--text--color--subtle)",
                         cursor:
-                          labelFiltering[label] &&
-                          labelFiltering[label].length > 0
+                          labelFiltering[label] && labelFiltering[label].length > 0
                             ? "pointer"
                             : "default",
                       },

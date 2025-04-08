@@ -1,30 +1,36 @@
-import React, { useContext, useState } from "react";
-import {
-  Dropdown,
-  DropdownItem,
-  MenuToggle,
-  MenuToggleElement,
-} from "@patternfly/react-core";
+import React, { useState } from "react";
+import { Dropdown, DropdownItem, MenuToggle, MenuToggleElement } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { DependencyContext } from "@/UI/Dependency";
+import { useUpdateNotification } from "@/Data/Managers/V2/Notification/UpdateNotification";
 import { words } from "@/UI/words";
 
+/**
+ * Props for the ActionList component.
+ *
+ * @property {boolean} read - Whether the notification is read
+ * @property {string} id - The unique identifier of the notification
+ * @property {() => void} onUpdate - Callback function triggered after a successful update
+ */
 interface Props {
   read: boolean;
   id: string;
   onUpdate(): void;
 }
 
+/**
+ * Component that renders a dropdown menu with actions for a notification.
+ * Provides options to mark notifications as read/unread.
+ */
 export const ActionList: React.FC<Props> = ({ read, id, onUpdate }) => {
-  const { commandResolver } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
-  const trigger = commandResolver.useGetTrigger<"UpdateNotification">({
-    kind: "UpdateNotification",
-    origin: "center",
+  const { mutate } = useUpdateNotification({
+    onSuccess: () => {
+      onUpdate();
+    },
   });
 
-  const onRead = () => trigger({ read: true }, [id], onUpdate);
-  const onUnread = () => trigger({ read: false }, [id], onUpdate);
+  const onRead = () => mutate({ body: { read: true }, ids: [id] });
+  const onUnread = () => mutate({ body: { read: false }, ids: [id] });
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
@@ -47,20 +53,10 @@ export const ActionList: React.FC<Props> = ({ read, id, onUpdate }) => {
         />
       )}
     >
-      <DropdownItem
-        key="read"
-        component="button"
-        isDisabled={read}
-        onClick={onRead}
-      >
+      <DropdownItem key="read" component="button" isDisabled={read} onClick={onRead}>
         {words("notification.read")}
       </DropdownItem>
-      <DropdownItem
-        key="unread"
-        component="button"
-        isDisabled={!read}
-        onClick={onUnread}
-      >
+      <DropdownItem key="unread" component="button" isDisabled={!read} onClick={onUnread}>
         {words("notification.unread")}
       </DropdownItem>
     </Dropdown>

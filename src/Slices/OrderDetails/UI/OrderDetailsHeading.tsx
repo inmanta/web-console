@@ -36,33 +36,25 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
         aria-label="OrderDetails-Heading"
       >
         <DescriptionListGroup aria-label="OrderState">
-          <DescriptionListTerm>
-            {words("orders.column.status")}
-          </DescriptionListTerm>
+          <DescriptionListTerm>{words("orders.column.status")}</DescriptionListTerm>
           <DescriptionListDescription>
             <OrderStatusLabel status={serviceOrder.status.state} />
           </DescriptionListDescription>
         </DescriptionListGroup>
         <DescriptionListGroup aria-label="OrderCreatedAt">
-          <DescriptionListTerm>
-            {words("orders.column.created_at")}
-          </DescriptionListTerm>
+          <DescriptionListTerm>{words("orders.column.created_at")}</DescriptionListTerm>
           <DescriptionListDescription>
             <DateWithTooltip timestamp={serviceOrder.created_at} />
           </DescriptionListDescription>
         </DescriptionListGroup>
         <DescriptionListGroup aria-label="OrderDescription">
-          <DescriptionListTerm>
-            {words("orders.column.description")}
-          </DescriptionListTerm>
+          <DescriptionListTerm>{words("orders.column.description")}</DescriptionListTerm>
           <DescriptionListDescription>
             {serviceOrder.description || serviceOrder.id}
           </DescriptionListDescription>
         </DescriptionListGroup>
         <DescriptionListGroup aria-label="OrderCompletedAt">
-          <DescriptionListTerm>
-            {words("orders.column.completed_at")}
-          </DescriptionListTerm>
+          <DescriptionListTerm>{words("orders.column.completed_at")}</DescriptionListTerm>
           <DescriptionListDescription>
             {serviceOrder.completed_at ? (
               <DateWithTooltip timestamp={serviceOrder.completed_at} />
@@ -80,14 +72,9 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
         aria-label="OrderDetails-Heading-Progress"
       >
         <DescriptionListGroup aria-label="OrderProgress">
-          <DescriptionListTerm>
-            {words("orders.column.progress")}
-          </DescriptionListTerm>
+          <DescriptionListTerm>{words("orders.column.progress")}</DescriptionListTerm>
           <DescriptionListDescription>
-            <OrderProgressBar
-              showTotal
-              serviceOrderItems={serviceOrder.service_order_items}
-            />
+            <OrderProgressBar showTotal serviceOrderItems={serviceOrder.service_order_items} />
           </DescriptionListDescription>
         </DescriptionListGroup>
       </ProgressDescriptionList>

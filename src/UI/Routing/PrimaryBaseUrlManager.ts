@@ -5,14 +5,16 @@ export class PrimaryBaseUrlManager implements BaseUrlManager {
 
   constructor(
     private readonly origin: string,
-    private readonly pathname: string,
+    private readonly pathname: string
   ) {}
 
   getBasePathname(): string {
     const { pathname, anchor } = this;
 
     if (!pathname.includes(anchor)) return anchor;
+
     if (pathname.split(anchor).length > 2) return anchor;
+
     const [pre] = pathname.split(anchor);
 
     return `${pre}${anchor}`;

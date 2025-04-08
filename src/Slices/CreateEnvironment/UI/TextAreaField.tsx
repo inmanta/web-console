@@ -11,18 +11,10 @@ interface Props {
   label: string;
   isRequired?: boolean;
   value: string;
-  onChange: (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-    value: string,
-  ) => void;
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>, value: string) => void;
 }
 
-export const TextAreaField: React.FC<Props> = ({
-  label,
-  isRequired,
-  value,
-  onChange,
-}) => {
+export const TextAreaField: React.FC<Props> = ({ label, isRequired, value, onChange }) => {
   const helperText = `Characters: (${value.length} / 255)`;
 
   return (

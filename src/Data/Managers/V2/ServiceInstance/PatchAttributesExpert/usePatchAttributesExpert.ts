@@ -1,8 +1,4 @@
-import {
-  UseMutationOptions,
-  UseMutationResult,
-  useMutation,
-} from "@tanstack/react-query";
+import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
 import { usePatch } from "../../helpers";
 
@@ -37,16 +33,13 @@ interface PatchEdit {
 export const usePatchAttributesExpert = (
   instance_id: string,
   service_entity: string,
-  options?: UseMutationOptions<void, Error, ExpertPatchAttributes>,
+  options?: UseMutationOptions<void, Error, ExpertPatchAttributes>
 ): UseMutationResult<void, Error, ExpertPatchAttributes, unknown> => {
   const patch = usePatch()<ExpertPatchAttributes>;
 
   return useMutation({
     mutationFn: (data) =>
-      patch(
-        `/lsm/v2/service_inventory/${service_entity}/${instance_id}/expert`,
-        data,
-      ),
+      patch(`/lsm/v2/service_inventory/${service_entity}/${instance_id}/expert`, data),
     mutationKey: ["patch_expert_edit"],
     ...options,
   });

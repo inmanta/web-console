@@ -50,9 +50,7 @@ export const DetailsSection: React.FC = () => {
             "aria-expanded": isExpanded,
           }}
         >
-          <Title headingLevel="h2">
-            {words("instanceDetails.details.title")}
-          </Title>
+          <Title headingLevel="h2">{words("instanceDetails.details.title")}</Title>
         </CardHeader>
         <CardExpandableContent>
           <CardBody>
@@ -60,10 +58,7 @@ export const DetailsSection: React.FC = () => {
               <DescriptionListGroup>
                 <DescriptionListTerm>Id: </DescriptionListTerm>
                 <DescriptionListDescription>
-                  <TextWithCopy
-                    value={instance.id}
-                    tooltipContent={words("id.copy")}
-                  />
+                  <TextWithCopy value={instance.id} tooltipContent={words("id.copy")} />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
@@ -89,9 +84,7 @@ export const DetailsSection: React.FC = () => {
                 <DescriptionListDescription>
                   <Flex>
                     <FlexItem flex={{ default: "flex_1" }}>
-                      <DeploymentProgressBar
-                        progress={instance.deployment_progress}
-                      />
+                      <DeploymentProgressBar progress={instance.deployment_progress} />
                     </FlexItem>
                     {instance.deployment_progress && (
                       <FlexItem>

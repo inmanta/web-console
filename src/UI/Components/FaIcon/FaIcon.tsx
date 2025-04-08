@@ -28,9 +28,7 @@ interface Props {
  */
 export const DynamicFAIcon = ({ ...props }: Props) => {
   const FAIcon = loadable(() =>
-    Promise.resolve(
-      fa[props.icon as keyof typeof fa] || fa["FaQuestionCircle"],
-    ),
+    Promise.resolve(fa[props.icon as keyof typeof fa] || fa["FaQuestionCircle"])
   );
 
   const value: IconContext = {

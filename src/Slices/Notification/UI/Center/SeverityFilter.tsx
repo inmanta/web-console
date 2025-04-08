@@ -1,13 +1,13 @@
 import React from "react";
 import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
+import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { severityList } from "@S/Notification/Core/Domain";
-import { Filter } from "@S/Notification/Core/Query";
 
 interface Props {
-  filter: Filter;
-  setFilter: (filter: Filter) => void;
+  filter: NotificationFilter;
+  setFilter: (filter: NotificationFilter) => void;
 }
 
 export const SeverityFilter: React.FC<Props> = ({ filter, setFilter }) => {

@@ -26,18 +26,14 @@ describe("addDefaultEntities", () => {
     expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
 
     //assert the arguments of the first call - calls is array of the arguments of each call
-    expect(
-      (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
-    ).toMatchObject({
+    expect((dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail).toMatchObject({
       name: "child_container",
       id: expect.any(String),
       relations: [{ currentAmount: 0, min: 1, name: "parent-service" }],
     }); //add relations to Tracker
 
     //assert the arguments of the second call - calls is array of the arguments of each call
-    expect(
-      (dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail,
-    ).toMatchObject({
+    expect((dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail).toMatchObject({
       action: "add",
       name: "child_container",
     }); //update stencil state
@@ -52,9 +48,7 @@ describe("addDefaultEntities", () => {
     const graph = new dia.Graph({});
     const customModel = {
       ...containerModel,
-      embedded_entities: [
-        { ...containerModel.embedded_entities[0], lower_limit: 2 },
-      ],
+      embedded_entities: [{ ...containerModel.embedded_entities[0], lower_limit: 2 }],
     };
 
     const embedded = addDefaultEntities(graph, customModel);
@@ -114,13 +108,9 @@ describe("addDefaultEntities", () => {
     //we return only top level embedded entities from addDefaultEntities so to get all we need to check graph directly
     expect(addedCells).toHaveLength(2);
 
-    expect(addedCells[0].get("embeddedTo")).toStrictEqual(
-      createdEntity1.get("embeddedTo"),
-    );
+    expect(addedCells[0].get("embeddedTo")).toStrictEqual(createdEntity1.get("embeddedTo"));
 
-    expect(addedCells[0].get("embeddedTo")).toStrictEqual(
-      createdEntity2.get("embeddedTo"),
-    );
+    expect(addedCells[0].get("embeddedTo")).toStrictEqual(createdEntity2.get("embeddedTo"));
   });
 });
 
@@ -151,9 +141,7 @@ describe("populateGraphWithDefault", () => {
     expect(AddedLinks).toHaveLength(1);
 
     expect(addedCells[0].getName()).toBe(containerModel.name);
-    expect(addedCells[1].getName()).toBe(
-      containerModel.embedded_entities[0].name,
-    );
+    expect(addedCells[1].getName()).toBe(containerModel.embedded_entities[0].name);
     expect(addedCells[1].get("isEmbeddedEntity")).toBeTruthy();
     expect(addedCells[1].get("holderName")).toBe(containerModel.name);
     expect(addedCells[1].get("embeddedTo")).toBe(addedCells[0].id);

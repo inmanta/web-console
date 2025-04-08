@@ -11,20 +11,9 @@ interface Props {
   setSort: (sort: Sort.Type) => void;
 }
 
-export const TableProvider: React.FC<Props> = ({
-  compileReports,
-  ...props
-}) => {
-  const tablePresenter = new CompileReportsTablePresenter(
-    new MomentDatePresenter(),
-  );
+export const TableProvider: React.FC<Props> = ({ compileReports, ...props }) => {
+  const tablePresenter = new CompileReportsTablePresenter(new MomentDatePresenter());
   const rows = tablePresenter.createRows(compileReports);
 
-  return (
-    <CompileReportsTable
-      {...props}
-      tablePresenter={tablePresenter}
-      rows={rows}
-    />
-  );
+  return <CompileReportsTable {...props} tablePresenter={tablePresenter} rows={rows} />;
 };

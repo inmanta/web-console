@@ -20,11 +20,7 @@ interface Props {
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
 }
 
-export const ConfigDetails: React.FC<Props> = ({
-  config,
-  defaults,
-  serviceInstanceIdentifier,
-}) => {
+export const ConfigDetails: React.FC<Props> = ({ config, defaults, serviceInstanceIdentifier }) => {
   const { service_entity, id, version } = serviceInstanceIdentifier;
   const { environmentModifier } = useContext(DependencyContext);
   const { mutate } = usePostInstanceConfig(service_entity, id);
@@ -56,10 +52,7 @@ export const ConfigDetails: React.FC<Props> = ({
         actions={{
           actions: (
             <>
-              <Tooltip
-                content={words("config.reset.description")}
-                entryDelay={200}
-              >
+              <Tooltip content={words("config.reset.description")} entryDelay={200}>
                 <Button
                   size="sm"
                   onClick={() =>

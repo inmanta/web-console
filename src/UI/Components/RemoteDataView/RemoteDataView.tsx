@@ -20,9 +20,7 @@ export const RemoteDataView = <T,>({
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => (
-        <LoadingView ariaLabel={label ? `${label}-Loading` : undefined} />
-      ),
+      loading: () => <LoadingView ariaLabel={label ? `${label}-Loading` : undefined} />,
       failed: (error) => (
         <ErrorView
           data-testid="ErrorView"
@@ -34,6 +32,6 @@ export const RemoteDataView = <T,>({
       ),
       success: SuccessView,
     },
-    data,
+    data
   );
 };

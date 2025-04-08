@@ -1,9 +1,5 @@
 import { dia } from "@inmanta/rappid";
-import {
-  ActionEnum,
-  EventActionEnum,
-  InterServiceRelationOnCanvasWithMin,
-} from "../interfaces";
+import { ActionEnum, EventActionEnum, InterServiceRelationOnCanvasWithMin } from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 
 /**
@@ -18,7 +14,7 @@ import { ServiceEntityBlock } from "../shapes";
 export const dispatchUpdateInterServiceRelations = (
   action: EventActionEnum,
   name: string,
-  id: string | dia.Cell.ID,
+  id: string | dia.Cell.ID
 ): void => {
   document.dispatchEvent(
     new CustomEvent("updateInterServiceRelations", {
@@ -27,7 +23,7 @@ export const dispatchUpdateInterServiceRelations = (
         name,
         id,
       },
-    }),
+    })
   );
 };
 
@@ -41,12 +37,12 @@ export const dispatchUpdateInterServiceRelations = (
  */
 export const dispatchUpdateServiceOrderItems = (
   cell: ServiceEntityBlock | dia.Cell,
-  action: ActionEnum,
+  action: ActionEnum
 ): void => {
   document.dispatchEvent(
     new CustomEvent("updateServiceOrderItems", {
       detail: { cell, action },
-    }),
+    })
   );
 };
 
@@ -62,7 +58,7 @@ export const dispatchUpdateServiceOrderItems = (
 export const dispatchAddInterServiceRelationToTracker = (
   id: string | dia.Cell.ID,
   name: string,
-  relations: InterServiceRelationOnCanvasWithMin[],
+  relations: InterServiceRelationOnCanvasWithMin[]
 ): void => {
   document.dispatchEvent(
     new CustomEvent("addInterServiceRelationToTracker", {
@@ -71,7 +67,7 @@ export const dispatchAddInterServiceRelationToTracker = (
         name,
         relations,
       },
-    }),
+    })
   );
 };
 
@@ -82,15 +78,13 @@ export const dispatchAddInterServiceRelationToTracker = (
  *
  * @returns {void}
  */
-export const dispatchRemoveInterServiceRelationFromTracker = (
-  id: string | dia.Cell.ID,
-): void => {
+export const dispatchRemoveInterServiceRelationFromTracker = (id: string | dia.Cell.ID): void => {
   document.dispatchEvent(
     new CustomEvent("removeInterServiceRelationFromTracker", {
       detail: {
         id,
       },
-    }),
+    })
   );
 };
 
@@ -102,17 +96,14 @@ export const dispatchRemoveInterServiceRelationFromTracker = (
  *
  * @returns {void}
  */
-export const dispatchUpdateStencil = (
-  name: string,
-  action?: EventActionEnum,
-): void => {
+export const dispatchUpdateStencil = (name: string, action?: EventActionEnum): void => {
   document.dispatchEvent(
     new CustomEvent("updateStencil", {
       detail: {
         name,
         action,
       },
-    }),
+    })
   );
 };
 
@@ -124,17 +115,14 @@ export const dispatchUpdateStencil = (
  *
  * @returns {void}
  */
-export const dispatchLooseElement = (
-  kind: EventActionEnum,
-  id: string | dia.Cell.ID,
-): void => {
+export const dispatchLooseElement = (kind: EventActionEnum, id: string | dia.Cell.ID): void => {
   document.dispatchEvent(
     new CustomEvent("looseElement", {
       detail: JSON.stringify({
         kind,
         id,
       }),
-    }),
+    })
   );
 };
 
@@ -149,6 +137,6 @@ export const dispatchSendCellToSidebar = (cell: dia.CellView | null) => {
   document.dispatchEvent(
     new CustomEvent("sendCellToSidebar", {
       detail: cell,
-    }),
+    })
   );
 };

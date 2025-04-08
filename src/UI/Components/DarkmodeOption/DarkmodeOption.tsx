@@ -12,9 +12,7 @@ export const getThemePreference = () => {
   if (localStorage.getItem(storageKey)) {
     return localStorage.getItem(storageKey);
   } else {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   }
 };
 
@@ -25,17 +23,14 @@ export const getThemePreference = () => {
 export const setThemePreference = (theme: string) => {
   localStorage.setItem(storageKey, theme);
   // Target the html tag and update the theme class "pf-v6-theme-dark" "pf-v6-theme-light" depending on the theme.
-  document.documentElement.classList.remove(
-    "pf-v6-theme-dark",
-    "pf-v6-theme-light",
-  );
+  document.documentElement.classList.remove("pf-v6-theme-dark", "pf-v6-theme-light");
   document.documentElement.classList.add(`pf-v6-theme-${theme}`);
 };
 
 /**
  * A React component that provides a dropdown item to toggle between dark and light themes.
  * The user's theme preference is stored in localStorage and applied to the document.
- * @returns {JSX.Element} The rendered component.
+ * @returns {React.FC} The rendered component.
  */
 export const DarkmodeOption: React.FC = () => {
   const [theme, setTheme] = useState<string>(getThemePreference() || "light");

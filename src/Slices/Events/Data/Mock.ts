@@ -25,8 +25,7 @@ export const listA: InstanceEvent[] = [
     timestamp: "2021-01-11T12:56:56.195110",
     source: "creating",
     destination: "awaiting_up",
-    message:
-      "compile request queued with id 5824a731-df20-437c-915b-bb570d351808",
+    message: "compile request queued with id 5824a731-df20-437c-915b-bb570d351808",
     ignored_transition: false,
     event_correlation_id: "363cc930-d847-4e8a-b605-41b87a903248",
     severity: 20,
@@ -73,8 +72,7 @@ export const listA: InstanceEvent[] = [
     timestamp: "2021-01-11T12:55:53.131606",
     source: "allocating",
     destination: "creating",
-    message:
-      "compile request queued with id ea1cdb3b-a666-4c0d-a6f9-c3d0d84d10e0",
+    message: "compile request queued with id ea1cdb3b-a666-4c0d-a6f9-c3d0d84d10e0",
     ignored_transition: false,
     event_correlation_id: "cddfabb6-a616-4e77-8526-4d73d45cb06b",
     severity: 20,
@@ -105,8 +103,7 @@ export const listA: InstanceEvent[] = [
     timestamp: "2021-01-11T12:55:46.968672",
     source: "allocating",
     destination: "creating",
-    message:
-      "Validation compile request queued with id b38e43cb-bf5c-47b1-bc50-44c6dbef145d",
+    message: "Validation compile request queued with id b38e43cb-bf5c-47b1-bc50-44c6dbef145d",
     ignored_transition: false,
     event_correlation_id: "cddfabb6-a616-4e77-8526-4d73d45cb06b",
     severity: 20,
@@ -169,8 +166,7 @@ export const listA: InstanceEvent[] = [
     timestamp: "2021-01-11T12:55:25.998128",
     source: "ordered",
     destination: "allocating",
-    message:
-      "Validation compile request queued with id 2447660b-593c-4c31-ac1f-e98c82209b90",
+    message: "Validation compile request queued with id 2447660b-593c-4c31-ac1f-e98c82209b90",
     ignored_transition: false,
     event_correlation_id: "3b3b0127-77b4-4679-b4b7-e47d49a666c3",
     severity: 20,
@@ -216,8 +212,7 @@ export const listA: InstanceEvent[] = [
     timestamp: "2021-01-11T12:55:25.905428",
     source: null,
     destination: "ordered",
-    message:
-      "Creation trigger received for service instance bd200aec-4f80-45e1-b2ad-137c442c68b8.",
+    message: "Creation trigger received for service instance bd200aec-4f80-45e1-b2ad-137c442c68b8.",
     ignored_transition: false,
     event_correlation_id: "f8a75240-d38c-41c5-8130-15920f519cb0",
     severity: 20,
@@ -235,8 +230,7 @@ export const listB: InstanceEvent[] = [
     timestamp: "2021-01-11T12:55:25.998128",
     source: "ordered",
     destination: "rejected",
-    message:
-      "Validation compile request queued with id 2447660b-593c-4c31-ac1f-e98c82209b90",
+    message: "Validation compile request queued with id 2447660b-593c-4c31-ac1f-e98c82209b90",
     ignored_transition: false,
     event_correlation_id: "3b3b0127-77b4-4679-b4b7-e47d49a666c3",
     severity: 20,
@@ -266,8 +260,7 @@ export const listB: InstanceEvent[] = [
     timestamp: "2021-01-11T12:55:25.905428",
     source: null,
     destination: "ordered",
-    message:
-      "Creation trigger received for service instance bd200aec-4f80-45e1-b2ad-137c442c68b8.",
+    message: "Creation trigger received for service instance bd200aec-4f80-45e1-b2ad-137c442c68b8.",
     ignored_transition: false,
     event_correlation_id: "f8a75240-d38c-41c5-8130-15920f519cb0",
     severity: 20,

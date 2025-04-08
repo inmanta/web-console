@@ -112,10 +112,7 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
                 )}
               </Flex>
               {service.description && (
-                <Content
-                  component={ContentVariants.small}
-                  id={`${service.name}-description`}
-                >
+                <Content component={ContentVariants.small} id={`${service.name}-description`}>
                   {service.description}
                 </Content>
               )}

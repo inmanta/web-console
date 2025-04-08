@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
-import { useGet } from "../../helpers";
+import { CustomError, useGet } from "../../helpers";
 
 /**
  *  Interface containing the metadata.
@@ -13,7 +13,7 @@ interface Metadata {
  * Return Signature of the useServiceModel React Query
  */
 interface GetMetadataHook {
-  useOneTime: () => UseQueryResult<string | undefined, Error>;
+  useOneTime: () => UseQueryResult<string | undefined, CustomError>;
 }
 
 /**
@@ -28,7 +28,7 @@ export const useGetMetadata = (
   service_entity: string,
   service_id: string,
   key: string,
-  instanceVersion?: ParsedNumber | null,
+  instanceVersion?: ParsedNumber | null
 ): GetMetadataHook => {
   const get = useGet()<Metadata>;
 
@@ -37,16 +37,10 @@ export const useGetMetadata = (
       useQuery({
         queryFn: () =>
           get(
-            `/lsm/v1/service_inventory/${service_entity}/${service_id}/metadata/${key}?current_version=${instanceVersion}`,
+            `/lsm/v1/service_inventory/${service_entity}/${service_id}/metadata/${key}?current_version=${instanceVersion}`
           ),
-        queryKey: [
-          "get_metadata",
-          service_entity,
-          service_id,
-          key,
-          instanceVersion,
-        ],
-        retry: false,
+        queryKey: ["get_metadata", service_entity, service_id, key, instanceVersion],
+
         enabled: instanceVersion !== null,
         select: (data) => data.data,
       }),

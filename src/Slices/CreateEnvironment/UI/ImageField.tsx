@@ -9,12 +9,7 @@ interface Props {
   onChange: (value: string) => void;
 }
 
-export const ImageField: React.FC<Props> = ({
-  label,
-  isRequired,
-  value,
-  onChange,
-}) => {
+export const ImageField: React.FC<Props> = ({ label, isRequired, value, onChange }) => {
   return (
     <FormGroup fieldId={label} label={label} isRequired={isRequired}>
       <ImageUpload onComplete={onChange} initial={value} />

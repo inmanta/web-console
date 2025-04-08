@@ -2,6 +2,36 @@ import { InstanceAttributeModel } from "@/Core";
 import { Field, ServiceInstance } from "@/Test";
 import { createEditFormState, createFormState } from "./createFormState";
 
+test.each`
+  numberValue             | fields                                      | expectedValue
+  ${"default - (null)"}   | ${[Field.number]}                           | ${{ [Field.number.name]: null }}
+  ${"empty string"}       | ${[{ ...Field.number, defaultValue: "" }]}  | ${{ [Field.number.name]: null }}
+  ${"stringified number"} | ${[{ ...Field.number, defaultValue: "1" }]} | ${{ [Field.number.name]: 1 }}
+  ${"null"}               | ${[{ ...Field.number, defaultValue: 1 }]}   | ${{ [Field.number.name]: 1 }}
+`(
+  "GIVEN createFormState WHEN passed a number field with a ($dictValue) value THEN creates formState correctly",
+  ({ fields, expectedValue }) => {
+    const cFormState = createFormState(fields);
+
+    expect(cFormState).toEqual(expectedValue);
+  }
+);
+
+test.each`
+  numberValue                      | fields                                           | expectedValue
+  ${"default - (null)"}            | ${[Field.numberArr]}                             | ${{ [Field.numberArr.name]: [1, 2] }}
+  ${"empty string"}                | ${[{ ...Field.numberArr, defaultValue: "" }]}    | ${{ [Field.numberArr.name]: null }}
+  ${"stringified array of number"} | ${[{ ...Field.numberArr, defaultValue: "[1]" }]} | ${{ [Field.numberArr.name]: [1] }}
+  ${"null"}                        | ${[{ ...Field.numberArr, defaultValue: null }]}  | ${{ [Field.numberArr.name]: null }}
+`(
+  "GIVEN createFormState WHEN passed a numberArr field with a ($dictValue) value THEN creates formState correctly",
+  ({ fields, expectedValue }) => {
+    const cFormState = createFormState(fields);
+
+    expect(cFormState).toEqual(expectedValue);
+  }
+);
+
 test("GIVEN fieldsToFormState WHEN passed a DictListField THEN creates formState correctly", () => {
   const fields = [Field.dictList([Field.text])];
   const formState = createFormState(fields);
@@ -15,12 +45,32 @@ test("GIVEN fieldsToFormState WHEN passed a DictListField THEN creates formState
   });
 });
 
-test("GIVEN createFormState WHEN passed a dict field with a default value THEN creates formState correctly", () => {
-  const fields = [Field.dictionary];
-  const formState = createFormState(fields);
+test.each`
+  dictValue             | fields                                           | expectedValue
+  ${"default"}          | ${[Field.dictionary]}                            | ${{ [Field.dictionary.name]: {} }}
+  ${"empty string"}     | ${[{ ...Field.dictionary, defaultValue: "" }]}   | ${{ [Field.dictionary.name]: null }}
+  ${"stringified dict"} | ${[{ ...Field.dictionary, defaultValue: "{}" }]} | ${{ [Field.dictionary.name]: {} }}
+  ${"null"}             | ${[{ ...Field.dictionary, defaultValue: null }]} | ${{ [Field.dictionary.name]: null }}
+`(
+  "GIVEN createFormState WHEN passed a dict field with a ($dictValue) value THEN creates formState correctly",
+  ({ fields, expectedValue }) => {
+    const formState = createFormState(fields);
 
-  expect(formState).toEqual({
-    [Field.dictionary.name]: "{}",
+    expect(formState).toEqual(expectedValue);
+  }
+);
+
+test("Given createFormState WHEN passed nested fields state THEN creates formState correctly", () => {
+  const formState = createFormState(Field.nestedEditable);
+
+  expect(formState).toMatchObject({
+    id_attr: "id",
+    other_attr1: "test",
+    int_attr: 1,
+    int_attr2: null,
+    other_attr2: null,
+    embedded: [],
+    another_embedded: [],
   });
 });
 
@@ -28,13 +78,15 @@ test("Given createEditFormState v1 WHEN passed editable nested fields and curren
   const formState = createEditFormState(
     Field.nestedEditable,
     "v1",
-    ServiceInstance.nestedEditable.candidate_attributes,
+    ServiceInstance.nestedEditable.candidate_attributes
   );
 
   expect(formState).toMatchObject({
     id_attr: "val",
     other_attr1: "test",
-    other_attr2: '{"a":"b"}',
+    int_attr: 10,
+    int_attr2: 12,
+    other_attr2: { a: "b" },
     another_embedded: [
       {
         my_other_attr: "asdasd",
@@ -50,7 +102,7 @@ test("Given createEditFormState v1 WHEN passed editable nested fields and curren
         },
         my_attr: 0,
         bool_attr: null,
-        dict_attr: "{}",
+        dict_attr: {},
       },
     ],
   });
@@ -93,11 +145,10 @@ test("Given createEditFormState v2 WHEN passed editable nested fields and curren
   const formState = createEditFormState(
     Field.nestedEditable,
     "v2",
-    ServiceInstance.nestedEditable.candidate_attributes,
+    ServiceInstance.nestedEditable.candidate_attributes
   );
 
   expect(formState).toMatchObject(
-    ServiceInstance.nestedEditable
-      .candidate_attributes as InstanceAttributeModel,
+    ServiceInstance.nestedEditable.candidate_attributes as InstanceAttributeModel
   );
 });

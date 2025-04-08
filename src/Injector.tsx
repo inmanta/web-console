@@ -40,22 +40,19 @@ interface Props {
  * @prop {React.ReactNode} children - The children to be rendered within the Injector.
  * @returns {React.FC<React.PropsWithChildren<Props>>} A `DependencyProvider` that wraps a `ModalProvider`, an `UpdateBanner`, and the children.
  */
-export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
-  store,
-  children,
-}) => {
+export const Injector: React.FC<React.PropsWithChildren<Props>> = ({ store, children }) => {
   const authHelper = useContext(AuthContext);
   const featureManager = new PrimaryFeatureManager(
     GetServerStatusStateHelper(store),
     new PrimaryLogger(),
     getJsonParserId(globalThis),
     COMMITHASH,
-    APP_VERSION,
+    APP_VERSION
   );
 
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
@@ -66,12 +63,10 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
       store,
       apiHelper,
       new SchedulerImpl(5000),
-      new SchedulerImpl(10000),
-    ),
+      new SchedulerImpl(10000)
+    )
   );
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper),
-  );
+  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
   const fileFetcher = new FileFetcherImpl(apiHelper);
   const environmentModifier = EnvironmentModifierImpl();
@@ -104,10 +99,13 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
 
 const getJsonParserId = (container: unknown): JsonParserId | undefined => {
   if (typeof container !== "object") return undefined;
+
   if (container === null) return undefined;
+
   const id = container["jsonParserId"];
 
   if (typeof id !== "string") return undefined;
+
   if (!isJsonParserId(id)) return undefined;
 
   return id;

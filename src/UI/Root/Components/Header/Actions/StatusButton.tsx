@@ -25,11 +25,7 @@ export const StatusButton: React.FC = () => {
 
   return (
     <ToolbarItem>
-      <Tooltip
-        content={words("dashboard.status_page.tooltip")}
-        position="bottom"
-        entryDelay={500}
-      >
+      <Tooltip content={words("dashboard.status_page.tooltip")} position="bottom" entryDelay={500}>
         <StyledLink pathname={routeManager.getUrl("Status", undefined)} envOnly>
           <Button
             icon={<StyledIcon color={statusColor} />}

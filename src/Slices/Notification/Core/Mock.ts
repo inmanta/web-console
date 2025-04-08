@@ -1,6 +1,4 @@
-import { Pagination } from "@/Test";
 import { Notification } from "./Domain";
-import { Manifest } from "./Query";
 
 export const unread: Notification = {
   environment: "env",
@@ -32,9 +30,4 @@ export const withoutUri: Notification = {
   uri: null,
 };
 
-export const response: Manifest["apiResponse"] = {
-  data: [unread, error, read, withoutUri],
-  metadata: Pagination.metadata,
-  links: Pagination.links,
-};
 export const list: Notification[] = [unread, read, error, withoutUri];

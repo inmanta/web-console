@@ -7,9 +7,7 @@ import {
 } from "@patternfly/react-tokens";
 import { Severity } from "@S/Notification/Core/Domain";
 
-export const getSeverityForNotification = (
-  severity: Severity,
-): VisualSeverity => {
+export const getSeverityForNotification = (severity: Severity): VisualSeverity => {
   switch (severity) {
     case "error":
       return "danger";
@@ -20,12 +18,7 @@ export const getSeverityForNotification = (
   }
 };
 
-export type VisualSeverity =
-  | "custom"
-  | "success"
-  | "danger"
-  | "warning"
-  | "info";
+export type VisualSeverity = "custom" | "success" | "danger" | "warning" | "info";
 
 export const getColorForVisualSeverity = (severity: VisualSeverity): string => {
   switch (severity) {

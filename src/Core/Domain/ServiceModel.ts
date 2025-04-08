@@ -167,10 +167,7 @@ interface MinimalEmbeddedEntity {
   name: string;
   description?: string | null;
   attributes: Pick<AttributeModel, "name" | "type" | "description">[];
-  inter_service_relations?: Pick<
-    InterServiceRelation,
-    "name" | "entity_type" | "description"
-  >[];
+  inter_service_relations?: Pick<InterServiceRelation, "name" | "entity_type" | "description">[];
   embedded_entities: MinimalEmbeddedEntity[];
 }
 
@@ -182,8 +179,5 @@ export type EntityLike = {
     modifier?: AttributeModel["modifier"];
   })[];
   embedded_entities: MinimalEmbeddedEntity[];
-  inter_service_relations?: Pick<
-    InterServiceRelation,
-    "name" | "entity_type" | "description"
-  >[];
+  inter_service_relations?: Pick<InterServiceRelation, "name" | "entity_type" | "description">[];
 };

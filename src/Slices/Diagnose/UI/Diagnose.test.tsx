@@ -26,12 +26,15 @@ const axe = configureAxe({
 
 function setup() {
   const store = getStoreInstance();
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
 
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
 
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -47,7 +50,7 @@ function setup() {
           enable_lsm_expert_mode: false,
         },
       },
-    ]),
+    ])
   );
   history.push("/?env=aaa");
 
@@ -55,9 +58,7 @@ function setup() {
     <QueryClientProvider client={queryClient}>
       <CustomRouter history={history}>
         {" "}
-        <DependencyProvider
-          dependencies={{ ...dependencies, environmentHandler }}
-        >
+        <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
           <StoreProvider store={store}>
             <Diagnose
               serviceName={Service.a.name}
@@ -84,90 +85,84 @@ const server = setupServer(
           rejections: [],
         },
       });
-    },
-  ),
+    }
+  )
 );
 
-// Establish API mocking before all tests.
-beforeAll(() => server.listen());
-// Reset any request handlers that we may add during the tests,
-// so they don't affect other tests.
-afterEach(() => server.resetHandlers());
-// Clean up after the tests are finished.
-afterAll(() => server.close());
+describe("Diagnose", () => {
+  // Establish API mocking before all tests.
+  beforeAll(() => server.listen());
+  // Reset any request handlers that we may add during the tests,
+  // so they don't affect other tests.
+  afterEach(() => server.resetHandlers());
+  // Clean up after the tests are finished.
+  afterAll(() => server.close());
 
-test("Diagnose View shows empty table", async () => {
-  const { component } = setup();
+  test("Diagnose View shows empty table", async () => {
+    const { component } = setup();
 
-  render(component);
+    render(component);
 
-  expect(
-    screen.getByRole("region", { name: "Diagnostics-Loading" }),
-  ).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Diagnostics-Loading" })).toBeInTheDocument();
 
-  expect(
-    await screen.findByRole("generic", { name: "Diagnostics-Empty" }),
-  ).toBeInTheDocument();
+    expect(await screen.findByRole("generic", { name: "Diagnostics-Empty" })).toBeInTheDocument();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      const results = await axe(document.body);
 
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
-});
 
-test("Diagnose View shows failed table", async () => {
-  server.use(
-    http.get(
-      "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose",
-      () => {
-        return HttpResponse.json(
-          {
-            message: "Something went wrong",
-          },
-          {
-            status: 400,
-          },
-        );
-      },
-    ),
-  );
+  test("Diagnose View shows failed table", async () => {
+    server.use(
+      http.get(
+        "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose",
+        () => {
+          return HttpResponse.json(
+            {
+              message: "Something went wrong",
+            },
+            {
+              status: 400,
+            }
+          );
+        }
+      )
+    );
 
-  const { component } = setup();
+    const { component } = setup();
 
-  render(component);
+    render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "Diagnostics-Error" }),
-  ).toBeInTheDocument();
+    expect(await screen.findByRole("region", { name: "Diagnostics-Error" })).toBeInTheDocument();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      const results = await axe(document.body);
 
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
-});
 
-test("Diagnose View shows success table", async () => {
-  server.use(
-    http.get(
-      "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose",
-      () => {
-        return HttpResponse.json({ data: failureAndRejection });
-      },
-    ),
-  );
-  const { component } = setup();
+  test("Diagnose View shows success table", async () => {
+    server.use(
+      http.get(
+        "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3/diagnose",
+        () => {
+          return HttpResponse.json({ data: failureAndRejection });
+        }
+      )
+    );
+    const { component } = setup();
 
-  render(component);
+    render(component);
 
-  expect(
-    await screen.findByRole("generic", { name: "Diagnostics-Success" }),
-  ).toBeInTheDocument();
+    expect(await screen.findByRole("generic", { name: "Diagnostics-Success" })).toBeInTheDocument();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      const results = await axe(document.body);
 
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
 });

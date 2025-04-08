@@ -1,16 +1,7 @@
 import React, { useContext, useEffect } from "react";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  EmptyView,
-  OldPaginationWidget,
-  PageContainer,
-  RemoteDataView,
-} from "@/UI/Components";
+import { EmptyView, OldPaginationWidget, PageContainer, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Filter, SortKey } from "@S/Facts/Core/Query";
@@ -70,10 +61,7 @@ export const Page: React.FC = () => {
         label="Facts"
         SuccessView={(facts) =>
           facts.data.length <= 0 ? (
-            <EmptyView
-              message={words("facts.empty.message")}
-              aria-label="FactsView-Empty"
-            />
+            <EmptyView message={words("facts.empty.message")} aria-label="FactsView-Empty" />
           ) : (
             <FactsTable
               aria-label="Facts-Success"

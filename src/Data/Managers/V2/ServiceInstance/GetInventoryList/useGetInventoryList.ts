@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceInstanceModel } from "@/Core";
-import { useGet } from "../../helpers";
+import { CustomError, useGet } from "../../helpers";
 
 /**
  * Inventories interface
@@ -15,8 +15,8 @@ export interface Inventories {
  * Return Signature of the useGetInventoryList React Query
  */
 interface GetInventoryList {
-  useOneTime: () => UseQueryResult<Inventories, Error>;
-  useContinuous: () => UseQueryResult<Inventories, Error>;
+  useOneTime: () => UseQueryResult<Inventories, CustomError>;
+  useContinuous: () => UseQueryResult<Inventories, CustomError>;
 }
 
 /**
@@ -25,12 +25,10 @@ interface GetInventoryList {
  * @param {string[]} serviceNames - the  array of service names
  *
  * @returns {GetInventoryList} An object containing the different available queries.
- * @returns {UseQueryResult<Inventories, Error>} returns.useOneTime - Fetch the service inventories as a single query.
- * @returns {UseQueryResult<Inventories, Error>} returns.useContinuous - Fetch the service inventories  with a recursive query with an interval of 5s.
+ * @returns {UseQueryResult<Inventories, CustomError>} returns.useOneTime - Fetch the service inventories as a single query.
+ * @returns {UseQueryResult<Inventories, CustomError>} returns.useContinuous - Fetch the service inventories  with a recursive query with an interval of 5s.
  */
-export const useGetInventoryList = (
-  serviceNames: string[],
-): GetInventoryList => {
+export const useGetInventoryList = (serviceNames: string[]): GetInventoryList => {
   const get = useGet()<{ data: ServiceInstanceModel[] }>;
 
   /**
@@ -42,24 +40,23 @@ export const useGetInventoryList = (
   const fetchAllServices = async (): Promise<Inventories> => {
     const responses = await Promise.all(
       serviceNames.map(async (serviceName) =>
-        get(`/lsm/v1/service_inventory/${serviceName}?limit=1000`),
-      ),
+        get(`/lsm/v1/service_inventory/${serviceName}?limit=1000`)
+      )
     );
 
     // Map the responses to an object of service names and arrays of service instances for each service
     return Object.fromEntries(
-      responses.map((response, index) => [serviceNames[index], response.data]),
+      responses.map((response, index) => [serviceNames[index], response.data])
     );
   };
 
   return {
-    useOneTime: (): UseQueryResult<Inventories, Error> =>
+    useOneTime: (): UseQueryResult<Inventories, CustomError> =>
       useQuery({
         queryKey: ["get_inventory_list-one_time", serviceNames],
         queryFn: fetchAllServices,
-        retry: false,
       }),
-    useContinuous: (): UseQueryResult<Inventories, Error> =>
+    useContinuous: (): UseQueryResult<Inventories, CustomError> =>
       useQuery({
         queryKey: ["get_inventory_list-continuous", serviceNames],
         queryFn: fetchAllServices,

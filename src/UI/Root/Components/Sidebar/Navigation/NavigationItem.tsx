@@ -32,9 +32,11 @@ export const NavigationItem: React.FC<Link> = ({
   if (locked) {
     return <LockedItem label={label} key={id} />;
   }
+
   if (external) {
     return <ExternalItem label={label} url={url} key={id} />;
   }
+
   if (statusIndication) {
     return <CompileReportItem label={label} url={url} key={id} />;
   }
@@ -63,10 +65,7 @@ const LockedItem: React.FC<Label> = ({ label }) => (
     disabled
     preventDefault
     icon={
-      <Tooltip
-        content={"Select an environment to enable this link"}
-        position="right"
-      >
+      <Tooltip content={"Select an environment to enable this link"} position="right">
         <LockIcon />
       </Tooltip>
     }
@@ -77,12 +76,7 @@ const LockedItem: React.FC<Label> = ({ label }) => (
 
 const ExternalItem: React.FC<Label & Url> = ({ label, url }) => (
   <NavItem itemId={label}>
-    <a
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-      aria-label="Sidebar-Navigation-Item-External"
-    >
+    <a href={url} target="_blank" rel="noreferrer" aria-label="Sidebar-Navigation-Item-External">
       {label}
     </a>
   </NavItem>
@@ -104,10 +98,7 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
         {label}
         {isSuccess && data.isCompiling && (
           <Tooltip key={"ongoing-compilation-tooltip"} content={"Compiling"}>
-            <CompileReportsIndication
-              role="presentation"
-              aria-label="CompileReportsIndication"
-            />
+            <CompileReportsIndication role="presentation" aria-label="CompileReportsIndication" />
           </Tooltip>
         )}
       </NavLink>

@@ -17,7 +17,7 @@ export const getUrl = (params: GetDiscoveredResourcesParams): string => {
               discovered_resource_id: filter.discovered_resource_id,
             },
           },
-          { allowDots: true, arrayFormat: "repeat" },
+          { allowDots: true, arrayFormat: "repeat" }
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";

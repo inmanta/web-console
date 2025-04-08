@@ -9,11 +9,7 @@ import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
-import {
-  DependencyProvider,
-  EnvironmentHandlerImpl,
-  PrimaryRouteManager,
-} from "@/UI";
+import { DependencyProvider, EnvironmentHandlerImpl, PrimaryRouteManager } from "@/UI";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
 import "@testing-library/jest-dom";
@@ -30,10 +26,7 @@ const setup = () => {
     },
   });
   const store = getStoreInstance();
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    PrimaryRouteManager(""),
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
 
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -49,7 +42,7 @@ const setup = () => {
           enable_lsm_expert_mode: false,
         },
       },
-    ]),
+    ])
   );
   history.push("/?env=aaa");
 
@@ -57,20 +50,10 @@ const setup = () => {
     <QueryClientProvider client={queryClient}>
       <CustomRouter history={history}>
         <StoreProvider store={store}>
-          <DependencyProvider
-            dependencies={{ ...dependencies, environmentHandler }}
-          >
+          <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
             <Routes>
-              <Route
-                path="/"
-                element={
-                  <ComposerCreatorProvider serviceName={"child-service"} />
-                }
-              />
-              <Route
-                path="/lsm/catalog/child-service/inventory"
-                element={<></>}
-              />
+              <Route path="/" element={<ComposerCreatorProvider serviceName={"child-service"} />} />
+              <Route path="/lsm/catalog/child-service/inventory" element={<></>} />
             </Routes>
           </DependencyProvider>
         </StoreProvider>
@@ -88,7 +71,7 @@ const server = setupServer(
     return HttpResponse.json({
       data: [],
     });
-  }),
+  })
 );
 
 describe("ComposerCreatorProvider", () => {
@@ -106,18 +89,15 @@ describe("ComposerCreatorProvider", () => {
   it("if there is error when fetching service models the error view is shown", async () => {
     server.use(
       http.get("/lsm/v1/service_catalog", async () => {
-        return HttpResponse.json(
-          { message: "Something went wrong" },
-          { status: 400 },
-        );
-      }),
+        return HttpResponse.json({ message: "Something went wrong" }, { status: 400 });
+      })
     );
     render(setup());
 
     expect(
       await screen.findByRole("region", {
         name: "ComposerCreatorProvider-Loading",
-      }),
+      })
     ).toBeInTheDocument();
 
     expect(await screen.findByTestId("ErrorView")).toBeInTheDocument();
@@ -125,7 +105,7 @@ describe("ComposerCreatorProvider", () => {
     expect(
       await screen.findByRole("region", {
         name: "ComposerCreatorProvider-ServiceModelsQuery_failed",
-      }),
+      })
     ).toBeInTheDocument();
 
     expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
@@ -135,16 +115,13 @@ describe("ComposerCreatorProvider", () => {
     render(setup());
     server.use(
       http.get("/lsm/v1/service_inventory/parent-service", async () => {
-        return HttpResponse.json(
-          { message: "Something went wrong" },
-          { status: 400 },
-        );
-      }),
+        return HttpResponse.json({ message: "Something went wrong" }, { status: 400 });
+      })
     );
     expect(
       await screen.findByRole("region", {
         name: "ComposerCreatorProvider-Loading",
-      }),
+      })
     ).toBeInTheDocument();
 
     expect(await screen.findByTestId("ErrorView")).toBeInTheDocument();
@@ -152,7 +129,7 @@ describe("ComposerCreatorProvider", () => {
     expect(
       await screen.findByRole("region", {
         name: "ComposerCreatorProvider-RelatedInventoriesQuery_failed",
-      }),
+      })
     ).toBeInTheDocument();
 
     expect(await screen.findByText("Something went wrong")).toBeInTheDocument();
@@ -164,7 +141,7 @@ describe("ComposerCreatorProvider", () => {
         return HttpResponse.json({
           data: [parentModel, containerModel],
         });
-      }),
+      })
     );
 
     render(setup());
@@ -172,7 +149,7 @@ describe("ComposerCreatorProvider", () => {
     expect(
       await screen.findByRole("region", {
         name: "ComposerCreatorProvider-Loading",
-      }),
+      })
     ).toBeInTheDocument();
 
     expect(await screen.findByTestId("ErrorView")).toBeInTheDocument();
@@ -180,13 +157,11 @@ describe("ComposerCreatorProvider", () => {
     expect(
       await screen.findByRole("region", {
         name: "ComposerCreatorProvider-NoServiceModel_failed",
-      }),
+      })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByText(
-        "There is no service model available for child-service",
-      ),
+      await screen.findByText("There is no service model available for child-service")
     ).toBeInTheDocument();
   });
 
@@ -198,12 +173,8 @@ describe("ComposerCreatorProvider", () => {
 
     expect(composer).toBeInTheDocument();
 
-    await userEvent.click(
-      await screen.findByRole("button", { name: "Cancel" }),
-    );
+    await userEvent.click(await screen.findByRole("button", { name: "Cancel" }));
 
-    expect(window.location.pathname).toEqual(
-      "/lsm/catalog/child-service/inventory",
-    );
+    expect(window.location.pathname).toEqual("/lsm/catalog/child-service/inventory");
   });
 });

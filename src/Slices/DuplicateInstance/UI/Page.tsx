@@ -4,21 +4,14 @@ import { PageContainer, ServiceProvider } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DuplicateInstancePage } from "./DuplicateInstancePage";
 
-const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
-  children,
-  ...props
-}) => (
-  <PageContainer
-    {...props}
-    pageTitle={words("inventory.duplicateInstance.title")}
-  >
+const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children, ...props }) => (
+  <PageContainer {...props} pageTitle={words("inventory.duplicateInstance.title")}>
     {children}
   </PageContainer>
 );
 
 export const Page: React.FC = () => {
-  const { service: serviceName, instance } =
-    useRouteParams<"DuplicateInstance">();
+  const { service: serviceName, instance } = useRouteParams<"DuplicateInstance">();
 
   return (
     <ServiceProvider
@@ -26,10 +19,7 @@ export const Page: React.FC = () => {
       Wrapper={PageWrapper}
       Dependant={({ service }) => (
         <PageWrapper>
-          <DuplicateInstancePage
-            serviceEntity={service}
-            instanceId={instance}
-          />
+          <DuplicateInstancePage serviceEntity={service} instanceId={instance} />
         </PageWrapper>
       )}
     />

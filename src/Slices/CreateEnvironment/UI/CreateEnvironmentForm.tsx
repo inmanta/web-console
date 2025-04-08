@@ -14,10 +14,7 @@ interface Props {
   projects: ProjectModel[];
 }
 
-export const CreateEnvironmentForm: React.FC<Props> = ({
-  projects,
-  ...props
-}) => {
+export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) => {
   const { commandResolver, featureManager } = useContext(DependencyContext);
   const isLsmEnabled = featureManager.isLsmEnabled();
   const navigateTo = useNavigateTo();
@@ -28,8 +25,10 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
   const createEnvironment = commandResolver.useGetTrigger<"CreateEnvironment">({
     kind: "CreateEnvironment",
   });
-  const [createEnvironmentBody, setCreateEnvironmentBody] =
-    useState<CreateEnvironmentParams>({ project_id: "", name: "" });
+  const [createEnvironmentBody, setCreateEnvironmentBody] = useState<CreateEnvironmentParams>({
+    project_id: "",
+    name: "",
+  });
   const [errorMessage, setErrorMessage] = useState("");
   const [projectName, setProjectName] = useState<string | null>("");
   const setName = (name: string) => {
@@ -62,9 +61,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
 
   const onSubmitCreate = async () => {
     if (projectName && createEnvironmentBody.name) {
-      const matchingProject = projects.find(
-        (project) => project.name === projectName,
-      );
+      const matchingProject = projects.find((project) => project.name === projectName);
 
       if (matchingProject) {
         const fullBody = {
@@ -90,9 +87,9 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
     <Form isWidthLimited aria-label={props["aria-label"]}>
       {errorMessage && (
         <InlinePlainAlert
-          aria-label={`submit-error-message`}
+          aria-label={"submit-error-message"}
           errorMessage={errorMessage}
-          closeButtonAriaLabel={`submit-close-error`}
+          closeButtonAriaLabel={"submit-close-error"}
           onCloseAlert={onCloseAlert}
         />
       )}
@@ -147,11 +144,7 @@ const FormControls: React.FC<{
 }> = ({ isSubmitDisabled, onSubmit, onCancel }) => (
   <Flex direction={{ default: "row" }} rowGap={{ default: "rowGap2xl" }}>
     <FlexItem>
-      <Button
-        aria-label="submit"
-        onClick={onSubmit}
-        isDisabled={isSubmitDisabled}
-      >
+      <Button aria-label="submit" onClick={onSubmit} isDisabled={isSubmitDisabled}>
         {words("submit")}
       </Button>
     </FlexItem>

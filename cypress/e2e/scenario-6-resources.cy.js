@@ -54,7 +54,7 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
 
     cy.request({
       method: "POST",
-      url: `/lsm/v1/exporter/export_service_definition`,
+      url: "/lsm/v1/exporter/export_service_definition",
       headers: { "X-Inmanta-Tid": id },
       body: { force_update: true },
     });
@@ -76,7 +76,7 @@ describe("Scenario 6 : Resources", () => {
     // Select Test environment
     cy.visit("/console/");
 
-    cy.get(`[aria-label="Select-environment-test"]`).click();
+    cy.get('[aria-label="Select-environment-test"]').click();
 
     // Go to Resources page by clicking on navbar
     cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -90,7 +90,7 @@ describe("Scenario 6 : Resources", () => {
     );
     // Expect table to be empty in case of ISO project
     isIso &&
-      cy.get('[aria-label="ResourcesPage-Empty"]').should("to.be.visible");
+      cy.get('[aria-label="ResourcesView-Empty"]').should("to.be.visible");
   });
 
   if (isIso) {
@@ -98,7 +98,7 @@ describe("Scenario 6 : Resources", () => {
       // Select Test environment
       cy.visit("/console/");
 
-      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Select-environment-test"]').click();
 
       // Go to Service Catalog
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -301,7 +301,7 @@ describe("Scenario 6 : Resources", () => {
     it("6.3 Log message filtering", () => {
       // Select Test environment
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Select-environment-test"]').click();
 
       // Go to Resources page
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -341,7 +341,7 @@ describe("Scenario 6 : Resources", () => {
     it("6.4 Resources with multiple dependencies", () => {
       // Select Test environment
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Select-environment-test"]').click();
 
       // Go to Service Catalog page
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -509,7 +509,7 @@ describe("Scenario 6 : Resources", () => {
       // Select Test environment
       cy.visit("/console/");
 
-      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Select-environment-test"]').click();
 
       // Go to Service Catalog
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
@@ -674,7 +674,7 @@ describe("Scenario 6 : Resources", () => {
     it("6.6 Resources for OSS", () => {
       cy.visit("/console/");
 
-      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Select-environment-test"]').click();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]')
         .contains("Resources")

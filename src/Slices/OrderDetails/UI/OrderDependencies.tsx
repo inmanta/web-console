@@ -37,10 +37,7 @@ export const OrderDependencies: React.FC<Props> = ({ dependencies }) => {
           {Object.entries(dependencies).map(([instance_id, status], index) => (
             <Tr key={instance_id} aria-label={`Dependency-Row-${index}`}>
               <Td>
-                <TextWithCopy
-                  value={instance_id}
-                  tooltipContent={words("serviceIdentity.copy")}
-                />
+                <TextWithCopy value={instance_id} tooltipContent={words("serviceIdentity.copy")} />
               </Td>
               <Td>
                 <OrderStatusLabel status={status} />

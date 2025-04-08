@@ -8,15 +8,8 @@ interface Props {
   onClick: (cellValue: string, serviceName?: string | undefined) => void;
 }
 
-export const InstanceCellButton: React.FC<Props> = ({
-  id,
-  serviceName,
-  onClick,
-}) => {
-  const { data, isLoading, isError, isSuccess } = useGetInstance(
-    serviceName,
-    id,
-  ).useOneTime();
+export const InstanceCellButton: React.FC<Props> = ({ id, serviceName, onClick }) => {
+  const { data, isLoading, isError, isSuccess } = useGetInstance(serviceName, id).useOneTime();
 
   if (isLoading) {
     return <Spinner size="sm" />;
@@ -28,16 +21,10 @@ export const InstanceCellButton: React.FC<Props> = ({
 
   if (isSuccess) {
     const { service_identity_attribute_value } = data;
-    const identifier = service_identity_attribute_value
-      ? service_identity_attribute_value
-      : id;
+    const identifier = service_identity_attribute_value ? service_identity_attribute_value : id;
 
     return (
-      <Button
-        variant="link"
-        isInline
-        onClick={() => onClick(identifier, serviceName)}
-      >
+      <Button variant="link" isInline onClick={() => onClick(identifier, serviceName)}>
         {identifier}
       </Button>
     );

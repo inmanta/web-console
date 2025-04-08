@@ -1,11 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import {
-  EmbeddedEntity,
-  InstanceAttributeModel,
-  ServiceInstanceModel,
-  ServiceModel,
-} from "@/Core";
-import { useGet } from "../../helpers";
+import { EmbeddedEntity, InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
+import { CustomError, useGet } from "../../helpers";
 
 /*
  * interface for the service instance with its related instances and eventual coordinates on canvas
@@ -20,8 +15,8 @@ export interface InstanceWithRelations {
  * Return Signature of the useServiceModel React Query
  */
 interface GetInstanceWithRelationsHook {
-  useOneTime: () => UseQueryResult<InstanceWithRelations, Error>;
-  useContinuous: () => UseQueryResult<InstanceWithRelations, Error>;
+  useOneTime: () => UseQueryResult<InstanceWithRelations, CustomError>;
+  useContinuous: () => UseQueryResult<InstanceWithRelations, CustomError>;
 }
 
 /**
@@ -34,7 +29,7 @@ interface GetInstanceWithRelationsHook {
 export const useGetInstanceWithRelations = (
   instanceId: string,
   includesReferencedBy: boolean = false,
-  serviceModel?: ServiceModel,
+  serviceModel?: ServiceModel
 ): GetInstanceWithRelationsHook => {
   const getUrl = (id: string) =>
     `/lsm/v1/service_inventory?service_id=${id}&include_deployment_progress=false&exclude_read_only_attributes=false&include_referenced_by=${includesReferencedBy}&include_metadata=true`;
@@ -47,15 +42,11 @@ export const useGetInstanceWithRelations = (
    * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity from which to extract the relations.
    * @returns {string[]} An array of the names of all relations.
    */
-  const getAllRelationNames = (
-    serviceModel: ServiceModel | EmbeddedEntity,
-  ): string[] => {
-    const relations =
-      serviceModel.inter_service_relations.map((relation) => relation.name) ||
-      [];
+  const getAllRelationNames = (serviceModel: ServiceModel | EmbeddedEntity): string[] => {
+    const relations = serviceModel.inter_service_relations.map((relation) => relation.name) || [];
 
     const nestedRelations = serviceModel.embedded_entities.flatMap((entity) =>
-      getAllRelationNames(entity),
+      getAllRelationNames(entity)
     );
 
     return [...relations, ...nestedRelations];
@@ -68,14 +59,10 @@ export const useGetInstanceWithRelations = (
    * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity from which to extract the embedded entities.
    * @returns {string[]} An array of the names of all embedded entities.
    */
-  const getAllEmbeddedEntityNames = (
-    serviceModel: ServiceModel | EmbeddedEntity,
-  ): string[] => {
-    const embeddedEntities = serviceModel.embedded_entities.map(
-      (entity) => entity.name,
-    );
-    const nestedEmbeddedEntities = serviceModel.embedded_entities.flatMap(
-      (entity) => getAllEmbeddedEntityNames(entity),
+  const getAllEmbeddedEntityNames = (serviceModel: ServiceModel | EmbeddedEntity): string[] => {
+    const embeddedEntities = serviceModel.embedded_entities.map((entity) => entity.name);
+    const nestedEmbeddedEntities = serviceModel.embedded_entities.flatMap((entity) =>
+      getAllEmbeddedEntityNames(entity)
     );
 
     return [...embeddedEntities, ...nestedEmbeddedEntities];
@@ -95,7 +82,7 @@ export const useGetInstanceWithRelations = (
   const getInterServiceRelationIds = (
     attributes: InstanceAttributeModel,
     relationNames: string[],
-    embeddedNames: string[],
+    embeddedNames: string[]
   ): string[] => {
     // Map relation names to corresponding IDs from attributes
     const relationIds = relationNames
@@ -113,14 +100,14 @@ export const useGetInstanceWithRelations = (
       if (Array.isArray(embeddedAttributes)) {
         // Recursively collect IDs from an array of embedded attributes
         return embeddedAttributes.flatMap((embedded) =>
-          getInterServiceRelationIds(embedded, relationNames, embeddedNames),
+          getInterServiceRelationIds(embedded, relationNames, embeddedNames)
         );
       } else {
         // Recursively collect IDs from a single embedded attribute
         return getInterServiceRelationIds(
           embeddedAttributes as InstanceAttributeModel, //InstanceAttributeModel is a Record<string, unknown> so casting is required here
           relationNames,
-          embeddedNames,
+          embeddedNames
         );
       }
     });
@@ -137,9 +124,7 @@ export const useGetInstanceWithRelations = (
    * @returns {Promise<InstanceWithRelations>} An object containing the fetched instance and its related instances.
    * @throws Error if the instance fails to fetch.
    */
-  const fetchInstanceWithRelations = async (
-    id: string,
-  ): Promise<InstanceWithRelations> => {
+  const fetchInstanceWithRelations = async (id: string): Promise<InstanceWithRelations> => {
     const interServiceRelations: ServiceInstanceModel[] = [];
     const { data: instance } = await get(getUrl(id));
     let serviceIds: string[] = [];
@@ -148,19 +133,12 @@ export const useGetInstanceWithRelations = (
       const attributesToFetch = getAllRelationNames(serviceModel);
       const uniqueAttributes = [...new Set(attributesToFetch)];
       const allEmbedded = getAllEmbeddedEntityNames(serviceModel);
-      const attributes =
-        instance.active_attributes || instance.candidate_attributes || {}; //we don't operate on rollback attributes
+      const attributes = instance.active_attributes || instance.candidate_attributes || {}; //we don't operate on rollback attributes
 
-      serviceIds = getInterServiceRelationIds(
-        attributes,
-        uniqueAttributes,
-        allEmbedded,
-      );
+      serviceIds = getInterServiceRelationIds(attributes, uniqueAttributes, allEmbedded);
     }
 
-    const allIds = [
-      ...new Set([...serviceIds, ...(instance.referenced_by || [])]),
-    ];
+    const allIds = [...new Set([...serviceIds, ...(instance.referenced_by || [])])];
 
     await Promise.all(
       allIds.map(async (relatedId) => {
@@ -171,7 +149,7 @@ export const useGetInstanceWithRelations = (
         }
 
         return interServiceRelation;
-      }),
+      })
     );
 
     return {
@@ -185,19 +163,19 @@ export const useGetInstanceWithRelations = (
      * Custom hook to fetch the parameter from the API once.
      * @returns The result of the query, including the parameter data.
      */
-    useOneTime: (): UseQueryResult<InstanceWithRelations, Error> =>
+    useOneTime: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
         queryKey: ["get_instance_with_relations-one_time", instanceId],
         queryFn: () => fetchInstanceWithRelations(instanceId),
-        retry: false,
+
         enabled: serviceModel !== undefined,
         gcTime: 0,
       }),
-    useContinuous: (): UseQueryResult<InstanceWithRelations, Error> =>
+    useContinuous: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
         queryKey: ["get_instance_with_relations-continuous", instanceId],
         queryFn: () => fetchInstanceWithRelations(instanceId),
-        retry: false,
+
         refetchInterval: 5000,
         enabled: serviceModel !== undefined,
       }),

@@ -1,9 +1,4 @@
-import React, {
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { MutableRefObject, useEffect, useState } from "react";
 import {
   Dropdown,
   DropdownItem,
@@ -16,31 +11,49 @@ import {
   NotificationDrawerList,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { RemoteData } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
+import { UseMutateFunction, UseQueryResult } from "@tanstack/react-query";
+import { PageSize } from "@/Core";
+import {
+  NotificationResponse,
+  useGetNotifications,
+} from "@/Data/Managers/V2/Notification/GetNotifications";
+import {
+  UpdateNotificationParams,
+  useUpdateNotification,
+} from "@/Data/Managers/V2/Notification/UpdateNotification";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import { Body } from "@S/Notification/Core/Domain";
-import { drawerQuery, ViewData } from "@S/Notification/Core/Query";
 import { Item, OnUpdate } from "./Item";
 
+/**
+ * Props for the Drawer component.
+ *
+ * @property {(event?: MouseEvent) => void} onClose - Function to handle drawer closing
+ * @property {boolean} isDrawerOpen - Whether the drawer is currently open
+ * @property {MutableRefObject<HTMLDivElement | undefined>} drawerRef - Ref to the drawer DOM element
+ */
 interface Props {
   onClose(event?: MouseEvent): void;
   isDrawerOpen: boolean;
   drawerRef: MutableRefObject<HTMLDivElement | undefined>;
 }
 
-export const Drawer: React.FC<Props> = ({
-  onClose,
-  isDrawerOpen,
-  drawerRef,
-}) => {
-  const { commandResolver, queryResolver } = useContext(DependencyContext);
-  const data = queryResolver.useReadOnly<"GetNotifications">(drawerQuery);
-
-  const trigger = commandResolver.useGetTrigger<"UpdateNotification">({
-    kind: "UpdateNotification",
+/**
+ * Main notification drawer component that displays a list of notifications.
+ * Provides functionality to view, mark as read/unread, and clear notifications.
+ */
+export const Drawer: React.FC<Props> = ({ onClose, isDrawerOpen, drawerRef }) => {
+  const response = useGetNotifications({
+    pageSize: PageSize.from("50"),
     origin: "drawer",
+    currentPage: { kind: "CurrentPage", value: "" },
+  }).useContinuous();
+
+  const { mutate } = useUpdateNotification({
+    onSuccess: () => {
+      onClose();
+      response.refetch();
+    },
   });
 
   useEffect(() => {
@@ -60,91 +73,95 @@ export const Drawer: React.FC<Props> = ({
     };
   }, [drawerRef, isDrawerOpen, onClose]);
 
-  return <View {...{ data, onClose, isDrawerOpen, trigger, drawerRef }} />;
+  return <View {...{ response, onClose, isDrawerOpen, mutate, drawerRef }} />;
 };
 
+/**
+ * Props for the View component that extends the main Drawer props.
+ *
+ * @property {UseQueryResult<NotificationResponse, Error>} response - Query result containing notification data
+ * @property {UseMutateFunction<void, Error, UpdateNotificationParams, unknown>} mutate - Function to update notifications
+ */
 interface ViewProps extends Props {
-  data: ViewData;
-  trigger(body: Body, ids: string[]): void;
+  response: UseQueryResult<NotificationResponse, Error>;
+  mutate: UseMutateFunction<void, Error, UpdateNotificationParams, unknown>;
 }
 
-const View: React.FC<ViewProps> = ({ data, onClose, trigger, drawerRef }) => {
-  const count = RemoteData.withFallback(
-    RemoteData.mapSuccess(
-      (info) => info.data.filter((n) => !n.read).length,
-      data,
-    ),
-    undefined,
-  );
+/**
+ * Internal view component that renders the notification drawer content.
+ * Handles the display of notifications and provides actions for managing them.
+ */
+const View: React.FC<ViewProps> = ({ response, onClose, mutate, drawerRef }) => {
+  const count = response.isSuccess
+    ? response.data.data.filter((notification) => !notification.read).length
+    : 0;
 
   const getOnUpdate =
     (ids: string[]): OnUpdate =>
-    async (body) => {
-      trigger(body, ids);
+    (body) => {
+      mutate({ body, ids });
     };
 
   const onClearAll = () => {
-    if (!RemoteData.isSuccess(data)) return;
-    getOnUpdate(data.value.data.map((notification) => notification.id))({
+    if (!response.isSuccess) return;
+
+    getOnUpdate(response.data.data.map((notification) => notification.id))({
       read: true,
       cleared: true,
     });
   };
 
   const onReadAll = () => {
-    if (!RemoteData.isSuccess(data)) return;
+    if (!response.isSuccess) return;
+
     getOnUpdate(
-      data.value.data
+      response.data.data
         .filter((notification) => !notification.read)
-        .map((notification) => notification.id),
+        .map((notification) => notification.id)
     )({ read: true });
   };
 
   return (
-    <NotificationDrawer
-      ref={drawerRef}
-      aria-label="NotificationDrawer"
-      id="notificationDrawer"
-    >
+    <NotificationDrawer ref={drawerRef} aria-label="NotificationDrawer" id="notificationDrawer">
       <NotificationDrawerHeader count={count} onClose={() => onClose()}>
         <ActionList {...{ onClearAll, onReadAll, onClose }} />
       </NotificationDrawerHeader>
       <NotificationDrawerBody>
         <NotificationDrawerList>
-          {RemoteData.fold(
-            {
-              notAsked: () => null,
-              loading: () => null,
-              failed: () => null,
-              success: ({ data }) =>
-                data.map((notification) => (
-                  <Item
-                    data-testid="menuitem"
-                    {...{ notification }}
-                    key={notification.id}
-                    onUpdate={getOnUpdate([notification.id])}
-                  />
-                )),
-            },
-            data,
-          )}
+          {response.isSuccess
+            ? response.data.data.map((notification) => (
+                <Item
+                  data-testid="menuitem"
+                  {...{ notification }}
+                  key={notification.id}
+                  onUpdate={getOnUpdate([notification.id])}
+                />
+              ))
+            : null}
         </NotificationDrawerList>
       </NotificationDrawerBody>
     </NotificationDrawer>
   );
 };
 
+/**
+ * Props for the ActionList component.
+ *
+ * @property {() => void} onClearAll - Function to clear all notifications
+ * @property {() => void} onReadAll - Function to mark all notifications as read
+ * @property {() => void} onClose - Function to close the drawer
+ */
 interface ActionListProps {
   onClearAll(): void;
   onReadAll(): void;
   onClose(): void;
 }
 
-const ActionList: React.FC<ActionListProps> = ({
-  onClearAll,
-  onReadAll,
-  onClose,
-}) => {
+/**
+ * Component that renders a dropdown menu with actions for all notifications.
+ * Provides options to clear all, mark all as read, and navigate to notifications page.
+ */
+const ActionList: React.FC<ActionListProps> = ({ onClearAll, onReadAll, onClose }) => {
   const navigateTo = useNavigateTo();
   const [isOpen, setIsOpen] = useState(false);
 

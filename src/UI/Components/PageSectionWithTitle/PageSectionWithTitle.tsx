@@ -5,11 +5,7 @@ interface Props extends PageSectionProps {
   title: string;
 }
 
-export const PageSectionWithTitle: React.FC<Props> = ({
-  children,
-  title,
-  ...props
-}) => (
+export const PageSectionWithTitle: React.FC<Props> = ({ children, title, ...props }) => (
   <PageSection hasBodyWrapper={false} {...props}>
     <Content>
       <Content component="h1">{title}</Content>

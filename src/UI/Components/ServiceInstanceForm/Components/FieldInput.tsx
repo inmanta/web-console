@@ -1,19 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  Button,
-  FormFieldGroupExpandable,
-  FormFieldGroupHeader,
-} from "@patternfly/react-core";
+import { Button, FormFieldGroupExpandable, FormFieldGroupHeader } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { get } from "lodash-es";
 import { v4 as uuidv4 } from "uuid";
-import {
-  InstanceAttributeModel,
-  DictListField,
-  Field,
-  NestedField,
-  FormSuggestion,
-} from "@/Core";
+import { InstanceAttributeModel, DictListField, Field, NestedField, FormSuggestion } from "@/Core";
 import { toOptionalBoolean } from "@/Data";
 import { useSuggestedValues } from "@/Data/Managers/V2/ServiceInstance";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
@@ -67,7 +57,7 @@ const makePath = (path: string | null, next: string): string =>
  *   @prop {boolean} isNew - Flag indicating whether the field is newly added. Default is false.
  *   @prop {FormSuggestion | null} suggestions - The suggestions for the field. Default is null.
  *
- * @returns {JSX.Element} The rendered FieldInput component.
+ * @returns {React.FC<Props>} The rendered FieldInput component.
  */
 export const FieldInput: React.FC<Props> = ({
   field,
@@ -78,8 +68,7 @@ export const FieldInput: React.FC<Props> = ({
   isNew = false,
   suggestions,
 }) => {
-  const { data, isLoading, error } =
-    useSuggestedValues(suggestions).useOneTime();
+  const { data, isLoading, error } = useSuggestedValues(suggestions).useOneTime();
   const [suggestionsList, setSuggestionsList] = useState<string[] | null>(null);
 
   // Get the controlled value for the field
@@ -101,7 +90,7 @@ export const FieldInput: React.FC<Props> = ({
     (value) => {
       getUpdate(makePath(path, field.name), value);
     },
-    [getUpdate, path, field.name],
+    [getUpdate, path, field.name]
   );
 
   useEffect(() => {
@@ -170,14 +159,11 @@ export const FieldInput: React.FC<Props> = ({
           isOptional={field.isOptional}
           shouldBeDisabled={
             field.isDisabled &&
-            get(originalState, makePath(path, field.name).split(".")) !==
-              undefined &&
+            get(originalState, makePath(path, field.name).split(".")) !== undefined &&
             !isNew
           }
           type={field.inputType}
-          handleInputChange={(value, _event) =>
-            getUpdate(makePath(path, field.name), value)
-          }
+          handleInputChange={(value, _event) => getUpdate(makePath(path, field.name), value)}
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
@@ -212,9 +198,7 @@ export const FieldInput: React.FC<Props> = ({
         <TextFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={getControlledValue(
-            get(formState, makePath(path, field.name)),
-          )}
+          attributeValue={getControlledValue(get(formState, makePath(path, field.name)))}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
@@ -223,9 +207,13 @@ export const FieldInput: React.FC<Props> = ({
             !isNew
           }
           type={field.inputType}
-          handleInputChange={(value, _event) =>
-            getUpdate(makePath(path, field.name), value)
-          }
+          handleInputChange={(value, _event) => {
+            if (field.type.includes("dict")) {
+              getUpdate(makePath(path, field.name), tryParseJSON(value));
+            } else {
+              getUpdate(makePath(path, field.name), value);
+            }
+          }}
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
@@ -235,20 +223,14 @@ export const FieldInput: React.FC<Props> = ({
     case "InterServiceRelation":
       return (
         <RelatedServiceProvider
-          alreadySelected={
-            get(formState, makePath(path, field.name), []) as string[]
-          }
+          alreadySelected={get(formState, makePath(path, field.name), []) as string[]}
           key={makePath(path, field.name)}
           serviceName={field.serviceEntity}
           attributeName={field.name}
           description={field.description}
-          attributeValue={
-            get(formState, makePath(path, field.name) as string) as string
-          }
+          attributeValue={get(formState, makePath(path, field.name) as string) as string}
           isOptional={field.isOptional}
-          handleInputChange={(value) =>
-            getUpdate(makePath(path, field.name) as string, value)
-          }
+          handleInputChange={(value) => getUpdate(makePath(path, field.name) as string, value)}
         />
       );
     case "Enum":
@@ -294,16 +276,12 @@ export const FieldInput: React.FC<Props> = ({
     case "RelationList":
       return (
         <RelatedServiceProvider
-          alreadySelected={
-            get(formState, makePath(path, field.name), []) as string[]
-          }
+          alreadySelected={get(formState, makePath(path, field.name), []) as string[]}
           key={makePath(path, field.name)}
           serviceName={field.serviceEntity}
           attributeName={field.name}
           description={field.description !== null ? field.description : ""}
-          attributeValue={
-            get(formState, makePath(path, field.name), []) as string[]
-          }
+          attributeValue={get(formState, makePath(path, field.name), []) as string[]}
           isOptional={field.isOptional}
           handleInputChange={(value) => {
             getUpdate(makePath(path, field.name), value, true);
@@ -342,9 +320,7 @@ const getPlaceholderForType = (typeName: string): string | undefined => {
  */
 const getTypeHintForType = (typeName: string): string | undefined => {
   if (typeName.endsWith("[]")) {
-    return words("inventory.form.typeHint.list")(
-      typeName.substring(0, typeName.indexOf("[")),
-    );
+    return words("inventory.form.typeHint.list")(typeName.substring(0, typeName.indexOf("[")));
   } else if (typeName.includes("dict")) {
     return words("inventory.form.typeHint.dict");
   }
@@ -370,7 +346,7 @@ interface NestedProps {
  *   @prop {OriginalState} originalState - The original state of the nested field.
  *   @prop {Function} getUpdate - Function to update and get updates for the nested field.
  *   @prop {string} path - The path of the nested field.
- * @returns {JSX.Element} The rendered NestedFieldInput component.
+ * @returns {React.FC<NestedProps>} The rendered NestedFieldInput component.
  */
 const NestedFieldInput: React.FC<NestedProps> = ({
   field,
@@ -381,11 +357,12 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   isNew = false,
 }) => {
   const [showList, setShowList] = useState(
-    !field.isOptional || formState[field.name] !== null,
+    !field.isOptional || get(formState, makePath(path, field.name)) !== null
   );
 
   const onAdd = () => {
     setShowList(true);
+
     if (formState !== null) {
       getUpdate(makePath(path, field.name), createFormState(field.fields));
     }
@@ -417,8 +394,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
                   isDisabled={
                     (!isNew &&
                       field.isDisabled &&
-                      get(originalState, makePath(path, field.name)) !==
-                        undefined) ||
+                      get(originalState, makePath(path, field.name)) !== undefined) ||
                     showList
                   }
                 >
@@ -472,7 +448,7 @@ interface DictListProps {
  *   @prop {OriginalState} originalState - The original state of the dictionary list field.
  *   @prop {Function} getUpdate - Function to update and get updates for the dictionary list field.
  *   @prop {string} path - The path of the dictionary list field.
- * @returns {JSX.Element} The rendered DictListFieldInput component.
+ * @returns {React.FC<DictListProps>} The rendered DictListFieldInput component.
  */
 const DictListFieldInput: React.FC<DictListProps> = ({
   field,
@@ -484,7 +460,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
 }) => {
   const list = useMemo(
     () => (get(formState, makePath(path, field.name)) as Array<unknown>) || [],
-    [formState, path, field.name],
+    [formState, path, field.name]
   );
 
   const [addedItemsPaths, setAddedItemPaths] = useState<string[]>([]);
@@ -510,17 +486,11 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     }
 
     get(originalState, makePath(path, field.name));
-    setAddedItemPaths([
-      ...addedItemsPaths,
-      `${makePath(path, field.name)}.${list.length}`,
-    ]);
+    setAddedItemPaths([...addedItemsPaths, `${makePath(path, field.name)}.${list.length}`]);
 
     setItemIds([...itemIds, uuidv4()]);
 
-    getUpdate(makePath(path, field.name), [
-      ...list,
-      createFormState(field.fields),
-    ]);
+    getUpdate(makePath(path, field.name), [...list, createFormState(field.fields)]);
   };
 
   /**
@@ -556,9 +526,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
 
     setAddedItemPaths([...newPaths]);
 
-    getUpdate(makePath(path, field.name), [
-      ...list.filter((_, i) => i !== index),
-    ]);
+    getUpdate(makePath(path, field.name), [...list.filter((_, i) => i !== index)]);
   };
 
   return (
@@ -580,8 +548,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               onClick={onAdd}
               isDisabled={
                 (field.isDisabled &&
-                  get(originalState, makePath(path, field.name)) !==
-                    undefined) ||
+                  get(originalState, makePath(path, field.name)) !== undefined) ||
                 (!!field.max && list.length >= field.max)
               }
             >
@@ -593,19 +560,13 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     >
       {list.map((_item, index) => (
         <FormFieldGroupExpandable
-          aria-label={`DictListFieldInputItem-${makePath(
-            path,
-            `${field.name}.${index}`,
-          )}`}
+          aria-label={`DictListFieldInputItem-${makePath(path, `${field.name}.${index}`)}`}
           key={makePath(path, `${field.name}.${itemIds[index]}`)}
           header={
             <FormFieldGroupHeader
               titleText={{
                 text: index,
-                id: `DictListFieldInputItem-${makePath(
-                  path,
-                  `${field.name}.${index}`,
-                )}`,
+                id: `DictListFieldInputItem-${makePath(path, `${field.name}.${index}`)}`,
               }}
               actions={
                 <Button
@@ -614,8 +575,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                   isDisabled={
                     (!isNew &&
                       field.isDisabled &&
-                      get(originalState, makePath(path, field.name)) !==
-                        undefined) ||
+                      get(originalState, makePath(path, field.name)) !== undefined) ||
                     field.min > index
                   }
                 >
@@ -633,12 +593,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               originalState={originalState}
               getUpdate={getUpdate}
               path={makePath(path, `${field.name}.${index}`)}
-              isNew={
-                isNew ||
-                addedItemsPaths.includes(
-                  `${makePath(path, field.name)}.${index}`,
-                )
-              }
+              isNew={isNew || addedItemsPaths.includes(`${makePath(path, field.name)}.${index}`)}
               suggestions={childField.suggestion}
             />
           ))}
@@ -646,4 +601,24 @@ const DictListFieldInput: React.FC<DictListProps> = ({
       ))}
     </FormFieldGroupExpandable>
   );
+};
+
+/**
+ * Attempts to parse a value as JSON, returning the original value if parsing fails.
+ * This is a safe wrapper around JSON.parse that prevents throwing errors for invalid JSON.
+ *
+ * @param {unknown} value - The value to attempt to parse as JSON
+ * @returns The parsed JSON value if successful, or the original value if parsing fails
+ */
+export const tryParseJSON = (value: unknown) => {
+  try {
+    if (typeof value === "string") {
+      return JSON.parse(value);
+    }
+
+    return JSON.parse(JSON.stringify(value));
+  } catch (_error) {
+    // If the value is not a valid JSON string, return the original value
+    return value;
+  }
 };

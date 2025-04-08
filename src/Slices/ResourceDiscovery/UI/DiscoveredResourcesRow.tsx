@@ -47,20 +47,14 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
           data-testid={words("discovered.column.managed_resource")}
           width={15}
         >
-          <DiscoveredResourceLink
-            resourceUri={row.managed_resource_uri}
-            type="managed"
-          />
+          <DiscoveredResourceLink resourceUri={row.managed_resource_uri} type="managed" />
         </Td>
         <Td
           dataLabel={words("discovered.column.discovery_resource")}
           data-testid={words("discovered.column.discovery_resource")}
           width={20}
         >
-          <DiscoveredResourceLink
-            resourceUri={row.discovery_resource_uri}
-            type="discovery"
-          />
+          <DiscoveredResourceLink resourceUri={row.discovery_resource_uri} type="discovery" />
         </Td>
       </Tr>
       {isExpanded && (
@@ -69,9 +63,7 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
             <Td colSpan={numberOfColumns}>
               <PaddedDescriptionList isHorizontal>
                 <DescriptionListGroup>
-                  <DescriptionListTerm>
-                    {words("discovered_resources.values")}
-                  </DescriptionListTerm>
+                  <DescriptionListTerm>{words("discovered_resources.values")}</DescriptionListTerm>
                   <DescriptionListDescription>
                     <CodeHighlighter
                       keyId="Json"

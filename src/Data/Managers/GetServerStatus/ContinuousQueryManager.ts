@@ -5,7 +5,7 @@ import { QueryManager } from "@/Data/Managers/Helpers";
 export function GetServerStatusContinuousQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetServerStatus">,
-  scheduler: Scheduler,
+  scheduler: Scheduler
 ) {
   return QueryManager.Continuous<"GetServerStatus">(
     apiHelper,
@@ -14,7 +14,7 @@ export function GetServerStatusContinuousQueryManager(
     ({ kind }) => kind,
     () => [],
     "GetServerStatus",
-    () => `/api/v1/serverstatus`,
-    identity,
+    () => "/api/v1/serverstatus",
+    identity
   );
 }

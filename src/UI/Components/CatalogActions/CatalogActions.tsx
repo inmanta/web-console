@@ -1,12 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  AlertVariant,
-  Button,
-  Content,
-  Flex,
-  FlexItem,
-  Tooltip,
-} from "@patternfly/react-core";
+import { AlertVariant, Button, Content, Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
 import { useExportCatalog } from "@/Data/Managers/V2/Service";
 import { DependencyContext } from "@/UI/Dependency";
@@ -117,9 +110,7 @@ export const CatalogActions: React.FC = () => {
         </FlexItem>
         <FlexItem>
           <Tooltip content={words("catalog.update.tooltip")}>
-            <Button onClick={openModal}>
-              {words("catalog.button.update")}
-            </Button>
+            <Button onClick={openModal}>{words("catalog.button.update")}</Button>
           </Tooltip>
         </FlexItem>
       </Flex>

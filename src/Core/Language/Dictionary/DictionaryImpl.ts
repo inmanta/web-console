@@ -18,6 +18,7 @@ export class DictionaryImpl<Value> implements Dictionary<Value> {
 
   set(key: string, value: Value): boolean {
     if (!this.isFree(key)) return false;
+
     this.state[key] = { value };
 
     return true;
@@ -36,13 +37,10 @@ export class DictionaryImpl<Value> implements Dictionary<Value> {
   }
 
   toObject(): Record<string, Value> {
-    return Object.entries(this.state).reduce<Record<string, Value>>(
-      (acc, [id, { value }]) => {
-        acc[id] = value;
+    return Object.entries(this.state).reduce<Record<string, Value>>((acc, [id, { value }]) => {
+      acc[id] = value;
 
-        return acc;
-      },
-      {},
-    );
+      return acc;
+    }, {});
   }
 }

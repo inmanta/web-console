@@ -1,15 +1,15 @@
 import React from "react";
 import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
+import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Filter } from "@S/Notification/Core/Query";
 
 type Read = "read" | "unread";
 const list: Read[] = ["read", "unread"];
 
 interface Props {
-  filter: Filter;
-  setFilter: (filter: Filter) => void;
+  filter: NotificationFilter;
+  setFilter: (filter: NotificationFilter) => void;
 }
 
 export const ReadFilter: React.FC<Props> = ({ filter, setFilter }) => {
@@ -30,11 +30,7 @@ export const ReadFilter: React.FC<Props> = ({ filter, setFilter }) => {
     });
 
   return (
-    <ToolbarFilter
-      labels={filterToChips(filter)}
-      deleteLabel={deleteChip}
-      categoryName="Read"
-    >
+    <ToolbarFilter labels={filterToChips(filter)} deleteLabel={deleteChip} categoryName="Read">
       <SingleTextSelect
         aria-label="ReadOptions"
         options={options}
@@ -47,7 +43,7 @@ export const ReadFilter: React.FC<Props> = ({ filter, setFilter }) => {
   );
 };
 
-const filterToSelected = (filter: Filter): Read | null => {
+const filterToSelected = (filter: NotificationFilter): Read | null => {
   switch (filter.read) {
     case undefined:
       return null;
@@ -58,7 +54,7 @@ const filterToSelected = (filter: Filter): Read | null => {
   }
 };
 
-const filterToChips = (filter: Filter): string[] => {
+const filterToChips = (filter: NotificationFilter): string[] => {
   switch (filter.read) {
     case undefined:
       return [];

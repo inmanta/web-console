@@ -39,33 +39,30 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const environmentDetailsStateHelper = GetEnvironmentDetailsStateHelper(store);
-  const environmentDetailsQueryManager =
-    EnvironmentDetailsContinuousQueryManager(store, apiHelper, scheduler);
+  const environmentDetailsQueryManager = EnvironmentDetailsContinuousQueryManager(
+    store,
+    apiHelper,
+    scheduler
+  );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl(
-      [environmentDetailsQueryManager],
-      scheduler,
-    ),
+    new DynamicQueryManagerResolverImpl([environmentDetailsQueryManager], scheduler)
   );
 
   const haltEnvironmentManager = HaltEnvironmentCommandManager(
     BaseApiHelper(undefined, defaultAuthContext),
     environmentDetailsStateHelper,
-    new EnvironmentDetailsUpdater(store, apiHelper),
+    new EnvironmentDetailsUpdater(store, apiHelper)
   );
 
   const resumeEnvironmentManager = ResumeEnvironmentCommandManager(
     BaseApiHelper(undefined, defaultAuthContext),
     environmentDetailsStateHelper,
-    new EnvironmentDetailsUpdater(store, apiHelper),
+    new EnvironmentDetailsUpdater(store, apiHelper)
   );
 
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([
-      haltEnvironmentManager,
-      resumeEnvironmentManager,
-    ]),
+    new DynamicCommandManagerResolverImpl([haltEnvironmentManager, resumeEnvironmentManager])
   );
 
   const component = (
@@ -124,12 +121,8 @@ test("EnvironmentControls halt the environment when clicked and the environment 
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
 
-  expect(receivedUrl).toEqual(
-    `http://localhost:8888/api/v2/actions/environment/halt`,
-  );
-  expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
-    EnvironmentDetails.a.id,
-  );
+  expect(receivedUrl).toEqual("http://localhost:8888/api/v2/actions/environment/halt");
+  expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(EnvironmentDetails.a.id);
   expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
 });
 
@@ -161,9 +154,7 @@ test("EnvironmentControls resume the environment when clicked and the environmen
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: { ...EnvironmentDetails.a, halted: true } }),
-    );
+    await apiHelper.resolve(Either.right({ data: { ...EnvironmentDetails.a, halted: true } }));
   });
 
   expect(await screen.findByText("Operations halted")).toBeVisible();
@@ -178,11 +169,7 @@ test("EnvironmentControls resume the environment when clicked and the environmen
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
 
-  expect(receivedUrl).toEqual(
-    `http://localhost:8888/api/v2/actions/environment/resume`,
-  );
-  expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
-    EnvironmentDetails.a.id,
-  );
+  expect(receivedUrl).toEqual("http://localhost:8888/api/v2/actions/environment/resume");
+  expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(EnvironmentDetails.a.id);
   expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
 });

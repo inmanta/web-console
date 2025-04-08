@@ -29,11 +29,7 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
 
   return (
     <ToolbarGroup variant="filter-group" aria-label="FilterBar" role="toolbar">
-      <FilterPicker
-        setFilterKind={setFilterKind}
-        filterKind={filterKind}
-        items={FilterList}
-      />
+      <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} items={FilterList} />
       <FreeTextFilter
         isHidden={filterKind !== FilterKind.Name}
         searchEntries={filter.name}

@@ -6,11 +6,7 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  QueryManagerResolverImpl,
-} from "@/Data";
+import { QueryResolverImpl, getStoreInstance, QueryManagerResolverImpl } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -24,7 +20,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
 
   const component = (
@@ -69,15 +65,13 @@ test("GIVEN Facts page THEN shows table", async () => {
         page_size: 8,
       },
       links: { self: "" },
-    }),
+    })
   );
 
   const rows = await screen.findAllByRole("row", { name: "FactsRow" });
 
   expect(rows).toHaveLength(8);
-  expect(
-    within(rows[0]).getByRole("cell", { name: "2021/03/18 18:10:43" }),
-  ).toBeVisible();
+  expect(within(rows[0]).getByRole("cell", { name: "2021/03/18 18:10:43" })).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -100,7 +94,7 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
         page_size: 8,
       },
       links: { self: "" },
-    }),
+    })
   );
   const resourceIdButton = await screen.findByRole("button", {
     name: words("facts.column.resourceId"),
@@ -140,19 +134,17 @@ test.each`
           page_size: 8,
         },
         links: { self: "" },
-      }),
+      })
     );
 
-    expect(
-      await screen.findAllByRole("row", { name: "FactsRow" }),
-    ).toHaveLength(8);
+    expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(8);
 
     const input = await screen.findByPlaceholderText(placeholderText);
 
     await userEvent.type(input, `${filterValue}{enter}`);
 
     expect(apiHelper.pendingRequests[0].url).toEqual(
-      `/api/v2/facts?limit=20&filter.${filterUrlName}=${filterValue}&sort=name.asc`,
+      `/api/v2/facts?limit=20&filter.${filterUrlName}=${filterValue}&sort=name.asc`
     );
 
     apiHelper.resolve(
@@ -165,19 +157,17 @@ test.each`
           page_size: 20,
         },
         links: { self: "" },
-      }),
+      })
     );
 
-    expect(
-      await screen.findAllByRole("row", { name: "FactsRow" }),
-    ).toHaveLength(4);
+    expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(4);
 
     await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
-  },
+  }
 );
 
 test("GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
@@ -200,7 +190,7 @@ test("GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN
           self: "",
           next: "/fake-link?end=fake-first-param",
         },
-      }),
+      })
     );
   });
 
@@ -226,7 +216,7 @@ test("GIVEN FactsView WHEN sorting changes AND we are not on the first page THEN
           self: "",
           next: "/fake-link?end=fake-first-param",
         },
-      }),
+      })
     );
   });
 

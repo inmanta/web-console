@@ -21,33 +21,27 @@ import { CanvasContext } from "./Context";
  *
  * @returns {React.FC<React.PropsWithChildren<unknown>>} The CanvasProvider component.
  */
-export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({
-  children,
-}) => {
+export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [looseElement, setLooseElement] = useState<Set<string>>(new Set());
   const [cellToEdit, setCellToEdit] = useState<dia.CellView | null>(null);
-  const [dictToDisplay, setDictToDisplay] = useState<DictDialogData | null>(
-    null,
-  );
+  const [dictToDisplay, setDictToDisplay] = useState<DictDialogData | null>(null);
   const [fields, setFields] = useState<Field[]>([]);
   const [formState, setFormState] = useState<InstanceAttributeModel>({});
-  const [serviceOrderItems, setServiceOrderItems] = useState<
-    Map<string, ComposerServiceOrderItem>
-  >(new Map());
+  const [serviceOrderItems, setServiceOrderItems] = useState<Map<string, ComposerServiceOrderItem>>(
+    new Map()
+  );
   const [isDirty, setIsDirty] = useState(false);
-  const [diagramHandlers, setDiagramHandlers] =
-    useState<DiagramHandlers | null>(null);
+  const [diagramHandlers, setDiagramHandlers] = useState<DiagramHandlers | null>(null);
   const [stencilState, setStencilState] = useState<StencilState | null>(null);
-  const [interServiceRelationsOnCanvas, setInterServiceRelationsOnCanvas] =
-    useState<Map<string, RelationCounterForCell>>(new Map());
+  const [interServiceRelationsOnCanvas, setInterServiceRelationsOnCanvas] = useState<
+    Map<string, RelationCounterForCell>
+  >(new Map());
 
   useEffect(() => {
     // check if any of the edited serviceOrderItems got its action changed from default - its a condition to disable the deploy button when we are in the edit view
     if (!isDirty) {
       setIsDirty(
-        Array.from(serviceOrderItems).filter(
-          ([_key, item]) => item.action !== null,
-        ).length > 0,
+        Array.from(serviceOrderItems).filter(([_key, item]) => item.action !== null).length > 0
       );
     }
   }, [serviceOrderItems, isDirty]);

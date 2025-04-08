@@ -31,12 +31,8 @@ const getLabel =
   (defaultValue: boolean) =>
   (value: boolean): string => {
     if (value) {
-      return defaultValue
-        ? words("setting.label.trueDefault")
-        : words("setting.label.true");
+      return defaultValue ? words("setting.label.trueDefault") : words("setting.label.true");
     }
 
-    return !defaultValue
-      ? words("setting.label.falseDefault")
-      : words("setting.label.false");
+    return !defaultValue ? words("setting.label.falseDefault") : words("setting.label.false");
   };

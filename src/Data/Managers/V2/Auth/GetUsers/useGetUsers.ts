@@ -29,7 +29,6 @@ export const useGetUsers = () => {
       useQuery({
         queryKey: ["get_users-one_time"],
         queryFn: () => get("/api/v2/user"),
-        retry: false,
         select: (data) => data.data,
       }),
   };

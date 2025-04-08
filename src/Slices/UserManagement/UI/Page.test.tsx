@@ -16,7 +16,13 @@ import { UserManagementPage } from "./Page";
 expect.extend(toHaveNoViolations);
 
 const setup = () => {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
 
   const component = (
     <MemoryRouter>
@@ -42,7 +48,7 @@ describe("UserManagementPage", () => {
         return HttpResponse.json({
           data: [],
         });
-      }),
+      })
     );
 
     server.listen();
@@ -58,9 +64,7 @@ describe("UserManagementPage", () => {
 
     expect(emptyView).toBeInTheDocument();
 
-    const addUserButton = await screen.findByText(
-      words("userManagement.addUser"),
-    );
+    const addUserButton = await screen.findByText(words("userManagement.addUser"));
 
     expect(addUserButton).toBeInTheDocument();
 
@@ -82,7 +86,7 @@ describe("UserManagementPage", () => {
             { username: "test_user2", auth_method: "oidc" },
           ],
         });
-      }),
+      })
     );
 
     server.listen();
@@ -125,9 +129,9 @@ describe("UserManagementPage", () => {
           },
           {
             status: 401,
-          },
+          }
         );
-      }),
+      })
     );
 
     server.listen();
@@ -144,7 +148,7 @@ describe("UserManagementPage", () => {
     expect(errorView).toBeInTheDocument();
 
     const errorMessage = await screen.findByText(
-      "The following error occured: Access to this resource is unauthorized",
+      "The following error occured: Access to this resource is unauthorized"
     );
 
     expect(errorMessage).toBeVisible();
@@ -179,21 +183,21 @@ describe("UserManagementPage", () => {
             },
             {
               status: 400,
-            },
+            }
           );
         }
 
         if (reqBody?.password.length <= 8) {
           return HttpResponse.json(
             {
-              message:
-                "Invalid request: the password should be at least 8 characters long",
+              message: "Invalid request: the password should be at least 8 characters long",
             },
             {
               status: 400,
-            },
+            }
           );
         }
+
         data.push({ username: reqBody?.username, auth_method: "database" });
 
         return HttpResponse.json({
@@ -205,7 +209,7 @@ describe("UserManagementPage", () => {
         data.splice(0, 1);
 
         return HttpResponse.json({ status: 204 });
-      }),
+      })
     );
 
     server.listen();
@@ -237,7 +241,7 @@ describe("UserManagementPage", () => {
 
     expect(errorMessage).toBeInTheDocument();
     expect(errorMessage).toHaveTextContent(
-      "Invalid request: the password should be at least 8 characters long",
+      "Invalid request: the password should be at least 8 characters long"
     );
 
     //mock success scenario
@@ -275,7 +279,7 @@ describe("UserManagementPage", () => {
         data.splice(0, 1);
 
         return HttpResponse.json({ status: 204 });
-      }),
+      })
     );
 
     server.listen();

@@ -1,10 +1,7 @@
 import React from "react";
 import { SelectOptionFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
-import {
-  ResourceLogFilter,
-  actionTypes,
-} from "@S/ResourceDetails/Core/ResourceLog";
+import { ResourceLogFilter, actionTypes } from "@S/ResourceDetails/Core/ResourceLog";
 
 interface Props {
   filter: ResourceLogFilter;

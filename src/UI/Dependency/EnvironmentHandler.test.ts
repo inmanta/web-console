@@ -14,14 +14,9 @@ test("EnvironmentHandler updates environment correctly", () => {
   const store = getStoreInstance();
   const env = Environment.filterable[0];
 
-  store
-    .getActions()
-    .environment.setEnvironments(RemoteData.success(Environment.filterable));
+  store.getActions().environment.setEnvironments(RemoteData.success(Environment.filterable));
 
-  const environmentHandler = EnvironmentHandlerImpl(
-    () => history.location,
-    routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(() => history.location, routeManager);
 
   environmentHandler.set(history.push, history.location, env.id);
 
@@ -31,41 +26,28 @@ test("EnvironmentHandler updates environment correctly", () => {
 test("EnvironmentHandler determines selected environment correctly", () => {
   const history = createMemoryHistory();
 
-  const environmentHandler = EnvironmentHandlerImpl(
-    () => history.location,
-    routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(() => history.location, routeManager);
 
   expect(
-    environmentHandler.determineSelected(
-      RemoteData.notAsked(),
-      history.location.search,
-    ),
+    environmentHandler.determineSelected(RemoteData.notAsked(), history.location.search)
   ).toBeUndefined();
   history.push(`?env=${Environment.filterable[0].id}`);
   expect(
-    environmentHandler.determineSelected(
-      RemoteData.notAsked(),
-      history.location.search,
-    ),
+    environmentHandler.determineSelected(RemoteData.notAsked(), history.location.search)
   ).toBeUndefined();
 
   expect(
     environmentHandler.determineSelected(
       RemoteData.success(Environment.filterable),
-      history.location.search,
-    ),
+      history.location.search
+    )
   ).toEqual(Environment.filterable[0]);
 
-  environmentHandler.set(
-    history.push,
-    history.location,
-    Environment.filterable[1].id,
-  );
+  environmentHandler.set(history.push, history.location, Environment.filterable[1].id);
   expect(
     environmentHandler.determineSelected(
       RemoteData.success(Environment.filterable),
-      history.location.search,
-    ),
+      history.location.search
+    )
   ).toEqual(Environment.filterable[1]);
 });

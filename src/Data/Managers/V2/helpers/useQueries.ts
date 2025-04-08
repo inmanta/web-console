@@ -10,14 +10,14 @@ import { useFetchHelpers } from "../helpers";
  *
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  *
- * @returns {Function} A function that performs a GET request and returns the response data.
+ * @returns {Function(path: string): Promise<Response>} A function that performs a GET request and returns the response data.
  *
- * @template- The type of the response data.
+ * @template Response - The type of the response data.
  */
 export const useGet = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { environmentHandler } = useContext(DependencyContext);
@@ -35,7 +35,6 @@ export const useGet = (options?: { message?: string }) => {
 
       return response.json();
     } catch (error) {
-      console.error("Error fetching data:", error);
       throw error;
     }
   };
@@ -50,14 +49,14 @@ export const useGet = (options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
  * In comparison to useGet, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<>} A function that performs a GET request and returns the response data.
+ * @returns {Function(path: string): Promise<Response>} A function that performs a GET request and returns the response data.
  *
- * @template- The type of the response data.
+ * @template Response - The type of the response data.
  */
 export const useGetWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -73,7 +72,77 @@ export const useGetWithoutEnv = (options?: { message?: string }) => {
 
       return response.json();
     } catch (error) {
-      console.error("Error fetching data:", error);
+      throw error;
+    }
+  };
+};
+
+/**
+ * Custom hook to perform a GET Zip request.
+ *
+ * @param {Object} [options] - Optional configuration for the GET request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
+ *
+ * @returns {Function<Blob>} A function that performs a GET zip request and returns the response blob.
+ */
+export const useGetZip = (options?: { message?: string }) => {
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname
+  );
+  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders({ env, message: options?.message });
+
+  return async (path: string): Promise<Blob> => {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, {
+        headers,
+      });
+
+      await handleErrors(response);
+
+      return response.blob();
+    } catch (error) {
+      throw error;
+    }
+  };
+};
+
+/**
+ * Custom hook to perform a GET zip request.
+ *
+ *  @param {Object} [options] - Optional configuration for the GET request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
+ * In comparison to useGet, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
+ *
+ * @returns {Function(path: string): Promise<Blob>} A function that performs a GET zip  request and returns the response blob.
+ */
+export const useGetZipWithoutEnv = (options?: { message?: string }) => {
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname
+  );
+  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders({ message: options?.message });
+
+  return async (path: string): Promise<Blob> => {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, {
+        headers,
+      });
+
+      await handleErrors(response);
+
+      return response.blob();
+    } catch (error) {
       throw error;
     }
   };
@@ -85,15 +154,14 @@ export const useGetWithoutEnv = (options?: { message?: string }) => {
  * @param {Object} [options] - Optional configuration for the POST request.
  * @param {string} [options.message] - Optional message to include in the request headers.
  *
- * @returns {Function<>} - A function that performs a POST request.
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a POST request.
  *
- * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
 export const usePost = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { environmentHandler } = useContext(DependencyContext);
@@ -117,7 +185,6 @@ export const usePost = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error posting data:", error);
       throw error;
     }
   };
@@ -132,15 +199,14 @@ export const usePost = (options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a POST request to the specified path.
  * In comparison to usePost, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<>} - A function that performs a POST request.
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a POST request.
  *
- * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
 export const usePostWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -164,7 +230,6 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
 
       return;
     } catch (error) {
-      console.error("Error posting data:", error);
       throw error;
     }
   };
@@ -178,15 +243,14 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
  *
- * @returns {Function<>} - A function that performs a PUT request.
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PUT request.
  *
- * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
 export const usePut = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { environmentHandler } = useContext(DependencyContext);
@@ -210,7 +274,6 @@ export const usePut = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error putting data:", error);
       throw error;
     }
   };
@@ -225,15 +288,14 @@ export const usePut = (options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
  * In comparison to usePut, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<>} - A function that performs a PUT request.
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PUT request.
  *
- * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
 export const usePutWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -255,7 +317,6 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error putting data:", error);
       throw error;
     }
   };
@@ -269,15 +330,14 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a PATCH request to the specified path.
  *
- * @returns {Function<>} - A function that performs a PATCH request.
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PATCH request.
  *
- * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
 export const usePatch = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { environmentHandler } = useContext(DependencyContext);
@@ -301,7 +361,6 @@ export const usePatch = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error patching data:", error);
       throw error;
     }
   };
@@ -316,15 +375,14 @@ export const usePatch = (options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a PATCH request to the specified path.
  * In comparison to usePatch, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<>} - A function that performs a PATCH request.
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PATCH request.
  *
- * @template- The expected response data type.
  * @template Body - The type of the request body.
  */
 export const usePatchWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -346,7 +404,6 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error patching data:", error);
       throw error;
     }
   };
@@ -360,14 +417,12 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
  *
  * This hook constructs the base URL and headers, and provides a function to perform a DELETE request to the specified path.
  *
- * @returns {Function<>} A function that performs a DELETE request and returns the response data.
- *
- * @template- The type of the response data.
+ * @returns {Function} A function that performs a DELETE request and returns the response data.
  */
 export const useDelete = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { environmentHandler } = useContext(DependencyContext);
@@ -394,7 +449,6 @@ export const useDelete = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error deleting data:", error);
       throw error;
     }
   };
@@ -409,14 +463,12 @@ export const useDelete = (options?: { message?: string }) => {
  * This hook constructs the base URL and headers, and provides a function to perform a DELETE request to the specified path.
  * In comparison to useDelete, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
- * @returns {Function<>} A function that performs a DELETE request and returns the response data.
- *
- * @template- The type of the response data.
+ * @returns {Function} A function that performs a DELETE request and returns the response data.
  */
 export const useDeleteWithoutEnv = (options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
@@ -436,7 +488,6 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
         return JSON.parse(text);
       }
     } catch (error) {
-      console.error("Error deleting data:", error);
       throw error;
     }
   };
@@ -462,7 +513,7 @@ export const useDeleteWithoutEnv = (options?: { message?: string }) => {
 export const useHead = () => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    globalThis.location.pathname,
+    globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders } = useFetchHelpers();

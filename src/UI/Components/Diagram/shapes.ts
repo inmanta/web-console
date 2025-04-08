@@ -73,12 +73,12 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             class: "joint-entityBlock-itemLabels-one",
             fontSize: t_global_font_size_body_default.var,
             textAnchor: "end",
-            x: `calc(0.5 * w - 10)`,
+            x: "calc(0.5 * w - 10)",
             cursor: "default",
           },
         },
       },
-      super.defaults,
+      super.defaults
     );
   }
 
@@ -104,6 +104,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       if (!item.name) {
         return;
       }
+
       const nameObject = {
         id: item.name,
         label: item.name,
@@ -120,14 +121,14 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         },
         {
           ellipsis: true,
-        },
+        }
       );
 
-      if (truncatedName.includes(`\u2026`)) {
+      if (truncatedName.includes("\u2026")) {
         this.attr(`itemLabel_${item.name}/data-tooltip`, item.name);
         this.attr(`itemLabel_${item.name}/data-tooltip-position`, "right");
 
-        names.push({ ...nameObject, label: item.name.slice(0, 15) + `\u2026` });
+        names.push({ ...nameObject, label: item.name.slice(0, 15) + "\u2026" });
       } else {
         names.push(nameObject);
       }
@@ -137,11 +138,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         label: "",
       };
 
-      if (
-        typeof item.value === "object" &&
-        !Array.isArray(item.value) &&
-        item.value !== null
-      ) {
+      if (typeof item.value === "object" && !Array.isArray(item.value) && item.value !== null) {
         value.label = "{...}";
 
         ///Add event and add data to display in Dictionary Modal
@@ -151,7 +148,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           JSON.stringify({
             title: item.name,
             value: item.value,
-          }),
+          })
         );
         this.attr(`itemLabel_${item.name}_value/cursor`, "pointer");
       } else {
@@ -168,17 +165,16 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             },
             {
               ellipsis: true,
-            },
+            }
           );
 
-          if (reproducedDisplayText.includes(`\u2026`)) {
-            value.label =
-              item.value.toString().replace(/\s+/g, " ").slice(0, 16) +
-              `\u2026`;
+          if (reproducedDisplayText.includes("\u2026")) {
+            value.label = item.value.toString().replace(/\s+/g, " ").slice(0, 16) + "\u2026";
             this.attr(`itemLabel_${item.name}_value/data-tooltip`, item.value);
           }
         }
       }
+
       values.push(value);
     });
 
@@ -252,17 +248,17 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       },
       {
         ellipsis: true,
-      },
+      }
     );
 
     this.set("entityName", name); //regardless of the type, name is still assigned to the entityName attribute, which is then used in all of the logic regarding the keeping track of the loose elements or the stencil state
     this.attr(["headerLabel", "data-testid"], "header-" + usedName);
 
-    if (shortenName.includes(`\u2026`)) {
+    if (shortenName.includes("\u2026")) {
       return this.attr(
         ["headerLabel", "text"],
-        usedName.replace(/\s+/g, " ").slice(0, 16) + `\u2026`,
-        options,
+        usedName.replace(/\s+/g, " ").slice(0, 16) + "\u2026",
+        options
       );
     } else {
       return this.attr(["headerLabel", "text"], shortenName, options);
@@ -478,7 +474,7 @@ export const Link = shapes.standard.Link.define(
         set: updateLabelPosition,
       },
     },
-  },
+  }
 );
 
 const LinkView = dia.LinkView.extend({

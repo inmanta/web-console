@@ -16,10 +16,7 @@ interface Props {
   filterPropertyName: string;
   placeholder: string;
   searchEntries?: string[];
-  removeChip: (
-    category: string | ToolbarLabelGroup,
-    chip: string | ToolbarLabel,
-  ) => void;
+  removeChip: (category: string | ToolbarLabelGroup, chip: string | ToolbarLabel) => void;
   value: string;
   setValue: (value: string) => void;
   isSubmitVisible?: boolean;

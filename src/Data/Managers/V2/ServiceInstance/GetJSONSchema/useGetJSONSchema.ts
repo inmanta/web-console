@@ -1,11 +1,11 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { useGet } from "../../helpers";
+import { CustomError, useGet } from "../../helpers";
 
 /**
  * Return Signature of the useGetJSONSchema React Query
  */
 interface GetJSONSchema {
-  useOneTime: () => UseQueryResult<unknown, Error>;
+  useOneTime: () => UseQueryResult<unknown, CustomError>;
 }
 
 /**
@@ -14,7 +14,7 @@ interface GetJSONSchema {
  * @param {string} service_id - The service entity.
  *
  * @returns {GetJSONShema} The result of the query.
- * @returns {UseQueryResult<unknown, Error>} returns.useOneTime - Fetch the JSON Schema with a single query.
+ * @returns {UseQueryResult<unknown, CustomError>} returns.useOneTime - Fetch the JSON Schema with a single query.
  */
 export const useGetJSONSchema = (service_id: string): GetJSONSchema => {
   const get = useGet()<{ data: unknown }>;
@@ -24,7 +24,6 @@ export const useGetJSONSchema = (service_id: string): GetJSONSchema => {
       useQuery({
         queryKey: ["get_JSON_schema-one_time", service_id],
         queryFn: () => get(`/lsm/v1/service_catalog/${service_id}/schema`),
-        retry: false,
         select: (data) => data.data,
       }),
   };

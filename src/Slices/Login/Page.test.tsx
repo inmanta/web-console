@@ -72,7 +72,7 @@ describe("Login", () => {
             },
           },
         });
-      }),
+      })
     );
 
     const component = setup({ method: "database" });
@@ -109,11 +109,7 @@ describe("Login", () => {
     await userEvent.click(logInButton);
 
     await waitFor(() =>
-      expect(spiedCreateCookie).toHaveBeenCalledWith(
-        "inmanta_user",
-        "test-token",
-        1,
-      ),
+      expect(spiedCreateCookie).toHaveBeenCalledWith("inmanta_user", "test-token", 1)
     );
 
     await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith("/"));
@@ -143,9 +139,9 @@ describe("Login", () => {
           },
           {
             status: 401,
-          },
+          }
         );
-      }),
+      })
     );
 
     const component = setup({ method: "database" });
@@ -167,7 +163,7 @@ describe("Login", () => {
 
     await waitFor(() => {
       expect(screen.getByLabelText("error-message")).toHaveTextContent(
-        "Access to this resource is unauthorized",
+        "Access to this resource is unauthorized"
       );
     });
 
@@ -196,9 +192,9 @@ describe("Login", () => {
           },
           {
             status: 401,
-          },
+          }
         );
-      }),
+      })
     );
 
     server.listen();
@@ -213,7 +209,7 @@ describe("Login", () => {
 
     await waitFor(() => {
       expect(screen.getByLabelText("error-message")).toHaveTextContent(
-        "Access to this resource is unauthorized",
+        "Access to this resource is unauthorized"
       );
     });
 

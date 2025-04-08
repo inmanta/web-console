@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Table,
-  TableVariant,
-  Tbody,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { Table, TableVariant, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
 import { useExpansion } from "@/Data";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import { words } from "@/UI";
@@ -25,18 +18,12 @@ interface Props {
  * @param rows ServiceOrderItem[]
  * @returns ReactNode
  */
-export const OrderDetailsTable: React.FC<Props> = ({
-  tablePresenter,
-  rows,
-  ...props
-}) => {
+export const OrderDetailsTable: React.FC<Props> = ({ tablePresenter, rows, ...props }) => {
   const [isExpanded, onExpansion] = useExpansion();
 
-  const heads = tablePresenter
-    .getColumnHeads()
-    .map(({ apiName, displayName }) => {
-      return <Th key={apiName}>{displayName}</Th>;
-    });
+  const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }) => {
+    return <Th key={apiName}>{displayName}</Th>;
+  });
 
   return (
     <Table {...props} variant={TableVariant.compact}>

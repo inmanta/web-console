@@ -7,11 +7,7 @@ import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { Either, getShortUuidFromRaw } from "@/Core";
-import {
-  QueryResolverImpl,
-  CommandResolverImpl,
-  getStoreInstance,
-} from "@/Data";
+import { QueryResolverImpl, CommandResolverImpl, getStoreInstance } from "@/Data";
 import {
   DynamicCommandManagerResolverImpl,
   DynamicQueryManagerResolverImpl,
@@ -38,38 +34,33 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
 
   const callbacksStateHelper = CallbacksStateHelper(store);
-  const callbacksQueryManager = CallbacksQueryManager(
-    apiHelper,
-    callbacksStateHelper,
-  );
+  const callbacksQueryManager = CallbacksQueryManager(apiHelper, callbacksStateHelper);
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([callbacksQueryManager]),
+    new DynamicQueryManagerResolverImpl([callbacksQueryManager])
   );
 
   const deleteCallbackCommandManager = DeleteCallbackCommandManager(
     apiHelper,
-    new CallbacksUpdater(CallbacksStateHelper(store), apiHelper),
+    new CallbacksUpdater(CallbacksStateHelper(store), apiHelper)
   );
 
   const createCallbackCommandManager = CreateCallbackCommandManager(
     apiHelper,
-    new CallbacksUpdater(CallbacksStateHelper(store), apiHelper),
+    new CallbacksUpdater(CallbacksStateHelper(store), apiHelper)
   );
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolverImpl([
       deleteCallbackCommandManager,
       createCallbackCommandManager,
-    ]),
+    ])
   );
 
   const component = (
     <QueryClientProvider client={testClient}>
       <MemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
-        <DependencyProvider
-          dependencies={{ ...dependencies, queryResolver, commandResolver }}
-        >
+        <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
           <StoreProvider store={store}>
             <Routes>
               <Route path="/lsm/catalog/:service/details" element={<Page />} />
@@ -90,7 +81,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
   server.use(
     http.get("/lsm/v1/service_catalog/service_name_a", () => {
       return HttpResponse.json({ data: Service.a });
-    }),
+    })
   );
   server.listen();
   const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);
@@ -103,20 +94,14 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
 
   await userEvent.click(callbacksButton);
 
-  expect(
-    screen.getByRole("region", { name: "Callbacks-Loading" }),
-  ).toBeVisible();
+  expect(screen.getByRole("region", { name: "Callbacks-Loading" })).toBeVisible();
 
   await act(async () => {
     apiHelper.resolve(Either.right({ data: Callback.list }));
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "CallbacksTable" }),
-  ).toBeVisible();
-  expect(
-    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID }),
-  ).toBeVisible();
+  expect(await screen.findByRole("grid", { name: "CallbacksTable" })).toBeVisible();
+  expect(screen.getByRole("row", { name: "CallbackRow-" + shortenUUID })).toBeVisible();
 
   server.close();
 });

@@ -9,11 +9,7 @@ interface Props {
   setFilter: (filter: Resource.Filter) => void;
 }
 
-export const Controls: React.FC<Props> = ({
-  paginationWidget,
-  filter,
-  setFilter,
-}) => (
+export const Controls: React.FC<Props> = ({ paginationWidget, filter, setFilter }) => (
   <>
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>

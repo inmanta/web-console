@@ -17,16 +17,9 @@ export const EventsTableControls: React.FC<Props> = ({
   states,
 }) => {
   return (
-    <Toolbar
-      clearAllFilters={() => setFilter({})}
-      collapseListedFiltersBreakpoint="xl"
-    >
+    <Toolbar clearAllFilters={() => setFilter({})} collapseListedFiltersBreakpoint="xl">
       <ToolbarContent>
-        <EventsFilterWidget
-          filter={filter}
-          setFilter={setFilter}
-          states={states}
-        />
+        <EventsFilterWidget filter={filter} setFilter={setFilter} states={states} />
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>
     </Toolbar>

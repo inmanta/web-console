@@ -7,9 +7,7 @@ interface Props {
   services: ServiceModel[];
 }
 
-export const CatalogDataList: React.FunctionComponent<Props> = ({
-  services,
-}) => {
+export const CatalogDataList: React.FunctionComponent<Props> = ({ services }) => {
   return (
     <DataList aria-label="List of service entities">
       {services.map((service) => (
