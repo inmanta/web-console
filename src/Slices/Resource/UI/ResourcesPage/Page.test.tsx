@@ -645,7 +645,7 @@ describe("ResourcesPage", () => {
   test("When clicking the clear and reset filters then the state filter is updated correctly", async () => {
     server.use(
       http.get("/api/v2/resource", ({ request }) => {
-        if (request.url.includes(`filter.status=%21orphaned`)) {
+        if (request.url.includes("filter.status=%21orphaned")) {
           return HttpResponse.json(Resource.response);
         }
 
