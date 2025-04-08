@@ -1,6 +1,6 @@
 import { AttributeModel } from "@/Core";
 
-export const a: AttributeModel = {
+const a: AttributeModel = {
   name: "bandwidth",
   type: "e2e::bandwidth_t",
   modifier: "rw+",
@@ -9,17 +9,16 @@ export const a: AttributeModel = {
   default_value: null,
 };
 
-export const b: AttributeModel = {
+const b: AttributeModel = {
   name: "customer_locations",
   type: "string",
   modifier: "rw",
-  description:
-    "A list of customer location IDS where the service should be delivered.",
+  description: "A list of customer location IDS where the service should be delivered.",
   default_value_set: false,
   default_value: null,
 };
 
-export const c: AttributeModel = {
+const c: AttributeModel = {
   name: "order_id",
   type: "string",
   modifier: "rw",
@@ -28,7 +27,7 @@ export const c: AttributeModel = {
   default_value: "1234",
 };
 
-export const d: AttributeModel = {
+const d: AttributeModel = {
   default_value: null,
   default_value_set: false,
   description: "The release of the orchestrator to install in the lab",
@@ -42,7 +41,7 @@ export const d: AttributeModel = {
   validation_type: "enum",
 };
 
-export const e: AttributeModel = {
+const e: AttributeModel = {
   default_value: "local",
   default_value_set: true,
   description: "The network this orchestrator should reside on.",

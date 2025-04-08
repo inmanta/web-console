@@ -10,6 +10,7 @@ import {
   errorServerInstance,
   emptyResourcesServer,
   defaultServer,
+  versionErrorResourceServerInstance,
 } from "../../Test/mockServer";
 import { SetupWrapper } from "../../Test/mockSetup";
 import { ResourcesTabContent } from "./ResourcesTabContent";
@@ -39,15 +40,20 @@ it("should render error view correctly", async () => {
 
   render(setup(instanceData));
 
-  expect(
-    await screen.findByLabelText("Error_view-Resources-content"),
-  ).toBeVisible();
+  expect(await screen.findByLabelText("Error_view-Resources-content")).toBeVisible();
   expect(screen.getByText("Something went wrong")).toBeVisible();
-  expect(
-    screen.getByText(
-      "Failed to fetch service instance resources for instance of id: 1d96a1ab",
-    ),
-  ).toBeVisible();
+
+  server.close();
+});
+
+it("in case of version conflict, should render loading view correctly", async () => {
+  const server = versionErrorResourceServerInstance;
+
+  server.listen();
+
+  render(setup(instanceData));
+
+  expect(await screen.findByLabelText("Resources-Loading")).toBeVisible();
 
   server.close();
 });
@@ -60,9 +66,7 @@ it("should render information about no resources correctly", async () => {
   render(setup({ ...instanceData, deployment_progress: null }));
 
   expect(await screen.findByText("No resources found")).toBeVisible();
-  expect(
-    screen.getByText("No resources could be found for this instance."),
-  ).toBeVisible();
+  expect(screen.getByText("No resources could be found for this instance.")).toBeVisible();
 
   server.close();
 });
@@ -74,9 +78,7 @@ it("should render information about no deployment progress data correctly", asyn
 
   render(setup({ ...instanceData, deployment_progress: undefined }));
 
-  expect(
-    await screen.findByText("There is no data about deployment progress."),
-  ).toBeVisible();
+  expect(await screen.findByText("There is no data about deployment progress.")).toBeVisible();
 
   server.close();
 });

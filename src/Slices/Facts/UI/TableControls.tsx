@@ -10,11 +10,7 @@ interface Props {
   paginationWidget: React.ReactNode;
 }
 
-export const TableControls: React.FC<Props> = ({
-  filter,
-  setFilter,
-  paginationWidget,
-}) => {
+export const TableControls: React.FC<Props> = ({ filter, setFilter, paginationWidget }) => {
   const updateName = (names: string[]) =>
     setFilter({ ...filter, name: names.length > 0 ? names : undefined });
 
@@ -22,10 +18,7 @@ export const TableControls: React.FC<Props> = ({
     setFilter({ ...filter, resource_id: ids.length > 0 ? ids : undefined });
 
   return (
-    <Toolbar
-      clearAllFilters={() => setFilter({})}
-      collapseListedFiltersBreakpoint="xl"
-    >
+    <Toolbar clearAllFilters={() => setFilter({})} collapseListedFiltersBreakpoint="xl">
       <ToolbarContent>
         <FreeTextFilter
           filterPropertyName={"Name"}

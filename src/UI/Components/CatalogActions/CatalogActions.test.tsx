@@ -1,27 +1,19 @@
 import React, { act } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, cleanup } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
-import {
-  CommandManagerResolverImpl,
-  CommandResolverImpl,
-  defaultAuthContext,
-  getStoreInstance,
-  QueryManagerResolverImpl,
-  QueryResolverImpl,
-} from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  MockEnvironmentModifier,
-  StaticScheduler,
-} from "@/Test";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
+import { dependencies, MockEnvironmentModifier } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { CatalogActions } from "./CatalogActions";
+
 expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
@@ -37,180 +29,167 @@ function setup(
     server_compile: true,
     protected_environment: false,
     enable_lsm_expert_mode: false,
-  },
+  }
 ) {
-  const apiHelper = new DeferredApiHelper();
-
-  const scheduler = new StaticScheduler();
   const store = getStoreInstance();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
-  );
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
-  );
-
   const environmentModifier = new MockEnvironmentModifier(details);
 
   const component = (
-    <StoreProvider store={store}>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          environmentModifier,
-          commandResolver,
-          queryResolver,
-        }}
-      >
-        <ModalProvider>
-          <CatalogActions />
-        </ModalProvider>
-      </DependencyProvider>
-    </StoreProvider>
+    <QueryClientProvider client={testClient}>
+      <StoreProvider store={store}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            environmentModifier,
+          }}
+        >
+          <ModalProvider>
+            <CatalogActions />
+          </ModalProvider>
+        </DependencyProvider>
+      </StoreProvider>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 }
 
-afterEach(cleanup);
+describe("CatalogActions", () => {
+  const server = setupServer();
 
-test("Given CatalogUpdateButton, when user clicks on button, it should display a modal.", async () => {
-  const { component } = setup();
+  beforeAll(() => server.listen());
 
-  render(component);
+  beforeEach(() => {
+    server.resetHandlers();
+  });
+  afterEach(cleanup);
 
-  const button = screen.getByRole("button", {
-    name: words("catalog.button.update"),
+  afterAll(() => {
+    server.close();
   });
 
-  expect(button).toBeVisible();
+  test("Given CatalogUpdateButton, when user clicks on button, it should display a modal.", async () => {
+    const { component } = setup();
 
-  await userEvent.click(button);
+    render(component);
 
-  expect(
-    await screen.findByText(words("catalog.update.modal.title")),
-  ).toBeVisible();
+    const button = screen.getByRole("button", {
+      name: words("catalog.button.update"),
+    });
 
-  await act(async () => {
-    const results = await axe(document.body);
+    expect(button).toBeVisible();
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    await userEvent.click(button);
 
-test("Given CatalogUpdateButton, when user cancels the modal, it should not fire the API call and close the modal.", async () => {
-  const { component, apiHelper } = setup();
+    expect(await screen.findByText(words("catalog.update.modal.title"))).toBeVisible();
 
-  render(component);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  const button = screen.getByRole("button", {
-    name: words("catalog.button.update"),
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  await userEvent.click(button);
+  test("Given CatalogUpdateButton, when user cancels the modal, it should not fire the API call and close the modal.", async () => {
+    server.use(
+      http.post("/lsm/v1/exporter/export_service_definition", () => {
+        return HttpResponse.json({ status: 200 });
+      })
+    );
 
-  const cancelButton = await screen.findByText(words("no"));
+    const { component } = setup();
 
-  expect(cancelButton).toBeVisible();
+    render(component);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    const button = screen.getByRole("button", {
+      name: words("catalog.button.update"),
+    });
 
-    expect(results).toHaveNoViolations();
+    await userEvent.click(button);
+
+    const cancelButton = await screen.findByText(words("no"));
+
+    expect(cancelButton).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    await userEvent.click(cancelButton);
+
+    expect(await screen.queryByText(words("catalog.update.success"))).toBeNull();
   });
 
-  await userEvent.click(cancelButton);
+  test("Given CatalogUpdateButton, when user confirms update, it should fire the API call, if success, show a toaster on success and close the modal.", async () => {
+    const { component } = setup();
 
-  expect(cancelButton).not.toBeVisible();
-  expect(apiHelper.pendingRequests).toHaveLength(0);
-  expect(apiHelper.resolvedRequests).toHaveLength(0);
-});
+    server.use(
+      http.post("/lsm/v1/exporter/export_service_definition", () => {
+        return HttpResponse.json({ status: 200 });
+      })
+    );
 
-test("Given CatalogUpdateButton, when user confirms update, it should fire the API call, if success, show a toaster on succes and close the modal.", async () => {
-  const { component, apiHelper } = setup();
+    render(component);
 
-  render(component);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  await act(async () => {
-    const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
 
-    expect(results).toHaveNoViolations();
+    const button = screen.getByRole("button", {
+      name: words("catalog.button.update"),
+    });
+
+    await userEvent.click(button);
+
+    const confirmButton = await screen.findByText(words("yes"));
+
+    expect(confirmButton).toBeVisible();
+
+    await userEvent.click(confirmButton);
+
+    expect(confirmButton).not.toBeVisible();
+
+    expect(await screen.queryByText(words("catalog.update.success"))).toBeVisible();
   });
 
-  const button = screen.getByRole("button", {
-    name: words("catalog.button.update"),
+  test("Given CatalogUpdateButton, when user confirms the update, it should fire the API call, if failure, it should show an error toast and close the modal.", async () => {
+    server.use(
+      http.post("/lsm/v1/exporter/export_service_definition", () => {
+        return HttpResponse.json({ message: "Something went wrong" }, { status: 400 });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    const button = screen.getByRole("button", {
+      name: words("catalog.button.update"),
+    });
+
+    await userEvent.click(button);
+
+    const confirmButton = await screen.findByText(words("yes"));
+
+    expect(confirmButton).toBeVisible();
+
+    await userEvent.click(confirmButton);
+
+    expect(await screen.findByText("Something went wrong")).toBeVisible();
   });
 
-  await userEvent.click(button);
+  test("Given API documentation button, it has the right href link.", async () => {
+    const { component } = setup();
 
-  const confirmButton = await screen.findByText(words("yes"));
+    render(component);
 
-  expect(confirmButton).toBeVisible();
+    const button = screen.getByRole("link", {
+      name: "API-Documentation",
+    });
 
-  await userEvent.click(confirmButton);
-
-  expect(confirmButton).not.toBeVisible();
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "POST",
-    url: "/lsm/v1/exporter/export_service_definition",
-    body: null,
-    environment: "env",
+    expect(button).toHaveAttribute("href", "/lsm/v1/service_catalog_docs?environment=env");
   });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: "id" }));
-  });
-
-  expect(
-    await screen.findByText(words("catalog.update.success")),
-  ).toBeVisible();
-});
-
-test("Given CatalogUpdateButton, when user confirms the update, it should fire the API call, if failure, it should show an error toast and close the modal.", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  const button = screen.getByRole("button", {
-    name: words("catalog.button.update"),
-  });
-
-  await userEvent.click(button);
-
-  const confirmButton = await screen.findByText(words("yes"));
-
-  expect(confirmButton).toBeVisible();
-
-  await userEvent.click(confirmButton);
-
-  expect(confirmButton).not.toBeVisible();
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "POST",
-    url: "/lsm/v1/exporter/export_service_definition",
-    body: null,
-    environment: "env",
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.left("Something went wrong"));
-  });
-
-  expect(await screen.findByText("Something went wrong")).toBeVisible();
-});
-
-test("Given API documentation button, it has the right href link.", async () => {
-  const { component } = setup();
-
-  render(component);
-
-  const button = screen.getByRole("link", {
-    name: "API-Documentation",
-  });
-
-  expect(button).toHaveAttribute(
-    "href",
-    "/lsm/v1/service_catalog_docs?environment=env",
-  );
 });

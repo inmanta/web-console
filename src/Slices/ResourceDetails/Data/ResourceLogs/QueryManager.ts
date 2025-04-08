@@ -1,9 +1,4 @@
-import {
-  Scheduler,
-  StateHelper,
-  ApiHelper,
-  stringifyObjectOrUndefined,
-} from "@/Core";
+import { Scheduler, StateHelper, ApiHelper, stringifyObjectOrUndefined } from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
 import { getUrl } from "./getUrl";
@@ -11,7 +6,7 @@ import { getUrl } from "./getUrl";
 export function ResourceLogsQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetResourceLogs">,
-  scheduler: Scheduler,
+  scheduler: Scheduler
 ) {
   return QueryManager.ContinuousWithEnv<"GetResourceLogs">(
     apiHelper,
@@ -29,15 +24,14 @@ export function ResourceLogsQueryManager(
     "GetResourceLogs",
     getUrl,
     ({ data, links, metadata }) => {
-      if (typeof links === "undefined")
-        return { data: data, handlers: {}, metadata };
+      if (typeof links === "undefined") return { data: data, handlers: {}, metadata };
 
       return {
         data: data,
         handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
-    },
+    }
   );
 }
 

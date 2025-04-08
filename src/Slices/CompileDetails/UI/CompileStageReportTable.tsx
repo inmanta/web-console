@@ -12,14 +12,10 @@ interface Props {
   reports: CompileStageReport[];
 }
 
-export const CompileStageReportTable: React.FC<Props> = ({
-  compileStarted,
-  reports,
-  ...props
-}) => {
+export const CompileStageReportTable: React.FC<Props> = ({ compileStarted, reports, ...props }) => {
   const tablePresenter = new CompileStageReportTablePresenter(
     new MomentDatePresenter(),
-    compileStarted,
+    compileStarted
   );
   const rows = tablePresenter.createRows(reports);
   const heads = tablePresenter
@@ -32,11 +28,7 @@ export const CompileStageReportTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th
-            aria-hidden
-            key="toggle"
-            screenReaderText={words("common.emptyColumnHeader")}
-          />
+          <Th aria-hidden key="toggle" screenReaderText={words("common.emptyColumnHeader")} />
           {heads}
         </Tr>
       </Thead>

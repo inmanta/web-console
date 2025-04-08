@@ -1,10 +1,6 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import {
-  QueryClient,
-  QueryClientProvider,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -12,16 +8,12 @@ import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
-import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
+import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
 import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
-import {
-  CanvasContext,
-  defaultCanvasContext,
-  InstanceComposerContext,
-} from "../Context";
+import { CanvasContext, defaultCanvasContext, InstanceComposerContext } from "../Context";
 import { childModel } from "../Mocks";
 import { RelationCounterForCell } from "../interfaces";
 import { ComposerActions } from "./ComposerActions";
@@ -36,51 +28,44 @@ describe("ComposerActions.", () => {
   const setup = (
     instanceWithRelations: InstanceWithRelations | null,
     canvasContext: typeof defaultCanvasContext,
-    editable: boolean = true,
+    editable: boolean = true
   ) => {
-    const client = new QueryClient();
-    const environmentHandler = EnvironmentHandlerImpl(
-      useLocation,
-      PrimaryRouteManager(""),
-    );
+    const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
     const store = getStoreInstance();
 
-    store.dispatch.environment.setEnvironments(
-      RemoteData.success([
-        {
-          id: "aaa",
-          name: "env-a",
-          project_id: "ppp",
-          repo_branch: "branch",
-          repo_url: "repo",
-          projectName: "project",
-        },
-      ]),
-    );
+    const env = {
+      id: "aaa",
+      name: "env-a",
+      project_id: "ppp",
+      repo_branch: "branch",
+      repo_url: "repo",
+      projectName: "project",
+      halted: false,
+      settings: {},
+    };
+
+    store.dispatch.environment.setEnvironments(RemoteData.success([env]));
+
+    store.dispatch.environment.setEnvironmentDetailsById({
+      id: "aaa",
+      value: RemoteData.success(env),
+    });
 
     return (
-      <QueryClientProvider client={client}>
+      <QueryClientProvider client={testClient}>
         <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
           <StoreProvider store={store}>
-            <DependencyProvider
-              dependencies={{ ...dependencies, environmentHandler }}
-            >
+            <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
               <InstanceComposerContext.Provider
                 value={{
                   serviceModels: [childModel],
                   instance: instanceWithRelations,
                   mainService: childModel,
-                  relatedInventoriesQuery: {} as UseQueryResult<
-                    Inventories,
-                    Error
-                  >,
+                  relatedInventoriesQuery: {} as UseQueryResult<Inventories, Error>,
                 }}
               >
                 <CanvasContext.Provider value={canvasContext}>
-                  <ComposerActions
-                    serviceName="child-service"
-                    editable={editable}
-                  />
+                  <ComposerActions serviceName="child-service" editable={editable} />
                 </CanvasContext.Provider>
               </InstanceComposerContext.Provider>
             </DependencyProvider>
@@ -117,19 +102,16 @@ describe("ComposerActions.", () => {
   };
 
   const server = setupServer(
-    http.post(
-      "/lsm/v1/service_inventory/child-service}/*/metadata/coordinates",
-      async () => {
-        return HttpResponse.json({
-          data: [],
-        });
-      },
-    ),
-    http.post("/lsm/v2/order", async () => {
+    http.post("/lsm/v1/service_inventory/child-service}/*/metadata/coordinates", async () => {
       return HttpResponse.json({
         data: [],
       });
     }),
+    http.post("/lsm/v2/order", async () => {
+      return HttpResponse.json({
+        data: [],
+      });
+    })
   );
 
   beforeAll(() => {
@@ -165,26 +147,19 @@ describe("ComposerActions.", () => {
 })}
   `(
     "should have deploy button disabled when at least one of conditions are not met",
-    ({
-      serviceOrderItems,
-      isDirty,
-      looseElement,
-      editable,
-      interServiceRelationsOnCanvas,
-    }) => {
+    ({ serviceOrderItems, isDirty, looseElement, editable, interServiceRelationsOnCanvas }) => {
       const canvasContext = {
         ...defaultCanvasContext,
         serviceOrderItems: serviceOrderItems || new Map().set("test", "test"),
         isDirty: isDirty,
         looseElement: looseElement || new Set<string>(),
         interServiceRelationsOnCanvas:
-          interServiceRelationsOnCanvas ||
-          new Map<string, RelationCounterForCell>(),
+          interServiceRelationsOnCanvas || new Map<string, RelationCounterForCell>(),
       };
 
       render(setup(null, canvasContext, editable));
       expect(screen.getByRole("button", { name: "Deploy" })).toBeDisabled();
-    },
+    }
   );
 
   it("should have deploy button enabled when all conditions are met", () => {
@@ -195,8 +170,12 @@ describe("ComposerActions.", () => {
   it("shows success message and redirects when deploy button is clicked", async () => {
     server.use(
       http.post("/lsm/v2/order", async () => {
-        return HttpResponse.json();
-      }),
+        return HttpResponse.json({
+          data: {
+            id: "test",
+          },
+        });
+      })
     );
 
     render(setup(null, validContextForEnabledDeploy));
@@ -204,17 +183,7 @@ describe("ComposerActions.", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
 
-    expect(
-      await screen.findByText("The request got sent successfully"),
-    ).toBeVisible();
-
-    await waitFor(
-      () =>
-        expect(mockedNavigate).toHaveBeenCalledWith(
-          "/lsm/catalog/child-service/inventory?env=aaa",
-        ),
-      { timeout: 1500 },
-    );
+    await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith("/order-details/test?env=aaa"));
   });
 
   it("shows error message about coordinates when there is no diagramHandlers", async () => {
@@ -222,8 +191,10 @@ describe("ComposerActions.", () => {
       http.post("/lsm/v2/order", async () => {
         await delay();
 
-        return HttpResponse.json();
-      }),
+        return HttpResponse.json({
+          data: [],
+        });
+      })
     );
     const canvasContext = {
       ...validContextForEnabledDeploy,
@@ -235,9 +206,7 @@ describe("ComposerActions.", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
 
-    expect(
-      screen.getByText("Failed to save instance coordinates on deploy."),
-    ).toBeVisible();
+    expect(screen.getByText("Failed to save instance coordinates on deploy.")).toBeVisible();
   });
 
   it("shows error message when deploy button is clicked and request fails", async () => {
@@ -249,9 +218,9 @@ describe("ComposerActions.", () => {
           },
           {
             status: 401,
-          },
+          }
         );
-      }),
+      })
     );
 
     render(setup(null, validContextForEnabledDeploy));

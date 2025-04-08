@@ -3,9 +3,9 @@ import { getUrl } from "./getUrl";
 
 it.each`
   filter                                  | sort                               | pageSize | currentPage | url
-  ${undefined}                            | ${undefined}                       | ${"20"}  | ${""}       | ${`/api/v2/discovered?limit=20`}
-  ${{}}                                   | ${{ name: "name", order: "asc" }}  | ${"50"}  | ${""}       | ${`/api/v2/discovered?limit=50&sort=name.asc`}
-  ${{ discovered_resource_id: ["abcd"] }} | ${{ name: "name", order: "desc" }} | ${"50"}  | ${""}       | ${`/api/v2/discovered?limit=50&filter.discovered_resource_id=abcd&sort=name.desc`}
+  ${undefined}                            | ${undefined}                       | ${"20"}  | ${""}       | ${"/api/v2/discovered?limit=20"}
+  ${{}}                                   | ${{ name: "name", order: "asc" }}  | ${"50"}  | ${""}       | ${"/api/v2/discovered?limit=50&sort=name.asc"}
+  ${{ discovered_resource_id: ["abcd"] }} | ${{ name: "name", order: "desc" }} | ${"50"}  | ${""}       | ${"/api/v2/discovered?limit=50&filter.discovered_resource_id=abcd&sort=name.desc"}
 `(
   "getUrl returns correct url for discovered resources with currentPage: $currentPage and pageSize: $pageSize",
   ({ filter, pageSize, sort, url, currentPage }) => {
@@ -18,5 +18,5 @@ it.each`
     };
 
     expect(getUrl(query)).toEqual(url);
-  },
+  }
 );

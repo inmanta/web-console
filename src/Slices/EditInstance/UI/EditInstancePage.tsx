@@ -1,40 +1,67 @@
-import React, { useContext } from "react";
+import React, { PropsWithChildren } from "react";
 import { ServiceModel } from "@/Core";
-import { RemoteDataView, ServiceInstanceDescription } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
+import { useGetInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { Description, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { EditForm } from "./EditForm";
 
+/**
+ * EditInstancePage component is responsible for rendering the edit page of a service instance.
+ * It fetches the instance data using the `useGetInstance` hook and displays the appropriate view
+ * based on the fetch status (loading, error, or success).
+ *
+ * @component
+ *
+ * @props {Props} props - The properties object.
+ * @prop {ServiceModel} props.serviceEntity - The service entity model.
+ * @prop {string} props.instanceId - The ID of the instance to be edited.
+ *
+ * @returns {React.FC<Props>} The rendered component.
+ */
 export const EditInstancePage: React.FC<{
   serviceEntity: ServiceModel;
   instanceId: string;
 }> = ({ serviceEntity, instanceId }) => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { data, isError, error, isSuccess } = useGetInstance(
+    serviceEntity.name,
+    instanceId
+  ).useContinuous();
 
-  const [data] = queryResolver.useContinuous<"GetServiceInstance">({
-    kind: "GetServiceInstance",
-    service_entity: serviceEntity.name,
-    id: instanceId,
-  });
+  if (isError) {
+    return (
+      <Wrapper id={instanceId}>
+        <ErrorView message={error.message} ariaLabel="EditInstance-Failed" />
+      </Wrapper>
+    );
+  }
+
+  if (isSuccess) {
+    const { service_identity_attribute_value } = data;
+    const identifier = service_identity_attribute_value
+      ? service_identity_attribute_value
+      : instanceId;
+
+    return (
+      <Wrapper id={identifier}>
+        <div aria-label="EditInstance-Success">
+          <EditForm instance={data} serviceEntity={serviceEntity} />
+        </div>
+      </Wrapper>
+    );
+  }
 
   return (
+    <Wrapper id={instanceId}>
+      <LoadingView ariaLabel="EditInstance-Loading" />
+    </Wrapper>
+  );
+};
+
+const Wrapper: React.FC<PropsWithChildren<{ id: string }>> = ({ id, children }) => {
+  return (
     <>
-      <ServiceInstanceDescription
-        instanceId={instanceId}
-        serviceName={serviceEntity.name}
-        getDescription={words("inventory.editInstance.header")}
-        data={data}
-        withSpace
-      />
-      <RemoteDataView
-        data={data}
-        label="EditInstance"
-        SuccessView={(instance) => (
-          <div aria-label="EditInstance-Success">
-            <EditForm instance={instance} serviceEntity={serviceEntity} />
-          </div>
-        )}
-      />
+      <Description withSpace>{words("inventory.duplicateInstance.header")(id)}</Description>
+      {children}
     </>
   );
 };

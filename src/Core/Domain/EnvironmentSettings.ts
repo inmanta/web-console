@@ -81,8 +81,7 @@ export type IntInputInfo = WithHandlers<ParsedNumber> & IntDefinition;
 export type EnumInputInfo = WithHandlers<string> & EnumDefinition;
 export type StrInputInfo = WithHandlers<string> & StrDefinition;
 export type DictInputInfo = WithHandlers<Dict> & DictDefinition;
-export type PositiveFloatInputInfo = WithHandlers<ParsedNumber> &
-  PositiveFloatDefinition;
+export type PositiveFloatInputInfo = WithHandlers<ParsedNumber> & PositiveFloatDefinition;
 
 export type InputInfo =
   | BooleanInputInfo
@@ -92,6 +91,4 @@ export type InputInfo =
   | StrInputInfo
   | PositiveFloatInputInfo;
 
-export type IsUpdateable = (
-  info: Pick<InputInfo, "initial" | "value" | "default">,
-) => boolean;
+export type IsUpdateable = (info: Pick<InputInfo, "initial" | "value" | "default">) => boolean;

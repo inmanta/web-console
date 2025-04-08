@@ -1,5 +1,6 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClientProvider, QueryClient, QueryObserverResult } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -11,6 +12,7 @@ import {
   QueryResolverImpl,
   QueryManagerResolverImpl,
 } from "@/Data";
+import * as queryModule from "@/Data/Managers/V2/Compilation/GetCompilerStatus/useGetCompilerStatus";
 import {
   DeferredApiHelper,
   dependencies,
@@ -23,31 +25,27 @@ import { Navigation } from "./Navigation";
 
 expect.extend(toHaveNoViolations);
 
-function setup(
-  initialEntries: string[] | undefined,
-  serverStatus: ServerStatus,
-) {
+function setup(initialEntries: string[] | undefined, serverStatus: ServerStatus) {
+  const queryClient = new QueryClient();
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
 
   store.dispatch.serverStatus.setData(RemoteData.success(serverStatus));
-  const featureManager = new PrimaryFeatureManager(
-    GetServerStatusStateHelper(store),
-  );
+  const featureManager = new PrimaryFeatureManager(GetServerStatusStateHelper(store));
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
   const component = (
-    <MemoryRouter initialEntries={initialEntries}>
-      <DependencyProvider
-        dependencies={{ ...dependencies, featureManager, queryResolver }}
-      >
-        <StoreProvider store={store}>
-          <Navigation environment="env" />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={initialEntries}>
+        <DependencyProvider dependencies={{ ...dependencies, featureManager, queryResolver }}>
+          <StoreProvider store={store}>
+            <Navigation environment="env" />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
   return { component, apiHelper };
@@ -72,25 +70,25 @@ test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => 
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.environment"),
-    }),
+    })
   ).toBeVisible();
 
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.lifecycleServiceManager"),
-    }),
+    })
   ).toBeVisible();
 
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.orchestrationEngine"),
-    }),
+    })
   ).toBeVisible();
 
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.resourceManager"),
-    }),
+    })
   ).toBeVisible();
 });
 
@@ -112,16 +110,14 @@ test("GIVEN Navigation WHEN no features enabled THEN no extra features are not s
   expect(
     within(navigation).queryByRole("region", {
       name: words("navigation.lifecycleServiceManager"),
-    }),
+    })
   ).not.toBeInTheDocument();
 
   // no orderView
   expect(links.find((item) => item.textContent === "Orders")).toBeUndefined();
 
   // no resourceDiscovery
-  expect(
-    links.find((item) => item.textContent === "Discovered Resources"),
-  ).toBeUndefined();
+  expect(links.find((item) => item.textContent === "Discovered Resources")).toBeUndefined();
 });
 
 test("GIVEN Navigation WHEN all features are enabled THEN all extra features are shown", () => {
@@ -142,18 +138,14 @@ test("GIVEN Navigation WHEN all features are enabled THEN all extra features are
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.lifecycleServiceManager"),
-    }),
+    })
   ).toBeInTheDocument();
 
   // has orderView
-  expect(
-    links.find((item) => item.textContent === "Orders"),
-  ).toBeInTheDocument();
+  expect(links.find((item) => item.textContent === "Orders")).toBeInTheDocument();
 
   // has resourceDiscovery
-  expect(
-    links.find((item) => item.textContent === "Discovered Resources"),
-  ).toBeInTheDocument();
+  expect(links.find((item) => item.textContent === "Discovered Resources")).toBeInTheDocument();
 });
 
 test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highlighted", () => {
@@ -171,24 +163,28 @@ test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highl
   expect(link).toHaveClass("active");
 });
 
-test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Reports' Indication is visible", async () => {
-  const { component, apiHelper } = setup(
-    ["/lsm/catalog"],
-    TestServerStatus.withLsm,
-  );
+test("GIVEN Navigation WHEN Compilation Reports are not pending THEN 'Compile Reports' Indication does not exist", async () => {
+  const { component } = setup(["/lsm/catalog"], TestServerStatus.withLsm);
 
   render(component);
+  const Indication = screen.queryByLabelText("CompileReportsIndication");
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "HEAD",
-    url: "/api/v1/notify/env",
+  expect(Indication).toBeNull();
+});
+
+test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Reports' Indication is visible", async () => {
+  jest.spyOn(queryModule, "useGetCompilerStatus").mockReturnValue({
+    useContinuous: () =>
+      ({
+        data: {
+          isCompiling: true,
+        },
+        isSuccess: true,
+      }) as unknown as QueryObserverResult<{ isCompiling: boolean }, Error>,
   });
+  const { component } = setup(["/lsm/catalog"], TestServerStatus.withLsm);
 
-  await act(async () => {
-    await apiHelper.resolve(200);
-  });
-
+  render(component);
   const Indication = screen.getByLabelText("CompileReportsIndication");
 
   expect(Indication).toBeVisible();

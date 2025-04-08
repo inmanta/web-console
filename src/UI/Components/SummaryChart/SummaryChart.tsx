@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { ChartDonut, ChartLegend } from "@patternfly/react-charts";
 import {
-  t_global_icon_color_status_danger_default,
-  t_global_color_brand_default,
-  t_global_icon_color_status_success_default,
-  t_global_icon_color_status_warning_default,
-  t_global_icon_color_severity_undefined_default,
+  t_global_color_status_success_default,
+  chart_color_blue_300,
+  t_global_color_status_danger_default,
+  t_global_color_status_warning_default,
+  t_global_color_nonstatus_gray_default,
 } from "@patternfly/react-tokens";
 import { InstancesByLabel } from "@/Core";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
@@ -26,7 +26,7 @@ interface Props {
  * @component SummaryChart
  * @desc A donut chart component with a legend that displays the instances grouped by label.
  * @param {Props} props - The component props.
- * @returns {JSX.Element} - The rendered SummaryChart component.
+ * @returns {React.FC<Props>} - The rendered SummaryChart component.
  */
 export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
   const { labelFiltering } = useContext(ServiceInventoryContext);
@@ -55,6 +55,12 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
         <ChartLegend
           name={"legend"}
           data={legendData}
+          style={{
+            labels: {
+              fontSize: 16,
+              fill: "var(--pf-t--global--text--color--subtle)",
+            },
+          }}
           events={[
             {
               target: "labels",
@@ -139,9 +145,9 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
                     return {
                       style: {
                         ...props.style,
+                        color: "var(--pf-t--global--text--color--subtle)",
                         cursor:
-                          labelFiltering[label] &&
-                          labelFiltering[label].length > 0
+                          labelFiltering[label] && labelFiltering[label].length > 0
                             ? "pointer"
                             : "default",
                       },
@@ -158,11 +164,11 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
 };
 
 const colorsForChart = {
-  danger: t_global_icon_color_status_danger_default,
-  warning: t_global_icon_color_status_warning_default,
-  success: t_global_icon_color_status_success_default,
-  info: t_global_color_brand_default,
-  no_label: t_global_icon_color_severity_undefined_default,
+  danger: t_global_color_status_danger_default,
+  warning: t_global_color_status_warning_default,
+  success: t_global_color_status_success_default,
+  info: chart_color_blue_300,
+  no_label: t_global_color_nonstatus_gray_default,
 };
 
 const orderedLabels = ["danger", "warning", "success", "info", "no_label"];
@@ -190,6 +196,6 @@ function getChartData(by_label: InstancesByLabel): ChartData[] {
   return orderedLabels.map((label) => ({
     x: label === "no_label" ? words("catalog.summary.noLabel") : label,
     y: by_label[label],
-    color: colorsForChart[label].value,
+    color: colorsForChart[label].var,
   }));
 }

@@ -13,12 +13,24 @@ module.exports = merge(common, {
   optimization: {
     minimizer: [
       new CssMinimizerPlugin({
+        test: /\.css$/i,
+        exclude: /monaco-editor/,
         minimizerOptions: {
           sourceMap: false,
         },
         minify: CssMinimizerPlugin.cleanCssMinify,
       }),
     ],
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        monaco: {
+          test: /[\\/]node_modules[\\/]monaco-editor[\\/]/,
+          name: "monaco-editor",
+          priority: 10,
+        },
+      },
+    },
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -41,35 +53,34 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.css$/,
+        include: [path.resolve(__dirname, "node_modules/monaco-editor")],
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.css$/,
         include: [
           path.resolve(__dirname, "src"),
           path.resolve(__dirname, "node_modules/patternfly"),
           path.resolve(__dirname, "node_modules/@patternfly/patternfly"),
           path.resolve(__dirname, "node_modules/@patternfly/react-styles/css"),
+          path.resolve(__dirname, "node_modules/@patternfly/react-core/dist/styles/base.css"),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-core/dist/styles/base.css",
+            "node_modules/@patternfly/react-core/dist/esm/@patternfly/patternfly"
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-core/dist/esm/@patternfly/patternfly",
+            "node_modules/@patternfly/react-core/node_modules/@patternfly/react-styles/css"
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-core/node_modules/@patternfly/react-styles/css",
+            "node_modules/@patternfly/react-table/node_modules/@patternfly/react-styles/css"
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-table/node_modules/@patternfly/react-styles/css",
+            "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css"
           ),
-          path.resolve(
-            __dirname,
-            "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css",
-          ),
-          path.resolve(
-            __dirname,
-            "node_modules/@inmanta/rappid/joint-plus.css",
-          ),
+          path.resolve(__dirname, "node_modules/@inmanta/rappid/joint-plus.css"),
         ],
         use: [MiniCssExtractPlugin.loader, "css-loader"],
       },

@@ -1,166 +1,146 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Table /* data-codemods */, Tbody, Tr } from "@patternfly/react-table";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
-import {
-  CommandResolverImpl,
-  defaultAuthContext,
-  getStoreInstance,
-  QueryManagerResolverImpl,
-  QueryResolverImpl,
-} from "@/Data";
-import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicCommandManagerResolverImpl,
-  ServiceInstance,
-  StaticScheduler,
-} from "@/Test";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
+import { dependencies, ServiceInstance } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CellWithCopy } from "./CellWithCopy";
 
 function setup(props) {
   const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
-  );
-  const updateAttribute = UpdateInstanceAttributeCommandManager(
-    defaultAuthContext,
-    apiHelper,
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([updateAttribute]),
-  );
+
   const onClickFn = jest.fn();
 
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-        }}
-      >
-        <StoreProvider store={store}>
-          <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
-            <Table>
-              <Tbody>
-                <Tr>
-                  <CellWithCopy {...props} />
-                </Tr>
-              </Tbody>
-            </Table>
-          </TreeTableCellContext.Provider>
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={testClient}>
+      <MemoryRouter>
+        <DependencyProvider dependencies={dependencies}>
+          <StoreProvider store={store}>
+            <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
+              <Table>
+                <Tbody>
+                  <Tr>
+                    <CellWithCopy {...props} />
+                  </Tr>
+                </Tbody>
+              </Table>
+            </TreeTableCellContext.Provider>
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler, onClickFn };
+  return { component, onClickFn };
 }
-
-test("Given CellWithCopy When a cell has a simple value only Then it is shown", async () => {
-  const props = { label: "attribute", value: "someValue" };
-  const { component } = setup(props);
-
-  render(component);
-
-  expect(await screen.findByText(props.value)).toBeVisible();
-});
-
-test("Given CellWithCopy When a cell has on click Then it is rendered as a link", async () => {
-  const props = { label: "attribute", value: "someValue", hasRelation: true };
-  const { component, onClickFn } = setup(props);
-
-  render(component);
-  const cell = await screen.findByText(props.value);
-
-  expect(cell).toBeVisible();
-
-  await userEvent.click(cell);
-
-  expect(onClickFn).toBeCalledWith(props.value);
-});
-
-test("Given CellWithCopy When a cell has entity and on click Then it is rendered as a link", async () => {
-  const props = {
-    label: "attribute",
-    value: "someValue",
-    hasRelation: true,
-    serviceName: "test_service",
-  };
-  const { component, apiHelper, onClickFn } = setup(props);
-
-  render(component);
-
-  apiHelper.resolve(
-    Either.right({
-      data: {
-        ...ServiceInstance.a,
-        service_identity_attribute_value: undefined,
-      },
+describe("CellWithCopy", () => {
+  const server = setupServer(
+    http.get("/lsm/v1/service_inventory/test_service/someValue", () => {
+      return HttpResponse.json({
+        data: {
+          ...ServiceInstance.a,
+          service_identity_attribute_value: "someValue",
+          name: "test_service",
+          id: "someValue",
+        },
+      });
     }),
+    http.get("/lsm/v1/service_inventory/test_service/someOtherValue", () => {
+      return HttpResponse.json({
+        data: {
+          ...ServiceInstance.a,
+          service_identity_attribute_value: "someOtherValue",
+          name: "test_service2",
+          id: "someOtherValue",
+        },
+      });
+    })
   );
 
-  const cell = await screen.findByText(props.value);
+  beforeAll(() => {
+    server.listen();
+  });
+  afterAll(() => {
+    server.close();
+  });
 
-  expect(cell).toBeVisible();
+  test("Given CellWithCopy When a cell has a simple value only Then it is shown", async () => {
+    const props = { label: "attribute", value: "someValue" };
+    const { component } = setup(props);
 
-  await userEvent.click(cell);
+    render(component);
 
-  expect(onClickFn).toBeCalledWith(props.value, props.serviceName);
-});
+    expect(await screen.findByText(props.value)).toBeVisible();
+  });
 
-test("Given CellWithCopy When a cell has entity, multiple values and on click Then multiple links are rendered", async () => {
-  const [someValue, someOtherValue] = ["someValue", "someOtherValue"];
-  const props = {
-    label: "attribute",
-    value: "someValue,someOtherValue",
-    hasRelation: true,
-    serviceName: "test_service",
-  };
-  const { component, apiHelper, onClickFn } = setup(props);
+  test("Given CellWithCopy When a cell has on click Then it is rendered as a link", async () => {
+    const props = { label: "attribute", value: "someValue", hasRelation: true };
+    const { component, onClickFn } = setup(props);
 
-  render(component);
+    render(component);
+    const cell = await screen.findByText(props.value);
 
-  apiHelper.resolve(
-    Either.right({
-      data: {
-        ...ServiceInstance.a,
-        service_identity_attribute_value: undefined,
-      },
-    }),
-  );
-  apiHelper.resolve(
-    Either.right({
-      data: {
-        ...ServiceInstance.b,
-        service_identity_attribute_value: undefined,
-      },
-    }),
-  );
+    expect(cell).toBeVisible();
 
-  const firstCell = await screen.findByText(someValue);
+    await userEvent.click(cell);
 
-  expect(firstCell).toBeVisible();
+    expect(onClickFn).toHaveBeenCalledWith(props.value);
+  });
 
-  await userEvent.click(firstCell);
+  test("Given CellWithCopy When a cell has entity and on click Then it is rendered as a link", async () => {
+    const props = {
+      label: "attribute",
+      value: "someValue",
+      hasRelation: true,
+      serviceName: "test_service",
+    };
+    const { component, onClickFn } = setup(props);
 
-  expect(onClickFn).toBeCalledWith(someValue, props.serviceName);
+    render(component);
 
-  const otherCell = await screen.findByText(someOtherValue);
+    const cell = await screen.findByText(props.value);
 
-  expect(otherCell).toBeVisible();
+    expect(cell).toBeVisible();
 
-  await userEvent.click(otherCell);
+    await userEvent.click(cell);
 
-  expect(onClickFn).toBeCalledWith(someOtherValue, props.serviceName);
+    expect(onClickFn).toHaveBeenCalledWith(props.value, props.serviceName);
+  });
+
+  test("Given CellWithCopy When a cell has entity, multiple values and on click Then multiple links are rendered", async () => {
+    const [someValue, someOtherValue] = ["someValue", "someOtherValue"];
+    const props = {
+      label: "attribute",
+      value: "someValue,someOtherValue",
+      hasRelation: true,
+      serviceName: "test_service",
+    };
+    const { component, onClickFn } = setup(props);
+
+    render(component);
+
+    const firstCell = await screen.findByText(someValue);
+
+    expect(firstCell).toBeVisible();
+
+    await userEvent.click(firstCell);
+
+    expect(onClickFn).toHaveBeenCalledWith(someValue, props.serviceName);
+
+    const otherCell = await screen.findByText(someOtherValue);
+
+    expect(otherCell).toBeVisible();
+
+    await userEvent.click(otherCell);
+
+    expect(onClickFn).toHaveBeenCalledWith(someOtherValue, props.serviceName);
+  });
 });

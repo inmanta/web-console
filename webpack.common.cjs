@@ -1,6 +1,7 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const { GitRevisionPlugin } = require("git-revision-webpack-plugin");
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const webpack = require("webpack");
 const VersionFile = require("webpack-version-file");
@@ -32,6 +33,11 @@ module.exports = {
     new webpack.ProvidePlugin({
       process: "process/browser",
     }),
+    new MonacoWebpackPlugin({
+      // available options:
+      languages: ["javascript", "typescript", "json"], // specify languages you need
+      features: ["!gotoSymbol"], // customize features
+    }),
   ],
   module: {
     rules: [
@@ -55,30 +61,17 @@ module.exports = {
         // if they live under a 'fonts' or 'pficon' directory
         include: [
           path.resolve(__dirname, "node_modules/patternfly/dist/fonts"),
-          path.resolve(
-            __dirname,
-            "node_modules/@patternfly/react-core/dist/styles/assets/fonts",
-          ),
-          path.resolve(
-            __dirname,
-            "node_modules/@patternfly/react-core/dist/styles/assets/pficon",
-          ),
-          path.resolve(
-            __dirname,
-            "node_modules/@patternfly/patternfly/assets/fonts",
-          ),
-          path.resolve(
-            __dirname,
-            "node_modules/@patternfly/patternfly/assets/pficon",
-          ),
+          path.resolve(__dirname, "node_modules/@patternfly/react-core/dist/styles/assets/fonts"),
+          path.resolve(__dirname, "node_modules/@patternfly/react-core/dist/styles/assets/pficon"),
+          path.resolve(__dirname, "node_modules/@patternfly/patternfly/assets/fonts"),
+          path.resolve(__dirname, "node_modules/@patternfly/patternfly/assets/pficon"),
         ],
       },
       {
         test: /\.svg$/,
         // only process SVG modules with this loader when they don't live under a
         // 'fonts', or 'pficon' directory, those are handled with other loaders
-        include: (input) =>
-          input.indexOf("fonts") === -1 && input.indexOf("pficon") === -1,
+        include: (input) => input.indexOf("fonts") === -1 && input.indexOf("pficon") === -1,
         type: "asset/inline",
       },
       {
@@ -86,29 +79,20 @@ module.exports = {
         include: [
           path.resolve(__dirname, "src"),
           path.resolve(__dirname, "node_modules/patternfly"),
+          path.resolve(__dirname, "node_modules/@patternfly/patternfly/assets/images"),
+          path.resolve(__dirname, "node_modules/@patternfly/react-styles/css/assets/images"),
+          path.resolve(__dirname, "node_modules/@patternfly/react-core/dist/styles/assets/images"),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/patternfly/assets/images",
+            "node_modules/@patternfly/react-core/node_modules/@patternfly/react-styles/css/assets/images"
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-styles/css/assets/images",
+            "node_modules/@patternfly/react-table/node_modules/@patternfly/react-styles/css/assets/images"
           ),
           path.resolve(
             __dirname,
-            "node_modules/@patternfly/react-core/dist/styles/assets/images",
-          ),
-          path.resolve(
-            __dirname,
-            "node_modules/@patternfly/react-core/node_modules/@patternfly/react-styles/css/assets/images",
-          ),
-          path.resolve(
-            __dirname,
-            "node_modules/@patternfly/react-table/node_modules/@patternfly/react-styles/css/assets/images",
-          ),
-          path.resolve(
-            __dirname,
-            "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css/assets/images",
+            "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css/assets/images"
           ),
         ],
         type: "asset/inline",

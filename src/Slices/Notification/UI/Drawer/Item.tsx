@@ -26,14 +26,16 @@ interface Props {
 
 export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
   const { routeManager } = useContext(DependencyContext);
-  const detailsLink: RouteKindWithId<"CompileDetails"> | undefined =
-    routeManager.getParamsFromUrl(notification.uri || "");
+  const detailsLink: RouteKindWithId<"CompileDetails"> | undefined = routeManager.getParamsFromUrl(
+    notification.uri || ""
+  );
   const navigate = useNavigateTo();
 
   const onClick = (): void => {
     if (!notification.read) {
       onUpdate({ read: true });
     }
+
     if (detailsLink) {
       navigate(detailsLink.kind, { id: detailsLink.params.id });
     }
@@ -64,7 +66,8 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
 const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const onToggle = (): void => {
+  const onToggle = (event: React.MouseEvent<Element>): void => {
+    event.stopPropagation();
     setIsOpen(!isOpen);
   };
 

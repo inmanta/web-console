@@ -1,7 +1,7 @@
 import { EmbeddedEntity } from "@/Core";
 import { attributesList } from "./Attribute";
 
-export const a: EmbeddedEntity = {
+const a: EmbeddedEntity = {
   attributes: [
     {
       name: "service_id",
@@ -33,6 +33,7 @@ export const a: EmbeddedEntity = {
       embedded_entities: [],
       inter_service_relations: [],
       name: "allocated",
+      type: "allocated",
       description: "Circuit allocated attributes",
       modifier: "r",
       lower_limit: 1,
@@ -53,8 +54,7 @@ export const a: EmbeddedEntity = {
         },
         {
           name: "outer_vlan",
-          description:
-            "The outer VLAN that is used at the IPX access for this service.",
+          description: "The outer VLAN that is used at the IPX access for this service.",
           modifier: "rw",
           type: "int",
           default_value: null,
@@ -174,6 +174,7 @@ export const a: EmbeddedEntity = {
           embedded_entities: [],
           inter_service_relations: [],
           name: "allocated",
+          type: "allocated",
           description: "Allocated attributes for customer endpoint ",
           modifier: "r",
           lower_limit: 1,
@@ -182,8 +183,8 @@ export const a: EmbeddedEntity = {
       ],
       inter_service_relations: [],
       name: "customer_endpoint",
-      description:
-        "Attributes for customer endpoint which are provided through the NB API",
+      type: "customer_endpoint",
+      description: "Attributes for customer endpoint which are provided through the NB API",
       modifier: "rw",
       lower_limit: 1,
       upper_limit: 1,
@@ -203,8 +204,7 @@ export const a: EmbeddedEntity = {
         },
         {
           name: "cloud_service_provider",
-          description:
-            "The CSP to connect to. Valid values are: Google, AWS, Azure_ECX, null.",
+          description: "The CSP to connect to. Valid values are: Google, AWS, Azure_ECX, null.",
           modifier: "rw",
           type: "string",
           default_value: null,
@@ -279,8 +279,7 @@ export const a: EmbeddedEntity = {
             },
             {
               name: "outer_vlan",
-              description:
-                "The outer VLAN that is used at the IPX access for this service.",
+              description: "The outer VLAN that is used at the IPX access for this service.",
               modifier: "rw",
               type: "int?",
               default_value: null,
@@ -382,6 +381,7 @@ export const a: EmbeddedEntity = {
           embedded_entities: [],
           inter_service_relations: [],
           name: "allocated",
+          type: "allocated",
           description: "Allocated attributes for CSP endpoint",
           modifier: "r",
           lower_limit: 1,
@@ -390,8 +390,8 @@ export const a: EmbeddedEntity = {
       ],
       inter_service_relations: [],
       name: "csp_endpoint",
-      description:
-        "Attributes for CSP endpoint which are provided through the NB API",
+      type: "csp_endpoint",
+      description: "Attributes for CSP endpoint which are provided through the NB API",
       modifier: "rw",
       lower_limit: 1,
       upper_limit: 1,
@@ -399,6 +399,7 @@ export const a: EmbeddedEntity = {
   ],
   inter_service_relations: [],
   name: "circuits",
+  type: "circuits",
   description: "Circuit attributes ",
   modifier: "rw+",
   lower_limit: 1,
@@ -454,6 +455,7 @@ export const nestedEditable: EmbeddedEntity[] = [
         embedded_entities: [],
         inter_service_relations: [],
         name: "embedded_single",
+        type: "embedded_single",
         description: "description",
         modifier: "rw",
         lower_limit: 0,
@@ -462,6 +464,7 @@ export const nestedEditable: EmbeddedEntity[] = [
     ],
     inter_service_relations: [],
     name: "embedded",
+    type: "embedded",
     description: "description",
     modifier: "rw+",
     lower_limit: 0,
@@ -503,6 +506,7 @@ export const nestedEditable: EmbeddedEntity[] = [
         ],
         embedded_entities: [],
         name: "another_embedded_single",
+        type: "another_embedded_single",
         description: "description",
         modifier: "rw+",
         lower_limit: 0,
@@ -520,6 +524,7 @@ export const nestedEditable: EmbeddedEntity[] = [
     ],
     inter_service_relations: [],
     name: "another_embedded",
+    type: "another_embedded",
     modifier: "rw+",
     lower_limit: 0,
     description: "description",
@@ -539,6 +544,7 @@ export const nestedEditable: EmbeddedEntity[] = [
     embedded_entities: [],
     inter_service_relations: [],
     name: "not_editable",
+    type: "not_editable",
     modifier: "rw",
     lower_limit: 1,
     upper_limit: 1,
@@ -558,6 +564,7 @@ export const nestedEditable: EmbeddedEntity[] = [
     embedded_entities: [],
     inter_service_relations: [],
     name: "editable_embedded_entity_relation_with_rw_attributes",
+    type: "editable_embedded_entity_relation_with_rw_attributes",
     modifier: "rw+",
     lower_limit: 1,
     upper_limit: 4,
@@ -681,6 +688,7 @@ export const multiNestedEditable: EmbeddedEntity[] = [
                 ],
                 embedded_entities: [],
                 name: "another_deeper_embedded",
+                type: "another_deeper_embedded",
                 description: "description",
                 modifier: "rw+",
                 lower_limit: 0,
@@ -690,6 +698,7 @@ export const multiNestedEditable: EmbeddedEntity[] = [
             ],
             inter_service_relations: [],
             name: "another_embedded",
+            type: "another_embedded",
             modifier: "rw+",
             lower_limit: 0,
             description: "description",
@@ -697,6 +706,7 @@ export const multiNestedEditable: EmbeddedEntity[] = [
         ],
         inter_service_relations: [],
         name: "embedded_single",
+        type: "embedded_single",
         description: "description",
         modifier: "rw+",
         lower_limit: 0,
@@ -704,6 +714,7 @@ export const multiNestedEditable: EmbeddedEntity[] = [
       },
     ],
     name: "embedded",
+    type: "embedded",
     description: "description",
     modifier: "rw+",
     lower_limit: 0,
@@ -711,16 +722,18 @@ export const multiNestedEditable: EmbeddedEntity[] = [
   },
 ];
 
-export const embedded: EmbeddedEntity = {
+const embedded: EmbeddedEntity = {
   attributes: attributesList,
   embedded_entities: [],
   inter_service_relations: [],
   name: "embedded",
+  type: "embedded",
   description: "desc",
   modifier: "rw",
   lower_limit: 1,
   upper_limit: 4,
 };
+
 export const embedded_base: EmbeddedEntity = {
   attributes: attributesList,
   embedded_entities: [
@@ -728,22 +741,26 @@ export const embedded_base: EmbeddedEntity = {
     {
       ...embedded,
       name: "editableEmbedded",
+      type: "editableEmbedded",
       modifier: "rw+",
     },
     {
       ...embedded,
       name: "embedded?",
+      type: "embedded?",
       lower_limit: 0,
     },
     {
       ...embedded,
       name: "editableEmbedded?",
+      type: "editableEmbedded?",
       modifier: "rw+",
       lower_limit: 0,
     },
   ],
   inter_service_relations: [],
   name: "embedded_base",
+  type: "embedded_base",
   description: "desc",
   modifier: "rw",
   lower_limit: 1,
@@ -753,15 +770,18 @@ export const embedded_base: EmbeddedEntity = {
 export const editableEmbedded_base: EmbeddedEntity = {
   ...embedded_base,
   name: "editableEmbedded_base",
+  type: "editableEmbedded_base",
   modifier: "rw+",
 };
 export const optionalEmbedded_base: EmbeddedEntity = {
   ...embedded_base,
   name: "optionalEmbedded_base",
+  type: "optionalEmbedded_base",
   lower_limit: 0,
 };
 export const editableOptionalEmbedded_base: EmbeddedEntity = {
   ...optionalEmbedded_base,
   name: "editableOptionalEmbedded_base",
+  type: "editableOptionalEmbedded_base",
   modifier: "rw+",
 };

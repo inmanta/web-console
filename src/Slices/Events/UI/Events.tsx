@@ -1,17 +1,13 @@
 import React, { useContext, useEffect } from "react";
 import { ServiceModel } from "@/Core";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EventsTablePresenter,
   EventsTableWrapper,
   EmptyView,
   EventsTableBody,
-  PaginationWidget,
+  OldPaginationWidget,
   RemoteDataView,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -64,7 +60,7 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
         setFilter={setFilter}
         states={states}
         paginationWidget={
-          <PaginationWidget
+          <OldPaginationWidget
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}

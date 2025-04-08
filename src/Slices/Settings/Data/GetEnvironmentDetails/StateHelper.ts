@@ -8,10 +8,7 @@ type Data = RemoteData.Type<
 >;
 
 export function StateHelper(store: Store) {
-  function getData(
-    state: State,
-    { details, id }: Query.SubQuery<"GetEnvironmentDetails">,
-  ): Data {
+  function getData(state: State, { details, id }: Query.SubQuery<"GetEnvironmentDetails">): Data {
     return details
       ? state.environment.environmentDetailsWithIconById[id]
       : state.environment.environmentDetailsById[id];
@@ -20,13 +17,14 @@ export function StateHelper(store: Store) {
   function setData(
     store: Dispatch,
     { details, id }: Query.SubQuery<"GetEnvironmentDetails">,
-    data: Data,
+    data: Data
   ) {
     if (details) {
       store.environment.setEnvironmentDetailsWithIconById({
         id,
         value: data,
       });
+
       if (RemoteData.isSuccess(data)) {
         store.environment.setEnvironmentDetailsById({
           id,
@@ -48,6 +46,6 @@ export function StateHelper(store: Store) {
 
       setData(store.dispatch, query, unwrapped);
     },
-    (state, query) => getData(state, query),
+    (state, query) => getData(state, query)
   );
 }

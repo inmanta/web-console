@@ -1,5 +1,5 @@
 import { ServiceInstanceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
+import { InstanceWithRelations } from "@/Data/Managers/V2/ServiceInstance";
 import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
 
 export const testInstance: ServiceInstanceModel = {
@@ -86,18 +86,6 @@ export const testEmbeddedApiInstances: ComposerServiceOrderItem[] = [
   },
 ];
 
-export const testParentService: ComposerServiceOrderItem = {
-  instance_id: "6af44f75-ba4b-4fba-9186-cc61c3c9463c",
-  service_entity: "parent-service",
-  config: {},
-  action: null,
-  attributes: {
-    name: "test",
-    service_id: "test123",
-    should_deploy_fail: false,
-  },
-};
-
 export const interServiceRelations: ComposerServiceOrderItem[] = [
   {
     instance_id: "13920268-cce0-4491-93b5-11316aa2fc37",
@@ -109,10 +97,7 @@ export const interServiceRelations: ComposerServiceOrderItem[] = [
       service_id: "123test",
       should_deploy_fail: false,
     },
-    relatedTo: new Map().set(
-      "6af44f75-ba4b-4fba-9186-cc61c3c9463c",
-      "parent_entity",
-    ),
+    relatedTo: new Map().set("6af44f75-ba4b-4fba-9186-cc61c3c9463c", "parent_entity"),
   },
   {
     instance_id: "a4218978-c9ad-4fd8-95e4-b9e9a8c3c653",
@@ -134,10 +119,7 @@ export const interServiceRelations: ComposerServiceOrderItem[] = [
       name: "child123",
     },
     embeddedTo: "a4218978-c9ad-4fd8-95e4-b9e9a8c3c653",
-    relatedTo: new Map().set(
-      "6af44f75-ba4b-4fba-9186-cc61c3c9463c",
-      "parent_entity",
-    ),
+    relatedTo: new Map().set("6af44f75-ba4b-4fba-9186-cc61c3c9463c", "parent_entity"),
   },
 ];
 
@@ -238,38 +220,6 @@ export const mockedInstanceTwo: InstanceWithRelations = {
       dictTwo: {
         data: "string",
       },
-    },
-    rollback_attributes: null,
-    created_at: "2023-09-19T14:39:30.770002",
-    last_updated: "2023-09-19T14:39:53.389878",
-    callback: [],
-    deleted: false,
-    deployment_progress: null,
-    service_identity_attribute_value: "test12345",
-    referenced_by: [],
-  },
-  interServiceRelations: [],
-};
-
-export const mockedInstanceThree: InstanceWithRelations = {
-  instance: {
-    id: "085cxf92-0894-4ex2-8d46-1gd9552e7ba3",
-    environment: "efa7c243-81aa-4986-b0b1-c89583cbf846",
-    service_entity: "test-service",
-    version: 4,
-    config: {},
-    state: "up",
-    candidate_attributes: null,
-    active_attributes: {
-      name: "test12345",
-      attrOne: "test12345",
-      dictOne: {},
-      attrTwo: "123",
-      attrThree: "456",
-      attrFour: "789",
-      service_id: "012",
-      should_deploy_fail: false,
-      dictTwo: {},
     },
     rollback_attributes: null,
     created_at: "2023-09-19T14:39:30.770002",

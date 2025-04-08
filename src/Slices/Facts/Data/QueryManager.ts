@@ -4,11 +4,7 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export function GetFactsQueryManager(
-  store: Store,
-  apiHelper: ApiHelper,
-  scheduler: Scheduler,
-) {
+export function GetFactsQueryManager(store: Store, apiHelper: ApiHelper, scheduler: Scheduler) {
   return QueryManager.ContinuousWithEnv<"GetFacts">(
     apiHelper,
     StateHelper(store),
@@ -34,6 +30,6 @@ export function GetFactsQueryManager(
         handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
-    },
+    }
   );
 }

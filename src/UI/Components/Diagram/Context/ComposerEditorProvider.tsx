@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { useGetAllServiceModels } from "@/Data/Managers/V2/GETTERS/GetAllServiceModels";
-import { useGetInstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
-import { useGetInventoryList } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
-import { DependencyContext, words } from "@/UI";
+import { useGetServiceModels } from "@/Data/Managers/V2/Service";
+import {
+  useGetInstanceWithRelations,
+  useGetInventoryList,
+} from "@/Data/Managers/V2/ServiceInstance";
+import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
 import { ComposerActions } from "../components";
@@ -43,19 +45,10 @@ interface Props {
  *
  * @returns {React.FC<Props>} The ComposerEditorProvider component.
  */
-export const ComposerEditorProvider: React.FC<Props> = ({
-  serviceName,
-  instance,
-  editable,
-}) => {
-  const [interServiceRelationNames, setInterServiceRelationNames] = useState<
-    string[]
-  >([]);
-  const { environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
+export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance, editable }) => {
+  const [interServiceRelationNames, setInterServiceRelationNames] = useState<string[]>([]);
 
-  const serviceModelsQuery =
-    useGetAllServiceModels(environment).useContinuous();
+  const serviceModelsQuery = useGetServiceModels().useContinuous();
 
   const mainService = useMemo(() => {
     const data = serviceModelsQuery.data;
@@ -69,15 +62,11 @@ export const ComposerEditorProvider: React.FC<Props> = ({
 
   const instanceWithRelationsQuery = useGetInstanceWithRelations(
     instance,
-    environment,
     !editable, //if editable is true, we don't fetch referenced_by instances as they should not be displayed to keep it aligned with the regular instance form, they are only displayed in the composer viewer
-    mainService,
+    mainService
   ).useOneTime();
 
-  const relatedInventoriesQuery = useGetInventoryList(
-    interServiceRelationNames,
-    environment,
-  ).useContinuous();
+  const relatedInventoriesQuery = useGetInventoryList(interServiceRelationNames).useContinuous();
 
   useEffect(() => {
     if (serviceModelsQuery.isSuccess) {
@@ -85,12 +74,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({
         setInterServiceRelationNames(findInterServiceRelations(mainService));
       }
     }
-  }, [
-    serviceModelsQuery.isSuccess,
-    serviceName,
-    serviceModelsQuery.data,
-    mainService,
-  ]);
+  }, [serviceModelsQuery.isSuccess, serviceName, serviceModelsQuery.data, mainService]);
 
   if (serviceModelsQuery.isError) {
     return (
@@ -105,20 +89,15 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   }
 
   if (instanceWithRelationsQuery.isError) {
-    const message = words("error.general")(
-      instanceWithRelationsQuery.error.message,
-    );
+    const message = words("error.general")(instanceWithRelationsQuery.error.message);
     const retry = instanceWithRelationsQuery.refetch;
-    const ariaLabel =
-      "ComposerEditorProvider-InstanceWithRelationsQuery_failed";
+    const ariaLabel = "ComposerEditorProvider-InstanceWithRelationsQuery_failed";
 
     return renderErrorView(message, ariaLabel, retry);
   }
 
   if (relatedInventoriesQuery.isError) {
-    const message = words("error.general")(
-      relatedInventoriesQuery.error.message,
-    );
+    const message = words("error.general")(relatedInventoriesQuery.error.message);
     const retry = relatedInventoriesQuery.refetch;
     const ariaLabel = "ComposerEditorProvider-RelatedInventoriesQuery_failed";
 
@@ -126,20 +105,14 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   }
 
   if (serviceModelsQuery.isSuccess && !mainService) {
-    const message = words("instanceComposer.noServiceModel.errorMessage")(
-      serviceName,
-    );
+    const message = words("instanceComposer.noServiceModel.errorMessage")(serviceName);
     const retry = serviceModelsQuery.refetch;
     const ariaLabel = "ComposerEditorProvider-NoServiceModel_failed";
 
     return renderErrorView(message, ariaLabel, retry);
   }
 
-  if (
-    serviceModelsQuery.isSuccess &&
-    instanceWithRelationsQuery.isSuccess &&
-    mainService
-  ) {
+  if (serviceModelsQuery.isSuccess && instanceWithRelationsQuery.isSuccess && mainService) {
     // there is no possibility to instanceWithRelationsQuery be in success state without mainService, and there is assertion above the if services are fetch but there is no mainService to display errorView
     return (
       <InstanceComposerContext.Provider
@@ -155,11 +128,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({
             pageTitle={
               <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
                 <FlexItem>
-                  {words(
-                    editable
-                      ? "instanceComposer.title.edit"
-                      : "instanceComposer.title.view",
-                  )}
+                  {words(editable ? "instanceComposer.title.edit" : "instanceComposer.title.view")}
                 </FlexItem>
                 <FlexItem>
                   <ComposerActions serviceName={serviceName} editable />

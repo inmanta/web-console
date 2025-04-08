@@ -20,8 +20,7 @@ export const CompileReportsIndication = styled.span`
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    border: 1px solid
-      var(--pf-t--global--border--color--nonstatus--blue--default);
+    border: 1px solid var(--pf-t--global--border--color--nonstatus--blue--default);
     animation: ${pendingAnimation} 2s infinite;
   }
 `;

@@ -9,9 +9,7 @@ interface Props {
   tooltipContent?: string;
 }
 
-export const ActionDisabledTooltip: React.FC<
-  React.PropsWithChildren<Props>
-> = ({
+export const ActionDisabledTooltip: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   isDisabled,
   testingId,
@@ -20,9 +18,7 @@ export const ActionDisabledTooltip: React.FC<
   if (isDisabled) {
     return (
       <Tooltip entryDelay={200} content={tooltipContent}>
-        <CursorNotAllowedContainer data-testid={testingId}>
-          {children}
-        </CursorNotAllowedContainer>
+        <CursorNotAllowedContainer data-testid={testingId}>{children}</CursorNotAllowedContainer>
       </Tooltip>
     );
   } else {

@@ -15,13 +15,9 @@ interface Props {
   identityAttribute?: { key: string; pretty: string };
 }
 
-export const FilterWidget: React.FC<Props> = ({
-  filter,
-  setFilter,
-  states,
-}) => {
+export const FilterWidget: React.FC<Props> = ({ filter, setFilter, states }) => {
   const [filterKind, setFilterKind] = useState<ServiceInstanceParams.Kind>(
-    ServiceInstanceParams.Kind.State,
+    ServiceInstanceParams.Kind.Id
   );
 
   const updateState = (states: string[]) =>
@@ -59,11 +55,7 @@ export const FilterWidget: React.FC<Props> = ({
       />
       <IdFilter
         isVisible={filterKind === ServiceInstanceParams.Kind.Id}
-        id={
-          filter.id_or_service_identity
-            ? filter.id_or_service_identity[0]
-            : undefined
-        }
+        id={filter.id_or_service_identity ? filter.id_or_service_identity[0] : undefined}
         update={updateId}
       />
       <AttributesFilter

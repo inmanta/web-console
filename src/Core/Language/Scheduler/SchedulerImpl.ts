@@ -13,10 +13,9 @@ export class SchedulerImpl implements Scheduler {
   constructor(
     private readonly delay: number,
     private readonly taskWrapper?: (task: Task) => Task,
-    tasks?: Dictionary<Task>,
+    tasks?: Dictionary<Task>
   ) {
-    this.tasks =
-      typeof tasks !== "undefined" ? tasks : new DictionaryImpl<Task>();
+    this.tasks = typeof tasks !== "undefined" ? tasks : new DictionaryImpl<Task>();
   }
 
   pauseTasks(): void {
@@ -54,6 +53,7 @@ export class SchedulerImpl implements Scheduler {
     if (!setCompleted) {
       throw new Error(`A task with id ${id} is already registered`);
     }
+
     this.revalidateTicker();
   }
 
@@ -69,6 +69,7 @@ export class SchedulerImpl implements Scheduler {
 
       return;
     }
+
     const taskRecord = this.tasks.toObject();
 
     this.nextEffects = mapValues(taskRecord, (task) => task.effect());
@@ -78,6 +79,7 @@ export class SchedulerImpl implements Scheduler {
       const update = this.nextUpdates[key];
 
       if (typeof update === "undefined") return;
+
       update(data);
     });
 
@@ -91,6 +93,7 @@ export class SchedulerImpl implements Scheduler {
 
   private revalidateTicker(): void {
     if (this.tasks.isEmpty()) return;
+
     if (this.ongoing) return;
 
     window.setTimeout(() => {

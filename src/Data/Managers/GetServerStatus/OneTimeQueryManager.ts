@@ -4,15 +4,15 @@ import { QueryManager } from "@/Data/Managers/Helpers";
 
 export function GetServerStatusOneTimeQueryManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelper<"GetServerStatus">,
+  stateHelper: StateHelper<"GetServerStatus">
 ) {
   return QueryManager.OneTime<"GetServerStatus">(
     apiHelper,
     stateHelper,
     () => [],
     "GetServerStatus",
-    () => `/api/v1/serverstatus`,
+    () => "/api/v1/serverstatus",
     identity,
-    "MERGE",
+    "MERGE"
   );
 }

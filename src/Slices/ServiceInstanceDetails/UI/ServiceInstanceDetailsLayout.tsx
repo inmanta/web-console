@@ -1,11 +1,7 @@
 import React from "react";
 import { Grid, GridItem } from "@patternfly/react-core";
 import styled from "styled-components";
-import {
-  ConfigSection,
-  DetailsSection,
-  HistorySection,
-} from "./Components/Sections";
+import { ConfigSection, DetailsSection, HistorySection } from "./Components/Sections";
 import { TabView } from "./Tabs";
 
 /**
@@ -17,14 +13,7 @@ import { TabView } from "./Tabs";
  */
 export const ServiceInstanceDetailsLayout: React.FC = () => {
   return (
-    <StyledGrid
-      id="Service-Instance-Details"
-      hasGutter
-      sm={12}
-      md={4}
-      lg={3}
-      xl2={1}
-    >
+    <StyledGrid id="Service-Instance-Details" hasGutter sm={12} md={4} lg={3} xl2={1}>
       <GridItem
         xl2={4}
         lg={5}

@@ -9,25 +9,11 @@ import {
   Stack,
   TabContent,
 } from "@patternfly/react-core";
-import {
-  ExpandableRowContent,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { ExpandableRowContent, Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { InstanceEvent } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { DependencyContext, words } from "@/UI";
-import {
-  ErrorView,
-  EventIcon,
-  LoadingView,
-  DateWithTimeDiffTooltip,
-  Link,
-} from "@/UI/Components";
+import { ErrorView, EventIcon, LoadingView, DateWithTimeDiffTooltip, Link } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { CompileReportLink } from "../Components/CompileReportLink";
 import { TabContentWrapper } from "./TabContentWrapper";
@@ -94,7 +80,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
   }
 
   const selectedVersionLogs: InstanceLog | undefined = logsQuery.data.filter(
-    (log: InstanceLog) => String(log.version) === selectedVersion,
+    (log: InstanceLog) => String(log.version) === selectedVersion
   )[0];
 
   // When we make an update to the instance, like changing the state, it can briefly happen we don't yet have logs for the version.
@@ -175,11 +161,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
               </Link>
             </FlexItem>
           </Flex>
-          <Table
-            aria-label="Expandable-events-table"
-            variant="compact"
-            isExpandable
-          >
+          <Table aria-label="Expandable-events-table" variant="compact" isExpandable>
             <Thead>
               <Tr>
                 <Th screenReaderText="Row expansion column" />
@@ -212,8 +194,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                     expand={{
                       rowIndex: index,
                       isExpanded: isExpanded(event.id),
-                      onToggle: () =>
-                        updateExpanded(event.id, !isExpanded(event.id)),
+                      onToggle: () => updateExpanded(event.id, !isExpanded(event.id)),
                     }}
                   ></Td>
                   <Td>
@@ -226,9 +207,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                     />
                   </Td>
                   <Td aria-label={`Event-source-${index}`}>{event.source}</Td>
-                  <Td aria-label={`Event-target-${index}`}>
-                    {event.destination}
-                  </Td>
+                  <Td aria-label={`Event-target-${index}`}>{event.destination}</Td>
                   <Td aria-label={`Event-compile-${index}`}>
                     {event.id_compile_report && (
                       <CompileReportLink
@@ -250,19 +229,13 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                           <DescriptionListTerm>
                             {words("events.column.message")}
                           </DescriptionListTerm>
-                          <DescriptionListDescription
-                            aria-label={`Event-message-${index}`}
-                          >
+                          <DescriptionListDescription aria-label={`Event-message-${index}`}>
                             {event.message}
                           </DescriptionListDescription>
                         </DescriptionListGroup>
                         <DescriptionListGroup>
-                          <DescriptionListTerm>
-                            {words("events.details.title")}
-                          </DescriptionListTerm>
-                          <DescriptionListDescription
-                            aria-label={`Event-details-${index}`}
-                          >
+                          <DescriptionListTerm>{words("events.details.title")}</DescriptionListTerm>
+                          <DescriptionListDescription aria-label={`Event-details-${index}`}>
                             <pre
                               style={{
                                 whiteSpace: "pre-wrap",

@@ -11,7 +11,7 @@ import { ServiceInstanceModel, ServiceModel, TransferModel } from "@/Core";
 export const isTransferDisabled = (
   instance: ServiceInstanceModel,
   transferType: "on_update" | "on_delete",
-  serviceEntity?: ServiceModel,
+  serviceEntity?: ServiceModel
 ): boolean => {
   if (typeof instance === "undefined" || !serviceEntity) {
     return true;
@@ -20,8 +20,7 @@ export const isTransferDisabled = (
   // If the action is allowed, there is a corresponding transfer in the lifecycle,
   // where the source state is the current state
   const transfersFromCurrentSource = serviceEntity.lifecycle.transfers.filter(
-    (transfer: TransferModel) =>
-      transfer.source === instance.state && transfer[transferType],
+    (transfer: TransferModel) => transfer.source === instance.state && transfer[transferType]
   );
 
   return transfersFromCurrentSource.length === 0;
@@ -38,7 +37,7 @@ export const isTransferDisabled = (
  */
 export const getAvailableStateTargets = (
   currentState: string,
-  serviceEntity?: ServiceModel,
+  serviceEntity?: ServiceModel
 ): string[] => {
   if (!serviceEntity) {
     return [];
@@ -46,14 +45,11 @@ export const getAvailableStateTargets = (
 
   // filter out the possible transfer objects that have the same source as current state.
   const possibleStatesTransfers = serviceEntity.lifecycle.transfers.filter(
-    (transfer: TransferModel) =>
-      transfer.source === currentState && transfer.api_set_state,
+    (transfer: TransferModel) => transfer.source === currentState && transfer.api_set_state
   );
 
   // return the targets only as a sorted array of strings.
-  return possibleStatesTransfers
-    .map((transfer: TransferModel) => transfer.target)
-    .sort();
+  return possibleStatesTransfers.map((transfer: TransferModel) => transfer.target).sort();
 };
 
 /**
@@ -64,9 +60,7 @@ export const getAvailableStateTargets = (
  * when the query is pending, it can happen that it is briefly undefined
  * @returns a sorted array of available target states for the service model.
  */
-export const getExpertStateTargets = (
-  serviceEntity?: ServiceModel,
-): string[] => {
+export const getExpertStateTargets = (serviceEntity?: ServiceModel): string[] => {
   if (!serviceEntity) {
     return [];
   }
@@ -80,7 +74,7 @@ export const getExpertStateTargets = (
    * We map over the possible transfers, an keep all the available targets, then filter out the duplicates to keep a clean list.
    */
   const possibleTargets = new Set(
-    possibleStatesTransfers.map((transfer: TransferModel) => transfer.target),
+    possibleStatesTransfers.map((transfer: TransferModel) => transfer.target)
   );
 
   const sortedArrayOfTargets: string[] = Array.from(possibleTargets).sort();

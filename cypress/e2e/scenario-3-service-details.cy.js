@@ -54,7 +54,7 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
 
     cy.request({
       method: "POST",
-      url: `/lsm/v1/exporter/export_service_definition`,
+      url: "/lsm/v1/exporter/export_service_definition",
       headers: { "X-Inmanta-Tid": id },
       body: { force_update: true },
     });
@@ -71,34 +71,23 @@ if (Cypress.env("edition") === "iso") {
 
     it("3.1 Check empty state", () => {
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on kebab menu and select Show Details on basic-service
-      cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions-dropdown"]')
-        .click();
+      cy.get("#basic-service", { timeout: 60000 }).find('[aria-label="Actions-dropdown"]').click();
       cy.get("button").contains("Show Details").click();
 
       // Expect to be redirected on Service Details: basic-service
-      cy.get("h1")
-        .contains("Service Details: basic-service")
-        .should("to.exist");
+      cy.get("h1").contains("Service Details: basic-service").should("to.exist");
 
       // Expect  the current tab to be Details
       cy.get(".pf-m-current").should("contain", "Details");
 
       // Expect 0 Instances
       cy.get(".pf-v5-c-chart").within(() => {
-        cy.get("svg")
-          .find("title")
-          .should("contain", "Number of instances by label");
-        cy.get("svg")
-          .find("text")
-          .should("contain", "0")
-          .and("contain", "Instances");
+        cy.get("svg").find("title").should("contain", "Number of instances by label");
+        cy.get("svg").find("text").should("contain", "0").and("contain", "Instances");
       });
 
       // Go to Attributes tab
@@ -117,27 +106,17 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Row-interface_r2_name"]')
         .should("contain", "interface_r2_name")
         .and("contain", "string");
-      cy.get('[aria-label="Row-ip_r1"]')
-        .should("contain", "ip_r1")
-        .and("contain", "string");
-      cy.get('[aria-label="Row-ip_r2"]')
-        .should("contain", "ip_r2")
-        .and("contain", "string");
-      cy.get('[aria-label="Row-name"]')
-        .should("contain", "name")
-        .and("contain", "string");
+      cy.get('[aria-label="Row-ip_r1"]').should("contain", "ip_r1").and("contain", "string");
+      cy.get('[aria-label="Row-ip_r2"]').should("contain", "ip_r2").and("contain", "string");
+      cy.get('[aria-label="Row-name"]').should("contain", "name").and("contain", "string");
       cy.get('[aria-label="Row-service_id"]')
         .should("contain", "service_id")
         .and("contain", "string");
       cy.get('[aria-label="Row-should_deploy_fail"]')
         .should("contain", "should_deploy_fail")
         .and("contain", "bool");
-      cy.get('[aria-label="Row-vlan_id_r1"]')
-        .should("contain", "vlan_id_r1")
-        .and("contain", "int");
-      cy.get('[aria-label="Row-vlan_id_r2"]')
-        .should("contain", "vlan_id_r2")
-        .and("contain", "int");
+      cy.get('[aria-label="Row-vlan_id_r1"]').should("contain", "vlan_id_r1").and("contain", "int");
+      cy.get('[aria-label="Row-vlan_id_r2"]').should("contain", "vlan_id_r2").and("contain", "int");
 
       // Go to Lifecycle states
       cy.get("button").contains("Lifecycle States").click();
@@ -154,7 +133,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Config").click();
 
       // Expect it to have setting in the config
-      cy.get('[aria-label="ServiceConfig"]').should("be.visible");
+      cy.get('[aria-label="ServiceConfig-Success"]').should("be.visible");
       cy.get('[aria-label="SettingsList"]').should("have.length", 1);
 
       // Go to Callback tab
@@ -171,15 +150,11 @@ if (Cypress.env("edition") === "iso") {
     it("3.2 Create success instance and check details", () => {
       // Select 'test' environment
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // click on Show Inventory on basic-service
-      cy.get("#basic-service", { timeout: 60000 })
-        .contains("Show inventory")
-        .click();
+      cy.get("#basic-service", { timeout: 60000 }).contains("Show inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
       // click on add instance
@@ -198,6 +173,13 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+      cy.get("#basic-service").contains("Show inventory").click();
+
       // expect newly created instance to be visible in table
       cy.get('[aria-label="ServiceInventory-Success"]', {
         timeout: 20000,
@@ -207,14 +189,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
 
       // go back to Service Catalog
-      cy.get('[aria-label="BreadcrumbItem"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
 
       // click on kebab menu on basic-service
-      cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions-dropdown"]')
-        .click();
+      cy.get("#basic-service", { timeout: 60000 }).find('[aria-label="Actions-dropdown"]').click();
       cy.get("button").contains("Show Details").click();
 
       // Expect to be redirected on Service Details: basic-service
@@ -227,33 +205,22 @@ if (Cypress.env("edition") === "iso") {
 
       // Expect the number in the chart to be 1
       cy.get(".pf-v5-c-chart").within(() => {
-        cy.get("svg")
-          .find("title")
-          .should("contain", "Number of instances by label");
-        cy.get("svg")
-          .find("text")
-          .should("contain", "1")
-          .and("contain", "Instances");
+        cy.get("svg").find("title").should("contain", "Number of instances by label");
+        cy.get("svg").find("text").should("contain", "1").and("contain", "Instances");
       });
     });
 
     it("3.3 Create a failed Instance by Duplicating and check details", () => {
       // Select 'test' environment
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // click on Show Inventory on basic-service
-      cy.get("#basic-service", { timeout: 60000 })
-        .contains("Show inventory")
-        .click();
+      cy.get("#basic-service", { timeout: 60000 }).contains("Show inventory").click();
 
       // click on duplicate instance
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
-        .eq(0)
-        .click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
       cy.get('[role="menuitem"]').contains("Duplicate").click();
 
       // Create a failed instance on basic-service
@@ -263,15 +230,17 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-v6-c-switch").first().click();
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+      cy.get("#basic-service").contains("Show inventory").click();
+
       // Expect the number in the chart to be 2
       cy.get(".pf-v5-c-chart").within(() => {
-        cy.get("svg")
-          .find("title")
-          .should("contain", "Number of instances by label");
-        cy.get("svg")
-          .find("text")
-          .should("contain", "2")
-          .and("contain", "Instances");
+        cy.get("svg").find("title").should("contain", "Number of instances by label");
+        cy.get("svg").find("text").should("contain", "2").and("contain", "Instances");
       });
 
       // expect newly created instance to be visible in table
@@ -287,56 +256,39 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-v6-c-label", { timeout: 120000 }).should("contain", "failed");
 
       // Check Instance Details page
-      cy.get('[aria-label="instance-details-link"]', { timeout: 50000 })
-        .first()
-        .click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 50000 }).first().click();
 
       // Check the state of the instance is failed in the history section.
       cy.get('[aria-label="History-Row"]').eq(0).should("contain", "failed");
 
       // go back to Service Catalog
-      cy.get('[aria-label="BreadcrumbItem"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
 
       // click on kebab menu on basic-service
-      cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions-dropdown"]')
-        .click();
+      cy.get("#basic-service", { timeout: 60000 }).find('[aria-label="Actions-dropdown"]').click();
       cy.get("button").contains("Show Details").click();
 
       // Expect to be redirected on Service Details: basic-service
-      cy.get("h1")
-        .contains("Service Details: basic-service")
-        .should("to.exist");
+      cy.get("h1").contains("Service Details: basic-service").should("to.exist");
 
       // Expect to be Details tab
       cy.get(".pf-m-current").should("contain", "Details");
 
       // Expect the number in the chart to be 2
       cy.get(".pf-v5-c-chart").within(() => {
-        cy.get("svg")
-          .find("title")
-          .should("contain", "Number of instances by label");
-        cy.get("svg")
-          .find("text")
-          .should("contain", "2")
-          .and("contain", "Instances");
+        cy.get("svg").find("title").should("contain", "Number of instances by label");
+        cy.get("svg").find("text").should("contain", "2").and("contain", "Instances");
       });
     });
 
     it("3.4 Callbacks", () => {
       // Select card 'test' environment on home page
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on kebab menu and select Show Details on basic-service
-      cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions-dropdown"]')
-        .click();
+      cy.get("#basic-service", { timeout: 60000 }).find('[aria-label="Actions-dropdown"]').click();
       cy.get("button").contains("Show Details").click();
 
       // Expect to be redirected on Service Details: basic-service
@@ -349,9 +301,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Fill in the fields
       cy.get('[aria-label="callbackUrl"]').type("wrongUrl");
-      cy.get('[aria-label="callbackId"]').type(
-        "60b18097-1525-47f2-95ae-1d941d9c0c85",
-      );
+      cy.get('[aria-label="callbackId"]').type("60b18097-1525-47f2-95ae-1d941d9c0c85");
       cy.get('[aria-label="MinimalLogLevelFilterInput"]').click();
       cy.get('[role="option"]').contains("INFO").click();
       cy.get('[aria-label="EventTypesFilterInput"]').click();
@@ -447,24 +397,18 @@ if (Cypress.env("edition") === "iso") {
     it("3.5 Delete Service", () => {
       // Select card 'test' environment on home page
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on Delete button
-      cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions-dropdown"]')
-        .click();
+      cy.get("#basic-service", { timeout: 60000 }).find('[aria-label="Actions-dropdown"]').click();
       cy.get("button", { timeout: 30000 }).contains("Delete").click();
 
       // Expect modal to confirm action and cancel it
       cy.get("#cancel").click();
 
       // Click again on Delete button
-      cy.get("#basic-service", { timeout: 60000 })
-        .find('[aria-label="Actions-dropdown"]')
-        .click();
+      cy.get("#basic-service", { timeout: 60000 }).find('[aria-label="Actions-dropdown"]').click();
       cy.get("button", { timeout: 20000 }).contains("Delete").click();
 
       // Confirm modal
@@ -474,23 +418,17 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="ToastAlert"]').should("to.be.visible");
 
       // Click on Show Invetory on basic-service
-      cy.get("#basic-service", { timeout: 60000 })
-        .contains("Show inventory")
-        .click();
+      cy.get("#basic-service", { timeout: 60000 }).contains("Show inventory").click();
 
       // Click on delete instance first row
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
-        .eq(0)
-        .click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
       cy.get('[role="menuitem"]').contains("Delete").click();
 
       // Confirm deletion
       cy.get("#submit").click();
 
       // Click on delete instance second row
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
-        .eq(1)
-        .click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(1).click();
       cy.get('[role="menuitem"]').contains("Delete").click();
 
       // Confirm deletion

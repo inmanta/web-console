@@ -32,7 +32,7 @@ export const Summary: React.FC<Props> = ({ data, updateFilter }) =>
         </>
       ),
     },
-    data,
+    data
   );
 
 const StretchedToolbarItem = styled(ResourceStatusBar)`

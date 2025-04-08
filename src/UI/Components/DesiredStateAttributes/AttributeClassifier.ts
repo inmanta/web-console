@@ -7,11 +7,11 @@ export class AttributeClassifier {
     private readonly xmlFormatter: Formatter,
     private readonly multilineClassifier: (
       key: string,
-      value: string,
+      value: string
     ) => Maybe.Type<ClassifiedAttribute> = (key, value) =>
       Maybe.some({ kind: "MultiLine", key, value }),
     private readonly isKeyIgnored: (key: string) => boolean = (key: string) =>
-      key === "version" || key === "requires",
+      key === "version" || key === "requires"
   ) {}
 
   classify(attributesObject: Record<string, unknown>): ClassifiedAttribute[] {
@@ -22,10 +22,7 @@ export class AttributeClassifier {
       .sort((a, b) => (a.key < b.key ? -1 : 1));
   }
 
-  private classifyKeyValue(
-    key: string,
-    value: unknown,
-  ): Maybe.Type<ClassifiedAttribute> {
+  private classifyKeyValue(key: string, value: unknown): Maybe.Type<ClassifiedAttribute> {
     if (this.isKeyIgnored(key)) {
       return Maybe.none();
     } else if (this.isUndefined(value)) {

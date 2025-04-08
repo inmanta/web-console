@@ -1,6 +1,6 @@
 import { ui } from "@inmanta/rappid";
 import { ServiceModel } from "@/Core";
-import { Inventories } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
+import { Inventories } from "@/Data/Managers/V2/ServiceInstance";
 import { InstanceStencilTab } from "./instanceStencil";
 import { InventoryStencilTab } from "./inventoryStencil";
 
@@ -12,11 +12,7 @@ export class StencilSidebar {
   inventoryTab: InventoryStencilTab;
   tabsToolbar: ui.Toolbar;
 
-  toggleTabVisibility = (
-    newActiveTab: Tab,
-    oldActiveTab: Tab,
-    newTabId: string,
-  ) => {
+  toggleTabVisibility = (newActiveTab: Tab, oldActiveTab: Tab, newTabId: string) => {
     oldActiveTab.stencil.el.classList.add("joint-hidden");
     oldActiveTab.stencil.freeze();
 
@@ -24,30 +20,20 @@ export class StencilSidebar {
     newActiveTab.stencil.unfreeze();
 
     const tabs: NodeListOf<HTMLElement> = document.querySelectorAll(
-      '[aria-label="stencil-sidebar-tabs"] li',
+      '[aria-label="stencil-sidebar-tabs"] li'
     );
 
-    tabs.forEach((tab) =>
-      tab.classList.toggle("pf-m-current", tab.id === newTabId),
-    );
+    tabs.forEach((tab) => tab.classList.toggle("pf-m-current", tab.id === newTabId));
   };
 
   toggleTab = (clickedElement: EventTarget) => {
     if (clickedElement instanceof HTMLElement) {
       // The clickedElement can also be the entire tabContainer, which we don't want to react on.
       clickedElement.innerText === "Inventory" &&
-        this.toggleTabVisibility(
-          this.inventoryTab,
-          this.instanceTab,
-          "inventory-tab",
-        );
+        this.toggleTabVisibility(this.inventoryTab, this.instanceTab, "inventory-tab");
 
       clickedElement.innerText === "New" &&
-        this.toggleTabVisibility(
-          this.instanceTab,
-          this.inventoryTab,
-          "new-tab",
-        );
+        this.toggleTabVisibility(this.instanceTab, this.inventoryTab, "new-tab");
     }
   };
 
@@ -64,18 +50,14 @@ export class StencilSidebar {
     scroller: ui.PaperScroller,
     serviceInventories: Inventories,
     service: ServiceModel,
-    serviceModels: ServiceModel[],
+    serviceModels: ServiceModel[]
   ) {
-    this.instanceTab = new InstanceStencilTab(
-      stencilElement,
-      scroller,
-      service,
-    );
+    this.instanceTab = new InstanceStencilTab(stencilElement, scroller, service);
     this.inventoryTab = new InventoryStencilTab(
       stencilElement,
       scroller,
       serviceInventories,
-      serviceModels,
+      serviceModels
     );
 
     this.tabsToolbar = new ui.Toolbar({

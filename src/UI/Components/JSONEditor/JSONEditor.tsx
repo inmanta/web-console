@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
-import { Alert, Panel, Spinner } from "@patternfly/react-core";
-import { InfoAltIcon } from "@patternfly/react-icons";
-import { useGetJSONSchema } from "@/Data/Managers/V2/GETTERS/GetJSONSchema";
-import { DependencyContext } from "@/UI";
+import { Spinner } from "@patternfly/react-core";
+
+import { useGetJSONSchema } from "@/Data/Managers/V2/ServiceInstance";
+import { words } from "@/UI";
+import { getThemePreference } from "../DarkmodeOption";
+import { ErrorMessageContainer } from "../ErrorMessageContainer";
 
 interface Props {
   service_entity: string;
@@ -33,14 +35,13 @@ export const JSONEditor: React.FC<Props> = ({
   onChange,
   readOnly = false,
 }) => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
+  const preferedTheme = getThemePreference() || "light";
 
   const [isLoading, setIsLoading] = useState(true);
   const [editorState, setEditorState] = useState<string>(data);
   const [errors, setErrors] = useState<string[]>([]);
 
-  const schema = useGetJSONSchema(service_entity, environment).useOneTime();
+  const schema = useGetJSONSchema(service_entity).useOneTime();
 
   const monaco = useMonaco();
 
@@ -122,25 +123,16 @@ export const JSONEditor: React.FC<Props> = ({
         defaultValue={data}
         value={editorState}
         onChange={handleEditorChange}
+        theme={`vs-${preferedTheme}`}
         onValidate={handleOnValidate}
         options={{ domReadOnly: readOnly, readOnly: readOnly }}
       />
-      {!readOnly && (
-        <Panel data-testid="Error-container">
-          {errors.length > 0 && (
-            <Alert
-              isInline
-              customIcon={<InfoAltIcon />}
-              isExpandable
-              variant="danger"
-              title={`Errors found : ${errors.length}`}
-            >
-              {errors.map((error, index) => (
-                <p key={index}>{error}</p>
-              ))}
-            </Alert>
-          )}
-        </Panel>
+      {!readOnly && errors.length > 0 && (
+        <ErrorMessageContainer title={words("validation.title")(errors.length)}>
+          {errors.map((error, index) => (
+            <p key={index}>{error}</p>
+          ))}
+        </ErrorMessageContainer>
       )}
     </div>
   );

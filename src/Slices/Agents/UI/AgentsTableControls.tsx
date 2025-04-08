@@ -9,15 +9,8 @@ interface Props {
   paginationWidget: React.ReactNode;
 }
 
-export const AgentsTableControls: React.FC<Props> = ({
-  filter,
-  setFilter,
-  paginationWidget,
-}) => (
-  <Toolbar
-    clearAllFilters={() => setFilter({})}
-    collapseListedFiltersBreakpoint="xl"
-  >
+export const AgentsTableControls: React.FC<Props> = ({ filter, setFilter, paginationWidget }) => (
+  <Toolbar clearAllFilters={() => setFilter({})} collapseListedFiltersBreakpoint="xl">
     <ToolbarContent>
       <AgentsFilterWidget filter={filter} setFilter={setFilter} />
       <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>

@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  FormGroup,
-  FormHelperText,
-  HelperText,
-  HelperTextItem,
-} from "@patternfly/react-core";
+import { FormGroup, FormHelperText, HelperText, HelperTextItem } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { MultiTextSelect } from "../../MultiTextSelect";
 import { SingleTextSelect } from "../../SingleTextSelect";
@@ -89,9 +84,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
           isDisabled={shouldBeDisabled}
           setSelected={handleInputChange}
           selected={selected as string[]}
-          placeholderText={words("common.serviceInstance.relations")(
-            serviceEntity,
-          )}
+          placeholderText={words("common.serviceInstance.relations")(serviceEntity)}
           onSearchTextChanged={onSearchTextChanged}
           hasChips
         />
@@ -102,9 +95,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
           isDisabled={shouldBeDisabled}
           setSelected={handleInputChange}
           selected={selected as string | null}
-          placeholderText={words("common.serviceInstance.relation")(
-            serviceEntity,
-          )}
+          placeholderText={words("common.serviceInstance.relation")(serviceEntity)}
           onSearchTextChanged={onSearchTextChanged}
         />
       )}

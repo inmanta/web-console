@@ -4,11 +4,7 @@ import { mapValues } from "lodash-es";
 import { RouteKind, RouteParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 
-type NavigateTo = (
-  kind: RouteKind,
-  params: RouteParams<typeof kind>,
-  search?: string,
-) => void;
+type NavigateTo = (kind: RouteKind, params: RouteParams<typeof kind>, search?: string) => void;
 
 /**
  * The useNavigateTo hook returns a navigateTo function which navigates to a route.
@@ -22,6 +18,7 @@ export const useNavigateTo = (): NavigateTo => {
 
   return (routeKind, params, newSearch) => {
     if (newSearch !== undefined) validateSearch(newSearch);
+
     const pathname = routeManager.getUrl(routeKind, params);
 
     navigate(`${pathname}${newSearch || search}`);
@@ -30,6 +27,7 @@ export const useNavigateTo = (): NavigateTo => {
 
 const validateSearch = (search: string): void => {
   if (search.startsWith("?")) return;
+
   throw new Error("A search string should start with a question mark (?).");
 };
 
@@ -58,14 +56,10 @@ export const useDocumentTitle = (title: string): void => {
   }, [title]);
 };
 
-export const decodeParams = (params: Params): Params => {
-  return mapValues(params, (value) =>
-    value === undefined ? value : decodeURIComponent(value),
-  );
+const decodeParams = (params: Params): Params => {
+  return mapValues(params, (value) => (value === undefined ? value : decodeURIComponent(value)));
 };
 
 export const encodeParams = (params: Params): Params => {
-  return mapValues(params, (value) =>
-    value === undefined ? value : encodeURIComponent(value),
-  );
+  return mapValues(params, (value) => (value === undefined ? value : encodeURIComponent(value)));
 };

@@ -13,7 +13,7 @@ module.exports = {
   moduleDirectories: ["node_modules", "<rootDir>/src"],
 
   // An array of file extensions your modules use
-  moduleFileExtensions: ["ts", "tsx", "js"],
+  moduleFileExtensions: ["ts", "tsx", "js", "mjs"],
 
   // A map from regular expressions to module names that allow to stub out resources with a single module
   moduleNameMapper: {
@@ -27,6 +27,7 @@ module.exports = {
     "^@joint/core$": "<rootDir>/node_modules/@inmanta/rappid",
     // Force module uuid to resolve with the CJS entry point, because Jest does not support package.json.exports. See https://github.com/uuidjs/uuid/issues/451
     uuid: require.resolve("uuid"),
+    "^monaco-editor$": "<rootDir>/__mocks__/monaco-editor.js",
   },
 
   // A preset that is used as a base for Jest's configuration
@@ -45,22 +46,28 @@ module.exports = {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest",
+    "^.+\\.(ts|tsx)$": [
+      "ts-jest",
+      {
+        useESM: true,
+      },
+    ],
   },
 
   testEnvironmentOptions: {
-    customExportConditions: [""],
+    customExportConditions: ["node", "default"],
   },
 
   reporters: ["default", "jest-junit"],
 
   // The react-syntax-highlighter, mermaid and @inmanta/rappid esm modules have to be handled by jest
   transformIgnorePatterns: [
-    "node_modules/(?!react-syntax-highlighter|@inmanta/rappid|mermaid/dist/mermaid.js)",
+    "node_modules/(?!(react-syntax-highlighter|@inmanta/rappid|mermaid|monaco-editor|@monaco-editor/react)/)",
   ],
   globals: {
     "ts-jest": {
       isolatedModules: true,
+      useESM: true,
     },
   },
 };

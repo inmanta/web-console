@@ -17,26 +17,14 @@ export const DocumentationLinks: React.FC = () => {
           entryDelay={500}
         >
           <Link to={urlManager.getDocumentationLink()} target="_blank">
-            <Button
-              icon={<BookIcon />}
-              aria-label="documentation link"
-              variant="plain"
-            />
+            <Button icon={<BookIcon />} aria-label="documentation link" variant="plain" />
           </Link>
         </Tooltip>
       </ToolbarItem>
       <ToolbarItem>
-        <Tooltip
-          content={words("dashboard.API.tooltip")}
-          position="bottom"
-          entryDelay={500}
-        >
+        <Tooltip content={words("dashboard.API.tooltip")} position="bottom" entryDelay={500}>
           <Link to={urlManager.getGeneralAPILink()} target="_blank">
-            <Button
-              icon={<FileCodeIcon />}
-              aria-label="general API link"
-              variant="plain"
-            />
+            <Button icon={<FileCodeIcon />} aria-label="general API link" variant="plain" />
           </Link>
         </Tooltip>
       </ToolbarItem>

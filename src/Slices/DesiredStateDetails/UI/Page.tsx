@@ -1,18 +1,9 @@
 import React, { useContext, useEffect } from "react";
 import { Resource } from "@/Core";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { DependencyContext } from "@/UI";
-import {
-  EmptyView,
-  PageContainer,
-  PaginationWidget,
-  RemoteDataView,
-} from "@/UI/Components";
+import { EmptyView, PageContainer, OldPaginationWidget, RemoteDataView } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Controls } from "./Controls";
@@ -38,11 +29,9 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
     default: { name: "resource_type", order: "asc" },
     route: "DesiredStateDetails",
   });
-  const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterFromVersion>(
-    {
-      route: "DesiredStateDetails",
-    },
-  );
+  const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterFromVersion>({
+    route: "DesiredStateDetails",
+  });
 
   const [data, retry] = queryResolver.useContinuous<"GetVersionResources">({
     kind: "GetVersionResources",
@@ -65,7 +54,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
     <PageContainer pageTitle={words("desiredState.details.title")}>
       <Controls
         paginationWidget={
-          <PaginationWidget
+          <OldPaginationWidget
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}

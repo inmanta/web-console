@@ -1,13 +1,9 @@
 import React from "react";
-import {
-  ServiceModel,
-  ServiceInstanceModelWithTargetStates,
-  Sort,
-} from "@/Core";
+import { ServiceModel, ServiceInstanceModelWithTargetStates, Sort } from "@/Core";
 import { InventoryTable } from "./InventoryTable";
 import { InventoryTablePresenter } from "./Presenters";
 
-export interface Props {
+interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
   serviceEntity: ServiceModel;
   sort: Sort.Type;
@@ -23,7 +19,7 @@ export const TableProvider: React.FC<Props> = ({
 }) => {
   const tablePresenter = new InventoryTablePresenter(
     serviceEntity.service_identity,
-    serviceEntity.service_identity_display_name,
+    serviceEntity.service_identity_display_name
   );
   const rows = tablePresenter.createRows(instances, serviceEntity);
 

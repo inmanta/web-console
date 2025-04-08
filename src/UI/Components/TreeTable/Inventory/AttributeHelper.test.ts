@@ -1,11 +1,6 @@
 import { ServiceModel } from "@/Core";
 import { Service } from "@/Test";
-import {
-  InventoryAttributeHelper,
-  getValue,
-  isLeaf,
-  isMultiLeaf,
-} from "./AttributeHelper";
+import { InventoryAttributeHelper, getValue, isLeaf, isMultiLeaf } from "./AttributeHelper";
 
 test("AttributeHelper getPaths", () => {
   const attributeHelper = new InventoryAttributeHelper(".");
@@ -135,9 +130,7 @@ test("getValue returns undefined for Branch", () => {
 });
 
 test("isMultiLeaf returns true for 1 Leaf", () => {
-  expect(
-    isMultiLeaf(undefined, { kind: "Leaf", value: null }, undefined),
-  ).toBeTruthy();
+  expect(isMultiLeaf(undefined, { kind: "Leaf", value: null }, undefined)).toBeTruthy();
 });
 
 test("isMultiLeaf returns false for (undefined,Branch,undefined)", () => {
@@ -150,11 +143,7 @@ test("isMultiLeaf returns true for (undefined,undefined,undefined)", () => {
 
 test("isMultiLeaf returns false for Leaf Leaf Branch", () => {
   expect(
-    isMultiLeaf(
-      { kind: "Leaf", value: null },
-      { kind: "Leaf", value: null },
-      { kind: "Branch" },
-    ),
+    isMultiLeaf({ kind: "Leaf", value: null }, { kind: "Leaf", value: null }, { kind: "Branch" })
   ).toBeFalsy();
 });
 
@@ -163,8 +152,8 @@ test("isMultiLeaf returns true for Leaf Leaf Leaf", () => {
     isMultiLeaf(
       { kind: "Leaf", value: null },
       { kind: "Leaf", value: null },
-      { kind: "Leaf", value: null },
-    ),
+      { kind: "Leaf", value: null }
+    )
   ).toBeTruthy();
 });
 
@@ -186,6 +175,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
     embedded_entities: [
       {
         name: "embedded",
+        type: "embedded",
         modifier: "rw",
         lower_limit: 0,
         upper_limit: 2,
@@ -203,6 +193,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
         embedded_entities: [
           {
             name: "embedded",
+            type: "embedded",
             modifier: "rw",
             lower_limit: 0,
             upper_limit: 2,
@@ -242,6 +233,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
       },
       {
         name: "embedded2",
+        type: "embedded2",
         modifier: "rw",
         lower_limit: 0,
         upper_limit: 2,
@@ -299,34 +291,23 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
         {
           attr: null,
           test: ["05715f31-8d5c-4429-aa56-e20da1da8a59"],
-          embedded: [
-            { attr: null, test: ["ee6be4c1-3e38-42ad-a6c6-b37f20eedf98"] },
-          ],
+          embedded: [{ attr: null, test: ["ee6be4c1-3e38-42ad-a6c6-b37f20eedf98"] }],
         },
       ],
-      embedded2: [
-        { test: ["8eb9a8e5-4507-49c5-95a7-481dd44e34ab"], attr_xyz: null },
-      ],
+      embedded2: [{ test: ["8eb9a8e5-4507-49c5-95a7-481dd44e34ab"], attr_xyz: null }],
     },
     active: {
-      test: [
-        "05715f31-8d5c-4429-aa56-e20da1da8a59",
-        "05715f31-8d5c-4429-aa56-e20da1da8aff",
-      ],
+      test: ["05715f31-8d5c-4429-aa56-e20da1da8a59", "05715f31-8d5c-4429-aa56-e20da1da8aff"],
       test2: [],
       id_attr: "testx",
       embedded: [
         {
           attr: null,
           test: ["05715f31-8d5c-4429-aa56-e20da1da8a59"],
-          embedded: [
-            { attr: null, test: ["ee6be4c1-3e38-42ad-a6c6-b37f20eedf98"] },
-          ],
+          embedded: [{ attr: null, test: ["ee6be4c1-3e38-42ad-a6c6-b37f20eedf98"] }],
         },
       ],
-      embedded2: [
-        { test: ["8eb9a8e5-4507-49c5-95a7-481dd44e34ab"], attr_xyz: null },
-      ],
+      embedded2: [{ test: ["8eb9a8e5-4507-49c5-95a7-481dd44e34ab"], attr_xyz: null }],
     },
     rollback: null,
   };
@@ -435,10 +416,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
 
       value: {
         candidate: ["05715f31-8d5c-4429-aa56-e20da1da8a59"],
-        active: [
-          "05715f31-8d5c-4429-aa56-e20da1da8a59",
-          "05715f31-8d5c-4429-aa56-e20da1da8aff",
-        ],
+        active: ["05715f31-8d5c-4429-aa56-e20da1da8a59", "05715f31-8d5c-4429-aa56-e20da1da8aff"],
         rollback: undefined,
       },
       hasRelation: true,

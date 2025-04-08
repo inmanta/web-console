@@ -1,12 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  EmptyView,
-  PageContainer,
-  PaginationWidget,
-  RemoteDataView,
-} from "@/UI/Components";
+import { EmptyView, PageContainer, OldPaginationWidget, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { SortKey } from "../Core/Query";
@@ -48,7 +43,7 @@ export const Page: React.FC = () => {
     <PageContainer pageTitle={words("orders.title")}>
       <TableControls
         paginationWidget={
-          <PaginationWidget
+          <OldPaginationWidget
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}
@@ -63,11 +58,7 @@ export const Page: React.FC = () => {
         SuccessView={(orders) =>
           orders.data.length <= 0 || disabledOrderView ? (
             <EmptyView
-              message={
-                disabledOrderView
-                  ? words("orders.disabled")
-                  : words("orders.table.empty")
-              }
+              message={disabledOrderView ? words("orders.disabled") : words("orders.table.empty")}
               aria-label="OrdersView-Empty"
             />
           ) : (

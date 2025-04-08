@@ -1,9 +1,9 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { DropdownItem, Content } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
-import { useDeleteInstance } from "@/Data/Managers/V2/DELETE/DeleteInstance";
-import { DependencyContext, words } from "@/UI";
+import { useDeleteInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { words } from "@/UI";
 import { ConfirmationModal } from "../../ConfirmModal";
 import { ToastAlertMessage } from "../../ToastAlert";
 
@@ -43,16 +43,14 @@ export const DeleteAction: React.FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const { environmentHandler } = useContext(DependencyContext);
-
-  const environment = environmentHandler.useId();
-
-  const { mutate, isError, error, isSuccess, isPending } = useDeleteInstance(
-    environment,
-    instance_id,
-    service_entity,
-    version,
-  );
+  const { mutate, isPending } = useDeleteInstance(instance_id, service_entity, version, {
+    onSuccess: () => {
+      closeModal();
+    },
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
+  });
 
   /**
    *  When the delete action is selected, block the interface and open the modal
@@ -66,7 +64,7 @@ export const DeleteAction: React.FC<Props> = ({
    * async method sending out the request to delete the instance
    */
   const onSubmitDelete = async (): Promise<void> => {
-    mutate("");
+    mutate();
   };
 
   /**
@@ -77,16 +75,6 @@ export const DeleteAction: React.FC<Props> = ({
     setInterfaceBlocked(false);
     onClose();
   }, [setIsModalOpen, setInterfaceBlocked, onClose]);
-
-  useEffect(() => {
-    if (isError) {
-      setErrorMessage(error.message);
-    }
-
-    if (isSuccess) {
-      closeModal();
-    }
-  }, [isError, isSuccess, error, closeModal]);
 
   return (
     <>
@@ -108,10 +96,7 @@ export const DeleteAction: React.FC<Props> = ({
         isPending={isPending}
       >
         <Content component="p">
-          {words("inventory.deleteInstance.header")(
-            instance_display_identity,
-            service_entity,
-          )}
+          {words("inventory.deleteInstance.header")(instance_display_identity, service_entity)}
         </Content>
         <br />
       </ConfirmationModal>

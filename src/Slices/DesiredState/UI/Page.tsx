@@ -3,21 +3,20 @@ import { ParsedNumber, RemoteData } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
-import { useDeleteDesiredStateVersion } from "@/Data/Managers/V2/DELETE/DeleteDesiredStateVersion";
-import { useGetDesiredStates } from "@/Data/Managers/V2/GETTERS/GetDesiredStates";
+import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Managers/V2/DesiredState";
 import {
   ToastAlert,
   PageContainer,
-  PaginationWidget,
+  OldPaginationWidget,
   ConfirmUserActionForm,
   EmptyView,
   LoadingView,
   ErrorView,
 } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { Filter } from "@S/DesiredState/Core/Query";
+import { DesiredStateVersionStatus } from "../Core/Domain";
 import { TableControls } from "./Components";
 import { DesiredStatesTable } from "./DesiredStatesTable";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
@@ -29,10 +28,8 @@ import { CompareSelection } from "./Utils";
  * @returns {React.FC} The rendered desired state page.
  */
 export const Page: React.FC = () => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const envId = environmentHandler.useId();
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const deleteVersion = useDeleteDesiredStateVersion(envId);
+  const deleteVersion = useDeleteDesiredStateVersion();
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -43,6 +40,13 @@ export const Page: React.FC = () => {
     route: "DesiredState",
   });
   const [filter, setFilter] = useUrlStateWithFilter<Filter>({
+    default: {
+      status: [
+        DesiredStateVersionStatus.active,
+        DesiredStateVersionStatus.candidate,
+        DesiredStateVersionStatus.retired,
+      ],
+    },
     route: "DesiredState",
     keys: { date: "DateRange", version: "IntRange" },
   });
@@ -51,9 +55,11 @@ export const Page: React.FC = () => {
     kind: "None",
   });
 
-  const { data, refetch, isError, error, isSuccess } = useGetDesiredStates(
-    envId,
-  ).useContinuous(pageSize, filter, currentPage);
+  const { data, refetch, isError, error, isSuccess } = useGetDesiredStates().useContinuous(
+    pageSize,
+    filter,
+    currentPage
+  );
 
   /**
    * function that will open a modal to confirm action to delete a version
@@ -99,9 +105,7 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     const handlers =
-      typeof data.links === "undefined"
-        ? {}
-        : getPaginationHandlers(data.links, data.metadata);
+      typeof data.links === "undefined" ? {} : getPaginationHandlers(data.links, data.metadata);
 
     return (
       <PageContainer pageTitle={words("desiredState.title")}>
@@ -120,7 +124,7 @@ export const Page: React.FC = () => {
             filter={filter}
             setFilter={setFilter}
             paginationWidget={
-              <PaginationWidget
+              <OldPaginationWidget
                 data={RemoteData.success({
                   handlers,
                   metadata: data.metadata,
@@ -143,10 +147,7 @@ export const Page: React.FC = () => {
               aria-label="DesiredStatesView-Empty"
             />
           ) : (
-            <DesiredStatesTable
-              rows={data.data}
-              aria-label="DesiredStatesView-Success"
-            />
+            <DesiredStatesTable rows={data.data} aria-label="DesiredStatesView-Success" />
           )}
         </GetDesiredStatesContext.Provider>
       </PageContainer>

@@ -1,9 +1,9 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { Label, NavItem, Tooltip } from "@patternfly/react-core";
 import { LockIcon } from "@patternfly/react-icons";
+import { useGetCompilerStatus } from "@/Data/Managers/V2/Compilation/GetCompilerStatus";
 import { CompileReportsIndication } from "@/Slices/Resource/UI/ResourcesPage/Components/CompileReportsIndication";
-import { DependencyContext } from "@/UI/Dependency";
 import { SearchHelper } from "@/UI/Routing";
 
 interface Label {
@@ -32,9 +32,11 @@ export const NavigationItem: React.FC<Link> = ({
   if (locked) {
     return <LockedItem label={label} key={id} />;
   }
+
   if (external) {
     return <ExternalItem label={label} url={url} key={id} />;
   }
+
   if (statusIndication) {
     return <CompileReportItem label={label} url={url} key={id} />;
   }
@@ -63,10 +65,7 @@ const LockedItem: React.FC<Label> = ({ label }) => (
     disabled
     preventDefault
     icon={
-      <Tooltip
-        content={"Select an environment to enable this link"}
-        position="right"
-      >
+      <Tooltip content={"Select an environment to enable this link"} position="right">
         <LockIcon />
       </Tooltip>
     }
@@ -77,30 +76,14 @@ const LockedItem: React.FC<Label> = ({ label }) => (
 
 const ExternalItem: React.FC<Label & Url> = ({ label, url }) => (
   <NavItem itemId={label}>
-    <a
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-      aria-label="Sidebar-Navigation-Item-External"
-    >
+    <a href={url} target="_blank" rel="noreferrer" aria-label="Sidebar-Navigation-Item-External">
       {label}
     </a>
   </NavItem>
 );
 
 const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [data, retry] = queryResolver.useContinuous<"GetCompilationState">({
-    kind: "GetCompilationState",
-  });
-
-  useEffect(() => {
-    document.addEventListener("CompileTrigger", retry);
-
-    return () => {
-      document.removeEventListener("CompileTrigger", retry);
-    };
-  }, [data, retry]);
+  const { data, isSuccess } = useGetCompilerStatus().useContinuous();
 
   return (
     <NavItem itemId={label}>
@@ -113,9 +96,9 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
         aria-label="Sidebar-Navigation-Item"
       >
         {label}
-        {data.kind === "Success" && data.value === true && (
+        {isSuccess && data.isCompiling && (
           <Tooltip key={"ongoing-compilation-tooltip"} content={"Compiling"}>
-            <CompileReportsIndication aria-label="CompileReportsIndication" />
+            <CompileReportsIndication role="presentation" aria-label="CompileReportsIndication" />
           </Tooltip>
         )}
       </NavLink>

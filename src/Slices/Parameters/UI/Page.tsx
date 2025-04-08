@@ -1,16 +1,7 @@
 import React, { useContext, useEffect } from "react";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  EmptyView,
-  PageContainer,
-  PaginationWidget,
-  RemoteDataView,
-} from "@/UI/Components";
+import { EmptyView, PageContainer, OldPaginationWidget, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Filter, SortKey } from "@S/Parameters/Core/Query";
@@ -55,7 +46,7 @@ export const Page: React.FC = () => {
         filter={filter}
         setFilter={setFilter}
         paginationWidget={
-          <PaginationWidget
+          <OldPaginationWidget
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}

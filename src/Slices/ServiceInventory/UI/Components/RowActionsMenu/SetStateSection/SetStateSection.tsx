@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Button, MenuItem, Content } from "@patternfly/react-core";
-import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
+import { VersionedServiceInstanceIdentifier } from "@/Core";
+import { usePostStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -40,13 +41,11 @@ export const SetStateSection: React.FC<Props> = ({
   };
 
   const isDisabled = !targets || targets.length === 0;
-  const { commandResolver, environmentModifier } =
-    useContext(DependencyContext);
-  const trigger = commandResolver.useGetTrigger<"TriggerSetState">({
-    kind: "TriggerSetState",
-    service_entity,
-    id,
-    version,
+  const { authHelper, environmentModifier } = useContext(DependencyContext);
+  const { mutate } = usePostStateTransfer(id, service_entity, {
+    onError: (error) => {
+      setStateErrorMessage(error.message);
+    },
   });
   const isHalted = environmentModifier.useIsHalted();
 
@@ -65,12 +64,16 @@ export const SetStateSection: React.FC<Props> = ({
      * @returns {Promise<void>} A Promise that resolves when the operation is complete.
      */
     const onSubmit = async () => {
-      const result = await trigger(targetState);
-
-      if (Maybe.isSome(result)) {
-        setStateErrorMessage(result.value);
-      }
       closeModal();
+
+      const username = authHelper.getUser();
+      const message = words("instanceDetails.API.message.update")(username);
+
+      mutate({
+        message: message,
+        current_version: version,
+        target_state: targetState,
+      });
     };
 
     triggerModal({
@@ -95,10 +98,7 @@ export const SetStateSection: React.FC<Props> = ({
       ],
       content: (
         <Content component="p">
-          {words("inventory.statustab.confirmMessage")(
-            instance_identity,
-            targetState,
-          )}
+          {words("inventory.statustab.confirmMessage")(instance_identity, targetState)}
         </Content>
       ),
     });
@@ -136,12 +136,7 @@ export const SetStateSection: React.FC<Props> = ({
         </MenuItem>
       ))}
       {(!targets || targets.length < 1) && (
-        <MenuItem
-          key={"no value"}
-          value={"no value"}
-          itemId={"no value"}
-          isDisabled
-        >
+        <MenuItem key={"no value"} value={"no value"} itemId={"no value"} isDisabled>
           None available
         </MenuItem>
       )}

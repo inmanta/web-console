@@ -15,16 +15,8 @@ interface Props {
 
 export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
   (
-    {
-      children,
-      isDisabled,
-      pathname,
-      envOnly,
-      search: newSearch,
-      className,
-      variant = "default",
-    },
-    ref,
+    { children, isDisabled, pathname, envOnly, search: newSearch, className, variant = "default" },
+    ref
   ) => {
     const { search: currentSearch } = useLocation();
     const search = newSearch
@@ -36,24 +28,17 @@ export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
     return isDisabled ? (
       <>{children}</>
     ) : (
-      <StyledRRLink
-        to={{ pathname, search }}
-        className={className}
-        ref={ref}
-        $variant={variant}
-      >
+      <StyledRRLink to={{ pathname, search }} className={className} ref={ref} $variant={variant}>
         {children}
       </StyledRRLink>
     );
-  },
+  }
 );
 
 const StyledRRLink = styled(RRLink)<{ $variant?: "plain" | "default" }>`
   display: inline-block;
   width: 100%;
   color: ${({ $variant }) =>
-    $variant === "plain"
-      ? "inherit"
-      : "var(--pf-t--global--text--color--link--default)"};
+    $variant === "plain" ? "inherit" : "var(--pf-t--global--text--color--link--default)"};
   ${({ $variant }) => ($variant === "plain" ? "text-decoration:none" : "")};
 `;

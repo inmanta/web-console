@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  OnSort,
-  Table,
-  TableVariant,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
 import { words } from "@/UI";
@@ -37,38 +30,33 @@ export const ResourceHistoryTable: React.FC<Props> = ({
     setSort({ ...sort, order });
   };
   // The resource history table is only sortable by one column
-  const heads = tablePresenter
-    .getColumnHeadDisplayNames()
-    .map((column, columnIndex) => {
-      const sortParams =
-        columnIndex == 0
-          ? {
-              sort: {
-                sortBy: {
-                  index: 0,
-                  direction: sort.order,
-                },
-                onSort,
-                columnIndex,
+  const heads = tablePresenter.getColumnHeadDisplayNames().map((column, columnIndex) => {
+    const sortParams =
+      columnIndex == 0
+        ? {
+            sort: {
+              sortBy: {
+                index: 0,
+                direction: sort.order,
               },
-            }
-          : {};
+              onSort,
+              columnIndex,
+            },
+          }
+        : {};
 
-      return (
-        <Th key={column} {...sortParams}>
-          {column}
-        </Th>
-      );
-    });
+    return (
+      <Th key={column} {...sortParams}>
+        {column}
+      </Th>
+    );
+  });
 
   return (
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th
-            aria-hidden
-            screenReaderText={words("common.emptyColumnHeader")}
-          />
+          <Th aria-hidden screenReaderText={words("common.emptyColumnHeader")} />
           {heads}
         </Tr>
       </Thead>

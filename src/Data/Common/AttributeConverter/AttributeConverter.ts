@@ -25,7 +25,7 @@ export interface AttributeInputConverter {
       | null
       | boolean
       | string[]
-      | { [x: string]: string | null | boolean | string[] },
+      | { [x: string]: string | null | boolean | string[] }
   ):
     | string
     | null
@@ -39,10 +39,7 @@ export interface AttributeInputConverter {
    * and to the active attribute set otherwise
    */
   getCurrentAttributes(
-    instance: Pick<
-      ServiceInstanceModel,
-      "candidate_attributes" | "active_attributes"
-    >,
+    instance: Pick<ServiceInstanceModel, "candidate_attributes" | "active_attributes">
   ): InstanceAttributeModel | null;
 }
 
@@ -55,16 +52,14 @@ export interface AttributeResultConverter {
   ensureAttributeType(
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     value: any,
-    type: string,
+    type: string
   ): unknown;
 
   /**
    * Creates a type-correct object from the attribute list, that can be used for communication with the backend
    * @param attributes The results from a form
    */
-  parseAttributesToCorrectTypes(
-    attributes: FormAttributeResult[],
-  ): InstanceAttributeModel;
+  parseAttributesToCorrectTypes(attributes: FormAttributeResult[]): InstanceAttributeModel;
 
   /**
    * Calculates the difference between the current attributes of an instance versus the updates (from a form)
@@ -74,6 +69,6 @@ export interface AttributeResultConverter {
    */
   calculateDiff(
     attributesAfterChanges: InstanceAttributeModel,
-    originalAttributes: InstanceAttributeModel | null,
+    originalAttributes: InstanceAttributeModel | null
   ): InstanceAttributeModel;
 }

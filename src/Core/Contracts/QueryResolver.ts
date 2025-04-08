@@ -1,10 +1,7 @@
 import { RemoteData } from "@/Core/Language";
 import { Query } from "@/Core/Query";
 
-type Data<K extends Query.Kind> = RemoteData.Type<
-  Query.Error<K>,
-  Query.UsedData<K>
->;
+type Data<K extends Query.Kind> = RemoteData.Type<Query.Error<K>, Query.UsedData<K>>;
 
 type Pair<K extends Query.Kind> = [Data<K>, () => void];
 

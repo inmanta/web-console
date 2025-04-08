@@ -7,7 +7,7 @@ import { ModalContext, ModalProvider } from "./ModalProvider";
 /**
  * `MockedModalUser` is a React functional component that renders a button that imitates the flow for the Modal Provider.
  *
- * @returns {JSX.Element} A button that triggers a modal when clicked.
+ * @returns {React.FC} A button that triggers a modal when clicked.
  */
 const MockedModalUser = () => {
   const { triggerModal, closeModal } = useContext(ModalContext);

@@ -25,11 +25,7 @@ interface Props {
  *  @prop {string} [classname] - optional class to style the date span.
  * @returns A component displaying the date in full, or relative, with tooltip.
  */
-export const DateWithTooltip: React.FC<Props> = ({
-  timestamp,
-  isFull,
-  className,
-}) => {
+export const DateWithTooltip: React.FC<Props> = ({ timestamp, isFull, className }) => {
   useTickerWithUnixMs(datePresenter.toUnixMs(timestamp));
   const date = datePresenter.get(timestamp);
 

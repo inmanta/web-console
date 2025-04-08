@@ -36,7 +36,7 @@ interface Props {
  *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
  *  @prop {function} handleInputChange - The callback for handling input changes.
  *
- * @returns {JSX.Element} The SelectFormInput component.
+ * @returns {React.FC<Props>} The SelectFormInput component.
  */
 export const SelectFormInput: React.FC<Props> = ({
   options,
@@ -55,8 +55,7 @@ export const SelectFormInput: React.FC<Props> = ({
     return {
       value: options[option],
       children: option,
-      isSelected:
-        selectOptions.length === 1 || options[option] === attributeValue,
+      isSelected: selectOptions.length === 1 || options[option] === attributeValue,
     };
   });
 
@@ -77,7 +76,7 @@ export const SelectFormInput: React.FC<Props> = ({
    */
   const onSelect = (
     _event: React.MouseEvent<Element, MouseEvent> | undefined,
-    value: string | number | undefined,
+    value: string | number | undefined
   ) => {
     handleInputChange(value);
     setIsOpen(false);
@@ -88,7 +87,7 @@ export const SelectFormInput: React.FC<Props> = ({
    *
    * @param {React.Ref<MenuToggleElement>} toggleRef - The toggle reference.
    *
-   * @returns {JSX.Element} The toggle element.
+   * @returns {React.FC} The toggle element.
    */
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
     <MenuToggle
@@ -105,18 +104,12 @@ export const SelectFormInput: React.FC<Props> = ({
     >
       {selectOptions.length === 1
         ? selectOptions[0]
-        : attributeValue ||
-          words("common.serviceInstance.select")(attributeName)}
+        : attributeValue || words("common.serviceInstance.select")(attributeName)}
     </MenuToggle>
   );
 
   return (
-    <FormGroup
-      {...props}
-      isRequired={!isOptional}
-      fieldId={attributeName}
-      label={attributeName}
-    >
+    <FormGroup {...props} isRequired={!isOptional} fieldId={attributeName} label={attributeName}>
       <FormHelperText>
         <HelperText>
           <HelperTextItem>{description}</HelperTextItem>
@@ -125,9 +118,7 @@ export const SelectFormInput: React.FC<Props> = ({
       <Select
         id={`${attributeName}-select`}
         isOpen={isOpen}
-        selected={
-          selectOptions.length === 1 ? selectOptions[0] : attributeValue
-        }
+        selected={selectOptions.length === 1 ? selectOptions[0] : attributeValue}
         onSelect={onSelect}
         onOpenChange={(isOpen) => setIsOpen(isOpen)}
         toggle={toggle}
@@ -136,11 +127,7 @@ export const SelectFormInput: React.FC<Props> = ({
       >
         <SelectList>
           {formattedOptions.map((option, index) => (
-            <SelectOption
-              key={index}
-              value={option.value}
-              isSelected={option.isSelected}
-            >
+            <SelectOption key={index} value={option.value} isSelected={option.isSelected}>
               {option.children}
             </SelectOption>
           ))}

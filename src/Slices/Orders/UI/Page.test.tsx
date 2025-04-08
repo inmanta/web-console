@@ -21,9 +21,7 @@ test("OrdersView shows empty table", async () => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "OrdersView-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "OrdersView-Loading" })).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -36,9 +34,7 @@ test("OrdersView shows empty table", async () => {
     await apiHelper.resolve(Either.right(emptyResponse));
   });
 
-  expect(
-    await screen.findByRole("generic", { name: "OrdersView-Empty" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("generic", { name: "OrdersView-Empty" })).toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -52,9 +48,7 @@ test("OrdersView shows failed table", async () => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "OrdersView-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "OrdersView-Loading" })).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -67,9 +61,7 @@ test("OrdersView shows failed table", async () => {
     await apiHelper.resolve(Either.left("error"));
   });
 
-  expect(
-    await screen.findByRole("region", { name: "OrdersView-Failed" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "OrdersView-Failed" })).toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -83,9 +75,7 @@ test("OrdersView shows success table", async () => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "OrdersView-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "OrdersView-Loading" })).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -98,9 +88,7 @@ test("OrdersView shows success table", async () => {
     await apiHelper.resolve(Either.right(orderResponse));
   });
 
-  expect(
-    await screen.findByRole("generic", { name: "OrdersView-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("generic", { name: "OrdersView-Success" })).toBeInTheDocument();
 
   const rows = await screen.findAllByRole("row", {
     name: "ServiceOrderRow",
@@ -120,9 +108,7 @@ test("OrdersView shows updated table", async () => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "OrdersView-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "OrdersView-Loading" })).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -135,9 +121,7 @@ test("OrdersView shows updated table", async () => {
     await apiHelper.resolve(Either.right(emptyResponse));
   });
 
-  expect(
-    await screen.findByRole("generic", { name: "OrdersView-Empty" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("generic", { name: "OrdersView-Empty" })).toBeInTheDocument();
 
   scheduler.executeAll();
 
@@ -145,9 +129,7 @@ test("OrdersView shows updated table", async () => {
     await apiHelper.resolve(Either.right(orderResponse));
   });
 
-  expect(
-    await screen.findByRole("generic", { name: "OrdersView-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("generic", { name: "OrdersView-Success" })).toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -176,7 +158,7 @@ test("GIVEN OrdersView WHEN sorting changes AND we are not on the first page THE
           after: 3,
           page_size: 100,
         },
-      }),
+      })
     );
   });
 
@@ -200,7 +182,7 @@ test("GIVEN OrdersView WHEN sorting changes AND we are not on the first page THE
           after: 0,
           page_size: 100,
         },
-      }),
+      })
     );
   });
 

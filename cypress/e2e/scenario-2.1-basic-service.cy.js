@@ -54,13 +54,17 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
 
     cy.request({
       method: "POST",
-      url: `/lsm/v1/exporter/export_service_definition`,
+      url: "/lsm/v1/exporter/export_service_definition",
       headers: { "X-Inmanta-Tid": id },
       body: { force_update: true },
     });
     checkStatusCompile(id);
   });
 };
+
+beforeEach(() => {
+  localStorage.setItem("theme-preference", "light");
+});
 
 if (Cypress.env("edition") === "iso") {
   describe("Scenario 2.1 Service Catalog - basic-service", () => {
@@ -75,13 +79,11 @@ if (Cypress.env("edition") === "iso") {
 
       cy.intercept(
         "GET",
-        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
+        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
       ).as("GetServiceInventory");
 
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // make sure the call to get inventory has been executed
@@ -112,10 +114,8 @@ if (Cypress.env("edition") === "iso") {
     it("2.1.2 Add Instance Submit form, INVALID form, EDIT form, VALID form", () => {
       // Go from Home page to Service Inventory of Basic-service
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
@@ -142,6 +142,13 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#ip_r2").clear().type("1.2.2.1");
       cy.get("button").contains("Confirm").click();
 
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+      cy.get("#basic-service").contains("Show inventory").click();
+
       // Should show the chart
       cy.get(".pf-v5-c-chart").should("be.visible");
 
@@ -160,10 +167,8 @@ if (Cypress.env("edition") === "iso") {
 
     it("2.1.3 Edit previously created instance, Instance Details history, documentation tab", () => {
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       // Expect to find one badge on the basic-service row.
       cy.get("#basic-service")
         .get('[aria-label="Number of instances by label"]')
@@ -177,50 +182,30 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="instance-details-link"]').first().click();
 
       // Check if there are three versions in the history table
-      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should(
-        "have.length",
-        3,
-      );
+      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should("have.length", 3);
 
       // Check the state of the instance is up in the history section.
       cy.get('[aria-label="History-Row"]').eq(0).should("contain", "up");
 
       // Selecting a version in the table should change the tags in the heading of the page.
-      cy.get('[aria-label="History-Row"]').eq(1).click();
-      cy.get('[data-testid="selected-version"]').should(
-        "have.text",
-        "Version: 2",
-      );
+      cy.get('[aria-label="History-Row"]')
+        .eq(1)
+        .within(() => {
+          cy.get('[data-label="version"]').trigger("click"); //it's done to avoid flake where the tooltip comes in a way and click ins't triggered
+        });
+      cy.get('[data-testid="selected-version"]').should("have.text", "Version: 2");
 
       // Check if it has all correct tabs and that the default selected one is the documentation tab.
-      cy.get('[aria-label="documentation-content"]').should(
-        "have.attr",
-        "aria-selected",
-        "true",
-      );
-      cy.get('[aria-label="attributes-content"]').should(
-        "have.attr",
-        "aria-selected",
-        "false",
-      );
-      cy.get('[aria-label="events-content"]').should(
-        "have.attr",
-        "aria-selected",
-        "false",
-      );
-      cy.get('[aria-label="resources-content"]').should(
-        "have.attr",
-        "aria-selected",
-        "false",
-      );
+      cy.get('[aria-label="documentation-content"]').should("have.attr", "aria-selected", "true");
+      cy.get('[aria-label="attributes-content"]').should("have.attr", "aria-selected", "false");
+      cy.get('[aria-label="events-content"]').should("have.attr", "aria-selected", "false");
+      cy.get('[aria-label="resources-content"]').should("have.attr", "aria-selected", "false");
 
       // check if the documentation is displayed
       cy.get(".markdown-body > h1").should("contain", "Getting started");
 
       // Go back to inventory using the breadcrumbs
-      cy.get('[aria-label="BreadcrumbItem"]')
-        .contains("Service Inventory: basic-service")
-        .click();
+      cy.get('[aria-label="BreadcrumbItem"]').contains("Service Inventory: basic-service").click();
 
       // click on edit button
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
@@ -243,52 +228,37 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Confirm").click();
 
       // check attributes on instance details page
-      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
-        .first()
-        .click();
       cy.get(".pf-v6-c-tabs__list").contains("Attributes").click();
 
       // Expect to find new value as candidate and old value in active
       cy.get('[aria-label="address_r1_value"]').should("contain", "1.2.3.5/32");
 
       // change to candidate attribute set
-      cy.get('[aria-label="Select-AttributeSet"]').select(
-        "candidate_attributes",
-      );
+      cy.get('[aria-label="Select-AttributeSet"]').select("candidate_attributes");
 
       cy.get('[aria-label="address_r1_value"]').should("contain", "1.2.3.8/32");
     });
 
     it("2.1.4 Duplicate instance with Editor", () => {
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
-        .eq(0)
-        .click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
       cy.get('[role="menuitem"]').contains("Duplicate").click();
 
       // toggle to JSON editor
       cy.get("#editorButton").click();
 
       // expect the JSON to be valid
-      cy.get('[data-testid="Error-container"]').should(
-        "not.contain",
-        "Errors found",
-      );
+      cy.get('[data-testid="Error-container"]').should("not.exist");
 
       // delete the JSON entirely
       cy.get(".view-line").last().type("{selectall}{backspace}");
 
       // expect the JSON to be invalid
-      cy.get('[data-testid="Error-container"]').should(
-        "contain",
-        "Errors found",
-      );
+      cy.get('[data-testid="Error-container"]').should("contain", "Errors found");
 
       // expect submit button to be disabled
       cy.get('[aria-label="submit"]').should("be.disabled");
@@ -300,10 +270,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".view-line").first().type("{ctrl}z");
 
       // expect the JSON to be valid
-      cy.get('[data-testid="Error-container"]').should(
-        "not.contain",
-        "Errors found",
-      );
+      cy.get('[data-testid="Error-container"]').should("not.exist");
 
       // expect submit button to be enabled
       cy.get('[aria-label="submit"]').should("be.enabled");
@@ -322,9 +289,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#editorButton").click();
 
       // expect the value for address_r1 to be empty
-      cy.get(".view-line > :nth-child(1) > .mtk5")
-        .first()
-        .should("contain", '""');
+      cy.get(".view-line > :nth-child(1) > .mtk5").first().should("contain", '""');
       cy.get(".view-line > :nth-child(1) > .mtk5").first().type("1.2.3.2/32");
       cy.get(".monaco-scrollable-element").first().type("{pageDown}"); // force editor to scroll down
 
@@ -334,8 +299,12 @@ if (Cypress.env("edition") === "iso") {
       // submit
       cy.get("button").contains("Confirm").click();
 
-      // expect to land on Service Inventory page
-      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      cy.get('[aria-label="Instance-Details-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
+
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+      cy.get("#basic-service").contains("Show inventory").click();
 
       // expect two rows in inventory now
       cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
@@ -347,13 +316,11 @@ if (Cypress.env("edition") === "iso") {
 
       cy.intercept(
         "GET",
-        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
+        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
       ).as("GetServiceInventory");
 
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // make sure the call to get inventory has been executed
@@ -379,21 +346,18 @@ if (Cypress.env("edition") === "iso") {
 
     it("2.1.6 Instance Details page", () => {
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       // Expect to find one badge on the basic-service row.
       cy.get("#basic-service")
-        .get('[aria-label="Number of instances by label"]')
+        .get('[aria-label="Number of instances by label"]', { timeout: 30000 })
         .children()
         .should("have.length", 1);
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Check Instance Details page
-      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
-        .last()
-        .click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).last().click();
 
       // click on the attributes tab
       cy.get('[aria-label="attributes-content"]').click();
@@ -407,9 +371,7 @@ if (Cypress.env("edition") === "iso") {
         .click();
 
       // assert the first element is now the address_r1 attribute
-      cy.get('[data-testid="attribute-key"]')
-        .first()
-        .should("contain", "address_r1");
+      cy.get('[data-testid="attribute-key"]').first().should("contain", "address_r1");
 
       // this row should contain the active_attribute value 1.2.3.5/32
       cy.get('[aria-label="address_r1_value"]').should("contain", "1.2.3.5/32");
@@ -422,9 +384,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="attribute-key"]').first().should("contain", "name");
 
       // assert you can change attributeSets to Candidate
-      cy.get('[aria-label="Select-AttributeSet"]').select(
-        "candidate_attributes",
-      );
+      cy.get('[aria-label="Select-AttributeSet"]').select("candidate_attributes");
 
       // assert that the address_r1 attribute value is now the candidate value 1.2.3.8/32
       cy.get('[aria-label="address_r1_value"]').should("contain", "1.2.3.8/32");
@@ -473,10 +433,7 @@ if (Cypress.env("edition") === "iso") {
 
       // open the first row of the events to confirm the data is correct. We can't assert all exact strings because the id's and dates are variable.
       cy.get("#expand-toggle0").click();
-      cy.get('[aria-label="Event-details-0"]').should(
-        "contain",
-        '"service_instance_version": 8,',
-      );
+      cy.get('[aria-label="Event-details-0"]').should("contain", '"service_instance_version": 8,');
 
       // close the row again and click on the export link in the second row. Expect to land on the compile report page.
       cy.get('[aria-label="Event-compile-1"]').should("contain", "Export");
@@ -485,22 +442,19 @@ if (Cypress.env("edition") === "iso") {
       cy.get("h1").contains("Compile Details").should("to.exist");
 
       // go back to the service inventory
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // go back to the details page
-      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
-        .last()
-        .click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).last().click();
 
       // change version and go to events page. The second version should contain a validation report.
-      cy.get('[aria-label="History-Row"]').eq(7).click();
-      cy.get('[data-testid="selected-version"]').should(
-        "have.text",
-        "Version: 2",
-      );
+      cy.get('[aria-label="History-Row"]')
+        .eq(7)
+        .within(() => {
+          cy.get('[data-label="version"]').click(); //it's done to avoid flake where the tooltip comes in a way and click ins't triggered
+        });
+      cy.get('[data-testid="selected-version"]').should("have.text", "Version: 2");
 
       cy.get('[aria-label="events-content"]').click();
 
@@ -524,61 +478,44 @@ if (Cypress.env("edition") === "iso") {
       cy.visit("/console/");
 
       // Add interceptions for the delete and get call to be able to catch responses later on.
-      cy.intercept("DELETE", "/lsm/v1/service_inventory/basic-service/**").as(
-        "DeleteInstance",
-      );
+      cy.intercept("DELETE", "/lsm/v1/service_inventory/basic-service/**").as("DeleteInstance");
       cy.intercept(
         "GET",
-        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
+        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
       ).as("GetServiceInventory");
 
-      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Select-environment-test"]').click();
 
       // START WORKAROUND
 
       // TODO: Remove workaround for race condition.
       // Must be done after https://github.com/inmanta/inmanta-lsm/issues/1249
       // Linked to: https://github.com/orgs/inmanta/projects/1?pane=issue&itemId=25836961
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Compile Reports")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
       cy.get("button", { timeout: 60000 }).contains("Recompile").click();
 
       // END WORKAROUND.
 
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Check Instance Details page
-      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
-        .first()
-        .click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();
 
       // Check the state of the instance is up in the history section.
-      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should(
-        "contain",
-        "up",
-      );
+      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should("contain", "up");
 
       // Go back to inventory using the breadcrumbs
-      cy.get('[aria-label="BreadcrumbItem"]')
-        .contains("Service Inventory: basic-service")
-        .click();
+      cy.get('[aria-label="BreadcrumbItem"]').contains("Service Inventory: basic-service").click();
 
       // delete but cancel deletion in modal
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
-        .last()
-        .click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).last().click();
       cy.get('[role="menuitem"]').contains("Delete").click();
       cy.get(".pf-v6-c-modal-box__header").should("contain", "Delete instance");
       cy.get(".pf-v6-c-form__actions").contains("No").click();
 
       // delete the instance.
-      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 })
-        .last()
-        .click();
+      cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).last().click();
       cy.get('[role="menuitem"]').contains("Delete").click();
       cy.get(".pf-v6-c-modal-box__header").should("contain", "Delete instance");
       cy.get(".pf-v6-c-form__actions").contains("Yes").click();

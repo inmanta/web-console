@@ -1,9 +1,4 @@
-import {
-  Command,
-  CommandResolver,
-  CommandManager,
-  CommandManagerResolver,
-} from "@/Core";
+import { Command, CommandResolver, CommandManager, CommandManagerResolver } from "@/Core";
 
 export class CommandResolverImpl implements CommandResolver {
   constructor(private readonly managerResolver: CommandManagerResolver) {}
@@ -15,11 +10,10 @@ export class CommandResolverImpl implements CommandResolver {
   }
 
   private getManager(command: Command.Type): CommandManager {
-    const manager = this.managerResolver
-      .get()
-      .find((manager) => manager.matches(command));
+    const manager = this.managerResolver.get().find((manager) => manager.matches(command));
 
     if (typeof manager !== "undefined") return manager;
+
     throw new Error(`Can't find CommandManager for command ${command.kind}`);
   }
 }

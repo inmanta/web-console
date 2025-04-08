@@ -4,16 +4,8 @@ import {
   t_chart_color_blue_400,
   t_chart_color_purple_300,
 } from "@patternfly/react-tokens";
-import {
-  EmbeddedEntity,
-  InstanceAttributeModel,
-  ParsedNumber,
-  ServiceModel,
-} from "@/Core";
-import {
-  ServiceOrderItemAction,
-  ServiceOrderItemConfig,
-} from "@/Slices/Orders/Core/Query";
+import { EmbeddedEntity, InstanceAttributeModel, ParsedNumber, ServiceModel } from "@/Core";
+import { ServiceOrderItemAction, ServiceOrderItemConfig } from "@/Slices/Orders/Core/Query";
 
 /**
  * Enum representing header colors for different types of entities.

@@ -1,0 +1,74 @@
+.markdown-body {
+  position: relative;
+}
+
+.mermaid-diagram {
+  display: block;
+  margin: 1rem auto;
+  max-width: 100%;
+  height: auto;
+  cursor: zoom-in;
+  transition: all 0.3s ease-in-out;
+  transform-origin: center center;
+  position: relative;
+}
+
+/* Overlay */
+.mermaid-diagram.zoomed::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 999;
+  pointer-events: none;
+}
+
+/* Use PatternFly's main content area for positioning */
+.mermaid-diagram.zoomed {
+  --diagram-margin: 3rem;
+  --extra-space: 2rem;
+  --left-margin: 1rem;
+  --page-padding: var(--pf-global--spacer--md, 1rem);
+  position: fixed;
+  z-index: 1000;
+  /* Position relative to the main content area */
+  left: calc(var(--pf-c-page__sidebar--Width, 300px) + var(--left-margin));
+  top: calc(var(--pf-c-page__header--MinHeight, 76px) + var(--diagram-margin));
+  width: calc(
+    100vw - var(--pf-c-page__sidebar--Width, 300px) - var(--left-margin) - var(--diagram-margin) -
+      (var(--page-padding) * 2) - var(--extra-space)
+  );
+  height: calc(
+    100vh - var(--pf-c-page__header--MinHeight, 76px) - (var(--diagram-margin) * 2) -
+      var(--page-padding) - var(--extra-space)
+  );
+  transform: none !important;
+  cursor: zoom-out;
+  background: var(--pf-global--BackgroundColor--100, white);
+  padding: 1.5rem;
+  border-radius: var(--pf-global--BorderRadius--lg, 8px);
+  object-fit: contain;
+  will-change: transform;
+  box-shadow: var(--pf-global--BoxShadow--lg, 0 0 30px rgba(0, 0, 0, 0.5));
+}
+
+/* When sidebar is collapsed */
+.pf-m-collapsed ~ * .mermaid-diagram.zoomed {
+  left: calc(var(--pf-c-page__sidebar--Width--collapsed, 75px) + var(--left-margin));
+  width: calc(
+    100vw - var(--pf-c-page__sidebar--Width--collapsed, 75px) - var(--left-margin) -
+      var(--diagram-margin) - (var(--page-padding) * 2) - var(--extra-space)
+  );
+}
+
+/* When sidebar is hidden */
+.pf-m-hidden ~ * .mermaid-diagram.zoomed {
+  left: var(--left-margin);
+  width: calc(
+    100vw - var(--left-margin) - var(--diagram-margin) - (var(--page-padding) * 2) -
+      var(--extra-space)
+  );
+}

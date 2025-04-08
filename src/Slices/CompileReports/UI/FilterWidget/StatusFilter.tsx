@@ -11,16 +11,10 @@ interface Props {
   setSelected: (selected: string | null) => void;
 }
 
-export const StatusFilter: React.FC<Props> = ({
-  isVisible,
-  selected,
-  setSelected,
-}) => {
-  const compileStatuses: SelectOptionProps[] = Object.keys(CompileStatus).map(
-    (key) => {
-      return { value: CompileStatus[key], children: CompileStatus[key] };
-    },
-  );
+export const StatusFilter: React.FC<Props> = ({ isVisible, selected, setSelected }) => {
+  const compileStatuses: SelectOptionProps[] = Object.keys(CompileStatus).map((key) => {
+    return { value: CompileStatus[key], children: CompileStatus[key] };
+  });
   const deleteChip = () => setSelected(null);
 
   return (

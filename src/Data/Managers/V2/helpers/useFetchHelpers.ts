@@ -1,6 +1,10 @@
 import { useContext } from "react";
 import { DependencyContext } from "@/UI";
 
+export interface CustomError extends Error {
+  status?: number;
+}
+
 /**
  * React Query hook that provides HTTP helper functions.
  *
@@ -22,9 +26,12 @@ export const useFetchHelpers = () => {
     }
 
     if (!response.ok) {
-      throw new Error(
-        customErrorMessage || JSON.parse(await response.text()).message,
+      const error: CustomError = new Error(
+        customErrorMessage || JSON.parse(await response.text()).message
       );
+
+      error.status = response.status;
+      throw error;
     }
   }
 
@@ -34,8 +41,9 @@ export const useFetchHelpers = () => {
    * @param env - The environment identifier.
    * @returns The headers object.
    */
-  function createHeaders(env?: string) {
-    const headers = new Headers({ "Content-Type": "application/json" });
+  function createHeaders(options?: { env?: string; message?: string }) {
+    const { env, message } = options || {};
+    const headers = new Headers();
 
     if (env) {
       headers.append("X-Inmanta-Tid", env);
@@ -43,6 +51,10 @@ export const useFetchHelpers = () => {
 
     if (!!authHelper.getToken()) {
       headers.append("Authorization", `Bearer ${authHelper.getToken()}`);
+    }
+
+    if (message) {
+      headers.append("message", message);
     }
 
     return headers;

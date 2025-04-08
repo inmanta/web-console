@@ -26,7 +26,7 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
   return (
     <>
       <div role="alert" aria-label="bannerNotifications">
-        {environmentId && <ExpertBanner environmentId={environmentId} />}
+        {environmentId && <ExpertBanner />}
         <LicenseBanner />
       </div>
       <div className="pf-m-grow" style={{ minHeight: "0%" }}>
@@ -39,12 +39,7 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
           }}
           isManagedSidebar
           breadcrumb={<PageBreadcrumbs />}
-          masthead={
-            <Header
-              {...{ onNotificationsToggle }}
-              noEnv={!Boolean(environmentId)}
-            />
-          }
+          masthead={<Header {...{ onNotificationsToggle }} noEnv={!Boolean(environmentId)} />}
           sidebar={<Sidebar environment={environmentId} />}
         >
           {children}

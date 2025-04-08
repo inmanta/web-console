@@ -13,10 +13,9 @@ import { ModalContext } from "../../ModalProvider";
 export const HaltButton: React.FC = () => {
   const { queryResolver, commandResolver } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const haltEnvironmentTrigger =
-    commandResolver.useGetTrigger<"HaltEnvironment">({
-      kind: "HaltEnvironment",
-    });
+  const haltEnvironmentTrigger = commandResolver.useGetTrigger<"HaltEnvironment">({
+    kind: "HaltEnvironment",
+  });
 
   /**
    * Handles the toggling of the modal.
@@ -56,16 +55,8 @@ export const HaltButton: React.FC = () => {
   };
 
   return (
-    <Tooltip
-      content={<div>{words("environment.halt.button.tooltip")}</div>}
-      position="right"
-    >
-      <Button
-        variant="stateful"
-        state="attention"
-        icon={<StopIcon />}
-        onClick={handleModalToggle}
-      >
+    <Tooltip content={<div>{words("environment.halt.button.tooltip")}</div>} position="right">
+      <Button variant="stateful" state="attention" icon={<StopIcon />} onClick={handleModalToggle}>
         {words("environment.halt.button")}
       </Button>
     </Tooltip>

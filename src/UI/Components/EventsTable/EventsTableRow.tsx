@@ -61,17 +61,11 @@ export const EventsTableRow: React.FC<Props> = ({
         <ExpandableRowContent>
           <DescriptionList>
             <DescriptionListGroup>
-              <DescriptionListTerm>
-                {words("events.column.message")}
-              </DescriptionListTerm>
-              <DescriptionListDescription>
-                {row.message}
-              </DescriptionListDescription>
+              <DescriptionListTerm>{words("events.column.message")}</DescriptionListTerm>
+              <DescriptionListDescription>{row.message}</DescriptionListDescription>
             </DescriptionListGroup>
             <DescriptionListGroup>
-              <DescriptionListTerm>
-                {words("events.details.title")}
-              </DescriptionListTerm>
+              <DescriptionListTerm>{words("events.details.title")}</DescriptionListTerm>
               <DescriptionListDescription>
                 <pre
                   style={{
@@ -83,9 +77,7 @@ export const EventsTableRow: React.FC<Props> = ({
                 </pre>
               </DescriptionListDescription>
             </DescriptionListGroup>
-            {row.idCompileReport && (
-              <CompileReportLink compileId={row.idCompileReport} />
-            )}
+            {row.idCompileReport && <CompileReportLink compileId={row.idCompileReport} />}
           </DescriptionList>
         </ExpandableRowContent>
       </Td>

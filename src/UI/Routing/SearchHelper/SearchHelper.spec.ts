@@ -16,8 +16,10 @@ test("GIVEN a very long query string with more than 20 elements in an array WHEN
     query += `&state.ResourceDetails.logs-expansion[${i}]=${key}`;
     expectedKeys.push(key);
   }
+
   expect(
-    (helper.parse(query).state as Record<string, Record<string, string>>)
-      .ResourceDetails["logs-expansion"],
+    (helper.parse(query).state as Record<string, Record<string, string>>).ResourceDetails[
+      "logs-expansion"
+    ]
   ).toEqual(expectedKeys);
 });

@@ -6,13 +6,7 @@ import { SettingsList } from "./SettingsList";
 test("ConfigView handles click on toggle correctly", () => {
   const cb = jest.fn();
 
-  render(
-    <SettingsList
-      config={{ test: false }}
-      onChange={cb}
-      Switch={BooleanSwitch}
-    />,
-  );
+  render(<SettingsList config={{ test: false }} onChange={cb} Switch={BooleanSwitch} />);
 
   expect(screen.getByRole("switch", { name: "test-False" })).toBeVisible();
 

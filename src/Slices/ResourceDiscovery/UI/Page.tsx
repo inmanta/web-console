@@ -1,16 +1,7 @@
 import React, { useContext, useEffect } from "react";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  EmptyView,
-  PageContainer,
-  PaginationWidget,
-  RemoteDataView,
-} from "@/UI/Components";
+import { EmptyView, PageContainer, OldPaginationWidget, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Filter, SortKey } from "@S/ResourceDiscovery/Core/Query";
@@ -44,8 +35,7 @@ export const Page: React.FC = () => {
     currentPage,
   });
 
-  const disabledDiscoveredResourcesView =
-    !featureManager.isResourceDiscoveryEnabled();
+  const disabledDiscoveredResourcesView = !featureManager.isResourceDiscoveryEnabled();
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
@@ -57,7 +47,7 @@ export const Page: React.FC = () => {
     <PageContainer pageTitle={words("discovered_resources.title")}>
       <TableControls
         paginationWidget={
-          <PaginationWidget
+          <OldPaginationWidget
             data={data}
             pageSize={pageSize}
             setPageSize={setPageSize}

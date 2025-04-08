@@ -1,9 +1,9 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
-import { usePostMetadata } from "@/Data/Managers/V2/POST/PostMetadata";
-import { usePostOrder } from "@/Data/Managers/V2/POST/PostOrder";
+import { usePostMetadata, usePostOrder } from "@/Data/Managers/V2/ServiceInstance";
+import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../../ToastAlert";
@@ -38,9 +38,7 @@ interface Props {
  * @returns {React.FC} The ComposerActions component.
  */
 export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
-  const { serviceModels, mainService, instance } = useContext(
-    InstanceComposerContext,
-  );
+  const { serviceModels, mainService, instance } = useContext(InstanceComposerContext);
   const {
     serviceOrderItems,
     isDirty,
@@ -48,15 +46,26 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
     diagramHandlers,
     interServiceRelationsOnCanvas,
   } = useContext(CanvasContext);
-  const { routeManager, environmentHandler } = useContext(DependencyContext);
+  const { routeManager } = useContext(DependencyContext);
 
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState(AlertVariant.danger);
+  const location = useLocation();
 
-  const environment = environmentHandler.useId();
+  const metadataMutation = usePostMetadata();
+  const orderMutation = usePostOrder({
+    onSuccess: (response: { data: ServiceOrder }) => {
+      const newUrl = routeManager.getUrl("OrderDetails", {
+        id: response.data.id,
+      });
 
-  const metadataMutation = usePostMetadata(environment);
-  const orderMutation = usePostOrder(environment);
+      navigate(`${newUrl}${location.search}`);
+    },
+    onError: (response: Error) => {
+      setAlertType(AlertVariant.danger);
+      setAlertMessage(response.message);
+    },
+  });
 
   const navigate = useNavigate();
   const url = routeManager.useUrl("Inventory", {
@@ -73,9 +82,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
 
     if (!diagramHandlers) {
       setAlertType(AlertVariant.danger);
-      setAlertMessage(
-        words("instanceComposer.errorMessage.coordinatesRequest"),
-      );
+      setAlertMessage(words("instanceComposer.errorMessage.coordinatesRequest"));
     } else {
       coordinates = diagramHandlers.getCoordinates();
     }
@@ -111,30 +118,10 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
 
     orderMutation.mutate(orderItems);
   };
-  const missingInterServiceRelations = Array.from(
-    interServiceRelationsOnCanvas,
-  ).filter(
+  const missingInterServiceRelations = Array.from(interServiceRelationsOnCanvas).filter(
     ([_key, value]) =>
-      value.relations.filter(
-        (relation) => relation.currentAmount < relation.min,
-      ).length > 0,
+      value.relations.filter((relation) => relation.currentAmount < relation.min).length > 0
   );
-
-  useEffect(() => {
-    if (orderMutation.isSuccess) {
-      //If response is successful then show feedback notification and redirect user to the service inventory view
-      setAlertType(AlertVariant.success);
-      setAlertMessage(words("instanceComposer.success"));
-
-      setTimeout(() => {
-        navigate(url);
-      }, 1000);
-    } else if (orderMutation.isError) {
-      setAlertType(AlertVariant.danger);
-      setAlertMessage(orderMutation.error.message);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderMutation.isSuccess, orderMutation.isError]);
 
   return (
     <Flex
@@ -157,10 +144,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
         />
       )}
       <FlexItem>
-        <Flex
-          spacer={{ default: "spacerMd" }}
-          alignItems={{ default: "alignItemsCenter" }}
-        >
+        <Flex spacer={{ default: "spacerMd" }} alignItems={{ default: "alignItemsCenter" }}>
           <Button variant="tertiary" width={200} onClick={handleRedirect}>
             {words("cancel")}
           </Button>

@@ -7,7 +7,7 @@ import { TabKey, Tabs } from "./Tabs";
 export const Page: React.FC = () => {
   const [activeTab, setActiveTab] = useUrlStateWithString<TabKey>({
     default: TabKey.Environment,
-    key: `tab`,
+    key: "tab",
     route: "Settings",
   });
 

@@ -1,4 +1,4 @@
-const kinds = [
+export const kinds = [
   /**
    * Main
    */
@@ -57,9 +57,6 @@ export type RouteKind = (typeof kinds)[number];
  */
 export type RestrictedRouteKind = "";
 
-export const isValidKind = (value: string): value is RouteKind =>
-  kinds.includes(value as RouteKind);
-
 export type EnvironmentRole = "Forbidden" | "Optional" | "Required";
 
 export interface Route<K extends RouteKind = RouteKind> {
@@ -101,10 +98,9 @@ interface RouteParamKeysManifest {
   OrderDetails: "id";
 }
 
-export type RouteParams<K extends RouteKind> =
-  K extends keyof RouteParamKeysManifest
-    ? Record<RouteParamKeysManifest[K], string>
-    : undefined;
+export type RouteParams<K extends RouteKind> = K extends keyof RouteParamKeysManifest
+  ? Record<RouteParamKeysManifest[K], string>
+  : undefined;
 
 export interface RouteMatch {
   params: RouteParams<RouteKind>;

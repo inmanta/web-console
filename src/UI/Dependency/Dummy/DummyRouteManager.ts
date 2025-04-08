@@ -1,11 +1,4 @@
-import {
-  RouteManager,
-  Route,
-  RouteKind,
-  RouteMatch,
-  Crumb,
-  RouteKindWithId,
-} from "@/Core";
+import { RouteManager, Route, RouteKind, RouteMatch, Crumb, RouteKindWithId } from "@/Core";
 
 export class DummyRouteManager implements RouteManager {
   getCrumbs(): Crumb[] {
