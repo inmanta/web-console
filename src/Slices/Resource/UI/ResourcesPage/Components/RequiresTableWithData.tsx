@@ -1,10 +1,6 @@
 import React from "react";
 import { useGetResourceDetails } from "@/Data/Managers/V2/Resource";
-import {
-  RequiresTable,
-  LoadingRequiresTable,
-  ErrorView,
-} from "@/UI/Components";
+import { RequiresTable, LoadingRequiresTable, ErrorView } from "@/UI/Components";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { words } from "@/UI/words";
 
@@ -14,8 +10,7 @@ interface Props {
 }
 
 export const RequiresTableWithData: React.FC<Props> = ({ id, deps }) => {
-  const { data, isSuccess, isError, error, refetch } =
-    useGetResourceDetails().useContinuous(id);
+  const { data, isSuccess, isError, error, refetch } = useGetResourceDetails().useContinuous(id);
 
   if (isError) {
     <ErrorView
@@ -43,10 +38,5 @@ export const RequiresTableWithData: React.FC<Props> = ({ id, deps }) => {
     );
   }
 
-  return (
-    <LoadingRequiresTable
-      numberOfRows={deps}
-      aria-label="ResourceRequires-Loading"
-    />
-  );
+  return <LoadingRequiresTable numberOfRows={deps} aria-label="ResourceRequires-Loading" />;
 };

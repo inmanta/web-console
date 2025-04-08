@@ -22,13 +22,7 @@ export const FactsTab: React.FC<Props> = ({ resourceId }) => {
     useGetResourceFacts().useContinuous(resourceId);
 
   if (isError) {
-    return (
-      <ErrorView
-        message={error.message}
-        retry={refetch}
-        ariaLabel="ResourceFacts-Error"
-      />
-    );
+    return <ErrorView message={error.message} retry={refetch} ariaLabel="ResourceFacts-Error" />;
   }
 
   if (isSuccess) {

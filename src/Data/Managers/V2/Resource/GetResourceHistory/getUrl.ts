@@ -6,12 +6,7 @@ import { GetResourceHistoryParams } from "./useGetResourceHistory";
  * @param {GetResourceHistoryParams} params - The query parameters
  * @returns {string} The constructed URL
  */
-export const getUrl = ({
-  id,
-  pageSize,
-  sort,
-  currentPage,
-}: GetResourceHistoryParams): string => {
+export const getUrl = ({ id, pageSize, sort, currentPage }: GetResourceHistoryParams): string => {
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
   return `/api/v2/resource/${id}/history?limit=${pageSize.value}${sortParam}${

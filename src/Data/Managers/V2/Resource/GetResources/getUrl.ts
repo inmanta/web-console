@@ -7,12 +7,7 @@ import { GetResourcesParams } from "./useGetResources";
  * @param {Query.SubQuery<"GetResources">} query - The query parameters
  * @returns {string} The constructed URL
  */
-export const getUrl = ({
-  filter,
-  pageSize,
-  sort,
-  currentPage,
-}: GetResourcesParams): string => {
+export const getUrl = ({ filter, pageSize, sort, currentPage }: GetResourcesParams): string => {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(

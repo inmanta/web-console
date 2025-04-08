@@ -74,7 +74,7 @@ interface GetDiscoveredResources {
  * @returns {UseQueryResult<DiscoveredResourceResponse, Error>} returns.useContinuous - Fetch the discovered resources with a recurrent query with an interval of 5s
  */
 export const useGetDiscoveredResources = (
-  params: GetDiscoveredResourcesParams,
+  params: GetDiscoveredResourcesParams
 ): GetDiscoveredResources => {
   const get = useGet()<ResponseBody>;
 

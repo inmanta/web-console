@@ -22,6 +22,6 @@ describe("getUrl for latest released resources ", () => {
       };
 
       expect(getUrl(params)).toEqual(url);
-    },
+    }
   );
 });

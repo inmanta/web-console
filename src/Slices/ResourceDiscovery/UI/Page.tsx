@@ -1,9 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   Filter,
@@ -47,16 +43,14 @@ export const Page: React.FC = () => {
     default: { name: "discovered_resource_id", order: "asc" },
     route: "DiscoveredResources",
   });
-  const { data, isError, isSuccess, refetch, error } =
-    useGetDiscoveredResources({
-      sort,
-      filter,
-      pageSize,
-      currentPage,
-    }).useContinuous();
+  const { data, isError, isSuccess, refetch, error } = useGetDiscoveredResources({
+    sort,
+    filter,
+    pageSize,
+    currentPage,
+  }).useContinuous();
 
-  const disabledDiscoveredResourcesView =
-    !featureManager.isResourceDiscoveryEnabled();
+  const disabledDiscoveredResourcesView = !featureManager.isResourceDiscoveryEnabled();
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
