@@ -89,6 +89,7 @@ export const JSONEditor: React.FC<Props> = ({
         schemaValidation: "error",
         schemas: [
           {
+            uri: `schema://${service_entity}.json`,
             schema: schema.data,
             fileMatch: ["*"],
           },

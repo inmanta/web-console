@@ -128,6 +128,15 @@ export const number: TextField = {
   inputType: TextInputTypes.number,
   type: "float?",
 };
+export const numberArr: TextField = {
+  kind: "Text",
+  name: "attr4",
+  defaultValue: [1, 2],
+  inputType: TextInputTypes.text,
+  type: "int[]",
+  isOptional: false,
+  isDisabled: false,
+};
 
 export const dictionary: TextField = {
   kind: "Text",
@@ -190,6 +199,26 @@ export const nestedEditable: Field[] = [
     inputType: TextInputTypes.text,
     description: "desc",
     type: "string?",
+    isOptional: true,
+    isDisabled: false,
+  },
+  {
+    kind: "Text",
+    name: "int_attr",
+    defaultValue: 1,
+    inputType: TextInputTypes.number,
+    description: "desc",
+    type: "int",
+    isOptional: false,
+    isDisabled: false,
+  },
+  {
+    kind: "Text",
+    name: "int_attr2",
+    defaultValue: null,
+    inputType: TextInputTypes.number,
+    description: "desc",
+    type: "int?",
     isOptional: true,
     isDisabled: false,
   },

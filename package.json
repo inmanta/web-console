@@ -1,6 +1,6 @@
 {
   "name": "@inmanta/web-console",
-  "version": "1.17.0",
+  "version": "1.17.1",
   "description": "Web Console for Inmanta Orchestrator",
   "exports": "./dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
@@ -164,6 +164,8 @@
     "mermaid": "^9.0.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
+    "monaco-editor": "^0.52.0",
+    "monaco-editor-webpack-plugin": "^7.1.0",
     "msw": "^2.2.2",
     "process": "^0.11.10",
     "qs": "^6.12.2",
@@ -202,7 +204,7 @@
     "loader-utils": "2.0.4 || 1.4.2",
     "word-wrap": "^1.2.4",
     "follow-redirects": "^1.15.4",
-    "undici": "^5",
+    "undici": "^5.28.5",
     "ws": "^8.17.1"
   },
   "madge": {

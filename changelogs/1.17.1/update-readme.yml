@@ -1,0 +1,3 @@
+description: Update the readme of the repo.
+change-type: patch
+destination-branches: [master, iso8, iso7]
