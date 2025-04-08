@@ -8,11 +8,7 @@ import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
-import {
-  getStoreInstance,
-  CommandResolverImpl,
-  CommandManagerResolverImpl,
-} from "@/Data";
+import { getStoreInstance, CommandResolverImpl, CommandManagerResolverImpl } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
@@ -46,9 +42,7 @@ function setup(entries?: string[]) {
   const apiHelper = new DeferredApiHelper();
 
   const store = getStoreInstance();
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper),
-  );
+  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
 
   const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
 
@@ -100,20 +94,16 @@ describe("ResourcesPage", () => {
           },
           links: { self: "" },
         });
-      }),
+      })
     );
 
     const { component } = setup();
 
     render(component);
 
-    expect(
-      screen.getByRole("region", { name: "ResourcesPage-Loading" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
 
-    expect(
-      await screen.findByRole("generic", { name: "ResourcesPage-Empty" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("generic", { name: "ResourcesPage-Empty" })).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -126,20 +116,16 @@ describe("ResourcesPage", () => {
     server.use(
       http.get("/api/v2/resource", () => {
         return HttpResponse.json({ message: "error" }, { status: 500 });
-      }),
+      })
     );
 
     const { component } = setup();
 
     render(component);
 
-    expect(
-      screen.getByRole("region", { name: "ResourcesPage-Loading" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
 
-    expect(
-      await screen.findByRole("region", { name: "ResourcesPage-Error" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("region", { name: "ResourcesPage-Error" })).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -152,20 +138,16 @@ describe("ResourcesPage", () => {
     server.use(
       http.get("/api/v2/resource", () => {
         return HttpResponse.json(Resource.response);
-      }),
+      })
     );
 
     const { component } = setup();
 
     render(component);
 
-    expect(
-      screen.getByRole("region", { name: "ResourcesPage-Loading" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
 
-    expect(
-      await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -189,7 +171,7 @@ describe("ResourcesPage", () => {
       }),
       http.get("/api/v2/resource/abc", () => {
         return HttpResponse.json(ResourceDetails.response);
-      }),
+      })
     );
 
     const { component } = setup();
@@ -208,9 +190,7 @@ describe("ResourcesPage", () => {
 
     await userEvent.click(toggleButton);
 
-    expect(
-      await screen.findByRole("grid", { name: "ResourceRequires-Success" }),
-    ).toBeVisible();
+    expect(await screen.findByRole("grid", { name: "ResourceRequires-Success" })).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -234,15 +214,13 @@ describe("ResourcesPage", () => {
           },
           metadata: Resource.response.metadata,
         });
-      }),
+      })
     );
 
     const { component } = setup();
 
     render(component);
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(
-      3,
-    );
+    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
 
     const button = screen.getAllByRole("button", {
       name: "Go to next page",
@@ -252,9 +230,7 @@ describe("ResourcesPage", () => {
 
     await userEvent.click(button);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(
-      6,
-    );
+    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(6);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -267,7 +243,7 @@ describe("ResourcesPage", () => {
     server.use(
       http.get("/api/v2/resource", () => {
         return HttpResponse.json(Resource.response);
-      }),
+      })
     );
     const { component } = setup();
 
@@ -284,7 +260,7 @@ describe("ResourcesPage", () => {
     expect(
       within(table).getByRole("button", {
         name: words("resources.column.deployState"),
-      }),
+      })
     ).toBeVisible();
 
     await act(async () => {
@@ -305,7 +281,7 @@ describe("ResourcesPage", () => {
         }
 
         return HttpResponse.json(Resource.response);
-      }),
+      })
     );
 
     const { component } = setup();
@@ -315,9 +291,7 @@ describe("ResourcesPage", () => {
     const rows = await screen.findAllByLabelText("Resource Table Row");
 
     expect(rows[0]).toHaveTextContent("/tmp/file4");
-    expect(rows[5]).toHaveTextContent(
-      "std::Directoryagent2/tmp/dir50skippedShow Details",
-    );
+    expect(rows[5]).toHaveTextContent("std::Directoryagent2/tmp/dir50skippedShow Details");
 
     const stateButton = await screen.findByRole("button", { name: "Agent" });
 
@@ -327,9 +301,7 @@ describe("ResourcesPage", () => {
 
     const updatedRows = await screen.findAllByLabelText("Resource Table Row");
 
-    expect(updatedRows[0]).toHaveTextContent(
-      "std::Directoryagent2/tmp/dir50skippedShow Details",
-    );
+    expect(updatedRows[0]).toHaveTextContent("std::Directoryagent2/tmp/dir50skippedShow Details");
     expect(updatedRows[5]).toHaveTextContent("/tmp/file4");
 
     await act(async () => {
@@ -354,15 +326,13 @@ describe("ResourcesPage", () => {
           },
           metadata: Resource.response.metadata,
         });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(
-      3,
-    );
+    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
 
     const nextPageButton = screen.getAllByLabelText("Go to next page")[0];
 
@@ -370,20 +340,16 @@ describe("ResourcesPage", () => {
 
     await userEvent.click(nextPageButton);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(
-      6,
-    );
+    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(6);
 
     //sort on the second page
     await userEvent.click(
       screen.getByRole("button", {
         name: "Type",
-      }),
+      })
     );
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(
-      3,
-    );
+    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
   });
 
   it.each`
@@ -405,7 +371,7 @@ describe("ResourcesPage", () => {
           }
 
           return HttpResponse.json(Resource.response);
-        }),
+        })
       );
       const { component } = setup();
 
@@ -440,7 +406,7 @@ describe("ResourcesPage", () => {
 
         expect(results).toHaveNoViolations();
       });
-    },
+    }
   );
 
   it.each`
@@ -461,9 +427,7 @@ describe("ResourcesPage", () => {
       server.use(
         http.get("/api/v2/resource", ({ request }) => {
           if (
-            request.url.includes(
-              `filter.${filterUrlNameOne}=${filterValueOne}`,
-            ) &&
+            request.url.includes(`filter.${filterUrlNameOne}=${filterValueOne}`) &&
             request.url.includes(`filter.${filterUrlNameTwo}=${filterValueTwo}`)
           ) {
             return HttpResponse.json({
@@ -474,7 +438,7 @@ describe("ResourcesPage", () => {
           }
 
           return HttpResponse.json(Resource.response);
-        }),
+        })
       );
       const { component } = setup();
 
@@ -505,22 +469,16 @@ describe("ResourcesPage", () => {
 
         expect(results).toHaveNoViolations();
       });
-    },
+    }
   );
 
   test("when using the all filters then the resources with that filter values should be fetched and shown", async () => {
     server.use(
       http.get("/api/v2/resource", ({ request }) => {
         if (
-          request.url.includes(
-            `filter.${filterUrlNameOne}=${filterValueOne}`,
-          ) &&
-          request.url.includes(
-            `filter.${filterUrlNameTwo}=${filterValueTwo}`,
-          ) &&
-          request.url.includes(
-            `filter.${filterUrlNameThree}=${filterValueThree}`,
-          )
+          request.url.includes(`filter.${filterUrlNameOne}=${filterValueOne}`) &&
+          request.url.includes(`filter.${filterUrlNameTwo}=${filterValueTwo}`) &&
+          request.url.includes(`filter.${filterUrlNameThree}=${filterValueThree}`)
         ) {
           return HttpResponse.json({
             data: Resource.response.data.slice(0, 3),
@@ -530,7 +488,7 @@ describe("ResourcesPage", () => {
         }
 
         return HttpResponse.json(Resource.response);
-      }),
+      })
     );
     const filterValueOne = "agent";
     const filterUrlNameOne = "agent";
@@ -549,19 +507,19 @@ describe("ResourcesPage", () => {
     expect(initialRows).toHaveLength(6);
 
     const inputOne = await screen.findByPlaceholderText(
-      words("resources.filters.agent.placeholder"),
+      words("resources.filters.agent.placeholder")
     );
 
     await userEvent.type(inputOne, `${filterValueOne}`);
 
     const inputTwo = await screen.findByPlaceholderText(
-      words("resources.filters.type.placeholder"),
+      words("resources.filters.type.placeholder")
     );
 
     await userEvent.type(inputTwo, `${filterValueTwo}`);
 
     const inputThree = await screen.findByPlaceholderText(
-      words("resources.filters.value.placeholder"),
+      words("resources.filters.value.placeholder")
     );
 
     await userEvent.type(inputThree, `${filterValueThree}{enter}`);
@@ -588,8 +546,7 @@ describe("ResourcesPage", () => {
     async ({ filterValue, option }) => {
       server.use(
         http.get("/api/v2/resource", ({ request }) => {
-          const filter =
-            option === "include" ? filterValue : `%21${filterValue}`;
+          const filter = option === "include" ? filterValue : `%21${filterValue}`;
 
           if (request.url.includes(`&filter.status=${filter}`)) {
             return HttpResponse.json({
@@ -600,7 +557,7 @@ describe("ResourcesPage", () => {
           }
 
           return HttpResponse.json(Resource.response);
-        }),
+        })
       );
       const { component } = setup();
 
@@ -639,7 +596,7 @@ describe("ResourcesPage", () => {
 
         expect(results).toHaveNoViolations();
       });
-    },
+    }
   );
 
   test("When clicking the clear and reset filters then the state filter is updated correctly", async () => {
@@ -654,7 +611,7 @@ describe("ResourcesPage", () => {
           links: Resource.response.links,
           metadata: Resource.response.metadata,
         });
-      }),
+      })
     );
     const { component } = setup();
 
@@ -679,9 +636,7 @@ describe("ResourcesPage", () => {
 
     expect(initialRowsAfterClear).toHaveLength(2);
 
-    await userEvent.click(
-      await screen.findByRole("button", { name: "Reset-filters" }),
-    );
+    await userEvent.click(await screen.findByRole("button", { name: "Reset-filters" }));
 
     const initialRowsAfterReset = await screen.findAllByRole("row", {
       name: "Resource Table Row",
@@ -700,20 +655,18 @@ describe("ResourcesPage", () => {
     server.use(
       http.get("/api/v2/resource", () => {
         return HttpResponse.json(Resource.response);
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
 
     expect(
       await screen.findByRole("generic", {
         name: words("resources.deploySummary.title"),
-      }),
+      })
     ).toBeInTheDocument();
 
     await act(async () => {
@@ -750,30 +703,26 @@ describe("ResourcesPage", () => {
             next: "/fake-link?end=fake-param",
           },
         });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      screen.getByRole("region", { name: "ResourcesPage-Loading" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
 
-    expect(
-      await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
 
     expect(
       await screen.findByRole("generic", {
         name: words("resources.deploySummary.title"),
-      }),
+      })
     ).toBeInTheDocument();
 
     expect(
       screen.getByRole("generic", {
         name: "LegendItem-available",
-      }),
+      })
     ).toHaveAttribute("data-value", "1");
 
     const nextButton = screen.getAllByRole("button", {
@@ -782,34 +731,32 @@ describe("ResourcesPage", () => {
 
     expect(nextButton).toBeEnabled();
 
-    await userEvent.click(nextButton);
+    await act(async () => {
+      await userEvent.click(nextButton);
+    });
 
     expect(
-      screen.getByRole("generic", {
+      await screen.findByRole("generic", {
         name: words("resources.deploySummary.title"),
-      }),
+      })
     ).toBeVisible();
     expect(
       screen.getByRole("button", {
         name: words("resources.deploySummary.repair"),
-      }),
+      })
     ).toBeVisible();
     expect(
       screen.getByRole("button", {
         name: words("resources.deploySummary.deploy"),
-      }),
+      })
     ).toBeVisible();
-    expect(
-      screen.getByRole("navigation", { name: "top-Pagination" }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("navigation", { name: "bottom-Pagination" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("navigation", { name: "top-Pagination" })).toBeVisible();
+    expect(screen.getByRole("navigation", { name: "bottom-Pagination" })).toBeInTheDocument();
 
     expect(
       await screen.findByRole("generic", {
         name: "LegendItem-available",
-      }),
+      })
     ).toHaveAttribute("data-value", "2");
 
     await act(async () => {
@@ -845,55 +792,52 @@ describe("ResourcesPage", () => {
           ...Resource.response,
           links: { ...Resource.response.links, next: "/fake-link" },
         });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
 
     expect(
       await screen.findByRole("generic", {
         name: words("resources.deploySummary.title"),
-      }),
+      })
     ).toBeInTheDocument();
 
     expect(
       screen.getByRole("generic", {
         name: "LegendItem-available",
-      }),
+      })
     ).toHaveAttribute("data-value", "1");
 
     expect(
       screen.getByRole("generic", {
         name: words("resources.deploySummary.title"),
-      }),
+      })
     ).toBeVisible();
     expect(
       screen.getByRole("button", {
         name: words("resources.deploySummary.repair"),
-      }),
+      })
     ).toBeVisible();
     expect(
       screen.getByRole("button", {
         name: words("resources.deploySummary.deploy"),
-      }),
+      })
     ).toBeVisible();
-    expect(
-      screen.getByRole("navigation", { name: "top-Pagination" }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("navigation", { name: "bottom-Pagination" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("navigation", { name: "top-Pagination" })).toBeVisible();
+    expect(screen.getByRole("navigation", { name: "bottom-Pagination" })).toBeInTheDocument();
 
-    await delay(5000);
+    await act(async () => {
+      await delay(5000);
+    });
+
     expect(
       await screen.findByRole("generic", {
         name: "LegendItem-available",
-      }),
+      })
     ).toHaveAttribute("data-value", "2");
 
     await act(async () => {
@@ -907,7 +851,7 @@ describe("ResourcesPage", () => {
     server.use(
       http.get("/api/v2/resource", () => {
         return HttpResponse.json(Resource.response);
-      }),
+      })
     );
     const { component } = setup();
 
@@ -916,7 +860,7 @@ describe("ResourcesPage", () => {
     expect(
       await screen.findByRole("generic", {
         name: words("resources.deploySummary.title"),
-      }),
+      })
     ).toBeInTheDocument();
 
     const availableItem = screen.getByRole("generic", {
@@ -940,26 +884,24 @@ describe("ResourcesPage", () => {
     server.use(
       http.get("/api/v2/resource", () => {
         return HttpResponse.json(Resource.response);
-      }),
+      })
     );
     const { component, apiHelper, environment } = setup();
 
     render(component);
 
-    expect(
-      await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
 
     await userEvent.click(
       await screen.findByRole("button", {
         name: words("resources.deploySummary.deploy"),
-      }),
+      })
     );
 
     expect(
       await screen.findByRole("button", {
         name: words("resources.deploySummary.deploy"),
-      }),
+      })
     ).toBeDisabled();
 
     expect(screen.getByTestId("dot-indication")).toBeInTheDocument();
@@ -986,26 +928,24 @@ describe("ResourcesPage", () => {
     server.use(
       http.get("/api/v2/resource", () => {
         return HttpResponse.json(Resource.response);
-      }),
+      })
     );
     const { component, apiHelper, environment } = setup();
 
     render(component);
 
-    expect(
-      await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
 
     await userEvent.click(
       await screen.findByRole("button", {
         name: words("resources.deploySummary.repair"),
-      }),
+      })
     );
 
     expect(
       await screen.findByRole("button", {
         name: words("resources.deploySummary.repair"),
-      }),
+      })
     ).toBeDisabled();
 
     expect(apiHelper.pendingRequests).toEqual([
@@ -1030,7 +970,7 @@ describe("ResourcesPage", () => {
     server.use(
       http.get("/api/v2/resource", () => {
         return HttpResponse.json(Resource.response);
-      }),
+      })
     );
     const { component, environment, store, environmentModifier } = setup();
 
@@ -1042,19 +982,17 @@ describe("ResourcesPage", () => {
 
     render(component);
 
-    expect(
-      await screen.findByRole("grid", { name: "ResourcesPage-Success" }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
 
     expect(
       await screen.findByRole("button", {
         name: words("resources.deploySummary.repair"),
-      }),
+      })
     ).toBeDisabled();
     expect(
       await screen.findByRole("button", {
         name: words("resources.deploySummary.deploy"),
-      }),
+      })
     ).toBeDisabled();
 
     await act(async () => {

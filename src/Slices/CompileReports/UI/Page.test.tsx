@@ -5,7 +5,7 @@ import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, delay } from "msw";
 import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
@@ -161,12 +161,12 @@ describe("CompileReports", () => {
   });
 
   test("CompileReportsView shows updated table", async () => {
-    let delay = 0;
+    let counter = 0;
 
     server.use(
       http.get("/api/v2/compilereport", () => {
-        if (delay === 0) {
-          delay++;
+        if (counter === 0) {
+          counter++;
 
           return HttpResponse.json({
             data: [],
@@ -191,7 +191,9 @@ describe("CompileReports", () => {
       await screen.findByRole("generic", { name: "CompileReportsView-Empty" })
     ).toBeInTheDocument();
 
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await act(async () => {
+      await delay(5000);
+    });
 
     expect(
       await screen.findByRole("grid", { name: "CompileReportsView-Success" })

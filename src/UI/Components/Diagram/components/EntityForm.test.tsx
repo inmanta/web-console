@@ -1,4 +1,4 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { dia } from "@inmanta/rappid";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -139,7 +139,9 @@ describe("EntityForm.", () => {
 
     expect(screen.getByRole("button", { name: "Remove" })).toBeEnabled();
 
-    await userEvent.click(screen.getByRole("button", { name: "Remove" }));
+    await act(async () => {
+      await userEvent.click(screen.getByRole("button", { name: "Remove" }));
+    });
 
     expect(onRemove).toHaveBeenCalled();
   });
@@ -200,7 +202,9 @@ describe("EntityForm.", () => {
     expect(screen.getByLabelText("TextInput-service_id")).toHaveValue("test_id");
     expect(screen.getByLabelText("TextInput-name")).toHaveValue("test_name");
 
-    await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    await act(async () => {
+      await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    });
 
     expect(editEntity).toHaveBeenCalledWith(expect.any(Object), parentModel, {
       name: "",

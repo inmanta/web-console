@@ -1,3 +1,4 @@
+import { act } from "react";
 import { dia, ui } from "@inmanta/rappid";
 import { fireEvent, screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
@@ -34,7 +35,9 @@ describe("ZoomHandler", () => {
 
     const fullscreenButton = screen.getByTestId("fullscreen");
 
-    await userEvent.click(fullscreenButton);
+    await act(async () => {
+      await userEvent.click(fullscreenButton);
+    });
 
     expect(fullScreenSpy).toHaveBeenCalled();
   });
@@ -50,7 +53,9 @@ describe("ZoomHandler", () => {
 
     const fullscreenButton = screen.getByTestId("fullscreen");
 
-    await userEvent.click(fullscreenButton);
+    await act(async () => {
+      await userEvent.click(fullscreenButton);
+    });
 
     expect(exitFullScreenSpy).toHaveBeenCalled();
   });
@@ -61,7 +66,9 @@ describe("ZoomHandler", () => {
 
     const fitToScreenButton = screen.getByTestId("fit-to-screen");
 
-    await userEvent.click(fitToScreenButton);
+    await act(async () => {
+      await userEvent.click(fitToScreenButton);
+    });
 
     expect(zoomToFit).toHaveBeenCalled();
   });

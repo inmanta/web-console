@@ -99,7 +99,9 @@ test("GIVEN EnvironmentControls WHEN rendered THEN it should be accessible", asy
     await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
   });
 
-  expect(await axe(container)).toHaveNoViolations();
+  await act(async () => {
+    expect(await axe(container)).toHaveNoViolations();
+  });
 });
 
 test("EnvironmentControls halt the environment when clicked and the environment is running", async () => {
@@ -115,9 +117,13 @@ test("EnvironmentControls halt the environment when clicked and the environment 
 
   expect(stopButton).toBeVisible();
 
-  await userEvent.click(stopButton);
+  await act(async () => {
+    await userEvent.click(stopButton);
+  });
 
-  await userEvent.click(await screen.findByText("Yes"));
+  await act(async () => {
+    await userEvent.click(await screen.findByText("Yes"));
+  });
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
 
@@ -139,9 +145,13 @@ test("EnvironmentControls don\\t trigger backend call when dialog is not confirm
 
   expect(stopButton).toBeVisible();
 
-  await userEvent.click(stopButton);
+  await act(async () => {
+    await userEvent.click(stopButton);
+  });
 
-  await userEvent.click(await screen.findByText("No"));
+  await act(async () => {
+    await userEvent.click(await screen.findByText("No"));
+  });
 
   expect(fetchMock.mock.calls).toHaveLength(0);
 });
@@ -163,9 +173,13 @@ test("EnvironmentControls resume the environment when clicked and the environmen
 
   expect(start).toBeVisible();
 
-  await userEvent.click(start);
+  await act(async () => {
+    await userEvent.click(start);
+  });
 
-  await userEvent.click(await screen.findByText("Yes"));
+  await act(async () => {
+    await userEvent.click(await screen.findByText("Yes"));
+  });
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
 
