@@ -1,7 +1,7 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -17,6 +17,7 @@ import {
 } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { links, metadata } from "@/Test/Data/Pagination";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
 import { NotificationCenterPage } from ".";
@@ -31,13 +32,6 @@ const axe = configureAxe({
 });
 
 const setup = (entries?: string[]) => {
-  const client = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
@@ -48,7 +42,7 @@ const setup = (entries?: string[]) => {
   const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
 
   const component = (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter initialEntries={entries}>
         <StoreProvider store={store}>
           <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>

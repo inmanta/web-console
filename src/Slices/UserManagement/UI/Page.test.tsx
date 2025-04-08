@@ -1,7 +1,7 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -9,6 +9,7 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { UserInfo } from "@/Data/Managers/V2/Auth";
 import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { UserManagementPage } from "./Page";
@@ -16,17 +17,9 @@ import { UserManagementPage } from "./Page";
 expect.extend(toHaveNoViolations);
 
 const setup = () => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
-
   const component = (
     <MemoryRouter>
-      <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={testClient}>
         <DependencyProvider dependencies={{ ...dependencies }}>
           <ModalProvider>
             <Page>

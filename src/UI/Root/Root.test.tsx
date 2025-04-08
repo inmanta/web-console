@@ -1,7 +1,7 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router";
 import { useLocation } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -27,12 +27,11 @@ import {
   ServerStatus,
   StaticScheduler,
 } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { Root } from "./Root";
 
 function setup() {
-  const queryClient = new QueryClient();
-
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
@@ -61,7 +60,7 @@ function setup() {
   const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
 
   const component = (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter initialEntries={["/"]}>
         <StoreProvider store={store}>
           <DependencyProvider

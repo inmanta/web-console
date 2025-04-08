@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
@@ -8,6 +8,7 @@ import { setupServer } from "msw/node";
 import { RemoteData, ServiceInstanceModel } from "@/Core";
 import { getStoreInstance } from "@/Data/Store";
 import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
 import { childModel, testInstance, testService } from "@/UI/Components/Diagram/Mocks";
 import { useGetInstanceWithRelations } from "./useGetInstanceWithRelations";
@@ -61,13 +62,7 @@ export const server = setupServer(
 const createWrapper = () => {
   const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
   const store = getStoreInstance();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
+
   const env = {
     id: "aaa",
     name: "env-a",
@@ -95,7 +90,7 @@ const createWrapper = () => {
         },
       ]}
     >
-      <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={testClient}>
         <DependencyProvider
           dependencies={{
             ...dependencies,

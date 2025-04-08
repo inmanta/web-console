@@ -1,6 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -10,6 +10,7 @@ import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { dependencies, EnvironmentDetails, EnvironmentSettings } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
@@ -27,13 +28,6 @@ const axe = configureAxe({
 const server = setupServer();
 
 function setup() {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
   const store = getStoreInstance();
 
   const routeManager = PrimaryRouteManager("");
@@ -52,7 +46,7 @@ function setup() {
   dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter>
         <DependencyProvider
           dependencies={{

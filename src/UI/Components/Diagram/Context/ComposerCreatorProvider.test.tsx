@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -9,6 +9,7 @@ import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl, PrimaryRouteManager } from "@/UI";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
@@ -18,13 +19,6 @@ import { defineObjectsForJointJS } from "../testSetup";
 import { ComposerCreatorProvider } from "./ComposerCreatorProvider";
 
 const setup = () => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
   const store = getStoreInstance();
   const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
 
@@ -47,7 +41,7 @@ const setup = () => {
   history.push("/?env=aaa");
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <CustomRouter history={history}>
         <StoreProvider store={store}>
           <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>

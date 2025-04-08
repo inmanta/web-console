@@ -1,6 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -16,6 +16,7 @@ import {
   MockEnvironmentHandler,
   Resource,
 } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
@@ -32,13 +33,6 @@ const axe = configureAxe({
 });
 
 function setup(entries?: string[]) {
-  const client = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
   const apiHelper = new DeferredApiHelper();
 
   const store = getStoreInstance();
@@ -47,7 +41,7 @@ function setup(entries?: string[]) {
   const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
 
   const component = (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter initialEntries={entries}>
         <DependencyProvider
           dependencies={{

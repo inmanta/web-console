@@ -1,6 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
@@ -13,9 +13,11 @@ import {
   DynamicQueryManagerResolverImpl,
   EnvironmentDetails,
 } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
+
 expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
@@ -34,7 +36,7 @@ function setup() {
     new DynamicQueryManagerResolverImpl([environmentDetailsQueryManager])
   );
   const component = (
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter>
         <StoreProvider store={store}>
           <DependencyProvider

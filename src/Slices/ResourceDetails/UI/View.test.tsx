@@ -1,7 +1,7 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -10,6 +10,7 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
@@ -19,16 +20,9 @@ expect.extend(toHaveNoViolations);
 
 function setup() {
   const store = getStoreInstance();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
 
   const component = (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter>
         <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>
@@ -54,16 +48,14 @@ describe("ResourceDetailsView", () => {
     server.use(
       http.get("/api/v2/resource/abc", () => {
         return HttpResponse.json({ data: ResourceDetails.a });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
     expect(screen.getByLabelText("ResourceDetails-Loading")).toBeVisible();
 
-    expect(
-      await screen.findByLabelText("ResourceDetails-Success"),
-    ).toBeVisible();
+    expect(await screen.findByLabelText("ResourceDetails-Success")).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -78,24 +70,20 @@ describe("ResourceDetailsView", () => {
         return HttpResponse.json({
           data: { ...ResourceDetails.a, requires_status: {} },
         });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
-    expect(
-      await screen.findByLabelText("ResourceDetails-Success"),
-    ).toBeVisible();
+    expect(await screen.findByLabelText("ResourceDetails-Success")).toBeVisible();
 
     await userEvent.click(
       screen.getAllByRole("tab", {
         name: words("resources.requires.title"),
-      })[0],
+      })[0]
     );
 
-    expect(
-      await screen.findByLabelText("ResourceRequires-Empty"),
-    ).toBeVisible();
+    expect(await screen.findByLabelText("ResourceRequires-Empty")).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -108,23 +96,19 @@ describe("ResourceDetailsView", () => {
     server.use(
       http.get("/api/v2/resource/abc", () => {
         return HttpResponse.json({ data: ResourceDetails.a });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
-    expect(
-      await screen.findByLabelText("ResourceDetails-Success"),
-    ).toBeVisible();
+    expect(await screen.findByLabelText("ResourceDetails-Success")).toBeVisible();
 
     await userEvent.click(
       screen.getAllByRole("tab", {
         name: words("resources.requires.title"),
-      })[0],
+      })[0]
     );
-    expect(
-      await screen.findByRole("grid", { name: "ResourceRequires-Success" }),
-    ).toBeVisible();
+    expect(await screen.findByRole("grid", { name: "ResourceRequires-Success" })).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -137,7 +121,7 @@ describe("ResourceDetailsView", () => {
     server.use(
       http.get("/api/v2/resource/abc", () => {
         return HttpResponse.json({ data: ResourceDetails.a });
-      }),
+      })
     );
     const { component } = setup();
 

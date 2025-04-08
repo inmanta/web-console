@@ -1,6 +1,6 @@
 import React, { act } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { QueryClient, QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
+import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, queries, within as baseWithin } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -9,6 +9,7 @@ import { getStoreInstance } from "@/Data";
 import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
 import { dependencies } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl, PrimaryRouteManager, words } from "@/UI";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
 import CustomRouter from "@/UI/Routing/CustomRouter";
@@ -32,7 +33,6 @@ const setup = (
   models: ServiceModel[] = serviceModels,
   editable: boolean = true
 ) => {
-  const queryClient = new QueryClient();
   const store = getStoreInstance();
   const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
 
@@ -67,7 +67,7 @@ const setup = (
   history.push("/?env=aaa");
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <CustomRouter history={history}>
         <StoreProvider store={store}>
           <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>

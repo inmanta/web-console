@@ -1,5 +1,5 @@
 import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { delay, http, HttpResponse } from "msw";
@@ -7,19 +7,14 @@ import { setupServer } from "msw/node";
 import { getStoreInstance, QueryManagerResolverImpl, QueryResolverImpl } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { metadata, links } from "@/Test/Data/Pagination";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Badge } from "./Badge";
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
+
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
 
@@ -28,7 +23,7 @@ function setup() {
   );
 
   const component = (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <StoreProvider store={store}>
         <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
           <Badge onClick={() => undefined} />

@@ -1,5 +1,5 @@
 import React from "react";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -7,6 +7,7 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { dependencies, MockEnvironmentModifier } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Provider } from "./Provider";
@@ -20,20 +21,13 @@ function setup({
   },
   isToastVisible = true,
 } = {}) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
   const store = getStoreInstance();
 
   const environmentModifier = new MockEnvironmentModifier(details);
   const afterTrigger = jest.fn();
 
   const component = (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <StoreProvider store={store}>
         <DependencyProvider
           dependencies={{

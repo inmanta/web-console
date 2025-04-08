@@ -1,6 +1,6 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { QueryClientProvider, QueryClient, QueryObserverResult } from "@tanstack/react-query";
+import { QueryClientProvider, QueryObserverResult } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -19,6 +19,7 @@ import {
   ServerStatus as TestServerStatus,
   StaticScheduler,
 } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Navigation } from "./Navigation";
@@ -26,7 +27,6 @@ import { Navigation } from "./Navigation";
 expect.extend(toHaveNoViolations);
 
 function setup(initialEntries: string[] | undefined, serverStatus: ServerStatus) {
-  const queryClient = new QueryClient();
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
@@ -37,7 +37,7 @@ function setup(initialEntries: string[] | undefined, serverStatus: ServerStatus)
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
   const component = (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter initialEntries={initialEntries}>
         <DependencyProvider dependencies={{ ...dependencies, featureManager, queryResolver }}>
           <StoreProvider store={store}>
