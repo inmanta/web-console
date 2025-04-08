@@ -33,10 +33,8 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
    */
   getInputType(attributeModel: AttributeModel): InputType {
     if (attributeModel.type.includes("bool")) return "bool";
-    return this.matchTextInputWithPatternflyInput(
-      attributeModel.name,
-      attributeModel.type,
-    );
+
+    return this.matchTextInputWithPatternflyInput(attributeModel.type);
   }
 
   /**
@@ -68,18 +66,9 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
     }
   }
 
-  private matchTextInputWithPatternflyInput(
-    attributeName: string,
-    type: string,
-  ): TextInputTypes {
+  private matchTextInputWithPatternflyInput(type: string): TextInputTypes {
     if (isNumberType(type)) {
       return TextInputTypes.number;
-    }
-    const pfInputTypeNames = Object.keys(TextInputTypes);
-    for (const inputType of pfInputTypeNames) {
-      if (attributeName.includes(inputType)) {
-        return TextInputTypes[inputType];
-      }
     }
     return TextInputTypes.text;
   }
