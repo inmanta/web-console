@@ -99,7 +99,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
     }
 
     return (
-      <Flex justifyContent={{ default: 'justifyContentFlexEnd' }}>
+      <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
         <FlexItem>
           <Button
             variant="secondary"

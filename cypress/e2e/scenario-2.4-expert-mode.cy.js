@@ -183,7 +183,7 @@ if (Cypress.env("edition") === "iso") {
         .type("# Test Heading\n\nThis is a test paragraph with **bold** text.");
 
       // Verify the preview updates with the new content
-      cy.get('.markdown-body')
+      cy.get(".markdown-body")
         .should("contain", "Test Heading")
         .and("contain", "This is a test paragraph")
         .and("contain", "bold");
@@ -225,7 +225,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".monaco-editor")
         .click()
         .focused()
-        .type("{ctrl+f}")  // open search tool
+        .type("{ctrl+f}");  // open search tool
 
       cy.wait(1000); // let the editor settle to avoid typing text to fail
 

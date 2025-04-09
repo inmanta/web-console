@@ -87,7 +87,7 @@ export const JSONEditor: React.FC<Props> = ({
       if (monaco) {
         const model = monaco.editor.getModels()[0];
         if (model) {
-          monaco.editor.setModelMarkers(model, 'json', []);
+          monaco.editor.setModelMarkers(model, "json", []);
         }
       }
     }

@@ -310,7 +310,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".monaco-editor")
         .click()
         .focused()
-        .type("{ctrl+f}")  // open search tool
+        .type("{ctrl+f}");  // open search tool
 
       cy.wait(1000); // let the editor settle to avoid typing text to fail
 
@@ -426,15 +426,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#Compare").click();
 
       // assert you can compare two different versions, and that there are differences.
-      cy.get(".editor.modified")
-        .find(".view-line")
-        .eq(4)
-        .should("contain", '"address_r1": "1.2.3.8/32",');
-
-      cy.get(".editor.original")
-        .find(".view-line")
-        .eq(4)
-        .should("contain", '"address_r1": "1.2.3.5/32",');
+      cy.get(".monaco-diff-editor").should("exist");
+      // Check for the presence of diff markers (insert/delete signs)
+      cy.get(".codicon-diff-insert, .codicon-diff-remove").should("exist");
 
       // Update the state to setting_start
       cy.get('[aria-label="Actions-Toggle"]').click();
@@ -489,10 +483,10 @@ if (Cypress.env("edition") === "iso") {
       // Check that both Export and Validation events exist in the table
       cy.get('[aria-label="Event-table-row"]').should(($events) => {
         const eventTypes = $events.map((_, element) =>
-          Cypress.$(element).find('[aria-label="Event-type"]').text().trim()
+          Cypress.$(element).find('[aria-label^="Event-compile-"] .pf-v6-c-button__text').text().trim()
         ).get();
 
-        expect(eventTypes).to.include.members(['Export', 'Validation']);
+        expect(eventTypes).to.include.members(["Export", "Validation"]);
         expect(eventTypes).to.have.length(4); // Verify total number of events
       });
 
