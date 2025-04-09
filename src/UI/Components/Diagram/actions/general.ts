@@ -42,7 +42,11 @@ export function createComposerEntity({
   //Create shape for Entity
   const instanceAsTable = new ServiceEntityBlock();
 
-  instanceAsTable.setName(serviceModel.name);
+  if (isEmbeddedEntity && "type" in serviceModel) {
+    instanceAsTable.setName(serviceModel.name, serviceModel.type);
+  } else {
+    instanceAsTable.setName(serviceModel.name, null);
+  }
 
   //if there is if provided, we use it, if not we use default one, created by JointJS
   if (id) {
@@ -81,11 +85,7 @@ export function createComposerEntity({
       }
     });
 
-    dispatchAddInterServiceRelationToTracker(
-      instanceAsTable.id,
-      serviceModel.name,
-      relations,
-    );
+    dispatchAddInterServiceRelationToTracker(instanceAsTable.id, serviceModel.name, relations);
   }
 
   if (attributes) {
@@ -109,7 +109,7 @@ export const connectEntities = (
   graph: dia.Graph,
   source: ServiceEntityBlock,
   targets: ServiceEntityBlock[],
-  isBlocked?: boolean,
+  isBlocked?: boolean
 ): void => {
   targets.map((target) => {
     const link = new Link();
@@ -117,6 +117,7 @@ export const connectEntities = (
     if (isBlocked) {
       link.set("isBlockedFromEditing", isBlocked);
     }
+
     link.source(source);
     link.target(target);
     graph.addCell(link);
@@ -137,12 +138,10 @@ export const updateAttributes = (
   serviceEntity: ServiceEntityBlock,
   keyAttributes: string[],
   serviceInstanceAttributes: InstanceAttributeModel,
-  isInitial = true,
+  isInitial = true
 ): void => {
   const attributesToDisplay = keyAttributes.map((key) => {
-    const value = serviceInstanceAttributes
-      ? (serviceInstanceAttributes[key] as string)
-      : "";
+    const value = serviceInstanceAttributes ? (serviceInstanceAttributes[key] as string) : "";
 
     return {
       name: key,
@@ -153,10 +152,7 @@ export const updateAttributes = (
   if (isInitial) {
     serviceEntity.appendColumns(attributesToDisplay);
   } else {
-    serviceEntity.updateColumns(
-      attributesToDisplay,
-      serviceEntity.attributes.isCollapsed,
-    );
+    serviceEntity.updateColumns(attributesToDisplay, serviceEntity.attributes.isCollapsed);
   }
 
   serviceEntity.set("instanceAttributes", serviceInstanceAttributes);

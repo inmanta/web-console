@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlexItem, Flex } from "@patternfly/react-core";
-import { useGetAllServiceModels } from "@/Data/Managers/V2/GETTERS/GetAllServiceModels";
-import { useGetInventoryList } from "@/Data/Managers/V2/GETTERS/GetInventoryList";
-import { DependencyContext, words } from "@/UI";
+import { useGetServiceModels } from "@/Data/Managers/V2/Service";
+import { useGetInventoryList } from "@/Data/Managers/V2/ServiceInstance";
+import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
 import { ComposerActions } from "../components";
@@ -35,24 +35,15 @@ interface Props {
  * @returns {React.FC<Props>} The ComposerCreatorProvider component.
  */
 export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
-  const [interServiceRelationNames, setInterServiceRelationNames] = useState<
-    string[]
-  >([]);
-  const { environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
+  const [interServiceRelationNames, setInterServiceRelationNames] = useState<string[]>([]);
 
-  const serviceModels = useGetAllServiceModels(environment).useContinuous();
+  const serviceModels = useGetServiceModels().useContinuous();
 
-  const relatedInventoriesQuery = useGetInventoryList(
-    interServiceRelationNames,
-    environment,
-  ).useContinuous();
+  const relatedInventoriesQuery = useGetInventoryList(interServiceRelationNames).useContinuous();
 
   useEffect(() => {
     if (serviceModels.isSuccess) {
-      const mainService = serviceModels.data.find(
-        (service) => service.name === serviceName,
-      );
+      const mainService = serviceModels.data.find((service) => service.name === serviceName);
 
       if (mainService) {
         setInterServiceRelationNames(findInterServiceRelations(mainService));
@@ -69,9 +60,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
   }
 
   if (relatedInventoriesQuery.isError) {
-    const message = words("error.general")(
-      relatedInventoriesQuery.error.message,
-    );
+    const message = words("error.general")(relatedInventoriesQuery.error.message);
     const retry = relatedInventoriesQuery.refetch;
     const ariaLabel = "ComposerCreatorProvider-RelatedInventoriesQuery_failed";
 
@@ -79,14 +68,10 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
   }
 
   if (serviceModels.isSuccess) {
-    const mainService = serviceModels.data.find(
-      (service) => service.name === serviceName,
-    );
+    const mainService = serviceModels.data.find((service) => service.name === serviceName);
 
     if (!mainService) {
-      const message = words("instanceComposer.noServiceModel.errorMessage")(
-        serviceName,
-      );
+      const message = words("instanceComposer.noServiceModel.errorMessage")(serviceName);
       const retry = serviceModels.refetch;
       const ariaLabel = "ComposerCreatorProvider-NoServiceModel_failed";
 
@@ -135,7 +120,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
 export const renderErrorView = (
   message: string,
   ariaLabel: string,
-  retry: () => void,
+  retry: () => void
 ): React.ReactElement => (
   <ErrorView
     data-testid="ErrorView"

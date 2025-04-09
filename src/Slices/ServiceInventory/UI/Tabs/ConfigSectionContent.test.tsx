@@ -1,32 +1,30 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter } from "react-router-dom";
+import {
+  QueryClient,
+  QueryClientProvider,
+  UseInfiniteQueryResult,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
 import {
-  Either,
   EnvironmentDetails,
   EnvironmentModifier,
   RemoteData,
+  ServiceModel,
   VersionedServiceInstanceIdentifier,
 } from "@/Core";
+import { InstanceLog } from "@/Core/Domain/HistoryLog";
+import { getStoreInstance } from "@/Data";
+import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
+import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
+
 import {
-  CommandResolverImpl,
-  QueryResolverImpl,
-  InstanceConfigCommandManager,
-  InstanceConfigQueryManager,
-  InstanceConfigStateHelper,
-  ServiceKeyMaker,
-  ServiceStateHelper,
-  InstanceConfigFinalizer,
-  getStoreInstance,
-} from "@/Data";
-import {
-  DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolverImpl,
-  DynamicQueryManagerResolverImpl,
-  InstantApiHelper,
   MockEnvironmentHandler,
   MockEnvironmentModifier,
   Service,
@@ -37,20 +35,9 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
 import { ConfigSectionContent } from "./ConfigSectionContent";
 
-function setup(
-  environmentModifier: EnvironmentModifier = new MockEnvironmentModifier(),
-) {
-  const storeInstance = getStoreInstance();
-  const apiHelper = new DeferredApiHelper();
-  const serviceKeyMaker = new ServiceKeyMaker();
-
-  storeInstance.dispatch.services.setSingle({
-    environment: Service.a.environment,
-    query: { kind: "GetService", name: Service.a.name },
-    data: RemoteData.success(Service.a),
-  });
-
-  const instanceConfigStateHelper = InstanceConfigStateHelper(storeInstance);
+function setup(environmentModifier: EnvironmentModifier = new MockEnvironmentModifier()) {
+  const client = new QueryClient();
+  const store = getStoreInstance();
 
   const instanceIdentifier: VersionedServiceInstanceIdentifier = {
     id: ServiceInstance.a.id,
@@ -58,125 +45,158 @@ function setup(
     version: ServiceInstance.a.version,
   };
 
-  const instanceConfigHelper = InstanceConfigQueryManager(
-    new InstantApiHelper(() => ({
-      kind: "Success",
-      data: { data: { auto_creating: false } },
-    })),
-    instanceConfigStateHelper,
-    new InstanceConfigFinalizer(
-      ServiceStateHelper(storeInstance, serviceKeyMaker),
-    ),
-  );
-
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([instanceConfigHelper]),
-  );
-
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([
-      InstanceConfigCommandManager(apiHelper, instanceConfigStateHelper),
-    ]),
-  );
-
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          environmentModifier,
-          environmentHandler: MockEnvironmentHandler(Service.a.environment),
-        }}
-      >
-        <StoreProvider store={storeInstance}>
-          <ConfigSectionContent
-            serviceInstanceIdentifier={instanceIdentifier}
-          />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={client}>
+      <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            environmentModifier,
+            environmentHandler: MockEnvironmentHandler(Service.a.environment),
+          }}
+        >
+          <StoreProvider store={store}>
+            <InstanceDetailsContext.Provider
+              value={{
+                instance: ServiceInstance.a,
+                logsQuery: {} as unknown as UseInfiniteQueryResult<InstanceLog[], Error>,
+                serviceModelQuery: {
+                  data: Service.a,
+                  isLoading: false,
+                  isError: false,
+                  isSuccess: true,
+                } as UseQueryResult<ServiceModel, Error>,
+              }}
+            >
+              <ConfigSectionContent serviceInstanceIdentifier={instanceIdentifier} />
+            </InstanceDetailsContext.Provider>
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
   return {
     component,
-    apiHelper,
-    storeInstance,
-    instanceConfigStateHelper,
+    store,
   };
 }
+let data = {
+  auto_creating: false,
+  auto_designed: false,
+  auto_update_designed: false,
+  auto_update_inprogress: false,
+};
 
-test("ConfigTab can reset all settings", async () => {
-  const { component, apiHelper } = setup();
+describe("ConfigSectionContent", () => {
+  const server = setupServer(
+    http.get("/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config", () => {
+      return HttpResponse.json({
+        data,
+      });
+    })
+  );
 
-  render(component);
-
-  const resetButton = await screen.findByRole("button", {
-    name: words("config.reset"),
+  beforeAll(() => {
+    server.listen();
+  });
+  afterAll(() => {
+    server.close();
   });
 
-  expect(resetButton).toBeVisible();
+  test("ConfigTab can reset all settings", async () => {
+    const mockFn = jest.fn().mockImplementation((_url, body) => {
+      data = {
+        ...data,
+        ...body.values,
+      };
+    });
 
-  expect(
-    screen.getByRole("switch", { name: "auto_creating-False" }),
-  ).toBeVisible();
+    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+    const { component } = setup();
 
-  await userEvent.click(resetButton, { skipHover: true });
+    render(component);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: {} }));
+    const resetButton = await screen.findByRole("button", {
+      name: words("config.reset"),
+    });
+
+    expect(resetButton).toBeVisible();
+
+    expect(screen.getByRole("switch", { name: "auto_creating-False" })).toBeVisible();
+
+    await userEvent.click(resetButton, { skipHover: true });
+
+    expect(mockFn).toHaveBeenCalledWith(
+      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
+      {
+        current_version: 3,
+        values: {
+          auto_creating: true,
+          auto_designed: true,
+          auto_update_designed: true,
+          auto_update_inprogress: true,
+        },
+      }
+    );
+    expect(await screen.findByRole("switch", { name: "auto_creating-True" })).toBeVisible();
   });
 
-  expect(
-    await screen.findByRole("switch", { name: "auto_creating-True" }),
-  ).toBeVisible();
-});
+  test("ConfigTab can change 1 toggle", async () => {
+    data = {
+      auto_creating: false,
+      auto_designed: true,
+      auto_update_designed: false,
+      auto_update_inprogress: false,
+    };
+    const mockFn = jest.fn().mockImplementation((_url, body) => {
+      data = {
+        ...data,
+        ...body.values,
+      };
+    });
 
-test("ConfigTab can change 1 toggle", async () => {
-  const { component, apiHelper } = setup();
+    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+    const { component } = setup();
 
-  render(component);
+    render(component);
 
-  const toggle = await screen.findByRole("switch", {
-    name: "auto_designed-True",
-  });
+    const toggle = await screen.findByRole("switch", {
+      name: "auto_designed-True",
+    });
 
-  expect(toggle).toBeVisible();
+    expect(toggle).toBeVisible();
 
-  await userEvent.click(toggle, { skipHover: true });
+    await userEvent.click(toggle, { skipHover: true });
 
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: { auto_creating: false, auto_designed: false } }),
+    expect(mockFn).toHaveBeenCalledWith(
+      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
+      {
+        current_version: 3,
+        values: {
+          auto_designed: false,
+        },
+      }
     );
   });
 
-  expect(
-    screen.getByRole("switch", { name: "auto_creating-False" }),
-  ).toBeVisible();
+  test("ConfigTab handles hooks with environment modifier correctly", async () => {
+    const environmentModifier = EnvironmentModifierImpl();
 
-  expect(
-    await screen.findByRole("switch", { name: "auto_designed-False" }),
-  ).toBeVisible();
-});
+    environmentModifier.setEnvironment(Service.a.environment);
+    const { component, store } = setup(environmentModifier);
 
-test("ConfigTab handles hooks with environment modifier correctly", async () => {
-  const environmentModifier = EnvironmentModifierImpl();
+    store.dispatch.environment.setEnvironmentDetailsById({
+      id: Service.a.environment,
+      value: RemoteData.success({ halted: true } as EnvironmentDetails),
+    });
+    render(component);
 
-  environmentModifier.setEnvironment(Service.a.environment);
-  const { component, storeInstance } = setup(environmentModifier);
+    const toggle = await screen.findByRole("switch", {
+      name: "auto_designed-False",
+    });
 
-  storeInstance.dispatch.environment.setEnvironmentDetailsById({
-    id: Service.a.environment,
-    value: RemoteData.success({ halted: true } as EnvironmentDetails),
+    expect(toggle).toBeVisible();
+    expect(toggle).toBeDisabled();
   });
-  render(component);
-
-  const toggle = await screen.findByRole("switch", {
-    name: "auto_designed-True",
-  });
-
-  expect(toggle).toBeVisible();
-  expect(toggle).toBeDisabled();
 });

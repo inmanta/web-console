@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUrlStateWithString } from "@/Data";
-import { useGetInfiniteInstanceLogs } from "@/Data/Managers/V2/GETTERS/GetInfiniteInstanceLogs";
-import { useGetInstance } from "@/Data/Managers/V2/GETTERS/GetInstance";
-import { useGetServiceModel } from "@/Data/Managers/V2/GETTERS/GetServiceModel";
-import { DependencyContext, useRouteParams, words } from "@/UI";
+import { useGetServiceModel } from "@/Data/Managers/V2/Service";
+import { useGetInstance, useGetInfiniteInstanceLogs } from "@/Data/Managers/V2/ServiceInstance";
+import { useRouteParams, words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { InstanceDetailsContext } from "../Core/Context";
 import { VersionedPageTitleWithActions } from "./Components/Sections";
@@ -31,25 +30,11 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
   instanceId,
   version,
 }) => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useId();
+  const instanceDetails = useGetInstance(service, instanceId).useContinuous();
 
-  const instanceDetails = useGetInstance(
-    service,
-    instanceId,
-    environment,
-  ).useContinuous();
+  const logsQuery = useGetInfiniteInstanceLogs(service, instanceId).useContinuous(version);
 
-  const logsQuery = useGetInfiniteInstanceLogs(
-    service,
-    instanceId,
-    environment,
-  ).useContinuous(version);
-
-  const serviceModelQuery = useGetServiceModel(
-    service,
-    environment,
-  ).useOneTime();
+  const serviceModelQuery = useGetServiceModel(service).useOneTime();
 
   const pageTitle = `${service}: ${instance}`;
 
@@ -59,10 +44,7 @@ export const ServiceInstanceDetails: React.FC<Props> = ({
         <ErrorView
           ariaLabel="Instance-Details-Error"
           title={words("instanceDetails.page.errorFallback.title")}
-          message={
-            instanceDetails.error?.message ||
-            words("instanceDetails.page.errorFallback")
-          }
+          message={instanceDetails.error?.message || words("instanceDetails.page.errorFallback")}
           retry={instanceDetails.refetch}
         />
       </PageContainer>
@@ -117,7 +99,7 @@ export const Page: React.FC = () => {
   const { service, instance, instanceId } = useRouteParams<"InstanceDetails">();
   const [selectedVersion] = useUrlStateWithString<string>({
     default: "",
-    key: `version`,
+    key: "version",
     route: "InstanceDetails",
   });
   const [initialVersion, setInitialVersion] = useState("-1");

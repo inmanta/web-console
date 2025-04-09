@@ -1,9 +1,9 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Alert, DropdownItem, Content } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
-import { useDestroyInstance } from "@/Data/Managers/V2/DELETE/DestroyInstance";
+import { useDestroyInstance } from "@/Data/Managers/V2/ServiceInstance";
 import { DependencyContext, words } from "@/UI";
 import { ConfirmationModal } from "../../ConfirmModal";
 import { ToastAlertMessage } from "../../ToastAlert";
@@ -49,13 +49,13 @@ export const DestroyAction: React.FC<Props> = ({
   const username = authHelper.getUser();
   const message = words("instanceDetails.API.message.update")(username);
 
-  const { mutate, isError, error, isSuccess, isPending } = useDestroyInstance(
-    environment,
-    instance_id,
-    service_entity,
-    version,
-    message,
-  );
+  const { mutate, isPending } = useDestroyInstance(instance_id, service_entity, version, message, {
+    onSuccess: () =>
+      navigate(`/console/lsm/catalog/${service_entity}/inventory?env=${environment}`),
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
+  });
 
   /**
    * When the destroy action is selected, block the interface and open the modal
@@ -78,21 +78,8 @@ export const DestroyAction: React.FC<Props> = ({
    * async method sending out the request to destroy the instance
    */
   const onSubmitDestroy = async (): Promise<void> => {
-    mutate("");
+    mutate();
   };
-
-  useEffect(() => {
-    if (isError) {
-      setErrorMessage(error.message);
-    }
-
-    if (isSuccess) {
-      // Because the instance gets destroyed, there's nothing left to display. So we redirect to the inventory.
-      navigate(
-        `/console/lsm/catalog/${service_entity}/inventory?env=${environment}`,
-      );
-    }
-  }, [isSuccess, isError, navigate, error, service_entity, environment]);
 
   return (
     <>
@@ -113,17 +100,10 @@ export const DestroyAction: React.FC<Props> = ({
         isPending={isPending}
       >
         <Content component="p">
-          {words("inventory.destroyInstance.header")(
-            instance_display_identity,
-            service_entity,
-          )}
+          {words("inventory.destroyInstance.header")(instance_display_identity, service_entity)}
         </Content>
         <br />
-        <Alert
-          variant="danger"
-          title={words("instanceDetails.expert.confirm.warning")}
-          isInline
-        />
+        <Alert variant="danger" title={words("instanceDetails.expert.confirm.warning")} isInline />
       </ConfirmationModal>
       {errorMessage && (
         <ToastAlertMessage

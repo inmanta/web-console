@@ -5,18 +5,8 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { AttributeModel, RemoteData, ServiceModel } from "@/Core";
-import {
-  CommandResolverImpl,
-  defaultAuthContext,
-  getStoreInstance,
-} from "@/Data";
-import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicCommandManagerResolverImpl,
-  Service,
-} from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { dependencies, Service } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
 import { AttributeTable } from "./AttributeTable";
@@ -49,20 +39,9 @@ const attribute2: AttributeModel = {
 };
 
 function setup(service: ServiceModel) {
-  const apiHelper = new DeferredApiHelper();
   const store = getStoreInstance();
 
-  const updateAttribute = UpdateInstanceAttributeCommandManager(
-    defaultAuthContext,
-    apiHelper,
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([updateAttribute]),
-  );
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
 
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -73,11 +52,12 @@ function setup(service: ServiceModel) {
         repo_branch: "branch",
         repo_url: "repo",
         projectName: "project",
+        halted: false,
         settings: {
           enable_lsm_expert_mode: true,
         },
       },
-    ]),
+    ])
   );
 
   const component = (
@@ -85,7 +65,6 @@ function setup(service: ServiceModel) {
       <DependencyProvider
         dependencies={{
           ...dependencies,
-          commandResolver,
           environmentHandler,
         }}
       >
@@ -125,9 +104,7 @@ test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async (
 
   render(component);
 
-  expect(
-    await screen.findByRole("row", { name: "Row-order_id" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-order_id" })).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -145,12 +122,8 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
 
   render(component);
 
-  expect(
-    await screen.findByRole("row", { name: "Row-order_id" }),
-  ).toBeVisible();
-  expect(
-    await screen.findByRole("row", { name: "Row-service_mtu" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-order_id" })).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-service_mtu" })).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -167,9 +140,7 @@ test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities 
 
   render(component);
 
-  expect(
-    await screen.findByRole("row", { name: "Row-circuits" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-circuits" })).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -187,12 +158,8 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
 
   render(component);
 
-  expect(
-    await screen.findByRole("row", { name: "Row-order_id" }),
-  ).toBeVisible();
-  expect(
-    await screen.findByRole("row", { name: "Row-service_mtu" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-order_id" })).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-service_mtu" })).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -211,9 +178,7 @@ test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows 
   render(component);
 
   //default embedded entity
-  expect(
-    await screen.findByRole("row", { name: "Row-bandwidth" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("row", { name: "Row-bandwidth" })).toBeVisible();
 
   //scenario to expand and hide one child
   const toggleButton = await screen.findByRole("button", {

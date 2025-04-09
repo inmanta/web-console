@@ -11,10 +11,7 @@ export const formatLegendData = (metrics, isStacked) => {
         childName: name,
         name: name.charAt(0).toUpperCase() + name.slice(1),
         symbol: {
-          fill:
-            colorTheme[name] === undefined
-              ? colorTheme.default
-              : colorTheme[name],
+          fill: colorTheme[name] === undefined ? colorTheme.default : colorTheme[name],
         },
       };
     });
@@ -22,23 +19,16 @@ export const formatLegendData = (metrics, isStacked) => {
     return [
       {
         childName: metrics.name,
-        name: words(`dashboard.${metrics.name as MetricName}.label.x`).split(
-          "[",
-        )[0],
+        name: words(`dashboard.${metrics.name as MetricName}.label.x`).split("[")[0],
         symbol: {
           fill:
-            colorTheme[metrics.name] === undefined
-              ? colorTheme.default
-              : colorTheme[metrics.name],
+            colorTheme[metrics.name] === undefined ? colorTheme.default : colorTheme[metrics.name],
         },
       },
     ];
   }
 };
-export const formatMetricsToStacked = (
-  metrics: StackedMetric | Metric,
-  isStacked: boolean,
-) => {
+export const formatMetricsToStacked = (metrics: StackedMetric | Metric, isStacked: boolean) => {
   let tempCharState: Metric[] = [];
   let max = 0;
 
@@ -60,10 +50,9 @@ export const formatMetricsToStacked = (
 
         keys.forEach((key, index) => {
           tempMax += object === null ? 0 : Math.round(object[key]);
-          tempCharState[index].data.push(
-            object === null ? null : Math.round(object[key]),
-          );
+          tempCharState[index].data.push(object === null ? null : Math.round(object[key]));
         });
+
         if (max < tempMax) {
           max = tempMax;
         }
@@ -114,6 +103,7 @@ export const interpolateMetrics = (metrics: (number | null)[]) => {
     if (nextNumber === -1) {
       newMetric.push(null);
     }
+
     //if null value is on the start or end of metrics then there is no value to interpolate (from or to), then push null
     if (value === null && (index === 0 || index === metrics.length - 1)) {
       newMetric.push(null);
@@ -123,6 +113,7 @@ export const interpolateMetrics = (metrics: (number | null)[]) => {
       //if null and there is a value to interpolate from then look for next non-nullish value
     } else if (value === null && newMetric[index - 1] !== null) {
       nextNumber = metrics.slice(index).findIndex((value) => value !== null);
+
       //if no number is found then push null
       if (nextNumber === -1) {
         newMetric.push(null);
@@ -132,8 +123,8 @@ export const interpolateMetrics = (metrics: (number | null)[]) => {
           linearInterpolation(
             newMetric[index - 1], //previous non-nullish value
             metrics[index + nextNumber], // next non-nullish number,
-            1 / (nextNumber + 1), //fraction of a distance from value before to nextNumber value
-          ),
+            1 / (nextNumber + 1) //fraction of a distance from value before to nextNumber value
+          )
         );
       }
     } else {

@@ -11,23 +11,14 @@ interface Props {
 }
 
 export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
-  const availableKeys = Object.keys(metrics.metrics).filter((key) =>
-    key.includes(metricType),
-  );
+  const availableKeys = Object.keys(metrics.metrics).filter((key) => key.includes(metricType));
 
   return (
     <FlexItem>
-      <Title
-        headingLevel="h2"
-        style={{ paddingBottom: "20px", fontWeight: 700 }}
-        size="xl"
-      >
+      <Title headingLevel="h2" style={{ paddingBottom: "20px", fontWeight: 700 }} size="xl">
         {title}
       </Title>
-      <Flex
-        direction={{ default: "column" }}
-        spaceItems={{ default: "spaceItemsXl" }}
-      >
+      <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsXl" }}>
         {availableKeys.map((key, index) =>
           key.includes("service_count") ? (
             <FlexItem key={`flex-card${key}-${index}`}>
@@ -39,10 +30,7 @@ export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
               />
             </FlexItem>
           ) : (
-            <FlexItem
-              fullWidth={{ default: "fullWidth" }}
-              key={`flex-card${key}-${index}`}
-            >
+            <FlexItem fullWidth={{ default: "fullWidth" }} key={`flex-card${key}-${index}`}>
               <GraphCard
                 isStacked={
                   key.includes("resource_count") ||
@@ -56,7 +44,7 @@ export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
                 }}
               />
             </FlexItem>
-          ),
+          )
         )}
       </Flex>
     </FlexItem>

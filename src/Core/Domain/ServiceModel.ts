@@ -79,7 +79,7 @@ export interface LifecycleModel {
 /**
  * Interface that represents a service identifier.
  */
-export interface ServiceIdentifier {
+interface ServiceIdentifier {
   name: string;
 }
 
@@ -150,6 +150,7 @@ export interface InterServiceRelation extends RelationAttribute {
  */
 export interface EmbeddedEntity extends RelationAttribute {
   name: string;
+  type: string | null;
   description?: string | null;
   attributes: AttributeModel[];
   embedded_entities: EmbeddedEntity[];
@@ -166,10 +167,7 @@ interface MinimalEmbeddedEntity {
   name: string;
   description?: string | null;
   attributes: Pick<AttributeModel, "name" | "type" | "description">[];
-  inter_service_relations?: Pick<
-    InterServiceRelation,
-    "name" | "entity_type" | "description"
-  >[];
+  inter_service_relations?: Pick<InterServiceRelation, "name" | "entity_type" | "description">[];
   embedded_entities: MinimalEmbeddedEntity[];
 }
 
@@ -181,8 +179,5 @@ export type EntityLike = {
     modifier?: AttributeModel["modifier"];
   })[];
   embedded_entities: MinimalEmbeddedEntity[];
-  inter_service_relations?: Pick<
-    InterServiceRelation,
-    "name" | "entity_type" | "description"
-  >[];
+  inter_service_relations?: Pick<InterServiceRelation, "name" | "entity_type" | "description">[];
 };

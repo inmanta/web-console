@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Content,
   Divider,
@@ -12,6 +13,7 @@ import {
 } from "@patternfly/react-core";
 import { UserCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
+import { DarkmodeOption } from "@/UI/Components/DarkmodeOption";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
@@ -31,6 +33,11 @@ export const EnvSelector: React.FC<Props> = ({
   toggleText,
 }) => {
   const { routeManager, authHelper } = useContext(DependencyContext);
+  const navigate = useNavigate();
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <Dropdown
@@ -39,6 +46,7 @@ export const EnvSelector: React.FC<Props> = ({
         position: "end",
       }}
       onOpenChange={(open: boolean) => setIsOpen(open)}
+      onClick={handleToggle}
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
         <MenuToggle
           id="toggle-button"
@@ -46,34 +54,22 @@ export const EnvSelector: React.FC<Props> = ({
           isExpanded={isOpen}
           aria-label={toggleText}
           isFullHeight
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={handleToggle}
           icon={authHelper.getUser() ? <UserCircleIcon /> : null}
         >
           <StyledDiv>
             <div>
-              {authHelper.getUser() && (
-                <StyledText>{authHelper.getUser()}</StyledText>
-              )}
-              <div>
-                {toggleText.length > 28
-                  ? toggleText.slice(0, 20) + "..."
-                  : toggleText}
-              </div>
+              {authHelper.getUser() && <StyledText>{authHelper.getUser()}</StyledText>}
+              <div>{toggleText.length > 28 ? toggleText.slice(0, 20) + "..." : toggleText}</div>
             </div>
           </StyledDiv>
         </MenuToggle>
       )}
     >
       <DropdownList>
-        <DropdownGroup
-          label={words("home.environment.selector")}
-          key="envs-group"
-        >
+        <DropdownGroup label={words("home.environment.selector")} key="envs-group">
           {items.map((item, index) => (
-            <DropdownItem
-              onClick={() => onSelect(item)}
-              key={`env-${index}-${item}`}
-            >
+            <DropdownItem onClick={() => onSelect(item)} key={`env-${index}-${item}`}>
               {item.length > 28 ? item.slice(0, 20) + "..." : item}
             </DropdownItem>
           ))}
@@ -81,14 +77,14 @@ export const EnvSelector: React.FC<Props> = ({
         <div key="overview-link">
           <Divider />
           <Tooltip content={words("home.navigation.tooltip")} entryDelay={500}>
-            <DropdownItem to={routeManager.getUrl("Home", undefined)}>
+            <DropdownItem onClick={() => navigate(routeManager.getUrl("Home", undefined))}>
               {words("home.navigation.button")}
             </DropdownItem>
           </Tooltip>
           {!authHelper.isDisabled() && (
             <>
               <DropdownItem
-                to={routeManager.getUrl("UserManagement", undefined)}
+                onClick={() => navigate(routeManager.getUrl("UserManagement", undefined))}
               >
                 {words("userManagement.title")}
               </DropdownItem>
@@ -98,6 +94,7 @@ export const EnvSelector: React.FC<Props> = ({
             </>
           )}
         </div>
+        <DarkmodeOption />
       </DropdownList>
     </Dropdown>
   );

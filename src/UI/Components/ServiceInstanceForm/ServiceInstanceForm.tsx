@@ -15,24 +15,19 @@ import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
 import { JSONEditor } from "../JSONEditor";
 import { FieldInput } from "./Components";
-import {
-  createDuplicateFormState,
-  createEditFormState,
-  createFormState,
-} from "./Helpers";
+import { createDuplicateFormState, createEditFormState, createFormState } from "./Helpers";
 
 interface Props {
   service_entity: string;
   fields: Field[];
-  onSubmit(
-    formState: InstanceAttributeModel,
-    callback: (value: boolean) => void,
-  ): void;
+  onSubmit(formState: InstanceAttributeModel, callback: (value: boolean) => void): void;
   onCancel(): void;
   originalAttributes?: InstanceAttributeModel;
   isSubmitDisabled?: boolean;
   apiVersion?: "v1" | "v2";
   isEdit?: boolean;
+  isDirty: boolean;
+  setIsDirty: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /**
@@ -45,11 +40,11 @@ interface Props {
  * @param {boolean} [isEdit=false] - Whether the form is in edit mode. Default is false.
  * @returns {InstanceAttributeModel} The calculated form state.
  */
-export const getFormState = (
+const getFormState = (
   fields,
   apiVersion,
   originalAttributes,
-  isEdit = false,
+  isEdit = false
 ): InstanceAttributeModel => {
   if (isEdit) {
     return createEditFormState(fields, apiVersion, originalAttributes);
@@ -72,7 +67,7 @@ export const getFormState = (
  *   @prop {boolean} isSubmitDisabled - Indicates whether the submit button is disabled.
  *   @prop {string} [apiVersion="v1"] - API version ("v1" or "v2"). Default is "v1".
  *   @prop {boolean} [isEdit=false] - Whether the form is in edit mode. Default is false.
- * @returns {JSX.Element} The rendered ServiceInstanceForm component.
+ * @returns {React.FC<Props>} The rendered ServiceInstanceForm component.
  */
 export const ServiceInstanceForm: React.FC<Props> = ({
   service_entity,
@@ -83,16 +78,15 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   isSubmitDisabled,
   apiVersion = "v1",
   isEdit = false,
+  isDirty,
+  setIsDirty,
 }) => {
   const [formState, setFormState] = useState(
-    getFormState(fields, apiVersion, originalAttributes, isEdit),
+    getFormState(fields, apiVersion, originalAttributes, isEdit)
   );
   //originalState is created to make possible to differentiate newly created attributes to keep track on which inputs should be disabled
-  const [originalState] = useState(
-    getFormState(fields, apiVersion, originalAttributes, isEdit),
-  );
+  const [originalState] = useState(getFormState(fields, apiVersion, originalAttributes, isEdit));
 
-  const [isDirty, setIsDirty] = useState(false);
   const [shouldPerformCancel, setShouldCancel] = useState(false);
   const [isForm, setIsForm] = useState(true);
   const [isEditorValid, setIsEditorValid] = useState(true);
@@ -114,6 +108,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       if (!isDirty) {
         setIsDirty(true);
       }
+
       if (multi) {
         setFormState((prev) => {
           const clone = { ...prev };
@@ -135,7 +130,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         });
       }
     },
-    [isDirty],
+    [isDirty, setIsDirty]
   );
 
   /**
@@ -160,7 +155,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         setIsEditorValid(false);
       }
     },
-    [setFormState, setIsEditorValid],
+    [setFormState, setIsEditorValid]
   );
 
   /**
@@ -168,8 +163,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
    *
    * @returns {void}
    */
-  const onConfirm = () =>
-    onSubmit(formState, (value: boolean) => setIsDirty(value));
+  const onConfirm = () => onSubmit(formState, (value: boolean) => setIsDirty(value));
 
   useEffect(() => {
     if (shouldPerformCancel) {
@@ -217,11 +211,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         ))
       )}
       {fields.length <= 0 && (
-        <Alert
-          variant="info"
-          isInline
-          title={words("inventory.editInstance.noAttributes")}
-        />
+        <Alert variant="info" isInline title={words("inventory.editInstance.noAttributes")} />
       )}
 
       <ActionGroup>
@@ -247,6 +237,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
             if (isDirty) {
               setIsDirty(false);
             }
+
             setShouldCancel(true);
           }}
         >

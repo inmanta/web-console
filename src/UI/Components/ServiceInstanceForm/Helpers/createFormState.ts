@@ -1,5 +1,6 @@
 import { times, cloneDeep } from "lodash-es";
 import { FieldLikeWithFormState, InstanceAttributeModel } from "@/Core";
+import { tryParseJSON } from "../Components";
 
 /**
  * Create an form state based on the provided fields.
@@ -7,9 +8,7 @@ import { FieldLikeWithFormState, InstanceAttributeModel } from "@/Core";
  * @param {FieldLikeWithFormState[]} fields - Array of fields with form state information.
  * @returns {InstanceAttributeModel} The instance attribute Model.
  */
-export const createFormState = (
-  fields: FieldLikeWithFormState[],
-): InstanceAttributeModel => {
+export const createFormState = (fields: FieldLikeWithFormState[]): InstanceAttributeModel => {
   const returnValue = fields.reduce((acc, curr) => {
     switch (curr.kind) {
       case "Boolean":
@@ -17,9 +16,7 @@ export const createFormState = (
       case "Text":
       case "Textarea":
       case "TextList": {
-        acc[curr.name] = curr.type.includes("dict")
-          ? stringifyDict(curr.defaultValue)
-          : curr.defaultValue;
+        acc[curr.name] = convertValueOnType(curr.type, curr.defaultValue);
 
         return acc;
       }
@@ -50,9 +47,7 @@ export const createFormState = (
         if (curr.min <= 0) {
           acc[curr.name] = [];
         } else {
-          acc[curr.name] = times(Number(curr.min), () =>
-            createFormState(curr.fields),
-          );
+          acc[curr.name] = times(Number(curr.min), () => createFormState(curr.fields));
         }
 
         return acc;
@@ -79,7 +74,7 @@ export const createFormState = (
 export const createEditFormState = (
   fields: FieldLikeWithFormState[],
   apiVersion: "v1" | "v2",
-  originalAttributes?: InstanceAttributeModel | null,
+  originalAttributes?: InstanceAttributeModel | null
 ): InstanceAttributeModel => {
   if (apiVersion === "v2" && originalAttributes) {
     return originalAttributes;
@@ -93,17 +88,13 @@ export const createEditFormState = (
         case "Textarea":
         case "TextList":
         case "Text": {
-          acc[curr.name] = curr.type.includes("dict")
-            ? stringifyDict(originalAttributes?.[curr.name])
-            : cloneDeep(originalAttributes?.[curr.name]);
+          acc[curr.name] = convertValueOnType(curr.type, originalAttributes?.[curr.name]);
 
           return acc;
         }
 
         case "InterServiceRelation": {
-          acc[curr.name] = originalAttributes?.[curr.name]
-            ? originalAttributes?.[curr.name]
-            : "";
+          acc[curr.name] = originalAttributes?.[curr.name] ? originalAttributes?.[curr.name] : "";
 
           return acc;
         }
@@ -115,7 +106,7 @@ export const createEditFormState = (
             acc[curr.name] = createEditFormState(
               curr.fields,
               apiVersion,
-              originalAttributes?.[curr.name] as InstanceAttributeModel,
+              originalAttributes?.[curr.name] as InstanceAttributeModel
             );
           }
 
@@ -129,14 +120,13 @@ export const createEditFormState = (
         }
 
         case "DictList": {
-          acc[curr.name] = (
-            originalAttributes?.[curr.name] as InstanceAttributeModel[]
-          ).map((nestedOriginalAttributes) =>
-            createEditFormState(
-              curr.fields,
-              apiVersion,
-              nestedOriginalAttributes as InstanceAttributeModel,
-            ),
+          acc[curr.name] = (originalAttributes?.[curr.name] as InstanceAttributeModel[]).map(
+            (nestedOriginalAttributes) =>
+              createEditFormState(
+                curr.fields,
+                apiVersion,
+                nestedOriginalAttributes as InstanceAttributeModel
+              )
           );
 
           return acc;
@@ -163,7 +153,7 @@ export const createEditFormState = (
  */
 export const createDuplicateFormState = (
   fields: FieldLikeWithFormState[],
-  originalAttributes?: InstanceAttributeModel | null,
+  originalAttributes?: InstanceAttributeModel | null
 ): InstanceAttributeModel => {
   return fields.reduce((acc, curr) => {
     if (originalAttributes?.[curr.name] !== undefined) {
@@ -173,17 +163,13 @@ export const createDuplicateFormState = (
         case "Textarea":
         case "TextList":
         case "Text": {
-          acc[curr.name] = curr.type.includes("dict")
-            ? stringifyDict(originalAttributes?.[curr.name])
-            : cloneDeep(originalAttributes?.[curr.name]);
+          acc[curr.name] = convertValueOnType(curr.type, originalAttributes?.[curr.name]);
 
           return acc;
         }
 
         case "InterServiceRelation": {
-          acc[curr.name] = originalAttributes?.[curr.name]
-            ? originalAttributes?.[curr.name]
-            : "";
+          acc[curr.name] = originalAttributes?.[curr.name] ? originalAttributes?.[curr.name] : "";
 
           return acc;
         }
@@ -194,7 +180,7 @@ export const createDuplicateFormState = (
           } else {
             acc[curr.name] = createDuplicateFormState(
               curr.fields,
-              originalAttributes?.[curr.name] as InstanceAttributeModel,
+              originalAttributes?.[curr.name] as InstanceAttributeModel
             );
           }
 
@@ -208,13 +194,12 @@ export const createDuplicateFormState = (
         }
 
         case "DictList": {
-          acc[curr.name] = (
-            originalAttributes?.[curr.name] as InstanceAttributeModel[]
-          ).map((nestedOriginalAttributes) =>
-            createDuplicateFormState(
-              curr.fields,
-              nestedOriginalAttributes as InstanceAttributeModel,
-            ),
+          acc[curr.name] = (originalAttributes?.[curr.name] as InstanceAttributeModel[]).map(
+            (nestedOriginalAttributes) =>
+              createDuplicateFormState(
+                curr.fields,
+                nestedOriginalAttributes as InstanceAttributeModel
+              )
           );
 
           return acc;
@@ -231,11 +216,33 @@ export const createDuplicateFormState = (
 };
 
 /**
- * Convert a value to a JSON string, or return an empty string if the value is an empty string.
+ * Converts a value to the appropriate type based on the provided type string.
+ * Handles various data types including integers, floats, arrays, and dictionaries.
  *
- * @param {unknown} value - The value to stringify.
- * @returns {string} The JSON string representation of the value, or an empty string if the value is an empty string.
+ * @param {string} type  - The type string indicating the expected data type (e.g., "int", "float", "dict", "int[]")
+ * @param {unknown} value - The value to convert
+ * @returns The converted value with the appropriate type, or null for empty values
+ *
+ * @example
+ * convertValueOnType("int", "42") // returns 42
+ * convertValueOnType("float[]", "") // returns []
+ * convertValueOnType("dict", "") // returns null
  */
-function stringifyDict(value: unknown) {
-  return value === "" ? "" : JSON.stringify(value);
-}
+const convertValueOnType = (type: string, value: unknown) => {
+  if (type.includes("int") || type.includes("float")) {
+    //empty string assertion and `Number(value)` is for converting input form to JSON Editor
+    if (type.includes("[]")) {
+      if (typeof value === "string") {
+        return value === "" ? null : tryParseJSON(value);
+      }
+
+      return value === null ? null : cloneDeep(value);
+    }
+
+    return value === "" || value === null ? null : Number(value);
+  } else if (type.includes("dict")) {
+    return value === "" ? null : cloneDeep(tryParseJSON(value));
+  } else {
+    return cloneDeep(value);
+  }
+};

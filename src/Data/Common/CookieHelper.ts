@@ -4,20 +4,11 @@
  * @param {string} cookieValue - The value to be stored in the cookie.
  * @param {number} hoursToExpire - The number of hours until the cookie expires.
  */
-export const createCookie = (
-  cookieName: string,
-  cookieValue: string,
-  hoursToExpire: number,
-) => {
+export const createCookie = (cookieName: string, cookieValue: string, hoursToExpire: number) => {
   const date = new Date();
 
   date.setTime(date.getTime() + hoursToExpire * 60 * 60 * 1000);
-  document.cookie =
-    cookieName +
-    " = " +
-    cookieValue +
-    ";Path=/; Expires = " +
-    date.toUTCString();
+  document.cookie = cookieName + " = " + cookieValue + ";Path=/; Expires = " + date.toUTCString();
 };
 
 /**
@@ -27,9 +18,7 @@ export const createCookie = (
  */
 export const getCookie = (cookieName: string): string | null => {
   const cookieArray = document.cookie.split(";");
-  const searchedCookie = cookieArray.find((cookie: string) =>
-    cookie.includes(cookieName),
-  );
+  const searchedCookie = cookieArray.find((cookie: string) => cookie.includes(cookieName));
 
   if (searchedCookie) {
     //slice of the amount that equals to cookieName + '=' sign

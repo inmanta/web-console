@@ -34,18 +34,9 @@ export const CellWithCopy: React.FC<Props> = ({
   };
 
   const cell = (
-    <Td
-      className={className}
-      key={label}
-      dataLabel={label}
-      onMouseEnter={onMouseEnter}
-    >
+    <Td className={className} key={label} dataLabel={label} onMouseEnter={onMouseEnter}>
       {shouldRenderLink(value, hasRelation) ? (
-        <MultiLinkCell
-          value={value}
-          serviceName={serviceName}
-          onClick={onClick}
-        />
+        <MultiLinkCell value={value} serviceName={serviceName} onClick={onClick} />
       ) : (
         value
       )}
@@ -57,10 +48,7 @@ export const CellWithCopy: React.FC<Props> = ({
       bodyContent={
         <>
           <StyledPopoverBody>{formatValue(value)}</StyledPopoverBody>
-          <ClipboardCopyButton
-            value={value}
-            tooltipContent={words("attribute.value.copy")}
-          />
+          <ClipboardCopyButton value={value} tooltipContent={words("attribute.value.copy")} />
         </>
       }
       showClose={false}
@@ -72,13 +60,13 @@ export const CellWithCopy: React.FC<Props> = ({
   );
 };
 
-export const StyledPopoverBody = styled.div`
+const StyledPopoverBody = styled.div`
   overflow-y: auto;
   max-height: 50vh;
   white-space: pre-wrap;
 `;
 
-export function formatValue(value: string): string {
+function formatValue(value: string): string {
   return isJson(value) ? JSON.stringify(JSON.parse(value), null, 2) : value;
 }
 
@@ -92,10 +80,7 @@ function isJson(value: string): boolean {
   return true;
 }
 
-export function shouldRenderLink(
-  value: string,
-  hasRelation?: boolean,
-): boolean {
+function shouldRenderLink(value: string, hasRelation?: boolean): boolean {
   return !!(hasRelation && value.length > 0 && value !== "{}");
 }
 
@@ -104,6 +89,7 @@ function splitValue(value: string): string[] {
 
   return parts;
 }
+
 function isValueOfMultipleIds(value: string): boolean {
   return splitValue(value).length > 0;
 }
@@ -114,11 +100,7 @@ interface LinkCellProps {
   onClick: (cellValue: string, serviceName?: string | undefined) => void;
 }
 
-export const MultiLinkCell: React.FC<LinkCellProps> = ({
-  value,
-  serviceName,
-  onClick,
-}) => {
+const MultiLinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) => {
   if (isValueOfMultipleIds(value)) {
     const ids = splitValue(value);
 
@@ -140,24 +122,14 @@ export const MultiLinkCell: React.FC<LinkCellProps> = ({
   return <LinkCell value={value} serviceName={serviceName} onClick={onClick} />;
 };
 
-export const LinkCell: React.FC<LinkCellProps> = ({
-  value,
-  serviceName,
-  onClick,
-}) =>
+const LinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) =>
   serviceName && value.length > 0 ? (
-    <InstanceCellButton
-      id={value}
-      serviceName={serviceName}
-      onClick={onClick}
-    />
+    <InstanceCellButton id={value} serviceName={serviceName} onClick={onClick} />
   ) : (
     <Button
       variant="link"
       isInline
-      onClick={
-        serviceName ? () => onClick(value, serviceName) : () => onClick(value)
-      }
+      onClick={serviceName ? () => onClick(value, serviceName) : () => onClick(value)}
     >
       {value}
     </Button>

@@ -1,16 +1,17 @@
 import React, { act } from "react";
 import { Page } from "@patternfly/react-core";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
+import { delay, http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import { ArchiveHelper, Deferred, Either, RemoteData } from "@/Core";
 import {
-  CommandResolverImpl,
   GetServerStatusContinuousQueryManager,
   GetServerStatusStateHelper,
   getStoreInstance,
-  GetSupportArchiveCommandManager,
   PrimaryArchiveHelper,
   PrimaryFeatureManager,
   QueryResolverImpl,
@@ -18,7 +19,6 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolverImpl,
   DynamicQueryManagerResolverImpl,
   ServerStatus,
   StaticScheduler,
@@ -26,7 +26,6 @@ import {
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { StatusPage } from ".";
-
 expect.extend(toHaveNoViolations);
 
 export class MockArchiveHelper implements ArchiveHelper {
@@ -48,50 +47,43 @@ export class MockArchiveHelper implements ArchiveHelper {
 }
 
 function setup(useMockArchiveHelper = false) {
+  const client = new QueryClient();
   const store = getStoreInstance();
 
-  store.dispatch.serverStatus.setData(
-    RemoteData.success(ServerStatus.withoutFeatures),
-  );
+  store.dispatch.serverStatus.setData(RemoteData.success(ServerStatus.withoutFeatures));
   const apiHelper = new DeferredApiHelper();
   const getServerStatusQueryManager = GetServerStatusContinuousQueryManager(
     apiHelper,
     GetServerStatusStateHelper(store),
-    new StaticScheduler(),
+    new StaticScheduler()
   );
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([getServerStatusQueryManager]),
-  );
-  const getSupportArchiveCommandManager = new GetSupportArchiveCommandManager(
-    apiHelper,
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([getSupportArchiveCommandManager]),
+    new DynamicQueryManagerResolverImpl([getServerStatusQueryManager])
   );
 
-  const featureManager = new PrimaryFeatureManager(
-    GetServerStatusStateHelper(store),
-  );
+  const featureManager = new PrimaryFeatureManager(GetServerStatusStateHelper(store));
 
-  const archiveHelper: MockArchiveHelper | PrimaryArchiveHelper =
-    useMockArchiveHelper ? new MockArchiveHelper() : dependencies.archiveHelper;
+  const archiveHelper: MockArchiveHelper | PrimaryArchiveHelper = useMockArchiveHelper
+    ? new MockArchiveHelper()
+    : dependencies.archiveHelper;
 
   const component = (
-    <DependencyProvider
-      dependencies={{
-        ...dependencies,
-        queryResolver,
-        commandResolver,
-        featureManager,
-        archiveHelper,
-      }}
-    >
-      <StoreProvider store={store}>
-        <Page>
-          <StatusPage />
-        </Page>
-      </StoreProvider>
-    </DependencyProvider>
+    <QueryClientProvider client={client}>
+      <DependencyProvider
+        dependencies={{
+          ...dependencies,
+          queryResolver,
+          featureManager,
+          archiveHelper,
+        }}
+      >
+        <StoreProvider store={store}>
+          <Page>
+            <StatusPage />
+          </Page>
+        </StoreProvider>
+      </DependencyProvider>
+    </QueryClientProvider>
   );
 
   return {
@@ -100,211 +92,195 @@ function setup(useMockArchiveHelper = false) {
     archiveHelper,
   };
 }
+const server = setupServer();
 
-test("GIVEN StatusPage THEN shows server status", async () => {
-  const { component, apiHelper } = setup();
+describe("StatusPage", () => {
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
-  render(component);
+  test("GIVEN StatusPage THEN shows server status", async () => {
+    const { component, apiHelper } = setup();
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/api/v1/serverstatus`,
+    render(component);
+
+    expect(apiHelper.pendingRequests).toHaveLength(1);
+    expect(apiHelper.pendingRequests[0]).toEqual({
+      method: "GET",
+      url: "/api/v1/serverstatus",
+    });
+
+    await act(async () => {
+      await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
+    });
+
+    expect(screen.getByRole("list", { name: "StatusList" })).toBeVisible();
+    expect(
+      screen.getByRole("listitem", {
+        name: "StatusItem-Inmanta Service Orchestrator",
+      })
+    ).toBeVisible();
+    expect(
+      screen.getByRole("listitem", {
+        name: "StatusItem-lsm",
+      })
+    ).toBeVisible();
+    expect(
+      screen.getByRole("listitem", {
+        name: "StatusItem-lsm.database",
+      })
+    ).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
+  test("GIVEN StatusPage without support extension THEN download button is not present", async () => {
+    const { component, apiHelper } = setup();
+
+    render(component);
+
+    await act(async () => {
+      await apiHelper.resolve(Either.right({ data: ServerStatus.withoutSupport }));
+    });
+
+    expect(screen.queryByRole("button", { name: "DownloadArchiveButton" })).not.toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(screen.getByRole("list", { name: "StatusList" })).toBeVisible();
-  expect(
-    screen.getByRole("listitem", {
-      name: "StatusItem-Inmanta Service Orchestrator",
-    }),
-  ).toBeVisible();
-  expect(
-    screen.getByRole("listitem", {
-      name: "StatusItem-lsm",
-    }),
-  ).toBeVisible();
-  expect(
-    screen.getByRole("listitem", {
-      name: "StatusItem-lsm.database",
-    }),
-  ).toBeVisible();
+  test("GIVEN StatusPage with support extension THEN download button is present", async () => {
+    const { component, apiHelper } = setup();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    render(component);
 
-    expect(results).toHaveNoViolations();
+    await act(async () => {
+      await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
+    });
+
+    expect(screen.getByRole("button", { name: "DownloadArchiveButton" })).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
-});
 
-test("GIVEN StatusPage without support extension THEN download button is not present", async () => {
-  const { component, apiHelper } = setup();
+  test("GIVEN StatusPage with support extension WHEN user click download THEN an archive is created", async () => {
+    server.use(
+      http.get("/api/v2/support", async () => {
+        await delay(100);
 
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: ServerStatus.withoutSupport }),
+        return HttpResponse.json(ServerStatus.supportArchiveBase64);
+      })
     );
-  });
+    const { component, apiHelper } = setup();
 
-  expect(
-    screen.queryByRole("button", { name: "DownloadArchiveButton" }),
-  ).not.toBeInTheDocument();
+    render(component);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
+    });
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    const downloadButton = screen.getByRole("button", {
+      name: "DownloadArchiveButton",
+    });
 
-test("GIVEN StatusPage with support extension THEN download button is present", async () => {
-  const { component, apiHelper } = setup();
+    expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"));
 
-  render(component);
+    await userEvent.click(downloadButton);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
-  });
+    expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.downloading"));
 
-  expect(
-    screen.getByRole("button", { name: "DownloadArchiveButton" }),
-  ).toBeVisible();
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("GIVEN StatusPage with support extension WHEN user click download THEN an archive is created", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
-  });
-
-  const downloadButton = screen.getByRole("button", {
-    name: "DownloadArchiveButton",
-  });
-
-  expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.download"),
-  );
-
-  await userEvent.click(downloadButton);
-
-  expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.downloading"),
-  );
-
-  expect(apiHelper.pendingRequests).toEqual([
-    { method: "GET", url: "/api/v2/support" },
-  ]);
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: ServerStatus.supportArchiveBase64 }),
+    await waitFor(() =>
+      expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"))
     );
-  });
-  await waitFor(() =>
-    expect(downloadButton).toHaveTextContent(
-      words("status.supportArchive.action.download"),
-    ),
-  );
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      const results = await axe(document.body);
 
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
-  const { component, apiHelper, archiveHelper } = setup(true);
-
-  render(component);
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  const downloadButton = screen.getByRole("button", {
-    name: "DownloadArchiveButton",
-  });
+  test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
+    server.use(
+      http.get("/api/v2/support", async () => {
+        await delay(100);
 
-  expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.download"),
-  );
-
-  await userEvent.click(downloadButton);
-
-  expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.downloading"),
-  );
-
-  expect(apiHelper.pendingRequests).toEqual([
-    { method: "GET", url: "/api/v2/support" },
-  ]);
-
-  await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: ServerStatus.supportArchiveBase64 }),
+        return HttpResponse.json(ServerStatus.supportArchiveBase64);
+      })
     );
+    const { component, apiHelper, archiveHelper } = setup(true);
+
+    render(component);
+    await act(async () => {
+      await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
+    });
+
+    const downloadButton = screen.getByRole("button", {
+      name: "DownloadArchiveButton",
+    });
+
+    expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"));
+
+    await userEvent.click(downloadButton);
+
+    expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.downloading"));
+
+    (archiveHelper as MockArchiveHelper).resolve(
+      new Blob(["testing"], { type: "application/octet-stream" })
+    );
+    await waitFor(() =>
+      expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"))
+    );
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  (archiveHelper as MockArchiveHelper).resolve(
-    new Blob(["testing"], { type: "application/octet-stream" }),
-  );
-  await waitFor(() =>
-    expect(downloadButton).toHaveTextContent(
-      words("status.supportArchive.action.download"),
-    ),
-  );
+  test("GIVEN StatusPage with support extension WHEN user click download and response is error THEN error is shown", async () => {
+    server.use(
+      http.get("/api/v2/support", () => {
+        return HttpResponse.json({ message: "error" }, { status: 500 });
+      })
+    );
+    const { component, apiHelper } = setup();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    render(component);
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    await act(async () => {
+      await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
+    });
 
-test("GIVEN StatusPage with support extension WHEN user click download and response is error THEN error is shown", async () => {
-  const { component, apiHelper } = setup();
+    const downloadButton = await screen.findByRole("button", {
+      name: "DownloadArchiveButton",
+    });
 
-  render(component);
+    expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"));
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
-  });
+    await userEvent.click(downloadButton);
 
-  const downloadButton = screen.getByRole("button", {
-    name: "DownloadArchiveButton",
-  });
+    const errorContainer = await screen.findByTestId("ToastAlert");
 
-  await userEvent.click(downloadButton);
+    expect(errorContainer).toBeVisible();
+    expect(within(errorContainer).getByText("error")).toBeVisible();
 
-  await act(async () => {
-    await apiHelper.resolve(Either.left("error"));
-  });
+    await act(async () => {
+      const results = await axe(document.body);
 
-  expect(downloadButton).toHaveTextContent(
-    words("status.supportArchive.action.download"),
-  );
-  const errorContainer = screen.getByTestId("ToastAlert");
-
-  expect(errorContainer).toBeVisible();
-  expect(within(errorContainer).getByText("error")).toBeVisible();
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
 });

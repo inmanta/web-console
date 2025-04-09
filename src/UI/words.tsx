@@ -47,17 +47,14 @@ const dict = {
    * Error related text
    */
   error: "Something went wrong",
-  "error.general": (message: string) =>
-    `The following error occured: ${message}`,
+  "error.general": (message: string) => `The following error occured: ${message}`,
   "error.environment.missing": "Environment is missing",
   "error.server.intro": (errorMessage: string) =>
     `The following error occured while communicating with the server: ${errorMessage}`,
   "error.authorizationFailed": "Authorization failed, please log in",
-  "error.fetch": (error: string) =>
-    `There was an error retrieving data: ${error}`,
+  "error.fetch": (error: string) => `There was an error retrieving data: ${error}`,
   "error.image.title": "Invalid image",
-  "error.image.unknown": (name: string) =>
-    `Something went wrong with file ${name}`,
+  "error.image.unknown": (name: string) => `Something went wrong with file ${name}`,
   "error.image.type": (name: string, type: string) =>
     `File '${name}' is not allowed because of an incorrect file type (${type}). Only jpeg, png, webp and svg images are supported.`,
   "error.image.size": (name: string, size: string) =>
@@ -73,6 +70,7 @@ const dict = {
   "codehighlighter.zoom.on": "Enlarge",
   "codehighlighter.zoom.off": "Back to original size",
   "codehighlighter.scrollToBottom": "Scroll down and resume auto-scroll",
+  "validation.title": (amount: number) => `Errors found: ${amount}`,
 
   /**
    * Inventory related text
@@ -93,8 +91,7 @@ const dict = {
   "empty.title": "There is nothing here",
   "inventory.intro": (service: string) => `Showing instances of ${service}`,
   "inventory.title": (name: string) => `Service Inventory: ${name}`,
-  "inventory.empty.message": (service: string) =>
-    `No instances found for service ${service}`,
+  "inventory.empty.message": (service: string) => `No instances found for service ${service}`,
   "inventory.column.id": "Id",
   "inventory.column.state": "State",
   "inventory.column.attributesSummary": "Attributes",
@@ -123,15 +120,15 @@ const dict = {
   "inventory.statustab.forceState.confirmTitle": "Confirm force state transfer",
   "inventory.statustab.forceState.message": (name: string, state: string) =>
     `Are you sure you want to force the state of instance ${name} to ${state}? `,
-  "inventory.statustab.forceState.confirmMessage": `Forcing a state might corrupt the service and the orchestrated resources`,
-  "inventory.statustab.forceState.confirmQuestion": `Are you sure you want to continue?`,
+  "inventory.statustab.forceState.confirmMessage":
+    "Forcing a state might corrupt the service and the orchestrated resources",
+  "inventory.statustab.forceState.confirmQuestion": "Are you sure you want to continue?",
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
   "inventory.statusTab.history": "History",
   "inventory.statusTab.events": "Events",
   "inventory.resourcesTab.empty.title": "No resources found",
-  "inventory.resourcesTab.empty.body":
-    "No resources could be found for this instance.",
+  "inventory.resourcesTab.empty.body": "No resources could be found for this instance.",
   "inventory.resourcesTab.failed.title": "Something went wrong",
   "inventory.resourcesTab.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
@@ -156,16 +153,13 @@ const dict = {
   "inventory.editInstance.failed": "Editing instance failed",
   "inventory.editInstance.noAttributes":
     "There are no attributes to edit. Click confirm to move into the update state",
-  "inventory.addInstance.unselectedEntity":
-    "Please select an entity to fill attributes values",
+  "inventory.addInstance.unselectedEntity": "Please select an entity to fill attributes values",
   "inventory.editInstance.header": (instanceId: string) =>
     `Change attributes of instance ${instanceId}`,
   "inventory.duplicateInstance.header": (instanceId: string) =>
     `Create an instance based of instance ${instanceId}`,
-  "inventory.form.typeHint.list": (listBaseType: string) =>
-    `A list of ${listBaseType}s`,
-  "inventory.form.typeHint.dict":
-    'Key-value pairs, following the JSON syntax: {"key": "value"}',
+  "inventory.form.typeHint.list": (listBaseType: string) => `A list of ${listBaseType}s`,
+  "inventory.form.typeHint.dict": 'Key-value pairs, following the JSON syntax: {"key": "value"}',
   "inventory.form.placeholder.intList": "1, 2, 3",
   "inventory.form.placeholder.floatList": "1.1, 3.14, 4.3",
   "inventory.form.placeholder.stringList": "Add a list of values",
@@ -175,20 +169,14 @@ const dict = {
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
-  "inventory.deleteInstance.header": (
-    instanceName: string,
-    serviceName: string,
-  ) =>
+  "inventory.deleteInstance.header": (instanceName: string, serviceName: string) =>
     `Are you sure you want to delete instance ${instanceName} of service entity ${serviceName}?`,
   "inventory.destroyInstance.button": "Destroy",
   "inventory.destroyInstance.failed": "Destroying instance failed",
   "inventory.destroyInstance.title": "Destroy instance",
-  "inventory.destroyInstance.header": (
-    instanceName: string,
-    serviceName: string,
-  ) =>
+  "inventory.destroyInstance.header": (instanceName: string, serviceName: string) =>
     `Are you absolutely sure you want to permanently destroy instance ${instanceName} of service entity ${serviceName}?`,
-  "inventory.destroyInstance.text": `This action cannot be undone.`,
+  "inventory.destroyInstance.text": "This action cannot be undone.",
   "inventory.deleteVersion.failed": "Deleting version failed",
   "inventory.deleteVersion.title": "Delete version",
   "inventory.deleteVersion.header": (version: ParsedNumber) =>
@@ -216,11 +204,9 @@ const dict = {
   "instanceComposer.noServiceModel.errorMessage": (serviceName) =>
     `There is no service model available for ${serviceName}`,
   "instanceComposer.labelButtonTooltip": "Toggle connection labels",
-  "instanceComposer.addInstanceButtonTooltip":
-    "Add new instance to the canvas.",
+  "instanceComposer.addInstanceButtonTooltip": "Add new instance to the canvas.",
   "instanceComposer.orderDescription": "Requested with Instance Composer",
-  "instanceComposer.errorMessage.missingModel":
-    "The instance attribute model is missing",
+  "instanceComposer.errorMessage.missingModel": "The instance attribute model is missing",
   "instanceComposer.errorMessage.coordinatesRequest":
     "Failed to save instance coordinates on deploy.",
   "instanceComposer.editButton": "Edit in Composer",
@@ -228,22 +214,14 @@ const dict = {
   "instanceComposer.formModal.placeholder": "Choose a Service",
   "instanceComposer.formModal.create.title": "Add Entity",
   "instanceComposer.formModal.edit.title": "Edit Entity",
-  "instanceComposer.formModal.noAttributes":
-    "There are no attribute fields to display.",
+  "instanceComposer.formModal.noAttributes": "There are no attribute fields to display.",
   "instanceComposer.formModal.noElementSelected.title": "No details available",
-  "instanceComposer.formModal.noElementSelected":
-    "Select an element to display the form.",
+  "instanceComposer.formModal.noElementSelected": "Select an element to display the form.",
   "instanceComposer.success": "The request got sent successfully",
   "instanceComposer.success.title": "Instance composed successfully",
   "instanceComposer.failed.title": "Instance Composing failed",
   "instanceComposer.dictModal": (valueName: string) => `Values of ${valueName}`,
-  "instanceComposer.validation.title": (amount: number) =>
-    `Errors found: ${amount}`,
-  "instanceComposer.missingRelations": (
-    name: string,
-    amount: number,
-    relations: string,
-  ) =>
+  "instanceComposer.missingRelations": (name: string, amount: number, relations: string) =>
     `Expected at least ${amount} ${relations} inter-service relation(s) for ${name}`,
   "instanceComposer.disabled":
     "Your license doesn't give you access to the Instance Composer, please contact support for more details.",
@@ -261,8 +239,7 @@ const dict = {
   "instanceDetails.title.tag": (version) => `Version: ${version}`,
   "instanceDetails.title.next": "Latest Version",
   "instanceDetails.button": "Show instance",
-  "instanceDetails.page.errorFallback":
-    "Something went wrong retrieving the instance details",
+  "instanceDetails.page.errorFallback": "Something went wrong retrieving the instance details",
   "instanceDetails.page.errorFallback.title": "Error",
   "instanceDetails.page.noData": "There is no data available to display.",
   "instanceDetails.page.noData.errorTitle": "No Data",
@@ -280,12 +257,10 @@ const dict = {
   "instanceDetails.tabs.events": "Events",
   "instanceDetails.tabs.resources": "Resources",
   "instanceDetails.tabs.resources.deploymentProgress": "Deployment Progress",
-  "instanceDetails.tabs.resources.EmptyResources":
-    "There is no data about deployment progress.",
+  "instanceDetails.tabs.resources.EmptyResources": "There is no data about deployment progress.",
   "instanceDetails.tabs.documentation.noData":
     "There is no documentation available for this version.",
-  "instanceDetails.tabs.events.noData":
-    "There is no events data available for this version.",
+  "instanceDetails.tabs.events.noData": "There is no events data available for this version.",
   "instanceDetails.tabs.disabled.resources-tooltip":
     "This tab is only available for the latest version.",
   "instanceDetails.documentation.noAttributeForVersion": (attributeName) =>
@@ -298,8 +273,7 @@ const dict = {
   "instanceDetails.resetSort": "Reset sorting",
   "instanceDetails.table.attributeKey": "Attribute",
   "instanceDetails.table.valueKey": "Value",
-  "instanceDetails.table.sorting.tooltip":
-    "The sorting can be resetted in the table options.",
+  "instanceDetails.table.sorting.tooltip": "The sorting can be resetted in the table options.",
   "instanceDetails.setState.label": "Set state",
   "instanceDetails.forceState.label": "Force state",
   "instanceDetails.stateTransfer.confirmTitle": "Confirm set state transfer",
@@ -310,15 +284,12 @@ const dict = {
   "instanceDetails.expert.editModal.message": (selectedSet) => `
   You are performing an update on the ${selectedSet} in expert mode, are you certain you want to proceed?
   `,
-  "instanceDetails.expert.confirm.warning":
-    "DANGER: This is an irreversible action!",
+  "instanceDetails.expert.confirm.warning": "DANGER: This is an irreversible action!",
   "instanceDetails.expert.confirm.state.message": (instance, state) => `
    Are you certain you want to FORCE update the state to : ${state} for ${instance}?
   `,
   "instanceDetails.API.message.update": (username) =>
-    username
-      ? `Triggered from the console by ${username}`
-      : "Triggered from the console",
+    username ? `Triggered from the console by ${username}` : "Triggered from the console",
   "instanceDetails.state.noOperation": "no operation",
   "instanceDetails.operation.selectLabel": "Select an operation",
   "instanceDetails.events.column.eventType": "Event type",
@@ -331,8 +302,7 @@ const dict = {
   "instanceDetails.events.exportReport": "Export",
   "instanceDetails.events.validationReport": "Validation",
   "instanceDetails.events.seeAll": "See all events",
-  "instanceDetails.events.dateTooltip": (dateDiff: string) =>
-    `${dateDiff} since last event`,
+  "instanceDetails.events.dateTooltip": (dateDiff: string) => `${dateDiff} since last event`,
 
   /**
    * Config related text
@@ -359,12 +329,10 @@ const dict = {
   "events.column.message": "Message",
   "events.details.compileReport": "Open compile report",
   "events.empty.title": "No events found",
-  "events.empty.body":
-    "No events could be found for this instance and the specified filters",
+  "events.empty.body": "No events could be found for this instance and the specified filters",
   "events.details.title": "Event details",
   "events.title": "Service Instance Events",
-  "events.failed.body": (error: string) =>
-    `There was an error retrieving data: ${error}`,
+  "events.failed.body": (error: string) => `There was an error retrieving data: ${error}`,
   "events.caption": (id: string) => `Showing events of instance ${id}`,
   "events.filters.source.placeholder": "Select a source state...",
   "events.filters.destination.placeholder": "Select a destination state...",
@@ -375,18 +343,15 @@ const dict = {
    * History related text
    */
   "history.title": "Service Instance History",
-  "history.missing": (instanceId: string) =>
-    `No history could be found for instance ${instanceId}`,
-  "history.caption": (instanceId: string) =>
-    `Showing history for instance ${instanceId}`,
+  "history.missing": (instanceId: string) => `No history could be found for instance ${instanceId}`,
+  "history.caption": (instanceId: string) => `Showing history for instance ${instanceId}`,
   "history.tabs.details": "Details",
   "history.tabs.attributes": "Attributes",
   "history.tabs.events": "Events",
 
   "diagnose.action": "Apply",
 
-  "diagnose.empty": (instanceId: string) =>
-    `No errors were found for instance ${instanceId}`,
+  "diagnose.empty": (instanceId: string) => `No errors were found for instance ${instanceId}`,
   "diagnose.failure.title": "Deployment failure",
   "diagnose.links.resourceDetails": "Resource Details",
   "diagnose.links.modelVersionDetails": "Model Version Details",
@@ -438,7 +403,7 @@ const dict = {
    * Catalog related text
    */
   "catalog.title": "Service Catalog",
-  "catalog.summary.title": `Number of instances by label`,
+  "catalog.summary.title": "Number of instances by label",
   "catalog.summary.noLabel": "no label",
   "catalog.summary.empty": "No instance summary found",
   "catalog.button.inventory": "Show inventory",
@@ -454,8 +419,7 @@ const dict = {
   "catalog.update.confirmation.p2": "This action will:",
   "catalog.update.confirmation.p3": "Update the project",
   "catalog.update.confirmation.p4": "Export the service definition",
-  "catalog.update.confirmation.p5":
-    "Note: It will not do a regular exporting compile.",
+  "catalog.update.confirmation.p5": "Note: It will not do a regular exporting compile.",
   "catalog.update.tooltip": "Update project and export service definition",
   "catalog.API.tooltip": "Catalog API",
   "catalog.button.details": "Show Details",
@@ -503,8 +467,7 @@ const dict = {
     "The rate of compile requests over time (number of compiles per hour)",
   "dashboard.orchestrator.compile_rate.label.x": "Rate of Compiles [#/h]",
   "dashboard.resource.agent_count.title": "Agents Count",
-  "dashboard.resource.agent_count.description":
-    "The number of agents (grouped by agent state)",
+  "dashboard.resource.agent_count.description": "The number of agents (grouped by agent state)",
   "dashboard.resource.agent_count.label.x": "Number of Agents [#]",
   "dashboard.resource.resource_count.title": "Resources Count",
   "dashboard.resource.resource_count.description":
@@ -522,8 +485,7 @@ const dict = {
    */
   "environment.resume.button": "Resume",
   "environment.halt.button": "STOP",
-  "environment.resume.tooltip":
-    "Resume all halted operations in the current environment",
+  "environment.resume.tooltip": "Resume all halted operations in the current environment",
   "environment.halt.button.tooltip":
     "Emergency stop to halt all operations in the current environment",
   "environment.halt.title": "Halt environment",
@@ -576,8 +538,7 @@ const dict = {
   "resources.attributes.title": "Desired State",
   "resources.logs.title": "Logs",
   "resources.logs.empty.message": "No logs found",
-  "resources.logs.filterOnAction": (actionType: string) =>
-    `Filter on '${actionType}'`,
+  "resources.logs.filterOnAction": (actionType: string) => `Filter on '${actionType}'`,
   "resources.logs.timestamp": "Timestamp",
   "resources.logs.actionType": "Action Type",
   "resources.logs.actionType.placeholder": "Action Type...",
@@ -658,14 +619,14 @@ const dict = {
   "home.environment.delete.warning": "Are you absolutely sure?",
   "home.environment.delete.confirmation": (environment: string) => (
     <>
-      This action cannot be undone. This will permanently delete the{" "}
-      <b>{environment}</b> environment.
+      This action cannot be undone. This will permanently delete the <b>{environment}</b>{" "}
+      environment.
     </>
   ),
   "home.environment.clear.confirmation": (environment: string) => (
     <>
-      This action cannot be undone. This will permanently remove everything from
-      the <b>{environment}</b> environment and reset it to its initial state.
+      This action cannot be undone. This will permanently remove everything from the{" "}
+      <b>{environment}</b> environment and reset it to its initial state.
     </>
   ),
   "home.environment.promptInput": (environment: string) => (
@@ -675,8 +636,7 @@ const dict = {
   ),
   "home.environment.delete.warning.action":
     "I understand the consequences, delete this environment",
-  "home.environment.clear.warning.action":
-    "I understand the consequences, clear this environment",
+  "home.environment.clear.warning.action": "I understand the consequences, clear this environment",
   "home.filters.project.placeholder": "Filter by project",
   "home.filters.env.placeholder": "Filter by name",
   "home.environment.copy": "Copy id",
@@ -709,8 +669,7 @@ const dict = {
   "settings.tabs.environment.id": "Id",
   "settings.tabs.configuration": "Configuration",
   "settings.tabs.tokens": "Tokens",
-  "settings.tabs.token.disabledInfo":
-    "An authenticated user is required to create tokens",
+  "settings.tabs.token.disabledInfo": "An authenticated user is required to create tokens",
   "settings.tabs.token.description":
     "Generate authentication tokens for authorizing agents, api or compiler for this specific environment.",
   "settings.tabs.token.generate": "Generate",
@@ -769,10 +728,8 @@ const dict = {
   "desiredState.actions.delete": "Delete",
   "desiredState.actions.showResources": "Show Resources",
   "desiredState.actions.promote": "Promote",
-  "desiredState.actions.promote.failed":
-    "Promoting desired state version failed",
-  "desiredState.actions.promote.disabledTooltip":
-    "Promoting this version is not allowed",
+  "desiredState.actions.promote.failed": "Promoting desired state version failed",
+  "desiredState.actions.promote.disabledTooltip": "Promoting this version is not allowed",
   "desiredState.filters.status.placeholder": "Select status...",
   "desiredState.filters.version.placeholder": "Filter by version",
   "desiredState.filters.date.placeholder": "Filter by date",
@@ -783,8 +740,7 @@ const dict = {
   "desiredState.compare.title": "Compare",
   "desiredState.compare.action.compare": "Select for compare",
   "desiredState.compare.action.compareWithSelected": "Compare with selected",
-  "desiredState.compare.action.compareWithCurrentState":
-    "Compare with current state",
+  "desiredState.compare.action.compareWithCurrentState": "Compare with current state",
   "desiredState.compare.selectionLabel": "Selected for compare: ",
   "desiredState.compare.deleted": "This resource has been deleted.",
   "desiredState.compare.deleted.action": "Show attributes",
@@ -802,8 +758,7 @@ const dict = {
   "desiredState.complianceCheck.title": "Compliance Check",
   "desiredState.complianceCheck.failed": "Getting list of dryruns failed",
   "desiredState.complianceCheck.action.dryRun": "Perform dry run",
-  "desiredState.complianceCheck.action.dryRun.failed":
-    "Triggering dryrun failed",
+  "desiredState.complianceCheck.action.dryRun.failed": "Triggering dryrun failed",
   "desiredState.complianceCheck.noDryRuns": "No dry runs exist",
   "desiredState.test.skippedCandidate": "skipped_candidate",
   "desiredState.test.candidate": "candidate",
@@ -844,19 +799,15 @@ const dict = {
   "banner.expertMode": "LSM expert mode is enabled, proceed with caution. ",
   "banner.updateBanner": (currentVersion: string) =>
     `You are running ${currentVersion}, a new version is available! Please hard-reload (Ctrl+F5 | Cmd + Shift + R) your page to load the new version.`,
-  "banner.entitlement.expired": (days: number) =>
-    `Your license has expired ${days} days ago!`,
-  "banner.certificate.expired": (days: number) =>
-    `Your license has expired ${days} days ago!`,
-  "banner.certificate.will.expire": (days: number) =>
-    `Your license will expire in ${days} days.`,
+  "banner.entitlement.expired": (days: number) => `Your license has expired ${days} days ago!`,
+  "banner.certificate.expired": (days: number) => `Your license has expired ${days} days ago!`,
+  "banner.certificate.will.expire": (days: number) => `Your license will expire in ${days} days.`,
   "banner.disableExpertMode": "Disable expert mode",
 
   /**
    * Common
    */
-  "common.serviceInstance.select": (attribute: string) =>
-    `Select value for ${attribute}`,
+  "common.serviceInstance.select": (attribute: string) => `Select value for ${attribute}`,
   "common.serviceInstance.relation": (serviceEntity: string) =>
     `Select an instance of ${serviceEntity}`,
   "common.serviceInstance.relations": (serviceEntity: string) =>
@@ -871,6 +822,7 @@ const dict = {
   "common.compileWidget.compilationDisabled.hint":
     "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",
   "common.emptyColumnHeader": "Column header for collapsible-expandable action",
+  "theme.toggle": (theme: string) => `Switch to ${theme === "dark" ? "light" : "dark"} mode`,
 
   /**
    * Login

@@ -1,6 +1,6 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { Filter } from "@S/Notification/Core/Query";
+import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
 import { MessageFilter } from "./MessageFilter";
 import { ReadFilter } from "./ReadFilter";
 import { SeverityFilter } from "./SeverityFilter";
@@ -8,15 +8,11 @@ import { TitleFilter } from "./TitleFilter";
 
 interface Props {
   paginationWidget: React.ReactNode;
-  filter: Filter;
-  setFilter: (filter: Filter) => void;
+  filter: NotificationFilter;
+  setFilter: (filter: NotificationFilter) => void;
 }
 
-export const Controls: React.FC<Props> = ({
-  paginationWidget,
-  filter,
-  setFilter,
-}) => (
+export const Controls: React.FC<Props> = ({ paginationWidget, filter, setFilter }) => (
   <Toolbar clearAllFilters={() => setFilter({})}>
     <ToolbarContent>
       <ToolbarItem>

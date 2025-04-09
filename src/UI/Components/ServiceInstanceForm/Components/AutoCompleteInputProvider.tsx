@@ -1,7 +1,7 @@
-import React, { useContext, useState } from "react";
-import { PageSize, RemoteData, ServiceInstanceParams } from "@/Core";
+import React, { useState } from "react";
+import { PageSize, ServiceInstanceParams } from "@/Core";
 import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { DependencyContext } from "@/UI/Dependency";
+import { useGetInstances } from "@/Data/Managers/V2/ServiceInstance";
 import { AutoCompleteInput } from "./AutoCompleteInput";
 
 interface Props {
@@ -44,73 +44,63 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
   multi,
   ...props
 }) => {
-  const { queryResolver } = useContext(DependencyContext);
   const [filter, setFilter] = useState<ServiceInstanceParams.Filter>({});
-  const [data] = queryResolver.useOneTime<"GetServiceInstances">({
-    kind: "GetServiceInstances",
-    name: serviceName,
+  const { data, isLoading, isSuccess } = useGetInstances(serviceName, {
     filter,
     pageSize: PageSize.from("250"),
     currentPage: initialCurrentPage,
-  });
+  }).useContinuous();
 
   const onSearchTextChanged = (searchText: string) => {
     setFilter({ id_or_service_identity: [searchText] });
   };
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => (
-        <AutoCompleteInput
-          options={[]}
-          selected={attributeValue}
-          serviceEntity={serviceName}
-          attributeName={attributeName}
-          isOptional={isOptional}
-          shouldBeDisabled={isDisabled}
-          description={description}
-          handleInputChange={handleInputChange}
-          onSearchTextChanged={onSearchTextChanged}
-          {...props}
-        />
-      ),
-      failed: () => null,
-      success: (instancesResponse) => {
-        const options = instancesResponse.data.map(
-          ({ id, service_identity_attribute_value }) => {
-            const displayName = service_identity_attribute_value
-              ? service_identity_attribute_value
-              : id;
+  if (isLoading) {
+    return (
+      <AutoCompleteInput
+        options={[]}
+        selected={attributeValue}
+        serviceEntity={serviceName}
+        attributeName={attributeName}
+        isOptional={isOptional}
+        shouldBeDisabled={isDisabled}
+        description={description}
+        handleInputChange={handleInputChange}
+        onSearchTextChanged={onSearchTextChanged}
+        {...props}
+      />
+    );
+  }
 
-            const isSelected =
-              alreadySelected !== null && alreadySelected.includes(id); //it can be that the value for inter-service relation is set to null
+  if (isSuccess) {
+    const options = data.data.map(({ id, service_identity_attribute_value }) => {
+      const displayName = service_identity_attribute_value ? service_identity_attribute_value : id;
 
-            return {
-              displayName,
-              value: id,
-              isSelected,
-            };
-          },
-        );
+      const isSelected = alreadySelected !== null && alreadySelected.includes(id); //it can be that the value for inter-service relation is set to null
 
-        return (
-          <AutoCompleteInput
-            options={options}
-            attributeName={attributeName}
-            serviceEntity={serviceName}
-            selected={attributeValue}
-            isOptional={isOptional}
-            shouldBeDisabled={isDisabled}
-            description={description}
-            handleInputChange={handleInputChange}
-            onSearchTextChanged={onSearchTextChanged}
-            multi={multi}
-            {...props}
-          />
-        );
-      },
-    },
-    data,
-  );
+      return {
+        displayName,
+        value: id,
+        isSelected,
+      };
+    });
+
+    return (
+      <AutoCompleteInput
+        options={options}
+        attributeName={attributeName}
+        serviceEntity={serviceName}
+        selected={attributeValue}
+        isOptional={isOptional}
+        shouldBeDisabled={isDisabled}
+        description={description}
+        handleInputChange={handleInputChange}
+        onSearchTextChanged={onSearchTextChanged}
+        multi={multi}
+        {...props}
+      />
+    );
+  }
+
+  return null;
 };

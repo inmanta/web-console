@@ -7,19 +7,19 @@ export const a: ProjectModel = {
   environments: [Environment.a],
 };
 
-export const b: ProjectModel = {
+const b: ProjectModel = {
   id: "project_id_b",
   name: "project_name_b",
   environments: [Environment.b, Environment.c],
 };
 
-export const c: ProjectModel = {
+const c: ProjectModel = {
   id: "project_id_c",
   name: "project_name_c",
   environments: [Environment.d],
 };
 
-export const d: ProjectModel = {
+const d: ProjectModel = {
   id: "project_id_d",
   name: "project_name_d",
   environments: [Environment.e],
@@ -38,6 +38,7 @@ export const filterable: ProjectModel[] = [
         project_id: "1",
         repo_branch: "master",
         repo_url: "github.com/test",
+        halted: false,
       },
       {
         id: "456",
@@ -45,6 +46,7 @@ export const filterable: ProjectModel[] = [
         project_id: "1",
         repo_branch: "master",
         repo_url: "github.com/test2",
+        halted: false,
       },
     ],
   },
@@ -58,6 +60,7 @@ export const filterable: ProjectModel[] = [
         project_id: "444",
         repo_branch: "master",
         repo_url: "gitlab.com/test",
+        halted: false,
       },
       {
         id: "101",
@@ -65,6 +68,7 @@ export const filterable: ProjectModel[] = [
         project_id: "444",
         repo_branch: "master",
         repo_url: "gitlab.com/test123",
+        halted: false,
       },
     ],
   },

@@ -4,10 +4,7 @@ import {
   a as InstanceAttributesA,
   b as InstanceAttributesB,
 } from "@/Test/Data/ServiceInstance/Attributes";
-import {
-  EventActionEnum,
-  LabelLinkView,
-} from "@/UI/Components/Diagram/interfaces";
+import { EventActionEnum, LabelLinkView } from "@/UI/Components/Diagram/interfaces";
 import { childModel, parentModel } from "../Mocks";
 import { createComposerEntity } from "../actions/general";
 import { ComposerPaper } from "../paper";
@@ -18,6 +15,7 @@ import {
   updateLabelPosition,
   toggleLooseElement,
   showLinkTools,
+  moveCellsFromColliding,
 } from "./visual";
 
 beforeAll(() => {
@@ -41,7 +39,7 @@ describe("updateLabelPosition", () => {
     sourceAnchorX: number,
     targetX: number,
     targetY: number,
-    targetAnchorX: number,
+    targetAnchorX: number
   ) => {
     const graph = new dia.Graph();
     const paper = new dia.Paper({
@@ -142,14 +140,7 @@ describe("updateLabelPosition", () => {
       sourceResult,
       targetResult,
     }) => {
-      const linkView = setup(
-        sourceX,
-        sourceY,
-        sourceAnchorX,
-        targetX,
-        targetY,
-        targetAnchorX,
-      );
+      const linkView = setup(sourceX, sourceY, sourceAnchorX, targetX, targetY, targetAnchorX);
       const labelCloseToTarget = linkView.findLabelNode(0) as SVGSVGElement;
       const labelCloseToSource = linkView.findLabelNode(1) as SVGSVGElement;
 
@@ -158,7 +149,7 @@ describe("updateLabelPosition", () => {
         linkView.getBBox(),
         labelCloseToSource,
         {},
-        linkView,
+        linkView
       );
 
       expect(result2).toEqual(sourceResult);
@@ -168,11 +159,11 @@ describe("updateLabelPosition", () => {
         linkView.getBBox(),
         labelCloseToTarget,
         {},
-        linkView,
+        linkView
       );
 
       expect(result).toEqual(targetResult);
-    },
+    }
   );
 });
 
@@ -200,21 +191,17 @@ describe("toggleLooseElement", () => {
 
     //assert the arguments of the first call - calls is array of the arguments of each call
     expect((dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail).toEqual(
-      JSON.stringify({ kind: "add", id: entity.id }),
+      JSON.stringify({ kind: "add", id: entity.id })
     );
-    expect(
-      dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
-    ).not.toBeNull();
+    expect(dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element")).not.toBeNull();
 
     //remove
     toggleLooseElement(paper.findViewByModel(entity), EventActionEnum.REMOVE);
-    expect(
-      dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
-    ).toBeNull();
+    expect(dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element")).toBeNull();
 
     //assert the arguments of the second call
     expect((dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail).toEqual(
-      JSON.stringify({ kind: "remove", id: entity.id }),
+      JSON.stringify({ kind: "remove", id: entity.id })
     );
   });
 
@@ -235,14 +222,10 @@ describe("toggleLooseElement", () => {
     graph.addCell(entity);
 
     toggleLooseElement(paper.findViewByModel(entity), EventActionEnum.ADD);
-    expect(
-      dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
-    ).not.toBeNull();
+    expect(dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element")).not.toBeNull();
 
     toggleLooseElement(paper.findViewByModel(entity), EventActionEnum.REMOVE);
-    expect(
-      dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element"),
-    ).toBeNull();
+    expect(dia.HighlighterView.get(paper.findViewByModel(entity), "loose_element")).toBeNull();
   });
 });
 
@@ -250,14 +233,11 @@ describe("showLinkTools", () => {
   const setup = (
     isParentInEditMode: boolean,
     isChildInEditMode: boolean,
-    modifier: "rw+" | "rw",
+    modifier: "rw+" | "rw"
   ) => {
     const editable = true;
     const graph = new dia.Graph({});
-    const connectionRules = createConnectionRules(
-      [parentModel, childModel],
-      {},
-    );
+    const connectionRules = createConnectionRules([parentModel, childModel], {});
     const paper = new ComposerPaper(connectionRules, graph, editable).paper;
 
     connectionRules[childModel.name][0].modifier = modifier;
@@ -295,7 +275,7 @@ describe("showLinkTools", () => {
     const { paper, graph, linkView, connectionRules } = setup(
       isParentInEditMode,
       isChildInEditMode,
-      modifier,
+      modifier
     );
 
     expect(linkView.hasTools()).toBeFalsy();
@@ -312,7 +292,7 @@ describe("showLinkTools", () => {
     const { paper, graph, linkView, connectionRules } = setup(
       isParentInEditMode,
       isChildInEditMode,
-      modifier,
+      modifier
     );
 
     expect(linkView.hasTools()).toBeFalsy();
@@ -329,12 +309,84 @@ describe("showLinkTools", () => {
     const { paper, graph, linkView, connectionRules } = setup(
       isParentInEditMode,
       isChildInEditMode,
-      modifier,
+      modifier
     );
 
     expect(linkView.hasTools()).toBeFalsy();
 
     showLinkTools(paper, graph, linkView, connectionRules);
     expect(linkView.hasTools()).toBeFalsy();
+  });
+});
+
+describe("moveCellsFromColliding", () => {
+  it("should move cells to avoid collision", () => {
+    const graph = new dia.Graph();
+
+    new dia.Paper({
+      model: graph,
+    });
+
+    const entityA = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbeddedEntity: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+    const entityB = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbeddedEntity: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesB,
+    });
+
+    graph.addCell(entityA);
+    graph.addCell(entityB);
+
+    entityA.set("position", { x: 0, y: 0 });
+    entityB.set("position", { x: 0, y: 0 });
+
+    moveCellsFromColliding(graph, graph.getCells());
+
+    const updatedCells = graph.getCells();
+
+    expect(updatedCells[0].position()).toEqual({ x: 0, y: 50 });
+    expect(updatedCells[1].position()).toEqual({ x: 0, y: 0 });
+  });
+
+  it("should not move cells if they are not colliding", () => {
+    const graph = new dia.Graph();
+
+    new dia.Paper({
+      model: graph,
+    });
+    const entityA = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbeddedEntity: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesA,
+    });
+    const entityB = createComposerEntity({
+      serviceModel: Service.a,
+      isCore: false,
+      isEmbeddedEntity: false,
+      isInEditMode: false,
+      attributes: InstanceAttributesB,
+    });
+
+    graph.addCell(entityA);
+    graph.addCell(entityB);
+
+    entityA.set("position", { x: 0, y: 0 });
+    entityB.set("position", { x: 200, y: 200 });
+
+    moveCellsFromColliding(graph, graph.getCells());
+    const updatedCells = graph.getCells();
+
+    expect(updatedCells[0].position()).toEqual({ x: 0, y: 0 });
+    expect(updatedCells[1].position()).toEqual({ x: 200, y: 200 });
   });
 });

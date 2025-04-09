@@ -10,7 +10,6 @@ import {
   QueryResolverImpl,
   CommandManagerResolverImpl,
   QueryManagerResolverImpl,
-  defaultAuthContext,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -30,20 +29,16 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
-  );
+  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
 
   dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
     <StoreProvider store={store}>
       <MemoryRouter>
-        <DependencyProvider
-          dependencies={{ ...dependencies, queryResolver, commandResolver }}
-        >
+        <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
           <ModalProvider>
             <Actions environment={{ id: "env", name: "connect" }} />
           </ModalProvider>
@@ -60,14 +55,12 @@ test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN de
 
   render(component);
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Delete environment" }),
-  );
+  await userEvent.click(await screen.findByRole("button", { name: "Delete environment" }));
 
   expect(
     screen.getByRole<HTMLInputElement>("textbox", {
       name: "delete environment check",
-    }),
+    })
   ).toHaveFocus();
 
   const input = screen.getByRole<HTMLInputElement>("textbox", {
@@ -89,9 +82,7 @@ test("GIVEN Environment Actions and delete modal WHEN correct env THEN delete en
 
   render(component);
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Delete environment" }),
-  );
+  await userEvent.click(await screen.findByRole("button", { name: "Delete environment" }));
 
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "delete environment check",
@@ -112,9 +103,7 @@ test("GIVEN Environment Actions and delete modal WHEN correct env & delete butto
 
   render(component);
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Delete environment" }),
-  );
+  await userEvent.click(await screen.findByRole("button", { name: "Delete environment" }));
 
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "delete environment check",
@@ -155,9 +144,7 @@ test("GIVEN Environment Actions and delete modal WHEN delete executed and error 
 
   render(component);
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Delete environment" }),
-  );
+  await userEvent.click(await screen.findByRole("button", { name: "Delete environment" }));
 
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "delete environment check",
@@ -181,9 +168,7 @@ test("GIVEN Environment Actions and delete modal WHEN form is valid and enter is
 
   render(component);
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Delete environment" }),
-  );
+  await userEvent.click(await screen.findByRole("button", { name: "Delete environment" }));
 
   await userEvent.keyboard("connect{enter}");
 
@@ -200,9 +185,7 @@ test("GIVEN Environment Actions and clear modal WHEN form is valid and enter is 
 
   render(component);
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Clear environment" }),
-  );
+  await userEvent.click(await screen.findByRole("button", { name: "Clear environment" }));
 
   await userEvent.keyboard("connect{enter}");
 
@@ -219,9 +202,7 @@ test("GIVEN Environment Actions and clear modal WHEN correct env & clear button 
 
   render(component);
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Clear environment" }),
-  );
+  await userEvent.click(await screen.findByRole("button", { name: "Clear environment" }));
 
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "clear environment check",
@@ -267,10 +248,6 @@ test("GIVEN Environment Actions WHEN the environment is protected THEN clear and
     }),
   });
   render(component);
-  expect(
-    await screen.findByRole("button", { name: "Clear environment" }),
-  ).toBeDisabled();
-  expect(
-    await screen.findByRole("button", { name: "Delete environment" }),
-  ).toBeDisabled();
+  expect(await screen.findByRole("button", { name: "Clear environment" })).toBeDisabled();
+  expect(await screen.findByRole("button", { name: "Delete environment" })).toBeDisabled();
 });

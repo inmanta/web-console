@@ -1,0 +1,6 @@
+description: Resolved the issue of cells overlapping in the instance composer
+issue-nr: 6154
+change-type: patch
+destination-branches: [master, iso8]
+sections:
+  bugfix: "{{description}}"

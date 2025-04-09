@@ -825,6 +825,7 @@ export const testService: ServiceModel = {
   embedded_entities: [
     {
       name: "peerings",
+      type: "peering",
       description: "desc",
       modifier: "rw+",
       lower_limit: 0,
@@ -850,8 +851,7 @@ export const testService: ServiceModel = {
         },
         {
           name: "port_name",
-          description:
-            "The name of the port on the switch to create the peering on",
+          description: "The name of the port on the switch to create the peering on",
           modifier: "rw",
           type: "string",
           default_value: null,
@@ -871,8 +871,7 @@ export const testService: ServiceModel = {
         },
         {
           name: "peer_address",
-          description:
-            "The address of the peer. When BPG is used, this is also the peering ip",
+          description: "The address of the peer. When BPG is used, this is also the peering ip",
           modifier: "rw",
           type: "string?",
           default_value: null,
@@ -903,8 +902,7 @@ export const testService: ServiceModel = {
         },
         {
           name: "routes",
-          description:
-            "Routes are structured as prefix,gateway For example: 0.0.0.0/0,192.0.2.1",
+          description: "Routes are structured as prefix,gateway For example: 0.0.0.0/0,192.0.2.1",
           modifier: "rw",
           type: "string[]",
           default_value: [] as string[],
@@ -924,8 +922,7 @@ export const testService: ServiceModel = {
   inter_service_relations: [],
   environment: "ff6dd80a-e18b-4a06-85fc-9a5cf4b45d0b",
   name: "mpn",
-  description:
-    "A redundant mobile private network deployment for Core and Transport",
+  description: "A redundant mobile private network deployment for Core and Transport",
   lifecycle: {
     states: [
       {
@@ -1611,6 +1608,7 @@ export const testApiInstanceModel: ServiceModel = {
   embedded_entities: [
     {
       name: "vlan_assigment_r1",
+      type: "vlan_assigment_r1",
       description: "",
       modifier: "rw",
       lower_limit: 1,
@@ -1618,8 +1616,7 @@ export const testApiInstanceModel: ServiceModel = {
       attributes: [
         {
           name: "address",
-          description:
-            "The IP-address/netmask to assign to the given VLAN interface.",
+          description: "The IP-address/netmask to assign to the given VLAN interface.",
           modifier: "rw+",
 
           type: "string",
@@ -1643,8 +1640,7 @@ export const testApiInstanceModel: ServiceModel = {
         },
         {
           name: "router_ip",
-          description:
-            "The IP address of the srlinux router that should be configured.",
+          description: "The IP address of the srlinux router that should be configured.",
           modifier: "rw",
 
           type: "string",
@@ -1654,8 +1650,7 @@ export const testApiInstanceModel: ServiceModel = {
         },
         {
           name: "interface_name",
-          description:
-            "The name of the interface that should be connected on the given VLAN.",
+          description: "The name of the interface that should be connected on the given VLAN.",
           modifier: "rw",
 
           type: "string",
@@ -1671,6 +1666,7 @@ export const testApiInstanceModel: ServiceModel = {
     },
     {
       name: "vlan_assigment_r2",
+      type: "vlan_assigment_r2",
       description: "",
       modifier: "rw",
       lower_limit: 1,
@@ -1678,8 +1674,7 @@ export const testApiInstanceModel: ServiceModel = {
       attributes: [
         {
           name: "address",
-          description:
-            "The IP-address/netmask to assign to the given VLAN interface.",
+          description: "The IP-address/netmask to assign to the given VLAN interface.",
           modifier: "rw+",
 
           type: "string",
@@ -1703,8 +1698,7 @@ export const testApiInstanceModel: ServiceModel = {
         },
         {
           name: "router_ip",
-          description:
-            "The IP address of the srlinux router that should be configured.",
+          description: "The IP address of the srlinux router that should be configured.",
           modifier: "rw",
           type: "string",
           default_value: null,
@@ -1713,8 +1707,7 @@ export const testApiInstanceModel: ServiceModel = {
         },
         {
           name: "interface_name",
-          description:
-            "The name of the interface that should be connected on the given VLAN.",
+          description: "The name of the interface that should be connected on the given VLAN.",
           modifier: "rw",
 
           type: "string",
@@ -2160,9 +2153,9 @@ export const containerModel: ServiceModel = {
   embedded_entities: [
     {
       name: "child_container",
+      type: "child_container",
       description: "",
       modifier: "rw",
-
       lower_limit: 1,
       upper_limit: 1,
       attributes: [
@@ -4295,8 +4288,7 @@ export const parentModel: ServiceModel = {
         auto: false,
         validate: false,
         config_name: null,
-        description:
-          "delete_validating_update_failed to delete_validating_update_failed",
+        description: "delete_validating_update_failed to delete_validating_update_failed",
         target_operation: null,
         error_operation: null,
       },
@@ -5111,8 +5103,7 @@ export const serviceModels: ServiceModel[] = [
     attributes: [
       {
         name: "address_r1",
-        description:
-          "The IP-address/netmask to assign to the given VLAN interface.",
+        description: "The IP-address/netmask to assign to the given VLAN interface.",
         modifier: "rw+",
         attribute_annotations: {},
         type: "string",
@@ -5137,8 +5128,7 @@ export const serviceModels: ServiceModel[] = [
       },
       {
         name: "address_r2",
-        description:
-          "The IP-address/netmask to assign to the given VLAN interface.",
+        description: "The IP-address/netmask to assign to the given VLAN interface.",
         modifier: "rw+",
         attribute_annotations: {},
         type: "string",
@@ -5209,8 +5199,7 @@ export const serviceModels: ServiceModel[] = [
       },
       {
         name: "ip_r1",
-        description:
-          "The IP address of the srlinux router 1 that should be configured.",
+        description: "The IP address of the srlinux router 1 that should be configured.",
         modifier: "rw",
         attribute_annotations: {},
         type: "string",
@@ -5221,8 +5210,7 @@ export const serviceModels: ServiceModel[] = [
       },
       {
         name: "interface_r1_name",
-        description:
-          "The name of the interface that should be connected on the given VLAN.",
+        description: "The name of the interface that should be connected on the given VLAN.",
         modifier: "rw",
         attribute_annotations: {},
         type: "string",
@@ -5233,8 +5221,7 @@ export const serviceModels: ServiceModel[] = [
       },
       {
         name: "ip_r2",
-        description:
-          "The IP address of the srlinux router 2 that should be configured.",
+        description: "The IP address of the srlinux router 2 that should be configured.",
         modifier: "rw",
         attribute_annotations: {},
         type: "string",
@@ -5245,8 +5232,7 @@ export const serviceModels: ServiceModel[] = [
       },
       {
         name: "interface_r2_name",
-        description:
-          "The name of the interface that should be connected on the given VLAN.",
+        description: "The name of the interface that should be connected on the given VLAN.",
         modifier: "rw",
         attribute_annotations: {},
         type: "string",
@@ -5691,6 +5677,7 @@ export const serviceModels: ServiceModel[] = [
     embedded_entities: [
       {
         name: "ro_meta",
+        type: "RoMeta",
         description: null,
         modifier: "rw",
         attribute_annotations: {},
@@ -5738,6 +5725,7 @@ export const serviceModels: ServiceModel[] = [
       },
       {
         name: "rw_meta",
+        type: "rw_meta",
         description: null,
         modifier: "rw+",
         attribute_annotations: {},
@@ -5785,6 +5773,7 @@ export const serviceModels: ServiceModel[] = [
       },
       {
         name: "ro_files",
+        type: "RoFiles",
         description: null,
         modifier: "rw+",
         attribute_annotations: {},
@@ -5821,6 +5810,7 @@ export const serviceModels: ServiceModel[] = [
       },
       {
         name: "rw_files",
+        type: "rw_files",
         description: null,
         modifier: "rw",
         attribute_annotations: {},

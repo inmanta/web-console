@@ -41,9 +41,7 @@ export class TreeExpansionManager {
    * Therefor we need to close all the children when a parent is closed.
    */
   private close(state: ExpansionState, key: string): ExpansionState {
-    const keysToClose = Object.keys(state).filter((k) =>
-      k.startsWith(`${key}${this.separator}`),
-    );
+    const keysToClose = Object.keys(state).filter((k) => k.startsWith(`${key}${this.separator}`));
 
     const closedState = this.createState([...keysToClose, key]);
 

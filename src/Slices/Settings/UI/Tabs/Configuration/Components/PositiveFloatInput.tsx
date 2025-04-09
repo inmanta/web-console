@@ -14,9 +14,7 @@ export const PositiveFloatInput: React.FC<Props> = ({ info }) => {
     info.set(Number(event.target.value));
   };
   const onMinus = () =>
-    info.set(
-      Number(info.value) - 1 >= MINVALUE ? Number(info.value) - 1 : MINVALUE,
-    );
+    info.set(Number(info.value) - 1 >= MINVALUE ? Number(info.value) - 1 : MINVALUE);
   const onPlus = () => info.set(Number(info.value) + 1);
 
   return (
@@ -36,9 +34,7 @@ export const PositiveFloatInput: React.FC<Props> = ({ info }) => {
         />
       </FlexItem>
 
-      <FlexItem style={{ minWidth: "20px" }}>
-        {info.isUpdateable(info) && <Warning />}
-      </FlexItem>
+      <FlexItem style={{ minWidth: "20px" }}>{info.isUpdateable(info) && <Warning />}</FlexItem>
     </Flex>
   );
 };

@@ -1,14 +1,6 @@
-import {
-  AttributeModel,
-  DictListField,
-  EmbeddedEntity,
-  NestedField,
-} from "@/Core";
+import { AttributeModel, DictListField, EmbeddedEntity, NestedField } from "@/Core";
 import { Service } from "@/Test";
-import {
-  InterServiceRelationFields,
-  RelationListFields,
-} from "@/Test/Data/Field";
+import { InterServiceRelationFields, RelationListFields } from "@/Test/Data/Field";
 import { InterServiceRelations } from "@/Test/Data/Service";
 import { attributesList } from "@/Test/Data/Service/Attribute";
 import {
@@ -21,18 +13,14 @@ import { FieldCreator } from "./FieldCreator";
 import { CreateModifierHandler, EditModifierHandler } from "./ModifierHandler";
 
 test("GIVEN FieldCreator for create form WHEN create is provided with a service THEN returns correct fields", () => {
-  const fields = new FieldCreator(new CreateModifierHandler()).create(
-    Service.a,
-  );
+  const fields = new FieldCreator(new CreateModifierHandler()).create(Service.a);
 
   expect(fields).toHaveLength(6);
   expect((fields[5] as NestedField).fields).toHaveLength(3);
 });
 
 test("GIVEN FieldCreator for edit form WHEN create is provided with a service THEN returns correct fields", () => {
-  const fields = new FieldCreator(new EditModifierHandler()).create(
-    Service.nestedEditable,
-  );
+  const fields = new FieldCreator(new EditModifierHandler()).create(Service.nestedEditable);
 
   expect(fields).toHaveLength(7);
   expect((fields[3] as NestedField).fields).toHaveLength(4);
@@ -132,6 +120,7 @@ test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they ar
       lower_limit: 0,
       modifier: "rw",
       name: "embedded_not_editable",
+      type: "embedded_not_editable",
       embedded_entities: [],
     },
     {
@@ -140,6 +129,7 @@ test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they ar
       lower_limit: 0,
       modifier: "rw+",
       name: "embedded_editable",
+      type: "embedded_editable",
       embedded_entities: [],
     },
   ];
@@ -149,9 +139,7 @@ test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they ar
     inter_service_relations: InterServiceRelations.listWithAll,
   });
 
-  expect(fields).toHaveLength(
-    embedded.length + InterServiceRelations.listWithAll.length,
-  );
+  expect(fields).toHaveLength(embedded.length + InterServiceRelations.listWithAll.length);
   expect(fields).toEqual([
     {
       kind: "DictList",
@@ -268,7 +256,7 @@ test.each`
     expect(entityFields.fields[18].isDisabled).toBeTruthy();
     expect(entityFields.fields[19].isDisabled).toBeFalsy();
     expect(entityFields.fields[20].isDisabled).toBeTruthy();
-  },
+  }
 );
 test.each`
   embeddedEntity
@@ -307,5 +295,5 @@ test.each`
     expect(entityFields.fields[18].isDisabled).toBeTruthy();
     expect(entityFields.fields[19].isDisabled).toBeFalsy();
     expect(entityFields.fields[20].isDisabled).toBeTruthy();
-  },
+  }
 );

@@ -19,18 +19,12 @@ interface Setting {
   value: boolean;
 }
 
-export const SettingsList: React.FC<Props> = ({
-  config,
-  onChange,
-  Switch,
-  isDisabled,
-}) => {
+export const SettingsList: React.FC<Props> = ({ config, onChange, Switch, isDisabled }) => {
   const settings = configToSettings(config);
 
   if (settings.length <= 0) return null;
 
-  const handleChange = (name: string) => (checked: boolean) =>
-    onChange(name, checked);
+  const handleChange = (name: string) => (checked: boolean) => onChange(name, checked);
 
   return (
     <Flex aria-label="SettingsList">

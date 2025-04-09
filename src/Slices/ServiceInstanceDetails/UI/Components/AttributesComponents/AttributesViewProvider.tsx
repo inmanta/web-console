@@ -34,7 +34,7 @@ export const AttributesViewProvider: React.FC<Props> = ({ selectedView }) => {
 
   const [selectedVersion] = useUrlStateWithString<string>({
     default: String(instance.version),
-    key: `version`,
+    key: "version",
     route: "InstanceDetails",
   });
   const isLatest = selectedVersion === String(instance.version);
@@ -64,10 +64,7 @@ export const AttributesViewProvider: React.FC<Props> = ({ selectedView }) => {
   return (
     <>
       {selectedView === AttributeViewToggles.TABLE && (
-        <AttributesTable
-          attributeSets={attributeSets}
-          dropdownOptions={dropdownOptions}
-        />
+        <AttributesTable attributeSets={attributeSets} dropdownOptions={dropdownOptions} />
       )}
       {selectedView === AttributeViewToggles.EDITOR && (
         <AttributesEditor
@@ -78,10 +75,7 @@ export const AttributesViewProvider: React.FC<Props> = ({ selectedView }) => {
         />
       )}
       {selectedView === AttributeViewToggles.COMPARE && (
-        <AttributesCompare
-          instanceLogs={logsQuery.data}
-          selectedVersion={selectedVersion}
-        />
+        <AttributesCompare instanceLogs={logsQuery.data} selectedVersion={selectedVersion} />
       )}
     </>
   );

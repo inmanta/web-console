@@ -29,7 +29,8 @@ export interface StackedMetric {
     | null
   )[];
 }
-export interface LegendData {
+
+interface LegendData {
   name: string;
   childName: string;
   symbol?: {
@@ -52,7 +53,7 @@ export interface LineChartProps {
   isStacked?: boolean;
 }
 
-export interface BackendMetric {
+interface BackendMetric {
   "lsm.service_count": (number | null)[];
   "orchestrator.compile_time": (number | null)[];
   "orchestrator.compile_waiting_time": (number | null)[];

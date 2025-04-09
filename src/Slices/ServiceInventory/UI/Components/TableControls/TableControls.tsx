@@ -60,10 +60,7 @@ export const TableControls: React.FC<Props> = ({
           search={location.search}
           variant="plain"
         >
-          <MenuToggleAction
-            aria-label="add-instance-button"
-            id="add-instance-button"
-          >
+          <MenuToggleAction aria-label="add-instance-button" id="add-instance-button">
             <PlusIcon /> {words("inventory.addInstance.button")}
           </MenuToggleAction>
         </Link>,
@@ -93,10 +90,7 @@ export const TableControls: React.FC<Props> = ({
                     })}
                     search={location.search}
                   >
-                    <DropdownItem
-                      id="add-instance-composer-button"
-                      icon={<PlusIcon />}
-                    >
+                    <DropdownItem id="add-instance-composer-button" icon={<PlusIcon />}>
                       {words("inventory.addInstance.composerButton")}
                     </DropdownItem>
                   </Link>

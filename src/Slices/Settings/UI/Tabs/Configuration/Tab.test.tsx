@@ -8,7 +8,6 @@ import { Either, Maybe } from "@/Core";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
-  defaultAuthContext,
   getStoreInstance,
   QueryManagerResolverImpl,
   QueryResolverImpl,
@@ -38,18 +37,14 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(store, apiHelper, defaultAuthContext),
-  );
+  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
 
   const component = (
     <MemoryRouter initialEntries={[{ search: "?env=env" }]}>
       <StoreProvider store={store}>
-        <DependencyProvider
-          dependencies={{ ...dependencies, queryResolver, commandResolver }}
-        >
+        <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
           <Tab environmentId="env" />
         </DependencyProvider>
       </StoreProvider>
@@ -82,20 +77,18 @@ test("GIVEN ConfigurationTab THEN shows all settings", async () => {
   expect(
     within(row).getByRole("cell", {
       name: "agent_trigger_method_on_auto_deploy",
-    }),
+    })
   ).toBeVisible();
 
   expect(
     within(row).getByRole("combobox", {
       name: "EnumInput-agent_trigger_method_on_auto_deployFilterInput",
-    }),
+    })
   ).toBeVisible();
 
   expect(within(row).getByRole("button", { name: "SaveAction" })).toBeVisible();
 
-  expect(
-    within(row).getByRole("button", { name: "ResetAction" }),
-  ).toBeVisible();
+  expect(within(row).getByRole("button", { name: "ResetAction" })).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -125,9 +118,7 @@ test("GIVEN ConfigurationTab WHEN editing a dict field THEN shows warning icon",
     name: /editentryvalue/i,
   });
 
-  expect(
-    within(row).queryByRole("generic", { name: "Warning" }),
-  ).not.toBeInTheDocument();
+  expect(within(row).queryByRole("generic", { name: "Warning" })).not.toBeInTheDocument();
 
   await userEvent.type(newKeyInput, "testKey");
   await userEvent.type(newValueInput, "testValue");
@@ -157,17 +148,15 @@ test("GIVEN ConfigurationTab WHEN editing an enum field THEN shows warning icon"
   await userEvent.click(
     within(row).getByRole("combobox", {
       name: "EnumInput-agent_trigger_method_on_auto_deployFilterInput",
-    }),
+    })
   );
 
-  expect(
-    within(row).queryByRole("generic", { name: "Warning" }),
-  ).not.toBeInTheDocument();
+  expect(within(row).queryByRole("generic", { name: "Warning" })).not.toBeInTheDocument();
 
   await userEvent.click(
     screen.getByRole("option", {
       name: /push_full_deploy/i,
-    }),
+    })
   );
 
   expect(within(row).getByTestId("Warning")).toBeInTheDocument();
@@ -192,14 +181,12 @@ test("GIVEN ConfigurationTab WHEN editing a boolean field THEN shows warning ico
     name: "Row-auto_deploy",
   });
 
-  expect(
-    within(row).queryByRole("generic", { name: "Warning" }),
-  ).not.toBeInTheDocument();
+  expect(within(row).queryByRole("generic", { name: "Warning" })).not.toBeInTheDocument();
 
   await userEvent.click(
     within(row).getByRole<HTMLInputElement>("switch", {
       name: "Toggle-auto_deploy",
-    }),
+    })
   );
 
   expect(within(row).getByTestId("Warning")).toBeInTheDocument();
@@ -224,9 +211,7 @@ test("GIVEN ConfigurationTab WHEN editing a number field THEN shows warning icon
     name: "Row-autostart_agent_deploy_interval",
   });
 
-  expect(
-    within(row).queryByRole("generic", { name: "Warning" }),
-  ).not.toBeInTheDocument();
+  expect(within(row).queryByRole("generic", { name: "Warning" })).not.toBeInTheDocument();
 
   await userEvent.click(within(row).getByRole("button", { name: "plus" }));
 
@@ -252,9 +237,7 @@ test("GIVEN ConfigurationTab WHEN editing a positiveFloat field THEN shows warni
     name: "Row-recompile_backoff",
   });
 
-  expect(
-    within(row).queryByRole("generic", { name: "Warning" }),
-  ).not.toBeInTheDocument();
+  expect(within(row).queryByRole("generic", { name: "Warning" })).not.toBeInTheDocument();
 
   await userEvent.click(within(row).getByRole("button", { name: "plus" }));
 
@@ -283,9 +266,7 @@ test("GIVEN ConfigurationTab WHEN editing a string field THEN shows warning icon
     name: "string input",
   });
 
-  expect(
-    within(row).queryByRole("generic", { name: "Warning" }),
-  ).not.toBeInTheDocument();
+  expect(within(row).queryByRole("generic", { name: "Warning" })).not.toBeInTheDocument();
 
   await userEvent.type(textbox, "testString");
 
@@ -347,12 +328,9 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
   expect(toggle).toBeChecked();
   expect(apiHelper.resolvedRequests).toHaveLength(1);
 
-  await userEvent.click(
-    within(row).getByRole("button", { name: "SaveAction" }),
-    {
-      skipHover: true,
-    },
-  );
+  await userEvent.click(within(row).getByRole("button", { name: "SaveAction" }), {
+    skipHover: true,
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -376,9 +354,7 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
   });
 
   await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: EnvironmentSettings.auto_deploy }),
-    );
+    await apiHelper.resolve(Either.right({ data: EnvironmentSettings.auto_deploy }));
   });
 
   fireEvent(document, new Event("settings-update"));
@@ -413,12 +389,9 @@ test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete i
 
   expect(toggle).not.toBeChecked();
 
-  await userEvent.click(
-    within(row).getByRole("button", { name: "ResetAction" }),
-    {
-      skipHover: true,
-    },
-  );
+  await userEvent.click(within(row).getByRole("button", { name: "ResetAction" }), {
+    skipHover: true,
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -439,9 +412,7 @@ test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete i
   });
 
   await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ data: EnvironmentSettings.auto_deploy }),
-    );
+    await apiHelper.resolve(Either.right({ data: EnvironmentSettings.auto_deploy }));
   });
 
   expect(toggle).toBeChecked();
@@ -479,12 +450,9 @@ test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN
 
   await userEvent.type(newValueInput, "testValue");
 
-  await userEvent.click(
-    within(row).getByRole("button", { name: "SaveAction" }),
-    {
-      skipHover: true,
-    },
-  );
+  await userEvent.click(within(row).getByRole("button", { name: "SaveAction" }), {
+    skipHover: true,
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -511,7 +479,7 @@ test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN
     await apiHelper.resolve(
       Either.right({
         data: EnvironmentSettings.autostart_agent_map({ testKey: "testValue" }),
-      }),
+      })
     );
   });
 
@@ -519,13 +487,11 @@ test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN
     await apiHelper.resolve(
       Either.right({
         data: Environment.a,
-      }),
+      })
     );
   });
 
-  expect(
-    within(row).getByRole("row", { name: "Row-testKey" }),
-  ).toBeInTheDocument();
+  expect(within(row).getByRole("row", { name: "Row-testKey" })).toBeInTheDocument();
   expect(newKeyInput).toHaveValue("");
   expect(newValueInput).toHaveValue("");
 

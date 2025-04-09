@@ -35,12 +35,8 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([
-      GetVersionResourcesQueryManager(
-        apiHelper,
-        GetVersionResourcesStateHelper(store),
-        scheduler,
-      ),
-    ]),
+      GetVersionResourcesQueryManager(apiHelper, GetVersionResourcesStateHelper(store), scheduler),
+    ])
   );
 
   const component = (
@@ -69,9 +65,7 @@ test("GIVEN DesiredStateDetails page THEN shows loading resource table", async (
     },
   ]);
 
-  expect(
-    screen.getByRole("region", { name: "VersionResourcesTable-Loading" }),
-  ).toBeVisible();
+  expect(screen.getByRole("region", { name: "VersionResourcesTable-Loading" })).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -86,14 +80,10 @@ test("GIVEN DesiredStateDetails page WHEN api returns no items THEN shows empty 
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(
-      Either.right({ ...Resource.responseFromVersion, data: [] }),
-    );
+    await apiHelper.resolve(Either.right({ ...Resource.responseFromVersion, data: [] }));
   });
 
-  expect(
-    screen.getByRole("generic", { name: "VersionResourcesTable-Empty" }),
-  ).toBeVisible();
+  expect(screen.getByRole("generic", { name: "VersionResourcesTable-Empty" })).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -111,9 +101,7 @@ test("GIVEN DesiredStateDetails page WHEN api returns error THEN shows error", a
     await apiHelper.resolve(Either.left("error"));
   });
 
-  expect(
-    screen.getByRole("region", { name: "VersionResourcesTable-Failed" }),
-  ).toBeVisible();
+  expect(screen.getByRole("region", { name: "VersionResourcesTable-Failed" })).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -131,9 +119,7 @@ test("GIVEN DesiredStateDetails page WHEN api returns items THEN shows success r
     await apiHelper.resolve(Either.right(Resource.responseFromVersion));
   });
 
-  expect(
-    screen.getByRole("grid", { name: "VersionResourcesTable-Success" }),
-  ).toBeVisible();
+  expect(screen.getByRole("grid", { name: "VersionResourcesTable-Success" })).toBeVisible();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -162,7 +148,7 @@ test("GIVEN DesiredStateDetails page WHEN sorting changes AND we are not on the 
           self: "",
           next: "/fake-link?end=fake-first-param",
         },
-      }),
+      })
     );
   });
 
@@ -188,7 +174,7 @@ test("GIVEN DesiredStateDetails page WHEN sorting changes AND we are not on the 
           self: "",
           next: "/fake-link?end=fake-first-param",
         },
-      }),
+      })
     );
   });
 
@@ -198,7 +184,5 @@ test("GIVEN DesiredStateDetails page WHEN sorting changes AND we are not on the 
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
   expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
-  expect(apiHelper.pendingRequests[1].url).toMatch(
-    /(&sort=resource_type.desc)/,
-  );
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=resource_type.desc)/);
 });

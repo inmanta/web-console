@@ -1,19 +1,10 @@
-import {
-  Scheduler,
-  Resource,
-  ApiHelper,
-  stringifyObjectOrUndefined,
-} from "@/Core";
+import { Scheduler, Resource, ApiHelper, stringifyObjectOrUndefined } from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export function GetResourcesQueryManager(
-  store: Store,
-  apiHelper: ApiHelper,
-  scheduler: Scheduler,
-) {
+export function GetResourcesQueryManager(store: Store, apiHelper: ApiHelper, scheduler: Scheduler) {
   return QueryManager.ContinuousWithEnv<"GetResources">(
     apiHelper,
     StateHelper(store),
@@ -39,7 +30,7 @@ export function GetResourcesQueryManager(
         handlers: getPaginationHandlers(links, metadata),
         metadata,
       };
-    },
+    }
   );
 }
 

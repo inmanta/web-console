@@ -10,9 +10,7 @@ export class MomentDatePresenter implements DatePresenter {
   private readonly timezone: string = moment.tz.guess();
 
   diff(timestamp1: string, timestamp2: string): string {
-    return `${moment
-      .duration(moment(timestamp1).diff(moment(timestamp2)))
-      .asSeconds()} s`;
+    return `${moment.duration(moment(timestamp1).diff(moment(timestamp2))).asSeconds()} s`;
   }
 
   get(timestamp: string): DateInfo {

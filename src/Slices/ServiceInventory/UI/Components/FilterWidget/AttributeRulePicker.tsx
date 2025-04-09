@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  MenuToggle,
-  MenuToggleElement,
-  Select,
-  SelectOption,
-} from "@patternfly/react-core";
+import { MenuToggle, MenuToggleElement, Select, SelectOption } from "@patternfly/react-core";
 
 export enum AttributeRule {
   Empty = "empty",
@@ -17,11 +12,7 @@ interface Props {
   isDisabled: boolean;
 }
 
-export const AttributeRulePicker: React.FC<Props> = ({
-  rule,
-  onChange,
-  isDisabled,
-}) => {
+export const AttributeRulePicker: React.FC<Props> = ({ rule, onChange, isDisabled }) => {
   const [isFilterOpen, setFilterOpen] = useState(false);
 
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (

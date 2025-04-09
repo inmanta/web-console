@@ -1,9 +1,6 @@
 import { Query, RemoteData, QueryResolver } from "@/Core";
 
-type Data = RemoteData.Type<
-  Query.Error<Query.Kind>,
-  Query.UsedData<Query.Kind>
->;
+type Data = RemoteData.Type<Query.Error<Query.Kind>, Query.UsedData<Query.Kind>>;
 
 export class DummyQueryResolver implements QueryResolver {
   useReadOnly(): Data {

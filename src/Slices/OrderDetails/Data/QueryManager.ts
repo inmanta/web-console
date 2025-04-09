@@ -7,7 +7,7 @@ import { GetOrderDetailsStateHelper } from "./StateHelper";
 export function GetOrderDetailsQueryManager(
   apiHelper: ApiHelper,
   store: Store,
-  scheduler: Scheduler,
+  scheduler: Scheduler
 ) {
   return QueryManager.ContinuousWithEnv<"GetOrderDetails">(
     apiHelper,
@@ -17,6 +17,6 @@ export function GetOrderDetailsQueryManager(
     ({ id }) => [id],
     "GetOrderDetails",
     ({ id }) => `/lsm/v2/order/${id}`,
-    identity,
+    identity
   );
 }

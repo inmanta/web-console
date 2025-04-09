@@ -7,12 +7,10 @@ import {
 } from "easy-peasy";
 import { StoreModel, storeModel } from "./Store";
 
-export const { useStoreActions, useStoreState, useStoreDispatch, useStore } =
-  createTypedHooks<StoreModel>();
+export const { useStoreState } = createTypedHooks<StoreModel>();
 
 export type Store = _Store<StoreModel>;
 export type State = _State<StoreModel>;
 export type Dispatch = _Dispatch<StoreModel>;
 
-export const getStoreInstance = (): Store =>
-  createStore<StoreModel>(storeModel);
+export const getStoreInstance = (): Store => createStore<StoreModel>(storeModel);

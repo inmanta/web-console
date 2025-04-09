@@ -8,14 +8,13 @@ export interface DateRange {
 
 export type Type = DateRange;
 
-export const serialize = (range: DateRange): string =>
-  `${range.operator}__${range.date.toISOString()}`;
+const serialize = (range: DateRange): string => `${range.operator}__${range.date.toISOString()}`;
 
-export const serializeList = (ranges: DateRange[]): string[] =>
-  ranges.map(serialize);
+export const serializeList = (ranges: DateRange[]): string[] => ranges.map(serialize);
 
-export const parse = (candidate: unknown): DateRange | undefined => {
+const parse = (candidate: unknown): DateRange | undefined => {
   if (typeof candidate !== "string") return undefined;
+
   const [operator, dateString] = candidate.split("__");
 
   if (!isValidOperator(operator) || !isValidDate(dateString)) return undefined;

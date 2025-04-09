@@ -17,6 +17,6 @@ export interface EnvironmentHandler {
   useId(): string;
   determineSelected(
     allEnvironments: RemoteData.Type<string, FlatEnvironment[]>,
-    search: string,
+    search: string
   ): FlatEnvironment | undefined;
 }

@@ -25,9 +25,11 @@ export const ResourceHistoryTableRow: React.FC<Props> = ({
   const rowRef = useRef<HTMLSpanElement>(null);
   const openTabAndScrollTo = (tab: TabKey) => () => {
     setActiveTab(tab);
+
     if (!isExpanded) {
       onToggle();
     }
+
     scrollRowIntoView(rowRef);
   };
 

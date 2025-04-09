@@ -1,14 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import { useUrlStateWithString } from "@/Data";
-import { useGetInstance } from "@/Data/Managers/V2/GETTERS/GetInstance";
-import {
-  Description,
-  ErrorView,
-  LoadingView,
-  PageContainer,
-} from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
+import { useGetInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { Description, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Diagnose } from "./Diagnose";
@@ -16,19 +10,14 @@ import { LookBackSlider } from "./LookBackSlider";
 
 export const Page: React.FC = () => {
   const { service, instance } = useRouteParams<"Diagnose">();
-  const { environmentHandler } = useContext(DependencyContext);
 
   const [amountOfVersionToLookBehind, setAmountOfVersionToLookBehind] =
     useUrlStateWithString<string>({
       default: "1",
-      key: `lookBehind`,
+      key: "lookBehind",
       route: "Diagnose",
     });
-  const { data, error, isError, isSuccess } = useGetInstance(
-    service,
-    instance,
-    environmentHandler.useId(),
-  ).useContinuous();
+  const { data, error, isError, isSuccess } = useGetInstance(service, instance).useContinuous();
 
   const handleSliding = (value: number) => {
     setAmountOfVersionToLookBehind(value.toString());
@@ -49,9 +38,7 @@ export const Page: React.FC = () => {
           initialLookBehind={Number(amountOfVersionToLookBehind)}
           setSelectedVersion={handleSliding}
         />
-        <Description withSpace>
-          {words("diagnose.main.subtitle")(id)}
-        </Description>
+        <Description withSpace>{words("diagnose.main.subtitle")(id)}</Description>
         <Diagnose
           serviceName={service}
           instanceId={instance}

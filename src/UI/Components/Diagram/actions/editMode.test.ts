@@ -1,16 +1,8 @@
 import { dia } from "@inmanta/rappid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/GETTERS/GetInstanceWithRelations";
-import {
-  containerModel,
-  mockedInstanceWithRelations,
-  serviceModels,
-} from "../Mocks";
-import {
-  appendEmbeddedEntity,
-  appendInstance,
-  addInfoIcon,
-} from "../actions/editMode";
+import { InstanceWithRelations } from "@/Data/Managers/V2/ServiceInstance";
+import { containerModel, mockedInstanceWithRelations, serviceModels } from "../Mocks";
+import { appendEmbeddedEntity, appendInstance, addInfoIcon } from "../actions/editMode";
 import { ComposerPaper } from "../paper";
 import { ServiceEntityBlock } from "../shapes";
 import { defineObjectsForJointJS } from "../testSetup";
@@ -112,7 +104,7 @@ describe("appendEmbeddedEntity", () => {
         embeddedTo,
         holderName,
         presentedAttrs,
-        isBlockedFromEditing,
+        isBlockedFromEditing
       );
 
       const cells = graph.getCells();
@@ -133,22 +125,18 @@ describe("appendEmbeddedEntity", () => {
       expect(cells[0].get("relatedTo")).toMatchObject(expectedMap);
       expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
       //assert the arguments of the first call - calls is array of the arguments of each call
-      expect(
-        (dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail,
-      ).toMatchObject({
+      expect((dispatchEventSpy.mock.calls[0][0] as CustomEvent).detail).toMatchObject({
         name: "child_container",
         id: expect.any(String),
         relations: [{ currentAmount: 0, min: 1, name: "parent-service" }],
       }); //add relations to Tracker
 
       //assert the arguments of the second call - calls is array of the arguments of each call
-      expect(
-        (dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail,
-      ).toMatchObject({
+      expect((dispatchEventSpy.mock.calls[1][0] as CustomEvent).detail).toMatchObject({
         action: "add",
         name: "child_container",
       }); //update stencil state
-    },
+    }
   );
 
   it("append embedded entities to the graph and paper", () => {
@@ -172,7 +160,7 @@ describe("appendEmbeddedEntity", () => {
       entityAttributes,
       embeddedTo,
       holderName,
-      presentedAttrs,
+      presentedAttrs
     );
 
     const cells = graph.getCells();
@@ -224,9 +212,7 @@ describe("appendEmbeddedEntity", () => {
 
       const nestedEmbeddedModel: EmbeddedEntity = {
         ...containerModel.embedded_entities[0],
-        embedded_entities: [
-          { ...containerModel.embedded_entities[0], name: "nested_container" },
-        ],
+        embedded_entities: [{ ...containerModel.embedded_entities[0], name: "nested_container" }],
       };
 
       const entityAttributes = [
@@ -249,15 +235,13 @@ describe("appendEmbeddedEntity", () => {
         entityAttributes,
         embeddedTo,
         holderName,
-        presentedAttrs,
+        presentedAttrs
       );
 
       expect(dispatchEventSpy).toHaveBeenCalledTimes(4);
 
       const cells = graph.getCells();
-      const filteredCells = graph
-        .getCells()
-        .filter((cell) => cell.get("type") !== "Link");
+      const filteredCells = graph.getCells().filter((cell) => cell.get("type") !== "Link");
 
       expect(cells).toHaveLength(3); // 3rd cell is a Link
       expect(filteredCells).toHaveLength(2); // 3rd cell is a Link
@@ -268,14 +252,10 @@ describe("appendEmbeddedEntity", () => {
       expect(filteredCells[0].get("isEmbeddedEntity")).toBe(true);
       expect(filteredCells[0].get("embeddedTo")).toBe("123");
 
-      expect(filteredCells[0].get("isBlockedFromEditing")).toBe(
-        isBlockedFromEditing,
-      );
+      expect(filteredCells[0].get("isBlockedFromEditing")).toBe(isBlockedFromEditing);
       expect(filteredCells[0].get("cantBeRemoved")).toBe(true);
       expect(filteredCells[0].get("relatedTo")).toMatchObject(expectedMap);
-      expect(filteredCells[1].get("attrs")?.info).toStrictEqual(
-        expectedInfoObject,
-      );
+      expect(filteredCells[1].get("attrs")?.info).toStrictEqual(expectedInfoObject);
 
       //assert second cell
       expect(filteredCells[1].get("entityName")).toBe("nested_container");
@@ -284,24 +264,18 @@ describe("appendEmbeddedEntity", () => {
       expect(filteredCells[1].get("isEmbeddedEntity")).toBe(true);
       expect(filteredCells[1].get("embeddedTo")).toBe(filteredCells[0].id);
 
-      expect(filteredCells[1].get("isBlockedFromEditing")).toBe(
-        isBlockedFromEditing,
-      );
+      expect(filteredCells[1].get("isBlockedFromEditing")).toBe(isBlockedFromEditing);
       expect(filteredCells[1].get("cantBeRemoved")).toBe(true);
       expect(filteredCells[1].get("relatedTo")).toMatchObject(expectedMap2);
-      expect(filteredCells[1].get("attrs")?.info).toStrictEqual(
-        expectedInfoObject,
-      );
-    },
+      expect(filteredCells[1].get("attrs")?.info).toStrictEqual(expectedInfoObject);
+    }
   );
 
-  it(`doesn't append nested embedded entities with "r" modifier to the graph or paper`, () => {
+  it('doesn\'t append nested embedded entities with "r" modifier to the graph or paper', () => {
     const { graph, paper, embeddedModel } = setup();
     const rModel = {
       ...embeddedModel,
-      embedded_entities: [
-        { ...embeddedModel, name: "container-r", modifier: "r" },
-      ],
+      embedded_entities: [{ ...embeddedModel, name: "container-r", modifier: "r" }],
     };
     const presentedAttrs = undefined;
     const isBlockedFromEditing = false;
@@ -317,7 +291,7 @@ describe("appendEmbeddedEntity", () => {
       embeddedTo,
       holderName,
       presentedAttrs,
-      isBlockedFromEditing,
+      isBlockedFromEditing
     );
 
     const cells = graph.getCells();
@@ -340,14 +314,7 @@ describe("appendInstance", () => {
     const { graph, paper } = setup();
 
     expect(() =>
-      appendInstance(
-        paper,
-        graph,
-        mockedInstanceWithRelations,
-        [],
-        true,
-        false,
-      ),
+      appendInstance(paper, graph, mockedInstanceWithRelations, [], true, false)
     ).toThrow("The instance attribute model is missing");
   });
 
@@ -385,14 +352,7 @@ describe("appendInstance", () => {
   it("appends instance with relations to the graph and paper", () => {
     const { graph, paper, serviceModels } = setup();
 
-    appendInstance(
-      paper,
-      graph,
-      mockedInstanceWithRelations,
-      serviceModels,
-      true,
-      false,
-    );
+    appendInstance(paper, graph, mockedInstanceWithRelations, serviceModels, true, false);
     const cells = graph.getCells();
 
     expect(cells).toHaveLength(7);
@@ -427,7 +387,7 @@ describe("appendInstance", () => {
     expect(filteredCells[1].get("isInEditMode")).toBe(true);
     expect(filteredCells[1].get("cantBeRemoved")).toBe(false);
     expect(filteredCells[3].get("relatedTo")).toStrictEqual(
-      new Map().set("085cdf92-0894-4b82-8d46-1dd9552e7ba3", "parent_entity"),
+      new Map().set("085cdf92-0894-4b82-8d46-1dd9552e7ba3", "parent_entity")
     );
     expect(filteredCells[1].get("sanitizedAttrs")).toStrictEqual({
       name: "child-test",
@@ -476,11 +436,9 @@ describe("appendInstance", () => {
     expect(filteredCells[3].get("isInEditMode")).toBe(true);
     expect(filteredCells[3].get("cantBeRemoved")).toBe(true);
     expect(filteredCells[3].get("holderName")).toBe("container-service");
-    expect(filteredCells[3].get("embeddedTo")).toBe(
-      "1548332f-86ab-42fe-bd32-4f3adb9e650b",
-    );
+    expect(filteredCells[3].get("embeddedTo")).toBe("1548332f-86ab-42fe-bd32-4f3adb9e650b");
     expect(filteredCells[3].get("relatedTo")).toStrictEqual(
-      new Map().set("085cdf92-0894-4b82-8d46-1dd9552e7ba3", "parent_entity"),
+      new Map().set("085cdf92-0894-4b82-8d46-1dd9552e7ba3", "parent_entity")
     );
 
     expect(filteredCells[3].get("sanitizedAttrs")).toStrictEqual({
@@ -497,9 +455,7 @@ describe("appendInstance", () => {
     const { graph, paper } = setup();
     const rModel: ServiceModel = {
       ...containerModel,
-      embedded_entities: [
-        { ...containerModel.embedded_entities[0], modifier: "r" },
-      ],
+      embedded_entities: [{ ...containerModel.embedded_entities[0], modifier: "r" }],
     };
 
     const mockedInstance: InstanceWithRelations = {

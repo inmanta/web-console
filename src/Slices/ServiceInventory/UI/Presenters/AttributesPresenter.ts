@@ -5,11 +5,7 @@ type Attribute = null | unknown;
 type Value = InstanceAttributeModel["key"];
 
 export class AttributesPresenter {
-  getSummary(
-    candidate: Attribute,
-    active: Attribute,
-    rollback: Attribute,
-  ): AttributesSummary {
+  getSummary(candidate: Attribute, active: Attribute, rollback: Attribute): AttributesSummary {
     return {
       candidate: candidate !== null,
       active: active !== null,
@@ -24,10 +20,7 @@ export class AttributesPresenter {
   }
 
   getPairs(attributes: InstanceAttributeModel): Pairs {
-    return Object.entries(attributes).map(([key, value]) => [
-      key,
-      this.printValue(value),
-    ]);
+    return Object.entries(attributes).map(([key, value]) => [key, this.printValue(value)]);
   }
 
   private printValue(value: Value): string {

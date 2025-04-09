@@ -1,8 +1,11 @@
 import { dia, shapes, util } from "@inmanta/rappid";
 import {
+  t_chart_global_fill_color_white,
+  t_global_background_color_primary_default,
   t_global_border_radius_small,
   t_global_font_family_mono,
-  t_global_text_color_inverse,
+  t_global_font_size_body_default,
+  t_global_font_size_body_lg,
 } from "@patternfly/react-tokens";
 import { updateLabelPosition } from "./helpers";
 import expandButton from "./icons/expand-icon.svg";
@@ -33,18 +36,18 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             strokeWidth: 0,
             cursor: "default",
             rx: t_global_border_radius_small.value,
+            fill: t_global_background_color_primary_default.var,
           },
           header: {
             strokeWidth: 0,
             cursor: "grab",
             d: "M1,0 h257 q6,0 6,6 v24 h-264 v-24 q0,-6 6,-6",
           },
-
           headerLabel: {
             fontFamily: t_global_font_family_mono.var,
             textTransform: "uppercase",
-            fill: t_global_text_color_inverse.var,
-            fontSize: 14,
+            fill: t_chart_global_fill_color_white.var,
+            fontSize: t_global_font_size_body_lg.var,
             textWrap: {
               ellipsis: true,
               height: 30,
@@ -59,7 +62,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           },
           itemLabels: {
             class: "joint-entityBlock-itemLabels",
-            fontSize: 12,
+            fontSize: t_global_font_size_body_default.var,
             //pointerEvents: "none",
             cursor: "default",
             itemText: {
@@ -68,14 +71,14 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           },
           itemLabels_1: {
             class: "joint-entityBlock-itemLabels-one",
-            fontSize: 12,
+            fontSize: t_global_font_size_body_default.var,
             textAnchor: "end",
-            x: `calc(0.5 * w - 10)`,
+            x: "calc(0.5 * w - 10)",
             cursor: "default",
           },
         },
       },
-      super.defaults,
+      super.defaults
     );
   }
 
@@ -101,6 +104,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       if (!item.name) {
         return;
       }
+
       const nameObject = {
         id: item.name,
         label: item.name,
@@ -117,14 +121,14 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         },
         {
           ellipsis: true,
-        },
+        }
       );
 
-      if (truncatedName.includes(`\u2026`)) {
+      if (truncatedName.includes("\u2026")) {
         this.attr(`itemLabel_${item.name}/data-tooltip`, item.name);
         this.attr(`itemLabel_${item.name}/data-tooltip-position`, "right");
 
-        names.push({ ...nameObject, label: item.name.slice(0, 15) + `\u2026` });
+        names.push({ ...nameObject, label: item.name.slice(0, 15) + "\u2026" });
       } else {
         names.push(nameObject);
       }
@@ -134,11 +138,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         label: "",
       };
 
-      if (
-        typeof item.value === "object" &&
-        !Array.isArray(item.value) &&
-        item.value !== null
-      ) {
+      if (typeof item.value === "object" && !Array.isArray(item.value) && item.value !== null) {
         value.label = "{...}";
 
         ///Add event and add data to display in Dictionary Modal
@@ -148,7 +148,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           JSON.stringify({
             title: item.name,
             value: item.value,
-          }),
+          })
         );
         this.attr(`itemLabel_${item.name}_value/cursor`, "pointer");
       } else {
@@ -165,17 +165,16 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             },
             {
               ellipsis: true,
-            },
+            }
           );
 
-          if (reproducedDisplayText.includes(`\u2026`)) {
-            value.label =
-              item.value.toString().replace(/\s+/g, " ").slice(0, 16) +
-              `\u2026`;
+          if (reproducedDisplayText.includes("\u2026")) {
+            value.label = item.value.toString().replace(/\s+/g, " ").slice(0, 16) + "\u2026";
             this.attr(`itemLabel_${item.name}_value/data-tooltip`, item.value);
           }
         }
       }
+
       values.push(value);
     });
 
@@ -238,9 +237,10 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @param {object} [options] - Optional settings for the attribute update.
    * @returns {this} The current instance for method chaining.
    */
-  setName(name: string, options?: object): this {
+  setName(name: string, displayText: string | null, options?: object): this {
+    const usedName = displayText || name; // displayText is used to display the name of the embedded entity, this value is nullable, that's why we fallback it to name
     const shortenName = util.breakText(
-      name,
+      usedName,
       { width: 140, height: 30 },
       {
         "font-size": this.attr("headerLabel/fontSize"),
@@ -248,17 +248,17 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       },
       {
         ellipsis: true,
-      },
+      }
     );
 
-    this.set("entityName", name);
-    this.attr(["headerLabel", "data-testid"], "header-" + name);
+    this.set("entityName", name); //regardless of the type, name is still assigned to the entityName attribute, which is then used in all of the logic regarding the keeping track of the loose elements or the stencil state
+    this.attr(["headerLabel", "data-testid"], "header-" + usedName);
 
-    if (shortenName.includes(`\u2026`)) {
+    if (shortenName.includes("\u2026")) {
       return this.attr(
         ["headerLabel", "text"],
-        name.replace(/\s+/g, " ").slice(0, 16) + `\u2026`,
-        options,
+        usedName.replace(/\s+/g, " ").slice(0, 16) + "\u2026",
+        options
       );
     } else {
       return this.attr(["headerLabel", "text"], shortenName, options);
@@ -474,10 +474,10 @@ export const Link = shapes.standard.Link.define(
         set: updateLabelPosition,
       },
     },
-  },
+  }
 );
 
-export const LinkView = dia.LinkView.extend({
+const LinkView = dia.LinkView.extend({
   update(...theArgs) {
     dia.LinkView.prototype.update.apply(this, theArgs as []);
     this.updateLabels();

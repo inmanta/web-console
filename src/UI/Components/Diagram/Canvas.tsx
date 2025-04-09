@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { CanvasContext, InstanceComposerContext } from "./Context";
 import { EventWrapper } from "./Context/EventWrapper";
 import { DictModal, RightSidebar } from "./components";
-import { Validation } from "./components/Validation";
+import { ErrorsContainer } from "./components/ErrorsContainer";
 import { createConnectionRules } from "./helpers";
 import { diagramInit } from "./init";
 import { ActionEnum } from "./interfaces";
@@ -70,7 +70,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       },
       connectionRules,
       editable,
-      mainService,
+      mainService
     );
 
     setDiagramHandlers(actions);
@@ -96,7 +96,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       scroller,
       relatedInventoriesQuery.data,
       mainService,
-      serviceModels,
+      serviceModels
     );
     const zoomHandler = new ZoomHandlerService(ZoomHandler.current, scroller);
 
@@ -144,13 +144,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       setCellToEdit(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    diagramHandlers,
-    isStencilStateReady,
-    leftSidebar,
-    serviceModels,
-    instance,
-  ]);
+  }, [diagramHandlers, isStencilStateReady, leftSidebar, serviceModels, instance]);
 
   return (
     <EventWrapper>
@@ -169,7 +163,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
         <RightSidebar editable={editable} />
         <ZoomHandlerContainer className="zoom-handler" ref={ZoomHandler} />
       </CanvasWrapper>
-      {editable && <Validation />}
+      {editable && <ErrorsContainer />}
     </EventWrapper>
   );
 };
@@ -181,9 +175,7 @@ const ZoomHandlerContainer = styled.div`
   position: absolute;
   bottom: 25px;
   right: 316px;
-  filter: drop-shadow(
-    0.05rem 0.2rem 0.2rem var(--pf-t--global--box-shadow--color--100)
-  );
+  filter: drop-shadow(0.05rem 0.2rem 0.2rem var(--pf-t--global--box-shadow--color--100));
 
   .joint-toolbar {
     padding: 0.5rem 2rem;
@@ -278,7 +270,7 @@ const ZoomHandlerContainer = styled.div`
 const CanvasContainer = styled.div`
   width: calc(100% - 540px); //240 left sidebar + 300 right sidebar
   height: 100%;
-  background: var(--pf-t--global--background--color--secondary--default);
+  background: var(--pf-t--global--background--color--primary--default);
 
   &.view_mode {
     width: calc(100% - 300px);
@@ -301,10 +293,8 @@ const CanvasContainer = styled.div`
 const LeftSidebarContainer = styled.div`
   width: 240px;
   height: 100%;
-  background: var(--pf-t--global--background--color--primary--default);
-  filter: drop-shadow(
-    0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100)
-  );
+  background: var(--pf-t--global--background--color--secondary--default);
+  filter: drop-shadow(0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100));
   z-index: 1;
 
   &.view_mode {

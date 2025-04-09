@@ -2,7 +2,7 @@ import { DateRange, IntRange, PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { DesiredStateVersion, DesiredStateVersionStatus } from "./Domain";
 
-export interface DesiredStateParams {
+interface DesiredStateParams {
   filter?: Filter;
   pageSize: PageSize.PageSize;
   currentPage: CurrentPage;
@@ -20,11 +20,7 @@ export enum FilterKind {
   Status = "Status",
 }
 
-export const FilterList: FilterKind[] = [
-  FilterKind.Version,
-  FilterKind.Date,
-  FilterKind.Status,
-];
+export const FilterList: FilterKind[] = [FilterKind.Version, FilterKind.Date, FilterKind.Status];
 
 export interface Query extends DesiredStateParams {
   kind: "GetDesiredStates";

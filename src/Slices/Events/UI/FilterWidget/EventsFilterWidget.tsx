@@ -14,14 +14,8 @@ interface Props {
   states: string[];
 }
 
-export const EventsFilterWidget: React.FC<Props> = ({
-  filter,
-  setFilter,
-  states,
-}) => {
-  const [filterKind, setFilterKind] = useState<FilterKind>(
-    FilterKind.EventType,
-  );
+export const EventsFilterWidget: React.FC<Props> = ({ filter, setFilter, states }) => {
+  const [filterKind, setFilterKind] = useState<FilterKind>(FilterKind.EventType);
 
   const updateSource = (sources: string[]) =>
     setFilter({ ...filter, source: sources.length > 0 ? sources : undefined });
@@ -37,9 +31,7 @@ export const EventsFilterWidget: React.FC<Props> = ({
     setFilter({
       ...filter,
       event_type:
-        eventTypes.length > 0
-          ? eventTypes.map((eventType) => EventType[eventType])
-          : undefined,
+        eventTypes.length > 0 ? eventTypes.map((eventType) => EventType[eventType]) : undefined,
     });
 
   const updateVersion = (versions: string[]) =>
@@ -56,11 +48,7 @@ export const EventsFilterWidget: React.FC<Props> = ({
 
   return (
     <ToolbarGroup variant="filter-group" aria-label="FilterBar" role="toolbar">
-      <FilterPicker
-        setFilterKind={setFilterKind}
-        filterKind={filterKind}
-        items={FilterList}
-      />
+      <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} items={FilterList} />
       <SelectOptionFilter
         filterPropertyName={FilterKind.EventType}
         placeholder={words("events.filters.eventType.placeholder")}

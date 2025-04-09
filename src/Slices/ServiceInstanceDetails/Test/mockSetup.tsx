@@ -1,16 +1,14 @@
 import React, { PropsWithChildren } from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
+import { loader } from "@monaco-editor/react";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StoreProvider } from "easy-peasy";
+import * as monaco from "monaco-editor";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
-import {
-  DependencyProvider,
-  EnvironmentHandlerImpl,
-  EnvironmentModifierImpl,
-} from "@/UI";
+import { DependencyProvider, EnvironmentHandlerImpl, EnvironmentModifierImpl } from "@/UI";
 import { ServiceInstanceDetails } from "../UI/Page";
 
 /**
@@ -19,9 +17,7 @@ import { ServiceInstanceDetails } from "../UI/Page";
  * @param {boolean} expertMode - whether to activate the expert mode in the state or not.
  * @returns {React.FC} A React Element rendering the test setup for Instance Details Page
  */
-export const setupServiceInstanceDetails = (
-  expertMode: boolean = false,
-): React.JSX.Element => {
+export const setupServiceInstanceDetails = (expertMode: boolean = false): React.JSX.Element => {
   const component = (
     <SetupWrapper expertMode={expertMode}>
       <Page>
@@ -49,17 +45,20 @@ interface Props {
  * @param {boolean} expertMode - whether to activate the expert mode in the state or not.
  * @returns {React.FC<PropsWithChildren<Props>>} A React Component that provides the test setup for Instance Details Page
  */
-export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
-  children,
-  expertMode,
-}) => {
-  const queryClient = new QueryClient();
+export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({ children, expertMode }) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   const store = getStoreInstance();
 
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  loader.config({ monaco });
+  loader.init();
+
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
 
   const environmentModifier = EnvironmentModifierImpl();
 
@@ -82,11 +81,12 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({
         repo_branch: "branch",
         repo_url: "repo",
         projectName: "project",
+        halted: false,
         settings: {
           enable_lsm_expert_mode: expertMode,
         },
       },
-    ]),
+    ])
   );
 
   store.dispatch.environment.setEnvironmentDetailsById({

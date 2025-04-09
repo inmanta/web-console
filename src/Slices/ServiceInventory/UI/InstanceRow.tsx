@@ -42,14 +42,9 @@ export const InstanceRow: React.FC<Props> = ({
         aria-label="InstanceRow-Intro"
       >
         {shouldUseServiceIdentity && row.serviceIdentityValue ? (
-          <Td
-            dataLabel={idDataLabel}
-            aria-label={`IdentityCell-${row.serviceIdentityValue}`}
-          >
+          <Td dataLabel={idDataLabel} aria-label={`IdentityCell-${row.serviceIdentityValue}`}>
             {row.serviceIdentityValue}
-            <CopyMultiOptions
-              options={[row.serviceIdentityValue, row.id.full]}
-            />
+            <CopyMultiOptions options={[row.serviceIdentityValue, row.id.full]} />
           </Td>
         ) : (
           <Td dataLabel={idDataLabel} aria-label={`IdCell-${row.id.short}`}>
@@ -63,11 +58,7 @@ export const InstanceRow: React.FC<Props> = ({
           <ActionWrapper
             id={`instance-row-resources-${row.id.short}`}
             aria-label="deploy-progress"
-            onClick={() =>
-              navigate(
-                `${instanceDetailsUrl}&state.InstanceDetails.tab=Resources`,
-              )
-            }
+            onClick={() => navigate(`${instanceDetailsUrl}&state.InstanceDetails.tab=Resources`)}
           >
             <DeploymentProgressBar progress={row.deploymentProgress} />
           </ActionWrapper>
@@ -92,9 +83,7 @@ export const InstanceRow: React.FC<Props> = ({
                   search: location.search,
                 }}
               >
-                <Button variant="link">
-                  {words("instanceDetails.button")}
-                </Button>
+                <Button variant="link">{words("instanceDetails.button")}</Button>
               </Link>
             </FlexItem>
             <FlexItem>

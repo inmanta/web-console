@@ -1,10 +1,4 @@
-import {
-  Pagination,
-  Sort,
-  PageSize,
-  DateRange,
-  Parameter,
-} from "@/Core/Domain";
+import { Pagination, Sort, PageSize, DateRange, Parameter } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 
 /**
@@ -62,11 +56,7 @@ export enum FilterKind {
 /**
  * Array that represents the available filter kinds.
  */
-export const FilterList: FilterKind[] = [
-  FilterKind.Name,
-  FilterKind.Source,
-  FilterKind.Updated,
-];
+export const FilterList: FilterKind[] = [FilterKind.Name, FilterKind.Source, FilterKind.Updated];
 
 /**
  * Type that represents the possible sort keys for parameters.

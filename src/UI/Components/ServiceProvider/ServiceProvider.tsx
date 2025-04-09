@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { RemoteData, ServiceModel } from "@/Core";
+import React from "react";
+import { ServiceModel } from "@/Core";
+import { useGetServiceModel } from "@/Data/Managers/V2/Service";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { LoadingView } from "@/UI/Components/LoadingView";
-import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   serviceName: string;
@@ -15,32 +15,22 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
   Wrapper,
   Dependant,
 }) => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { data, isError, error, isSuccess, refetch } =
+    useGetServiceModel(serviceName).useContinuous();
 
-  const [data, retry] = queryResolver.useContinuous<"GetService">({
-    kind: "GetService",
-    name: serviceName,
-  });
+  if (isError) {
+    <Wrapper aria-label="ServiceProvider-Failed" name={serviceName}>
+      <ErrorView message={error.message} retry={refetch} ariaLabel="ServiceProvider-Failed" />
+    </Wrapper>;
+  }
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => (
-        <Wrapper aria-label="ServiceProvider-Loading" name={serviceName}>
-          <LoadingView ariaLabel="ServiceProvider-Loading" />
-        </Wrapper>
-      ),
-      failed: (error) => (
-        <Wrapper aria-label="ServiceProvider-Failed" name={serviceName}>
-          <ErrorView
-            message={error}
-            retry={retry}
-            ariaLabel="ServiceProvider-Failed"
-          />
-        </Wrapper>
-      ),
-      success: (service) => <Dependant service={service} />,
-    },
-    data,
+  if (isSuccess) {
+    return <Dependant service={data} />;
+  }
+
+  return (
+    <Wrapper aria-label="ServiceProvider-Loading" name={serviceName}>
+      <LoadingView ariaLabel="ServiceProvider-Loading" />
+    </Wrapper>
   );
 };

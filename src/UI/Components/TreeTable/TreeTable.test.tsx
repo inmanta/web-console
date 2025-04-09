@@ -2,44 +2,24 @@ import React, { act } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Attributes, EntityLike, ServiceModel } from "@/Core";
-import { CommandResolverImpl, defaultAuthContext } from "@/Data";
-import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicCommandManagerResolverImpl,
-} from "@/Test";
+import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CatalogAttributeHelper, CatalogTreeTableHelper } from "./Catalog";
 import { PathHelper, TreeExpansionManager } from "./Helpers";
-import {
-  InventoryAttributeHelper,
-  InventoryTreeTableHelper,
-} from "./Inventory";
+import { InventoryAttributeHelper, InventoryTreeTableHelper } from "./Inventory";
 import { TreeTable } from "./TreeTable";
 
 function inventorySetup(
   attributes: Attributes,
   service?: ServiceModel,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setTab?: jest.Mock<any, any, any>,
+  setTab?: jest.Mock<any, any, any>
 ) {
-  const apiHelper = new DeferredApiHelper();
-
-  const updateAttribute = UpdateInstanceAttributeCommandManager(
-    defaultAuthContext,
-    apiHelper,
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([updateAttribute]),
-  );
-
   const component = (
     <DependencyProvider
       dependencies={{
         ...dependencies,
-        commandResolver,
       }}
     >
       <TreeTable
@@ -48,7 +28,7 @@ function inventorySetup(
             new PathHelper("$"),
             new TreeExpansionManager("$"),
             new InventoryAttributeHelper("$", service),
-            attributes,
+            attributes
           )
         }
         setTab={setTab}
@@ -66,11 +46,9 @@ test("TreeTable 1st level of nested property can be expanded", async () => {
       candidate: null,
       active: { a: { b: { c: "d" } } },
       rollback: null,
-    }),
+    })
   );
-  expect(
-    screen.queryByRole("row", { name: "Row-a$b" }),
-  ).not.toBeInTheDocument();
+  expect(screen.queryByRole("row", { name: "Row-a$b" })).not.toBeInTheDocument();
 
   // Act
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
@@ -123,9 +101,9 @@ test("TreeTable with 1st level of attributes containing annotations should not r
         },
         rollback: null,
       },
-      serviceModel,
+      serviceModel
     ),
-    setTab(),
+    setTab()
   );
 
   // expect to find a row with a link to the documentation tab
@@ -149,13 +127,11 @@ test("TreeTable 2nd level of nested property can be expanded", async () => {
       candidate: null,
       active: { a: { b: { c: "d" } } },
       rollback: null,
-    }),
+    })
   );
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
 
-  expect(
-    screen.queryByRole("row", { name: "Row-a$b$c" }),
-  ).not.toBeInTheDocument();
+  expect(screen.queryByRole("row", { name: "Row-a$b$c" })).not.toBeInTheDocument();
 
   // Act
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a$b" }));
@@ -165,21 +141,10 @@ test("TreeTable 2nd level of nested property can be expanded", async () => {
 });
 
 function catalogSetup(service: EntityLike) {
-  const apiHelper = new DeferredApiHelper();
-
-  const updateAttribute = UpdateInstanceAttributeCommandManager(
-    defaultAuthContext,
-    apiHelper,
-  );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([updateAttribute]),
-  );
-
   const component = (
     <DependencyProvider
       dependencies={{
         ...dependencies,
-        commandResolver,
       }}
     >
       <TreeTable
@@ -188,7 +153,7 @@ function catalogSetup(service: EntityLike) {
             new PathHelper("$"),
             new TreeExpansionManager("$"),
             new CatalogAttributeHelper("$"),
-            service,
+            service
           )
         }
         version={1}
@@ -221,9 +186,7 @@ test("TreeTable with catalog entries can be expanded", async () => {
   render(catalogSetup(service));
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
 
-  expect(
-    screen.queryByRole("row", { name: "Row-a$c$d" }),
-  ).not.toBeInTheDocument();
+  expect(screen.queryByRole("row", { name: "Row-a$c$d" })).not.toBeInTheDocument();
 
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a$c" }));
 
@@ -303,9 +266,7 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
 
   fireEvent.click(dropdown);
 
-  await userEvent.click(
-    screen.getByRole("option", { name: words("inventory.tabs.collapse") }),
-  );
+  await userEvent.click(screen.getByRole("option", { name: words("inventory.tabs.collapse") }));
 
   expect(row1).not.toBeVisible();
   expect(row2).not.toBeVisible();

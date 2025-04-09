@@ -33,9 +33,4 @@ export enum Kind {
   Deleted = "Deleted",
 }
 
-export const List: Kind[] = [
-  Kind.State,
-  Kind.Id,
-  Kind.AttributeSet,
-  Kind.Deleted,
-];
+export const List: Kind[] = [Kind.State, Kind.Id, Kind.AttributeSet, Kind.Deleted];

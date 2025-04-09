@@ -64,9 +64,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
     if (!logsQuery.data) {
       return (
         <TabContentWrapper id="documentation">
-          <ErrorView
-            message={words("instanceDetails.tabs.documentation.noData")}
-          />
+          <ErrorView message={words("instanceDetails.tabs.documentation.noData")} />
         </TabContentWrapper>
       );
     }
@@ -91,10 +89,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
   if (sections.length === 1) {
     return (
       <TabContentWrapper id="documentation">
-        <MarkdownCard
-          attributeValue={sections[0].value}
-          web_title={sections[0].title}
-        />
+        <MarkdownCard attributeValue={sections[0].value} web_title={sections[0].title} />
       </TabContentWrapper>
     );
   }
@@ -113,17 +108,12 @@ export const DocumentationTabContent: React.FC<Props> = ({
               <DynamicFAIcon icon={section.iconName} /> {section.title}
             </AccordionToggle>
             <AccordionContent id={`${section.title}-accordion-toggle`}>
-              <MarkdownCard
-                attributeValue={section.value}
-                web_title={section.title}
-              />
+              <MarkdownCard attributeValue={section.value} web_title={section.title} />
             </AccordionContent>
           </AccordionItem>
         ))}
         {sections.length === 0 && (
-          <ErrorView
-            message={words("instanceDetails.tabs.documentation.noData")}
-          />
+          <ErrorView message={words("instanceDetails.tabs.documentation.noData")} />
         )}
       </Accordion>
     </TabContentWrapper>
@@ -143,7 +133,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
  */
 const getDocumentationSections = (
   docAttributeDescriptors: DocAttributeDescriptors[],
-  attributeSet: InstanceAttributeModel,
+  attributeSet: InstanceAttributeModel
 ): MarkdownAttributes[] => {
   return docAttributeDescriptors.map(({ title, iconName, attributeName }) => {
     return {
@@ -151,9 +141,7 @@ const getDocumentationSections = (
       iconName: iconName,
       value:
         attributeSet[attributeName] ||
-        words("instanceDetails.documentation.noAttributeForVersion")(
-          attributeName,
-        ),
+        words("instanceDetails.documentation.noAttributeForVersion")(attributeName),
     };
   });
 };
@@ -161,7 +149,7 @@ const getDocumentationSections = (
 /**
  * Retrieves the first attribute set that contains data
  * for a specific version in the log history.
- * Prioritizing the active-attributes.
+ * Prioritizing the candidate-attributes. This is only the case for the documentation tab.
  *
  * @param {InstanceLog[]} logs - The logs that contain the attributeSet history.
  * @param {string} version - The version for which you need the attributeSet
@@ -169,20 +157,20 @@ const getDocumentationSections = (
  */
 const getSelectedAttributeSet = (
   logs: InstanceLog[],
-  version: string,
+  version: string
 ): InstanceAttributeModel | void => {
   const selectedLog: InstanceLog | undefined = logs.find(
-    (log: InstanceLog) => String(log.version) === version,
+    (log: InstanceLog) => String(log.version) === version
   );
 
   if (!selectedLog) return; // Return void if no matching log is found
 
-  if (selectedLog.active_attributes) {
-    return selectedLog.active_attributes;
-  }
-
   if (selectedLog.candidate_attributes) {
     return selectedLog.candidate_attributes;
+  }
+
+  if (selectedLog.active_attributes) {
+    return selectedLog.active_attributes;
   }
 
   if (selectedLog.rollback_attributes) {
@@ -194,20 +182,20 @@ const getSelectedAttributeSet = (
 
 /**
  * Retrieves the first attribute set that contains data
- * Prioritizing the active-attributes.
+ * Prioritizing the candidate-attributes. This is only the case for the documentation tab.
  *
  * @param {ServiceInstanceModel} instance - the instance that contains the attributeSets.
  * @returns {InstanceAttributeModel | void}
  */
 const getSelectedAttributeSetFromInstance = (
-  instance: ServiceInstanceModel,
+  instance: ServiceInstanceModel
 ): InstanceAttributeModel | void => {
-  if (instance.active_attributes) {
-    return instance.active_attributes;
-  }
-
   if (instance.candidate_attributes) {
     return instance.candidate_attributes;
+  }
+
+  if (instance.active_attributes) {
+    return instance.active_attributes;
   }
 
   if (instance.rollback_attributes) {

@@ -18,12 +18,7 @@ import {
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
 import { Link } from "@/UI/Components";
-import {
-  DeleteAction,
-  DestroyAction,
-  ExpertStateTransfer,
-  StateAction,
-} from "./Actions";
+import { DeleteAction, DestroyAction, ExpertStateTransfer, StateAction } from "./Actions";
 
 /**
  * The InstanceActions Component
@@ -40,28 +35,19 @@ import {
  */
 export const InstanceActions: React.FC = () => {
   const { instance, serviceModelQuery } = useContext(InstanceDetailsContext);
-  const { routeManager, environmentModifier, featureManager } =
-    useContext(DependencyContext);
+  const { routeManager, environmentModifier, featureManager } = useContext(DependencyContext);
 
   const editDisabled =
-    instance.deleted ||
-    isTransferDisabled(instance, "on_update", serviceModelQuery.data);
+    instance.deleted || isTransferDisabled(instance, "on_update", serviceModelQuery.data);
   const deleteDisabled =
-    instance.deleted ||
-    isTransferDisabled(instance, "on_delete", serviceModelQuery.data);
+    instance.deleted || isTransferDisabled(instance, "on_delete", serviceModelQuery.data);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [isExpertDropdownOpen, setIsExpertDropdownOpen] =
-    useState<boolean>(false);
+  const [isExpertDropdownOpen, setIsExpertDropdownOpen] = useState<boolean>(false);
   const [blockedInterface, setBlockedInterface] = useState<boolean>(false);
 
-  const stateTargets: string[] = getAvailableStateTargets(
-    instance.state,
-    serviceModelQuery.data,
-  );
-  const expertStateTargets: string[] = getExpertStateTargets(
-    serviceModelQuery.data,
-  );
+  const stateTargets: string[] = getAvailableStateTargets(instance.state, serviceModelQuery.data);
+  const expertStateTargets: string[] = getExpertStateTargets(serviceModelQuery.data);
 
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
     <MenuToggle
@@ -92,16 +78,12 @@ export const InstanceActions: React.FC = () => {
       {environmentModifier.useIsExpertModeEnabled() && (
         <Dropdown
           isOpen={isExpertDropdownOpen}
-          onOpenChange={(isOpen: boolean) =>
-            !blockedInterface && setIsExpertDropdownOpen(isOpen)
-          }
+          onOpenChange={(isOpen: boolean) => !blockedInterface && setIsExpertDropdownOpen(isOpen)}
           toggle={expertToggle}
         >
           <DropdownList>
             <DestroyAction
-              instance_display_identity={
-                instance.service_identity_attribute_value ?? instance.id
-              }
+              instance_display_identity={instance.service_identity_attribute_value ?? instance.id}
               instance_id={instance.id}
               service_entity={instance.service_entity}
               version={instance.version}
@@ -129,9 +111,7 @@ export const InstanceActions: React.FC = () => {
       )}
       <Dropdown
         isOpen={isDropdownOpen}
-        onOpenChange={(isOpen: boolean) =>
-          !blockedInterface && setIsDropdownOpen(isOpen)
-        }
+        onOpenChange={(isOpen: boolean) => !blockedInterface && setIsDropdownOpen(isOpen)}
         toggle={toggle}
         popperProps={{ position: "right" }}
       >
@@ -171,11 +151,7 @@ export const InstanceActions: React.FC = () => {
               </Link>
             </DropdownItem>
           )}
-          <DropdownItem
-            key="Edit"
-            isDisabled={editDisabled}
-            icon={<ToolsIcon />}
-          >
+          <DropdownItem key="Edit" isDisabled={editDisabled} icon={<ToolsIcon />}>
             <Link
               variant="plain"
               pathname={routeManager.getUrl("EditInstance", {
@@ -201,9 +177,7 @@ export const InstanceActions: React.FC = () => {
           <DeleteAction
             isDisabled={deleteDisabled}
             service_entity={instance.service_entity}
-            instance_display_identity={
-              instance.service_identity_attribute_value ?? instance.id
-            }
+            instance_display_identity={instance.service_identity_attribute_value ?? instance.id}
             instance_id={instance.id}
             version={instance.version}
             onClose={() => setIsDropdownOpen(false)}
@@ -255,23 +229,15 @@ const ExpertMenu = styled(MenuToggle)`
     );
   }
   &.pf-v6-c-menu-toggle:is(.pf-m-expanded, [aria-expanded="true"]) {
-    --pf-v6-c-menu-toggle--Color: var(
-      --pf-t--global--text--color--status--danger--default
-    );
-    --pf-v6-c-menu-toggle--BorderColor: var(
-      --pf-t--global--border--color--status--danger--clicked
-    );
+    --pf-v6-c-menu-toggle--Color: var(--pf-t--global--text--color--status--danger--default);
+    --pf-v6-c-menu-toggle--BorderColor: var(--pf-t--global--border--color--status--danger--clicked);
     --pf-v6-c-menu-toggle__toggle-icon--Color: var(
       --pf-t--global--icon--color--status--danger--clicked
     );
   }
   &.pf-v6-c-menu-toggle:is(:hover, :focus) {
-    --pf-v6-c-menu-toggle--Color: var(
-      --pf-t--global--text--color--status--danger--hover
-    );
-    --pf-v6-c-menu-toggle--BorderColor: var(
-      --pf-t--global--border--color--status--danger--hover
-    );
+    --pf-v6-c-menu-toggle--Color: var(--pf-t--global--text--color--status--danger--hover);
+    --pf-v6-c-menu-toggle--BorderColor: var(--pf-t--global--border--color--status--danger--hover);
     --pf-v6-c-menu-toggle__toggle-icon--Color: var(
       --pf-t--global--icon--color--status--danger--hover
     );

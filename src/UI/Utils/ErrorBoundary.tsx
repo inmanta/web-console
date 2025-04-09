@@ -36,9 +36,7 @@ class ErrorBoundary extends Component<Props, State> {
         <React.Fragment>
           <ErrorView
             ariaLabel="ErrorBoundary"
-            message={
-              this.state.error?.message || "Something unexpected happened."
-            }
+            message={this.state.error?.message || "Something unexpected happened."}
           ></ErrorView>
           <this.StyledClipboardContainer>
             <ClipboardCopy
@@ -49,8 +47,7 @@ class ErrorBoundary extends Component<Props, State> {
               hoverTip="Copy"
               clickTip="Copied"
             >
-              {this.state.error?.stack ||
-                "We couldn't retrieve the error trace."}
+              {this.state.error?.stack || "We couldn't retrieve the error trace."}
             </ClipboardCopy>
             <this.StyledCenteredContainer>
               <Button variant="primary" onClick={() => location.reload()}>
@@ -58,8 +55,7 @@ class ErrorBoundary extends Component<Props, State> {
               </Button>
               <Content component="p">
                 If this error keeps happening, please contact{" "}
-                <a href="mailto:support@inmanta.com">support@inmanta.com</a> for
-                more assistance.
+                <a href="mailto:support@inmanta.com">support@inmanta.com</a> for more assistance.
               </Content>
             </this.StyledCenteredContainer>
           </this.StyledClipboardContainer>

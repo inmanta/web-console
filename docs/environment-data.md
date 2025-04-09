@@ -14,13 +14,13 @@ The main areas where the frontend uses the environment data are:
 
 The following components have queries related to environments
 
-| Index  | Query | Component | Comment  |
-| ------ | ----- | --------- | -------- |
-| 1 | Environment list, no details, one time | `Initializer` | Consumed by `EnvironmentHandler` |
-| 2 | Environment list, no details, one time | `EnvironmentSelector` |  |
-| 3 | Environment get, no details, continuous | `EnvironmentControls` | Updates on `Halt/Resume` |
-| 4 | Environment list, with details, one time | `HomePage` | Rerendered when a new environment is created  |
-| 5 | Environment get, with details, one time | `EditEnvironment` tab | Updates when submitting |
+| Index | Query                                    | Component             | Comment                                      |
+| ----- | ---------------------------------------- | --------------------- | -------------------------------------------- |
+| 1     | Environment list, no details, one time   | `Initializer`         | Consumed by `EnvironmentHandler`             |
+| 2     | Environment list, no details, one time   | `EnvironmentSelector` |                                              |
+| 3     | Environment get, no details, continuous  | `EnvironmentControls` | Updates on `Halt/Resume`                     |
+| 4     | Environment list, with details, one time | `HomePage`            | Rerendered when a new environment is created |
+| 5     | Environment get, with details, one time  | `EditEnvironment` tab | Updates when submitting                      |
 
 Out of these 1 and 2 happen on every page reload (so not while navigating, only on a full page reload), and 3 happens continuously on every page that requires an environment.
 
@@ -30,9 +30,9 @@ Introducing these different slices for the separate components leads to a situat
 
 ## EnvironmentModifier
 
-EnvironmentModifier in the web-console is used to access up-to-date data of currently selected Environment across application and it can be accesed through `DependencyContext` either by existing functions in the Modifier or through extending them for the needed use-case. 
+EnvironmentModifier in the web-console is used to access up-to-date data of currently selected Environment across application and it can be accesed through `DependencyContext` either by existing functions in the Modifier or through extending them for the needed use-case.
 
-Data accessed through EnvironmentModifier is stored in the global store  and accessed through environment id that set by `setEnvironment()` function. Despite the name updating and modifing environament data is outside of the capabilities of said Modifier.
+Data accessed through EnvironmentModifier is stored in the global store and accessed through environment id that set by `setEnvironment()` function. Despite the name updating and modifing environament data is outside of the capabilities of said Modifier.
 
 Currently functions available through Modifier beside one mentioned above are:
 
@@ -43,6 +43,7 @@ Currently functions available through Modifier beside one mentioned above are:
     -useIsProtectedEnvironment()
 
     -useIsExpertModeEnabled()
+
 .
 
 Those functions returns values of certain settings for selected environment that are used to fullfil lice-cycles for Views and Components across application, for example `useIsExpertModeEnabled()` returns value of `enable_lsm_expert_mode` setting which then is used to handle visibility of functinalites restricted by given expert mode.

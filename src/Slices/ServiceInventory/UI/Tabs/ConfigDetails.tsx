@@ -9,6 +9,7 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
+import { usePostInstanceConfig } from "@/Data/Managers/V2/ServiceInstance";
 import { DefaultSwitch, EmptyView, SettingsList } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -19,17 +20,10 @@ interface Props {
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
 }
 
-export const ConfigDetails: React.FC<Props> = ({
-  config,
-  defaults,
-  serviceInstanceIdentifier,
-}) => {
-  const { commandResolver, environmentModifier } =
-    useContext(DependencyContext);
-  const trigger = commandResolver.useGetTrigger<"UpdateInstanceConfig">({
-    kind: "UpdateInstanceConfig",
-    ...serviceInstanceIdentifier,
-  });
+export const ConfigDetails: React.FC<Props> = ({ config, defaults, serviceInstanceIdentifier }) => {
+  const { service_entity, id, version } = serviceInstanceIdentifier;
+  const { environmentModifier } = useContext(DependencyContext);
+  const { mutate } = usePostInstanceConfig(service_entity, id);
   const isHalted = environmentModifier.useIsHalted();
 
   const [isExpanded, setIsExpanded] = useState(true);
@@ -58,11 +52,16 @@ export const ConfigDetails: React.FC<Props> = ({
         actions={{
           actions: (
             <>
-              <Tooltip
-                content={words("config.reset.description")}
-                entryDelay={200}
-              >
-                <Button size="sm" onClick={() => trigger({ kind: "RESET" })}>
+              <Tooltip content={words("config.reset.description")} entryDelay={200}>
+                <Button
+                  size="sm"
+                  onClick={() =>
+                    mutate({
+                      current_version: Number(version),
+                      values: defaults,
+                    })
+                  }
+                >
                   {words("config.reset")}
                 </Button>
               </Tooltip>
@@ -79,7 +78,10 @@ export const ConfigDetails: React.FC<Props> = ({
           <SettingsList
             config={config}
             onChange={(option, value) =>
-              trigger({ kind: "UPDATE", option, value })
+              mutate({
+                current_version: Number(version),
+                values: { [option]: value },
+              })
             }
             Switch={(props) => <DefaultSwitch {...props} defaults={defaults} />}
             isDisabled={isHalted}

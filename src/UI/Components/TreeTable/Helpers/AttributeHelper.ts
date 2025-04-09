@@ -7,7 +7,5 @@ export interface AttributeHelper<Kind extends AttributeTree> {
 
   getAttributeAnnotations(key: string): AttributeAnnotations;
 
-  getMultiAttributeNodes(
-    attributes: Kind["source"],
-  ): MultiAttributeNodeDict<Kind["target"]>;
+  getMultiAttributeNodes(attributes: Kind["source"]): MultiAttributeNodeDict<Kind["target"]>;
 }

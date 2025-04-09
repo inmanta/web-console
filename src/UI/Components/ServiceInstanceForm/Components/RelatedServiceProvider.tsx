@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Alert, Button } from "@patternfly/react-core";
-import { RemoteData } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
+import { useGetServiceModel } from "@/Data/Managers/V2/Service";
 import { words } from "@/UI/words";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
@@ -41,45 +40,35 @@ export const RelatedServiceProvider: React.FC<Props> = ({
   alreadySelected,
   multi,
 }) => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [data, retry] = queryResolver.useOneTime<"GetService">({
-    kind: "GetService",
-    name: serviceName,
-  });
+  const { isError, error, isSuccess, refetch } = useGetServiceModel(serviceName).useContinuous();
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => null,
-      failed: (message) => (
-        <Alert
-          variant="danger"
-          isInline
-          title={words("inventory.service.failed")}
-        >
-          {message}
-          <div>
-            <Button variant="link" isInline onClick={retry}>
-              {words("retry")}
-            </Button>
-          </div>
-        </Alert>
-      ),
-      success: () => {
-        return (
-          <AutoCompleteInputProvider
-            alreadySelected={alreadySelected}
-            attributeName={attributeName}
-            attributeValue={attributeValue}
-            isOptional={isOptional}
-            description={description}
-            handleInputChange={handleInputChange}
-            serviceName={serviceName}
-            multi={multi}
-          />
-        );
-      },
-    },
-    data,
-  );
+  if (isError) {
+    return (
+      <Alert variant="danger" isInline title={words("inventory.service.failed")}>
+        {error.message}
+        <div>
+          <Button variant="link" isInline onClick={() => refetch()}>
+            {words("retry")}
+          </Button>
+        </div>
+      </Alert>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <AutoCompleteInputProvider
+        alreadySelected={alreadySelected}
+        attributeName={attributeName}
+        attributeValue={attributeValue}
+        isOptional={isOptional}
+        description={description}
+        handleInputChange={handleInputChange}
+        serviceName={serviceName}
+        multi={multi}
+      />
+    );
+  }
+
+  return null;
 };

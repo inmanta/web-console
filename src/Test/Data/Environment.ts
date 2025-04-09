@@ -6,6 +6,7 @@ export const a: EnvironmentModel = {
   project_id: "project_id_a",
   repo_branch: "",
   repo_url: "",
+  halted: false,
 };
 
 export const b: EnvironmentModel = {
@@ -14,6 +15,7 @@ export const b: EnvironmentModel = {
   project_id: "project_id_b",
   repo_branch: "",
   repo_url: "",
+  halted: false,
 };
 
 export const c: EnvironmentModel = {
@@ -22,6 +24,7 @@ export const c: EnvironmentModel = {
   project_id: "project_id_b",
   repo_branch: "",
   repo_url: "",
+  halted: false,
 };
 
 export const d: EnvironmentModel = {
@@ -30,6 +33,7 @@ export const d: EnvironmentModel = {
   project_id: "project_id_c",
   repo_branch: "",
   repo_url: "",
+  halted: false,
 };
 
 export const e: EnvironmentModel = {
@@ -38,6 +42,7 @@ export const e: EnvironmentModel = {
   project_id: "project_id_d",
   repo_branch: "",
   repo_url: "",
+  halted: false,
 };
 
 export const filterable: EnvironmentExpertOnly[] = [
@@ -50,6 +55,7 @@ export const filterable: EnvironmentExpertOnly[] = [
     repo_url: "github.com/test",
     description: "Test desc",
     icon: "image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiCiAgICAgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIgogICAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iYmxhY2siIC8+CiAgPGNpcmNsZSBjeD0iMTUiIGN5PSIxMCIgcj0iOCIgZmlsbD0id2hpdGUiIC8+Cjwvc3ZnPg==",
+    halted: false,
     settings: {
       enable_lsm_expert_mode: true,
     },
@@ -61,6 +67,7 @@ export const filterable: EnvironmentExpertOnly[] = [
     projectName: "default",
     repo_branch: "master",
     repo_url: "github.com/test2",
+    halted: false,
     settings: {
       enable_lsm_expert_mode: true,
     },
@@ -72,6 +79,8 @@ export const filterable: EnvironmentExpertOnly[] = [
     project_id: "444",
     repo_branch: "master",
     repo_url: "gitlab.com/test",
+    halted: false,
+
     settings: {
       enable_lsm_expert_mode: true,
     },
@@ -83,6 +92,7 @@ export const filterable: EnvironmentExpertOnly[] = [
     project_id: "444",
     repo_branch: "master",
     repo_url: "gitlab.com/test123",
+    halted: false,
     settings: {
       enable_lsm_expert_mode: true,
     },

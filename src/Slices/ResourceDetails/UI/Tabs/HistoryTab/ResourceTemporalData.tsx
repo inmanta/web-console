@@ -23,19 +23,13 @@ export const ResourceTemporalData: React.FC<Props> = ({ data }) => (
     SuccessView={(resourceDetails) => (
       <DescriptionList isHorizontal aria-label="ResourceTemporalData-Success">
         <DescriptionListGroup>
-          <DescriptionListTerm>
-            {words("resources.info.lastDeploy")}
-          </DescriptionListTerm>
+          <DescriptionListTerm>{words("resources.info.lastDeploy")}</DescriptionListTerm>
           <DescriptionListDescription>
-            {resourceDetails.last_deploy
-              ? datePresenter.getFull(resourceDetails.last_deploy)
-              : ""}
+            {resourceDetails.last_deploy ? datePresenter.getFull(resourceDetails.last_deploy) : ""}
           </DescriptionListDescription>
         </DescriptionListGroup>
         <DescriptionListGroup>
-          <DescriptionListTerm>
-            {words("resources.info.firstTime")}
-          </DescriptionListTerm>
+          <DescriptionListTerm>{words("resources.info.firstTime")}</DescriptionListTerm>
           <DescriptionListDescription>
             {datePresenter.getFull(resourceDetails.first_generated_time)}
           </DescriptionListDescription>

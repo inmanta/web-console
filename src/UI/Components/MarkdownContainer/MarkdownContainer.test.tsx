@@ -1,6 +1,9 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { MarkdownContainer } from "./MarkdownContainer";
+
+// Mock mermaid module
+jest.mock("mermaid");
 
 describe("MarkdownContainer", () => {
   it("renders the Markdown content correctly", () => {
@@ -21,15 +24,25 @@ describe("MarkdownContainer", () => {
     expect(screen.queryByRole("script")).not.toBeInTheDocument();
   });
 
-  it("renders the Markdown content with Mermaid diagrams correctly", () => {
-    const markdownContent =
-      "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```";
+  it("renders the Markdown content with Mermaid diagrams correctly", async () => {
+    const markdownContent = "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```";
     const webTitle = "Container_id";
 
     render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
 
-    // expect to find an image tag. JSDom isn't able to render real mermaid charts
-    // so we just check if the image tag is present. It would contain the svg data.
-    expect(screen.getByRole("img")).toBeInTheDocument();
+    // First, check if the loading placeholder is shown
+    expect(screen.getByText("Loading diagram...")).toBeInTheDocument();
+
+    // Wait for the diagram to be rendered
+    await waitFor(() => {
+      // The mock will replace the loading placeholder with an img tag
+      const img = screen.getByRole("img");
+
+      expect(img).toBeInTheDocument();
+      // Verify the image source contains our mock SVG
+      expect(img.getAttribute("src")).toContain(
+        encodeURIComponent("<svg>Mock Mermaid Diagram</svg>")
+      );
+    });
   });
 });

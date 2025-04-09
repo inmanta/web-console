@@ -9,37 +9,27 @@ interface Props {
   environments: FlatEnvironment[];
 }
 
-export interface Filters {
+interface Filters {
   projectFilter?: string[];
   environmentFilter?: string;
 }
 
-export const EnvironmentsOverview: React.FC<Props> = ({
-  environments,
-  ...props
-}) => {
+export const EnvironmentsOverview: React.FC<Props> = ({ environments, ...props }) => {
   const projectNames = Array.from(
-    new Set(environments.map((environment) => environment.projectName)),
+    new Set(environments.map((environment) => environment.projectName))
   );
   const [filter, setFilter] = useUrlStateWithFilter<Filters>({ route: "Home" });
-  const setProjectFilter = (projectFilter?: string[]) =>
-    setFilter({ ...filter, projectFilter });
+  const setProjectFilter = (projectFilter?: string[]) => setFilter({ ...filter, projectFilter });
   const projectFilter = filter.projectFilter ? filter.projectFilter : [];
   const setEnvironmentFilter = (environmentFilter?: string) => {
     setFilter({
       ...filter,
-      environmentFilter:
-        environmentFilter === "" ? undefined : environmentFilter,
+      environmentFilter: environmentFilter === "" ? undefined : environmentFilter,
     });
   };
-  const environmentFilter = filter.environmentFilter
-    ? filter.environmentFilter
-    : "";
+  const environmentFilter = filter.environmentFilter ? filter.environmentFilter : "";
   const filteredByProjectName = filterByProject(environments, projectFilter);
-  const filteredByEnvName = filterByName(
-    filteredByProjectName,
-    environmentFilter,
-  );
+  const filteredByEnvName = filterByName(filteredByProjectName, environmentFilter);
 
   return (
     <>
@@ -66,7 +56,7 @@ export const EnvironmentsOverview: React.FC<Props> = ({
 
 function filterByName(
   filterableEnvironments: FlatEnvironment[],
-  environmentFilter: string,
+  environmentFilter: string
 ): FlatEnvironment[] {
   return filterableEnvironments.filter((environment) => {
     if (environmentFilter && environmentFilter.length > 0) {
@@ -79,7 +69,7 @@ function filterByName(
 
 function filterByProject(
   filterableEnvironments: FlatEnvironment[],
-  projectFilter: string[],
+  projectFilter: string[]
 ): FlatEnvironment[] {
   return filterableEnvironments.filter((environment) => {
     if (projectFilter && projectFilter.length > 0) {

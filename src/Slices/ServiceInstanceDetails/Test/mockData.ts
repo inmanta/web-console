@@ -163,8 +163,7 @@ export const historyData: InstanceLog[] = [
         timestamp: "2022-09-02T12:01:19.634064+00:00",
         source: "creating",
         destination: "up",
-        message:
-          "compile request queued with id 44d81446-0596-4708-80aa-4b7e052d2ab2",
+        message: "compile request queued with id 44d81446-0596-4708-80aa-4b7e052d2ab2",
         ignored_transition: false,
         event_correlation_id: "15de0ccc-320c-4f62-ab8a-4d3b05564d00",
         severity: 20,
@@ -257,8 +256,7 @@ export const historyData: InstanceLog[] = [
         timestamp: "2022-09-02T12:01:19.634064+00:00",
         source: "creating",
         destination: "up",
-        message:
-          "compile request queued with id 44d81446-0596-4708-80aa-4b7e052d2ab2",
+        message: "compile request queued with id 44d81446-0596-4708-80aa-4b7e052d2ab2",
         ignored_transition: false,
         event_correlation_id: "15de0ccc-320c-4f62-ab8a-4d3b05564d00",
         severity: 20,
@@ -342,8 +340,7 @@ export const historyData: InstanceLog[] = [
         timestamp: "2022-09-02T11:56:16.124634+00:00",
         source: "acknowledged",
         destination: "creating",
-        message:
-          "compile request queued with id d2845b93-8a02-41ca-89cc-6f508be51e2b",
+        message: "compile request queued with id d2845b93-8a02-41ca-89cc-6f508be51e2b",
         ignored_transition: false,
         event_correlation_id: "332bc22f-ff3b-4035-9a95-142cdccb1a66",
         severity: 20,
@@ -427,8 +424,7 @@ export const historyData: InstanceLog[] = [
         timestamp: "2022-09-02T11:56:06.869318+00:00",
         source: "start",
         destination: "acknowledged",
-        message:
-          "Validation compile request queued with id c1d2018b-d1cd-46a8-b59b-7bea82d51008",
+        message: "Validation compile request queued with id c1d2018b-d1cd-46a8-b59b-7bea82d51008",
         ignored_transition: false,
         event_correlation_id: "da9a2f08-cc01-43e1-9363-966ced8bd1c2",
         severity: 20,
@@ -554,8 +550,7 @@ export const serviceModel: ServiceModel = {
     },
     {
       name: "epc_version",
-      description:
-        "The version of the epc that should be deployed\nfor this mobile core.",
+      description: "The version of the epc that should be deployed\nfor this mobile core.",
       modifier: "rw+",
       attribute_annotations: {},
       type: "string",
@@ -598,6 +593,7 @@ export const serviceModel: ServiceModel = {
   embedded_entities: [
     {
       name: "site",
+      type: "site",
       description:
         "The site at which the epc should be deployed.  The name should\n\nmatch a site provided in the config file.",
       modifier: "rw",
@@ -625,8 +621,7 @@ export const serviceModel: ServiceModel = {
         },
         {
           name: "name",
-          description:
-            "The name of the site where the mobile core should be deployed.",
+          description: "The name of the site where the mobile core should be deployed.",
           modifier: "rw",
           attribute_annotations: {},
           type: "string",
@@ -1324,14 +1319,9 @@ export const serviceModelWithConfig: ServiceModel = {
   config: { option1: true },
 };
 
-export const instanceDataWithConfig: ServiceInstanceModel = {
-  ...instanceData,
-  config: { option1: true },
-};
-
 export const instanceDataWithDocumentation: ServiceInstanceModel = {
   ...instanceData,
-  active_attributes: {
+  candidate_attributes: {
     topography: "# Getting started\n\nThis is some markdown\n",
   },
 };
@@ -1358,7 +1348,7 @@ export const serviceModelWithDocumentation: ServiceModel = {
   ],
 };
 
-export const historyDataWithDocumentation: InstanceLog[] = [
+const historyDataWithDocumentation: InstanceLog[] = [
   {
     service_instance_id: "1d96a1ab",
     environment: "5bfe1994-365f-49ec-bff1-fed77bbbf8e6",
@@ -1405,8 +1395,7 @@ export const historyDataWithDocumentation: InstanceLog[] = [
         timestamp: "2022-09-02T12:01:19.634064+00:00",
         source: "creating",
         destination: "up",
-        message:
-          "compile request queued with id 44d81446-0596-4708-80aa-4b7e052d2ab2",
+        message: "compile request queued with id 44d81446-0596-4708-80aa-4b7e052d2ab2",
         ignored_transition: false,
         event_correlation_id: "15de0ccc-320c-4f62-ab8a-4d3b05564d00",
         severity: 20,
@@ -1483,8 +1472,7 @@ export const historyDataWithDocumentation: InstanceLog[] = [
         timestamp: "2022-09-02T11:56:16.124634+00:00",
         source: "acknowledged",
         destination: "creating",
-        message:
-          "compile request queued with id d2845b93-8a02-41ca-89cc-6f508be51e2b",
+        message: "compile request queued with id d2845b93-8a02-41ca-89cc-6f508be51e2b",
         ignored_transition: false,
         event_correlation_id: "332bc22f-ff3b-4035-9a95-142cdccb1a66",
         severity: 20,
@@ -1561,8 +1549,7 @@ export const historyDataWithDocumentation: InstanceLog[] = [
         timestamp: "2022-09-02T11:56:06.869318+00:00",
         source: "start",
         destination: "acknowledged",
-        message:
-          "Validation compile request queued with id c1d2018b-d1cd-46a8-b59b-7bea82d51008",
+        message: "Validation compile request queued with id c1d2018b-d1cd-46a8-b59b-7bea82d51008",
         ignored_transition: false,
         event_correlation_id: "da9a2f08-cc01-43e1-9363-966ced8bd1c2",
         severity: 20,

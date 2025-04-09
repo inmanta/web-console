@@ -24,7 +24,7 @@ export interface Manifest {
   query: Query;
 }
 
-export interface Raw {
+interface Raw {
   resource_id: string;
   requires: string[];
   status: string;

@@ -13,6 +13,6 @@ export function StateHelper(store: Store) {
         data,
       });
     },
-    (state, { reportId }) => state.dryRunReport.byId[reportId],
+    (state, { reportId }) => state.dryRunReport.byId[reportId]
   );
 }

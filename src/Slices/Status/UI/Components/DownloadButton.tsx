@@ -5,21 +5,23 @@ import { words } from "@/UI/words";
 export type Phase = "Default" | "Downloading";
 
 interface Props {
-  phase: Phase;
+  isPending: boolean;
   onClick(): void;
 }
 
-export const DownloadButton: React.FC<Props> = ({ phase, onClick }) => {
+export const DownloadButton: React.FC<Props> = ({ isPending, onClick }) => {
+  const label = isPending ? phaseLabelRecord["Downloading"] : phaseLabelRecord["Default"];
+
   return (
     <Button
-      spinnerAriaValueText={phaseLabelRecord[phase]}
-      isLoading={phase !== "Default"}
+      spinnerAriaValueText={label}
+      isLoading={isPending}
       variant="primary"
       onClick={onClick}
-      isDisabled={phase !== "Default"}
+      isDisabled={isPending}
       aria-label="DownloadArchiveButton"
     >
-      {phaseLabelRecord[phase]}
+      {label}
     </Button>
   );
 };

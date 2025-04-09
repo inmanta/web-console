@@ -27,10 +27,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
   numberOfColumns,
   index,
 }) => {
-  const failed =
-    row.returncode !== null &&
-    row.returncode !== undefined &&
-    row.returncode !== 0;
+  const failed = row.returncode !== null && row.returncode !== undefined && row.returncode !== 0;
 
   return (
     <Tbody isExpanded={false}>
@@ -50,19 +47,11 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
           )}{" "}
           {row.name}
         </Td>
-        <Td dataLabel={words("compileDetails.stages.columns.command")}>
-          {row.shortCommand}
-        </Td>
-        <Td
-          dataLabel={words("compileDetails.stages.columns.delay")}
-          modifier="fitContent"
-        >
+        <Td dataLabel={words("compileDetails.stages.columns.command")}>{row.shortCommand}</Td>
+        <Td dataLabel={words("compileDetails.stages.columns.delay")} modifier="fitContent">
           {row.startDelay}
         </Td>
-        <Td
-          dataLabel={words("compileDetails.stages.columns.duration")}
-          modifier="fitContent"
-        >
+        <Td dataLabel={words("compileDetails.stages.columns.duration")} modifier="fitContent">
           {row.duration}
         </Td>
       </Tr>
@@ -72,8 +61,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
             isHorizontal
             isFillColumns
             style={{
-              paddingTop:
-                "var(--pf-t--global--spacer--control--vertical--default",
+              paddingTop: "var(--pf-t--global--spacer--control--vertical--default",
             }}
           >
             <DescriptionListGroup>
@@ -81,11 +69,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                 {words("compileDetails.stages.columns.command")}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                <CodeHighlighter
-                  keyId="command"
-                  code={row.command}
-                  language="bash"
-                />
+                <CodeHighlighter keyId="command" code={row.command} language="bash" />
               </DescriptionListDescription>
             </DescriptionListGroup>
             <DescriptionListGroup>

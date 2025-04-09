@@ -4,11 +4,7 @@ import { DateRange, IntRange } from "@/Core";
 
 import { MomentDatePresenter } from "@/UI";
 import { FilterPicker } from "@/UI/Components";
-import {
-  IntRangeFilter,
-  SelectOptionFilter,
-  TimestampFilter,
-} from "@/UI/Components/Filters";
+import { IntRangeFilter, SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import { Filter, FilterKind, FilterList } from "@S/DesiredState/Core/Query";
@@ -22,7 +18,7 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
   const [filterKind, setFilterKind] = useState<FilterKind>(FilterKind.Status);
 
   const desiredStateStatuses = Object.keys(DesiredStateVersionStatus).map(
-    (k) => DesiredStateVersionStatus[k],
+    (k) => DesiredStateVersionStatus[k]
   );
 
   const updateStatus = (selectedStatuses: string[]) =>
@@ -48,11 +44,7 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
 
   return (
     <ToolbarGroup variant="filter-group" aria-label="FilterBar" role="toolbar">
-      <FilterPicker
-        setFilterKind={setFilterKind}
-        filterKind={filterKind}
-        items={FilterList}
-      />
+      <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} items={FilterList} />
       <SelectOptionFilter
         filterPropertyName={FilterKind.Status}
         placeholder={words("desiredState.filters.status.placeholder")}

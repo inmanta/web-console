@@ -15,13 +15,7 @@ import { ServiceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { useUrlStateWithString } from "@/Data";
 import { DependencyContext, words } from "@/UI";
-import {
-  DateWithTooltip,
-  ErrorView,
-  InstanceStateLabel,
-  Link,
-  LoadingView,
-} from "@/UI/Components";
+import { DateWithTooltip, ErrorView, InstanceStateLabel, Link, LoadingView } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../../Core/Context";
 
 /**
@@ -41,7 +35,7 @@ export const HistorySection: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
   const [selectedVersion, setSelectedVersion] = useUrlStateWithString<string>({
     default: String(instance.version),
-    key: `version`,
+    key: "version",
     route: "InstanceDetails",
   });
 
@@ -50,9 +44,7 @@ export const HistorySection: React.FC = () => {
       <PanelHeader>
         <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
           <FlexItem>
-            <Title headingLevel="h2">
-              {words("instanceDetails.history.title")}
-            </Title>
+            <Title headingLevel="h2">{words("instanceDetails.history.title")}</Title>
           </FlexItem>
           <FlexItem>
             <Link
@@ -62,9 +54,7 @@ export const HistorySection: React.FC = () => {
               })}
               isDisabled={instance.deleted}
             >
-              <Button variant="secondary">
-                {words("instanceDetails.history.diagnose")}
-              </Button>
+              <Button variant="secondary">{words("instanceDetails.history.diagnose")}</Button>
             </Link>
           </FlexItem>
         </Flex>
@@ -76,10 +66,7 @@ export const HistorySection: React.FC = () => {
           {(logsQuery.isError ||
             logsQuery.isFetchNextPageError ||
             logsQuery.isFetchPreviousPageError) && (
-            <ErrorView
-              message={words("instanceDetails.history.error")}
-              ariaLabel="History-Error"
-            />
+            <ErrorView message={words("instanceDetails.history.error")} ariaLabel="History-Error" />
           )}
           {logsQuery.isSuccess && (
             <Table aria-label="VersionHistoryTable">
@@ -87,9 +74,7 @@ export const HistorySection: React.FC = () => {
                 {logsQuery.hasPreviousPage && (
                   <Tr isBorderRow>
                     <Td colSpan={3}>
-                      <Flex
-                        justifyContent={{ default: "justifyContentCenter" }}
-                      >
+                      <Flex justifyContent={{ default: "justifyContentCenter" }}>
                         <Button
                           variant="tertiary"
                           size="sm"
@@ -118,9 +103,7 @@ export const HistorySection: React.FC = () => {
                 {logsQuery.hasNextPage && (
                   <Tr>
                     <Td colSpan={3}>
-                      <Flex
-                        justifyContent={{ default: "justifyContentCenter" }}
-                      >
+                      <Flex justifyContent={{ default: "justifyContentCenter" }}>
                         <Button
                           variant="tertiary"
                           size="sm"
@@ -161,10 +144,7 @@ const HistoryRowContent: React.FC<HistoryRowProps> = ({ log }) => {
   return (
     <>
       <Td dataLabel="version">{String(log.version)}</Td>
-      <Td
-        dataLabel="timestamp"
-        data-testid={`version-${log.version}-timestamp`}
-      >
+      <Td dataLabel="timestamp" data-testid={`version-${log.version}-timestamp`}>
         <DateWithTooltip isFull timestamp={log.timestamp} />
       </Td>
       <Td dataLabel="state" data-testid={`version-${log.version}-state`}>
@@ -194,7 +174,7 @@ export const StateLabel: React.FC<StateLabelProps> = ({ service, state }) => {
 
   // The service entity lifecycle contains all of the states an instance of that entity can reach
   const lifecycleState = service.lifecycle.states.find(
-    (serviceState) => serviceState.name === state,
+    (serviceState) => serviceState.name === state
   );
 
   if (!lifecycleState) {

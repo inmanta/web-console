@@ -57,7 +57,7 @@ export interface ServiceOrderItemStatus {
   instance_state_label: string | null;
 }
 
-export interface ServiceOrderStatus {
+interface ServiceOrderStatus {
   state: ServiceOrderState;
 }
 
@@ -69,17 +69,10 @@ export interface ServiceOrderItemConfig {
   [x: string]: boolean;
 }
 
-export type ServiceOrderState =
-  | "success"
-  | "failed"
-  | "in_progress"
-  | "partial";
-export type ServiceOrderItemState =
-  | "completed"
-  | "failed"
-  | "in_progress"
-  | "acknowledged";
-export type FailureType =
+export type ServiceOrderState = "success" | "failed" | "in_progress" | "partial";
+export type ServiceOrderItemState = "completed" | "failed" | "in_progress" | "acknowledged";
+
+type FailureType =
   | "INVALID_ORDER_ITEM"
   | "VALIDATION_COMPILE_FAILED"
   | "EXECUTION_FAILED"

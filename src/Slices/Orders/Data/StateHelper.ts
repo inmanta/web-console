@@ -13,6 +13,6 @@ export function GetOrdersStateHelper(store: Store) {
         data: value,
       });
     },
-    (state, _query, environment) => state.orders.listByEnv[environment],
+    (state, _query, environment) => state.orders.listByEnv[environment]
   );
 }

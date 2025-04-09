@@ -1,11 +1,7 @@
 import React from "react";
 import { Either } from "@/Core";
 import { CreatableSelectInput } from "./CreatableSelectInput";
-import {
-  EditableField,
-  FieldProps,
-  StaticViewComponent,
-} from "./EditableField";
+import { EditableField, FieldProps, StaticViewComponent } from "./EditableField";
 import { InlineValue } from "./InlineFillers";
 
 interface Props extends FieldProps {
