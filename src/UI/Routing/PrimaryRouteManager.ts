@@ -1,9 +1,4 @@
-import {
-  generatePath,
-  matchPath,
-  PathMatch,
-  useLocation,
-} from "react-router-dom";
+import { generatePath, matchPath, PathMatch, useLocation } from "react-router-dom";
 import {
   RouteDictionary,
   RouteManager,
@@ -123,9 +118,11 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     if (typeof routeMatch === "undefined") {
       return getUrl("Home", undefined);
     }
+
     const { route } = routeMatch;
 
     if (!routeHasParams(route)) return pathname;
+
     const parent = getParentWithoutParams(route);
 
     if (typeof parent === "undefined") return getUrl("Home", undefined);
@@ -155,38 +152,35 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     return routeDictionary[kind] as Route<K>;
   }
 
-  function getUrl<K extends RouteKind>(
-    kind: K,
-    params: RouteParams<K>,
-  ): string {
+  function getUrl<K extends RouteKind>(kind: K, params: RouteParams<K>): string {
     const route = getRoute(kind);
 
-    return generatePath(
-      route.path,
-      params === undefined ? params : encodeParams(params),
-    );
+    return generatePath(route.path, params === undefined ? params : encodeParams(params));
   }
 
   function getUrlForApiUri(uri: string): string | undefined {
     if (uri.length <= 0) return undefined;
+
     const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
 
     if (match === null) return undefined;
+
     if (match.params.id === undefined) return undefined;
 
     return getUrl("CompileDetails", { id: match.params.id });
   }
 
-  function getParamsFromUrl(
-    uri: string,
-  ): RouteKindWithId<"CompileDetails"> | undefined {
+  function getParamsFromUrl(uri: string): RouteKindWithId<"CompileDetails"> | undefined {
     if (uri.length <= 0) return undefined;
+
     const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
 
     if (match === null) return undefined;
+
     if (match.params.id === undefined) return undefined;
+
     const params = { id: match.params.id };
 
     return {
@@ -196,15 +190,13 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   }
 
   function getRouteMatchFromUrl(url: string): RouteMatch | undefined {
-    const routeMatchPairs = getRoutes().map((route) => [
-      route,
-      matchPath(route.path, url),
-    ]);
+    const routeMatchPairs = getRoutes().map((route) => [route, matchPath(route.path, url)]);
     const routeWithMatch = routeMatchPairs.find(
-      (pair): pair is [Route, PathMatch] => pair[1] !== null,
+      (pair): pair is [Route, PathMatch] => pair[1] !== null
     );
 
     if (typeof routeWithMatch === "undefined") return undefined;
+
     const [route, match] = routeWithMatch;
 
     return {
@@ -219,10 +211,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   function useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
     const { search } = useLocation();
     const route = getRoute(kind);
-    const path = generatePath(
-      route.path,
-      params === undefined ? params : encodeParams(params),
-    );
+    const path = generatePath(route.path, params === undefined ? params : encodeParams(params));
 
     return `${path}${search}`;
   }
@@ -231,6 +220,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     const routeMatch = getRouteMatchFromUrl(url);
 
     if (typeof routeMatch === "undefined") return [];
+
     const { route, params } = routeMatch;
     const lineage = getLineageFromRoute(route);
 

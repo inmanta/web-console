@@ -84,18 +84,16 @@ describe("CompileReports", () => {
           links: { self: "" },
           metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
         });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      screen.getByRole("region", { name: "CompileReportsView-Loading" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "CompileReportsView-Loading" })).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("generic", { name: "CompileReportsView-Empty" }),
+      await screen.findByRole("generic", { name: "CompileReportsView-Empty" })
     ).toBeInTheDocument();
 
     await act(async () => {
@@ -114,20 +112,20 @@ describe("CompileReports", () => {
           },
           {
             status: 500,
-          },
+          }
         );
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
+      await screen.findByRole("region", { name: "CompileReportsView-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("region", { name: "CompileReportsView-Error" }),
+      await screen.findByRole("region", { name: "CompileReportsView-Error" })
     ).toBeInTheDocument();
 
     await act(async () => {
@@ -141,18 +139,18 @@ describe("CompileReports", () => {
     server.use(
       http.get("/api/v2/compilereport", () => {
         return HttpResponse.json(Mock.response);
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
+      await screen.findByRole("region", { name: "CompileReportsView-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("grid", { name: "CompileReportsView-Success" }),
+      await screen.findByRole("grid", { name: "CompileReportsView-Success" })
     ).toBeInTheDocument();
 
     await act(async () => {
@@ -178,7 +176,7 @@ describe("CompileReports", () => {
         }
 
         return HttpResponse.json(Mock.response);
-      }),
+      })
     );
 
     const { component } = setup();
@@ -186,17 +184,17 @@ describe("CompileReports", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "CompileReportsView-Loading" }),
+      await screen.findByRole("region", { name: "CompileReportsView-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("generic", { name: "CompileReportsView-Empty" }),
+      await screen.findByRole("generic", { name: "CompileReportsView-Empty" })
     ).toBeInTheDocument();
 
     await new Promise((resolve) => setTimeout(resolve, 5000));
 
     expect(
-      await screen.findByRole("grid", { name: "CompileReportsView-Success" }),
+      await screen.findByRole("grid", { name: "CompileReportsView-Success" })
     ).toBeInTheDocument();
 
     await act(async () => {
@@ -217,7 +215,7 @@ describe("CompileReports", () => {
         }
 
         return HttpResponse.json(Mock.response);
-      }),
+      })
     );
     const { component } = setup();
 
@@ -230,15 +228,12 @@ describe("CompileReports", () => {
     expect(initialRows).toHaveLength(8);
 
     await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
+        name: "FilterPicker",
+      })
     );
 
-    const input = screen.getByPlaceholderText(
-      words("compileReports.filters.status.placeholder"),
-    );
+    const input = screen.getByPlaceholderText(words("compileReports.filters.status.placeholder"));
 
     await userEvent.click(input);
 
@@ -272,7 +267,7 @@ describe("CompileReports", () => {
         }
 
         return HttpResponse.json(Mock.response);
-      }),
+      })
     );
     const { component } = setup();
 
@@ -285,21 +280,18 @@ describe("CompileReports", () => {
     expect(initialRows).toHaveLength(8);
 
     await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
+        name: "FilterPicker",
+      })
     );
 
     await userEvent.click(
       screen.getByRole("option", {
         name: words("compileReports.columns.status"),
-      }),
+      })
     );
 
-    const input = screen.getByPlaceholderText(
-      words("compileReports.filters.status.placeholder"),
-    );
+    const input = screen.getByPlaceholderText(words("compileReports.filters.status.placeholder"));
 
     await userEvent.click(input);
 
@@ -327,7 +319,7 @@ describe("CompileReports", () => {
       http.get("/api/v2/compilereport", ({ request }) => {
         if (
           request.url.includes(
-            "filter.requested=ge%3A2021-09-27%2B22%3A00%3A00&filter.requested=le%3A2021-09-29%2B22%3A00%3A00",
+            "filter.requested=ge%3A2021-09-27%2B22%3A00%3A00&filter.requested=le%3A2021-09-29%2B22%3A00%3A00"
           )
         ) {
           return HttpResponse.json({
@@ -337,7 +329,7 @@ describe("CompileReports", () => {
         }
 
         return HttpResponse.json(Mock.response);
-      }),
+      })
     );
     const { component } = setup();
 
@@ -350,16 +342,15 @@ describe("CompileReports", () => {
     expect(initialRows).toHaveLength(8);
 
     await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "FilterPicker" },
-      ),
+      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
+        name: "FilterPicker",
+      })
     );
 
     await userEvent.click(
       screen.getByRole("option", {
         name: words("compileReports.columns.requested"),
-      }),
+      })
     );
 
     const fromDatePicker = await screen.findByLabelText("From Date Picker");
@@ -384,12 +375,8 @@ describe("CompileReports", () => {
       window.dispatchEvent(new Event("resize"));
     });
 
-    expect(
-      await screen.findByText("from | 2021/09/28 00:00:00", { exact: false }),
-    ).toBeVisible();
-    expect(
-      await screen.findByText("to | 2021/09/30 00:00:00", { exact: false }),
-    ).toBeVisible();
+    expect(await screen.findByText("from | 2021/09/28 00:00:00", { exact: false })).toBeVisible();
+    expect(await screen.findByText("to | 2021/09/30 00:00:00", { exact: false })).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -416,7 +403,7 @@ describe("CompileReports", () => {
         update = true;
 
         return HttpResponse.json({});
-      }),
+      })
     );
     const { component } = setup();
 
@@ -470,14 +457,14 @@ describe("CompileReports", () => {
             next: "/fake-link?end=fake-first-param",
           },
         });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
     expect(
-      await screen.findByRole("grid", { name: "CompileReportsView-Success" }),
+      await screen.findByRole("grid", { name: "CompileReportsView-Success" })
     ).toBeInTheDocument();
 
     const initialRows = await screen.findAllByRole("row", {

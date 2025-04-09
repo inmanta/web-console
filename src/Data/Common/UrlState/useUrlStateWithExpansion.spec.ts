@@ -11,9 +11,9 @@ test.each`
     const [value] = handleUrlStateWithExpansion(
       { route: "Inventory" },
       { pathname: "", search, hash: "" },
-      () => undefined,
+      () => undefined
     );
 
     expect(value).toEqual(expectedValue);
-  },
+  }
 );

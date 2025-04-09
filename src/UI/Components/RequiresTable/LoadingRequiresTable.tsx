@@ -9,10 +9,7 @@ interface Props {
   numberOfRows: number;
 }
 
-export const LoadingRequiresTable: React.FC<Props> = ({
-  numberOfRows,
-  ...props
-}) => (
+export const LoadingRequiresTable: React.FC<Props> = ({ numberOfRows, ...props }) => (
   <RequiresTableWrapper {...props}>
     {range(numberOfRows).map((num) => (
       <Tr key={num}>

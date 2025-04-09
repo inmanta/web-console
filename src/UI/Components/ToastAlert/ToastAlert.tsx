@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-  AlertVariant,
-} from "@patternfly/react-core";
+import { Alert, AlertActionCloseButton, AlertGroup, AlertVariant } from "@patternfly/react-core";
 import styled from "styled-components";
 
 interface Props {

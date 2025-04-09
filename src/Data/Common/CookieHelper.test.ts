@@ -6,9 +6,7 @@ describe("createCookie", () => {
 
     // Retrieve created cookie
     const cookieArray = document.cookie.split(";");
-    const createdCookie = cookieArray.find((cookie) =>
-      cookie.includes("testCookie"),
-    );
+    const createdCookie = cookieArray.find((cookie) => cookie.includes("testCookie"));
 
     // Expectations
     expect(createdCookie).toBeDefined();

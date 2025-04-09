@@ -13,10 +13,7 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  ResourceLogsQueryManager,
-  ResourceLogsStateHelper,
-} from "@S/ResourceDetails/Data";
+import { ResourceLogsQueryManager, ResourceLogsStateHelper } from "@S/ResourceDetails/Data";
 import { ResourceLogs } from "@S/ResourceDetails/Data/Mock";
 import { View } from "./View";
 
@@ -27,11 +24,11 @@ function setup() {
   const resourceLogsQueryManager = ResourceLogsQueryManager(
     apiHelper,
     resourceLogsStateHelper,
-    new StaticScheduler(),
+    new StaticScheduler()
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([resourceLogsQueryManager]),
+    new DynamicQueryManagerResolverImpl([resourceLogsQueryManager])
   );
 
   const component = (
@@ -55,9 +52,7 @@ test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
 
   render(component);
 
-  expect(
-    screen.getByRole("region", { name: "ResourceLogs-Loading" }),
-  ).toBeVisible();
+  expect(screen.getByRole("region", { name: "ResourceLogs-Loading" })).toBeVisible();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -70,9 +65,7 @@ test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
     apiHelper.resolve(Either.right(ResourceLogs.response));
   });
 
-  expect(
-    await screen.findByRole("grid", { name: "ResourceLogsTable" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("grid", { name: "ResourceLogsTable" })).toBeVisible();
 
   const rows = await screen.findAllByRole("rowgroup", {
     name: "ResourceLogRow",
@@ -101,7 +94,7 @@ test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant l
       Either.right({
         ...ResourceLogs.response,
         data: [ResourceLogs.response.data[0]],
-      }),
+      })
     );
   });
 
@@ -128,7 +121,7 @@ test("GIVEN ResourceLogsView WHEN sorting changes AND we are not on the first pa
           after: 3,
           page_size: 100,
         },
-      }),
+      })
     );
   });
 

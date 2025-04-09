@@ -1,10 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import {
-  Content,
-  PageSection,
-  Toolbar,
-  ToolbarContent,
-} from "@patternfly/react-core";
+import { Content, PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
 import { Diff, Maybe, RemoteData } from "@/Core";
 import { DiffWizard, ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -33,9 +28,7 @@ export const View: React.FC<Props> = ({ version }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [updatedList, setUpdatedList] = useState(false);
   const [statuses, setStatuses] = useState(Diff.defaultStatuses);
-  const [selectedReport, setSelectedReport] = useState<MaybeReport>(
-    Maybe.none(),
-  );
+  const [selectedReport, setSelectedReport] = useState<MaybeReport>(Maybe.none());
   const [searchFilter, setSearchFilter] = useState("");
   const firstReport = useRef<MaybeReport>(Maybe.none());
 
@@ -44,6 +37,7 @@ export const View: React.FC<Props> = ({ version }) => {
    */
   useEffect(() => {
     if (!RemoteData.isFailed(data)) return;
+
     setErrorMessage(data.value);
   }, [data]);
 
@@ -66,15 +60,13 @@ export const View: React.FC<Props> = ({ version }) => {
    */
   useEffect(() => {
     if (!RemoteData.isSuccess(data) || data.value.length <= 0) return;
+
     if (Maybe.isSome(selectedReport)) {
       const fetchedSelectedReport = data.value.find(
-        (report) => report.id === selectedReport.value.id,
+        (report) => report.id === selectedReport.value.id
       );
 
-      if (
-        !!fetchedSelectedReport &&
-        fetchedSelectedReport.todo !== selectedReport.value.todo
-      ) {
+      if (!!fetchedSelectedReport && fetchedSelectedReport.todo !== selectedReport.value.todo) {
         setSelectedReport(Maybe.some(fetchedSelectedReport));
       } else {
         return;
@@ -86,9 +78,11 @@ export const View: React.FC<Props> = ({ version }) => {
 
   useEffect(() => {
     if (!updatedList) return;
+
     if (RemoteData.isSuccess(data)) {
       setSelectedReport(firstReport.current);
     }
+
     setUpdatedList(false);
   }, [updatedList, data]);
 
@@ -107,9 +101,7 @@ export const View: React.FC<Props> = ({ version }) => {
       />
       <PageSection>
         <Content>
-          <Content component="h1">
-            {words("desiredState.complianceCheck.title")}
-          </Content>
+          <Content component="h1">{words("desiredState.complianceCheck.title")}</Content>
         </Content>
       </PageSection>
       <PageSection hasBodyWrapper={false}>

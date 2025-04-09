@@ -1,8 +1,8 @@
 # Description
 
-* Short description here *
+- Short description here \*
 
-closes *Add ticket reference here*
+closes _Add ticket reference here_
 
 # Self Check:
 

@@ -1,7 +1,6 @@
 import { Route } from "@/Core";
 
-export const path =
-  "/lsm/catalog/:service/inventory/:instance/:instanceId/details";
+export const path = "/lsm/catalog/:service/inventory/:instance/:instanceId/details";
 
 export const route = (base: string): Route<"InstanceDetails"> => ({
   kind: "InstanceDetails",

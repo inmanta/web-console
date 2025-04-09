@@ -92,12 +92,10 @@ describe("dictToDisplay - event handler that accepts dictionary value to display
       document.dispatchEvent(
         new CustomEvent("openDictsModal", {
           detail: JSON.stringify({ test: "value" }),
-        }),
+        })
       );
     });
-    expect(screen.getByTestId("dictToDisplay")).toHaveTextContent(
-      '{"test":"value"}',
-    );
+    expect(screen.getByTestId("dictToDisplay")).toHaveTextContent('{"test":"value"}');
   });
 });
 
@@ -116,7 +114,7 @@ describe("cellToEdit - event handler that receives cell object from the canvas t
             <EventWrapper>{children}</EventWrapper>
           </CanvasProvider>
         ),
-      },
+      }
     );
 
     expect(result.current).toBeNull();
@@ -144,8 +142,7 @@ describe("cellToEdit - event handler that receives cell object from the canvas t
 
 describe("updateServiceOrderItems - event handler that keeps track of the elements of the instance that should be converted to the complete instance at the deploy", () => {
   const InstancesComponent = (): JSX.Element => {
-    const { serviceOrderItems, setServiceOrderItems } =
-      useContext(CanvasContext);
+    const { serviceOrderItems, setServiceOrderItems } = useContext(CanvasContext);
 
     useEffect(() => {
       const testInstances = new Map();
@@ -183,9 +180,7 @@ describe("updateServiceOrderItems - event handler that keeps track of the elemen
     expect(screen.getByTestId("instancesIds")).toHaveTextContent('["1","2"]');
 
     await act(async () => {
-      const cell = new ServiceEntityBlock()
-        .set("sanitizedAttrs", "value3")
-        .set("id", "3");
+      const cell = new ServiceEntityBlock().set("sanitizedAttrs", "value3").set("id", "3");
 
       dispatchUpdateServiceOrderItems(cell, ActionEnum.UPDATE);
     });
@@ -199,16 +194,12 @@ describe("updateServiceOrderItems - event handler that keeps track of the elemen
     expect(screen.getByTestId("instancesIds")).toHaveTextContent('["1","2"]');
 
     await act(async () => {
-      const cell = new ServiceEntityBlock()
-        .set("sanitizedAttrs", "value3")
-        .set("id", "3");
+      const cell = new ServiceEntityBlock().set("sanitizedAttrs", "value3").set("id", "3");
 
       dispatchUpdateServiceOrderItems(cell, ActionEnum.CREATE);
     });
 
-    expect(screen.getByTestId("instancesIds")).toHaveTextContent(
-      '["1","2","3"]',
-    );
+    expect(screen.getByTestId("instancesIds")).toHaveTextContent('["1","2","3"]');
     expect(screen.getByTestId("3")).toHaveTextContent("value3");
   });
 
@@ -218,9 +209,7 @@ describe("updateServiceOrderItems - event handler that keeps track of the elemen
     expect(screen.getByTestId("2")).toHaveTextContent("value2");
 
     await act(async () => {
-      const cell = new ServiceEntityBlock()
-        .set("sanitizedAttrs", "updatedValue2")
-        .set("id", "2");
+      const cell = new ServiceEntityBlock().set("sanitizedAttrs", "updatedValue2").set("id", "2");
 
       dispatchUpdateServiceOrderItems(cell, ActionEnum.UPDATE);
     });
@@ -253,10 +242,7 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
         {Object.keys(stencilState).map((key) => (
           <div data-testid={key} key={`${key}-stencil_mock`}>
             <div data-testid={`body_${key}`} aria-labelledby={`body_${key}`} />
-            <div
-              data-testid={`bodyTwo_${key}`}
-              aria-labelledby={`bodyTwo_${key}`}
-            />
+            <div data-testid={`bodyTwo_${key}`} aria-labelledby={`bodyTwo_${key}`} />
             <div data-testid={`text_${key}`} aria-labelledby={`text_${key}`} />
           </div>
         ))}
@@ -310,69 +296,39 @@ describe("updateStencil - eventHandler that updates how many elements(embedded/i
   it("updateStencil Event handler correctly apply classNames to the elements in the DOM", async () => {
     render(setup(<TestingComponent />));
 
-    expect(screen.getByTestId("body_test")).not.toHaveClass(
-      "stencil_accent-disabled",
-    );
-    expect(screen.getByTestId("bodyTwo_test")).not.toHaveClass(
-      "stencil_body-disabled",
-    );
-    expect(screen.getByTestId("text_test")).not.toHaveClass(
-      "stencil_text-disabled",
-    );
-    expect(screen.getByTestId("body_test2")).not.toHaveClass(
-      "stencil_accent-disabled",
-    );
-    expect(screen.getByTestId("bodyTwo_test2")).not.toHaveClass(
-      "stencil_body-disabled",
-    );
-    expect(screen.getByTestId("text_test2")).not.toHaveClass(
-      "stencil_text-disabled",
-    );
+    expect(screen.getByTestId("body_test")).not.toHaveClass("stencil_accent-disabled");
+    expect(screen.getByTestId("bodyTwo_test")).not.toHaveClass("stencil_body-disabled");
+    expect(screen.getByTestId("text_test")).not.toHaveClass("stencil_text-disabled");
+    expect(screen.getByTestId("body_test2")).not.toHaveClass("stencil_accent-disabled");
+    expect(screen.getByTestId("bodyTwo_test2")).not.toHaveClass("stencil_body-disabled");
+    expect(screen.getByTestId("text_test2")).not.toHaveClass("stencil_text-disabled");
 
     await act(async () => {
       dispatchUpdateStencil("test", EventActionEnum.ADD);
     });
 
     //expect disabled classes as test got current increased to max value
-    expect(screen.getByTestId("body_test")).toHaveClass(
-      "stencil_accent-disabled",
-    );
-    expect(screen.getByTestId("bodyTwo_test")).toHaveClass(
-      "stencil_body-disabled",
-    );
-    expect(screen.getByTestId("text_test")).toHaveClass(
-      "stencil_text-disabled",
-    );
+    expect(screen.getByTestId("body_test")).toHaveClass("stencil_accent-disabled");
+    expect(screen.getByTestId("bodyTwo_test")).toHaveClass("stencil_body-disabled");
+    expect(screen.getByTestId("text_test")).toHaveClass("stencil_text-disabled");
 
     await act(async () => {
       dispatchUpdateStencil("test2", EventActionEnum.ADD);
     });
 
     //expect no disabled classes as test2 doesn't have max set
-    expect(screen.getByTestId("body_test2")).not.toHaveClass(
-      "stencil_accent-disabled",
-    );
-    expect(screen.getByTestId("bodyTwo_test2")).not.toHaveClass(
-      "stencil_body-disabled",
-    );
-    expect(screen.getByTestId("text_test2")).not.toHaveClass(
-      "stencil_text-disabled",
-    );
+    expect(screen.getByTestId("body_test2")).not.toHaveClass("stencil_accent-disabled");
+    expect(screen.getByTestId("bodyTwo_test2")).not.toHaveClass("stencil_body-disabled");
+    expect(screen.getByTestId("text_test2")).not.toHaveClass("stencil_text-disabled");
 
     await act(async () => {
       dispatchUpdateStencil("test", EventActionEnum.REMOVE);
     });
 
     //expect no disabled classes as test got current decreased to 0, below max value
-    expect(screen.getByTestId("body_test")).not.toHaveClass(
-      "stencil_accent-disabled",
-    );
-    expect(screen.getByTestId("bodyTwo_test")).not.toHaveClass(
-      "stencil_body-disabled",
-    );
-    expect(screen.getByTestId("text_test")).not.toHaveClass(
-      "stencil_text-disabled",
-    );
+    expect(screen.getByTestId("body_test")).not.toHaveClass("stencil_accent-disabled");
+    expect(screen.getByTestId("bodyTwo_test")).not.toHaveClass("stencil_body-disabled");
+    expect(screen.getByTestId("text_test")).not.toHaveClass("stencil_text-disabled");
   });
 });
 
@@ -390,7 +346,7 @@ describe("addInterServiceRelationToTracker - eventHandler that adds to the Map i
             <EventWrapper>{children}</EventWrapper>
           </CanvasProvider>
         ),
-      },
+      }
     );
 
     expect(result.current).toStrictEqual(new Map());
@@ -405,7 +361,7 @@ describe("addInterServiceRelationToTracker - eventHandler that adds to the Map i
       new Map().set("1", {
         name: "test",
         relations: [{ currentAmount: 0, min: 1, name: "test2" }],
-      }),
+      })
     );
   });
 });
@@ -414,17 +370,15 @@ describe("removeInterServiceRelationFromTracker - event handler that removes int
   it("removes successfully the interServiceRationTracker from the Map", async () => {
     const { result } = renderHook(
       () => {
-        const {
-          interServiceRelationsOnCanvas,
-          setInterServiceRelationsOnCanvas,
-        } = useContext(CanvasContext);
+        const { interServiceRelationsOnCanvas, setInterServiceRelationsOnCanvas } =
+          useContext(CanvasContext);
 
         useEffect(() => {
           setInterServiceRelationsOnCanvas(
             new Map().set("1", {
               name: "test",
               relations: [{ currentAmount: 0, min: 1, name: "test2" }],
-            }),
+            })
           );
         }, [setInterServiceRelationsOnCanvas]);
 
@@ -436,14 +390,14 @@ describe("removeInterServiceRelationFromTracker - event handler that removes int
             <EventWrapper>{children}</EventWrapper>
           </CanvasProvider>
         ),
-      },
+      }
     );
 
     expect(result.current).toStrictEqual(
       new Map().set("1", {
         name: "test",
         relations: [{ currentAmount: 0, min: 1, name: "test2" }],
-      }),
+      })
     );
 
     await act(async () => {
@@ -458,17 +412,15 @@ describe("updateInterServiceRelations", () => {
   it("updates successfully the interServiceRationTracker in the Map", async () => {
     const { result } = renderHook(
       () => {
-        const {
-          interServiceRelationsOnCanvas,
-          setInterServiceRelationsOnCanvas,
-        } = useContext(CanvasContext);
+        const { interServiceRelationsOnCanvas, setInterServiceRelationsOnCanvas } =
+          useContext(CanvasContext);
 
         useEffect(() => {
           setInterServiceRelationsOnCanvas(
             new Map().set("1", {
               name: "test",
               relations: [{ currentAmount: 0, min: 1, name: "test2" }],
-            }),
+            })
           );
         }, [setInterServiceRelationsOnCanvas]);
 
@@ -480,7 +432,7 @@ describe("updateInterServiceRelations", () => {
             <EventWrapper>{children}</EventWrapper>
           </CanvasProvider>
         ),
-      },
+      }
     );
 
     const name = "test2";
@@ -494,7 +446,7 @@ describe("updateInterServiceRelations", () => {
       new Map().set("1", {
         name: "test",
         relations: [{ currentAmount: 1, min: 1, name: "test2" }],
-      }),
+      })
     );
 
     await act(async () => {
@@ -505,7 +457,7 @@ describe("updateInterServiceRelations", () => {
       new Map().set("1", {
         name: "test",
         relations: [{ currentAmount: 0, min: 1, name: "test2" }],
-      }),
+      })
     );
   });
 });

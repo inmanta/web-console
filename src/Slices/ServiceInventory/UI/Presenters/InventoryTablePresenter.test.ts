@@ -3,8 +3,7 @@ import { InventoryTablePresenter } from "./InventoryTablePresenter";
 
 const tablePresenter = () => new InventoryTablePresenter();
 
-const tablePresenterWithIdentity = () =>
-  new InventoryTablePresenter("service_id", "Service ID");
+const tablePresenterWithIdentity = () => new InventoryTablePresenter("service_id", "Service ID");
 
 const presenter = new InventoryTablePresenter();
 const rows = presenter.createRows([ServiceInstance.a], Service.a);
@@ -47,9 +46,7 @@ describe("TablePresenter with identity ", () => {
     ]);
   });
   test("converts column index to name correctly", () => {
-    expect(presenterWithIdentity.getColumnNameForIndex(0)).toEqual(
-      "service_id",
-    );
+    expect(presenterWithIdentity.getColumnNameForIndex(0)).toEqual("service_id");
     expect(presenterWithIdentity.getColumnNameForIndex(1)).toEqual("state");
     expect(presenterWithIdentity.getColumnNameForIndex(-1)).toBeUndefined();
     expect(presenterWithIdentity.getColumnNameForIndex(10)).toBeUndefined();
@@ -57,9 +54,7 @@ describe("TablePresenter with identity ", () => {
 
   test("converts column name to index correctly", () => {
     expect(presenterWithIdentity.getIndexForColumnName("id")).toEqual(-1);
-    expect(presenterWithIdentity.getIndexForColumnName("service_id")).toEqual(
-      0,
-    );
+    expect(presenterWithIdentity.getIndexForColumnName("service_id")).toEqual(0);
     expect(presenterWithIdentity.getIndexForColumnName("state")).toEqual(1);
     expect(presenterWithIdentity.getIndexForColumnName("history")).toEqual(-1);
     expect(presenterWithIdentity.getIndexForColumnName(undefined)).toEqual(-1);
@@ -67,10 +62,7 @@ describe("TablePresenter with identity ", () => {
 });
 
 describe("TablePresenter with Actions", () => {
-  const presenterWithActions = new InventoryTablePresenter(
-    "service_id",
-    "Service ID",
-  );
+  const presenterWithActions = new InventoryTablePresenter("service_id", "Service ID");
 
   test("TablePresenter converts column name to index correctly", () => {
     expect(presenterWithActions.getIndexForColumnName("id")).toEqual(-1);

@@ -1,8 +1,4 @@
-import {
-  UseMutationResult,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDelete } from "../../helpers";
 
 /**
@@ -10,12 +6,7 @@ import { useDelete } from "../../helpers";
  *
  * @returns {Mutation} - The mutation object provided by `useMutation` hook.
  */
-export const useDeleteDesiredStateVersion = (): UseMutationResult<
-  void,
-  Error,
-  string,
-  unknown
-> => {
+export const useDeleteDesiredStateVersion = (): UseMutationResult<void, Error, string, unknown> => {
   const client = useQueryClient();
   const deleteFn = useDelete();
 

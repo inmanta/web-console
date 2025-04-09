@@ -27,8 +27,7 @@ export const from = (value: string): PageSize => {
 
 export const initial = from("20");
 
-export const equals = (a: PageSize, b: PageSize): boolean =>
-  a.value === b.value;
+export const equals = (a: PageSize, b: PageSize): boolean => a.value === b.value;
 
 export const serialize = (pageSize: PageSize): string => pageSize.value;
 

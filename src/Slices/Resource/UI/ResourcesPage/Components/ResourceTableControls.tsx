@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Toolbar,
-  ToolbarItem,
-  ToolbarContent,
-  Button,
-} from "@patternfly/react-core";
+import { Toolbar, ToolbarItem, ToolbarContent, Button } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { FilterForm } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -40,12 +35,7 @@ export const ResourceTableControls: React.FC<Props> = ({
         </ToolbarItem>
         <FilterForm filter={filter} setFilter={setFilter} />
         <ToolbarItem>
-          <Button
-            variant="link"
-            isInline
-            onClick={() => setFilter({})}
-            aria-label="Reset-filters"
-          >
+          <Button variant="link" isInline onClick={() => setFilter({})} aria-label="Reset-filters">
             {words("resources.filters.reset")}
           </Button>
         </ToolbarItem>

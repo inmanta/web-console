@@ -9,7 +9,7 @@ export const useUrlState = provide(handleUrlState);
 export function handleUrlState<Data>(
   config: StateConfig<Data>,
   location: Location,
-  replace: Replace,
+  replace: Replace
 ): [Data, Update<Data>] {
   const parsedSearch = searchHelper.parse(location.search);
   const state = getKeyOrEmpty(parsedSearch, "state");
@@ -17,12 +17,9 @@ export function handleUrlState<Data>(
   const candidateValue = routeState[config.key];
 
   const parsedValue =
-    typeof candidateValue !== "undefined"
-      ? config.parse(candidateValue)
-      : candidateValue;
+    typeof candidateValue !== "undefined" ? config.parse(candidateValue) : candidateValue;
 
-  const currentValue =
-    typeof parsedValue !== "undefined" ? parsedValue : config.default;
+  const currentValue = typeof parsedValue !== "undefined" ? parsedValue : config.default;
 
   const areEqual = (a: Data, b: Data): boolean => config.equals(a, b);
 
@@ -31,6 +28,7 @@ export function handleUrlState<Data>(
 
   const setValue = (newValue: Data) => {
     if (areEqual(newValue, currentValue)) return;
+
     const serialized = getSerializedValue(newValue);
     const newSearch = searchHelper.stringify({
       ...parsedSearch,

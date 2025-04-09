@@ -1,9 +1,6 @@
 import { ColumnHead, DatePresenter, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
-import {
-  ResourceHistory,
-  ResourceHistoryRow,
-} from "@S/ResourceDetails/Core/ResourceHistory";
+import { ResourceHistory, ResourceHistoryRow } from "@S/ResourceDetails/Core/ResourceHistory";
 
 export class ResourceHistoryTablePresenter
   implements TablePresenter<ResourceHistory, ResourceHistoryRow>
@@ -52,9 +49,7 @@ export class ResourceHistoryTablePresenter
   }
 
   public getIndexForColumnName(columnName?: string): number {
-    return this.columnHeads.findIndex(
-      (columnHead) => columnHead.apiName === columnName,
-    );
+    return this.columnHeads.findIndex((columnHead) => columnHead.apiName === columnName);
   }
 
   public getSortableColumnNames(): string[] {

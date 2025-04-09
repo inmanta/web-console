@@ -55,5 +55,4 @@ export const defaultAuthContext: AuthContextInterface = {
 /**
  * The authentication context.
  */
-export const AuthContext =
-  createContext<AuthContextInterface>(defaultAuthContext);
+export const AuthContext = createContext<AuthContextInterface>(defaultAuthContext);

@@ -54,8 +54,7 @@ const a: EmbeddedEntity = {
         },
         {
           name: "outer_vlan",
-          description:
-            "The outer VLAN that is used at the IPX access for this service.",
+          description: "The outer VLAN that is used at the IPX access for this service.",
           modifier: "rw",
           type: "int",
           default_value: null,
@@ -185,8 +184,7 @@ const a: EmbeddedEntity = {
       inter_service_relations: [],
       name: "customer_endpoint",
       type: "customer_endpoint",
-      description:
-        "Attributes for customer endpoint which are provided through the NB API",
+      description: "Attributes for customer endpoint which are provided through the NB API",
       modifier: "rw",
       lower_limit: 1,
       upper_limit: 1,
@@ -206,8 +204,7 @@ const a: EmbeddedEntity = {
         },
         {
           name: "cloud_service_provider",
-          description:
-            "The CSP to connect to. Valid values are: Google, AWS, Azure_ECX, null.",
+          description: "The CSP to connect to. Valid values are: Google, AWS, Azure_ECX, null.",
           modifier: "rw",
           type: "string",
           default_value: null,
@@ -282,8 +279,7 @@ const a: EmbeddedEntity = {
             },
             {
               name: "outer_vlan",
-              description:
-                "The outer VLAN that is used at the IPX access for this service.",
+              description: "The outer VLAN that is used at the IPX access for this service.",
               modifier: "rw",
               type: "int?",
               default_value: null,
@@ -395,8 +391,7 @@ const a: EmbeddedEntity = {
       inter_service_relations: [],
       name: "csp_endpoint",
       type: "csp_endpoint",
-      description:
-        "Attributes for CSP endpoint which are provided through the NB API",
+      description: "Attributes for CSP endpoint which are provided through the NB API",
       modifier: "rw",
       lower_limit: 1,
       upper_limit: 1,

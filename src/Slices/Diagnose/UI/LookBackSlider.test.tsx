@@ -7,23 +7,17 @@ it("LookBackSlider calls callback with adequate value on apply", async () => {
   const callback = jest.fn();
 
   render(
-    <LookBackSlider
-      instanceVersion={5}
-      initialLookBehind={1}
-      setSelectedVersion={callback}
-    />,
+    <LookBackSlider instanceVersion={5} initialLookBehind={1} setSelectedVersion={callback} />
   );
 
   expect(
-    screen.getByText(
-      "The number of lifecycle versions to look back when diagnosing failures.",
-    ),
+    screen.getByText("The number of lifecycle versions to look back when diagnosing failures.")
   ).toBeInTheDocument();
 
   expect(
     screen.getByText(
-      "The slider determines how many lifecycle versions to look back when diagnosing failures.",
-    ),
+      "The slider determines how many lifecycle versions to look back when diagnosing failures."
+    )
   ).toBeInTheDocument();
 
   expect(screen.getByLabelText("LookBack-Slider")).toBeInTheDocument();
@@ -44,7 +38,7 @@ it("LookBackSlider calls callback with adequate value on apply", async () => {
   // test input change
   await userEvent.type(
     screen.getByLabelText("Slider value input"),
-    "{selectall}{backspace}4{enter}",
+    "{selectall}{backspace}4{enter}"
   );
 
   expect(screen.getByLabelText("Slider value input")).toHaveValue(4);
@@ -57,7 +51,7 @@ it("LookBackSlider calls callback with adequate value on apply", async () => {
   //test passing value below min to the input
   await userEvent.type(
     screen.getByLabelText("Slider value input"),
-    "{selectall}{backspace}0{enter}",
+    "{selectall}{backspace}0{enter}"
   );
   expect(screen.getByLabelText("Slider value input")).toHaveValue(1);
   expect(screen.getByLabelText("Value")).toHaveValue(1);
@@ -69,7 +63,7 @@ it("LookBackSlider calls callback with adequate value on apply", async () => {
   //test passing value above max to the input
   await userEvent.type(
     screen.getByLabelText("Slider value input"),
-    "{selectall}{backspace}5{enter}",
+    "{selectall}{backspace}5{enter}"
   );
   expect(screen.getByLabelText("Slider value input")).toHaveValue(4);
   expect(screen.getByLabelText("Value")).toHaveValue(4);

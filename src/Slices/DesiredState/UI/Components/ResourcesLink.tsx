@@ -18,9 +18,7 @@ export const ResourcesLink: React.FC<Props> = ({ version }) => {
         version: version.toString(),
       })}
     >
-      <Button variant="link">
-        {words("desiredState.actions.showResources")}
-      </Button>
+      <Button variant="link">{words("desiredState.actions.showResources")}</Button>
     </Link>
   );
 };

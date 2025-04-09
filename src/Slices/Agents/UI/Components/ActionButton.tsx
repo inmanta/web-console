@@ -11,10 +11,8 @@ interface Props {
 }
 
 export const ActionButton: React.FC<Props> = ({ name, paused }) => {
-  const { commandResolver, environmentModifier } =
-    useContext(DependencyContext);
-  const { filter, sort, pageSize, currentPage, setErrorMessage } =
-    useContext(GetAgentsContext);
+  const { commandResolver, environmentModifier } = useContext(DependencyContext);
+  const { filter, sort, pageSize, currentPage, setErrorMessage } = useContext(GetAgentsContext);
   const agentActionTrigger = commandResolver.useGetTrigger<"ControlAgent">({
     kind: "ControlAgent",
     name,
@@ -48,9 +46,7 @@ export const ActionButton: React.FC<Props> = ({ name, paused }) => {
         size="sm"
         onClick={onSubmit}
       >
-        {paused
-          ? words("agents.actions.unpause")
-          : words("agents.actions.pause")}
+        {paused ? words("agents.actions.unpause") : words("agents.actions.pause")}
       </Button>
     </ActionDisabledTooltip>
   );

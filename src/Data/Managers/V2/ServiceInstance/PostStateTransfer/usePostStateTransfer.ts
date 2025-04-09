@@ -29,17 +29,14 @@ interface StateTransferResponse {
 export const usePostStateTransfer = (
   instance_id: string,
   service_entity: string,
-  options?: UseMutationOptions<StateTransferResponse, Error, PostStateTransfer>,
+  options?: UseMutationOptions<StateTransferResponse, Error, PostStateTransfer>
 ): UseMutationResult<StateTransferResponse, Error, PostStateTransfer> => {
   const client = useQueryClient();
   const post = usePost()<PostStateTransfer>;
 
   return useMutation({
     mutationFn: (body) =>
-      post(
-        `/lsm/v1/service_inventory/${service_entity}/${instance_id}/state`,
-        body,
-      ),
+      post(`/lsm/v1/service_inventory/${service_entity}/${instance_id}/state`, body),
     mutationKey: ["post_state_transfer"],
     onSuccess: () => {
       client.invalidateQueries({

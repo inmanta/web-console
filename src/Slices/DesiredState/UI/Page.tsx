@@ -3,10 +3,7 @@ import { ParsedNumber, RemoteData } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
-import {
-  useDeleteDesiredStateVersion,
-  useGetDesiredStates,
-} from "@/Data/Managers/V2/DesiredState";
+import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Managers/V2/DesiredState";
 import {
   ToastAlert,
   PageContainer,
@@ -58,8 +55,11 @@ export const Page: React.FC = () => {
     kind: "None",
   });
 
-  const { data, refetch, isError, error, isSuccess } =
-    useGetDesiredStates().useContinuous(pageSize, filter, currentPage);
+  const { data, refetch, isError, error, isSuccess } = useGetDesiredStates().useContinuous(
+    pageSize,
+    filter,
+    currentPage
+  );
 
   /**
    * function that will open a modal to confirm action to delete a version
@@ -105,9 +105,7 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     const handlers =
-      typeof data.links === "undefined"
-        ? {}
-        : getPaginationHandlers(data.links, data.metadata);
+      typeof data.links === "undefined" ? {} : getPaginationHandlers(data.links, data.metadata);
 
     return (
       <PageContainer pageTitle={words("desiredState.title")}>
@@ -149,10 +147,7 @@ export const Page: React.FC = () => {
               aria-label="DesiredStatesView-Empty"
             />
           ) : (
-            <DesiredStatesTable
-              rows={data.data}
-              aria-label="DesiredStatesView-Success"
-            />
+            <DesiredStatesTable rows={data.data} aria-label="DesiredStatesView-Success" />
           )}
         </GetDesiredStatesContext.Provider>
       </PageContainer>

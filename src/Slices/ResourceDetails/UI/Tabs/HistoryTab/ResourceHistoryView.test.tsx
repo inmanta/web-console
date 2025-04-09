@@ -28,17 +28,9 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([
-      ResourceHistoryQueryManager(
-        apiHelper,
-        ResourceHistoryStateHelper(store),
-        scheduler,
-      ),
-      ResourceDetailsQueryManager(
-        apiHelper,
-        ResourceDetailsStateHelper(store),
-        scheduler,
-      ),
-    ]),
+      ResourceHistoryQueryManager(apiHelper, ResourceHistoryStateHelper(store), scheduler),
+      ResourceDetailsQueryManager(apiHelper, ResourceDetailsStateHelper(store), scheduler),
+    ])
   );
 
   const component = (
@@ -50,10 +42,7 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <ResourceHistoryView
-            resourceId={Resource.id}
-            details={RemoteData.notAsked()}
-          />
+          <ResourceHistoryView resourceId={Resource.id} details={RemoteData.notAsked()} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -68,7 +57,7 @@ test("ResourceHistoryView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "ResourceHistory-Loading" }),
+    await screen.findByRole("region", { name: "ResourceHistory-Loading" })
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -76,12 +65,10 @@ test("ResourceHistoryView shows empty table", async () => {
       data: [],
       metadata: { total: 0, before: 0, after: 0, page_size: 10 },
       links: { self: "" },
-    }),
+    })
   );
 
-  expect(
-    await screen.findByRole("generic", { name: "ResourceHistory-Empty" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("generic", { name: "ResourceHistory-Empty" })).toBeInTheDocument();
 });
 
 test("ResourceHistoryView shows failed table", async () => {
@@ -90,14 +77,12 @@ test("ResourceHistoryView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "ResourceHistory-Loading" }),
+    await screen.findByRole("region", { name: "ResourceHistory-Loading" })
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
-  expect(
-    await screen.findByRole("region", { name: "ResourceHistory-Failed" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "ResourceHistory-Failed" })).toBeInTheDocument();
 });
 
 test("ResourceHistoryView shows success table", async () => {
@@ -106,7 +91,7 @@ test("ResourceHistoryView shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "ResourceHistory-Loading" }),
+    await screen.findByRole("region", { name: "ResourceHistory-Loading" })
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -118,9 +103,7 @@ test("ResourceHistoryView shows success table", async () => {
 
   apiHelper.resolve(Either.right(ResourceHistory.response));
 
-  expect(
-    await screen.findByRole("grid", { name: "ResourceHistory-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("grid", { name: "ResourceHistory-Success" })).toBeInTheDocument();
 });
 
 test("ResourceHistoryView shows sorting buttons for sortable columns", async () => {
@@ -156,9 +139,7 @@ test("GIVEN The ResourceHistoryView WHEN the user clicks on the expansion toggle
 
   await userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
 
-  expect(
-    screen.getAllByRole("tab", { name: "Desired State" })[0],
-  ).toBeVisible();
+  expect(screen.getAllByRole("tab", { name: "Desired State" })[0]).toBeVisible();
   expect(screen.getAllByRole("tab", { name: "Requires" })[0]).toBeVisible();
 });
 
@@ -182,7 +163,7 @@ test("GIVEN The ResourceHistoryView WHEN sorting changes AND we are not on the f
           ...ResourceHistory.response.links,
           next: "/fake-link?end=fake-first-param",
         },
-      }),
+      })
     );
   });
 
@@ -206,7 +187,7 @@ test("GIVEN The ResourceHistoryView WHEN sorting changes AND we are not on the f
           after: 0,
           page_size: 100,
         },
-      }),
+      })
     );
   });
 

@@ -71,9 +71,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
     if (!logsQuery.data) {
       return (
         <TabContentWrapper id="documentation">
-          <ErrorView
-            message={words("instanceDetails.tabs.documentation.noData")}
-          />
+          <ErrorView message={words("instanceDetails.tabs.documentation.noData")} />
         </TabContentWrapper>
       );
     }
@@ -149,17 +147,12 @@ export const DocumentationTabContent: React.FC<Props> = ({
               <DynamicFAIcon icon={section.iconName} /> {section.title}
             </AccordionToggle>
             <AccordionContent id={`${section.title}-accordion-toggle`}>
-              <MarkdownCard
-                attributeValue={section.value}
-                web_title={section.title}
-              />
+              <MarkdownCard attributeValue={section.value} web_title={section.title} />
             </AccordionContent>
           </AccordionItem>
         ))}
         {sections.length === 0 && (
-          <ErrorView
-            message={words("instanceDetails.tabs.documentation.noData")}
-          />
+          <ErrorView message={words("instanceDetails.tabs.documentation.noData")} />
         )}
       </Accordion>
     </TabContentWrapper>
@@ -179,7 +172,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
  */
 const getDocumentationSections = (
   docAttributeDescriptors: DocAttributeDescriptors[],
-  attributeSet: InstanceAttributeModel,
+  attributeSet: InstanceAttributeModel
 ): MarkdownAttributes[] => {
   return docAttributeDescriptors.map(({ title, iconName, attributeName }) => {
     return {
@@ -187,9 +180,7 @@ const getDocumentationSections = (
       iconName: iconName,
       value:
         attributeSet[attributeName] ||
-        words("instanceDetails.documentation.noAttributeForVersion")(
-          attributeName,
-        ),
+        words("instanceDetails.documentation.noAttributeForVersion")(attributeName),
     };
   });
 };
@@ -205,10 +196,10 @@ const getDocumentationSections = (
  */
 const getSelectedAttributeSet = (
   logs: InstanceLog[],
-  version: string,
+  version: string
 ): InstanceAttributeModel | void => {
   const selectedLog: InstanceLog | undefined = logs.find(
-    (log: InstanceLog) => String(log.version) === version,
+    (log: InstanceLog) => String(log.version) === version
   );
 
   if (!selectedLog) return; // Return void if no matching log is found
@@ -236,7 +227,7 @@ const getSelectedAttributeSet = (
  * @returns {InstanceAttributeModel | void}
  */
 const getSelectedAttributeSetFromInstance = (
-  instance: ServiceInstanceModel,
+  instance: ServiceInstanceModel
 ): InstanceAttributeModel | void => {
   if (instance.candidate_attributes) {
     return instance.candidate_attributes;

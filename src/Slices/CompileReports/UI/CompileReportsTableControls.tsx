@@ -18,10 +18,7 @@ export const CompileReportsTableControls: React.FC<Props> = ({
   afterRecompile,
 }) => {
   return (
-    <Toolbar
-      clearAllFilters={() => setFilter({})}
-      collapseListedFiltersBreakpoint="xl"
-    >
+    <Toolbar clearAllFilters={() => setFilter({})} collapseListedFiltersBreakpoint="xl">
       <ToolbarContent>
         <CompileReportsFilterWidget filter={filter} setFilter={setFilter} />
         <ToolbarItem variant="separator" />

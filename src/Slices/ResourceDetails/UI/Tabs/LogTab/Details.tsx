@@ -27,10 +27,7 @@ export const Details: React.FC<Props> = ({ log }) => {
         <DescriptionListGroup>
           <DescriptionListTerm>Kwargs</DescriptionListTerm>
           <DescriptionListDescription>
-            <AttributeList
-              attributes={classifier.classify(log.kwargs)}
-              variant="monospace"
-            />
+            <AttributeList attributes={classifier.classify(log.kwargs)} variant="monospace" />
           </DescriptionListDescription>
         </DescriptionListGroup>
       )}
@@ -41,5 +38,5 @@ export const Details: React.FC<Props> = ({ log }) => {
 const classifier = new AttributeClassifier(
   new JsonFormatter(),
   new XmlFormatter(),
-  (key: string, value: string) => Maybe.some({ kind: "Python", key, value }),
+  (key: string, value: string) => Maybe.some({ kind: "Python", key, value })
 );

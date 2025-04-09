@@ -10,10 +10,7 @@ interface Props {
   updateFilter: (updater: (filter: Resource.Filter) => Resource.Filter) => void;
 }
 
-export const ResourceStatusBar: React.FC<Props> = ({
-  summary,
-  updateFilter,
-}) => {
+export const ResourceStatusBar: React.FC<Props> = ({ summary, updateFilter }) => {
   const done = getResourcesInDoneState(summary.by_state || {});
 
   const onClick = (ids: Resource.Status[]) =>
@@ -38,9 +35,7 @@ export const ResourceStatusBar: React.FC<Props> = ({
   );
 };
 
-function getResourcesInDoneState(
-  by_state: Record<string, ParsedNumber>,
-): number {
+function getResourcesInDoneState(by_state: Record<string, ParsedNumber>): number {
   return Object.entries(by_state)
     .filter(([key]) => !Resource.TRANSIENT_STATES.includes(key))
     .map(([, value]) => Number(value))
@@ -49,7 +44,7 @@ function getResourcesInDoneState(
 
 export function infoToLegendItem(
   info: InfoWithTotal,
-  onClick: (ids: Resource.Status[]) => void,
+  onClick: (ids: Resource.Status[]) => void
 ): LegendItemDetails {
   return {
     id: info.keys[0],
@@ -60,10 +55,7 @@ export function infoToLegendItem(
   };
 }
 
-function addTotal(
-  info: Info,
-  byState: Record<string, ParsedNumber>,
-): InfoWithTotal {
+function addTotal(info: Info, byState: Record<string, ParsedNumber>): InfoWithTotal {
   return {
     ...info,
     total: info.keys
@@ -83,11 +75,7 @@ export interface InfoWithTotal extends Info {
 
 const groups: Array<Array<Resource.Status>> = [
   [Resource.Status.deployed],
-  [
-    Resource.Status.skipped,
-    Resource.Status.skipped_for_undefined,
-    Resource.Status.cancelled,
-  ],
+  [Resource.Status.skipped, Resource.Status.skipped_for_undefined, Resource.Status.cancelled],
   [Resource.Status.failed],
   [Resource.Status.unavailable, Resource.Status.undefined],
   [Resource.Status.deploying],

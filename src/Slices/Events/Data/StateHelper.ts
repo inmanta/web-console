@@ -10,6 +10,6 @@ export function EventsStateHelper(store: Store) {
 
       store.dispatch.events.setData({ id, value });
     },
-    (state, { id }) => state.events.byId[id],
+    (state, { id }) => state.events.byId[id]
   );
 }

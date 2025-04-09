@@ -15,9 +15,7 @@ export const DiffView: React.FC<Diff.Values> = ({ from, to }) => (
         padding: "0 4px",
       },
     }}
-    compareMethod={
-      isMultiLine(from) || isMultiLine(to) ? DiffMethod.WORDS : DiffMethod.CHARS
-    }
+    compareMethod={isMultiLine(from) || isMultiLine(to) ? DiffMethod.WORDS : DiffMethod.CHARS}
     oldValue={from}
     newValue={to}
     hideLineNumbers={true}

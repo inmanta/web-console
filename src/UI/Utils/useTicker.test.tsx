@@ -1,10 +1,6 @@
 import React, { act } from "react";
 import { render } from "@testing-library/react";
-import {
-  useTickerWithInterval,
-  useTickerWithUnixMs,
-  getDiffFromNow,
-} from "./useTicker";
+import { useTickerWithInterval, useTickerWithUnixMs, getDiffFromNow } from "./useTicker";
 
 jest.useFakeTimers();
 

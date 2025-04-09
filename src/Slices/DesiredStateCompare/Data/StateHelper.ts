@@ -10,7 +10,6 @@ export function GetDesiredStateDiffStateHelper(store: Store) {
 
       store.dispatch.desiredStateDiff.setList({ environment, data });
     },
-    (state, query, environment) =>
-      state.desiredStateDiff.listByEnv[environment],
+    (state, query, environment) => state.desiredStateDiff.listByEnv[environment]
   );
 }

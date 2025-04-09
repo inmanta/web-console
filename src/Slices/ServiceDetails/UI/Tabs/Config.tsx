@@ -15,11 +15,7 @@ export const Config: React.FC<Props> = ({ serviceName }) => {
   if (isError) {
     <Card aria-label="ServiceConfig-Failed" data-testid="ServiceConfig">
       <CardBody>
-        <ErrorView
-          message={error.message}
-          retry={refetch}
-          ariaLabel="ServiceConfig-Error"
-        />
+        <ErrorView message={error.message} retry={refetch} ariaLabel="ServiceConfig-Error" />
       </CardBody>
     </Card>;
   }

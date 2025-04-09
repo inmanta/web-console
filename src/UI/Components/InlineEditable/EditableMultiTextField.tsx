@@ -10,11 +10,7 @@ import {
 } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
 import { convertToTitleCase } from "@/UI/Utils";
-import {
-  CancelEditButton,
-  EnableEditButton,
-  SubmitEditButton,
-} from "./InlineEditButtons";
+import { CancelEditButton, EnableEditButton, SubmitEditButton } from "./InlineEditButtons";
 import { InlineValue } from "./InlineFillers";
 import { InlinePlainAlert } from "./InlinePlainAlert";
 
@@ -22,9 +18,7 @@ interface Props {
   groupName: string;
   initialValues: Record<string, string>;
   initiallyEditable?: boolean;
-  onSubmit: (
-    fieldDescriptors: Record<string, string>,
-  ) => Promise<Maybe.Type<string>>;
+  onSubmit: (fieldDescriptors: Record<string, string>) => Promise<Maybe.Type<string>>;
 }
 
 export const EditableMultiTextField: React.FC<Props> = ({
@@ -46,6 +40,7 @@ export const EditableMultiTextField: React.FC<Props> = ({
   };
   const onKeyDown = (event) => {
     if (event.key && event.key !== "Enter") return;
+
     onSubmitRequest(fieldValues);
   };
   const onEditClick = () => {
@@ -74,21 +69,12 @@ export const EditableMultiTextField: React.FC<Props> = ({
       <DescriptionListTerm>
         {groupName}
         {!editable && (
-          <EnableEditButton
-            onClick={onEditClick}
-            aria-label={`${groupName}-toggle-edit`}
-          />
+          <EnableEditButton onClick={onEditClick} aria-label={`${groupName}-toggle-edit`} />
         )}
         {editable && (
           <>
-            <SubmitEditButton
-              aria-label={`${groupName}-submit-edit`}
-              onClick={onSubmitClick}
-            />
-            <CancelEditButton
-              aria-label={`${groupName}-cancel-edit`}
-              onClick={onCancelEditClick}
-            />
+            <SubmitEditButton aria-label={`${groupName}-submit-edit`} onClick={onSubmitClick} />
+            <CancelEditButton aria-label={`${groupName}-cancel-edit`} onClick={onCancelEditClick} />
           </>
         )}
       </DescriptionListTerm>
@@ -108,11 +94,7 @@ export const EditableMultiTextField: React.FC<Props> = ({
                 {convertToTitleCase(label)}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                {!editable && (
-                  <InlineValue aria-label={`${label}-value`}>
-                    {value}
-                  </InlineValue>
-                )}
+                {!editable && <InlineValue aria-label={`${label}-value`}>{value}</InlineValue>}
                 {editable && (
                   <Flex spaceItems={{ default: "spaceItemsNone" }}>
                     <FlexItem grow={{ default: "grow" }}>

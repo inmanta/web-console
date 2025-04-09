@@ -20,10 +20,7 @@ interface GetInstanceConfig {
  * @returns {UseQueryResult<Config, CustomError>} returns.useOneTime - Fetch the logs with a single query.
  * @returns {UseQueryResult<Config, CustomError>} returns.useContinuous - Fetch the logs with a recursive query with an interval of 5s.
  */
-export const useGetInstanceConfig = (
-  service: string,
-  id: string,
-): GetInstanceConfig => {
+export const useGetInstanceConfig = (service: string, id: string): GetInstanceConfig => {
   const url = `/lsm/v1/service_inventory/${service}/${id}/config`;
   const get = useGet()<{ data: Config }>;
 

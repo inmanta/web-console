@@ -9,9 +9,7 @@ import { ServiceOrder } from "../Core/Query";
  * The presenters contain all the needed data-transformation methods to create a table for the OrderView.
  *
  */
-export class OrdersTablePresenter
-  implements TablePresenter<ServiceOrder, ServiceOrder>
-{
+export class OrdersTablePresenter implements TablePresenter<ServiceOrder, ServiceOrder> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
@@ -117,8 +115,6 @@ export class OrdersTablePresenter
    * @returns number
    */
   getIndexForColumnName(columnName?: string): number {
-    return this.columnHeads.findIndex(
-      (columnHead) => columnHead.apiName === columnName,
-    );
+    return this.columnHeads.findIndex((columnHead) => columnHead.apiName === columnName);
   }
 }

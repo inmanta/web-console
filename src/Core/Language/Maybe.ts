@@ -14,8 +14,7 @@ interface None {
 
 export const none = (): None => ({ kind: "None" });
 
-export const isNone = <Value>(maybe: Maybe<Value>): maybe is None =>
-  maybe.kind === "None";
+export const isNone = <Value>(maybe: Maybe<Value>): maybe is None => maybe.kind === "None";
 
 interface Some<Value> {
   kind: "Some";
@@ -27,10 +26,7 @@ export const some = <Value>(value: Value): Some<Value> => ({
   value,
 });
 
-export const isSome = <Value>(maybe: Maybe<Value>): maybe is Some<Value> =>
-  maybe.kind === "Some";
+export const isSome = <Value>(maybe: Maybe<Value>): maybe is Some<Value> => maybe.kind === "Some";
 
-export const withFallback = <Value>(
-  maybe: Maybe<Value>,
-  fallback: Value,
-): Value => (isNone(maybe) ? fallback : maybe.value);
+export const withFallback = <Value>(maybe: Maybe<Value>, fallback: Value): Value =>
+  isNone(maybe) ? fallback : maybe.value;

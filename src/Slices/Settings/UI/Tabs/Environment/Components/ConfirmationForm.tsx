@@ -65,13 +65,13 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   const onConfirm = async (type: EnvActions): Promise<void> => {
     setIsBusy(true);
     setErrorMessage(null);
-    const error =
-      type === "delete" ? await deleteTrigger() : await clearTrigger();
+    const error = type === "delete" ? await deleteTrigger() : await clearTrigger();
 
     if (Maybe.isNone(error)) {
       if (type === "delete") {
         redirectToHome();
       }
+
       closeModal();
     } else {
       setIsBusy(false);
@@ -83,28 +83,21 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
     <Form
       onSubmit={(event) => {
         event.preventDefault();
+
         if (validated !== "success" || isBusy) return;
+
         onConfirm(type);
       }}
     >
       {errorMessage && (
         <FormAlert>
-          <Alert
-            data-testid="ErrorAlert"
-            variant="danger"
-            title={words("error")}
-            isInline
-          >
+          <Alert data-testid="ErrorAlert" variant="danger" title={words("error")} isInline>
             {errorMessage}
           </Alert>
         </FormAlert>
       )}
       <FormGroup
-        label={
-          <CustomLabel>
-            {words("home.environment.promptInput")(environment.name)}
-          </CustomLabel>
-        }
+        label={<CustomLabel>{words("home.environment.promptInput")(environment.name)}</CustomLabel>}
         type="text"
         fieldId="environmentName"
       >
@@ -132,12 +125,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
           </FlexItem>
 
           <FlexItem>
-            <Button
-              icon={words("cancel")}
-              key="cancel"
-              variant="plain"
-              onClick={closeModal}
-            />
+            <Button icon={words("cancel")} key="cancel" variant="plain" onClick={closeModal} />
           </FlexItem>
         </Flex>
       </ActionGroup>

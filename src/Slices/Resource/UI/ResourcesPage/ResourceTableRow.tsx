@@ -1,11 +1,7 @@
 import React from "react";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import { Resource } from "@/Core";
-import {
-  labelColorConfig,
-  ResourceLink,
-  ResourceStatusLabel,
-} from "@/UI/Components";
+import { labelColorConfig, ResourceLink, ResourceStatusLabel } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { RequiresTableWithData } from "./Components";
 
@@ -52,26 +48,17 @@ export const ResourceTableRow: React.FC<Props> = ({
         {row.numberOfDependencies as React.ReactNode}
       </Td>
       <Td dataLabel={words("resources.column.deployState")}>
-        <ResourceStatusLabel
-          status={labelColorConfig[row.deployState]}
-          label={row.deployState}
-        />
+        <ResourceStatusLabel status={labelColorConfig[row.deployState]} label={row.deployState} />
       </Td>
       <Td isActionCell width={10}>
-        <ResourceLink
-          resourceId={row.id}
-          linkText={words("resources.link.details")}
-        />
+        <ResourceLink resourceId={row.id} linkText={words("resources.link.details")} />
       </Td>
     </Tr>
     {isExpanded && (
       <Tr isExpanded={isExpanded}>
         <Td colSpan={numberOfColumns}>
           <ExpandableRowContent>
-            <RequiresTableWithData
-              id={row.id}
-              deps={row.numberOfDependencies as number}
-            />
+            <RequiresTableWithData id={row.id} deps={row.numberOfDependencies as number} />
           </ExpandableRowContent>
         </Td>
       </Tr>

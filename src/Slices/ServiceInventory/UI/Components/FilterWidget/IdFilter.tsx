@@ -22,6 +22,7 @@ export const IdFilter: React.FC<Props> = ({ id, isVisible, update }) => {
 
   const onIdInput = (event) => {
     if (event.key && event.key !== "Enter") return;
+
     update(idInput);
     setIdInput("");
   };

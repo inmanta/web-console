@@ -1,7 +1,4 @@
-import {
-  ControlAgent,
-  ControlAgentManifest,
-} from "@/Data/Managers/ControlAgent/interface";
+import { ControlAgent, ControlAgentManifest } from "@/Data/Managers/ControlAgent/interface";
 import { Deploy, DeployManifest } from "@/Data/Managers/Deploy/interface";
 import {
   ResetEnvironmentSetting,
@@ -11,10 +8,7 @@ import {
   UpdateEnvironmentSetting,
   UpdateEnvironmentSettingManifest,
 } from "@/Data/Managers/EnvironmentSettings/UpdateEnvironmentSetting/interface";
-import {
-  GenerateToken,
-  GenerateTokenManifest,
-} from "@/Data/Managers/GenerateToken/interface";
+import { GenerateToken, GenerateTokenManifest } from "@/Data/Managers/GenerateToken/interface";
 import {
   HaltEnvironment,
   HaltEnvironmentManifest,
@@ -28,10 +22,7 @@ import {
   ResumeEnvironment,
   ResumeEnvironmentManifest,
 } from "@/Data/Managers/ResumeEnvironment/interface";
-import {
-  TriggerDryRun,
-  TriggerDryRunManifest,
-} from "@/Data/Managers/TriggerDryRun/interface";
+import { TriggerDryRun, TriggerDryRunManifest } from "@/Data/Managers/TriggerDryRun/interface";
 
 import * as CreateEnvironment from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
 import * as CreateProject from "@S/CreateEnvironment/Core/CreateProjectCommand";

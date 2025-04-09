@@ -16,11 +16,7 @@ interface Props {
   items: string[];
 }
 
-export const FilterPicker: React.FC<Props> = ({
-  filterKind,
-  setFilterKind,
-  items,
-}) => {
+export const FilterPicker: React.FC<Props> = ({ filterKind, setFilterKind, items }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSelect = (_event, selection) => {

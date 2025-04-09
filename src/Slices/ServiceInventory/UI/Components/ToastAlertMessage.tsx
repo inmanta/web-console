@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-} from "@patternfly/react-core";
+import { Alert, AlertActionCloseButton, AlertGroup } from "@patternfly/react-core";
 
 interface ToastAlertMessageProps {
   stateErrorMessage: string;

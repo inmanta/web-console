@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  ToolbarFilter,
-  InputGroup,
-  InputGroupItem,
-  SearchInput,
-} from "@patternfly/react-core";
+import { ToolbarFilter, InputGroup, InputGroupItem, SearchInput } from "@patternfly/react-core";
 
 interface Props {
   isHidden?: boolean;
@@ -28,7 +23,9 @@ export const FreeTextFilter: React.FC<Props> = ({
 
   const onTextInput = (event) => {
     if (event.key && event.key !== "Enter") return;
+
     if (textInput.length <= 0) return;
+
     update(searchEntries ? [...searchEntries, textInput] : [textInput]);
     setTextInput("");
   };

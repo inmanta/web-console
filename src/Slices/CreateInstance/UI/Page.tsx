@@ -13,11 +13,7 @@ export const Page: React.FC = () => {
 
   if (isError) {
     <PageContainer pageTitle={words("inventory.createInstance.title")}>
-      <ErrorView
-        message={error.message}
-        retry={refetch}
-        ariaLabel="ServicesProvider-Failed"
-      />
+      <ErrorView message={error.message} retry={refetch} ariaLabel="ServicesProvider-Failed" />
     </PageContainer>;
   }
 

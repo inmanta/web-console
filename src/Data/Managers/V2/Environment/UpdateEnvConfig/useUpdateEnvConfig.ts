@@ -21,15 +21,14 @@ type UpdateValue = { value: string | boolean | ParsedNumber | Dict };
  * @returns {UseMutationResult<void, Error, ConfigUpdate, unknown>}- The mutation object from `useMutation` hook.
  */
 export const useUpdateEnvConfig = (
-  options?: UseMutationOptions<void, Error, ConfigUpdate, unknown>,
+  options?: UseMutationOptions<void, Error, ConfigUpdate, unknown>
 ): UseMutationResult<void, Error, ConfigUpdate, unknown> => {
   const client = useQueryClient();
 
   const post = usePost()<UpdateValue>;
 
   return useMutation({
-    mutationFn: ({ id, updatedValue }) =>
-      post(`/api/v2/environment_settings/${id}`, updatedValue),
+    mutationFn: ({ id, updatedValue }) => post(`/api/v2/environment_settings/${id}`, updatedValue),
     mutationKey: ["update_env_config"],
     onSuccess: () => {
       client.invalidateQueries({

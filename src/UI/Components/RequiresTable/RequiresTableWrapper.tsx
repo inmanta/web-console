@@ -1,17 +1,11 @@
 import React from "react";
-import {
-  Tbody,
-  Table,
-  TableVariant,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { Tbody, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { words } from "@/UI/words";
 
-export const RequiresTableWrapper: React.FC<
-  React.PropsWithChildren<unknown>
-> = ({ children, ...props }) => (
+export const RequiresTableWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+  ...props
+}) => (
   <Table aria-label={props["aria-label"]} variant={TableVariant.compact}>
     <Thead>
       <Tr>

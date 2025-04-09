@@ -171,17 +171,11 @@ describe("createConnectionRules", () => {
     ${[Service.nestedEditable]}                                               | ${rulesForFourthTests}
   `(
     "returns correct rules for given services",
-    ({
-      services,
-      expectedRules,
-    }: {
-      services: ServiceModel[];
-      expectedRules: ConnectionRules;
-    }) => {
+    ({ services, expectedRules }: { services: ServiceModel[]; expectedRules: ConnectionRules }) => {
       const rules = createConnectionRules(services, {});
 
       expect(rules).toStrictEqual(expectedRules);
-    },
+    }
   );
 });
 
@@ -218,105 +212,65 @@ describe("checkWhetherConnectionRulesAreExhausted", () => {
 
   it("assert connections exhaustion when rule has modifier set to 'rw'", () => {
     //editMode set to true
+    expect(checkWhetherConnectionRulesAreExhausted([], embeddedRule, true)).toBeTruthy();
     expect(
-      checkWhetherConnectionRulesAreExhausted([], embeddedRule, true),
+      checkWhetherConnectionRulesAreExhausted([mockedEmbedded], embeddedRule, true)
     ).toBeTruthy();
     expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedEmbedded],
-        embeddedRule,
-        true,
-      ),
-    ).toBeTruthy();
-    expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedMatchingEmbedded],
-        embeddedRule,
-        true,
-      ),
+      checkWhetherConnectionRulesAreExhausted([mockedMatchingEmbedded], embeddedRule, true)
     ).toBeTruthy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingEmbedded, mockedEmbedded],
         embeddedRule,
-        true,
-      ),
+        true
+      )
     ).toBeTruthy();
 
+    expect(checkWhetherConnectionRulesAreExhausted([], relationRule, true)).toBeTruthy();
     expect(
-      checkWhetherConnectionRulesAreExhausted([], relationRule, true),
+      checkWhetherConnectionRulesAreExhausted([mockedInterService], relationRule, true)
     ).toBeTruthy();
     expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedInterService],
-        relationRule,
-        true,
-      ),
-    ).toBeTruthy();
-    expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedMatchingInterService],
-        relationRule,
-        true,
-      ),
+      checkWhetherConnectionRulesAreExhausted([mockedMatchingInterService], relationRule, true)
     ).toBeTruthy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingInterService, mockedInterService],
         relationRule,
-        true,
-      ),
+        true
+      )
     ).toBeTruthy();
 
     //editMode set to false
+    expect(checkWhetherConnectionRulesAreExhausted([], embeddedRule, false)).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted([], embeddedRule, false),
+      checkWhetherConnectionRulesAreExhausted([mockedEmbedded], embeddedRule, false)
     ).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedEmbedded],
-        embeddedRule,
-        false,
-      ),
-    ).toBeFalsy();
-    expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedMatchingEmbedded],
-        embeddedRule,
-        false,
-      ),
+      checkWhetherConnectionRulesAreExhausted([mockedMatchingEmbedded], embeddedRule, false)
     ).toBeTruthy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingEmbedded, mockedEmbedded],
         embeddedRule,
-        false,
-      ),
+        false
+      )
     ).toBeTruthy();
 
+    expect(checkWhetherConnectionRulesAreExhausted([], relationRule, false)).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted([], relationRule, false),
+      checkWhetherConnectionRulesAreExhausted([mockedInterService], relationRule, false)
     ).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedInterService],
-        relationRule,
-        false,
-      ),
-    ).toBeFalsy();
-    expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedMatchingInterService],
-        relationRule,
-        false,
-      ),
+      checkWhetherConnectionRulesAreExhausted([mockedMatchingInterService], relationRule, false)
     ).toBeTruthy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingInterService, mockedInterService],
         relationRule,
-        false,
-      ),
+        false
+      )
     ).toBeTruthy();
   });
 
@@ -331,105 +285,65 @@ describe("checkWhetherConnectionRulesAreExhausted", () => {
     };
 
     //editMode set to true
+    expect(checkWhetherConnectionRulesAreExhausted([], rwEmbeddedRule, true)).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted([], rwEmbeddedRule, true),
+      checkWhetherConnectionRulesAreExhausted([mockedEmbedded], rwEmbeddedRule, true)
     ).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedEmbedded],
-        rwEmbeddedRule,
-        true,
-      ),
-    ).toBeFalsy();
-    expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedMatchingEmbedded],
-        rwEmbeddedRule,
-        true,
-      ),
+      checkWhetherConnectionRulesAreExhausted([mockedMatchingEmbedded], rwEmbeddedRule, true)
     ).toBeTruthy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingEmbedded, mockedEmbedded],
         rwEmbeddedRule,
-        true,
-      ),
+        true
+      )
     ).toBeTruthy();
 
+    expect(checkWhetherConnectionRulesAreExhausted([], rwRelationRule, true)).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted([], rwRelationRule, true),
+      checkWhetherConnectionRulesAreExhausted([mockedInterService], rwRelationRule, true)
     ).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedInterService],
-        rwRelationRule,
-        true,
-      ),
-    ).toBeFalsy();
-    expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedMatchingInterService],
-        rwRelationRule,
-        true,
-      ),
+      checkWhetherConnectionRulesAreExhausted([mockedMatchingInterService], rwRelationRule, true)
     ).toBeTruthy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingInterService, mockedInterService],
         rwRelationRule,
-        true,
-      ),
+        true
+      )
     ).toBeTruthy();
 
     //editMode set to false
+    expect(checkWhetherConnectionRulesAreExhausted([], rwEmbeddedRule, false)).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted([], rwEmbeddedRule, false),
+      checkWhetherConnectionRulesAreExhausted([mockedEmbedded], rwEmbeddedRule, false)
     ).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedEmbedded],
-        rwEmbeddedRule,
-        false,
-      ),
-    ).toBeFalsy();
-    expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedMatchingEmbedded],
-        rwEmbeddedRule,
-        false,
-      ),
+      checkWhetherConnectionRulesAreExhausted([mockedMatchingEmbedded], rwEmbeddedRule, false)
     ).toBeTruthy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingEmbedded, mockedEmbedded],
         rwEmbeddedRule,
-        false,
-      ),
+        false
+      )
     ).toBeTruthy();
 
+    expect(checkWhetherConnectionRulesAreExhausted([], rwRelationRule, false)).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted([], rwRelationRule, false),
+      checkWhetherConnectionRulesAreExhausted([mockedInterService], rwRelationRule, false)
     ).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedInterService],
-        rwRelationRule,
-        false,
-      ),
-    ).toBeFalsy();
-    expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedMatchingInterService],
-        rwRelationRule,
-        false,
-      ),
+      checkWhetherConnectionRulesAreExhausted([mockedMatchingInterService], rwRelationRule, false)
     ).toBeTruthy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingInterService, mockedInterService],
         rwRelationRule,
-        false,
-      ),
+        false
+      )
     ).toBeTruthy();
   });
 
@@ -445,61 +359,49 @@ describe("checkWhetherConnectionRulesAreExhausted", () => {
 
     //editMode set to false
     expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [],
-        EmbeddedRuleUndefinedLimit,
-        false,
-      ),
+      checkWhetherConnectionRulesAreExhausted([], EmbeddedRuleUndefinedLimit, false)
     ).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedEmbedded],
-        EmbeddedRuleUndefinedLimit,
-        false,
-      ),
+      checkWhetherConnectionRulesAreExhausted([mockedEmbedded], EmbeddedRuleUndefinedLimit, false)
     ).toBeFalsy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingEmbedded],
         EmbeddedRuleUndefinedLimit,
-        false,
-      ),
+        false
+      )
     ).toBeFalsy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingEmbedded, mockedEmbedded],
         EmbeddedRuleUndefinedLimit,
-        false,
-      ),
+        false
+      )
     ).toBeFalsy();
 
     expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [],
-        RelationRuleUndefinedLimit,
-        false,
-      ),
+      checkWhetherConnectionRulesAreExhausted([], RelationRuleUndefinedLimit, false)
     ).toBeFalsy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedInterService],
         RelationRuleUndefinedLimit,
-        false,
-      ),
+        false
+      )
     ).toBeFalsy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingInterService],
         RelationRuleUndefinedLimit,
-        false,
-      ),
+        false
+      )
     ).toBeFalsy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingInterService, mockedInterService],
         RelationRuleUndefinedLimit,
-        false,
-      ),
+        false
+      )
     ).toBeFalsy();
 
     const EmbeddedRuleNoLimit: EmbeddedRule = {
@@ -512,54 +414,38 @@ describe("checkWhetherConnectionRulesAreExhausted", () => {
     };
 
     //editMode set to false
+    expect(checkWhetherConnectionRulesAreExhausted([], EmbeddedRuleNoLimit, false)).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted([], EmbeddedRuleNoLimit, false),
+      checkWhetherConnectionRulesAreExhausted([mockedEmbedded], EmbeddedRuleNoLimit, false)
     ).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedEmbedded],
-        EmbeddedRuleNoLimit,
-        false,
-      ),
-    ).toBeFalsy();
-    expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedMatchingEmbedded],
-        EmbeddedRuleNoLimit,
-        false,
-      ),
+      checkWhetherConnectionRulesAreExhausted([mockedMatchingEmbedded], EmbeddedRuleNoLimit, false)
     ).toBeFalsy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingEmbedded, mockedEmbedded],
         EmbeddedRuleNoLimit,
-        false,
-      ),
+        false
+      )
     ).toBeFalsy();
 
+    expect(checkWhetherConnectionRulesAreExhausted([], RelationRuleNoLimit, false)).toBeFalsy();
     expect(
-      checkWhetherConnectionRulesAreExhausted([], RelationRuleNoLimit, false),
-    ).toBeFalsy();
-    expect(
-      checkWhetherConnectionRulesAreExhausted(
-        [mockedInterService],
-        RelationRuleNoLimit,
-        false,
-      ),
+      checkWhetherConnectionRulesAreExhausted([mockedInterService], RelationRuleNoLimit, false)
     ).toBeFalsy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingInterService],
         RelationRuleNoLimit,
-        false,
-      ),
+        false
+      )
     ).toBeFalsy();
     expect(
       checkWhetherConnectionRulesAreExhausted(
         [mockedMatchingInterService, mockedInterService],
         RelationRuleNoLimit,
-        false,
-      ),
+        false
+      )
     ).toBeFalsy();
   });
 });
@@ -583,9 +469,7 @@ describe("checkIfConnectionIsAllowed", () => {
       serviceModel: Service.a.embedded_entities[0],
       isCore: false,
       isInEditMode: false,
-      attributes: (
-        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
-      )[0],
+      attributes: (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
       isEmbeddedEntity: true,
     });
 
@@ -595,7 +479,7 @@ describe("checkIfConnectionIsAllowed", () => {
       graph,
       paper.findViewByModel(serviceA),
       paper.findViewByModel(embeddedService),
-      rules,
+      rules
     );
 
     expect(result).toBeTruthy();
@@ -621,7 +505,7 @@ describe("checkIfConnectionIsAllowed", () => {
       graph,
       paper.findViewByModel(serviceA),
       paper.findViewByModel(independendService),
-      rules,
+      rules
     );
 
     expect(result).toBeFalsy();
@@ -638,9 +522,7 @@ describe("checkIfConnectionIsAllowed", () => {
       serviceModel: Service.a.embedded_entities[0],
       isCore: false,
       isInEditMode: false,
-      attributes: (
-        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
-      )[0],
+      attributes: (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
       isBlockedFromEditing: true,
     });
 
@@ -650,7 +532,7 @@ describe("checkIfConnectionIsAllowed", () => {
       graph,
       paper.findViewByModel(serviceA),
       paper.findViewByModel(blockedService),
-      rules,
+      rules
     );
 
     expect(result).toBeTruthy();
@@ -669,9 +551,7 @@ describe("checkIfConnectionIsAllowed", () => {
       serviceModel: Service.a.embedded_entities[0],
       isCore: false,
       isInEditMode: false,
-      attributes: (
-        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
-      )[0],
+      attributes: (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
       isEmbeddedEntity: true,
       holderName: Service.a.name,
     });
@@ -682,7 +562,7 @@ describe("checkIfConnectionIsAllowed", () => {
       graph,
       paper.findViewByModel(serviceA),
       paper.findViewByModel(serviceB),
-      rules,
+      rules
     );
 
     expect(result).toBeFalsy();
@@ -709,9 +589,7 @@ describe("checkIfConnectionIsAllowed", () => {
       serviceModel: Service.a.embedded_entities[0],
       isCore: true,
       isInEditMode: false,
-      attributes: (
-        InstanceAttributesA["circuits"] as InstanceAttributeModel[]
-      )[0],
+      attributes: (InstanceAttributesA["circuits"] as InstanceAttributeModel[])[0],
       isEmbeddedEntity: true,
       holderName: "service_name_a",
     });
@@ -728,7 +606,7 @@ describe("checkIfConnectionIsAllowed", () => {
       graph,
       paper.findViewByModel(serviceA),
       paper.findViewByModel(connectedEmbeddedEntity),
-      rules,
+      rules
     );
 
     expect(result).toBeFalsy();

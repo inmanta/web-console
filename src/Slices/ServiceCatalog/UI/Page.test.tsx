@@ -24,23 +24,14 @@ const [env1] = Environment.filterable.map((env) => env.id);
 function setup() {
   const store = getStoreInstance();
 
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
 
-  store.dispatch.environment.setEnvironments(
-    RemoteData.success(Environment.filterable),
-  );
+  store.dispatch.environment.setEnvironments(RemoteData.success(Environment.filterable));
 
   const component = (
     <QueryClientProvider client={testClient}>
       <ModalProvider>
-        <MemoryRouter
-          initialEntries={[
-            { pathname: "/lsm/catalog", search: `?env=${env1}` },
-          ]}
-        >
+        <MemoryRouter initialEntries={[{ pathname: "/lsm/catalog", search: `?env=${env1}` }]}>
           <DependencyProvider
             dependencies={{
               ...dependencies,
@@ -80,7 +71,7 @@ describe("ServiceCatalog", () => {
     server.use(
       http.get("/lsm/v1/service_catalog", () => {
         return HttpResponse.json({ data: [] });
-      }),
+      })
     );
 
     const { component } = setup();
@@ -88,11 +79,11 @@ describe("ServiceCatalog", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "ServiceCatalog-Loading" }),
+      await screen.findByRole("region", { name: "ServiceCatalog-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("generic", { name: "ServiceCatalog-Empty" }),
+      await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
     ).toBeInTheDocument();
 
     await act(async () => {
@@ -106,7 +97,7 @@ describe("ServiceCatalog", () => {
     server.use(
       http.get("/lsm/v1/service_catalog", () => {
         return HttpResponse.json({ data: [Service.a] });
-      }),
+      })
     );
 
     const { component } = setup();
@@ -114,7 +105,7 @@ describe("ServiceCatalog", () => {
     render(component);
 
     expect(
-      await screen.findByRole("generic", { name: "ServiceCatalog-Success" }),
+      await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
     ).toBeInTheDocument();
 
     await act(async () => {
@@ -135,7 +126,7 @@ describe("ServiceCatalog", () => {
         data.pop();
 
         return HttpResponse.json({ status: 204 });
-      }),
+      })
     );
 
     const { component } = setup();
@@ -143,19 +134,17 @@ describe("ServiceCatalog", () => {
     render(component);
 
     expect(
-      await screen.findByRole("generic", { name: "ServiceCatalog-Success" }),
+      await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
     ).toBeInTheDocument();
 
     await userEvent.click(screen.getByLabelText("Actions-dropdown"));
 
-    await userEvent.click(
-      screen.getByLabelText(Service.a.name + "-deleteButton"),
-    );
+    await userEvent.click(screen.getByLabelText(Service.a.name + "-deleteButton"));
 
     await userEvent.click(screen.getByText(words("yes")));
 
     expect(
-      await screen.findByRole("generic", { name: "ServiceCatalog-Empty" }),
+      await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
     ).toBeInTheDocument();
 
     await act(async () => {
@@ -176,7 +165,7 @@ describe("ServiceCatalog", () => {
         data.push(Service.a);
 
         return HttpResponse.json({ status: 200 });
-      }),
+      })
     );
 
     const { component } = setup();
@@ -184,7 +173,7 @@ describe("ServiceCatalog", () => {
     render(component);
 
     expect(
-      await screen.findByRole("generic", { name: "ServiceCatalog-Empty" }),
+      await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
     ).toBeInTheDocument();
 
     await userEvent.click(screen.getByText("Update Service Catalog"));
@@ -192,7 +181,7 @@ describe("ServiceCatalog", () => {
     await userEvent.click(screen.getByText(words("yes")));
 
     expect(
-      await screen.findByRole("generic", { name: "ServiceCatalog-Success" }),
+      await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
     ).toBeInTheDocument();
   });
 });

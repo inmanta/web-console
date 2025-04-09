@@ -34,18 +34,9 @@ export const CellWithCopy: React.FC<Props> = ({
   };
 
   const cell = (
-    <Td
-      className={className}
-      key={label}
-      dataLabel={label}
-      onMouseEnter={onMouseEnter}
-    >
+    <Td className={className} key={label} dataLabel={label} onMouseEnter={onMouseEnter}>
       {shouldRenderLink(value, hasRelation) ? (
-        <MultiLinkCell
-          value={value}
-          serviceName={serviceName}
-          onClick={onClick}
-        />
+        <MultiLinkCell value={value} serviceName={serviceName} onClick={onClick} />
       ) : (
         value
       )}
@@ -57,10 +48,7 @@ export const CellWithCopy: React.FC<Props> = ({
       bodyContent={
         <>
           <StyledPopoverBody>{formatValue(value)}</StyledPopoverBody>
-          <ClipboardCopyButton
-            value={value}
-            tooltipContent={words("attribute.value.copy")}
-          />
+          <ClipboardCopyButton value={value} tooltipContent={words("attribute.value.copy")} />
         </>
       }
       showClose={false}
@@ -101,6 +89,7 @@ function splitValue(value: string): string[] {
 
   return parts;
 }
+
 function isValueOfMultipleIds(value: string): boolean {
   return splitValue(value).length > 0;
 }
@@ -111,11 +100,7 @@ interface LinkCellProps {
   onClick: (cellValue: string, serviceName?: string | undefined) => void;
 }
 
-const MultiLinkCell: React.FC<LinkCellProps> = ({
-  value,
-  serviceName,
-  onClick,
-}) => {
+const MultiLinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) => {
   if (isValueOfMultipleIds(value)) {
     const ids = splitValue(value);
 
@@ -139,18 +124,12 @@ const MultiLinkCell: React.FC<LinkCellProps> = ({
 
 const LinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) =>
   serviceName && value.length > 0 ? (
-    <InstanceCellButton
-      id={value}
-      serviceName={serviceName}
-      onClick={onClick}
-    />
+    <InstanceCellButton id={value} serviceName={serviceName} onClick={onClick} />
   ) : (
     <Button
       variant="link"
       isInline
-      onClick={
-        serviceName ? () => onClick(value, serviceName) : () => onClick(value)
-      }
+      onClick={serviceName ? () => onClick(value, serviceName) : () => onClick(value)}
     >
       {value}
     </Button>

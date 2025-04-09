@@ -13,6 +13,6 @@ export function ResourceHistoryStateHelper(store: Store) {
         value,
       });
     },
-    (state, query) => state.resourceHistory.byId[query.id],
+    (state, query) => state.resourceHistory.byId[query.id]
   );
 }

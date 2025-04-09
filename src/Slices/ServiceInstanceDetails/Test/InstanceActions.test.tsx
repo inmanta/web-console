@@ -31,11 +31,11 @@ describe("Page Actions - Success", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Loading" }),
+      await screen.findByRole("region", { name: "Instance-Details-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Success" }),
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
     ).toBeInTheDocument();
 
     // expect to find the expert actions dropdown
@@ -80,11 +80,11 @@ describe("Page Actions - Success", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Loading" }),
+      await screen.findByRole("region", { name: "Instance-Details-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Success" }),
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
     ).toBeInTheDocument();
 
     // expect to find the expert actions dropdown
@@ -109,8 +109,8 @@ describe("Page Actions - Success", () => {
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
     await waitFor(() =>
       expect(mockedUsedNavigate).toHaveBeenCalledWith(
-        "/console/lsm/catalog/mobileCore/inventory?env=aaa",
-      ),
+        "/console/lsm/catalog/mobileCore/inventory?env=aaa"
+      )
     );
   });
 
@@ -120,16 +120,14 @@ describe("Page Actions - Success", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Loading" }),
+      await screen.findByRole("region", { name: "Instance-Details-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Success" }),
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
     ).toBeInTheDocument();
 
-    expect(
-      screen.queryByRole("button", { name: /expert actions/i }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /expert actions/i })).not.toBeInTheDocument();
 
     // expect to find action dropdown
     const actionDropdown = screen.getByRole("button", {
@@ -151,8 +149,8 @@ describe("Page Actions - Success", () => {
 
     expect(
       screen.getByText(
-        /are you sure you want to delete instance core1 of service entity mobilecore\?/i,
-      ),
+        /are you sure you want to delete instance core1 of service entity mobilecore\?/i
+      )
     ).toBeVisible();
 
     const confirmButton = screen.getByRole("button", {
@@ -171,16 +169,14 @@ describe("Page Actions - Success", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Loading" }),
+      await screen.findByRole("region", { name: "Instance-Details-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Success" }),
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
     ).toBeInTheDocument();
 
-    expect(
-      screen.queryByRole("button", { name: /expert actions/i }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /expert actions/i })).not.toBeInTheDocument();
 
     // expect to find action dropdown
     const actionDropdown = screen.getByRole("button", {
@@ -201,9 +197,7 @@ describe("Page Actions - Success", () => {
     });
 
     expect(
-      screen.getByText(
-        /are you sure you want to set state of instance core1 to update_start\?/i,
-      ),
+      screen.getByText(/are you sure you want to set state of instance core1 to update_start\?/i)
     ).toBeVisible();
 
     await userEvent.click(confirmButton);
@@ -234,11 +228,11 @@ describe("Page Actions - Failed", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Loading" }),
+      await screen.findByRole("region", { name: "Instance-Details-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Success" }),
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
     ).toBeInTheDocument();
 
     // expect to find the expert actions dropdown
@@ -274,9 +268,7 @@ describe("Page Actions - Failed", () => {
     await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
-    expect(
-      screen.getByTestId("error-toast-expert-state-message"),
-    ).toBeVisible();
+    expect(screen.getByTestId("error-toast-expert-state-message")).toBeVisible();
   });
 
   it("Expert actions - Destroy", async () => {
@@ -285,11 +277,11 @@ describe("Page Actions - Failed", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Loading" }),
+      await screen.findByRole("region", { name: "Instance-Details-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Success" }),
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
     ).toBeInTheDocument();
 
     // expect to find the expert actions dropdown
@@ -312,9 +304,7 @@ describe("Page Actions - Failed", () => {
     await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
-    expect(
-      screen.getByTestId("error-toast-expert-destroy-message"),
-    ).toBeVisible();
+    expect(screen.getByTestId("error-toast-expert-destroy-message")).toBeVisible();
 
     await waitFor(() => expect(mockedUsedNavigate).not.toHaveBeenCalled());
   });
@@ -325,16 +315,14 @@ describe("Page Actions - Failed", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Loading" }),
+      await screen.findByRole("region", { name: "Instance-Details-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Success" }),
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
     ).toBeInTheDocument();
 
-    expect(
-      screen.queryByRole("button", { name: /expert actions/i }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /expert actions/i })).not.toBeInTheDocument();
 
     // expect to find action dropdown
     const actionDropdown = screen.getByRole("button", {
@@ -356,8 +344,8 @@ describe("Page Actions - Failed", () => {
 
     expect(
       screen.getByText(
-        /are you sure you want to delete instance core1 of service entity mobilecore\?/i,
-      ),
+        /are you sure you want to delete instance core1 of service entity mobilecore\?/i
+      )
     ).toBeVisible();
 
     const confirmButton = screen.getByRole("button", {
@@ -367,9 +355,7 @@ describe("Page Actions - Failed", () => {
     await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
-    expect(
-      screen.getByTestId("error-toast-delete-instance-message"),
-    ).toBeVisible();
+    expect(screen.getByTestId("error-toast-delete-instance-message")).toBeVisible();
   });
 
   it("Normal Instance Actions Enabled - update state action", async () => {
@@ -378,16 +364,14 @@ describe("Page Actions - Failed", () => {
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Loading" }),
+      await screen.findByRole("region", { name: "Instance-Details-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("region", { name: "Instance-Details-Success" }),
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
     ).toBeInTheDocument();
 
-    expect(
-      screen.queryByRole("button", { name: /expert actions/i }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /expert actions/i })).not.toBeInTheDocument();
 
     // expect to find action dropdown
     const actionDropdown = screen.getByRole("button", {
@@ -408,15 +392,11 @@ describe("Page Actions - Failed", () => {
     });
 
     expect(
-      screen.getByText(
-        /are you sure you want to set state of instance core1 to update_start\?/i,
-      ),
+      screen.getByText(/are you sure you want to set state of instance core1 to update_start\?/i)
     ).toBeVisible();
 
     await userEvent.click(confirmButton);
 
-    expect(
-      screen.getByTestId("error-toast-state-transfer-message"),
-    ).toBeVisible();
+    expect(screen.getByTestId("error-toast-state-transfer-message")).toBeVisible();
   });
 });

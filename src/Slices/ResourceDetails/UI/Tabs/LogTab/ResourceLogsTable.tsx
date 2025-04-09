@@ -14,12 +14,7 @@ interface Props {
   setSort: (sort: Sort.Type) => void;
 }
 
-export const ResourceLogsTable: React.FC<Props> = ({
-  logs,
-  toggleActionType,
-  sort,
-  setSort,
-}) => {
+export const ResourceLogsTable: React.FC<Props> = ({ logs, toggleActionType, sort, setSort }) => {
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
     key: "logs-expansion",
     route: "ResourceDetails",
@@ -33,10 +28,7 @@ export const ResourceLogsTable: React.FC<Props> = ({
     <Table aria-label="ResourceLogsTable" variant="compact">
       <Thead>
         <Tr>
-          <Th
-            aria-hidden
-            screenReaderText={words("common.emptyColumnHeader")}
-          />
+          <Th aria-hidden screenReaderText={words("common.emptyColumnHeader")} />
           <Th
             sort={{
               sortBy: { index: 0, direction: sort.order },

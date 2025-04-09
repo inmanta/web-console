@@ -11,7 +11,7 @@ export class DynamicQueryManagerResolverImpl implements QueryManagerResolver {
   private scheduler: Scheduler = new StaticScheduler();
   constructor(
     private readonly managers: QueryManager[],
-    private externalScheduler?: Scheduler,
+    private externalScheduler?: Scheduler
   ) {
     if (externalScheduler !== undefined) {
       this.scheduler = this.externalScheduler as Scheduler;
@@ -33,9 +33,7 @@ export class DynamicQueryManagerResolverImpl implements QueryManagerResolver {
   }
 }
 
-export class DynamicCommandManagerResolverImpl
-  implements CommandManagerResolver
-{
+export class DynamicCommandManagerResolverImpl implements CommandManagerResolver {
   constructor(private readonly managers: CommandManager[]) {}
 
   get(): CommandManager[] {

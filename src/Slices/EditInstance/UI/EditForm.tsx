@@ -1,10 +1,6 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  InstanceAttributeModel,
-  ServiceInstanceModel,
-  ServiceModel,
-} from "@/Core";
+import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
 import { usePatchAttributes } from "@/Data/Managers/V2/ServiceInstance/PatchAttributes";
 import {
@@ -52,8 +48,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
 
   const attributeInputConverter = new AttributeInputConverterImpl();
-  const currentAttributes =
-    attributeInputConverter.getCurrentAttributes(instance);
+  const currentAttributes = attributeInputConverter.getCurrentAttributes(instance);
 
   const apiVersion = serviceEntity.strict_modifier_enforcement ? "v2" : "v1";
 
@@ -70,12 +65,12 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
       onSuccess: () => {
         handleRedirect();
       },
-    },
+    }
   );
 
   const onSubmit = async (
     updatedAttributes: InstanceAttributeModel,
-    setIsDirty: (values: boolean) => void,
+    setIsDirty: (values: boolean) => void
   ) => {
     //as setState used in setIsDirty doesn't change immediately we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
     setIsDirty(false);

@@ -10,10 +10,7 @@ interface Props {
   updateList(): void;
 }
 
-export const TriggerDryRunAction: React.FC<Props> = ({
-  version,
-  updateList,
-}) => {
+export const TriggerDryRunAction: React.FC<Props> = ({ version, updateList }) => {
   const { commandResolver } = useContext(DependencyContext);
   const [errorMessage, setErrorMessage] = useState("");
   const trigger = commandResolver.useGetTrigger<"TriggerDryRun">({
@@ -27,6 +24,7 @@ export const TriggerDryRunAction: React.FC<Props> = ({
     if (Maybe.isSome(error)) {
       setErrorMessage(error.value);
     }
+
     updateList();
   };
 

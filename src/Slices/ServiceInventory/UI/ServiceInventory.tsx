@@ -1,18 +1,9 @@
 import React, { ReactElement, createContext, useEffect } from "react";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGetInstances } from "@/Data/Managers/V2/ServiceInstance";
-import {
-  EmptyView,
-  ErrorView,
-  LoadingView,
-  PaginationWidget,
-} from "@/UI/Components";
+import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { TableControls } from "./Components";
 import { TableProvider } from "./TableProvider";
@@ -68,18 +59,16 @@ export const ServiceInventory: React.FunctionComponent<{
     route: "Inventory",
   });
 
-  const [filter, setFilter] =
-    useUrlStateWithFilter<ServiceInstanceParams.Filter>({ route: "Inventory" });
+  const [filter, setFilter] = useUrlStateWithFilter<ServiceInstanceParams.Filter>({
+    route: "Inventory",
+  });
 
-  const { data, isError, error, isSuccess, refetch } = useGetInstances(
-    serviceName,
-    {
-      sort,
-      filter,
-      pageSize,
-      currentPage,
-    },
-  ).useContinuous();
+  const { data, isError, error, isSuccess, refetch } = useGetInstances(serviceName, {
+    sort,
+    filter,
+    pageSize,
+    currentPage,
+  }).useContinuous();
 
   /**
    * Filters the service lifecycle states based on the provided label.
@@ -102,11 +91,7 @@ export const ServiceInventory: React.FunctionComponent<{
     return (
       <Wrapper name={serviceName}>
         {intro}
-        <ErrorView
-          message={error.message}
-          retry={refetch}
-          ariaLabel="ServiceInventory-Failed"
-        />
+        <ErrorView message={error.message} retry={refetch} ariaLabel="ServiceInventory-Failed" />
       </Wrapper>
     );
   }

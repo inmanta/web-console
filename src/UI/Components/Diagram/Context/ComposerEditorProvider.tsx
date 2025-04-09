@@ -45,14 +45,8 @@ interface Props {
  *
  * @returns {React.FC<Props>} The ComposerEditorProvider component.
  */
-export const ComposerEditorProvider: React.FC<Props> = ({
-  serviceName,
-  instance,
-  editable,
-}) => {
-  const [interServiceRelationNames, setInterServiceRelationNames] = useState<
-    string[]
-  >([]);
+export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance, editable }) => {
+  const [interServiceRelationNames, setInterServiceRelationNames] = useState<string[]>([]);
 
   const serviceModelsQuery = useGetServiceModels().useContinuous();
 
@@ -69,12 +63,10 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   const instanceWithRelationsQuery = useGetInstanceWithRelations(
     instance,
     !editable, //if editable is true, we don't fetch referenced_by instances as they should not be displayed to keep it aligned with the regular instance form, they are only displayed in the composer viewer
-    mainService,
+    mainService
   ).useOneTime();
 
-  const relatedInventoriesQuery = useGetInventoryList(
-    interServiceRelationNames,
-  ).useContinuous();
+  const relatedInventoriesQuery = useGetInventoryList(interServiceRelationNames).useContinuous();
 
   useEffect(() => {
     if (serviceModelsQuery.isSuccess) {
@@ -82,12 +74,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({
         setInterServiceRelationNames(findInterServiceRelations(mainService));
       }
     }
-  }, [
-    serviceModelsQuery.isSuccess,
-    serviceName,
-    serviceModelsQuery.data,
-    mainService,
-  ]);
+  }, [serviceModelsQuery.isSuccess, serviceName, serviceModelsQuery.data, mainService]);
 
   if (serviceModelsQuery.isError) {
     return (
@@ -102,20 +89,15 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   }
 
   if (instanceWithRelationsQuery.isError) {
-    const message = words("error.general")(
-      instanceWithRelationsQuery.error.message,
-    );
+    const message = words("error.general")(instanceWithRelationsQuery.error.message);
     const retry = instanceWithRelationsQuery.refetch;
-    const ariaLabel =
-      "ComposerEditorProvider-InstanceWithRelationsQuery_failed";
+    const ariaLabel = "ComposerEditorProvider-InstanceWithRelationsQuery_failed";
 
     return renderErrorView(message, ariaLabel, retry);
   }
 
   if (relatedInventoriesQuery.isError) {
-    const message = words("error.general")(
-      relatedInventoriesQuery.error.message,
-    );
+    const message = words("error.general")(relatedInventoriesQuery.error.message);
     const retry = relatedInventoriesQuery.refetch;
     const ariaLabel = "ComposerEditorProvider-RelatedInventoriesQuery_failed";
 
@@ -123,20 +105,14 @@ export const ComposerEditorProvider: React.FC<Props> = ({
   }
 
   if (serviceModelsQuery.isSuccess && !mainService) {
-    const message = words("instanceComposer.noServiceModel.errorMessage")(
-      serviceName,
-    );
+    const message = words("instanceComposer.noServiceModel.errorMessage")(serviceName);
     const retry = serviceModelsQuery.refetch;
     const ariaLabel = "ComposerEditorProvider-NoServiceModel_failed";
 
     return renderErrorView(message, ariaLabel, retry);
   }
 
-  if (
-    serviceModelsQuery.isSuccess &&
-    instanceWithRelationsQuery.isSuccess &&
-    mainService
-  ) {
+  if (serviceModelsQuery.isSuccess && instanceWithRelationsQuery.isSuccess && mainService) {
     // there is no possibility to instanceWithRelationsQuery be in success state without mainService, and there is assertion above the if services are fetch but there is no mainService to display errorView
     return (
       <InstanceComposerContext.Provider
@@ -152,11 +128,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({
             pageTitle={
               <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
                 <FlexItem>
-                  {words(
-                    editable
-                      ? "instanceComposer.title.edit"
-                      : "instanceComposer.title.view",
-                  )}
+                  {words(editable ? "instanceComposer.title.edit" : "instanceComposer.title.view")}
                 </FlexItem>
                 <FlexItem>
                   <ComposerActions serviceName={serviceName} editable />

@@ -39,12 +39,7 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
           }}
           isManagedSidebar
           breadcrumb={<PageBreadcrumbs />}
-          masthead={
-            <Header
-              {...{ onNotificationsToggle }}
-              noEnv={!Boolean(environmentId)}
-            />
-          }
+          masthead={<Header {...{ onNotificationsToggle }} noEnv={!Boolean(environmentId)} />}
           sidebar={<Sidebar environment={environmentId} />}
         >
           {children}

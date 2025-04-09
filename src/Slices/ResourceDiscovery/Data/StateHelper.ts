@@ -13,7 +13,6 @@ export function GetDiscoveredResourcesStateHelper(store: Store) {
         data: value,
       });
     },
-    (state, query, environment) =>
-      state.discoveredResources.listByEnv[environment],
+    (state, query, environment) => state.discoveredResources.listByEnv[environment]
   );
 }
