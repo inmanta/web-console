@@ -18,11 +18,7 @@ interface Props {
  *  @prop {string} instance - The instance name
  * @returns {React.FC<Props>} A React Component that provides the controls for the CodeEditor.
  */
-export const CodeEditorControls: React.FC<Props> = ({
-  code,
-  service,
-  instance,
-}) => {
+export const CodeEditorControls: React.FC<Props> = ({ code, service, instance }) => {
   return (
     <>
       <CodeEditorControl

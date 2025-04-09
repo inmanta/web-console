@@ -255,10 +255,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="Error-container"]').should("not.exist");
 
       // delete the JSON entirely
-      cy.get(".monaco-editor")
-        .click()
-        .focused()
-        .type("{ctrl+a}{backspace}");
+      cy.get(".monaco-editor").click().focused().type("{ctrl+a}{backspace}");
 
       // expect the JSON to be invalid
       cy.get('[data-testid="Error-container"]').should("contain", "Errors found");
@@ -270,10 +267,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#formButton").should("be.disabled");
 
       // ctrl+z to undo the deletion
-      cy.get(".monaco-editor")
-        .click()
-        .focused()
-        .type("{ctrl+z}");
+      cy.get(".monaco-editor").click().focused().type("{ctrl+z}");
 
       // expect the JSON to be valid
       cy.get('[data-testid="Error-container"]').should("not.exist");
@@ -295,9 +289,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#editorButton").click();
 
       // expect the value for address_r1 to be empty
-      cy.get(".view-line > :nth-child(1) > .mtk5")
-        .first()
-        .should("contain", '""');
+      cy.get(".view-line > :nth-child(1) > .mtk5").first().should("contain", '""');
 
       // empty value should be valid and allow going back to form.
       cy.get("#formButton").click();
@@ -307,10 +299,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#editorButton").click();
 
       // change the service id to make instance unique
-      cy.get(".monaco-editor")
-        .click()
-        .focused()
-        .type("{ctrl+f}");  // open search tool
+      cy.get(".monaco-editor").click().focused().type("{ctrl+f}"); // open search tool
 
       cy.wait(1000); // let the editor settle to avoid typing text to fail
 
@@ -482,9 +471,14 @@ if (Cypress.env("edition") === "iso") {
 
       // Check that both Export and Validation events exist in the table
       cy.get('[aria-label="Event-table-row"]').should(($events) => {
-        const eventTypes = $events.map((_, element) =>
-          Cypress.$(element).find('[aria-label^="Event-compile-"] .pf-v6-c-button__text').text().trim()
-        ).get();
+        const eventTypes = $events
+          .map((_, element) =>
+            Cypress.$(element)
+              .find('[aria-label^="Event-compile-"] .pf-v6-c-button__text')
+              .text()
+              .trim()
+          )
+          .get();
 
         expect(eventTypes).to.include.members(["Export", "Validation"]);
         expect(eventTypes).to.have.length(4); // Verify total number of events

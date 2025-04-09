@@ -855,8 +855,7 @@ const dict = {
   "markdownPreviewer.pageTitle": (service: string, instance: string) =>
     `Markdown Preview: ${service} - ${instance}`,
   "markdownPreviewer.download.tooltip": "Download markdown file",
-  "markdownPreviewer.route.label": (instance: string) =>
-    `Markdown Preview: ${instance}`,
+  "markdownPreviewer.route.label": (instance: string) => `Markdown Preview: ${instance}`,
   "markdownPreviewer.download": "Download",
 };
 

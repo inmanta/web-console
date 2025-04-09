@@ -150,15 +150,11 @@ if (Cypress.env("edition") === "iso") {
     it("2.4.2 Verify markdown preview in documentation tab", () => {
       cy.visit("/console/");
       cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Go to the instance details
-      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
-        .first()
-        .click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();
 
       // Go to the documentation tab
       cy.get('[aria-label="documentation-content"]').click();
@@ -171,9 +167,7 @@ if (Cypress.env("edition") === "iso") {
         .click();
 
       // Verify the preview view is shown
-      cy.get('[aria-label="Markdown-Previewer-Success"]')
-        .should("exist")
-        .and("be.visible");
+      cy.get('[aria-label="Markdown-Previewer-Success"]').should("exist").and("be.visible");
 
       // Edit the markdown text
       cy.get(".monaco-editor")
@@ -222,10 +216,7 @@ if (Cypress.env("edition") === "iso") {
       cy.wait(1000);
 
       // edit the value of the interface_r1_name by removing a character
-      cy.get(".monaco-editor")
-        .click()
-        .focused()
-        .type("{ctrl+f}");  // open search tool
+      cy.get(".monaco-editor").click().focused().type("{ctrl+f}"); // open search tool
 
       cy.wait(1000); // let the editor settle to avoid typing text to fail
 

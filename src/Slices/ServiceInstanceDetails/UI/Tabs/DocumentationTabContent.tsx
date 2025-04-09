@@ -108,8 +108,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
             onClick={() => {
               navigateTo("MarkdownPreviewer", {
                 service: instance.service_entity,
-                instance:
-                  instance.service_identity_attribute_value || instance.id,
+                instance: instance.service_identity_attribute_value || instance.id,
                 instanceId: instance.id,
               });
             }}
@@ -125,10 +124,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
     return (
       <TabContentWrapper id="documentation">
         <MarkdownPreviewerButton />
-        <MarkdownCard
-          attributeValue={sections[0].value}
-          web_title={sections[0].title}
-        />
+        <MarkdownCard attributeValue={sections[0].value} web_title={sections[0].title} />
       </TabContentWrapper>
     );
   }

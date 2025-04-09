@@ -69,9 +69,11 @@ export const JSONEditor: React.FC<Props> = ({
     }
 
     // Add any other validation errors from Monaco
-    errors.push(...markers.map((marker) => {
-      return `${marker.message} at line ${marker.startLineNumber} and column ${marker.startColumn}`;
-    }));
+    errors.push(
+      ...markers.map((marker) => {
+        return `${marker.message} at line ${marker.startLineNumber} and column ${marker.startColumn}`;
+      })
+    );
 
     setErrors(errors);
   };
@@ -156,7 +158,7 @@ export const JSONEditor: React.FC<Props> = ({
       } else {
         // Clear the empty error if we have content
         // Note: Other validation errors from onValidate will still be present! We only remove the empty content error.
-        setErrors(errors => errors.filter(error => error !== words("validation.empty")));
+        setErrors((errors) => errors.filter((error) => error !== words("validation.empty")));
       }
     });
 
@@ -190,8 +192,8 @@ export const JSONEditor: React.FC<Props> = ({
             horizontal: "visible",
             useShadows: false,
             verticalScrollbarSize: 10,
-            horizontalScrollbarSize: 10
-          }
+            horizontalScrollbarSize: 10,
+          },
         }}
       />
       {!readOnly && errors.length > 0 && (

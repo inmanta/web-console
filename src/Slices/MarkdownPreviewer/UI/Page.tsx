@@ -11,14 +11,7 @@ import { MarkdownPreviewer } from "./MarkdownPreviewer";
  * @returns {React.FC} A React Component to wrap the MarkdownPreviewer.
  */
 export const Page: React.FC = () => {
-  const { service, instance, instanceId } =
-    useRouteParams<"MarkdownPreviewer">();
+  const { service, instance, instanceId } = useRouteParams<"MarkdownPreviewer">();
 
-  return (
-    <MarkdownPreviewer
-      service={service}
-      instance={instance}
-      instanceId={instanceId}
-    />
-  );
+  return <MarkdownPreviewer service={service} instance={instance} instanceId={instanceId} />;
 };
