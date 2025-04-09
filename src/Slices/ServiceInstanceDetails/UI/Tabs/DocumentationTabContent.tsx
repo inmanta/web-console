@@ -5,6 +5,8 @@ import {
   AccordionItem,
   AccordionToggle,
   Button,
+  Flex,
+  FlexItem,
 } from "@patternfly/react-core";
 import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
@@ -99,22 +101,25 @@ export const DocumentationTabContent: React.FC<Props> = ({
     }
 
     return (
-      <div style={{ marginBottom: "1rem" }}>
-        <Button
-          variant="secondary"
-          isDanger
-          onClick={() => {
-            navigateTo("MarkdownPreviewer", {
-              service: instance.service_entity,
-              instance:
-                instance.service_identity_attribute_value || instance.id,
-              instanceId: instance.id,
-            });
-          }}
-        >
-          Open in Previewer
-        </Button>
-      </div>
+      <Flex justifyContent={{ default: 'justifyContentFlexEnd' }}>
+        <FlexItem>
+          <Button
+            variant="secondary"
+            aria-label={"preview-button"}
+            isDanger
+            onClick={() => {
+              navigateTo("MarkdownPreviewer", {
+                service: instance.service_entity,
+                instance:
+                  instance.service_identity_attribute_value || instance.id,
+                instanceId: instance.id,
+              });
+            }}
+          >
+            {words("instanceDetails.documentation.openPreviewer")}
+          </Button>
+        </FlexItem>
+      </Flex>
     );
   };
 

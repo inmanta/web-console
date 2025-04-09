@@ -35,7 +35,7 @@ export const CodeEditorControls: React.FC<Props> = ({
       />
       <CodeEditorControl
         icon={<DownloadIcon />}
-        aria-label={words("copy")}
+        aria-label={words("markdownPreviewer.download")}
         tooltipProps={{ content: words("markdownPreviewer.download.tooltip") }}
         onClick={() => {
           const blob = new Blob([code], { type: "text/markdown" });
