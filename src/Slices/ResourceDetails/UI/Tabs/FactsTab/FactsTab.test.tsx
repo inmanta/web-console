@@ -1,12 +1,13 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Mock } from "@S/Facts/Test";
 import { FactsTab } from "./FactsTab";
@@ -14,15 +15,9 @@ import { sortFactRows } from "./FactsTable";
 
 function setup() {
   const store = getStoreInstance();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
+
   const component = (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter>
         <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>

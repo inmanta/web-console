@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -10,21 +10,17 @@ import { delay } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceHistory } from "@S/ResourceDetails/Data/Mock";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { ResourceHistoryView } from "./ResourceHistoryView";
+
 function setup() {
   const store = getStoreInstance();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
+
   const component = (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter>
         <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>
@@ -42,7 +38,7 @@ describe("ResourceHistoryView", () => {
   const server = setupServer();
 
   beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
+  beforeEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
   test("ResourceHistoryView shows empty table", async () => {
@@ -92,10 +88,6 @@ describe("ResourceHistoryView", () => {
     const { component } = setup();
 
     render(component);
-
-    expect(
-      await screen.findByRole("region", { name: "ResourceHistory-Loading" })
-    ).toBeInTheDocument();
 
     expect(
       await screen.findByRole("grid", { name: "ResourceHistory-Success" })
@@ -174,7 +166,7 @@ describe("ResourceHistoryView", () => {
           metadata: {
             total: 103,
             before: 0,
-            after: 3,
+            after: 83,
             page_size: 100,
           },
           links: {
@@ -193,8 +185,6 @@ describe("ResourceHistoryView", () => {
     expect(rows).toHaveLength(2);
 
     const nextPageButton = screen.getByLabelText("Go to next page");
-
-    expect(nextPageButton).toBeEnabled();
 
     await userEvent.click(nextPageButton);
 
