@@ -1,6 +1,7 @@
 import { RouteKind } from "@/Core";
 import { InstanceComposer } from "@/Slices/InstanceComposerCreator";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
+import { MarkdownPreviewer } from "@/Slices/MarkdownPreviewer";
 import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -65,6 +66,7 @@ export const paths: Paths = {
   Orders: Orders.path,
   OrderDetails: OrderDetails.path,
   InstanceDetails: InstanceDetails.path,
+  MarkdownPreviewer: MarkdownPreviewer.path,
 
   /**
    * Resource Manager

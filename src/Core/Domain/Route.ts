@@ -27,6 +27,7 @@ export const kinds = [
   "Orders",
   "OrderDetails",
   "ServiceDetails",
+  "MarkdownPreviewer",
 
   /**
    * Resource Manager
@@ -91,6 +92,7 @@ interface RouteParamKeysManifest {
   InstanceComposerEditor: "service" | "instance";
   InstanceComposerViewer: "service" | "instance";
   Inventory: "service";
+  MarkdownPreviewer: "service" | "instance" | "instanceId";
   ResourceDetails: "resourceId";
   ResourceHistory: "resourceId";
   ResourceLogs: "resourceId";

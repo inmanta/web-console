@@ -35,7 +35,7 @@ module.exports = {
     }),
     new MonacoWebpackPlugin({
       // available options:
-      languages: ["javascript", "typescript", "json"], // specify languages you need
+      languages: ["javascript", "typescript", "json", "markdown"], // specify languages you need
       features: ["!gotoSymbol"], // customize features
     }),
   ],
