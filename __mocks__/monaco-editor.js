@@ -3,8 +3,14 @@
 
 module.exports = {
   editor: {
+    getModels: jest.fn().mockReturnValue([]),
     create: jest.fn(() => ({
-      getModel: jest.fn(),
+      getModel: jest.fn().mockReturnValue({
+        onDidChangeContent: jest.fn(),
+        getValue: jest.fn(),
+        setValue: jest.fn(),
+        dispose: jest.fn(),
+      }),
       onDidChangeModelContent: jest.fn(),
       createModel: jest.fn(),
       setModelLanguage: jest.fn(),
