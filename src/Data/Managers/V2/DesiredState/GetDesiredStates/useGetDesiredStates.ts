@@ -24,9 +24,16 @@ interface Result {
   metadata: Pagination.Metadata;
 }
 
+/**
+ * interface of Data that the useGetDesiredStates React Query returns if successful
+ */
 interface QueryData extends Result {
   handlers: Pagination.Handlers;
 }
+
+/**
+ * interface of Params of the useGetDesiredStates React Query
+ */
 export interface GetDesiredStatesParams {
   pageSize: PageSize.PageSize;
   filter: Filter;

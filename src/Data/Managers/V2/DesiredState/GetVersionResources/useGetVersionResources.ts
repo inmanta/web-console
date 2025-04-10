@@ -15,6 +15,9 @@ interface Result {
   metadata: Pagination.Metadata;
 }
 
+/**
+ * interface of Data that the useGetVersionResources React Query returns if successful
+ */
 interface QueryResponse extends Result {
   handlers: Pagination.Handlers;
 }
