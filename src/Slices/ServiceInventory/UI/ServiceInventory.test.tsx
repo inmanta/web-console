@@ -203,6 +203,22 @@ describe("ServiceInventory", () => {
   });
 
   test("ServiceInventory shows instance summary chart", async () => {
+    server.use(
+      http.get("/lsm/v1/service_inventory/service_name_e", () => {
+        return HttpResponse.json({
+          data: [
+            {
+              ...ServiceInstance.allAttrs,
+              id: "a",
+              service_identity_attribute_value: undefined,
+            },
+          ],
+          links: Pagination.links,
+          metadata: Pagination.metadata,
+        });
+      })
+    );
+
     const { component } = setup(Service.withInstanceSummary);
 
     render(component);
