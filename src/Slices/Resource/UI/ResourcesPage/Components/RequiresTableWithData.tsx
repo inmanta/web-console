@@ -14,7 +14,7 @@ export const RequiresTableWithData: React.FC<Props> = ({ id, deps }) => {
 
   if (isError) {
     <ErrorView
-      message={words("error.general")(error?.message)}
+      message={words("error.general")(error.message)}
       ariaLabel="ResourceRequires-Failed"
       retry={refetch}
     />;

@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { dia } from "@inmanta/rappid";
 import { QueryClientProvider } from "@tanstack/react-query";

@@ -1,4 +1,3 @@
-import { act } from "react";
 import { dia, ui } from "@inmanta/rappid";
 import { fireEvent, screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";

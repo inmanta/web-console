@@ -1,7 +1,7 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -10,6 +10,7 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
@@ -19,16 +20,9 @@ expect.extend(toHaveNoViolations);
 
 function setup() {
   const store = getStoreInstance();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
 
   const component = (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <MemoryRouter>
         <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>
@@ -47,7 +41,7 @@ describe("ResourceDetailsView", () => {
   const server = setupServer();
 
   beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
+  beforeEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
   test("GIVEN The Resource details view THEN details data is fetched immediately", async () => {

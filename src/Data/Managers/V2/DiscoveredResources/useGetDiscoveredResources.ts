@@ -14,6 +14,7 @@ export interface DiscoveredResourceFilter {
   state?: string;
   environment?: string;
 }
+
 export interface DiscoveredResource {
   discovered_resource_id: string;
   managed_resource_uri: string | null;

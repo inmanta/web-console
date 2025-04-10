@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { DictEditor } from "./DictEditor";

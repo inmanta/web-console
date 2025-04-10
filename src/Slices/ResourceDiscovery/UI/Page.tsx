@@ -1,11 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  Filter,
-  SortKey,
-  useGetDiscoveredResources,
-} from "@/Data/Managers/V2/DiscoveredResources/useGetDiscoveredResources";
+import { Filter, SortKey, useGetDiscoveredResources } from "@/Data/Managers/V2/DiscoveredResources";
 import {
   EmptyView,
   PageContainer,

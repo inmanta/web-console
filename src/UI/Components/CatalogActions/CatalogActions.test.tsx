@@ -1,6 +1,6 @@
-import React from "react";
+import React, { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, cleanup, waitFor } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
@@ -79,13 +79,11 @@ describe("CatalogActions", () => {
 
     expect(button).toBeVisible();
 
-    await waitFor(async () => {
-      await userEvent.click(button);
-    });
+    await userEvent.click(button);
 
     expect(await screen.findByText(words("catalog.update.modal.title"))).toBeVisible();
 
-    await waitFor(async () => {
+    await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -107,23 +105,19 @@ describe("CatalogActions", () => {
       name: words("catalog.button.update"),
     });
 
-    await waitFor(async () => {
-      await userEvent.click(button);
-    });
+    await userEvent.click(button);
 
     const cancelButton = await screen.findByText(words("no"));
 
     expect(cancelButton).toBeVisible();
 
-    await waitFor(async () => {
+    await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
 
-    await waitFor(async () => {
-      await userEvent.click(cancelButton);
-    });
+    await userEvent.click(cancelButton);
 
     expect(await screen.queryByText(words("catalog.update.success"))).toBeNull();
   });
@@ -139,7 +133,7 @@ describe("CatalogActions", () => {
 
     render(component);
 
-    await waitFor(async () => {
+    await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
@@ -149,17 +143,13 @@ describe("CatalogActions", () => {
       name: words("catalog.button.update"),
     });
 
-    await waitFor(async () => {
-      await userEvent.click(button);
-    });
+    await userEvent.click(button);
 
     const confirmButton = await screen.findByText(words("yes"));
 
     expect(confirmButton).toBeVisible();
 
-    await waitFor(async () => {
-      await userEvent.click(confirmButton);
-    });
+    await userEvent.click(confirmButton);
 
     expect(confirmButton).not.toBeVisible();
 
@@ -180,17 +170,13 @@ describe("CatalogActions", () => {
       name: words("catalog.button.update"),
     });
 
-    await waitFor(async () => {
-      await userEvent.click(button);
-    });
+    await userEvent.click(button);
 
     const confirmButton = await screen.findByText(words("yes"));
 
     expect(confirmButton).toBeVisible();
 
-    await waitFor(async () => {
-      await userEvent.click(confirmButton);
-    });
+    await userEvent.click(confirmButton);
 
     expect(await screen.findByText("Something went wrong")).toBeVisible();
   });

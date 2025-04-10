@@ -4,7 +4,7 @@ import { GetResourcesParams } from "./useGetResources";
 /**
  * Constructs a URL for fetching resources with filtering, sorting, and pagination
  *
- * @param {Query.SubQuery<"GetResources">} query - The query parameters
+ * @param {GetResourcesParams} query - The query parameters
  * @returns {string} The constructed URL
  */
 export const getUrl = ({ filter, pageSize, sort, currentPage }: GetResourcesParams): string => {
