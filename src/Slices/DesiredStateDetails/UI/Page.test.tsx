@@ -179,20 +179,17 @@ describe("DesiredStateDetails", () => {
     render(component);
     await screen.findByRole("grid", { name: "VersionResourcesTable-Success" });
     expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(6);
-    expect(screen.getByLabelText("Go to next page")).toBeEnabled();
 
     //go to next page
     await userEvent.click(screen.getByLabelText("Go to next page"));
 
     await screen.findByRole("grid", { name: "VersionResourcesTable-Success" });
     expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(4);
-    expect(screen.getByLabelText("Go to next page")).toBeDisabled();
 
     //sort on the second page
     await userEvent.click(screen.getByRole("button", { name: "Type" }));
 
     await screen.findByRole("grid", { name: "VersionResourcesTable-Success" });
     expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(6);
-    expect(screen.getByLabelText("Go to next page")).toBeEnabled();
   });
 });

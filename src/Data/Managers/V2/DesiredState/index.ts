@@ -4,4 +4,3 @@ export * from "./PromoteDesiredStateVersion";
 export * from "./GetDesiredStateDiff";
 export * from "./GetDesiredStateResourceDetails";
 export * from "./GetVersionResources";
-export * from "./TriggerDryRun";
