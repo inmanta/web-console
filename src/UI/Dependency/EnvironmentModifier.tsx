@@ -1,37 +1,29 @@
-import {
-  EnvironmentDetails,
-  EnvironmentModifier,
-  EnvironmentSettings,
-  Maybe,
-  RemoteData,
-} from "@/Core";
-import { useStoreState } from "@/Data/Store";
+import { EnvironmentDetails, EnvironmentModifier, EnvironmentSettings } from "@/Core";
+import { EnvironmentSettings as EnvironmentSettingsType } from "@/Core/Domain/EnvironmentSettings";
+import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment/GetEnvironmentDetails";
+import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment/GetEnvironmentSettings";
+import { useState } from "react";
 
 export function EnvironmentModifierImpl(): EnvironmentModifier {
-  let environment: Maybe.Type<string> = Maybe.none();
+  const [envId, setEnvId] = useState<null | string>(null);
+
+  const envDetails = useGetEnvironmentDetails().useContinuous(envId || "");
+  const envSettings = useGetEnvironmentSettings().useOneTime(envId || "");
 
   function useCurrentEnvironment(): EnvironmentDetails | null {
-    const storeState = useStoreState((state) => state.environment.environmentDetailsById);
-
-    if (Maybe.isSome(environment)) {
-      const state = storeState[environment.value];
-
-      if (state !== undefined && RemoteData.isSuccess(state)) {
-        return state.value;
+    if (envId) {
+      if (envDetails.isSuccess) {
+        return envDetails.data;
       }
     }
 
     return null;
   }
 
-  function useEnvironmentSettings(): EnvironmentSettings.EnvironmentSettings | null {
-    const storeState = useStoreState((state) => state.environment.settingsByEnv);
-
-    if (Maybe.isSome(environment)) {
-      const state = storeState[environment.value];
-
-      if (state !== undefined && RemoteData.isSuccess(state)) {
-        return state.value;
+  function useEnvironmentSettings(): EnvironmentSettingsType | null {
+    if (envId) {
+      if (envSettings.isSuccess) {
+        return envSettings.data;
       }
     }
 
@@ -39,7 +31,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
   }
 
   function setEnvironment(environmentToSet: string): void {
-    environment = Maybe.some(environmentToSet);
+    setEnvId(environmentToSet);
   }
 
   function useIsHalted(): boolean {
