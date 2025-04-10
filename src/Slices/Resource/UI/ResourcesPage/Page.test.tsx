@@ -731,9 +731,7 @@ describe("ResourcesPage", () => {
 
     expect(nextButton).toBeEnabled();
 
-    await act(async () => {
-      await userEvent.click(nextButton);
-    });
+    await userEvent.click(nextButton);
 
     expect(
       await screen.findByRole("generic", {

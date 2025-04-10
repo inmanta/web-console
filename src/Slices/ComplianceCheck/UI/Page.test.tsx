@@ -278,9 +278,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
 
   await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
 
-  await act(async () => {
-    await userEvent.click(statusOptions[0]);
-  });
+  await userEvent.click(statusOptions[0]);
 
   await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
 

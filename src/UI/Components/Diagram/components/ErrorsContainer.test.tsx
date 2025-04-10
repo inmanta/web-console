@@ -48,9 +48,7 @@ describe("Given a Validation component", () => {
     expect(screen.queryByTestId("Error-container")).toBeDefined();
     expect(screen.getByText("Errors found: 1")).toBeDefined();
 
-    await act(async () => {
-      await userEvent.click(screen.getByLabelText("Danger alert details"));
-    });
+    await userEvent.click(screen.getByLabelText("Danger alert details"));
 
     expect(
       screen.getByText("Expected at least 1 relation-test inter-service relation(s) for test")

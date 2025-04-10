@@ -1,5 +1,5 @@
 import React, { act } from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Attributes, EntityLike, ServiceModel } from "@/Core";
 import { dependencies } from "@/Test";
@@ -252,13 +252,9 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
     name: "expand-collapse-dropdown-toggle",
   });
 
-  await waitFor(async () => {
-    await userEvent.click(dropdown);
-  });
+  await userEvent.click(dropdown);
 
-  await waitFor(async () => {
-    await userEvent.click(screen.getByRole("option", { name: "Expand all" }));
-  });
+  await userEvent.click(screen.getByRole("option", { name: "Expand all" }));
 
   const row1 = screen.getByRole("row", { name: "Row-a$c$d" });
   const row2 = screen.getByRole("row", { name: "Row-a$e$f" });
@@ -268,13 +264,9 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
   expect(row2).toBeVisible();
   expect(row3).toBeVisible();
 
-  await waitFor(async () => {
-    await userEvent.click(dropdown);
-  });
+  await userEvent.click(dropdown);
 
-  await waitFor(async () => {
-    await userEvent.click(screen.getByRole("option", { name: words("inventory.tabs.collapse") }));
-  });
+  await userEvent.click(screen.getByRole("option", { name: words("inventory.tabs.collapse") }));
 
   expect(row1).not.toBeVisible();
   expect(row2).not.toBeVisible();

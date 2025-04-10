@@ -17,9 +17,7 @@ describe("BooleanFormInput", () => {
     );
     const toggle = await screen.findByLabelText("Toggle-bool_param");
 
-    await act(async () => {
-      await userEvent.click(toggle);
-    });
+    await userEvent.click(toggle);
 
     expect(handleClick).toHaveBeenCalled();
   });

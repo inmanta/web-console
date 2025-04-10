@@ -139,9 +139,7 @@ describe("EntityForm.", () => {
 
     expect(screen.getByRole("button", { name: "Remove" })).toBeEnabled();
 
-    await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Remove" }));
-    });
+    await userEvent.click(screen.getByRole("button", { name: "Remove" }));
 
     expect(onRemove).toHaveBeenCalled();
   });
@@ -202,9 +200,7 @@ describe("EntityForm.", () => {
     expect(screen.getByLabelText("TextInput-service_id")).toHaveValue("test_id");
     expect(screen.getByLabelText("TextInput-name")).toHaveValue("test_name");
 
-    await act(async () => {
-      await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
-    });
+    await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
 
     expect(editEntity).toHaveBeenCalledWith(expect.any(Object), parentModel, {
       name: "",

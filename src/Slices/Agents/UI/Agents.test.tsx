@@ -132,13 +132,11 @@ test("When using the name filter then only the matching agents should be fetched
 
   expect(initialRows).toHaveLength(6);
 
-  await act(async () => {
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
-  });
+  await userEvent.click(
+    within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
+      name: "FilterPicker",
+    })
+  );
 
   await userEvent.click(screen.getByRole("option", { name: words("attribute.name") }));
 

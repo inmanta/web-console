@@ -35,9 +35,7 @@ describe("ZoomHandler", () => {
 
     const fullscreenButton = screen.getByTestId("fullscreen");
 
-    await act(async () => {
-      await userEvent.click(fullscreenButton);
-    });
+    await userEvent.click(fullscreenButton);
 
     expect(fullScreenSpy).toHaveBeenCalled();
   });
@@ -53,9 +51,7 @@ describe("ZoomHandler", () => {
 
     const fullscreenButton = screen.getByTestId("fullscreen");
 
-    await act(async () => {
-      await userEvent.click(fullscreenButton);
-    });
+    await userEvent.click(fullscreenButton);
 
     expect(exitFullScreenSpy).toHaveBeenCalled();
   });
@@ -66,9 +62,7 @@ describe("ZoomHandler", () => {
 
     const fitToScreenButton = screen.getByTestId("fit-to-screen");
 
-    await act(async () => {
-      await userEvent.click(fitToScreenButton);
-    });
+    await userEvent.click(fitToScreenButton);
 
     expect(zoomToFit).toHaveBeenCalled();
   });
