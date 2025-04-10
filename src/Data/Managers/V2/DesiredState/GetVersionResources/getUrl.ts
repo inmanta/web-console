@@ -14,11 +14,22 @@ export function getUrl({
   sort,
   currentPage,
 }: GetVersionResourcesParams): string {
-  const filterParam = filter
-    ? `&${qs.stringify({ filter }, { allowDots: true, arrayFormat: "repeat" })}`
-    : "";
+  const filterParam =
+    filter && Object.keys(filter).length > 0
+      ? `&${qs.stringify(
+          {
+            filter: {
+              agent: filter.agent,
+              resource_id_value: filter.value,
+              resource_type: filter.type,
+            },
+          },
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
+      : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  const paginationParam = currentPage.value ? `&${currentPage.value}` : "";
 
-  return `/api/v2/desiredstate/${version}?limit=${pageSize.value}${filterParam}${sortParam}${paginationParam}`;
+  return `/api/v2/desiredstate/${version}?limit=${pageSize.value}${filterParam}${sortParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }
