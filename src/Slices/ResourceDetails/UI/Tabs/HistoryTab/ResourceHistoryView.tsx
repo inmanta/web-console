@@ -7,7 +7,7 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { Details } from "@/Core/Domain/Resource";
+import { Details } from "@/Core/Domain/Resource/Resource";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGetResourceHistory } from "@/Data/Managers/V2/Resource/GetResourceHistory";

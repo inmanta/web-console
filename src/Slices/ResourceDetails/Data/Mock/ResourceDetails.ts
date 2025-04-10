@@ -1,4 +1,4 @@
-import { Details, Status } from "@/Core/Domain/Resource";
+import { Details, Status } from "@/Core/Domain/Resource/Resource";
 import { id } from "@/Test/Data/Resource";
 
 export const a: Details = {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Details } from "@/Core/Domain/Resource";
+import { Details } from "@/Core/Domain/Resource/Resource";
 import { EmptyView, RequiresTable } from "@/UI/Components";
 import { words } from "@/UI/words";
 
