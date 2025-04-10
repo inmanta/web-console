@@ -54,16 +54,14 @@ describe("ResourceDetailsView", () => {
     server.use(
       http.get("/api/v2/resource/abc", () => {
         return HttpResponse.json({ data: ResourceDetails.a });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
     expect(screen.getByLabelText("ResourceDetails-Loading")).toBeVisible();
 
-    expect(
-      await screen.findByLabelText("ResourceDetails-Success"),
-    ).toBeVisible();
+    expect(await screen.findByLabelText("ResourceDetails-Success")).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -78,24 +76,20 @@ describe("ResourceDetailsView", () => {
         return HttpResponse.json({
           data: { ...ResourceDetails.a, requires_status: {} },
         });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
-    expect(
-      await screen.findByLabelText("ResourceDetails-Success"),
-    ).toBeVisible();
+    expect(await screen.findByLabelText("ResourceDetails-Success")).toBeVisible();
 
     await userEvent.click(
       screen.getAllByRole("tab", {
         name: words("resources.requires.title"),
-      })[0],
+      })[0]
     );
 
-    expect(
-      await screen.findByLabelText("ResourceRequires-Empty"),
-    ).toBeVisible();
+    expect(await screen.findByLabelText("ResourceRequires-Empty")).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -108,23 +102,19 @@ describe("ResourceDetailsView", () => {
     server.use(
       http.get("/api/v2/resource/abc", () => {
         return HttpResponse.json({ data: ResourceDetails.a });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
-    expect(
-      await screen.findByLabelText("ResourceDetails-Success"),
-    ).toBeVisible();
+    expect(await screen.findByLabelText("ResourceDetails-Success")).toBeVisible();
 
     await userEvent.click(
       screen.getAllByRole("tab", {
         name: words("resources.requires.title"),
-      })[0],
+      })[0]
     );
-    expect(
-      await screen.findByRole("grid", { name: "ResourceRequires-Success" }),
-    ).toBeVisible();
+    expect(await screen.findByRole("grid", { name: "ResourceRequires-Success" })).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -137,7 +127,7 @@ describe("ResourceDetailsView", () => {
     server.use(
       http.get("/api/v2/resource/abc", () => {
         return HttpResponse.json({ data: ResourceDetails.a });
-      }),
+      })
     );
     const { component } = setup();
 

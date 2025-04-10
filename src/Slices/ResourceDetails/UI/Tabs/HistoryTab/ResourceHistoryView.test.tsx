@@ -28,10 +28,7 @@ function setup() {
       <MemoryRouter>
         <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>
-            <ResourceHistoryView
-              resourceId="abc"
-              details={ResourceDetails.response.data}
-            />
+            <ResourceHistoryView resourceId="abc" details={ResourceDetails.response.data} />
           </StoreProvider>
         </DependencyProvider>
       </MemoryRouter>
@@ -58,18 +55,16 @@ describe("ResourceHistoryView", () => {
           metadata: { total: 0, before: 0, after: 0, page_size: 10 },
           links: { self: "" },
         });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      screen.getByRole("region", { name: "ResourceHistory-Loading" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "ResourceHistory-Loading" })).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("generic", { name: "ResourceHistory-Empty" }),
+      await screen.findByRole("generic", { name: "ResourceHistory-Empty" })
     ).toBeInTheDocument();
   });
 
@@ -77,14 +72,14 @@ describe("ResourceHistoryView", () => {
     server.use(
       http.get("/api/v2/resource/abc/history", () => {
         return HttpResponse.json({ message: "error" }, { status: 500 });
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "ResourceHistory-Error" }),
+      await screen.findByRole("region", { name: "ResourceHistory-Error" })
     ).toBeInTheDocument();
   });
 
@@ -92,18 +87,18 @@ describe("ResourceHistoryView", () => {
     server.use(
       http.get("/api/v2/resource/abc/history", () => {
         return HttpResponse.json(ResourceHistory.response);
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
     expect(
-      await screen.findByRole("region", { name: "ResourceHistory-Loading" }),
+      await screen.findByRole("region", { name: "ResourceHistory-Loading" })
     ).toBeInTheDocument();
 
     expect(
-      await screen.findByRole("grid", { name: "ResourceHistory-Success" }),
+      await screen.findByRole("grid", { name: "ResourceHistory-Success" })
     ).toBeInTheDocument();
   });
 
@@ -118,7 +113,7 @@ describe("ResourceHistoryView", () => {
         }
 
         return HttpResponse.json(ResourceHistory.response);
-      }),
+      })
     );
     const { component } = setup();
 
@@ -134,9 +129,7 @@ describe("ResourceHistoryView", () => {
 
     await userEvent.click(stateButton);
 
-    const updatedRows = await screen.findAllByLabelText(
-      "Resource History Table Row",
-    );
+    const updatedRows = await screen.findAllByLabelText("Resource History Table Row");
 
     expect(updatedRows[0]).toHaveTextContent("4 years ago1");
     expect(updatedRows[1]).toHaveTextContent("4 years ago2");
@@ -146,23 +139,17 @@ describe("ResourceHistoryView", () => {
     server.use(
       http.get("/api/v2/resource/abc/history", () => {
         return HttpResponse.json(ResourceHistory.response);
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      await screen.findByLabelText("ResourceHistory-Success"),
-    ).toBeVisible();
+    expect(await screen.findByLabelText("ResourceHistory-Success")).toBeVisible();
 
-    await userEvent.click(
-      screen.getAllByRole("button", { name: "Details" })[0],
-    );
+    await userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
 
-    expect(
-      screen.getAllByRole("tab", { name: "Desired State" })[0],
-    ).toBeVisible();
+    expect(screen.getAllByRole("tab", { name: "Desired State" })[0]).toBeVisible();
     expect(screen.getAllByRole("tab", { name: "Requires" })[0]).toBeVisible();
   });
 
@@ -195,7 +182,7 @@ describe("ResourceHistoryView", () => {
             next: "/fake-link?end=fake-first-param",
           },
         });
-      }),
+      })
     );
     const { component } = setup();
 
@@ -211,18 +198,14 @@ describe("ResourceHistoryView", () => {
 
     await userEvent.click(nextPageButton);
 
-    const updatedRows = await screen.findAllByLabelText(
-      "Resource History Table Row",
-    );
+    const updatedRows = await screen.findAllByLabelText("Resource History Table Row");
 
     expect(updatedRows).toHaveLength(1);
 
     //sort on the second page
     await userEvent.click(screen.getByRole("button", { name: "Date" }));
 
-    const updatedRows1 = await screen.findAllByLabelText(
-      "Resource History Table Row",
-    );
+    const updatedRows1 = await screen.findAllByLabelText("Resource History Table Row");
 
     expect(updatedRows1).toHaveLength(2);
   });
