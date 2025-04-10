@@ -10,6 +10,27 @@ interface Props {
 }
 
 /**
+ * Handles the download of the markdown content as a file.
+ *
+ * @param {string} code - The markdown content to be downloaded
+ * @param {string} service - The service name to be used in the filename
+ * @param {string} instance - The instance name to be used in the filename
+ * @returns {void}
+ */
+const handleDownload = (code: string, service: string, instance: string) => {
+  const blob = new Blob([code], { type: "text/markdown" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download = `${service}-${instance}-documentation.md`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+/**
  * The CodeEditorControls Component
  *
  * @props {Props} props - The props of the component.
@@ -33,18 +54,7 @@ export const CodeEditorControls: React.FC<Props> = ({ code, service, instance })
         icon={<DownloadIcon />}
         aria-label={words("markdownPreviewer.download")}
         tooltipProps={{ content: words("markdownPreviewer.download.tooltip") }}
-        onClick={() => {
-          const blob = new Blob([code], { type: "text/markdown" });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-
-          a.href = url;
-          a.download = `${service}-${instance}-documentation.md`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }}
+        onClick={() => handleDownload(code, service, instance)}
       />
     </>
   );

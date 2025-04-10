@@ -19,7 +19,7 @@ jest.mock("@patternfly/react-code-editor", () => ({
       <textarea
         data-testid="code-editor-textarea"
         value={code}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
       />
     </div>
   ),

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import { Flex, FlexItem, Hint, HintTitle, HintBody, Button } from "@patternfly/react-core";
 import { CloseIcon } from "@patternfly/react-icons";
@@ -29,7 +29,7 @@ export const MarkdownPreviewer: React.FC<Props> = ({ service, instance, instance
   const [markdownContent, setMarkdownContent] = useState(initialCode);
 
   // Update local state when initial code changes
-  React.useEffect(() => {
+  useEffect(() => {
     setMarkdownContent(initialCode);
   }, [initialCode]);
 
