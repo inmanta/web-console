@@ -54,7 +54,12 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
         </PageSection>
         <PageSection hasBodyWrapper={false} hasShadowBottom>
           {/* RemoteData will throw type error after Dry run query updates will take place, for now this component will stay as is*/}
-          <DiffWizard.Controls data={RemoteData.success(data)} refs={refs} from={from} to={to} />
+          <DiffWizard.Controls
+            data={RemoteData.success(filteredData)}
+            refs={refs}
+            from={from}
+            to={to}
+          />
         </PageSection>
         <PageSection hasBodyWrapper={false} isFilled>
           {data.length <= 0 ? (
