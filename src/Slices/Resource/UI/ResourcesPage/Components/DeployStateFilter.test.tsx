@@ -24,7 +24,9 @@ test("Given the deploy state filter When changing the include/exclude options Th
     name: "Deploy State-toggle",
   });
 
-  fireEvent.click(menuToggle);
+  await act(async () => {
+    fireEvent.click(menuToggle);
+  });
 
   // Skipped state, check if no filter is applied by default on that option.
   expect(await screen.findByRole("generic", { name: "skipped-include-inactive" })).toBeVisible();
