@@ -1,10 +1,7 @@
 import { Action, action } from "easy-peasy";
 import { Query, RemoteData } from "@/Core";
 
-type Data = RemoteData.Type<
-  Query.Error<"GetCallbacks">,
-  Query.Data<"GetCallbacks">
->;
+type Data = RemoteData.Type<Query.Error<"GetCallbacks">, Query.Data<"GetCallbacks">>;
 
 /**
  * The eventsSlice stores events related to service instances.
@@ -13,10 +10,7 @@ type Data = RemoteData.Type<
  */
 export interface CallbacksSlice {
   byEnv: Record<string, Record<string, Data>>;
-  setData: Action<
-    CallbacksSlice,
-    { environment: string; service_entity: string; value: Data }
-  >;
+  setData: Action<CallbacksSlice, { environment: string; service_entity: string; value: Data }>;
 }
 
 export const callbacksSlice: CallbacksSlice = {

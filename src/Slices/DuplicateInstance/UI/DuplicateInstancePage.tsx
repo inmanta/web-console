@@ -20,13 +20,11 @@ export const DuplicateInstancePage: React.FC<{
 }> = ({ serviceEntity, instanceId }) => {
   const { data, isError, error, isSuccess } = useGetInstance(
     serviceEntity.name,
-    instanceId,
+    instanceId
   ).useContinuous();
 
   if (isError) {
-    return (
-      <ErrorView ariaLabel="DuplicateInstance-Failed" message={error.message} />
-    );
+    return <ErrorView ariaLabel="DuplicateInstance-Failed" message={error.message} />;
   }
 
   if (isSuccess) {
@@ -51,15 +49,10 @@ export const DuplicateInstancePage: React.FC<{
   );
 };
 
-const Wrapper: React.FC<PropsWithChildren<{ id: string }>> = ({
-  id,
-  children,
-}) => {
+const Wrapper: React.FC<PropsWithChildren<{ id: string }>> = ({ id, children }) => {
   return (
     <>
-      <Description withSpace>
-        {words("inventory.duplicateInstance.header")(id)}
-      </Description>
+      <Description withSpace>{words("inventory.duplicateInstance.header")(id)}</Description>
       {children}
     </>
   );

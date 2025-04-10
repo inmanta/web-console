@@ -14,10 +14,9 @@ export const ResumeButton: React.FC = () => {
   const { queryResolver, commandResolver } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
 
-  const resumeEnvironmentTrigger =
-    commandResolver.useGetTrigger<"ResumeEnvironment">({
-      kind: "ResumeEnvironment",
-    });
+  const resumeEnvironmentTrigger = commandResolver.useGetTrigger<"ResumeEnvironment">({
+    kind: "ResumeEnvironment",
+  });
 
   /**
    * Handles the toggling of the modal.
@@ -56,10 +55,7 @@ export const ResumeButton: React.FC = () => {
   };
 
   return (
-    <Tooltip
-      content={<div>{words("environment.resume.tooltip")}</div>}
-      position="right"
-    >
+    <Tooltip content={<div>{words("environment.resume.tooltip")}</div>} position="right">
       <Button
         icon={
           <Icon status="success">

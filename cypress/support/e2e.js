@@ -3,6 +3,7 @@ beforeEach(() => {
   cy.on("uncaught:exception", (err) => {
     // Only ignore the specific Monaco editor disposal error
     console.log(err.message);
+
     if (err.message.includes("TextModel")) {
       return false; // Prevents the error from failing tests
     }
@@ -10,4 +11,6 @@ beforeEach(() => {
     // Allow other uncaught exceptions to fail tests
     return true;
   });
+
+  localStorage.setItem("theme-preference", "light");
 });

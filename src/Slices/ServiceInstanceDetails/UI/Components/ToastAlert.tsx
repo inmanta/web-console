@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-} from "@patternfly/react-core";
+import { Alert, AlertActionCloseButton, AlertGroup } from "@patternfly/react-core";
 
 interface Props {
   message: string;
@@ -22,12 +18,7 @@ interface Props {
  *  @prop {"danger" | "success"} variant - the variant of the toast that needs to be displayed
  * @returns {React.FC<Props>} A React Component displaying a toaster element
  */
-export const ToastAlertMessage: React.FC<Props> = ({
-  message,
-  id,
-  setMessage,
-  variant,
-}) => {
+export const ToastAlertMessage: React.FC<Props> = ({ message, id, setMessage, variant }) => {
   return (
     <AlertGroup isToast={true}>
       <Alert

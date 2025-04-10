@@ -11,15 +11,10 @@ interface Props {
   isToastVisible?: boolean;
 }
 
-export const Provider: React.FC<Props> = ({
-  afterTrigger,
-  isToastVisible = false,
-}) => {
-  const { environmentModifier, environmentHandler } =
-    useContext(DependencyContext);
+export const Provider: React.FC<Props> = ({ afterTrigger, isToastVisible = false }) => {
+  const { environmentModifier, environmentHandler } = useContext(DependencyContext);
   const [toastMessage, setToastMessage] = useState("");
-  const isServerCompileEnabled =
-    environmentModifier.useIsServerCompileEnabled();
+  const isServerCompileEnabled = environmentModifier.useIsServerCompileEnabled();
   const env = environmentHandler.useId();
 
   const { mutate } = useTriggerCompile({

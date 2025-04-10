@@ -12,12 +12,7 @@ interface Props {
 
 const datePresenter = new MomentDatePresenter();
 
-export const Provider: React.FC<Props> = ({
-  requested,
-  started,
-  completed,
-  success,
-}) => {
+export const Provider: React.FC<Props> = ({ requested, started, completed, success }) => {
   useTickerWithInterval(!(started && completed) ? "OneSecond" : "Never");
   const now = new Date(Date.now()).toISOString();
 
@@ -36,9 +31,7 @@ export const Provider: React.FC<Props> = ({
               time: datePresenter.getTime(started),
             }
       }
-      startedDiff={
-        !started ? undefined : getDiff(completed ? completed : now, started)
-      }
+      startedDiff={!started ? undefined : getDiff(completed ? completed : now, started)}
       completed={
         !completed
           ? undefined
@@ -53,10 +46,8 @@ export const Provider: React.FC<Props> = ({
 };
 
 const getDiff = (timestampA: string, timestampB: string): string => {
-  const seconds = moment
-    .duration(moment.utc(timestampA).diff(moment.utc(timestampB)))
-    .asSeconds();
+  const seconds = moment.duration(moment.utc(timestampA).diff(moment.utc(timestampB))).asSeconds();
   const rounded = Math.round(seconds);
 
-  return rounded === 1 ? `1 second` : `${rounded} seconds`;
+  return rounded === 1 ? "1 second" : `${rounded} seconds`;
 };

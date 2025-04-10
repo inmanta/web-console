@@ -104,11 +104,9 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
     });
 
     // Add initial event listeners
-    container
-      .querySelectorAll('.mermaid-diagram[data-zoomable="true"]')
-      .forEach((img) => {
-        img.addEventListener("click", handleImageClick);
-      });
+    container.querySelectorAll('.mermaid-diagram[data-zoomable="true"]').forEach((img) => {
+      img.addEventListener("click", handleImageClick);
+    });
 
     document.addEventListener("click", handleDocumentClick);
     document.addEventListener("keydown", handleKeyDown);
@@ -117,11 +115,9 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
       observer.disconnect();
       document.removeEventListener("click", handleDocumentClick);
       document.removeEventListener("keydown", handleKeyDown);
-      container
-        .querySelectorAll('.mermaid-diagram[data-zoomable="true"]')
-        .forEach((img) => {
-          img.removeEventListener("click", handleImageClick);
-        });
+      container.querySelectorAll('.mermaid-diagram[data-zoomable="true"]').forEach((img) => {
+        img.removeEventListener("click", handleImageClick);
+      });
       document.body.style.overflow = "";
     };
   }, [text]);

@@ -1,8 +1,4 @@
-import {
-  UseMutationResult,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDeleteWithoutEnv } from "../../helpers";
 
 /**
@@ -10,12 +6,7 @@ import { useDeleteWithoutEnv } from "../../helpers";
  *
  * @returns {Mutation} - The mutation object provided by `useMutation` hook.
  */
-export const useRemoveUser = (): UseMutationResult<
-  void,
-  Error,
-  string,
-  unknown
-> => {
+export const useRemoveUser = (): UseMutationResult<void, Error, string, unknown> => {
   const client = useQueryClient();
   const deleteFn = useDeleteWithoutEnv();
 

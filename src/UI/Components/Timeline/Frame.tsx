@@ -1,9 +1,6 @@
 import React from "react";
 import { Icon, Spinner } from "@patternfly/react-core";
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-} from "@patternfly/react-icons";
+import { CheckCircleIcon, ExclamationCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Timestamp } from "./Timestamp";
 
@@ -22,20 +19,14 @@ interface FrameProps {
  *
  * @returns {React.FC<FrameProps>} - A frame with the three states of a request
  */
-export const Frame: React.FC<FrameProps> = ({
-  started,
-  completed,
-  success,
-}) => {
+export const Frame: React.FC<FrameProps> = ({ started, completed, success }) => {
   const DoneState = () => (
     <Icon aria-label="done-state" role="img" size="lg" status="success">
       <CheckCircleIcon />
     </Icon>
   );
 
-  const LoadingState = () => (
-    <Spinner aria-label="loading-state" role="img" size="lg" />
-  );
+  const LoadingState = () => <Spinner aria-label="loading-state" role="img" size="lg" />;
 
   const ErrorState = () => (
     <Icon aria-label="error-state" role="img" size="lg" status="danger">
@@ -84,9 +75,7 @@ const FrameContainer = styled.div`
 const Line = styled.div`
   width: 200px;
   height: 2px;
-  background-color: var(
-    --pf-t--global--border--color--nonstatus--gray--default
-  );
+  background-color: var(--pf-t--global--border--color--nonstatus--gray--default);
   margin: 0 10px;
   transform: translateY(10px);
 `;

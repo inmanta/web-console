@@ -27,26 +27,14 @@ interface Props {
  * @prop {string} [className] - Optional additional class name for the list.
  * @returns {React.FC<Props>} The rendered status list component.
  */
-export const StatusList: React.FC<Props> = ({
-  status,
-  apiUrl,
-  className,
-  ...props
-}) => {
+export const StatusList: React.FC<Props> = ({ status, apiUrl, className, ...props }) => {
   const { featureManager } = useContext(DependencyContext);
 
   return (
-    <DataList
-      {...props}
-      className={className}
-      aria-label="StatusList"
-      isCompact
-    >
+    <DataList {...props} className={className} aria-label="StatusList" isCompact>
       <StatusItem
         name={status.product}
-        details={toDetails(
-          omit(status, ["product", "extensions", "slices", "features"]),
-        )}
+        details={toDetails(omit(status, ["product", "extensions", "slices", "features"]))}
         icon={
           <Icon size="lg">
             <TagIcon
@@ -84,8 +72,7 @@ export const StatusList: React.FC<Props> = ({
             <Icon size="lg">
               <IntegrationIcon
                 style={{
-                  color:
-                    "var(--pf-t--global--icon--color--severity--none--default)",
+                  color: "var(--pf-t--global--icon--color--severity--none--default)",
                 }}
               />
             </Icon>
@@ -126,10 +113,7 @@ export type DetailTuple = [DetailKey, DetailValue];
  */
 const toDetails = (obj: Record<string, unknown>): DetailTuple[] =>
   Object.entries(obj).map(([key, value]) => {
-    return [
-      key,
-      isRecord(value) ? stringifyRecordAttributes(value) : `${value}`,
-    ];
+    return [key, isRecord(value) ? stringifyRecordAttributes(value) : `${value}`];
   });
 
 /**
@@ -140,12 +124,8 @@ const toDetails = (obj: Record<string, unknown>): DetailTuple[] =>
  * @param {Record<string, unknown>} obj - The record whose attributes are to be converted to strings.
  * @returns {Record<string, string>} A new record with all values converted to strings.
  */
-const stringifyRecordAttributes = (
-  obj: Record<string, unknown>,
-): Record<string, string> => {
-  return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [key, String(value)]),
-  );
+const stringifyRecordAttributes = (obj: Record<string, unknown>): Record<string, string> => {
+  return Object.fromEntries(Object.entries(obj).map(([key, value]) => [key, String(value)]));
 };
 
 /**

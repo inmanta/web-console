@@ -10,11 +10,7 @@ interface Props {
   route: RouteKind;
 }
 
-export const EventsTableBody: React.FC<Props> = ({
-  events,
-  tablePresenter,
-  route,
-}) => {
+export const EventsTableBody: React.FC<Props> = ({ events, tablePresenter, route }) => {
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
     route,
   });

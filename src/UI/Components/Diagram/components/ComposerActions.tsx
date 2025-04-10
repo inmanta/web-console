@@ -2,10 +2,7 @@ import React, { useCallback, useContext, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
-import {
-  usePostMetadata,
-  usePostOrder,
-} from "@/Data/Managers/V2/ServiceInstance";
+import { usePostMetadata, usePostOrder } from "@/Data/Managers/V2/ServiceInstance";
 import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -41,9 +38,7 @@ interface Props {
  * @returns {React.FC} The ComposerActions component.
  */
 export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
-  const { serviceModels, mainService, instance } = useContext(
-    InstanceComposerContext,
-  );
+  const { serviceModels, mainService, instance } = useContext(InstanceComposerContext);
   const {
     serviceOrderItems,
     isDirty,
@@ -87,9 +82,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
 
     if (!diagramHandlers) {
       setAlertType(AlertVariant.danger);
-      setAlertMessage(
-        words("instanceComposer.errorMessage.coordinatesRequest"),
-      );
+      setAlertMessage(words("instanceComposer.errorMessage.coordinatesRequest"));
     } else {
       coordinates = diagramHandlers.getCoordinates();
     }
@@ -125,13 +118,9 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
 
     orderMutation.mutate(orderItems);
   };
-  const missingInterServiceRelations = Array.from(
-    interServiceRelationsOnCanvas,
-  ).filter(
+  const missingInterServiceRelations = Array.from(interServiceRelationsOnCanvas).filter(
     ([_key, value]) =>
-      value.relations.filter(
-        (relation) => relation.currentAmount < relation.min,
-      ).length > 0,
+      value.relations.filter((relation) => relation.currentAmount < relation.min).length > 0
   );
 
   return (
@@ -155,10 +144,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
         />
       )}
       <FlexItem>
-        <Flex
-          spacer={{ default: "spacerMd" }}
-          alignItems={{ default: "alignItemsCenter" }}
-        >
+        <Flex spacer={{ default: "spacerMd" }} alignItems={{ default: "alignItemsCenter" }}>
           <Button variant="tertiary" width={200} onClick={handleRedirect}>
             {words("cancel")}
           </Button>

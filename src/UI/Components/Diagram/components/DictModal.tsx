@@ -30,15 +30,8 @@ export const DictModal: React.FC = () => {
         setDictToDisplay(null);
       }}
     >
-      <ModalHeader
-        title={"Values of " + dictToDisplay.title}
-        labelId="dict-modal-title"
-      />
-      <ModalBody
-        tabIndex={0}
-        id="dict-modal-body"
-        aria-label="Scrollable modal content"
-      >
+      <ModalHeader title={"Values of " + dictToDisplay.title} labelId="dict-modal-title" />
+      <ModalBody tabIndex={0} id="dict-modal-body" aria-label="Scrollable modal content">
         {dictToDisplay && (
           <CodeBlock
             actions={
@@ -47,19 +40,13 @@ export const DictModal: React.FC = () => {
                   id="basic-copy-button"
                   textId="copy-to-clipboard"
                   aria-label="Copy to clipboard"
-                  onClick={() =>
-                    navigator.clipboard.writeText(
-                      JSON.stringify(dictToDisplay.value),
-                    )
-                  }
+                  onClick={() => navigator.clipboard.writeText(JSON.stringify(dictToDisplay.value))}
                   exitDelay={copied ? 1500 : 600}
                   maxWidth="110px"
                   variant="plain"
                   onTooltipHidden={() => setCopied(false)}
                 >
-                  {copied
-                    ? "Successfully copied to clipboard!"
-                    : "Copy to clipboard"}
+                  {copied ? "Successfully copied to clipboard!" : "Copy to clipboard"}
                 </ClipboardCopyButton>
               </CodeBlockAction>
             }

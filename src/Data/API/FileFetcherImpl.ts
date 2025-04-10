@@ -10,14 +10,16 @@ export class FileFetcherImpl implements FileFetcher {
 
   constructor(
     private readonly apiHelper: ApiHelper,
-    environment?: string,
+    environment?: string
   ) {
     if (typeof environment === "undefined") return;
+
     this.environment = Maybe.some(environment);
   }
 
   private getEnvironment(): string {
     if (Maybe.isSome(this.environment)) return this.environment.value;
+
     throw new Error("Environment not set");
   }
 
@@ -35,22 +37,18 @@ export class FileFetcherImpl implements FileFetcher {
 
   async get(fileId: string): Promise<Either.Type<string, string>> {
     return this.unpack(
-      await this.apiHelper.get<RawResponse>(
-        this.getUrl(fileId),
-        this.getEnvironment(),
-      ),
+      await this.apiHelper.get<RawResponse>(this.getUrl(fileId), this.getEnvironment())
     );
   }
 
-  private unpack(
-    either: Either.Type<string, RawResponse>,
-  ): Either.Type<string, string> {
+  private unpack(either: Either.Type<string, RawResponse>): Either.Type<string, string> {
     if (Either.isRight(either)) {
       const response = either.value;
 
       if (typeof response.message !== "undefined") {
         return Either.left(response.message);
       }
+
       if (typeof response.content !== "undefined") {
         return Either.right(this.decodeBase64String(response.content));
       }

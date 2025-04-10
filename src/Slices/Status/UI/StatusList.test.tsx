@@ -62,7 +62,7 @@ describe("Given StatusList", () => {
     render(
       <DependencyProvider dependencies={dependencies}>
         <StatusList status={status} apiUrl="test" />
-      </DependencyProvider>,
+      </DependencyProvider>
     );
 
     expect(screen.getByRole("list", { name: "StatusList" })).toBeVisible();
@@ -89,9 +89,7 @@ describe("Given StatusList", () => {
 
     expect(coreItem).toBeVisible();
 
-    expect(
-      within(coreItem).getByRole("heading", { name: "core" }),
-    ).toBeVisible();
+    expect(within(coreItem).getByRole("heading", { name: "core" })).toBeVisible();
     expect(within(coreItem).getByText("extension")).toBeVisible();
 
     expect(within(coreItem).getByText("version")).toBeVisible();
@@ -134,38 +132,24 @@ describe("Given StatusList", () => {
 
     expect(coreSchedulerManagerItem).toBeVisible();
 
-    expect(
-      within(coreSchedulerManagerItem).getByText("core.scheduler_manager"),
-    ).toBeVisible();
-    expect(
-      within(coreSchedulerManagerItem).getByText("component"),
-    ).toBeVisible();
+    expect(within(coreSchedulerManagerItem).getByText("core.scheduler_manager")).toBeVisible();
+    expect(within(coreSchedulerManagerItem).getByText("component")).toBeVisible();
 
-    expect(
-      within(coreSchedulerManagerItem).getByText("resource_facts"),
-    ).toBeVisible();
+    expect(within(coreSchedulerManagerItem).getByText("resource_facts")).toBeVisible();
     expect(within(coreSchedulerManagerItem).getByText("28")).toBeVisible();
 
-    expect(
-      within(coreSchedulerManagerItem).getByText("sessions"),
-    ).toBeVisible();
+    expect(within(coreSchedulerManagerItem).getByText("sessions")).toBeVisible();
     expect(within(coreSchedulerManagerItem).getByText("7")).toBeVisible();
 
-    expect(
-      within(coreSchedulerManagerItem).getByText("database"),
-    ).toBeVisible();
+    expect(within(coreSchedulerManagerItem).getByText("database")).toBeVisible();
     expect(within(coreSchedulerManagerItem).getByText("inmanta")).toBeVisible();
 
     expect(within(coreSchedulerManagerItem).getByText("host")).toBeVisible();
-    expect(
-      within(coreSchedulerManagerItem).getByText("localhost"),
-    ).toBeVisible();
+    expect(within(coreSchedulerManagerItem).getByText("localhost")).toBeVisible();
 
     expect(within(coreSchedulerManagerItem).getByText("total")).toBeVisible();
 
-    const totalNestedListItem = screen.getByLabelText(
-      "StatusNestedListItem-total",
-    );
+    const totalNestedListItem = screen.getByLabelText("StatusNestedListItem-total");
 
     expect(totalNestedListItem).toBeVisible();
     expect(within(totalNestedListItem).getByText("total")).toBeVisible();
@@ -176,24 +160,16 @@ describe("Given StatusList", () => {
     expect(within(totalNestedListItem).getByText("max_pool")).toBeVisible();
     expect(within(totalNestedListItem).getByText("9")).toBeVisible();
 
-    expect(
-      within(totalNestedListItem).getByText("open_connections"),
-    ).toBeVisible();
+    expect(within(totalNestedListItem).getByText("open_connections")).toBeVisible();
     expect(within(totalNestedListItem).getByText("3")).toBeVisible();
 
-    expect(
-      within(totalNestedListItem).getByText("free_connections"),
-    ).toBeVisible();
+    expect(within(totalNestedListItem).getByText("free_connections")).toBeVisible();
     expect(within(totalNestedListItem).getByText("4")).toBeVisible();
 
-    expect(
-      within(totalNestedListItem).getByText("pool_exhaustion_count"),
-    ).toBeVisible();
+    expect(within(totalNestedListItem).getByText("pool_exhaustion_count")).toBeVisible();
     expect(within(totalNestedListItem).getByText("209")).toBeVisible();
 
-    const prodNestedListItem = screen.getByLabelText(
-      "StatusNestedListItem-prod",
-    );
+    const prodNestedListItem = screen.getByLabelText("StatusNestedListItem-prod");
 
     expect(prodNestedListItem).toBeVisible();
     expect(within(prodNestedListItem).getByText("prod")).toBeVisible();
@@ -204,19 +180,13 @@ describe("Given StatusList", () => {
     expect(within(prodNestedListItem).getByText("max_pool")).toBeVisible();
     expect(within(prodNestedListItem).getByText("3")).toBeVisible();
 
-    expect(
-      within(prodNestedListItem).getByText("open_connections"),
-    ).toBeVisible();
+    expect(within(prodNestedListItem).getByText("open_connections")).toBeVisible();
     expect(within(prodNestedListItem).getByText("1")).toBeVisible();
 
-    expect(
-      within(prodNestedListItem).getByText("free_connections"),
-    ).toBeVisible();
+    expect(within(prodNestedListItem).getByText("free_connections")).toBeVisible();
     expect(within(prodNestedListItem).getByText("2")).toBeVisible();
 
-    expect(
-      within(prodNestedListItem).getByText("pool_exhaustion_count"),
-    ).toBeVisible();
+    expect(within(prodNestedListItem).getByText("pool_exhaustion_count")).toBeVisible();
     expect(within(prodNestedListItem).getByText("209")).toBeVisible();
   });
 });

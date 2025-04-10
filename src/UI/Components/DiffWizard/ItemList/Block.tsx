@@ -16,12 +16,7 @@ import { Classification, Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
 import { Entry } from "./Entry/Entry";
 
-type Classify = (
-  title: string,
-  entryTitle: string,
-  from: string,
-  to: string,
-) => Classification;
+type Classify = (title: string, entryTitle: string, from: string, to: string) => Classification;
 
 interface Props {
   item: Item;
@@ -35,17 +30,8 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
 
   return (
     <>
-      <ScrollAnchor
-        ref={(element) =>
-          element ? (refs.current[item.id] = element) : undefined
-        }
-      />
-      <Card
-        isExpanded={isExpanded}
-        isCompact
-        aria-label="DiffBlock"
-        data-testid="DiffBlock"
-      >
+      <ScrollAnchor ref={(element) => (element ? (refs.current[item.id] = element) : undefined)} />
+      <Card isExpanded={isExpanded} isCompact aria-label="DiffBlock" data-testid="DiffBlock">
         <CardHeader
           onExpand={onExpand}
           toggleButtonProps={{
@@ -69,10 +55,7 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
   );
 };
 
-const Body: React.FC<{ item: Item; classify?: Classify }> = ({
-  item,
-  classify,
-}) => {
+const Body: React.FC<{ item: Item; classify?: Classify }> = ({ item, classify }) => {
   switch (item.status) {
     case "deleted":
       return (
@@ -88,32 +71,17 @@ const Body: React.FC<{ item: Item; classify?: Classify }> = ({
       return <BodyWithChanges item={item} classify={classify} />;
 
     case "unmodified":
-      return (
-        <BodyWithMessage message={words("desiredState.compare.unmodified")} />
-      );
+      return <BodyWithMessage message={words("desiredState.compare.unmodified")} />;
     case "agent_down": {
-      const agent = Maybe.withFallback(
-        Resource.IdParser.getAgentName(item.id),
-        "???",
-      );
+      const agent = Maybe.withFallback(Resource.IdParser.getAgentName(item.id), "???");
 
-      return (
-        <BodyWithMessage
-          message={words("desiredState.compare.agent_down")(agent)}
-        />
-      );
+      return <BodyWithMessage message={words("desiredState.compare.agent_down")(agent)} />;
     }
 
     case "undefined":
-      return (
-        <BodyWithMessage message={words("desiredState.compare.undefined")} />
-      );
+      return <BodyWithMessage message={words("desiredState.compare.undefined")} />;
     case "skipped_for_undefined":
-      return (
-        <BodyWithMessage
-          message={words("desiredState.compare.skipped_for_undefined")}
-        />
-      );
+      return <BodyWithMessage message={words("desiredState.compare.skipped_for_undefined")} />;
     default:
       return null;
   }
@@ -150,11 +118,7 @@ const BodyWithChanges: React.FC<{
       <Entry
         key={entry.title}
         {...entry}
-        classify={
-          classify
-            ? (title, to, from) => classify(item.id, title, to, from)
-            : undefined
-        }
+        classify={classify ? (title, to, from) => classify(item.id, title, to, from) : undefined}
       />
     ))}
   </CardBody>

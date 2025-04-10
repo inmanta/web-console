@@ -48,9 +48,7 @@ export const DictInputWithRow: React.FC<Props> = ({ info }) => {
           />
         </FlexItem>
 
-        <FlexItem style={{ minWidth: "20px" }}>
-          {customInfo.isUpdateable() && <Warning />}
-        </FlexItem>
+        <FlexItem style={{ minWidth: "20px" }}>{customInfo.isUpdateable() && <Warning />}</FlexItem>
       </Flex>
     </Row>
   );

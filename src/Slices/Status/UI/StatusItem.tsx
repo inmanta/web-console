@@ -36,12 +36,7 @@ interface Props {
  * @prop {string} [category] - The category of the status item.
  * @returns {React.FC<Props>} The rendered status item component.
  */
-export const StatusItem: React.FC<Props> = ({
-  name,
-  details,
-  icon,
-  category,
-}) => (
+export const StatusItem: React.FC<Props> = ({ name, details, icon, category }) => (
   <DataListItem aria-label={`StatusItem-${name}`}>
     <DataListItemRow key={`${category}-${name}-title`}>
       <DataListItemCells
@@ -71,13 +66,7 @@ export const StatusItem: React.FC<Props> = ({
               <List isPlain>
                 {details.map(([key, value]) => {
                   if (typeof value === "object") {
-                    return (
-                      <NestedListItem
-                        key={`${key}-${value}`}
-                        name={key}
-                        properties={value}
-                      />
-                    );
+                    return <NestedListItem key={`${key}-${value}`} name={key} properties={value} />;
                   } else {
                     return (
                       <ListItem key={`${key}-${value}`}>
@@ -131,10 +120,7 @@ interface NestedListItemProps {
  * @prop {Record<string, string>} properties - The sub properties to display in the NestedListItem components.
  * @returns {React.FC<NestedListItemProps>} The rendered NestedListItem component.
  */
-const NestedListItem: React.FC<NestedListItemProps> = ({
-  name,
-  properties,
-}) => {
+const NestedListItem: React.FC<NestedListItemProps> = ({ name, properties }) => {
   return (
     <List aria-label={`StatusNestedListItem-${name}`} isPlain>
       <ListItem>

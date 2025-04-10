@@ -1,8 +1,4 @@
-import {
-  UseMutationOptions,
-  UseMutationResult,
-  useMutation,
-} from "@tanstack/react-query";
+import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
 import { useDelete } from "../../helpers";
 
@@ -17,14 +13,14 @@ export const useDestroyInstance = (
   service_entity: string,
   version: ParsedNumber,
   message: string,
-  options?: UseMutationOptions<void, Error, void, unknown>,
+  options?: UseMutationOptions<void, Error, void, unknown>
 ): UseMutationResult<void, Error, void, unknown> => {
   const deleteFn = useDelete({ message });
 
   return useMutation({
     mutationFn: () =>
       deleteFn(
-        `/lsm/v2/service_inventory/${service_entity}/${instance_id}/expert?current_version=${version}`,
+        `/lsm/v2/service_inventory/${service_entity}/${instance_id}/expert?current_version=${version}`
       ),
     mutationKey: ["destroy_instance"],
     ...options,

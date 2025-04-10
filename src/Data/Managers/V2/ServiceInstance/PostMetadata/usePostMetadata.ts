@@ -17,19 +17,14 @@ interface PostMetadataInfo {
  *
  * @returns {UseMutationResult<void, Error, PostMetadataInfo, unknown>}- The mutation object from `useMutation` hook.
  */
-export const usePostMetadata = (): UseMutationResult<
-  void,
-  Error,
-  PostMetadataInfo,
-  unknown
-> => {
+export const usePostMetadata = (): UseMutationResult<void, Error, PostMetadataInfo, unknown> => {
   const post = usePost()<PostMetadataInfo>;
 
   return useMutation({
     mutationFn: (info) =>
       post(
         `/lsm/v1/service_inventory/${info.service_entity}/${info.service_id}/metadata/${info.key}`,
-        info,
+        info
       ),
     mutationKey: ["post_metadata"],
   });

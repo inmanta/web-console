@@ -95,11 +95,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
             })}
             isDisabled={editDisabled}
           >
-            <DropdownItem
-              itemId="edit-composer"
-              isDisabled={editDisabled}
-              icon={<ToolsIcon />}
-            >
+            <DropdownItem itemId="edit-composer" isDisabled={editDisabled} icon={<ToolsIcon />}>
               {words("instanceComposer.editButton")}
             </DropdownItem>
           </Link>
@@ -125,11 +121,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
           })}
           isDisabled={editDisabled}
         >
-          <DropdownItem
-            itemId="edit"
-            isDisabled={editDisabled}
-            icon={<ToolsIcon />}
-          >
+          <DropdownItem itemId="edit" isDisabled={editDisabled} icon={<ToolsIcon />}>
             {words("inventory.editInstance.button")}
           </DropdownItem>
         </Link>

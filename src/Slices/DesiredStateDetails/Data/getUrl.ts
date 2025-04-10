@@ -18,14 +18,12 @@ export function getUrl({
               resource_type: filter.type,
             },
           },
-          { allowDots: true, arrayFormat: "repeat" },
+          { allowDots: true, arrayFormat: "repeat" }
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
-  return `/api/v2/desiredstate/${version}?limit=${
-    pageSize.value
-  }${filterParam}${sortParam}${
+  return `/api/v2/desiredstate/${version}?limit=${pageSize.value}${filterParam}${sortParam}${
     currentPage.value ? `&${currentPage.value}` : ""
   }`;
 }

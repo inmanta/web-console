@@ -17,17 +17,12 @@ export const Page: React.FC = () => {
         {
           notAsked: () => null,
           loading: () => <LoadingView ariaLabel="CreateEnvironment-Loading" />,
-          failed: (message) => (
-            <ErrorView message={message} ariaLabel="CreateEnvironment-Failed" />
-          ),
+          failed: (message) => <ErrorView message={message} ariaLabel="CreateEnvironment-Failed" />,
           success: (projects) => (
-            <CreateEnvironmentForm
-              projects={projects}
-              aria-label="CreateEnvironment-Success"
-            />
+            <CreateEnvironmentForm projects={projects} aria-label="CreateEnvironment-Success" />
           ),
         },
-        data,
+        data
       )}
     </PageContainer>
   );

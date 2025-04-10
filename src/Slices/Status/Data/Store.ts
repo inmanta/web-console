@@ -2,16 +2,10 @@ import { Action, action } from "easy-peasy";
 import { Query, RemoteData } from "@/Core";
 
 export interface ServerStatusSlice {
-  status: RemoteData.Type<
-    Query.Error<"GetServerStatus">,
-    Query.Data<"GetServerStatus">
-  >;
+  status: RemoteData.Type<Query.Error<"GetServerStatus">, Query.Data<"GetServerStatus">>;
   setData: Action<
     ServerStatusSlice,
-    RemoteData.Type<
-      Query.Error<"GetServerStatus">,
-      Query.Data<"GetServerStatus">
-    >
+    RemoteData.Type<Query.Error<"GetServerStatus">, Query.Data<"GetServerStatus">>
   >;
 }
 

@@ -34,10 +34,7 @@ interface Props {
   type: TextInputTypes;
   typeHint?: string;
   placeholder?: string;
-  handleInputChange: (
-    value: string[],
-    event: React.FormEvent<HTMLInputElement> | null,
-  ) => void;
+  handleInputChange: (value: string[], event: React.FormEvent<HTMLInputElement> | null) => void;
   suggestions?: string[] | null;
 }
 
@@ -80,9 +77,7 @@ export const TextListFormInput: React.FC<Props> = ({
    * @param chipToDelete - The chip to be removed.
    */
   const deleteChip = (chipToDelete: string) => {
-    const newChips = currentChips.filter(
-      (chip) => !Object.is(chip, chipToDelete),
-    );
+    const newChips = currentChips.filter((chip) => !Object.is(chip, chipToDelete));
 
     setCurrentChips(newChips);
     handleInputChange(newChips, null);
@@ -95,10 +90,7 @@ export const TextListFormInput: React.FC<Props> = ({
    *
    * @returns {void}
    */
-  const handleChangeInput = (
-    _event: React.FormEvent<HTMLInputElement>,
-    value: string,
-  ) => {
+  const handleChangeInput = (_event: React.FormEvent<HTMLInputElement>, value: string) => {
     setInputValue(value);
   };
 

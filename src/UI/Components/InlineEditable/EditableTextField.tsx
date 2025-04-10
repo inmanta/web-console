@@ -1,11 +1,6 @@
 import React from "react";
 import { TextInput } from "@patternfly/react-core";
-import {
-  EditableField,
-  EditViewComponent,
-  FieldProps,
-  StaticViewComponent,
-} from "./EditableField";
+import { EditableField, EditViewComponent, FieldProps, StaticViewComponent } from "./EditableField";
 import { InlineValue } from "./InlineFillers";
 
 export const EditableTextField: React.FC<FieldProps> = ({
@@ -33,6 +28,7 @@ const EditView: EditViewComponent = ({ value, onChange, onSubmit, label }) => (
     onChange={(_event, value) => onChange(value)}
     onKeyDown={(event) => {
       if (event.key && event.key !== "Enter") return;
+
       onSubmit();
     }}
   />

@@ -7,8 +7,7 @@ import { StatusList } from "./StatusList";
 import { SupportArchive } from "./SupportArchive";
 
 export const Page: React.FC = () => {
-  const { urlManager, queryResolver, featureManager } =
-    useContext(DependencyContext);
+  const { urlManager, queryResolver, featureManager } = useContext(DependencyContext);
   const [data, retry] = queryResolver.useContinuous<"GetServerStatus">({
     kind: "GetServerStatus",
   });
@@ -30,9 +29,7 @@ export const Page: React.FC = () => {
         data={data}
         retry={retry}
         label="ServerStatus"
-        SuccessView={(status) => (
-          <StatusList status={status} apiUrl={urlManager.getApiUrl()} />
-        )}
+        SuccessView={(status) => <StatusList status={status} apiUrl={urlManager.getApiUrl()} />}
       />
     </PageContainer>
   );

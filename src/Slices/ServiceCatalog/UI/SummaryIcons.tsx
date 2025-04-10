@@ -9,20 +9,14 @@ interface Props {
 }
 
 export const SummaryIcons: React.FC<Props> = ({ summary }) => {
-  const nonZeroSummaryEntries = Object.entries(summary.by_label).filter(
-    ([, value]) => value > 0,
-  );
+  const nonZeroSummaryEntries = Object.entries(summary.by_label).filter(([, value]) => value > 0);
 
   return (
     <Flex aria-label="Number of instances by label">
       {nonZeroSummaryEntries.map(([labelName, value]) => (
         <FlexItem key={labelName}>
           <Tooltip
-            content={
-              labelName !== "no_label"
-                ? labelName
-                : words("catalog.summary.noLabel")
-            }
+            content={labelName !== "no_label" ? labelName : words("catalog.summary.noLabel")}
             entryDelay={200}
           >
             {getLabelforName(labelName, value)}

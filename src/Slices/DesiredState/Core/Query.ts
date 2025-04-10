@@ -20,11 +20,7 @@ export enum FilterKind {
   Status = "Status",
 }
 
-export const FilterList: FilterKind[] = [
-  FilterKind.Version,
-  FilterKind.Date,
-  FilterKind.Status,
-];
+export const FilterList: FilterKind[] = [FilterKind.Version, FilterKind.Date, FilterKind.Status];
 
 export interface Query extends DesiredStateParams {
   kind: "GetDesiredStates";

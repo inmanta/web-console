@@ -9,10 +9,7 @@ interface Props {
   info: EnvironmentSettings.InputInfo;
 }
 
-export const Row: React.FC<React.PropsWithChildren<Props>> = ({
-  info,
-  children,
-}) => (
+export const Row: React.FC<React.PropsWithChildren<Props>> = ({ info, children }) => (
   <Tr aria-label={`Row-${info.name}`}>
     <Td>
       {info.name}{" "}
@@ -27,9 +24,7 @@ export const Row: React.FC<React.PropsWithChildren<Props>> = ({
   </Tr>
 );
 
-const getDescription = (
-  info: Pick<EnvironmentSettings.InputInfo, "default" | "doc">,
-): string => {
+const getDescription = (info: Pick<EnvironmentSettings.InputInfo, "default" | "doc">): string => {
   if (typeof info.default === "object") {
     return `${info.doc}\ndefault: ${JSON.stringify(info.default)}`;
   }

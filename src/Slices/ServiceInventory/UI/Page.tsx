@@ -18,9 +18,7 @@ export const Page: React.FC = () => {
   );
 };
 
-const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({
-  service,
-}) => (
+const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({ service }) => (
   <ServiceInventory
     service={service}
     serviceName={service.name}

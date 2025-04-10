@@ -1,8 +1,4 @@
-import {
-  InstanceAttributeModel,
-  VersionedServiceInstanceIdentifier,
-  Field,
-} from "@/Core/Domain";
+import { InstanceAttributeModel, VersionedServiceInstanceIdentifier, Field } from "@/Core/Domain";
 import { Maybe } from "@/Core/Language";
 
 export interface Command extends VersionedServiceInstanceIdentifier {
@@ -18,6 +14,6 @@ export interface Manifest {
   trigger: (
     fields: Field[],
     currentAttributes: InstanceAttributeModel | null,
-    formState: InstanceAttributeModel,
+    formState: InstanceAttributeModel
   ) => Promise<Maybe.Type<string>>;
 }

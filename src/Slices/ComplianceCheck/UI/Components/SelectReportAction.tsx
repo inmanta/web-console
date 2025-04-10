@@ -32,9 +32,11 @@ export const SelectReportAction: React.FC<Props> = ({
 
   const onSelect = (value) => {
     if (!RemoteData.isSuccess(reportsData)) return;
+
     const report = reportsData.value.find((report) => report.id === value);
 
     if (report === undefined) return;
+
     setSelectedReport(Maybe.some(report));
     setIsOpen(false);
   };
@@ -68,7 +70,9 @@ const Picker: React.FC<PickerProps> = ({
   onSelect,
 }) => {
   if (!RemoteData.isSuccess(reportsData)) return null;
+
   if (reportsData.value.length <= 0) return <EmptyPicker />;
+
   if (Maybe.isNone(selectedReport)) return null;
 
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
@@ -83,8 +87,7 @@ const Picker: React.FC<PickerProps> = ({
         } as React.CSSProperties
       }
     >
-      <Progress report={reportsData.value[0]} />{" "}
-      {datePresenter.getFull(selectedReport.value.date)}
+      <Progress report={reportsData.value[0]} /> {datePresenter.getFull(selectedReport.value.date)}
     </MenuToggle>
   );
 
@@ -114,9 +117,7 @@ const DisabledToggle = () => (
   </MenuToggle>
 );
 
-const EmptyPicker: React.FC = () => (
-  <Select toggle={DisabledToggle} aria-label="ReportList" />
-);
+const EmptyPicker: React.FC = () => <Select toggle={DisabledToggle} aria-label="ReportList" />;
 
 const Progress: React.FC<{ report: DomainProgress }> = ({ report }) => {
   const tot = Number(report.total);

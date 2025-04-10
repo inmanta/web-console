@@ -20,10 +20,7 @@ interface GetInstanceLogs {
  * @returns {UseQueryResult<InstanceLog[], CustomError>} returns.useOneTime - Fetch the logs with a single query.
  * @returns {UseQueryResult<InstanceLog[], CustomError>} returns.useContinuous - Fetch the logs with a recursive query with an interval of 5s.
  */
-export const useGetInstanceLogs = (
-  service: string,
-  instance: string,
-): GetInstanceLogs => {
+export const useGetInstanceLogs = (service: string, instance: string): GetInstanceLogs => {
   const url = `/lsm/v1/service_inventory/${service}/${instance}/log`;
   const get = useGet()<{ data: InstanceLog[] }>;
 

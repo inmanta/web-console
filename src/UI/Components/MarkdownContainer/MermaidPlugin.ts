@@ -8,7 +8,7 @@ interface MermaidAPI {
   initialize: (config: any) => void;
   render: (
     id: string,
-    text: string,
+    text: string
   ) => Promise<{
     svg: string;
     bindFunctions?: (element: HTMLElement) => void;
@@ -25,11 +25,7 @@ const mermaid = Mermaid as unknown as MermaidAPI;
  * @param baseId - The base id to use for the mermaid elements.
  * @param options - The options to use for rendering the mermaid diagrams.
  */
-export default function mermaidPlugin(
-  md: MarkdownIt,
-  baseId: string,
-  options: any,
-) {
+export default function mermaidPlugin(md: MarkdownIt, baseId: string, options: any) {
   // Setup Mermaid
   mermaid.initialize({
     securityLevel: "loose",
@@ -44,13 +40,7 @@ export default function mermaidPlugin(
   const defaultFenceRenderer = md.renderer.rules.fence;
 
   // Render custom code types as SVGs, letting the fence parser do all the heavy lifting.
-  async function customFenceRenderer(
-    tokens: any[],
-    idx: number,
-    options: any,
-    env: any,
-    slf: any,
-  ) {
+  async function customFenceRenderer(tokens: any[], idx: number, options: any, env: any, slf: any) {
     const token = tokens[idx];
     const info = token.info.trim();
     const langName = info ? getLangName(info) : "";
@@ -77,10 +67,7 @@ export default function mermaidPlugin(
       const container_id = `${baseId}-${idx}`;
 
       // New async render API in Mermaid v10+
-      const { svg, bindFunctions } = await mermaid.render(
-        container_id,
-        token.content,
-      );
+      const { svg, bindFunctions } = await mermaid.render(container_id, token.content);
 
       // Extract max-width/height from the rendered SVG element
       const renderedSvg = document.getElementById(container_id);
@@ -109,10 +96,7 @@ export default function mermaidPlugin(
     }
 
     // Store encoded image data
-    imageAttrs.push([
-      "src",
-      `data:image/svg+xml,${encodeURIComponent(svgString)}`,
-    ]);
+    imageAttrs.push(["src", `data:image/svg+xml,${encodeURIComponent(svgString)}`]);
 
     // Add class and data attributes for zoom functionality
     imageAttrs.push(["class", "mermaid-diagram"]);

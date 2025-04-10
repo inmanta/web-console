@@ -10,9 +10,7 @@ interface Props {
 }
 
 export const DownloadButton: React.FC<Props> = ({ isPending, onClick }) => {
-  const label = isPending
-    ? phaseLabelRecord["Downloading"]
-    : phaseLabelRecord["Default"];
+  const label = isPending ? phaseLabelRecord["Downloading"] : phaseLabelRecord["Default"];
 
   return (
     <Button

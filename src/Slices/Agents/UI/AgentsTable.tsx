@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  OnSort,
-  Table,
-  TableVariant,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { AgentRow } from "@S/Agents/Core/Domain";
 import { AgentsTablePresenter } from "./AgentsTablePresenter";
@@ -19,13 +12,7 @@ interface Props {
   setSort: (sort: Sort.Type) => void;
 }
 
-export const AgentsTable: React.FC<Props> = ({
-  tablePresenter,
-  rows,
-  sort,
-  setSort,
-  ...props
-}) => {
+export const AgentsTable: React.FC<Props> = ({ tablePresenter, rows, sort, setSort, ...props }) => {
   const onSort: OnSort = (event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as string,
@@ -33,29 +20,27 @@ export const AgentsTable: React.FC<Props> = ({
     });
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
-  const heads = tablePresenter
-    .getColumnHeads()
-    .map(({ apiName, displayName }, columnIndex) => {
-      const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
-      const sortParams = hasSort
-        ? {
-            sort: {
-              sortBy: {
-                index: activeSortIndex,
-                direction: sort.order,
-              },
-              onSort,
-              columnIndex,
+  const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
+    const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
+    const sortParams = hasSort
+      ? {
+          sort: {
+            sortBy: {
+              index: activeSortIndex,
+              direction: sort.order,
             },
-          }
-        : {};
+            onSort,
+            columnIndex,
+          },
+        }
+      : {};
 
-      return (
-        <Th key={displayName} {...sortParams}>
-          {displayName}
-        </Th>
-      );
-    });
+    return (
+      <Th key={displayName} {...sortParams}>
+        {displayName}
+      </Th>
+    );
+  });
 
   return (
     <Table {...props} variant={TableVariant.compact}>

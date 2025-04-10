@@ -14,11 +14,7 @@ import {
   Spinner,
   Content,
 } from "@patternfly/react-core";
-import {
-  ExclamationCircleIcon,
-  EyeIcon,
-  EyeSlashIcon,
-} from "@patternfly/react-icons";
+import { ExclamationCircleIcon, EyeIcon, EyeSlashIcon } from "@patternfly/react-icons";
 import { useAddUser } from "@/Data/Managers/V2/Auth";
 import { words } from "@/UI";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -54,10 +50,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
    *
    * @returns {void}
    */
-  const handleUsernameChange = (
-    _event: React.FormEvent<HTMLInputElement>,
-    value: string,
-  ): void => {
+  const handleUsernameChange = (_event: React.FormEvent<HTMLInputElement>, value: string): void => {
     setUsername(value);
   };
 
@@ -68,10 +61,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
    *
    * @returns {void}
    */
-  const handlePasswordChange = (
-    _event: React.FormEvent<HTMLInputElement>,
-    value: string,
-  ): void => {
+  const handlePasswordChange = (_event: React.FormEvent<HTMLInputElement>, value: string): void => {
     setPassword(value);
   };
 
@@ -84,9 +74,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
    * @returns {void}
    */
   const handleSubmit = (
-    event:
-      | React.FormEvent<HTMLFormElement>
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>
   ): void => {
     event.preventDefault();
     mutate({ username, password });
@@ -113,11 +101,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           </HelperText>
         </FormHelperText>
       )}
-      <FormGroup
-        label={words("username")}
-        isRequired
-        fieldId="pf-login-username-id"
-      >
+      <FormGroup label={words("username")} isRequired fieldId="pf-login-username-id">
         <TextInput
           id="pf-login-username-id"
           isRequired
@@ -129,11 +113,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           onChange={handleUsernameChange}
         />
       </FormGroup>
-      <FormGroup
-        label={words("password")}
-        isRequired
-        fieldId="pf-login-password-id"
-      >
+      <FormGroup label={words("password")} isRequired fieldId="pf-login-password-id">
         <InputGroup>
           <InputGroupItem isFill>
             <TextInput
@@ -167,11 +147,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           isBlock
           isDisabled={isPending}
         >
-          {isPending ? (
-            <Spinner size="md" />
-          ) : (
-            <Content component="p">{submitButtonText}</Content>
-          )}
+          {isPending ? <Spinner size="md" /> : <Content component="p">{submitButtonText}</Content>}
         </Button>
       </ActionGroup>
     </Form>

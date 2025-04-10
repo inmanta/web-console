@@ -26,11 +26,7 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
   const visualSeverity = getSeverityForNotification(notification.severity);
 
   return (
-    <CustomItem
-      aria-label="NotificationItem"
-      $read={notification.read}
-      $severity={visualSeverity}
-    >
+    <CustomItem aria-label="NotificationItem" $read={notification.read} $severity={visualSeverity}>
       <DataListItemRow>
         <DataListItemCells
           dataListCells={[

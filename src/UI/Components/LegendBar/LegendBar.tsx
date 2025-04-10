@@ -14,15 +14,8 @@ interface Props {
  *
  * @param {string} props.label displayed when there are no items.
  */
-export const LegendBar: React.FC<Props> = ({
-  items,
-  total,
-  label,
-  ...props
-}) => {
-  const totalValue = items
-    .map((item) => item.value)
-    .reduce((acc, cur) => acc + cur, 0);
+export const LegendBar: React.FC<Props> = ({ items, total, label, ...props }) => {
+  const totalValue = items.map((item) => item.value).reduce((acc, cur) => acc + cur, 0);
 
   return (
     <Container {...props}>

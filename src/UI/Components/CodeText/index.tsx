@@ -14,7 +14,6 @@ export const CodeText: React.FC<Props> = ({ children, singleLine = false }) => (
 
 const StyledPre = styled.pre<{ singleLine: boolean }>`
   white-space: ${(p) => (p.singleLine ? "nowrap" : "pre-wrap")};
-  ${({ singleLine }) =>
-    singleLine ? "overflow: hidden; text-overflow: ellipsis;" : ""}
+  ${({ singleLine }) => (singleLine ? "overflow: hidden; text-overflow: ellipsis;" : "")}
   font-family: "Liberation Mono";
 `;

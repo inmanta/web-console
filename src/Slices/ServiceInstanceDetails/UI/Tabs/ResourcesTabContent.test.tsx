@@ -40,9 +40,7 @@ it("should render error view correctly", async () => {
 
   render(setup(instanceData));
 
-  expect(
-    await screen.findByLabelText("Error_view-Resources-content"),
-  ).toBeVisible();
+  expect(await screen.findByLabelText("Error_view-Resources-content")).toBeVisible();
   expect(screen.getByText("Something went wrong")).toBeVisible();
 
   server.close();
@@ -68,9 +66,7 @@ it("should render information about no resources correctly", async () => {
   render(setup({ ...instanceData, deployment_progress: null }));
 
   expect(await screen.findByText("No resources found")).toBeVisible();
-  expect(
-    screen.getByText("No resources could be found for this instance."),
-  ).toBeVisible();
+  expect(screen.getByText("No resources could be found for this instance.")).toBeVisible();
 
   server.close();
 });
@@ -82,9 +78,7 @@ it("should render information about no deployment progress data correctly", asyn
 
   render(setup({ ...instanceData, deployment_progress: undefined }));
 
-  expect(
-    await screen.findByText("There is no data about deployment progress."),
-  ).toBeVisible();
+  expect(await screen.findByText("There is no data about deployment progress.")).toBeVisible();
 
   server.close();
 });

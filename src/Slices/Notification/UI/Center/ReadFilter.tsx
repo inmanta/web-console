@@ -30,11 +30,7 @@ export const ReadFilter: React.FC<Props> = ({ filter, setFilter }) => {
     });
 
   return (
-    <ToolbarFilter
-      labels={filterToChips(filter)}
-      deleteLabel={deleteChip}
-      categoryName="Read"
-    >
+    <ToolbarFilter labels={filterToChips(filter)} deleteLabel={deleteChip} categoryName="Read">
       <SingleTextSelect
         aria-label="ReadOptions"
         options={options}

@@ -15,12 +15,10 @@ import {
 } from "@/UI/Components/TreeTable/Helpers/AttributeNode";
 import { InventoryAttributeTree } from "@/UI/Components/TreeTable/types";
 
-export class InventoryAttributeHelper
-  implements AttributeHelper<InventoryAttributeTree>
-{
+export class InventoryAttributeHelper implements AttributeHelper<InventoryAttributeTree> {
   constructor(
     private readonly separator: string,
-    private readonly service?: ServiceModel,
+    private readonly service?: ServiceModel
   ) {}
 
   /**
@@ -35,25 +33,23 @@ export class InventoryAttributeHelper
         ...attributes.candidate,
         ...attributes.active,
         ...attributes.rollback,
-      }),
+      })
     );
   }
 
   public getMultiAttributeNodes(
-    attributes: Attributes,
+    attributes: Attributes
   ): MultiAttributeNodeDict<InventoryAttributes> {
     return this.mergeNodes(
       this.getSingleAttributeNodes("", attributes.candidate),
       this.getSingleAttributeNodes("", attributes.active),
-      this.getSingleAttributeNodes("", attributes.rollback),
+      this.getSingleAttributeNodes("", attributes.rollback)
     );
   }
 
   public getAttributeAnnotations(key: string) {
     if (this.service && this.service.attributes) {
-      const attr = this.service.attributes.find(
-        (attribute) => attribute.name === key,
-      );
+      const attr = this.service.attributes.find((attribute) => attribute.name === key);
 
       return attr?.attribute_annotations || {};
     }
@@ -63,16 +59,16 @@ export class InventoryAttributeHelper
 
   private findKeyInService(
     prefix: string,
-    key: string,
-  ):
-    | Pick<InterServiceRelation, "name" | "entity_type" | "description">
-    | undefined {
+    key: string
+  ): Pick<InterServiceRelation, "name" | "entity_type" | "description"> | undefined {
     if (!this.service) {
       return;
     }
+
     if (prefix.length === 0) {
       return this.findInRelations(this.service, key);
     }
+
     const prefixParts = prefix
       .split(this.separator)
       .filter((part) => isNaN(part as unknown as number));
@@ -84,20 +80,14 @@ export class InventoryAttributeHelper
   private findInServiceLike(
     service: Pick<EntityLike, "embedded_entities" | "inter_service_relations">,
     prefix: string[],
-    key: string,
-  ):
-    | Pick<InterServiceRelation, "name" | "entity_type" | "description">
-    | undefined {
+    key: string
+  ): Pick<InterServiceRelation, "name" | "entity_type" | "description"> | undefined {
     const matchingEmbeddedEntity = service.embedded_entities.find(
-      (entity) => entity.name === prefix[0],
+      (entity) => entity.name === prefix[0]
     );
 
     if (matchingEmbeddedEntity)
-      return this.findInServiceLike(
-        matchingEmbeddedEntity,
-        prefix.slice(1),
-        key,
-      );
+      return this.findInServiceLike(matchingEmbeddedEntity, prefix.slice(1), key);
 
     const fromRelations = this.findInRelations(service, key);
 
@@ -110,12 +100,10 @@ export class InventoryAttributeHelper
 
   private findInRelations(
     service: Pick<EntityLike, "inter_service_relations">,
-    key: string,
-  ):
-    | Pick<InterServiceRelation, "name" | "entity_type" | "description">
-    | undefined {
+    key: string
+  ): Pick<InterServiceRelation, "name" | "entity_type" | "description"> | undefined {
     const matchingRelation = service.inter_service_relations?.find(
-      (relation) => relation.name === key,
+      (relation) => relation.name === key
     );
 
     return matchingRelation;
@@ -124,35 +112,26 @@ export class InventoryAttributeHelper
   private findAttributeType(
     service: ServiceModel | EmbeddedEntity | undefined,
     prefix: string[],
-    key: string,
+    key: string
   ): string | undefined {
     if (service === undefined) {
       return undefined;
     }
 
     const matchingEmbeddedEntity = service.embedded_entities.find(
-      (entity) => entity.name === prefix[0],
+      (entity) => entity.name === prefix[0]
     );
 
     if (matchingEmbeddedEntity) {
-      return this.findAttributeType(
-        matchingEmbeddedEntity,
-        prefix.slice(1),
-        key,
-      );
+      return this.findAttributeType(matchingEmbeddedEntity, prefix.slice(1), key);
     }
 
-    const adequateAttribute = service.attributes.find(
-      (attribute) => attribute.name === key,
-    );
+    const adequateAttribute = service.attributes.find((attribute) => attribute.name === key);
 
     return adequateAttribute?.type;
   }
 
-  private getSingleAttributeNodes(
-    prefix: string,
-    subject: unknown,
-  ): AttributeNodeDict {
+  private getSingleAttributeNodes(prefix: string, subject: unknown): AttributeNodeDict {
     if (!this.isNested(subject)) {
       return {};
     }
@@ -164,10 +143,8 @@ export class InventoryAttributeHelper
     primaryKeys.forEach((key) => {
       const type = this.findAttributeType(
         this.service,
-        prefix
-          .split(this.separator)
-          .filter((part) => isNaN(part as unknown as number)),
-        key,
+        prefix.split(this.separator).filter((part) => isNaN(part as unknown as number)),
+        key
       );
 
       if (!this.isNested(subject[key])) {
@@ -184,10 +161,7 @@ export class InventoryAttributeHelper
         keys[`${prefix}${key}`] = { kind: "Branch" };
         keys = {
           ...keys,
-          ...this.getSingleAttributeNodes(
-            `${prefix}${key}${this.separator}`,
-            subject[key],
-          ),
+          ...this.getSingleAttributeNodes(`${prefix}${key}${this.separator}`, subject[key]),
         };
       }
     });
@@ -228,7 +202,7 @@ export class InventoryAttributeHelper
   private mergeNodes(
     candidateNodes: AttributeNodeDict,
     activeNodes: AttributeNodeDict,
-    rollbackNodes: AttributeNodeDict,
+    rollbackNodes: AttributeNodeDict
   ): MultiAttributeNodeDict<InventoryAttributes> {
     //sorting of the attributes moved to helpers to avoid sorting issues - check issue #5030 for example
     const paths = Object.keys({
@@ -237,46 +211,37 @@ export class InventoryAttributeHelper
       ...rollbackNodes,
     }).sort();
 
-    return paths.reduce<MultiAttributeNodeDict<InventoryAttributes>>(
-      (acc, cur) => {
-        const conform = isMultiLeaf(
-          candidateNodes[cur],
-          activeNodes[cur],
-          rollbackNodes[cur],
-        );
+    return paths.reduce<MultiAttributeNodeDict<InventoryAttributes>>((acc, cur) => {
+      const conform = isMultiLeaf(candidateNodes[cur], activeNodes[cur], rollbackNodes[cur]);
 
-        if (!conform) {
-          acc[cur] = { kind: "Branch" };
-
-          return acc;
-        }
-
-        acc[cur] = {
-          kind: "Leaf",
-          value: {
-            candidate: getValue(candidateNodes[cur]),
-            active: getValue(activeNodes[cur]),
-            rollback: getValue(rollbackNodes[cur]),
-          },
-          hasRelation:
-            getHasRelation(candidateNodes[cur]) ||
-            getHasRelation(activeNodes[cur]) ||
-            getHasRelation(rollbackNodes[cur]),
-          entity: chooseEntity([
-            getEntity(candidateNodes[cur]),
-            getEntity(activeNodes[cur]),
-            getEntity(rollbackNodes[cur]),
-          ]),
-          type:
-            getType(candidateNodes[cur]) ||
-            getType(activeNodes[cur]) ||
-            getType(rollbackNodes[cur]),
-        };
+      if (!conform) {
+        acc[cur] = { kind: "Branch" };
 
         return acc;
-      },
-      {},
-    );
+      }
+
+      acc[cur] = {
+        kind: "Leaf",
+        value: {
+          candidate: getValue(candidateNodes[cur]),
+          active: getValue(activeNodes[cur]),
+          rollback: getValue(rollbackNodes[cur]),
+        },
+        hasRelation:
+          getHasRelation(candidateNodes[cur]) ||
+          getHasRelation(activeNodes[cur]) ||
+          getHasRelation(rollbackNodes[cur]),
+        entity: chooseEntity([
+          getEntity(candidateNodes[cur]),
+          getEntity(activeNodes[cur]),
+          getEntity(rollbackNodes[cur]),
+        ]),
+        type:
+          getType(candidateNodes[cur]) || getType(activeNodes[cur]) || getType(rollbackNodes[cur]),
+      };
+
+      return acc;
+    }, {});
   }
 }
 
@@ -291,7 +256,7 @@ export class InventoryAttributeHelper
 export function isMultiLeaf(
   candidateNode: TreeNode | undefined,
   activeNode: TreeNode | undefined,
-  rollbackNode: TreeNode | undefined,
+  rollbackNode: TreeNode | undefined
 ): boolean {
   return isLeaf(candidateNode) && isLeaf(activeNode) && isLeaf(rollbackNode);
 }
@@ -305,6 +270,7 @@ export function isMultiLeaf(
  */
 function getType(node: TreeNode | undefined): string | undefined {
   if (typeof node === "undefined") return undefined;
+
   if (node.kind !== "Leaf") return undefined;
 
   return node.type;
@@ -319,6 +285,7 @@ function getType(node: TreeNode | undefined): string | undefined {
  */
 export function getValue(node: TreeNode | undefined): unknown {
   if (typeof node === "undefined") return undefined;
+
   if (node.kind !== "Leaf") return undefined;
 
   return node.value;
@@ -346,6 +313,7 @@ export function isLeaf(node: TreeNode | undefined): boolean {
  */
 function getHasRelation(node: TreeNode | undefined): boolean | undefined {
   if (typeof node === "undefined") return undefined;
+
   if (node.kind !== "Leaf") return undefined;
 
   return node.hasRelation;
@@ -360,6 +328,7 @@ function getHasRelation(node: TreeNode | undefined): boolean | undefined {
  */
 function getEntity(node: TreeNode | undefined): string | undefined {
   if (typeof node === "undefined") return undefined;
+
   if (node.kind !== "Leaf") return undefined;
 
   return node.entity;

@@ -10,10 +10,7 @@ import {
   FeatureManager,
   ArchiveHelper,
 } from "@/Core";
-import {
-  AuthContextInterface,
-  defaultAuthContext,
-} from "@/Data/Auth/AuthContext";
+import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   DummyCommandResolver,
   DummyEnvironmentModifier,
@@ -76,8 +73,7 @@ export const DependencyProvider: React.FC<{
       queryResolver: queryResolver || new DummyQueryResolver(),
       urlManager: urlManager || new DummyUrlManager(),
       fileFetcher: fileFetcher || new DummyFileFetcher(),
-      environmentModifier:
-        environmentModifier || new DummyEnvironmentModifier(),
+      environmentModifier: environmentModifier || new DummyEnvironmentModifier(),
       featureManager: featureManager || new DummyFeatureManager(),
       routeManager: routeManager || new DummyRouteManager(),
       environmentHandler: environmentHandler || DummyEnvironmentHandler(),

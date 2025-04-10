@@ -1,10 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import {
-  Content,
-  PageSection,
-  Toolbar,
-  ToolbarContent,
-} from "@patternfly/react-core";
+import { Content, PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
 import { Diff, RemoteData } from "@/Core";
 import { RemoteDataView, DiffWizard, EmptyView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -34,20 +29,16 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
       resources
         .filter((resource) => statuses.includes(resource.status))
         .filter((resource) =>
-          resource.resource_id
-            .toLocaleLowerCase()
-            .includes(searchFilter.toLocaleLowerCase()),
+          resource.resource_id.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase())
         ),
-    data,
+    data
   );
 
   return (
     <>
       <PageSection>
         <Content>
-          <Content component="h1">
-            {words("desiredState.compare.title")}
-          </Content>
+          <Content component="h1">{words("desiredState.compare.title")}</Content>
         </Content>
       </PageSection>
       <PageSection hasBodyWrapper={false}>
@@ -63,12 +54,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
         </Toolbar>
       </PageSection>
       <PageSection hasBodyWrapper={false} hasShadowBottom>
-        <DiffWizard.Controls
-          data={filteredData}
-          refs={refs}
-          from={from}
-          to={to}
-        />
+        <DiffWizard.Controls data={filteredData} refs={refs} from={from} to={to} />
       </PageSection>
       <PageSection hasBodyWrapper={false} isFilled>
         <RemoteDataView

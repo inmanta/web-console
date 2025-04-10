@@ -3,14 +3,12 @@ import { RawDiagnostics } from "@S/Diagnose/Core/Domain";
 const failure: RawDiagnostics = {
   failures: [
     {
-      resource_id:
-        "unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2",
+      resource_id: "unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2",
       failures: [
         {
           instance_version: 3,
           model_version: 2,
-          resource_id:
-            "unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2",
+          resource_id: "unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2",
           time: new Date("2021-05-03T13:10:05.978048"),
           message:
             "An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation()) An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation()) An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation())",

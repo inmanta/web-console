@@ -8,12 +8,13 @@ import { InputInfoCreator } from "./InputInfoCreator";
 interface Props {
   settings: EnvironmentSettings.EnvironmentSettings;
 }
+
 function reducer(
   state: { settings: EnvironmentSettings.ValuesMap; resetedValueName: string },
   action: {
     type: string;
     payload: EnvironmentSettings.ValuesMap | string;
-  },
+  }
 ) {
   const { type, payload } = action;
 
@@ -41,9 +42,7 @@ function reducer(
   }
 }
 
-export const Provider: React.FC<Props> = ({
-  settings: { settings, definition },
-}) => {
+export const Provider: React.FC<Props> = ({ settings: { settings, definition } }) => {
   /*
   useReducer in this component is used due to dependency issues in useEffect, 
   to keep track of unsaved changes we had to add logic that was updating the state 
@@ -56,15 +55,12 @@ export const Provider: React.FC<Props> = ({
   });
   const [errorMessage, setErrorMessage] = useState("");
   const { commandResolver } = useContext(DependencyContext);
-  const updateSetting =
-    commandResolver.useGetTrigger<"UpdateEnvironmentSetting">({
-      kind: "UpdateEnvironmentSetting",
-    });
-  const resetSetting = commandResolver.useGetTrigger<"ResetEnvironmentSetting">(
-    {
-      kind: "ResetEnvironmentSetting",
-    },
-  );
+  const updateSetting = commandResolver.useGetTrigger<"UpdateEnvironmentSetting">({
+    kind: "UpdateEnvironmentSetting",
+  });
+  const resetSetting = commandResolver.useGetTrigger<"ResetEnvironmentSetting">({
+    kind: "ResetEnvironmentSetting",
+  });
   const handleReset = (id: string) => {
     dispatch({ type: "reset", payload: id });
 
@@ -76,7 +72,7 @@ export const Provider: React.FC<Props> = ({
     },
     updateSetting,
     handleReset,
-    setErrorMessage,
+    setErrorMessage
   ).create(settings, definition, state.settings);
 
   useEffect(() => {
@@ -84,10 +80,6 @@ export const Provider: React.FC<Props> = ({
   }, [settings]);
 
   return (
-    <Container
-      infos={infos}
-      errorMessage={errorMessage}
-      onErrorClose={() => setErrorMessage("")}
-    />
+    <Container infos={infos} errorMessage={errorMessage} onErrorClose={() => setErrorMessage("")} />
   );
 };

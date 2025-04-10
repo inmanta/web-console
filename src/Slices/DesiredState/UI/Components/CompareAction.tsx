@@ -13,27 +13,17 @@ interface Props {
 }
 
 export const CompareAction: React.FC<Props> = ({ version, isDisabled }) => {
-  const { compareSelection, setCompareSelection } = useContext(
-    GetDesiredStatesContext,
-  );
+  const { compareSelection, setCompareSelection } = useContext(GetDesiredStatesContext);
 
   return (
     <>
       <DropdownItem
-        onClick={
-          isDisabled
-            ? undefined
-            : () => setCompareSelection(Maybe.some(version))
-        }
+        onClick={isDisabled ? undefined : () => setCompareSelection(Maybe.some(version))}
         isDisabled={isDisabled}
       >
         {words("desiredState.compare.action.compare")}
       </DropdownItem>
-      <CompareWithSelected
-        selection={compareSelection}
-        version={version}
-        isDisabled={isDisabled}
-      />
+      <CompareWithSelected selection={compareSelection} version={version} isDisabled={isDisabled} />
       <CompareWithCurrentState version={version.toString()} />
     </>
   );
@@ -69,7 +59,7 @@ const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
       <Link
         pathname={routeManager.getUrl(
           "DesiredStateCompare",
-          sanitizeFromTo(selection.value, version),
+          sanitizeFromTo(selection.value, version)
         )}
       >
         {words("desiredState.compare.action.compareWithSelected")}
@@ -78,9 +68,7 @@ const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
   );
 };
 
-const CompareWithCurrentState: React.FC<{ version: string }> = ({
-  version,
-}) => {
+const CompareWithCurrentState: React.FC<{ version: string }> = ({ version }) => {
   const { routeManager } = useContext(DependencyContext);
 
   return (

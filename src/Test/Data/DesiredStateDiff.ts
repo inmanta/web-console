@@ -2,8 +2,7 @@ import { Diff } from "@/Core";
 
 export const resources: Diff.Resource[] = [
   {
-    resource_id:
-      "lsm::LifecycleTransfer[internal,instance_id=095339a2-54af-491e-9450-00000001]",
+    resource_id: "lsm::LifecycleTransfer[internal,instance_id=095339a2-54af-491e-9450-00000001]",
     attributes: {
       next_version: {
         from_value: 9,
@@ -33,8 +32,7 @@ export const resources: Diff.Resource[] = [
     status: "modified",
   },
   {
-    resource_id:
-      "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-0000000003]",
+    resource_id: "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-0000000003]",
     attributes: {
       next_version: {
         from_value: null,
@@ -48,8 +46,7 @@ export const resources: Diff.Resource[] = [
     status: "modified",
   },
   {
-    resource_id:
-      "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-00000000004]",
+    resource_id: "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-00000000004]",
     attributes: {
       next_version: {
         from_value: null,

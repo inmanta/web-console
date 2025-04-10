@@ -12,10 +12,7 @@ interface Props {
   setFilter: (filter: Filter) => void;
 }
 
-export const CompileReportsFilterWidget: React.FC<Props> = ({
-  filter,
-  setFilter,
-}) => {
+export const CompileReportsFilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
   const [filterKind, setFilterKind] = useState<Kind>(Kind.Status);
 
   const updateCompileStatus = (selectedCompileStatus: string | null) =>
@@ -34,11 +31,7 @@ export const CompileReportsFilterWidget: React.FC<Props> = ({
 
   return (
     <ToolbarGroup variant="filter-group" aria-label="FilterBar" role="toolbar">
-      <FilterPicker
-        setFilterKind={setFilterKind}
-        filterKind={filterKind}
-        items={List}
-      />
+      <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} items={List} />
       <StatusFilter
         isVisible={filterKind === Kind.Status}
         selected={filter.status ? filter.status : null}

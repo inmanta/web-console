@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  Dropdown,
-  DropdownItem,
-  MenuToggle,
-  MenuToggleElement,
-} from "@patternfly/react-core";
+import { Dropdown, DropdownItem, MenuToggle, MenuToggleElement } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { useUpdateNotification } from "@/Data/Managers/V2/Notification/UpdateNotification";
 import { words } from "@/UI/words";
@@ -58,20 +53,10 @@ export const ActionList: React.FC<Props> = ({ read, id, onUpdate }) => {
         />
       )}
     >
-      <DropdownItem
-        key="read"
-        component="button"
-        isDisabled={read}
-        onClick={onRead}
-      >
+      <DropdownItem key="read" component="button" isDisabled={read} onClick={onRead}>
         {words("notification.read")}
       </DropdownItem>
-      <DropdownItem
-        key="unread"
-        component="button"
-        isDisabled={!read}
-        onClick={onUnread}
-      >
+      <DropdownItem key="unread" component="button" isDisabled={!read} onClick={onUnread}>
         {words("notification.unread")}
       </DropdownItem>
     </Dropdown>

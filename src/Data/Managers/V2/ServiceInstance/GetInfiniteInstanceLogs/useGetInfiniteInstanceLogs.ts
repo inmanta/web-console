@@ -1,7 +1,4 @@
-import {
-  UseInfiniteQueryResult,
-  useInfiniteQuery,
-} from "@tanstack/react-query";
+import { UseInfiniteQueryResult, useInfiniteQuery } from "@tanstack/react-query";
 import { Pagination } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { CustomError, useGet } from "../../helpers";
@@ -16,9 +13,7 @@ interface LogsResponse {
  * Return Signature of the useGetInfiniteInstanceLogs React Query
  */
 interface GetInfiniteInstanceLogs {
-  useContinuous: (
-    selectedVersion: string,
-  ) => UseInfiniteQueryResult<InstanceLog[], CustomError>;
+  useContinuous: (selectedVersion: string) => UseInfiniteQueryResult<InstanceLog[], CustomError>;
 }
 
 /**
@@ -33,14 +28,12 @@ interface GetInfiniteInstanceLogs {
  */
 export const useGetInfiniteInstanceLogs = (
   service: string,
-  instance: string,
+  instance: string
 ): GetInfiniteInstanceLogs => {
   const get = useGet()<LogsResponse>;
 
   return {
-    useContinuous: (
-      selectedVersion: string,
-    ): UseInfiniteQueryResult<InstanceLog[], CustomError> =>
+    useContinuous: (selectedVersion: string): UseInfiniteQueryResult<InstanceLog[], CustomError> =>
       useInfiniteQuery({
         queryKey: ["get_instance_logs-continuous", service, instance],
         queryFn: ({ pageParam }) => {
@@ -49,7 +42,7 @@ export const useGetInfiniteInstanceLogs = (
             : "limit=50";
 
           return get(
-            `/lsm/v1/service_inventory/${service}/${instance}/log?${pageParam ? pageParam : initialParameters}`,
+            `/lsm/v1/service_inventory/${service}/${instance}/log?${pageParam ? pageParam : initialParameters}`
           );
         },
         refetchInterval: 5000,

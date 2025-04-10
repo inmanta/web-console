@@ -21,8 +21,7 @@ const dummySetter = () => {
   return;
 };
 
-const tablePresenterWithIdentity = () =>
-  new InventoryTablePresenter("service_id", "Service ID");
+const tablePresenterWithIdentity = () => new InventoryTablePresenter("service_id", "Service ID");
 
 function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
   const store = getStoreInstance();
@@ -41,7 +40,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
           enable_lsm_expert_mode: expertMode,
         },
       },
-    ]),
+    ])
   );
 
   store.dispatch.environment.setSettingsData({
@@ -69,10 +68,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
     }),
   });
 
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
   const environmentModifier = EnvironmentModifierImpl();
 
   environmentModifier.setEnvironment("aaa");
@@ -122,9 +118,7 @@ test("ServiceInventory shows sorting buttons for sortable columns", async () => 
   expect(await screen.findByRole("button", { name: /state/i })).toBeVisible();
   expect(await screen.findByRole("button", { name: /created/i })).toBeVisible();
   expect(await screen.findByRole("button", { name: /updated/i })).toBeVisible();
-  expect(
-    screen.queryByRole("button", { name: /attributes/i }),
-  ).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /attributes/i })).not.toBeInTheDocument();
 });
 
 test("ServiceInventory sets sorting parameters correctly on click", async () => {

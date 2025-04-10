@@ -8,10 +8,7 @@ interface Props {
   resourceId: string;
 }
 
-export const DetailsProvider: React.FC<Props> = ({
-  version,
-  resourceId: id,
-}) => {
+export const DetailsProvider: React.FC<Props> = ({ version, resourceId: id }) => {
   const { queryResolver } = useContext(DependencyContext);
 
   const [data] = queryResolver.useContinuous<"GetVersionedResourceDetails">({
@@ -24,9 +21,7 @@ export const DetailsProvider: React.FC<Props> = ({
     <RemoteDataView
       data={data}
       label="ResourceDetails"
-      SuccessView={(details) => (
-        <Details details={details} aria-label="ResourceDetails-Success" />
-      )}
+      SuccessView={(details) => <Details details={details} aria-label="ResourceDetails-Success" />}
     />
   );
 };

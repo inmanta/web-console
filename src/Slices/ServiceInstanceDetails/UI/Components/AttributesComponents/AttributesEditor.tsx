@@ -60,14 +60,10 @@ export const AttributesEditor: React.FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const { mutate, isPending } = usePatchAttributesExpert(
-    instance.id,
-    instance.service_entity,
-    {
-      onError: (error) => setErrorMessage(error.message),
-      onSuccess: () => setIsModalOpen(false),
-    },
-  );
+  const { mutate, isPending } = usePatchAttributesExpert(instance.id, instance.service_entity, {
+    onError: (error) => setErrorMessage(error.message),
+    onSuccess: () => setIsModalOpen(false),
+  });
 
   /**
    * Handles the change of the selected attribute Set.
@@ -75,10 +71,7 @@ export const AttributesEditor: React.FC<Props> = ({
    * @param {React.FormEvent<HTMLSelectElement>} _event
    * @param {string} value
    */
-  const onSetSelectionChange = (
-    _event: React.FormEvent<HTMLSelectElement>,
-    value: string,
-  ) => {
+  const onSetSelectionChange = (_event: React.FormEvent<HTMLSelectElement>, value: string) => {
     setSelectedSet(value);
   };
 
@@ -102,7 +95,7 @@ export const AttributesEditor: React.FC<Props> = ({
         setIsEditorValid(false);
       }
     },
-    [setEditorState, setIsEditorValid],
+    [setEditorState, setIsEditorValid]
   );
 
   /**
@@ -152,11 +145,7 @@ export const AttributesEditor: React.FC<Props> = ({
             ouiaId="Select-AttributeSet"
           >
             {dropdownOptions.map((option, index) => (
-              <FormSelectOption
-                value={option}
-                key={index}
-                label={words(option as AttributeSets)}
-              />
+              <FormSelectOption value={option} key={index} label={words(option as AttributeSets)} />
             ))}
           </StyledSelect>
         </FlexItem>
@@ -165,6 +154,7 @@ export const AttributesEditor: React.FC<Props> = ({
             <Button
               isDisabled={!isEditorValid}
               aria-label="Expert-Submit-Button"
+              aria-disabled={!isEditorValid}
               variant="danger"
               onClick={() => setIsModalOpen(true)}
             >

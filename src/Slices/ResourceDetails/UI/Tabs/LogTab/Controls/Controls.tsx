@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Toolbar,
-  ToolbarItem,
-  ToolbarContent,
-  Divider,
-} from "@patternfly/react-core";
+import { Toolbar, ToolbarItem, ToolbarContent, Divider } from "@patternfly/react-core";
 import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
 import { ActionFilter } from "./ActionFilter";
 import { LogLevelFilter } from "./LogLevelFilter";
@@ -17,11 +12,7 @@ interface Props {
   setFilter: (filter: ResourceLogFilter) => void;
 }
 
-export const Controls: React.FC<Props> = ({
-  paginationWidget,
-  filter,
-  setFilter,
-}) => (
+export const Controls: React.FC<Props> = ({ paginationWidget, filter, setFilter }) => (
   <>
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>

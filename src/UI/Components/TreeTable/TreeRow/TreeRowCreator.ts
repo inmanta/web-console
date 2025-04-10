@@ -16,9 +16,9 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
     private readonly isChildExpanded: (path: string) => boolean,
     private readonly createOnToggle: (path: string) => () => void,
     private readonly extractValues: (
-      node: Extract<MultiAttributeNode<T>, { kind: "Leaf" }>,
+      node: Extract<MultiAttributeNode<T>, { kind: "Leaf" }>
     ) => Cell[],
-    private readonly attributes: Attributes,
+    private readonly attributes: Attributes
   ) {}
 
   /**
@@ -41,17 +41,17 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
 
     const candidateValue = pathArr.reduce(
       (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
-      candidate,
+      candidate
     );
 
     const activeValue = pathArr.reduce(
       (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
-      active,
+      active
     );
 
     const rollBackValue = pathArr.reduce(
       (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
-      rollback,
+      rollback
     );
 
     /**
@@ -65,17 +65,11 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
       typeof rollBackValue === "string"
     ) {
       const candidateStringified =
-        typeof candidateValue !== "undefined"
-          ? JSON.stringify(candidateValue)
-          : candidateValue;
+        typeof candidateValue !== "undefined" ? JSON.stringify(candidateValue) : candidateValue;
       const activeStringified =
-        typeof activeValue !== "undefined"
-          ? JSON.stringify(activeValue)
-          : activeValue;
+        typeof activeValue !== "undefined" ? JSON.stringify(activeValue) : activeValue;
       const rollbackStringified =
-        typeof rollBackValue !== "undefined"
-          ? JSON.stringify(rollBackValue)
-          : rollBackValue;
+        typeof rollBackValue !== "undefined" ? JSON.stringify(rollBackValue) : rollBackValue;
 
       return `Candidate attributes : ${candidateStringified} \n  Active attributes : ${activeStringified} \n Rollback attributes : ${rollbackStringified}`;
     }
@@ -94,11 +88,7 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
    * @param {MultiAttributeNode<T>} node
    * @returns {TreeRow} a TreeRow object
    */
-  create(
-    path: string,
-    node: MultiAttributeNode<T>,
-    annotations?: AttributeAnnotations,
-  ): TreeRow {
+  create(path: string, node: MultiAttributeNode<T>, annotations?: AttributeAnnotations): TreeRow {
     if (node.kind === "Leaf") {
       if (this.pathHelper.isNested(path)) {
         return {
@@ -165,12 +155,18 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
 
 function format(value: unknown): string {
   if (typeof value === "string") return value;
+
   if (typeof value === "number") return value.toString();
+
   if (typeof value === "boolean") return value ? "true" : "false";
+
   if (typeof value === "undefined") return "";
+
   if (typeof value === "object") {
     if (value === null) return "null";
+
     if (Object.keys(value).length === 0) return "{}";
+
     if (Array.isArray(value)) return value.join(", ");
   }
 
@@ -178,7 +174,7 @@ function format(value: unknown): string {
 }
 
 export function extractCatalogValues(
-  node: Extract<MultiAttributeNode<CatalogAttributes>, { kind: "Leaf" }>,
+  node: Extract<MultiAttributeNode<CatalogAttributes>, { kind: "Leaf" }>
 ): Cell[] {
   return [
     {
@@ -198,7 +194,7 @@ export function extractCatalogValues(
 }
 
 export function extractInventoryValues(
-  node: Extract<MultiAttributeNode<InventoryAttributes>, { kind: "Leaf" }>,
+  node: Extract<MultiAttributeNode<InventoryAttributes>, { kind: "Leaf" }>
 ): Cell[] {
   return [
     {

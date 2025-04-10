@@ -1,10 +1,7 @@
 import { Action, action } from "easy-peasy";
 import { RemoteData, Query } from "@/Core";
 
-type Data = RemoteData.Type<
-  Query.Error<"GetResourceHistory">,
-  Query.Data<"GetResourceHistory">
->;
+type Data = RemoteData.Type<Query.Error<"GetResourceHistory">, Query.Data<"GetResourceHistory">>;
 
 /**
  * The ResourceHistorySlice stores the history of a resource by id.

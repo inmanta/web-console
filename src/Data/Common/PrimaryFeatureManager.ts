@@ -31,10 +31,10 @@ export class PrimaryFeatureManager implements FeatureManager {
     private readonly logger: Logger = new VoidLogger(),
     private readonly jsonParserId: JsonParserId = "Native",
     private readonly commitHash: string = "",
-    private readonly appVersion: string = "",
+    private readonly appVersion: string = ""
   ) {
     this.logger.log(
-      `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`,
+      `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
     );
   }
 
@@ -93,7 +93,7 @@ export class PrimaryFeatureManager implements FeatureManager {
    */
   public isLicencedFeatureEnabled(featureSlice: Feature): boolean {
     return this.get().features.some(
-      (feature) => feature.slice === featureSlice && feature.value === true,
+      (feature) => feature.slice === featureSlice && feature.value === true
     );
   }
 
@@ -182,7 +182,7 @@ export class PrimaryFeatureManager implements FeatureManager {
   getLicenseInformation(): StatusLicense | undefined {
     const serverStatus = this.get();
     const licenceInformation = serverStatus.slices.find(
-      (slice) => slice.name === "license.license",
+      (slice) => slice.name === "license.license"
     );
 
     return licenceInformation?.status;

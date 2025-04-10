@@ -16,19 +16,12 @@ import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
 import { JSONEditor } from "../JSONEditor";
 import { FieldInput } from "./Components";
-import {
-  createDuplicateFormState,
-  createEditFormState,
-  createFormState,
-} from "./Helpers";
+import { createDuplicateFormState, createEditFormState, createFormState } from "./Helpers";
 
 interface Props {
   service_entity: string;
   fields: Field[];
-  onSubmit(
-    formState: InstanceAttributeModel,
-    callback: (value: boolean) => void,
-  ): void;
+  onSubmit(formState: InstanceAttributeModel, callback: (value: boolean) => void): void;
   onCancel(): void;
   originalAttributes?: InstanceAttributeModel;
   isSubmitDisabled?: boolean;
@@ -52,7 +45,7 @@ const getFormState = (
   fields,
   apiVersion,
   originalAttributes,
-  isEdit = false,
+  isEdit = false
 ): InstanceAttributeModel => {
   if (isEdit) {
     return createEditFormState(fields, apiVersion, originalAttributes);
@@ -90,12 +83,10 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   setIsDirty,
 }) => {
   const [formState, setFormState] = useState(
-    getFormState(fields, apiVersion, originalAttributes, isEdit),
+    getFormState(fields, apiVersion, originalAttributes, isEdit)
   );
   //originalState is created to make possible to differentiate newly created attributes to keep track on which inputs should be disabled
-  const [originalState] = useState(
-    getFormState(fields, apiVersion, originalAttributes, isEdit),
-  );
+  const [originalState] = useState(getFormState(fields, apiVersion, originalAttributes, isEdit));
 
   const [shouldPerformCancel, setShouldCancel] = useState(false);
   const [isForm, setIsForm] = useState(true);
@@ -118,6 +109,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       if (!isDirty) {
         setIsDirty(true);
       }
+
       if (multi) {
         setFormState((prev) => {
           const clone = { ...prev };
@@ -139,7 +131,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         });
       }
     },
-    [isDirty, setIsDirty],
+    [isDirty, setIsDirty]
   );
 
   /**
@@ -164,7 +156,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         setIsEditorValid(false);
       }
     },
-    [setFormState, setIsEditorValid],
+    [setFormState, setIsEditorValid]
   );
 
   /**
@@ -172,8 +164,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
    *
    * @returns {void}
    */
-  const onConfirm = () =>
-    onSubmit(formState, (value: boolean) => setIsDirty(value));
+  const onConfirm = () => onSubmit(formState, (value: boolean) => setIsDirty(value));
 
   useEffect(() => {
     if (shouldPerformCancel) {
@@ -221,11 +212,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         ))
       )}
       {fields.length <= 0 && (
-        <Alert
-          variant="info"
-          isInline
-          title={words("inventory.editInstance.noAttributes")}
-        />
+        <Alert variant="info" isInline title={words("inventory.editInstance.noAttributes")} />
       )}
 
       <ActionList>

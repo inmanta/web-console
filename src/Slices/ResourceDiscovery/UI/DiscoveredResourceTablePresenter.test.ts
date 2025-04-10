@@ -25,7 +25,5 @@ test("TablePresenter converts column name to index correctly", () => {
 });
 
 test("TablePresenter returns sortable columns correctly", () => {
-  expect(presenter.getSortableColumnNames()).toEqual([
-    "discovered_resource_id",
-  ]);
+  expect(presenter.getSortableColumnNames()).toEqual(["discovered_resource_id"]);
 });
