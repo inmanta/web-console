@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  MenuToggle,
-  MenuToggleElement,
-  Select,
-  ToolbarFilter,
-} from "@patternfly/react-core";
+import { MenuToggle, MenuToggleElement, Select, ToolbarFilter } from "@patternfly/react-core";
 import {
   CheckCircleIcon,
   CheckIcon,
@@ -38,13 +33,8 @@ export const SelectIncludeExcludeFilter: React.FC<Props> = ({
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const onClick = (selection) => {
-    const safeSelectedStates = ensureInvertedFilterIsNotPresent(
-      selection,
-      selectedStates,
-    );
-    const updatedSelection = uniq(
-      toggleValueInList(selection, safeSelectedStates),
-    );
+    const safeSelectedStates = ensureInvertedFilterIsNotPresent(selection, selectedStates);
+    const updatedSelection = uniq(toggleValueInList(selection, safeSelectedStates));
 
     update(updatedSelection);
     setIsFilterOpen(false);
@@ -124,16 +114,9 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
     </Td>
     <Td>
       <span>
-        <ClickableMenuItem
-          onClick={onInclude}
-          aria-label={`${state}-include-toggle`}
-        >
+        <ClickableMenuItem onClick={onInclude} aria-label={`${state}-include-toggle`}>
           <span
-            aria-label={
-              includeActive
-                ? `${state}-include-active`
-                : `${state}-include-inactive`
-            }
+            aria-label={includeActive ? `${state}-include-active` : `${state}-include-inactive`}
           >
             {includeActive ? <ActiveIncludeIcon /> : <InactiveIncludeIcon />}
           </span>
@@ -142,16 +125,9 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
     </Td>
     <Td>
       <div>
-        <ClickableMenuItem
-          onClick={onExclude}
-          aria-label={`${state}-exclude-toggle`}
-        >
+        <ClickableMenuItem onClick={onExclude} aria-label={`${state}-exclude-toggle`}>
           <span
-            aria-label={
-              excludeActive
-                ? `${state}-exclude-active`
-                : `${state}-exclude-inactive`
-            }
+            aria-label={excludeActive ? `${state}-exclude-active` : `${state}-exclude-inactive`}
           >
             {excludeActive ? <ActiveExcludeIcon /> : <InactiveExcludeIcon />}
           </span>
@@ -163,7 +139,7 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
 
 const ensureInvertedFilterIsNotPresent = (
   selection: string,
-  selectedStates: string[],
+  selectedStates: string[]
 ): string[] => {
   const invertedFilter = invertFilter(selection);
 

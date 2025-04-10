@@ -60,7 +60,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
 
   const onSubmit = async (
     attributes: InstanceAttributeModel,
-    setIsDirty: (values: boolean) => void,
+    setIsDirty: (values: boolean) => void
   ) => {
     //as setState used in setIsDirty doesn't change immediately we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
     setIsDirty(false);

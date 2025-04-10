@@ -18,10 +18,7 @@ import { connectEntities, createComposerEntity } from "./general";
  * @param {ServiceModel} serviceModel - The service model to use for populating the graph.
  * @returns {void}
  */
-export function populateGraphWithDefault(
-  graph: dia.Graph,
-  serviceModel: ServiceModel,
-): void {
+export function populateGraphWithDefault(graph: dia.Graph, serviceModel: ServiceModel): void {
   //the most reliable way to get attributes default state is to use Field Creator
 
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
@@ -59,24 +56,20 @@ export function populateGraphWithDefault(
  */
 export function addDefaultEntities(
   graph: dia.Graph,
-  service: ServiceModel | EmbeddedEntity,
+  service: ServiceModel | EmbeddedEntity
 ): ServiceEntityBlock[] {
   const embedded_entities = service.embedded_entities
     .filter((embedded_entity) => embedded_entity.lower_limit > 0)
     .flatMap((embedded_entity) => {
       const fieldCreator = new FieldCreator(new CreateModifierHandler());
-      const fields = fieldCreator.attributesToFields(
-        embedded_entity.attributes,
-      );
+      const fields = fieldCreator.attributesToFields(embedded_entity.attributes);
       const attributes = createFormState(fields);
 
       if (embedded_entity.lower_limit > 1) {
         const embedded_entities: ServiceEntityBlock[] = [];
 
         for (let i = 0; i < embedded_entity.lower_limit; i++) {
-          embedded_entities.push(
-            addSingleEntity(graph, embedded_entity, attributes, service.name),
-          );
+          embedded_entities.push(addSingleEntity(graph, embedded_entity, attributes, service.name));
         }
 
         return embedded_entities;
@@ -101,7 +94,7 @@ const addSingleEntity = (
   graph: dia.Graph,
   model: EmbeddedEntity,
   attributes: InstanceAttributeModel,
-  holderName: string,
+  holderName: string
 ): ServiceEntityBlock => {
   const embeddedEntity = createComposerEntity({
     serviceModel: model,

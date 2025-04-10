@@ -3,23 +3,14 @@ import { isEqual } from "lodash-es";
 import { Query, RemoteData, StateHelper, StateHelperWithEnv } from "@/Core";
 import { Store, StoreModel, useStoreState } from "@/Data/Store";
 
-type Data<Kind extends Query.Kind> = RemoteData.Type<
-  Query.Error<Kind>,
-  Query.Data<Kind>
->;
+type Data<Kind extends Query.Kind> = RemoteData.Type<Query.Error<Kind>, Query.Data<Kind>>;
 
-type ApiData<Kind extends Query.Kind> = RemoteData.Type<
-  Query.Error<Kind>,
-  Query.ApiResponse<Kind>
->;
+type ApiData<Kind extends Query.Kind> = RemoteData.Type<Query.Error<Kind>, Query.ApiResponse<Kind>>;
 
 export function PrimaryStateHelper<Kind extends Query.Kind>(
   store: Store,
   customSet: (data: ApiData<Kind>, query: Query.SubQuery<Kind>) => void,
-  customGet: (
-    state: State<StoreModel>,
-    query: Query.SubQuery<Kind>,
-  ) => Data<Kind>,
+  customGet: (state: State<StoreModel>, query: Query.SubQuery<Kind>) => Data<Kind>
 ): StateHelper<Kind> {
   function set(data: ApiData<Kind>, query: Query.SubQuery<Kind>): void {
     customSet(data, query);
@@ -48,33 +39,19 @@ export function PrimaryStateHelper<Kind extends Query.Kind>(
 
 export function PrimaryStateHelperWithEnv<Kind extends Query.Kind>(
   store: Store,
-  customSet: (
-    data: ApiData<Kind>,
-    query: Query.SubQuery<Kind>,
-    environment: string,
-  ) => void,
+  customSet: (data: ApiData<Kind>, query: Query.SubQuery<Kind>, environment: string) => void,
   customGet: (
     state: State<StoreModel>,
     query: Query.SubQuery<Kind>,
-    environment: string,
-  ) => Data<Kind> | undefined,
+    environment: string
+  ) => Data<Kind> | undefined
 ): StateHelperWithEnv<Kind> {
-  function set(
-    data: ApiData<Kind>,
-    query: Query.SubQuery<Kind>,
-    environment: string,
-  ): void {
+  function set(data: ApiData<Kind>, query: Query.SubQuery<Kind>, environment: string): void {
     customSet(data, query, environment);
   }
 
-  function useGetHooked(
-    query: Query.SubQuery<Kind>,
-    environment: string,
-  ): Data<Kind> {
-    return useStoreState(
-      (state) => enforce(customGet(state, query, environment)),
-      isEqual,
-    );
+  function useGetHooked(query: Query.SubQuery<Kind>, environment: string): Data<Kind> {
+    return useStoreState((state) => enforce(customGet(state, query, environment)), isEqual);
   }
 
   function enforce(value: undefined | Data<Kind>): Data<Kind> {
@@ -83,10 +60,7 @@ export function PrimaryStateHelperWithEnv<Kind extends Query.Kind>(
     return value;
   }
 
-  function getOnce(
-    query: Query.SubQuery<Kind>,
-    environment: string,
-  ): Data<Kind> {
+  function getOnce(query: Query.SubQuery<Kind>, environment: string): Data<Kind> {
     return enforce(customGet(store.getState(), query, environment));
   }
 

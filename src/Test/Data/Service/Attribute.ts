@@ -13,8 +13,7 @@ const b: AttributeModel = {
   name: "customer_locations",
   type: "string",
   modifier: "rw",
-  description:
-    "A list of customer location IDS where the service should be delivered.",
+  description: "A list of customer location IDS where the service should be delivered.",
   default_value_set: false,
   default_value: null,
 };

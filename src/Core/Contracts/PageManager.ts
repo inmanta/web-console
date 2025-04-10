@@ -9,7 +9,4 @@ export interface PageManager {
   getPages(features?: string[]): Page[];
 }
 
-export type PageDictionary = Record<
-  Exclude<RouteKind, RestrictedRouteKind>,
-  Page
->;
+export type PageDictionary = Record<Exclude<RouteKind, RestrictedRouteKind>, Page>;

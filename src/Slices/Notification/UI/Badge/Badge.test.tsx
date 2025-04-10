@@ -4,11 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import {
-  getStoreInstance,
-  QueryManagerResolverImpl,
-  QueryResolverImpl,
-} from "@/Data";
+import { getStoreInstance, QueryManagerResolverImpl, QueryResolverImpl } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { metadata, links } from "@/Test/Data/Pagination";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -28,7 +24,7 @@ function setup() {
   const store = getStoreInstance();
 
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
 
   const component = (
@@ -54,7 +50,7 @@ describe("Badge", () => {
     server.use(
       http.get("/api/v2/notification", () => {
         return HttpResponse.json({ message: "error" }, { status: 500 });
-      }),
+      })
     );
     const { component } = setup();
 
@@ -75,7 +71,7 @@ describe("Badge", () => {
       server.use(
         http.get("/api/v2/notification", () => {
           return HttpResponse.json({ data, links, metadata });
-        }),
+        })
       );
       const { component } = setup();
 
@@ -87,7 +83,7 @@ describe("Badge", () => {
 
       expect(button).toBeVisible();
       expect(button).toHaveAttribute("data-variant", variant);
-    },
+    }
   );
 
   test("Given Badge WHEN request is loading THEN variant is not shown and badge is disabled", () => {
@@ -96,7 +92,7 @@ describe("Badge", () => {
         delay(100);
 
         return HttpResponse.json({ data: [], links, metadata });
-      }),
+      })
     );
     const { component } = setup();
 

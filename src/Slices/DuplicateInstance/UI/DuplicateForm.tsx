@@ -1,10 +1,6 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  InstanceAttributeModel,
-  ServiceInstanceModel,
-  ServiceModel,
-} from "@/Core";
+import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
 import { usePostInstance } from "@/Data/Managers/V2/ServiceInstance";
 import {
@@ -48,8 +44,7 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
 
   const attributeInputConverter = new AttributeInputConverterImpl();
-  const currentAttributes =
-    attributeInputConverter.getCurrentAttributes(instance);
+  const currentAttributes = attributeInputConverter.getCurrentAttributes(instance);
 
   const { mutate } = usePostInstance(serviceEntity.name, {
     onError: (error) => {
@@ -69,7 +64,7 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
 
   const onSubmit = async (
     attributes: InstanceAttributeModel,
-    setIsDirty: (values: boolean) => void,
+    setIsDirty: (values: boolean) => void
   ) => {
     //as setState used in setIsDirty doesn't change immediately we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
     setIsDirty(false);

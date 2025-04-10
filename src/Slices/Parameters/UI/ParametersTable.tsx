@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  OnSort,
-  Table,
-  TableVariant,
-  Th,
-  Thead,
-  Tr,
-} from "@patternfly/react-table";
+import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort, Parameter } from "@/Core";
 import { SortKey } from "@S/Parameters/Core/Query";
 import { ParametersTablePresenter } from "./ParametersTablePresenter";
@@ -33,30 +26,26 @@ export const ParametersTable: React.FC<Props> = ({
     });
   };
 
-  const heads = tablePresenter
-    .getColumnHeads()
-    .map(({ apiName, displayName }, columnIndex) => {
-      const sortParams = tablePresenter
-        .getSortableColumnNames()
-        .includes(apiName)
-        ? {
-            sort: {
-              sortBy: {
-                index: tablePresenter.getIndexForColumnName(sort.name),
-                direction: sort.order,
-              },
-              onSort,
-              columnIndex,
+  const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
+    const sortParams = tablePresenter.getSortableColumnNames().includes(apiName)
+      ? {
+          sort: {
+            sortBy: {
+              index: tablePresenter.getIndexForColumnName(sort.name),
+              direction: sort.order,
             },
-          }
-        : {};
+            onSort,
+            columnIndex,
+          },
+        }
+      : {};
 
-      return (
-        <Th key={displayName} {...sortParams} width={20}>
-          {displayName}
-        </Th>
-      );
-    });
+    return (
+      <Th key={displayName} {...sortParams} width={20}>
+        {displayName}
+      </Th>
+    );
+  });
 
   return (
     <Table {...props} variant={TableVariant.compact}>

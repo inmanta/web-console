@@ -2,10 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ParsedNumber } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  useDeleteDesiredStateVersion,
-  useGetDesiredStates,
-} from "@/Data/Managers/V2/DesiredState";
+import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Managers/V2/DesiredState";
 import {
   ToastAlert,
   PageContainer,
@@ -57,8 +54,11 @@ export const Page: React.FC = () => {
     kind: "None",
   });
 
-  const { data, refetch, isError, error, isSuccess } =
-    useGetDesiredStates().useContinuous(pageSize, filter, currentPage);
+  const { data, refetch, isError, error, isSuccess } = useGetDesiredStates().useContinuous(
+    pageSize,
+    filter,
+    currentPage
+  );
 
   /**
    * function that will open a modal to confirm action to delete a version
@@ -140,10 +140,7 @@ export const Page: React.FC = () => {
               aria-label="DesiredStatesView-Empty"
             />
           ) : (
-            <DesiredStatesTable
-              rows={data.data}
-              aria-label="DesiredStatesView-Success"
-            />
+            <DesiredStatesTable rows={data.data} aria-label="DesiredStatesView-Success" />
           )}
         </GetDesiredStatesContext.Provider>
       </PageContainer>

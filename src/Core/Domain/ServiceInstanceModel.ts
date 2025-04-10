@@ -37,8 +37,7 @@ export interface ServiceInstanceIdentifier {
  * Interface representing the identifier of a versioned service instance.
  * Extends the ServiceInstanceIdentifier interface.
  */
-export interface VersionedServiceInstanceIdentifier
-  extends ServiceInstanceIdentifier {
+export interface VersionedServiceInstanceIdentifier extends ServiceInstanceIdentifier {
   version: ParsedNumber;
 }
 
@@ -46,8 +45,7 @@ export interface VersionedServiceInstanceIdentifier
  * Interface representing the model of a service instance.
  * Extends the VersionedServiceInstanceIdentifier interface.
  */
-export interface ServiceInstanceModel
-  extends VersionedServiceInstanceIdentifier {
+export interface ServiceInstanceModel extends VersionedServiceInstanceIdentifier {
   config?: { [key: string]: boolean } | null;
   environment: string;
   active_attributes: InstanceAttributeModel | null;
@@ -71,8 +69,7 @@ export interface ServiceInstanceModel
  * Interface representing the model of a service instance with target states.
  * Extends the ServiceInstanceModel interface.
  */
-export interface ServiceInstanceModelWithTargetStates
-  extends ServiceInstanceModel {
+export interface ServiceInstanceModelWithTargetStates extends ServiceInstanceModel {
   instanceSetStateTargets: string[];
 }
 

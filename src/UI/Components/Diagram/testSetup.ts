@@ -47,9 +47,7 @@ export const defineObjectsForJointJS = () => {
       inverse: jest.fn().mockImplementation(() => global.SVGSVGElement),
       multiply: jest.fn().mockImplementation(() => global.SVGSVGElement),
       rotate: jest.fn().mockImplementation(() => global.SVGSVGElement),
-      rotateFromVector: jest
-        .fn()
-        .mockImplementation(() => global.SVGSVGElement),
+      rotateFromVector: jest.fn().mockImplementation(() => global.SVGSVGElement),
       scale: jest.fn().mockImplementation(() => global.SVGSVGElement),
       scaleNonUniform: jest.fn().mockImplementation(() => global.SVGSVGElement),
       skewX: jest.fn().mockImplementation(() => global.SVGSVGElement),
@@ -63,9 +61,7 @@ export const defineObjectsForJointJS = () => {
         rotate: jest.fn().mockImplementation(() => ({
           translate: jest.fn().mockImplementation(() => ({
             rotate: jest.fn().mockImplementation(() => ({
-              translate: jest
-                .fn()
-                .mockImplementation(() => global.SVGSVGElement),
+              translate: jest.fn().mockImplementation(() => global.SVGSVGElement),
             })),
           })),
         })),

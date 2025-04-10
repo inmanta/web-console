@@ -6,11 +6,7 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  QueryManagerResolverImpl,
-} from "@/Data";
+import { QueryResolverImpl, getStoreInstance, QueryManagerResolverImpl } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -24,7 +20,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
 
   const component = (
@@ -69,7 +65,7 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
   expect(
     within(rows[0]).getByRole("cell", {
       name: "vcenter::VirtualMachine[lab,name=acisim]",
-    }),
+    })
   ).toBeVisible();
 
   // with correct uri to managed resource
@@ -81,7 +77,7 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
 
   expect(within(rowWithManagedResource).getByRole("link")).toHaveAttribute(
     "href",
-    "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D",
+    "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D"
   );
 
   // with correct uri to discovery resource
@@ -93,26 +89,20 @@ test("GIVEN Discovered Resources page THEN shows table", async () => {
 
   expect(within(rowWithDiscoveryResource).getByRole("link")).toHaveAttribute(
     "href",
-    "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D",
+    "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D"
   );
 
   // uri is null
   expect(within(rows[1]).getByTestId("Managed resource")).toHaveTextContent("");
-  expect(within(rows[1]).getByTestId("Discovery resource")).toHaveTextContent(
-    "",
-  );
+  expect(within(rows[1]).getByTestId("Discovery resource")).toHaveTextContent("");
 
   // uri doesn't have a rid
   expect(within(rows[2]).getByTestId("Managed resource")).toHaveTextContent("");
-  expect(within(rows[2]).getByTestId("Discovery resource")).toHaveTextContent(
-    "",
-  );
+  expect(within(rows[2]).getByTestId("Discovery resource")).toHaveTextContent("");
 
   // uri is an empty string
   expect(within(rows[3]).getByTestId("Managed resource")).toHaveTextContent("");
-  expect(within(rows[3]).getByTestId("Discovery resource")).toHaveTextContent(
-    "",
-  );
+  expect(within(rows[3]).getByTestId("Discovery resource")).toHaveTextContent("");
 
   await act(async () => {
     const results = await axe(document.body);
@@ -135,9 +125,7 @@ test("GIVEN Discovered Resources page THEN sets sorting parameters correctly on 
 
   await userEvent.click(resourceIdButton);
 
-  expect(apiHelper.pendingRequests[0].url).toContain(
-    "&sort=discovered_resource_id.desc",
-  );
+  expect(apiHelper.pendingRequests[0].url).toContain("&sort=discovered_resource_id.desc");
 
   await act(async () => {
     const results = await axe(document.body);
@@ -166,7 +154,7 @@ test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the firs
           ...DiscoveredResources.response.links,
           next: "/fake-link?end=fake-first-param",
         },
-      }),
+      })
     );
   });
 
@@ -176,9 +164,7 @@ test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the firs
 
   //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
   expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
-  expect(apiHelper.pendingRequests[0].url).toMatch(
-    /(&sort=discovered_resource_id.asc)/,
-  );
+  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=discovered_resource_id.asc)/);
 
   await act(async () => {
     apiHelper.resolve(Either.right(DiscoveredResources.response));
@@ -193,7 +179,5 @@ test("GIVEN Discovered Resources WHEN sorting changes AND we are not on the firs
   // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
   // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
   expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
-  expect(apiHelper.pendingRequests[1].url).toMatch(
-    /(&sort=discovered_resource_id.desc)/,
-  );
+  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=discovered_resource_id.desc)/);
 });

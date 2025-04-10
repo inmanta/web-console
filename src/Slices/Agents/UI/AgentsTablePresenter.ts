@@ -16,9 +16,11 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
         apiName: "unpause_on_resume",
       },
     ];
+
     if (!isHalted) {
       this.columnHeads.pop();
     }
+
     this.numberOfColumns = this.columnHeads.length + 3;
   }
 
@@ -46,9 +48,7 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
   }
 
   getIndexForColumnName(columnName?: string): number {
-    return this.columnHeads.findIndex(
-      (columnHead) => columnHead.apiName === columnName,
-    );
+    return this.columnHeads.findIndex((columnHead) => columnHead.apiName === columnName);
   }
 
   getSortableColumnNames(): string[] {

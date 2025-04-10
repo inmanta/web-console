@@ -35,18 +35,14 @@ export interface UpdateNotificationParams {
  * @returns {UseMutationResult} A mutation result containing the response or an error
  */
 export const useUpdateNotification = (
-  options?: UseMutationOptions<void, Error, UpdateNotificationParams>,
+  options?: UseMutationOptions<void, Error, UpdateNotificationParams>
 ): UseMutationResult<void, Error, UpdateNotificationParams> => {
   const patch = usePatch();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (params: UpdateNotificationParams) => {
-      await Promise.all(
-        params.ids.map((id) =>
-          patch(`/api/v2/notification/${id}`, params.body),
-        ),
-      );
+      await Promise.all(params.ids.map((id) => patch(`/api/v2/notification/${id}`, params.body)));
     },
     onSuccess: () => {
       // Invalidate relevant queries based on origin

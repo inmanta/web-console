@@ -105,8 +105,7 @@ export const response = {
       },
     },
     {
-      discovered_resource_id:
-        "vcenter::VirtualMachine[lab,name=CentOS7Template]",
+      discovered_resource_id: "vcenter::VirtualMachine[lab,name=CentOS7Template]",
       managed_resource_uri: "",
       discovery_resource_uri: "",
       values: {
@@ -134,8 +133,7 @@ export const response = {
       },
     },
     {
-      discovered_resource_id:
-        "vcenter::VirtualMachine[lab,name=CentOS7TestNfvApiTemplate]",
+      discovered_resource_id: "vcenter::VirtualMachine[lab,name=CentOS7TestNfvApiTemplate]",
       managed_resource_uri: null,
       discovery_resource_uri: null,
       values: {
@@ -163,8 +161,7 @@ export const response = {
       },
     },
     {
-      discovered_resource_id:
-        "vcenter::VirtualMachine[lab,name=ma-test-1705069110.4363039_1]",
+      discovered_resource_id: "vcenter::VirtualMachine[lab,name=ma-test-1705069110.4363039_1]",
       managed_resource_uri: null,
       discovery_resource_uri: null,
       values: {
@@ -226,8 +223,7 @@ export const response = {
       },
     },
     {
-      discovered_resource_id:
-        "vcenter::VirtualMachine[lab,name=t160_srv_example]",
+      discovered_resource_id: "vcenter::VirtualMachine[lab,name=t160_srv_example]",
       managed_resource_uri: null,
       discovery_resource_uri: null,
 
@@ -249,8 +245,7 @@ export const response = {
       },
     },
     {
-      discovered_resource_id:
-        "vcenter::VirtualMachine[lab,name=t160_srv_example_2]",
+      discovered_resource_id: "vcenter::VirtualMachine[lab,name=t160_srv_example_2]",
       managed_resource_uri: null,
       discovery_resource_uri: null,
       values: {
@@ -299,8 +294,7 @@ export const response = {
       },
     },
     {
-      discovered_resource_id:
-        "vcenter::VirtualMachine[lab,name=ubuntu-18.04.6]",
+      discovered_resource_id: "vcenter::VirtualMachine[lab,name=ubuntu-18.04.6]",
       managed_resource_uri: null,
       discovery_resource_uri: null,
       values: {
@@ -441,8 +435,7 @@ export const response = {
       },
     },
     {
-      discovered_resource_id:
-        "vcenter::VirtualMachine[lab,name=VMware vCenter Server 8]",
+      discovered_resource_id: "vcenter::VirtualMachine[lab,name=VMware vCenter Server 8]",
       managed_resource_uri: null,
       discovery_resource_uri: null,
       values: {
@@ -470,8 +463,7 @@ export const response = {
       },
     },
     {
-      discovered_resource_id:
-        "vcenter::VirtualMachine[lab,name=WindowsServer2016Template]",
+      discovered_resource_id: "vcenter::VirtualMachine[lab,name=WindowsServer2016Template]",
       managed_resource_uri: null,
       discovery_resource_uri: null,
       values: {
@@ -492,8 +484,7 @@ export const response = {
         hot_add_cpu: true,
         hot_add_memory: true,
         hot_remove_cpu: false,
-        iso_cdrom_name:
-          "[datastore1] Windows_Server_2016_Datacenter_EVAL_en-us_14393_refresh.ISO",
+        iso_cdrom_name: "[datastore1] Windows_Server_2016_Datacenter_EVAL_en-us_14393_refresh.ISO",
         datastore_paths: ["/bedc/datastore/DatastoreCluster/datastore1"],
         cpu_num_per_socket: 2,
         resource_pool_path: null,

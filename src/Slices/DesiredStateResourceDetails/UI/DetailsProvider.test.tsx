@@ -44,7 +44,7 @@ describe("DetailsProvider", () => {
   const server = setupServer(
     http.get("/api/v2/desiredstate/123/resource/abc", () => {
       return HttpResponse.json({ data: VersionedResourceDetails.a });
-    }),
+    })
   );
 
   beforeAll(() => {
@@ -59,9 +59,7 @@ describe("DetailsProvider", () => {
 
     render(component);
 
-    expect(
-      await screen.findByRole("generic", { name: "ResourceDetails-Success" }),
-    ).toBeVisible();
+    expect(await screen.findByRole("generic", { name: "ResourceDetails-Success" })).toBeVisible();
     expect(screen.getByText("requires")).toBeVisible();
 
     await act(async () => {

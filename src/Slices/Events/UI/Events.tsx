@@ -1,10 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { ServiceModel } from "@/Core";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import {
   EventsTablePresenter,

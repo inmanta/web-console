@@ -1,11 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import {
-  Flex,
-  FlexItem,
-  Label,
-  Stack,
-  StackItem,
-} from "@patternfly/react-core";
+import { Flex, FlexItem, Label, Stack, StackItem } from "@patternfly/react-core";
 import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -38,7 +32,7 @@ export const EnvironmentControls: React.FC = () => {
           return null;
         },
       },
-      data,
+      data
     );
   }, [data]);
 
@@ -51,23 +45,17 @@ export const EnvironmentControls: React.FC = () => {
         return (
           <Stack hasGutter>
             <StackItem>
-              {data.halted && (
-                <Label status="warning">
-                  {words("environment.halt.label")}
-                </Label>
-              )}
+              {data.halted && <Label status="warning">{words("environment.halt.label")}</Label>}
             </StackItem>
             <StackItem>
               <Flex>
-                <FlexItem>
-                  {data.halted ? <ResumeButton /> : <HaltButton />}
-                </FlexItem>
+                <FlexItem>{data.halted ? <ResumeButton /> : <HaltButton />}</FlexItem>
               </Flex>
             </StackItem>
           </Stack>
         );
       },
     },
-    data,
+    data
   );
 };

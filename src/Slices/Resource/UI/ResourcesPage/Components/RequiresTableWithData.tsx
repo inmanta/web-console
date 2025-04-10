@@ -1,10 +1,6 @@
 import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
-import {
-  RequiresTable,
-  LoadingRequiresTable,
-  ErrorView,
-} from "@/UI/Components";
+import { RequiresTable, LoadingRequiresTable, ErrorView } from "@/UI/Components";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -26,16 +22,10 @@ export const RequiresTableWithData: React.FC<Props> = ({ id, deps }) => {
     {
       notAsked: () => null,
       loading: () => (
-        <LoadingRequiresTable
-          numberOfRows={deps}
-          aria-label="ResourceRequires-Loading"
-        />
+        <LoadingRequiresTable numberOfRows={deps} aria-label="ResourceRequires-Loading" />
       ),
       failed: (error) => (
-        <ErrorView
-          message={words("error.general")(error)}
-          ariaLabel="ResourceRequires-Failed"
-        />
+        <ErrorView message={words("error.general")(error)} ariaLabel="ResourceRequires-Failed" />
       ),
       success: (resourceDetails) =>
         Object.keys(resourceDetails.requires_status).length <= 0 ? (
@@ -50,6 +40,6 @@ export const RequiresTableWithData: React.FC<Props> = ({ id, deps }) => {
           />
         ),
     },
-    data,
+    data
   );
 };

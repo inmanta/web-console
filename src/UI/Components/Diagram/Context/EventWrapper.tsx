@@ -1,11 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { updateServiceOrderItems } from "../helpers";
-import {
-  ActionEnum,
-  EventActionEnum,
-  RelationCounterForCell,
-  StencilState,
-} from "../interfaces";
+import { ActionEnum, EventActionEnum, RelationCounterForCell, StencilState } from "../interfaces";
 import { ServiceEntityBlock } from "../shapes";
 import { toggleDisabledStencil } from "../stencil/helpers";
 import { CanvasContext } from "./Context";
@@ -21,9 +16,7 @@ import { CanvasContext } from "./Context";
  *
  * @returns {React.FC<React.PropsWithChildren>} The EventWrapper component.
  */
-export const EventWrapper: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+export const EventWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
   const {
     setInterServiceRelationsOnCanvas,
     setStencilState,
@@ -44,9 +37,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    */
   const handleLooseElementEvent = (event): void => {
     const customEvent = event as CustomEvent;
-    const eventData: { kind: EventActionEnum; id: string } = JSON.parse(
-      customEvent.detail,
-    );
+    const eventData: { kind: EventActionEnum; id: string } = JSON.parse(customEvent.detail);
     const newSet = new Set(looseElement);
 
     if (eventData.kind === "remove") {
@@ -54,6 +45,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     } else {
       newSet.add(eventData.id);
     }
+
     setLooseElement(newSet);
   };
 
@@ -120,8 +112,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
    */
   const handleUpdateStencilState = (event): void => {
     const customEvent = event as CustomEvent;
-    const eventData: { name: string; action: EventActionEnum } =
-      customEvent.detail;
+    const eventData: { name: string; action: EventActionEnum } = customEvent.detail;
 
     //event listener doesn't get updated state outside setStencilState function, so all logic has to be done inside it
     setStencilState((prev) => {
@@ -147,9 +138,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
       }
 
       const shouldDisable =
-        stencil.max !== null &&
-        stencil.max !== undefined &&
-        stencil.currentAmount >= stencil.max;
+        stencil.max !== null && stencil.max !== undefined && stencil.currentAmount >= stencil.max;
 
       toggleDisabledStencil(name, shouldDisable);
 
@@ -220,23 +209,17 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
 
       if (cellsRelations) {
         const indexOfRelationToUpdate = cellsRelations.relations.findIndex(
-          (relation) => relation.name === name,
+          (relation) => relation.name === name
         );
 
         if (indexOfRelationToUpdate > -1) {
-          const relationToUpdate =
-            cellsRelations.relations[indexOfRelationToUpdate];
+          const relationToUpdate = cellsRelations.relations[indexOfRelationToUpdate];
 
           let current = relationToUpdate.currentAmount;
 
-          relationToUpdate.currentAmount =
-            action === EventActionEnum.ADD ? ++current : --current;
+          relationToUpdate.currentAmount = action === EventActionEnum.ADD ? ++current : --current;
 
-          cellsRelations.relations.splice(
-            indexOfRelationToUpdate,
-            1,
-            relationToUpdate,
-          );
+          cellsRelations.relations.splice(indexOfRelationToUpdate, 1, relationToUpdate);
           copy.set(id, cellsRelations);
         }
       }
@@ -249,44 +232,38 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({
     document.addEventListener("openDictsModal", handleDictEvent);
     document.addEventListener("sendCellToSidebar", handleEditEvent);
     document.addEventListener("looseElement", handleLooseElementEvent);
-    document.addEventListener(
-      "updateServiceOrderItems",
-      handleUpdateServiceOrderItems,
-    );
+    document.addEventListener("updateServiceOrderItems", handleUpdateServiceOrderItems);
     document.addEventListener("updateStencil", handleUpdateStencilState);
     document.addEventListener(
       "addInterServiceRelationToTracker",
-      handleAddCellWithInterServiceRelations,
+      handleAddCellWithInterServiceRelations
     );
     document.addEventListener(
       "removeInterServiceRelationFromTracker",
-      handleRemoveCellWithInterServiceRelations,
+      handleRemoveCellWithInterServiceRelations
     );
     document.addEventListener(
       "updateInterServiceRelations",
-      handleUpdateOfInterServiceRelationsInCell,
+      handleUpdateOfInterServiceRelationsInCell
     );
 
     return () => {
       document.removeEventListener("openDictsModal", handleDictEvent);
       document.removeEventListener("sendCellToSidebar", handleEditEvent);
       document.removeEventListener("looseElement", handleLooseElementEvent);
-      document.removeEventListener(
-        "updateServiceOrderItems",
-        handleUpdateServiceOrderItems,
-      );
+      document.removeEventListener("updateServiceOrderItems", handleUpdateServiceOrderItems);
       document.removeEventListener("updateStencil", handleUpdateStencilState);
       document.removeEventListener(
         "addInterServiceRelationToTracker",
-        handleAddCellWithInterServiceRelations,
+        handleAddCellWithInterServiceRelations
       );
       document.removeEventListener(
         "removeInterServiceRelationFromTracker",
-        handleRemoveCellWithInterServiceRelations,
+        handleRemoveCellWithInterServiceRelations
       );
       document.addEventListener(
         "updateInterServiceRelations",
-        handleUpdateOfInterServiceRelationsInCell,
+        handleUpdateOfInterServiceRelationsInCell
       );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

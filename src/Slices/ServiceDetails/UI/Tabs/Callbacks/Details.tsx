@@ -19,9 +19,7 @@ export const Details: React.FC<Props> = ({ event_types }) => {
   return (
     <DescriptionList>
       <DescriptionListGroup>
-        <DescriptionListTerm>
-          {words("catalog.callbacks.eventTypes")}
-        </DescriptionListTerm>
+        <DescriptionListTerm>{words("catalog.callbacks.eventTypes")}</DescriptionListTerm>
         <DescriptionListDescription>
           <CheckedList all={EventTypesList} available={event_types} />
         </DescriptionListDescription>
@@ -30,17 +28,14 @@ export const Details: React.FC<Props> = ({ event_types }) => {
   );
 };
 
-const CheckedList: React.FC<{ all: string[]; available: string[] }> = ({
-  all,
-  available,
-}) => (
+const CheckedList: React.FC<{ all: string[]; available: string[] }> = ({ all, available }) => (
   <List isPlain>
     {all.map((item) =>
       available.includes(item) ? (
         <ListItem key={item}>{item}</ListItem>
       ) : (
         <StyledListItemStriked key={item}>{item}</StyledListItemStriked>
-      ),
+      )
     )}
   </List>
 );

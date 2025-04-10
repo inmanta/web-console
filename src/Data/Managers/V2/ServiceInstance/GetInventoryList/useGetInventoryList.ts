@@ -28,9 +28,7 @@ interface GetInventoryList {
  * @returns {UseQueryResult<Inventories, CustomError>} returns.useOneTime - Fetch the service inventories as a single query.
  * @returns {UseQueryResult<Inventories, CustomError>} returns.useContinuous - Fetch the service inventories  with a recursive query with an interval of 5s.
  */
-export const useGetInventoryList = (
-  serviceNames: string[],
-): GetInventoryList => {
+export const useGetInventoryList = (serviceNames: string[]): GetInventoryList => {
   const get = useGet()<{ data: ServiceInstanceModel[] }>;
 
   /**
@@ -42,13 +40,13 @@ export const useGetInventoryList = (
   const fetchAllServices = async (): Promise<Inventories> => {
     const responses = await Promise.all(
       serviceNames.map(async (serviceName) =>
-        get(`/lsm/v1/service_inventory/${serviceName}?limit=1000`),
-      ),
+        get(`/lsm/v1/service_inventory/${serviceName}?limit=1000`)
+      )
     );
 
     // Map the responses to an object of service names and arrays of service instances for each service
     return Object.fromEntries(
-      responses.map((response, index) => [serviceNames[index], response.data]),
+      responses.map((response, index) => [serviceNames[index], response.data])
     );
   };
 

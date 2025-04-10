@@ -10,16 +10,9 @@ interface Props {
   paginationWidget: React.ReactNode;
 }
 
-export const TableControls: React.FC<Props> = ({
-  filter,
-  setFilter,
-  paginationWidget,
-}) => {
+export const TableControls: React.FC<Props> = ({ filter, setFilter, paginationWidget }) => {
   return (
-    <Toolbar
-      clearAllFilters={() => setFilter({})}
-      collapseListedFiltersBreakpoint="xl"
-    >
+    <Toolbar clearAllFilters={() => setFilter({})} collapseListedFiltersBreakpoint="xl">
       <ToolbarContent>
         <FilterWidget filter={filter} setFilter={setFilter} />
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>

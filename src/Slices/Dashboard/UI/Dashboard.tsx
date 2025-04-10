@@ -21,9 +21,7 @@ import { Section } from "./Section";
 
 export const Dashboard: React.FC = () => {
   const { featureManager } = useContext(DependencyContext);
-  const [startDate, setStartDate] = useState(
-    moment().add(-7, "days").toISOString(),
-  );
+  const [startDate, setStartDate] = useState(moment().add(-7, "days").toISOString());
   const [endDate, setEndDate] = useState(moment().toISOString());
   const {
     data: metrics,
@@ -43,13 +41,7 @@ export const Dashboard: React.FC = () => {
   };
 
   if (isError) {
-    return (
-      <ErrorView
-        message={error.message}
-        retry={refetch}
-        ariaLabel="Metrics-Failed"
-      />
-    );
+    return <ErrorView message={error.message} retry={refetch} ariaLabel="Metrics-Failed" />;
   }
 
   if (isSuccess) {

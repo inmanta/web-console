@@ -8,21 +8,14 @@ interface Props {
   resourceId: string;
 }
 
-export const DetailsProvider: React.FC<Props> = ({
-  version,
-  resourceId: id,
-}) => {
-  const { data, isSuccess, isError, error, refetch } =
-    useGetDesiredStateResourceDetails(version, id).useContinuous();
+export const DetailsProvider: React.FC<Props> = ({ version, resourceId: id }) => {
+  const { data, isSuccess, isError, error, refetch } = useGetDesiredStateResourceDetails(
+    version,
+    id
+  ).useContinuous();
 
   if (isError) {
-    return (
-      <ErrorView
-        ariaLabel="ResourceDetails-Error"
-        message={error.message}
-        retry={refetch}
-      />
-    );
+    return <ErrorView ariaLabel="ResourceDetails-Error" message={error.message} retry={refetch} />;
   }
 
   if (isSuccess) {

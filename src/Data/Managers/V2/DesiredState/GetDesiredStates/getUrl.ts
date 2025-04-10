@@ -13,13 +13,11 @@ import { GetDesiredStatesParams } from "./useGetDesiredStates";
  */
 export function getUrl(
   { pageSize, filter, currentPage }: GetDesiredStatesParams,
-  timezone = moment.tz.guess(),
+  timezone = moment.tz.guess()
 ): string {
   const defaultFilter = {};
   const filterWithDefaults =
-    filter && filter.status && filter.status?.length > 0
-      ? filter
-      : { ...filter, ...defaultFilter };
+    filter && filter.status && filter.status?.length > 0 ? filter : { ...filter, ...defaultFilter };
   const filterParam =
     filterWithDefaults && Object.keys(filterWithDefaults).length > 0
       ? `&${qs.stringify(
@@ -28,27 +26,22 @@ export function getUrl(
               status: filterWithDefaults.status,
               date: filterWithDefaults.date?.map(
                 (timestampWithOperator) =>
-                  `${RangeOperator.serializeOperator(
-                    timestampWithOperator.operator,
-                  )}:${moment
+                  `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${moment
                     .tz(timestampWithOperator.date, timezone)
                     .utc()
-                    .format("YYYY-MM-DD+HH:mm:ss")}`,
+                    .format("YYYY-MM-DD+HH:mm:ss")}`
               ),
               version: filterWithDefaults.version?.map(
-                ({ value, operator }) =>
-                  `${RangeOperator.serializeOperator(operator)}:${value}`,
+                ({ value, operator }) => `${RangeOperator.serializeOperator(operator)}:${value}`
               ),
             },
           },
-          { allowDots: true, arrayFormat: "repeat" },
+          { allowDots: true, arrayFormat: "repeat" }
         )}`
       : "";
-  const sortParam = `&sort=version.desc`;
+  const sortParam = "&sort=version.desc";
 
-  return `/api/v2/desiredstate?limit=${
-    pageSize.value
-  }${sortParam}${filterParam}${
+  return `/api/v2/desiredstate?limit=${pageSize.value}${sortParam}${filterParam}${
     currentPage.value ? `&${currentPage.value}` : ""
   }`;
 }

@@ -27,7 +27,7 @@ test("OrderDetailsView shows failed view", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "OrderDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "OrderDetailsView-Loading" })
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -37,7 +37,7 @@ test("OrderDetailsView shows failed view", async () => {
   });
 
   expect(
-    await screen.findByRole("region", { name: "OrderDetailsView-Failed" }),
+    await screen.findByRole("region", { name: "OrderDetailsView-Failed" })
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -53,7 +53,7 @@ test("OrderDetailsView shows view for a failed order", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "OrderDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "OrderDetailsView-Loading" })
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -63,12 +63,10 @@ test("OrderDetailsView shows view for a failed order", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Success" }),
+    await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
   ).toBeInTheDocument();
 
-  expect(
-    await screen.findByLabelText("OrderDetails-Heading"),
-  ).toBeInTheDocument();
+  expect(await screen.findByLabelText("OrderDetails-Heading")).toBeInTheDocument();
 
   const orderStatus = await screen.findByLabelText("OrderState");
 
@@ -97,7 +95,7 @@ test("OrderDetailsView shows view for a partial order", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "OrderDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "OrderDetailsView-Loading" })
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -107,7 +105,7 @@ test("OrderDetailsView shows view for a partial order", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Success" }),
+    await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
   ).toBeInTheDocument();
 
   const statusDescription = await screen.findByLabelText("OrderState");
@@ -116,9 +114,7 @@ test("OrderDetailsView shows view for a partial order", async () => {
 
   const orderDescription = await screen.findByLabelText("OrderDescription");
 
-  expect(orderDescription).toHaveTextContent(
-    /Partial UPDATE order, with dependency/,
-  );
+  expect(orderDescription).toHaveTextContent(/Partial UPDATE order, with dependency/);
 
   const serviceOrderItemRows = await screen.findAllByRole("row", {
     name: "ServiceOrderDetailsRow",
@@ -156,7 +152,7 @@ test("OrderDetailsView shows view for a in progress order", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "OrderDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "OrderDetailsView-Loading" })
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -166,7 +162,7 @@ test("OrderDetailsView shows view for a in progress order", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Success" }),
+    await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
   ).toBeInTheDocument();
 
   const statusDescription = await screen.findByLabelText("OrderState");
@@ -214,7 +210,7 @@ test("OrderDetailsView shows view for completed order", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "OrderDetailsView-Loading" }),
+    await screen.findByRole("region", { name: "OrderDetailsView-Loading" })
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -224,7 +220,7 @@ test("OrderDetailsView shows view for completed order", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Success" }),
+    await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
   ).toBeInTheDocument();
 
   const statusDescription = await screen.findByLabelText("OrderState");

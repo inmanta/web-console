@@ -1,10 +1,4 @@
-import {
-  Pagination,
-  Sort,
-  PageSize,
-  DateRange,
-  CompileStatus,
-} from "@/Core/Domain";
+import { Pagination, Sort, PageSize, DateRange, CompileStatus } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { CompileReport } from "./Domain";
 

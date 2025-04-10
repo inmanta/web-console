@@ -1,9 +1,5 @@
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
-import {
-  getAvailableStateTargets,
-  getExpertStateTargets,
-  isTransferDisabled,
-} from "../Utils";
+import { getAvailableStateTargets, getExpertStateTargets, isTransferDisabled } from "../Utils";
 import { instanceData, instanceDataDeleted, serviceModel } from "./mockData";
 
 describe("isTransferDisabled", () => {
@@ -61,10 +57,7 @@ describe("getAvailableStateTargets", () => {
 
     const result = getAvailableStateTargets("update_start", serviceEntity);
 
-    expect(result).toEqual([
-      "update_acknowledged",
-      "update_acknowledged_failed",
-    ]);
+    expect(result).toEqual(["update_acknowledged", "update_acknowledged_failed"]);
   });
 });
 

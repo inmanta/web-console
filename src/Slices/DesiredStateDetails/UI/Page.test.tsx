@@ -56,15 +56,13 @@ describe("DesiredStateDetails", () => {
     server.use(
       http.get("/api/v2/desiredstate/123", () => {
         return HttpResponse.json(Resource.responseFromVersion);
-      }),
+      })
     );
     const { component } = setup();
 
     render(component);
 
-    expect(
-      screen.getByRole("region", { name: "VersionResourcesTable-Loading" }),
-    ).toBeVisible();
+    expect(screen.getByRole("region", { name: "VersionResourcesTable-Loading" })).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -80,7 +78,7 @@ describe("DesiredStateDetails", () => {
           ...Resource.responseFromVersion,
           data: [],
         });
-      }),
+      })
     );
     const { component } = setup();
 
@@ -89,7 +87,7 @@ describe("DesiredStateDetails", () => {
     expect(
       await screen.findByRole("generic", {
         name: "VersionResourcesTable-Empty",
-      }),
+      })
     ).toBeVisible();
 
     await act(async () => {
@@ -106,9 +104,9 @@ describe("DesiredStateDetails", () => {
           {
             message: "something went wrong",
           },
-          { status: 500 },
+          { status: 500 }
         );
-      }),
+      })
     );
     const { component } = setup();
 
@@ -117,7 +115,7 @@ describe("DesiredStateDetails", () => {
     expect(
       await screen.findByRole("region", {
         name: "VersionResourcesTable-Error",
-      }),
+      })
     ).toBeVisible();
 
     await act(async () => {
@@ -131,7 +129,7 @@ describe("DesiredStateDetails", () => {
     server.use(
       http.get("/api/v2/desiredstate/123", () => {
         return HttpResponse.json(Resource.responseFromVersion);
-      }),
+      })
     );
 
     const { component } = setup();
@@ -141,7 +139,7 @@ describe("DesiredStateDetails", () => {
     expect(
       await screen.findByRole("grid", {
         name: "VersionResourcesTable-Success",
-      }),
+      })
     ).toBeVisible();
 
     await act(async () => {
@@ -174,7 +172,7 @@ describe("DesiredStateDetails", () => {
             next: "/fake-link?end=fake-first-param",
           },
         });
-      }),
+      })
     );
     const { component } = setup();
 

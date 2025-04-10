@@ -11,10 +11,7 @@ export const response = {
         attribute: "path",
         resource_id_value: "/tmp/file4",
       },
-      requires: [
-        "std::File[agent2,path=/etc/file3],v=3",
-        "std::File[agent1,path=/etc/file2],v=3",
-      ],
+      requires: ["std::File[agent2,path=/etc/file3],v=3", "std::File[agent1,path=/etc/file2],v=3"],
       status: "unavailable",
     },
     {
@@ -113,10 +110,7 @@ export const responseFromVersion: Resource.ResponseFromVersion = {
         attribute: "path",
         resource_id_value: "/tmp/file4",
       },
-      requires: [
-        "std::File[agent2,path=/etc/file3],v=3",
-        "std::File[agent1,path=/etc/file2],v=3",
-      ],
+      requires: ["std::File[agent2,path=/etc/file3],v=3", "std::File[agent1,path=/etc/file2],v=3"],
     },
     {
       resource_id: "std::File[agent2,path=/etc/file3]",

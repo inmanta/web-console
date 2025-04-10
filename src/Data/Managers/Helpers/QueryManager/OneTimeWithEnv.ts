@@ -26,17 +26,17 @@ export function OneTimeWithEnv<Kind extends Query.Kind>(
   kind: Kind,
   getUrl: GetUrlWithEnv<Kind>,
   toUsed: ToUsed<Kind>,
-  strategy: "MERGE" | "RELOAD" = "RELOAD",
+  strategy: "MERGE" | "RELOAD" = "RELOAD"
 ): OneTimeQueryManager<Kind> {
   async function update(
     query: Query.SubQuery<Kind>,
     url: string,
-    environment: string,
+    environment: string
   ): Promise<void> {
     stateHelper.set(
       RemoteData.fromEither(await apiHelper.get(url, environment)),
       query,
-      environment,
+      environment
     );
   }
 
@@ -50,39 +50,29 @@ export function OneTimeWithEnv<Kind extends Query.Kind>(
       () => {
         setUrl(getUrl(urlEncodeParams(query), environment));
       },
-      getDependencies(query, environment),
+      getDependencies(query, environment)
     );
 
     useEffect(() => {
-      if (
-        strategy === "RELOAD" ||
-        RemoteData.isNotAsked(stateHelper.getOnce(query, environment))
-      ) {
+      if (strategy === "RELOAD" || RemoteData.isNotAsked(stateHelper.getOnce(query, environment))) {
         stateHelper.set(RemoteData.loading(), query, environment);
       }
+
       // If the environment changed, use the url derived from the query
       // Otherwise the url has changed, use it to not lose e.g. paging state
       const urlToUse =
-        environment !== previousEnvironment
-          ? getUrl(urlEncodeParams(query), environment)
-          : url;
+        environment !== previousEnvironment ? getUrl(urlEncodeParams(query), environment) : url;
 
       update(query, urlToUse, environment);
     }, [url, environment]);
 
     return [
-      RemoteData.mapSuccess(
-        (d) => toUsed(d, setUrl),
-        stateHelper.useGetHooked(query, environment),
-      ),
+      RemoteData.mapSuccess((d) => toUsed(d, setUrl), stateHelper.useGetHooked(query, environment)),
       () => update(query, url, environment),
     ];
   }
 
-  function matches(
-    query: Query.SubQuery<Kind>,
-    matchingKind: QueryManagerKind,
-  ): boolean {
+  function matches(query: Query.SubQuery<Kind>, matchingKind: QueryManagerKind): boolean {
     return query.kind === kind && matchingKind === "OneTime";
   }
 

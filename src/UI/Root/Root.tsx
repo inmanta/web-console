@@ -6,10 +6,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { RouteOutlet, SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
-import {
-  getThemePreference,
-  setThemePreference,
-} from "../Components/DarkmodeOption";
+import { getThemePreference, setThemePreference } from "../Components/DarkmodeOption";
 import { PageFrame } from "./Components";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
@@ -22,7 +19,7 @@ export const Root: React.FC = () => {
 
   const pageManager = useMemo(
     () => new PrimaryPageManager(routeManager.getRouteDictionary()),
-    [routeManager],
+    [routeManager]
   );
 
   const [pages, setPages] = useState(pageManager.getPages());
@@ -45,12 +42,7 @@ export const Root: React.FC = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route element={<RouteOutlet />}>
             {routeManager.isBaseUrlDefined() && (
-              <Route
-                path="/"
-                element={
-                  <Navigate to={routeManager.getUrl("Home", undefined)} />
-                }
-              />
+              <Route path="/" element={<Navigate to={routeManager.getUrl("Home", undefined)} />} />
             )}
             <Route
               path="*"
@@ -63,11 +55,7 @@ export const Root: React.FC = () => {
             {pages.map(({ path, kind, element, environmentRole }) => (
               <Route
                 path={path}
-                element={
-                  <PageFrame environmentRole={environmentRole}>
-                    {element}
-                  </PageFrame>
-                }
+                element={<PageFrame environmentRole={environmentRole}>{element}</PageFrame>}
                 key={kind}
               />
             ))}

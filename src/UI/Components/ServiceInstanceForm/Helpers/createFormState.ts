@@ -8,9 +8,7 @@ import { tryParseJSON } from "../Components";
  * @param {FieldLikeWithFormState[]} fields - Array of fields with form state information.
  * @returns {InstanceAttributeModel} The instance attribute Model.
  */
-export const createFormState = (
-  fields: FieldLikeWithFormState[],
-): InstanceAttributeModel => {
+export const createFormState = (fields: FieldLikeWithFormState[]): InstanceAttributeModel => {
   const returnValue = fields.reduce((acc, curr) => {
     switch (curr.kind) {
       case "Boolean":
@@ -49,9 +47,7 @@ export const createFormState = (
         if (curr.min <= 0) {
           acc[curr.name] = [];
         } else {
-          acc[curr.name] = times(Number(curr.min), () =>
-            createFormState(curr.fields),
-          );
+          acc[curr.name] = times(Number(curr.min), () => createFormState(curr.fields));
         }
 
         return acc;
@@ -78,7 +74,7 @@ export const createFormState = (
 export const createEditFormState = (
   fields: FieldLikeWithFormState[],
   apiVersion: "v1" | "v2",
-  originalAttributes?: InstanceAttributeModel | null,
+  originalAttributes?: InstanceAttributeModel | null
 ): InstanceAttributeModel => {
   if (apiVersion === "v2" && originalAttributes) {
     return originalAttributes;
@@ -92,18 +88,13 @@ export const createEditFormState = (
         case "Textarea":
         case "TextList":
         case "Text": {
-          acc[curr.name] = convertValueOnType(
-            curr.type,
-            originalAttributes?.[curr.name],
-          );
+          acc[curr.name] = convertValueOnType(curr.type, originalAttributes?.[curr.name]);
 
           return acc;
         }
 
         case "InterServiceRelation": {
-          acc[curr.name] = originalAttributes?.[curr.name]
-            ? originalAttributes?.[curr.name]
-            : "";
+          acc[curr.name] = originalAttributes?.[curr.name] ? originalAttributes?.[curr.name] : "";
 
           return acc;
         }
@@ -115,7 +106,7 @@ export const createEditFormState = (
             acc[curr.name] = createEditFormState(
               curr.fields,
               apiVersion,
-              originalAttributes?.[curr.name] as InstanceAttributeModel,
+              originalAttributes?.[curr.name] as InstanceAttributeModel
             );
           }
 
@@ -129,14 +120,13 @@ export const createEditFormState = (
         }
 
         case "DictList": {
-          acc[curr.name] = (
-            originalAttributes?.[curr.name] as InstanceAttributeModel[]
-          ).map((nestedOriginalAttributes) =>
-            createEditFormState(
-              curr.fields,
-              apiVersion,
-              nestedOriginalAttributes as InstanceAttributeModel,
-            ),
+          acc[curr.name] = (originalAttributes?.[curr.name] as InstanceAttributeModel[]).map(
+            (nestedOriginalAttributes) =>
+              createEditFormState(
+                curr.fields,
+                apiVersion,
+                nestedOriginalAttributes as InstanceAttributeModel
+              )
           );
 
           return acc;
@@ -163,7 +153,7 @@ export const createEditFormState = (
  */
 export const createDuplicateFormState = (
   fields: FieldLikeWithFormState[],
-  originalAttributes?: InstanceAttributeModel | null,
+  originalAttributes?: InstanceAttributeModel | null
 ): InstanceAttributeModel => {
   return fields.reduce((acc, curr) => {
     if (originalAttributes?.[curr.name] !== undefined) {
@@ -173,18 +163,13 @@ export const createDuplicateFormState = (
         case "Textarea":
         case "TextList":
         case "Text": {
-          acc[curr.name] = convertValueOnType(
-            curr.type,
-            originalAttributes?.[curr.name],
-          );
+          acc[curr.name] = convertValueOnType(curr.type, originalAttributes?.[curr.name]);
 
           return acc;
         }
 
         case "InterServiceRelation": {
-          acc[curr.name] = originalAttributes?.[curr.name]
-            ? originalAttributes?.[curr.name]
-            : "";
+          acc[curr.name] = originalAttributes?.[curr.name] ? originalAttributes?.[curr.name] : "";
 
           return acc;
         }
@@ -195,7 +180,7 @@ export const createDuplicateFormState = (
           } else {
             acc[curr.name] = createDuplicateFormState(
               curr.fields,
-              originalAttributes?.[curr.name] as InstanceAttributeModel,
+              originalAttributes?.[curr.name] as InstanceAttributeModel
             );
           }
 
@@ -209,13 +194,12 @@ export const createDuplicateFormState = (
         }
 
         case "DictList": {
-          acc[curr.name] = (
-            originalAttributes?.[curr.name] as InstanceAttributeModel[]
-          ).map((nestedOriginalAttributes) =>
-            createDuplicateFormState(
-              curr.fields,
-              nestedOriginalAttributes as InstanceAttributeModel,
-            ),
+          acc[curr.name] = (originalAttributes?.[curr.name] as InstanceAttributeModel[]).map(
+            (nestedOriginalAttributes) =>
+              createDuplicateFormState(
+                curr.fields,
+                nestedOriginalAttributes as InstanceAttributeModel
+              )
           );
 
           return acc;

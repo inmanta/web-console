@@ -2,10 +2,7 @@ import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 
 // A type for the possible AttributeSets.
-export type AttributeSets =
-  | "active_attributes"
-  | "candidate_attributes"
-  | "rollback_attributes";
+export type AttributeSets = "active_attributes" | "candidate_attributes" | "rollback_attributes";
 
 // Interface representing the TreeRowData, meant to populate a TreeTable
 export interface TreeRowData {
@@ -34,7 +31,7 @@ export type AttributeViews = "Table" | "Compare" | "JSON";
  */
 export const getAvailableAttributesSets = (
   logs: InstanceLog[],
-  version: string,
+  version: string
 ): Partial<Record<AttributeSets, InstanceAttributeModel>> => {
   const selectedLog: InstanceLog | null =
     logs.find((log: InstanceLog) => String(log.version) === version) || null;
@@ -67,7 +64,7 @@ export const getAvailableAttributesSets = (
  * @returns {Partial<Record<AttributeSets, InstanceAttributeModel>>} - The available attributeSets.
  */
 export const getAttributeSetsFromInstance = (
-  instance: ServiceInstanceModel,
+  instance: ServiceInstanceModel
 ): Partial<Record<AttributeSets, InstanceAttributeModel>> => {
   const sets = {};
 
@@ -94,7 +91,7 @@ export const getAttributeSetsFromInstance = (
  */
 export const formatTreeRowData = (
   attributes: Record<string, unknown>,
-  path: string = "",
+  path: string = ""
 ): TreeRowData[] => {
   const result: TreeRowData[] = [];
 
@@ -127,7 +124,7 @@ export const formatTreeRowData = (
                 value: item,
                 children: formatTreeRowData(
                   item as Record<string, unknown>,
-                  path + key + "." + index + ".",
+                  path + key + "." + index + "."
                 ),
               });
             } else {
@@ -142,10 +139,7 @@ export const formatTreeRowData = (
         } else {
           // this case is when we are dealing with a normal object. We call the recursion.
           node?.children?.push(
-            ...formatTreeRowData(
-              value as Record<string, unknown>,
-              path + key + ".",
-            ),
+            ...formatTreeRowData(value as Record<string, unknown>, path + key + ".")
           );
         }
       }
@@ -166,7 +160,7 @@ export const formatTreeRowData = (
  */
 export const sortTreeRows = (
   tableData: TreeRowData[],
-  direction: "asc" | "desc",
+  direction: "asc" | "desc"
 ): TreeRowData[] => {
   // Helper function to compare values based on direction
   const compare = (a: TreeRowData, b: TreeRowData) => {

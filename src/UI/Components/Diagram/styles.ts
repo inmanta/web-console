@@ -18,9 +18,7 @@ export const CanvasWrapper = styled.div`
     background-color: var(--pf-t--global--background--color--primary--default);
   }
   .joint-paper-scroller.joint-theme-default {
-    background-color: var(
-      --pf-t--global--background--color--secondary--default
-    );
+    background-color: var(--pf-t--global--background--color--secondary--default);
   }
 
   button.joint-widget.joint-theme-default {
@@ -75,9 +73,7 @@ export const CanvasWrapper = styled.div`
   }
 
   .joint-element {
-    filter: drop-shadow(
-      0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100)
-    );
+    filter: drop-shadow(0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100));
   }
 
   .joint-stencil.searchable > .content {

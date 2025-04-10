@@ -9,12 +9,7 @@ interface Props extends EntryInfo {
   classify?: Classify;
 }
 
-export const Entry: React.FC<Props> = ({
-  title,
-  fromValue,
-  toValue,
-  classify,
-}) => {
+export const Entry: React.FC<Props> = ({ title, fromValue, toValue, classify }) => {
   if (classify === undefined) {
     return <DefaultEntry {...{ title, fromValue, toValue }} />;
   }

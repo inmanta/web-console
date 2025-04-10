@@ -10,10 +10,7 @@ interface Props {
 export const Chart: React.FC<Props> = ({ summary }) =>
   summary ? (
     <ChartContainer>
-      <SummaryChart
-        by_label={summary.by_label}
-        total={summary.total.toString()}
-      />
+      <SummaryChart by_label={summary.by_label} total={summary.total.toString()} />
     </ChartContainer>
   ) : null;
 

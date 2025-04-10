@@ -13,6 +13,6 @@ export function GetEnvironmentSettingsStateHelper(store: Store) {
         value: unwrapped,
       });
     },
-    (state, query, environment) => state.environment.settingsByEnv[environment],
+    (state, query, environment) => state.environment.settingsByEnv[environment]
   );
 }

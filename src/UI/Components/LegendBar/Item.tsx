@@ -14,14 +14,7 @@ export interface Props {
   onClick?(id: string): void;
 }
 
-export const Item: React.FC<Props> = ({
-  value,
-  label,
-  backgroundColor,
-  color,
-  onClick,
-  id,
-}) => (
+export const Item: React.FC<Props> = ({ value, label, backgroundColor, color, onClick, id }) => (
   <Tooltip content={label} position="top" distance={4} enableFlip>
     <Container
       value={value}

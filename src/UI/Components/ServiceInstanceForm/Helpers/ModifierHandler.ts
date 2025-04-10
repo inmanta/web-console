@@ -11,10 +11,7 @@
  */
 export interface ModifierHandler {
   /** Determines if the modifier of an attribute is valid for a use case  */
-  validateModifier(
-    modifier: string | undefined,
-    embeddedEntity?: boolean,
-  ): boolean;
+  validateModifier(modifier: string | undefined, embeddedEntity?: boolean): boolean;
 }
 
 /**

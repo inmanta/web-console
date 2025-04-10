@@ -29,18 +29,12 @@ test("Given the deploy state filter When changing the include/exclude options Th
   });
 
   // Skipped state, check if no filter is applied by default on that option.
-  expect(
-    await screen.findByRole("generic", { name: "skipped-include-inactive" }),
-  ).toBeVisible();
-  expect(
-    await screen.findByRole("generic", { name: "skipped-exclude-inactive" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("generic", { name: "skipped-include-inactive" })).toBeVisible();
+  expect(await screen.findByRole("generic", { name: "skipped-exclude-inactive" })).toBeVisible();
 
   // Select include for skipped state
   await act(async () => {
-    fireEvent.click(
-      await screen.findByRole("generic", { name: "skipped-include-toggle" }),
-    );
+    fireEvent.click(await screen.findByRole("generic", { name: "skipped-include-toggle" }));
   });
   await act(async () => {
     fireEvent.click(menuToggle);
@@ -48,21 +42,15 @@ test("Given the deploy state filter When changing the include/exclude options Th
 
   // Check if the include active icon is shown
   expect(
-    screen.queryByRole("generic", { name: "skipped-include-inactive" }),
+    screen.queryByRole("generic", { name: "skipped-include-inactive" })
   ).not.toBeInTheDocument();
-  expect(
-    await screen.findByRole("generic", { name: "skipped-include-active" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("generic", { name: "skipped-include-active" })).toBeVisible();
 
   // Select exclude for skipped state
-  expect(
-    screen.queryByRole("generic", { name: "skipped-exclude-active" }),
-  ).not.toBeInTheDocument();
+  expect(screen.queryByRole("generic", { name: "skipped-exclude-active" })).not.toBeInTheDocument();
 
   await act(async () => {
-    fireEvent.click(
-      await screen.findByRole("generic", { name: "skipped-exclude-toggle" }),
-    );
+    fireEvent.click(await screen.findByRole("generic", { name: "skipped-exclude-toggle" }));
   });
 
   // The include icon inactive one again and the exclude is active
@@ -70,44 +58,30 @@ test("Given the deploy state filter When changing the include/exclude options Th
     fireEvent.click(menuToggle);
   });
 
-  expect(
-    await screen.findByRole("generic", { name: "skipped-include-inactive" }),
-  ).toBeVisible();
-  expect(
-    await screen.findByRole("generic", { name: "skipped-exclude-active" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("generic", { name: "skipped-include-inactive" })).toBeVisible();
+  expect(await screen.findByRole("generic", { name: "skipped-exclude-active" })).toBeVisible();
 
   // Include and exclude filters for different options can be combined
   await act(async () => {
-    fireEvent.click(
-      await screen.findByRole("generic", { name: "deployed-include-toggle" }),
-    );
+    fireEvent.click(await screen.findByRole("generic", { name: "deployed-include-toggle" }));
   });
   await act(async () => {
     fireEvent.click(menuToggle);
   });
 
-  expect(
-    await screen.findByRole("generic", { name: "deployed-include-active" }),
-  ).toBeVisible();
-  expect(
-    await screen.findByRole("generic", { name: "skipped-exclude-active" }),
-  ).toBeVisible();
+  expect(await screen.findByRole("generic", { name: "deployed-include-active" })).toBeVisible();
+  expect(await screen.findByRole("generic", { name: "skipped-exclude-active" })).toBeVisible();
 
   // Clicking a toggle again removes that filter
   await act(async () => {
-    fireEvent.click(
-      await screen.findByRole("generic", { name: "deployed-include-toggle" }),
-    );
+    fireEvent.click(await screen.findByRole("generic", { name: "deployed-include-toggle" }));
   });
   await act(async () => {
     fireEvent.click(menuToggle);
   });
 
   expect(
-    screen.queryByRole("generic", { name: "deployed-include-active" }),
+    screen.queryByRole("generic", { name: "deployed-include-active" })
   ).not.toBeInTheDocument();
-  expect(
-    screen.getByRole("generic", { name: "deployed-include-inactive" }),
-  ).toBeVisible();
+  expect(screen.getByRole("generic", { name: "deployed-include-inactive" })).toBeVisible();
 });

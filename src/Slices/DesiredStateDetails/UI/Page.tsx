@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import { Resource } from "@/Core";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGetVersionResources } from "@/Data/Managers/V2/DesiredState";
 import {
@@ -37,11 +33,9 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
     default: { name: "resource_type", order: "asc" },
     route: "DesiredStateDetails",
   });
-  const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterFromVersion>(
-    {
-      route: "DesiredStateDetails",
-    },
-  );
+  const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterFromVersion>({
+    route: "DesiredStateDetails",
+  });
 
   const { data, isSuccess, isError, error, refetch } = useGetVersionResources({
     version,
@@ -61,11 +55,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
 
   if (isError) {
     return (
-      <ErrorView
-        ariaLabel="VersionResourcesTable-Error"
-        retry={refetch}
-        message={error.message}
-      />
+      <ErrorView ariaLabel="VersionResourcesTable-Error" retry={refetch} message={error.message} />
     );
   }
   if (isSuccess) {

@@ -12,9 +12,7 @@ export const getThemePreference = () => {
   if (localStorage.getItem(storageKey)) {
     return localStorage.getItem(storageKey);
   } else {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   }
 };
 
@@ -25,10 +23,7 @@ export const getThemePreference = () => {
 export const setThemePreference = (theme: string) => {
   localStorage.setItem(storageKey, theme);
   // Target the html tag and update the theme class "pf-v6-theme-dark" "pf-v6-theme-light" depending on the theme.
-  document.documentElement.classList.remove(
-    "pf-v6-theme-dark",
-    "pf-v6-theme-light",
-  );
+  document.documentElement.classList.remove("pf-v6-theme-dark", "pf-v6-theme-light");
   document.documentElement.classList.add(`pf-v6-theme-${theme}`);
 };
 

@@ -14,20 +14,13 @@ import { GraphCardProps, Metric, MetricName } from "../Core/Domain";
 import { LineChart } from "./Charts/LineChart";
 import { formatLegendData, formatMetricsToStacked } from "./helper";
 
-export const GraphCard: React.FC<GraphCardProps> = ({
-  isStacked,
-  timestamps,
-  metrics,
-}) => {
+export const GraphCard: React.FC<GraphCardProps> = ({ isStacked, timestamps, metrics }) => {
   const [formatedMetrics, max] = formatMetricsToStacked(metrics, isStacked);
 
   return (
     <Card id={`trend-card-${metrics.name}`} component="div">
       <CardHeader>
-        <Flex
-          direction={{ default: "column" }}
-          spaceItems={{ default: "spaceItemsNone" }}
-        >
+        <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsNone" }}>
           <FlexItem>
             <CardTitle>
               <Title headingLevel="h3" size="lg" style={{ fontWeight: 500 }}>
@@ -47,9 +40,7 @@ export const GraphCard: React.FC<GraphCardProps> = ({
           <LineChart
             label={words(`dashboard.${metrics.name as MetricName}.label.x`)}
             title={words(`dashboard.${metrics.name as MetricName}.title`)}
-            description={words(
-              `dashboard.${metrics.name as MetricName}.description`,
-            )}
+            description={words(`dashboard.${metrics.name as MetricName}.description`)}
             isStacked={isStacked}
             legendData={formatLegendData(metrics, isStacked)}
             timestamps={timestamps}

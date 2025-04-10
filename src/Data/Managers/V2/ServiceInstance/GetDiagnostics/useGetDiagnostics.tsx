@@ -6,9 +6,7 @@ import { CustomError, useGet } from "../../helpers";
  * Return Signature of the useGetDiagnostics React Query
  */
 interface GetDiagnostics {
-  useOneTime: (
-    lookBehind: string,
-  ) => UseQueryResult<RawDiagnostics, CustomError>;
+  useOneTime: (lookBehind: string) => UseQueryResult<RawDiagnostics, CustomError>;
 }
 
 /**
@@ -20,18 +18,13 @@ interface GetDiagnostics {
  * @returns {GetInstance} An object containing the different available queries.
  * @returns {UseQueryResult<ServiceInstanceModel, CustomError>} returns.useOneTime - Fetch the diagnose report with a single query.
  */
-export const useGetDiagnostics = (
-  service: string,
-  instanceId: string,
-): GetDiagnostics => {
+export const useGetDiagnostics = (service: string, instanceId: string): GetDiagnostics => {
   const url = (lookBehind) =>
     `/lsm/v1/service_inventory/${service}/${instanceId}/diagnose?rejection_lookbehind=${lookBehind}&failure_lookbehind=${lookBehind}`;
   const get = useGet()<{ data: RawDiagnostics }>;
 
   return {
-    useOneTime: (
-      lookBehind: string,
-    ): UseQueryResult<RawDiagnostics, CustomError> =>
+    useOneTime: (lookBehind: string): UseQueryResult<RawDiagnostics, CustomError> =>
       useQuery({
         queryKey: ["get_diagnostics-one_time", service, instanceId, lookBehind],
         queryFn: () => get(url(lookBehind)),

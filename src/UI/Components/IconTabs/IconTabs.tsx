@@ -24,16 +24,10 @@ export const IconTabs = <Key extends string>({
   onChange,
   tabs,
 }: Props<Key>): ReturnType<React.FC<Props<Key>>> => {
-  const setActiveTabWithEventKey = (_event, eventKey: number | string) =>
-    onChange(eventKey as Key);
+  const setActiveTabWithEventKey = (_event, eventKey: number | string) => onChange(eventKey as Key);
 
   return (
-    <Tabs
-      activeKey={activeTab}
-      onSelect={setActiveTabWithEventKey}
-      mountOnEnter
-      unmountOnExit
-    >
+    <Tabs activeKey={activeTab} onSelect={setActiveTabWithEventKey} mountOnEnter unmountOnExit>
       {tabs.map((tab) => (
         <Tab
           key={tab.id}

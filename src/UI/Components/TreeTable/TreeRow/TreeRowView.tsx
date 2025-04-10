@@ -1,11 +1,5 @@
 import React, { FC } from "react";
-import {
-  Button,
-  Icon,
-  Split,
-  SplitItem,
-  Tooltip,
-} from "@patternfly/react-core";
+import { Button, Icon, Split, SplitItem, Tooltip } from "@patternfly/react-core";
 import { ExclamationTriangleIcon, InfoAltIcon } from "@patternfly/react-icons";
 import { Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
@@ -43,11 +37,7 @@ const warningMessage =
  *
  * @returns The tree row view component.
  */
-export const TreeRowView: React.FC<RowProps> = ({
-  row,
-  annotations,
-  setTab = () => {},
-}) => {
+export const TreeRowView: React.FC<RowProps> = ({ row, annotations, setTab = () => {} }) => {
   switch (row.kind) {
     case "Flat":
       return (
@@ -91,8 +81,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                     onToggle={row.onToggle}
                     aria-label={`Toggle-${row.id}`}
                   />
-                  {row.primaryCell.label === "description" &&
-                  row.primaryCell.value === "null"
+                  {row.primaryCell.label === "description" && row.primaryCell.value === "null"
                     ? ""
                     : row.primaryCell.value}
                   {row.primaryCell.warning ? (
@@ -102,9 +91,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                           <ExclamationTriangleIcon />
                         </Icon>
                       </Tooltip>
-                      <ClipboardCopyButton
-                        value={row.primaryCell.warning}
-                      ></ClipboardCopyButton>
+                      <ClipboardCopyButton value={row.primaryCell.warning}></ClipboardCopyButton>
                     </Spacer>
                   ) : (
                     ""
@@ -126,8 +113,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                 onToggle={row.onToggle}
                 aria-label={`Toggle-${row.id}`}
               />
-              {row.primaryCell.label === "description" &&
-              row.primaryCell.value === "null"
+              {row.primaryCell.label === "description" && row.primaryCell.value === "null"
                 ? ""
                 : row.primaryCell.value}
               {row.primaryCell.warning ? (
@@ -137,9 +123,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                       <ExclamationTriangleIcon />
                     </Icon>
                   </Tooltip>
-                  <ClipboardCopyButton
-                    value={row.primaryCell.warning}
-                  ></ClipboardCopyButton>
+                  <ClipboardCopyButton value={row.primaryCell.warning}></ClipboardCopyButton>
                 </Spacer>
               ) : (
                 ""
@@ -192,11 +176,7 @@ interface DocumentationCellProps {
  *
  * @returns The documentation cell component.
  */
-const DocumentationCell: FC<DocumentationCellProps> = ({
-  value,
-  tabKey = "",
-  setTab,
-}) => (
+const DocumentationCell: FC<DocumentationCellProps> = ({ value, tabKey = "", setTab }) => (
   <Button
     variant="link"
     icon={<InfoAltIcon />}

@@ -47,7 +47,9 @@ export const JSONEditor: React.FC<Props> = ({
 
   // local method to update state when the editor content changes
   const handleEditorChange = (value: string | undefined, _event) => {
-    value && setEditorState(value);
+    // Always update the editor state, even if empty
+    const newValue = value || "";
+    setEditorState(newValue);
   };
 
   /**
@@ -59,12 +61,39 @@ export const JSONEditor: React.FC<Props> = ({
    * @return {void}
    */
   const handleOnValidate: OnValidate = (markers) => {
-    const errors: string[] = markers.map((marker) => {
-      return `${marker.message} at line ${marker.startLineNumber} and column ${marker.startColumn}`;
-    });
+    const errors: string[] = [];
+
+    // If editor is empty, add an error
+    if (!editorState.trim()) {
+      errors.push(words("validation.empty"));
+    }
+
+    // Add any other validation errors from Monaco
+    errors.push(
+      ...markers.map((marker) => {
+        return `${marker.message} at line ${marker.startLineNumber} and column ${marker.startColumn}`;
+      })
+    );
 
     setErrors(errors);
   };
+
+  // Add an effect to handle validation whenever editorState changes
+  useEffect(() => {
+    // If editor is empty, set the empty validation error
+    if (!editorState.trim()) {
+      setErrors([words("validation.empty")]);
+    } else {
+      // If we have content, trigger Monaco's validation
+      // This will indirectly call handleOnValidate through Monaco's validation system
+      if (monaco) {
+        const model = monaco.editor.getModels()[0];
+        if (model) {
+          monaco.editor.setModelMarkers(model, "json", []);
+        }
+      }
+    }
+  }, [editorState, monaco]);
 
   // Whenever the editorState has changed and no errors are found, call the onChange callback.
   // This prevents the string to be invalid based on the provided schema.
@@ -112,6 +141,30 @@ export const JSONEditor: React.FC<Props> = ({
     }
   }, [monaco, schema.data]);
 
+  const handleEditorDidMount = (editor, _monaco) => {
+    // Get the editor's model
+    const model = editor.getModel();
+
+    // Add listener for all content changes including undo/redo. Those are not triggered by the onChange event.
+    model.onDidChangeContent(() => {
+      const value = model.getValue();
+      setEditorState(value);
+
+      // Always update validation state based on current content
+      // If the content is empty, add the empty content error. By design, the empty content error is not added by the onValidate event.
+      // But this is something that we consider invalid for our forms.
+      if (!value.trim()) {
+        setErrors([words("validation.empty")]);
+      } else {
+        // Clear the empty error if we have content
+        // Note: Other validation errors from onValidate will still be present! We only remove the empty content error.
+        setErrors((errors) => errors.filter((error) => error !== words("validation.empty")));
+      }
+    });
+
+    setIsLoading(false);
+  };
+
   return isLoading ? (
     <Spinner data-testid="loading-spinner" />
   ) : (
@@ -123,9 +176,25 @@ export const JSONEditor: React.FC<Props> = ({
         defaultValue={data}
         value={editorState}
         onChange={handleEditorChange}
+        onMount={handleEditorDidMount}
         theme={`vs-${preferedTheme}`}
         onValidate={handleOnValidate}
-        options={{ domReadOnly: readOnly, readOnly: readOnly }}
+        options={{
+          domReadOnly: readOnly,
+          readOnly: readOnly,
+          scrollBeyondLastLine: false,
+          smoothScrolling: true,
+          cursorSurroundingLines: 5,
+          cursorSurroundingLinesStyle: "default",
+          minimap: { enabled: true },
+          scrollbar: {
+            vertical: "visible",
+            horizontal: "visible",
+            useShadows: false,
+            verticalScrollbarSize: 10,
+            horizontalScrollbarSize: 10,
+          },
+        }}
       />
       {!readOnly && errors.length > 0 && (
         <ErrorMessageContainer title={words("validation.title")(errors.length)}>

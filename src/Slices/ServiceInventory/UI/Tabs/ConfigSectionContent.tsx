@@ -9,15 +9,13 @@ interface Props {
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
 }
 
-export const ConfigSectionContent: React.FC<Props> = ({
-  serviceInstanceIdentifier,
-}) => {
+export const ConfigSectionContent: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
   const { serviceModelQuery } = useContext(InstanceDetailsContext);
 
   const { service_entity, id } = serviceInstanceIdentifier;
   const { data, isSuccess, isError, error, refetch } = useGetInstanceConfig(
     service_entity,
-    id,
+    id
   ).useOneTime();
 
   if (isSuccess && serviceModelQuery.isSuccess) {
@@ -33,13 +31,7 @@ export const ConfigSectionContent: React.FC<Props> = ({
   }
 
   if (isError) {
-    return (
-      <ErrorView
-        retry={refetch}
-        message={error.message}
-        ariaLabel="ConfigDetails-Error"
-      />
-    );
+    return <ErrorView retry={refetch} message={error.message} ariaLabel="ConfigDetails-Error" />;
   }
 
   if (serviceModelQuery.isError) {

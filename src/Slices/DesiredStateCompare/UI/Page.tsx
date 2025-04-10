@@ -1,10 +1,5 @@
 import React, { useRef, useState } from "react";
-import {
-  Content,
-  PageSection,
-  Toolbar,
-  ToolbarContent,
-} from "@patternfly/react-core";
+import { Content, PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
 import { Diff } from "@/Core";
 import { useGetDesiredStateDiff } from "@/Data/Managers/V2/DesiredState";
 import { DiffWizard, EmptyView, LoadingView, ErrorView } from "@/UI/Components";
@@ -22,35 +17,27 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
   const [statuses, setStatuses] = useState(Diff.defaultStatuses);
   const [searchFilter, setSearchFilter] = useState("");
 
-  const { data, isError, error, isSuccess, refetch } =
-    useGetDesiredStateDiff().useOneTime(from, to);
+  const { data, isError, error, isSuccess, refetch } = useGetDesiredStateDiff().useOneTime(
+    from,
+    to
+  );
 
   if (isError) {
-    return (
-      <ErrorView
-        ariaLabel="CompareView-Error"
-        retry={refetch}
-        message={error.message}
-      />
-    );
+    return <ErrorView ariaLabel="CompareView-Error" retry={refetch} message={error.message} />;
   }
 
   if (isSuccess) {
     const filteredData = data
       .filter((resource) => statuses.includes(resource.status))
       .filter((resource) =>
-        resource.resource_id
-          .toLocaleLowerCase()
-          .includes(searchFilter.toLocaleLowerCase()),
+        resource.resource_id.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase())
       );
 
     return (
       <>
         <PageSection>
           <Content>
-            <Content component="h1">
-              {words("desiredState.compare.title")}
-            </Content>
+            <Content component="h1">{words("desiredState.compare.title")}</Content>
           </Content>
         </PageSection>
         <PageSection hasBodyWrapper={false}>
@@ -66,12 +53,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           </Toolbar>
         </PageSection>
         <PageSection hasBodyWrapper={false} hasShadowBottom>
-          <DiffWizard.Controls
-            data={filteredData}
-            refs={refs}
-            from={from}
-            to={to}
-          />
+          <DiffWizard.Controls data={filteredData} refs={refs} from={from} to={to} />
         </PageSection>
         <PageSection hasBodyWrapper={false} isFilled>
           {data.length <= 0 ? (

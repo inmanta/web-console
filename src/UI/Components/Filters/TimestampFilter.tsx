@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  ToolbarFilter,
-  ToolbarItem,
-  Flex,
-  FlexItem,
-} from "@patternfly/react-core";
+import { Button, ToolbarFilter, ToolbarItem, Flex, FlexItem } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 import { reject } from "lodash-es";
 import { DateRange, RangeOperator } from "@/Core";
@@ -30,16 +24,8 @@ export const TimestampFilter: React.FC<Props> = ({
   const [to, setTo] = useState<Date | undefined>();
 
   const onApply = () => {
-    const withNewFrom = insertNewTimestamp(
-      timestampFilters,
-      from,
-      RangeOperator.Operator.From,
-    );
-    const withNewTo = insertNewTimestamp(
-      withNewFrom,
-      to,
-      RangeOperator.Operator.To,
-    );
+    const withNewFrom = insertNewTimestamp(timestampFilters, from, RangeOperator.Operator.From);
+    const withNewTo = insertNewTimestamp(withNewFrom, to, RangeOperator.Operator.To);
 
     update(withNewTo);
     setFrom(undefined);
@@ -53,9 +39,8 @@ export const TimestampFilter: React.FC<Props> = ({
       reject(
         timestampFilters,
         (element) =>
-          element.date.getTime() === raw.date.getTime() &&
-          element.operator == raw.operator,
-      ),
+          element.date.getTime() === raw.date.getTime() && element.operator == raw.operator
+      )
     );
   };
   const onFromDateChange = (timestamp: Date) => {
@@ -83,10 +68,7 @@ export const TimestampFilter: React.FC<Props> = ({
   };
 
   return (
-    <Flex
-      style={{ gap: "var(--pf-t--global--spacer--md)" }}
-      flexWrap={{ lg: "nowrap" }}
-    >
+    <Flex style={{ gap: "var(--pf-t--global--spacer--md)" }} flexWrap={{ lg: "nowrap" }}>
       {isVisible && (
         <>
           <FlexItem>
@@ -139,13 +121,10 @@ export const TimestampFilter: React.FC<Props> = ({
 function insertNewTimestamp(
   timestampFilters: DateRange.Type[],
   date: Date | undefined,
-  operator: RangeOperator.Operator,
+  operator: RangeOperator.Operator
 ): DateRange.Type[] {
   if (date) {
-    return [
-      ...reject(timestampFilters, (ts) => ts.operator === operator),
-      { date, operator },
-    ];
+    return [...reject(timestampFilters, (ts) => ts.operator === operator), { date, operator }];
   }
 
   return timestampFilters;

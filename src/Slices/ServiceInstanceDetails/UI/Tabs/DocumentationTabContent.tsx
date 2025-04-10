@@ -4,6 +4,9 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionToggle,
+  Button,
+  Flex,
+  FlexItem,
 } from "@patternfly/react-core";
 import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
@@ -11,6 +14,8 @@ import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
+import { DependencyContext } from "@/UI/Dependency";
+import { useNavigateTo } from "@/UI/Routing";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { TabContentWrapper } from ".";
 
@@ -47,7 +52,9 @@ export const DocumentationTabContent: React.FC<Props> = ({
   selectedVersion,
 }) => {
   const { logsQuery, instance } = useContext(InstanceDetailsContext);
+  const { environmentModifier } = useContext(DependencyContext);
   const [expanded, setExpanded] = useState(0);
+  const navigateTo = useNavigateTo();
 
   const isLatest = selectedVersion === String(instance.version);
   let selectedSet: InstanceAttributeModel | void;
@@ -64,9 +71,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
     if (!logsQuery.data) {
       return (
         <TabContentWrapper id="documentation">
-          <ErrorView
-            message={words("instanceDetails.tabs.documentation.noData")}
-          />
+          <ErrorView message={words("instanceDetails.tabs.documentation.noData")} />
         </TabContentWrapper>
       );
     }
@@ -88,13 +93,38 @@ export const DocumentationTabContent: React.FC<Props> = ({
     }
   };
 
+  const MarkdownPreviewerButton = () => {
+    if (!environmentModifier.useIsExpertModeEnabled()) {
+      return null;
+    }
+
+    return (
+      <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+        <FlexItem>
+          <Button
+            variant="secondary"
+            aria-label={"preview-button"}
+            isDanger
+            onClick={() => {
+              navigateTo("MarkdownPreviewer", {
+                service: instance.service_entity,
+                instance: instance.service_identity_attribute_value || instance.id,
+                instanceId: instance.id,
+              });
+            }}
+          >
+            {words("instanceDetails.documentation.openPreviewer")}
+          </Button>
+        </FlexItem>
+      </Flex>
+    );
+  };
+
   if (sections.length === 1) {
     return (
       <TabContentWrapper id="documentation">
-        <MarkdownCard
-          attributeValue={sections[0].value}
-          web_title={sections[0].title}
-        />
+        <MarkdownPreviewerButton />
+        <MarkdownCard attributeValue={sections[0].value} web_title={sections[0].title} />
       </TabContentWrapper>
     );
   }
@@ -113,17 +143,12 @@ export const DocumentationTabContent: React.FC<Props> = ({
               <DynamicFAIcon icon={section.iconName} /> {section.title}
             </AccordionToggle>
             <AccordionContent id={`${section.title}-accordion-toggle`}>
-              <MarkdownCard
-                attributeValue={section.value}
-                web_title={section.title}
-              />
+              <MarkdownCard attributeValue={section.value} web_title={section.title} />
             </AccordionContent>
           </AccordionItem>
         ))}
         {sections.length === 0 && (
-          <ErrorView
-            message={words("instanceDetails.tabs.documentation.noData")}
-          />
+          <ErrorView message={words("instanceDetails.tabs.documentation.noData")} />
         )}
       </Accordion>
     </TabContentWrapper>
@@ -143,7 +168,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
  */
 const getDocumentationSections = (
   docAttributeDescriptors: DocAttributeDescriptors[],
-  attributeSet: InstanceAttributeModel,
+  attributeSet: InstanceAttributeModel
 ): MarkdownAttributes[] => {
   return docAttributeDescriptors.map(({ title, iconName, attributeName }) => {
     return {
@@ -151,9 +176,7 @@ const getDocumentationSections = (
       iconName: iconName,
       value:
         attributeSet[attributeName] ||
-        words("instanceDetails.documentation.noAttributeForVersion")(
-          attributeName,
-        ),
+        words("instanceDetails.documentation.noAttributeForVersion")(attributeName),
     };
   });
 };
@@ -169,10 +192,10 @@ const getDocumentationSections = (
  */
 const getSelectedAttributeSet = (
   logs: InstanceLog[],
-  version: string,
+  version: string
 ): InstanceAttributeModel | void => {
   const selectedLog: InstanceLog | undefined = logs.find(
-    (log: InstanceLog) => String(log.version) === version,
+    (log: InstanceLog) => String(log.version) === version
   );
 
   if (!selectedLog) return; // Return void if no matching log is found
@@ -200,7 +223,7 @@ const getSelectedAttributeSet = (
  * @returns {InstanceAttributeModel | void}
  */
 const getSelectedAttributeSetFromInstance = (
-  instance: ServiceInstanceModel,
+  instance: ServiceInstanceModel
 ): InstanceAttributeModel | void => {
   if (instance.candidate_attributes) {
     return instance.candidate_attributes;

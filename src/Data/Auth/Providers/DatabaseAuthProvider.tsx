@@ -1,19 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  createCookie,
-  getCookie,
-  removeCookie,
-} from "../../Common/CookieHelper";
+import { createCookie, getCookie, removeCookie } from "../../Common/CookieHelper";
 import { AuthContext } from "../AuthContext";
 
 /**
  * DatabaseAuthProvider component provides authentication functionality using a database.
  * It manages user authentication state, token management, and navigation.
  */
-export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -51,9 +45,7 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({
   }, [user, logout]);
 
   return (
-    <AuthContext.Provider
-      value={{ getUser, login, logout, updateUser, getToken, isDisabled }}
-    >
+    <AuthContext.Provider value={{ getUser, login, logout, updateUser, getToken, isDisabled }}>
       {children}
     </AuthContext.Provider>
   );

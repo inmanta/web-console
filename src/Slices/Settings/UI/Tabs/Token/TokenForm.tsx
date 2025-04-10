@@ -10,11 +10,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@patternfly/react-core";
-import {
-  ClusterIcon,
-  ProcessAutomationIcon,
-  UserIcon,
-} from "@patternfly/react-icons";
+import { ClusterIcon, ProcessAutomationIcon, UserIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { ClientType, Maybe } from "@/Core";
 import { ClipboardCopyButton, Description } from "@/UI/Components";
@@ -49,9 +45,7 @@ export const TokenForm: React.FC<Props> = ({
             text="agent"
             aria-label="AgentOption"
             isSelected={isClientTypeSelected("agent")}
-            onChange={(_event, selected) =>
-              getClientTypeSelector("agent")(selected)
-            }
+            onChange={(_event, selected) => getClientTypeSelector("agent")(selected)}
             isDisabled={isBusy}
           />
           <ToggleGroupItem
@@ -59,9 +53,7 @@ export const TokenForm: React.FC<Props> = ({
             text="api"
             aria-label="ApiOption"
             isSelected={isClientTypeSelected("api")}
-            onChange={(_event, selected) =>
-              getClientTypeSelector("api")(selected)
-            }
+            onChange={(_event, selected) => getClientTypeSelector("api")(selected)}
             isDisabled={isBusy}
           />
           <ToggleGroupItem
@@ -69,9 +61,7 @@ export const TokenForm: React.FC<Props> = ({
             text="compiler"
             aria-label="CompilerOption"
             isSelected={isClientTypeSelected("compiler")}
-            onChange={(_event, selected) =>
-              getClientTypeSelector("compiler")(selected)
-            }
+            onChange={(_event, selected) => getClientTypeSelector("compiler")(selected)}
             isDisabled={isBusy}
           />
         </ToggleGroup>

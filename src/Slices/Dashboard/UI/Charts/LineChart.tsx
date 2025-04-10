@@ -53,9 +53,7 @@ export const LineChart: React.FC<LineChartProps> = ({
   useEffect(() => {
     function handleResize() {
       // Set window width to state if width from ref is available
-      if (
-        ref.current?.parentElement?.getBoundingClientRect().width !== undefined
-      ) {
+      if (ref.current?.parentElement?.getBoundingClientRect().width !== undefined) {
         setWidth(ref.current?.parentElement?.getBoundingClientRect().width);
       }
     }
@@ -79,9 +77,7 @@ export const LineChart: React.FC<LineChartProps> = ({
             labelComponent={
               <ChartLegendTooltip
                 legendData={legendData}
-                title={(datum) =>
-                  datum.x ? new Date(datum.x).toLocaleString() : "No data"
-                }
+                title={(datum) => (datum.x ? new Date(datum.x).toLocaleString() : "No data")}
                 flyoutWidth={250}
               />
             }
@@ -161,14 +157,8 @@ export const LineChart: React.FC<LineChartProps> = ({
                 key={name + index}
                 style={{
                   data: {
-                    stroke:
-                      colorTheme[name] === undefined
-                        ? colorTheme.default
-                        : colorTheme[name],
-                    fill:
-                      colorTheme[name] === undefined
-                        ? colorTheme.default
-                        : colorTheme[name],
+                    stroke: colorTheme[name] === undefined ? colorTheme.default : colorTheme[name],
+                    fill: colorTheme[name] === undefined ? colorTheme.default : colorTheme[name],
                   },
                 }}
               />
@@ -188,10 +178,7 @@ export const LineChart: React.FC<LineChartProps> = ({
                 key={name + index}
                 style={{
                   data: {
-                    stroke:
-                      colorTheme[name] === undefined
-                        ? colorTheme.default
-                        : colorTheme[name],
+                    stroke: colorTheme[name] === undefined ? colorTheme.default : colorTheme[name],
                   },
                 }}
               />
@@ -212,10 +199,7 @@ export const LineChart: React.FC<LineChartProps> = ({
                 key={"scatter-" + name + metricIndex}
                 style={{
                   data: {
-                    fill:
-                      colorTheme[name] === undefined
-                        ? colorTheme.default
-                        : colorTheme[name],
+                    fill: colorTheme[name] === undefined ? colorTheme.default : colorTheme[name],
                   },
                 }}
               />

@@ -4,11 +4,7 @@ import { EntryInfo } from "@/UI/Components/DiffWizard/types";
 import { DiffView } from "./DiffView";
 import { Title } from "./utils";
 
-export const DefaultEntry: React.FC<EntryInfo> = ({
-  title,
-  fromValue: from,
-  toValue: to,
-}) => (
+export const DefaultEntry: React.FC<EntryInfo> = ({ title, fromValue: from, toValue: to }) => (
   <Grid>
     <GridItem span={2}>
       <Title>{title}</Title>

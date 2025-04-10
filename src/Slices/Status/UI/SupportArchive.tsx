@@ -1,9 +1,5 @@
 import React, { useContext, useState } from "react";
-import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-} from "@patternfly/react-core";
+import { Alert, AlertActionCloseButton, AlertGroup } from "@patternfly/react-core";
 import { useCreateSupportArchive } from "@/Data/Managers/V2/Miscellaneous/CreateSupportArchive";
 import { DependencyContext } from "@/UI/Dependency";
 import { DownloadButton } from "./Components";
@@ -25,11 +21,7 @@ export const SupportArchive: React.FC = () => {
       try {
         archiveHelper.triggerDownload(data);
       } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Failed to download support archive",
-        );
+        setError(err instanceof Error ? err.message : "Failed to download support archive");
       }
     },
     onError: (error) => {
@@ -52,9 +44,7 @@ export const SupportArchive: React.FC = () => {
             variant="danger"
             title="Something went wrong with downloading the support archive"
             component="h3"
-            actionClose={
-              <AlertActionCloseButton onClose={() => setError(null)} />
-            }
+            actionClose={<AlertActionCloseButton onClose={() => setError(null)} />}
           >
             {error}
           </Alert>

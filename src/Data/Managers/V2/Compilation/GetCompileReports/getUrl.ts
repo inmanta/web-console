@@ -4,40 +4,34 @@ import { CompileStatus, RangeOperator } from "@/Core";
 import { Filter } from "@/Slices/CompileReports/Core/Query";
 import { CompileReportsParams } from "./useGetCompileReports";
 
-export function getUrl(
-  params: CompileReportsParams,
-  timezone = moment.tz.guess(),
-): string {
+export function getUrl(params: CompileReportsParams, timezone = moment.tz.guess()): string {
   const { pageSize, sort, filter, currentPage } = params;
 
   const serializedFilters =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
           { filter: filterToParam(filter, timezone) },
-          { allowDots: true, arrayFormat: "repeat" },
+          { allowDots: true, arrayFormat: "repeat" }
         )}`
       : "";
   const filterParam = serializedFilters.length > 1 ? serializedFilters : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
-  return `/api/v2/compilereport?limit=${
-    pageSize.value
-  }${sortParam}${filterParam}${
+  return `/api/v2/compilereport?limit=${pageSize.value}${sortParam}${filterParam}${
     currentPage.value ? `&${currentPage.value}` : ""
   }`;
 }
 
 const filterToParam = (filter: Filter, timezone: string) => {
   if (typeof filter === "undefined") return {};
+
   const { status, requested } = filter;
   const serializedTimestampOperatorFilters = requested?.map(
     (timestampWithOperator) =>
-      `${RangeOperator.serializeOperator(
-        timestampWithOperator.operator,
-      )}:${moment
+      `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${moment
         .tz(timestampWithOperator.date, timezone)
         .utc()
-        .format("YYYY-MM-DD+HH:mm:ss")}`,
+        .format("YYYY-MM-DD+HH:mm:ss")}`
   );
 
   const statusFilter = translateStatusFilter(status);
@@ -50,6 +44,7 @@ const filterToParam = (filter: Filter, timezone: string) => {
 
 function translateStatusFilter(status?: CompileStatus) {
   if (!status) return {};
+
   switch (status) {
     case CompileStatus.success:
       return { success: true };

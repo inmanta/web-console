@@ -69,16 +69,8 @@ export interface ServiceOrderItemConfig {
   [x: string]: boolean;
 }
 
-export type ServiceOrderState =
-  | "success"
-  | "failed"
-  | "in_progress"
-  | "partial";
-export type ServiceOrderItemState =
-  | "completed"
-  | "failed"
-  | "in_progress"
-  | "acknowledged";
+export type ServiceOrderState = "success" | "failed" | "in_progress" | "partial";
+export type ServiceOrderItemState = "completed" | "failed" | "in_progress" | "acknowledged";
 
 type FailureType =
   | "INVALID_ORDER_ITEM"

@@ -10,12 +10,7 @@ import { checkIfConnectionIsAllowed } from "../helpers";
 import { showLinkTools, toggleLooseElement } from "../helpers";
 import collapseButton from "../icons/collapse-icon.svg";
 import expandButton from "../icons/expand-icon.svg";
-import {
-  ActionEnum,
-  ConnectionRules,
-  EventActionEnum,
-  TypeEnum,
-} from "../interfaces";
+import { ActionEnum, ConnectionRules, EventActionEnum, TypeEnum } from "../interfaces";
 import { routerNamespace } from "../routers";
 import { Link, ServiceEntityBlock } from "../shapes";
 
@@ -33,11 +28,7 @@ export class ComposerPaper {
    * @param {dia.Graph} graph - The JointJS graph.
    * @param {boolean} editable - Indicates if the paper is editable.
    */
-  constructor(
-    connectionRules: ConnectionRules,
-    graph: dia.Graph,
-    editable: boolean,
-  ) {
+  constructor(connectionRules: ConnectionRules, graph: dia.Graph, editable: boolean) {
     this.paper = new dia.Paper({
       model: graph,
       width: 1000,
@@ -74,8 +65,7 @@ export class ComposerPaper {
       },
       defaultLink: () => new Link(),
       validateConnection: (sourceView, srcMagnet, targetView, tgtMagnet) => {
-        const baseValidators =
-          srcMagnet !== tgtMagnet && sourceView.cid !== targetView.cid;
+        const baseValidators = srcMagnet !== tgtMagnet && sourceView.cid !== targetView.cid;
 
         const sourceViewAsElement = graph
           .getElements()
@@ -85,13 +75,13 @@ export class ComposerPaper {
         if (sourceViewAsElement) {
           const connectedElements = graph.getNeighbors(sourceViewAsElement);
           const isConnected = connectedElements.find(
-            (connectedElement) => connectedElement.cid === targetView.model.cid,
+            (connectedElement) => connectedElement.cid === targetView.model.cid
           );
           const isAllowed = checkIfConnectionIsAllowed(
             graph,
             targetView,
             sourceView,
-            connectionRules,
+            connectionRules
           );
 
           return isConnected === undefined && isAllowed && baseValidators;
@@ -102,16 +92,13 @@ export class ComposerPaper {
     });
 
     //Event that is triggered when user clicks on the cell's dictionary icon. It's used to open the dictionary modal.
-    this.paper.on(
-      "element:showDict",
-      (_elementView: dia.ElementView, event: dia.Event) => {
-        document.dispatchEvent(
-          new CustomEvent("openDictsModal", {
-            detail: event.target.parentElement.attributes.dict.value,
-          }),
-        );
-      },
-    );
+    this.paper.on("element:showDict", (_elementView: dia.ElementView, event: dia.Event) => {
+      document.dispatchEvent(
+        new CustomEvent("openDictsModal", {
+          detail: event.target.parentElement.attributes.dict.value,
+        })
+      );
+    });
 
     //Event that is triggered when user clicks on the toggle button for the cells that have more than 4 attributes. It's used to collapse or expand the cell.
     this.paper.on(
@@ -125,12 +112,9 @@ export class ComposerPaper {
 
         elementAsShape.appendColumns(
           isCollapsed ? originalAttrs : originalAttrs.slice(0, 4),
-          false,
+          false
         );
-        elementAsShape.attr(
-          "toggleButton/xlink:href",
-          isCollapsed ? collapseButton : expandButton,
-        );
+        elementAsShape.attr("toggleButton/xlink:href", isCollapsed ? collapseButton : expandButton);
 
         const bbox = elementAsShape.getBBox();
 
@@ -139,7 +123,7 @@ export class ComposerPaper {
         elementAsShape.attr("buttonBody/y", bbox.height - 32);
 
         elementAsShape.set("isCollapsed", !isCollapsed);
-      },
+      }
     );
 
     //Event that is triggered when user clicks on the blank space of the paper. It's used to clear the sidebar.
@@ -250,7 +234,7 @@ export class ComposerPaper {
        */
       const assignConnectionData = (
         elementCell: ServiceEntityBlock,
-        connectingCell: ServiceEntityBlock,
+        connectingCell: ServiceEntityBlock
       ) => {
         const cellRelations = elementCell.getRelations();
         const cellName = elementCell.getName();
@@ -259,31 +243,22 @@ export class ComposerPaper {
         //if cell has Map of relations that mean it can accept inter-service relations
         if (cellRelations) {
           const cellConnectionRule = connectionRules[cellName].find(
-            (rule) => rule.name === connectingCellName,
+            (rule) => rule.name === connectingCellName
           );
 
           //if there is corresponding rule we can apply connection and update given service
-          if (
-            cellConnectionRule &&
-            cellConnectionRule.kind === TypeEnum.INTERSERVICE
-          ) {
-            elementCell.addRelation(
-              connectingCell.id,
-              cellConnectionRule.attributeName,
-            );
+          if (cellConnectionRule && cellConnectionRule.kind === TypeEnum.INTERSERVICE) {
+            elementCell.addRelation(connectingCell.id, cellConnectionRule.attributeName);
             model.set("isRelationshipConnection", true);
 
             dispatchUpdateInterServiceRelations(
               EventActionEnum.ADD,
               cellConnectionRule.name,
-              elementCell.id,
+              elementCell.id
             );
             dispatchUpdateServiceOrderItems(targetCell, ActionEnum.UPDATE);
 
-            toggleLooseElement(
-              this.paper.findViewByModel(connectingCell),
-              EventActionEnum.REMOVE,
-            );
+            toggleLooseElement(this.paper.findViewByModel(connectingCell), EventActionEnum.REMOVE);
           }
         }
 
@@ -293,10 +268,7 @@ export class ComposerPaper {
           elementCell.get("holderName") === connectingCellName
         ) {
           elementCell.set("embeddedTo", connectingCell.id);
-          toggleLooseElement(
-            this.paper.findViewByModel(elementCell),
-            EventActionEnum.REMOVE,
-          );
+          toggleLooseElement(this.paper.findViewByModel(elementCell), EventActionEnum.REMOVE);
 
           dispatchUpdateServiceOrderItems(elementCell, ActionEnum.UPDATE);
         }

@@ -5,10 +5,7 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export function EnvironmentDetailsOneTimeQueryManager(
-  store: Store,
-  apiHelper: ApiHelper,
-) {
+export function EnvironmentDetailsOneTimeQueryManager(store: Store, apiHelper: ApiHelper) {
   return QueryManager.OneTime<"GetEnvironmentDetails">(
     apiHelper,
     StateHelper(store),
@@ -16,6 +13,6 @@ export function EnvironmentDetailsOneTimeQueryManager(
     "GetEnvironmentDetails",
     ({ details, id }) => getUrl(details, id),
     identity,
-    "MERGE",
+    "MERGE"
   );
 }

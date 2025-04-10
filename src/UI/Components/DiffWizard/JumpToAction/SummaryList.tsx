@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  DropdownItem,
-  DropdownList,
-  Flex,
-  Truncate,
-} from "@patternfly/react-core";
+import { DropdownItem, DropdownList, Flex, Truncate } from "@patternfly/react-core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 
@@ -16,7 +11,9 @@ interface Props {
 export const SummaryList: React.FC<Props> = ({ items, refs }) => {
   const onSelect = (itemId: string) => {
     if (itemId === undefined) return;
+
     if (refs.current[itemId] === undefined) return;
+
     refs.current[itemId].scrollIntoView({
       behavior: "smooth",
     });

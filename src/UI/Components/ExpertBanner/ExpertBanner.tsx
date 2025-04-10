@@ -32,16 +32,8 @@ export const ExpertBanner: React.FC = () => {
           setMessage={setMessage}
         />
       )}
-      <Banner
-        isSticky
-        color="red"
-        id="expert-mode-banner"
-        aria-label="expertModeActive"
-      >
-        <Flex
-          justifyContent={{ default: "justifyContentCenter" }}
-          gap={{ default: "gapXs" }}
-        >
+      <Banner isSticky color="red" id="expert-mode-banner" aria-label="expertModeActive">
+        <Flex justifyContent={{ default: "justifyContentCenter" }} gap={{ default: "gapXs" }}>
           {words("banner.expertMode")}
           <Button
             variant="link"

@@ -11,7 +11,7 @@ interface LoggedUser {
  * @returns {Query} - An object containing a custom hook to fetch user information.
  */
 export const useGetCurrentUser = () => {
-  const url = `/api/v2/current_user`;
+  const url = "/api/v2/current_user";
   const get = useGetWithoutEnv()<{ data: LoggedUser }>;
 
   return {

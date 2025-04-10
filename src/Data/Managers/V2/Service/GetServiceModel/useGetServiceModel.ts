@@ -26,15 +26,13 @@ export const useGetServiceModel = (service: string): GetServiceModel => {
     useOneTime: (): UseQueryResult<ServiceModel, CustomError> =>
       useQuery({
         queryKey: ["get_service_model-one_time", service],
-        queryFn: () =>
-          get(`/lsm/v1/service_catalog/${service}?instance_summary=True`),
+        queryFn: () => get(`/lsm/v1/service_catalog/${service}?instance_summary=True`),
         select: (data) => data.data,
       }),
     useContinuous: (): UseQueryResult<ServiceModel, CustomError> =>
       useQuery({
         queryKey: ["get_service_model-continuous", service],
-        queryFn: () =>
-          get(`/lsm/v1/service_catalog/${service}?instance_summary=True`),
+        queryFn: () => get(`/lsm/v1/service_catalog/${service}?instance_summary=True`),
         refetchInterval: 5000,
         select: (data) => data.data,
       }),

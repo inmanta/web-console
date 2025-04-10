@@ -11,10 +11,7 @@ import {
   FlexItem,
   Icon,
 } from "@patternfly/react-core";
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-} from "@patternfly/react-icons";
+import { CheckCircleIcon, ExclamationCircleIcon } from "@patternfly/react-icons";
 import { Timeline } from "@/UI/Components/Timeline";
 import { words } from "@/UI/words";
 import { CompileDetails } from "@S/CompileDetails/Core/Domain";
@@ -47,31 +44,21 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
         </Bullseye>
       </FlexItem>
       <FlexItem>
-        <DescriptionList
-          isHorizontal
-          isFillColumns
-          columnModifier={{ default: "2Col" }}
-        >
+        <DescriptionList isHorizontal isFillColumns columnModifier={{ default: "2Col" }}>
           <DescriptionListGroup>
-            <DescriptionListTerm>
-              {words("compileDetails.status.export")}
-            </DescriptionListTerm>
+            <DescriptionListTerm>{words("compileDetails.status.export")}</DescriptionListTerm>
             <DescriptionListDescription>
               {compileDetails.do_export.toString()}
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
-            <DescriptionListTerm>
-              {words("compileDetails.status.update")}
-            </DescriptionListTerm>
+            <DescriptionListTerm>{words("compileDetails.status.update")}</DescriptionListTerm>
             <DescriptionListDescription>
               {compileDetails.force_update.toString()}
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
-            <DescriptionListTerm>
-              {words("compileDetails.status.success")}
-            </DescriptionListTerm>
+            <DescriptionListTerm>{words("compileDetails.status.success")}</DescriptionListTerm>
             <DescriptionListDescription>
               {compileDetails.success ? (
                 <Icon status="success">
@@ -87,18 +74,14 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
-            <DescriptionListTerm>
-              {words("compileDetails.status.message")}
-            </DescriptionListTerm>
+            <DescriptionListTerm>{words("compileDetails.status.message")}</DescriptionListTerm>
             <DescriptionListDescription>
               {compileDetails.metadata["message"] as string}
             </DescriptionListDescription>
           </DescriptionListGroup>
           {compileDetails.metadata["type"] ? (
             <DescriptionListGroup>
-              <DescriptionListTerm>
-                {words("compileDetails.status.trigger")}
-              </DescriptionListTerm>
+              <DescriptionListTerm>{words("compileDetails.status.trigger")}</DescriptionListTerm>
               <DescriptionListDescription>
                 {compileDetails.metadata["type"] as string}
               </DescriptionListDescription>
@@ -111,17 +94,11 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
       <FlexItem>
         <DescriptionList isHorizontal isAutoFit>
           <DescriptionListGroup>
-            <DescriptionListTerm>
-              {words("compileDetails.status.envVars")}
-            </DescriptionListTerm>
+            <DescriptionListTerm>{words("compileDetails.status.envVars")}</DescriptionListTerm>
             <DescriptionListDescription>
               <CodeBlock>
                 <CodeBlockCode>
-                  {JSON.stringify(
-                    compileDetails.environment_variables,
-                    null,
-                    2,
-                  )}
+                  {JSON.stringify(compileDetails.environment_variables, null, 2)}
                 </CodeBlockCode>
               </CodeBlock>
             </DescriptionListDescription>

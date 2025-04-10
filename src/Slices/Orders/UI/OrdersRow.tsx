@@ -32,11 +32,7 @@ export const OrdersRow: React.FC<Props> = ({ row }) => {
           <DateWithTooltip timestamp={row.created_at} />
         </Td>
         <Td width={15} dataLabel={words("orders.column.completed_at")}>
-          {row.completed_at ? (
-            <DateWithTooltip timestamp={row.completed_at} />
-          ) : (
-            ""
-          )}
+          {row.completed_at ? <DateWithTooltip timestamp={row.completed_at} /> : ""}
         </Td>
         <Td width={10} dataLabel={words("orders.column.status")}>
           <OrderStatusLabel status={row.status.state} />
@@ -47,11 +43,7 @@ export const OrdersRow: React.FC<Props> = ({ row }) => {
         <Td width={25} dataLabel={words("orders.column.description")}>
           {row.description || row.id}
         </Td>
-        <Td
-          dataLabel={words("orders.column.option")}
-          modifier="fitContent"
-          isActionCell
-        >
+        <Td dataLabel={words("orders.column.option")} modifier="fitContent" isActionCell>
           <Link
             to={{
               pathname: routeManager.getUrl("OrderDetails", {

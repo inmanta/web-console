@@ -40,13 +40,10 @@ export const Page: React.FC = () => {
             </>
           ),
           success: (environments) => (
-            <EnvironmentsOverview
-              environments={environments}
-              aria-label="Overview-Success"
-            />
+            <EnvironmentsOverview environments={environments} aria-label="Overview-Success" />
           ),
         },
-        data,
+        data
       )}
     </>
   );

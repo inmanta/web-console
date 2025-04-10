@@ -13,6 +13,6 @@ export function GetParametersStateHelper(store: Store) {
         data: value,
       });
     },
-    (state, query, environment) => state.parameters.listByEnv[environment],
+    (state, query, environment) => state.parameters.listByEnv[environment]
   );
 }
