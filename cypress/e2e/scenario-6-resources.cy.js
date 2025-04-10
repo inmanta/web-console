@@ -84,7 +84,7 @@ describe("Scenario 6 : Resources", () => {
     // Expect 0/0 resources to be visible
     cy.get('[aria-label="Deployment state summary"]').should("contain", isIso ? "0 / 0" : "5 / 5");
     // Expect table to be empty in case of ISO project
-    isIso && cy.get('[aria-label="ResourcesView-Empty"]').should("to.be.visible");
+    isIso && cy.get('[aria-label="ResourcesPage-Empty"]').should("to.be.visible");
   });
 
   if (isIso) {

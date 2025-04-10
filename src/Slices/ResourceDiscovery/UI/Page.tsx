@@ -89,7 +89,7 @@ export const Page: React.FC = () => {
                 ? words("resources.discovery.disabled")
                 : words("resources.empty.message")
             }
-            aria-label="ResourcesView-Empty"
+            aria-label="DiscoveredResourcesView-Empty"
           />
         ) : (
           <DiscoveredResourcesTable
