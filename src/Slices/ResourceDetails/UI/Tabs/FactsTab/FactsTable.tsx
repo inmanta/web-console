@@ -37,7 +37,7 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
   }, [facts, sort]);
 
   return (
-    <Table variant="compact" aria-label="ResourceFacts-Success">
+    <Table variant="compact" aria-label="Facts-Success">
       <Thead>
         <Tr>
           {factsColumnHeads.map(({ displayName }, idx) => (

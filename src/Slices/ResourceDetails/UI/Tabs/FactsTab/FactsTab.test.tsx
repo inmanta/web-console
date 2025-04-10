@@ -55,9 +55,9 @@ describe("FactsTab", () => {
 
     render(component);
 
-    expect(screen.getByRole("region", { name: "ResourceFacts-Loading" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Facts-Loading" })).toBeInTheDocument();
 
-    expect(await screen.findByRole("region", { name: "ResourceFacts-Error" })).toBeInTheDocument();
+    expect(await screen.findByRole("region", { name: "Facts-Error" })).toBeInTheDocument();
   });
 
   test("Given the FactsTab When the backend response is successful Then shows success table", async () => {
@@ -72,11 +72,9 @@ describe("FactsTab", () => {
 
     render(component);
 
-    expect(
-      await screen.findByRole("region", { name: "ResourceFacts-Loading" })
-    ).toBeInTheDocument();
+    expect(await screen.findByRole("region", { name: "Facts-Loading" })).toBeInTheDocument();
 
-    expect(await screen.findByRole("grid", { name: "ResourceFacts-Success" })).toBeInTheDocument();
+    expect(await screen.findByRole("grid", { name: "Facts-Success" })).toBeInTheDocument();
   });
 
   test("Given sortFactRows When sorting by different columns Then the result is correct", async () => {
