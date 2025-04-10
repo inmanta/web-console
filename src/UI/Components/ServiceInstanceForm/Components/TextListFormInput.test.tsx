@@ -115,6 +115,7 @@ describe("TextListInputField", () => {
     // Open the suggestions popover
     const input = screen.getByRole("textbox");
 
+    //this action require act due to updates within the patternfly component triggering "act warning"
     await act(async () => {
       fireEvent.focus(input);
     });

@@ -76,6 +76,7 @@ test("Given the AutoCompleteInputProvider When typing an instance name or id The
     "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=",
   ]);
 
+  //fireEvents in that scenario triggers update in the components which then triggers "act warning"
   await act(async () => {
     fireEvent.change(relationInputField, { target: { value: "a" } });
   });

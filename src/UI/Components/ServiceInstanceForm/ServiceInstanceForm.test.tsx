@@ -241,7 +241,6 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   });
 
   // simulate click on the input to show the suggestions
-
   await userEvent.click(textBox);
 
   const suggestions = screen.queryAllByRole("menuitem");
