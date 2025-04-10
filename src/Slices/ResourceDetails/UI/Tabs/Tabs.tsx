@@ -1,6 +1,6 @@
 import React from "react";
 import { ColumnsIcon, HistoryIcon, ListIcon, ModuleIcon, TableIcon } from "@patternfly/react-icons";
-import { Details } from "@/Core/Domain/Resource/Resource";
+import { Details } from "@/Core/Domain/Resource";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";

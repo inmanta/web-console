@@ -1,4 +1,5 @@
 import React from "react";
+import "@testing-library/jest-dom";
 import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
@@ -363,7 +364,6 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
 
   expect(screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })).toBeVisible();
 });
-
 test("GIVEN ServiceInstanceForm and a NestedField WHEN rendering optional inputs THEN the form structure is correct", async () => {
   //simplified version of form state that was causing bug on production
   const { component } = setup([

@@ -264,7 +264,7 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
   expect(row2).toBeVisible();
   expect(row3).toBeVisible();
 
-  await userEvent.click(dropdown);
+  fireEvent.click(dropdown);
 
   await userEvent.click(screen.getByRole("option", { name: words("inventory.tabs.collapse") }));
 
