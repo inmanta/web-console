@@ -1,25 +1,33 @@
-import React, { useContext } from "react";
-import { RemoteDataView } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
+import React from "react";
+import { useGetResourceFacts } from "@/Data/Managers/V2/Resource";
+import { ErrorView, LoadingView } from "@/UI/Components";
 import { FactsTable } from "./FactsTable";
 
 interface Props {
   resourceId: string;
 }
 
+/**
+ * The FactsTab component.
+ *
+ * This component is responsible of displaying the facts of a resource.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {string} resourceId - The id of the resource
+ *
+ * @returns {React.FC<Props>} A React Component displaying the facts of a resource
+ */
 export const FactsTab: React.FC<Props> = ({ resourceId }) => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { data, isSuccess, isError, error, refetch } =
+    useGetResourceFacts().useContinuous(resourceId);
 
-  const [data] = queryResolver.useContinuous<"GetResourceFacts">({
-    kind: "GetResourceFacts",
-    resourceId,
-  });
+  if (isError) {
+    return <ErrorView message={error.message} retry={refetch} ariaLabel="Facts-Error" />;
+  }
 
-  return (
-    <RemoteDataView
-      data={data}
-      label="Facts"
-      SuccessView={(facts) => <FactsTable facts={facts} />}
-    />
-  );
+  if (isSuccess) {
+    return <FactsTable facts={data} />;
+  }
+
+  return <LoadingView ariaLabel="Facts-Loading" />;
 };

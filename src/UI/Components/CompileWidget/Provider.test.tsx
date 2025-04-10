@@ -1,6 +1,6 @@
 import React from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { http, HttpResponse } from "msw";
@@ -74,9 +74,7 @@ describe("CompileWidgetProvider", () => {
 
     expect(toast).toBeVisible();
     expect(toast).toHaveTextContent(words("common.compileWidget.toast")(false));
-    await waitFor(() => {
-      expect(afterTrigger).toHaveBeenCalled();
-    });
+    expect(afterTrigger).toHaveBeenCalled();
 
     expect(button).toBeEnabled();
   });
@@ -109,9 +107,7 @@ describe("CompileWidgetProvider", () => {
     expect(toast).toBeVisible();
     expect(toast).toHaveTextContent(words("common.compileWidget.toast")(true));
 
-    await waitFor(() => {
-      expect(afterTrigger).toHaveBeenCalled();
-    });
+    expect(afterTrigger).toHaveBeenCalled();
   });
 
   test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THEN button is disabled", async () => {

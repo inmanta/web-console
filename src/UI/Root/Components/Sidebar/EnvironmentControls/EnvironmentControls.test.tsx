@@ -99,7 +99,9 @@ test("GIVEN EnvironmentControls WHEN rendered THEN it should be accessible", asy
     await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
   });
 
-  expect(await axe(container)).toHaveNoViolations();
+  await act(async () => {
+    expect(await axe(container)).toHaveNoViolations();
+  });
 });
 
 test("EnvironmentControls halt the environment when clicked and the environment is running", async () => {

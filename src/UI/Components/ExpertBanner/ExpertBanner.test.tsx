@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
@@ -99,9 +99,7 @@ describe("Given ExpertBanner", () => {
 
     await userEvent.click(screen.getByText("Disable expert mode"));
 
-    await waitFor(() => {
-      expect(screen.getByText("Something went wrong")).toBeVisible();
-    });
+    expect(screen.getByText("Something went wrong")).toBeVisible();
     expect(screen.getByText("Request or referenced resource does not exist")).toBeVisible();
 
     expect(screen.getByText("LSM expert mode is enabled, proceed with caution.")).toBeVisible();

@@ -4,7 +4,7 @@ import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers/Pagination/getPaginationHandlers";
 import { Notification, Severity } from "@S/Notification/Core/Domain";
 import { Origin } from "@S/Notification/Core/Utils";
-import { CustomError, useGet } from "../../helpers";
+import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**
@@ -87,7 +87,7 @@ export const useGetNotifications = (params: GetNotificationsParams): GetNotifica
           params.currentPage.value,
           params.origin,
         ],
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,

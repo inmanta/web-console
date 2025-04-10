@@ -4,7 +4,7 @@ import { DateRange } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
-import { CustomError, useGet } from "../../helpers";
+import { CustomError, REFETCH_INTERVAL, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 interface Filter {
@@ -73,7 +73,7 @@ export const useGetCompileReports = (params: CompileReportsParams): GetCompileRe
           params.currentPage,
         ],
         queryFn: () => get(url),
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),

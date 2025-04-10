@@ -84,7 +84,7 @@ describe("Scenario 6 : Resources", () => {
     // Expect 0/0 resources to be visible
     cy.get('[aria-label="Deployment state summary"]').should("contain", isIso ? "0 / 0" : "5 / 5");
     // Expect table to be empty in case of ISO project
-    isIso && cy.get('[aria-label="ResourcesView-Empty"]').should("to.be.visible");
+    isIso && cy.get('[aria-label="ResourcesPage-Empty"]').should("to.be.visible");
   });
 
   if (isIso) {
@@ -575,21 +575,21 @@ describe("Scenario 6 : Resources", () => {
 
       //Go to next page
       cy.get('[aria-label="Go to next page"]').first().click();
-      cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "21 - 40");
 
       //Go to last page
       cy.get('[aria-label="Go to next page"]').first().click();
-      cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "41 - 49");
 
       //Go to previous page
       cy.get('[aria-label="Go to previous page"]').first().click();
-      cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"

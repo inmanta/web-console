@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { CompileDetails } from "@/Slices/CompileDetails/Core/Domain";
-import { CustomError, useGet } from "../../helpers";
+import { CustomError, REFETCH_INTERVAL, useGet } from "../../helpers";
 
 interface CompileDetailsParams {
   id: string;
@@ -44,7 +44,7 @@ export const useGetCompileDetails = (params: CompileDetailsParams): GetCompileDe
       useQuery({
         queryKey: ["get_compile_details-continuous", params.id],
         queryFn: () => get(url),
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data) => data,
       }),
   };
