@@ -18,7 +18,10 @@ interface Props {
  * @returns {React.FC<Props>} A React Component displaying the attributes of a resource
  */
 export const AttributesTab: React.FC<Props> = ({ details }) => {
-  const classifier = new AttributeClassifier(new JsonFormatter(), new XmlFormatter());
+  const classifier = new AttributeClassifier(
+    new JsonFormatter(),
+    new XmlFormatter(),
+  );
 
   const classifiedAttributes = classifier.classify(details.attributes);
 

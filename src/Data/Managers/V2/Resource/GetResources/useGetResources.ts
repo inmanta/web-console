@@ -63,7 +63,13 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   return {
     useOneTime: (): UseQueryResult<GetResourcesResponse, Error> =>
       useQuery({
-        queryKey: ["get_resources-one_time", pageSize, filter, sort, currentPage],
+        queryKey: [
+          "get_resources-one_time",
+          pageSize,
+          filter,
+          sort,
+          currentPage,
+        ],
         queryFn: () => get(url),
         select: (data) => ({
           ...data,
@@ -72,7 +78,13 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
       }),
     useContinuous: (): UseQueryResult<GetResourcesResponse, Error> =>
       useQuery({
-        queryKey: ["get_resources-continuous", pageSize, filter, sort, currentPage],
+        queryKey: [
+          "get_resources-continuous",
+          pageSize,
+          filter,
+          sort,
+          currentPage,
+        ],
         queryFn: () => get(url),
         select: (data) => ({
           ...data,

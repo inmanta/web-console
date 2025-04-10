@@ -52,15 +52,19 @@ describe("ResourceLogsView", () => {
         delay(100);
 
         return HttpResponse.json(ResourceLogs.response);
-      })
+      }),
     );
     const { component } = setup();
 
     render(component);
 
-    expect(screen.getByRole("region", { name: "ResourceLogs-Loading" })).toBeVisible();
+    expect(
+      screen.getByRole("region", { name: "ResourceLogs-Loading" }),
+    ).toBeVisible();
 
-    expect(await screen.findByRole("grid", { name: "ResourceLogsTable" })).toBeVisible();
+    expect(
+      await screen.findByRole("grid", { name: "ResourceLogsTable" }),
+    ).toBeVisible();
 
     const rows = await screen.findAllByRole("rowgroup", {
       name: "ResourceLogRow",
@@ -80,7 +84,7 @@ describe("ResourceLogsView", () => {
         }
 
         return HttpResponse.json(ResourceLogs.response);
-      })
+      }),
     );
     const { component } = setup();
 
@@ -118,7 +122,7 @@ describe("ResourceLogsView", () => {
             page_size: 100,
           },
         });
-      })
+      }),
     );
     const { component } = setup();
 

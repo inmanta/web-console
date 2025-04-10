@@ -9,7 +9,13 @@ import { GetResourceLogsParams } from "./useGetResourceLogs";
  * @param {GetResourceLogsParams} params - The query parameters
  * @returns {string} The constructed URL
  */
-export function getUrl({ id, sort, filter, pageSize, currentPage }: GetResourceLogsParams): string {
+export function getUrl({
+  id,
+  sort,
+  filter,
+  pageSize,
+  currentPage,
+}: GetResourceLogsParams): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(

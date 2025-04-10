@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router";
 import { Router } from "react-router-dom";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -11,7 +11,6 @@ import { setupServer } from "msw/node";
 import { FlatEnvironment, RemoteData } from "@/Core";
 import { AuthProvider, getStoreInstance, KeycloakAuthConfig, LocalConfig } from "@/Data";
 import { AuthTestWrapper, Environment, dependencies } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
@@ -22,6 +21,7 @@ const setup = (
   config: KeycloakAuthConfig | LocalConfig | undefined = undefined,
   environments: FlatEnvironment[] = Environment.filterable
 ) => {
+  const queryClient = new QueryClient();
   const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
   const store = getStoreInstance();
 
@@ -42,7 +42,7 @@ const setup = (
           },
         ]}
       >
-        <QueryClientProvider client={testClient}>
+        <QueryClientProvider client={queryClient}>
           <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
             <StoreProvider store={store}>
               <AuthProvider config={config}>

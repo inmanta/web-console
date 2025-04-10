@@ -1,6 +1,6 @@
 import React, { act } from "react";
 import { useLocation } from "react-router-dom";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
@@ -9,7 +9,6 @@ import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { Service, dependencies } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
@@ -27,6 +26,13 @@ const axe = configureAxe({
 
 function setup() {
   const store = getStoreInstance();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
 
   const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
 
@@ -49,7 +55,7 @@ function setup() {
   history.push("/?env=aaa");
 
   const component = (
-    <QueryClientProvider client={testClient}>
+    <QueryClientProvider client={queryClient}>
       <CustomRouter history={history}>
         {" "}
         <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>

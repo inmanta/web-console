@@ -13,7 +13,10 @@ interface Props {
 
 export const Summary: React.FC<Props> = ({ data, updateFilter }) => (
   <>
-    <StretchedToolbarItem summary={data.metadata.deploy_summary} updateFilter={updateFilter} />
+    <StretchedToolbarItem
+      summary={data.metadata.deploy_summary}
+      updateFilter={updateFilter}
+    />
     <ToolbarItem>
       <DeployButton />
     </ToolbarItem>

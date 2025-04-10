@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
+import {
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGetResources } from "@/Data/Managers/V2/Resource/GetResources/useGetResources";
 import {
@@ -17,7 +21,9 @@ import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { Summary } from "./Summary";
 
 const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => (
-  <PageContainer pageTitle={words("inventory.tabs.resources")}>{children}</PageContainer>
+  <PageContainer pageTitle={words("inventory.tabs.resources")}>
+    {children}
+  </PageContainer>
 );
 
 export const Page: React.FC = () => {
@@ -27,17 +33,20 @@ export const Page: React.FC = () => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Resources",
   });
-  const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterWithDefaultHandling>({
-    route: "Resources",
-    keys: { disregardDefault: "Boolean" },
-  });
+  const [filter, setFilter] =
+    useUrlStateWithFilter<Resource.FilterWithDefaultHandling>({
+      route: "Resources",
+      keys: { disregardDefault: "Boolean" },
+    });
   const [sort, setSort] = useUrlStateWithSort<Resource.SortKey>({
     default: { name: "resource_type", order: "asc" },
     route: "Resources",
   });
 
   const filterWithDefaults =
-    !filter.disregardDefault && !filter.status ? { ...filter, status: ["!orphaned"] } : filter;
+    !filter.disregardDefault && !filter.status
+      ? { ...filter, status: ["!orphaned"] }
+      : filter;
 
   const { data, isSuccess, isError, refetch, error } = useGetResources({
     pageSize,
@@ -52,11 +61,18 @@ export const Page: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
-  const updateFilter = (updater: (filter: Resource.Filter) => Resource.Filter): void =>
-    setFilter(updater(filterWithDefaults));
+  const updateFilter = (
+    updater: (filter: Resource.Filter) => Resource.Filter,
+  ): void => setFilter(updater(filterWithDefaults));
 
   if (isError) {
-    return <ErrorView message={error.message} ariaLabel="ResourcesPage-Error" retry={refetch} />;
+    return (
+      <ErrorView
+        message={error.message}
+        ariaLabel="ResourcesPage-Error"
+        retry={refetch}
+      />
+    );
   }
 
   if (isSuccess) {
@@ -76,7 +92,10 @@ export const Page: React.FC = () => {
           setFilter={setFilter}
         />
         {data.data.length <= 0 ? (
-          <EmptyView message={words("resources.empty.message")} aria-label="ResourcesPage-Empty" />
+          <EmptyView
+            message={words("resources.empty.message")}
+            aria-label="ResourcesPage-Empty"
+          />
         ) : (
           <>
             <ResourcesTableProvider

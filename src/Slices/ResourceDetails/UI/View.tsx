@@ -34,12 +34,17 @@ export const View: React.FC<Props> = ({ id }) => {
     route: "ResourceDetails",
   });
 
-  const { data, isSuccess, isError, error, refetch } = useGetResourceDetails().useContinuous(id);
+  const { data, isSuccess, isError, error, refetch } =
+    useGetResourceDetails().useContinuous(id);
 
   if (isError) {
     return (
       <PageContainer pageTitle={words("resources.details.title")}>
-        <ErrorView message={error.message} ariaLabel="ResourceDetails-Error" retry={refetch} />
+        <ErrorView
+          message={error.message}
+          ariaLabel="ResourceDetails-Error"
+          retry={refetch}
+        />
       </PageContainer>
     );
   }
@@ -55,7 +60,10 @@ export const View: React.FC<Props> = ({ id }) => {
             <Description>{id}</Description>
           </FlexItem>
           <FlexItem>
-            <ResourceStatusLabel status={labelColorConfig[data.status]} label={data.status} />
+            <ResourceStatusLabel
+              status={labelColorConfig[data.status]}
+              label={data.status}
+            />
           </FlexItem>
         </Flex>
 

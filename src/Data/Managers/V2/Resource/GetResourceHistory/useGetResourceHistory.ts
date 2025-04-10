@@ -50,7 +50,9 @@ interface GetResourceHistory {
  * @returns {UseQueryResult<ResourceHistoryResponse, Error>} returns.useOneTime - Fetch the resource history with a single query
  * @returns {UseQueryResult<ResourceHistoryResponse, Error>} returns.useContinuous - Fetch the resource history with a recurrent query with an interval of 5s
  */
-export const useGetResourceHistory = (params: GetResourceHistoryParams): GetResourceHistory => {
+export const useGetResourceHistory = (
+  params: GetResourceHistoryParams,
+): GetResourceHistory => {
   const { id, pageSize, sort, currentPage } = params;
   const url = getUrl({
     id,
@@ -63,7 +65,13 @@ export const useGetResourceHistory = (params: GetResourceHistoryParams): GetReso
   return {
     useOneTime: (): UseQueryResult<ResourceHistoryResponse, Error> =>
       useQuery({
-        queryKey: ["get_resource_history-one_time", id, pageSize, sort, currentPage],
+        queryKey: [
+          "get_resource_history-one_time",
+          id,
+          pageSize,
+          sort,
+          currentPage,
+        ],
         queryFn: () => get(url),
         select: (data) => ({
           ...data,
@@ -72,7 +80,13 @@ export const useGetResourceHistory = (params: GetResourceHistoryParams): GetReso
       }),
     useContinuous: (): UseQueryResult<ResourceHistoryResponse, Error> =>
       useQuery({
-        queryKey: ["get_resource_history-continuous", id, pageSize, sort, currentPage],
+        queryKey: [
+          "get_resource_history-continuous",
+          id,
+          pageSize,
+          sort,
+          currentPage,
+        ],
         queryFn: () => get(url),
         select: (data) => ({
           ...data,

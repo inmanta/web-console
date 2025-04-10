@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -19,7 +19,6 @@ import {
 import { getStoreInstance, QueryResolverImpl, QueryManagerResolverImpl } from "@/Data";
 import * as Test from "@/Test";
 import { DeferredApiHelper, StaticScheduler, dependencies } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
 import { words } from "@/UI/words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
@@ -93,7 +92,9 @@ const setup = (
 };
 
 function createQueryWrapper(children: React.ReactNode) {
-  return <QueryClientProvider client={testClient}>{children}</QueryClientProvider>;
+  const queryClient = new QueryClient();
+
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 const server = setupServer();
 

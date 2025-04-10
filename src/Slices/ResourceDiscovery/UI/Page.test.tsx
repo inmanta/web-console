@@ -1,7 +1,7 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -10,16 +10,20 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as DiscoveredResources from "../Data/Mock";
 import { DiscoveredResourcesPage } from ".";
-
 expect.extend(toHaveNoViolations);
 
 function setup() {
-  const client = testClient;
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   const store = getStoreInstance();
 
   const component = (
@@ -52,7 +56,7 @@ describe("DiscoveredResourcesPage", () => {
     server.use(
       http.get("/api/v2/discovered", () => {
         return HttpResponse.json(DiscoveredResources.response);
-      })
+      }),
     );
 
     const { component } = setup();
@@ -67,7 +71,7 @@ describe("DiscoveredResourcesPage", () => {
     expect(
       within(rows[0]).getByRole("cell", {
         name: "vcenter::VirtualMachine[lab,name=acisim]",
-      })
+      }),
     ).toBeVisible();
 
     // with correct uri to managed resource
@@ -79,7 +83,7 @@ describe("DiscoveredResourcesPage", () => {
 
     expect(within(rowWithManagedResource).getByRole("link")).toHaveAttribute(
       "href",
-      "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D"
+      "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D",
     );
 
     // with correct uri to discovery resource
@@ -91,20 +95,32 @@ describe("DiscoveredResourcesPage", () => {
 
     expect(within(rowWithDiscoveryResource).getByRole("link")).toHaveAttribute(
       "href",
-      "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D"
+      "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D",
     );
 
     // uri is null
-    expect(within(rows[1]).getByTestId("Managed resource")).toHaveTextContent("");
-    expect(within(rows[1]).getByTestId("Discovery resource")).toHaveTextContent("");
+    expect(within(rows[1]).getByTestId("Managed resource")).toHaveTextContent(
+      "",
+    );
+    expect(within(rows[1]).getByTestId("Discovery resource")).toHaveTextContent(
+      "",
+    );
 
     // uri doesn't have a rid
-    expect(within(rows[2]).getByTestId("Managed resource")).toHaveTextContent("");
-    expect(within(rows[2]).getByTestId("Discovery resource")).toHaveTextContent("");
+    expect(within(rows[2]).getByTestId("Managed resource")).toHaveTextContent(
+      "",
+    );
+    expect(within(rows[2]).getByTestId("Discovery resource")).toHaveTextContent(
+      "",
+    );
 
     // uri is an empty string
-    expect(within(rows[3]).getByTestId("Managed resource")).toHaveTextContent("");
-    expect(within(rows[3]).getByTestId("Discovery resource")).toHaveTextContent("");
+    expect(within(rows[3]).getByTestId("Managed resource")).toHaveTextContent(
+      "",
+    );
+    expect(within(rows[3]).getByTestId("Discovery resource")).toHaveTextContent(
+      "",
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -124,7 +140,7 @@ describe("DiscoveredResourcesPage", () => {
         }
 
         return HttpResponse.json(DiscoveredResources.response);
-      })
+      }),
     );
 
     const { component } = setup();
@@ -142,7 +158,7 @@ describe("DiscoveredResourcesPage", () => {
     expect(
       within(rows[0]).getByRole("cell", {
         name: "vcenter::VirtualMachine[lab,name=acisim]",
-      })
+      }),
     ).toBeVisible();
 
     expect(resourceIdButton).toBeVisible();
@@ -157,7 +173,7 @@ describe("DiscoveredResourcesPage", () => {
     expect(
       within(sortedRows[16]).getByRole("cell", {
         name: "vcenter::VirtualMachine[lab,name=acisim]",
-      })
+      }),
     ).toBeVisible();
 
     await act(async () => {
@@ -190,7 +206,7 @@ describe("DiscoveredResourcesPage", () => {
             next: "/fake-link?end=fake-first-param",
           },
         });
-      })
+      }),
     );
     const { component } = setup();
 

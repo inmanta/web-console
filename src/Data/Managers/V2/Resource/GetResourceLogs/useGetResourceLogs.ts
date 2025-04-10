@@ -2,7 +2,10 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers/Pagination/getPaginationHandlers";
-import { ResourceLog, ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
+import {
+  ResourceLog,
+  ResourceLogFilter,
+} from "@S/ResourceDetails/Core/ResourceLog";
 import { useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
@@ -51,7 +54,9 @@ interface GetResourceLogs {
  * @returns {UseQueryResult<ResourceLogsResponse, Error>} returns.useOneTime - Fetch the resource logs with a single query
  * @returns {UseQueryResult<ResourceLogsResponse, Error>} returns.useContinuous - Fetch the resource logs with a recurrent query with an interval of 5s
  */
-export const useGetResourceLogs = (params: GetResourceLogsParams): GetResourceLogs => {
+export const useGetResourceLogs = (
+  params: GetResourceLogsParams,
+): GetResourceLogs => {
   const { id, filter, pageSize, sort, currentPage } = params;
   const url = getUrl({
     id,
@@ -65,7 +70,14 @@ export const useGetResourceLogs = (params: GetResourceLogsParams): GetResourceLo
   return {
     useOneTime: (): UseQueryResult<ResourceLogsResponse, Error> =>
       useQuery({
-        queryKey: ["get_resource_logs-one_time", id, pageSize, filter, sort, currentPage],
+        queryKey: [
+          "get_resource_logs-one_time",
+          id,
+          pageSize,
+          filter,
+          sort,
+          currentPage,
+        ],
         queryFn: () => get(url),
         select: (data) => ({
           ...data,
@@ -74,7 +86,14 @@ export const useGetResourceLogs = (params: GetResourceLogsParams): GetResourceLo
       }),
     useContinuous: (): UseQueryResult<ResourceLogsResponse, Error> =>
       useQuery({
-        queryKey: ["get_resource_logs-continuous", id, pageSize, filter, sort, currentPage],
+        queryKey: [
+          "get_resource_logs-continuous",
+          id,
+          pageSize,
+          filter,
+          sort,
+          currentPage,
+        ],
         queryFn: () => get(url),
         select: (data) => ({
           ...data,

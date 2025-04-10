@@ -18,6 +18,9 @@ export const RequiresTab: React.FC<Props> = ({ details }) => {
   }
 
   return (
-    <RequiresTable aria-label="ResourceRequires-Success" requiresStatus={details.requires_status} />
+    <RequiresTable
+      aria-label="ResourceRequires-Success"
+      requiresStatus={details.requires_status}
+    />
   );
 };

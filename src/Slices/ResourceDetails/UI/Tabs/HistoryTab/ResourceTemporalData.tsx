@@ -18,13 +18,17 @@ const datePresenter = new MomentDatePresenter();
 export const ResourceTemporalData: React.FC<Props> = ({ details }) => (
   <DescriptionList isHorizontal aria-label="ResourceTemporalData-Success">
     <DescriptionListGroup>
-      <DescriptionListTerm>{words("resources.info.lastDeploy")}</DescriptionListTerm>
+      <DescriptionListTerm>
+        {words("resources.info.lastDeploy")}
+      </DescriptionListTerm>
       <DescriptionListDescription>
         {details.last_deploy ? datePresenter.getFull(details.last_deploy) : ""}
       </DescriptionListDescription>
     </DescriptionListGroup>
     <DescriptionListGroup>
-      <DescriptionListTerm>{words("resources.info.firstTime")}</DescriptionListTerm>
+      <DescriptionListTerm>
+        {words("resources.info.firstTime")}
+      </DescriptionListTerm>
       <DescriptionListDescription>
         {datePresenter.getFull(details.first_generated_time)}
       </DescriptionListDescription>
