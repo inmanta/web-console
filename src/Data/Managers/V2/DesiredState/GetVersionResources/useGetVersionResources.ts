@@ -53,21 +53,18 @@ export const useGetVersionResources = ({
   currentPage,
 }: GetVersionResourcesParams): GetVersionResources => {
   const get = useGet()<Result>;
-
+  const url = getUrl({
+    version,
+    pageSize,
+    filter,
+    sort,
+    currentPage,
+  });
   return {
     useOneTime: (): UseQueryResult<QueryResponse, Error> =>
       useQuery({
         queryKey: ["get_version_resources-one_time", version, pageSize, filter, sort, currentPage],
-        queryFn: () =>
-          get(
-            getUrl({
-              version,
-              pageSize,
-              filter,
-              sort,
-              currentPage,
-            })
-          ),
+        queryFn: () => get(url),
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
@@ -83,16 +80,7 @@ export const useGetVersionResources = ({
           sort,
           currentPage,
         ],
-        queryFn: () =>
-          get(
-            getUrl({
-              version,
-              pageSize,
-              filter,
-              sort,
-              currentPage,
-            })
-          ),
+        queryFn: () => get(url),
         refetchInterval: 5000,
         select: (data) => ({
           ...data,
