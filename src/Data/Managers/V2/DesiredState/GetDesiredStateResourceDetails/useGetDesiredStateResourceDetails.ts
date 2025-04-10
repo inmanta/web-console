@@ -26,7 +26,7 @@ interface GetDesiredStateResourceDetails {
  */
 export const useGetDesiredStateResourceDetails = (
   version: string,
-  id: string,
+  id: string
 ): GetDesiredStateResourceDetails => {
   const get = useGet({})<Result>;
 
@@ -39,11 +39,7 @@ export const useGetDesiredStateResourceDetails = (
       }),
     useContinuous: (): UseQueryResult<Resource.VersionedDetails, Error> =>
       useQuery({
-        queryKey: [
-          "get_desired_state_resource_details-continuous",
-          version,
-          id,
-        ],
+        queryKey: ["get_desired_state_resource_details-continuous", version, id],
         queryFn: () => get(getUrl(version, id)),
         refetchInterval: 5000,
         select: (data) => data.data,

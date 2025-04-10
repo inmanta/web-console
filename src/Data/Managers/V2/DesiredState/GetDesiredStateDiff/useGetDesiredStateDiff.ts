@@ -13,14 +13,8 @@ interface Result {
  * Return signature of the useGetDesiredStateDiff React Query hook
  */
 interface GetDesiredStateDiff {
-  useOneTime: (
-    from: string,
-    to: string,
-  ) => UseQueryResult<Diff.Resource[], Error>;
-  useContinuous: (
-    from: string,
-    to: string,
-  ) => UseQueryResult<Diff.Resource[], Error>;
+  useOneTime: (from: string, to: string) => UseQueryResult<Diff.Resource[], Error>;
+  useContinuous: (from: string, to: string) => UseQueryResult<Diff.Resource[], Error>;
 }
 
 /**
@@ -34,19 +28,13 @@ export const useGetDesiredStateDiff = (): GetDesiredStateDiff => {
   const get = useGet()<Result>;
 
   return {
-    useOneTime: (
-      from: string,
-      to: string,
-    ): UseQueryResult<Diff.Resource[], Error> =>
+    useOneTime: (from: string, to: string): UseQueryResult<Diff.Resource[], Error> =>
       useQuery({
         queryKey: ["get_desired_state_diff-one_time", from, to],
         queryFn: () => get(getUrl(from, to)),
         select: (data) => data.data,
       }),
-    useContinuous: (
-      from: string,
-      to: string,
-    ): UseQueryResult<Diff.Resource[], Error> =>
+    useContinuous: (from: string, to: string): UseQueryResult<Diff.Resource[], Error> =>
       useQuery({
         queryKey: ["get_desired_state_diff-continuous", from, to],
         queryFn: () => get(getUrl(from, to)),

@@ -57,14 +57,7 @@ export const useGetVersionResources = ({
   return {
     useOneTime: (): UseQueryResult<QueryResponse, Error> =>
       useQuery({
-        queryKey: [
-          "get_version_resources-one_time",
-          version,
-          pageSize,
-          filter,
-          sort,
-          currentPage,
-        ],
+        queryKey: ["get_version_resources-one_time", version, pageSize, filter, sort, currentPage],
         queryFn: () =>
           get(
             getUrl({
@@ -73,7 +66,7 @@ export const useGetVersionResources = ({
               filter,
               sort,
               currentPage,
-            }),
+            })
           ),
         select: (data) => ({
           ...data,
@@ -98,7 +91,7 @@ export const useGetVersionResources = ({
               filter,
               sort,
               currentPage,
-            }),
+            })
           ),
         refetchInterval: 5000,
         select: (data) => ({
