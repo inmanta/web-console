@@ -92,7 +92,7 @@ describe("MarkdownPreviewer", () => {
 
     render(setup());
 
-    // Wait for t  load
+    // Wait for the content to load
     await waitFor(() => {
       // The code editor should be visible
       const codeEditor = screen.getByTestId("code-editor");
