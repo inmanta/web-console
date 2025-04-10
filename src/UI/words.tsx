@@ -42,6 +42,9 @@ const dict = {
   password: "Password",
   "load.previous": "Load previous",
   "load.next": "Load next",
+  copy: "Copy",
+  "copy.raw": "Copy raw",
+  "copy.raw.tooltip": "Copy with escaped newlines",
 
   /**
    * Error related text
@@ -78,7 +81,6 @@ const dict = {
    */
   "id.copy": "Copy full service instance id to clipboard",
   "serviceIdentity.copy": "Copy identifier to clipboard",
-  copy: "Copy",
   "copy.feedback": "Copied to clipboard",
   "attributes.active": "Active Attributes",
   "attributes.candidate": "Candidate Attributes",
@@ -851,7 +853,7 @@ const dict = {
    */
   "markdownPreviewer.hint.title": "Preview Only",
   "markdownPreviewer.hint.body":
-    "This editor is for preview purposes only. Changes made here will not be saved. To make permanent changes, please update the documentation attribute(s) in the service instance.",
+    "This editor is for preview purposes only. Changes made here will not be saved into the service attributes.",
   "markdownPreviewer.pageTitle": (service: string, instance: string) =>
     `Markdown Preview: ${service} - ${instance}`,
   "markdownPreviewer.download.tooltip": "Download markdown file",

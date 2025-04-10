@@ -1,6 +1,6 @@
 import React from "react";
 import { CodeEditorControl } from "@patternfly/react-code-editor";
-import { CopyIcon, DownloadIcon } from "@patternfly/react-icons";
+import { CopyIcon, DownloadIcon, CodeIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -31,6 +31,16 @@ const handleDownload = (code: string, service: string, instance: string) => {
 };
 
 /**
+ * Escapes newlines in a string by replacing them with \n
+ *
+ * @param {string} text - The string to escape
+ * @returns {string} The string with escaped newlines
+ */
+export const escapeNewlines = (text: string): string => {
+  return text.replace(/\n/g, "\\n");
+};
+
+/**
  * The CodeEditorControls Component
  *
  * @props {Props} props - The props of the component.
@@ -48,6 +58,14 @@ export const CodeEditorControls: React.FC<Props> = ({ code, service, instance })
         tooltipProps={{ content: words("copy") }}
         onClick={() => {
           navigator.clipboard.writeText(code);
+        }}
+      />
+      <CodeEditorControl
+        icon={<CodeIcon />}
+        aria-label={words("copy.raw")}
+        tooltipProps={{ content: words("copy.raw.tooltip") }}
+        onClick={() => {
+          navigator.clipboard.writeText(escapeNewlines(code));
         }}
       />
       <CodeEditorControl
