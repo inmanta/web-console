@@ -35,9 +35,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
 import { ConfigSectionContent } from "./ConfigSectionContent";
 
-function setup(
-  environmentModifier: EnvironmentModifier = new MockEnvironmentModifier(),
-) {
+function setup(environmentModifier: EnvironmentModifier = new MockEnvironmentModifier()) {
   const client = new QueryClient();
   const store = getStoreInstance();
 
@@ -61,10 +59,7 @@ function setup(
             <InstanceDetailsContext.Provider
               value={{
                 instance: ServiceInstance.a,
-                logsQuery: {} as unknown as UseInfiniteQueryResult<
-                  InstanceLog[],
-                  Error
-                >,
+                logsQuery: {} as unknown as UseInfiniteQueryResult<InstanceLog[], Error>,
                 serviceModelQuery: {
                   data: Service.a,
                   isLoading: false,
@@ -73,9 +68,7 @@ function setup(
                 } as UseQueryResult<ServiceModel, Error>,
               }}
             >
-              <ConfigSectionContent
-                serviceInstanceIdentifier={instanceIdentifier}
-              />
+              <ConfigSectionContent serviceInstanceIdentifier={instanceIdentifier} />
             </InstanceDetailsContext.Provider>
           </StoreProvider>
         </DependencyProvider>
@@ -97,14 +90,11 @@ let data = {
 
 describe("ConfigSectionContent", () => {
   const server = setupServer(
-    http.get(
-      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
-      () => {
-        return HttpResponse.json({
-          data,
-        });
-      },
-    ),
+    http.get("/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config", () => {
+      return HttpResponse.json({
+        data,
+      });
+    })
   );
 
   beforeAll(() => {
@@ -133,9 +123,7 @@ describe("ConfigSectionContent", () => {
 
     expect(resetButton).toBeVisible();
 
-    expect(
-      screen.getByRole("switch", { name: "auto_creating-False" }),
-    ).toBeVisible();
+    expect(screen.getByRole("switch", { name: "auto_creating-False" })).toBeVisible();
 
     await userEvent.click(resetButton, { skipHover: true });
 
@@ -149,11 +137,9 @@ describe("ConfigSectionContent", () => {
           auto_update_designed: true,
           auto_update_inprogress: true,
         },
-      },
+      }
     );
-    expect(
-      await screen.findByRole("switch", { name: "auto_creating-True" }),
-    ).toBeVisible();
+    expect(await screen.findByRole("switch", { name: "auto_creating-True" })).toBeVisible();
   });
 
   test("ConfigTab can change 1 toggle", async () => {
@@ -190,7 +176,7 @@ describe("ConfigSectionContent", () => {
         values: {
           auto_designed: false,
         },
-      },
+      }
     );
   });
 

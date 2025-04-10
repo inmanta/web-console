@@ -22,10 +22,7 @@ interface Props {
  * @param showTotal boolean
  * @returns ReactNode
  */
-export const OrderProgressBar: React.FC<Props> = ({
-  serviceOrderItems,
-  showTotal = false,
-}) => {
+export const OrderProgressBar: React.FC<Props> = ({ serviceOrderItems, showTotal = false }) => {
   const done = getTotalDoneState(serviceOrderItems || []);
 
   return (
@@ -61,40 +58,30 @@ const getTotalDoneState = (items: ServiceOrderItem[]) => {
  * @param items ServiceOrderItem[]
  * @returns LegendItemDetails[]
  */
-const fromProgressToItems = (
-  items: ServiceOrderItem[],
-): LegendItemDetails[] => {
+const fromProgressToItems = (items: ServiceOrderItem[]): LegendItemDetails[] => {
   return [
     {
       id: "acknowledged",
       label: words("orders.status.acknowledged"),
-      value: Number(
-        items.filter((item) => item.status.state === "acknowledged").length,
-      ),
+      value: Number(items.filter((item) => item.status.state === "acknowledged").length),
       backgroundColor: t_global_icon_color_status_success_default.var,
     },
     {
       id: "failed",
       label: words("orders.status.failed"),
-      value: Number(
-        items.filter((item) => item.status.state === "failed").length,
-      ),
+      value: Number(items.filter((item) => item.status.state === "failed").length),
       backgroundColor: t_global_icon_color_status_danger_default.var,
     },
     {
       id: "completed",
       label: words("orders.status.completed"),
-      value: Number(
-        items.filter((item) => item.status.state === "completed").length,
-      ),
+      value: Number(items.filter((item) => item.status.state === "completed").length),
       backgroundColor: t_global_icon_color_status_success_default.var,
     },
     {
       id: "in_progress",
       label: words("orders.status.in_progress"),
-      value: Number(
-        items.filter((item) => item.status.state === "in_progress").length,
-      ),
+      value: Number(items.filter((item) => item.status.state === "in_progress").length),
       backgroundColor: t_global_color_brand_default.var,
     },
   ].filter((item) => item.value > 0);

@@ -1,9 +1,5 @@
 import { PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
-import {
-  MockEnvironmentHandler,
-  MockFeatureManager,
-  MockFileManager,
-} from "@/Test/Mock";
+import { MockEnvironmentHandler, MockFeatureManager, MockFileManager } from "@/Test/Mock";
 import { PrimaryRouteManager, EnvironmentModifierImpl } from "@/UI";
 import { UrlManagerImpl } from "@/UI/Utils";
 

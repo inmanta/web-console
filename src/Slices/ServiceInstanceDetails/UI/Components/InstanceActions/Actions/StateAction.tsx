@@ -46,19 +46,15 @@ export const StateAction: React.FC<Props> = ({
 
   const { authHelper } = useContext(DependencyContext);
 
-  const { mutate, isPending } = usePostStateTransfer(
-    instance_id,
-    service_entity,
-    {
-      onSuccess: () => {
-        closeModal();
-      },
-      onError: (error) => {
-        setErrorMessage(error.message);
-        closeModal();
-      },
+  const { mutate, isPending } = usePostStateTransfer(instance_id, service_entity, {
+    onSuccess: () => {
+      closeModal();
     },
-  );
+    onError: (error) => {
+      setErrorMessage(error.message);
+      closeModal();
+    },
+  });
 
   /**
    * When a state is selected, block the interface, open the modal,
@@ -69,10 +65,7 @@ export const StateAction: React.FC<Props> = ({
   const onSelect = (value: string) => {
     setTargetState(value);
     setConfirmationText(
-      words("inventory.statustab.confirmMessage")(
-        instance_display_identity,
-        value,
-      ),
+      words("inventory.statustab.confirmMessage")(instance_display_identity, value)
     );
 
     setInterfaceBlocked(true);

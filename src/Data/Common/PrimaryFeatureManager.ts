@@ -4,15 +4,12 @@ import {
   Extention,
   JsonParserId,
   Logger,
-  RemoteData,
   ServerStatus,
-  StateHelper,
   StatusLicense,
   EXTENSION_LIST,
   FEATURE_LIST,
 } from "@/Core";
 import { VoidLogger } from "./VoidLogger";
-import { useGetServerStatus } from "../Managers/V2/Server/GetServerStatus";
 import { useState } from "react";
 
 /**
@@ -32,10 +29,10 @@ export const PrimaryFeatureManager = (
   logger: Logger = new VoidLogger(),
   jsonParserId: JsonParserId = "Native",
   commitHash: string = "",
-  appVersion: string = "",
+  appVersion: string = ""
 ): FeatureManager => {
   logger.log(
-    `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`,
+    `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
   );
   const [serverStatus, setServerStatus] = useState<ServerStatus | null>(null);
   /**
@@ -59,9 +56,9 @@ export const PrimaryFeatureManager = (
   }
 
   function get(): ServerStatus {
-    // if (!serverStatus) {
-    //   throw new Error("ServerStatus has not yet been set.");
-    // }
+    if (!serverStatus) {
+      throw new Error("ServerStatus has not yet been set.");
+    }
 
     return serverStatus;
   }
@@ -95,7 +92,7 @@ export const PrimaryFeatureManager = (
    */
   function isLicencedFeatureEnabled(featureSlice: Feature): boolean {
     return get().features.some(
-      (feature) => feature.slice === featureSlice && feature.value === true,
+      (feature) => feature.slice === featureSlice && feature.value === true
     );
   }
 
@@ -184,7 +181,7 @@ export const PrimaryFeatureManager = (
   function getLicenseInformation(): StatusLicense | undefined {
     const serverStatus = get();
     const licenceInformation = serverStatus.slices.find(
-      (slice) => slice.name === "license.license",
+      (slice) => slice.name === "license.license"
     );
 
     return licenceInformation?.status;

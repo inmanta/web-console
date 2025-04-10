@@ -15,5 +15,8 @@ export interface EnvironmentHandler {
    * @throws error when there is no environment defined
    */
   useId(): string;
-  determineSelected(search: string): FlatEnvironment | undefined;
+  determineSelected(
+    allEnvironments: RemoteData.Type<string, FlatEnvironment[]>,
+    search: string
+  ): FlatEnvironment | undefined;
 }

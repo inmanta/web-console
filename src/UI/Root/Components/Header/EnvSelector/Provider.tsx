@@ -29,6 +29,7 @@ export const Provider: React.FC = () => {
 
       return;
     }
+
     const newLocation = {
       ...location,
       pathname: featureManager.isLsmEnabled()

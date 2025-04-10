@@ -17,10 +17,7 @@ interface Props {
  *
  * @returns DiscoveredResourceLink component
  */
-export const DiscoveredResourceLink: React.FC<Props> = ({
-  resourceUri,
-  type,
-}) => {
+export const DiscoveredResourceLink: React.FC<Props> = ({ resourceUri, type }) => {
   if (!resourceUri) {
     return <></>;
   }
@@ -32,10 +29,7 @@ export const DiscoveredResourceLink: React.FC<Props> = ({
   }
 
   return (
-    <ResourceLink
-      resourceId={rid}
-      linkText={words(`discovered_resources.show_resource.${type}`)}
-    />
+    <ResourceLink resourceId={rid} linkText={words(`discovered_resources.show_resource.${type}`)} />
   );
 };
 

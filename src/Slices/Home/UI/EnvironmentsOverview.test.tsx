@@ -33,16 +33,12 @@ it.each`
     const initialCards = await screen.findAllByTestId("Environment card");
 
     expect(initialCards).toHaveLength(4);
-    const input = await screen.findByPlaceholderText(
-      words("home.filters.env.placeholder"),
-    );
+    const input = await screen.findByPlaceholderText(words("home.filters.env.placeholder"));
 
     await userEvent.type(input, filterValue);
 
-    expect(screen.queryAllByTestId("Environment card")).toHaveLength(
-      numberOfResults,
-    );
-  },
+    expect(screen.queryAllByTestId("Environment card")).toHaveLength(numberOfResults);
+  }
 );
 
 test("Given environments overview When filtering by project Then only the matching environments should be rendered", async () => {
@@ -53,9 +49,7 @@ test("Given environments overview When filtering by project Then only the matchi
 
   expect(initialCards).toHaveLength(4);
 
-  const input = await screen.findByPlaceholderText(
-    words("home.filters.project.placeholder"),
-  );
+  const input = await screen.findByPlaceholderText(words("home.filters.project.placeholder"));
 
   await userEvent.click(input);
 
@@ -74,7 +68,7 @@ test("Given environments overview When filtering by name and project Then only t
 
   expect(initialCards).toHaveLength(4);
   const projectInput = await screen.findByPlaceholderText(
-    words("home.filters.project.placeholder"),
+    words("home.filters.project.placeholder")
   );
 
   await userEvent.click(projectInput);
@@ -83,9 +77,7 @@ test("Given environments overview When filtering by name and project Then only t
 
   await userEvent.click(option);
 
-  const nameInput = await screen.findByPlaceholderText(
-    words("home.filters.env.placeholder"),
-  );
+  const nameInput = await screen.findByPlaceholderText(words("home.filters.env.placeholder"));
 
   await userEvent.type(nameInput, "test");
 

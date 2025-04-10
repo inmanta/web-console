@@ -64,7 +64,7 @@ describe("CreateInstance", () => {
             page_size: 250,
           },
         });
-      }),
+      })
     );
   });
 
@@ -104,35 +104,32 @@ describe("CreateInstance", () => {
     });
 
     await userEvent.click(screen.getByText(words("confirm")));
-    expect(postMock).toHaveBeenCalledWith(
-      `/lsm/v1/service_inventory/${Service.a.name}`,
-      {
-        attributes: {
-          bandwidth: "2",
-          circuits: [
-            {
-              csp_endpoint: {
-                attributes: "",
-                cloud_service_provider: "",
-                ipx_access: null,
-                region: "",
-              },
-              customer_endpoint: {
-                encapsulation: "",
-                inner_vlan: null,
-                ipx_access: null,
-                outer_vlan: null,
-              },
-              service_id: null,
+    expect(postMock).toHaveBeenCalledWith(`/lsm/v1/service_inventory/${Service.a.name}`, {
+      attributes: {
+        bandwidth: "2",
+        circuits: [
+          {
+            csp_endpoint: {
+              attributes: null,
+              cloud_service_provider: "",
+              ipx_access: null,
+              region: "",
             },
-          ],
-          customer_locations: "5",
-          iso_release: "",
-          network: "local",
-          order_id: "12347007",
-        },
+            customer_endpoint: {
+              encapsulation: "",
+              inner_vlan: null,
+              ipx_access: null,
+              outer_vlan: null,
+            },
+            service_id: null,
+          },
+        ],
+        customer_locations: "5",
+        iso_release: "",
+        network: "local",
+        order_id: "12347007",
       },
-    );
+    });
   });
 
   //TODO: Fix the test scenario
@@ -191,166 +188,114 @@ describe("CreateInstance", () => {
     });
 
     //check if direct attributes have correct default value
-    expect(screen.queryByLabelText("TextInput-string")).toHaveValue(
-      "default_string",
-    );
-    expect(screen.queryByLabelText("TextInput-editableString")).toHaveValue(
-      "default_string",
-    );
-    expect(screen.queryByLabelText("TextInput-string?")).toHaveValue(
-      "default_string",
-    );
-    expect(screen.queryByLabelText("TextInput-editableString?")).toHaveValue(
-      "default_string",
-    );
+    expect(screen.queryByLabelText("TextInput-string")).toHaveValue("default_string");
+    expect(screen.queryByLabelText("TextInput-editableString")).toHaveValue("default_string");
+    expect(screen.queryByLabelText("TextInput-string?")).toHaveValue("default_string");
+    expect(screen.queryByLabelText("TextInput-editableString?")).toHaveValue("default_string");
 
     expect(screen.queryByLabelText("Toggle-bool")).toBeChecked();
     expect(screen.queryByLabelText("Toggle-editableBool")).toBeChecked();
     expect(screen.queryByTestId("bool?-true")).toBeChecked();
     expect(screen.queryByTestId("editableBool?-true")).toBeChecked();
 
-    expect(
-      screen.queryByLabelText("TextFieldInput-string[]"),
-    ).toHaveTextContent("1.1.1.1");
-    expect(
-      screen.queryByLabelText("TextFieldInput-string[]"),
-    ).toHaveTextContent("8.8.8.8");
-    expect(
-      screen.queryByLabelText("TextFieldInput-editableString[]"),
-    ).toHaveTextContent("1.1.1.1");
-    expect(
-      screen.queryByLabelText("TextFieldInput-editableString[]"),
-    ).toHaveTextContent("8.8.8.8");
-    expect(
-      screen.queryByLabelText("TextFieldInput-string[]?"),
-    ).toHaveTextContent("1.1.1.1");
-    expect(
-      screen.queryByLabelText("TextFieldInput-string[]?"),
-    ).toHaveTextContent("8.8.8.8");
-    expect(
-      screen.queryByLabelText("TextFieldInput-editableString[]?"),
-    ).toHaveTextContent("1.1.1.1");
-    expect(
-      screen.queryByLabelText("TextFieldInput-editableString[]?"),
-    ).toHaveTextContent("8.8.8.8");
-
-    expect(screen.getByTestId("enum-select-toggle")).toHaveTextContent(
-      "OPTION_ONE",
+    expect(screen.queryByLabelText("TextFieldInput-string[]")).toHaveTextContent("1.1.1.1");
+    expect(screen.queryByLabelText("TextFieldInput-string[]")).toHaveTextContent("8.8.8.8");
+    expect(screen.queryByLabelText("TextFieldInput-editableString[]")).toHaveTextContent("1.1.1.1");
+    expect(screen.queryByLabelText("TextFieldInput-editableString[]")).toHaveTextContent("8.8.8.8");
+    expect(screen.queryByLabelText("TextFieldInput-string[]?")).toHaveTextContent("1.1.1.1");
+    expect(screen.queryByLabelText("TextFieldInput-string[]?")).toHaveTextContent("8.8.8.8");
+    expect(screen.queryByLabelText("TextFieldInput-editableString[]?")).toHaveTextContent(
+      "1.1.1.1"
     );
-    expect(screen.getByTestId("editableEnum?-select-toggle")).toHaveTextContent(
-      "OPTION_ONE",
+    expect(screen.queryByLabelText("TextFieldInput-editableString[]?")).toHaveTextContent(
+      "8.8.8.8"
     );
 
-    expect(screen.getByTestId("editableEnum-select-toggle")).toHaveTextContent(
-      "OPTION_ONE",
-    );
-    expect(screen.getByTestId("enum?-select-toggle")).toHaveTextContent(
-      "OPTION_ONE",
-    );
+    expect(screen.getByTestId("enum-select-toggle")).toHaveTextContent("OPTION_ONE");
+    expect(screen.getByTestId("editableEnum?-select-toggle")).toHaveTextContent("OPTION_ONE");
 
-    expect(screen.queryByLabelText("TextInput-dict")).toHaveValue(
-      '{"default":"value"}',
-    );
-    expect(screen.queryByLabelText("TextInput-editableDict")).toHaveValue(
-      '{"default":"value"}',
-    );
-    expect(screen.queryByLabelText("TextInput-dict?")).toHaveValue(
-      '{"default":"value"}',
-    );
-    expect(screen.queryByLabelText("TextInput-editableDict?")).toHaveValue(
-      '{"default":"value"}',
-    );
+    expect(screen.getByTestId("editableEnum-select-toggle")).toHaveTextContent("OPTION_ONE");
+    expect(screen.getByTestId("enum?-select-toggle")).toHaveTextContent("OPTION_ONE");
+
+    expect(screen.queryByLabelText("TextInput-dict")).toHaveValue('{"default":"value"}');
+    expect(screen.queryByLabelText("TextInput-editableDict")).toHaveValue('{"default":"value"}');
+    expect(screen.queryByLabelText("TextInput-dict?")).toHaveValue('{"default":"value"}');
+    expect(screen.queryByLabelText("TextInput-editableDict?")).toHaveValue('{"default":"value"}');
 
     //check if embedded entities buttons are correctly displayed
-    const embedded_base = screen.getByLabelText(
-      "DictListFieldInput-embedded_base",
-    );
+    const embedded_base = screen.getByLabelText("DictListFieldInput-embedded_base");
 
-    await userEvent.click(
-      screen.getByRole("button", { name: "embedded_base" }),
-    );
+    await userEvent.click(screen.getByRole("button", { name: "embedded_base" }));
 
     //check if direct attributes for embedded entities have correct default values
 
-    await userEvent.click(
-      within(embedded_base).getByRole("button", { name: "0" }),
+    await userEvent.click(within(embedded_base).getByRole("button", { name: "0" }));
+
+    expect(within(embedded_base).queryByLabelText("TextInput-string")).toHaveValue(
+      "default_string"
+    );
+    expect(within(embedded_base).queryByLabelText("TextInput-editableString")).toHaveValue(
+      "default_string"
+    );
+    expect(within(embedded_base).queryByLabelText("TextInput-string?")).toHaveValue(
+      "default_string"
+    );
+    expect(within(embedded_base).queryByLabelText("TextInput-editableString?")).toHaveValue(
+      "default_string"
     );
 
-    expect(
-      within(embedded_base).queryByLabelText("TextInput-string"),
-    ).toHaveValue("default_string");
-    expect(
-      within(embedded_base).queryByLabelText("TextInput-editableString"),
-    ).toHaveValue("default_string");
-    expect(
-      within(embedded_base).queryByLabelText("TextInput-string?"),
-    ).toHaveValue("default_string");
-    expect(
-      within(embedded_base).queryByLabelText("TextInput-editableString?"),
-    ).toHaveValue("default_string");
-
     expect(within(embedded_base).queryByLabelText("Toggle-bool")).toBeChecked();
-    expect(
-      within(embedded_base).queryByLabelText("Toggle-editableBool"),
-    ).toBeChecked();
+    expect(within(embedded_base).queryByLabelText("Toggle-editableBool")).toBeChecked();
     expect(within(embedded_base).queryByTestId("bool?-true")).toBeChecked();
-    expect(
-      within(embedded_base).queryByTestId("editableBool?-true"),
-    ).toBeChecked();
+    expect(within(embedded_base).queryByTestId("editableBool?-true")).toBeChecked();
 
+    expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]")).toHaveTextContent(
+      "1.1.1.1"
+    );
+    expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]")).toHaveTextContent(
+      "8.8.8.8"
+    );
     expect(
-      within(embedded_base).queryByLabelText("TextFieldInput-string[]"),
+      within(embedded_base).queryByLabelText("TextFieldInput-editableString[]")
     ).toHaveTextContent("1.1.1.1");
     expect(
-      within(embedded_base).queryByLabelText("TextFieldInput-string[]"),
+      within(embedded_base).queryByLabelText("TextFieldInput-editableString[]")
     ).toHaveTextContent("8.8.8.8");
+    expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]?")).toHaveTextContent(
+      "1.1.1.1"
+    );
+    expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]?")).toHaveTextContent(
+      "8.8.8.8"
+    );
     expect(
-      within(embedded_base).queryByLabelText("TextFieldInput-editableString[]"),
+      within(embedded_base).queryByLabelText("TextFieldInput-editableString[]?")
     ).toHaveTextContent("1.1.1.1");
     expect(
-      within(embedded_base).queryByLabelText("TextFieldInput-editableString[]"),
-    ).toHaveTextContent("8.8.8.8");
-    expect(
-      within(embedded_base).queryByLabelText("TextFieldInput-string[]?"),
-    ).toHaveTextContent("1.1.1.1");
-    expect(
-      within(embedded_base).queryByLabelText("TextFieldInput-string[]?"),
-    ).toHaveTextContent("8.8.8.8");
-    expect(
-      within(embedded_base).queryByLabelText(
-        "TextFieldInput-editableString[]?",
-      ),
-    ).toHaveTextContent("1.1.1.1");
-    expect(
-      within(embedded_base).queryByLabelText(
-        "TextFieldInput-editableString[]?",
-      ),
+      within(embedded_base).queryByLabelText("TextFieldInput-editableString[]?")
     ).toHaveTextContent("8.8.8.8");
 
-    expect(
-      within(embedded_base).getByTestId("enum-select-toggle"),
-    ).toHaveTextContent("OPTION_ONE");
-    expect(
-      within(embedded_base).getByTestId("editableEnum-select-toggle"),
-    ).toHaveTextContent("OPTION_ONE");
-    expect(
-      within(embedded_base).getByTestId("enum?-select-toggle"),
-    ).toHaveTextContent("OPTION_ONE");
-    expect(
-      within(embedded_base).getByTestId("editableEnum?-select-toggle"),
-    ).toHaveTextContent("OPTION_ONE");
+    expect(within(embedded_base).getByTestId("enum-select-toggle")).toHaveTextContent("OPTION_ONE");
+    expect(within(embedded_base).getByTestId("editableEnum-select-toggle")).toHaveTextContent(
+      "OPTION_ONE"
+    );
+    expect(within(embedded_base).getByTestId("enum?-select-toggle")).toHaveTextContent(
+      "OPTION_ONE"
+    );
+    expect(within(embedded_base).getByTestId("editableEnum?-select-toggle")).toHaveTextContent(
+      "OPTION_ONE"
+    );
 
-    expect(
-      within(embedded_base).queryByLabelText("TextInput-dict"),
-    ).toHaveValue('{"default":"value"}');
-    expect(
-      within(embedded_base).queryByLabelText("TextInput-editableDict"),
-    ).toHaveValue('{"default":"value"}');
-    expect(
-      within(embedded_base).queryByLabelText("TextInput-dict?"),
-    ).toHaveValue('{"default":"value"}');
-    expect(
-      within(embedded_base).queryByLabelText("TextInput-editableDict?"),
-    ).toHaveValue('{"default":"value"}');
+    expect(within(embedded_base).queryByLabelText("TextInput-dict")).toHaveValue(
+      '{"default":"value"}'
+    );
+    expect(within(embedded_base).queryByLabelText("TextInput-editableDict")).toHaveValue(
+      '{"default":"value"}'
+    );
+    expect(within(embedded_base).queryByLabelText("TextInput-dict?")).toHaveValue(
+      '{"default":"value"}'
+    );
+    expect(within(embedded_base).queryByLabelText("TextInput-editableDict?")).toHaveValue(
+      '{"default":"value"}'
+    );
   });
 });

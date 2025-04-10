@@ -1,10 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import {
-  QueryClientProvider,
-  QueryClient,
-  QueryObserverResult,
-} from "@tanstack/react-query";
+import { QueryClientProvider, QueryClient, QueryObserverResult } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
@@ -28,10 +24,7 @@ import { Navigation } from "./Navigation";
 
 expect.extend(toHaveNoViolations);
 
-function setup(
-  initialEntries: string[] | undefined,
-  serverStatus: ServerStatus,
-) {
+function setup(initialEntries: string[] | undefined, serverStatus: ServerStatus) {
   const queryClient = new QueryClient();
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
@@ -39,14 +32,12 @@ function setup(
 
   const featureManager = PrimaryFeatureManager();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
   const component = (
     <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={initialEntries}>
-        <DependencyProvider
-          dependencies={{ ...dependencies, featureManager, queryResolver }}
-        >
+        <DependencyProvider dependencies={{ ...dependencies, featureManager, queryResolver }}>
           <StoreProvider store={store}>
             <Navigation environment="env" />
           </StoreProvider>
@@ -77,25 +68,25 @@ test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => 
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.environment"),
-    }),
+    })
   ).toBeVisible();
 
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.lifecycleServiceManager"),
-    }),
+    })
   ).toBeVisible();
 
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.orchestrationEngine"),
-    }),
+    })
   ).toBeVisible();
 
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.resourceManager"),
-    }),
+    })
   ).toBeVisible();
 });
 
@@ -117,16 +108,14 @@ test("GIVEN Navigation WHEN no features enabled THEN no extra features are not s
   expect(
     within(navigation).queryByRole("region", {
       name: words("navigation.lifecycleServiceManager"),
-    }),
+    })
   ).not.toBeInTheDocument();
 
   // no orderView
   expect(links.find((item) => item.textContent === "Orders")).toBeUndefined();
 
   // no resourceDiscovery
-  expect(
-    links.find((item) => item.textContent === "Discovered Resources"),
-  ).toBeUndefined();
+  expect(links.find((item) => item.textContent === "Discovered Resources")).toBeUndefined();
 });
 
 test("GIVEN Navigation WHEN all features are enabled THEN all extra features are shown", () => {
@@ -147,18 +136,14 @@ test("GIVEN Navigation WHEN all features are enabled THEN all extra features are
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.lifecycleServiceManager"),
-    }),
+    })
   ).toBeInTheDocument();
 
   // has orderView
-  expect(
-    links.find((item) => item.textContent === "Orders"),
-  ).toBeInTheDocument();
+  expect(links.find((item) => item.textContent === "Orders")).toBeInTheDocument();
 
   // has resourceDiscovery
-  expect(
-    links.find((item) => item.textContent === "Discovered Resources"),
-  ).toBeInTheDocument();
+  expect(links.find((item) => item.textContent === "Discovered Resources")).toBeInTheDocument();
 });
 
 test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highlighted", () => {

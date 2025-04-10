@@ -3,10 +3,7 @@ import { EnvironmentDetails, FlatEnvironment, ProjectModel } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { LoadingView, ErrorView } from "@/UI/Components";
 import { EnvironmentSettings } from "./EnvironmentSettings";
-import {
-  useGetEnvironmentDetails,
-  useGetProjects,
-} from "@/Data/Managers/V2/Environment";
+import { useGetEnvironmentDetails, useGetProjects } from "@/Data/Managers/V2/Environment";
 
 export const Tab: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);
@@ -47,10 +44,7 @@ export const Tab: React.FC = () => {
   return <LoadingView ariaLabel="EditEnvironment-Loading" />;
 };
 
-const addProjectName = (
-  env: EnvironmentDetails,
-  projects: ProjectModel[],
-): FlatEnvironment => {
+const addProjectName = (env: EnvironmentDetails, projects: ProjectModel[]): FlatEnvironment => {
   const match = projects.find((p) => p.id === env.project_id);
 
   if (!match) return { ...env, projectName: "" };

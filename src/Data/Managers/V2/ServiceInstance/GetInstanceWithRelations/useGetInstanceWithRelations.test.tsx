@@ -9,11 +9,7 @@ import { RemoteData, ServiceInstanceModel } from "@/Core";
 import { getStoreInstance } from "@/Data/Store";
 import { dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
-import {
-  childModel,
-  testInstance,
-  testService,
-} from "@/UI/Components/Diagram/Mocks";
+import { childModel, testInstance, testService } from "@/UI/Components/Diagram/Mocks";
 import { useGetInstanceWithRelations } from "./useGetInstanceWithRelations";
 
 export const server = setupServer(
@@ -59,14 +55,11 @@ export const server = setupServer(
     return HttpResponse.json({
       data: { ...testInstance, id: "test_mpn_id" },
     });
-  }),
+  })
 );
 
 const createWrapper = () => {
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
   const store = getStoreInstance();
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -126,11 +119,10 @@ describe("useGetInstanceWithRelations", () => {
   afterAll(() => server.close());
   test("if the fetched instance has referenced instance(s), then query will return the given instance with that related instance(s)", async () => {
     const { result } = renderHook(
-      () =>
-        useGetInstanceWithRelations("test_id", false, testService).useOneTime(),
+      () => useGetInstanceWithRelations("test_id", false, testService).useOneTime(),
       {
         wrapper: createWrapper(),
-      },
+      }
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -138,19 +130,17 @@ describe("useGetInstanceWithRelations", () => {
     expect(result.current.data).toBeDefined();
     expect(result.current.data?.instance.id).toEqual("test_id");
     expect(result.current.data?.interServiceRelations).toHaveLength(1);
-    expect(
-      (result.current.data?.interServiceRelations as ServiceInstanceModel[])[0]
-        .id,
-    ).toEqual("test_mpn_id");
+    expect((result.current.data?.interServiceRelations as ServiceInstanceModel[])[0].id).toEqual(
+      "test_mpn_id"
+    );
   });
 
   test("if the fetched instance has inter-service relation(s) in the model, then query will return the given instance with that related instance(s)", async () => {
     const { result } = renderHook(
-      () =>
-        useGetInstanceWithRelations("child_id", false, childModel).useOneTime(),
+      () => useGetInstanceWithRelations("child_id", false, childModel).useOneTime(),
       {
         wrapper: createWrapper(),
-      },
+      }
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -158,10 +148,9 @@ describe("useGetInstanceWithRelations", () => {
     expect(result.current.data).toBeDefined();
     expect(result.current.data?.instance.id).toEqual("child_id");
     expect(result.current.data?.interServiceRelations).toHaveLength(1);
-    expect(
-      (result.current.data?.interServiceRelations as ServiceInstanceModel[])[0]
-        .id,
-    ).toEqual("test_mpn_id");
+    expect((result.current.data?.interServiceRelations as ServiceInstanceModel[])[0].id).toEqual(
+      "test_mpn_id"
+    );
   });
 
   test("if the fetched instance has inter-service relation(s) in the model, and they are stored in the array in the instance, then query will return the given instance with that related instance(s)", async () => {
@@ -208,14 +197,13 @@ describe("useGetInstanceWithRelations", () => {
         return HttpResponse.json({
           data: { ...testInstance, id: "test_mpn_id" },
         });
-      }),
+      })
     );
     const { result } = renderHook(
-      () =>
-        useGetInstanceWithRelations("child_id", false, childModel).useOneTime(),
+      () => useGetInstanceWithRelations("child_id", false, childModel).useOneTime(),
       {
         wrapper: createWrapper(),
-      },
+      }
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -223,23 +211,17 @@ describe("useGetInstanceWithRelations", () => {
     expect(result.current.data).toBeDefined();
     expect(result.current.data?.instance.id).toEqual("child_id");
     expect(result.current.data?.interServiceRelations).toHaveLength(1);
-    expect(
-      (result.current.data?.interServiceRelations as ServiceInstanceModel[])[0]
-        .id,
-    ).toEqual("test_mpn_id");
+    expect((result.current.data?.interServiceRelations as ServiceInstanceModel[])[0].id).toEqual(
+      "test_mpn_id"
+    );
   });
 
   test("when instance returned has not referenced instance(s), then the query will return the given instance without interServiceRelations", async () => {
     const { result } = renderHook(
-      () =>
-        useGetInstanceWithRelations(
-          "test_mpn_id",
-          false,
-          testService,
-        ).useOneTime(),
+      () => useGetInstanceWithRelations("test_mpn_id", false, testService).useOneTime(),
       {
         wrapper: createWrapper(),
-      },
+      }
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));

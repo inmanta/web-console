@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  NotificationBadge,
-  NotificationBadgeVariant,
-} from "@patternfly/react-core";
+import { NotificationBadge, NotificationBadgeVariant } from "@patternfly/react-core";
 import { UseQueryResult } from "@tanstack/react-query";
 import { PageSize } from "@/Core";
 import {
@@ -49,6 +46,7 @@ const View: React.FC<Props> = ({ response, onClick }) => {
 
   useEffect(() => {
     if (!response.isError) return;
+
     setError(response.error.message);
   }, [response]);
 
@@ -84,11 +82,7 @@ const View: React.FC<Props> = ({ response, onClick }) => {
   }
 
   return (
-    <NotificationBadge
-      aria-label="Badge"
-      variant={NotificationBadgeVariant.read}
-      isDisabled
-    />
+    <NotificationBadge aria-label="Badge" variant={NotificationBadgeVariant.read} isDisabled />
   );
 };
 
@@ -100,12 +94,11 @@ const View: React.FC<Props> = ({ response, onClick }) => {
  * @param {Notification[]} notifications - List of notifications to analyze
  * @returns {NotificationBadgeVariant} The appropriate badge variant
  */
-const getVariantFromNotifications = (
-  notifications: Notification[],
-): NotificationBadgeVariant => {
+const getVariantFromNotifications = (notifications: Notification[]): NotificationBadgeVariant => {
   if (notifications.some(isUnreadError)) {
     return NotificationBadgeVariant.attention;
   }
+
   if (notifications.some(isUnread)) return NotificationBadgeVariant.unread;
 
   return NotificationBadgeVariant.read;
@@ -126,8 +119,7 @@ const isUnreadError = (notification: Notification) =>
  * @param {Notification} notification - The notification to check
  * @returns {boolean} True if the notification has error severity
  */
-const isError = (notification: Notification) =>
-  notification.severity === "error";
+const isError = (notification: Notification) => notification.severity === "error";
 
 /**
  * Checks if a notification is unread.

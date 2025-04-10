@@ -17,12 +17,4 @@ export interface ResourceLogFilter {
   timestamp?: DateRange.DateRange[];
 }
 
-export const actionTypes = [
-  "store",
-  "push",
-  "pull",
-  "deploy",
-  "dryrun",
-  "getfact",
-  "other",
-];
+export const actionTypes = ["store", "push", "pull", "deploy", "dryrun", "getfact", "other"];

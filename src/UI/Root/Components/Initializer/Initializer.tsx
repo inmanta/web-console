@@ -5,9 +5,7 @@ import { ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 
-export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({
-  children,
-}) => {
+export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const getServerStatus = useGetServerStatus().useOneTime();
   const getEnvironments = useGetEnvironments().useOneTime();
   const { featureManager } = useContext(DependencyContext);

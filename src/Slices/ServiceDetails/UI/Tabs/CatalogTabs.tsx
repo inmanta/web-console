@@ -23,12 +23,7 @@ export const CatalogTabs: React.FunctionComponent<Props> = ({ service }) => {
   };
 
   return (
-    <Tabs
-      title=""
-      activeKey={activeTabKey}
-      onSelect={handleTabClick}
-      mountOnEnter
-    >
+    <Tabs title="" activeKey={activeTabKey} onSelect={handleTabClick} mountOnEnter>
       <Tab eventKey="details" title="Details">
         <Details instanceSummary={service.instance_summary} />
       </Tab>

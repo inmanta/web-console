@@ -59,9 +59,7 @@ interface GetNotifications {
  * @param {UseQueryOptions} options - Additional options for the query
  * @returns {UseQueryResult} A query result containing notifications data or an error
  */
-export const useGetNotifications = (
-  params: GetNotificationsParams,
-): GetNotifications => {
+export const useGetNotifications = (params: GetNotificationsParams): GetNotifications => {
   const get = useGet()<ResponseBody>;
 
   return {

@@ -1,10 +1,7 @@
 import { Action, action } from "easy-peasy";
 import { RemoteData, Query } from "@/Core";
 
-type Data = RemoteData.Type<
-  Query.Error<"GetResourceLogs">,
-  Query.Data<"GetResourceLogs">
->;
+type Data = RemoteData.Type<Query.Error<"GetResourceLogs">, Query.Data<"GetResourceLogs">>;
 
 export interface ResourceLogsSlice {
   byId: Record<string, Data>;

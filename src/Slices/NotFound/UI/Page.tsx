@@ -1,10 +1,5 @@
 import * as React from "react";
-import {
-  Button,
-  EmptyState,
-  PageSection,
-  EmptyStateFooter,
-} from "@patternfly/react-core";
+import { Button, EmptyState, PageSection, EmptyStateFooter } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";

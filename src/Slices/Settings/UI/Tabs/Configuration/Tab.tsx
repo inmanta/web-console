@@ -18,11 +18,7 @@ export const Tab: React.FC<Props> = ({ environmentId }) => {
 
   if (isError) {
     return (
-      <ErrorView
-        ariaLabel="EnvironmentSettings-Failed"
-        message={error.message}
-        retry={refetch}
-      />
+      <ErrorView ariaLabel="EnvironmentSettings-Failed" message={error.message} retry={refetch} />
     );
   }
 

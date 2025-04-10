@@ -55,5 +55,5 @@ root.render(
         </StoreProvider>
       </QueryControlProvider>
     </QueryClientProvider>
-  </ErrorBoundary>,
+  </ErrorBoundary>
 );

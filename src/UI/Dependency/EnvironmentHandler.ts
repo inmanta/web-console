@@ -1,31 +1,20 @@
 import { Location } from "history";
-import {
-  EnvironmentHandler,
-  FlatEnvironment,
-  Navigate,
-  RouteManager,
-} from "@/Core";
+import { EnvironmentHandler, FlatEnvironment, Navigate, RouteManager } from "@/Core";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
 
 export function EnvironmentHandlerImpl(
   useLocation: () => Location,
-  routeManager: RouteManager,
+  routeManager: RouteManager
 ): EnvironmentHandler {
   const environmentsData = useGetEnvironments().useContinuous();
-  function set(
-    navigate: Navigate,
-    location: Location,
-    environmentId: string,
-  ): void {
+  function set(navigate: Navigate, location: Location, environmentId: string): void {
     const { pathname, search } = location;
     const params = new URLSearchParams(search);
 
     if (params.get("env") !== environmentId) {
       params.set("env", environmentId);
-      navigate(
-        routeManager.getRelatedUrlWithoutParams(pathname) + `?${params}`,
-      );
+      navigate(routeManager.getRelatedUrlWithoutParams(pathname) + `?${params}`);
     }
   }
 
@@ -51,9 +40,7 @@ export function EnvironmentHandlerImpl(
     const envId = parsed["env"];
 
     if (envId && environmentsData.isSuccess) {
-      const env = environmentsData.data.find(
-        (environment) => environment.id === envId,
-      );
+      const env = environmentsData.data.find((environment) => environment.id === envId);
 
       return env;
     }

@@ -15,7 +15,7 @@ export function getUrl({
               discovered_resource_id: filter.discovered_resource_id,
             },
           },
-          { allowDots: true, arrayFormat: "repeat" },
+          { allowDots: true, arrayFormat: "repeat" }
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";

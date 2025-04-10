@@ -31,15 +31,10 @@ export const TreeTable: React.FC<Props> = ({
   isExpertAvailable = false,
   setTab = () => {},
 }) => {
-  const [expansionState, setExpansionState] = useState(
-    treeTableHelper.getExpansionState(),
-  );
+  const [expansionState, setExpansionState] = useState(treeTableHelper.getExpansionState());
   const [isOpen, setIsOpen] = useState(false);
   const [firstColumn, ...columns] = treeTableHelper.getColumns();
-  const { rows, closeAll, openAll } = treeTableHelper.createRows(
-    expansionState,
-    setExpansionState,
-  );
+  const { rows, closeAll, openAll } = treeTableHelper.createRows(expansionState, setExpansionState);
   const emptyColumns = treeTableHelper.getEmptyAttributeSets();
 
   return (
@@ -75,18 +70,10 @@ export const TreeTable: React.FC<Props> = ({
               popperProps={{ position: "right" }}
             >
               <DropdownList>
-                <DropdownItem
-                  key="openAll"
-                  component="button"
-                  onClick={openAll}
-                >
+                <DropdownItem key="openAll" component="button" onClick={openAll}>
                   {words("inventory.tabs.expand")}
                 </DropdownItem>
-                <DropdownItem
-                  key="closeAll"
-                  component="button"
-                  onClick={closeAll}
-                >
+                <DropdownItem key="closeAll" component="button" onClick={closeAll}>
                   {words("inventory.tabs.collapse")}
                 </DropdownItem>
               </DropdownList>

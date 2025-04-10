@@ -11,8 +11,7 @@ import { ComposerEditorProvider } from "@/UI/Components/Diagram/Context/Composer
  * @returns {React.FC} The Page component.
  */
 export const Page: React.FC = () => {
-  const { service: serviceName, instance } =
-    useRouteParams<"InstanceComposerEditor">();
+  const { service: serviceName, instance } = useRouteParams<"InstanceComposerEditor">();
   const { featureManager } = useContext(DependencyContext);
 
   if (!featureManager.isComposerEnabled()) {
@@ -24,11 +23,5 @@ export const Page: React.FC = () => {
     );
   }
 
-  return (
-    <ComposerEditorProvider
-      serviceName={serviceName}
-      instance={instance}
-      editable
-    />
-  );
+  return <ComposerEditorProvider serviceName={serviceName} instance={instance} editable />;
 };

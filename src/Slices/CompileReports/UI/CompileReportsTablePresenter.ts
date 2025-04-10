@@ -26,16 +26,10 @@ export class CompileReportsTablePresenter
       requested: compileReport.requested,
       compileTime:
         compileReport.started && compileReport.completed
-          ? this.datePresenter.diff(
-              compileReport.completed,
-              compileReport.started,
-            )
+          ? this.datePresenter.diff(compileReport.completed, compileReport.started)
           : "",
       waitTime: compileReport.started
-        ? this.datePresenter.diff(
-            compileReport.started,
-            compileReport.requested,
-          )
+        ? this.datePresenter.diff(compileReport.started, compileReport.requested)
         : "",
       completed: compileReport.completed,
       message: compileReport.metadata["message"] as string,
@@ -43,11 +37,7 @@ export class CompileReportsTablePresenter
     }));
   }
 
-  private getStatusFromReport({
-    completed,
-    success,
-    started,
-  }: CompileReport): CompileStatus {
+  private getStatusFromReport({ completed, success, started }: CompileReport): CompileStatus {
     if (!started) {
       return CompileStatus.queued;
     } else if (!!started && !completed) {

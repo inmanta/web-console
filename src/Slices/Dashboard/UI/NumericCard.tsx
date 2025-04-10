@@ -22,17 +22,10 @@ export const NumericCard = ({ metrics }: { metrics: Metric }) => {
       <GalleryItem>
         <Card id={`trend-card-${metrics.name}`} component="div">
           <CardHeader>
-            <Flex
-              direction={{ default: "column" }}
-              spaceItems={{ default: "spaceItemsNone" }}
-            >
+            <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsNone" }}>
               <FlexItem>
                 <CardTitle>
-                  <Title
-                    headingLevel="h3"
-                    size="lg"
-                    style={{ fontWeight: 500 }}
-                  >
+                  <Title headingLevel="h3" size="lg" style={{ fontWeight: 500 }}>
                     {words(`dashboard.${metrics.name as MetricName}.title`)}
                   </Title>
                 </CardTitle>

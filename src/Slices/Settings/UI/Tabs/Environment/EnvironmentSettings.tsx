@@ -18,10 +18,7 @@ interface Props {
   projects: ProjectModel[];
 }
 
-export const EnvironmentSettings: React.FC<Props> = ({
-  environment,
-  projects,
-}) => {
+export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) => {
   const { mutate: modifyEnvironment } = useModifyEnvironment(environment.id);
   const { mutate: createProject } = useCreateProject();
 

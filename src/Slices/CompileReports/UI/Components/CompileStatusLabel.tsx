@@ -14,9 +14,7 @@ import { CompileStatus } from "@/Core";
  * @param {CompileStatus} status - Status of the compile
  * @returns A React Component rendering a Label with the status of the compile
  */
-export const CompileStatusLabel: React.FC<{ status: CompileStatus }> = ({
-  status,
-}) => {
+export const CompileStatusLabel: React.FC<{ status: CompileStatus }> = ({ status }) => {
   switch (status) {
     case CompileStatus.success:
       return (

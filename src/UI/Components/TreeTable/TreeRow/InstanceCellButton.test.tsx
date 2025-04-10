@@ -6,12 +6,7 @@ import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import {
-  dependencies,
-  MockEnvironmentHandler,
-  Service,
-  ServiceInstance,
-} from "@/Test";
+import { dependencies, MockEnvironmentHandler, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { InstanceCellButton } from "./InstanceCellButton";
@@ -30,11 +25,7 @@ function setup(serviceName: string, id: string) {
           }}
         >
           <StoreProvider store={store}>
-            <InstanceCellButton
-              id={id}
-              serviceName={serviceName}
-              onClick={handleClick}
-            />
+            <InstanceCellButton id={id} serviceName={serviceName} onClick={handleClick} />
           </StoreProvider>
         </DependencyProvider>
       </MemoryRouter>
@@ -46,36 +37,27 @@ function setup(serviceName: string, id: string) {
 
 describe("InstanceCellButton", () => {
   const server = setupServer(
-    http.get(
-      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a",
-      () => {
-        return HttpResponse.json({ data: ServiceInstance.a });
-      },
-    ),
-    http.get(
-      "/lsm/v1/service_inventory/service_name_a/service_instance_id_b",
-      () => {
-        return HttpResponse.json({
-          data: {
-            ...ServiceInstance.b,
-            service_identity_attribute_value: undefined,
-          },
-        });
-      },
-    ),
-    http.get(
-      "/lsm/v1/service_inventory/service_name_a/service_instance_id_c",
-      () => {
-        return HttpResponse.json(
-          {
-            message: "something happened",
-          },
-          {
-            status: 500,
-          },
-        );
-      },
-    ),
+    http.get("/lsm/v1/service_inventory/service_name_a/service_instance_id_a", () => {
+      return HttpResponse.json({ data: ServiceInstance.a });
+    }),
+    http.get("/lsm/v1/service_inventory/service_name_a/service_instance_id_b", () => {
+      return HttpResponse.json({
+        data: {
+          ...ServiceInstance.b,
+          service_identity_attribute_value: undefined,
+        },
+      });
+    }),
+    http.get("/lsm/v1/service_inventory/service_name_a/service_instance_id_c", () => {
+      return HttpResponse.json(
+        {
+          message: "something happened",
+        },
+        {
+          status: 500,
+        }
+      );
+    })
   );
 
   beforeAll(() => {
@@ -92,9 +74,7 @@ describe("InstanceCellButton", () => {
     render(component);
 
     expect(
-      await screen.findByText(
-        ServiceInstance.a.service_identity_attribute_value as string,
-      ),
+      await screen.findByText(ServiceInstance.a.service_identity_attribute_value as string)
     ).toBeVisible();
   });
 

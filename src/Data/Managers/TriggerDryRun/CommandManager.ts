@@ -6,10 +6,6 @@ export function CommandManager(apiHelper: ApiHelper) {
     "TriggerDryRun",
     ({ version }, environment) =>
       () =>
-        apiHelper.postWithoutResponse(
-          `/api/v2/dryrun/${version}`,
-          environment,
-          undefined,
-        ),
+        apiHelper.postWithoutResponse(`/api/v2/dryrun/${version}`, environment, undefined)
   );
 }

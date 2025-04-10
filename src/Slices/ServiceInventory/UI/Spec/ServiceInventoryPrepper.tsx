@@ -5,12 +5,7 @@ import { StoreProvider } from "easy-peasy";
 import { RemoteData, ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { AuthProvider } from "@/Data/Auth/AuthProvider";
-import {
-  dependencies,
-  Environment,
-  MockEnvironmentModifier,
-  Service,
-} from "@/Test";
+import { dependencies, Environment, MockEnvironmentModifier, Service } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { ServiceInventory } from "@S/ServiceInventory/UI/ServiceInventory";
 
@@ -23,14 +18,9 @@ export class ServiceInventoryPrepper {
     const client = new QueryClient();
     const store = getStoreInstance();
 
-    const environmentHandler = EnvironmentHandlerImpl(
-      useLocation,
-      dependencies.routeManager,
-    );
+    const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
 
-    store.dispatch.environment.setEnvironments(
-      RemoteData.success(Environment.filterable),
-    );
+    store.dispatch.environment.setEnvironments(RemoteData.success(Environment.filterable));
     const component = (
       <QueryClientProvider client={client}>
         <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
@@ -43,10 +33,7 @@ export class ServiceInventoryPrepper {
               }}
             >
               <StoreProvider store={store}>
-                <ServiceInventory
-                  serviceName={service.name}
-                  service={service}
-                />
+                <ServiceInventory serviceName={service.name} service={service} />
               </StoreProvider>
             </DependencyProvider>
           </AuthProvider>

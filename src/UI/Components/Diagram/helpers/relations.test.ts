@@ -1,8 +1,4 @@
-import {
-  InstanceAttributeModel,
-  ServiceInstanceModelWithTargetStates,
-  ServiceModel,
-} from "@/Core";
+import { InstanceAttributeModel, ServiceInstanceModelWithTargetStates, ServiceModel } from "@/Core";
 import { Service, ServiceInstance } from "@/Test";
 import { childModel, containerModel, parentModel } from "../Mocks";
 import { ServiceEntityBlock } from "../shapes";
@@ -41,18 +37,14 @@ describe("extractRelationsIds", () => {
       const ids = extractRelationsIds(serviceModel, serviceInstance);
 
       expect(ids).toHaveLength(expectedLength);
-    },
+    }
   );
 
   it("Service With relations in active and candidate sets gives an array with candidate attributes first", () => {
-    const ids = extractRelationsIds(
-      Service.withRelationsOnly,
-      ServiceInstance.with_relations,
-    );
+    const ids = extractRelationsIds(Service.withRelationsOnly, ServiceInstance.with_relations);
 
     const expectedId = (
-      ServiceInstance.with_relations
-        .candidate_attributes as InstanceAttributeModel
+      ServiceInstance.with_relations.candidate_attributes as InstanceAttributeModel
     )["test_entity"] as string;
 
     expect(ids).toHaveLength(1);
@@ -66,9 +58,9 @@ describe("extractRelationsIds", () => {
     };
     const ids = extractRelationsIds(Service.withRelationsOnly, activeAttrsOnly);
 
-    const expectedId = (
-      ServiceInstance.with_relations.active_attributes as InstanceAttributeModel
-    )["test_entity"] as string;
+    const expectedId = (ServiceInstance.with_relations.active_attributes as InstanceAttributeModel)[
+      "test_entity"
+    ] as string;
 
     expect(ids).toHaveLength(1);
     expect(ids[0]).toBe(expectedId);

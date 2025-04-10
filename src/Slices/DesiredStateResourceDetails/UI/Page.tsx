@@ -5,8 +5,7 @@ import { words } from "@/UI/words";
 import { DetailsProvider } from "./DetailsProvider";
 
 export const Page: React.FC = () => {
-  const { version, resourceId } =
-    useRouteParams<"DesiredStateResourceDetails">();
+  const { version, resourceId } = useRouteParams<"DesiredStateResourceDetails">();
 
   return (
     <PageContainer pageTitle={words("desiredState.resourceDetails.title")}>

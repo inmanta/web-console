@@ -13,6 +13,6 @@ export function ResourceLogsStateHelper(store: Store) {
         value,
       });
     },
-    (state, { id }) => state.resourceLogs.byId[id],
+    (state, { id }) => state.resourceLogs.byId[id]
   );
 }

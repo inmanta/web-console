@@ -54,7 +54,7 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
 
     cy.request({
       method: "POST",
-      url: `/lsm/v1/exporter/export_service_definition`,
+      url: "/lsm/v1/exporter/export_service_definition",
       headers: { "X-Inmanta-Tid": id },
       body: { force_update: true },
     });
@@ -75,13 +75,11 @@ if (Cypress.env("edition") === "iso") {
 
       cy.intercept(
         "GET",
-        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
+        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
       ).as("GetServiceInventory");
 
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Make sure the call to get inventory has been executed
@@ -107,20 +105,14 @@ if (Cypress.env("edition") === "iso") {
       }).should("to.be.visible");
 
       // Go to the settings, then to the configuration tab
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Settings")
-        .click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Settings").click();
 
       cy.get("button").contains("Configuration").click();
 
       // Change enable_lsm_expert_mode
-      cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
-        .find(".pf-v6-c-switch")
-        .click();
+      cy.get('[aria-label="Row-enable_lsm_expert_mode"]').find(".pf-v6-c-switch").click();
       cy.get('[data-testid="Warning"]').should("exist");
-      cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
-        .find('[aria-label="SaveAction"]')
-        .click();
+      cy.get('[aria-label="Row-enable_lsm_expert_mode"]').find('[aria-label="SaveAction"]').click();
       cy.get('[data-testid="Warning"]').should("not.exist");
       cy.get("[id='expert-mode-banner']")
         .should("exist")
@@ -128,25 +120,19 @@ if (Cypress.env("edition") === "iso") {
 
       // Go back to service inventory
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Go to the instance details
-      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
-        .first()
-        .click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();
 
       // expect to find in the history the up state as last
-      cy.get('[aria-label="History-Row"]', { timeout: 90000 }).should(
-        ($rows) => {
-          expect($rows[0]).to.contain("up");
-          expect($rows[0]).to.contain(3);
-          expect($rows).to.have.length(3);
-        },
-      );
+      cy.get('[aria-label="History-Row"]', { timeout: 90000 }).should(($rows) => {
+        expect($rows[0]).to.contain("up");
+        expect($rows[0]).to.contain(3);
+        expect($rows).to.have.length(3);
+      });
 
       // force state to creating
       cy.get('[aria-label="Expert-Actions-Toggle"]').click();
@@ -158,18 +144,49 @@ if (Cypress.env("edition") === "iso") {
 
       // expect to find in the history the creating state after the up state
       cy.get('[data-testid="version-3-state"]').should("have.text", "up");
-      cy.get('[data-testid="version-4-state"]', { timeout: 60000 }).should(
-        "have.text",
-        "creating",
-      );
+      cy.get('[data-testid="version-4-state"]', { timeout: 60000 }).should("have.text", "creating");
     });
 
-    it("2.4.2 Edit instance attributes", () => {
+    it("2.4.2 Verify markdown preview in documentation tab", () => {
       cy.visit("/console/");
       cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+      cy.get("#basic-service").contains("Show inventory").click();
+
+      // Go to the instance details
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();
+
+      // Go to the documentation tab
+      cy.get('[aria-label="documentation-content"]').click();
+
+      // Verify the preview button exists and is clickable
+      cy.get('[aria-label="preview-button"]')
+        .should("exist")
+        .and("be.visible")
+        .and("be.enabled")
         .click();
+
+      // Verify the preview view is shown
+      cy.get('[aria-label="Markdown-Previewer-Success"]').should("exist").and("be.visible");
+
+      // Edit the markdown text
+      cy.get(".monaco-editor")
+        .click()
+        .focused()
+        .type("{ctrl+a}{backspace}") // Clear existing content
+        .type("# Test Heading\n\nThis is a test paragraph with **bold** text.");
+
+      // Verify the preview updates with the new content
+      cy.get(".markdown-body")
+        .should("contain", "Test Heading")
+        .and("contain", "This is a test paragraph")
+        .and("contain", "bold");
+    });
+
+    it("2.4.3 Edit instance attributes", () => {
+      cy.visit("/console/");
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Expect to find one badge on the basic-service row.
       cy.get("#basic-service")
@@ -179,9 +196,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Go to the instance details
-      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
-        .last()
-        .click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).last().click();
 
       // Go to the attributes tab and select the JSON view
       cy.get('[aria-label="attributes-content"]').click();
@@ -190,41 +205,45 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".monaco-editor", { timeout: 15000 }).should("be.visible"); // assure the editor is loaded before further assertions.
 
       // edit the first line to make editor invalid (Delete the first character of the name property)
-      cy.get(".mtk20").contains("name").type("{home}{rightArrow}{del}");
+      cy.get(".mtk20").contains("name").type("{ctrl+rightArrow}{backspace}");
 
       // expect the Force Update to be disabled
       cy.get('[aria-label="Expert-Submit-Button"]').should("be.disabled");
 
       // Adjust the name property of the instance and make editor valid again
-      cy.get(".mtk20").contains("ame").type("{home}{rightArrow}n");
+      cy.get(".mtk20").contains("nam").type("{ctrl+rightArrow}e");
 
-      // edit the value of the name by removing characters
-      cy.get(".mtk5")
-        .contains("basic-service")
-        .type(
-          "{end}{leftArrow}{leftArrow}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}",
-        );
+      cy.wait(1000);
+
+      // edit the value of the interface_r1_name by removing a character
+      cy.get(".monaco-editor").click().focused().type("{ctrl+f}"); // open search tool
+
+      cy.wait(1000); // let the editor settle to avoid typing text to fail
+
+      // search for eth0
+      cy.get('[aria-label="Find"]').type("eth0");
+
+      // toggle replace option
+      cy.get('[aria-label="Toggle Replace"]').click();
+      // go to the replace field
+      cy.get('[aria-label="Replace"]').type("eth1{enter}{enter}");
 
       // confirm edit
       cy.get('[aria-label="Expert-Submit-Button"]').click();
       cy.get("button").contains("Yes").click();
 
-      // Go back to inventory using the breadcrumbs
-      cy.get('[aria-label="BreadcrumbItem"]')
-        .contains("Service Inventory: basic-service")
-        .click();
+      // select attributes tab
+      cy.get('[aria-label="attributes-content"]').click();
+      cy.get("#Table").click();
 
-      // Expect the name of the instance to be updated in the inventory
-      // (Until the BE fixes the history logs not being updated when force updating attributes)
-      cy.get('[aria-label="IdentityCell-basic"]').should("be.visible");
+      // expect the value of the interface_r1_name to be updated
+      cy.get('[aria-label="interface_r1_name_value"]').should("have.text", "eth1");
     });
 
-    it("2.4.3 Destroy previously created instance", () => {
+    it("2.4.4 Destroy previously created instance", () => {
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
-      cy.get('[aria-label="Sidebar-Navigation-Item"]')
-        .contains("Service Catalog")
-        .click();
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Expect to find one badge on the basic-service row.
       cy.get("#basic-service")
@@ -234,9 +253,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Go to the instance details
-      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 })
-        .first()
-        .click();
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();
 
       // Open Expert menu
       cy.get('[aria-label="Expert-Actions-Toggle"]').click();

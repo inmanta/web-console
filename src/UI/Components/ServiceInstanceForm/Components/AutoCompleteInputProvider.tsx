@@ -71,23 +71,19 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
       />
     );
   }
+
   if (isSuccess) {
-    const options = data.data.map(
-      ({ id, service_identity_attribute_value }) => {
-        const displayName = service_identity_attribute_value
-          ? service_identity_attribute_value
-          : id;
+    const options = data.data.map(({ id, service_identity_attribute_value }) => {
+      const displayName = service_identity_attribute_value ? service_identity_attribute_value : id;
 
-        const isSelected =
-          alreadySelected !== null && alreadySelected.includes(id); //it can be that the value for inter-service relation is set to null
+      const isSelected = alreadySelected !== null && alreadySelected.includes(id); //it can be that the value for inter-service relation is set to null
 
-        return {
-          displayName,
-          value: id,
-          isSelected,
-        };
-      },
-    );
+      return {
+        displayName,
+        value: id,
+        isSelected,
+      };
+    });
 
     return (
       <AutoCompleteInput

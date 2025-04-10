@@ -21,7 +21,6 @@ const axe = configureAxe({
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-
   const component = (
     <MemoryRouter>
       <DependencyProvider dependencies={dependencies}>
@@ -40,15 +39,11 @@ test("Home view shows failed table", async () => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "Overview-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "Overview-Loading" })).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
-  expect(
-    await screen.findByRole("region", { name: "Overview-Failed" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "Overview-Failed" })).toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);
@@ -62,19 +57,15 @@ test("Home View shows success table", async () => {
 
   render(component);
 
-  expect(
-    await screen.findByRole("region", { name: "Overview-Loading" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("region", { name: "Overview-Loading" })).toBeInTheDocument();
 
   apiHelper.resolve(
     Either.right({
       data: Project.filterable,
-    }),
+    })
   );
 
-  expect(
-    await screen.findByRole("generic", { name: "Overview-Success" }),
-  ).toBeInTheDocument();
+  expect(await screen.findByRole("generic", { name: "Overview-Success" })).toBeInTheDocument();
 
   await act(async () => {
     const results = await axe(document.body);

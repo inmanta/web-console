@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  Dropdown,
-  MenuToggle,
-  MenuToggleElement,
-  Spinner,
-} from "@patternfly/react-core";
+import { Dropdown, MenuToggle, MenuToggleElement, Spinner } from "@patternfly/react-core";
 
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
@@ -25,11 +20,7 @@ export const JumpToAction: React.FC<Props> = ({ items, refs }) => {
       isScrollable
       popperProps={{ preventOverflow: true, maxWidth: "800px" }}
       toggle={(toggleref: React.Ref<MenuToggleElement>) => (
-        <MenuToggle
-          ref={toggleref}
-          onClick={() => setIsOpen(!isOpen)}
-          isExpanded={isOpen}
-        >
+        <MenuToggle ref={toggleref} onClick={() => setIsOpen(!isOpen)} isExpanded={isOpen}>
           {words("jumpTo")}
         </MenuToggle>
       )}

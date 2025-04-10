@@ -2,9 +2,7 @@ import { Resource } from "@/Core";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 
-export class ResourcesTablePresenter
-  implements TablePresenter<Resource.Resource, Resource.Row>
-{
+export class ResourcesTablePresenter implements TablePresenter<Resource.Resource, Resource.Row> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
@@ -58,18 +56,11 @@ export class ResourcesTablePresenter
   }
 
   public getIndexForColumnName(columnName?: string): number {
-    return this.columnHeads.findIndex(
-      (columnHead) => columnHead.apiName === columnName,
-    );
+    return this.columnHeads.findIndex((columnHead) => columnHead.apiName === columnName);
   }
 
   public getSortableColumnNames(): string[] {
-    const sortableColumns = [
-      "resource_type",
-      "agent",
-      "resource_id_value",
-      "status",
-    ];
+    const sortableColumns = ["resource_type", "agent", "resource_id_value", "status"];
 
     return sortableColumns;
   }

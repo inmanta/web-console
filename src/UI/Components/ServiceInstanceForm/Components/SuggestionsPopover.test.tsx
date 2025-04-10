@@ -20,7 +20,7 @@ describe("SuggestionsPopover", () => {
         setIsOpen={setIsOpen}
         isOpen={isOpen}
         ref={ref}
-      />,
+      />
     );
 
     // Assert that the popover component is rendered
@@ -42,7 +42,7 @@ describe("SuggestionsPopover", () => {
           isOpen={isOpen}
           ref={ref}
         />
-      </>,
+      </>
     );
 
     // Simulate a click on the 'apple' suggestion
@@ -65,7 +65,7 @@ describe("SuggestionsPopover", () => {
         />
         <input ref={ref} />
         <Button id="button">Some button</Button>
-      </>,
+      </>
     );
 
     // Simulate a click outside the popover
@@ -87,7 +87,7 @@ describe("SuggestionsPopover", () => {
           isOpen={isOpen}
           ref={ref}
         />
-      </>,
+      </>
     );
 
     const input = screen.getByRole("textbox");

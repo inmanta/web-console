@@ -24,7 +24,7 @@ interface getInstanceResources {
 export const useGetInstanceResources = (
   id: string,
   service_entity: string,
-  version: string,
+  version: string
 ): getInstanceResources => {
   const url = `/lsm/v1/service_inventory/${service_entity}/${id}/resources?current_version=${version}`;
   const get = useGet()<{ data: InstanceResourceModel[] }>;
@@ -32,23 +32,13 @@ export const useGetInstanceResources = (
   return {
     useOneTime: (): UseQueryResult<InstanceResourceModel[], CustomError> =>
       useQuery({
-        queryKey: [
-          "get_instance_resources-one_time",
-          id,
-          version,
-          service_entity,
-        ],
+        queryKey: ["get_instance_resources-one_time", id, version, service_entity],
         queryFn: () => get(url),
         select: (data): InstanceResourceModel[] => data.data,
       }),
     useContinuous: (): UseQueryResult<InstanceResourceModel[], CustomError> =>
       useQuery({
-        queryKey: [
-          "get_instance_resources-continuous",
-          id,
-          version,
-          service_entity,
-        ],
+        queryKey: ["get_instance_resources-continuous", id, version, service_entity],
         queryFn: () => get(url),
         refetchInterval: 5000,
         select: (data): InstanceResourceModel[] => data.data,

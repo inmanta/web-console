@@ -11,17 +11,14 @@ export function ResourceDetailsStateHelper(store: Store) {
           ...wrapped.data,
           status: wrapped.data.status as Resource.Status,
           requires_status: Object.fromEntries(
-            Object.entries(wrapped.data.requires_status).map(([k, v]) => [
-              k,
-              v as Resource.Status,
-            ]),
+            Object.entries(wrapped.data.requires_status).map(([k, v]) => [k, v as Resource.Status])
           ),
         }),
-        data,
+        data
       );
 
       store.dispatch.resourceDetails.setData({ id: query.id, value });
     },
-    (state, query) => state.resourceDetails.byId[query.id],
+    (state, query) => state.resourceDetails.byId[query.id]
   );
 }

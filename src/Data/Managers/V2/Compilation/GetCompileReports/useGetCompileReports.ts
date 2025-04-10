@@ -43,9 +43,7 @@ interface GetCompileReports {
  * @returns {UseQueryResult<HookResponse, CustomError>} returns.useOneTime - Fetch compile reports with a single query
  * @returns {UseQueryResult<HookResponse, CustomError>} returns.useContinuous - Fetch compile reports with a recursive query with an interval of 5s
  */
-export const useGetCompileReports = (
-  params: CompileReportsParams,
-): GetCompileReports => {
+export const useGetCompileReports = (params: CompileReportsParams): GetCompileReports => {
   const url = getUrl(params);
   const get = useGet()<ResponseBody>;
 

@@ -16,9 +16,7 @@ interface ResponseData {
  *
  * @returns The result of the query, {data, status, error, isLoading}.
  */
-export const useSuggestedValues = (
-  suggestions: FormSuggestion | null | undefined,
-) => {
+export const useSuggestedValues = (suggestions: FormSuggestion | null | undefined) => {
   const get = useGet()<ResponseData>;
 
   if (!suggestions) {

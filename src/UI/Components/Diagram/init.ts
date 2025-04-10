@@ -13,11 +13,7 @@ import {
   moveCellsFromColliding,
 } from "./helpers";
 import { toggleLooseElement } from "./helpers";
-import {
-  ConnectionRules,
-  EventActionEnum,
-  SavedCoordinates,
-} from "./interfaces";
+import { ConnectionRules, EventActionEnum, SavedCoordinates } from "./interfaces";
 import { ComposerPaper } from "./paper";
 import { ServiceEntityBlock } from "./shapes";
 import { toggleDisabledStencil } from "./stencil/helpers";
@@ -41,7 +37,7 @@ export function diagramInit(
   setScroller,
   connectionRules: ConnectionRules,
   editable: boolean,
-  mainService: ServiceModel,
+  mainService: ServiceModel
 ): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
@@ -95,14 +91,12 @@ export function diagramInit(
     }
   });
 
-  paper.on(
-    "blank:pointerdown",
-    (evt: dia.Event) => evt && scroller.startPanning(evt),
-  );
+  paper.on("blank:pointerdown", (evt: dia.Event) => evt && scroller.startPanning(evt));
 
   if (canvasRef.current) {
     canvasRef.current.appendChild(scroller.el);
   }
+
   scroller.render().center();
   scroller.centerContent();
 
@@ -130,6 +124,7 @@ export function diagramInit(
           if (stencilName) {
             toggleDisabledStencil(stencilName, true);
           }
+
           cell.set("items", copy.items); // converted cells lacks "items" attribute
         }
       });
@@ -143,10 +138,7 @@ export function diagramInit(
       return copy;
     },
 
-    addInstance: (
-      services: ServiceModel[],
-      instance: InstanceWithRelations | null,
-    ) => {
+    addInstance: (services: ServiceModel[], instance: InstanceWithRelations | null) => {
       let cells: ServiceEntityBlock[] = [];
 
       if (!instance) {
@@ -154,19 +146,12 @@ export function diagramInit(
 
         cells = graph
           .getCells()
-          .filter(
-            (cell) => cell.get("type") !== "Link",
-          ) as ServiceEntityBlock[];
+          .filter((cell) => cell.get("type") !== "Link") as ServiceEntityBlock[];
       } else {
         cells = appendInstance(paper, graph, instance, services);
 
-        if (
-          instance.instance.metadata &&
-          instance.instance.metadata.coordinates
-        ) {
-          const parsedCoordinates = JSON.parse(
-            instance.instance.metadata.coordinates,
-          );
+        if (instance.instance.metadata && instance.instance.metadata.coordinates) {
+          const parsedCoordinates = JSON.parse(instance.instance.metadata.coordinates);
 
           if (parsedCoordinates.version === "v2") {
             applyCoordinatesToCells(graph, parsedCoordinates.data);
@@ -195,12 +180,7 @@ export function diagramInit(
 
       //line below resolves issue that appendColumns did update values in the model, but visual representation wasn't updated
       cellView.model.set("items", []);
-      updateAttributes(
-        cellView.model as ServiceEntityBlock,
-        keyAttributes,
-        attributeValues,
-        false,
-      );
+      updateAttributes(cellView.model as ServiceEntityBlock, keyAttributes, attributeValues, false);
 
       return cellView.model as ServiceEntityBlock;
     },
@@ -239,7 +219,7 @@ export interface DiagramHandlers {
    */
   addInstance: (
     services: ServiceModel[],
-    instance: InstanceWithRelations | null,
+    instance: InstanceWithRelations | null
   ) => ServiceEntityBlock[];
 
   /**
@@ -257,7 +237,7 @@ export interface DiagramHandlers {
   editEntity: (
     cellView: dia.CellView,
     serviceModel: ServiceModel | EmbeddedEntity,
-    attributeValues: InstanceAttributeModel,
+    attributeValues: InstanceAttributeModel
   ) => ServiceEntityBlock;
 
   /**

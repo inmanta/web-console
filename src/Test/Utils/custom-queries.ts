@@ -1,9 +1,4 @@
-import {
-  queryHelpers,
-  buildQueries,
-  Matcher,
-  MatcherOptions,
-} from "@testing-library/react";
+import { queryHelpers, buildQueries, Matcher, MatcherOptions } from "@testing-library/react";
 
 const getMultipleError = (attributeName: string) => (_c, selectorValue) =>
   `Found multiple elements with the ${attributeName} attribute of: ${selectorValue}`;
@@ -13,7 +8,7 @@ const getMissingError = (attributeName: string) => (_c, selectorValue) =>
 const queryAllByJointSelector = (
   container: HTMLElement,
   id: Matcher,
-  options?: MatcherOptions | undefined,
+  options?: MatcherOptions | undefined
 ) => queryHelpers.queryAllByAttribute("joint-selector", container, id, options);
 
 const [
@@ -25,7 +20,7 @@ const [
 ] = buildQueries(
   queryAllByJointSelector,
   getMultipleError("joint-selector"),
-  getMissingError("joint-selector"),
+  getMissingError("joint-selector")
 );
 
 export {

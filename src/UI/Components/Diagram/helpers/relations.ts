@@ -17,11 +17,9 @@ import { ServiceEntityBlock } from "../shapes";
  */
 export const extractRelationsIds = (
   service: ServiceModel,
-  instance: ServiceInstanceModel,
+  instance: ServiceInstanceModel
 ): string[] => {
-  const relationKeys = service.inter_service_relations.map(
-    (relation) => relation.name,
-  );
+  const relationKeys = service.inter_service_relations.map((relation) => relation.name);
 
   if (!relationKeys) {
     return [];
@@ -49,15 +47,12 @@ export const extractRelationsIds = (
  * @returns {string[]} An array of entity types that have inter-service relations with the given service model or embedded entity
  */
 export const findInterServiceRelations = (
-  serviceModel: ServiceModel | EmbeddedEntity,
+  serviceModel: ServiceModel | EmbeddedEntity
 ): string[] => {
-  const result =
-    serviceModel.inter_service_relations.map(
-      (relation) => relation.entity_type,
-    ) || [];
+  const result = serviceModel.inter_service_relations.map((relation) => relation.entity_type) || [];
 
-  const embeddedEntitiesResult = serviceModel.embedded_entities.flatMap(
-    (embedded_entity) => findInterServiceRelations(embedded_entity),
+  const embeddedEntitiesResult = serviceModel.embedded_entities.flatMap((embedded_entity) =>
+    findInterServiceRelations(embedded_entity)
   );
 
   return result.concat(embeddedEntitiesResult);
@@ -71,12 +66,12 @@ export const findInterServiceRelations = (
  * @returns {string[]} An array of inter-service relations objects that have inter-service relations
  * */
 export const findFullInterServiceRelations = (
-  serviceModel: ServiceModel | EmbeddedEntity,
+  serviceModel: ServiceModel | EmbeddedEntity
 ): InterServiceRelation[] => {
   const result = serviceModel.inter_service_relations || [];
 
-  const embeddedEntitiesResult = serviceModel.embedded_entities.flatMap(
-    (embedded_entity) => findFullInterServiceRelations(embedded_entity),
+  const embeddedEntitiesResult = serviceModel.embedded_entities.flatMap((embedded_entity) =>
+    findFullInterServiceRelations(embedded_entity)
   );
 
   return result.concat(embeddedEntitiesResult);
@@ -96,7 +91,7 @@ interface CorrespondingId {
  */
 export const findCorrespondingId = (
   neighborRelations: Map<dia.Cell.ID, string>,
-  instanceAsTable: ServiceEntityBlock,
+  instanceAsTable: ServiceEntityBlock
 ): CorrespondingId | undefined => {
   return Array.from(neighborRelations, ([id, attributeName]) => ({
     id,

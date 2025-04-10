@@ -1,8 +1,4 @@
-import {
-  UseMutationResult,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Config } from "@/Core";
 import { usePost } from "../../helpers";
 
@@ -22,14 +18,13 @@ interface Response {
  */
 export const usePostInstanceConfig = (
   service_entity: string,
-  id: string,
+  id: string
 ): UseMutationResult<Response, Error, Body, unknown> => {
   const client = useQueryClient();
   const post = usePost()<Body>;
 
   return useMutation({
-    mutationFn: (body) =>
-      post(`/lsm/v1/service_inventory/${service_entity}/${id}/config`, body),
+    mutationFn: (body) => post(`/lsm/v1/service_inventory/${service_entity}/${id}/config`, body),
     mutationKey: ["post_instance_config"],
     onSuccess: () => {
       client.refetchQueries({

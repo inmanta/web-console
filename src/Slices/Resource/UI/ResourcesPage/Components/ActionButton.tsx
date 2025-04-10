@@ -11,14 +11,9 @@ interface Props {
   textContent: string;
 }
 
-export const ResourcePageActionButton: React.FC<Props> = ({
-  kind,
-  tooltip,
-  textContent,
-}) => {
+export const ResourcePageActionButton: React.FC<Props> = ({ kind, tooltip, textContent }) => {
   const [showSpinner, setShowSpinner] = useState(false);
-  const { environmentModifier, commandResolver } =
-    useContext(DependencyContext);
+  const { environmentModifier, commandResolver } = useContext(DependencyContext);
   const isHalted = environmentModifier.useIsHalted();
 
   const trigger = commandResolver.useGetTrigger<typeof kind>({ kind: kind });
@@ -50,15 +45,9 @@ export const ResourcePageActionButton: React.FC<Props> = ({
     </ActionDisabledTooltip>
   ) : (
     <Tooltip content={tooltip} entryDelay={400}>
-      <Button
-        variant="secondary"
-        isDisabled={showSpinner}
-        onClick={() => handleClick()}
-      >
+      <Button variant="secondary" isDisabled={showSpinner} onClick={() => handleClick()}>
         {textContent}
-        {showSpinner && (
-          <CompileReportsIndication data-testid="dot-indication" />
-        )}
+        {showSpinner && <CompileReportsIndication data-testid="dot-indication" />}
       </Button>
     </Tooltip>
   );

@@ -98,10 +98,7 @@ export const SetStateSection: React.FC<Props> = ({
       ],
       content: (
         <Content component="p">
-          {words("inventory.statustab.confirmMessage")(
-            instance_identity,
-            targetState,
-          )}
+          {words("inventory.statustab.confirmMessage")(instance_identity, targetState)}
         </Content>
       ),
     });
@@ -139,12 +136,7 @@ export const SetStateSection: React.FC<Props> = ({
         </MenuItem>
       ))}
       {(!targets || targets.length < 1) && (
-        <MenuItem
-          key={"no value"}
-          value={"no value"}
-          itemId={"no value"}
-          isDisabled
-        >
+        <MenuItem key={"no value"} value={"no value"} itemId={"no value"} isDisabled>
           None available
         </MenuItem>
       )}

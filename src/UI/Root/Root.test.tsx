@@ -18,10 +18,7 @@ function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
 
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    dependencies.routeManager,
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
 
   const component = (
     <QueryClientProvider client={queryClient}>
@@ -96,7 +93,5 @@ test("GIVEN the app THEN the documentation link should be visible", async () => 
     await apiHelper.resolve(Either.right({ data: Project.list }));
   });
 
-  expect(
-    screen.getByRole("button", { name: "documentation link" }),
-  ).toBeVisible();
+  expect(screen.getByRole("button", { name: "documentation link" })).toBeVisible();
 });

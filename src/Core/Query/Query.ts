@@ -1,8 +1,5 @@
 import { RemoteData } from "@/Core/Language";
-import {
-  GetVersionFile,
-  GetVersionFileManifest,
-} from "@/Data/Managers/GetVersionFile/interface";
+import { GetVersionFile, GetVersionFileManifest } from "@/Data/Managers/GetVersionFile/interface";
 import * as GetAgents from "@S/Agents/Core/Query";
 import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
 import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
@@ -89,7 +86,4 @@ export type Data<K extends Kind> = Manifest[K]["data"];
 export type ApiResponse<K extends Kind> = Manifest[K]["apiResponse"];
 export type SubQuery<K extends Kind> = Manifest[K]["query"];
 export type UsedData<K extends Kind> = Manifest[K]["usedData"];
-export type UsedApiData<K extends Kind> = RemoteData.RemoteData<
-  Error<K>,
-  UsedData<K>
->;
+export type UsedApiData<K extends Kind> = RemoteData.RemoteData<Error<K>, UsedData<K>>;

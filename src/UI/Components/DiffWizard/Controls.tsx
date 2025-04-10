@@ -1,11 +1,7 @@
 import React from "react";
 import { Grid, GridItem } from "@patternfly/react-core";
 import { Diff, RemoteData } from "@/Core";
-import {
-  EmptyJumpToAction,
-  JumpToAction,
-  LoadingJumpToAction,
-} from "./JumpToAction";
+import { EmptyJumpToAction, JumpToAction, LoadingJumpToAction } from "./JumpToAction";
 import { Versus } from "./Versus";
 import { fromResourceToItem } from "./fromResourceToItem";
 import { Refs } from "./types";
@@ -27,13 +23,10 @@ export const Controls: React.FC<Props> = ({ data, refs, from, to }) => (
             resources.length <= 0 ? (
               <EmptyJumpToAction />
             ) : (
-              <JumpToAction
-                items={resources.map(fromResourceToItem)}
-                refs={refs}
-              />
+              <JumpToAction items={resources.map(fromResourceToItem)} refs={refs} />
             ),
         },
-        data,
+        data
       )}
     </GridItem>
     <GridItem span={10}>

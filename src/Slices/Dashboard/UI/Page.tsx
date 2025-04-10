@@ -18,13 +18,7 @@ export const Page: React.FC = () => {
   } = useGetEnvironmentDetails().useOneTime(environmentHandler.useId());
 
   if (isError) {
-    return (
-      <ErrorView
-        message={error.message}
-        retry={refetch}
-        ariaLabel="Dashboard-Failed"
-      />
-    );
+    return <ErrorView message={error.message} retry={refetch} ariaLabel="Dashboard-Failed" />;
   }
   if (isSuccess) {
     return (

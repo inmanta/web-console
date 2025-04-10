@@ -20,7 +20,7 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
 
   constructor(
     private readonly store: Store,
-    private readonly apiHelper: ApiHelper,
+    private readonly apiHelper: ApiHelper
   ) {
     this.managers = this.getManagers();
   }
@@ -30,10 +30,7 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
   }
 
   private getManagers(): CommandManager[] {
-    const callbacksUpdater = new CallbacksUpdater(
-      CallbacksStateHelper(this.store),
-      this.apiHelper,
-    );
+    const callbacksUpdater = new CallbacksUpdater(CallbacksStateHelper(this.store), this.apiHelper);
 
     return [
       DeleteCallbackCommandManager(this.apiHelper, callbacksUpdater),
@@ -41,10 +38,7 @@ export class CommandManagerResolverImpl implements CommandManagerResolver {
       GenerateTokenCommandManager(this.apiHelper),
       DeployCommandManager(this.apiHelper),
       RepairCommandManager(this.apiHelper),
-      ControlAgentCommandManager(
-        this.apiHelper,
-        new GetAgentsUpdater(this.store, this.apiHelper),
-      ),
+      ControlAgentCommandManager(this.apiHelper, new GetAgentsUpdater(this.store, this.apiHelper)),
       TriggerDryRun.CommandManager(this.apiHelper),
     ];
   }

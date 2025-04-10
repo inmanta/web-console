@@ -1,16 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import { toggleValueInList } from "@/Core";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  EmptyView,
-  OldPaginationWidget,
-  RemoteDataView,
-} from "@/UI/Components";
+import { EmptyView, OldPaginationWidget, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";

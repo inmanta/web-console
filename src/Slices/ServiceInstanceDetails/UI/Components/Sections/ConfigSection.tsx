@@ -29,9 +29,7 @@ export const ConfigSection: React.FC = () => {
   return (
     !isConfigEmpty(instance.config) && (
       <Panel variant="raised" aria-label="Config-Section">
-        <ConfigSectionContent
-          serviceInstanceIdentifier={serviceInstanceIdentifier}
-        />
+        <ConfigSectionContent serviceInstanceIdentifier={serviceInstanceIdentifier} />
       </Panel>
     )
   );

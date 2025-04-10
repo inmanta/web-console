@@ -15,9 +15,7 @@ import { NavigationItem } from "./NavigationItem";
  *
  * @returns {React.FC} - Navigation component
  */
-export const Navigation: React.FC<{ environment: string | undefined }> = ({
-  environment,
-}) => {
+export const Navigation: React.FC<{ environment: string | undefined }> = ({ environment }) => {
   const { featureManager, routeManager } = useContext(DependencyContext);
 
   const isEnvPresent = typeof environment !== "undefined";

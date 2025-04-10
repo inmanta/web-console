@@ -23,11 +23,7 @@ import {
   TextField,
   Textarea,
 } from "@/Core";
-import {
-  getStoreInstance,
-  QueryResolverImpl,
-  QueryManagerResolverImpl,
-} from "@/Data";
+import { getStoreInstance, QueryResolverImpl, QueryManagerResolverImpl } from "@/Data";
 import * as Test from "@/Test";
 import { DeferredApiHelper, StaticScheduler, dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI";
@@ -36,23 +32,16 @@ import history from "@/UI/Routing/history";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 const setup = (
-  fields: (
-    | TextField
-    | BooleanField
-    | NestedField
-    | DictListField
-    | EnumField
-    | Textarea
-  )[],
+  fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
   func: undefined | jest.Mock = undefined,
   isEdit = false,
-  originalAttributes: InstanceAttributeModel | undefined = undefined,
+  originalAttributes: InstanceAttributeModel | undefined = undefined
 ) => {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler),
+    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
 
   const queryClient = new QueryClient();
@@ -111,7 +100,7 @@ it("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads wit
           type: "object",
         },
       });
-    }),
+    })
   );
 
   // Start the interception.
@@ -124,7 +113,7 @@ it("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads wit
   expect(
     screen.getByRole("generic", {
       name: `TextFieldInput-${Test.Field.text.name}`,
-    }),
+    })
   ).toBeVisible();
 
   const EditorToggle = screen.getByRole("button", { name: "JSON-Editor" });

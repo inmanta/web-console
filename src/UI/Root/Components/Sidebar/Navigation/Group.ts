@@ -28,10 +28,7 @@ interface Link {
  * @param isEnvPresent - boolean
  * @returns Group
  */
-export const envrionment = (
-  routeManager: RouteManager,
-  isEnvPresent: boolean,
-): Group => ({
+export const envrionment = (routeManager: RouteManager, isEnvPresent: boolean): Group => ({
   id: words("navigation.environment"),
   title: words("navigation.environment"),
   links: [
@@ -65,7 +62,7 @@ export const envrionment = (
 export const lifecycleServiceManager = (
   routeManager: RouteManager,
   isEnvPresent: boolean,
-  featureManager: FeatureManager,
+  featureManager: FeatureManager
 ): Group => ({
   id: "LifecycleServiceManager",
   title: words("navigation.lifecycleServiceManager"),
@@ -100,10 +97,7 @@ export const lifecycleServiceManager = (
  * @param isEnvPresent - boolean
  * @returns Group
  */
-export const orchestrationEngine = (
-  routeManager: RouteManager,
-  isEnvPresent: boolean,
-): Group => ({
+export const orchestrationEngine = (routeManager: RouteManager, isEnvPresent: boolean): Group => ({
   id: "OrchestrationEngine",
   title: words("navigation.orchestrationEngine"),
   links: [
@@ -145,7 +139,7 @@ export const orchestrationEngine = (
 export const resourceManager = (
   routeManager: RouteManager,
   isEnvPresent: boolean,
-  featureManager: FeatureManager,
+  featureManager: FeatureManager
 ): Group => ({
   id: "ResourceManager",
   title: words("navigation.resourceManager"),
@@ -162,9 +156,7 @@ export const resourceManager = (
       ? [
           {
             id: "Discovered Resources",
-            label: routeManager
-              .getRoute("DiscoveredResources")
-              .generateLabel(undefined),
+            label: routeManager.getRoute("DiscoveredResources").generateLabel(undefined),
             url: routeManager.getRoute("DiscoveredResources").path,
             external: false,
             locked: !isEnvPresent,

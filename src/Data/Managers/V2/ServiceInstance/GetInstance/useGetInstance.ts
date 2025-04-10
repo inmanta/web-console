@@ -20,10 +20,7 @@ interface GetInstance {
  * @returns {UseQueryResult<ServiceInstanceModel, CustomError>} returns.useOneTime - Fetch the instance with a single query.
  * @returns {UseQueryResult<ServiceInstanceModel, CustomError>} returns.useContinuous - Fetch the instance with a recursive query with an interval of 5s.
  */
-export const useGetInstance = (
-  service: string,
-  instanceId: string,
-): GetInstance => {
+export const useGetInstance = (service: string, instanceId: string): GetInstance => {
   const url = `/lsm/v1/service_inventory/${service}/${instanceId}?include_deployment_progress=true`;
   const get = useGet()<{ data: ServiceInstanceModel }>;
 

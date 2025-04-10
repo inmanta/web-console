@@ -28,7 +28,7 @@ export const useGetMetadata = (
   service_entity: string,
   service_id: string,
   key: string,
-  instanceVersion?: ParsedNumber | null,
+  instanceVersion?: ParsedNumber | null
 ): GetMetadataHook => {
   const get = useGet()<Metadata>;
 
@@ -37,15 +37,9 @@ export const useGetMetadata = (
       useQuery({
         queryFn: () =>
           get(
-            `/lsm/v1/service_inventory/${service_entity}/${service_id}/metadata/${key}?current_version=${instanceVersion}`,
+            `/lsm/v1/service_inventory/${service_entity}/${service_id}/metadata/${key}?current_version=${instanceVersion}`
           ),
-        queryKey: [
-          "get_metadata",
-          service_entity,
-          service_id,
-          key,
-          instanceVersion,
-        ],
+        queryKey: ["get_metadata", service_entity, service_id, key, instanceVersion],
 
         enabled: instanceVersion !== null,
         select: (data) => data.data,

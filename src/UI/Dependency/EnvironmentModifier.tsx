@@ -1,8 +1,4 @@
-import {
-  EnvironmentDetails,
-  EnvironmentModifier,
-  EnvironmentSettings,
-} from "@/Core";
+import { EnvironmentDetails, EnvironmentModifier, EnvironmentSettings } from "@/Core";
 import { EnvironmentSettings as EnvironmentSettingsType } from "@/Core/Domain/EnvironmentSettings";
 import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment/GetEnvironmentDetails";
 import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment/GetEnvironmentSettings";
@@ -46,14 +42,12 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
     return environmentDetails.halted;
   }
 
-  function useSetting(
-    settingName: keyof EnvironmentSettings.DefinitionMap,
-  ): boolean {
+  function useSetting(settingName: keyof EnvironmentSettings.DefinitionMap): boolean {
     const environmentDetails = useCurrentEnvironment();
     const environmentSettings = useEnvironmentSettings();
 
-    if (environmentDetails === null || environmentSettings === null)
-      return false;
+    if (environmentDetails === null || environmentSettings === null) return false;
+
     if (
       environmentDetails.settings[settingName] !== undefined &&
       environmentDetails.settings[settingName] !== null
@@ -71,6 +65,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
   function useIsProtectedEnvironment(): boolean {
     return useSetting("protected_environment");
   }
+
   function useIsExpertModeEnabled(): boolean {
     return useSetting("enable_lsm_expert_mode");
   }

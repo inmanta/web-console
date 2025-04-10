@@ -1,9 +1,6 @@
 import React from "react";
 import { PageSection } from "@patternfly/react-core";
-import {
-  useGetEnvironments,
-  useGetProjects,
-} from "@/Data/Managers/V2/Environment";
+import { useGetEnvironments, useGetProjects } from "@/Data/Managers/V2/Environment";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageSectionWithTitle } from "@/UI/Components";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
@@ -11,8 +8,7 @@ import { EmptyFilterToolbar } from "./FilterToolbar";
 import { Environment } from "@/Core";
 
 export const Page: React.FC = () => {
-  const { data, isError, error, isSuccess, refetch } =
-    useGetEnvironments().useContinuous(true);
+  const { data, isError, error, isSuccess, refetch } = useGetEnvironments().useContinuous(true);
   const projects = useGetProjects().useOneTime();
 
   if (isError) {
@@ -35,18 +31,13 @@ export const Page: React.FC = () => {
   if (isSuccess && projects.isSuccess) {
     const envsWithProjectName: Environment[] = data.map((env) => ({
       ...env,
-      projectName:
-        projects.data.find((project) => project.id === env.project_id)?.name ||
-        "",
+      projectName: projects.data.find((project) => project.id === env.project_id)?.name || "",
     }));
 
     return (
       <>
         <PageSectionWithTitle title={words("home.title")} />
-        <EnvironmentsOverview
-          environments={envsWithProjectName}
-          aria-label="Overview-Success"
-        />
+        <EnvironmentsOverview environments={envsWithProjectName} aria-label="Overview-Success" />
       </>
     );
   }

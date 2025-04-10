@@ -1,11 +1,7 @@
 import qs from "qs";
 import { GetNotificationsParams } from "./useGetNotifications";
 
-export function getUrl({
-  filter,
-  pageSize,
-  currentPage,
-}: GetNotificationsParams): string {
+export function getUrl({ filter, pageSize, currentPage }: GetNotificationsParams): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
@@ -18,7 +14,7 @@ export function getUrl({
               severity: filter.severity,
             },
           },
-          { allowDots: true, arrayFormat: "repeat" },
+          { allowDots: true, arrayFormat: "repeat" }
         )}`
       : "";
 

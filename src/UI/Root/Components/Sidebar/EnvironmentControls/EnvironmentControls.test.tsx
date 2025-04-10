@@ -29,9 +29,7 @@ function setup() {
           <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
             <DependencyProvider
               dependencies={{
-                environmentHandler: MockEnvironmentHandler(
-                  EnvironmentDetails.a.id,
-                ),
+                environmentHandler: MockEnvironmentHandler(EnvironmentDetails.a.id),
               }}
             >
               <EnvironmentControls />
@@ -59,7 +57,7 @@ test("EnvironmentControls shows halt button when environment is not halted", asy
     Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ data: EnvironmentDetails.a }),
-    }),
+    })
   );
 
   render(component);
@@ -73,9 +71,8 @@ test("EnvironmentControls shows resume button when environment is halted", async
   fetchMock.mockImplementationOnce(() =>
     Promise.resolve({
       ok: true,
-      json: () =>
-        Promise.resolve({ data: { ...EnvironmentDetails.a, halted: true } }),
-    }),
+      json: () => Promise.resolve({ data: { ...EnvironmentDetails.a, halted: true } }),
+    })
   );
 
   render(component);
@@ -93,13 +90,13 @@ test("EnvironmentControls halts the environment when clicked", async () => {
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve({ data: EnvironmentDetails.a }),
-      }),
+      })
     )
     .mockImplementationOnce(() =>
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve({}),
-      }),
+      })
     );
 
   render(component);
@@ -114,12 +111,8 @@ test("EnvironmentControls halts the environment when clicked", async () => {
   const [, haltCall] = fetchMock.mock.calls;
   const [receivedUrl, requestInit] = haltCall;
 
-  expect(receivedUrl).toEqual(
-    `http://localhost:8888/api/v2/actions/environment/halt`,
-  );
-  expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
-    EnvironmentDetails.a.id,
-  );
+  expect(receivedUrl).toEqual("http://localhost:8888/api/v2/actions/environment/halt");
+  expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(EnvironmentDetails.a.id);
   expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
 });
 
@@ -131,15 +124,14 @@ test("EnvironmentControls resumes the environment when clicked and the environme
     .mockImplementationOnce(() =>
       Promise.resolve({
         ok: true,
-        json: () =>
-          Promise.resolve({ data: { ...EnvironmentDetails.a, halted: true } }),
-      }),
+        json: () => Promise.resolve({ data: { ...EnvironmentDetails.a, halted: true } }),
+      })
     )
     .mockImplementationOnce(() =>
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve({}),
-      }),
+      })
     );
 
   render(component);
@@ -154,11 +146,7 @@ test("EnvironmentControls resumes the environment when clicked and the environme
   const [, resumeCall] = fetchMock.mock.calls;
   const [receivedUrl, requestInit] = resumeCall;
 
-  expect(receivedUrl).toEqual(
-    `http://localhost:8888/api/v2/actions/environment/resume`,
-  );
-  expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
-    EnvironmentDetails.a.id,
-  );
+  expect(receivedUrl).toEqual("http://localhost:8888/api/v2/actions/environment/resume");
+  expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(EnvironmentDetails.a.id);
   expect(dispatchEventSpy).toHaveBeenCalledTimes(2);
 });

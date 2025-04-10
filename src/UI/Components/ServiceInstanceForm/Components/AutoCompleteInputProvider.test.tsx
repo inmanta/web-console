@@ -13,9 +13,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
 const server = setupServer(
-  http.get("/lsm/v1/service_inventory/test_entity", ({ request }) => {
-    console.log(request.url);
-
+  http.get("/lsm/v1/service_inventory/test_entity", () => {
     return HttpResponse.json({
       data: [ServiceInstance.a],
       metadata: {
@@ -25,7 +23,7 @@ const server = setupServer(
         page_size: 250,
       },
     });
-  }),
+  })
 );
 const TestWrapper = () => {
   const [value, setValue] = useState("");
@@ -67,7 +65,7 @@ test("Given the AutoCompleteInputProvider When typing an instance name or id The
   render(<TestWrapper />);
 
   const relationInputField = await screen.findByPlaceholderText(
-    "Select an instance of test_entity",
+    "Select an instance of test_entity"
   );
 
   expect(mockFn.mock.calls[0]).toStrictEqual([

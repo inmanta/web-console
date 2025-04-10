@@ -12,7 +12,7 @@ import { usePost } from "../../helpers";
  * @returns {Mutation} The mutation object for sending the request.
  */
 export const usePromoteDesiredStateVersion = (
-  options?: UseMutationOptions<void, Error, string>,
+  options?: UseMutationOptions<void, Error, string>
 ): UseMutationResult<void, Error, string> => {
   const client = useQueryClient();
   const post = usePost()<void>;

@@ -109,13 +109,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
  * @returns {React.FC} The rendered LogoImage component.
  */
 const LogoImage: React.FC = () => (
-  <svg
-    width="285"
-    height="50"
-    viewBox="0 0 285 50"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width="285" height="50" viewBox="0 0 285 50" fill="none" xmlns="http://www.w3.org/2000/svg">
     <mask
       id="mask0_1495_21356"
       style={{ maskType: "luminance" }}
@@ -125,10 +119,7 @@ const LogoImage: React.FC = () => (
       width="285"
       height="52"
     >
-      <path
-        d="M284.736 -0.00195312H0V50.0027H284.736V-0.00195312Z"
-        fill="white"
-      />
+      <path d="M284.736 -0.00195312H0V50.0027H284.736V-0.00195312Z" fill="white" />
     </mask>
     <g mask="url(#mask0_1495_21356)">
       <path
@@ -145,10 +136,7 @@ const LogoImage: React.FC = () => (
       width="285"
       height="52"
     >
-      <path
-        d="M284.736 -0.00195312H0V50.0027H284.736V-0.00195312Z"
-        fill="white"
-      />
+      <path d="M284.736 -0.00195312H0V50.0027H284.736V-0.00195312Z" fill="white" />
     </mask>
     <g mask="url(#mask1_1495_21356)">
       <path
@@ -165,10 +153,7 @@ const LogoImage: React.FC = () => (
       width="285"
       height="52"
     >
-      <path
-        d="M284.736 -0.00195312H0V50.0027H284.736V-0.00195312Z"
-        fill="white"
-      />
+      <path d="M284.736 -0.00195312H0V50.0027H284.736V-0.00195312Z" fill="white" />
     </mask>
     <g mask="url(#mask2_1495_21356)">
       <path
@@ -185,10 +170,7 @@ const LogoImage: React.FC = () => (
       width="285"
       height="52"
     >
-      <path
-        d="M284.736 -0.00195312H0V50.0027H284.736V-0.00195312Z"
-        fill="white"
-      />
+      <path d="M284.736 -0.00195312H0V50.0027H284.736V-0.00195312Z" fill="white" />
     </mask>
     <g mask="url(#mask3_1495_21356)">
       <path
@@ -205,10 +187,7 @@ const LogoImage: React.FC = () => (
       width="285"
       height="52"
     >
-      <path
-        d="M284.736 -0.00195312H0V50.0027H284.736V-0.00195312Z"
-        fill="white"
-      />
+      <path d="M284.736 -0.00195312H0V50.0027H284.736V-0.00195312Z" fill="white" />
     </mask>
     <g mask="url(#mask4_1495_21356)">
       <path
@@ -225,10 +204,7 @@ const LogoImage: React.FC = () => (
       width="285"
       height="52"
     >
-      <path
-        d="M284.736 -0.00195312H0V50.0027H284.736V-0.00195312Z"
-        fill="white"
-      />
+      <path d="M284.736 -0.00195312H0V50.0027H284.736V-0.00195312Z" fill="white" />
     </mask>
     <g mask="url(#mask5_1495_21356)">
       <path

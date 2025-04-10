@@ -17,8 +17,6 @@ export const BooleanInput: React.FC<Props> = ({ info }) => (
       />
     </FlexItem>
 
-    <FlexItem style={{ minWidth: "20px" }}>
-      {info.isUpdateable(info) && <Warning />}
-    </FlexItem>
+    <FlexItem style={{ minWidth: "20px" }}>{info.isUpdateable(info) && <Warning />}</FlexItem>
   </Flex>
 );

@@ -1,12 +1,7 @@
 import React, { useContext } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { useGetServerStatus } from "@/Data/Managers/V2/Server/GetServerStatus";
-import {
-  Description,
-  ErrorView,
-  LoadingView,
-  PageContainer,
-} from "@/UI/Components";
+import { Description, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { StatusList } from "./StatusList";
@@ -14,17 +9,12 @@ import { SupportArchive } from "./SupportArchive";
 
 export const Page: React.FC = () => {
   const { urlManager } = useContext(DependencyContext);
-  const { data, isError, error, isSuccess, refetch } =
-    useGetServerStatus().useContinuous();
+  const { data, isError, error, isSuccess, refetch } = useGetServerStatus().useContinuous();
 
   if (isError) {
     return (
       <Wrapper>
-        <ErrorView
-          message={error.message}
-          retry={refetch}
-          ariaLabel="ServerStatus-Error"
-        />
+        <ErrorView message={error.message} retry={refetch} ariaLabel="ServerStatus-Error" />
       </Wrapper>
     );
   }
