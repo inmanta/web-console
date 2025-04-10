@@ -3,7 +3,7 @@ import { PageSize, Resource, Sort } from "@/Core/Domain";
 import { Handlers, Links } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
-import { useGet } from "../../helpers";
+import { useGet, REFETCH_INTERVAL } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**
@@ -78,7 +78,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };

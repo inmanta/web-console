@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
-import { CustomError, useGet } from "../../helpers";
+import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
 /*
  * interface for the service instance with its related instances and eventual coordinates on canvas
@@ -176,7 +176,7 @@ export const useGetInstanceWithRelations = (
         queryKey: ["get_instance_with_relations-continuous", instanceId],
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         enabled: serviceModel !== undefined,
       }),
   };

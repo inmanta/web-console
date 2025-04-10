@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Fact } from "@/Slices/Facts/Core/Domain";
-import { useGet } from "../../helpers";
+import { useGet, REFETCH_INTERVAL } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**
@@ -40,7 +40,7 @@ export const useGetResourceFacts = (): GetResourceFacts => {
         queryKey: ["get_resource_facts-continuous", resourceId],
         queryFn: () => get(getUrl(resourceId)),
         select: (data) => data.data,
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };

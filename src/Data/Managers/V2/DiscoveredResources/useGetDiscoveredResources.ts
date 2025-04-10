@@ -2,7 +2,7 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "../../Helpers/Pagination/getPaginationHandlers";
-import { useGet } from "../helpers/useQueries";
+import { useGet, REFETCH_INTERVAL } from "../helpers";
 import { getUrl } from "./getUrl";
 
 /**
@@ -108,7 +108,7 @@ export const useGetDiscoveredResources = (
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };

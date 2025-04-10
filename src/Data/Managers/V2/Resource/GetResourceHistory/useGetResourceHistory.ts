@@ -3,7 +3,7 @@ import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers/Pagination/getPaginationHandlers";
 import { ResourceHistory } from "@S/ResourceDetails/Core/ResourceHistory";
-import { useGet } from "../../helpers";
+import { useGet, REFETCH_INTERVAL } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**
@@ -78,7 +78,7 @@ export const useGetResourceHistory = (params: GetResourceHistoryParams): GetReso
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };

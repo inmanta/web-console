@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { CustomError, useGet } from "../../helpers";
+import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
 /**
  * Return Signature of the useGetInstanceLogs React Query
@@ -35,7 +35,7 @@ export const useGetInstanceLogs = (service: string, instance: string): GetInstan
       useQuery({
         queryKey: ["get_instance_logs-continuous", service, instance],
         queryFn: () => get(url),
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data) => data.data,
       }),
   };
