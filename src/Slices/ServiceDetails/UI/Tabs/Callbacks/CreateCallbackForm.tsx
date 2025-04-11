@@ -58,7 +58,14 @@ export const CreateCallbackForm: React.FC<Props> = ({ service_entity, numberOfCo
     },
   });
 
-  const onCreate = async () => {
+  /**
+   * Handles the creation of a new callback.
+   * This function gather the input data and calls the mutation function to create a callback.
+   * It resets the error state before attempting to create the callback.
+   *
+   * @returns {<void>}
+   */
+  const onCreate = () => {
     setError(null);
     mutate({
       callback_url: url || "",
