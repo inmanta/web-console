@@ -29,7 +29,6 @@ import { GetFactsQueryManager } from "@S/Facts/Data";
 import { GetOrderDetailsQueryManager } from "@S/OrderDetails/Data/QueryManager";
 import { GetOrdersStateHelper } from "@S/Orders/Data/StateHelper";
 import { GetParametersQueryManager, GetParametersStateHelper } from "@S/Parameters/Data";
-import { CallbacksQueryManager, CallbacksStateHelper } from "@S/ServiceDetails/Data";
 import {
   GetEnvironmentsContinuousQueryManager,
   GetEnvironmentsContinuousStateHelper,
@@ -83,7 +82,6 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
       EventsQueryManager(this.apiHelper, EventsStateHelper(this.store), this.scheduler),
       EnvironmentDetailsContinuousQueryManager(this.store, this.apiHelper, this.scheduler),
       EnvironmentDetailsOneTimeQueryManager(this.store, this.apiHelper),
-      CallbacksQueryManager(this.apiHelper, CallbacksStateHelper(this.store)),
       GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
       GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
       GetVersionResourcesQueryManager(

@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
-import { RemoteDataView } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
+import React from "react";
+import { useGetCallbacks } from "@/Data/Managers/V2/Callback/GetCallbacks";
+import { ErrorView, LoadingView } from "@/UI/Components";
 import { CallbacksTable } from "./CallbacksTable";
 
 interface Props {
@@ -8,20 +8,15 @@ interface Props {
 }
 
 export const CallbacksView: React.FC<Props> = ({ service_entity }) => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [data, retry] = queryResolver.useOneTime<"GetCallbacks">({
-    kind: "GetCallbacks",
-    service_entity,
-  });
+  const { data, isSuccess, isError, error, refetch } = useGetCallbacks().useOneTime();
 
-  return (
-    <RemoteDataView
-      data={data}
-      label="Callbacks"
-      retry={retry}
-      SuccessView={(callbacks) => (
-        <CallbacksTable callbacks={callbacks} service_entity={service_entity} />
-      )}
-    />
-  );
+  if (isError) {
+    return <ErrorView ariaLabel="Callbacks-Error" message={error.message} retry={refetch} />;
+  }
+
+  if (isSuccess) {
+    return <CallbacksTable callbacks={data} service_entity={service_entity} />;
+  }
+
+  return <LoadingView ariaLabel="Callbacks-Loading" />;
 };
