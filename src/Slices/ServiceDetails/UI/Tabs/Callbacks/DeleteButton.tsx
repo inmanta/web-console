@@ -1,11 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Button } from "@patternfly/react-core";
-import { Maybe } from "@/Core";
 import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { Callback } from "@S/ServiceDetails/Core/Callback";
+import { useDeleteCallback } from "@/Data/Managers/V2/Callback";
 
 interface Props {
   callback: Callback;
@@ -22,12 +21,11 @@ interface Props {
  * @returns {React.React.FC<Props>} The rendered Component to delete a callback.
  */
 export const DeleteButton: React.FC<Props> = ({ service_entity, callback, ...props }) => {
-  const { commandResolver } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const onDelete = commandResolver.useGetTrigger<"DeleteCallback">({
-    kind: "DeleteCallback",
-    callbackId: callback.callback_id,
-    service_entity,
+  const { mutate } = useDeleteCallback({
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
   });
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -40,11 +38,7 @@ export const DeleteButton: React.FC<Props> = ({ service_entity, callback, ...pro
    */
   const onSubmit = async (): Promise<void> => {
     closeModal();
-    const result = await onDelete();
-
-    if (Maybe.isSome(result)) {
-      setErrorMessage(result.value);
-    }
+    mutate(callback.callback_id);
   };
 
   return (
