@@ -19,6 +19,8 @@ import {
 import { UrlManagerImpl } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { testClient } from "./react-query-setup";
 
 export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
   const apiHelper = new DeferredApiHelper();
@@ -47,19 +49,21 @@ export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
   dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          routeManager,
-          urlManager,
-        }}
-      >
-        <StoreProvider store={store}>{Page}</StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={testClient}>
+      <MemoryRouter>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+            commandResolver,
+            routeManager,
+            urlManager,
+          }}
+        >
+          <StoreProvider store={store}>{Page}</StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
   return { component, apiHelper, scheduler };

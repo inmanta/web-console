@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { useGetOrders } from "@/Data/Managers/V2/Order";
 import {
   EmptyView,
   PageContainer,
@@ -14,7 +15,6 @@ import { SortKey } from "../Core/Query";
 import { OrdersTable } from "./OrdersTable";
 import { OrdersTablePresenter } from "./OrdersTablePresenter";
 import { TableControls } from "./TableControls";
-import { useGetOrders } from "@/Data/Managers/V2/Order";
 
 export const Page: React.FC = () => {
   const { featureManager } = useContext(DependencyContext);
@@ -45,7 +45,11 @@ export const Page: React.FC = () => {
   }, [sort.order]);
 
   if (isError) {
-    <ErrorView ariaLabel="OrdersView-Error" retry={refetch} message={error.message} />;
+    return (
+      <PageContainer pageTitle={words("orders.title")}>
+        <ErrorView ariaLabel="OrdersView-Error" retry={refetch} message={error.message} />;
+      </PageContainer>
+    );
   }
 
   if (isSuccess) {
@@ -80,5 +84,9 @@ export const Page: React.FC = () => {
     );
   }
 
-  return <LoadingView ariaLabel="OrdersView-Loading" />;
+  return (
+    <PageContainer pageTitle={words("orders.title")}>
+      <LoadingView ariaLabel="OrdersView-Loading" />{" "}
+    </PageContainer>
+  );
 };
