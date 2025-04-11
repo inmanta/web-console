@@ -21,8 +21,8 @@ interface GetDesiredStateDiff {
  * React Query hook to fetch the diff between two desired states
  *
  * @returns {GetDesiredStateDiff} An object containing the available queries.
- * @returns {UseQueryResult<Result, Error>} returns.useOneTime - Fetch the diff with a single query.
- * @returns {UseQueryResult<Result, Error>} returns.useContinuous - Fetch the diff with a recurrent query with an interval of 5s.
+ * @returns {UseQueryResult<Diff.Resource[], Error>} returns.useOneTime - Fetch the diff with a single query.
+ * @returns {UseQueryResult<Diff.Resource[], Error>} returns.useContinuous - Fetch the diff with a recurrent query with an interval of 5s.
  */
 export const useGetDesiredStateDiff = (): GetDesiredStateDiff => {
   const get = useGet()<Result>;
