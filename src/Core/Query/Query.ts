@@ -24,10 +24,6 @@ import * as GetAgents from "@S/Agents/Core/Query";
 import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
 import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
 import * as GetMetrics from "@S/Dashboard/Core/Query";
-import * as GetDesiredStates from "@S/DesiredState/Core/Query";
-import * as GetDesiredStateDiff from "@S/DesiredStateCompare/Core/Query";
-import * as GetVersionResources from "@S/DesiredStateDetails/Core/Query";
-import * as GetVersionedResourceDetails from "@S/DesiredStateResourceDetails/Core/Query";
 import * as GetDiagnostics from "@S/Diagnose/Core/Query";
 import * as GetInstanceEvents from "@S/Events/Core/Query";
 import * as GetFacts from "@S/Facts/Core/Query";
@@ -58,13 +54,9 @@ export type Query =
   | GetEnvironmentsContinuous
   | GetFacts.Query
   | GetAgents.Query
-  | GetDesiredStates.Query
-  | GetVersionResources.Query
   | GetParameters.Query
-  | GetDesiredStateDiff.Query
   | GetDryRuns.Query
   | GetDryRunReport.Query
-  | GetVersionedResourceDetails.Query
   | GetVersionFile;
 
 export type Type = Query;
@@ -90,14 +82,10 @@ interface Manifest {
   GetEnvironments: GetEnvironmentsManifest;
   GetEnvironmentsContinuous: GetEnvironmentsContinuousManifest;
   GetAgents: GetAgents.Manifest;
-  GetDesiredStates: GetDesiredStates.Manifest;
-  GetVersionResources: GetVersionResources.Manifest;
   GetParameters: GetParameters.Manifest;
   GetFacts: GetFacts.Manifest;
-  GetDesiredStateDiff: GetDesiredStateDiff.Manifest;
   GetDryRuns: GetDryRuns.Manifest;
   GetDryRunReport: GetDryRunReport.Manifest;
-  GetVersionedResourceDetails: GetVersionedResourceDetails.Manifest;
   GetVersionFile: GetVersionFileManifest;
 }
 
