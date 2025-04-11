@@ -20,7 +20,6 @@ import {
   GetServerStatusManifest,
 } from "@/Data/Managers/GetServerStatus/interface";
 import { GetVersionFile, GetVersionFileManifest } from "@/Data/Managers/GetVersionFile/interface";
-
 import * as GetAgents from "@S/Agents/Core/Query";
 import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
 import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
@@ -31,12 +30,8 @@ import * as GetFacts from "@S/Facts/Core/Query";
 import * as GetOrderDetails from "@S/OrderDetails/Core/Query";
 import * as GetOrders from "@S/Orders/Core/Query";
 import * as GetParameters from "@S/Parameters/Core/Query";
-import * as GetResources from "@S/Resource/Core/Query";
-import * as GetResourceDetails from "@S/ResourceDetails/Core/GetResourceDetailsQuery";
-import * as GetResourceFacts from "@S/ResourceDetails/Core/GetResourceFactsQuery";
 import * as GetResourceHistory from "@S/ResourceDetails/Core/GetResourceHistoryQuery";
 import * as GetResourceLogs from "@S/ResourceDetails/Core/GetResourceLogsQuery";
-import * as GetDiscoveredResources from "@S/ResourceDiscovery/Core/Query";
 import * as GetCallbacks from "@S/ServiceDetails/Core/GetCallbacksQuery";
 import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
 import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
@@ -45,10 +40,7 @@ export type Query =
   | GetInstanceEvents.Query
   | GetMetrics.Query
   | GetDiagnostics.Query
-  | GetDiscoveredResources.Query
   | GetProjects.Query
-  | GetResources.Query
-  | GetResourceDetails.Query
   | GetResourceHistory.Query
   | GetResourceLogs.Query
   | GetOrders.Query
@@ -61,7 +53,6 @@ export type Query =
   | GetEnvironments
   | GetEnvironmentsContinuous
   | GetFacts.Query
-  | GetResourceFacts.Query
   | GetAgents.Query
   | GetParameters.Query
   | GetDryRuns.Query
@@ -77,12 +68,9 @@ export type Type = Query;
 interface Manifest {
   GetInstanceEvents: GetInstanceEvents.Manifest;
   GetDiagnostics: GetDiagnostics.Manifest;
-  GetDiscoveredResources: GetDiscoveredResources.Manifest;
   GetMetrics: GetMetrics.Manifest;
   GetProjects: GetProjects.Manifest;
   GetServerStatus: GetServerStatusManifest;
-  GetResources: GetResources.Manifest;
-  GetResourceDetails: GetResourceDetails.Manifest;
   GetResourceHistory: GetResourceHistory.Manifest;
   GetResourceLogs: GetResourceLogs.Manifest;
   GetOrders: GetOrders.Manifest;
@@ -93,7 +81,6 @@ interface Manifest {
   GetEnvironmentSetting: GetEnvironmentSettingManifest;
   GetEnvironments: GetEnvironmentsManifest;
   GetEnvironmentsContinuous: GetEnvironmentsContinuousManifest;
-  GetResourceFacts: GetResourceFacts.Manifest;
   GetAgents: GetAgents.Manifest;
   GetParameters: GetParameters.Manifest;
   GetFacts: GetFacts.Manifest;

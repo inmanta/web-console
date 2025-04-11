@@ -3,7 +3,7 @@ import { DateRange, IntRange, PageSize, Pagination } from "@/Core";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
 import { DesiredStateVersion, DesiredStateVersionStatus } from "@/Slices/DesiredState/Core/Domain";
-import { CustomError, useGet } from "../../helpers";
+import { CustomError, REFETCH_INTERVAL, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**
@@ -88,7 +88,7 @@ export const useGetDesiredStates = (): GetDesiredStates => {
       useQuery({
         queryKey: ["get_desired_states-continuous", pageSize, filter, currentPage],
         queryFn: () => get(getUrl({ pageSize, filter, currentPage })),
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),

@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceInstanceModel } from "@/Core";
-import { CustomError, useGet } from "../../helpers";
+import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
 /**
  * Inventories interface
@@ -60,7 +60,7 @@ export const useGetInventoryList = (serviceNames: string[]): GetInventoryList =>
       useQuery({
         queryKey: ["get_inventory_list-continuous", serviceNames],
         queryFn: fetchAllServices,
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };

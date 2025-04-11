@@ -1,39 +1,27 @@
 import React from "react";
 import { ToolbarItem } from "@patternfly/react-core";
 import styled from "styled-components";
-import { RemoteData, Resource } from "@/Core";
+import { Resource } from "@/Core";
+import { GetResourcesResponse } from "@/Data/Managers/V2/Resource/GetResources";
 import { ResourceStatusBar } from "@/UI/Components";
-import { ViewData } from "@S/Resource/Core/Utils";
 import { DeployButton, RepairButton } from "./Components";
 
 interface Props {
-  data: ViewData;
+  data: GetResourcesResponse;
   updateFilter: (updater: (filter: Resource.Filter) => Resource.Filter) => void;
 }
 
-export const Summary: React.FC<Props> = ({ data, updateFilter }) =>
-  RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => null,
-      failed: () => null,
-      success: (result) => (
-        <>
-          <StretchedToolbarItem
-            summary={result.metadata.deploy_summary}
-            updateFilter={updateFilter}
-          />
-          <ToolbarItem>
-            <DeployButton />
-          </ToolbarItem>
-          <ToolbarItem>
-            <RepairButton />
-          </ToolbarItem>
-        </>
-      ),
-    },
-    data
-  );
+export const Summary: React.FC<Props> = ({ data, updateFilter }) => (
+  <>
+    <StretchedToolbarItem summary={data.metadata.deploy_summary} updateFilter={updateFilter} />
+    <ToolbarItem>
+      <DeployButton />
+    </ToolbarItem>
+    <ToolbarItem>
+      <RepairButton />
+    </ToolbarItem>
+  </>
+);
 
 const StretchedToolbarItem = styled(ResourceStatusBar)`
   flex-grow: 1;

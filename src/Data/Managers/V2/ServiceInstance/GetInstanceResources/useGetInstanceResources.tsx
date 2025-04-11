@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { InstanceResourceModel } from "@/Core";
-import { CustomError, useGet } from "../../helpers";
+import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
 /**
  * Return Signature of the useGetInstanceResources React Query
@@ -40,7 +40,7 @@ export const useGetInstanceResources = (
       useQuery({
         queryKey: ["get_instance_resources-continuous", id, version, service_entity],
         queryFn: () => get(url),
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data): InstanceResourceModel[] => data.data,
       }),
   };
