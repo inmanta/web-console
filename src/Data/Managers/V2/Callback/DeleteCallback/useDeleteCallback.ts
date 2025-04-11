@@ -18,7 +18,7 @@ export const useDeleteCallback = (
   const deleteFn = useDelete();
 
   return useMutation({
-    mutationFn: (id: string) => deleteFn(`/lsm/v1/callbacks/${id}`),
+    mutationFn: (id) => deleteFn(`/lsm/v1/callbacks/${id}`),
     mutationKey: ["delete_callback"],
     onSuccess: () => {
       //invalidate the get_callbacks query to update the list

@@ -1,14 +1,13 @@
 import React, { useContext, useState } from "react";
 import { Button } from "@patternfly/react-core";
+import { useDeleteCallback } from "@/Data/Managers/V2/Callback";
 import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { Callback } from "@S/ServiceDetails/Core/Callback";
-import { useDeleteCallback } from "@/Data/Managers/V2/Callback";
 
 interface Props {
   callback: Callback;
-  service_entity: string;
 }
 
 /**
@@ -16,11 +15,10 @@ interface Props {
  *
  * @props {Props} props - The props of the component.
  * @prop callback {Callback} - the callback object
- * @prop service_entity {string} - the service entity name
  *
  * @returns {React.React.FC<Props>} The rendered Component to delete a callback.
  */
-export const DeleteButton: React.FC<Props> = ({ service_entity, callback, ...props }) => {
+export const DeleteButton: React.FC<Props> = ({ callback, ...props }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { mutate } = useDeleteCallback({
     onError: (error) => {
