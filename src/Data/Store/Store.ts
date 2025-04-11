@@ -4,12 +4,6 @@ import { ordersSlice, OrdersSlice } from "@/Slices/Orders/Data/Store";
 import { agentsSlice, AgentsSlice } from "@S/Agents/Data/Store";
 import { dryRunReportSlice, DryRunReportSlice } from "@S/ComplianceCheck/Data/DryRunReportSlice";
 import { dryRunsSlice, DryRunsSlice } from "@S/ComplianceCheck/Data/DryRunsSlice";
-import { desiredStateDiffSlice, DesiredStateDiffSlice } from "@S/DesiredStateCompare/Data/Store";
-import { versionResourcesSlice, VersionResourcesSlice } from "@S/DesiredStateDetails/Data/Store";
-import {
-  versionedResourceDetailsSlice,
-  VersionedResourceDetailsSlice,
-} from "@S/DesiredStateResourceDetails/Data/Store";
 import { factsSlice, FactsSlice } from "@S/Facts/Data/Store";
 import { parametersSlice, ParametersSlice } from "@S/Parameters/Data/Store";
 import { CallbacksSlice, callbacksSlice } from "@S/ServiceDetails/Data/CallbacksSlice";
@@ -20,7 +14,6 @@ import { projectsSlice, ProjectsSlice } from "./ProjectsSlice";
 export interface StoreModel {
   agents: AgentsSlice;
   callbacks: CallbacksSlice;
-  desiredStateDiff: DesiredStateDiffSlice;
   dryRunReport: DryRunReportSlice;
   dryRuns: DryRunsSlice;
   environment: EnvironmentSlice;
@@ -31,14 +24,11 @@ export interface StoreModel {
   serverStatus: ServerStatusSlice;
   orders: OrdersSlice;
   orderDetails: OrderDetailsSlice;
-  versionedResourceDetails: VersionedResourceDetailsSlice;
-  versionResources: VersionResourcesSlice;
 }
 
 export const storeModel: StoreModel = {
   agents: agentsSlice,
   callbacks: callbacksSlice,
-  desiredStateDiff: desiredStateDiffSlice,
   dryRunReport: dryRunReportSlice,
   dryRuns: dryRunsSlice,
   environment: environmentSlice,
@@ -49,6 +39,4 @@ export const storeModel: StoreModel = {
   serverStatus: serverStatusSlice,
   orders: ordersSlice,
   orderDetails: orderDetailsSlice,
-  versionedResourceDetails: versionedResourceDetailsSlice,
-  versionResources: versionResourcesSlice,
 };

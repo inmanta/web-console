@@ -17,13 +17,6 @@ import {
 import { GetProjectsQueryManager } from "@/Slices/Settings/Data/GetProjects";
 import { GetAgentsQueryManager } from "@S/Agents/Data";
 import { GetDryRunReportQueryManager, GetDryRunsQueryManager } from "@S/ComplianceCheck/Data";
-import {
-  GetDesiredStateDiffQueryManager,
-  GetDesiredStateDiffStateHelper,
-} from "@S/DesiredStateCompare/Data";
-import { GetVersionResourcesQueryManager } from "@S/DesiredStateDetails/Data";
-import { GetVersionResourcesStateHelper } from "@S/DesiredStateDetails/Data/StateHelper";
-import { GetDesiredStateResourceDetailsQueryManager } from "@S/DesiredStateResourceDetails/Data";
 import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
 import { GetFactsQueryManager } from "@S/Facts/Data";
 import { GetOrderDetailsQueryManager } from "@S/OrderDetails/Data/QueryManager";
@@ -84,23 +77,16 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
       EnvironmentDetailsOneTimeQueryManager(this.store, this.apiHelper),
       GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
       GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
-      GetVersionResourcesQueryManager(
-        this.apiHelper,
-        GetVersionResourcesStateHelper(this.store),
-        this.scheduler
-      ),
       GetParametersQueryManager(
         this.apiHelper,
         GetParametersStateHelper(this.store),
         this.scheduler
       ),
       GetFactsQueryManager(this.store, this.apiHelper, this.scheduler),
-      GetDesiredStateDiffQueryManager(this.apiHelper, GetDesiredStateDiffStateHelper(this.store)),
       GetOrdersQueryManager(this.apiHelper, GetOrdersStateHelper(this.store), this.scheduler),
       GetOrderDetailsQueryManager(this.apiHelper, this.store, this.scheduler),
       GetDryRunsQueryManager(this.apiHelper, this.store, this.scheduler),
       GetDryRunReportQueryManager(this.apiHelper, this.store),
-      GetDesiredStateResourceDetailsQueryManager(this.apiHelper, this.store, this.scheduler),
     ];
   }
 }

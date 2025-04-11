@@ -1,13 +1,19 @@
 import qs from "qs";
-import { Query } from "@/Core";
+import { GetVersionResourcesParams } from "./useGetVersionResources";
 
+/**
+ * Constructs the URL for fetching resources from a specific desired state version
+ *
+ * @param query - The query parameters containing version, pagination, filter, and sort information
+ * @returns The constructed URL for fetching the resources
+ */
 export function getUrl({
   version,
-  sort,
-  filter,
   pageSize,
+  filter,
+  sort,
   currentPage,
-}: Query.SubQuery<"GetVersionResources">): string {
+}: GetVersionResourcesParams): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
