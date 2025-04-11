@@ -27,7 +27,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
   }
 
   if (isSuccess) {
-    const filteredData = data
+    const filteredResources = data
       .filter((resource) => statuses.includes(resource.status))
       .filter((resource) =>
         resource.resource_id.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase())
@@ -55,7 +55,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
         <PageSection hasBodyWrapper={false} hasShadowBottom>
           {/* RemoteData will throw type error after Dry run query updates will take place, for now this component will stay as is*/}
           <DiffWizard.Controls
-            data={RemoteData.success(filteredData)}
+            data={RemoteData.success(filteredResources)}
             refs={refs}
             from={from}
             to={to}
@@ -69,7 +69,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
             />
           ) : (
             <DiffWizard.ItemList
-              items={filteredData.map(DiffWizard.fromResourceToItem)}
+              items={filteredResources.map(DiffWizard.fromResourceToItem)}
               refs={refs}
             />
           )}
