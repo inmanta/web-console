@@ -11,10 +11,23 @@ import styled from "styled-components";
 import { EventTypesList } from "@/Core";
 import { words } from "@/UI/words";
 
+/**
+ * Props interface for the Details component
+ *
+ */
 interface Props {
   event_types: string[];
 }
 
+/**
+ * Details is a component that displays detailed information about a callback's event types.
+ * It shows a grid of cards, each representing an event type with its properties.
+ *
+ * @props {Props} props - The component props
+ * @prop {string[]} event_types - Array of event types associated with the callback
+ *
+ * @returns {React.FC<Props>} A React component that renders detailed information about callback event types
+ */
 export const Details: React.FC<Props> = ({ event_types }) => {
   return (
     <DescriptionList>

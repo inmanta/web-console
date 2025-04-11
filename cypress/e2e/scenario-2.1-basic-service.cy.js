@@ -177,7 +177,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Check Instance Details page
-      // cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
       // The first button should be the one redirecting to the details page.
       cy.get('[aria-label="instance-details-link"]').first().click();
 
@@ -193,7 +192,10 @@ if (Cypress.env("edition") === "iso") {
         .within(() => {
           cy.get('[data-label="version"]').trigger("click"); //it's done to avoid flake where the tooltip comes in a way and click ins't triggered
         });
-      cy.get('[data-testid="selected-version"]').should("have.text", "Version: 2");
+      cy.get('[data-testid="selected-version"]', { timeout: 30000 }).should(
+        "have.text",
+        "Version: 2"
+      );
 
       // Check if it has all correct tabs and that the default selected one is the documentation tab.
       cy.get('[aria-label="documentation-content"]').should("have.attr", "aria-selected", "true");

@@ -6,11 +6,26 @@ import { Callback } from "@S/ServiceDetails/Core/Callback";
 import { CreateCallbackForm } from "./CreateCallbackForm";
 import { Row } from "./Row";
 
+/**
+ * Props interface for the CallbacksTable component
+ *
+ * @interface Props
+ * @property {Callback[]} callbacks - Array of callback objects to be displayed in the table
+ * @property {string} service_entity - The entity associated with the callbacks
+ */
 interface Props {
   callbacks: Callback[];
   service_entity: string;
 }
 
+/**
+ * CallbacksTable is a component that displays a list of callbacks in a table format.
+ * Each callback is rendered as a row using the Row component.
+ *
+ * @component
+ * @param {Props} props - The component props
+ * @returns {React.FC} A React component that renders a table of callbacks
+ */
 export const CallbacksTable: React.FC<Props> = ({ callbacks, service_entity }) => {
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
     key: "callbacks-expansion",
@@ -35,7 +50,6 @@ export const CallbacksTable: React.FC<Props> = ({ callbacks, service_entity }) =
           isExpanded={isExpanded(cb.callback_id)}
           key={cb.callback_id}
           callback={cb}
-          service_entity={service_entity}
           numberOfColumns={5}
         />
       ))}
