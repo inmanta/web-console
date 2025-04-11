@@ -23,6 +23,7 @@ interface Props {
 /**
  * Row is a component that renders a single row in the callbacks table.
  * It displays the callback information and handles expansion to show details.
+ * TODO PF-6 MIGRATION : Update the toggle column to use the semantic of PF-6. Current implementation is messing up the alignment of the rows.
  *
  * @component
  * @props {Props} props - The component props
