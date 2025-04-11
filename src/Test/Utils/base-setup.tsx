@@ -22,7 +22,11 @@ import { PrimaryRouteManager } from "@/UI/Routing";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { testClient } from "./react-query-setup";
 
-export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
+export function baseSetup(
+  Page: React.ReactNode,
+  halted: boolean = false,
+  initialEntries: string[] = []
+) {
   const apiHelper = new DeferredApiHelper();
 
   const scheduler = new StaticScheduler();
@@ -50,7 +54,7 @@ export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
 
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
+      <MemoryRouter initialEntries={initialEntries}>
         <DependencyProvider
           dependencies={{
             ...dependencies,

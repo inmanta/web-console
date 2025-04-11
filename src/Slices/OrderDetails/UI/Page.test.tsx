@@ -12,6 +12,8 @@ import {
   responsePartialOrder,
 } from "../Data/Mock";
 import { OrderDetailsPage } from ".";
+import { setupServer } from "msw/node";
+import { delay, http, HttpResponse } from "msw";
 
 expect.extend(toHaveNoViolations);
 
@@ -21,245 +23,246 @@ const DetailsPage = (
   </Page>
 );
 
-test("OrderDetailsView shows failed view", async () => {
-  const { component, apiHelper } = baseSetup(DetailsPage);
+describe("Order Details", () => {
+  const server = setupServer();
+  const halted = false;
+  const initialEntries = ["/order-details/123"];
 
-  render(component);
-
-  expect(
-    await screen.findByRole("region", { name: "OrderDetailsView-Loading" })
-  ).toBeInTheDocument();
-
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.left("error"));
+  beforeAll(() => {
+    server.listen();
+  });
+  beforeEach(() => {
+    server.resetHandlers();
+  });
+  afterAll(() => {
+    server.close();
   });
 
-  expect(
-    await screen.findByRole("region", { name: "OrderDetailsView-Failed" })
-  ).toBeInTheDocument();
+  test("OrderDetailsView shows failed view", async () => {
+    server.use(
+      http.get("/lsm/v2/order/1234", async () => {
+        await delay(200);
+        return HttpResponse.json({ message: "something went wrong" }, { status: 500 });
+      })
+    );
 
-  await act(async () => {
-    const results = await axe(document.body);
+    const { component } = baseSetup(DetailsPage, halted, initialEntries);
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    render(component);
 
-test("OrderDetailsView shows view for a failed order", async () => {
-  const { component, apiHelper } = baseSetup(DetailsPage);
+    expect(
+      await screen.findByRole("region", { name: "OrderDetailsView-Loading" })
+    ).toBeInTheDocument();
 
-  render(component);
+    expect(
+      await screen.findByRole("region", { name: "OrderDetailsView-Error" })
+    ).toBeInTheDocument();
 
-  expect(
-    await screen.findByRole("region", { name: "OrderDetailsView-Loading" })
-  ).toBeInTheDocument();
+    await act(async () => {
+      const results = await axe(document.body);
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: responseOrderFailed }));
-  });
-
-  expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
-  ).toBeInTheDocument();
-
-  expect(await screen.findByLabelText("OrderDetails-Heading")).toBeInTheDocument();
-
-  const orderStatus = await screen.findByLabelText("OrderState");
-
-  expect(orderStatus).toHaveTextContent(/failed/);
-
-  const orderDescription = await screen.findByLabelText("OrderDescription");
-
-  expect(orderDescription).toHaveTextContent(/Failed CREATE order/);
-
-  const serviceOrderItemRows = await screen.findAllByRole("row", {
-    name: "ServiceOrderDetailsRow",
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(serviceOrderItemRows).toHaveLength(1);
+  test("OrderDetailsView shows view for a failed order", async () => {
+    server.use(
+      http.get("/lsm/v2/order/1234", () => {
+        return HttpResponse.json({ data: responseOrderFailed });
+      })
+    );
 
-  await act(async () => {
-    const results = await axe(document.body);
+    const { component } = baseSetup(DetailsPage, halted, initialEntries);
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    render(component);
 
-test("OrderDetailsView shows view for a partial order", async () => {
-  const { component, apiHelper } = baseSetup(DetailsPage);
+    expect(
+      await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
+    ).toBeInTheDocument();
 
-  render(component);
+    expect(await screen.findByLabelText("OrderDetails-Heading")).toBeInTheDocument();
 
-  expect(
-    await screen.findByRole("region", { name: "OrderDetailsView-Loading" })
-  ).toBeInTheDocument();
+    const orderStatus = await screen.findByLabelText("OrderState");
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
+    expect(orderStatus).toHaveTextContent(/failed/);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: responsePartialOrder }));
-  });
+    const orderDescription = await screen.findByLabelText("OrderDescription");
 
-  expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
-  ).toBeInTheDocument();
+    expect(orderDescription).toHaveTextContent(/Failed CREATE order/);
 
-  const statusDescription = await screen.findByLabelText("OrderState");
+    const serviceOrderItemRows = await screen.findAllByRole("row", {
+      name: "ServiceOrderDetailsRow",
+    });
 
-  expect(statusDescription).toHaveTextContent(/partial/);
+    expect(serviceOrderItemRows).toHaveLength(1);
 
-  const orderDescription = await screen.findByLabelText("OrderDescription");
+    await act(async () => {
+      const results = await axe(document.body);
 
-  expect(orderDescription).toHaveTextContent(/Partial UPDATE order, with dependency/);
-
-  const serviceOrderItemRows = await screen.findAllByRole("row", {
-    name: "ServiceOrderDetailsRow",
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(serviceOrderItemRows).toHaveLength(2);
+  test("OrderDetailsView shows view for a partial order", async () => {
+    server.use(
+      http.get("/lsm/v2/order/1234", () => {
+        return HttpResponse.json({ data: responsePartialOrder });
+      })
+    );
 
-  await userEvent.click(screen.getAllByLabelText("Toggle-DetailsRow")[0]);
-  const rowDetails = await screen.findByLabelText("Expanded-Details");
+    const { component } = baseSetup(DetailsPage, halted, initialEntries);
 
-  expect(rowDetails).toHaveTextContent(/Show Compile Report/);
-  expect(rowDetails).toHaveTextContent(/Failure Type/);
-  expect(rowDetails).toHaveTextContent(/Reason/);
+    render(component);
 
-  const rowConfig = await screen.findByLabelText("Expanded-Config");
+    expect(
+      await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
+    ).toBeInTheDocument();
 
-  expect(rowConfig).toHaveTextContent(/Empty/);
+    const statusDescription = await screen.findByLabelText("OrderState");
 
-  expect(screen.getByLabelText("Expanded-Body")).toBeInTheDocument();
+    expect(statusDescription).toHaveTextContent(/partial/);
 
-  const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
+    const orderDescription = await screen.findByLabelText("OrderDescription");
 
-  expect(rowDependencies).not.toHaveTextContent(/Empty/);
+    expect(orderDescription).toHaveTextContent(/Partial UPDATE order, with dependency/);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    const serviceOrderItemRows = await screen.findAllByRole("row", {
+      name: "ServiceOrderDetailsRow",
+    });
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    expect(serviceOrderItemRows).toHaveLength(2);
 
-test("OrderDetailsView shows view for a in progress order", async () => {
-  const { component, apiHelper } = baseSetup(DetailsPage);
+    await userEvent.click(screen.getAllByLabelText("Toggle-DetailsRow")[0]);
+    const rowDetails = await screen.findByLabelText("Expanded-Details");
 
-  render(component);
+    expect(rowDetails).toHaveTextContent(/Show Compile Report/);
+    expect(rowDetails).toHaveTextContent(/Failure Type/);
+    expect(rowDetails).toHaveTextContent(/Reason/);
 
-  expect(
-    await screen.findByRole("region", { name: "OrderDetailsView-Loading" })
-  ).toBeInTheDocument();
+    const rowConfig = await screen.findByLabelText("Expanded-Config");
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
+    expect(rowConfig).toHaveTextContent(/Empty/);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: responseInProgressOrder }));
-  });
+    expect(screen.getByLabelText("Expanded-Body")).toBeInTheDocument();
 
-  expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
-  ).toBeInTheDocument();
+    const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
 
-  const statusDescription = await screen.findByLabelText("OrderState");
+    expect(rowDependencies).not.toHaveTextContent(/Empty/);
 
-  expect(statusDescription).toHaveTextContent(/in progress/);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  const orderDescription = await screen.findByLabelText("OrderDescription");
-
-  expect(orderDescription).toHaveTextContent(/In progress DELETE order/);
-
-  const serviceOrderItemRows = await screen.findAllByRole("row", {
-    name: "ServiceOrderDetailsRow",
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(serviceOrderItemRows).toHaveLength(1);
+  test("OrderDetailsView shows view for a in progress order", async () => {
+    server.use(
+      http.get("/lsm/v2/order/1234", () => {
+        return HttpResponse.json({ data: responseInProgressOrder });
+      })
+    );
 
-  await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
+    const { component } = baseSetup(DetailsPage, halted, initialEntries);
 
-  const rowDetails = await screen.findByLabelText("Expanded-Details");
+    render(component);
 
-  expect(rowDetails).not.toHaveTextContent(/Show Compile Report/);
-  expect(rowDetails).not.toHaveTextContent(/Failure Type/);
-  expect(rowDetails).not.toHaveTextContent(/Reason/);
+    expect(
+      await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
+    ).toBeInTheDocument();
 
-  const rowConfig = await screen.findByLabelText("Expanded-Config");
+    const statusDescription = await screen.findByLabelText("OrderState");
 
-  expect(rowConfig).toHaveTextContent(/Empty/);
+    expect(statusDescription).toHaveTextContent(/in progress/);
 
-  expect(screen.queryByLabelText("Expanded-Body")).not.toBeInTheDocument();
+    const orderDescription = await screen.findByLabelText("OrderDescription");
 
-  const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
+    expect(orderDescription).toHaveTextContent(/In progress DELETE order/);
 
-  expect(rowDependencies).toHaveTextContent(/Empty/);
+    const serviceOrderItemRows = await screen.findAllByRole("row", {
+      name: "ServiceOrderDetailsRow",
+    });
 
-  await act(async () => {
-    const results = await axe(document.body);
+    expect(serviceOrderItemRows).toHaveLength(1);
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
 
-test("OrderDetailsView shows view for completed order", async () => {
-  const { component, apiHelper } = baseSetup(DetailsPage);
+    const rowDetails = await screen.findByLabelText("Expanded-Details");
 
-  render(component);
+    expect(rowDetails).not.toHaveTextContent(/Show Compile Report/);
+    expect(rowDetails).not.toHaveTextContent(/Failure Type/);
+    expect(rowDetails).not.toHaveTextContent(/Reason/);
 
-  expect(
-    await screen.findByRole("region", { name: "OrderDetailsView-Loading" })
-  ).toBeInTheDocument();
+    const rowConfig = await screen.findByLabelText("Expanded-Config");
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
+    expect(rowConfig).toHaveTextContent(/Empty/);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: responseCompletedOrder }));
-  });
+    expect(screen.queryByLabelText("Expanded-Body")).not.toBeInTheDocument();
 
-  expect(
-    await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
-  ).toBeInTheDocument();
+    const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
 
-  const statusDescription = await screen.findByLabelText("OrderState");
+    expect(rowDependencies).toHaveTextContent(/Empty/);
 
-  expect(statusDescription).toHaveTextContent(/success/);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  const orderDescription = await screen.findByLabelText("OrderDescription");
-
-  expect(orderDescription).toHaveTextContent(/Success CREATE order/);
-
-  const serviceOrderItemRows = await screen.findAllByRole("row", {
-    name: "ServiceOrderDetailsRow",
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(serviceOrderItemRows).toHaveLength(1);
+  test("OrderDetailsView shows view for completed order", async () => {
+    server.use(
+      http.get("/lsm/v2/order/1234", () => {
+        return HttpResponse.json({ data: responseCompletedOrder });
+      })
+    );
 
-  await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
+    const { component } = baseSetup(DetailsPage, halted, initialEntries);
 
-  const rowDetails = await screen.findByLabelText("Expanded-Details");
+    render(component);
 
-  expect(rowDetails).toHaveTextContent(/Show Compile Report/);
-  expect(rowDetails).not.toHaveTextContent(/Failure Type/);
-  expect(rowDetails).not.toHaveTextContent(/Reason/);
+    expect(
+      await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
+    ).toBeInTheDocument();
 
-  const rowConfig = await screen.findByLabelText("Expanded-Config");
+    const statusDescription = await screen.findByLabelText("OrderState");
 
-  expect(rowConfig).toHaveTextContent(/Empty/);
+    expect(statusDescription).toHaveTextContent(/success/);
 
-  const rowBody = await screen.findByLabelText("Expanded-Body");
+    const orderDescription = await screen.findByLabelText("OrderDescription");
 
-  expect(rowBody).toHaveTextContent(/completed service/);
+    expect(orderDescription).toHaveTextContent(/Success CREATE order/);
 
-  const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
+    const serviceOrderItemRows = await screen.findAllByRole("row", {
+      name: "ServiceOrderDetailsRow",
+    });
 
-  expect(rowDependencies).toHaveTextContent(/Empty/);
+    expect(serviceOrderItemRows).toHaveLength(1);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await userEvent.click(screen.getByLabelText("Toggle-DetailsRow"));
 
-    expect(results).toHaveNoViolations();
+    const rowDetails = await screen.findByLabelText("Expanded-Details");
+
+    expect(rowDetails).toHaveTextContent(/Show Compile Report/);
+    expect(rowDetails).not.toHaveTextContent(/Failure Type/);
+    expect(rowDetails).not.toHaveTextContent(/Reason/);
+
+    const rowConfig = await screen.findByLabelText("Expanded-Config");
+
+    expect(rowConfig).toHaveTextContent(/Empty/);
+
+    const rowBody = await screen.findByLabelText("Expanded-Body");
+
+    expect(rowBody).toHaveTextContent(/completed service/);
+
+    const rowDependencies = await screen.findByLabelText("Expanded-Dependencies");
+
+    expect(rowDependencies).toHaveTextContent(/Empty/);
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });
