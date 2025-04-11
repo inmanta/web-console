@@ -21,7 +21,8 @@ interface Props {
 }
 
 /**
- * CreateCallbackForm is a component that provides a form interface for creating new callbacks.
+  * CreateCallbackForm component
+ * Provides a form for creating new callbacks.
  * It allows users to input callback URL, ID, log level, and event types, and handles the creation
  * of callbacks through the API.
  *
