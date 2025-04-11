@@ -3,7 +3,7 @@ import { Resource } from "@/Core/Domain";
 import { REFETCH_INTERVAL, useGet } from "../../helpers";
 
 /**
- * Interface for the API response containing the resource details
+ * Interface for the API response containing the resource details for a desired state version
  */
 interface Result {
   data: Resource.VersionedDetails;
