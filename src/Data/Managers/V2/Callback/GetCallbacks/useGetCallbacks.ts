@@ -3,9 +3,9 @@ import { Callback } from "@/Slices/ServiceDetails/Core/Callback";
 import { CustomError, useGet } from "../../helpers";
 
 /**
- * interface of Result of the useGetCallbacks React Query
+ * interface of Response of the useGetCallbacks Query Call
  */
-interface Result {
+interface Response {
   data: Callback[];
 }
 
@@ -23,7 +23,7 @@ interface GetDesiredStates {
  * @returns {UseQueryResult<Callback[], CustomError>} returns.useOneTime - Fetch the callbacks with a single query.
  */
 export const useGetCallbacks = (): GetDesiredStates => {
-  const get = useGet()<Result>;
+  const get = useGet()<Response>;
 
   return {
     useOneTime: (): UseQueryResult<Callback[], CustomError> =>
