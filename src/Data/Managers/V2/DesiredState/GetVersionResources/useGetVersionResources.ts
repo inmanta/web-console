@@ -3,7 +3,7 @@ import { PageSize, Pagination } from "@/Core";
 import { Resource } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
-import { useGet } from "../../helpers";
+import { REFETCH_INTERVAL, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**
@@ -84,7 +84,7 @@ export const useGetVersionResources = ({
           currentPage,
         ],
         queryFn: () => get(url),
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),

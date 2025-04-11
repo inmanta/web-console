@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Diff } from "@/Core/Domain";
-import { useGet } from "../../helpers";
+import { REFETCH_INTERVAL, useGet } from "../../helpers";
 
 /**
  * Interface for the API response containing the diff data
@@ -38,7 +38,7 @@ export const useGetDesiredStateDiff = (): GetDesiredStateDiff => {
       useQuery({
         queryKey: ["get_desired_state_diff-continuous", from, to],
         queryFn: () => get(getUrl(from, to)),
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data) => data.data,
       }),
   };

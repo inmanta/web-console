@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Resource } from "@/Core/Domain";
-import { useGet } from "../../helpers";
+import { REFETCH_INTERVAL, useGet } from "../../helpers";
 
 /**
  * Interface for the API response containing the resource details
@@ -41,7 +41,7 @@ export const useGetDesiredStateResourceDetails = (
       useQuery({
         queryKey: ["get_desired_state_resource_details-continuous", version, id],
         queryFn: () => get(getUrl(version, id)),
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data) => data.data,
       }),
   };
