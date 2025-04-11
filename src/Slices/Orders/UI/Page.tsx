@@ -1,16 +1,23 @@
 import React, { useContext, useEffect } from "react";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { EmptyView, PageContainer, OldPaginationWidget, RemoteDataView } from "@/UI/Components";
+import {
+  EmptyView,
+  PageContainer,
+  LoadingView,
+  PaginationWidget,
+  ErrorView,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { SortKey } from "../Core/Query";
 import { OrdersTable } from "./OrdersTable";
 import { OrdersTablePresenter } from "./OrdersTablePresenter";
 import { TableControls } from "./TableControls";
+import { useGetOrders } from "@/Data/Managers/V2/Order";
 
 export const Page: React.FC = () => {
-  const { queryResolver, featureManager } = useContext(DependencyContext);
+  const { featureManager } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "Orders",
@@ -23,9 +30,7 @@ export const Page: React.FC = () => {
     default: { name: "created_at", order: "desc" },
     route: "Orders",
   });
-
-  const [data, retry] = queryResolver.useContinuous<"GetOrders">({
-    kind: "GetOrders",
+  const { data, isSuccess, isError, error, refetch } = useGetOrders().useContinuous({
     sort,
     pageSize,
     currentPage,
@@ -39,40 +44,41 @@ export const Page: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
-  return (
-    <PageContainer pageTitle={words("orders.title")}>
-      <TableControls
-        paginationWidget={
-          <OldPaginationWidget
-            data={data}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            setCurrentPage={setCurrentPage}
-          />
-        }
-      />
-      <RemoteDataView
-        data={data}
-        label="OrdersView"
-        retry={retry}
-        SuccessView={(orders) =>
-          orders.data.length <= 0 || disabledOrderView ? (
-            <EmptyView
-              message={disabledOrderView ? words("orders.disabled") : words("orders.table.empty")}
-              aria-label="OrdersView-Empty"
+  if (isError) {
+    <ErrorView ariaLabel="OrdersView-Error" retry={refetch} message={error.message} />;
+  }
+
+  if (isSuccess) {
+    return (
+      <PageContainer pageTitle={words("orders.title")}>
+        <TableControls
+          paginationWidget={
+            <PaginationWidget
+              data={data}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              setCurrentPage={setCurrentPage}
             />
-          ) : (
-            <div aria-label="OrdersView-Success">
-              <OrdersTable
-                rows={orders.data}
-                tablePresenter={new OrdersTablePresenter()}
-                sort={sort}
-                setSort={setSort}
-              />
-            </div>
-          )
-        }
-      />
-    </PageContainer>
-  );
+          }
+        />
+        {data.data.length <= 0 || disabledOrderView ? (
+          <EmptyView
+            message={disabledOrderView ? words("orders.disabled") : words("orders.table.empty")}
+            aria-label="OrdersView-Empty"
+          />
+        ) : (
+          <div aria-label="OrdersView-Success">
+            <OrdersTable
+              rows={data.data}
+              tablePresenter={new OrdersTablePresenter()}
+              sort={sort}
+              setSort={setSort}
+            />
+          </div>
+        )}
+      </PageContainer>
+    );
+  }
+
+  return <LoadingView ariaLabel="OrdersView-Loading" />;
 };
