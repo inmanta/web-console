@@ -1,4 +1,4 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
@@ -9,6 +9,7 @@ import { MockEnvironmentHandler } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "../../ModalProvider";
 import { EnvironmentControls } from "./EnvironmentControls";
+import { axe } from "jest-axe";
 const fetchMock = jest.fn();
 
 global.fetch = fetchMock;
@@ -48,6 +49,22 @@ function setup() {
 
 beforeEach(() => {
   fetchMock.mockClear();
+});
+
+test("GIVEN EnvironmentControls WHEN rendered THEN it should be accessible", async () => {
+  fetchMock.mockImplementationOnce(() =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ data: EnvironmentDetails.a }),
+    })
+  );
+
+  const { component } = setup();
+  const { container } = render(component);
+
+  await act(async () => {
+    expect(await axe(container)).toHaveNoViolations();
+  });
 });
 
 test("EnvironmentControls shows halt button when environment is not halted", async () => {

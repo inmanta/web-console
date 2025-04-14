@@ -1,4 +1,4 @@
-import React from "react";
+import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClientProvider, QueryClient, QueryObserverResult } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
@@ -53,7 +53,9 @@ test("GIVEN Navigation THEN it should be accessible", async () => {
   const { component } = setup(undefined, TestServerStatus.withLsm);
   const { container } = render(component);
 
-  expect(await axe(container)).toHaveNoViolations();
+  await act(async () => {
+    expect(await axe(container)).toHaveNoViolations();
+  });
 });
 
 test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => {

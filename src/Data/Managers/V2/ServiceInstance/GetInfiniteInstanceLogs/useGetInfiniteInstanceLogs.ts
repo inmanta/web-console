@@ -1,7 +1,7 @@
 import { UseInfiniteQueryResult, useInfiniteQuery } from "@tanstack/react-query";
 import { Pagination } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { CustomError, useGet } from "../../helpers";
+import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
 interface LogsResponse {
   data: InstanceLog[];
@@ -45,7 +45,7 @@ export const useGetInfiniteInstanceLogs = (
             `/lsm/v1/service_inventory/${service}/${instance}/log?${pageParam ? pageParam : initialParameters}`
           );
         },
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data) => {
           return data.pages.flatMap((page) => page.data);
         },

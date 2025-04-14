@@ -3,7 +3,7 @@ import { Pagination, ServiceInstanceModelWithTargetStates } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { ServiceInstanceParams } from "@/Core/Domain/ServiceInstanceParams";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
-import { CustomError, useGet } from "../../helpers";
+import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 interface ResponseBody {
@@ -65,7 +65,7 @@ export const useGetInstances = (
       useQuery({
         queryKey: ["get_instances-continuous", serviceName, filter, sort, pageSize, currentPage],
         queryFn: () => get(url),
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),

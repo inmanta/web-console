@@ -1,17 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ParsedNumber, RemoteData } from "@/Core";
+import { ParsedNumber } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { getPaginationHandlers } from "@/Data/Managers/Helpers";
 import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Managers/V2/DesiredState";
 import {
   ToastAlert,
   PageContainer,
-  OldPaginationWidget,
   ConfirmUserActionForm,
   EmptyView,
   LoadingView,
   ErrorView,
+  PaginationWidget,
 } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
@@ -104,9 +103,6 @@ export const Page: React.FC = () => {
   }
 
   if (isSuccess) {
-    const handlers =
-      typeof data.links === "undefined" ? {} : getPaginationHandlers(data.links, data.metadata);
-
     return (
       <PageContainer pageTitle={words("desiredState.title")}>
         <GetDesiredStatesContext.Provider
@@ -124,11 +120,8 @@ export const Page: React.FC = () => {
             filter={filter}
             setFilter={setFilter}
             paginationWidget={
-              <OldPaginationWidget
-                data={RemoteData.success({
-                  handlers,
-                  metadata: data.metadata,
-                })}
+              <PaginationWidget
+                data={data}
                 pageSize={pageSize}
                 setPageSize={setPageSize}
                 setCurrentPage={setCurrentPage}

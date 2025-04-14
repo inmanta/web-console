@@ -1,22 +1,18 @@
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
-import { getStoreInstance, QueryResolverImpl } from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolverImpl,
-  StaticScheduler,
-  Resource,
-} from "@/Test";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { getStoreInstance } from "@/Data";
+import { dependencies } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
-import { ResourceDetailsQueryManager, ResourceDetailsStateHelper } from "@S/ResourceDetails/Data";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { View } from "./View";
 
@@ -24,95 +20,119 @@ expect.extend(toHaveNoViolations);
 
 function setup() {
   const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      ResourceDetailsQueryManager(apiHelper, ResourceDetailsStateHelper(store), scheduler),
-    ])
-  );
 
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-        }}
-      >
-        <StoreProvider store={store}>
-          <Page>
-            <View id={Resource.id} />
-          </Page>
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={testClient}>
+      <MemoryRouter>
+        <DependencyProvider dependencies={dependencies}>
+          <StoreProvider store={store}>
+            <Page>
+              <View id={"abc"} />
+            </Page>
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, scheduler, apiHelper };
+  return { component };
 }
+describe("ResourceDetailsView", () => {
+  const server = setupServer();
 
-test("GIVEN The Resource details view THEN details data is fetched immediately", async () => {
-  const { component, apiHelper } = setup();
+  beforeAll(() => server.listen());
+  beforeEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
-  render(component);
+  test("GIVEN The Resource details view THEN details data is fetched immediately", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc", () => {
+        return HttpResponse.json({ data: ResourceDetails.a });
+      })
+    );
+    const { component } = setup();
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0].url).toEqual(`/api/v2/resource/${Resource.encodedId}`);
+    render(component);
+    expect(screen.getByLabelText("ResourceDetails-Loading")).toBeVisible();
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
+    expect(await screen.findByLabelText("ResourceDetails-Success")).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(await screen.findByText(ResourceDetails.a.attributes.path)).toBeVisible();
+  test("GIVEN The Resource details view WHEN the user clicks on the requires tab AND the requires table is empty THEN the empty state is shown", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc", () => {
+        return HttpResponse.json({
+          data: { ...ResourceDetails.a, requires_status: {} },
+        });
+      })
+    );
+    const { component } = setup();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    render(component);
+    expect(await screen.findByLabelText("ResourceDetails-Success")).toBeVisible();
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    await userEvent.click(
+      screen.getAllByRole("tab", {
+        name: words("resources.requires.title"),
+      })[0]
+    );
 
-test("GIVEN The Resource details view WHEN the user clicks on the requires tab THEN the requires table is shown", async () => {
-  const { component, apiHelper } = setup();
+    expect(await screen.findByLabelText("ResourceRequires-Empty")).toBeVisible();
 
-  render(component);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
-  });
-
-  await userEvent.click(
-    screen.getAllByRole("tab", {
-      name: words("resources.requires.title"),
-    })[0]
-  );
-
-  expect(apiHelper.resolvedRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests).toHaveLength(0);
-
-  expect(await screen.findByRole("grid", { name: "ResourceRequires-Success" })).toBeVisible();
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("GIVEN The Resource details view THEN shows status label", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(screen.getByTestId("Status-deployed")).toBeVisible();
+  test("GIVEN The Resource details view WHEN the user clicks on the requires tab THEN the requires table is shown", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc", () => {
+        return HttpResponse.json({ data: ResourceDetails.a });
+      })
+    );
+    const { component } = setup();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    render(component);
+    expect(await screen.findByLabelText("ResourceDetails-Success")).toBeVisible();
 
-    expect(results).toHaveNoViolations();
+    await userEvent.click(
+      screen.getAllByRole("tab", {
+        name: words("resources.requires.title"),
+      })[0]
+    );
+    expect(await screen.findByRole("grid", { name: "ResourceRequires-Success" })).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("GIVEN The Resource details view THEN shows status label", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc", () => {
+        return HttpResponse.json({ data: ResourceDetails.a });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByTestId("Status-deployed")).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

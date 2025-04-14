@@ -7,9 +7,9 @@ import {
 } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
+import { DiscoveredResource } from "@/Data/Managers/V2/DiscoveredResources";
 import { CodeHighlighter, Toggle } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { DiscoveredResource } from "../Core/Query";
 import { DiscoveredResourceLink } from "./Components";
 
 interface Props {

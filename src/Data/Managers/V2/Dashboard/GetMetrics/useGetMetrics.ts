@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { BackendMetricData } from "@/Slices/Dashboard/Core/Domain";
-import { CustomError, useGet } from "../../helpers";
+import { CustomError, REFETCH_INTERVAL, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 export interface GetMetricsParams {
   startDate: string;
@@ -39,7 +39,7 @@ export const useGetMetrics = (): GetMetrics => {
         queryKey: ["get_metrics-continuous", params],
         queryFn: () => get(getUrl(params)),
         select: (data) => data.data,
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };
