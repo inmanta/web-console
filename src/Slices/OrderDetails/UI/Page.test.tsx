@@ -3,7 +3,6 @@ import { Page } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
 import { baseSetup } from "@/Test/Utils/base-setup";
 import {
   responseCompletedOrder,
@@ -15,6 +14,11 @@ import { OrderDetailsPage } from ".";
 import { setupServer } from "msw/node";
 import { delay, http, HttpResponse } from "msw";
 
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useParams: jest.fn().mockReturnValue({ id: "1234" }),
+}));
+
 expect.extend(toHaveNoViolations);
 
 const DetailsPage = (
@@ -25,8 +29,6 @@ const DetailsPage = (
 
 describe("Order Details", () => {
   const server = setupServer();
-  const halted = false;
-  const initialEntries = ["/order-details/123"];
 
   beforeAll(() => {
     server.listen();
@@ -46,7 +48,7 @@ describe("Order Details", () => {
       })
     );
 
-    const { component } = baseSetup(DetailsPage, halted, initialEntries);
+    const { component } = baseSetup(DetailsPage);
 
     render(component);
 
@@ -72,7 +74,7 @@ describe("Order Details", () => {
       })
     );
 
-    const { component } = baseSetup(DetailsPage, halted, initialEntries);
+    const { component } = baseSetup(DetailsPage);
 
     render(component);
 
@@ -110,7 +112,7 @@ describe("Order Details", () => {
       })
     );
 
-    const { component } = baseSetup(DetailsPage, halted, initialEntries);
+    const { component } = baseSetup(DetailsPage);
 
     render(component);
 
@@ -163,7 +165,7 @@ describe("Order Details", () => {
       })
     );
 
-    const { component } = baseSetup(DetailsPage, halted, initialEntries);
+    const { component } = baseSetup(DetailsPage);
 
     render(component);
 
@@ -217,7 +219,7 @@ describe("Order Details", () => {
       })
     );
 
-    const { component } = baseSetup(DetailsPage, halted, initialEntries);
+    const { component } = baseSetup(DetailsPage);
 
     render(component);
 
