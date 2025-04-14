@@ -10,28 +10,25 @@ interface Result {
 }
 
 /**
- * Return Signature of the useGetServiceModel React Query
+ * Return Signature of the useGetOrderDetails React Query
  */
-interface GetServiceModels {
+interface GetOrderDetails {
   useContinuous: (id: string) => UseQueryResult<ServiceOrder, CustomError>;
 }
 
 /**
- * React Query hook to fetch the service models
+ * React Query hook to fetch the order details
  *
- * @param environment {string} - the environment in which the services belongs
- *
- * @returns {GetServiceModels} An object containing the different available queries.
- * @returns {UseQueryResult<QueryData, CustomError>} returns.useOneTime - Fetch the service models with a single query.
- * @returns {UseQueryResult<QueryData, CustomError>} returns.useContinuous - Fetch the service models with an interval of 5s.
+ * @returns {GetOrderDetails} An object containing the different available queries.
+ * @returns {UseQueryResult<QueryData, CustomError>} returns.useContinuous - Fetch the order details with an interval of 5s.
  */
-export const useGetOrderDetails = (): GetServiceModels => {
+export const useGetOrderDetails = (): GetOrderDetails => {
   const get = useGet()<Result>;
 
   return {
     useContinuous: (id): UseQueryResult<ServiceOrder, CustomError> =>
       useQuery({
-        queryKey: ["get_service_models-continuous", id],
+        queryKey: ["get_order_details-continuous", id],
         queryFn: () => get(`/lsm/v2/order/${id}`),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => data.data,

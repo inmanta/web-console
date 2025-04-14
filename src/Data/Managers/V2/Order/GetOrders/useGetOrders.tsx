@@ -15,10 +15,16 @@ interface Result {
   metadata: Pagination.Metadata;
 }
 
+/**
+ * Extended interface that includes pagination handlers for the orders response
+ */
 interface QueryData extends Result {
   handlers: Pagination.Handlers;
 }
 
+/**
+ * Interface for parameters required to fetch orders
+ */
 export interface OrdersQueryParams {
   sort?: Sort.Sort<SortKey>;
   pageSize: PageSize.PageSize;
@@ -26,28 +32,25 @@ export interface OrdersQueryParams {
 }
 
 /**
- * Return Signature of the useGetServiceModel React Query
+ * Return Signature of the useGetOrders React Query
  */
-interface GetServiceModels {
+interface GetOrders {
   useContinuous: (params: OrdersQueryParams) => UseQueryResult<QueryData, CustomError>;
 }
 
 /**
- * React Query hook to fetch the service models
+ * React Query hook to fetch the orders
  *
- * @param environment {string} - the environment in which the services belongs
- *
- * @returns {GetServiceModels} An object containing the different available queries.
- * @returns {UseQueryResult<QueryData, CustomError>} returns.useOneTime - Fetch the service models with a single query.
- * @returns {UseQueryResult<QueryData, CustomError>} returns.useContinuous - Fetch the service models with an interval of 5s.
+ * @returns {GetOrders} An object containing the different available queries.
+ * @returns {UseQueryResult<QueryData, CustomError>} returns.useContinuous - Fetch the orders with an interval of 5s.
  */
-export const useGetOrders = (): GetServiceModels => {
+export const useGetOrders = (): GetOrders => {
   const get = useGet()<Result>;
 
   return {
     useContinuous: (params): UseQueryResult<QueryData, CustomError> =>
       useQuery({
-        queryKey: ["get_service_models-continuous", ...Array.from(Object.values(params))],
+        queryKey: ["get_orders-continuous", ...Array.from(Object.values(params))],
         queryFn: () => get(getUrl(params)),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
