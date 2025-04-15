@@ -10,6 +10,17 @@ interface Props {
   paused: boolean;
 }
 
+/**
+ * ActionButton - component that renders a button to pause or unpause an agent.
+ * It uses the `usePauseAgent` hook to perform the pause/unpause action and displays a tooltip
+ * when the environment is halted, disabling the button.
+ *
+ * @props {Props} props - The props for the ActionButton component.
+ * @prop {string} name - The name of the agent to be paused or unpaused.
+ * @prop {boolean} paused - Indicates whether the agent is currently paused.
+ *
+ * @returns {React.FC<Props>} A button wrapped in a tooltip that performs the pause/unpause action.
+ */
 export const ActionButton: React.FC<Props> = ({ name, paused }) => {
   const { environmentModifier } = useContext(DependencyContext);
   const { setErrorMessage } = useContext(GetAgentsContext);
