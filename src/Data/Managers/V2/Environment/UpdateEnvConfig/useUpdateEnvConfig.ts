@@ -28,7 +28,8 @@ export const useUpdateEnvConfig = (
   const post = usePost()<UpdateValue>;
 
   return useMutation({
-    mutationFn: ({ id, updatedValue }) => post(`/api/v2/environment_settings/${id}`, updatedValue),
+    mutationFn: ({ id, updatedValue }) =>
+      post(`/api/v2/environment_settings/${encodeURI(id)}`, updatedValue),
     mutationKey: ["update_env_config"],
     onSuccess: () => {
       client.invalidateQueries({

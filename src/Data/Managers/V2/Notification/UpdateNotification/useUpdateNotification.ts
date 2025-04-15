@@ -42,7 +42,9 @@ export const useUpdateNotification = (
 
   return useMutation({
     mutationFn: async (params: UpdateNotificationParams) => {
-      await Promise.all(params.ids.map((id) => patch(`/api/v2/notification/${id}`, params.body)));
+      await Promise.all(
+        params.ids.map((id) => patch(`/api/v2/notification/${encodeURIComponent(id)}`, params.body))
+      );
     },
     onSuccess: () => {
       // Invalidate relevant queries based on origin

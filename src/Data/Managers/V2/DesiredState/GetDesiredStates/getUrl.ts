@@ -2,6 +2,7 @@ import moment from "moment-timezone";
 import qs from "qs";
 import { RangeOperator } from "@/Core";
 import { GetDesiredStatesParams } from "./useGetDesiredStates";
+import { urlEncodeParams } from "../../helpers/utils";
 
 /**
  * Constructs the URL for fetching desired states based on the provided query parameters.
@@ -11,10 +12,9 @@ import { GetDesiredStatesParams } from "./useGetDesiredStates";
  * @param timezone - The timezone to use for date conversions (default: guessed timezone).
  * @returns The constructed URL for fetching desired states.
  */
-export function getUrl(
-  { pageSize, filter, currentPage }: GetDesiredStatesParams,
-  timezone = moment.tz.guess()
-): string {
+export function getUrl(params: GetDesiredStatesParams, timezone = moment.tz.guess()): string {
+  const { filter, pageSize, currentPage } = urlEncodeParams<GetDesiredStatesParams>(params);
+
   const defaultFilter = {};
   const filterWithDefaults =
     filter && filter.status && filter.status?.length > 0 ? filter : { ...filter, ...defaultFilter };

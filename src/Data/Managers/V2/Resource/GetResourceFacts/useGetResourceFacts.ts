@@ -1,7 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Fact } from "@/Slices/Facts/Core/Domain";
 import { useGet, REFETCH_INTERVAL } from "../../helpers";
-import { getUrl } from "./getUrl";
 
 /**
  * Result interface for the resource facts API response
@@ -32,13 +31,13 @@ export const useGetResourceFacts = (): GetResourceFacts => {
     useOneTime: (resourceId: string): UseQueryResult<Fact[], Error> =>
       useQuery({
         queryKey: ["get_resource_facts-one_time", resourceId],
-        queryFn: () => get(getUrl(resourceId)),
+        queryFn: () => get(`/api/v2/resource/${encodeURIComponent(resourceId)}/facts`),
         select: (data) => data.data,
       }),
     useContinuous: (resourceId: string): UseQueryResult<Fact[], Error> =>
       useQuery({
         queryKey: ["get_resource_facts-continuous", resourceId],
-        queryFn: () => get(getUrl(resourceId)),
+        queryFn: () => get(`/api/v2/resource/${encodeURIComponent(resourceId)}/facts`),
         select: (data) => data.data,
         refetchInterval: REFETCH_INTERVAL,
       }),

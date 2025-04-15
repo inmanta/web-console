@@ -1,7 +1,10 @@
 import qs from "qs";
 import { GetNotificationsParams } from "./useGetNotifications";
+import { urlEncodeParams } from "../../helpers/utils";
 
-export function getUrl({ filter, pageSize, currentPage }: GetNotificationsParams): string {
+export function getUrl(params: GetNotificationsParams): string {
+  const { filter, pageSize, currentPage } = urlEncodeParams<GetNotificationsParams>(params);
+
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(

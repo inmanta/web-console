@@ -1,5 +1,6 @@
 import qs from "qs";
 import { GetVersionResourcesParams } from "./useGetVersionResources";
+import { urlEncodeParams } from "../../helpers/utils";
 
 /**
  * Constructs the URL for fetching resources from a specific desired state version
@@ -7,13 +8,10 @@ import { GetVersionResourcesParams } from "./useGetVersionResources";
  * @param query - The query parameters containing version, pagination, filter, and sort information
  * @returns The constructed URL for fetching the resources
  */
-export function getUrl({
-  version,
-  pageSize,
-  filter,
-  sort,
-  currentPage,
-}: GetVersionResourcesParams): string {
+export function getUrl(params: GetVersionResourcesParams): string {
+  const { version, filter, sort, pageSize, currentPage } =
+    urlEncodeParams<GetVersionResourcesParams>(params);
+
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
