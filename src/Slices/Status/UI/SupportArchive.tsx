@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Alert, AlertActionCloseButton, AlertGroup } from "@patternfly/react-core";
-import { useCreateSupportArchive } from "@/Data/Managers/V2/Miscellaneous/CreateSupportArchive";
+import { useCreateSupportArchive } from "@/Data/Managers/V2/Miscellaneous";
 import { DependencyContext } from "@/UI/Dependency";
 import { DownloadButton } from "./Components";
 
