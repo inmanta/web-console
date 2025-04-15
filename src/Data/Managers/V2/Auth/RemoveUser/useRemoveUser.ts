@@ -11,7 +11,7 @@ export const useRemoveUser = (): UseMutationResult<void, Error, string, unknown>
   const deleteFn = useDeleteWithoutEnv();
 
   return useMutation({
-    mutationFn: (username) => deleteFn(`/api/v2/user/${username}`),
+    mutationFn: (username) => deleteFn(`/api/v2/user/${encodeURIComponent(username)}`),
     mutationKey: ["removeUser"],
     onSuccess: () => {
       // Refetch the users query to update the list
