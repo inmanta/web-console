@@ -4,8 +4,7 @@
  * This function takes an object as input and returns a new object where all string values
  * are URL-encoded. Non-string values are left unchanged.
  *
- * @template Type - The type of the input object.
- * @param params - The object containing key-value pairs to be URL-encoded.
+ * @param {Type} params - The object containing key-value pairs to be URL-encoded.
  * @returns A new object with the same keys as the input, but with string values URL-encoded.
  */
 export function urlEncodeParams<Type extends object>(params: Type) {
