@@ -1,12 +1,12 @@
-import React, { act } from "react";
+import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { HttpResponse, http } from "msw";
+import { HttpResponse, delay, http } from "msw";
 import { setupServer } from "msw/node";
-import { Either, getShortUuidFromRaw } from "@/Core";
+import { getShortUuidFromRaw } from "@/Core";
 import { QueryResolverImpl, CommandResolverImpl, getStoreInstance } from "@/Data";
 import {
   DynamicCommandManagerResolverImpl,
@@ -73,7 +73,6 @@ function setup() {
 
   return {
     component,
-    apiHelper,
   };
 }
 
@@ -81,12 +80,16 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
   server.use(
     http.get("/lsm/v1/service_catalog/service_name_a", () => {
       return HttpResponse.json({ data: Service.a });
+    }),
+    http.get("lsm/v1/callbacks", async () => {
+      await delay(500);
+      return HttpResponse.json({ data: Callback.list });
     })
   );
   server.listen();
   const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);
 
-  const { component, apiHelper } = setup();
+  const { component } = setup();
 
   render(component);
 
@@ -95,10 +98,6 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
   await userEvent.click(callbacksButton);
 
   expect(screen.getByRole("region", { name: "Callbacks-Loading" })).toBeVisible();
-
-  await act(async () => {
-    apiHelper.resolve(Either.right({ data: Callback.list }));
-  });
 
   expect(await screen.findByRole("grid", { name: "CallbacksTable" })).toBeVisible();
   expect(screen.getByRole("row", { name: "CallbackRow-" + shortenUUID })).toBeVisible();
