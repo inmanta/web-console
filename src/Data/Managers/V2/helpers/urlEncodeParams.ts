@@ -5,7 +5,7 @@
  * are URL-encoded. Non-string values are left unchanged.
  *
  * @param {Type} params - The object containing key-value pairs to be URL-encoded.
- * @returns A new object with the same keys as the input, but with string values URL-encoded.
+ * @returns {Type} A new object with the same keys as the input, but with string values URL-encoded.
  */
 export function urlEncodeParams<Type extends object>(params: Type) {
   const encodedQuery = Object.fromEntries(
