@@ -1,5 +1,5 @@
 import qs from "qs";
-import { urlEncodeParams } from "../../helpers/utils";
+import { urlEncodeParams } from "../../helpers";
 import { GetVersionResourcesParams } from "./useGetVersionResources";
 
 /**

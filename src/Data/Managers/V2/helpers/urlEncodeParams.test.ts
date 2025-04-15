@@ -1,4 +1,4 @@
-import { urlEncodeParams } from "./utils";
+import { urlEncodeParams } from "./urlEncodeParams";
 
 describe("urlEncodeParams", () => {
   it("should encode string values in the object", () => {
