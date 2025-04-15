@@ -86,7 +86,7 @@ export const Page: React.FC = () => {
 
   return (
     <PageContainer pageTitle={words("orders.title")}>
-      <LoadingView ariaLabel="OrdersView-Loading" />{" "}
+      <LoadingView ariaLabel="OrdersView-Loading" />
     </PageContainer>
   );
 };

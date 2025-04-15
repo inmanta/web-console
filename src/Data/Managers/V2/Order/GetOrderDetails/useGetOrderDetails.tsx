@@ -3,7 +3,7 @@ import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
 /**
- * Result interface for the resources API response
+ * Result interface for the order details API response
  */
 interface Result {
   data: ServiceOrder;

@@ -7,7 +7,7 @@ import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**
- * Result interface for the resources API response
+ * Result interface for the orders API response
  */
 interface Result {
   data: ServiceOrder[];
