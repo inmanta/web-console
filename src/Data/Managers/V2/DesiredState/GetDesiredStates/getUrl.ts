@@ -1,8 +1,8 @@
 import moment from "moment-timezone";
 import qs from "qs";
 import { RangeOperator } from "@/Core";
-import { GetDesiredStatesParams } from "./useGetDesiredStates";
 import { urlEncodeParams } from "../../helpers/utils";
+import { GetDesiredStatesParams } from "./useGetDesiredStates";
 
 /**
  * Constructs the URL for fetching desired states based on the provided query parameters.

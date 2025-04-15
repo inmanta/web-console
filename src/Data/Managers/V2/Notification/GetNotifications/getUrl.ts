@@ -1,6 +1,6 @@
 import qs from "qs";
-import { GetNotificationsParams } from "./useGetNotifications";
 import { urlEncodeParams } from "../../helpers/utils";
+import { GetNotificationsParams } from "./useGetNotifications";
 
 export function getUrl(params: GetNotificationsParams): string {
   const { filter, pageSize, currentPage } = urlEncodeParams<GetNotificationsParams>(params);

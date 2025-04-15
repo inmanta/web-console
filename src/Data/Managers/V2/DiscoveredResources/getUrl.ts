@@ -1,6 +1,6 @@
 import qs from "qs";
-import { GetDiscoveredResourcesParams } from "./useGetDiscoveredResources";
 import { urlEncodeParams } from "../helpers/utils";
+import { GetDiscoveredResourcesParams } from "./useGetDiscoveredResources";
 
 /**
  * Constructs a URL for fetching discovered resources

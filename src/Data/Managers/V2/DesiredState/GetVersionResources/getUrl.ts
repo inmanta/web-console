@@ -1,6 +1,6 @@
 import qs from "qs";
-import { GetVersionResourcesParams } from "./useGetVersionResources";
 import { urlEncodeParams } from "../../helpers/utils";
+import { GetVersionResourcesParams } from "./useGetVersionResources";
 
 /**
  * Constructs the URL for fetching resources from a specific desired state version

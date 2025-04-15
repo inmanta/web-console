@@ -1,6 +1,6 @@
 import qs from "qs";
-import { GetResourcesParams } from "./useGetResources";
 import { urlEncodeParams } from "../../helpers/utils";
+import { GetResourcesParams } from "./useGetResources";
 
 /**
  * Constructs a URL for fetching resources with filtering, sorting, and pagination

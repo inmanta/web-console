@@ -1,9 +1,8 @@
 import moment from "moment-timezone";
 import qs from "qs";
 import { DateRange, RangeOperator } from "@/Core";
-import { GetResourceLogsParams } from "./useGetResourceLogs";
-import { url } from "inspector";
 import { urlEncodeParams } from "../../helpers/utils";
+import { GetResourceLogsParams } from "./useGetResourceLogs";
 
 /**
  * Constructs a URL for fetching resource logs with filtering, sorting, and pagination

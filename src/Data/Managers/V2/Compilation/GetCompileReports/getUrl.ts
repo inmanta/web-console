@@ -2,8 +2,8 @@ import moment from "moment-timezone";
 import qs from "qs";
 import { CompileStatus, RangeOperator } from "@/Core";
 import { Filter } from "@/Slices/CompileReports/Core/Query";
-import { CompileReportsParams } from "./useGetCompileReports";
 import { urlEncodeParams } from "../../helpers/utils";
+import { CompileReportsParams } from "./useGetCompileReports";
 
 export function getUrl(params: CompileReportsParams, timezone = moment.tz.guess()): string {
   const { pageSize, sort, filter, currentPage } = urlEncodeParams<CompileReportsParams>(params);
