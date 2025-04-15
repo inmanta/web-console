@@ -8,14 +8,8 @@ import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
-import { getStoreInstance, CommandResolverImpl, CommandManagerResolverImpl } from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  EnvironmentDetails,
-  MockEnvironmentHandler,
-  Resource,
-} from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { dependencies, EnvironmentDetails, MockEnvironmentHandler, Resource } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
@@ -39,10 +33,8 @@ function setup(entries?: string[]) {
       },
     },
   });
-  const apiHelper = new DeferredApiHelper();
 
   const store = getStoreInstance();
-  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
 
   const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
 
@@ -52,7 +44,6 @@ function setup(entries?: string[]) {
         <DependencyProvider
           dependencies={{
             ...dependencies,
-            commandResolver,
             environmentHandler: MockEnvironmentHandler(environment),
           }}
         >
@@ -67,7 +58,6 @@ function setup(entries?: string[]) {
   return {
     component,
     environment,
-    apiHelper,
     store,
     environmentModifier: dependencies.environmentModifier,
   };
@@ -879,12 +869,18 @@ describe("ResourcesPage", () => {
   });
 
   test("Given the ResourcesPage When clicking on deploy, then the approriate backend request is fired", async () => {
+    let body: unknown = {};
+
     server.use(
       http.get("/api/v2/resource", () => {
         return HttpResponse.json(Resource.response);
+      }),
+      http.post("/api/v1/deploy", async ({ request }) => {
+        const data = await request.json();
+        body = data;
       })
     );
-    const { component, apiHelper, environment } = setup();
+    const { component } = setup();
 
     render(component);
 
@@ -904,16 +900,10 @@ describe("ResourcesPage", () => {
 
     expect(screen.getByTestId("dot-indication")).toBeInTheDocument();
 
-    expect(apiHelper.pendingRequests).toEqual([
-      {
-        method: "POST",
-        url: "/api/v1/deploy",
-        environment,
-        body: {
-          agent_trigger_method: "push_incremental_deploy",
-        },
-      },
-    ]);
+    expect(body).toEqual({
+      agent_trigger_method: "push_incremental_deploy",
+      agents: [],
+    });
 
     await act(async () => {
       const results = await axe(document.body);
@@ -922,13 +912,19 @@ describe("ResourcesPage", () => {
     });
   });
 
-  test("Given the ResourcesPage When clicking on repair, then the approriate backend request is fired", async () => {
+  test("Given the ResourcesPage When clicking on repair, then the appropriate backend request is fired", async () => {
+    let body: unknown = {};
+
     server.use(
       http.get("/api/v2/resource", () => {
         return HttpResponse.json(Resource.response);
+      }),
+      http.post("/api/v1/deploy", async ({ request }) => {
+        const data = await request.json();
+        body = data;
       })
     );
-    const { component, apiHelper, environment } = setup();
+    const { component } = setup();
 
     render(component);
 
@@ -946,16 +942,10 @@ describe("ResourcesPage", () => {
       })
     ).toBeDisabled();
 
-    expect(apiHelper.pendingRequests).toEqual([
-      {
-        method: "POST",
-        url: "/api/v1/deploy",
-        environment,
-        body: {
-          agent_trigger_method: "push_full_deploy",
-        },
-      },
-    ]);
+    expect(body).toEqual({
+      agent_trigger_method: "push_full_deploy",
+      agents: [],
+    });
 
     await act(async () => {
       const results = await axe(document.body);

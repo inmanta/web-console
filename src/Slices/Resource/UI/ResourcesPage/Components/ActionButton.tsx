@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
+import { useDeploy } from "@/Data/Managers/V2/Miscellaneous/Deploy";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -13,13 +14,16 @@ interface Props {
 
 export const ResourcePageActionButton: React.FC<Props> = ({ kind, tooltip, textContent }) => {
   const [showSpinner, setShowSpinner] = useState(false);
-  const { environmentModifier, commandResolver } = useContext(DependencyContext);
+  const { environmentModifier } = useContext(DependencyContext);
   const isHalted = environmentModifier.useIsHalted();
 
-  const trigger = commandResolver.useGetTrigger<typeof kind>({ kind: kind });
+  const { mutate } = useDeploy();
 
   const handleClick = () => {
-    trigger();
+    mutate({
+      method: kind,
+      agents: [],
+    });
     setShowSpinner(true);
   };
 
