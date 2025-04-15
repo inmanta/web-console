@@ -1,1 +1,1 @@
-export * from "./useControlAgent";
+export * from "./usePauseAgent";

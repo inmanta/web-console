@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Switch, Tooltip } from "@patternfly/react-core";
-import { useControlAgent } from "@/Data/Managers/V2/Miscellaneous";
+import { usePauseAgent } from "@/Data/Managers/V2/Miscellaneous";
 import { words } from "@/UI/words";
 import { GetAgentsContext } from "@S/Agents/UI/GetAgentsContext";
 
@@ -11,7 +11,7 @@ interface Props {
 
 export const OnResumeToggle: React.FC<Props> = ({ name, unpauseOnResume }) => {
   const { setErrorMessage } = useContext(GetAgentsContext);
-  const { mutate } = useControlAgent({
+  const { mutate } = usePauseAgent({
     onError: (error) => {
       setErrorMessage(error.message);
     },

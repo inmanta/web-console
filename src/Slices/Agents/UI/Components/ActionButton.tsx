@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
-import { useControlAgent } from "@/Data/Managers/V2/Miscellaneous";
+import { usePauseAgent } from "@/Data/Managers/V2/Miscellaneous";
 import { DependencyContext, words } from "@/UI";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { GetAgentsContext } from "@S/Agents/UI/GetAgentsContext";
@@ -13,7 +13,7 @@ interface Props {
 export const ActionButton: React.FC<Props> = ({ name, paused }) => {
   const { environmentModifier } = useContext(DependencyContext);
   const { setErrorMessage } = useContext(GetAgentsContext);
-  const { mutate } = useControlAgent({
+  const { mutate } = usePauseAgent({
     onError: (error) => {
       setErrorMessage(error.message);
     },

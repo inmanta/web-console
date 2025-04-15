@@ -2,6 +2,12 @@ import qs from "qs";
 import { Sort } from "@/Core";
 import { GetAgentsParams } from "./useGetAgents";
 
+/**
+ * Constructs a URL for fetching agents
+ *
+ * @param {GetAgentsParams} params - The query parameters
+ * @returns {string} The constructed URL
+ */
 export function getUrl({ pageSize, sort, filter, currentPage }: GetAgentsParams): string {
   const filterParam =
     filter && Object.keys(filter).length > 0

@@ -7,21 +7,21 @@ import {
 import { usePost } from "../../helpers";
 
 /**
- * Interface for control agents parameters
+ * Interface for pausing/resuming agents parameters
  */
-interface ControlAgentParams {
+interface PauseAgentParams {
   name: string;
   action: "pause" | "unpause" | "keep_paused_on_resume" | "unpause_on_resume";
 }
 
 /**
- * React Query hook for controlling agent .
+ * React Query hook for pausing/resuming agent .
  *
  * @returns {UseMutationResult<void, Error, ConfigUpdate, unknown>}- The mutation object from `useMutation` hook.
  */
-export const useControlAgent = (
-  options?: UseMutationOptions<void, Error, ControlAgentParams, unknown>
-): UseMutationResult<void, Error, ControlAgentParams, unknown> => {
+export const usePauseAgent = (
+  options?: UseMutationOptions<void, Error, PauseAgentParams, unknown>
+): UseMutationResult<void, Error, PauseAgentParams, unknown> => {
   const client = useQueryClient();
 
   const post = usePost()<null>;
@@ -29,7 +29,7 @@ export const useControlAgent = (
   return useMutation({
     mutationFn: ({ name, action }) =>
       post(`/api/v2/agent/${encodeURIComponent(name)}/${action}`, null),
-    mutationKey: ["update_env_config"],
+    mutationKey: ["pause_agent"],
     onSuccess: () => {
       client.refetchQueries({ queryKey: ["get_agents-continuous"], type: "active" });
     },
