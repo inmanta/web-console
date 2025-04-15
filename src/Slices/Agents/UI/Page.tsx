@@ -16,6 +16,14 @@ import { AgentsTableControls } from "./AgentsTableControls";
 import { GetAgentsContext } from "./GetAgentsContext";
 import { TableProvider } from "./TableProvider";
 
+/**
+ * Agents Page - Component  responsible for rendering the Agents page in the application.
+ * It handles the state management for pagination, filtering, sorting, and data fetching
+ * for the agents list. The component also manages error handling, loading states, and
+ * displays the appropriate views based on the data fetching status.
+ *
+ * @returns {React.FC} The rendered Agents page.
+ */
 export const Page: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
