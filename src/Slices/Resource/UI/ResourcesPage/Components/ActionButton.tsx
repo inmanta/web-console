@@ -1,18 +1,31 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
-import { useDeploy } from "@/Data/Managers/V2/Agents";
+import { DeployAction, useDeploy } from "@/Data/Managers/V2/Agents";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CompileReportsIndication } from "./CompileReportsIndication";
 
 interface Props {
-  kind: "Deploy" | "Repair";
+  method: DeployAction;
   tooltip: string;
   textContent: string;
 }
 
-export const ResourcePageActionButton: React.FC<Props> = ({ kind, tooltip, textContent }) => {
+/**
+ * ActionButton component for the Resources page
+ *
+ * This component renders a button that triggers deployment actions (deploy or repair)
+ * for resources. It handles disabled states when the environment is halted and
+ * shows a loading spinner during the action.
+ *
+ * @param {DeployAction} method - The type of deployment action (deploy or repair)
+ * @param {string} tooltip - The tooltip text to display on hover
+ * @param {string} textContent - The text content of the button
+ *
+ * @returns {React.FC<Props>} A button component with appropriate state handling
+ */
+export const ResourcePageActionButton: React.FC<Props> = ({ method, tooltip, textContent }) => {
   const [showSpinner, setShowSpinner] = useState(false);
   const { environmentModifier } = useContext(DependencyContext);
   const isHalted = environmentModifier.useIsHalted();
@@ -21,7 +34,7 @@ export const ResourcePageActionButton: React.FC<Props> = ({ kind, tooltip, textC
 
   const handleClick = () => {
     mutate({
-      method: kind,
+      method,
     });
     setShowSpinner(true);
   };

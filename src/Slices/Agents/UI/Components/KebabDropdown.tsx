@@ -7,7 +7,7 @@ import {
   MenuToggleElement,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { useDeploy } from "@/Data/Managers/V2/Agents";
+import { DeployAction, useDeploy } from "@/Data/Managers/V2/Agents";
 import { words } from "@/UI";
 
 interface Props {
@@ -15,6 +15,12 @@ interface Props {
   paused: boolean;
 }
 
+/**
+ * Import the useDeploy hook from the Agents module.
+ * This hook provides functionality to deploy and repair agents through the dropdown menu.
+ *
+ * @returns {React.FC<Props>}
+ */
 export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
   const { mutate } = useDeploy();
   const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +52,7 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
           isDisabled={paused}
           onClick={() =>
             mutate({
-              method: "Deploy",
+              method: DeployAction.deploy,
               agents: [name],
             })
           }
@@ -59,7 +65,7 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
           isDisabled={paused}
           onClick={() =>
             mutate({
-              method: "Repair",
+              method: DeployAction.repair,
               agents: [name],
             })
           }

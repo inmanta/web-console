@@ -1,15 +1,28 @@
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { usePost } from "../../helpers";
 
+/**
+ * Interface representing the request body for agent deployment
+ */
 interface Body {
   agent_trigger_method: string;
   agents?: string[];
 }
 
+/**
+ * Parameters for the useDeploy mutation function
+ * @property {string} method - The deployment method, either "Deploy" for incremental deployment or "Repair" for full deployment
+ * @property {string[]} [agents] - Optional array of agent IDs to deploy or repair. If not provided, all agents will be affected
+ */
 type Params = {
-  method: "Deploy" | "Repair";
+  method: DeployAction;
   agents?: string[];
 };
+
+export enum DeployAction {
+  deploy = "Deploy",
+  repair = "Repair",
+}
 
 /**
  * React Query hook for repairing or deploying Agents
