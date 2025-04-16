@@ -39,6 +39,9 @@ interface GetParameters {
   useContinuous: () => UseQueryResult<GetParametersResponse, Error>;
 }
 
+/**
+ * Interface for parameters required to fetch parameters
+ */
 export interface GetParametersParams {
   pageSize: PageSize.PageSize;
   filter: Filter;

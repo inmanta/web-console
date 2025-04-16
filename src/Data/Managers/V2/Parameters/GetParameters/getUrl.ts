@@ -15,7 +15,6 @@ import { GetParametersParams } from "./useGetParameters";
  * @param {string} timezone - The timezone to use for date conversions, defaults to the user's local timezone
  * @returns {string} The constructed URL string for the API request
  */
-
 export function getUrl(
   { pageSize, filter, sort, currentPage }: GetParametersParams,
   timezone = moment.tz.guess()
