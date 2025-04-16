@@ -1,6 +1,7 @@
 import qs from "qs";
 import { Sort } from "@/Core";
 import { GetAgentsParams } from "./useGetAgents";
+import { urlEncodeParams } from "../../helpers";
 
 /**
  * Constructs a URL for fetching agents
@@ -8,7 +9,9 @@ import { GetAgentsParams } from "./useGetAgents";
  * @param {GetAgentsParams} params - The query parameters
  * @returns {string} The constructed URL
  */
-export function getUrl({ pageSize, sort, filter, currentPage }: GetAgentsParams): string {
+export function getUrl(params: GetAgentsParams): string {
+  const { pageSize, sort, filter, currentPage } = urlEncodeParams<GetAgentsParams>(params);
+
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
