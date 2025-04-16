@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
-import { DeployAction, useDeploy } from "@/Data/Managers/V2/Agents";
+import { DeployAction, useDeployAgents } from "@/Data/Managers/V2/Agents";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -30,7 +30,7 @@ export const ResourcePageActionButton: React.FC<Props> = ({ method, tooltip, tex
   const { environmentModifier } = useContext(DependencyContext);
   const isHalted = environmentModifier.useIsHalted();
 
-  const { mutate } = useDeploy();
+  const { mutate } = useDeployAgents();
 
   const handleClick = () => {
     mutate({

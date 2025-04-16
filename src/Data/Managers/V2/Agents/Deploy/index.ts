@@ -1,1 +1,1 @@
-export * from "./useDeploy";
+export * from "./useDeployAgents";

@@ -10,7 +10,7 @@ interface Body {
 }
 
 /**
- * Parameters for the useDeploy mutation function
+ * Parameters for the useDeployAgents mutation function
  * @property {string} method - The deployment method, either "Deploy" for incremental deployment or "Repair" for full deployment
  * @property {string[]} [agents] - Optional array of agent IDs to deploy or repair. If not provided, all agents will be affected
  */
@@ -32,7 +32,7 @@ export enum DeployAction {
  *
  * @returns {Mutation} The mutation object for sending the request.
  */
-export const useDeploy = (
+export const useDeployAgents = (
   options?: UseMutationOptions<void, Error, Params>
 ): UseMutationResult<void, Error, Params> => {
   const post = usePost()<Body>;

@@ -7,7 +7,7 @@ import {
   MenuToggleElement,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { DeployAction, useDeploy } from "@/Data/Managers/V2/Agents";
+import { DeployAction, useDeployAgents } from "@/Data/Managers/V2/Agents";
 import { words } from "@/UI";
 
 interface Props {
@@ -16,13 +16,19 @@ interface Props {
 }
 
 /**
- * Import the useDeploy hook from the Agents module.
- * This hook provides functionality to deploy and repair agents through the dropdown menu.
+ * The KebabDropdown Component
  *
- * @returns {React.FC<Props>}
+ * This component provides a dropdown menu with actions for agent management.
+ * It allows users to deploy or repair agents through a kebab-style dropdown menu.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {string} name - The name of the agent to perform actions on
+ *  @prop {boolean} paused - Whether the agent is paused, which disables action buttons
+ *
+ * @returns {React.FC<Props>} A React Component that displays a dropdown menu with agent actions
  */
 export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
-  const { mutate } = useDeploy();
+  const { mutate } = useDeployAgents();
   const [isOpen, setIsOpen] = useState(false);
 
   const onToggleClick = () => {
