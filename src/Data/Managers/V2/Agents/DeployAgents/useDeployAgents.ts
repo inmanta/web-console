@@ -15,14 +15,14 @@ interface Body {
  * @property {string[]} [agents] - Optional array of agent IDs to deploy or repair. If not provided, all agents will be affected
  */
 type Params = {
-  method: DeployAction;
+  method: DeployAgentsAction;
   agents?: string[];
 };
 
 /**
  * Enum that represents the different kinds of actions for Deploy method.
  */
-export enum DeployAction {
+export enum DeployAgentsAction {
   deploy = "Deploy",
   repair = "Repair",
 }

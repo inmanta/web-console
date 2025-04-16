@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
-import { DeployAction, useDeployAgents } from "@/Data/Managers/V2/Agents";
+import { DeployAgentsAction, useDeployAgents } from "@/Data/Managers/V2/Agents";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CompileReportsIndication } from "./CompileReportsIndication";
 
 interface Props {
-  method: DeployAction;
+  method: DeployAgentsAction;
   tooltip: string;
   textContent: string;
 }
@@ -19,7 +19,7 @@ interface Props {
  * for resources. It handles disabled states when the environment is halted and
  * shows a loading spinner during the action.
  *
- * @param {DeployAction} method - The type of deployment action (deploy or repair)
+ * @param {DeployAgentsAction} method - The type of deployment action (deploy or repair)
  * @param {string} tooltip - The tooltip text to display on hover
  * @param {string} textContent - The text content of the button
  *

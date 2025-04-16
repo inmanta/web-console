@@ -7,7 +7,7 @@ import {
   MenuToggleElement,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { DeployAction, useDeployAgents } from "@/Data/Managers/V2/Agents";
+import { DeployAgentsAction, useDeployAgents } from "@/Data/Managers/V2/Agents";
 import { words } from "@/UI";
 
 interface Props {
@@ -58,7 +58,7 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
           isDisabled={paused}
           onClick={() =>
             mutate({
-              method: DeployAction.deploy,
+              method: DeployAgentsAction.deploy,
               agents: [name],
             })
           }
@@ -71,7 +71,7 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
           isDisabled={paused}
           onClick={() =>
             mutate({
-              method: DeployAction.repair,
+              method: DeployAgentsAction.repair,
               agents: [name],
             })
           }

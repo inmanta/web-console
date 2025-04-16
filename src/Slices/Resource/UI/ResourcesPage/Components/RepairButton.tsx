@@ -1,5 +1,5 @@
 import React from "react";
-import { DeployAction } from "@/Data/Managers/V2/Agents";
+import { DeployAgentsAction } from "@/Data/Managers/V2/Agents";
 import { words } from "@/UI/words";
 import { ResourcePageActionButton } from "./ActionButton";
 
@@ -15,7 +15,7 @@ import { ResourcePageActionButton } from "./ActionButton";
 export const RepairButton: React.FC = () => {
   return (
     <ResourcePageActionButton
-      method={DeployAction.repair}
+      method={DeployAgentsAction.repair}
       tooltip={words("resources.repair.tooltip")}
       textContent={words("resources.deploySummary.repair")}
     />
