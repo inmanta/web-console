@@ -13,6 +13,12 @@ interface Handles {
   component: React.ReactElement;
 }
 
+/**
+ * EventsPageComposer is a test utility class that composes the Events component
+ * with all necessary providers for testing purposes.
+ *
+ * @returns {Handles} An object containing the composed component
+ */
 export class EventsPageComposer {
   compose(service: ServiceModel = Service.a): Handles {
     const store = getStoreInstance();
