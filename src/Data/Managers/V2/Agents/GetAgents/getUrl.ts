@@ -1,7 +1,7 @@
 import qs from "qs";
 import { Sort } from "@/Core";
-import { GetAgentsParams } from "./useGetAgents";
 import { urlEncodeParams } from "../../helpers";
+import { GetAgentsParams } from "./useGetAgents";
 
 /**
  * Constructs a URL for fetching agents
