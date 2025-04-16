@@ -1,7 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Resource } from "@/Core/Domain";
 import { useGet, REFETCH_INTERVAL } from "../../helpers";
-import { getUrl } from "./getUrl";
 
 /**
  * Resource.Details interface for the resource details API response
@@ -32,13 +31,13 @@ export const useGetResourceDetails = (): GetResourceDetails => {
     useOneTime: (id: string): UseQueryResult<Resource.Details, Error> =>
       useQuery({
         queryKey: ["get_resource_details-one_time", id],
-        queryFn: () => get(getUrl(id)),
+        queryFn: () => get(`/api/v2/resource/${encodeURIComponent(id)}`),
         select: (data) => data.data,
       }),
     useContinuous: (id: string): UseQueryResult<Resource.Details, Error> =>
       useQuery({
         queryKey: ["get_resource_details-continuous", id],
-        queryFn: () => get(getUrl(id)),
+        queryFn: () => get(`/api/v2/resource/${encodeURIComponent(id)}`),
         select: (data) => data.data,
         refetchInterval: REFETCH_INTERVAL,
       }),

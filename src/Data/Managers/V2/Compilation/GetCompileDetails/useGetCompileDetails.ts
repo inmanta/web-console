@@ -16,7 +16,7 @@ interface GetCompileDetails {
 }
 
 function getUrl(params: CompileDetailsParams): string {
-  return `/api/v2/compilereport/${params.id}`;
+  return `/api/v2/compilereport/${encodeURIComponent(params.id)}`;
 }
 
 /**

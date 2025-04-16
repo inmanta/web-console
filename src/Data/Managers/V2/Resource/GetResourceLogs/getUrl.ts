@@ -1,6 +1,7 @@
 import moment from "moment-timezone";
 import qs from "qs";
 import { DateRange, RangeOperator } from "@/Core";
+import { urlEncodeParams } from "../../helpers";
 import { GetResourceLogsParams } from "./useGetResourceLogs";
 
 /**
@@ -9,7 +10,10 @@ import { GetResourceLogsParams } from "./useGetResourceLogs";
  * @param {GetResourceLogsParams} params - The query parameters
  * @returns {string} The constructed URL
  */
-export function getUrl({ id, sort, filter, pageSize, currentPage }: GetResourceLogsParams): string {
+export function getUrl(params: GetResourceLogsParams): string {
+  const { id, sort, filter, pageSize, currentPage } =
+    urlEncodeParams<GetResourceLogsParams>(params);
+
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(

@@ -1,4 +1,5 @@
 import qs from "qs";
+import { urlEncodeParams } from "../helpers";
 import { GetDiscoveredResourcesParams } from "./useGetDiscoveredResources";
 
 /**
@@ -8,7 +9,9 @@ import { GetDiscoveredResourcesParams } from "./useGetDiscoveredResources";
  * @returns {string} The constructed URL
  */
 export const getUrl = (params: GetDiscoveredResourcesParams): string => {
-  const { filter, sort, pageSize, currentPage } = params;
+  const encodedParams = urlEncodeParams<GetDiscoveredResourcesParams>(params);
+
+  const { filter, sort, pageSize, currentPage } = encodedParams;
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
