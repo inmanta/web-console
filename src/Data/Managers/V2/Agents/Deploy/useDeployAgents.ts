@@ -20,7 +20,7 @@ type Params = {
 };
 
 /**
- * Enum that represents the different kinds of actions for Deploy method.
+ * Enum that represents the different kinds of actions for method to dpely agents.
  */
 export enum DeployAction {
   deploy = "Deploy",
@@ -43,7 +43,7 @@ export const useDeployAgents = (
         agent_trigger_method: method === "Deploy" ? "push_incremental_deploy" : "push_full_deploy",
         agents: agents,
       }),
-    mutationKey: ["deploy"],
+    mutationKey: ["deploy_agents"],
     ...options,
   });
 };
