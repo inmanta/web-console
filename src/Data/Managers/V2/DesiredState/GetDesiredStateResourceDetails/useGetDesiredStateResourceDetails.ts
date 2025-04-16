@@ -48,5 +48,5 @@ export const useGetDesiredStateResourceDetails = (
 };
 
 function getUrl(version: string, id: string): string {
-  return `/api/v2/desiredstate/${version}/resource/${id}`;
+  return `/api/v2/desiredstate/${version}/resource/${encodeURIComponent(id)}`;
 }

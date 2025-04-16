@@ -1,6 +1,6 @@
 import { Scheduler, ApiHelper, StateHelperWithEnv, stringifyObjectOrUndefined } from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
-import { getUrl } from "./getUrl";
+import { getUrl } from "@/Data/Managers/V2/Order/GetOrders/getUrl";
 
 export function GetOrdersQueryManager(
   apiHelper: ApiHelper,
