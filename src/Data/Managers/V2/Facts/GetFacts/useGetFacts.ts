@@ -54,7 +54,7 @@ interface GetFacts {
  *
  * @param {GetFactsParams} params - The parameters for the query
  * @returns {GetFacts} An object containing the available queries
- * @returns {UseQueryResult<GetFactsResponse, Error>} returns.useOneTime - Fetch the facts with a single query
+
  * @returns {UseQueryResult<GetFactsResponse, Error>} returns.useContinuous - Fetch the facts with a recurrent query with an interval of 5s
  */
 export const useGetFacts = (params: GetFactsParams): GetFacts => {
