@@ -902,7 +902,6 @@ describe("ResourcesPage", () => {
 
     expect(body).toEqual({
       agent_trigger_method: "push_incremental_deploy",
-      agents: [],
     });
 
     await act(async () => {
@@ -944,7 +943,6 @@ describe("ResourcesPage", () => {
 
     expect(body).toEqual({
       agent_trigger_method: "push_full_deploy",
-      agents: [],
     });
 
     await act(async () => {

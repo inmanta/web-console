@@ -17,6 +17,8 @@ import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as AgentsMock from "@S/Agents/Core/Mock";
 import { Page } from "./Page";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { QueryClientProvider } from "@tanstack/react-query";
 expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
@@ -39,19 +41,21 @@ function setup() {
   dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-        }}
-      >
-        <StoreProvider store={store}>
-          <Page />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={testClient}>
+      <MemoryRouter>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+            commandResolver,
+          }}
+        >
+          <StoreProvider store={store}>
+            <Page />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
   return { component, apiHelper, scheduler, store };

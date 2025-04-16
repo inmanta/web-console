@@ -3,6 +3,19 @@ import qs from "qs";
 import { RangeOperator } from "@/Core";
 import { GetParametersParams } from "./useGetParameters";
 
+/**
+ * Constructs the URL for fetching parameters with the provided query parameters.
+ *
+ * @param {GetParametersParams} params - The parameters for the request
+ *   @param {PageSize.PageSize} params.pageSize - The page size for pagination
+ *   @param {Filter} params.filter - Optional filters for the parameters query
+ *   @param {Sort.Sort} params.sort - Optional sorting criteria
+ *   @param {CurrentPage} params.currentPage - The current page for pagination
+ *
+ * @param {string} timezone - The timezone to use for date conversions, defaults to the user's local timezone
+ * @returns {string} The constructed URL string for the API request
+ */
+
 export function getUrl(
   { pageSize, filter, sort, currentPage }: GetParametersParams,
   timezone = moment.tz.guess()

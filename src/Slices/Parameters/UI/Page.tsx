@@ -15,6 +15,11 @@ import { ParametersTable } from "./ParametersTable";
 import { ParametersTablePresenter } from "./ParametersTablePresenter";
 import { TableControls } from "./TableControls";
 
+/**
+ * Page component for the Parameters View
+ *
+ * @returns {React.FC} A React component that displays a list of parameters
+ */
 export const Page: React.FC = () => {
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "Parameters",

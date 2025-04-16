@@ -24,6 +24,10 @@ interface Result {
   links: Links;
   metadata: Metadata;
 }
+
+/**
+ * Extended interface that includes pagination handlers for the resource response
+ */
 export interface GetParametersResponse extends Result {
   handlers: Handlers;
 }

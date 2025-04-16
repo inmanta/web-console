@@ -19,6 +19,9 @@ type Params = {
   agents?: string[];
 };
 
+/**
+ * Enum that represents the different kinds of actions for Deploy method.
+ */
 export enum DeployAction {
   deploy = "Deploy",
   repair = "Repair",
