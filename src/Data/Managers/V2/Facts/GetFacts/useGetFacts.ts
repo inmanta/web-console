@@ -63,7 +63,7 @@ export const useGetFacts = (params: GetFactsParams): GetFacts => {
   return {
     useContinuous: (): UseQueryResult<GetFactsResponse, Error> =>
       useQuery({
-        queryKey: ["get_facts-one_time", ...Array.from(Object.values(params))],
+        queryKey: ["get_facts-continuous", ...Array.from(Object.values(params))],
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,
