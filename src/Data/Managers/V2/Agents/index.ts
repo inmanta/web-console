@@ -1,1 +1,3 @@
-export * from "./Deploy";
+export * from "./DeployAgents";
+export * from "./GetAgents";
+export * from "./PauseAgent";

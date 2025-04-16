@@ -96,6 +96,7 @@ export const HistorySection: React.FC = () => {
                     isRowSelected={String(log.version) === selectedVersion}
                     aria-label="History-Row"
                     className={log.deleted ? "danger" : ""}
+                    id={`version-${log.version}`}
                   >
                     <HistoryRowContent log={log} />
                   </Tr>
