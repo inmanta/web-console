@@ -8,7 +8,7 @@ interface Body {
 
 type Params = {
   method: "Deploy" | "Repair";
-  agents: string[];
+  agents?: string[];
 };
 
 /**

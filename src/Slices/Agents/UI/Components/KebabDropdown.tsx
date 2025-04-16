@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Dropdown,
   DropdownItem,
@@ -7,7 +7,8 @@ import {
   MenuToggleElement,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { DependencyContext, words } from "@/UI";
+import { words } from "@/UI";
+import { useDeploy } from "@/Data/Managers/V2/Agents";
 
 interface Props {
   name: string;
@@ -15,9 +16,7 @@ interface Props {
 }
 
 export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
-  const { commandResolver } = useContext(DependencyContext);
-  const deploy = commandResolver.useGetTrigger<"Deploy">({ kind: "Deploy" });
-  const repair = commandResolver.useGetTrigger<"Repair">({ kind: "Repair" });
+  const { mutate } = useDeploy();
   const [isOpen, setIsOpen] = useState(false);
 
   const onToggleClick = () => {
@@ -45,7 +44,12 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
         <DropdownItem
           key="deploy"
           isDisabled={paused}
-          onClick={() => deploy([name])}
+          onClick={() =>
+            mutate({
+              method: "Deploy",
+              agents: [name],
+            })
+          }
           component="button"
         >
           {words("agents.actions.deploy")}
@@ -53,7 +57,12 @@ export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
         <DropdownItem
           key="repair"
           isDisabled={paused}
-          onClick={() => repair([name])}
+          onClick={() =>
+            mutate({
+              method: "Repair",
+              agents: [name],
+            })
+          }
           component="button"
         >
           {words("agents.actions.repair")}

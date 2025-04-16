@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
-import { useDeploy } from "@/Data/Managers/V2/Miscellaneous/Deploy";
+import { useDeploy } from "@/Data/Managers/V2/Agents";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -22,7 +22,6 @@ export const ResourcePageActionButton: React.FC<Props> = ({ kind, tooltip, textC
   const handleClick = () => {
     mutate({
       method: kind,
-      agents: [],
     });
     setShowSpinner(true);
   };
