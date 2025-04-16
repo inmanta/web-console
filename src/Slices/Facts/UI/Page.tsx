@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGetFacts } from "@/Data/Managers/V2/Facts/GetFacts/useGetFacts";
@@ -9,7 +9,6 @@ import {
   PageContainer,
   PaginationWidget,
 } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Filter, SortKey } from "@S/Facts/Core/Query";
 import { FactsTable } from "./FactsTable";
