@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
-import { usePauseAgent } from "@/Data/Managers/V2/Miscellaneous";
+import { usePauseAgent } from "@/Data/Managers/V2/Agents";
 import { DependencyContext, words } from "@/UI";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { GetAgentsContext } from "@S/Agents/UI/GetAgentsContext";

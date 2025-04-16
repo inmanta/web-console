@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Switch, Tooltip } from "@patternfly/react-core";
-import { usePauseAgent } from "@/Data/Managers/V2/Miscellaneous";
+import { usePauseAgent } from "@/Data/Managers/V2/Agents";
 import { words } from "@/UI/words";
 import { GetAgentsContext } from "@S/Agents/UI/GetAgentsContext";
 

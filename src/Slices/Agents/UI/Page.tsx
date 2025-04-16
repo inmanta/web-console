@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetAgents } from "@/Data/Managers/V2/Miscellaneous";
+import { useGetAgents } from "@/Data/Managers/V2/Agents";
 import {
   EmptyView,
   ToastAlert,
