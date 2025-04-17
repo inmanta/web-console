@@ -86,11 +86,6 @@ export const View: React.FC<Props> = ({ version }) => {
     setUpdatedList(false);
   }, [updatedList, data]);
 
-  const updateList = async () => {
-    await (refetch as () => Promise<void>)();
-    setUpdatedList(true);
-  };
-
   return (
     <>
       <ToastAlert
@@ -118,7 +113,7 @@ export const View: React.FC<Props> = ({ version }) => {
               searchFilter={searchFilter}
               setSearchFilter={setSearchFilter}
             />
-            <TriggerDryRunAction version={version} updateList={updateList} />
+            <TriggerDryRunAction version={version} />
           </ToolbarContent>
         </Toolbar>
       </PageSection>

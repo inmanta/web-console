@@ -1,31 +1,23 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Button, ToolbarGroup } from "@patternfly/react-core";
-import { Maybe } from "@/Core";
 import { ToastAlert } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { useTriggerDryRun } from "@/Data/Managers/V2/DryRun";
 
 interface Props {
   version: string;
-  updateList(): void;
 }
 
-export const TriggerDryRunAction: React.FC<Props> = ({ version, updateList }) => {
-  const { commandResolver } = useContext(DependencyContext);
+export const TriggerDryRunAction: React.FC<Props> = ({ version }) => {
   const [errorMessage, setErrorMessage] = useState("");
-  const trigger = commandResolver.useGetTrigger<"TriggerDryRun">({
-    kind: "TriggerDryRun",
-    version,
+  const { mutate } = useTriggerDryRun({
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
   });
 
   const onTrigger = async () => {
-    const error = await trigger();
-
-    if (Maybe.isSome(error)) {
-      setErrorMessage(error.value);
-    }
-
-    updateList();
+    mutate(version);
   };
 
   return (
