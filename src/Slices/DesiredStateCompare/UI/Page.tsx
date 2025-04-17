@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Content, PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
-import { Diff, RemoteData } from "@/Core";
+import { Diff } from "@/Core";
 import { useGetDesiredStateDiff } from "@/Data/Managers/V2/DesiredState";
 import { DiffWizard, EmptyView, LoadingView, ErrorView } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
@@ -53,13 +53,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           </Toolbar>
         </PageSection>
         <PageSection hasBodyWrapper={false} hasShadowBottom>
-          {/* RemoteData will throw type error after Dry run query updates will take place, for now this component will stay as is*/}
-          <DiffWizard.Controls
-            data={RemoteData.success(filteredResources)}
-            refs={refs}
-            from={from}
-            to={to}
-          />
+          <DiffWizard.Controls data={filteredResources} refs={refs} from={from} to={to} />
         </PageSection>
         <PageSection hasBodyWrapper={false} isFilled>
           {data.length <= 0 ? (
