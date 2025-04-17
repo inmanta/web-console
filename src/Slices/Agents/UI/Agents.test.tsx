@@ -8,8 +8,8 @@ import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
-import { getStoreInstance, CommandResolverImpl, CommandManagerResolverImpl } from "@/Data";
-import { StaticScheduler, DeferredApiHelper, dependencies, EnvironmentDetails } from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { dependencies, EnvironmentDetails } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -26,23 +26,14 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const apiHelper = new DeferredApiHelper();
-
-  const scheduler = new StaticScheduler();
   const store = getStoreInstance();
-  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
 
   dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
     <QueryClientProvider client={testClient}>
       <MemoryRouter>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            commandResolver,
-          }}
-        >
+        <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>
             <Page />
           </StoreProvider>
@@ -51,7 +42,7 @@ function setup() {
     </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler, store };
+  return { component, store };
 }
 
 describe("Agents", () => {

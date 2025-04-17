@@ -1,0 +1,5 @@
+description: Upgrade GetParameter Deploy and Repair queries
+issue-nr: 6291
+change-type: patch
+destination-branches: [master, iso8]
+
