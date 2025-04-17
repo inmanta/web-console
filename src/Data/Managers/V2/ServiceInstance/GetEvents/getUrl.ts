@@ -1,8 +1,8 @@
 import moment from "moment-timezone";
 import qs from "qs";
-import { Query, RangeOperator } from "@/Core";
+import { RangeOperator } from "@/Core";
 import { urlEncodeParams } from "../../helpers";
-import { GetInstanceEventParams } from "./useGetEvents";
+import { Filter, GetInstanceEventParams } from "./useGetEvents";
 
 /**
  * Constructs a URL for fetching events for a specific service instance.
@@ -29,8 +29,14 @@ export function getUrl(params: GetInstanceEventParams, timezone = moment.tz.gues
   }${sortParam}${filterParam}${currentPage.value ? `&${currentPage.value}` : ""}`;
 }
 
-type Filter = NonNullable<Query.SubQuery<"GetInstanceEvents">["filter"]>;
-
+/**
+ * Converts a Filter object to URL parameters for the API request.
+ * This function serializes timestamp with operator and timezone and merge with other filters
+ *
+ * @param {Filter} filter - The filter object containing various filtering criteria
+ * @param {string} timezone - The timezone to use for timestamp conversions
+ * @returns {object} An object with filter parameters formatted for the API
+ */
 const filterToParam = (filter: Filter, timezone: string) => {
   if (typeof filter === "undefined") return {};
 
