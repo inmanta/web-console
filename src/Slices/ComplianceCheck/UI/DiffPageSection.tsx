@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { PageSection } from "@patternfly/react-core";
-import { Diff, Maybe, ParsedNumber, RemoteData } from "@/Core";
-import { EmptyView, RemoteDataView, DiffWizard } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
+import { Diff, Maybe, ParsedNumber } from "@/Core";
+import { EmptyView, DiffWizard, LoadingView, ErrorView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { LoadingIndicator } from "./Components";
 import { MaybeReport } from "./types";
+import { useGetDryRunReport } from "@/Data/Managers/V2/DryRun/GetDryRunReport/useGetDryRunReport";
 
 interface Props {
   report: MaybeReport;
@@ -32,43 +32,32 @@ const DiffView: React.FC<{
   statuses: Diff.Status[];
   searchFilter: string;
 }> = ({ id, todo, version, statuses, searchFilter }) => {
-  const prevId = useRef(id);
   const refs: DiffWizard.Refs = useRef({});
-  const { queryResolver } = useContext(DependencyContext);
-  const [reportData, refetch] = queryResolver.useOneTime<"GetDryRunReport">({
-    kind: "GetDryRunReport",
-    reportId: id,
+  const { data, isSuccess, isError, isLoading, error, refetch } = useGetDryRunReport().useOneTime(
     version,
-  });
-
-  useEffect(() => {
-    // avoid  double refetching when id is changed
-    if (prevId.current !== id) {
-      prevId.current = id;
-
-      return;
-    }
-
-    if (todo <= 0 && !RemoteData.isSuccess(reportData)) return;
-
-    refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [todo, id]); //keeping refetch in the dependency creates issue with call on every update of the data, but we want to align it with the continuous call
-
-  const diffData = RemoteData.mapSuccess(
-    (report) => report.diff.filter((resource) => statuses.includes(resource.status)),
-    reportData
+    id
   );
 
-  return (
-    <>
-      <PageSection hasBodyWrapper={false} hasShadowBottom>
-        <DiffWizard.Controls data={diffData} refs={refs} from={"current"} to={version} />
-      </PageSection>
-      <PageSection hasBodyWrapper={false} isFilled>
-        <RemoteDataView
-          data={reportData}
-          SuccessView={(data) => (
+  useEffect(() => {
+    // keep the refetching until there are still resources to check
+    if (todo <= 0 && isLoading) return;
+    refetch();
+  }, [todo, isLoading]);
+
+  if (isError) {
+    return <ErrorView message={error.message} retry={refetch} ariaLabel="DiffPageSection-Error" />;
+  }
+
+  if (isSuccess) {
+    const diffData = data.diff.filter((resource) => statuses.includes(resource.status));
+
+    return (
+      <>
+        <PageSection hasBodyWrapper={false} hasShadowBottom>
+          <DiffWizard.Controls data={diffData} refs={refs} from={"current"} to={version} />
+        </PageSection>
+        <PageSection hasBodyWrapper={false} isFilled>
+          {
             <>
               {data.summary.todo > 0 && <LoadingIndicator progress={getProgress(data.summary)} />}
               {data.diff.length <= 0 ? (
@@ -88,11 +77,13 @@ const DiffView: React.FC<{
                 />
               )}
             </>
-          )}
-        />
-      </PageSection>
-    </>
-  );
+          }
+        </PageSection>
+      </>
+    );
+  }
+
+  return <LoadingView ariaLabel="DiffPageSection-Loading" />;
 };
 
 const getProgress = (summary: { todo: ParsedNumber; total: ParsedNumber }): string =>
