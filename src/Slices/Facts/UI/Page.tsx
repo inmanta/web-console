@@ -1,8 +1,14 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { EmptyView, OldPaginationWidget, PageContainer, RemoteDataView } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
+import { useGetFacts } from "@/Data/Managers/V2/Facts/GetFacts/useGetFacts";
+import {
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  PageContainer,
+  PaginationWidget,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
 import { Filter, SortKey } from "@S/Facts/Core/Query";
 import { FactsTable } from "./FactsTable";
@@ -10,8 +16,6 @@ import { FactsTablePresenter } from "./FactsTablePresenter";
 import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
-  const { queryResolver } = useContext(DependencyContext);
-
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "Facts",
   });
@@ -26,13 +30,12 @@ export const Page: React.FC = () => {
     route: "Facts",
   });
 
-  const [data] = queryResolver.useContinuous<"GetFacts">({
-    kind: "GetFacts",
-    sort,
-    filter,
+  const { data, isSuccess, isError, error, refetch } = useGetFacts({
     pageSize,
+    filter,
+    sort,
     currentPage,
-  });
+  }).useContinuous();
 
   const tablePresenter = new FactsTablePresenter();
 
@@ -42,37 +45,45 @@ export const Page: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
+  if (isError) {
+    <PageContainer pageTitle={words("facts.title")}>
+      <ErrorView message={error.message} retry={refetch} ariaLabel="Facts-Failed" />
+    </PageContainer>;
+  }
+
+  if (isSuccess) {
+    return (
+      <PageContainer pageTitle={words("facts.title")}>
+        <TableControls
+          filter={filter}
+          setFilter={setFilter}
+          paginationWidget={
+            <PaginationWidget
+              data={data}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              setCurrentPage={setCurrentPage}
+            />
+          }
+        />
+        {data.data.length <= 0 ? (
+          <EmptyView message={words("facts.empty.message")} aria-label="FactsView-Empty" />
+        ) : (
+          <FactsTable
+            aria-label="Facts-Success"
+            rows={tablePresenter.createRows(data.data)}
+            tablePresenter={tablePresenter}
+            sort={sort}
+            setSort={setSort}
+          />
+        )}
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer pageTitle={words("facts.title")}>
-      <TableControls
-        filter={filter}
-        setFilter={setFilter}
-        paginationWidget={
-          <OldPaginationWidget
-            data={data}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            setCurrentPage={setCurrentPage}
-          />
-        }
-      />
-      <RemoteDataView
-        data={data}
-        label="Facts"
-        SuccessView={(facts) =>
-          facts.data.length <= 0 ? (
-            <EmptyView message={words("facts.empty.message")} aria-label="FactsView-Empty" />
-          ) : (
-            <FactsTable
-              aria-label="Facts-Success"
-              rows={tablePresenter.createRows(facts.data)}
-              tablePresenter={tablePresenter}
-              sort={sort}
-              setSort={setSort}
-            />
-          )
-        }
-      />
+      <LoadingView ariaLabel="Facts-Loading" />
     </PageContainer>
   );
 };

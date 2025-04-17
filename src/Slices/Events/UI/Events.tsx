@@ -1,16 +1,17 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { ServiceModel } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { useGetInstanceEvents } from "@/Data/Managers/V2/ServiceInstance/GetEvents";
 import {
   EventsTablePresenter,
   EventsTableWrapper,
   EmptyView,
   EventsTableBody,
-  OldPaginationWidget,
-  RemoteDataView,
+  PaginationWidget,
+  LoadingView,
+  ErrorView,
 } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Filter } from "@S/Events/Core/Query";
 import { EventsTableControls } from "./EventsTableControls";
@@ -20,9 +21,18 @@ interface Props {
   instanceId: string;
 }
 
-export const Events: React.FC<Props> = ({ service, instanceId }) => {
-  const { queryResolver } = useContext(DependencyContext);
+/**
+ * Events component displays a table of events for a service instance
+ * 
+ * 
+ * @props {Props} props - Component properties
+ * @prop {ServiceModel} service - The service model containing lifecycle states
+ * @prop {string} instanceId - The ID of the service instance to fetch events for
 
+ * @returns {React.FC<Props>} The rendered Events component
+ */
+
+export const Events: React.FC<Props> = ({ service, instanceId }) => {
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "Events",
   });
@@ -35,15 +45,16 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
     keys: { timestamp: "DateRange" },
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({ route: "Events" });
-  const [data] = queryResolver.useContinuous<"GetInstanceEvents">({
-    kind: "GetInstanceEvents",
+
+  const { data, isSuccess, isError, error, refetch } = useGetInstanceEvents({
     id: instanceId,
-    service_entity: service.name,
+    serviceName: service.name,
     filter,
     sort,
     pageSize,
     currentPage,
-  });
+  }).useContinuous();
+
   const tablePresenter = new EventsTablePresenter();
   const states = service.lifecycle.states.map((state) => state.name).sort();
 
@@ -53,47 +64,45 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
-  return (
-    <div>
-      <EventsTableControls
-        filter={filter}
-        setFilter={setFilter}
-        states={states}
-        paginationWidget={
-          <OldPaginationWidget
-            data={data}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            setCurrentPage={setCurrentPage}
-          />
-        }
-      />
-      <RemoteDataView
-        data={data}
-        label="EventTable"
-        SuccessView={(events) =>
-          events.data.length === 0 ? (
-            <EmptyView
-              title={words("events.empty.title")}
-              message={words("events.empty.body")}
-              aria-label="EventTable-Empty"
+  if (isError) {
+    return <ErrorView message={error.message} ariaLabel="EventTable-Error" retry={refetch} />;
+  }
+
+  if (isSuccess) {
+    return (
+      <div>
+        <EventsTableControls
+          filter={filter}
+          setFilter={setFilter}
+          states={states}
+          paginationWidget={
+            <PaginationWidget
+              data={data}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              setCurrentPage={setCurrentPage}
             />
-          ) : (
-            <EventsTableWrapper
-              tablePresenter={tablePresenter}
-              aria-label="EventTable-Success"
-              sort={sort}
-              setSort={setSort}
-            >
-              <EventsTableBody
-                route="Events"
-                events={events.data}
-                tablePresenter={tablePresenter}
-              />
-            </EventsTableWrapper>
-          )
-        }
-      />
-    </div>
-  );
+          }
+        />
+        {data.data.length === 0 ? (
+          <EmptyView
+            title={words("events.empty.title")}
+            message={words("events.empty.body")}
+            aria-label="EventTable-Empty"
+          />
+        ) : (
+          <EventsTableWrapper
+            tablePresenter={tablePresenter}
+            aria-label="EventTable-Success"
+            sort={sort}
+            setSort={setSort}
+          >
+            <EventsTableBody route="Events" events={data.data} tablePresenter={tablePresenter} />
+          </EventsTableWrapper>
+        )}
+      </div>
+    );
+  }
+
+  return <LoadingView ariaLabel="EventTable-Loading" />;
 };
