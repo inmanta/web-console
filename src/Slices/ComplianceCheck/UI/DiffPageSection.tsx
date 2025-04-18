@@ -16,6 +16,18 @@ interface Props {
   searchFilter: string;
 }
 
+/**
+ * DiffPageSection component displays the compliance check diff results
+ * Shows a loading view when data is being fetched, error view on failure,
+ * and the diff wizard with filtered resources when data is available
+ * @props {Props} props - The component props
+ * @prop {DryRun | null} report - The dry run report data
+ * @prop {string} version - The version of the dry run
+ * @prop {Diff.Status[]} statuses - The statuses to filter the resources by
+ * @prop {string} searchFilter - The search filter to filter the resources by
+ *
+ * @returns {React.FC<Props>} The DiffPageSection component
+ */
 export const DiffPageSection: React.FC<Props> = ({ report, version, statuses, searchFilter }) =>
   report ? (
     <DiffView
@@ -27,6 +39,19 @@ export const DiffPageSection: React.FC<Props> = ({ report, version, statuses, se
     />
   ) : null;
 
+/**
+ * DiffView component displays the compliance check diff results
+ * Shows a loading view when data is being fetched, error view on failure,
+ * and the diff wizard with filtered resources when data is available
+ * @props {Props} props - The component props
+ * @prop {string} id - The id of the dry run
+ * @prop {number} todo - The number of todo resources
+ * @prop {string} version - The version of the dry run
+ * @prop {Diff.Status[]} statuses - The statuses to filter the resources by
+ * @prop {string} searchFilter - The search filter to filter the resources by
+ *
+ * @returns {React.FC<Props>} The DiffView component
+ */
 const DiffView: React.FC<{
   id: string;
   todo: number;
@@ -88,5 +113,14 @@ const DiffView: React.FC<{
   return <LoadingView ariaLabel="DiffPageSection-Loading" />;
 };
 
+/**
+ * Calculates the progress based on the DryRun summary data
+ *
+ * @param {Object} summary - The DryRun summary containing total and todo counts
+ * @param {ParsedNumber} summary.todo - The number of todo resources
+ * @param {ParsedNumber} summary.total - The total number of resources
+ *
+ * @returns {string} The percentage of completed tasks as a string in the format "completed/total"
+ */
 const getProgress = (summary: { todo: ParsedNumber; total: ParsedNumber }): string =>
   `${Number(summary.total) - Number(summary.todo)}/${Number(summary.total)}`;

@@ -8,6 +8,15 @@ import { words } from "@/UI/words";
 import { SelectReportAction, TriggerDryRunAction } from "./Components";
 import { DiffPageSection } from "./DiffPageSection";
 
+/**
+ * ComplianceCheck Page component
+ *
+ * This component serves as the main entry point for the Compliance Check feature.
+ * It extracts the version parameter from the route and passes it to the View component.
+ *
+ * @returns {React.FC} The Page component that renders the compliance check view
+ */
+
 export const Page: React.FC = () => {
   const { version } = useRouteParams<"ComplianceCheck">();
 
@@ -17,6 +26,21 @@ export const Page: React.FC = () => {
 interface Props {
   version: string;
 }
+
+/**
+ * View component for the Compliance Check page
+ *
+ * This component handles the main functionality of the Compliance Check feature:
+ * - Fetches and displays dry run reports for the specified version
+ * - Allows selecting different reports
+ * - Provides filtering by status and search text
+ * - Shows error messages when data fetching fails
+ *
+ * @props {Props} props - The component props
+ * @prop {string} version - The version to fetch dry run reports for
+ *
+ * @returns {React.FC<Props>} The View component that renders the compliance check interface
+ */
 
 export const View: React.FC<Props> = ({ version }) => {
   const { data, isSuccess, isError, error } = useGetDryRuns().useContinuous(version);
@@ -50,24 +74,6 @@ export const View: React.FC<Props> = ({ version }) => {
     }
   }, [data, isSuccess]);
 
-  /**
-   * Setting the selected report when data changed and there is no selected report
-   * Update the selected report when chosen one has new data available
-   */
-  useEffect(() => {
-    if (!isSuccess || data.length <= 0) return;
-
-    if (selectedReport) {
-      const fetchedSelectedReport = data.find((report) => report.id === selectedReport.id);
-      if (!!fetchedSelectedReport && fetchedSelectedReport.todo !== selectedReport.todo) {
-        setSelectedReport(fetchedSelectedReport);
-      } else {
-        return;
-      }
-    } else {
-      setSelectedReport(data[0]);
-    }
-  }, [selectedReport, data, isSuccess]);
   useEffect(() => {
     if (isSuccess) {
       setSelectedReport(firstReport.current);

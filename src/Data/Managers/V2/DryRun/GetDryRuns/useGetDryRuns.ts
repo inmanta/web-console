@@ -2,24 +2,27 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { REFETCH_INTERVAL, useGet } from "../../helpers";
 import { DryRun } from "../GetDryRunReport";
 
+/**
+ * Response interface for the dry runs API response
+ */
 interface Response {
   data: DryRun[];
 }
 
 /**
- * Return signature of the useGetDryRunReport React Query hook
+ * Return signature of the useGetDryRuns React Query hook
  */
-interface GetDryRunReport {
+interface GetDryRuns {
   useContinuous: (version: string) => UseQueryResult<DryRun[], Error>;
 }
 
 /**
- * React Query hook to fetch details of a specific resource
+ * React Query hook to fetch all dry runs
  *
- * @returns {GetDryRunReport} An object containing the available queries
- * @returns {UseQueryResult<Resource.Details, Error>} returns.useOneTime - Fetch the resource details with a single query
+ * @returns {GetDryRuns} An object containing the available queries
+ * @returns {UseQueryResult<DryRun[], Error>} returns.useOneTime - Fetch the dry runs with a single query
  */
-export const useGetDryRuns = (): GetDryRunReport => {
+export const useGetDryRuns = (): GetDryRuns => {
   const get = useGet()<Response>;
 
   return {
