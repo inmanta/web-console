@@ -9,15 +9,14 @@ import {
   Spinner,
   ToolbarGroup,
 } from "@patternfly/react-core";
-import { Maybe, RemoteData } from "@/Core";
+import { DryRun } from "@/Data/Managers/V2/DryRun";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { Progress as DomainProgress } from "@S/ComplianceCheck/Core/Domain";
-import { MaybeReport, RemoteReportList } from "../types";
 
 interface Props {
-  setSelectedReport(report: MaybeReport): void;
-  selectedReport: MaybeReport;
-  reportsData: RemoteReportList;
+  setSelectedReport(report: DryRun | null): void;
+  selectedReport: DryRun | null;
+  reportsData?: DryRun[];
 }
 
 const datePresenter = new MomentDatePresenter();
@@ -31,13 +30,13 @@ export const SelectReportAction: React.FC<Props> = ({
   // This should be the trigger from the command
 
   const onSelect = (value) => {
-    if (!RemoteData.isSuccess(reportsData)) return;
+    if (!reportsData) return;
 
-    const report = reportsData.value.find((report) => report.id === value);
+    const report = reportsData.find((report) => report.id === value);
 
     if (report === undefined) return;
 
-    setSelectedReport(Maybe.some(report));
+    setSelectedReport(report);
     setIsOpen(false);
   };
 
@@ -55,8 +54,8 @@ export const SelectReportAction: React.FC<Props> = ({
 };
 
 interface PickerProps {
-  reportsData: RemoteReportList;
-  selectedReport: MaybeReport;
+  reportsData?: DryRun[];
+  selectedReport: DryRun | null;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   onSelect: (value: string | number | undefined) => void;
@@ -69,11 +68,11 @@ const Picker: React.FC<PickerProps> = ({
   setIsOpen,
   onSelect,
 }) => {
-  if (!RemoteData.isSuccess(reportsData)) return null;
+  if (!reportsData) return null;
 
-  if (reportsData.value.length <= 0) return <EmptyPicker />;
+  if (reportsData.length <= 0) return <EmptyPicker />;
 
-  if (Maybe.isNone(selectedReport)) return null;
+  if (!selectedReport) return null;
 
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
     <MenuToggle
@@ -87,7 +86,7 @@ const Picker: React.FC<PickerProps> = ({
         } as React.CSSProperties
       }
     >
-      <Progress report={reportsData.value[0]} /> {datePresenter.getFull(selectedReport.value.date)}
+      <Progress report={reportsData[0]} /> {datePresenter.getFull(selectedReport.date)}
     </MenuToggle>
   );
 
@@ -95,13 +94,13 @@ const Picker: React.FC<PickerProps> = ({
     <Select
       toggle={toggle}
       onSelect={(_event, value) => onSelect(value)}
-      selected={selectedReport.value.id}
+      selected={selectedReport.id}
       isOpen={isOpen}
       onOpenChange={(isOpen) => setIsOpen(isOpen)}
       aria-label="ReportList"
     >
       <SelectList aria-label="ReportSelectOptions">
-        {reportsData.value.map((report) => (
+        {reportsData.map((report) => (
           <SelectOption key={report.id} value={report.id}>
             <Progress report={report} /> {datePresenter.getFull(report.date)}
           </SelectOption>

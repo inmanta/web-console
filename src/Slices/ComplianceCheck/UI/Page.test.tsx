@@ -1,9 +1,12 @@
 import React, { act } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
+import { delay, HttpResponse } from "msw";
+import { http } from "msw";
+import { setupServer } from "msw/node";
 import {
   CommandManagerResolverImpl,
   CommandResolverImpl,
@@ -12,11 +15,13 @@ import {
   QueryResolverImpl,
 } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { View } from "./Page";
+
 expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
@@ -37,302 +42,258 @@ function setup() {
   );
   const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
   const component = (
-    <StoreProvider store={store}>
-      <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
-        <View version="123" />
-      </DependencyProvider>
-    </StoreProvider>
+    <QueryClientProvider client={testClient}>
+      <StoreProvider store={store}>
+        <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
+          <View version="123" />
+        </DependencyProvider>
+      </StoreProvider>
+    </QueryClientProvider>
   );
 
   return { component, apiHelper, datePresenter };
 }
 
-test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async () => {
-  const { component, apiHelper, datePresenter } = setup();
+describe("ComplianceCheck page", () => {
+  const server = setupServer();
 
-  render(component);
+  beforeAll(() => server.listen());
+  beforeEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: "/api/v2/dryrun/123",
-    environment: "env",
-  });
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.listResponse));
-  });
+  test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async () => {
+    server.use(
+      http.get("/api/v2/dryrun/123", () => {
+        return HttpResponse.json(Mock.listResponse);
+      }),
+      http.get(`/api/v2/dryrun/123/${Mock.b.id}`, () => {
+        return HttpResponse.json(Mock.reportResponse);
+      })
+    );
+    const { component, datePresenter } = setup();
 
-  const select = screen.getByRole("button", { name: "ReportListSelect" });
+    render(component);
 
-  expect(select).toBeInTheDocument();
-  expect(select).toHaveTextContent(datePresenter.getFull(Mock.listResponse.data[0].date));
+    const select = await screen.findByRole("button", { name: "ReportListSelect" });
 
-  await userEvent.click(select);
+    expect(select).toBeInTheDocument();
+    expect(select).toHaveTextContent(datePresenter.getFull(Mock.listResponse.data[0].date));
 
-  const options = screen.getAllByRole<HTMLButtonElement>("option");
+    await userEvent.click(select);
 
-  expect(options).toHaveLength(3);
-  expect(options[0]).toHaveAttribute("aria-selected", "true");
+    const options = screen.getAllByRole<HTMLButtonElement>("option");
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/api/v2/dryrun/123/${Mock.b.id}`,
-    environment: "env",
-  });
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.reportResponse));
-  });
+    expect(options).toHaveLength(3);
+    expect(options[0]).toHaveAttribute("aria-selected", "true");
 
-  const blocks = await screen.findAllByTestId("DiffBlock");
+    const blocks = await screen.findAllByTestId("DiffBlock");
 
-  expect(blocks).toHaveLength(11);
+    expect(blocks).toHaveLength(11);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    await act(async () => {
+      const results = await axe(document.body);
 
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("GIVEN ComplianceCheck page When a report is selected from the list THEN the user sees the selected dry run report", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.listResponse));
-  });
-  // The first dryrun is selected by default
-  // Verify the request
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/api/v2/dryrun/123/${Mock.b.id}`,
-    environment: "env",
-  });
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.reportResponse));
-  });
+  test("GIVEN ComplianceCheck page When a report is selected from the list THEN the user sees the selected dry run report", async () => {
+    server.use(
+      http.get("/api/v2/dryrun/123", () => {
+        return HttpResponse.json(Mock.listResponse);
+      }),
+      http.get(`/api/v2/dryrun/123/${Mock.b.id}`, () => {
+        return HttpResponse.json(Mock.reportResponse);
+      }),
+      http.get(`/api/v2/dryrun/123/${Mock.c.id}`, () => {
+        return HttpResponse.json(Mock.reportResponse);
+      })
+    );
+    const { component } = setup();
 
-  // Also verify that the option shows the selected icon
-  const select = screen.getByRole("button", { name: "ReportListSelect" });
+    render(component);
 
-  await userEvent.click(select);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  const options = screen.getAllByRole<HTMLButtonElement>("option");
+      expect(results).toHaveNoViolations();
+    });
+    // The first dryrun is selected by default
 
-  expect(options).toHaveLength(3);
-  expect(options[0]).toHaveAttribute("aria-selected", "true");
+    // Also verify that the option shows the selected icon
+    const select = screen.getByRole("button", { name: "ReportListSelect" });
 
-  // Select a different report
-  await userEvent.click(options[1]);
+    await userEvent.click(select);
 
-  // Verify the request
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/api/v2/dryrun/123/${Mock.c.id}`,
-    environment: "env",
-  });
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.reportResponse));
-  });
-  // Verify that it's selected
-  await userEvent.click(select);
+    const options = screen.getAllByRole<HTMLButtonElement>("option");
 
-  expect(screen.getAllByRole<HTMLButtonElement>("option")[1]).toHaveAttribute(
-    "aria-selected",
-    "true"
-  );
-  // Go back to the first one
-  await userEvent.click(screen.getAllByRole<HTMLButtonElement>("option")[0]);
+    expect(options).toHaveLength(3);
+    expect(options[0]).toHaveAttribute("aria-selected", "true");
 
-  // Verify the request
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/api/v2/dryrun/123/${Mock.b.id}`,
-    environment: "env",
-  });
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.reportResponse));
-  });
-  // Verify that it's selected
-  await userEvent.click(select);
+    // Select a different report
+    await userEvent.click(options[1]);
 
-  expect(screen.getAllByRole<HTMLButtonElement>("option")[0]).toHaveAttribute(
-    "aria-selected",
-    "true"
-  );
+    // Verify that it's selected
+    await userEvent.click(select);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    expect(screen.getAllByRole<HTMLButtonElement>("option")[1]).toHaveAttribute(
+      "aria-selected",
+      "true"
+    );
+    // Go back to the first one
+    await userEvent.click(screen.getAllByRole<HTMLButtonElement>("option")[0]);
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    // Verify that it's selected
+    await userEvent.click(select);
 
-test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new dry run is selected", async () => {
-  const { component, apiHelper, datePresenter } = setup();
+    expect(screen.getAllByRole<HTMLButtonElement>("option")[0]).toHaveAttribute(
+      "aria-selected",
+      "true"
+    );
 
-  render(component);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.listResponse));
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.reportResponse));
+  test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new dry run is selected", async () => {
+    let data = Mock.listResponse;
+    server.use(
+      http.get("/api/v2/dryrun/123", () => {
+        return HttpResponse.json(data);
+      }),
+      http.get(`/api/v2/dryrun/123/${Mock.b.id}`, () => {
+        return HttpResponse.json(Mock.reportResponse);
+      }),
+      http.post("/api/v2/dryrun/123", () => {
+        data = { data: [Mock.a, ...Mock.listOfReports] };
+        return HttpResponse.json(data);
+      })
+    );
+    const { component, datePresenter } = setup();
+
+    render(component);
+
+    const dryRunButton = screen.getByRole("button", {
+      name: words("desiredState.complianceCheck.action.dryRun"),
+    });
+
+    await userEvent.click(dryRunButton);
+
+    await act(async () => {
+      await delay(5000);
+    });
+
+    const select = await screen.findByRole("button", { name: "ReportListSelect" });
+
+    expect(select).toBeInTheDocument();
+    expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date));
+
+    await userEvent.click(select);
+
+    const options = screen.getAllByRole<HTMLButtonElement>("option");
+
+    expect(options).toHaveLength(4);
+    expect(options[0]).toHaveAttribute("aria-selected", "true");
   });
 
-  const dryRunButton = screen.getByRole("button", {
-    name: words("desiredState.complianceCheck.action.dryRun"),
+  test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
+    server.use(
+      http.get("/api/v2/dryrun/123", () => {
+        return HttpResponse.json(Mock.listResponse);
+      }),
+      http.get(`/api/v2/dryrun/123/${Mock.b.id}`, () => {
+        return HttpResponse.json(Mock.reportResponse);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: words("jumpTo") }));
+
+    expect(screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" })).toHaveLength(11);
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
+
+    expect(screen.queryByRole("listbox", { name: "StatusFilterOptions" })).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
+
+    expect(screen.getByRole("listbox", { name: "StatusFilterOptions" })).toBeVisible();
+
+    const statusOptions = screen.getAllByRole("option");
+
+    expect(statusOptions).toHaveLength(7);
+
+    await userEvent.click(screen.getByRole("button", { name: words("showAll") }));
+
+    await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
+
+    await userEvent.click(statusOptions[0]);
+
+    await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
+
+    expect(await screen.findAllByRole("menuitem", { name: "DiffSummaryListItem" })).toHaveLength(2);
+
+    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  await userEvent.click(dryRunButton);
+  test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
+    server.use(
+      http.get("/api/v2/dryrun/123", () => {
+        return HttpResponse.json(Mock.listResponse);
+      }),
+      http.get(`/api/v2/dryrun/123/${Mock.b.id}`, () => {
+        return HttpResponse.json(Mock.reportResponse);
+      })
+    );
+    const { component } = setup();
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "POST",
-    url: "/api/v2/dryrun/123",
-    environment: "env",
-  });
-  await act(async () => {
-    await apiHelper.resolve(Either.right({}));
-  });
+    render(component);
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: "/api/v2/dryrun/123",
-    environment: "env",
-  });
+    await userEvent.click(await screen.findByRole("button", { name: words("jumpTo") }));
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: [Mock.a, ...Mock.listOfReports] }));
-  });
+    await act(async () => {
+      const results = await axe(document.body);
 
-  const select = screen.getByRole("button", { name: "ReportListSelect" });
+      expect(results).toHaveNoViolations();
+    });
 
-  expect(select).toBeInTheDocument();
-  expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date));
+    expect(screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" })).toHaveLength(11);
 
-  await userEvent.click(select);
+    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 
-  const options = screen.getAllByRole<HTMLButtonElement>("option");
+    await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "lsm");
 
-  expect(options).toHaveLength(4);
-  expect(options[0]).toHaveAttribute("aria-selected", "true");
+    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(10);
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: `/api/v2/dryrun/123/${Mock.a.id}`,
-    environment: "env",
-  });
-});
+    await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "44554");
 
-test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
-  const { apiHelper, component } = setup();
+    expect(screen.queryAllByTestId("DiffBlock")).toHaveLength(0);
 
-  render(component);
+    await userEvent.clear(screen.getByRole("searchbox", { name: "SearchFilter" }));
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.listResponse));
-  });
+    expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.reportResponse));
-  });
+    await act(async () => {
+      const results = await axe(document.body);
 
-  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
-
-  expect(screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" })).toHaveLength(11);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-
-  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
-
-  expect(screen.queryByRole("listbox", { name: "StatusFilterOptions" })).not.toBeInTheDocument();
-
-  await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
-
-  expect(screen.getByRole("listbox", { name: "StatusFilterOptions" })).toBeVisible();
-
-  const statusOptions = screen.getAllByRole("option");
-
-  expect(statusOptions).toHaveLength(7);
-
-  await userEvent.click(screen.getByRole("button", { name: words("showAll") }));
-
-  await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
-
-  await userEvent.click(statusOptions[0]);
-
-  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
-
-  expect(await screen.findAllByRole("menuitem", { name: "DiffSummaryListItem" })).toHaveLength(2);
-
-  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(2);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
-  const { apiHelper, component } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.listResponse));
-  });
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Mock.reportResponse));
-  });
-
-  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-
-  expect(screen.getAllByRole("menuitem", { name: "DiffSummaryListItem" })).toHaveLength(11);
-
-  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
-
-  await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "lsm");
-
-  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(10);
-
-  await userEvent.type(screen.getByRole("searchbox", { name: "SearchFilter" }), "44554");
-
-  expect(screen.queryAllByTestId("DiffBlock")).toHaveLength(0);
-
-  await userEvent.clear(screen.getByRole("searchbox", { name: "SearchFilter" }));
-
-  expect(await screen.findAllByTestId("DiffBlock")).toHaveLength(11);
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
+      expect(results).toHaveNoViolations();
+    });
   });
 });
