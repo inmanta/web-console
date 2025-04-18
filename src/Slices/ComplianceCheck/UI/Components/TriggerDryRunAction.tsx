@@ -8,6 +8,17 @@ interface Props {
   version: string;
 }
 
+/**
+ * TriggerDryRunAction component
+ *
+ * This component allows users to trigger a dry run for a given version.
+ * It displays a toast alert for error messages and a button to trigger the dry run.
+ *
+ * @props {Props} props - The component props
+ * @prop {string} version - The version to trigger the dry run for
+ *
+ * @returns {React.FC<Props>} The TriggerDryRunAction component
+ */
 export const TriggerDryRunAction: React.FC<Props> = ({ version }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const { mutate } = useTriggerDryRun({

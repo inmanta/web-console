@@ -11,6 +11,19 @@ interface Props extends Diff.Identifiers {
   refs: Refs;
 }
 
+/**
+ * DiffWizard Controls component
+ *
+ * This component displays the controls for the DiffWizard, including a jump-to action and a versus comparison.
+ *
+ * @props {Props} props - The component props
+ * @prop {Diff.Resource[]} data - The data to display
+ * @prop {Refs} refs - The refs to use
+ * @prop {string} from - The from version
+ * @prop {string} to - The to version
+ *
+ * @returns {React.FC<Props>} The Controls component
+ */
 export const Controls: React.FC<Props> = ({ data, refs, from, to }) => (
   <Grid>
     <GridItem span={2}>
