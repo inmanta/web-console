@@ -120,7 +120,7 @@ const DiffView: React.FC<{
  * @param {ParsedNumber} summary.todo - The number of todo resources
  * @param {ParsedNumber} summary.total - The total number of resources
  *
- * @returns {string} The percentage of completed tasks as a string in the format "completed/total"
+ * @returns {string} The progress of completed tasks as a string in the format "completed/total"
  */
 const getProgress = (summary: { todo: ParsedNumber; total: ParsedNumber }): string =>
   `${Number(summary.total) - Number(summary.todo)}/${Number(summary.total)}`;
