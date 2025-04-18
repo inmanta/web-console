@@ -1,20 +1,6 @@
 import { QueryManager, ApiHelper, Scheduler, QueryManagerResolver } from "@/Core";
-import {
-  GetServerStatusOneTimeQueryManager,
-  GetServerStatusContinuousQueryManager,
-  GetServerStatusStateHelper,
-  GetEnvironmentSettingsQueryManager,
-  GetEnvironmentSettingsStateHelper,
-  GetEnvironmentsQueryManager,
-  GetEnvironmentsStateHelper,
-} from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import { GetOrdersQueryManager } from "@/Slices/Orders/Data/QueryManager";
-import {
-  EnvironmentDetailsContinuousQueryManager,
-  EnvironmentDetailsOneTimeQueryManager,
-} from "@/Slices/Settings/Data/GetEnvironmentDetails";
-import { GetProjectsQueryManager } from "@/Slices/Settings/Data/GetProjects";
 import { GetAgentsQueryManager } from "@S/Agents/Data";
 import { GetDryRunReportQueryManager, GetDryRunsQueryManager } from "@S/ComplianceCheck/Data";
 import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
@@ -22,10 +8,8 @@ import { GetFactsQueryManager } from "@S/Facts/Data";
 import { GetOrderDetailsQueryManager } from "@S/OrderDetails/Data/QueryManager";
 import { GetOrdersStateHelper } from "@S/Orders/Data/StateHelper";
 import { GetParametersQueryManager, GetParametersStateHelper } from "@S/Parameters/Data";
-import {
-  GetEnvironmentsContinuousQueryManager,
-  GetEnvironmentsContinuousStateHelper,
-} from "../Managers/GetEnvironmentsContinuous";
+import { CallbacksQueryManager, CallbacksStateHelper } from "@S/ServiceDetails/Data";
+
 export class QueryManagerResolverImpl implements QueryManagerResolver {
   private managers: QueryManager[] = [];
 
@@ -54,27 +38,8 @@ export class QueryManagerResolverImpl implements QueryManagerResolver {
 
   private getManagers(): QueryManager[] {
     return [
-      GetProjectsQueryManager(this.store, this.apiHelper),
-      GetEnvironmentsContinuousQueryManager(
-        this.apiHelper,
-        this.scheduler,
-        GetEnvironmentsContinuousStateHelper(this.store)
-      ),
-      GetEnvironmentsQueryManager(this.apiHelper, GetEnvironmentsStateHelper(this.store)),
-      GetServerStatusOneTimeQueryManager(this.apiHelper, GetServerStatusStateHelper(this.store)),
-      GetServerStatusContinuousQueryManager(
-        this.apiHelper,
-        GetServerStatusStateHelper(this.store),
-        this.slowScheduler
-      ),
-      GetEnvironmentSettingsQueryManager(
-        this.apiHelper,
-        GetEnvironmentSettingsStateHelper(this.store)
-      ),
-      EnvironmentDetailsContinuousQueryManager(this.store, this.apiHelper, this.scheduler),
       EventsQueryManager(this.apiHelper, EventsStateHelper(this.store), this.scheduler),
-      EnvironmentDetailsContinuousQueryManager(this.store, this.apiHelper, this.scheduler),
-      EnvironmentDetailsOneTimeQueryManager(this.store, this.apiHelper),
+      CallbacksQueryManager(this.apiHelper, CallbacksStateHelper(this.store)),
       GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
       GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
       GetParametersQueryManager(

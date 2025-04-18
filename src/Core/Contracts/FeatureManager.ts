@@ -1,3 +1,4 @@
+import { ServerStatus } from "../Domain";
 import { JsonParserId } from "./JsonParser";
 
 /**
@@ -11,6 +12,7 @@ export interface FeatureManager {
   isResourceDiscoveryEnabled(): boolean;
   isComposerEnabled(): boolean;
   getServerMajorVersion(): string;
+  set(status: ServerStatus): void;
   getServerVersion(): string;
   getEdition(): string;
   getJsonParser(): JsonParserId;

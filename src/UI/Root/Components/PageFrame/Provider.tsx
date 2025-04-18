@@ -22,12 +22,7 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 
   return (
     <>
-      {environmentId && (
-        <>
-          <PageInitializer environment={environmentId} />
-          <DependencyResolver environment={environmentId} />
-        </>
-      )}
+      {environmentId && <DependencyResolver environment={environmentId} />}
       <PageFrame environmentId={environmentId}>
         {Either.isLeft(eitherEnvironmentId) ? (
           <Navigate to={routeManager.getUrl("Home", undefined)} />

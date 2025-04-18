@@ -1,6 +1,6 @@
 import { Location } from "history";
 import { FlatEnvironment } from "@/Core/Domain";
-import { Navigate, RemoteData } from "@/Core/Language";
+import { Navigate } from "@/Core/Language";
 
 export interface EnvironmentHandler {
   set(navigate: Navigate, location: Location, environmentId: string): void;
@@ -15,8 +15,5 @@ export interface EnvironmentHandler {
    * @throws error when there is no environment defined
    */
   useId(): string;
-  determineSelected(
-    allEnvironments: RemoteData.Type<string, FlatEnvironment[]>,
-    search: string
-  ): FlatEnvironment | undefined;
+  determineSelected(search: string): FlatEnvironment | undefined;
 }
