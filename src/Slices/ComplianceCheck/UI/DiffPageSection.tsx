@@ -1,29 +1,31 @@
 import React, { useEffect, useRef } from "react";
 import { PageSection } from "@patternfly/react-core";
-import { Diff, Maybe, ParsedNumber } from "@/Core";
+import { Diff, ParsedNumber } from "@/Core";
+import {
+  DryRun,
+  useGetDryRunReport,
+} from "@/Data/Managers/V2/DryRun/GetDryRunReport/useGetDryRunReport";
 import { EmptyView, DiffWizard, LoadingView, ErrorView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { LoadingIndicator } from "./Components";
-import { MaybeReport } from "./types";
-import { useGetDryRunReport } from "@/Data/Managers/V2/DryRun/GetDryRunReport/useGetDryRunReport";
 
 interface Props {
-  report: MaybeReport;
+  report: DryRun | null;
   version: string;
   statuses: Diff.Status[];
   searchFilter: string;
 }
 
 export const DiffPageSection: React.FC<Props> = ({ report, version, statuses, searchFilter }) =>
-  Maybe.isNone(report) ? null : (
+  report ? (
     <DiffView
-      id={report.value.id}
-      todo={report.value.todo as number}
+      id={report.id}
+      todo={report.todo as number}
       version={version}
       statuses={statuses}
       searchFilter={searchFilter}
     />
-  );
+  ) : null;
 
 const DiffView: React.FC<{
   id: string;
@@ -42,7 +44,7 @@ const DiffView: React.FC<{
     // keep the refetching until there are still resources to check
     if (todo <= 0 && isLoading) return;
     refetch();
-  }, [todo, isLoading]);
+  }, [todo, isLoading, refetch]);
 
   if (isError) {
     return <ErrorView message={error.message} retry={refetch} ariaLabel="DiffPageSection-Error" />;

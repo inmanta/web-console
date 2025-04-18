@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Content, PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
-import { Diff, Maybe, RemoteData } from "@/Core";
+import { Diff } from "@/Core";
+import { DryRun, useGetDryRuns } from "@/Data/Managers/V2/DryRun";
 import { DiffWizard, ToastAlert } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { SelectReportAction, TriggerDryRunAction } from "./Components";
 import { DiffPageSection } from "./DiffPageSection";
-import { MaybeReport } from "./types";
 
 export const Page: React.FC = () => {
   const { version } = useRouteParams<"ComplianceCheck">();
@@ -20,71 +19,60 @@ interface Props {
 }
 
 export const View: React.FC<Props> = ({ version }) => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [data, refetch] = queryResolver.useContinuous<"GetDryRuns">({
-    kind: "GetDryRuns",
-    version: parseInt(version),
-  });
+  const { data, isSuccess, isError, error } = useGetDryRuns().useContinuous(version);
   const [errorMessage, setErrorMessage] = useState("");
-  const [updatedList, setUpdatedList] = useState(false);
   const [statuses, setStatuses] = useState(Diff.defaultStatuses);
-  const [selectedReport, setSelectedReport] = useState<MaybeReport>(Maybe.none());
+  const [selectedReport, setSelectedReport] = useState<DryRun | null>(null);
   const [searchFilter, setSearchFilter] = useState("");
-  const firstReport = useRef<MaybeReport>(Maybe.none());
+  const firstReport = useRef<DryRun | null>(null);
 
   /**
    * Setting the errorMessage when data failed
    */
   useEffect(() => {
-    if (!RemoteData.isFailed(data)) return;
-
-    setErrorMessage(data.value);
-  }, [data]);
+    if (isError) {
+      setErrorMessage(error.message);
+    }
+  }, [isError, error?.message]);
 
   /**
    * Setting the firstReport mutable ref when data changes
    */
   useEffect(() => {
-    if (!RemoteData.isSuccess(data) || data.value.length <= 0) {
-      firstReport.current = Maybe.none();
+    if (isSuccess) {
+      if (data.length <= 0) {
+        firstReport.current = null;
+      }
 
-      return;
+      firstReport.current = data[0];
+    } else {
+      firstReport.current = null;
     }
-
-    firstReport.current = Maybe.some(data.value[0]);
-  }, [data]);
+  }, [data, isSuccess]);
 
   /**
    * Setting the selected report when data changed and there is no selected report
    * Update the selected report when chosen one has new data available
    */
   useEffect(() => {
-    if (!RemoteData.isSuccess(data) || data.value.length <= 0) return;
+    if (!isSuccess || data.length <= 0) return;
 
-    if (Maybe.isSome(selectedReport)) {
-      const fetchedSelectedReport = data.value.find(
-        (report) => report.id === selectedReport.value.id
-      );
-
-      if (!!fetchedSelectedReport && fetchedSelectedReport.todo !== selectedReport.value.todo) {
-        setSelectedReport(Maybe.some(fetchedSelectedReport));
+    if (selectedReport) {
+      const fetchedSelectedReport = data.find((report) => report.id === selectedReport.id);
+      if (!!fetchedSelectedReport && fetchedSelectedReport.todo !== selectedReport.todo) {
+        setSelectedReport(fetchedSelectedReport);
       } else {
         return;
       }
     } else {
-      setSelectedReport(Maybe.some(data.value[0]));
+      setSelectedReport(data[0]);
     }
-  }, [selectedReport, data]);
-
+  }, [selectedReport, data, isSuccess]);
   useEffect(() => {
-    if (!updatedList) return;
-
-    if (RemoteData.isSuccess(data)) {
+    if (isSuccess) {
       setSelectedReport(firstReport.current);
     }
-
-    setUpdatedList(false);
-  }, [updatedList, data]);
+  }, [isSuccess, data]);
 
   return (
     <>

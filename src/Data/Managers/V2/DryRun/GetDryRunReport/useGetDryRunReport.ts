@@ -1,7 +1,7 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { useGet } from "../../helpers";
-import { ParsedNumber } from "@/Core/Language";
 import { Diff } from "@/Core";
+import { ParsedNumber } from "@/Core/Language";
+import { useGet } from "../../helpers";
 
 /**
  * DryRun interface
@@ -47,7 +47,7 @@ interface GetDryRunReport {
  * React Query hook to fetch details of a specific resource
  *
  * @returns {GetDryRunReport} An object containing the available queries
- * @returns {UseQueryResult<Resource.Details, Error>} returns.useOneTime - Fetch the resource details with a single query
+ * @returns {UseQueryResult<Report, Error>} returns.useOneTime - Fetch the resource details with a single query
  */
 export const useGetDryRunReport = (): GetDryRunReport => {
   const get = useGet()<Response>;
@@ -55,7 +55,7 @@ export const useGetDryRunReport = (): GetDryRunReport => {
   return {
     useOneTime: (version: string, reportId: string): UseQueryResult<Report, Error> =>
       useQuery({
-        queryKey: ["get_resource_details-one_time", version, reportId],
+        queryKey: ["get_dry_run_reports-one_time", version, reportId],
         queryFn: () => get(`/api/v2/dryrun/${version}/${encodeURIComponent(reportId)}`),
         select: (data) => data.data,
       }),
