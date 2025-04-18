@@ -1,25 +1,41 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
+import { DeployAgentsAction, useDeployAgents } from "@/Data/Managers/V2/Agents";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CompileReportsIndication } from "./CompileReportsIndication";
 
 interface Props {
-  kind: "Deploy" | "Repair";
+  method: DeployAgentsAction;
   tooltip: string;
   textContent: string;
 }
 
-export const ResourcePageActionButton: React.FC<Props> = ({ kind, tooltip, textContent }) => {
+/**
+ * ActionButton component for the Resources page
+ *
+ * This component renders a button that triggers deployment actions (deploy or repair)
+ * for resources. It handles disabled states when the environment is halted and
+ * shows a loading spinner during the action.
+ *
+ * @param {DeployAgentsAction} method - The type of deployment action (deploy or repair)
+ * @param {string} tooltip - The tooltip text to display on hover
+ * @param {string} textContent - The text content of the button
+ *
+ * @returns {React.FC<Props>} A button component with appropriate state handling
+ */
+export const ResourcePageActionButton: React.FC<Props> = ({ method, tooltip, textContent }) => {
   const [showSpinner, setShowSpinner] = useState(false);
-  const { environmentModifier, commandResolver } = useContext(DependencyContext);
+  const { environmentModifier } = useContext(DependencyContext);
   const isHalted = environmentModifier.useIsHalted();
 
-  const trigger = commandResolver.useGetTrigger<typeof kind>({ kind: kind });
+  const { mutate } = useDeployAgents();
 
   const handleClick = () => {
-    trigger();
+    mutate({
+      method,
+    });
     setShowSpinner(true);
   };
 

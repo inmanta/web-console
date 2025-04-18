@@ -37,7 +37,7 @@ export const useGetMetadata = (
       useQuery({
         queryFn: () =>
           get(
-            `/lsm/v1/service_inventory/${service_entity}/${service_id}/metadata/${key}?current_version=${instanceVersion}`
+            `/lsm/v1/service_inventory/${service_entity}/${service_id}/metadata/${encodeURIComponent(key)}?current_version=${instanceVersion}`
           ),
         queryKey: ["get_metadata", service_entity, service_id, key, instanceVersion],
 

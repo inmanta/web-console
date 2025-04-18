@@ -1,4 +1,5 @@
 import qs from "qs";
+import { urlEncodeParams } from "../../helpers";
 import { GetResourcesParams } from "./useGetResources";
 
 /**
@@ -7,7 +8,8 @@ import { GetResourcesParams } from "./useGetResources";
  * @param {GetResourcesParams} query - The query parameters
  * @returns {string} The constructed URL
  */
-export const getUrl = ({ filter, pageSize, sort, currentPage }: GetResourcesParams): string => {
+export const getUrl = (params: GetResourcesParams): string => {
+  const { filter, sort, pageSize, currentPage } = urlEncodeParams<GetResourcesParams>(params);
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(

@@ -23,7 +23,7 @@ export const usePostMetadata = (): UseMutationResult<void, Error, PostMetadataIn
   return useMutation({
     mutationFn: (info) =>
       post(
-        `/lsm/v1/service_inventory/${info.service_entity}/${info.service_id}/metadata/${info.key}`,
+        `/lsm/v1/service_inventory/${info.service_entity}/${info.service_id}/metadata/${encodeURIComponent(info.key)}`,
         info
       ),
     mutationKey: ["post_metadata"],
