@@ -1,7 +1,7 @@
 import React from "react";
+import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment/GetEnvironmentSettings";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { Provider } from "./Provider";
-import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment/GetEnvironmentSettings";
 
 interface Props {
   environmentId: string;

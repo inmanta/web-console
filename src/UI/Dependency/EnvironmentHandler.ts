@@ -1,7 +1,7 @@
 import { Location } from "history";
 import { EnvironmentHandler, FlatEnvironment, Navigate, RouteManager } from "@/Core";
-import { SearchHelper } from "@/UI/Routing/SearchHelper";
 import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
+import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
 export function EnvironmentHandlerImpl(
   useLocation: () => Location,

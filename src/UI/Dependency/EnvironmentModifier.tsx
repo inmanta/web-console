@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { EnvironmentDetails, EnvironmentModifier, EnvironmentSettings } from "@/Core";
 import { EnvironmentSettings as EnvironmentSettingsType } from "@/Core/Domain/EnvironmentSettings";
 import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment/GetEnvironmentDetails";
 import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment/GetEnvironmentSettings";
-import { useState } from "react";
 
 export function EnvironmentModifierImpl(): EnvironmentModifier {
   const [envId, setEnvId] = useState<null | string>(null);

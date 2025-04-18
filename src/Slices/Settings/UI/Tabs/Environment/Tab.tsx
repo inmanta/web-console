@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { EnvironmentDetails, FlatEnvironment, ProjectModel } from "@/Core";
+import { useGetEnvironmentDetails, useGetProjects } from "@/Data/Managers/V2/Environment";
 import { DependencyContext } from "@/UI";
 import { LoadingView, ErrorView } from "@/UI/Components";
 import { EnvironmentSettings } from "./EnvironmentSettings";
-import { useGetEnvironmentDetails, useGetProjects } from "@/Data/Managers/V2/Environment";
 
 export const Tab: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);

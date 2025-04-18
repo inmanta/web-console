@@ -1,11 +1,11 @@
 import React from "react";
 import { PageSection } from "@patternfly/react-core";
+import { Environment } from "@/Core";
 import { useGetEnvironments, useGetProjects } from "@/Data/Managers/V2/Environment";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageSectionWithTitle } from "@/UI/Components";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 import { EmptyFilterToolbar } from "./FilterToolbar";
-import { Environment } from "@/Core";
 
 export const Page: React.FC = () => {
   const { data, isError, error, isSuccess, refetch } = useGetEnvironments().useContinuous(true);

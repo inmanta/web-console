@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   FeatureManager,
   Feature,
@@ -10,7 +11,6 @@ import {
   FEATURE_LIST,
 } from "@/Core";
 import { VoidLogger } from "./VoidLogger";
-import { useState } from "react";
 
 /**
  * Represents the primary feature manager.
@@ -35,6 +35,7 @@ export const PrimaryFeatureManager = (
     `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
   );
   const [serverStatus, setServerStatus] = useState<ServerStatus | null>(null);
+
   /**
    * Gets the version of the application.
    * @returns The version of the application.

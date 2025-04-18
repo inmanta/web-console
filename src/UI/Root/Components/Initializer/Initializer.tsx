@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
 import { useGetServerStatus } from "@/Data/Managers/V2/Server/GetServerStatus";
 import { ErrorView, LoadingView } from "@/UI/Components";
-import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const getServerStatus = useGetServerStatus().useOneTime();

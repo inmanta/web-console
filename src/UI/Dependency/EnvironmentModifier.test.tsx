@@ -1,10 +1,10 @@
-import React, { act } from "react";
+import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { EnvironmentModifier, RemoteData } from "@/Core";
+import { EnvironmentModifier } from "@/Core";
 import { DefinitionMap } from "@/Core/Domain/EnvironmentSettings";
 import { getStoreInstance } from "@/Data";
-import { EnvironmentDetails, EnvironmentSettings } from "@/Test";
+import { EnvironmentSettings } from "@/Test";
 import { EnvironmentModifierImpl } from "./EnvironmentModifier";
 
 const DummyComponent: React.FC<{

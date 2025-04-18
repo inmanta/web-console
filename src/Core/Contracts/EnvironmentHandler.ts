@@ -1,6 +1,6 @@
 import { Location } from "history";
 import { FlatEnvironment } from "@/Core/Domain";
-import { Navigate, RemoteData } from "@/Core/Language";
+import { Navigate } from "@/Core/Language";
 
 export interface EnvironmentHandler {
   set(navigate: Navigate, location: Location, environmentId: string): void;

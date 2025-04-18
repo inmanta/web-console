@@ -6,7 +6,6 @@ import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Either } from "@/Core";
 import { getStoreInstance, QueryResolverImpl } from "@/Data";
-import { EnvironmentDetailsOneTimeQueryManager } from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import {
   DeferredApiHelper,
   dependencies,
@@ -28,7 +27,6 @@ const axe = configureAxe({
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const environmentDetailsQueryManager = EnvironmentDetailsOneTimeQueryManager(store, apiHelper);
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolverImpl([environmentDetailsQueryManager])

@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
+import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Dashboard } from "./Dashboard";
-import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment";
 
 export const Page: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);

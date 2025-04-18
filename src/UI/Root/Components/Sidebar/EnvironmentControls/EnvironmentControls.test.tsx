@@ -3,13 +3,13 @@ import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { axe } from "jest-axe";
 import { QueryControlProvider } from "@/Data/Managers/V2/helpers";
 import { EnvironmentDetails } from "@/Test/Data";
 import { MockEnvironmentHandler } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "../../ModalProvider";
 import { EnvironmentControls } from "./EnvironmentControls";
-import { axe } from "jest-axe";
 const fetchMock = jest.fn();
 
 global.fetch = fetchMock;
