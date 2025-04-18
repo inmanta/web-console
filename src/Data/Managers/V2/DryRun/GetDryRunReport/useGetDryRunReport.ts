@@ -44,10 +44,10 @@ interface GetDryRunReport {
 }
 
 /**
- * React Query hook to fetch details of a specific resource
+ * React Query hook to fetch Dry Run Report
  *
  * @returns {GetDryRunReport} An object containing the available queries
- * @returns {UseQueryResult<Report, Error>} returns.useOneTime - Fetch the resource details with a single query
+ * @returns {UseQueryResult<Report, Error>} returns.useOneTime - Fetch the  dry run report with a single query
  */
 export const useGetDryRunReport = (): GetDryRunReport => {
   const get = useGet()<Response>;
