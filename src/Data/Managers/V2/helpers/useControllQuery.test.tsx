@@ -1,9 +1,9 @@
-import React, { ReactNode } from "react";
-import { renderHook, waitFor } from "@testing-library/react";
+import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useControlledQuery } from "./useControlledQuery";
+import { renderHook, waitFor } from "@testing-library/react";
 import { QueryControlProvider } from "./QueryControlContext";
-
+import { useControlledQuery } from "./useControlledQuery";
+import * as QueryControlContext from "./QueryControlContext";
 const setup = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -22,7 +22,7 @@ const setup = () => {
 };
 
 describe("useControlledQuery", () => {
-  const mockedContext = jest.spyOn(require("./QueryControlContext"), "useQueryControl");
+  const mockedContext = jest.spyOn(QueryControlContext, "useQueryControl");
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -47,7 +47,11 @@ describe("useControlledQuery", () => {
   });
 
   it("should not execute the query when queriesEnabled is false", async () => {
-    mockedContext.mockReturnValue({ queriesEnabled: false });
+    mockedContext.mockReturnValue({
+      queriesEnabled: false,
+      enableQueries: jest.fn(),
+      disableQueries: jest.fn(),
+    });
     const wrapper = setup();
     const queryFn = jest.fn().mockResolvedValue("test data");
 
