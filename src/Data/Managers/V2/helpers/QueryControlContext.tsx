@@ -22,6 +22,9 @@ const QueryControlContext = createContext<QueryControlContextType | undefined>(u
 
 /**
  * Provider for the QueryControlContext.
+ * it stores the logic for managing the query execution through the useQuery flag.
+ *
+ * when Environment will be halted, we will use this context to disable almost all of the queries that use environment as a direct or indirect dependency.
  *
  * @param {React.ReactNode} children - The children of the provider.
  * @returns {React.ReactNode} The provider.

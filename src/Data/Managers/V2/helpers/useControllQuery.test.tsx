@@ -2,8 +2,9 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { QueryControlProvider } from "./QueryControlContext";
-import { useControlledQuery } from "./useControlledQuery";
+import { useCustomQuery } from "./useCustomQuery";
 import * as QueryControlContext from "./QueryControlContext";
+
 const setup = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -21,7 +22,7 @@ const setup = () => {
   return wrapper;
 };
 
-describe("useControlledQuery", () => {
+describe("useCustomQuery", () => {
   const mockedContext = jest.spyOn(QueryControlContext, "useQueryControl");
 
   afterEach(() => {
@@ -33,7 +34,7 @@ describe("useControlledQuery", () => {
     const wrapper = setup();
     const { result } = renderHook(
       () =>
-        useControlledQuery({
+        useCustomQuery({
           queryKey: ["test-key"],
           queryFn,
         }),
@@ -57,7 +58,7 @@ describe("useControlledQuery", () => {
 
     const { result } = renderHook(
       () =>
-        useControlledQuery({
+        useCustomQuery({
           queryKey: ["test-key"],
           queryFn,
         }),
@@ -76,7 +77,7 @@ describe("useControlledQuery", () => {
     const wrapper = setup();
     const { result } = renderHook(
       () =>
-        useControlledQuery({
+        useCustomQuery({
           queryKey: ["test-key"],
           queryFn,
           enabled: false,
