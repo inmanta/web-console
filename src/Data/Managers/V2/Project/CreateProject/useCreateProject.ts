@@ -1,16 +1,18 @@
-import {
-  UseMutationResult,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ProjectModel } from "@/Core";
 import { usePostWithoutEnv } from "../../helpers";
 
+/**
+ * Interface for the parameters for the create project mutation.
+ */
 interface CreateProjectParams {
   name: string;
   description?: string;
 }
 
+/**
+ * Interface for the response from the create project mutation.
+ */
 interface CreateProjectResponse {
   data: ProjectModel;
 }
@@ -29,8 +31,7 @@ export const useCreateProject = (): UseMutationResult<
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: CreateProjectParams) =>
-      post("/api/v2/project", params),
+    mutationFn: (params: CreateProjectParams) => post("/api/v2/project", params),
     onSuccess: () => {
       // Invalidate and refetch projects query
       queryClient.invalidateQueries({ queryKey: ["get_projects"] });

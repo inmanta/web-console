@@ -8,21 +8,27 @@ import { ParsedNumber } from "@/Core";
 import { Dict } from "@/UI/Components";
 import { usePost } from "../../helpers";
 
-interface ConfigUpdate {
+/**
+ * Interface for the parameters for the update environment configuration mutation.
+ */
+interface ConfigUpdateParams {
   id: string;
   updatedValue: UpdateValue;
 }
 
+/**
+ * Interface for the value for the update environment configuration mutation.
+ */
 type UpdateValue = { value: string | boolean | ParsedNumber | Dict };
 
 /**
  * React Query hook for updating environment configuration settings.
  *
- * @returns {UseMutationResult<void, Error, ConfigUpdate, unknown>}- The mutation object from `useMutation` hook.
+ * @returns {UseMutationResult<void, Error, ConfigUpdateParams, unknown>}- The mutation object from `useMutation` hook.
  */
 export const useUpdateEnvConfig = (
-  options?: UseMutationOptions<void, Error, ConfigUpdate, unknown>
-): UseMutationResult<void, Error, ConfigUpdate, unknown> => {
+  options?: UseMutationOptions<void, Error, ConfigUpdateParams, unknown>
+): UseMutationResult<void, Error, ConfigUpdateParams, unknown> => {
   const client = useQueryClient();
 
   const post = usePost()<UpdateValue>;

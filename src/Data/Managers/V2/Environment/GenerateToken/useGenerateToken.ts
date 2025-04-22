@@ -6,6 +6,9 @@ import {
 } from "@tanstack/react-query";
 import { usePost } from "../../helpers";
 
+/**
+ * Interface for the parameters for the generate token mutation.
+ */
 interface GenerateTokenParams {
   name: string;
   project_id: string;
@@ -15,6 +18,9 @@ interface GenerateTokenParams {
   description?: string;
 }
 
+/**
+ * Interface for the response from the generate token mutation.
+ */
 interface Response {
   data: string;
 }

@@ -7,6 +7,9 @@ import {
 import { EnvironmentSettings } from "@/Core";
 import { usePost } from "../../helpers";
 
+/**
+ * Interface for the parameters for the update environment setting mutation.
+ */
 interface UpdateParams {
   id: string;
   value: EnvironmentSettings.Value;
@@ -18,14 +21,13 @@ interface UpdateParams {
  * @returns {UseMutationResult<void, Error, UpdateParams, unknown>} The mutation object for updating an environment setting.
  */
 export const useUpdateEnvironmentSetting = (
-  options?: UseMutationOptions<void, Error, UpdateParams>,
+  options?: UseMutationOptions<void, Error, UpdateParams>
 ): UseMutationResult<void, Error, UpdateParams> => {
   const client = useQueryClient();
   const post = usePost();
 
   return useMutation({
-    mutationFn: ({ id, value }) =>
-      post(`/api/v2/environment_settings/${id}`, { value }),
+    mutationFn: ({ id, value }) => post(`/api/v2/environment_settings/${id}`, { value }),
     mutationKey: ["update_environment_setting"],
     onSuccess: () => {
       client.invalidateQueries({
