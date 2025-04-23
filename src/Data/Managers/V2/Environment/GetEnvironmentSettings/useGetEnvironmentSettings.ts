@@ -22,7 +22,7 @@ export const useGetEnvironmentSettings = (): GetEnvironmentSettings => {
     useOneTime: (): UseQueryResult<EnvironmentSettings, Error> =>
       useQuery({
         queryKey: ["get_environment_settings-one_time"],
-        queryFn: () => get(`/api/v2/environment_settings`),
+        queryFn: () => get("/api/v2/environment_settings"),
         retry: false,
         select: (data) => data.data,
       }),

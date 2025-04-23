@@ -12,7 +12,7 @@ import { usePost } from "../../helpers";
  * @returns {UseMutationResult<void, Error, void, unknown>} The mutation object for halting an environment.
  */
 export const useHaltEnvironment = (
-  options?: UseMutationOptions<void, Error, void>,
+  options?: UseMutationOptions<void, Error, void>
 ): UseMutationResult<void, Error, void> => {
   const client = useQueryClient();
   const post = usePost();

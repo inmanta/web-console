@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
 import { StopIcon } from "@patternfly/react-icons";
-import { DependencyContext } from "@/UI/Dependency";
+import { useHaltEnvironment } from "@/Data/Managers/V2/Environment";
+import { useQueryControl } from "@/Data/Managers/V2/helpers/QueryControlContext";
 import { words } from "@/UI/words";
 import { ModalContext } from "../../ModalProvider";
 
@@ -11,10 +12,13 @@ import { ModalContext } from "../../ModalProvider";
  * @returns {React.FC} A button with a tooltip that triggers a modal when clicked.
  */
 export const HaltButton: React.FC = () => {
-  const { queryResolver, commandResolver } = useContext(DependencyContext);
+  const { disableQueries, enableQueries } = useQueryControl();
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const haltEnvironmentTrigger = commandResolver.useGetTrigger<"HaltEnvironment">({
-    kind: "HaltEnvironment",
+  const { mutate } = useHaltEnvironment({
+    onSuccess: () => {
+      enableQueries();
+      document.dispatchEvent(new CustomEvent("halt-event"));
+    },
   });
 
   /**
@@ -36,11 +40,8 @@ export const HaltButton: React.FC = () => {
           key="confirm"
           variant="primary"
           onClick={() => {
-            queryResolver.pauseAllContinuousManagers();
-            haltEnvironmentTrigger().then((_result) => {
-              queryResolver.resumeAllContinuousManagers();
-              document.dispatchEvent(new CustomEvent("halt-event"));
-            });
+            disableQueries();
+            mutate();
             closeModal();
             document.dispatchEvent(new CustomEvent("halt-event"));
           }}

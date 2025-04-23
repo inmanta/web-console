@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ProjectModel } from "@/Core";
-import { usePostWithoutEnv, usePutWithoutEnv } from "../../helpers";
+import { usePutWithoutEnv } from "../../helpers";
 
 /**
  * Interface for the parameters for the create project mutation.

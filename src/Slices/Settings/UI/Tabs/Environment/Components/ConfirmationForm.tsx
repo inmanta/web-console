@@ -10,6 +10,7 @@ import {
   FormGroup,
   TextInput,
 } from "@patternfly/react-core";
+import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import { FlatEnvironment } from "@/Core";
 import { useClearEnvironment, useDeleteEnvironment } from "@/Data/Managers/V2/Environment";
@@ -17,7 +18,6 @@ import { useNavigateTo } from "@/UI";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { EnvActions } from "./Actions";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   environment: Pick<FlatEnvironment, "id" | "name">;
