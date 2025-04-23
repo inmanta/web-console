@@ -23,12 +23,12 @@ export const useModifyEnvironment = (
     mutationFn: (params) => post(`/api/v2/environment/${environmentId}`, params),
     mutationKey: ["modify_environment", environmentId],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: ["get_environments-one_time"] });
-      client.refetchQueries({ queryKey: ["get_environments-continuous"] });
-      client.refetchQueries({
+      client.invalidateQueries({ queryKey: ["get_environments-one_time"] });
+      client.invalidateQueries({ queryKey: ["get_environments-continuous"] });
+      client.invalidateQueries({
         queryKey: ["get_environment_details-one_time", environmentId],
       });
-      client.refetchQueries({
+      client.invalidateQueries({
         queryKey: ["get_environment_details-continuous", environmentId],
       });
     },
