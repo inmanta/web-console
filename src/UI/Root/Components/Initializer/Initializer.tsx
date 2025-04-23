@@ -1,6 +1,6 @@
 import React from "react";
 import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
-import { useGetServerStatus } from "@/Data/Managers/V2/Server";
+import { useGetServerStatus } from "@/Data/Managers/V2/Server/GetServerStatus";
 import { ErrorView, LoadingView } from "@/UI/Components";
 
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {

@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
+import { useQueryClient } from "@tanstack/react-query";
 import { ProjectModel } from "@/Core";
 import { useCreateEnvironment } from "@/Data/Managers/V2/Environment";
 import { useCreateProject } from "@/Data/Managers/V2/Project/CreateProject";
@@ -11,7 +12,6 @@ import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnviron
 import { ImageField } from "./ImageField";
 import { TextAreaField } from "./TextAreaField";
 import { TextField } from "./TextField";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   projects: ProjectModel[];
