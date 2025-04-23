@@ -10,7 +10,7 @@ import { InlineValue } from "./InlineFillers";
 
 interface Props extends FieldProps {
   options: string[];
-  mutation: UseMutationResult<CreateProjectResponse, Error, CreateProjectParams>;
+  onCreate: UseMutationResult<CreateProjectResponse, Error, CreateProjectParams>;
 }
 
 export const EditableSelectField: React.FC<Props> = ({
@@ -19,7 +19,7 @@ export const EditableSelectField: React.FC<Props> = ({
   initialValue,
   options,
   initiallyEditable,
-  mutation,
+  onCreate,
   onSubmit,
 }) => {
   return (
@@ -34,7 +34,7 @@ export const EditableSelectField: React.FC<Props> = ({
           value={value}
           label={label}
           options={options}
-          mutation={mutation}
+          onCreate={onCreate}
           onSelect={onChange}
         />
       )}

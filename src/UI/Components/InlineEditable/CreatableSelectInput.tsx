@@ -14,7 +14,7 @@ interface Props {
   options: string[];
   isRequired?: boolean;
   withLabel?: boolean;
-  mutation: UseMutationResult<CreateProjectResponse, Error, CreateProjectParams>;
+  onCreate: UseMutationResult<CreateProjectResponse, Error, CreateProjectParams>;
   onSelect: (value: string) => void;
 }
 
@@ -27,7 +27,7 @@ interface Props {
  * @prop {string[]} options - The options for the input
  * @prop {boolean} isRequired - Whether the input is required
  * @prop {boolean} withLabel - Whether to show the label
- * @prop {UseMutationResult<CreateProjectResponse, Error, CreateProjectParams>} mutation - The mutation for the input
+ * @prop {UseMutationResult<CreateProjectResponse, Error, CreateProjectParams>} onCreate - The function to call when the input is created
  * @prop {(value: string) => void} onSelect - The function to call when the input is selected
  */
 export const CreatableSelectInput: React.FC<Props> = ({
@@ -36,25 +36,25 @@ export const CreatableSelectInput: React.FC<Props> = ({
   options,
   isRequired,
   withLabel,
-  mutation,
+  onCreate,
   onSelect,
 }) => {
   const [submitError, setSubmitError] = useState("");
   const onCreateOption = (newValue: string) => {
-    mutation.mutate({ name: newValue });
+    onCreate.mutate({ name: newValue });
   };
   const onCloseAlert = () => setSubmitError("");
 
   useEffect(() => {
-    if (mutation.isError) {
-      setSubmitError(mutation.error.message);
+    if (onCreate.isError) {
+      setSubmitError(onCreate.error.message);
       onSelect("");
     }
-    if (mutation.isSuccess) {
-      const response = mutation.data;
+    if (onCreate.isSuccess) {
+      const response = onCreate.data;
       onSelect(response.data.name);
     }
-  }, [mutation.isError, mutation.isSuccess, mutation.data, mutation.error]);
+  }, [onCreate.isError, onCreate.isSuccess, onCreate.data, onCreate.error]);
 
   const errorView = submitError && (
     <InlinePlainAlert
