@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
 import { Dict } from "@/UI/Components";
-import { usePost } from "../../helpers";
+import { usePostWithoutEnv } from "../../helpers";
 
 /**
  * Interface for the parameters for the update environment configuration mutation.
@@ -31,7 +31,7 @@ export const useUpdateEnvConfig = (
 ): UseMutationResult<void, Error, ConfigUpdateParams, unknown> => {
   const client = useQueryClient();
 
-  const post = usePost()<UpdateValue>;
+  const post = usePostWithoutEnv()<UpdateValue>;
 
   return useMutation({
     mutationFn: ({ id, updatedValue }) => post(`/api/v2/environment_settings/${id}`, updatedValue),

@@ -21,7 +21,11 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
     <>
       {environmentId && <DependencyResolver environment={environmentId} />}
       <PageFrame environmentId={environmentId}>
-        {environmentId ? <Navigate to={routeManager.getUrl("Home", undefined)} /> : children}
+        {environmentId === words("error.environment.missing") ? (
+          <Navigate to={routeManager.getUrl("Home", undefined)} />
+        ) : (
+          children
+        )}
       </PageFrame>
     </>
   );

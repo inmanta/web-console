@@ -8,11 +8,11 @@ import {
   FlexItem,
   TextInput,
 } from "@patternfly/react-core";
+import { ErrorHandlingContext } from "@/Slices/Settings/UI/Tabs/Environment/Components";
 import { convertToTitleCase } from "@/UI/Utils";
 import { CancelEditButton, EnableEditButton, SubmitEditButton } from "./InlineEditButtons";
 import { InlineValue } from "./InlineFillers";
 import { InlinePlainAlert } from "./InlinePlainAlert";
-import { ErrorHandlingContext } from "@/Slices/Settings/UI/Tabs/Environment/Components";
 
 interface Props {
   groupName: string;

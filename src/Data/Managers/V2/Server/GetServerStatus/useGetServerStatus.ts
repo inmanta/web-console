@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServerStatus } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 import { useGetWithoutEnv } from "../../helpers";
 
 /**
@@ -18,6 +20,7 @@ interface GetServerStatus {
  * @returns {UseQueryResult<ServerStatus, Error>} returns.useContinuous - Fetch server status with continuous polling.
  */
 export const useGetServerStatus = (): GetServerStatus => {
+  const { featureManager } = useContext(DependencyContext);
   const get = useGetWithoutEnv()<{ data: ServerStatus }>;
 
   return {
@@ -26,7 +29,10 @@ export const useGetServerStatus = (): GetServerStatus => {
         queryKey: ["get_server_status-one_time"],
         queryFn: () => get("/api/v1/serverstatus"),
         retry: false,
-        select: (data) => data.data,
+        select: (data) => {
+          featureManager.setServerStatus(data.data);
+          return data.data;
+        },
       }),
 
     useContinuous: (): UseQueryResult<ServerStatus, Error> =>
@@ -34,7 +40,10 @@ export const useGetServerStatus = (): GetServerStatus => {
         queryKey: ["get_server_status-continuous"],
         queryFn: () => get("/api/v1/serverstatus"),
         retry: false,
-        select: (data) => data.data,
+        select: (data) => {
+          featureManager.setServerStatus(data.data);
+          return data.data;
+        },
         refetchInterval: 5000,
       }),
   };

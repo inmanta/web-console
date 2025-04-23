@@ -54,7 +54,7 @@ export const CreatableSelectInput: React.FC<Props> = ({
       const response = onCreate.data;
       onSelect(response.data.name);
     }
-  }, [onCreate.isError, onCreate.isSuccess, onCreate.data, onCreate.error]);
+  }, [onCreate.isError, onCreate.isSuccess, onCreate.data, onCreate.error, onSelect]);
 
   const errorView = submitError && (
     <InlinePlainAlert

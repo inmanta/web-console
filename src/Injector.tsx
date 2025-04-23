@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import { isJsonParserId, JsonParserId, SchedulerImpl } from "@/Core";
 import {
   PrimaryFeatureManager,
-  GetServerStatusStateHelper,
   BaseApiHelper,
   FileFetcherImpl,
   CommandResolverImpl,
@@ -43,7 +42,6 @@ interface Props {
 export const Injector: React.FC<React.PropsWithChildren<Props>> = ({ store, children }) => {
   const authHelper = useContext(AuthContext);
   const featureManager = new PrimaryFeatureManager(
-    GetServerStatusStateHelper(store),
     new PrimaryLogger(),
     getJsonParserId(globalThis),
     COMMITHASH,

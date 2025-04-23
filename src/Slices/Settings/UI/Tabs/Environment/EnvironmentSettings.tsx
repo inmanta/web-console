@@ -30,7 +30,7 @@ interface Props {
  */
 export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) => {
   const { environmentHandler } = useContext(DependencyContext);
-  const { mutate, error } = useModifyEnvironment(environmentHandler.useId());
+  const { mutate } = useModifyEnvironment(environmentHandler.useId());
 
   const createProject = useCreateProject();
 

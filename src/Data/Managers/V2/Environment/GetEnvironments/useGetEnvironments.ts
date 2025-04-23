@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Environment } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 import { useGetWithoutEnv } from "../../helpers";
 
 /**
@@ -18,6 +20,7 @@ interface GetEnvironments {
  * @returns {UseQueryResult<Environment[], Error>} returns.useContinuous - Fetch environments with continuous polling.
  */
 export const useGetEnvironments = (): GetEnvironments => {
+  const { environmentHandler } = useContext(DependencyContext);
   const get = useGetWithoutEnv()<{ data: Environment[] }>;
 
   return {
@@ -26,7 +29,10 @@ export const useGetEnvironments = (): GetEnvironments => {
         queryKey: ["get_environments-one_time", details],
         queryFn: () => get(`/api/v2/environment?details=${details}`),
         retry: false,
-        select: (data) => data.data,
+        select: (data) => {
+          environmentHandler.setAllEnvironments(data.data);
+          return data.data;
+        },
       }),
 
     useContinuous: (details = false): UseQueryResult<Environment[], Error> =>
@@ -34,7 +40,10 @@ export const useGetEnvironments = (): GetEnvironments => {
         queryKey: ["get_environments-continuous", details],
         queryFn: () => get(`/api/v2/environment?details=${details}`),
         retry: false,
-        select: (data) => data.data,
+        select: (data) => {
+          environmentHandler.setAllEnvironments(data.data);
+          return data.data;
+        },
         refetchInterval: 5000,
       }),
   };

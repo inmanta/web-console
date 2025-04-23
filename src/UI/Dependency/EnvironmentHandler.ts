@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { Location } from "history";
-import { EnvironmentHandler, FlatEnvironment, Navigate, RemoteData, RouteManager } from "@/Core";
-import { useStoreState } from "@/Data/Store";
+import { EnvironmentHandler, FlatEnvironment, Navigate, RouteManager } from "@/Core";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
 export function EnvironmentHandlerImpl(
   useLocation: () => Location,
   routeManager: RouteManager
 ): EnvironmentHandler {
+  const [allEnvs, setAllEnvs] = useState<FlatEnvironment[]>([]);
+
   function set(navigate: Navigate, location: Location, environmentId: string): void {
     const { pathname, search } = location;
     const params = new URLSearchParams(search);
@@ -28,22 +30,27 @@ export function EnvironmentHandlerImpl(
   }
 
   function useSelected(): FlatEnvironment | undefined {
-    const allEnvironments = useStoreState((state) => state.environment.environments);
+    console.log("useSelected", allEnvs);
     const { search } = useLocation();
 
-    return determineSelected(allEnvironments, search);
+    return determineSelected(allEnvs, search);
+  }
+
+  function setAllEnvironments(environments: FlatEnvironment[]): void {
+    console.log("setAllEnvironments", environments);
+    setAllEnvs(environments);
   }
 
   function determineSelected(
-    allEnvironments: RemoteData.Type<string, FlatEnvironment[]>,
+    allEnvironments: FlatEnvironment[],
     search: string
   ): FlatEnvironment | undefined {
     const searchHelper = new SearchHelper();
     const parsed = searchHelper.parse(search);
     const envId = parsed["env"];
 
-    if (envId && allEnvironments.kind === "Success") {
-      const env = allEnvironments.value.find((environment) => environment.id === envId);
+    if (envId) {
+      const env = allEnvironments.find((environment) => environment.id === envId);
 
       return env;
     }
@@ -56,5 +63,6 @@ export function EnvironmentHandlerImpl(
     useId,
     useSelected,
     determineSelected,
+    setAllEnvironments,
   };
 }

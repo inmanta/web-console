@@ -34,8 +34,9 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
 
   const createEnvironment = useCreateEnvironment({
     onSuccess: (data) => {
-      client.refetchQueries({ queryKey: ["get_environments-one_time"] });
-      client.refetchQueries({ queryKey: ["get_environments-continuous"] });
+      //reset the queries to get the rid of the data that would not include the new environment, otherwise the new view would try to access env set through search param and throw error
+      client.resetQueries({ queryKey: ["get_environments-one_time"] });
+      client.resetQueries({ queryKey: ["get_environments-continuous"] });
 
       const target = isLsmEnabled ? "Catalog" : "DesiredState";
 
