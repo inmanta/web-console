@@ -61,7 +61,7 @@ function setup(useMockArchiveHelper = false) {
     new DynamicQueryManagerResolverImpl([getServerStatusQueryManager])
   );
 
-  const featureManager = new PrimaryFeatureManager(GetServerStatusStateHelper(store));
+  const featureManager = new PrimaryFeatureManager();
 
   const archiveHelper: MockArchiveHelper | PrimaryArchiveHelper = useMockArchiveHelper
     ? new MockArchiveHelper()

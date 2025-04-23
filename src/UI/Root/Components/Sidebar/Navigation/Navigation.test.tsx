@@ -32,7 +32,7 @@ function setup(initialEntries: string[] | undefined, serverStatus: ServerStatus)
   const store = getStoreInstance();
 
   store.dispatch.serverStatus.setData(RemoteData.success(serverStatus));
-  const featureManager = new PrimaryFeatureManager(GetServerStatusStateHelper(store));
+  const featureManager = new PrimaryFeatureManager();
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
   );
