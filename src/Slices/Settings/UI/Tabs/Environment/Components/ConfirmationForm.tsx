@@ -11,11 +11,13 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { FlatEnvironment, Maybe } from "@/Core";
-import { DependencyContext, useNavigateTo } from "@/UI";
+import { FlatEnvironment } from "@/Core";
+import { useClearEnvironment, useDeleteEnvironment } from "@/Data/Managers/V2/Environment";
+import { useNavigateTo } from "@/UI";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { EnvActions } from "./Actions";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   environment: Pick<FlatEnvironment, "id" | "name">;
@@ -32,9 +34,9 @@ interface Props {
  * @returns {React.FC<Props>} - The rendered confirmation form.
  */
 export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
-  const { commandResolver } = useContext(DependencyContext);
   const { closeModal } = useContext(ModalContext);
   const navigateTo = useNavigateTo();
+  const client = useQueryClient();
 
   const [candidateEnv, setCandidateEnv] = useState("");
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
@@ -42,13 +44,33 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   const validated = environment.name === candidateEnv ? "success" : "default";
 
   const redirectToHome = () => navigateTo("Home", undefined);
-  const deleteTrigger = commandResolver.useGetTrigger<"DeleteEnvironment">({
-    kind: "DeleteEnvironment",
-    id: environment.id,
+
+  const deleteEnv = useDeleteEnvironment(environment.id, {
+    onSuccess: () => {
+      //reset the queries removes the cache which improves the ux when navigating back to the environments page
+      client.resetQueries({ queryKey: ["get_environments-one_time"] });
+      client.resetQueries({ queryKey: ["get_environments-continuous"] });
+
+      closeModal();
+      redirectToHome();
+    },
+    onError: (error) => {
+      setErrorMessage(error.message);
+      setIsBusy(false);
+    },
   });
-  const clearTrigger = commandResolver.useGetTrigger<"ClearEnvironment">({
-    kind: "ClearEnvironment",
-    id: environment.id,
+
+  const clearEnv = useClearEnvironment(environment.id, {
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: ["get_environments-one_time"] });
+      client.invalidateQueries({ queryKey: ["get_environments-continuous"] });
+
+      closeModal();
+    },
+    onError: (error) => {
+      setErrorMessage(error.message);
+      setIsBusy(false);
+    },
   });
 
   /**
@@ -65,18 +87,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   const onConfirm = async (type: EnvActions): Promise<void> => {
     setIsBusy(true);
     setErrorMessage(null);
-    const error = type === "delete" ? await deleteTrigger() : await clearTrigger();
-
-    if (Maybe.isNone(error)) {
-      if (type === "delete") {
-        redirectToHome();
-      }
-
-      closeModal();
-    } else {
-      setIsBusy(false);
-      setErrorMessage(error.value);
-    }
+    type === "delete" ? deleteEnv.mutate() : clearEnv.mutate();
   };
 
   return (

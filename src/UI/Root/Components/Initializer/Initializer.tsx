@@ -1,23 +1,34 @@
-import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
-import { RemoteDataView } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
+import React from "react";
+import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
+import { useGetServerStatus } from "@/Data/Managers/V2/Server";
+import { ErrorView, LoadingView } from "@/UI/Components";
 
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [statusData] = queryResolver.useOneTime<"GetServerStatus">({
-    kind: "GetServerStatus",
-  });
+  const serverStatus = useGetServerStatus().useOneTime();
+  const environments = useGetEnvironments().useOneTime();
 
-  const [environmentsData] = queryResolver.useOneTime<"GetEnvironments">({
-    kind: "GetEnvironments",
-    details: false,
-  });
+  if (serverStatus.isError) {
+    return (
+      <ErrorView
+        ariaLabel="Initializer-Error"
+        message={serverStatus.error.message}
+        retry={serverStatus.refetch}
+      />
+    );
+  }
 
-  return (
-    <RemoteDataView
-      data={RemoteData.merge(statusData, environmentsData)}
-      SuccessView={() => <>{children}</>}
-    />
-  );
+  if (environments.isError) {
+    return (
+      <ErrorView
+        ariaLabel="Initializer-Error"
+        message={environments.error.message}
+        retry={environments.refetch}
+      />
+    );
+  }
+
+  if (serverStatus.isSuccess && environments.isSuccess) {
+    return <>{children}</>;
+  }
+  return <LoadingView ariaLabel="Initializer-Loading" />;
 };

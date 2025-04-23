@@ -1,10 +1,5 @@
-import {
-  UseMutationOptions,
-  UseMutationResult,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { useDelete } from "../../helpers";
+import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
+import { useDeleteWithoutEnv } from "../../helpers";
 
 /**
  * React Query hook for clearing (decommissioning) an environment.
@@ -12,18 +7,14 @@ import { useDelete } from "../../helpers";
  * @returns {UseMutationResult<void, Error, string, unknown>} The mutation object for clearing an environment.
  */
 export const useClearEnvironment = (
-  options?: UseMutationOptions<void, Error, string>
-): UseMutationResult<void, Error, string> => {
-  const client = useQueryClient();
-  const deleteFn = useDelete();
+  environmentId: string,
+  options?: UseMutationOptions<void, Error, void>
+): UseMutationResult<void, Error, void> => {
+  const deleteFn = useDeleteWithoutEnv();
 
   return useMutation({
-    mutationFn: (environmentId) => deleteFn(`/api/v2/decommission/${environmentId}`),
+    mutationFn: () => deleteFn(`/api/v2/decommission/${environmentId}`),
     mutationKey: ["clear_environment"],
-    onSuccess: () => {
-      client.invalidateQueries({ queryKey: ["get_environments-one_time"] });
-      client.invalidateQueries({ queryKey: ["get_environments-continuous"] });
-    },
     ...options,
   });
 };

@@ -1,29 +1,30 @@
-import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
-import { DependencyContext } from "@/UI";
+import React from "react";
+import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects/useGetProjects";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
 
 export const Page: React.FC = () => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useOneTime<"GetProjects">({
-    kind: "GetProjects",
-    environmentDetails: false,
-  });
+  const { data, isSuccess, isError, error, refetch } = useGetProjects().useOneTime();
+
+  if (isError) {
+    return (
+      <PageContainer pageTitle={"Create Environment"}>
+        <ErrorView message={error.message} ariaLabel="CreateEnvironment-Error" retry={refetch} />
+      </PageContainer>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <PageContainer pageTitle={"Create Environment"}>
+        <CreateEnvironmentForm projects={data} aria-label="CreateEnvironment-Success" />
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer pageTitle={"Create Environment"}>
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => <LoadingView ariaLabel="CreateEnvironment-Loading" />,
-          failed: (message) => <ErrorView message={message} ariaLabel="CreateEnvironment-Failed" />,
-          success: (projects) => (
-            <CreateEnvironmentForm projects={projects} aria-label="CreateEnvironment-Success" />
-          ),
-        },
-        data
-      )}
+      <LoadingView ariaLabel="CreateEnvironment-Loading" />,
     </PageContainer>
   );
 };

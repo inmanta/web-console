@@ -1,22 +1,6 @@
-import {
-  UseMutationOptions,
-  UseMutationResult,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
+import { TokenInfo } from "@/Core/Domain";
 import { usePost } from "../../helpers";
-
-/**
- * Interface for the parameters for the generate token mutation.
- */
-interface GenerateTokenParams {
-  name: string;
-  project_id: string;
-  repository?: string;
-  branch?: string;
-  icon?: string;
-  description?: string;
-}
 
 /**
  * Interface for the response from the generate token mutation.
@@ -31,18 +15,13 @@ interface Response {
  * @returns {UseMutationResult<Response, Error, GenerateTokenParams, unknown>} The mutation object for generating a new token.
  */
 export const useGenerateToken = (
-  options?: UseMutationOptions<Response, Error, GenerateTokenParams>
-): UseMutationResult<Response, Error, GenerateTokenParams> => {
-  const client = useQueryClient();
-  const post = usePost()<GenerateTokenParams>;
+  options?: UseMutationOptions<Response, Error, TokenInfo>
+): UseMutationResult<Response, Error, TokenInfo> => {
+  const post = usePost()<TokenInfo>;
 
   return useMutation({
     mutationFn: (params) => post("/api/v2/environment_auth", params),
     mutationKey: ["generate_token"],
-    onSuccess: () => {
-      client.invalidateQueries({ queryKey: ["get_environments-one_time"] });
-      client.invalidateQueries({ queryKey: ["get_environments-continuous"] });
-    },
     ...options,
   });
 };

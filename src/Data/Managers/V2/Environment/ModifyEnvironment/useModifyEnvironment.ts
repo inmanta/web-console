@@ -14,22 +14,21 @@ import { usePost } from "../../helpers";
  */
 export const useModifyEnvironment = (
   environmentId: string,
-  options?: UseMutationOptions<void, Error, ModifyEnvironmentParams>,
+  options?: UseMutationOptions<void, Error, ModifyEnvironmentParams>
 ): UseMutationResult<void, Error, ModifyEnvironmentParams> => {
   const client = useQueryClient();
   const post = usePost()<ModifyEnvironmentParams>;
 
   return useMutation({
-    mutationFn: (params) =>
-      post(`/api/v2/environment/${environmentId}`, params),
+    mutationFn: (params) => post(`/api/v2/environment/${environmentId}`, params),
     mutationKey: ["modify_environment", environmentId],
     onSuccess: () => {
-      client.invalidateQueries({ queryKey: ["get_environments-one_time"] });
-      client.invalidateQueries({ queryKey: ["get_environments-continuous"] });
-      client.invalidateQueries({
+      client.refetchQueries({ queryKey: ["get_environments-one_time"] });
+      client.refetchQueries({ queryKey: ["get_environments-continuous"] });
+      client.refetchQueries({
         queryKey: ["get_environment_details-one_time", environmentId],
       });
-      client.invalidateQueries({
+      client.refetchQueries({
         queryKey: ["get_environment_details-continuous", environmentId],
       });
     },

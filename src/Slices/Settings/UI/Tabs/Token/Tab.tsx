@@ -1,16 +1,16 @@
-import React, { useContext, useState } from "react";
-import { ClientType, Either, Maybe, toggleValueInList } from "@/Core";
-import { DependencyContext } from "@/UI";
+import React, { useState } from "react";
+import { ClientType, toggleValueInList } from "@/Core";
+import { useGenerateToken } from "@/Data/Managers/V2/Environment";
 import { TokenForm } from "./TokenForm";
 
 export const Tab: React.FC = () => {
-  const { commandResolver } = useContext(DependencyContext);
   const [clientTypes, setClientTypes] = useState<ClientType[]>([]);
   const [isBusy, setIsBusy] = useState(false);
-  const [error, setError] = useState<Maybe.Maybe<string>>(Maybe.none());
-  const [token, setToken] = useState<Maybe.Maybe<string>>(Maybe.none());
-  const trigger = commandResolver.useGetTrigger<"GenerateToken">({
-    kind: "GenerateToken",
+  const [error, setError] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const { mutate } = useGenerateToken({
+    onError: (error) => setError(error.message),
+    onSuccess: (data) => setToken(data.data),
   });
 
   const isClientTypeSelected = (clientType: ClientType): boolean =>
@@ -25,24 +25,18 @@ export const Tab: React.FC = () => {
   };
 
   const onGenerate = async () => {
-    setError(Maybe.none());
-    setToken(Maybe.none());
+    setError(null);
+    setToken(null);
     setIsBusy(true);
-    const result = await trigger({ client_types: clientTypes });
+    mutate({ client_types: clientTypes });
 
     setIsBusy(false);
-
-    if (Either.isLeft(result)) {
-      setError(Maybe.some(result.value));
-    } else {
-      setToken(Maybe.some(result.value));
-    }
   };
 
   return (
     <TokenForm
       onGenerate={onGenerate}
-      onErrorClose={() => setError(Maybe.none())}
+      onErrorClose={() => setError(null)}
       getClientTypeSelector={getClientTypeSelector}
       isClientTypeSelected={isClientTypeSelected}
       token={token}

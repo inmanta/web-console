@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { DescriptionList } from "@patternfly/react-core";
 import { FlatEnvironment, Maybe, ProjectModel } from "@/Core";
+import { useModifyEnvironment } from "@/Data/Managers/V2/Environment";
+import { useCreateProject } from "@/Data/Managers/V2/Project/CreateProject";
 import {
   EditableTextField,
   EditableMultiTextField,
@@ -18,44 +20,41 @@ interface Props {
 }
 
 export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) => {
-  const { commandResolver } = useContext(DependencyContext);
-  const modifyEnvironmentTrigger = commandResolver.useGetTrigger<"ModifyEnvironment">({
-    kind: "ModifyEnvironment",
-  });
-  const createProject = commandResolver.useGetTrigger<"CreateProject">({
-    kind: "CreateProject",
-  });
+  const { environmentHandler } = useContext(DependencyContext);
+  const { mutate } = useModifyEnvironment(environmentHandler.useId());
 
-  const onNameSubmit = (name: string) => modifyEnvironmentTrigger({ name: name });
+  const createProject = useCreateProject();
+
+  const onNameSubmit = (name: string) => mutate({ name: name });
 
   const onRepoSubmit = (fields: Record<string, string>) =>
-    modifyEnvironmentTrigger({
+    mutate({
       name: environment.name,
       repository: fields["repo_url"],
       branch: fields["repo_branch"],
     });
 
-  const onProjectSubmit = async (projectName: string) => {
+  const onProjectSubmit = (projectName: string) => {
     const match = projects.find((project) => project.name === projectName);
 
     if (!match) {
       return Maybe.some(`No matching project found for name '${projectName}'`);
     }
 
-    return modifyEnvironmentTrigger({
+    return mutate({
       name: environment.name,
       project_id: match.id,
     });
   };
 
-  const onIconSubmit = async (icon: string) =>
-    modifyEnvironmentTrigger({
+  const onIconSubmit = (icon: string) =>
+    mutate({
       name: environment.name,
       icon,
     });
 
-  const onDescriptionSubmit = async (description: string) =>
-    modifyEnvironmentTrigger({
+  const onDescriptionSubmit = (description: string) =>
+    mutate({
       name: environment.name,
       description,
     });
@@ -84,7 +83,7 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
         label={words("settings.tabs.environment.projectName")}
         initialValue={environment.projectName}
         options={projects.map((project) => project.name)}
-        onCreate={createProject}
+        mutation={createProject}
         onSubmit={onProjectSubmit}
       />
       <EditableImageField
