@@ -1,17 +1,17 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
 function setup(initialEntries?: string[]) {
   const component = (
     <DependencyProvider dependencies={{ routeManager: PrimaryRouteManager("") }}>
-      <MemoryRouter initialEntries={initialEntries}>
+      <TestMemoryRouter initialEntries={initialEntries}>
         <PageBreadcrumbs />
-      </MemoryRouter>
+      </TestMemoryRouter>
     </DependencyProvider>
   );
 

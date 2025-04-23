@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -12,6 +11,7 @@ import { StaticScheduler, DeferredApiHelper, dependencies } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as DesiredStateVersions from "@S/DesiredState/Data/Mock";
 import { Page } from "./Page";
 
@@ -39,13 +39,13 @@ function setup() {
   const component = (
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
-        <MemoryRouter>
+        <TestMemoryRouter>
           <DependencyProvider dependencies={dependencies}>
             <StoreProvider store={store}>
               <Page />
             </StoreProvider>
           </DependencyProvider>
-        </MemoryRouter>
+        </TestMemoryRouter>
       </ModalProvider>
     </QueryClientProvider>
   );

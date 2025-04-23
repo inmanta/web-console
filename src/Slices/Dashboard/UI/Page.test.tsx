@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
@@ -15,6 +14,7 @@ import {
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
 expect.extend(toHaveNoViolations);
 
@@ -35,7 +35,7 @@ function setup() {
   );
   const component = (
     <QueryClientProvider client={new QueryClient()}>
-      <MemoryRouter>
+      <TestMemoryRouter>
         <StoreProvider store={store}>
           <DependencyProvider
             dependencies={{
@@ -46,7 +46,7 @@ function setup() {
             <Page />
           </DependencyProvider>
         </StoreProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

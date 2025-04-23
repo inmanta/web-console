@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
@@ -9,9 +8,11 @@ import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { UrlManagerImpl } from "@/UI/Utils";
 import * as Mock from "@S/CompileDetails/Core/Mock";
 import { CompileDetails } from "./CompileDetails";
+
 expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
@@ -34,13 +35,13 @@ function setup() {
 
   const component = (
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter>
+      <TestMemoryRouter>
         <DependencyProvider dependencies={{ ...dependencies, urlManager }}>
           <StoreProvider store={store}>
             <CompileDetails id="123" />
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

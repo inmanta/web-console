@@ -11,8 +11,7 @@ import { dependencies } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
 import { DependencyProvider, EnvironmentHandlerImpl, PrimaryRouteManager, words } from "@/UI";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
-import CustomRouter from "@/UI/Routing/CustomRouter";
-import history from "@/UI/Routing/history";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasProvider } from "./Context/CanvasProvider";
 import { InstanceComposerContext } from "./Context/Context";
 import { mockedInstanceTwo, mockedInstanceTwoServiceModel, serviceModels } from "./Mocks";
@@ -64,11 +63,10 @@ const setup = (
       },
     ])
   );
-  history.push("/?env=aaa");
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CustomRouter history={history}>
+      <TestMemoryRouter>
         <StoreProvider store={store}>
           <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
             <InstanceComposerContext.Provider
@@ -88,7 +86,7 @@ const setup = (
             </InstanceComposerContext.Provider>
           </DependencyProvider>
         </StoreProvider>
-      </CustomRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 };

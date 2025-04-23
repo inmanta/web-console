@@ -1,5 +1,5 @@
 import React from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData, ServiceModel } from "@/Core";
@@ -7,6 +7,7 @@ import { getStoreInstance } from "@/Data";
 import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import { dependencies, Environment, MockEnvironmentModifier, Service } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInventory } from "@S/ServiceInventory/UI/ServiceInventory";
 
 interface Handles {
@@ -23,7 +24,7 @@ export class ServiceInventoryPrepper {
     store.dispatch.environment.setEnvironments(RemoteData.success(Environment.filterable));
     const component = (
       <QueryClientProvider client={client}>
-        <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
+        <TestMemoryRouter initialEntries={["/?env=123"]}>
           <AuthProvider config={undefined}>
             <DependencyProvider
               dependencies={{
@@ -37,7 +38,7 @@ export class ServiceInventoryPrepper {
               </StoreProvider>
             </DependencyProvider>
           </AuthProvider>
-        </MemoryRouter>
+        </TestMemoryRouter>
       </QueryClientProvider>
     );
 

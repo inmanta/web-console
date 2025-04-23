@@ -10,9 +10,8 @@ import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl, PrimaryRouteManager } from "@/UI";
-import CustomRouter from "@/UI/Routing/CustomRouter";
-import history from "@/UI/Routing/history";
 import "@testing-library/jest-dom";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { childModel, containerModel, mockedInstanceWithRelations, parentModel } from "../Mocks";
 import { defineObjectsForJointJS } from "../testSetup";
 import { ComposerEditorProvider } from "./ComposerEditorProvider";
@@ -44,16 +43,19 @@ const setup = (instanceId: string, editable: boolean = true) => {
       },
     ])
   );
-  history.push("/?env=aaa");
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CustomRouter history={history}>
+      <TestMemoryRouter
+        initialEntries={[
+          "/lsm/catalog/child-service/inventory/13920268-cce0-4491-93b5-11316aa2fc37/edit?env=aaa",
+        ]}
+      >
         <StoreProvider store={store}>
           <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
             <Routes>
               <Route
-                path="/"
+                path="/lsm/catalog/child-service/inventory/:instanceId/edit"
                 element={
                   <ComposerEditorProvider
                     serviceName={"child-service"}
@@ -62,11 +64,15 @@ const setup = (instanceId: string, editable: boolean = true) => {
                   />
                 }
               />
-              <Route path="/lsm/catalog/child-service/inventory" element={<></>} />
+              <Route
+                path="/lsm/catalog/child-service/inventory"
+                element={<div data-testid="inventory-page" />}
+              />
+              <Route path="/" element={<div data-testid="root-page" />} />
             </Routes>
           </DependencyProvider>
         </StoreProvider>
-      </CustomRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 };
@@ -230,14 +236,12 @@ describe("ComposerEditorProvider", () => {
   it("navigating out of the View works correctly", async () => {
     render(setup("13920268-cce0-4491-93b5-11316aa2fc37"));
 
-    expect(window.location.pathname).toEqual("/");
-
     const composer = await screen.findByTestId("Composer-Container");
 
     expect(composer).toBeInTheDocument();
 
     await userEvent.click(await screen.findByRole("button", { name: "Cancel" }));
 
-    expect(window.location.pathname).toEqual("/lsm/catalog/child-service/inventory");
+    expect(await screen.findByTestId("inventory-page")).toBeInTheDocument();
   });
 });

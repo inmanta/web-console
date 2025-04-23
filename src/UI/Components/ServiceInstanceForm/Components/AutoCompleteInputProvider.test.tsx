@@ -1,5 +1,4 @@
 import React, { act, useState } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
@@ -10,6 +9,7 @@ import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
 import { dependencies, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
 const server = setupServer(
@@ -31,7 +31,7 @@ const TestWrapper = () => {
 
   return (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
+      <TestMemoryRouter>
         <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>
             <AutoCompleteInputProvider
@@ -46,7 +46,7 @@ const TestWrapper = () => {
             />
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 };

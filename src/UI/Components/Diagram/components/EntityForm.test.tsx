@@ -1,5 +1,5 @@
 import React from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { dia } from "@inmanta/rappid";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
@@ -11,6 +11,7 @@ import { dependencies } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasContext, defaultCanvasContext } from "../Context";
 import { parentModel } from "../Mocks";
 import { createComposerEntity } from "../actions";
@@ -75,7 +76,7 @@ describe("EntityForm.", () => {
 
     const component = (
       <QueryClientProvider client={testClient}>
-        <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+        <TestMemoryRouter initialEntries={["/?env=aaa"]}>
           <StoreProvider store={store}>
             <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
               <CanvasContext.Provider
@@ -101,7 +102,7 @@ describe("EntityForm.", () => {
               </CanvasContext.Provider>
             </DependencyProvider>
           </StoreProvider>
-        </MemoryRouter>
+        </TestMemoryRouter>
       </QueryClientProvider>
     );
 

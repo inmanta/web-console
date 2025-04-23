@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { loader } from "@monaco-editor/react";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -9,6 +9,7 @@ import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl, EnvironmentModifierImpl } from "@/UI";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInstanceDetails } from "../UI/Page";
 
 /**
@@ -108,13 +109,8 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({ children, exp
   environmentModifier.setEnvironment("aaa");
 
   return (
-    <MemoryRouter
-      initialEntries={[
-        {
-          pathname: "/lsm/catalog/mobileCore/inventory/core1/1d96a1ab/details",
-          search: "?env=aaa",
-        },
-      ]}
+    <TestMemoryRouter
+      initialEntries={["/lsm/catalog/mobileCore/inventory/core1/1d96a1ab/details?env=aaa"]}
     >
       <QueryClientProvider client={queryClient}>
         <DependencyProvider
@@ -127,6 +123,6 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({ children, exp
           <StoreProvider store={store}>{children}</StoreProvider>
         </DependencyProvider>
       </QueryClientProvider>
-    </MemoryRouter>
+    </TestMemoryRouter>
   );
 };

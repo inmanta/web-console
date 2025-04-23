@@ -1,5 +1,5 @@
 import React, { useContext, act } from "react";
-import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -9,6 +9,7 @@ import { getStoreInstance } from "@/Data/Store";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyContext, DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 
 test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api call uses the correct url", async () => {
   const apiHelper = new DeferredApiHelper();
@@ -58,13 +59,13 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   };
 
   const component = (
-    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+    <TestMemoryRouter>
       <StoreProvider store={store}>
         <Wrapper>
           <Component />
         </Wrapper>
       </StoreProvider>
-    </MemoryRouter>
+    </TestMemoryRouter>
   );
 
   render(component);

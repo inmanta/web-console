@@ -1,6 +1,6 @@
 import React from "react";
 import "@testing-library/jest-dom";
-import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -21,6 +21,7 @@ import { getStoreInstance, QueryResolverImpl, QueryManagerResolverImpl } from "@
 import * as Test from "@/Test";
 import { DeferredApiHelper, StaticScheduler, dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
@@ -57,14 +58,7 @@ const setup = (
   });
 
   const component = (
-    <MemoryRouter
-      initialEntries={[
-        {
-          pathname: "/",
-          search: "?env=aaa",
-        },
-      ]}
-    >
+    <TestMemoryRouter initialEntries={["/?env=aaa"]}>
       <DependencyProvider dependencies={{ ...dependencies, queryResolver, environmentHandler }}>
         <StoreProvider store={store}>
           <Routes>
@@ -86,7 +80,7 @@ const setup = (
           </Routes>
         </StoreProvider>
       </DependencyProvider>
-    </MemoryRouter>
+    </TestMemoryRouter>
   );
 
   return { component, apiHelper, scheduler };

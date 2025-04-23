@@ -10,9 +10,8 @@ import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl, PrimaryRouteManager } from "@/UI";
-import CustomRouter from "@/UI/Routing/CustomRouter";
-import history from "@/UI/Routing/history";
 import "@testing-library/jest-dom";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { childModel, containerModel, parentModel } from "../Mocks";
 import { defineObjectsForJointJS } from "../testSetup";
 import { ComposerCreatorProvider } from "./ComposerCreatorProvider";
@@ -44,20 +43,26 @@ const setup = () => {
       },
     ])
   );
-  history.push("/?env=aaa");
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CustomRouter history={history}>
+      <TestMemoryRouter initialEntries={["/lsm/catalog/child-service/inventory/add?env=aaa"]}>
         <StoreProvider store={store}>
           <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
             <Routes>
-              <Route path="/" element={<ComposerCreatorProvider serviceName={"child-service"} />} />
-              <Route path="/lsm/catalog/child-service/inventory" element={<></>} />
+              <Route
+                path="/lsm/catalog/child-service/inventory/add"
+                element={<ComposerCreatorProvider serviceName={"child-service"} />}
+              />
+              <Route
+                path="/lsm/catalog/child-service/inventory"
+                element={<div data-testid="inventory-page" />}
+              />
+              <Route path="/" element={<div data-testid="root-page" />} />
             </Routes>
           </DependencyProvider>
         </StoreProvider>
-      </CustomRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 };
@@ -167,7 +172,6 @@ describe("ComposerCreatorProvider", () => {
 
   it("navigating out of the View works correctly", async () => {
     render(setup());
-    expect(window.location.pathname).toEqual("/");
 
     const composer = await screen.findByTestId("Composer-Container");
 
@@ -175,6 +179,6 @@ describe("ComposerCreatorProvider", () => {
 
     await userEvent.click(await screen.findByRole("button", { name: "Cancel" }));
 
-    expect(window.location.pathname).toEqual("/lsm/catalog/child-service/inventory");
+    expect(await screen.findByTestId("inventory-page")).toBeInTheDocument();
   });
 });

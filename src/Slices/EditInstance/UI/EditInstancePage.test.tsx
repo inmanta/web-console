@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -15,6 +14,7 @@ import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { EditInstancePage } from "./EditInstancePage";
 
 expect.extend(toHaveNoViolations);
@@ -51,7 +51,7 @@ function setup(entity = "a", multiNested = false) {
 
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
+      <TestMemoryRouter>
         <DependencyProvider
           dependencies={{
             ...dependencies,
@@ -65,7 +65,7 @@ function setup(entity = "a", multiNested = false) {
             />
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
@@ -10,6 +10,7 @@ import { getStoreInstance } from "@/Data/Store";
 import { dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
 import { childModel, testInstance, testService } from "@/UI/Components/Diagram/Mocks";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { useGetInstanceWithRelations } from "./useGetInstanceWithRelations";
 
 export const server = setupServer(
@@ -87,14 +88,7 @@ const createWrapper = () => {
   });
 
   return ({ children }) => (
-    <MemoryRouter
-      initialEntries={[
-        {
-          pathname: "/",
-          search: "?env=aaa",
-        },
-      ]}
-    >
+    <TestMemoryRouter>
       <QueryClientProvider client={queryClient}>
         <DependencyProvider
           dependencies={{
@@ -105,7 +99,7 @@ const createWrapper = () => {
           <StoreProvider store={store}>{children}</StoreProvider>
         </DependencyProvider>
       </QueryClientProvider>
-    </MemoryRouter>
+    </TestMemoryRouter>
   );
 };
 

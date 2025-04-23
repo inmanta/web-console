@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -12,6 +11,7 @@ import { getStoreInstance } from "@/Data";
 import { dependencies, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Events } from "./Events";
 
 expect.extend(toHaveNoViolations);
@@ -28,13 +28,13 @@ function setup() {
 
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
+      <TestMemoryRouter>
         <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>
             <Events service={Service.a} instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"} />
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 
@@ -234,43 +234,39 @@ describe("Events Page", () => {
             return HttpResponse.json({
               data: [
                 {
-                  json: {
-                    id: "6342b9aa-f077-4527-9aab-60dbdbc271a1",
-                    service_instance_id: "2b716f3d-aaff-4f27-a0db-226fa3054408",
-                    service_instance_version: 6,
-                    service_desired_state_version: 6,
-                    timestamp: "2025-04-16T11:09:26.499222+00:00",
-                    source: "up",
-                    destination: "up",
-                    message:
-                      "Resource-based transition requested for service instance 2b716f3d-aaff-4f27-a0db-226fa3054408 in environment test (cd9db453-35db-40b6-af3b-e3eb9f247f25).  No transition because source up equals up",
-                    ignored_transition: true,
-                    event_correlation_id: "1d3b37ac-c850-4515-8a0c-c8ab50eacb74",
-                    severity: 20,
-                    severity_text: "INFO",
-                    id_compile_report: null,
-                    event_type: "RESOURCE_TRANSITION",
-                    is_error_transition: false,
-                  },
+                  id: "6342b9aa-f077-4527-9aab-60dbdbc271a1",
+                  service_instance_id: "2b716f3d-aaff-4f27-a0db-226fa3054408",
+                  service_instance_version: 6,
+                  service_desired_state_version: 6,
+                  timestamp: "2025-04-16T11:09:26.499222+00:00",
+                  source: "up",
+                  destination: "up",
+                  message:
+                    "Resource-based transition requested for service instance 2b716f3d-aaff-4f27-a0db-226fa3054408 in environment test (cd9db453-35db-40b6-af3b-e3eb9f247f25).  No transition because source up equals up",
+                  ignored_transition: true,
+                  event_correlation_id: "1d3b37ac-c850-4515-8a0c-c8ab50eacb74",
+                  severity: 20,
+                  severity_text: "INFO",
+                  id_compile_report: null,
+                  event_type: "RESOURCE_TRANSITION",
+                  is_error_transition: false,
                 },
                 {
-                  json: {
-                    id: "1e6c0f68-e808-44ff-938d-0d9197faf3b0",
-                    service_instance_id: "2b716f3d-aaff-4f27-a0db-226fa3054408",
-                    service_instance_version: 4,
-                    service_desired_state_version: 4,
-                    timestamp: "2025-04-16T11:08:57.254939+00:00",
-                    source: "update_start",
-                    destination: "update_inprogress",
-                    message: "compile request queued with id 808c1ca9-fed4-46a8-bfa5-a7d71361975a",
-                    ignored_transition: false,
-                    event_correlation_id: "95e1ff14-b091-4dfd-831f-95351680e9fc",
-                    severity: 20,
-                    severity_text: "INFO",
-                    id_compile_report: "808c1ca9-fed4-46a8-bfa5-a7d71361975a",
-                    event_type: "AUTO_TRANSITION",
-                    is_error_transition: false,
-                  },
+                  id: "1e6c0f68-e808-44ff-938d-0d9197faf3b0",
+                  service_instance_id: "2b716f3d-aaff-4f27-a0db-226fa3054408",
+                  service_instance_version: 4,
+                  service_desired_state_version: 4,
+                  timestamp: "2025-04-16T11:08:57.254939+00:00",
+                  source: "update_start",
+                  destination: "update_inprogress",
+                  message: "compile request queued with id 808c1ca9-fed4-46a8-bfa5-a7d71361975a",
+                  ignored_transition: false,
+                  event_correlation_id: "95e1ff14-b091-4dfd-831f-95351680e9fc",
+                  severity: 20,
+                  severity_text: "INFO",
+                  id_compile_report: "808c1ca9-fed4-46a8-bfa5-a7d71361975a",
+                  event_type: "AUTO_TRANSITION",
+                  is_error_transition: false,
                 },
               ],
               links: {

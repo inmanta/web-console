@@ -1,5 +1,5 @@
 import React from "react";
-import { MemoryRouter, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -14,6 +14,7 @@ import {
   EnvironmentModifierImpl,
 } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { InventoryTable } from "./InventoryTable";
 import { InventoryTablePresenter } from "./Presenters";
 
@@ -74,7 +75,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
   environmentModifier.setEnvironment("aaa");
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+      <TestMemoryRouter>
         <DependencyProvider
           dependencies={{
             ...dependencies,
@@ -94,7 +95,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
             </ModalProvider>
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

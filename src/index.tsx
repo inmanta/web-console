@@ -12,7 +12,6 @@ import { Root } from "@/UI/Root";
 import { AuthProvider } from "./Data/Auth/AuthProvider";
 import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
-import history from "./UI/Routing/history";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
 
 loader.config({ monaco });
@@ -36,7 +35,7 @@ root.render(
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <StoreProvider store={store}>
-        <CustomRouter history={history}>
+        <CustomRouter>
           <AuthProvider config={globalThis && globalThis.auth}>
             <Flex
               flexWrap={{ default: "nowrap" }}

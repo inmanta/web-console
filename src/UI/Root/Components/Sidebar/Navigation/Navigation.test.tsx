@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClientProvider, QueryClient, QueryObserverResult } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
@@ -20,6 +19,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { Navigation } from "./Navigation";
 
@@ -38,13 +38,13 @@ function setup(initialEntries: string[] | undefined, serverStatus: ServerStatus)
   );
   const component = (
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={initialEntries}>
+      <TestMemoryRouter initialEntries={initialEntries}>
         <DependencyProvider dependencies={{ ...dependencies, featureManager, queryResolver }}>
           <StoreProvider store={store}>
             <Navigation environment="env" />
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 
