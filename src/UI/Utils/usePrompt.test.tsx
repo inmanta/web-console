@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { TestMemoryRouter } from "../Routing/TestMemoryRouter";

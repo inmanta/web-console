@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData, ServiceModel } from "@/Core";

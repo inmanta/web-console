@@ -1,5 +1,5 @@
 import React, { act } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router";
 import { QueryClient, QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, queries, within as baseWithin } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";

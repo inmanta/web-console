@@ -1,5 +1,5 @@
 import React, { act } from "react";
-import { Router } from "react-router-dom";
+import { Router } from "react-router";
 import { Masthead, Page } from "@patternfly/react-core";
 import { createMemoryHistory } from "@remix-run/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

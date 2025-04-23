@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { dia } from "@inmanta/rappid";
 import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";

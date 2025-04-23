@@ -1,5 +1,5 @@
 import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router";
 
 /**
  * CustomRouter is base for implementation usePrompt hook which allows to halt and resume navigation on demand.

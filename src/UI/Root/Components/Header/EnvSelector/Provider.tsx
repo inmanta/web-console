@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { DependencyContext } from "@/UI/Dependency";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";

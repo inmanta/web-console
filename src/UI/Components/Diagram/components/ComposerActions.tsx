@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { usePostOrder } from "@/Data/Managers/V2/Order";
 import { usePostMetadata } from "@/Data/Managers/V2/ServiceInstance";

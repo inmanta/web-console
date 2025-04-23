@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router";
 import { RouteManager, RouteKind } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchSanitizer } from "./SearchSanitizer";

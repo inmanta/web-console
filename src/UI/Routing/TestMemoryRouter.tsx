@@ -1,5 +1,5 @@
 import React from "react";
-import { createMemoryRouter, RouterProvider, useBlocker } from "react-router-dom";
+import { createMemoryRouter, RouterProvider, useBlocker } from "react-router";
 
 interface Props {
   basename?: string;
@@ -9,7 +9,7 @@ interface Props {
 
 /**
  * TestMemoryRouter is a custom router implementation for tests that supports the useBlocker hook.
- * It wraps the createMemoryRouter from react-router-dom and provides a stable implementation
+ * It wraps the createMemoryRouter from react-router and provides a stable implementation
  * of the useBlocker functionality for testing purposes.
  */
 export function TestMemoryRouter({ basename, children, initialEntries = ["/?env=aaa"] }: Props) {

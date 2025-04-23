@@ -1,5 +1,5 @@
 import React, { act } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";

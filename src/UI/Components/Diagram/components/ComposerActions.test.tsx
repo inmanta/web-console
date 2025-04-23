@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -20,8 +20,8 @@ import { RelationCounterForCell } from "../interfaces";
 import { ComposerActions } from "./ComposerActions";
 const mockedNavigate = jest.fn();
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
   useNavigate: () => mockedNavigate,
 }));
 

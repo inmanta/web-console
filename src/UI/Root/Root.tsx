@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { LoginPage } from "@/Slices/Login";
 import { DependencyContext } from "@/UI/Dependency";

@@ -1,5 +1,5 @@
 import React, { act } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
@@ -10,8 +10,7 @@ import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { Service, dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
-import CustomRouter from "@/UI/Routing/CustomRouter";
-import history from "@/UI/Routing/history";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { failureAndRejection } from "@S/Diagnose/Data/Mock";
 import { Diagnose } from "./Diagnose";
 
@@ -52,12 +51,10 @@ function setup() {
       },
     ])
   );
-  history.push("/?env=aaa");
 
   const component = (
     <QueryClientProvider client={queryClient}>
-      <CustomRouter history={history}>
-        {" "}
+      <TestMemoryRouter>
         <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
           <StoreProvider store={store}>
             <Diagnose
@@ -68,7 +65,7 @@ function setup() {
             />
           </StoreProvider>
         </DependencyProvider>
-      </CustomRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

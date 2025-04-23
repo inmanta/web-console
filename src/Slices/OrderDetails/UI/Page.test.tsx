@@ -14,8 +14,8 @@ import {
 } from "../Data/Mock";
 import { OrderDetailsPage } from ".";
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
   useParams: jest.fn().mockReturnValue({ id: "1234" }),
 }));
 

@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { useBlocker } from "react-router-dom";
+import { useBlocker } from "react-router";
 
 /**
  * Prompts the user with an Alert before they leave the current screen.

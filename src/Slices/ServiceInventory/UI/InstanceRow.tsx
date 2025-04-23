@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";

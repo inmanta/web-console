@@ -1,5 +1,5 @@
 import React, { act } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";

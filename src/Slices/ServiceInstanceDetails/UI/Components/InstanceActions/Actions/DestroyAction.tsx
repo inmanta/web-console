@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { Alert, DropdownItem, Content } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";

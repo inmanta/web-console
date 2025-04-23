@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { loader } from "@monaco-editor/react";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
