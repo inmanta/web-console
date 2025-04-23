@@ -51,9 +51,10 @@ export const Page: React.FC = () => {
   }
 
   if (isSuccess && projects.isSuccess) {
+    const projectMap = new Map(projects.data.map((project) => [project.id, project.name]));
     const envsWithProjectName: Environment[] = data.map((env) => ({
       ...env,
-      projectName: projects.data.find((project) => project.id === env.project_id)?.name || "",
+      projectName: projectMap.get(env.project_id) || "",
     }));
 
     return (

@@ -112,7 +112,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
         label={words("createEnv.projectName")}
         value={projectName || ""}
         options={projects.map((project) => project.name)}
-        mutation={createProject}
+        onCreate={createProject}
         onSelect={setProjectName}
       />
       <TextField
