@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormGroup } from "@patternfly/react-core";
-import { Either } from "@/Core";
+import { UseMutationResult } from "@tanstack/react-query";
+import {
+  CreateProjectParams,
+  CreateProjectResponse,
+} from "@/Data/Managers/V2/Project/CreateProject";
 import { SingleTextSelect } from "../SingleTextSelect";
 import { InlinePlainAlert } from "./InlinePlainAlert";
 
@@ -10,31 +14,47 @@ interface Props {
   options: string[];
   isRequired?: boolean;
   withLabel?: boolean;
-  onCreate: (name: string) => Promise<Either.Type<string, unknown>>;
+  mutation: UseMutationResult<CreateProjectResponse, Error, CreateProjectParams>;
   onSelect: (value: string) => void;
 }
 
+/**
+ * CreatableSelectInput component
+ *
+ * @props {Props} props - The component props
+ * @prop {string} label - The label for the input
+ * @prop {string} value - The value of the input
+ * @prop {string[]} options - The options for the input
+ * @prop {boolean} isRequired - Whether the input is required
+ * @prop {boolean} withLabel - Whether to show the label
+ * @prop {UseMutationResult<CreateProjectResponse, Error, CreateProjectParams>} mutation - The mutation for the input
+ * @prop {(value: string) => void} onSelect - The function to call when the input is selected
+ */
 export const CreatableSelectInput: React.FC<Props> = ({
   label,
   value,
   options,
   isRequired,
   withLabel,
-  onCreate,
+  mutation,
   onSelect,
 }) => {
   const [submitError, setSubmitError] = useState("");
-  const onCreateOption = async (newValue: string) => {
-    const result = await onCreate(newValue);
-
-    if (Either.isLeft(result)) {
-      setSubmitError(result.value);
-      onSelect("");
-    } else {
-      onSelect(newValue);
-    }
+  const onCreateOption = (newValue: string) => {
+    mutation.mutate({ name: newValue });
   };
   const onCloseAlert = () => setSubmitError("");
+
+  useEffect(() => {
+    if (mutation.isError) {
+      setSubmitError(mutation.error.message);
+      onSelect("");
+    }
+    if (mutation.isSuccess) {
+      const response = mutation.data;
+      onSelect(response.data.name);
+    }
+  }, [mutation.isError, mutation.isSuccess, mutation.data, mutation.error]);
 
   const errorView = submitError && (
     <InlinePlainAlert
