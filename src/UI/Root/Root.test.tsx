@@ -1,6 +1,5 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
@@ -28,6 +27,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { TestMemoryRouter } from "../Routing/TestMemoryRouter";
 import { Root } from "./Root";
 
 function setup() {
@@ -62,7 +62,7 @@ function setup() {
 
   const component = (
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={["/"]}>
+      <TestMemoryRouter initialEntries={["/"]}>
         <StoreProvider store={store}>
           <DependencyProvider
             dependencies={{
@@ -79,7 +79,7 @@ function setup() {
             <Root />
           </DependencyProvider>
         </StoreProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

@@ -1,5 +1,5 @@
 import React, { act } from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, within } from "@testing-library/react";
@@ -23,6 +23,7 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
 
@@ -53,7 +54,7 @@ function setup(service = Service.a, pageSize = "") {
   );
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter initialEntries={[`/?env=aaa${pageSize}`]}>
+      <TestMemoryRouter initialEntries={[`/?env=aaa${pageSize}`]}>
         <DependencyProvider
           dependencies={{
             ...dependencies,
@@ -73,7 +74,7 @@ function setup(service = Service.a, pageSize = "") {
             </ModalProvider>
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

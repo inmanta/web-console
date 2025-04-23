@@ -1,5 +1,5 @@
 import React, { act } from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -9,6 +9,7 @@ import { getStoreInstance } from "@/Data";
 import { dependencies, Service } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { AttributeTable } from "./AttributeTable";
 
 expect.extend(toHaveNoViolations);
@@ -61,7 +62,7 @@ function setup(service: ServiceModel) {
   );
 
   const component = (
-    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+    <TestMemoryRouter>
       <DependencyProvider
         dependencies={{
           ...dependencies,
@@ -72,7 +73,7 @@ function setup(service: ServiceModel) {
           <AttributeTable service={service} />
         </StoreProvider>
       </DependencyProvider>
-    </MemoryRouter>
+    </TestMemoryRouter>
   );
 
   return component;

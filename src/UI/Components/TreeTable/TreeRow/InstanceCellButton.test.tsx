@@ -1,5 +1,4 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
@@ -9,6 +8,7 @@ import { getStoreInstance } from "@/Data";
 import { dependencies, MockEnvironmentHandler, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { InstanceCellButton } from "./InstanceCellButton";
 
 function setup(serviceName: string, id: string) {
@@ -17,7 +17,7 @@ function setup(serviceName: string, id: string) {
   const handleClick = jest.fn();
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+      <TestMemoryRouter>
         <DependencyProvider
           dependencies={{
             ...dependencies,
@@ -28,7 +28,7 @@ function setup(serviceName: string, id: string) {
             <InstanceCellButton id={id} serviceName={serviceName} onClick={handleClick} />
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

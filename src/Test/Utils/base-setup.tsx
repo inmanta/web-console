@@ -1,5 +1,4 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData } from "@/Core";
@@ -18,8 +17,10 @@ import {
   EnvironmentSettings,
 } from "@/Test";
 import { UrlManagerImpl } from "@/UI";
+import { BlockingModal } from "@/UI/Components";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { testClient } from "./react-query-setup";
 
 export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
@@ -50,7 +51,7 @@ export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
 
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
+      <TestMemoryRouter initialEntries={["/"]}>
         <DependencyProvider
           dependencies={{
             ...dependencies,
@@ -60,9 +61,12 @@ export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
             urlManager,
           }}
         >
-          <StoreProvider store={store}>{Page}</StoreProvider>
+          <StoreProvider store={store}>
+            <BlockingModal />
+            {Page}
+          </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

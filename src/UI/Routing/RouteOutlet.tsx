@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import { DependencyContext } from "@/UI/Dependency";
 import { Initializer } from "../Root/Components/Initializer";
 

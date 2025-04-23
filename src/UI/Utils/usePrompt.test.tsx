@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import CustomRouter from "../Routing/CustomRouter";
-import history from "../Routing/history";
+import { TestMemoryRouter } from "../Routing/TestMemoryRouter";
 import { usePrompt } from "./usePrompt";
 
 const setup = () => {
@@ -22,7 +21,7 @@ const setup = () => {
     );
   };
   const component = (
-    <CustomRouter history={history}>
+    <TestMemoryRouter initialEntries={["/"]}>
       <Routes>
         <Route path="/" element={<Component />} />
         <Route
@@ -37,7 +36,7 @@ const setup = () => {
           }
         />
       </Routes>
-    </CustomRouter>
+    </TestMemoryRouter>
   );
 
   return component;
@@ -57,7 +56,7 @@ test("GIVEN usePrompt WHEN hook's parameter is equal true and user cancel alert 
   await userEvent.click(link);
 
   expect(prompt).toHaveBeenCalledTimes(1);
-  expect(window.location.pathname).toMatch("/");
+  expect(screen.getByText("Click")).toBeInTheDocument(); // Still on the same page
 });
 
 test("GIVEN usePrompt WHEN hook's parameter is equal false THEN page is changed", async () => {
@@ -70,18 +69,13 @@ test("GIVEN usePrompt WHEN hook's parameter is equal false THEN page is changed"
   await userEvent.click(link);
 
   expect(prompt).toHaveBeenCalledTimes(0);
-  expect(window.location.pathname).toMatch("/page");
+  expect(screen.getByText("new page")).toBeInTheDocument();
 });
 
 test("GIVEN usePrompt WHEN hook's parameter is equal true and user confirm alert window THEN page is changed", async () => {
   const prompt = jest.spyOn(window, "confirm").mockImplementation(() => true);
 
   render(setup());
-
-  //cleanup doesn't reset page url so I had to manually go back to "/"
-  const homeLink = screen.getByText("Home");
-
-  await userEvent.click(homeLink);
 
   const button = screen.getByText("Click");
 
@@ -92,5 +86,5 @@ test("GIVEN usePrompt WHEN hook's parameter is equal true and user confirm alert
   await userEvent.click(link);
 
   expect(prompt).toHaveBeenCalledTimes(1);
-  expect(window.location.pathname).toMatch("/page");
+  expect(screen.getByText("new page")).toBeInTheDocument();
 });

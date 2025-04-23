@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router";
 import { dependencies, MockCommandManager } from "@/Test";
 import { DependencyProvider, PrimaryRouteManager } from "@/UI";
 import * as Mock from "@S/Notification/Core/Mock";

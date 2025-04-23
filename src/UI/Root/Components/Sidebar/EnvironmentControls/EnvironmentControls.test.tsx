@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -29,6 +28,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ModalProvider } from "../../ModalProvider";
 import { EnvironmentControls } from "./EnvironmentControls";
 
@@ -67,7 +67,7 @@ function setup() {
 
   const component = (
     <ModalProvider>
-      <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
+      <TestMemoryRouter initialEntries={["/?env=123"]}>
         <DependencyProvider
           dependencies={{
             ...dependencies,
@@ -80,7 +80,7 @@ function setup() {
             <EnvironmentControls />
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </ModalProvider>
   );
 

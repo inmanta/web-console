@@ -1,4 +1,4 @@
-import { Location } from "history";
+import { Location } from "react-router";
 import { EnvironmentHandler, FlatEnvironment, Navigate, RemoteData, RouteManager } from "@/Core";
 import { useStoreState } from "@/Data/Store";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";

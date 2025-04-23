@@ -1,5 +1,5 @@
 import React, { act } from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
@@ -15,6 +15,7 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceCatalogPage } from ".";
 
 expect.extend(toHaveNoViolations);
@@ -31,7 +32,7 @@ function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
       <ModalProvider>
-        <MemoryRouter initialEntries={[{ pathname: "/lsm/catalog", search: `?env=${env1}` }]}>
+        <TestMemoryRouter initialEntries={["/lsm/catalog?env=" + env1]}>
           <DependencyProvider
             dependencies={{
               ...dependencies,
@@ -44,7 +45,7 @@ function setup() {
               </Page>
             </StoreProvider>
           </DependencyProvider>
-        </MemoryRouter>
+        </TestMemoryRouter>
       </ModalProvider>
     </QueryClientProvider>
   );

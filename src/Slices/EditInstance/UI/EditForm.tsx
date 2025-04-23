@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
 import { usePatchAttributes } from "@/Data/Managers/V2/ServiceInstance/PatchAttributes";
