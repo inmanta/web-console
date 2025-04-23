@@ -3,6 +3,11 @@ import { ClientType, toggleValueInList } from "@/Core";
 import { useGenerateToken } from "@/Data/Managers/V2/Environment";
 import { TokenForm } from "./TokenForm";
 
+/**
+ * Token tab for the Settings page
+ *
+ * @returns {React.FC} The Token tab
+ */
 export const Tab: React.FC = () => {
   const [clientTypes, setClientTypes] = useState<ClientType[]>([]);
   const [isBusy, setIsBusy] = useState(false);

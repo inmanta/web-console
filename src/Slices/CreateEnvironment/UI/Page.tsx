@@ -3,6 +3,11 @@ import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects/useGetPro
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
 
+/**
+ * Create Environment page
+ *
+ * @returns {React.FC} The Create Environment page
+ */
 export const Page: React.FC = () => {
   const { data, isSuccess, isError, error, refetch } = useGetProjects().useOneTime();
 

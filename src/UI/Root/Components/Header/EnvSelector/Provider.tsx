@@ -6,6 +6,11 @@ import { DependencyContext } from "@/UI/Dependency";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 
+/**
+ * Provider component for the EnvironmentSelector
+ *
+ * @returns {React.FC} The Provider component
+ */
 export const Provider: React.FC = () => {
   const client = useQueryClient();
   const { environmentHandler, routeManager, featureManager } = useContext(DependencyContext);

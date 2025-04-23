@@ -19,6 +19,15 @@ interface Props {
   projects: ProjectModel[];
 }
 
+/**
+ * EnvironmentSettings component
+ *
+ * @props {Props} props - The component props
+ * @prop {FlatEnvironment} environment - The environment to modify
+ * @prop {ProjectModel[]} projects - The projects to choose from
+ *
+ * @returns {React.FC<Props>} - The EnvironmentSettings component
+ */
 export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const { mutate } = useModifyEnvironment(environmentHandler.useId());

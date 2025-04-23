@@ -3,6 +3,11 @@ import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
 import { useGetServerStatus } from "@/Data/Managers/V2/Server/GetServerStatus";
 import { ErrorView, LoadingView } from "@/UI/Components";
 
+/**
+ * Initializer component
+ *
+ * @returns {React.FC<React.PropsWithChildren<unknown>>} The Initializer component
+ */
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const serverStatus = useGetServerStatus().useOneTime();
   const environments = useGetEnvironments().useOneTime();
@@ -30,5 +35,6 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
   if (serverStatus.isSuccess && environments.isSuccess) {
     return <>{children}</>;
   }
+
   return <LoadingView ariaLabel="Initializer-Loading" />;
 };
