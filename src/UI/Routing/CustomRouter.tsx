@@ -13,7 +13,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
  * @component
  * @props {HistoryRouterProps} props - The component props
  *  @prop {string} [props.basename] - The base URL for all locations. If your app is served from a sub-directory on your server, you'll want to set this to the sub-directory.
- *  @prop {React.ReactNode} props.children - The child components to be rendered within the router
+ *  @prop {React.ReactNode} [props.children] - The child components to be rendered within the router
  * @returns {JSX.Element} A RouterProvider component configured with the specified basename and children
  *
  * @example
