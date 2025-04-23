@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -8,17 +8,17 @@ import {
   FlexItem,
   TextInput,
 } from "@patternfly/react-core";
-import { Maybe } from "@/Core";
 import { convertToTitleCase } from "@/UI/Utils";
 import { CancelEditButton, EnableEditButton, SubmitEditButton } from "./InlineEditButtons";
 import { InlineValue } from "./InlineFillers";
 import { InlinePlainAlert } from "./InlinePlainAlert";
+import { ErrorHandlingContext } from "@/Slices/Settings/UI/Tabs/Environment/Components";
 
 interface Props {
   groupName: string;
   initialValues: Record<string, string>;
   initiallyEditable?: boolean;
-  onSubmit: (fieldDescriptors: Record<string, string>) => Promise<Maybe.Type<string>>;
+  onSubmit: (fieldDescriptors: Record<string, string>) => void;
 }
 
 export const EditableMultiTextField: React.FC<Props> = ({
@@ -27,16 +27,12 @@ export const EditableMultiTextField: React.FC<Props> = ({
   initiallyEditable,
   onSubmit,
 }) => {
+  const { error, setError } = useContext(ErrorHandlingContext);
   const [editable, setEditable] = useState(initiallyEditable);
   const [fieldValues, setFieldValues] = useState(initialValues);
-  const [submitError, setSubmitError] = useState("");
   const onSubmitRequest = async (values: Record<string, string>) => {
     setEditable(false);
-    const error = await onSubmit(values);
-
-    if (Maybe.isSome(error)) {
-      setSubmitError(error.value);
-    }
+    onSubmit(values);
   };
   const onKeyDown = (event) => {
     if (event.key && event.key !== "Enter") return;
@@ -45,14 +41,14 @@ export const EditableMultiTextField: React.FC<Props> = ({
   };
   const onEditClick = () => {
     setEditable(true);
-    setSubmitError("");
+    setError(null);
   };
   const onSubmitClick = () => onSubmitRequest(fieldValues);
   const onCancelEditClick = () => {
     setEditable(false);
     setFieldValues(initialValues);
   };
-  const onCloseAlert = () => setSubmitError("");
+  const onCloseAlert = () => setError(null);
   const onChange = (label: string) => (input: string) => {
     const updated = { ...fieldValues };
 
@@ -78,10 +74,10 @@ export const EditableMultiTextField: React.FC<Props> = ({
           </>
         )}
       </DescriptionListTerm>
-      {submitError && (
+      {error && (
         <InlinePlainAlert
           aria-label={`${groupName}-error-message`}
-          errorMessage={submitError}
+          errorMessage={error}
           closeButtonAriaLabel={`${groupName}-close-error`}
           onCloseAlert={onCloseAlert}
         />

@@ -10,16 +10,15 @@ import {
   UnknownDefinition,
 } from "@/Core/Domain/EnvironmentSettings";
 
-type Update = (id: string, value: EnvironmentSettings.Value) => Promise<Maybe.Type<string>>;
+type Update = (id: string, value: EnvironmentSettings.Value) => void;
 
-type Reset = (id: string) => Promise<Maybe.Type<string>>;
+type Reset = (id: string) => void;
 
 export class InputInfoCreator {
   constructor(
     private readonly setValues: (values: EnvironmentSettings.ValuesMap) => void,
     private readonly update: Update,
-    private readonly reset: Reset,
-    private readonly setError: (message: string) => void
+    private readonly reset: Reset
   ) {}
 
   create(
@@ -52,8 +51,6 @@ export class InputInfoCreator {
     const update = async (value: EnvironmentSettings.Value) => {
       const error = await this.update(definition.name, value);
 
-      this.setError(Maybe.withFallback(error, ""));
-
       return error;
     };
 
@@ -63,11 +60,7 @@ export class InputInfoCreator {
 
         return Maybe.none();
       } else {
-        const error = await this.reset(definition.name);
-
-        this.setError(Maybe.withFallback(error, ""));
-
-        return error;
+        return this.reset(definition.name);
       }
     };
 

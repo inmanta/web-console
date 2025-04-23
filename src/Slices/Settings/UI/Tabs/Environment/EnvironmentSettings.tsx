@@ -12,7 +12,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Actions } from "./Components";
+import { Actions, ErrorHandlingProvider } from "./Components";
 
 interface Props {
   environment: FlatEnvironment;
@@ -30,7 +30,7 @@ interface Props {
  */
 export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) => {
   const { environmentHandler } = useContext(DependencyContext);
-  const { mutate } = useModifyEnvironment(environmentHandler.useId());
+  const { mutate, error } = useModifyEnvironment(environmentHandler.useId());
 
   const createProject = useCreateProject();
 
@@ -69,38 +69,40 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
     });
 
   return (
-    <DescriptionList>
-      <EditableTextField
-        initialValue={environment.name}
-        label={words("settings.tabs.environment.name")}
-        onSubmit={onNameSubmit}
-      />
-      <EditableTextAreaField
-        initialValue={environment.description || ""}
-        label={words("settings.tabs.environment.description")}
-        onSubmit={onDescriptionSubmit}
-      />
-      <EditableMultiTextField
-        groupName={words("settings.tabs.environment.repoSettings")}
-        initialValues={{
-          repo_branch: environment.repo_branch,
-          repo_url: environment.repo_url,
-        }}
-        onSubmit={onRepoSubmit}
-      />
-      <EditableSelectField
-        label={words("settings.tabs.environment.projectName")}
-        initialValue={environment.projectName}
-        options={projects.map((project) => project.name)}
-        mutation={createProject}
-        onSubmit={onProjectSubmit}
-      />
-      <EditableImageField
-        label={words("settings.tabs.environment.icon")}
-        initialValue={environment.icon || ""}
-        onSubmit={onIconSubmit}
-      />
-      <Actions environment={environment} />
-    </DescriptionList>
+    <ErrorHandlingProvider>
+      <DescriptionList>
+        <EditableTextField
+          initialValue={environment.name}
+          label={words("settings.tabs.environment.name")}
+          onSubmit={onNameSubmit}
+        />
+        <EditableTextAreaField
+          initialValue={environment.description || ""}
+          label={words("settings.tabs.environment.description")}
+          onSubmit={onDescriptionSubmit}
+        />
+        <EditableMultiTextField
+          groupName={words("settings.tabs.environment.repoSettings")}
+          initialValues={{
+            repo_branch: environment.repo_branch,
+            repo_url: environment.repo_url,
+          }}
+          onSubmit={onRepoSubmit}
+        />
+        <EditableSelectField
+          label={words("settings.tabs.environment.projectName")}
+          initialValue={environment.projectName}
+          options={projects.map((project) => project.name)}
+          mutation={createProject}
+          onSubmit={onProjectSubmit}
+        />
+        <EditableImageField
+          label={words("settings.tabs.environment.icon")}
+          initialValue={environment.icon || ""}
+          onSubmit={onIconSubmit}
+        />
+        <Actions environment={environment} />
+      </DescriptionList>
+    </ErrorHandlingProvider>
   );
 };

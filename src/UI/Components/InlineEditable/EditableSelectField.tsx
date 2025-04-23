@@ -1,12 +1,16 @@
 import React from "react";
-import { Either } from "@/Core";
+import { UseMutationResult } from "@tanstack/react-query";
+import {
+  CreateProjectParams,
+  CreateProjectResponse,
+} from "@/Data/Managers/V2/Project/CreateProject";
 import { CreatableSelectInput } from "./CreatableSelectInput";
 import { EditableField, FieldProps, StaticViewComponent } from "./EditableField";
 import { InlineValue } from "./InlineFillers";
 
 interface Props extends FieldProps {
   options: string[];
-  onCreate: (value: string) => Promise<Either.Type<string, unknown>>;
+  mutation: UseMutationResult<CreateProjectResponse, Error, CreateProjectParams>;
 }
 
 export const EditableSelectField: React.FC<Props> = ({
@@ -15,7 +19,7 @@ export const EditableSelectField: React.FC<Props> = ({
   initialValue,
   options,
   initiallyEditable,
-  onCreate,
+  mutation,
   onSubmit,
 }) => {
   return (
@@ -30,7 +34,7 @@ export const EditableSelectField: React.FC<Props> = ({
           value={value}
           label={label}
           options={options}
-          onCreate={onCreate}
+          mutation={mutation}
           onSelect={onChange}
         />
       )}
