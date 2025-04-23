@@ -87,7 +87,12 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   const onConfirm = async (type: EnvActions): Promise<void> => {
     setIsBusy(true);
     setErrorMessage(null);
-    type === "delete" ? deleteEnv.mutate() : clearEnv.mutate();
+
+    if (type === "delete") {
+      deleteEnv.mutate();
+    } else {
+      clearEnv.mutate();
+    }
   };
 
   return (
