@@ -19,7 +19,7 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({ childr
     navigate("/login");
   }, [navigate]);
 
-  const login = (): void => navigate("/login");
+  const login = async (): Promise<void> => navigate("/login");
 
   const getToken = (): string | null => getCookie("inmanta_user");
 
