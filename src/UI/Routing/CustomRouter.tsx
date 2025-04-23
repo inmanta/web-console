@@ -11,9 +11,9 @@ import { createBrowserRouter, RouterProvider } from "react-router";
  * - Handle browser refresh/close events
  *
  * @component
- * @param {Object} props - The component props
- * @param {string} [props.basename] - The base URL for all locations. If your app is served from a sub-directory on your server, you'll want to set this to the sub-directory.
- * @param {React.ReactNode} props.children - The child components to be rendered within the router
+ * @props {HistoryRouterProps} props - The component props
+ *  @prop {string} [props.basename] - The base URL for all locations. If your app is served from a sub-directory on your server, you'll want to set this to the sub-directory.
+ *  @prop {React.ReactNode} props.children - The child components to be rendered within the router
  * @returns {JSX.Element} A RouterProvider component configured with the specified basename and children
  *
  * @example
