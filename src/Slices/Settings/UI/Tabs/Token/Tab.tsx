@@ -6,6 +6,8 @@ import { TokenForm } from "./TokenForm";
 /**
  * Token tab for the Settings page
  *
+ * It handles the generation of tokens for the current user
+ *
  * @returns {React.FC} The Token tab
  */
 export const Tab: React.FC = () => {

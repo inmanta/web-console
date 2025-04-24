@@ -9,6 +9,9 @@ import { EnvironmentSettings } from "./EnvironmentSettings";
 /**
  * Environment tab for the Settings page
  *
+ * It handles different states of the environment settings and project data (loading, error, success)
+ * and renders the appropriate UI for each state.
+ *
  * @returns {React.FC} The Environment tab
  */
 export const Tab: React.FC = () => {
