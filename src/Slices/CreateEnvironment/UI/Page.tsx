@@ -2,6 +2,7 @@ import React from "react";
 import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects/useGetProjects";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
+import { words } from "@/UI";
 
 /**
  * Create Environment page
@@ -16,7 +17,7 @@ export const Page: React.FC = () => {
 
   if (isError) {
     return (
-      <PageContainer pageTitle={"Create Environment"}>
+      <PageContainer pageTitle={words("home.create.env")}>
         <ErrorView message={error.message} ariaLabel="CreateEnvironment-Error" retry={refetch} />
       </PageContainer>
     );
@@ -24,14 +25,14 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     return (
-      <PageContainer pageTitle={"Create Environment"}>
+      <PageContainer pageTitle={words("home.create.env")}>
         <CreateEnvironmentForm projects={data} aria-label="CreateEnvironment-Success" />
       </PageContainer>
     );
   }
 
   return (
-    <PageContainer pageTitle={"Create Environment"}>
+    <PageContainer pageTitle={words("home.create.env")}>
       <LoadingView ariaLabel="CreateEnvironment-Loading" />,
     </PageContainer>
   );
