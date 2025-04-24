@@ -12,7 +12,7 @@ interface Response {
 /**
  * React Query hook for generating a new token.
  *
- * @returns {UseMutationResult<Response, Error, GenerateTokenParams, unknown>} The mutation object for generating a new token.
+ * @returns {UseMutationResult<Response, Error, TokenInfo, unknown>} The mutation object for generating a new token.
  */
 export const useGenerateToken = (
   options?: UseMutationOptions<Response, Error, TokenInfo>

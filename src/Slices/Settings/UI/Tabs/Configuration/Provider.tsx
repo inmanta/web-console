@@ -12,6 +12,13 @@ interface Props {
   settings: EnvironmentSettings.EnvironmentSettings;
 }
 
+/**
+ * Reducer function for the Environment Settings tab
+ *
+ * @param state - The current state of the environment settings
+ * @param action - The action to be performed
+ * @returns The new state of the environment settings
+ */
 function reducer(
   state: { settings: EnvironmentSettings.ValuesMap; resetedValueName: string },
   action: {
@@ -45,6 +52,12 @@ function reducer(
   }
 }
 
+/**
+ * Provider component for the Environment Settings tab
+ *
+ * @param props - The props for the Environment Settings tab
+ * @returns The Environment Settings tab
+ */
 export const Provider: React.FC<Props> = ({ settings: { settings, definition } }) => {
   /*
   useReducer in this component is used due to dependency issues in useEffect, 

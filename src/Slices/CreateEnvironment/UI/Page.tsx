@@ -6,6 +6,9 @@ import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
 /**
  * Create Environment page
  *
+ * It handles different states of the project data fetching for Create Environment form (loading, error, success)
+ * and renders the appropriate UI for each state.
+ *
  * @returns {React.FC} The Create Environment page
  */
 export const Page: React.FC = () => {
