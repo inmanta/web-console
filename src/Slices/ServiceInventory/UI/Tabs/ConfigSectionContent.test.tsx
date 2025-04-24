@@ -1,5 +1,4 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
 import {
   QueryClient,
   QueryClientProvider,
@@ -33,6 +32,7 @@ import {
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ConfigSectionContent } from "./ConfigSectionContent";
 
 function setup(environmentModifier: EnvironmentModifier = new MockEnvironmentModifier()) {
@@ -47,7 +47,7 @@ function setup(environmentModifier: EnvironmentModifier = new MockEnvironmentMod
 
   const component = (
     <QueryClientProvider client={client}>
-      <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+      <TestMemoryRouter initialEntries={["/?env=aaa"]}>
         <DependencyProvider
           dependencies={{
             ...dependencies,
@@ -72,7 +72,7 @@ function setup(environmentModifier: EnvironmentModifier = new MockEnvironmentMod
             </InstanceDetailsContext.Provider>
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

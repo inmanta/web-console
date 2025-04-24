@@ -1,4 +1,4 @@
-import { generatePath, matchPath, PathMatch, useLocation } from "react-router-dom";
+import { generatePath, matchPath, PathMatch, useLocation } from "react-router";
 import {
   RouteDictionary,
   RouteManager,

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate } from "react-router";
 import { EnvironmentRole, FlatEnvironment } from "@/Core";
 import { DependencyContext, DependencyResolver } from "@/UI/Dependency";
 import { words } from "@/UI/words";

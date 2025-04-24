@@ -1,19 +1,19 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { dependencies, Environment } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 
 function setup() {
   const component = (
-    <MemoryRouter>
+    <TestMemoryRouter>
       <DependencyProvider dependencies={dependencies}>
         <EnvironmentsOverview environments={Environment.filterable} />
       </DependencyProvider>
-    </MemoryRouter>
+    </TestMemoryRouter>
   );
 
   return { component };

@@ -1,5 +1,4 @@
 import React from "react";
-import { MemoryRouter } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -12,6 +11,7 @@ import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ResourceHistory } from "@S/ResourceDetails/Data/Mock";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { ResourceHistoryView } from "./ResourceHistoryView";
@@ -21,13 +21,13 @@ function setup() {
 
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
+      <TestMemoryRouter>
         <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>
             <ResourceHistoryView resourceId="abc" details={ResourceDetails.response.data} />
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

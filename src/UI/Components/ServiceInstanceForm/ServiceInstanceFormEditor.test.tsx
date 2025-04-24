@@ -8,7 +8,7 @@
 
 import React, { act } from "react";
 import "@testing-library/jest-dom";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
@@ -27,8 +27,7 @@ import { getStoreInstance, QueryResolverImpl, QueryManagerResolverImpl } from "@
 import * as Test from "@/Test";
 import { DeferredApiHelper, StaticScheduler, dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI";
-import CustomRouter from "@/UI/Routing/CustomRouter";
-import history from "@/UI/Routing/history";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 const setup = (
@@ -48,7 +47,7 @@ const setup = (
 
   const component = (
     <QueryClientProvider client={queryClient}>
-      <CustomRouter history={history}>
+      <TestMemoryRouter>
         <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
           <StoreProvider store={store}>
             <Routes>
@@ -70,7 +69,7 @@ const setup = (
             </Routes>
           </StoreProvider>
         </DependencyProvider>
-      </CustomRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

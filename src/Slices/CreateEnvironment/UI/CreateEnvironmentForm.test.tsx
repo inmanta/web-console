@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -14,6 +13,7 @@ import {
 } from "@/Data";
 import { DeferredApiHelper, dependencies, Environment, Project, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
 expect.extend(toHaveNoViolations);
 
@@ -35,13 +35,13 @@ function setup() {
   const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
 
   const component = (
-    <MemoryRouter>
+    <TestMemoryRouter>
       <StoreProvider store={store}>
         <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
           <Page />
         </DependencyProvider>
       </StoreProvider>
-    </MemoryRouter>
+    </TestMemoryRouter>
   );
 
   return { component, apiHelper };

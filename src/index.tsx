@@ -13,7 +13,6 @@ import { AuthProvider } from "./Data/Auth/AuthProvider";
 import { QueryControlProvider } from "./Data/Managers/V2/helpers/QueryControlContext";
 import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
-import history from "./UI/Routing/history";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
 
 loader.config({ monaco });
@@ -38,7 +37,7 @@ root.render(
     <QueryControlProvider>
       <QueryClientProvider client={queryClient}>
         <StoreProvider store={store}>
-          <CustomRouter history={history}>
+          <CustomRouter>
             <AuthProvider config={globalThis && globalThis.auth}>
               <Flex
                 flexWrap={{ default: "nowrap" }}

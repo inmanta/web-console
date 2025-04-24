@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -9,6 +8,7 @@ import { dependencies, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CatalogDataList } from "./CatalogDataList";
 
 expect.extend(toHaveNoViolations);
@@ -23,11 +23,11 @@ const axe = configureAxe({
 const Component = (services: ServiceModel[]) => {
   return (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
+      <TestMemoryRouter>
         <DependencyProvider dependencies={dependencies}>
           <CatalogDataList services={services} />
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 };

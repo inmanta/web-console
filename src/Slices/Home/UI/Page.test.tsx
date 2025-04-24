@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
@@ -17,6 +16,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
 
 expect.extend(toHaveNoViolations);
@@ -41,7 +41,7 @@ function setup() {
     new DynamicQueryManagerResolverImpl([environmentsManager])
   );
   const component = (
-    <MemoryRouter>
+    <TestMemoryRouter>
       <DependencyProvider
         dependencies={{
           ...dependencies,
@@ -52,7 +52,7 @@ function setup() {
           <Page />
         </StoreProvider>
       </DependencyProvider>
-    </MemoryRouter>
+    </TestMemoryRouter>
   );
 
   return { component, apiHelper };

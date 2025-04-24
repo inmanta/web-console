@@ -1,11 +1,11 @@
 import React, { act } from "react";
-import { Router } from "react-router-dom";
+import { Router } from "react-router";
 import { Masthead, Page } from "@patternfly/react-core";
+import { createMemoryHistory } from "@remix-run/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { createMemoryHistory } from "history";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";

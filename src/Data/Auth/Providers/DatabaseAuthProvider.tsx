@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { createCookie, getCookie, removeCookie } from "../../Common/CookieHelper";
 import { AuthContext } from "../AuthContext";
 
@@ -19,7 +19,7 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({ childr
     navigate("/login");
   }, [navigate]);
 
-  const login = (): void => navigate("/login");
+  const login = async (): Promise<void> => navigate("/login");
 
   const getToken = (): string | null => getCookie("inmanta_user");
 

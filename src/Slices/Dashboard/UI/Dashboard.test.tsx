@@ -1,5 +1,4 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -10,6 +9,7 @@ import { getStoreInstance } from "@/Data";
 import { dependencies } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { mockedMetrics } from "../Core/Mock";
 import { Dashboard } from "./Dashboard";
@@ -29,13 +29,13 @@ const setup = (isLsmEnabled = false) => {
 
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
+      <TestMemoryRouter>
         <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>
             <Dashboard />
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

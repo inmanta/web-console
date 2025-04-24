@@ -1,4 +1,4 @@
-import { createMemoryHistory } from "history";
+import { createMemoryHistory } from "@remix-run/router";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { Environment } from "@/Test";

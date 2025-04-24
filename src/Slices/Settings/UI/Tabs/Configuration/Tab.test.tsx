@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -20,6 +19,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider, words } from "@/UI";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Tab } from "./Tab";
 
 expect.extend(toHaveNoViolations);
@@ -42,13 +42,13 @@ function setup() {
   const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
 
   const component = (
-    <MemoryRouter initialEntries={[{ search: "?env=env" }]}>
+    <TestMemoryRouter initialEntries={["/?env=env"]}>
       <StoreProvider store={store}>
         <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
           <Tab environmentId="env" />
         </DependencyProvider>
       </StoreProvider>
-    </MemoryRouter>
+    </TestMemoryRouter>
   );
 
   return { component, apiHelper };

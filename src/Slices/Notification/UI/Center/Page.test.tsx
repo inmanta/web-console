@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
@@ -18,6 +17,7 @@ import {
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { links, metadata } from "@/Test/Data/Pagination";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as Mock from "@S/Notification/Core/Mock";
 import { NotificationCenterPage } from ".";
 
@@ -49,7 +49,7 @@ const setup = (entries?: string[]) => {
 
   const component = (
     <QueryClientProvider client={client}>
-      <MemoryRouter initialEntries={entries}>
+      <TestMemoryRouter initialEntries={entries}>
         <StoreProvider store={store}>
           <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
             <Page>
@@ -57,7 +57,7 @@ const setup = (entries?: string[]) => {
             </Page>
           </DependencyProvider>
         </StoreProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

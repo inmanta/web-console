@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -21,6 +20,7 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Actions } from "./Actions";
 
 function setup() {
@@ -37,13 +37,13 @@ function setup() {
 
   const component = (
     <StoreProvider store={store}>
-      <MemoryRouter>
+      <TestMemoryRouter>
         <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
           <ModalProvider>
             <Actions environment={{ id: "env", name: "connect" }} />
           </ModalProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </StoreProvider>
   );
 

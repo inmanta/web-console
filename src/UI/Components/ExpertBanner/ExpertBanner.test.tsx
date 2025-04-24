@@ -1,5 +1,4 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -11,6 +10,7 @@ import * as useUpdateEnvConfig from "@/Data/Managers/V2/Environment/UpdateEnvCon
 import { dependencies } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ExpertBanner } from "./ExpertBanner";
 
 const setup = (flag: boolean) => {
@@ -18,7 +18,7 @@ const setup = (flag: boolean) => {
   const store = getStoreInstance();
 
   return (
-    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+    <TestMemoryRouter initialEntries={["/?env=aaa"]}>
       <DependencyProvider
         dependencies={{
           ...dependencies,
@@ -30,7 +30,7 @@ const setup = (flag: boolean) => {
           </StoreProvider>
         </QueryClientProvider>
       </DependencyProvider>
-    </MemoryRouter>
+    </TestMemoryRouter>
   );
 };
 

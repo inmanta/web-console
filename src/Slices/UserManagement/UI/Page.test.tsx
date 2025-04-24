@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
@@ -11,6 +10,7 @@ import { UserInfo } from "@/Data/Managers/V2/Auth";
 import { dependencies } from "@/Test";
 import { DependencyProvider, words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { UserManagementPage } from "./Page";
 
 expect.extend(toHaveNoViolations);
@@ -25,7 +25,7 @@ const setup = () => {
   });
 
   const component = (
-    <MemoryRouter>
+    <TestMemoryRouter>
       <QueryClientProvider client={queryClient}>
         <DependencyProvider dependencies={{ ...dependencies }}>
           <ModalProvider>
@@ -35,7 +35,7 @@ const setup = () => {
           </ModalProvider>
         </DependencyProvider>
       </QueryClientProvider>
-    </MemoryRouter>
+    </TestMemoryRouter>
   );
 
   return component;

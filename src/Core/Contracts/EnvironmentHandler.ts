@@ -1,4 +1,4 @@
-import { Location } from "history";
+import { Location } from "react-router";
 import { FlatEnvironment } from "@/Core/Domain";
 import { Navigate } from "@/Core/Language";
 

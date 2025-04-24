@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Location } from "history";
+import { Location } from "react-router";
 import { EnvironmentHandler, FlatEnvironment, Navigate, RouteManager } from "@/Core";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
+import { useState } from "react";
 
 export function EnvironmentHandlerImpl(
   useLocation: () => Location,

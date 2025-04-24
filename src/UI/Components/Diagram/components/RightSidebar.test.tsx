@@ -1,5 +1,5 @@
 import React from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { dia } from "@inmanta/rappid";
 import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
@@ -11,6 +11,7 @@ import { dependencies } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasContext, InstanceComposerContext, defaultCanvasContext } from "../Context";
 import { containerModel } from "../Mocks";
 import { addDefaultEntities } from "../actions/createMode";
@@ -55,7 +56,7 @@ describe("RightSidebar.", () => {
 
     const component = (
       <QueryClientProvider client={testClient}>
-        <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+        <TestMemoryRouter initialEntries={["/?env=aaa"]}>
           <StoreProvider store={store}>
             <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
               <InstanceComposerContext.Provider
@@ -78,7 +79,7 @@ describe("RightSidebar.", () => {
               </InstanceComposerContext.Provider>
             </DependencyProvider>
           </StoreProvider>
-        </MemoryRouter>
+        </TestMemoryRouter>
       </QueryClientProvider>
     );
 

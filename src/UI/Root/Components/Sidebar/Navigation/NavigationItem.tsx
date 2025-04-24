@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import { Label, NavItem, Tooltip } from "@patternfly/react-core";
 import { LockIcon } from "@patternfly/react-icons";
 import { useGetCompilerStatus } from "@/Data/Managers/V2/Compilation/GetCompilerStatus";

@@ -1,6 +1,5 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import { Table /* data-codemods */, Tbody, Tr } from "@patternfly/react-table";
+import { Table, Tbody, Tr } from "@patternfly/react-table";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -12,8 +11,8 @@ import { dependencies, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CellWithCopy } from "./CellWithCopy";
-
 function setup(props) {
   const store = getStoreInstance();
 
@@ -21,7 +20,7 @@ function setup(props) {
 
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
+      <TestMemoryRouter>
         <DependencyProvider dependencies={dependencies}>
           <StoreProvider store={store}>
             <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
@@ -35,7 +34,7 @@ function setup(props) {
             </TreeTableCellContext.Provider>
           </StoreProvider>
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

@@ -1,17 +1,18 @@
 import React from "react";
-import { MemoryRouter, useLocation } from "react-router";
-import { Router } from "react-router-dom";
+import { useLocation } from "react-router";
+import { Router } from "react-router";
+import { createMemoryHistory } from "@remix-run/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { createMemoryHistory } from "history";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { FlatEnvironment, RemoteData } from "@/Core";
 import { AuthProvider, getStoreInstance, KeycloakAuthConfig, LocalConfig } from "@/Data";
 import { AuthTestWrapper, Environment, dependencies } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
@@ -34,14 +35,7 @@ const setup = (
 
   return (
     <ErrorBoundary>
-      <MemoryRouter
-        initialEntries={[
-          {
-            pathname: "/",
-            search: "?env=123",
-          },
-        ]}
-      >
+      <TestMemoryRouter initialEntries={["/?env=123"]}>
         <QueryClientProvider client={queryClient}>
           <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
             <StoreProvider store={store}>
@@ -57,7 +51,7 @@ const setup = (
             </StoreProvider>
           </DependencyProvider>
         </QueryClientProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </ErrorBoundary>
   );
 };

@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -14,6 +13,7 @@ import {
   Project,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
 expect.extend(toHaveNoViolations);
@@ -34,7 +34,7 @@ function setup() {
 
   const component = (
     <StoreProvider store={store}>
-      <MemoryRouter>
+      <TestMemoryRouter>
         <DependencyProvider
           dependencies={{
             ...dependencies,
@@ -44,7 +44,7 @@ function setup() {
         >
           <EnvironmentSettings environment={selectedEnvironment} projects={Project.list} />
         </DependencyProvider>
-      </MemoryRouter>
+      </TestMemoryRouter>
     </StoreProvider>
   );
 
