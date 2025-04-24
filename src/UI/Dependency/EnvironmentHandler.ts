@@ -3,6 +3,15 @@ import { Location } from "react-router";
 import { EnvironmentHandler, FlatEnvironment, Navigate, RouteManager } from "@/Core";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
+/**
+ * EnvironmentHandlerImpl is a React component that manages the environment selection and navigation.
+ * It provides functions to set the current environment, get the selected environment, and determine the selected environment from the URL.
+ *
+ * @param {(): Location} useLocation - useLocation hook from react-router
+ * @param {RouteManager} routeManager - The route manager to navigate between routes.
+ *
+ * @returns {EnvironmentHandler} An object containing the different available functions.
+ */
 export function EnvironmentHandlerImpl(
   useLocation: () => Location,
   routeManager: RouteManager
@@ -36,7 +45,6 @@ export function EnvironmentHandlerImpl(
   }
 
   function setAllEnvironments(environments: FlatEnvironment[]): void {
-    console.log("setAllEnvironments", environments);
     setAllEnvs(environments);
   }
 
