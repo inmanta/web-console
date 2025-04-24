@@ -1,12 +1,13 @@
 import React from "react";
 import { Alert, Dropdown, Spinner, MenuToggle } from "@patternfly/react-core";
 import { UseQueryResult } from "@tanstack/react-query";
-import { Environment, FlatEnvironment } from "@/Core";
+import { Environment, FlatEnvironment, ProjectModel } from "@/Core";
 import { words } from "@/UI/words";
 import { EnvironmentSelectorItem, EnvSelectorWrapper } from "./EnvSelectorWrapper";
 
 interface Props {
   environments: UseQueryResult<Environment[], Error>;
+  projects: UseQueryResult<ProjectModel[], Error>;
   onSelectEnvironment(item: EnvironmentSelectorItem): void;
   selectedEnvironment?: FlatEnvironment;
 }
@@ -25,6 +26,7 @@ interface Props {
 
 export const EnvSelectorWithData: React.FC<Props> = ({
   environments,
+  projects,
   onSelectEnvironment,
   selectedEnvironment,
 }) => {
@@ -42,15 +44,40 @@ export const EnvSelectorWithData: React.FC<Props> = ({
     );
   }
 
-  if (environments.isSuccess) {
+  if (projects.isError) {
+    return (
+      <>
+        <Dropdown
+          aria-label="EnvSelector-Failed"
+          toggle={() => <MenuToggle>{words("error")}</MenuToggle>}
+        ></Dropdown>
+        <Alert variant="danger" title={words("error")} data-testid="AlertError">
+          <p>{projects.error.message}</p>
+        </Alert>
+      </>
+    );
+  }
+
+  if (environments.isSuccess && projects.isSuccess) {
+    const projectMap = new Map<string, string>(
+      projects.data.map((project) => [project.id, project.name])
+    );
+    const envsWithProjectName = environments.data.map((env) => ({
+      ...env,
+      projectName: projectMap.get(env.project_id) || "",
+    }));
+
+    const selectedEnvWithProjectName = envsWithProjectName.find(
+      (env) => env.id === selectedEnvironment?.id
+    );
     return (
       <EnvSelectorWrapper
-        selectorItems={environments.data.map(environmentToSelector)}
-        environmentNames={environments.data.map(environmentToName)}
+        selectorItems={envsWithProjectName.map(environmentToSelector)}
+        environmentNames={envsWithProjectName.map(environmentToName)}
         onSelectEnvironment={onSelectEnvironment}
         defaultToggleText={
           selectedEnvironment
-            ? environmentToName(selectedEnvironment)
+            ? environmentToName(selectedEnvWithProjectName || selectedEnvironment)
             : words("common.environment.select")
         }
       />
