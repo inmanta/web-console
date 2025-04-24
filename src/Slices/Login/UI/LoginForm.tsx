@@ -17,7 +17,7 @@ import {
 } from "@patternfly/react-core";
 import { ExclamationCircleIcon, EyeIcon, EyeSlashIcon } from "@patternfly/react-icons";
 import { useLogin } from "@/Data/Managers/V2/Auth";
-import { DependencyContext, words } from "@/UI";
+import { DependencyContext, words, PrimaryBaseUrlManager } from "@/UI";
 
 interface Props {
   submitButtonText: string;
@@ -38,6 +38,11 @@ export const LoginForm: React.FC<Props> = ({
 }) => {
   const { authHelper } = useContext(DependencyContext);
   const navigate = useNavigate();
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname
+  );
+  const basePathname = baseUrlManager.getBasePathname();
 
   const { data, mutate, isSuccess, isError, error, isPending } = useLogin();
 
@@ -85,9 +90,9 @@ export const LoginForm: React.FC<Props> = ({
   useEffect(() => {
     if (isSuccess) {
       authHelper.updateUser(data.data.user.username, data.data.token);
-      navigate("/");
+      navigate(basePathname);
     }
-  }, [isSuccess, navigate, data, authHelper]);
+  }, [isSuccess, navigate, data, authHelper, basePathname]);
 
   return (
     <Form className="loginForm" onSubmit={handleSubmit}>
