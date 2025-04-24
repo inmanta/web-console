@@ -1,39 +1,46 @@
 import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
+import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment/GetEnvironmentDetails/useGetEnvironmentDetails";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { Dashboard } from "./Dashboard";
+import { words } from "@/UI";
 
+/**
+ * Dashboard page
+ *
+ * It handles different states of the project data fetching for Dashboard page (loading, error, success)
+ * and renders the appropriate UI for each state.
+ *
+ * @returns {React.FC} The Dashboard page
+ */
 export const Page: React.FC = () => {
-  const { queryResolver, environmentHandler } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
 
-  const [envData, retry] = queryResolver.useOneTime<"GetEnvironmentDetails">({
-    kind: "GetEnvironmentDetails",
-    details: true,
-    id: environmentHandler.useId(),
-  });
+  const envName = environmentHandler.useSelected()?.name || ""; //useSelected() theoretically could return undefined but as we use useId() the view would throw an error in that case
+
+  const { isSuccess, isError, error, refetch } = useGetEnvironmentDetails().useOneTime(
+    environmentHandler.useId()
+  );
+
+  if (isError) {
+    return (
+      <PageContainer pageTitle={words("dashboard.title")(envName)}>
+        <ErrorView message={error.message} retry={refetch} ariaLabel="Dashboard-Failed" />
+      </PageContainer>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <PageContainer pageTitle={words("dashboard.title")(envName)}>
+        <Dashboard />
+      </PageContainer>
+    );
+  }
 
   return (
-    <>
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => <LoadingView ariaLabel="Dashboard-Loading" />,
-          failed: (error) => (
-            <ErrorView message={error} retry={retry} ariaLabel="Dashboard-Failed" />
-          ),
-          success: (value) => (
-            <PageContainer
-              pageTitle={words("dashboard.title")(value.name)}
-              aria-label="Dashboard-Success"
-            >
-              <Dashboard />
-            </PageContainer>
-          ),
-        },
-        envData
-      )}
-    </>
+    <PageContainer pageTitle={words("dashboard.title")(envName)}>
+      <LoadingView ariaLabel="Dashboard-Loading" />
+    </PageContainer>
   );
 };

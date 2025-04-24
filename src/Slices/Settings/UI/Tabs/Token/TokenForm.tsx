@@ -12,7 +12,7 @@ import {
 } from "@patternfly/react-core";
 import { ClusterIcon, ProcessAutomationIcon, UserIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { ClientType, Maybe } from "@/Core";
+import { ClientType } from "@/Core";
 import { ClipboardCopyButton, Description } from "@/UI/Components";
 import { words } from "@/UI/words";
 
@@ -21,8 +21,8 @@ interface Props {
   onErrorClose(): void;
   getClientTypeSelector(clientType: ClientType): (selected: boolean) => void;
   isClientTypeSelected(clientType: ClientType): boolean;
-  token: Maybe.Maybe<string>;
-  error: Maybe.Maybe<string>;
+  token: string | null;
+  error: string | null;
   isBusy: boolean;
 }
 
@@ -78,17 +78,17 @@ export const TokenForm: React.FC<Props> = ({
         id="token"
         type="text"
         aria-label="TokenOutput"
-        value={Maybe.withFallback(token, "")}
+        value={token ?? ""}
         readOnlyVariant="default"
       />
       <ClipboardCopyButton
-        value={Maybe.withFallback(token, "")}
-        isDisabled={Maybe.isNone(token)}
+        value={token ?? ""}
+        isDisabled={token === null}
         variant="control"
         aria-label="CopyTokenToClipboard"
       />
     </StyledInputGroup>
-    {Maybe.isSome(error) && (
+    {error && (
       <Alert
         data-testid="ToastError"
         isInline
@@ -96,7 +96,7 @@ export const TokenForm: React.FC<Props> = ({
         title="Something went wrong"
         actionClose={<AlertActionCloseButton onClose={onErrorClose} />}
       >
-        <p>{error.value}</p>
+        <p>{error}</p>
       </Alert>
     )}
   </Container>

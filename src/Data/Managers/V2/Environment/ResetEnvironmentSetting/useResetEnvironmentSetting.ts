@@ -12,7 +12,7 @@ import { useDelete } from "../../helpers";
  * @returns {UseMutationResult<void, Error, string, unknown>} The mutation object for resetting an environment setting.
  */
 export const useResetEnvironmentSetting = (
-  options?: UseMutationOptions<void, Error, string>,
+  options?: UseMutationOptions<void, Error, string>
 ): UseMutationResult<void, Error, string> => {
   const client = useQueryClient();
   const deleteFn = useDelete();

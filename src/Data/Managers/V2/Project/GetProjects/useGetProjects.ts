@@ -6,12 +6,8 @@ import { useGetWithoutEnv } from "../../helpers";
  * Return Signature of the useGetProjects React Query
  */
 interface GetProjects {
-  useOneTime: (
-    environmentDetails?: boolean,
-  ) => UseQueryResult<ProjectModel[], Error>;
-  useContinuous: (
-    environmentDetails?: boolean,
-  ) => UseQueryResult<ProjectModel[], Error>;
+  useOneTime: (environmentDetails?: boolean) => UseQueryResult<ProjectModel[], Error>;
+  useContinuous: (environmentDetails?: boolean) => UseQueryResult<ProjectModel[], Error>;
 }
 
 /**
@@ -25,24 +21,18 @@ export const useGetProjects = (): GetProjects => {
   const get = useGetWithoutEnv()<{ data: ProjectModel[] }>;
 
   return {
-    useOneTime: (
-      environmentDetails = false,
-    ): UseQueryResult<ProjectModel[], Error> =>
+    useOneTime: (environmentDetails = false): UseQueryResult<ProjectModel[], Error> =>
       useQuery({
         queryKey: ["get_projects-one_time", environmentDetails],
-        queryFn: () =>
-          get(`/api/v2/project?environment_details=${environmentDetails}`),
+        queryFn: () => get(`/api/v2/project?environment_details=${environmentDetails}`),
         retry: false,
         select: (data) => data.data,
       }),
 
-    useContinuous: (
-      environmentDetails = false,
-    ): UseQueryResult<ProjectModel[], Error> =>
+    useContinuous: (environmentDetails = false): UseQueryResult<ProjectModel[], Error> =>
       useQuery({
         queryKey: ["get_projects-continuous", environmentDetails],
-        queryFn: () =>
-          get(`/api/v2/project?environment_details=${environmentDetails}`),
+        queryFn: () => get(`/api/v2/project?environment_details=${environmentDetails}`),
         retry: false,
         select: (data) => data.data,
         refetchInterval: 5000,

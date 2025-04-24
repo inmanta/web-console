@@ -1,4 +1,4 @@
-import { Maybe, ParsedNumber } from "@/Core/Language";
+import { ParsedNumber } from "@/Core/Language";
 
 export interface EnvironmentSettings {
   settings: ValuesMap;
@@ -71,8 +71,8 @@ interface WithHandlers<ValueType extends Value> {
   initial: ValueType;
   value: ValueType;
   set: (value: ValueType) => void;
-  update: (value: ValueType) => Promise<Maybe.Maybe<string>>;
-  reset: () => Promise<Maybe.Maybe<string>>;
+  update: (value: ValueType) => void;
+  reset: () => void;
   isUpdateable: IsUpdateable;
 }
 

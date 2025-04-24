@@ -1,7 +1,10 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import _ from "lodash";
 import { EnvironmentSettings } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
+import {
+  useResetEnvironmentSetting,
+  useUpdateEnvironmentSetting,
+} from "@/Data/Managers/V2/Environment";
 import { Container } from "./Container";
 import { InputInfoCreator } from "./InputInfoCreator";
 
@@ -9,6 +12,13 @@ interface Props {
   settings: EnvironmentSettings.EnvironmentSettings;
 }
 
+/**
+ * Reducer function for the Environment Settings tab
+ *
+ * @param state - The current state of the environment settings
+ * @param action - The action to be performed
+ * @returns The new state of the environment settings
+ */
 function reducer(
   state: { settings: EnvironmentSettings.ValuesMap; resetedValueName: string },
   action: {
@@ -42,6 +52,12 @@ function reducer(
   }
 }
 
+/**
+ * Provider component for the Environment Settings tab
+ *
+ * @param props - The props for the Environment Settings tab
+ * @returns The Environment Settings tab
+ */
 export const Provider: React.FC<Props> = ({ settings: { settings, definition } }) => {
   /*
   useReducer in this component is used due to dependency issues in useEffect, 
@@ -54,25 +70,29 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     resetedValueName: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
-  const { commandResolver } = useContext(DependencyContext);
-  const updateSetting = commandResolver.useGetTrigger<"UpdateEnvironmentSetting">({
-    kind: "UpdateEnvironmentSetting",
+  const updateSetting = useUpdateEnvironmentSetting({
+    onError: (error) => setErrorMessage(error.message),
   });
-  const resetSetting = commandResolver.useGetTrigger<"ResetEnvironmentSetting">({
-    kind: "ResetEnvironmentSetting",
+  const resetSetting = useResetEnvironmentSetting({
+    onError: (error) => setErrorMessage(error.message),
   });
+
   const handleReset = (id: string) => {
     dispatch({ type: "reset", payload: id });
 
-    return resetSetting(id);
+    return resetSetting.mutate(id);
   };
+  const handleUpdate = (id: string, value: EnvironmentSettings.Value) => {
+    dispatch({ type: "update", payload: { [id]: value } });
+    return updateSetting.mutate({ id, value });
+  };
+
   const infos = new InputInfoCreator(
     (values: EnvironmentSettings.ValuesMap) => {
       dispatch({ type: "set", payload: values });
     },
-    updateSetting,
-    handleReset,
-    setErrorMessage
+    handleUpdate,
+    handleReset
   ).create(settings, definition, state.settings);
 
   useEffect(() => {
