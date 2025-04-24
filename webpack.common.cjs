@@ -14,7 +14,7 @@ module.exports = {
   plugins: [
     new webpack.IgnorePlugin({
       resourceRegExp: /^\.\/(config|version)\.js$/,
-      contextRegExp: /[\\/]__mocks__[\\/]/
+      contextRegExp: /[\\/]__mocks__[\\/]/,
     }),
     gitRevisionPlugin,
     new webpack.DefinePlugin({

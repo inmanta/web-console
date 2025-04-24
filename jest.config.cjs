@@ -70,7 +70,5 @@ module.exports = {
       useESM: true,
     },
   },
-  modulePathIgnorePatterns: [
-    "<rootDir>/dist/"
-  ],
+  modulePathIgnorePatterns: ["<rootDir>/dist/"],
 };
