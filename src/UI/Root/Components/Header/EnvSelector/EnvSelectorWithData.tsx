@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Dropdown, MenuToggle } from "@patternfly/react-core";
+import { Alert, Dropdown, DropdownItem, Spinner, MenuToggle } from "@patternfly/react-core";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Environment, FlatEnvironment } from "@/Core";
 import { words } from "@/UI/words";
@@ -57,7 +57,9 @@ export const EnvSelectorWithData: React.FC<Props> = ({
     );
   }
 
-  return <Dropdown toggle={() => <></>} aria-label="EnvSelector-Loading"></Dropdown>;
+  return (
+    <Dropdown toggle={() => <Spinner size="sm" />} aria-label="EnvSelector-Loading"></Dropdown>
+  );
 };
 
 /**

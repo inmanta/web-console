@@ -6,6 +6,9 @@ import { ErrorView, LoadingView } from "@/UI/Components";
 /**
  * Initializer component
  *
+ * It handles different states of the server status and environments data fetching (loading, error, success)
+ * and renders the appropriate UI for each state.
+ *
  * @returns {React.FC<React.PropsWithChildren<unknown>>} The Initializer component
  */
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {

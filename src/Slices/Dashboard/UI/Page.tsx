@@ -7,6 +7,9 @@ import { Dashboard } from "./Dashboard";
 /**
  * Dashboard page
  *
+ * It handles different states of the project data fetching for Dashboard page (loading, error, success)
+ * and renders the appropriate UI for each state.
+ *
  * @returns {React.FC} The Dashboard page
  */
 export const Page: React.FC = () => {

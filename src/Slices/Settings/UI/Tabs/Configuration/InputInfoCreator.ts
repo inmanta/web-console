@@ -14,6 +14,13 @@ type Update = (id: string, value: EnvironmentSettings.Value) => void;
 
 type Reset = (id: string) => void;
 
+/**
+ * InputInfoCreator class
+ *
+ * @param setValues - The function to set the values
+ * @param update - The function to update the values
+ * @param reset - The function to reset the values
+ */
 export class InputInfoCreator {
   constructor(
     private readonly setValues: (values: EnvironmentSettings.ValuesMap) => void,

@@ -11,6 +11,9 @@ import { EmptyFilterToolbar } from "./FilterToolbar";
 /**
  * Home page
  *
+ * It handles different states of the environment data fetching for Home page (loading, error, success)
+ * and renders the appropriate UI for each state.
+ *
  * @returns {React.FC} The Home page
  */
 export const Page: React.FC = () => {
