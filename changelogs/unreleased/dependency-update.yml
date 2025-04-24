@@ -1,3 +1,3 @@
-description:Remove unused dependencies or resolutions, add resolution for webpack-dev-middleware to cover security vulnerability
+description: Remove unused dependencies or resolutions, add resolution for webpack-dev-middleware to cover security vulnerability
 change-type: patch
 destination-branches: [master, iso8]
