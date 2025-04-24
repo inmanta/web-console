@@ -19,7 +19,7 @@ interface Props {
 }
 
 /**
- * CreatableSelectInput component
+ * CreatableSelectInput component used in the EnvironmentSettings component
  *
  * @props {Props} props - The component props
  * @prop {string} label - The label for the input

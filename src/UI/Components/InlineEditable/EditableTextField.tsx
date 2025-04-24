@@ -3,6 +3,18 @@ import { TextInput } from "@patternfly/react-core";
 import { EditableField, EditViewComponent, FieldProps, StaticViewComponent } from "./EditableField";
 import { InlineValue } from "./InlineFillers";
 
+/**
+ * EditableTextField component used in the EnvironmentSettings component
+ *
+ * @props {FieldProps} props - The component props
+ * @prop {boolean} isRequired - Whether the field is required
+ * @prop {string} label - The label of the field
+ * @prop {string} initialValue - The initial value of the field
+ * @prop {boolean} initiallyEditable - Whether the field is initially editable
+ * @prop {Function} onSubmit - The function to call when the form is submitted
+ *
+ * @returns {React.FC<FieldProps>} - The EditableTextField component
+ */
 export const EditableTextField: React.FC<FieldProps> = ({
   isRequired,
   label,

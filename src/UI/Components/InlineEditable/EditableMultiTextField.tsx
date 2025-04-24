@@ -21,6 +21,17 @@ interface Props {
   onSubmit: (fieldDescriptors: Record<string, string>) => void;
 }
 
+/**
+ * EditableMultiTextField component used in the EnvironmentSettings component
+ *
+ * @props {Props} props - The component props
+ * @prop {string} groupName - The name of the group
+ * @prop {Record<string, string>} initialValues - The initial values of the fields
+ * @prop {boolean} initiallyEditable - Whether the fields are initially editable
+ * @prop {Function} onSubmit - The function to call when the form is submitted
+ *
+ * @returns {React.FC<Props>} - The EditableMultiTextField component
+ */
 export const EditableMultiTextField: React.FC<Props> = ({
   groupName,
   initialValues,
