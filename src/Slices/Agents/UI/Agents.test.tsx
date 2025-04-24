@@ -28,7 +28,7 @@ const axe = configureAxe({
 function setup() {
   const store = getStoreInstance();
 
-  dependencies.environmentModifier.setEnvironment("env");
+  dependencies.environmentModifier.setEnvironment(EnvironmentDetails.env);
 
   const component = (
     <QueryClientProvider client={testClient}>

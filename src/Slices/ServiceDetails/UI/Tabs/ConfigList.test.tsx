@@ -5,7 +5,7 @@ import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Config, EnvironmentDetails, RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { dependencies, Service, ServiceInstance } from "@/Test";
+import { dependencies, EnvironmentDetails as EnvDetails, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { ConfigList } from "./ConfigList";
@@ -28,7 +28,7 @@ function setup() {
   });
   const environmentModifier = EnvironmentModifierImpl();
 
-  environmentModifier.setEnvironment(Service.a.environment);
+  environmentModifier.setEnvironment(EnvDetails.env);
 
   return {
     component: (config: Config) => (

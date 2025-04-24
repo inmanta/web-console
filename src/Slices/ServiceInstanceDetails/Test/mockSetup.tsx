@@ -7,7 +7,7 @@ import { StoreProvider } from "easy-peasy";
 import * as monaco from "monaco-editor";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
+import { dependencies, EnvironmentDetails } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl, EnvironmentModifierImpl } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInstanceDetails } from "../UI/Page";
@@ -106,7 +106,7 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({ children, exp
     }),
   });
 
-  environmentModifier.setEnvironment("aaa");
+  environmentModifier.setEnvironment({ ...EnvironmentDetails.env, id: "aaa" });
 
   return (
     <TestMemoryRouter

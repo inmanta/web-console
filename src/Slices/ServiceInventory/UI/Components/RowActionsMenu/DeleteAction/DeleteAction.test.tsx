@@ -6,7 +6,12 @@ import { StoreProvider } from "easy-peasy";
 import { EnvironmentDetails, RemoteData } from "@/Core";
 import { CommandManagerResolverImpl, CommandResolverImpl, getStoreInstance } from "@/Data";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
-import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
+import {
+  DeferredApiHelper,
+  dependencies,
+  EnvironmentDetails as EnvDetails,
+  ServiceInstance,
+} from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -29,7 +34,7 @@ function setup() {
     value: RemoteData.success({ halted: false } as EnvironmentDetails),
   });
 
-  dependencies.environmentModifier.setEnvironment(ServiceInstance.a.environment);
+  dependencies.environmentModifier.setEnvironment(EnvDetails.a);
 
   const commandResolver = new CommandResolverImpl(
     new CommandManagerResolverImpl(storeInstance, apiHelper)

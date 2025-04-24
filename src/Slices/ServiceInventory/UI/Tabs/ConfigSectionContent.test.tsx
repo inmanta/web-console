@@ -11,7 +11,6 @@ import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import {
-  EnvironmentDetails,
   EnvironmentModifier,
   RemoteData,
   ServiceModel,
@@ -28,6 +27,7 @@ import {
   MockEnvironmentModifier,
   Service,
   ServiceInstance,
+  EnvironmentDetails,
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -183,12 +183,12 @@ describe("ConfigSectionContent", () => {
   test("ConfigTab handles hooks with environment modifier correctly", async () => {
     const environmentModifier = EnvironmentModifierImpl();
 
-    environmentModifier.setEnvironment(Service.a.environment);
+    environmentModifier.setEnvironment(EnvironmentDetails.halted);
     const { component, store } = setup(environmentModifier);
 
     store.dispatch.environment.setEnvironmentDetailsById({
       id: Service.a.environment,
-      value: RemoteData.success({ halted: true } as EnvironmentDetails),
+      value: RemoteData.success(EnvironmentDetails.halted),
     });
     render(component);
 

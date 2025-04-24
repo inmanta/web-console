@@ -49,7 +49,7 @@ function setup() {
       definition: EnvironmentSettings.definition,
     }),
   });
-  dependencies.environmentModifier.setEnvironment("env");
+  dependencies.environmentModifier.setEnvironment(EnvironmentDetails.env);
 
   const component = (
     <QueryClientProvider client={queryClient}>

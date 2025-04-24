@@ -33,7 +33,7 @@ function setup() {
   );
   const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
 
-  dependencies.environmentModifier.setEnvironment("env");
+  dependencies.environmentModifier.setEnvironment(EnvironmentDetails.env);
 
   const component = (
     <StoreProvider store={store}>

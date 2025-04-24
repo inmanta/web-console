@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Config, EnvironmentDetails, RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { dependencies, ServiceInstance } from "@/Test";
+import { dependencies, EnvironmentDetails as EnvDetails, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { ConfigDetails } from "./ConfigDetails";
@@ -18,7 +18,7 @@ function setup() {
   });
   const environmentModifier = EnvironmentModifierImpl();
 
-  environmentModifier.setEnvironment(ServiceInstance.a.environment);
+  environmentModifier.setEnvironment(EnvDetails.a);
 
   return {
     component: (config: Config) => (

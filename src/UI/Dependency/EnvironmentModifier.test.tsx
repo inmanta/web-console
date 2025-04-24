@@ -30,7 +30,7 @@ function setup(definition: DefinitionMap) {
   });
   const environmentModifier = EnvironmentModifierImpl();
 
-  environmentModifier.setEnvironment(environmentId);
+  environmentModifier.setEnvironment(EnvironmentDetails.env);
   const component = (
     <StoreProvider store={store}>
       <DummyComponent environmentModifier={environmentModifier} />

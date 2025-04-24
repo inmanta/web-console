@@ -6,7 +6,7 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { Row, dependencies, Service } from "@/Test";
+import { Row, dependencies, Service, EnvironmentDetails } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import {
   DependencyProvider,
@@ -72,7 +72,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
   const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
   const environmentModifier = EnvironmentModifierImpl();
 
-  environmentModifier.setEnvironment("aaa");
+  environmentModifier.setEnvironment({ ...EnvironmentDetails.env, id: "aaa" });
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>

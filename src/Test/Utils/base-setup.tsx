@@ -38,7 +38,7 @@ export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
 
   store.dispatch.environment.setEnvironmentDetailsById({
     id: "env",
-    value: RemoteData.success(EnvironmentDetails[halted ? "halted" : "a"]),
+    value: RemoteData.success(EnvironmentDetails[halted ? "halted" : "env"]),
   });
   store.dispatch.environment.setSettingsData({
     environment: "env",
@@ -47,7 +47,10 @@ export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
       definition: EnvironmentSettings.definition,
     }),
   });
-  dependencies.environmentModifier.setEnvironment("env");
+  dependencies.environmentModifier.setEnvironment({
+    ...EnvironmentDetails.env,
+    halted,
+  });
 
   const component = (
     <QueryClientProvider client={testClient}>

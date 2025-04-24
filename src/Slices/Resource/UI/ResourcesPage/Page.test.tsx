@@ -960,7 +960,7 @@ describe("ResourcesPage", () => {
     );
     const { component, environment, store, environmentModifier } = setup();
 
-    environmentModifier.setEnvironment(environment);
+    environmentModifier.setEnvironment(EnvironmentDetails.env);
     store.dispatch.environment.setEnvironmentDetailsById({
       id: environment,
       value: RemoteData.success(EnvironmentDetails.halted),
