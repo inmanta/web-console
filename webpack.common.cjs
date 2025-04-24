@@ -12,7 +12,10 @@ module.exports = {
     app: path.resolve(__dirname, "src", "index.tsx"),
   },
   plugins: [
-    new webpack.IgnorePlugin({ resourceRegExp: /^\.\/(config|version)\.js$/ }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/(config|version)\.js$/,
+      contextRegExp: /[\\/]__mocks__[\\/]/,
+    }),
     gitRevisionPlugin,
     new webpack.DefinePlugin({
       COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
@@ -44,6 +47,7 @@ module.exports = {
       {
         test: /\.(tsx|ts|jsx)?$/,
         include: path.resolve(__dirname, "src"),
+        exclude: /[\\/]__mocks__[\\/]/,
         use: [
           {
             loader: "ts-loader",
