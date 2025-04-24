@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { EnvironmentDetails, FlatEnvironment, ProjectModel } from "@/Core";
+import { FlatEnvironment, ProjectModel } from "@/Core";
 import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment/GetEnvironmentDetails/useGetEnvironmentDetails";
 import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects";
 import { DependencyContext } from "@/UI";
@@ -54,7 +54,7 @@ export const Tab: React.FC = () => {
   return <LoadingView ariaLabel="Environment-Loading" />;
 };
 
-const addProjectName = (env: EnvironmentDetails, projects: ProjectModel[]): FlatEnvironment => {
+const addProjectName = (env: FlatEnvironment, projects: ProjectModel[]): FlatEnvironment => {
   const match = projects.find((p) => p.id === env.project_id);
 
   if (!match) return { ...env, projectName: "" };

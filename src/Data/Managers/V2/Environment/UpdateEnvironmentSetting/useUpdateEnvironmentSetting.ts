@@ -30,13 +30,19 @@ export const useUpdateEnvironmentSetting = (
     mutationFn: ({ id, value }) => post(`/api/v2/environment_settings/${id}`, { value }),
     mutationKey: ["update_environment_setting"],
     onSuccess: () => {
-      client.invalidateQueries({
+      client.refetchQueries({
+        queryKey: ["get_environments-one_time"],
+      });
+      client.refetchQueries({
+        queryKey: ["get_environments-continuous"],
+      });
+      client.refetchQueries({
         queryKey: ["get_environment_settings-one_time"],
       });
-      client.invalidateQueries({
+      client.refetchQueries({
         queryKey: ["get_environment_details-one_time"],
       });
-      client.invalidateQueries({
+      client.refetchQueries({
         queryKey: ["get_environment_details-continuous"],
       });
       document.dispatchEvent(new Event("settings-update"));

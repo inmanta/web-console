@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment/GetEnvironmentDetails/useGetEnvironmentDetails";
+import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { Dashboard } from "./Dashboard";
-import { words } from "@/UI";
 
 /**
  * Dashboard page

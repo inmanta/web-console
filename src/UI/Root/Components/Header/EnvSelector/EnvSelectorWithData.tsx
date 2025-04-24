@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Dropdown, DropdownItem, Spinner, MenuToggle } from "@patternfly/react-core";
+import { Alert, Dropdown, Spinner, MenuToggle } from "@patternfly/react-core";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Environment, FlatEnvironment } from "@/Core";
 import { words } from "@/UI/words";

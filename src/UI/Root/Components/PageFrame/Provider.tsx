@@ -20,10 +20,10 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 
   return (
     <>
-      {environmentId && (
+      {environment && (
         <>
           <SettingsProvider />
-          <DependencyResolver environment={environmentId} />
+          <DependencyResolver environment={environment} />
         </>
       )}
       <PageFrame environmentId={environmentId}>

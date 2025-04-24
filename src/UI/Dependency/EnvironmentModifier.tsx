@@ -1,68 +1,35 @@
-import {
-  EnvironmentDetails,
-  EnvironmentModifier,
-  EnvironmentSettings,
-  Maybe,
-  RemoteData,
-} from "@/Core";
-import { useStoreState } from "@/Data/Store";
+import { useState } from "react";
+import { FlatEnvironment, EnvironmentModifier, EnvironmentSettings } from "@/Core";
 
 export function EnvironmentModifierImpl(): EnvironmentModifier {
-  let environment: Maybe.Type<string> = Maybe.none();
+  const [env, setEnv] = useState<FlatEnvironment | null>(null);
+  const [envSettings, setEnvSettings] = useState<EnvironmentSettings.EnvironmentSettings | null>(
+    null
+  );
 
-  function useCurrentEnvironment(): EnvironmentDetails | null {
-    const storeState = useStoreState((state) => state.environment.environmentDetailsById);
-
-    if (Maybe.isSome(environment)) {
-      const state = storeState[environment.value];
-
-      if (state !== undefined && RemoteData.isSuccess(state)) {
-        return state.value;
-      }
-    }
-
-    return null;
+  function setEnvironment(environmentToSet: FlatEnvironment): void {
+    setEnv(environmentToSet);
   }
 
-  function useEnvironmentSettings(): EnvironmentSettings.EnvironmentSettings | null {
-    const storeState = useStoreState((state) => state.environment.settingsByEnv);
-
-    if (Maybe.isSome(environment)) {
-      const state = storeState[environment.value];
-
-      if (state !== undefined && RemoteData.isSuccess(state)) {
-        return state.value;
-      }
-    }
-
-    return null;
-  }
-
-  function setEnvironment(environmentToSet: string): void {
-    environment = Maybe.some(environmentToSet);
+  function setEnvironmentSettings(
+    environmentSettingsToSet: EnvironmentSettings.EnvironmentSettings
+  ): void {
+    setEnvSettings(environmentSettingsToSet);
   }
 
   function useIsHalted(): boolean {
-    const environmentDetails = useCurrentEnvironment();
+    if (env === null) return false;
 
-    if (environmentDetails === null) return false;
-
-    return environmentDetails.halted;
+    return env.halted;
   }
 
   function useSetting(settingName: keyof EnvironmentSettings.DefinitionMap): boolean {
-    const environmentDetails = useCurrentEnvironment();
-    const environmentSettings = useEnvironmentSettings();
+    if (env === null || envSettings === null) return false;
 
-    if (environmentDetails === null || environmentSettings === null) return false;
-
-    if (
-      environmentDetails.settings[settingName] !== undefined &&
-      environmentDetails.settings[settingName] !== null
-    ) {
-      return Boolean(environmentDetails.settings[settingName]);
+    if (env.settings[settingName] !== undefined && env.settings[settingName] !== null) {
+      return Boolean(env.settings[settingName]);
     } else {
-      return Boolean(environmentSettings.definition[settingName]?.default);
+      return Boolean(envSettings.definition[settingName]?.default);
     }
   }
 
@@ -81,6 +48,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
   return {
     useIsHalted,
     setEnvironment,
+    setEnvironmentSettings,
     useIsServerCompileEnabled,
     useIsProtectedEnvironment,
     useIsExpertModeEnabled,

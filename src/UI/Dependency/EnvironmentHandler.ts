@@ -1,7 +1,7 @@
+import { useState } from "react";
 import { Location } from "react-router";
 import { EnvironmentHandler, FlatEnvironment, Navigate, RouteManager } from "@/Core";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
-import { useState } from "react";
 
 export function EnvironmentHandlerImpl(
   useLocation: () => Location,
@@ -30,7 +30,6 @@ export function EnvironmentHandlerImpl(
   }
 
   function useSelected(): FlatEnvironment | undefined {
-    console.log("useSelected", allEnvs);
     const { search } = useLocation();
 
     return determineSelected(allEnvs, search);

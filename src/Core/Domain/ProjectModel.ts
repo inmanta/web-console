@@ -10,6 +10,7 @@ export interface EnvironmentModel {
   project_id: string;
   repo_branch: string;
   repo_url: string;
+  settings: Record<string, unknown>;
   description?: string;
   icon?: string;
   halted: boolean;

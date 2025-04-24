@@ -1,4 +1,15 @@
-import { EnvironmentExpertOnly, EnvironmentModel } from "@/Core";
+import { EnvironmentExpertOnly, EnvironmentModel, FlatEnvironment } from "@/Core";
+
+export const env: FlatEnvironment = {
+  id: "env",
+  name: "environment_name_env",
+  project_id: "project_id_env",
+  repo_branch: "",
+  repo_url: "",
+  halted: false,
+  projectName: "project_name_env",
+  settings: {},
+};
 
 export const a: EnvironmentModel = {
   id: "environment_id_a",
@@ -7,6 +18,7 @@ export const a: EnvironmentModel = {
   repo_branch: "",
   repo_url: "",
   halted: false,
+  settings: {},
 };
 
 export const b: EnvironmentModel = {
@@ -16,6 +28,7 @@ export const b: EnvironmentModel = {
   repo_branch: "",
   repo_url: "",
   halted: false,
+  settings: {},
 };
 
 export const c: EnvironmentModel = {
@@ -25,6 +38,7 @@ export const c: EnvironmentModel = {
   repo_branch: "",
   repo_url: "",
   halted: false,
+  settings: {},
 };
 
 export const d: EnvironmentModel = {
@@ -34,6 +48,7 @@ export const d: EnvironmentModel = {
   repo_branch: "",
   repo_url: "",
   halted: false,
+  settings: {},
 };
 
 export const e: EnvironmentModel = {
@@ -43,6 +58,7 @@ export const e: EnvironmentModel = {
   repo_branch: "",
   repo_url: "",
   halted: false,
+  settings: {},
 };
 
 export const filterable: EnvironmentExpertOnly[] = [

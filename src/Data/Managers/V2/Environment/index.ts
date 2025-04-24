@@ -9,5 +9,4 @@ export * from "./ResumeEnvironment";
 export * from "./ClearEnvironment";
 export * from "./ResetEnvironmentSetting";
 export * from "./UpdateEnvironmentSetting";
-export * from "./UpdateEnvConfig";
 export * from "./GenerateToken";
