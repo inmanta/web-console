@@ -5,6 +5,7 @@ import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
 import { DependencyContext } from "@/UI/Dependency";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
+import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects/useGetProjects";
 
 /**
  * Provider component for the EnvironmentSelector
@@ -18,7 +19,9 @@ export const Provider: React.FC = () => {
   const navigate = useNavigate();
   const selected = environmentHandler.useSelected();
 
-  const environments = useGetEnvironments().useOneTime();
+  const envDetails = true;
+  const environments = useGetEnvironments().useOneTime(envDetails);
+  const projects = useGetProjects().useOneTime();
 
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
     if (selected) {
@@ -45,6 +48,7 @@ export const Provider: React.FC = () => {
   return (
     <EnvSelectorWithData
       environments={environments}
+      projects={projects}
       onSelectEnvironment={onSelectEnvironment}
       selectedEnvironment={selected}
     />
