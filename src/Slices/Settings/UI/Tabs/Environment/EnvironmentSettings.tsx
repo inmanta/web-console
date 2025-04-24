@@ -92,7 +92,7 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
         label={words("settings.tabs.environment.projectName")}
         initialValue={environment.projectName}
         options={projects.map((project) => project.name)}
-        mutation={createProject}
+        onCreate={createProject}
         onSubmit={onProjectSubmit}
       />
       <EditableImageField
