@@ -47,7 +47,8 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
 
   const deleteEnv = useDeleteEnvironment(environment.id, {
     onSuccess: () => {
-      //reset the queries removes the cache which improves the ux when navigating back to the environments page
+      //reset the queries removes the cache which improves the ux when navigating back to the environments page,
+      // without it the user won't see loading state and will see the old data for a split second and then removed env will be removed from the view
       client.resetQueries({ queryKey: ["get_environments-one_time"] });
       client.resetQueries({ queryKey: ["get_environments-continuous"] });
 

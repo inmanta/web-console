@@ -3,6 +3,7 @@ import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment/GetEnvi
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { Dashboard } from "./Dashboard";
+import { words } from "@/UI";
 
 /**
  * Dashboard page
@@ -15,13 +16,15 @@ import { Dashboard } from "./Dashboard";
 export const Page: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);
 
+  const envName = environmentHandler.useSelected()?.name || ""; //useSelected() theoretically could return undefined but as we use useId() the view would throw an error in that case
+
   const { isSuccess, isError, error, refetch } = useGetEnvironmentDetails().useOneTime(
     environmentHandler.useId()
   );
 
   if (isError) {
     return (
-      <PageContainer pageTitle={"Dashboard"}>
+      <PageContainer pageTitle={words("dashboard.title")(envName)}>
         <ErrorView message={error.message} retry={refetch} ariaLabel="Dashboard-Failed" />
       </PageContainer>
     );
@@ -29,14 +32,14 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     return (
-      <PageContainer pageTitle={"Dashboard"}>
+      <PageContainer pageTitle={words("dashboard.title")(envName)}>
         <Dashboard />
       </PageContainer>
     );
   }
 
   return (
-    <PageContainer pageTitle={"Dashboard"}>
+    <PageContainer pageTitle={words("dashboard.title")(envName)}>
       <LoadingView ariaLabel="Dashboard-Loading" />
     </PageContainer>
   );
