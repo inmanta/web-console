@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { Button, Icon, Tooltip } from "@patternfly/react-core";
 import { PlayIcon } from "@patternfly/react-icons";
-import { DependencyContext } from "@/UI/Dependency";
+import { useResumeEnvironment } from "@/Data/Managers/V2/Environment";
+import { useQueryControl } from "@/Data/Managers/V2/helpers/QueryControlContext";
 import { words } from "@/UI/words";
 import { ModalContext } from "../../ModalProvider";
 
@@ -11,11 +12,14 @@ import { ModalContext } from "../../ModalProvider";
  * @returns {React.FC} A button with a tooltip that triggers a modal when clicked.
  */
 export const ResumeButton: React.FC = () => {
-  const { queryResolver, commandResolver } = useContext(DependencyContext);
+  const { enableQueries } = useQueryControl();
   const { triggerModal, closeModal } = useContext(ModalContext);
 
-  const resumeEnvironmentTrigger = commandResolver.useGetTrigger<"ResumeEnvironment">({
-    kind: "ResumeEnvironment",
+  const { mutate } = useResumeEnvironment({
+    onSuccess: () => {
+      enableQueries();
+      document.dispatchEvent(new CustomEvent("resume-event"));
+    },
   });
 
   /**
@@ -37,10 +41,7 @@ export const ResumeButton: React.FC = () => {
           key="confirm"
           variant="primary"
           onClick={() => {
-            resumeEnvironmentTrigger().then((_result) => {
-              queryResolver.resumeAllContinuousManagers();
-              document.dispatchEvent(new CustomEvent("resume-event"));
-            });
+            mutate();
             closeModal();
             document.dispatchEvent(new CustomEvent("resume-event"));
           }}

@@ -10,6 +10,7 @@ import { createRoot } from "react-dom/client";
 import { getStoreInstance } from "@/Data";
 import { Root } from "@/UI/Root";
 import { AuthProvider } from "./Data/Auth/AuthProvider";
+import { QueryControlProvider } from "./Data/Managers/V2/helpers/QueryControlContext";
 import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
@@ -33,23 +34,25 @@ const queryClient = new QueryClient({
 
 root.render(
   <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <StoreProvider store={store}>
-        <CustomRouter>
-          <AuthProvider config={globalThis && globalThis.auth}>
-            <Flex
-              flexWrap={{ default: "nowrap" }}
-              spaceItems={{ default: "spaceItemsNone" }}
-              direction={{ default: "column" }}
-              style={{ height: "100%" }}
-            >
-              <Injector store={store}>
-                <Root />
-              </Injector>
-            </Flex>
-          </AuthProvider>
-        </CustomRouter>
-      </StoreProvider>
-    </QueryClientProvider>
+    <QueryControlProvider>
+      <QueryClientProvider client={queryClient}>
+        <StoreProvider store={store}>
+          <CustomRouter>
+            <AuthProvider config={globalThis && globalThis.auth}>
+              <Flex
+                flexWrap={{ default: "nowrap" }}
+                spaceItems={{ default: "spaceItemsNone" }}
+                direction={{ default: "column" }}
+                style={{ height: "100%" }}
+              >
+                <Injector store={store}>
+                  <Root />
+                </Injector>
+              </Flex>
+            </AuthProvider>
+          </CustomRouter>
+        </StoreProvider>
+      </QueryClientProvider>
+    </QueryControlProvider>
   </ErrorBoundary>
 );
