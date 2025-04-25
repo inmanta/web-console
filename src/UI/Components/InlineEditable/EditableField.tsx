@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DescriptionListDescription,
   DescriptionListGroup,
@@ -6,7 +6,6 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { ErrorHandlingContext } from "@/Slices/Settings/UI/Tabs/Environment/Components";
 import { convertToTitleCase } from "@/UI/Utils";
 import { CancelEditButton, EnableEditButton, SubmitEditButton } from "./InlineEditButtons";
 import { InlineEditButtonFiller, InlineLabelItem } from "./InlineFillers";
@@ -18,6 +17,8 @@ export interface FieldProps {
   initialValue: string;
   initiallyEditable?: boolean;
   onSubmit: (value: string) => void;
+  error: string | null;
+  setError: (error: string | null) => void;
 }
 
 export type EditViewComponent = React.FC<{
@@ -34,6 +35,8 @@ interface Props extends FieldProps {
   EditView: EditViewComponent;
   StaticView: StaticViewComponent;
   alignActions?: "start" | "end";
+  error: string | null;
+  setError: (error: string | null) => void;
 }
 
 export const EditableField: React.FC<Props> = ({
@@ -45,8 +48,9 @@ export const EditableField: React.FC<Props> = ({
   EditView,
   StaticView,
   alignActions,
+  error,
+  setError,
 }) => {
-  const { error, setError } = useContext(ErrorHandlingContext);
   const alignment = alignActions === "end" ? "alignSelfFlexEnd" : "alignSelfFlexStart";
   const [editable, setEditable] = useState(initiallyEditable);
   const [value, setValue] = useState(initialValue);

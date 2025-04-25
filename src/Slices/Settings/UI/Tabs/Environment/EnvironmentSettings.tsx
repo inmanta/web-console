@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { DescriptionList } from "@patternfly/react-core";
 import { FlatEnvironment, Maybe, ProjectModel } from "@/Core";
 import { useModifyEnvironment } from "@/Data/Managers/V2/Environment";
@@ -30,8 +30,10 @@ interface Props {
  */
 export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) => {
   const { environmentHandler } = useContext(DependencyContext);
-  const { mutate } = useModifyEnvironment(environmentHandler.useId());
-
+  const { mutate } = useModifyEnvironment(environmentHandler.useId(), {
+    onError: (error) => setError(error.message),
+  });
+  const [error, setError] = useState<string | null>(null);
   const createProject = useCreateProject();
 
   const onNameSubmit = (name: string) => mutate({ name: name });
@@ -74,11 +76,15 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
         initialValue={environment.name}
         label={words("settings.tabs.environment.name")}
         onSubmit={onNameSubmit}
+        error={error}
+        setError={setError}
       />
       <EditableTextAreaField
         initialValue={environment.description || ""}
         label={words("settings.tabs.environment.description")}
         onSubmit={onDescriptionSubmit}
+        error={error}
+        setError={setError}
       />
       <EditableMultiTextField
         groupName={words("settings.tabs.environment.repoSettings")}
@@ -87,6 +93,8 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
           repo_url: environment.repo_url,
         }}
         onSubmit={onRepoSubmit}
+        error={error}
+        setError={setError}
       />
       <EditableSelectField
         label={words("settings.tabs.environment.projectName")}
@@ -94,11 +102,15 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
         options={projects.map((project) => project.name)}
         onCreate={createProject}
         onSubmit={onProjectSubmit}
+        error={error}
+        setError={setError}
       />
       <EditableImageField
         label={words("settings.tabs.environment.icon")}
         initialValue={environment.icon || ""}
         onSubmit={onIconSubmit}
+        error={error}
+        setError={setError}
       />
       <Actions environment={environment} />
     </DescriptionList>
