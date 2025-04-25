@@ -23,7 +23,7 @@ interface Props {
 }
 
 /**
- * EditableMultiTextField component used in the EnvironmentSettings component
+ * EditableMultiTextField component
  *
  * @props {Props} props - The component props
  * @prop {string} groupName - The name of the group

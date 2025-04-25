@@ -14,7 +14,7 @@ interface Props extends FieldProps {
 }
 
 /**
- * EditableSelectField component used in the EnvironmentSettings component
+ * EditableSelectField component
  *
  * @props {Props} props - The component props
  * @prop {string[]} options - The options to choose from

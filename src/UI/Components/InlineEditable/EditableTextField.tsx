@@ -4,7 +4,7 @@ import { EditableField, EditViewComponent, FieldProps, StaticViewComponent } fro
 import { InlineValue } from "./InlineFillers";
 
 /**
- * EditableTextField component used in the EnvironmentSettings component
+ * EditableTextField component
  *
  * @props {FieldProps} props - The component props
  * @prop {boolean} isRequired - Whether the field is required
