@@ -1,22 +1,17 @@
 import React from "react";
-import { useLocation } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { Row, dependencies, Service, EnvironmentDetails } from "@/Test";
+import { Row, Service, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import {
-  DependencyProvider,
-  EnvironmentHandlerImpl,
-  EnvironmentModifierImpl,
-} from "@/UI/Dependency";
+
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { InventoryTable } from "./InventoryTable";
 import { InventoryTablePresenter } from "./Presenters";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 
 const dummySetter = () => {
   return;
@@ -25,64 +20,17 @@ const dummySetter = () => {
 const tablePresenterWithIdentity = () => new InventoryTablePresenter("service_id", "Service ID");
 
 function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
+  jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+    ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
+    useIsExpertModeEnabled: () => expertMode,
+    useIsHalted: () => false,
+  });
+
   const store = getStoreInstance();
-
-  store.dispatch.environment.setEnvironments(
-    RemoteData.success([
-      {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        halted: false,
-        settings: {
-          enable_lsm_expert_mode: expertMode,
-        },
-      },
-    ])
-  );
-
-  store.dispatch.environment.setSettingsData({
-    environment: "aaa",
-    value: RemoteData.success({
-      settings: {
-        enable_lsm_expert_mode: expertMode,
-      },
-      definition: {},
-    }),
-  });
-  store.dispatch.environment.setEnvironmentDetailsById({
-    id: "aaa",
-    value: RemoteData.success({
-      id: "aaa",
-      name: "env-a",
-      project_id: "ppp",
-      repo_branch: "branch",
-      repo_url: "repo",
-      projectName: "project",
-      halted: false,
-      settings: {
-        enable_lsm_expert_mode: expertMode,
-      },
-    }),
-  });
-
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
-  const environmentModifier = EnvironmentModifierImpl();
-
-  environmentModifier.setEnvironment({ ...EnvironmentDetails.env, id: "aaa" });
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentModifier,
-            environmentHandler,
-          }}
-        >
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <ModalProvider>
               <InventoryTable
@@ -94,7 +42,7 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
               />
             </ModalProvider>
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

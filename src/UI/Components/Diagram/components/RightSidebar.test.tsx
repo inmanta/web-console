@@ -1,16 +1,12 @@
 import React from "react";
-import { useLocation } from "react-router";
 import { dia } from "@inmanta/rappid";
 import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { Inventories } from "@/Data/Managers/V2/ServiceInstance";
-import { dependencies } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasContext, InstanceComposerContext, defaultCanvasContext } from "../Context";
 import { containerModel } from "../Mocks";
@@ -22,43 +18,13 @@ import { RightSidebar } from "./RightSidebar";
 
 describe("RightSidebar.", () => {
   const setup = (cellToEdit: dia.CellView | null, stencilState: StencilState) => {
-    const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
     const store = getStoreInstance();
-
-    store.dispatch.environment.setEnvironments(
-      RemoteData.success([
-        {
-          id: "aaa",
-          name: "env-a",
-          project_id: "ppp",
-          repo_branch: "branch",
-          repo_url: "repo",
-          projectName: "project",
-          halted: false,
-          settings: {
-            enable_lsm_expert_mode: false,
-          },
-        },
-        {
-          id: "bbb",
-          name: "env-b",
-          project_id: "ppp",
-          repo_branch: "branch",
-          repo_url: "repo",
-          projectName: "project",
-          halted: false,
-          settings: {
-            enable_lsm_expert_mode: false,
-          },
-        },
-      ])
-    );
 
     const component = (
       <QueryClientProvider client={testClient}>
         <TestMemoryRouter initialEntries={["/?env=aaa"]}>
           <StoreProvider store={store}>
-            <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
+            <MockedDependencyProvider>
               <InstanceComposerContext.Provider
                 value={{
                   mainService: containerModel, //Sidebar use only mainService, rest can be mocked
@@ -77,7 +43,7 @@ describe("RightSidebar.", () => {
                   <RightSidebar editable={true} />
                 </CanvasContext.Provider>
               </InstanceComposerContext.Provider>
-            </DependencyProvider>
+            </MockedDependencyProvider>
           </StoreProvider>
         </TestMemoryRouter>
       </QueryClientProvider>

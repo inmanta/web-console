@@ -8,9 +8,9 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { Either } from "@/Core";
 import { FileFetcherImpl, getStoreInstance } from "@/Data";
-import { DeferredApiHelper, dependencies, DesiredStateDiff } from "@/Test";
+import { DeferredApiHelper, MockedDependencyProvider, DesiredStateDiff } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider, words } from "@/UI";
+import { words } from "@/UI";
 import { View } from "./Page";
 expect.extend(toHaveNoViolations);
 
@@ -30,11 +30,11 @@ function setup() {
 
   const component = (
     <QueryClientProvider client={testClient}>
-      <DependencyProvider dependencies={{ ...dependencies, fileFetcher }}>
+      <MockedDependencyProvider fileFetcher={fileFetcher}>
         <StoreProvider store={store}>
           <View from="123" to="456" />
         </StoreProvider>
-      </DependencyProvider>
+      </MockedDependencyProvider>
     </QueryClientProvider>
   );
 

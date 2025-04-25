@@ -4,10 +4,9 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance, QueryManagerResolverImpl, QueryResolverImpl } from "@/Data";
-import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { DeferredApiHelper, MockedDependencyProvider } from "@/Test";
 import { metadata, links } from "@/Test/Data/Pagination";
-import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Badge } from "./Badge";
 
@@ -20,19 +19,14 @@ function setup() {
       },
     },
   });
-  const scheduler = new StaticScheduler();
   const store = getStoreInstance();
-
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
-  );
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <StoreProvider store={store}>
-        <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+        <MockedDependencyProvider>
           <Badge onClick={() => undefined} />
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </StoreProvider>
     </QueryClientProvider>
   );

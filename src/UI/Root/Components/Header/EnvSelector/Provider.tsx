@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
+import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects/useGetProjects";
 import { DependencyContext } from "@/UI/Dependency";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
-import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects/useGetProjects";
 
 /**
  * Provider component for the EnvironmentSelector

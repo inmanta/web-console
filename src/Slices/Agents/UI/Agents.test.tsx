@@ -8,13 +8,13 @@ import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { dependencies, EnvironmentDetails } from "@/Test";
+import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as AgentsMock from "@S/Agents/Core/Mock";
 import { Page } from "./Page";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 
 expect.extend(toHaveNoViolations);
 
@@ -28,21 +28,19 @@ const axe = configureAxe({
 function setup() {
   const store = getStoreInstance();
 
-  dependencies.environmentModifier.setEnvironment(EnvironmentDetails.env);
-
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <Page />
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
 
-  return { component, store };
+  return { component };
 }
 
 describe("Agents", () => {
@@ -54,10 +52,12 @@ describe("Agents", () => {
 
   beforeEach(() => {
     server.resetHandlers();
+    jest.clearAllMocks();
   });
 
   afterAll(() => {
     server.close();
+    jest.clearAllMocks();
   });
 
   test("AgentsView shows empty table", async () => {
@@ -357,6 +357,9 @@ describe("Agents", () => {
   });
 
   test("Given the Agents view with the environment halted, When setting keep_paused_on_resume on an agent, Then the correct request is fired", async () => {
+    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+      useIsHalted: () => true,
+    } as any);
     const data = JSON.parse(JSON.stringify(AgentsMock.response)); //copy the object to avoid mutation overflow to others places
     server.use(
       http.post("/api/v2/agent/aws/keep_paused_on_resume", () => {
@@ -367,12 +370,8 @@ describe("Agents", () => {
         return HttpResponse.json(data);
       })
     );
-    const { component, store } = setup();
+    const { component } = setup();
 
-    store.dispatch.environment.setEnvironmentDetailsById({
-      id: "env",
-      value: RemoteData.success({ ...EnvironmentDetails.halted, id: "env" }),
-    });
     render(component);
 
     const onResumeToggle = await screen.findByRole("switch", {
@@ -401,6 +400,10 @@ describe("Agents", () => {
   });
 
   test("Given the Agents view with the environment halted, When setting unpause_on_resume on an agent, Then the correct request is fired", async () => {
+    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+      useIsHalted: () => true,
+    } as any);
+
     const data = JSON.parse(JSON.stringify(AgentsMock.response)); //copy the object to avoid mutation overflow to others places
     server.use(
       http.post("/api/v2/agent/ecx/unpause_on_resume", () => {
@@ -412,12 +415,8 @@ describe("Agents", () => {
       })
     );
 
-    const { component, store } = setup();
+    const { component } = setup();
 
-    store.dispatch.environment.setEnvironmentDetailsById({
-      id: "env",
-      value: RemoteData.success({ ...EnvironmentDetails.halted, id: "env" }),
-    });
     render(component);
 
     await act(async () => {
@@ -471,17 +470,17 @@ describe("Agents", () => {
   });
 
   test("Given the Agents view with the environment halted, THEN the on resume column should be shown", async () => {
+    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+      useIsHalted: () => true,
+    } as any);
+
     server.use(
       http.get("/api/v2/agents", async () => {
         return HttpResponse.json(AgentsMock.response);
       })
     );
-    const { component, store } = setup();
+    const { component } = setup();
 
-    store.dispatch.environment.setEnvironmentDetailsById({
-      id: "env",
-      value: RemoteData.success({ ...EnvironmentDetails.halted, id: "env" }),
-    });
     render(component);
 
     const tableHeaders = await screen.findAllByRole("columnheader");

@@ -1,8 +1,7 @@
 import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import { ServerStatus } from "@/Core";
-import { dependencies } from "@/Test";
-import { DependencyProvider } from "@/UI";
+import { MockedDependencyProvider } from "@/Test";
 import { StatusList } from "./StatusList";
 
 const status: ServerStatus = {
@@ -60,9 +59,9 @@ const status: ServerStatus = {
 describe("Given StatusList", () => {
   it("WHEN receiving status object THEN should render correctly list", () => {
     render(
-      <DependencyProvider dependencies={dependencies}>
+      <MockedDependencyProvider>
         <StatusList status={status} apiUrl="test" />
-      </DependencyProvider>
+      </MockedDependencyProvider>
     );
 
     expect(screen.getByRole("list", { name: "StatusList" })).toBeVisible();

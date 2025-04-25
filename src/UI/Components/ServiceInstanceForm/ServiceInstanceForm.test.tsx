@@ -13,14 +13,13 @@ import {
   EnumField,
   InstanceAttributeModel,
   NestedField,
-  RemoteData,
   TextField,
   Textarea,
 } from "@/Core";
-import { getStoreInstance, QueryResolverImpl, QueryManagerResolverImpl } from "@/Data";
+import { getStoreInstance } from "@/Data";
 import * as Test from "@/Test";
-import { DeferredApiHelper, StaticScheduler, dependencies } from "@/Test";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
+import { MockedDependencyProvider } from "@/Test";
+import { EnvironmentHandlerImpl, PrimaryRouteManager } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
@@ -31,35 +30,11 @@ const setup = (
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined
 ) => {
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
   const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
-  );
-
-  const env = {
-    id: "aaa",
-    name: "env-a",
-    project_id: "ppp",
-    repo_branch: "branch",
-    repo_url: "repo",
-    projectName: "project",
-    halted: false,
-    settings: {},
-  };
-
-  store.dispatch.environment.setEnvironments(RemoteData.success([env]));
-
-  store.dispatch.environment.setEnvironmentDetailsById({
-    id: "aaa",
-    value: RemoteData.success(env),
-  });
 
   const component = (
     <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-      <DependencyProvider dependencies={{ ...dependencies, queryResolver, environmentHandler }}>
+      <MockedDependencyProvider>
         <StoreProvider store={store}>
           <Routes>
             <Route
@@ -79,11 +54,11 @@ const setup = (
             />
           </Routes>
         </StoreProvider>
-      </DependencyProvider>
+      </MockedDependencyProvider>
     </TestMemoryRouter>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 };
 
 function createQueryWrapper(children: React.ReactNode) {

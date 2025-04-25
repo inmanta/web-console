@@ -7,9 +7,9 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasContext, defaultCanvasContext } from "../Context";
@@ -40,37 +40,8 @@ describe("EntityForm.", () => {
 
     graph.addCell(cell);
     const cellView = paper.findViewByModel(cell);
-    const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
     const store = getStoreInstance();
 
-    store.dispatch.environment.setEnvironments(
-      RemoteData.success([
-        {
-          id: "aaa",
-          name: "env-a",
-          project_id: "ppp",
-          repo_branch: "branch",
-          repo_url: "repo",
-          projectName: "project",
-          halted: false,
-          settings: {
-            enable_lsm_expert_mode: false,
-          },
-        },
-        {
-          id: "bbb",
-          name: "env-b",
-          project_id: "ppp",
-          repo_branch: "branch",
-          repo_url: "repo",
-          projectName: "project",
-          halted: false,
-          settings: {
-            enable_lsm_expert_mode: false,
-          },
-        },
-      ])
-    );
     const onRemove = jest.fn();
     const editEntity = jest.fn().mockReturnValue(cellView.model);
 
@@ -78,7 +49,7 @@ describe("EntityForm.", () => {
       <QueryClientProvider client={testClient}>
         <TestMemoryRouter initialEntries={["/?env=aaa"]}>
           <StoreProvider store={store}>
-            <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
+            <MockedDependencyProvider>
               <CanvasContext.Provider
                 value={{
                   ...defaultCanvasContext,
@@ -100,7 +71,7 @@ describe("EntityForm.", () => {
                   showButtons={showButtons}
                 />
               </CanvasContext.Provider>
-            </DependencyProvider>
+            </MockedDependencyProvider>
           </StoreProvider>
         </TestMemoryRouter>
       </QueryClientProvider>

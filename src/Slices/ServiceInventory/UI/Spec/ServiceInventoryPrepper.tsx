@@ -1,12 +1,10 @@
 import React from "react";
-import { useLocation } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StoreProvider } from "easy-peasy";
-import { RemoteData, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { AuthProvider } from "@/Data/Auth/AuthProvider";
-import { dependencies, Environment, MockEnvironmentModifier, Service } from "@/Test";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { MockedDependencyProvider, Service } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInventory } from "@S/ServiceInventory/UI/ServiceInventory";
 
@@ -19,24 +17,15 @@ export class ServiceInventoryPrepper {
     const client = new QueryClient();
     const store = getStoreInstance();
 
-    const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
-
-    store.dispatch.environment.setEnvironments(RemoteData.success(Environment.filterable));
     const component = (
       <QueryClientProvider client={client}>
         <TestMemoryRouter initialEntries={["/?env=123"]}>
           <AuthProvider config={undefined}>
-            <DependencyProvider
-              dependencies={{
-                ...dependencies,
-                environmentModifier: new MockEnvironmentModifier(),
-                environmentHandler,
-              }}
-            >
+            <MockedDependencyProvider>
               <StoreProvider store={store}>
                 <ServiceInventory serviceName={service.name} service={service} />
               </StoreProvider>
-            </DependencyProvider>
+            </MockedDependencyProvider>
           </AuthProvider>
         </TestMemoryRouter>
       </QueryClientProvider>

@@ -5,9 +5,8 @@ import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import { dependencies, MockEnvironmentHandler, Service, ServiceInstance } from "@/Test";
+import { MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { InstanceCellButton } from "./InstanceCellButton";
 
@@ -18,16 +17,11 @@ function setup(serviceName: string, id: string) {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentHandler: MockEnvironmentHandler(Service.a.environment),
-          }}
-        >
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <InstanceCellButton id={id} serviceName={serviceName} onClick={handleClick} />
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

@@ -6,9 +6,8 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
-import { dependencies, ServiceInstance } from "@/Test";
+import { MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
@@ -32,7 +31,7 @@ const TestWrapper = () => {
   return (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <AutoCompleteInputProvider
               alreadySelected={[]}
@@ -45,7 +44,7 @@ const TestWrapper = () => {
               multi={false}
             />
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

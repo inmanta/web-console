@@ -10,32 +10,19 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import {
-  EnvironmentModifier,
-  RemoteData,
-  ServiceModel,
-  VersionedServiceInstanceIdentifier,
-} from "@/Core";
+import { ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { getStoreInstance } from "@/Data";
 import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 
-import {
-  dependencies,
-  MockEnvironmentHandler,
-  MockEnvironmentModifier,
-  Service,
-  ServiceInstance,
-  EnvironmentDetails,
-} from "@/Test";
+import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
-import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ConfigSectionContent } from "./ConfigSectionContent";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 
-function setup(environmentModifier: EnvironmentModifier = new MockEnvironmentModifier()) {
+function setup() {
   const client = new QueryClient();
   const store = getStoreInstance();
 
@@ -48,13 +35,7 @@ function setup(environmentModifier: EnvironmentModifier = new MockEnvironmentMod
   const component = (
     <QueryClientProvider client={client}>
       <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentModifier,
-            environmentHandler: MockEnvironmentHandler(Service.a.environment),
-          }}
-        >
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <InstanceDetailsContext.Provider
               value={{
@@ -71,7 +52,7 @@ function setup(environmentModifier: EnvironmentModifier = new MockEnvironmentMod
               <ConfigSectionContent serviceInstanceIdentifier={instanceIdentifier} />
             </InstanceDetailsContext.Provider>
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
@@ -181,15 +162,13 @@ describe("ConfigSectionContent", () => {
   });
 
   test("ConfigTab handles hooks with environment modifier correctly", async () => {
-    const environmentModifier = EnvironmentModifierImpl();
-
-    environmentModifier.setEnvironment(EnvironmentDetails.halted);
-    const { component, store } = setup(environmentModifier);
-
-    store.dispatch.environment.setEnvironmentDetailsById({
-      id: Service.a.environment,
-      value: RemoteData.success(EnvironmentDetails.halted),
+    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
+      useIsHalted: () => true,
     });
+
+    const { component } = setup();
+
     render(component);
 
     const toggle = await screen.findByRole("switch", {

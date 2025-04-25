@@ -5,14 +5,15 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
+import { MockedDependencyProvider } from "@/Test";
 
 function setup(initialEntries?: string[]) {
   const component = (
-    <DependencyProvider dependencies={{ routeManager: PrimaryRouteManager("") }}>
+    <MockedDependencyProvider>
       <TestMemoryRouter initialEntries={initialEntries}>
         <PageBreadcrumbs />
       </TestMemoryRouter>
-    </DependencyProvider>
+    </MockedDependencyProvider>
   );
 
   return { component };

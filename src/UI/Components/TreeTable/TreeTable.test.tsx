@@ -2,8 +2,7 @@ import React, { act } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Attributes, EntityLike, ServiceModel } from "@/Core";
-import { dependencies } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI/words";
 import { CatalogAttributeHelper, CatalogTreeTableHelper } from "./Catalog";
 import { PathHelper, TreeExpansionManager } from "./Helpers";
@@ -17,11 +16,7 @@ function inventorySetup(
   setTab?: jest.Mock<any, any, any>
 ) {
   const component = (
-    <DependencyProvider
-      dependencies={{
-        ...dependencies,
-      }}
-    >
+    <MockedDependencyProvider>
       <TreeTable
         treeTableHelper={
           new InventoryTreeTableHelper(
@@ -34,7 +29,7 @@ function inventorySetup(
         setTab={setTab}
         version={1}
       />
-    </DependencyProvider>
+    </MockedDependencyProvider>
   );
 
   return component;
@@ -142,11 +137,7 @@ test("TreeTable 2nd level of nested property can be expanded", async () => {
 
 function catalogSetup(service: EntityLike) {
   const component = (
-    <DependencyProvider
-      dependencies={{
-        ...dependencies,
-      }}
-    >
+    <MockedDependencyProvider>
       <TreeTable
         treeTableHelper={
           new CatalogTreeTableHelper(
@@ -158,7 +149,7 @@ function catalogSetup(service: EntityLike) {
         }
         version={1}
       />
-    </DependencyProvider>
+    </MockedDependencyProvider>
   );
 
   return component;

@@ -1,20 +1,18 @@
 import React from "react";
-import { Route, Routes, useLocation } from "react-router";
+import { Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
-import { DependencyProvider, EnvironmentHandlerImpl, PrimaryRouteManager } from "@/UI";
 import "@testing-library/jest-dom";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { childModel, containerModel, parentModel } from "../Mocks";
 import { defineObjectsForJointJS } from "../testSetup";
 import { ComposerCreatorProvider } from "./ComposerCreatorProvider";
+import { MockedDependencyProvider } from "@/Test";
 
 const setup = () => {
   const queryClient = new QueryClient({
@@ -25,30 +23,12 @@ const setup = () => {
     },
   });
   const store = getStoreInstance();
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
-
-  store.dispatch.environment.setEnvironments(
-    RemoteData.success([
-      {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        halted: false,
-        settings: {
-          enable_lsm_expert_mode: false,
-        },
-      },
-    ])
-  );
 
   return (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={["/lsm/catalog/child-service/inventory/add?env=aaa"]}>
         <StoreProvider store={store}>
-          <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
+          <MockedDependencyProvider>
             <Routes>
               <Route
                 path="/lsm/catalog/child-service/inventory/add"
@@ -60,7 +40,7 @@ const setup = () => {
               />
               <Route path="/" element={<div data-testid="root-page" />} />
             </Routes>
-          </DependencyProvider>
+          </MockedDependencyProvider>
         </StoreProvider>
       </TestMemoryRouter>
     </QueryClientProvider>

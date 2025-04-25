@@ -9,7 +9,7 @@
 import React, { act } from "react";
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { http, HttpResponse } from "msw";
@@ -23,12 +23,12 @@ import {
   TextField,
   Textarea,
 } from "@/Core";
-import { getStoreInstance, QueryResolverImpl, QueryManagerResolverImpl } from "@/Data";
+import { getStoreInstance } from "@/Data";
 import * as Test from "@/Test";
-import { DeferredApiHelper, StaticScheduler, dependencies } from "@/Test";
-import { DependencyProvider } from "@/UI";
+import { MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
+import { testClient } from "@/Test/Utils/react-query-setup";
 
 const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
@@ -37,18 +37,11 @@ const setup = (
   originalAttributes: InstanceAttributeModel | undefined = undefined
 ) => {
   const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
-  );
-
-  const queryClient = new QueryClient();
 
   const component = (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <Routes>
               <Route
@@ -68,12 +61,12 @@ const setup = (
               />
             </Routes>
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 };
 
 it("GIVEN the ServiceInstanceForm WHEN using the JSON Editor THEN View loads without errors", async () => {
