@@ -8,11 +8,11 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import "@testing-library/jest-dom";
+import { MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { childModel, containerModel, parentModel } from "../Mocks";
 import { defineObjectsForJointJS } from "../testSetup";
 import { ComposerCreatorProvider } from "./ComposerCreatorProvider";
-import { MockedDependencyProvider } from "@/Test";
 
 const setup = () => {
   const queryClient = new QueryClient({

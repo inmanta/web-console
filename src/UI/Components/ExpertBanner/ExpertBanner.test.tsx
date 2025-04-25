@@ -9,9 +9,9 @@ import { getStoreInstance } from "@/Data";
 import * as useUpdateEnvironmentSetting from "@/Data/Managers/V2/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting"; //import with that exact path is required for mock to work correctly
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ExpertBanner } from "./ExpertBanner";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 
 const setup = (flag: boolean) => {
   jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({

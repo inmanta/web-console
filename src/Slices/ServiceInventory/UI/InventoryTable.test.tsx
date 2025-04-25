@@ -7,11 +7,11 @@ import { getStoreInstance } from "@/Data";
 import { Row, Service, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { InventoryTable } from "./InventoryTable";
 import { InventoryTablePresenter } from "./Presenters";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 
 const dummySetter = () => {
   return;

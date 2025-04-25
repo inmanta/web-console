@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -8,9 +8,9 @@ import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInv
 import { ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { DeleteAction } from "./DeleteAction";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 
 const mockedMutate = jest.fn();
 

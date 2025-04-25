@@ -18,9 +18,9 @@ import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Con
 
 import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ConfigSectionContent } from "./ConfigSectionContent";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 
 function setup() {
   const client = new QueryClient();

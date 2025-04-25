@@ -26,9 +26,9 @@ import {
 import { getStoreInstance } from "@/Data";
 import * as Test from "@/Test";
 import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
-import { testClient } from "@/Test/Utils/react-query-setup";
 
 const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],

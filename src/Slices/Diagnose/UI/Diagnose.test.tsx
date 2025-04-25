@@ -7,10 +7,10 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider, Service } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { failureAndRejection } from "@S/Diagnose/Data/Mock";
 import { Diagnose } from "./Diagnose";
-import { testClient } from "@/Test/Utils/react-query-setup";
 
 expect.extend(toHaveNoViolations);
 

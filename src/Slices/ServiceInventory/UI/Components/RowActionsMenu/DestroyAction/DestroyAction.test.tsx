@@ -8,9 +8,9 @@ import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInv
 import { ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { DestroyAction } from "./DestroyAction";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 
 const mockedMutate = jest.fn();
 

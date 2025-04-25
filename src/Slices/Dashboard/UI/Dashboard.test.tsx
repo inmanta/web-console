@@ -6,12 +6,12 @@ import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
+import { MockedDependencyProvider, MockFeatureManager } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { mockedMetrics } from "../Core/Mock";
 import { Dashboard } from "./Dashboard";
-import { MockedDependencyProvider, MockFeatureManager } from "@/Test";
 
 const server = setupServer(
   http.get("/api/v2/metrics", () => {

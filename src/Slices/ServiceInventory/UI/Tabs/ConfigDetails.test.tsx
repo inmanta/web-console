@@ -6,8 +6,8 @@ import { Config } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { ConfigDetails } from "./ConfigDetails";
 import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
+import { ConfigDetails } from "./ConfigDetails";
 
 function setup() {
   const store = getStoreInstance();

@@ -13,7 +13,9 @@ export function MockEnvironmentHandler(environment: FlatEnvironment): Environmen
     throw new Error("Method not implemented.");
   }
 
-  function setAllEnvironments(_environments: FlatEnvironment[]): void {}
+  function setAllEnvironments(_environments: FlatEnvironment[]): void {
+    return;
+  }
 
   function determineSelected(): FlatEnvironment | undefined {
     throw new Error("Method not implemented.");
