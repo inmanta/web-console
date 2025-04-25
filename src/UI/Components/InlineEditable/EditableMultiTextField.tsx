@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -8,7 +8,6 @@ import {
   FlexItem,
   TextInput,
 } from "@patternfly/react-core";
-import { ErrorHandlingContext } from "@/Slices/Settings/UI/Tabs/Environment/Components";
 import { convertToTitleCase } from "@/UI/Utils";
 import { CancelEditButton, EnableEditButton, SubmitEditButton } from "./InlineEditButtons";
 import { InlineValue } from "./InlineFillers";
@@ -19,6 +18,8 @@ interface Props {
   initialValues: Record<string, string>;
   initiallyEditable?: boolean;
   onSubmit: (fieldDescriptors: Record<string, string>) => void;
+  error: string | null;
+  setError: (error: string | null) => void;
 }
 
 /**
@@ -29,6 +30,8 @@ interface Props {
  * @prop {Record<string, string>} initialValues - The initial values of the fields
  * @prop {boolean} initiallyEditable - Whether the fields are initially editable
  * @prop {Function} onSubmit - The function to call when the form is submitted
+ * @prop {string | null} error - The error message of the field
+ * @prop {Function} setError - The function to call to set/clear the error message
  *
  * @returns {React.FC<Props>} - The EditableMultiTextField component
  */
@@ -37,8 +40,9 @@ export const EditableMultiTextField: React.FC<Props> = ({
   initialValues,
   initiallyEditable,
   onSubmit,
+  error,
+  setError,
 }) => {
-  const { error, setError } = useContext(ErrorHandlingContext);
   const [editable, setEditable] = useState(initiallyEditable);
   const [fieldValues, setFieldValues] = useState(initialValues);
   const onSubmitRequest = async (values: Record<string, string>) => {
