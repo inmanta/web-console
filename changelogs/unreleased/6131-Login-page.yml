@@ -1,0 +1,6 @@
+description: Replace old Login page implementation with Patternfly Login page. Repair redirects to login page and cover trailing slashes in routes.
+issue-nr: 6131
+change-type: patch
+destination-branches: [master, iso8]
+sections:
+  minor-improvement: "{{description}}"

@@ -9,14 +9,14 @@ export class PrimaryBaseUrlManager implements BaseUrlManager {
   ) {}
 
   getBasePathname(): string {
-    const { pathname, anchor } = this;
+    const { anchor } = this;
+    // Normalize the pathname by removing trailing slash
+    const normalizedPathname = this.pathname.replace(/\/$/, "");
 
-    if (!pathname.includes(anchor)) return anchor;
+    if (!normalizedPathname.includes(anchor)) return anchor;
+    if (normalizedPathname.split(anchor).length > 2) return anchor;
 
-    if (pathname.split(anchor).length > 2) return anchor;
-
-    const [pre] = pathname.split(anchor);
-
+    const [pre] = normalizedPathname.split(anchor);
     return `${pre}${anchor}`;
   }
 
