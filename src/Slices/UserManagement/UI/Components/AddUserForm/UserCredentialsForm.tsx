@@ -147,7 +147,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           isBlock
           isDisabled={isPending}
         >
-          {isPending ? <Spinner size="md" /> : <Content component="p">{submitButtonText}</Content>}
+          {isPending ? <Spinner size="md" /> : submitButtonText}
         </Button>
       </ActionGroup>
     </Form>
