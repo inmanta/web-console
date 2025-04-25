@@ -11,8 +11,8 @@ import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import * as CookieHelper from "@/Data/Common/CookieHelper";
 import { dependencies } from "@/Test";
 import { AuthTestWrapper } from "@/Test/Inject";
-import { Login } from "./Page";
 import { words } from "@/UI";
+import { Login } from "./Page";
 
 expect.extend(toHaveNoViolations);
 

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { LoginForm, HelperText, HelperTextItem } from "@patternfly/react-core";
+import { LoginForm } from "@patternfly/react-core";
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import { useLogin } from "@/Data/Managers/V2/Auth";
 import { DependencyContext, words, PrimaryBaseUrlManager } from "@/UI";
@@ -27,7 +27,7 @@ export const LoginPageComponent: React.FC<Props> = ({ submitButtonText }) => {
   );
   const basePathname = baseUrlManager.getBasePathname();
 
-  const { data, mutate, isSuccess, isError, error, isPending } = useLogin();
+  const { data, mutate, isSuccess, isError, error } = useLogin();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

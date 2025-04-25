@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import { createCookie, getCookie, removeCookie } from "../../Common/CookieHelper";
 import { AuthContext } from "../AuthContext";
-import { PrimaryBaseUrlManager } from "@/UI/Routing";
 
 /**
  * DatabaseAuthProvider component provides authentication functionality using a database.

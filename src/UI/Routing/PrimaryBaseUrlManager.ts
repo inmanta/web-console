@@ -6,12 +6,12 @@ export class PrimaryBaseUrlManager implements BaseUrlManager {
   constructor(
     private readonly origin: string,
     private readonly pathname: string
-  ) { }
+  ) {}
 
   getBasePathname(): string {
     const { anchor } = this;
     // Normalize the pathname by removing trailing slash
-    const normalizedPathname = this.pathname.replace(/\/$/, '');
+    const normalizedPathname = this.pathname.replace(/\/$/, "");
 
     if (!normalizedPathname.includes(anchor)) return anchor;
     if (normalizedPathname.split(anchor).length > 2) return anchor;
