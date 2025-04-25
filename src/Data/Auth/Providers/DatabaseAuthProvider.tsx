@@ -10,7 +10,6 @@ import { AuthContext } from "../AuthContext";
  */
 export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
-  const [shouldLogin, setShouldLogin] = useState(false);
   const navigate = useNavigate();
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -26,16 +25,9 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({ childr
     navigate(`${basePathname}/login`);
   }, [navigate, basePathname]);
 
-  const login = async (): Promise<void> => {
-    setShouldLogin(true);
+  const login = (): void => {
+    navigate(`${basePathname}/login`);
   };
-
-  useEffect(() => {
-    if (shouldLogin) {
-      navigate(`${basePathname}/login`);
-      setShouldLogin(false);
-    }
-  }, [shouldLogin, navigate, basePathname]);
 
   const getToken = (): string | null => getCookie("inmanta_user");
 
