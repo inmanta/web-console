@@ -7,7 +7,12 @@ import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import { dependencies, MockEnvironmentHandler, MockEnvironmentModifier, Service } from "@/Test";
+import {
+  MockedDependencyProvider,
+  MockEnvironmentHandler,
+  MockEnvironmentModifier,
+  Service,
+} from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -19,19 +24,13 @@ function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentModifier: new MockEnvironmentModifier(),
-            environmentHandler: MockEnvironmentHandler(Service.a.environment),
-          }}
-        >
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <Routes>
               <Route path="/lsm/catalog/:service/details" element={<Page />} />
             </Routes>
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

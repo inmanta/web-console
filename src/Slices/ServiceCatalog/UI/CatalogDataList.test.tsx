@@ -4,10 +4,9 @@ import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { ServiceModel } from "@/Core";
-import { dependencies, Service } from "@/Test";
+import { MockedDependencyProvider, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CatalogDataList } from "./CatalogDataList";
 
@@ -24,9 +23,9 @@ const Component = (services: ServiceModel[]) => {
   return (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
+        <MockedDependencyProvider>
           <CatalogDataList services={services} />
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

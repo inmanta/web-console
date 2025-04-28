@@ -7,17 +7,10 @@ import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { delay, HttpResponse } from "msw";
 import { http } from "msw";
 import { setupServer } from "msw/node";
-import {
-  CommandManagerResolverImpl,
-  CommandResolverImpl,
-  getStoreInstance,
-  QueryManagerResolverImpl,
-  QueryResolverImpl,
-} from "@/Data";
-import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { View } from "./Page";
@@ -32,26 +25,20 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const apiHelper = new DeferredApiHelper();
-
-  const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const datePresenter = new MomentDatePresenter();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
-  );
-  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
+
   const component = (
     <QueryClientProvider client={testClient}>
       <StoreProvider store={store}>
-        <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
+        <MockedDependencyProvider>
           <View version="123" />
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </StoreProvider>
     </QueryClientProvider>
   );
 
-  return { component, apiHelper, datePresenter };
+  return { component, datePresenter };
 }
 
 describe("ComplianceCheck page", () => {

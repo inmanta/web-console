@@ -5,9 +5,8 @@ import { StoreProvider } from "easy-peasy";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Mock } from "@S/Facts/Test";
 import { FactsTab } from "./FactsTab";
@@ -19,11 +18,11 @@ function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <FactsTab resourceId={"abc"} />
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

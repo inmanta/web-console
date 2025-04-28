@@ -1,25 +1,19 @@
 import React, { act } from "react";
 import { Page } from "@patternfly/react-core";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import {
-  CommandManagerResolverImpl,
-  CommandResolverImpl,
-  getStoreInstance,
-  QueryManagerResolverImpl,
-  QueryResolverImpl,
-} from "@/Data";
-import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { MockedDependencyProvider } from "@/Test";
 import { links, metadata } from "@/Test/Data/Pagination";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as Mock from "@S/Notification/Core/Mock";
 import { NotificationCenterPage } from ".";
+import { testClient } from "@/Test/Utils/react-query-setup";
 
 expect.extend(toHaveNoViolations);
 
@@ -31,31 +25,17 @@ const axe = configureAxe({
 });
 
 const setup = (entries?: string[]) => {
-  const client = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
-  const apiHelper = new DeferredApiHelper();
-  const scheduler = new StaticScheduler();
   const store = getStoreInstance();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
-  );
-
-  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
 
   const component = (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={entries}>
         <StoreProvider store={store}>
-          <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
+          <MockedDependencyProvider>
             <Page>
               <NotificationCenterPage />
             </Page>
-          </DependencyProvider>
+          </MockedDependencyProvider>
         </StoreProvider>
       </TestMemoryRouter>
     </QueryClientProvider>

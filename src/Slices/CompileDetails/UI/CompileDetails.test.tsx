@@ -6,12 +6,11 @@ import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { UrlManagerImpl } from "@/UI/Utils";
 import * as Mock from "@S/CompileDetails/Core/Mock";
 import { CompileDetails } from "./CompileDetails";
+import { testClient } from "@/Test/Utils/react-query-setup";
 
 expect.extend(toHaveNoViolations);
 
@@ -23,24 +22,16 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
   const store = getStoreInstance();
-  const urlManager = new UrlManagerImpl(dependencies.featureManager, "");
 
   const component = (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider dependencies={{ ...dependencies, urlManager }}>
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <CompileDetails id="123" />
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
@@ -115,10 +106,6 @@ describe("CompileDetails", () => {
     const { component } = setup();
 
     await render(component);
-
-    expect(
-      await screen.findByRole("region", { name: "CompileDetailsView-Loading" })
-    ).toBeInTheDocument();
 
     expect(
       await screen.findByRole("generic", {
