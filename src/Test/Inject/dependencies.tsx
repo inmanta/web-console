@@ -1,15 +1,14 @@
 import React from "react";
+import { FileFetcher, FlatEnvironment } from "@/Core";
 import { PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
 import { MockEnvironmentHandler, MockFeatureManager, MockFileManager } from "@/Test/Mock";
 import { PrimaryRouteManager, useEnvironmentModifierImpl, DependencyProvider } from "@/UI";
 import { UrlManagerImpl } from "@/UI/Utils";
 import { EnvironmentDetails } from "../Data";
-import { EnvironmentHandler, EnvironmentSettings, FileFetcher, FlatEnvironment } from "@/Core";
 
 export const MockedDependencyProvider: React.FC<
   React.PropsWithChildren<{
     env?: FlatEnvironment;
-    envSettings?: EnvironmentSettings.EnvironmentSettings;
     fileFetcher?: FileFetcher;
   }>
 > = ({ env = EnvironmentDetails.env, fileFetcher, children }) => {

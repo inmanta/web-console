@@ -9,10 +9,10 @@ import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider, Resource } from "@/Test";
 import { words } from "@/UI";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { Page } from "./Page";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 
 expect.extend(toHaveNoViolations);
 

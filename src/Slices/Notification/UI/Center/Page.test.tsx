@@ -10,10 +10,10 @@ import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider } from "@/Test";
 import { links, metadata } from "@/Test/Data/Pagination";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as Mock from "@S/Notification/Core/Mock";
 import { NotificationCenterPage } from ".";
-import { testClient } from "@/Test/Utils/react-query-setup";
 
 expect.extend(toHaveNoViolations);
 

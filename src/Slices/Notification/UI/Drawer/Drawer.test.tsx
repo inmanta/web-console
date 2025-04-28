@@ -10,10 +10,10 @@ import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
+import { MockedDependencyProvider } from "@/Test";
 import { links, metadata } from "@/Test/Data/Pagination";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Drawer } from "./Drawer";
-import { MockedDependencyProvider } from "@/Test";
 
 expect.extend(toHaveNoViolations);
 

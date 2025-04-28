@@ -7,8 +7,8 @@ import { Config } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { ConfigList } from "./ConfigList";
 import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
+import { ConfigList } from "./ConfigList";
 expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({

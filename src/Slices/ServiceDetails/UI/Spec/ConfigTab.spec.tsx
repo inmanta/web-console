@@ -7,14 +7,8 @@ import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import {
-  MockedDependencyProvider,
-  MockEnvironmentHandler,
-  MockEnvironmentModifier,
-  Service,
-} from "@/Test";
+import { MockedDependencyProvider, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "@S/ServiceDetails/UI/Page";
 

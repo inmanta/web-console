@@ -8,7 +8,6 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider } from "@/Test";
-import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";

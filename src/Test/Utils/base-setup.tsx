@@ -4,9 +4,9 @@ import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/Data";
 import { StaticScheduler, DeferredApiHelper, MockedDependencyProvider } from "@/Test";
 import { BlockingModal } from "@/UI/Components";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { testClient } from "./react-query-setup";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 
 export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
   jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({

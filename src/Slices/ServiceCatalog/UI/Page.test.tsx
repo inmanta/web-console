@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { useLocation } from "react-router";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
