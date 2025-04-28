@@ -1,74 +1,31 @@
 import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { StoreProvider } from "easy-peasy";
-import { RemoteData } from "@/Core";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  CommandResolverImpl,
-  QueryManagerResolverImpl,
-  CommandManagerResolverImpl,
-} from "@/Data";
-import {
-  StaticScheduler,
-  DeferredApiHelper,
-  dependencies,
-  EnvironmentDetails,
-  EnvironmentSettings,
-} from "@/Test";
-import { UrlManagerImpl } from "@/UI";
+import { getStoreInstance } from "@/Data";
+import { StaticScheduler, DeferredApiHelper, MockedDependencyProvider } from "@/Test";
 import { BlockingModal } from "@/UI/Components";
-import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { testClient } from "./react-query-setup";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 
 export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
+  jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+    ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
+    useIsHalted: () => halted,
+  });
   const apiHelper = new DeferredApiHelper();
-
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
-  );
-  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
-
-  const routeManager = PrimaryRouteManager("");
-  const urlManager = new UrlManagerImpl(dependencies.featureManager, "");
-
-  store.dispatch.environment.setEnvironmentDetailsById({
-    id: "env",
-    value: RemoteData.success(EnvironmentDetails[halted ? "halted" : "env"]),
-  });
-  store.dispatch.environment.setSettingsData({
-    environment: "env",
-    value: RemoteData.success({
-      settings: {},
-      definition: EnvironmentSettings.definition,
-    }),
-  });
-  dependencies.environmentModifier.setEnvironment({
-    ...EnvironmentDetails.env,
-    halted,
-  });
 
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={["/"]}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            queryResolver,
-            commandResolver,
-            routeManager,
-            urlManager,
-          }}
-        >
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <BlockingModal />
             {Page}
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
