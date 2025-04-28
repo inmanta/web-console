@@ -4,17 +4,18 @@ import { MockEnvironmentHandler, MockFeatureManager, MockFileManager } from "@/T
 import { PrimaryRouteManager, useEnvironmentModifierImpl, DependencyProvider } from "@/UI";
 import { UrlManagerImpl } from "@/UI/Utils";
 import { EnvironmentDetails } from "../Data";
-import { EnvironmentHandler, FileFetcher } from "@/Core";
+import { EnvironmentHandler, EnvironmentSettings, FileFetcher, FlatEnvironment } from "@/Core";
 
 export const MockedDependencyProvider: React.FC<
-  React.PropsWithChildren<{ environmentHandler?: EnvironmentHandler; fileFetcher?: FileFetcher }>
-> = ({
-  environmentHandler = MockEnvironmentHandler(EnvironmentDetails.env),
-  fileFetcher,
-  children,
-}) => {
+  React.PropsWithChildren<{
+    env?: FlatEnvironment;
+    envSettings?: EnvironmentSettings.EnvironmentSettings;
+    fileFetcher?: FileFetcher;
+  }>
+> = ({ env = EnvironmentDetails.env, fileFetcher, children }) => {
   const baseUrl = "";
   const routeManager = PrimaryRouteManager(baseUrl);
+  const environmentHandler = MockEnvironmentHandler(env);
   const featureManager = new MockFeatureManager();
   const environmentModifier = useEnvironmentModifierImpl();
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
