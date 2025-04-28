@@ -51,7 +51,6 @@ describe("Agents", () => {
 
   beforeEach(() => {
     server.resetHandlers();
-    jest.clearAllMocks();
   });
 
   afterAll(() => {
@@ -242,7 +241,7 @@ describe("Agents", () => {
 
     render(component);
 
-    const input = screen.getByPlaceholderText(words("agents.filters.name.placeholder"));
+    const input = await screen.findByPlaceholderText(words("agents.filters.name.placeholder"));
 
     await userEvent.type(input, "aws{enter}");
 
@@ -291,7 +290,7 @@ describe("Agents", () => {
 
     render(component);
 
-    const input = screen.getByPlaceholderText(words("agents.filters.name.placeholder"));
+    const input = await screen.findByPlaceholderText(words("agents.filters.name.placeholder"));
 
     await userEvent.type(input, "bru{enter}");
 
@@ -355,10 +354,36 @@ describe("Agents", () => {
     expect(await screen.findByText("something happened")).toBeVisible();
   });
 
+  test("Given the Agents view with the environment NOT halted, THEN the on resume column shouldn't be shown", async () => {
+    server.use(
+      http.get("/api/v2/agents", async () => {
+        return HttpResponse.json(AgentsMock.response);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    const tableHeaders = await screen.findAllByRole("columnheader");
+
+    expect(tableHeaders).toHaveLength(2);
+
+    const onResumeColumnHeader = tableHeaders.find((header) => header.textContent === "On resume");
+
+    expect(onResumeColumnHeader).toBeUndefined();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
   test("Given the Agents view with the environment halted, When setting keep_paused_on_resume on an agent, Then the correct request is fired", async () => {
     jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
       useIsHalted: () => true,
-    } as any);
+    });
     const data = JSON.parse(JSON.stringify(AgentsMock.response)); //copy the object to avoid mutation overflow to others places
     server.use(
       http.post("/api/v2/agent/aws/keep_paused_on_resume", () => {
@@ -399,10 +424,6 @@ describe("Agents", () => {
   });
 
   test("Given the Agents view with the environment halted, When setting unpause_on_resume on an agent, Then the correct request is fired", async () => {
-    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-      useIsHalted: () => true,
-    } as any);
-
     const data = JSON.parse(JSON.stringify(AgentsMock.response)); //copy the object to avoid mutation overflow to others places
     server.use(
       http.post("/api/v2/agent/ecx/unpause_on_resume", () => {
@@ -443,36 +464,7 @@ describe("Agents", () => {
     expect(updatedOnResumeToggle).toBeChecked();
   });
 
-  test("Given the Agents view with the environment NOT halted, THEN the on resume column shouldn't be shown", async () => {
-    server.use(
-      http.get("/api/v2/agents", async () => {
-        return HttpResponse.json(AgentsMock.response);
-      })
-    );
-    const { component } = setup();
-
-    render(component);
-
-    const tableHeaders = await screen.findAllByRole("columnheader");
-
-    expect(tableHeaders).toHaveLength(2);
-
-    const onResumeColumnHeader = tableHeaders.find((header) => header.textContent === "On resume");
-
-    expect(onResumeColumnHeader).toBeUndefined();
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-  });
-
   test("Given the Agents view with the environment halted, THEN the on resume column should be shown", async () => {
-    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-      useIsHalted: () => true,
-    } as any);
-
     server.use(
       http.get("/api/v2/agents", async () => {
         return HttpResponse.json(AgentsMock.response);
