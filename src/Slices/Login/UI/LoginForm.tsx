@@ -1,23 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import {
-  FormHelperText,
-  HelperText,
-  HelperTextItem,
-  Form,
-  FormGroup,
-  TextInput,
-  InputGroup,
-  InputGroupItem,
-  Button,
-  ActionGroup,
-  ValidatedOptions,
-  Spinner,
-  Content,
-} from "@patternfly/react-core";
-import { ExclamationCircleIcon, EyeIcon, EyeSlashIcon } from "@patternfly/react-icons";
+import { LoginForm } from "@patternfly/react-core";
+import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import { useLogin } from "@/Data/Managers/V2/Auth";
-import { DependencyContext, words } from "@/UI";
+import { DependencyContext, words, PrimaryBaseUrlManager } from "@/UI";
 
 interface Props {
   submitButtonText: string;
@@ -32,18 +18,19 @@ interface Props {
  *
  * @returns {React.FC<Props>} The rendered component.
  */
-export const LoginForm: React.FC<Props> = ({
-  submitButtonText,
-  submitButtonLabel = "login-button",
-}) => {
+export const LoginPageComponent: React.FC<Props> = ({ submitButtonText }) => {
   const { authHelper } = useContext(DependencyContext);
   const navigate = useNavigate();
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname
+  );
+  const basePathname = baseUrlManager.getBasePathname();
 
-  const { data, mutate, isSuccess, isError, error, isPending } = useLogin();
+  const { data, mutate, isSuccess, isError, error } = useLogin();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isPasswordHidden, setIsPasswordHidden] = useState(true);
 
   /**
    * Handle the change of the username input field.
@@ -85,76 +72,23 @@ export const LoginForm: React.FC<Props> = ({
   useEffect(() => {
     if (isSuccess) {
       authHelper.updateUser(data.data.user.username, data.data.token);
-      navigate("/");
+      navigate(basePathname);
     }
-  }, [isSuccess, navigate, data, authHelper]);
+  }, [isSuccess, navigate, data, authHelper, basePathname]);
 
   return (
-    <Form className="loginForm" onSubmit={handleSubmit}>
-      {isError && error && (
-        <FormHelperText>
-          <HelperText>
-            <HelperTextItem
-              variant="error"
-              icon={<ExclamationCircleIcon />}
-              aria-label="error-message"
-            >
-              {error.message}
-            </HelperTextItem>
-          </HelperText>
-        </FormHelperText>
-      )}
-      <FormGroup label={words("username")} isRequired fieldId="pf-login-username-id">
-        <TextInput
-          id="pf-login-username-id"
-          isRequired
-          validated={ValidatedOptions.default}
-          type="text"
-          name="pf-login-username-id"
-          aria-label="input-username"
-          value={username}
-          onChange={handleUsernameChange}
-        />
-      </FormGroup>
-      <FormGroup label={words("password")} isRequired fieldId="pf-login-password-id">
-        {
-          <InputGroup>
-            <InputGroupItem isFill>
-              <TextInput
-                isRequired
-                type={isPasswordHidden ? "password" : "text"}
-                id="pf-login-password-id"
-                name="pf-login-password-id"
-                aria-label="input-password"
-                validated={ValidatedOptions.default}
-                value={password}
-                onChange={handlePasswordChange}
-              />
-            </InputGroupItem>
-            <InputGroupItem>
-              <Button
-                variant="control"
-                onClick={() => setIsPasswordHidden(!isPasswordHidden)}
-                aria-label={isPasswordHidden ? "show-password" : "hide-password"}
-              >
-                {isPasswordHidden ? <EyeIcon /> : <EyeSlashIcon />}
-              </Button>
-            </InputGroupItem>
-          </InputGroup>
-        }
-      </FormGroup>
-      <ActionGroup>
-        <Button
-          aria-label={submitButtonLabel}
-          variant="primary"
-          type="submit"
-          onClick={handleSubmit}
-          isBlock
-          isDisabled={isPending}
-        >
-          {isPending ? <Spinner size="md" /> : <Content component="p">{submitButtonText}</Content>}
-        </Button>
-      </ActionGroup>
-    </Form>
+    <LoginForm
+      showHelperText={isError}
+      helperText={error?.message}
+      helperTextIcon={<ExclamationCircleIcon />}
+      usernameLabel={words("username")}
+      usernameValue={username}
+      onChangeUsername={handleUsernameChange}
+      passwordLabel={words("password")}
+      passwordValue={password}
+      onChangePassword={handlePasswordChange}
+      onLoginButtonClick={handleSubmit}
+      loginButtonLabel={submitButtonText}
+    />
   );
 };

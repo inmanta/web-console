@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import { createCookie, getCookie, removeCookie } from "../../Common/CookieHelper";
 import { AuthContext } from "../AuthContext";
 
@@ -10,16 +11,23 @@ import { AuthContext } from "../AuthContext";
 export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
   const navigate = useNavigate();
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname
+  );
+  const basePathname = baseUrlManager.getBasePathname();
 
   const getUser = (): string | null => user;
 
   const logout = useCallback((): void => {
     removeCookie("inmanta_user");
     localStorage.removeItem("inmanta_user");
-    navigate("/login");
-  }, [navigate]);
+    navigate(`${basePathname}/login`);
+  }, [navigate, basePathname]);
 
-  const login = async (): Promise<void> => navigate("/login");
+  const login = (): void => {
+    navigate(`${basePathname}/login`);
+  };
 
   const getToken = (): string | null => getCookie("inmanta_user");
 
