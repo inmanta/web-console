@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { dependencies, Environment } from "@/Test";
+import { MockedDependencyProvider, Environment } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -10,9 +10,9 @@ import { EnvironmentsOverview } from "./EnvironmentsOverview";
 function setup() {
   const component = (
     <TestMemoryRouter>
-      <DependencyProvider dependencies={dependencies}>
+      <MockedDependencyProvider>
         <EnvironmentsOverview environments={Environment.filterable} />
-      </DependencyProvider>
+      </MockedDependencyProvider>
     </TestMemoryRouter>
   );
 

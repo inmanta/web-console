@@ -1,24 +1,11 @@
 import React from "react";
 import { renderHook } from "@testing-library/react";
+import { defaultAuthContext } from "@/Data/Auth";
 import { createCookie, removeCookie } from "@/Data/Common/CookieHelper";
-import { dependencies } from "@/Test";
-import { DependencyProvider } from "@/UI";
+import { MockedDependencyProvider } from "@/Test";
 import { useFetchHelpers } from "./";
-
-const setup = (getToken: () => string | null = () => null) => {
-  const wrapper = ({ children }) => (
-    <DependencyProvider
-      dependencies={{
-        ...dependencies,
-        authHelper: {
-          ...dependencies.authHelper,
-          getToken,
-        },
-      }}
-    >
-      {children}
-    </DependencyProvider>
-  );
+const setup = () => {
+  const wrapper = ({ children }) => <MockedDependencyProvider>{children}</MockedDependencyProvider>;
 
   return wrapper;
 };
@@ -79,7 +66,8 @@ describe("createHeaders", () => {
   });
 
   it("should return headers with Authorization Token when authHelper hook returns the token", () => {
-    const wrapper = setup(() => "token");
+    jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("token");
+    const wrapper = setup();
 
     createCookie("inmanta_user", "token", 1);
     const { result } = renderHook(() => useFetchHelpers().createHeaders(), {
