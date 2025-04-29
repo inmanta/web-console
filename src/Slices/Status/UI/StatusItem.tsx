@@ -132,7 +132,7 @@ const NestedListItem: React.FC<NestedListItemProps> = ({ name, properties }) => 
           {name}
         </b>
       </ListItem>
-      <List key={`${name}-nested-list`} isPlain={false}>
+      <List key={`${name}-nested-list`} isPlain style={{ marginLeft: "1rem" }}>
         {Object.entries(properties).map(([subKey, subValue]) => (
           <ListItem key={name + "_" + subKey}>
             <DescriptionList
