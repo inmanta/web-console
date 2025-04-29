@@ -1,83 +1,38 @@
 import React, { act } from "react";
-import { useLocation } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  GetServerStatusOneTimeQueryManager,
-  GetServerStatusStateHelper,
-  GetEnvironmentsStateHelper,
-  GetEnvironmentsQueryManager,
-} from "@/Data";
+import { HttpResponse } from "msw";
+import { http } from "msw";
+import { setupServer } from "msw/node";
+import { FileFetcherImpl, getStoreInstance } from "@/Data";
 import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
-  GetEnvironmentsContinuousQueryManager,
-  GetEnvironmentsContinuousStateHelper,
-} from "@/Data/Managers/GetEnvironmentsContinuous";
-import {
   DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolverImpl,
+  Environment,
+  MockedDependencyProvider,
   Project,
   ServerStatus,
-  StaticScheduler,
 } from "@/Test";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { TestMemoryRouter } from "../Routing/TestMemoryRouter";
 import { Root } from "./Root";
 
+jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("mocked_token");
+jest.spyOn(defaultAuthContext, "getUser").mockReturnValue("mocked_user");
 function setup() {
   const queryClient = new QueryClient();
-
-  const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const scheduler = new StaticScheduler();
-  const environmentsStateHelper = GetEnvironmentsStateHelper(store);
-  const environmentManagerOneTime = GetEnvironmentsQueryManager(apiHelper, environmentsStateHelper);
-
-  const environmentsManager = GetEnvironmentsContinuousQueryManager(
-    apiHelper,
-    scheduler,
-    GetEnvironmentsContinuousStateHelper(store)
-  );
-
-  const getServerStatusManager = GetServerStatusOneTimeQueryManager(
-    apiHelper,
-    GetServerStatusStateHelper(store)
-  );
-
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      environmentsManager,
-      environmentManagerOneTime,
-      getServerStatusManager,
-    ])
-  );
-
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
+  const fileFetcher = new FileFetcherImpl(apiHelper);
+  const store = getStoreInstance();
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={["/"]}>
         <StoreProvider store={store}>
-          <DependencyProvider
-            dependencies={{
-              ...dependencies,
-              queryResolver,
-              environmentHandler,
-              authHelper: {
-                ...defaultAuthContext,
-                getUser: () => "mocked_user",
-                getToken: () => "mocked_token",
-              },
-            }}
-          >
+          <MockedDependencyProvider fileFetcher={fileFetcher}>
             <Root />
-          </DependencyProvider>
+          </MockedDependencyProvider>
         </StoreProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
@@ -85,54 +40,59 @@ function setup() {
 
   return {
     component,
-    apiHelper,
   };
 }
 
 expect.extend(toHaveNoViolations);
 
-test("GIVEN the app THEN the app should be accessible", async () => {
-  fetchMock.mockResponse(JSON.stringify({}));
-  const { component, apiHelper } = setup();
+describe("Root", () => {
+  const server = setupServer(
+    http.get("/api/v1/serverstatus", async () => {
+      return HttpResponse.json({ data: ServerStatus.withLsm });
+    }),
+    http.get("/api/v2/project", async () => {
+      return HttpResponse.json({ data: Project.list });
+    }),
+    http.get("/api/v2/environment", async () => {
+      return HttpResponse.json({ data: Environment.filterable });
+    })
+  );
 
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
-    await apiHelper.resolve(Either.right({ data: Project.list }));
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => {
+    server.close();
+    jest.clearAllMocks();
   });
 
-  await act(async () => {
-    const results = await axe(document.body);
+  test("GIVEN the app THEN the app should be accessible", async () => {
+    fetchMock.mockResponse(JSON.stringify({}));
+    const { component } = setup();
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    render(component);
 
-test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
-  fetchMock.mockResponse(JSON.stringify({}));
-  const { component, apiHelper } = setup();
+    await act(async () => {
+      const results = await axe(document.body);
 
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
-    await apiHelper.resolve(Either.right({ data: Project.list }));
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(screen.getByRole("button", { name: "Main Navigation" })).toBeVisible();
-});
+  test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
+    fetchMock.mockResponse(JSON.stringify({}));
+    const { component } = setup();
 
-test("GIVEN the app THEN the documentation link should be visible", async () => {
-  fetchMock.mockResponse(JSON.stringify({}));
-  const { component, apiHelper } = setup();
+    render(component);
 
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
-    await apiHelper.resolve(Either.right({ data: Project.list }));
+    expect(await screen.findByRole("button", { name: "Main Navigation" })).toBeVisible();
   });
 
-  expect(screen.getByRole("button", { name: "documentation link" })).toBeVisible();
+  test("GIVEN the app THEN the documentation link should be visible", async () => {
+    fetchMock.mockResponse(JSON.stringify({}));
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByRole("button", { name: "documentation link" })).toBeVisible();
+  });
 });
