@@ -1,10 +1,7 @@
 import React, { useContext } from "react";
 import { AuthContext } from "@/Data/Auth/AuthContext";
 import { Dependencies, DependencyProvider } from "@/UI";
-
-type Props = {
-  dependencies: Partial<Dependencies>;
-};
+import { MockedDependencyProvider } from "./dependencies";
 
 /**
  * A component that injects dependencies into its children components.
@@ -27,15 +24,8 @@ type Props = {
  * };
  * ```
  */
-export const AuthTestWrapper: React.FC<React.PropsWithChildren<Props>> = ({
-  dependencies,
-  children,
-}) => {
+export const AuthTestWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
   const authHelper = useContext(AuthContext);
 
-  return (
-    <DependencyProvider dependencies={{ ...dependencies, authHelper }}>
-      {children}
-    </DependencyProvider>
-  );
+  return <MockedDependencyProvider authHelper={authHelper}>{children}</MockedDependencyProvider>;
 };

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { FlatEnvironment } from "@/Core";
 import { DependencyContext } from "./Dependency";
 
@@ -9,8 +9,10 @@ interface Props {
 export const DependencyResolver: React.FC<Props> = ({ environment }) => {
   const { fileFetcher, environmentModifier } = useContext(DependencyContext);
 
-  fileFetcher.setEnvironment(environment.id);
-  environmentModifier.setEnvironment(environment);
+  useEffect(() => {
+    fileFetcher.setEnvironment(environment.id);
+    environmentModifier.setEnvironment(environment);
+  }, [environment]);
 
   return null;
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import { FileFetcher, FlatEnvironment } from "@/Core";
-import { PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
+import { AuthContextInterface, PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
 import { MockEnvironmentHandler, MockFeatureManager, MockFileManager } from "@/Test/Mock";
 import { PrimaryRouteManager, useEnvironmentModifierImpl, DependencyProvider } from "@/UI";
 import { UrlManagerImpl } from "@/UI/Utils";
@@ -10,8 +10,9 @@ export const MockedDependencyProvider: React.FC<
   React.PropsWithChildren<{
     env?: FlatEnvironment;
     fileFetcher?: FileFetcher;
+    authHelper?: AuthContextInterface;
   }>
-> = ({ env = EnvironmentDetails.env, fileFetcher, children }) => {
+> = ({ env = EnvironmentDetails.env, fileFetcher, authHelper = defaultAuthContext, children }) => {
   const baseUrl = "";
   const routeManager = PrimaryRouteManager(baseUrl);
   const environmentHandler = MockEnvironmentHandler(env);
@@ -31,7 +32,7 @@ export const MockedDependencyProvider: React.FC<
         environmentHandler,
         archiveHelper,
         fileFetcher,
-        authHelper: defaultAuthContext,
+        authHelper,
       }}
     >
       {children}

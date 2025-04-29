@@ -7,67 +7,27 @@ import { StoreProvider } from "easy-peasy";
 import { HttpResponse, delay, http } from "msw";
 import { setupServer } from "msw/node";
 import { getShortUuidFromRaw } from "@/Core";
-import { QueryResolverImpl, CommandResolverImpl, getStoreInstance } from "@/Data";
-import {
-  DynamicCommandManagerResolverImpl,
-  DynamicQueryManagerResolverImpl,
-  Service,
-  Callback,
-  DeferredApiHelper,
-  dependencies,
-} from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { Service, Callback, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import {
-  CallbacksQueryManager,
-  CallbacksStateHelper,
-  CallbacksUpdater,
-  CreateCallbackCommandManager,
-  DeleteCallbackCommandManager,
-} from "@S/ServiceDetails/Data";
 import { Page } from "@S/ServiceDetails/UI/Page";
 
 const server = setupServer();
 
 function setup() {
   const store = getStoreInstance();
-  const apiHelper = new DeferredApiHelper();
-
-  const callbacksStateHelper = CallbacksStateHelper(store);
-  const callbacksQueryManager = CallbacksQueryManager(apiHelper, callbacksStateHelper);
-
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([callbacksQueryManager])
-  );
-
-  const deleteCallbackCommandManager = DeleteCallbackCommandManager(
-    apiHelper,
-    new CallbacksUpdater(CallbacksStateHelper(store), apiHelper)
-  );
-
-  const createCallbackCommandManager = CreateCallbackCommandManager(
-    apiHelper,
-    new CallbacksUpdater(CallbacksStateHelper(store), apiHelper)
-  );
-
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([
-      deleteCallbackCommandManager,
-      createCallbackCommandManager,
-    ])
-  );
 
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
-        <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <Routes>
               <Route path="/lsm/catalog/:service/details" element={<Page />} />
             </Routes>
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

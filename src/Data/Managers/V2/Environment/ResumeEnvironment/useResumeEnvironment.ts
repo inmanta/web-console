@@ -21,14 +21,7 @@ export const useResumeEnvironment = (
     mutationFn: () => post("/api/v2/actions/environment/resume", null),
     mutationKey: ["resume_environment"],
     onSuccess: () => {
-      client.invalidateQueries({ queryKey: ["get_environments-one_time"] });
-      client.invalidateQueries({ queryKey: ["get_environments-continuous"] });
-      client.invalidateQueries({
-        queryKey: ["get_environment_details-one_time"],
-      });
-      client.invalidateQueries({
-        queryKey: ["get_environment_details-continuous"],
-      });
+      client.resetQueries();
     },
     ...options,
   });

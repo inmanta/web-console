@@ -1,120 +1,66 @@
 import React, { act } from "react";
 import { Page } from "@patternfly/react-core";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { ArchiveHelper, Deferred, Either, RemoteData } from "@/Core";
-import {
-  GetServerStatusContinuousQueryManager,
-  GetServerStatusStateHelper,
-  getStoreInstance,
-  PrimaryArchiveHelper,
-  PrimaryFeatureManager,
-  QueryResolverImpl,
-} from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolverImpl,
-  ServerStatus,
-  StaticScheduler,
-} from "@/Test";
+import { getStoreInstance, PrimaryFeatureManager } from "@/Data";
+import { MockedDependencyProvider, MockFeatureManager, ServerStatus } from "@/Test";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
 import { StatusPage } from ".";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { PrimaryArchiveHelper } from "@/Data/Common/PrimaryArchiveHelper";
 expect.extend(toHaveNoViolations);
 
-export class MockArchiveHelper implements ArchiveHelper {
-  private promise;
-  public resolve;
-  constructor() {
-    const { promise, resolve } = new Deferred();
-
-    this.promise = promise;
-    this.resolve = resolve;
-  }
-  async generateBlob(): Promise<Blob> {
-    return this.promise as Promise<Blob>;
-  }
-
-  triggerDownload(): void {
-    return;
-  }
-}
-
-function setup(useMockArchiveHelper = false) {
-  const client = new QueryClient();
+function setup() {
   const store = getStoreInstance();
 
-  store.dispatch.serverStatus.setData(RemoteData.success(ServerStatus.withoutFeatures));
-  const apiHelper = new DeferredApiHelper();
-  const getServerStatusQueryManager = GetServerStatusContinuousQueryManager(
-    apiHelper,
-    GetServerStatusStateHelper(store),
-    new StaticScheduler()
-  );
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([getServerStatusQueryManager])
-  );
-
-  const featureManager = new PrimaryFeatureManager();
-
-  const archiveHelper: MockArchiveHelper | PrimaryArchiveHelper = useMockArchiveHelper
-    ? new MockArchiveHelper()
-    : dependencies.archiveHelper;
-
   const component = (
-    <QueryClientProvider client={client}>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          featureManager,
-          archiveHelper,
-        }}
-      >
+    <QueryClientProvider client={testClient}>
+      <MockedDependencyProvider>
         <StoreProvider store={store}>
           <Page>
             <StatusPage />
           </Page>
         </StoreProvider>
-      </DependencyProvider>
+      </MockedDependencyProvider>
     </QueryClientProvider>
   );
 
   return {
     component,
-    apiHelper,
-    archiveHelper,
   };
 }
-const server = setupServer();
 
 describe("StatusPage", () => {
+  const server = setupServer(
+    http.get("/api/v1/serverstatus", () => {
+      return HttpResponse.json({ data: ServerStatus.withLsm });
+    })
+  );
+
   beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
+  beforeEach(() => server.resetHandlers());
+
+  afterAll(() => {
+    server.close();
+    jest.resetAllMocks();
+  });
 
   test("GIVEN StatusPage THEN shows server status", async () => {
-    const { component, apiHelper } = setup();
+    server.use(
+      http.get("/api/v1/serverstatus", () => {
+        return HttpResponse.json({ data: ServerStatus.withLsm });
+      })
+    );
+    const { component } = setup();
 
     render(component);
 
-    expect(apiHelper.pendingRequests).toHaveLength(1);
-    expect(apiHelper.pendingRequests[0]).toEqual({
-      method: "GET",
-      url: "/api/v1/serverstatus",
-    });
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
-    });
-
-    expect(screen.getByRole("list", { name: "StatusList" })).toBeVisible();
+    expect(await screen.findByRole("list", { name: "StatusList" })).toBeVisible();
     expect(
       screen.getByRole("listitem", {
         name: "StatusItem-Inmanta Service Orchestrator",
@@ -139,13 +85,10 @@ describe("StatusPage", () => {
   });
 
   test("GIVEN StatusPage without support extension THEN download button is not present", async () => {
-    const { component, apiHelper } = setup();
+    jest.spyOn(MockFeatureManager.prototype, "isSupportEnabled").mockReturnValue(false);
+    const { component } = setup();
 
     render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right({ data: ServerStatus.withoutSupport }));
-    });
 
     expect(screen.queryByRole("button", { name: "DownloadArchiveButton" })).not.toBeInTheDocument();
 
@@ -157,13 +100,11 @@ describe("StatusPage", () => {
   });
 
   test("GIVEN StatusPage with support extension THEN download button is present", async () => {
-    const { component, apiHelper } = setup();
+    jest.spyOn(MockFeatureManager.prototype, "isSupportEnabled").mockReturnValue(true);
+
+    const { component } = setup();
 
     render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
-    });
 
     expect(screen.getByRole("button", { name: "DownloadArchiveButton" })).toBeVisible();
 
@@ -182,13 +123,9 @@ describe("StatusPage", () => {
         return HttpResponse.json(ServerStatus.supportArchiveBase64);
       })
     );
-    const { component, apiHelper } = setup();
+    const { component } = setup();
 
     render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
-    });
 
     const downloadButton = screen.getByRole("button", {
       name: "DownloadArchiveButton",
@@ -212,19 +149,23 @@ describe("StatusPage", () => {
   });
 
   test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
+    jest
+      .spyOn(PrimaryArchiveHelper.prototype, "triggerDownload")
+      .mockImplementation(() => new Blob(["testing"], { type: "application/octet-stream" }));
+
     server.use(
+      http.get("/api/v1/support", () => {
+        return HttpResponse.json({ data: ServerStatus.withSupport });
+      }),
       http.get("/api/v2/support", async () => {
         await delay(100);
 
         return HttpResponse.json(ServerStatus.supportArchiveBase64);
       })
     );
-    const { component, apiHelper, archiveHelper } = setup(true);
+    const { component } = setup();
 
     render(component);
-    await act(async () => {
-      await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
-    });
 
     const downloadButton = screen.getByRole("button", {
       name: "DownloadArchiveButton",
@@ -236,9 +177,6 @@ describe("StatusPage", () => {
 
     expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.downloading"));
 
-    (archiveHelper as MockArchiveHelper).resolve(
-      new Blob(["testing"], { type: "application/octet-stream" })
-    );
     await waitFor(() =>
       expect(downloadButton).toHaveTextContent(words("status.supportArchive.action.download"))
     );
@@ -252,17 +190,16 @@ describe("StatusPage", () => {
 
   test("GIVEN StatusPage with support extension WHEN user click download and response is error THEN error is shown", async () => {
     server.use(
+      http.get("/api/v1/support", () => {
+        return HttpResponse.json({ data: ServerStatus.withSupport });
+      }),
       http.get("/api/v2/support", () => {
         return HttpResponse.json({ message: "error" }, { status: 500 });
       })
     );
-    const { component, apiHelper } = setup();
+    const { component } = setup();
 
     render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
-    });
 
     const downloadButton = await screen.findByRole("button", {
       name: "DownloadArchiveButton",

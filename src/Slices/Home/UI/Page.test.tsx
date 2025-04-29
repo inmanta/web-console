@@ -2,22 +2,15 @@ import React, { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
-import { getStoreInstance, QueryResolverImpl } from "@/Data";
-import {
-  GetEnvironmentsContinuousQueryManager,
-  GetEnvironmentsContinuousStateHelper,
-} from "@/Data/Managers/GetEnvironmentsContinuous";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolverImpl,
-  Project,
-  StaticScheduler,
-} from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { getStoreInstance } from "@/Data";
+import { Environment, MockedDependencyProvider, Project } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { setupServer } from "msw/node";
+import { http } from "msw";
+import { HttpResponse } from "msw";
 
 expect.extend(toHaveNoViolations);
 
@@ -30,70 +23,87 @@ const axe = configureAxe({
 
 function setup() {
   const store = getStoreInstance();
-  const apiHelper = new DeferredApiHelper();
-  const scheduler = new StaticScheduler();
-  const environmentsManager = GetEnvironmentsContinuousQueryManager(
-    apiHelper,
-    scheduler,
-    GetEnvironmentsContinuousStateHelper(store)
-  );
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([environmentsManager])
-  );
+
   const component = (
-    <TestMemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-        }}
-      >
-        <StoreProvider store={store}>
-          <Page />
-        </StoreProvider>
-      </DependencyProvider>
-    </TestMemoryRouter>
+    <QueryClientProvider client={testClient}>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
+          <StoreProvider store={store}>
+            <Page />
+          </StoreProvider>
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper };
+  return { component };
 }
 
-test("Home view shows failed table", async () => {
-  const { component, apiHelper } = setup();
+describe("Home", () => {
+  const server = setupServer();
 
-  render(component);
-
-  expect(await screen.findByRole("region", { name: "Overview-Loading" })).toBeInTheDocument();
-
-  apiHelper.resolve(Either.left("error"));
-
-  expect(await screen.findByRole("region", { name: "Overview-Failed" })).toBeInTheDocument();
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
+  beforeAll(() => {
+    server.listen();
   });
-});
 
-test("Home View shows success table", async () => {
-  const { component, apiHelper } = setup();
+  beforeEach(() => {
+    server.resetHandlers();
+  });
 
-  render(component);
+  afterAll(() => {
+    server.close();
+  });
 
-  expect(await screen.findByRole("region", { name: "Overview-Loading" })).toBeInTheDocument();
+  test("Home view shows failed table", async () => {
+    server.use(
+      http.get("/api/v2/project", () => {
+        return HttpResponse.json(
+          {
+            message: "something went wrong",
+          },
+          { status: 500 }
+        );
+      }),
+      http.get("/api/v2/environment", () => {
+        return HttpResponse.json({ data: Environment.filterable });
+      })
+    );
+    const { component } = setup();
 
-  apiHelper.resolve(
-    Either.right({
-      data: Project.filterable,
-    })
-  );
+    render(component);
 
-  expect(await screen.findByRole("generic", { name: "Overview-Success" })).toBeInTheDocument();
+    expect(await screen.findByRole("region", { name: "Overview-Loading" })).toBeInTheDocument();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    expect(await screen.findByRole("region", { name: "Overview-Failed" })).toBeInTheDocument();
 
-    expect(results).toHaveNoViolations();
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("Home View shows success table", async () => {
+    server.use(
+      http.get("/api/v2/project", () => {
+        return HttpResponse.json({ data: Project.filterable });
+      }),
+      http.get("/api/v2/environment", () => {
+        return HttpResponse.json({ data: Environment.filterable });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByRole("region", { name: "Overview-Loading" })).toBeInTheDocument();
+
+    expect(await screen.findByRole("generic", { name: "Overview-Success" })).toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

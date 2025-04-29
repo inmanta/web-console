@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
 import { useGetServerStatus } from "@/Data/Managers/V2/Server/GetServerStatus";
 import { ErrorView, LoadingView } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 
 /**
  * Initializer component
@@ -12,8 +13,15 @@ import { ErrorView, LoadingView } from "@/UI/Components";
  * @returns {React.FC<React.PropsWithChildren<unknown>>} The Initializer component
  */
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
+  const { environmentHandler } = useContext(DependencyContext);
   const serverStatus = useGetServerStatus().useOneTime();
   const environments = useGetEnvironments().useOneTime();
+
+  useEffect(() => {
+    if (environments.isSuccess) {
+      environmentHandler.setAllEnvironments(environments.data);
+    }
+  }, [environments.data, environments.isSuccess]);
 
   if (serverStatus.isError) {
     return (
