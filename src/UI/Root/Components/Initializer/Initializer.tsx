@@ -21,7 +21,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     if (environments.isSuccess) {
       environmentHandler.setAllEnvironments(environments.data);
     }
-  }, [environments.data, environments.isSuccess, environmentHandler]);
+  }, [environments.data, environments.isSuccess]);
 
   if (serverStatus.isError) {
     return (

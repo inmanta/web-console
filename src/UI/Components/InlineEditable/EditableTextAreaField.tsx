@@ -65,7 +65,7 @@ const StyledHelperText = styled(HelperText)`
 `;
 
 const StaticView: StaticViewComponent = ({ value, ...props }) => (
-  <InlineAreaValue role="contentinfo" {...props}>
+  <InlineAreaValue role="textbox" {...props}>
     {value}
   </InlineAreaValue>
 );

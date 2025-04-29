@@ -35,6 +35,8 @@ export const EditableSelectField: React.FC<Props> = ({
   initiallyEditable,
   onCreate,
   onSubmit,
+  error,
+  setError,
 }) => {
   return (
     <EditableField
@@ -53,10 +55,14 @@ export const EditableSelectField: React.FC<Props> = ({
         />
       )}
       StaticView={StaticView}
+      error={error}
+      setError={setError}
     />
   );
 };
 
 const StaticView: StaticViewComponent = ({ value, ...props }) => (
-  <InlineValue {...props}>{value}</InlineValue>
+  <InlineValue role="textbox" {...props}>
+    {value}
+  </InlineValue>
 );
