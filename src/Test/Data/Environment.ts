@@ -3,11 +3,11 @@ import { EnvironmentExpertOnly, EnvironmentModel, FlatEnvironment } from "@/Core
 export const env: FlatEnvironment = {
   id: "env",
   name: "environment_name_env",
-  project_id: "project_id_env",
+  project_id: "project_id_b",
   repo_branch: "",
   repo_url: "",
   halted: false,
-  projectName: "project_name_env",
+  projectName: "project_name_b",
   settings: {
     auto_deploy: false,
     server_compile: true,
