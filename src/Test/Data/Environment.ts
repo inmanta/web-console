@@ -1,4 +1,35 @@
-import { EnvironmentExpertOnly, EnvironmentModel } from "@/Core";
+import { EnvironmentExpertOnly, EnvironmentModel, FlatEnvironment } from "@/Core";
+
+export const env: FlatEnvironment = {
+  id: "env",
+  name: "environment_name_env",
+  project_id: "project_id_env",
+  repo_branch: "",
+  repo_url: "",
+  halted: false,
+  projectName: "project_name_env",
+  settings: {
+    auto_deploy: false,
+    server_compile: true,
+    autostart_splay: 10,
+    purge_on_delete: true,
+    autostart_on_start: true,
+    autostart_agent_map: {
+      internal: "local:",
+    },
+    enable_lsm_expert_mode: false,
+    push_on_auto_deploy: true,
+    protected_environment: false,
+    autostart_agent_interval: 600,
+    resource_action_logs_retention: 7,
+    autostart_agent_deploy_interval: 600,
+    autostart_agent_repair_interval: 86400,
+    environment_agent_trigger_method: "push_full_deploy",
+    autostart_agent_deploy_splay_time: 10,
+    autostart_agent_repair_splay_time: 600,
+    agent_trigger_method_on_auto_deploy: "push_incremental_deploy",
+  },
+};
 
 export const a: EnvironmentModel = {
   id: "environment_id_a",
@@ -7,6 +38,7 @@ export const a: EnvironmentModel = {
   repo_branch: "",
   repo_url: "",
   halted: false,
+  settings: {},
 };
 
 export const b: EnvironmentModel = {
@@ -16,6 +48,7 @@ export const b: EnvironmentModel = {
   repo_branch: "",
   repo_url: "",
   halted: false,
+  settings: {},
 };
 
 export const c: EnvironmentModel = {
@@ -25,6 +58,7 @@ export const c: EnvironmentModel = {
   repo_branch: "",
   repo_url: "",
   halted: false,
+  settings: {},
 };
 
 export const d: EnvironmentModel = {
@@ -34,6 +68,7 @@ export const d: EnvironmentModel = {
   repo_branch: "",
   repo_url: "",
   halted: false,
+  settings: {},
 };
 
 export const e: EnvironmentModel = {
@@ -43,6 +78,7 @@ export const e: EnvironmentModel = {
   repo_branch: "",
   repo_url: "",
   halted: false,
+  settings: {},
 };
 
 export const filterable: EnvironmentExpertOnly[] = [

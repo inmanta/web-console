@@ -1,8 +1,8 @@
 import React from "react";
 import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects/useGetProjects";
+import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
-import { words } from "@/UI";
 
 /**
  * Create Environment page

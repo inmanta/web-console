@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { EnvironmentSettings } from "@/Core/Domain/EnvironmentSettings";
+import { DependencyContext } from "@/UI/Dependency";
 import { useGet } from "../../helpers";
 
 /**
@@ -17,14 +19,17 @@ interface GetEnvironmentSettings {
  */
 export const useGetEnvironmentSettings = (): GetEnvironmentSettings => {
   const get = useGet()<{ data: EnvironmentSettings }>;
-
+  const { environmentModifier } = useContext(DependencyContext);
   return {
     useOneTime: (): UseQueryResult<EnvironmentSettings, Error> =>
       useQuery({
         queryKey: ["get_environment_settings-one_time"],
         queryFn: () => get("/api/v2/environment_settings"),
         retry: false,
-        select: (data) => data.data,
+        select: (data) => {
+          environmentModifier.setEnvironmentSettings(data.data);
+          return data.data;
+        },
       }),
   };
 };

@@ -4,6 +4,18 @@ import styled from "styled-components";
 import { EditableField, EditViewComponent, FieldProps, StaticViewComponent } from "./EditableField";
 import { InlineAreaValue } from "./InlineFillers";
 
+/**
+ * EditableTextAreaField component
+ *
+ * @props {FieldProps} props - The component props
+ * @prop {boolean} isRequired - Whether the field is required
+ * @prop {string} label - The label of the field
+ * @prop {string} initialValue - The initial value of the field
+ * @prop {boolean} initiallyEditable - Whether the field is initially editable
+ * @prop {Function} onSubmit - The function to call when the form is submitted
+ *
+ * @returns {React.FC<FieldProps>} - The EditableTextAreaField component
+ */
 export const EditableTextAreaField: React.FC<FieldProps> = ({
   isRequired,
   label,
@@ -22,6 +34,13 @@ export const EditableTextAreaField: React.FC<FieldProps> = ({
   />
 );
 
+/**
+ * EditView component used in the EditableTextAreaField component
+ *
+ * @props {Props} props - The component props
+ * @prop {string} value - The value of the field
+ * @prop {Function} onChange - The function to call when the value is changed
+ */
 const EditView: EditViewComponent = ({ value, onChange, label }) => (
   <>
     <TextArea

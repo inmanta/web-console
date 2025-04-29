@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Banner, Button, Flex, Spinner } from "@patternfly/react-core";
-import { useUpdateEnvConfig } from "@/Data/Managers/V2/Environment";
+import { useUpdateEnvironmentSetting } from "@/Data/Managers/V2/Environment";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
@@ -14,7 +14,7 @@ import { ToastAlert } from "../ToastAlert";
 export const ExpertBanner: React.FC = () => {
   const [errorMessage, setMessage] = useState<string | undefined>(undefined);
   const { environmentModifier } = useContext(DependencyContext);
-  const { mutate } = useUpdateEnvConfig({
+  const { mutate } = useUpdateEnvironmentSetting({
     onError: (error) => {
       setMessage(error.message);
       setIsLoading(false);
@@ -42,7 +42,7 @@ export const ExpertBanner: React.FC = () => {
               setIsLoading(true);
               mutate({
                 id: "enable_lsm_expert_mode",
-                updatedValue: { value: false },
+                value: false,
               });
             }}
           >

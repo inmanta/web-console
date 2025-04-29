@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { EnvironmentSettings, Maybe } from "@/Core";
+import { EnvironmentSettings } from "@/Core";
 import {
   BooleanDefinition,
   DictDefinition,

@@ -6,7 +6,7 @@ import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import * as useUpdateEnvConfig from "@/Data/Managers/V2/Environment/UpdateEnvConfig/useUpdateEnvConfig"; //import with that exact path is required for mock to work correctly
+import * as useUpdateEnvironmentSetting from "@/Data/Managers/V2/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting"; //import with that exact path is required for mock to work correctly
 import { dependencies } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -45,29 +45,29 @@ describe("Given ExpertBanner", () => {
 
   it("When expert_mode is set to true AND user clicks to disable expert mode it Then should fire mutation function", async () => {
     const mutateSpy = jest.fn();
-    const spy = jest.spyOn(useUpdateEnvConfig, "useUpdateEnvConfig").mockReturnValue({
-      data: undefined,
-      error: null,
-      failureCount: 0,
-      isError: false,
-      isIdle: false,
-      isSuccess: true,
-      isPending: false,
-      reset: jest.fn(),
-      isPaused: false,
-      context: undefined,
-      variables: {
-        id: "",
-        updatedValue: {
-          value: "",
+    const spy = jest
+      .spyOn(useUpdateEnvironmentSetting, "useUpdateEnvironmentSetting")
+      .mockReturnValue({
+        data: undefined,
+        error: null,
+        failureCount: 0,
+        isError: false,
+        isIdle: false,
+        isSuccess: true,
+        isPending: false,
+        reset: jest.fn(),
+        isPaused: false,
+        context: undefined,
+        variables: {
+          id: "",
+          value: false,
         },
-      },
-      failureReason: null,
-      submittedAt: 0,
-      mutateAsync: jest.fn(),
-      status: "success",
-      mutate: mutateSpy,
-    });
+        failureReason: null,
+        submittedAt: 0,
+        mutateAsync: jest.fn(),
+        status: "success",
+        mutate: mutateSpy,
+      });
 
     render(setup(true));
 
