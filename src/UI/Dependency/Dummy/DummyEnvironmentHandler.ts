@@ -17,10 +17,15 @@ export function DummyEnvironmentHandler(): EnvironmentHandler {
     throw new Error("Method not implemented.");
   }
 
+  function setAllEnvironments(): void {
+    throw new Error("Method not implemented.");
+  }
+
   return {
     useId,
     set,
     useSelected,
     determineSelected,
+    setAllEnvironments,
   };
 }
