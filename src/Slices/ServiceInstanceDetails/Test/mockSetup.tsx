@@ -6,10 +6,9 @@ import { StoreProvider } from "easy-peasy";
 import * as monaco from "monaco-editor";
 import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider } from "@/Test";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInstanceDetails } from "../UI/Page";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 
 /**
  * Mock setup for the test cases of the Instance Details page.

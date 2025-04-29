@@ -8,7 +8,7 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { UserInfo } from "@/Data/Managers/V2/Auth";
 import { MockedDependencyProvider } from "@/Test";
-import { DependencyProvider, words } from "@/UI";
+import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { UserManagementPage } from "./Page";

@@ -3,15 +3,15 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { http } from "msw";
+import { HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider, EnvironmentDetails } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { setupServer } from "msw/node";
-import { http } from "msw";
-import { HttpResponse } from "msw";
 expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({

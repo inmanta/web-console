@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { AuthContext } from "@/Data/Auth/AuthContext";
-import { Dependencies, DependencyProvider } from "@/UI";
 import { MockedDependencyProvider } from "./dependencies";
 
 /**

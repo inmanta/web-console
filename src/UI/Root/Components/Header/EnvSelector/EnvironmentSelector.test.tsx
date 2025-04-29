@@ -7,16 +7,16 @@ import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { FlatEnvironment } from "@/Core";
 import { AuthProvider, getStoreInstance, KeycloakAuthConfig, LocalConfig } from "@/Data";
+import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
+import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects";
 import { AuthTestWrapper, Environment, MockedDependencyProvider, Project } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
-import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
-import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { FlatEnvironment } from "@/Core";
 const EnvSelectorWrapper = ({
   onSelectEnvironment,
   selectedEnvironment,

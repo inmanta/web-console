@@ -20,14 +20,12 @@ import {
 } from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import {
   DeferredApiHelper,
-  dependencies,
   DynamicCommandManagerResolverImpl,
   DynamicQueryManagerResolverImpl,
   EnvironmentDetails,
   MockEnvironmentHandler,
   StaticScheduler,
 } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ModalProvider } from "../../ModalProvider";
 import { EnvironmentControls } from "./EnvironmentControls";
@@ -68,9 +66,8 @@ function setup() {
   const component = (
     <ModalProvider>
       <TestMemoryRouter initialEntries={["/?env=123"]}>
-        <DependencyProvider
+        <MockedDependencyProvider
           dependencies={{
-            ...dependencies,
             queryResolver,
             commandResolver,
             environmentHandler: MockEnvironmentHandler(EnvironmentDetails.a.id),
@@ -79,7 +76,7 @@ function setup() {
           <StoreProvider store={store}>
             <EnvironmentControls />
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </ModalProvider>
   );
