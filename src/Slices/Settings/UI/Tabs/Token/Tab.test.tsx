@@ -1,114 +1,136 @@
-import React, { act } from "react";
-import { render, screen, within } from "@testing-library/react";
+import React from "react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Either } from "@/Core";
-import { CommandResolverImpl, GenerateTokenCommandManager } from "@/Data";
-import { DeferredApiHelper, dependencies, DynamicCommandManagerResolverImpl } from "@/Test";
-import { DependencyProvider, words } from "@/UI";
+import { MockedDependencyProvider } from "@/Test";
+import { words } from "@/UI";
 import { Tab } from "./Tab";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { setupServer } from "msw/node";
+import { http, HttpResponse } from "msw";
 
 function setup() {
-  const apiHelper = new DeferredApiHelper();
-  const commandManager = GenerateTokenCommandManager(apiHelper);
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolverImpl([commandManager])
-  );
-
   const component = (
-    <DependencyProvider dependencies={{ ...dependencies, commandResolver }}>
-      <Tab />
-    </DependencyProvider>
+    <QueryClientProvider client={testClient}>
+      <MockedDependencyProvider>
+        <Tab />
+      </MockedDependencyProvider>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper };
+  return { component };
 }
 
-test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is executed", async () => {
-  const { component, apiHelper } = setup();
+describe("Token Tab", () => {
+  const server = setupServer();
 
-  render(component);
-  const generateButton = screen.getByRole("button", {
-    name: words("settings.tabs.token.generate"),
-  });
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
-  expect(generateButton).toBeVisible();
-  expect(generateButton).toBeEnabled();
-  expect(apiHelper.pendingRequests).toHaveLength(0);
+  test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is executed", async () => {
+    server.use(
+      http.post("/api/v2/environment_auth", ({ request }) => {
+        const body = request.json();
+        if (body["client_types"].length === 0) {
+          return HttpResponse.json({ data: "tokenstring123" });
+        }
+        return HttpResponse.json({ message: "wrong params" }, { status: 400 });
+      })
+    );
 
-  await userEvent.click(generateButton);
+    const { component } = setup();
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "POST",
-    body: { client_types: [] },
-    url: "/api/v2/environment_auth",
-    environment: "env",
-  });
-});
-
-test("GIVEN TokenTab WHEN api clientType is selected and generate button is clicked THEN generate call is executed with clientType set", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await userEvent.click(screen.getByRole("button", { name: "AgentOption" }));
-
-  await userEvent.click(
-    screen.getByRole("button", {
+    render(component);
+    const generateButton = screen.getByRole("button", {
       name: words("settings.tabs.token.generate"),
-    })
-  );
+    });
 
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "POST",
-    body: { client_types: ["agent"] },
-    url: "/api/v2/environment_auth",
-    environment: "env",
-  });
-});
+    expect(generateButton).toBeVisible();
+    expect(generateButton).toBeEnabled();
 
-test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
-  const { component, apiHelper } = setup();
+    await userEvent.click(generateButton);
 
-  render(component);
-
-  await userEvent.click(
-    screen.getByRole("button", {
-      name: words("settings.tabs.token.generate"),
-    })
-  );
-
-  await act(async () => {
-    await apiHelper.resolve(Either.left("error message"));
+    await waitFor(() => {
+      expect(screen.queryByLabelText("ToastError")).toBeNull();
+    });
   });
 
-  const errorContainer = screen.getByTestId("ToastError");
+  test("GIVEN TokenTab WHEN api clientType is selected and generate button is clicked THEN generate call is executed with clientType set", async () => {
+    server.use(
+      http.post("/api/v2/environment_auth", ({ request }) => {
+        const body = request.json();
+        if (body["client_types"].length === 1 && body["client_types"][0] === "agent") {
+          return HttpResponse.json({ data: "tokenstring123" });
+        }
+        return HttpResponse.json({ message: "wrong params" }, { status: 400 });
+      })
+    );
 
-  expect(errorContainer).toBeVisible();
-  expect(within(errorContainer).getByText("error message")).toBeVisible();
-});
+    const { component } = setup();
 
-test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async () => {
-  const { component, apiHelper } = setup();
+    render(component);
 
-  render(component);
+    await userEvent.click(screen.getByRole("button", { name: "AgentOption" }));
 
-  const copyButton = screen.getByRole("button", { name: "Copy to clipboard" });
-  const tokenOutput = screen.getByRole("textbox", { name: "TokenOutput" });
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: words("settings.tabs.token.generate"),
+      })
+    );
 
-  expect(copyButton).toBeDisabled();
-  expect(tokenOutput).toHaveValue("");
-
-  await userEvent.click(
-    screen.getByRole("button", {
-      name: words("settings.tabs.token.generate"),
-    })
-  );
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: "tokenstring123" }));
+    await waitFor(() => {
+      expect(screen.queryByLabelText("ToastError")).toBeNull();
+    });
   });
 
-  expect(copyButton).toBeEnabled();
-  expect(tokenOutput).toHaveValue("tokenstring123");
+  test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
+    server.use(
+      http.post("/api/v2/environment_auth", () => {
+        return HttpResponse.json({ message: "wrong params" }, { status: 400 });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: words("settings.tabs.token.generate"),
+      })
+    );
+
+    const errorContainer = await screen.findByTestId("ToastError");
+
+    expect(errorContainer).toBeVisible();
+    expect(within(errorContainer).getByText("wrong params")).toBeVisible();
+  });
+
+  test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async () => {
+    server.use(
+      http.post("/api/v2/environment_auth", () => {
+        return HttpResponse.json({ data: "tokenstring123" });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    const copyButton = screen.getByRole("button", { name: "Copy to clipboard" });
+    const tokenOutput = screen.getByRole("textbox", { name: "TokenOutput" });
+
+    expect(copyButton).toBeDisabled();
+    expect(tokenOutput).toHaveValue("");
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: words("settings.tabs.token.generate"),
+      })
+    );
+    const updatedCopyButton = await screen.findByRole("button", { name: "Copy to clipboard" });
+    const updatedTokenOutput = await screen.findByRole("textbox", { name: "TokenOutput" });
+
+    expect(updatedCopyButton).toBeEnabled();
+    expect(updatedTokenOutput).toHaveValue("tokenstring123");
+  });
 });

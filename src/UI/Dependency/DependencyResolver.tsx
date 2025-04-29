@@ -12,7 +12,7 @@ export const DependencyResolver: React.FC<Props> = ({ environment }) => {
   useEffect(() => {
     fileFetcher.setEnvironment(environment.id);
     environmentModifier.setEnvironment(environment);
-  }, [environment]);
+  }, [environment, environmentModifier]);
 
   return null;
 };
