@@ -1,13 +1,13 @@
 import React from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { Tab } from "./Tab";
-import { testClient } from "@/Test/Utils/react-query-setup";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { setupServer } from "msw/node";
-import { http, HttpResponse } from "msw";
 
 function setup() {
   const component = (

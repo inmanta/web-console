@@ -21,6 +21,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     if (environments.isSuccess) {
       environmentHandler.setAllEnvironments(environments.data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environments.data, environments.isSuccess]);
 
   if (serverStatus.isError) {

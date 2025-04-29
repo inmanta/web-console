@@ -12,6 +12,7 @@ export const DependencyResolver: React.FC<Props> = ({ environment }) => {
   useEffect(() => {
     fileFetcher.setEnvironment(environment.id);
     environmentModifier.setEnvironment(environment);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environment]);
 
   return null;
