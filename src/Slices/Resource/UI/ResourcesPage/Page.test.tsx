@@ -684,7 +684,7 @@ describe("ResourcesPage", () => {
         });
       })
     );
-    const { component } = setup();
+    const { component } = setup(["/resources?pageSize=20"]);
 
     render(component);
 
