@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatEnvironment, EnvironmentModifier, EnvironmentSettings } from "@/Core";
 
 /**
@@ -36,10 +36,14 @@ export function useEnvironmentModifierImpl(): EnvironmentModifier {
   }
 
   function useSetting(settingName: keyof EnvironmentSettings.DefinitionMap): boolean {
-    if (env === null || envSettings === null) return false;
+    if (env === null) return false;
 
     if (env.settings[settingName] !== undefined && env.settings[settingName] !== null) {
       return Boolean(env.settings[settingName]);
+    }
+
+    if (envSettings === null) {
+      return false;
     } else {
       return Boolean(envSettings.definition[settingName]?.default);
     }
