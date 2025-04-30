@@ -35,6 +35,14 @@ export function useEnvironmentModifierImpl(): EnvironmentModifier {
     return env.halted;
   }
 
+  /**
+   * check in the environment if the current settings exist if not it will try to fallback to envSettings definitions, in case of lack of env and lack of envSettings it will return false
+   *
+   * Currently envSettings are being fetched only when visiting env settings view due to re-rendering issues that came up through changing structure of the envModifier and Handler
+   * It will be resolved with GraphQL update for the initial loading of the environments - https://github.com/inmanta/web-console/issues/6266
+   * @param {keyof EnvironmentSettings.DefinitionMap} settingName
+   * @returns {boolean}
+   */
   function useSetting(settingName: keyof EnvironmentSettings.DefinitionMap): boolean {
     if (env === null) return false;
 
