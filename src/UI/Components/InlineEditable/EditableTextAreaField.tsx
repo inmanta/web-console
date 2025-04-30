@@ -22,6 +22,8 @@ export const EditableTextAreaField: React.FC<FieldProps> = ({
   initialValue,
   initiallyEditable,
   onSubmit,
+  error,
+  setError,
 }) => (
   <EditableField
     isRequired={isRequired}
@@ -31,6 +33,8 @@ export const EditableTextAreaField: React.FC<FieldProps> = ({
     onSubmit={onSubmit}
     EditView={EditView}
     StaticView={StaticView}
+    error={error}
+    setError={setError}
   />
 );
 
@@ -61,5 +65,7 @@ const StyledHelperText = styled(HelperText)`
 `;
 
 const StaticView: StaticViewComponent = ({ value, ...props }) => (
-  <InlineAreaValue {...props}>{value}</InlineAreaValue>
+  <InlineAreaValue role="textbox" {...props}>
+    {value}
+  </InlineAreaValue>
 );

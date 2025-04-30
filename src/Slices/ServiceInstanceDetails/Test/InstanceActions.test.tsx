@@ -109,7 +109,7 @@ describe("Page Actions - Success", () => {
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
     await waitFor(() =>
       expect(mockedUsedNavigate).toHaveBeenCalledWith(
-        "/console/lsm/catalog/mobileCore/inventory?env=aaa"
+        "/console/lsm/catalog/mobileCore/inventory?env=c85c0a64-ed45-4cba-bdc5-703f65a225f7"
       )
     );
   });

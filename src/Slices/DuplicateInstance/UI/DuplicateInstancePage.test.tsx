@@ -8,10 +8,9 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
-import { dependencies, MockEnvironmentModifier, Service, ServiceInstance } from "@/Test";
+import { MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { DuplicateInstancePage } from "./DuplicateInstancePage";
 
@@ -30,19 +29,14 @@ function setup(entity = "a") {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentModifier: new MockEnvironmentModifier(),
-          }}
-        >
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <DuplicateInstancePage
               serviceEntity={Service[entity]}
               instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
             />
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

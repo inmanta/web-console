@@ -7,9 +7,8 @@ import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import { dependencies, MockEnvironmentModifier } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { CatalogActions } from "./CatalogActions";
@@ -23,30 +22,17 @@ const axe = configureAxe({
   },
 });
 
-function setup(
-  details = {
-    halted: false,
-    server_compile: true,
-    protected_environment: false,
-    enable_lsm_expert_mode: false,
-  }
-) {
+function setup() {
   const store = getStoreInstance();
-  const environmentModifier = new MockEnvironmentModifier(details);
 
   const component = (
     <QueryClientProvider client={testClient}>
       <StoreProvider store={store}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentModifier,
-          }}
-        >
+        <MockedDependencyProvider>
           <ModalProvider>
             <CatalogActions />
           </ModalProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </StoreProvider>
     </QueryClientProvider>
   );
@@ -190,6 +176,9 @@ describe("CatalogActions", () => {
       name: "API-Documentation",
     });
 
-    expect(button).toHaveAttribute("href", "/lsm/v1/service_catalog_docs?environment=env");
+    expect(button).toHaveAttribute(
+      "href",
+      "/lsm/v1/service_catalog_docs?environment=c85c0a64-ed45-4cba-bdc5-703f65a225f7"
+    ); //default id of EnvironmentDetails.env which is provided in MockedDependencyProvider
   });
 });

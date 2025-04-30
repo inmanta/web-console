@@ -1,14 +1,12 @@
 import React from "react";
-import { useLocation } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { RemoteData, ServiceInstanceModel } from "@/Core";
+import { ServiceInstanceModel } from "@/Core";
 import { getStoreInstance } from "@/Data/Store";
-import { dependencies } from "@/Test";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
+import { MockedDependencyProvider } from "@/Test";
 import { childModel, testInstance, testService } from "@/UI/Components/Diagram/Mocks";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { useGetInstanceWithRelations } from "./useGetInstanceWithRelations";
@@ -60,7 +58,6 @@ export const server = setupServer(
 );
 
 const createWrapper = () => {
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
   const store = getStoreInstance();
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -69,35 +66,13 @@ const createWrapper = () => {
       },
     },
   });
-  const env = {
-    id: "aaa",
-    name: "env-a",
-    project_id: "ppp",
-    repo_branch: "branch",
-    repo_url: "repo",
-    projectName: "project",
-    halted: false,
-    settings: {},
-  };
-
-  store.dispatch.environment.setEnvironments(RemoteData.success([env]));
-
-  store.dispatch.environment.setEnvironmentDetailsById({
-    id: "aaa",
-    value: RemoteData.success(env),
-  });
 
   return ({ children }) => (
     <TestMemoryRouter>
       <QueryClientProvider client={queryClient}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentHandler,
-          }}
-        >
+        <MockedDependencyProvider>
           <StoreProvider store={store}>{children}</StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </QueryClientProvider>
     </TestMemoryRouter>
   );

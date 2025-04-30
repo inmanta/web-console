@@ -8,10 +8,9 @@ import { axe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as DiscoveredResources from "../Data/Mock";
 import { DiscoveredResourcesPage } from ".";
@@ -23,13 +22,13 @@ function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[""]}>
-        <DependencyProvider dependencies={dependencies}>
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <Page>
               <DiscoveredResourcesPage />
             </Page>
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

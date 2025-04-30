@@ -329,7 +329,7 @@ describe("ServiceInstanceDetailsPage", () => {
     // Should have the right href attribute
     expect(allEventsLink).toHaveAttribute(
       "href",
-      "/lsm/catalog/mobileCore/inventory/1d96a1ab/events?env=aaa&state.InstanceDetails.version=1&state.InstanceDetails.tab=Events"
+      "/lsm/catalog/mobileCore/inventory/1d96a1ab/events?env=c85c0a64-ed45-4cba-bdc5-703f65a225f7&state.InstanceDetails.version=1&state.InstanceDetails.tab=Events"
     );
 
     // In this version, expect only two rows with aria-label Event table row

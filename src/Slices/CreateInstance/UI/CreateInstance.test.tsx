@@ -8,10 +8,9 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
-import { dependencies, Service, ServiceInstance } from "@/Test";
+import { MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CreateInstance } from "./CreateInstance";
 
@@ -30,11 +29,11 @@ function setup(service) {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <CreateInstance serviceEntity={service} />
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

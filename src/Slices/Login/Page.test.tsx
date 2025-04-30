@@ -9,7 +9,6 @@ import { setupServer } from "msw/node";
 import { KeycloakAuthConfig, LocalConfig } from "@/Data/Auth";
 import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import * as CookieHelper from "@/Data/Common/CookieHelper";
-import { dependencies } from "@/Test";
 import { AuthTestWrapper } from "@/Test/Inject";
 import { words } from "@/UI";
 import { Login } from "./Page";
@@ -29,7 +28,7 @@ const setup = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider config={config}>
-        <AuthTestWrapper dependencies={dependencies}>
+        <AuthTestWrapper>
           <Login />
         </AuthTestWrapper>
       </AuthProvider>

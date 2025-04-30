@@ -4,7 +4,6 @@ import { EnvironmentRole, FlatEnvironment } from "@/Core";
 import { DependencyContext, DependencyResolver } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { PageFrame } from "./PageFrame";
-import { SettingsProvider } from "./SettingsProvider";
 
 interface Props {
   environmentRole: EnvironmentRole;
@@ -22,7 +21,6 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
     <>
       {environment && (
         <>
-          <SettingsProvider />
           <DependencyResolver environment={environment} />
         </>
       )}

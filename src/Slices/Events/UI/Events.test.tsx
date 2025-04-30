@@ -8,9 +8,8 @@ import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { InstanceEvent } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { dependencies, Service } from "@/Test";
+import { MockedDependencyProvider, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Events } from "./Events";
 
@@ -29,11 +28,11 @@ function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <Events service={Service.a} instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"} />
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

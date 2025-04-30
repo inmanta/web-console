@@ -1,18 +1,17 @@
 import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import { MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
 function setup(initialEntries?: string[]) {
   const component = (
-    <DependencyProvider dependencies={{ routeManager: PrimaryRouteManager("") }}>
+    <MockedDependencyProvider>
       <TestMemoryRouter initialEntries={initialEntries}>
         <PageBreadcrumbs />
       </TestMemoryRouter>
-    </DependencyProvider>
+    </MockedDependencyProvider>
   );
 
   return { component };

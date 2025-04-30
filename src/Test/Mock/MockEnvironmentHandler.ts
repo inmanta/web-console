@@ -1,8 +1,8 @@
 import { EnvironmentHandler, FlatEnvironment } from "@/Core";
 
-export function MockEnvironmentHandler(environment: string): EnvironmentHandler {
+export function MockEnvironmentHandler(environment: FlatEnvironment): EnvironmentHandler {
   function useId(): string {
-    return environment;
+    return environment.id;
   }
 
   function set(): void {
@@ -10,7 +10,11 @@ export function MockEnvironmentHandler(environment: string): EnvironmentHandler 
   }
 
   function useSelected(): FlatEnvironment {
-    throw new Error("Method not implemented.");
+    return environment;
+  }
+
+  function setAllEnvironments(_environments: FlatEnvironment[]): void {
+    return;
   }
 
   function determineSelected(): FlatEnvironment | undefined {
@@ -20,6 +24,7 @@ export function MockEnvironmentHandler(environment: string): EnvironmentHandler 
   return {
     useId,
     set,
+    setAllEnvironments,
     useSelected,
     determineSelected,
   };

@@ -7,10 +7,9 @@ import { StoreProvider } from "easy-peasy";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
-import { dependencies, ServiceInstance } from "@/Test";
+import { MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CellWithCopy } from "./CellWithCopy";
 function setup(props) {
@@ -21,7 +20,7 @@ function setup(props) {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
               <Table>
@@ -33,7 +32,7 @@ function setup(props) {
               </Table>
             </TreeTableCellContext.Provider>
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

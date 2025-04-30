@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
 import { StopIcon } from "@patternfly/react-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { useHaltEnvironment } from "@/Data/Managers/V2/Environment";
 import { useQueryControl } from "@/Data/Managers/V2/helpers/QueryControlContext";
 import { words } from "@/UI/words";
@@ -12,10 +13,12 @@ import { ModalContext } from "../../ModalProvider";
  * @returns {React.FC} A button with a tooltip that triggers a modal when clicked.
  */
 export const HaltButton: React.FC = () => {
+  const client = useQueryClient();
   const { disableQueries, enableQueries } = useQueryControl();
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { mutate } = useHaltEnvironment({
     onSuccess: () => {
+      client.refetchQueries();
       enableQueries();
       document.dispatchEvent(new CustomEvent("halt-event"));
     },

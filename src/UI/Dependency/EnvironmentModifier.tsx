@@ -13,7 +13,7 @@ import { FlatEnvironment, EnvironmentModifier, EnvironmentSettings } from "@/Cor
  *
  * @returns {EnvironmentModifier} - An object with the following properties:
  */
-export function EnvironmentModifierImpl(): EnvironmentModifier {
+export function useEnvironmentModifierImpl(): EnvironmentModifier {
   const [env, setEnv] = useState<FlatEnvironment | null>(null);
   const [envSettings, setEnvSettings] = useState<EnvironmentSettings.EnvironmentSettings | null>(
     null

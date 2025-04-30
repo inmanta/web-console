@@ -7,29 +7,29 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { getStoreInstance } from "@/Data";
 import * as useUpdateEnvironmentSetting from "@/Data/Managers/V2/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting"; //import with that exact path is required for mock to work correctly
-import { dependencies } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ExpertBanner } from "./ExpertBanner";
 
 const setup = (flag: boolean) => {
-  dependencies.environmentModifier.useIsExpertModeEnabled = jest.fn(() => flag);
+  jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+    ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
+    useIsExpertModeEnabled: () => flag,
+  });
+
   const store = getStoreInstance();
 
   return (
     <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-        }}
-      >
+      <MockedDependencyProvider>
         <QueryClientProvider client={testClient}>
           <StoreProvider store={store}>
             <ExpertBanner />
           </StoreProvider>
         </QueryClientProvider>
-      </DependencyProvider>
+      </MockedDependencyProvider>
     </TestMemoryRouter>
   );
 };
@@ -75,7 +75,7 @@ describe("Given ExpertBanner", () => {
 
     expect(mutateSpy).toHaveBeenCalledWith({
       id: "enable_lsm_expert_mode",
-      updatedValue: { value: false },
+      value: false,
     });
     spy.mockRestore();
   });

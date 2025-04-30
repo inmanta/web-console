@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { useLocation } from "react-router";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, within } from "@testing-library/react";
@@ -8,20 +7,16 @@ import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { RemoteData } from "@/Core";
 import { getStoreInstance } from "@/Data";
 import {
   Service,
   ServiceInstance,
   Pagination,
   StaticScheduler,
-  MockEnvironmentModifier,
-  DeferredApiHelper,
-  dependencies,
+  MockedDependencyProvider,
 } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Chart } from "./Components";
@@ -32,36 +27,11 @@ expect.extend(toHaveNoViolations);
 function setup(service = Service.a, pageSize = "") {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
 
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
-
-  store.dispatch.environment.setEnvironments(
-    RemoteData.success([
-      {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        halted: false,
-        settings: {
-          enable_lsm_expert_mode: false,
-        },
-      },
-    ])
-  );
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[`/?env=aaa${pageSize}`]}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentModifier: new MockEnvironmentModifier(),
-            environmentHandler,
-          }}
-        >
+        <MockedDependencyProvider>
           <StoreProvider store={store}>
             <ModalProvider>
               <Page>
@@ -73,14 +43,13 @@ function setup(service = Service.a, pageSize = "") {
               </Page>
             </ModalProvider>
           </StoreProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
 
   return {
     component,
-    apiHelper,
     scheduler,
   };
 }

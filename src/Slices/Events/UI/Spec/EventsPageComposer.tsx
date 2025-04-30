@@ -4,9 +4,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { StoreProvider } from "easy-peasy";
 import { ServiceModel } from "@/Core";
 import { getStoreInstance } from "@/Data";
-import { dependencies, Service } from "@/Test";
+import { MockedDependencyProvider, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
 import { Events } from "@S/Events/UI/Events";
 
 interface Handles {
@@ -26,11 +25,11 @@ export class EventsPageComposer {
     const component = (
       <QueryClientProvider client={testClient}>
         <MemoryRouter>
-          <DependencyProvider dependencies={dependencies}>
+          <MockedDependencyProvider>
             <StoreProvider store={store}>
               <Events service={service} instanceId="id1" />
             </StoreProvider>
-          </DependencyProvider>
+          </MockedDependencyProvider>
         </MemoryRouter>
       </QueryClientProvider>
     );

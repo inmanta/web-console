@@ -1,4 +1,4 @@
-import { EnvironmentDetails } from "@/Core/Domain";
+import { FlatEnvironment } from "@/Core/Domain";
 
 export interface Query {
   kind: "GetEnvironmentDetails";
@@ -8,8 +8,8 @@ export interface Query {
 
 export interface Manifest {
   error: string;
-  apiResponse: { data: EnvironmentDetails };
-  data: EnvironmentDetails;
-  usedData: EnvironmentDetails;
+  apiResponse: { data: FlatEnvironment };
+  data: FlatEnvironment;
+  usedData: FlatEnvironment;
   query: Query;
 }

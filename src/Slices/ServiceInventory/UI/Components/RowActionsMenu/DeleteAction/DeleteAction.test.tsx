@@ -1,17 +1,17 @@
-import React, { act } from "react";
+import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { EnvironmentDetails, RemoteData } from "@/Core";
-import { CommandManagerResolverImpl, CommandResolverImpl, getStoreInstance } from "@/Data";
+import { getStoreInstance } from "@/Data";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
-import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
+import { ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { DeleteAction } from "./DeleteAction";
+
 const mockedMutate = jest.fn();
 
 //mock is used to assert correct function call
@@ -20,31 +20,13 @@ jest.mock("@/Data/Managers/V2/ServiceInstance", () => ({
 }));
 
 function setup() {
-  const apiHelper = new DeferredApiHelper();
-
   const storeInstance = getStoreInstance();
-
-  storeInstance.dispatch.environment.setEnvironmentDetailsById({
-    id: ServiceInstance.a.environment,
-    value: RemoteData.success({ halted: false } as EnvironmentDetails),
-  });
-
-  dependencies.environmentModifier.setEnvironment(ServiceInstance.a.environment);
-
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(storeInstance, apiHelper)
-  );
 
   return {
     component: (isDisabled = false) => (
       <QueryClientProvider client={testClient}>
         <StoreProvider store={storeInstance}>
-          <DependencyProvider
-            dependencies={{
-              ...dependencies,
-              commandResolver,
-            }}
-          >
+          <MockedDependencyProvider>
             <ModalProvider>
               <ServiceInventoryContext.Provider
                 value={{
@@ -69,7 +51,7 @@ function setup() {
                 />
               </ServiceInventoryContext.Provider>
             </ModalProvider>
-          </DependencyProvider>
+          </MockedDependencyProvider>
         </StoreProvider>
       </QueryClientProvider>
     ),
@@ -124,15 +106,13 @@ describe("DeleteModal ", () => {
   });
 
   it("Takes environment halted status in account", async () => {
-    const { component, storeInstance } = setup();
+    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
+      useIsHalted: () => true,
+    });
+    const { component } = setup();
     const { rerender } = render(component(true));
 
-    await act(async () => {
-      storeInstance.dispatch.environment.setEnvironmentDetailsById({
-        id: ServiceInstance.a.environment,
-        value: RemoteData.success({ halted: true } as EnvironmentDetails),
-      });
-    });
     rerender(component(false));
     expect(await screen.findByRole("menuitem", { name: words("delete") })).toBeDisabled();
   });

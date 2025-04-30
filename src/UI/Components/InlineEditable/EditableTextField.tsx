@@ -53,5 +53,7 @@ const EditView: EditViewComponent = ({ value, onChange, onSubmit, label }) => (
 );
 
 const StaticView: StaticViewComponent = ({ value, ...props }) => (
-  <InlineValue {...props}>{value}</InlineValue>
+  <InlineValue role="textbox" {...props}>
+    {value}
+  </InlineValue>
 );

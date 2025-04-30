@@ -105,7 +105,11 @@ export const EditableMultiTextField: React.FC<Props> = ({
                 {convertToTitleCase(label)}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                {!editable && <InlineValue aria-label={`${label}-value`}>{value}</InlineValue>}
+                {!editable && (
+                  <InlineValue role="textbox" aria-label={`${label}-value`}>
+                    {value}
+                  </InlineValue>
+                )}
                 {editable && (
                   <Flex spaceItems={{ default: "spaceItemsNone" }}>
                     <FlexItem grow={{ default: "grow" }}>

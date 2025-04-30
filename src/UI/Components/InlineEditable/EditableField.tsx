@@ -60,6 +60,7 @@ export const EditableField: React.FC<Props> = ({
   };
   const onEditClick = () => {
     setEditable(true);
+    setError(null);
   };
 
   const onSubmitClick = () => onSubmitRequest(value);

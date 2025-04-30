@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Button, Icon, Tooltip } from "@patternfly/react-core";
 import { PlayIcon } from "@patternfly/react-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { useResumeEnvironment } from "@/Data/Managers/V2/Environment";
 import { useQueryControl } from "@/Data/Managers/V2/helpers/QueryControlContext";
 import { words } from "@/UI/words";
@@ -12,11 +13,13 @@ import { ModalContext } from "../../ModalProvider";
  * @returns {React.FC} A button with a tooltip that triggers a modal when clicked.
  */
 export const ResumeButton: React.FC = () => {
+  const client = useQueryClient();
   const { enableQueries } = useQueryControl();
   const { triggerModal, closeModal } = useContext(ModalContext);
 
   const { mutate } = useResumeEnvironment({
     onSuccess: () => {
+      client.refetchQueries();
       enableQueries();
       document.dispatchEvent(new CustomEvent("resume-event"));
     },
