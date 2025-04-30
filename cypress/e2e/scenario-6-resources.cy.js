@@ -569,6 +569,11 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="LegendItem-deployed"]', { timeout: 60000 }).should("have.text", "49");
 
+      // set page size to 20 for the test, 100 should be the default
+      cy.get('[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle').click();
+      cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist");
+      cy.contains(".pf-v6-c-menu__list-item", "20").click();
+
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "1 - 20");
