@@ -14,7 +14,6 @@ export const useResumeEnvironment = (
   return useMutation({
     mutationFn: () => post("/api/v2/actions/environment/resume", null),
     mutationKey: ["resume_environment"],
-
     ...options,
   });
 };
