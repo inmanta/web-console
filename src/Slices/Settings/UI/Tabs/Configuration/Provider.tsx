@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import _ from "lodash";
 import { EnvironmentSettings } from "@/Core";
 import {
@@ -7,7 +8,6 @@ import {
 } from "@/Data/Managers/V2/Environment";
 import { Container } from "./Container";
 import { InputInfoCreator } from "./InputInfoCreator";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   settings: EnvironmentSettings.EnvironmentSettings;

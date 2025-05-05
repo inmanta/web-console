@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Banner, Flex } from "@patternfly/react-core";
+import { useGetVersionFileInfo } from "@/Data/Managers/V2/Miscellaneous";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { useGetVersionFileInfo } from "@/Data/Managers/V2/Miscellaneous";
 
 /**
  * Component for displaying an update banner when a new version is available.
@@ -20,7 +20,7 @@ export const UpdateBanner: React.FC = () => {
     if (isSuccess && data.version_info.commitHash !== currentCommit) {
       setShowBannerState(true);
     }
-  }, [isSuccess]);
+  }, [isSuccess, currentCommit]);
 
   const banner = (
     <React.Fragment>

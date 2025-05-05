@@ -3,6 +3,7 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServerStatus } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { REFETCH_INTERVAL, useGetWithoutEnv } from "../../helpers";
+
 /**
  * Return Signature of the useGetServerStatus React Query
  */

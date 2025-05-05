@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Alert, AlertActionCloseButton, Stack } from "@patternfly/react-core";
 import { Tbody, Table } from "@patternfly/react-table";
 import { EnvironmentSettings } from "@/Core";
