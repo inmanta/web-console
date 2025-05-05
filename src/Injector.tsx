@@ -88,7 +88,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({ store, chil
       }}
     >
       <ModalProvider>
-        <UpdateBanner apiHelper={apiHelper} />
+        <UpdateBanner />
         {children}
       </ModalProvider>
     </DependencyProvider>
