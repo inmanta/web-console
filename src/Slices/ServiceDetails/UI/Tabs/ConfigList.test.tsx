@@ -1,10 +1,8 @@
 import React, { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Config } from "@/Core";
-import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
@@ -19,15 +17,11 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const store = getStoreInstance();
-
   return {
     component: (config: Config) => (
       <QueryClientProvider client={testClient}>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <ConfigList serviceName={Service.a.name} config={config} />
-          </StoreProvider>
+          <ConfigList serviceName={Service.a.name} config={config} />
         </MockedDependencyProvider>
       </QueryClientProvider>
     ),

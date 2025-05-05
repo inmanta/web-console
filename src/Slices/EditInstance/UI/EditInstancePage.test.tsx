@@ -2,12 +2,10 @@ import React, { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { cloneDeep } from "lodash";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
 import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
@@ -42,8 +40,6 @@ const axeLimited = configureAxe({
 });
 
 function setup(entity = "a", multiNested = false) {
-  const store = getStoreInstance();
-
   const service = multiNested
     ? { ...Service[entity], embedded_entities: multiNestedEditable }
     : Service[entity];
@@ -52,12 +48,10 @@ function setup(entity = "a", multiNested = false) {
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <EditInstancePage
-              serviceEntity={service}
-              instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-            />
-          </StoreProvider>
+          <EditInstancePage
+            serviceEntity={service}
+            instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
+          />
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>

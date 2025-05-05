@@ -4,7 +4,6 @@ import { Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import {
@@ -16,7 +15,6 @@ import {
   TextField,
   Textarea,
 } from "@/Core";
-import { getStoreInstance } from "@/Data";
 import * as Test from "@/Test";
 import { MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -29,30 +27,26 @@ const setup = (
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined
 ) => {
-  const store = getStoreInstance();
-
   const component = (
     <TestMemoryRouter initialEntries={["/?env=aaa"]}>
       <MockedDependencyProvider>
-        <StoreProvider store={store}>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <ServiceInstanceForm
-                  fields={fields}
-                  onCancel={jest.fn()}
-                  onSubmit={func ? func : jest.fn()}
-                  isEdit={isEdit}
-                  originalAttributes={originalAttributes}
-                  service_entity="service_entity"
-                  isDirty={false}
-                  setIsDirty={jest.fn()}
-                />
-              }
-            />
-          </Routes>
-        </StoreProvider>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ServiceInstanceForm
+                fields={fields}
+                onCancel={jest.fn()}
+                onSubmit={func ? func : jest.fn()}
+                isEdit={isEdit}
+                originalAttributes={originalAttributes}
+                service_entity="service_entity"
+                isDirty={false}
+                setIsDirty={jest.fn()}
+              />
+            }
+          />
+        </Routes>
       </MockedDependencyProvider>
     </TestMemoryRouter>
   );

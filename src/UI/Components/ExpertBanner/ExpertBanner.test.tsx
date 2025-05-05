@@ -2,10 +2,8 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import * as useUpdateEnvironmentSetting from "@/Data/Managers/V2/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting"; //import with that exact path is required for mock to work correctly
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -19,15 +17,11 @@ const setup = (flag: boolean) => {
     useIsExpertModeEnabled: () => flag,
   });
 
-  const store = getStoreInstance();
-
   return (
     <TestMemoryRouter initialEntries={["/?env=aaa"]}>
       <MockedDependencyProvider>
         <QueryClientProvider client={testClient}>
-          <StoreProvider store={store}>
-            <ExpertBanner />
-          </StoreProvider>
+          <ExpertBanner />
         </QueryClientProvider>
       </MockedDependencyProvider>
     </TestMemoryRouter>

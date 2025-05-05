@@ -37,7 +37,6 @@ export interface GetVersionResourcesParams {
  * Return signature of the useGetVersionResources React Query hook
  */
 interface GetVersionResources {
-  useOneTime: () => UseQueryResult<QueryResponse, Error>;
   useContinuous: () => UseQueryResult<QueryResponse, Error>;
 }
 
@@ -45,7 +44,6 @@ interface GetVersionResources {
  * React Query hook to fetch resources from a specific desired state version
  *
  * @returns {GetVersionResources} An object containing the available queries.
- * @returns {UseQueryResult<QueryResponse, Error>} returns.useOneTime - Fetch the resources with a single query.
  * @returns {UseQueryResult<QueryResponse, Error>} returns.useContinuous - Fetch the resources with a recurrent query with an interval of 5s.
  */
 export const useGetVersionResources = ({
@@ -64,15 +62,6 @@ export const useGetVersionResources = ({
     currentPage,
   });
   return {
-    useOneTime: (): UseQueryResult<QueryResponse, Error> =>
-      useQuery({
-        queryKey: ["get_version_resources-one_time", version, pageSize, filter, sort, currentPage],
-        queryFn: () => get(url),
-        select: (data) => ({
-          ...data,
-          handlers: getPaginationHandlers(data.links, data.metadata),
-        }),
-      }),
     useContinuous: (): UseQueryResult<QueryResponse, Error> =>
       useQuery({
         queryKey: [

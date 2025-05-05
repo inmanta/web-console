@@ -2,11 +2,8 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { getStoreInstance } from "@/Data";
 import { Row, Service, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-
 import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -26,22 +23,19 @@ function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
     useIsHalted: () => false,
   });
 
-  const store = getStoreInstance();
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <ModalProvider>
-              <InventoryTable
-                rows={[Row.a]}
-                tablePresenter={tablePresenterWithIdentity()}
-                service={Service.withIdentity}
-                setSort={setSortFn}
-                sort={{ name: "created_at", order: "desc" }}
-              />
-            </ModalProvider>
-          </StoreProvider>
+          <ModalProvider>
+            <InventoryTable
+              rows={[Row.a]}
+              tablePresenter={tablePresenterWithIdentity()}
+              service={Service.withIdentity}
+              setSort={setSortFn}
+              sort={{ name: "created_at", order: "desc" }}
+            />
+          </ModalProvider>
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>

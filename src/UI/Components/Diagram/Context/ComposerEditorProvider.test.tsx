@@ -3,10 +3,8 @@ import { Route, Routes } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import "@testing-library/jest-dom";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -16,8 +14,6 @@ import { defineObjectsForJointJS } from "../testSetup";
 import { ComposerEditorProvider } from "./ComposerEditorProvider";
 
 const setup = (instanceId: string, editable: boolean = true) => {
-  const store = getStoreInstance();
-
   return (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter
@@ -25,27 +21,25 @@ const setup = (instanceId: string, editable: boolean = true) => {
           "/lsm/catalog/child-service/inventory/13920268-cce0-4491-93b5-11316aa2fc37/edit?env=aaa",
         ]}
       >
-        <StoreProvider store={store}>
-          <MockedDependencyProvider>
-            <Routes>
-              <Route
-                path="/lsm/catalog/child-service/inventory/:instanceId/edit"
-                element={
-                  <ComposerEditorProvider
-                    serviceName={"child-service"}
-                    editable={editable}
-                    instance={instanceId}
-                  />
-                }
-              />
-              <Route
-                path="/lsm/catalog/child-service/inventory"
-                element={<div data-testid="inventory-page" />}
-              />
-              <Route path="/" element={<div data-testid="root-page" />} />
-            </Routes>
-          </MockedDependencyProvider>
-        </StoreProvider>
+        <MockedDependencyProvider>
+          <Routes>
+            <Route
+              path="/lsm/catalog/child-service/inventory/:instanceId/edit"
+              element={
+                <ComposerEditorProvider
+                  serviceName={"child-service"}
+                  editable={editable}
+                  instance={instanceId}
+                />
+              }
+            />
+            <Route
+              path="/lsm/catalog/child-service/inventory"
+              element={<div data-testid="inventory-page" />}
+            />
+            <Route path="/" element={<div data-testid="root-page" />} />
+          </Routes>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

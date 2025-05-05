@@ -1,11 +1,10 @@
 import React, { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { FileFetcherImpl, getStoreInstance } from "@/Data";
+import { FileFetcherImpl } from "@/Data";
 import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   DeferredApiHelper,
@@ -23,16 +22,13 @@ function setup() {
   const queryClient = new QueryClient();
   const apiHelper = new DeferredApiHelper();
   const fileFetcher = new FileFetcherImpl(apiHelper);
-  const store = getStoreInstance();
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={["/"]}>
-        <StoreProvider store={store}>
-          <MockedDependencyProvider fileFetcher={fileFetcher}>
-            <Root />
-          </MockedDependencyProvider>
-        </StoreProvider>
+        <MockedDependencyProvider fileFetcher={fileFetcher}>
+          <Root />
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

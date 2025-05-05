@@ -2,10 +2,8 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
@@ -14,19 +12,15 @@ import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Actions } from "./Actions";
 
 function setup() {
-  const store = getStoreInstance();
-
   const component = (
     <QueryClientProvider client={testClient}>
-      <StoreProvider store={store}>
-        <TestMemoryRouter>
-          <MockedDependencyProvider>
-            <ModalProvider>
-              <Actions environment={{ id: "env", name: "connect" }} />
-            </ModalProvider>
-          </MockedDependencyProvider>
-        </TestMemoryRouter>
-      </StoreProvider>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
+          <ModalProvider>
+            <Actions environment={{ id: "env", name: "connect" }} />
+          </ModalProvider>
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

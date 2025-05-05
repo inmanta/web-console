@@ -1,8 +1,6 @@
 import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { StoreProvider } from "easy-peasy";
-import { getStoreInstance } from "@/Data";
-import { StaticScheduler, DeferredApiHelper, MockedDependencyProvider } from "@/Test";
+import { DeferredApiHelper, MockedDependencyProvider } from "@/Test";
 import { BlockingModal } from "@/UI/Components";
 import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -14,21 +12,17 @@ export function baseSetup(Page: React.ReactNode, halted: boolean = false) {
     useIsHalted: () => halted,
   });
   const apiHelper = new DeferredApiHelper();
-  const scheduler = new StaticScheduler();
-  const store = getStoreInstance();
 
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={["/"]}>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <BlockingModal />
-            {Page}
-          </StoreProvider>
+          <BlockingModal />
+          {Page}
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component, apiHelper };
 }

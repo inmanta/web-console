@@ -1,10 +1,8 @@
 import React, { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { AttributeModel, ServiceModel } from "@/Core";
-import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider, Service } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -38,14 +36,10 @@ const attribute2: AttributeModel = {
 };
 
 function setup(service: ServiceModel) {
-  const store = getStoreInstance();
-
   const component = (
     <TestMemoryRouter>
       <MockedDependencyProvider>
-        <StoreProvider store={store}>
-          <AttributeTable service={service} />
-        </StoreProvider>
+        <AttributeTable service={service} />
       </MockedDependencyProvider>
     </TestMemoryRouter>
   );

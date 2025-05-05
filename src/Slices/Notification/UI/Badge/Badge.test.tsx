@@ -1,10 +1,8 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import { DeferredApiHelper, MockedDependencyProvider } from "@/Test";
 import { metadata, links } from "@/Test/Data/Pagination";
 import * as Mock from "@S/Notification/Core/Mock";
@@ -19,15 +17,12 @@ function setup() {
       },
     },
   });
-  const store = getStoreInstance();
 
   const component = (
     <QueryClientProvider client={queryClient}>
-      <StoreProvider store={store}>
-        <MockedDependencyProvider>
-          <Badge onClick={() => undefined} />
-        </MockedDependencyProvider>
-      </StoreProvider>
+      <MockedDependencyProvider>
+        <Badge onClick={() => undefined} />
+      </MockedDependencyProvider>
     </QueryClientProvider>
   );
 

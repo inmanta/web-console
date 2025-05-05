@@ -7,15 +7,12 @@ import {
 } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { getStoreInstance } from "@/Data";
 import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
-
 import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
 import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
@@ -24,7 +21,6 @@ import { ConfigSectionContent } from "./ConfigSectionContent";
 
 function setup() {
   const client = new QueryClient();
-  const store = getStoreInstance();
 
   const instanceIdentifier: VersionedServiceInstanceIdentifier = {
     id: ServiceInstance.a.id,
@@ -36,22 +32,20 @@ function setup() {
     <QueryClientProvider client={client}>
       <TestMemoryRouter initialEntries={["/?env=aaa"]}>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <InstanceDetailsContext.Provider
-              value={{
-                instance: ServiceInstance.a,
-                logsQuery: {} as unknown as UseInfiniteQueryResult<InstanceLog[], Error>,
-                serviceModelQuery: {
-                  data: Service.a,
-                  isLoading: false,
-                  isError: false,
-                  isSuccess: true,
-                } as UseQueryResult<ServiceModel, Error>,
-              }}
-            >
-              <ConfigSectionContent serviceInstanceIdentifier={instanceIdentifier} />
-            </InstanceDetailsContext.Provider>
-          </StoreProvider>
+          <InstanceDetailsContext.Provider
+            value={{
+              instance: ServiceInstance.a,
+              logsQuery: {} as unknown as UseInfiniteQueryResult<InstanceLog[], Error>,
+              serviceModelQuery: {
+                data: Service.a,
+                isLoading: false,
+                isError: false,
+                isSuccess: true,
+              } as UseQueryResult<ServiceModel, Error>,
+            }}
+          >
+            <ConfigSectionContent serviceInstanceIdentifier={instanceIdentifier} />
+          </InstanceDetailsContext.Provider>
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
@@ -59,7 +53,6 @@ function setup() {
 
   return {
     component,
-    store,
   };
 }
 let data = {

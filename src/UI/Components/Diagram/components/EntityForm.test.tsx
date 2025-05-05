@@ -3,8 +3,6 @@ import { dia } from "@inmanta/rappid";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -36,7 +34,6 @@ describe("EntityForm.", () => {
 
     graph.addCell(cell);
     const cellView = paper.findViewByModel(cell);
-    const store = getStoreInstance();
 
     const onRemove = jest.fn();
     const editEntity = jest.fn().mockReturnValue(cellView.model);
@@ -44,31 +41,29 @@ describe("EntityForm.", () => {
     const component = (
       <QueryClientProvider client={testClient}>
         <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-          <StoreProvider store={store}>
-            <MockedDependencyProvider>
-              <CanvasContext.Provider
-                value={{
-                  ...defaultCanvasContext,
-                  diagramHandlers: {
-                    saveAndClearCanvas: () => {},
-                    loadState: () => {},
-                    addInstance: (_services, _instance) => [new ServiceEntityBlock()],
-                    getCoordinates: () => getCellsCoordinates(graph),
-                    editEntity: (_cell, serviceModel, attributeValues) =>
-                      editEntity(cellView, serviceModel, attributeValues),
-                  },
-                }}
-              >
-                <EntityForm
-                  cellToEdit={cellView}
-                  isDisabled={isDisabled}
-                  isRemovable={isRemovable}
-                  onRemove={onRemove}
-                  showButtons={showButtons}
-                />
-              </CanvasContext.Provider>
-            </MockedDependencyProvider>
-          </StoreProvider>
+          <MockedDependencyProvider>
+            <CanvasContext.Provider
+              value={{
+                ...defaultCanvasContext,
+                diagramHandlers: {
+                  saveAndClearCanvas: () => {},
+                  loadState: () => {},
+                  addInstance: (_services, _instance) => [new ServiceEntityBlock()],
+                  getCoordinates: () => getCellsCoordinates(graph),
+                  editEntity: (_cell, serviceModel, attributeValues) =>
+                    editEntity(cellView, serviceModel, attributeValues),
+                },
+              }}
+            >
+              <EntityForm
+                cellToEdit={cellView}
+                isDisabled={isDisabled}
+                isRemovable={isRemovable}
+                onRemove={onRemove}
+                showButtons={showButtons}
+              />
+            </CanvasContext.Provider>
+          </MockedDependencyProvider>
         </TestMemoryRouter>
       </QueryClientProvider>
     );

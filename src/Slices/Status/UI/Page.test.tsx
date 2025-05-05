@@ -3,11 +3,9 @@ import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import { PrimaryArchiveHelper } from "@/Data/Common/PrimaryArchiveHelper";
 import { MockedDependencyProvider, MockFeatureManager, ServerStatus } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -16,16 +14,12 @@ import { StatusPage } from ".";
 expect.extend(toHaveNoViolations);
 
 function setup() {
-  const store = getStoreInstance();
-
   const component = (
     <QueryClientProvider client={testClient}>
       <MockedDependencyProvider>
-        <StoreProvider store={store}>
-          <Page>
-            <StatusPage />
-          </Page>
-        </StoreProvider>
+        <Page>
+          <StatusPage />
+        </Page>
       </MockedDependencyProvider>
     </QueryClientProvider>
   );

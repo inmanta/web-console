@@ -2,10 +2,8 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { delay, HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -13,15 +11,11 @@ import { ResourceLogs } from "@S/ResourceDetails/Data/Mock";
 import { View } from "./View";
 
 function setup() {
-  const store = getStoreInstance();
-
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <View resourceId={"abc"} />
-          </StoreProvider>
+          <View resourceId={"abc"} />
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>

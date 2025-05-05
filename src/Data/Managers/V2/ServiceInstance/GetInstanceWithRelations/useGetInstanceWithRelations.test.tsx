@@ -1,11 +1,9 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { ServiceInstanceModel } from "@/Core";
-import { getStoreInstance } from "@/Data/Store";
 import { MockedDependencyProvider } from "@/Test";
 import { childModel, testInstance, testService } from "@/UI/Components/Diagram/Mocks";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -58,7 +56,6 @@ export const server = setupServer(
 );
 
 const createWrapper = () => {
-  const store = getStoreInstance();
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -70,9 +67,7 @@ const createWrapper = () => {
   return ({ children }) => (
     <TestMemoryRouter>
       <QueryClientProvider client={queryClient}>
-        <MockedDependencyProvider>
-          <StoreProvider store={store}>{children}</StoreProvider>
-        </MockedDependencyProvider>
+        <MockedDependencyProvider>{children}</MockedDependencyProvider>
       </QueryClientProvider>
     </TestMemoryRouter>
   );

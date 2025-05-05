@@ -63,7 +63,6 @@ export interface DiscoveredResourceResponse extends ResponseBody {
  * Return signature of the useGetDiscoveredResources React Query hook
  */
 interface GetDiscoveredResources {
-  useOneTime: () => UseQueryResult<DiscoveredResourceResponse, Error>;
   useContinuous: () => UseQueryResult<DiscoveredResourceResponse, Error>;
 }
 
@@ -71,7 +70,6 @@ interface GetDiscoveredResources {
  * React Query hook to fetch discovered resources
  *
  * @returns {GetDiscoveredResources} An object containing the available queries
- * @returns {UseQueryResult<DiscoveredResourceResponse, Error>} returns.useOneTime - Fetch the discovered resources with a single query
  * @returns {UseQueryResult<DiscoveredResourceResponse, Error>} returns.useContinuous - Fetch the discovered resources with a recurrent query with an interval of 5s
  */
 export const useGetDiscoveredResources = (
@@ -80,21 +78,6 @@ export const useGetDiscoveredResources = (
   const get = useGet()<ResponseBody>;
 
   return {
-    useOneTime: (): UseQueryResult<DiscoveredResourceResponse, Error> =>
-      useQuery({
-        queryKey: [
-          "get_discovered_resources-one_time",
-          params.currentPage,
-          params.sort,
-          params.pageSize,
-          params.filter,
-        ],
-        queryFn: () => get(getUrl(params)),
-        select: (data) => ({
-          ...data,
-          handlers: getPaginationHandlers(data.links, data.metadata),
-        }),
-      }),
     useContinuous: (): UseQueryResult<DiscoveredResourceResponse, Error> =>
       useQuery({
         queryKey: [

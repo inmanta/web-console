@@ -3,10 +3,8 @@ import { Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import "@testing-library/jest-dom";
 import { MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -22,26 +20,23 @@ const setup = () => {
       },
     },
   });
-  const store = getStoreInstance();
 
   return (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={["/lsm/catalog/child-service/inventory/add?env=aaa"]}>
-        <StoreProvider store={store}>
-          <MockedDependencyProvider>
-            <Routes>
-              <Route
-                path="/lsm/catalog/child-service/inventory/add"
-                element={<ComposerCreatorProvider serviceName={"child-service"} />}
-              />
-              <Route
-                path="/lsm/catalog/child-service/inventory"
-                element={<div data-testid="inventory-page" />}
-              />
-              <Route path="/" element={<div data-testid="root-page" />} />
-            </Routes>
-          </MockedDependencyProvider>
-        </StoreProvider>
+        <MockedDependencyProvider>
+          <Routes>
+            <Route
+              path="/lsm/catalog/child-service/inventory/add"
+              element={<ComposerCreatorProvider serviceName={"child-service"} />}
+            />
+            <Route
+              path="/lsm/catalog/child-service/inventory"
+              element={<div data-testid="inventory-page" />}
+            />
+            <Route path="/" element={<div data-testid="root-page" />} />
+          </Routes>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
