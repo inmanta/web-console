@@ -20,7 +20,7 @@ export const UpdateBanner: React.FC = () => {
     if (isSuccess && data.version_info.commitHash !== currentCommit) {
       setShowBannerState(true);
     }
-  }, [isSuccess, currentCommit]);
+  }, [isSuccess, currentCommit, data]);
 
   const banner = (
     <React.Fragment>
