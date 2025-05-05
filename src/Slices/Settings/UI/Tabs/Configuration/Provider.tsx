@@ -7,6 +7,7 @@ import {
 } from "@/Data/Managers/V2/Environment";
 import { Container } from "./Container";
 import { InputInfoCreator } from "./InputInfoCreator";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   settings: EnvironmentSettings.EnvironmentSettings;
@@ -69,22 +70,45 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     settings: settings,
     resetedValueName: "",
   });
+  const client = useQueryClient();
+  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
   const updateSetting = useUpdateEnvironmentSetting({
+    onSuccess: () => {
+      client.refetchQueries();
+      document.dispatchEvent(new Event("settings-update"));
+
+      setShowUpdateBanner(true);
+      setTimeout(() => {
+        setShowUpdateBanner(false);
+      }, 2000);
+    },
     onError: (error) => setErrorMessage(error.message),
   });
+
   const resetSetting = useResetEnvironmentSetting({
     onError: (error) => setErrorMessage(error.message),
   });
 
   const handleReset = (id: string) => {
     dispatch({ type: "reset", payload: id });
-
+    if (errorMessage) {
+      setErrorMessage("");
+    }
     return resetSetting.mutate(id);
   };
+
   const handleUpdate = (id: string, value: EnvironmentSettings.Value) => {
     dispatch({ type: "update", payload: { [id]: value } });
+    if (errorMessage) {
+      setErrorMessage("");
+    }
     return updateSetting.mutate({ id, value });
+  };
+
+  const updateSuccessBanner = (value: boolean) => {
+    setShowUpdateBanner(value);
   };
 
   const infos = new InputInfoCreator(
@@ -100,6 +124,12 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
   }, [settings]);
 
   return (
-    <Container infos={infos} errorMessage={errorMessage} onErrorClose={() => setErrorMessage("")} />
+    <Container
+      infos={infos}
+      errorMessage={errorMessage}
+      onErrorClose={() => setErrorMessage("")}
+      showUpdateBanner={showUpdateBanner}
+      setShowUpdateBanner={updateSuccessBanner}
+    />
   );
 };

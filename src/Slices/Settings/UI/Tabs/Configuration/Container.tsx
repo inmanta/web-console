@@ -8,28 +8,20 @@ import { InputRow } from "./Components";
 interface Props {
   infos: EnvironmentSettings.InputInfo[];
   errorMessage: string;
+  showUpdateBanner: boolean;
   onErrorClose: () => void;
+  setShowUpdateBanner: (showUpdateBanner: boolean) => void;
   className?: string;
 }
 
-export const Container: React.FC<Props> = ({ infos, errorMessage, onErrorClose, className }) => {
-  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
-
-  useEffect(() => {
-    const updateSuccessBanner = () => {
-      setShowUpdateBanner(true);
-      setTimeout(() => {
-        setShowUpdateBanner(false);
-      }, 2000);
-    };
-
-    document.addEventListener("settings-update", updateSuccessBanner);
-
-    return () => {
-      document.removeEventListener("settings-update", updateSuccessBanner);
-    };
-  }, [setShowUpdateBanner]);
-
+export const Container: React.FC<Props> = ({
+  infos,
+  errorMessage,
+  showUpdateBanner,
+  setShowUpdateBanner,
+  onErrorClose,
+  className,
+}) => {
   return (
     <Stack hasGutter style={{ maxWidth: "1000px" }} className={className}>
       {errorMessage && (

@@ -2,8 +2,7 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServerStatus } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { useGetWithoutEnv } from "../../helpers";
-
+import { REFETCH_INTERVAL, useGetWithoutEnv } from "../../helpers";
 /**
  * Return Signature of the useGetServerStatus React Query
  */
@@ -44,7 +43,7 @@ export const useGetServerStatus = (): GetServerStatus => {
           featureManager.setServerStatus(data.data);
           return data.data;
         },
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };

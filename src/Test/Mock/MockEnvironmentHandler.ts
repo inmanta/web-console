@@ -1,5 +1,11 @@
 import { EnvironmentHandler, FlatEnvironment } from "@/Core";
 
+/**
+ * MockEnvironmentHandler is a function that returns a mocked EnvironmentHandler object.
+ *
+ * @param {FlatEnvironment} environment - The environment to be used in the mock.
+ * @returns {EnvironmentHandler}An EnvironmentHandler object.
+ */
 export function MockEnvironmentHandler(environment: FlatEnvironment): EnvironmentHandler {
   function useId(): string {
     return environment.id;

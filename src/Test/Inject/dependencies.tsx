@@ -6,13 +6,23 @@ import { PrimaryRouteManager, useEnvironmentModifierImpl, DependencyProvider } f
 import { UrlManagerImpl } from "@/UI/Utils";
 import { EnvironmentDetails } from "../Data";
 
-export const MockedDependencyProvider: React.FC<
-  React.PropsWithChildren<{
-    env?: FlatEnvironment;
-    fileFetcher?: FileFetcher;
-    authHelper?: AuthContextInterface;
-  }>
-> = ({ env = EnvironmentDetails.env, fileFetcher, authHelper = defaultAuthContext, children }) => {
+interface Props {
+  env?: FlatEnvironment;
+  fileFetcher?: FileFetcher;
+  authHelper?: AuthContextInterface;
+}
+
+/**
+ * MockedDependencyProvider is a component that provides the dependencies for the tested component.
+ *
+ * @returns {React.FC<React.PropsWithChildren<Props>}
+ */
+export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> = ({
+  env = EnvironmentDetails.env,
+  fileFetcher,
+  authHelper = defaultAuthContext,
+  children,
+}) => {
   const baseUrl = "";
   const routeManager = PrimaryRouteManager(baseUrl);
   const environmentHandler = MockEnvironmentHandler(env);

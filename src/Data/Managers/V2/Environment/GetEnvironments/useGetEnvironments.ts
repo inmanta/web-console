@@ -2,14 +2,14 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Environment } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { useGetWithoutEnv } from "../../helpers";
+import { REFETCH_INTERVAL, useGetWithoutEnv } from "../../helpers";
 
 /**
  * Return Signature of the useGetEnvironments React Query
  */
 interface GetEnvironments {
-  useOneTime: (details?: boolean) => UseQueryResult<Environment[], Error>;
-  useContinuous: (details?: boolean) => UseQueryResult<Environment[], Error>;
+  useOneTime: (hasDetails?: boolean) => UseQueryResult<Environment[], Error>;
+  useContinuous: (hasDetails?: boolean) => UseQueryResult<Environment[], Error>;
 }
 
 /**
@@ -24,10 +24,10 @@ export const useGetEnvironments = (): GetEnvironments => {
   const get = useGetWithoutEnv()<{ data: Environment[] }>;
 
   return {
-    useOneTime: (details = false): UseQueryResult<Environment[], Error> =>
+    useOneTime: (hasDetails = false): UseQueryResult<Environment[], Error> =>
       useQuery({
-        queryKey: ["get_environments-one_time", details],
-        queryFn: () => get(`/api/v2/environment?details=${details}`),
+        queryKey: ["get_environments-one_time", hasDetails],
+        queryFn: () => get(`/api/v2/environment?details=${hasDetails}`),
         retry: false,
         select: (data) => {
           environmentHandler.setAllEnvironments(data.data);
@@ -35,16 +35,16 @@ export const useGetEnvironments = (): GetEnvironments => {
         },
       }),
 
-    useContinuous: (details = false): UseQueryResult<Environment[], Error> =>
+    useContinuous: (hasDetails = false): UseQueryResult<Environment[], Error> =>
       useQuery({
-        queryKey: ["get_environments-continuous", details],
-        queryFn: () => get(`/api/v2/environment?details=${details}`),
+        queryKey: ["get_environments-continuous", hasDetails],
+        queryFn: () => get(`/api/v2/environment?details=${hasDetails}`),
         retry: false,
         select: (data) => {
           environmentHandler.setAllEnvironments(data.data);
           return data.data;
         },
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };

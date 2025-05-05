@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
-import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects/useGetProjects";
+import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects/";
 import { DependencyContext } from "@/UI/Dependency";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
@@ -19,8 +19,8 @@ export const Provider: React.FC = () => {
   const navigate = useNavigate();
   const selected = environmentHandler.useSelected();
 
-  const envDetails = true;
-  const environments = useGetEnvironments().useOneTime(envDetails);
+  const hasDetails = true;
+  const environments = useGetEnvironments().useOneTime(hasDetails);
   const projects = useGetProjects().useOneTime();
 
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {

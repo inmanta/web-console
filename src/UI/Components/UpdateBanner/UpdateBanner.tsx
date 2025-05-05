@@ -15,13 +15,13 @@ export const UpdateBanner: React.FunctionComponent<Props> = (props) => {
   const currentVersion = featureManager.getAppVersion();
   const currentCommit = featureManager.getCommitHash();
 
-  GetVersionFileQueryManager(props.apiHelper)
-    .then(({ kind, value }) => {
-      if (kind === "Left" || currentCommit !== value.version_info.commitHash) {
-        setShowBannerState(true);
-      }
-    })
-    .catch((error) => console.log(error));
+  // GetVersionFileQueryManager(props.apiHelper)
+  //   .then(({ kind, value }) => {
+  //     if (kind === "Left" || currentCommit !== value.version_info.commitHash) {
+  //       setShowBannerState(true);
+  //     }
+  //   })
+  //   .catch((error) => console.log(error));
 
   const banner = (
     <React.Fragment>

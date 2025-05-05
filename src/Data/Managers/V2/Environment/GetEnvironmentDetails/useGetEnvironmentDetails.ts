@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Environment } from "@/Core";
-import { useGetWithoutEnv } from "../../helpers";
+import { REFETCH_INTERVAL, useGetWithoutEnv } from "../../helpers";
 
 /**
  * Return Signature of the useGetEnvironmentDetails React Query
@@ -35,7 +35,7 @@ export const useGetEnvironmentDetails = (): GetEnvironmentDetails => {
         queryFn: () => get(`/api/v2/environment/${id}?details=true`),
         retry: false,
         select: (data) => data.data,
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };

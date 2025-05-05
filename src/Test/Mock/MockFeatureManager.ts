@@ -1,5 +1,9 @@
 import { Feature, FeatureManager, JsonParserId, ServerStatus, StatusLicense } from "@/Core";
 
+/**
+ * Mock implementation of the FeatureManager interface for testing purposes.
+ * This class provides hardcoded values for all feature-related functionality.
+ */
 export class MockFeatureManager implements FeatureManager {
   getCommitHash(): string {
     return "123456abcdef";
@@ -61,6 +65,10 @@ export class MockFeatureManager implements FeatureManager {
   }
 }
 
+/**
+ * Mock implementation of the FeatureManager interface for testing purposes.
+ * This class provides hardcoded values for all feature-related functionality.
+ */
 export class MockEditableFeatureManager implements FeatureManager {
   getCommitHash(): string {
     return "123456abcdef";
@@ -122,6 +130,10 @@ export class MockEditableFeatureManager implements FeatureManager {
   }
 }
 
+/**
+ * Mock implementation of the FeatureManager interface for testing purposes.
+ * This class provides hardcoded values for all feature-related functionality.
+ */
 export class MockLimitedFeatureManager implements FeatureManager {
   getCommitHash(): string {
     return "123456abcdef";

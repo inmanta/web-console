@@ -1,13 +1,13 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ProjectModel } from "@/Core";
-import { useGetWithoutEnv } from "../../helpers";
+import { REFETCH_INTERVAL, useGetWithoutEnv } from "../../helpers";
 
 /**
  * Return Signature of the useGetProjects React Query
  */
 interface GetProjects {
-  useOneTime: (environmentDetails?: boolean) => UseQueryResult<ProjectModel[], Error>;
-  useContinuous: (environmentDetails?: boolean) => UseQueryResult<ProjectModel[], Error>;
+  useOneTime: (hasEnvironmentDetails?: boolean) => UseQueryResult<ProjectModel[], Error>;
+  useContinuous: (hasEnvironmentDetails?: boolean) => UseQueryResult<ProjectModel[], Error>;
 }
 
 /**
@@ -21,21 +21,21 @@ export const useGetProjects = (): GetProjects => {
   const get = useGetWithoutEnv()<{ data: ProjectModel[] }>;
 
   return {
-    useOneTime: (environmentDetails = false): UseQueryResult<ProjectModel[], Error> =>
+    useOneTime: (hasEnvironmentDetails = false): UseQueryResult<ProjectModel[], Error> =>
       useQuery({
-        queryKey: ["get_projects-one_time", environmentDetails],
-        queryFn: () => get(`/api/v2/project?environment_details=${environmentDetails}`),
+        queryKey: ["get_projects-one_time", hasEnvironmentDetails],
+        queryFn: () => get(`/api/v2/project?environment_details=${hasEnvironmentDetails}`),
         retry: false,
         select: (data) => data.data,
       }),
 
-    useContinuous: (environmentDetails = false): UseQueryResult<ProjectModel[], Error> =>
+    useContinuous: (hasEnvironmentDetails = false): UseQueryResult<ProjectModel[], Error> =>
       useQuery({
-        queryKey: ["get_projects-continuous", environmentDetails],
-        queryFn: () => get(`/api/v2/project?environment_details=${environmentDetails}`),
+        queryKey: ["get_projects-continuous", hasEnvironmentDetails],
+        queryFn: () => get(`/api/v2/project?environment_details=${hasEnvironmentDetails}`),
         retry: false,
         select: (data) => data.data,
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };
