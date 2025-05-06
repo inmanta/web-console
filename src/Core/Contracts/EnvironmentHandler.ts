@@ -9,6 +9,7 @@ import { Navigate } from "@/Core/Language";
 export interface EnvironmentHandler {
   set(navigate: Navigate, location: Location, environmentId: string): void;
   useSelected(): FlatEnvironment | undefined;
+  useName(): string;
 
   /**
    * If this function is called, it means the environment is required.

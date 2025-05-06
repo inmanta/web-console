@@ -16,8 +16,7 @@ import { Dashboard } from "./Dashboard";
 export const Page: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);
 
-  const envName = environmentHandler.useSelected()?.name || ""; //useSelected() theoretically could return undefined but as we use useId() the view would throw an error in that case
-
+  const envName = environmentHandler.useName();
   const { isSuccess, isError, error, refetch } = useGetEnvironmentDetails().useOneTime(
     environmentHandler.useId()
   );

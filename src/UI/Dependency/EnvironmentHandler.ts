@@ -38,6 +38,16 @@ export function EnvironmentHandlerImpl(
     return environment.id;
   }
 
+  function useName(): string {
+    const environment = useSelected();
+
+    if (typeof environment === "undefined") {
+      throw new Error("environment required but missing");
+    }
+
+    return environment.name;
+  }
+
   function useSelected(): FlatEnvironment | undefined {
     const { search } = useLocation();
 
@@ -68,6 +78,7 @@ export function EnvironmentHandlerImpl(
   return {
     set,
     useId,
+    useName,
     useSelected,
     determineSelected,
     setAllEnvironments,

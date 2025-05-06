@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Banner, Flex } from "@patternfly/react-core";
-import { useGetVersionFileInfo } from "@/Data/Managers/V2/Miscellaneous";
+import { useGetVersionFileInfo } from "@/Data/Managers/V2/Server";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
 /**
- * Component for displaying an update banner when a new version is available.
+ * Component for displaying an update banner when a new app version is available.
  *
  * @returns {React.ReactNode} The rendered component.
  */

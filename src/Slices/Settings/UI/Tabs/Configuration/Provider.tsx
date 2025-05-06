@@ -78,7 +78,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     onSuccess: () => {
       client.refetchQueries();
       document.dispatchEvent(new Event("settings-update"));
-
+      setErrorMessage("");
       setShowUpdateBanner(true);
       setTimeout(() => {
         setShowUpdateBanner(false);
@@ -88,22 +88,20 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
   });
 
   const resetSetting = useResetEnvironmentSetting({
+    onSuccess: () => {
+      setErrorMessage("");
+      client.refetchQueries();
+    },
     onError: (error) => setErrorMessage(error.message),
   });
 
   const handleReset = (id: string) => {
     dispatch({ type: "reset", payload: id });
-    if (errorMessage) {
-      setErrorMessage("");
-    }
     return resetSetting.mutate(id);
   };
 
   const handleUpdate = (id: string, value: EnvironmentSettings.Value) => {
     dispatch({ type: "update", payload: { [id]: value } });
-    if (errorMessage) {
-      setErrorMessage("");
-    }
     return updateSetting.mutate({ id, value });
   };
 

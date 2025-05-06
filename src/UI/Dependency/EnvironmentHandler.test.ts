@@ -19,6 +19,18 @@ test("EnvironmentHandler updates environment correctly", () => {
   expect(history.location.search).toEqual(`?env=${env.id}`);
 });
 
+test("EnvironmentHandler uses name and Id correctly", () => {
+  const history = createMemoryHistory();
+  const env = Environment.filterable[0];
+
+  const { result } = renderHook(() => EnvironmentHandlerImpl(() => history.location, routeManager));
+  result.current.setAllEnvironments(Environment.filterable);
+  result.current.set(history.push, history.location, env.id);
+
+  expect(result.current.useName()).toEqual(env.name);
+  expect(result.current.useId()).toEqual(env.id);
+});
+
 test("EnvironmentHandler determines selected environment correctly", () => {
   const history = createMemoryHistory();
 

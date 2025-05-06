@@ -8,8 +8,8 @@ import { InputRow } from "./Components";
 interface Props {
   infos: EnvironmentSettings.InputInfo[];
   errorMessage: string;
-  showUpdateBanner: boolean;
   onErrorClose: () => void;
+  showUpdateBanner: boolean;
   setShowUpdateBanner: (showUpdateBanner: boolean) => void;
   className?: string;
 }
