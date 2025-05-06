@@ -6,6 +6,7 @@ import { MomentDatePresenter } from "@/UI/Utils";
 import { CompileStageReport } from "@S/CompileDetails/Core/Domain";
 import { CompileStageReportTablePresenter } from "./CompileStageReportTablePresenter";
 import { CompileStageReportTableRow } from "./CompileStageReportTableRow";
+import { LogViewerComponent, LogViewerData } from "@/UI/Components/LogViewer";
 
 interface Props {
   compileStarted?: string | null;
@@ -13,35 +14,32 @@ interface Props {
 }
 
 export const CompileStageReportTable: React.FC<Props> = ({ compileStarted, reports, ...props }) => {
-  const tablePresenter = new CompileStageReportTablePresenter(
-    new MomentDatePresenter(),
-    compileStarted
-  );
-  const rows = tablePresenter.createRows(reports);
-  const heads = tablePresenter
-    .getColumnHeadDisplayNames()
-    .map((columnName) => <Th key={columnName}>{columnName}</Th>);
-
-  const [isExpanded, onExpansion] = useExpansion();
+  const logs: LogViewerData[] = reports.map((report) => {
+    return {
+      data: [report.command, report.errstream, report.outstream],
+      name: report.name,
+      id: report.id,
+      duration: getDuration(report.started, report.completed),
+      failed: report.returncode !== null && report.returncode !== undefined && report.returncode !== 0,
+    };
+  });
 
   return (
-    <Table {...props} variant={TableVariant.compact}>
-      <Thead>
-        <Tr>
-          <Th aria-hidden key="toggle" screenReaderText={words("common.emptyColumnHeader")} />
-          {heads}
-        </Tr>
-      </Thead>
-      {rows.map((row, idx) => (
-        <CompileStageReportTableRow
-          row={row}
-          key={row.id}
-          index={idx}
-          isExpanded={isExpanded(row.id)}
-          onToggle={onExpansion(row.id)}
-          numberOfColumns={tablePresenter.getNumberOfColumns()}
-        />
-      ))}
-    </Table>
+    <LogViewerComponent logs={logs} />
   );
 };
+
+/**
+ * Get the duration of a compile stage
+ * If the completed time is not provided, use the current time
+ * @param started - The start time of the compile stage
+ * @param completed - The end time of the compile stage
+ * @returns The duration of the compile stage
+ */
+const getDuration = (started: string, completed?: string) => {
+  const startTime = new Date(started);
+  const endTime = new Date(completed || new Date().toISOString());
+  const duration = endTime.getTime() - startTime.getTime();
+  return duration;
+};
+

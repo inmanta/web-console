@@ -72,6 +72,7 @@ module.exports = merge(common, {
             "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css"
           ),
           path.resolve(__dirname, "node_modules/@inmanta/rappid/joint-plus.css"),
+          path.resolve(__dirname, "node_modules/@patternfly/react-log-viewer/dist/esm/LogViewer/css"),
         ],
         use: ["style-loader", "css-loader"],
       },
