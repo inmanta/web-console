@@ -2,6 +2,7 @@ import React from "react";
 import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment/GetEnvironmentSettings";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { Provider } from "./Provider";
+
 interface Props {
   environmentId: string;
 }
@@ -11,8 +12,9 @@ interface Props {
  *
  * @returns {React.FC} The Configuration tab
  */
-export const Tab: React.FC<Props> = () => {
-  const { data, isSuccess, isError, error, refetch } = useGetEnvironmentSettings().useOneTime();
+export const Tab: React.FC<Props> = ({ environmentId }) => {
+  const { data, isSuccess, isError, error, refetch } =
+    useGetEnvironmentSettings(environmentId).useOneTime();
 
   if (isError) {
     return (

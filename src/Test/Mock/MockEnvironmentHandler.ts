@@ -7,6 +7,10 @@ import { EnvironmentHandler, FlatEnvironment } from "@/Core";
  * @returns {EnvironmentHandler}An EnvironmentHandler object.
  */
 export function MockEnvironmentHandler(environment: FlatEnvironment): EnvironmentHandler {
+  function useName(): string {
+    return environment.name;
+  }
+
   function useId(): string {
     return environment.id;
   }
@@ -30,6 +34,7 @@ export function MockEnvironmentHandler(environment: FlatEnvironment): Environmen
   return {
     useId,
     set,
+    useName,
     setAllEnvironments,
     useSelected,
     determineSelected,

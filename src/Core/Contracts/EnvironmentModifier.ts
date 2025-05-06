@@ -1,5 +1,4 @@
 import { FlatEnvironment } from "../Domain";
-import { EnvironmentSettings } from "../Domain/EnvironmentSettings";
 
 /**
  * EnvironmentModifier is a function that returns an object with the following properties:
@@ -16,6 +15,5 @@ export interface EnvironmentModifier {
   useIsServerCompileEnabled(): boolean;
   useIsProtectedEnvironment(): boolean;
   setEnvironment(environment: FlatEnvironment): void;
-  setEnvironmentSettings(environmentSettings: EnvironmentSettings): void;
   useIsExpertModeEnabled(): boolean;
 }

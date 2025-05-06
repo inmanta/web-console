@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FlatEnvironment, EnvironmentModifier, EnvironmentSettings } from "@/Core";
+import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment";
 
 /**
  * EnvironmentModifierImpl is a function that returns an object with the following properties:
@@ -15,18 +16,10 @@ import { FlatEnvironment, EnvironmentModifier, EnvironmentSettings } from "@/Cor
  */
 export function useEnvironmentModifierImpl(): EnvironmentModifier {
   const [env, setEnv] = useState<FlatEnvironment | null>(null);
-  const [envSettings, setEnvSettings] = useState<EnvironmentSettings.EnvironmentSettings | null>(
-    null
-  );
+  const envSettings = useGetEnvironmentSettings(env?.id).useOneTime();
 
   function setEnvironment(environmentToSet: FlatEnvironment): void {
     setEnv(environmentToSet);
-  }
-
-  function setEnvironmentSettings(
-    environmentSettingsToSet: EnvironmentSettings.EnvironmentSettings
-  ): void {
-    setEnvSettings(environmentSettingsToSet);
   }
 
   function useIsHalted(): boolean {
@@ -50,11 +43,15 @@ export function useEnvironmentModifierImpl(): EnvironmentModifier {
       return Boolean(env.settings[settingName]);
     }
 
-    if (envSettings === null) {
-      return false;
-    } else {
-      return Boolean(envSettings.definition[settingName]?.default);
+    if (envSettings.data) {
+      if (
+        envSettings.data.definition[settingName] !== undefined &&
+        envSettings.data.definition[settingName] !== null
+      ) {
+        return Boolean(envSettings.data.definition[settingName]?.default);
+      }
     }
+    return false;
   }
 
   function useIsServerCompileEnabled(): boolean {
@@ -72,7 +69,6 @@ export function useEnvironmentModifierImpl(): EnvironmentModifier {
   return {
     useIsHalted,
     setEnvironment,
-    setEnvironmentSettings,
     useIsServerCompileEnabled,
     useIsProtectedEnvironment,
     useIsExpertModeEnabled,

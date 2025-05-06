@@ -67,8 +67,8 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({ store, chil
   const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
   const fileFetcher = new FileFetcherImpl(apiHelper);
-  const environmentModifier = useEnvironmentModifierImpl();
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
+  const environmentModifier = useEnvironmentModifierImpl();
   const fileManager = new PrimaryFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
 

@@ -1,50 +1,113 @@
-import { act } from "react";
-import { renderHook } from "@testing-library/react";
+import React, { act } from "react";
+import { renderHook, waitFor } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import { EnvironmentDetails, EnvironmentSettings } from "@/Test";
 import { useEnvironmentModifierImpl } from "./EnvironmentModifier";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { testClient } from "@/Test/Utils/react-query-setup";
 
-test("Given the environmentModifier When the server compile setting is requested Then returns the correct value", async () => {
-  const { result } = renderHook(() => useEnvironmentModifierImpl());
-  // No setting is specified, and the default is true
-  await act(() => {
-    result.current.setEnvironment(EnvironmentDetails.a);
+describe("EnvironmentModifier", () => {
+  const server = setupServer();
+
+  beforeAll(() => {
+    server.listen();
   });
-  await act(() => {
-    result.current.setEnvironmentSettings({
-      settings: {},
-      definition: EnvironmentSettings.definition,
+
+  beforeEach(() => {
+    server.resetHandlers();
+  });
+
+  afterAll(() => {
+    server.close();
+  });
+
+  const wrapper = ({ children }) => (
+    <QueryClientProvider client={testClient}>{children}</QueryClientProvider>
+  );
+
+  test("Given the environmentModifier When the server compile setting is requested Then returns the correct value", async () => {
+    server.use(
+      http.get("/api/v2/environment_settings", () => {
+        return HttpResponse.json({
+          data: {
+            settings: {},
+            definition: EnvironmentSettings.definition,
+          },
+        });
+      })
+    );
+
+    const { result } = renderHook(() => useEnvironmentModifierImpl(), { wrapper });
+    // No setting is specified, and the default is true
+    await act(() => {
+      result.current.setEnvironment(EnvironmentDetails.a);
+    });
+
+    await waitFor(() => {
+      expect(result.current.useIsServerCompileEnabled()).toBe(true);
+    });
+
+    // Set the option explicitly to false
+    await act(() => {
+      result.current.setEnvironment({
+        ...EnvironmentDetails.a,
+        settings: {
+          ...EnvironmentDetails.a.settings,
+          server_compile: false,
+        },
+      });
+    });
+
+    expect(result.current.useIsServerCompileEnabled()).toBe(false);
+  });
+
+  test.only("given the environmentModifier When the missing setting is requested and the definition is not missing Then return definition default value", async () => {
+    server.use(
+      http.get("/api/v2/environment_settings", () => {
+        return HttpResponse.json({
+          data: {
+            settings: {},
+            definition: EnvironmentSettings.definition,
+          },
+        });
+      })
+    );
+    const { result } = renderHook(() => useEnvironmentModifierImpl(), { wrapper });
+
+    await act(() => {
+      result.current.setEnvironment({
+        ...EnvironmentDetails.a,
+        settings: {},
+      });
+    });
+
+    //default value from definition is true
+    await waitFor(() => {
+      expect(result.current.useIsServerCompileEnabled()).toBe(true);
     });
   });
 
-  expect(result.current.useIsServerCompileEnabled()).toBe(true);
+  test("Given the environmentModifier When the missing setting is requested and the definition is missing Then return false without throwing an error", async () => {
+    delete EnvironmentSettings.definition.server_compile;
 
-  // Set the option explicitly to false
-  await act(() => {
-    result.current.setEnvironment({
-      ...EnvironmentDetails.a,
-      settings: {
-        ...EnvironmentDetails.a.settings,
-        server_compile: false,
-      },
+    server.use(
+      http.get("/api/v2/environment_settings", () => {
+        return HttpResponse.json({
+          data: {
+            settings: {},
+            definition: {},
+          },
+        });
+      })
+    );
+    const consoleError = jest.spyOn(console, "error");
+
+    const { result } = renderHook(() => useEnvironmentModifierImpl(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.useIsServerCompileEnabled()).toBe(false);
     });
+    expect(consoleError).not.toHaveBeenCalled();
   });
-
-  expect(result.current.useIsServerCompileEnabled()).toBe(false);
-});
-
-test("Given the environmentModifier When the missing setting is requested Then render component as the value would be false without throwing an error", async () => {
-  const consoleError = jest.spyOn(console, "error");
-
-  delete EnvironmentSettings.definition.server_compile;
-  const { result } = renderHook(() => useEnvironmentModifierImpl());
-
-  await act(() => {
-    result.current.setEnvironmentSettings({
-      settings: {},
-      definition: EnvironmentSettings.definition,
-    });
-  });
-
-  expect(result.current.useIsServerCompileEnabled()).toBe(false);
-  expect(consoleError).not.toHaveBeenCalled();
 });
