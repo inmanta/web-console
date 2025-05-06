@@ -1,11 +1,11 @@
 import React, { act } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { EnvironmentDetails, EnvironmentSettings } from "@/Test";
-import { useEnvironmentModifierImpl } from "./EnvironmentModifier";
-import { QueryClientProvider } from "@tanstack/react-query";
 import { testClient } from "@/Test/Utils/react-query-setup";
+import { useEnvironmentModifierImpl } from "./EnvironmentModifier";
 
 describe("EnvironmentModifier", () => {
   const server = setupServer();
@@ -62,7 +62,7 @@ describe("EnvironmentModifier", () => {
     expect(result.current.useIsServerCompileEnabled()).toBe(false);
   });
 
-  test.only("given the environmentModifier When the missing setting is requested and the definition is not missing Then return definition default value", async () => {
+  test("given the environmentModifier When the missing setting is requested and the definition is not missing Then return definition default value", async () => {
     server.use(
       http.get("/api/v2/environment_settings", () => {
         return HttpResponse.json({
