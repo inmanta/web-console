@@ -230,6 +230,7 @@ export const FieldInput: React.FC<Props> = ({
           description={field.description}
           attributeValue={get(formState, makePath(path, field.name) as string) as string}
           isOptional={field.isOptional}
+          isDisabled={!isNew && field.isDisabled}
           handleInputChange={(value) => getUpdate(makePath(path, field.name) as string, value)}
         />
       );
@@ -283,6 +284,7 @@ export const FieldInput: React.FC<Props> = ({
           description={field.description !== null ? field.description : ""}
           attributeValue={get(formState, makePath(path, field.name), []) as string[]}
           isOptional={field.isOptional}
+          isDisabled={!isNew && field.isDisabled}
           handleInputChange={(value) => {
             getUpdate(makePath(path, field.name), value, true);
           }}
@@ -511,21 +513,22 @@ const DictListFieldInput: React.FC<DictListProps> = ({
      * If the user deletes an item preceding the new items,
      * we want to make sure the path refers to the same entity.
      */
-    addedItemsPaths.forEach((addedPath, indexPath) => {
-      const lastDigit: number = Number(addedPath.slice(-1));
+    addedItemsPaths.forEach((addedPath) => {
+      // Extract the index from the path
+      const pathIndex = Number(addedPath.slice(-1));
 
-      if (indexPath < index) {
-        newPaths.push(addedPath); // add addedPath to newPath
-      } else if (lastDigit > index) {
-        const truncatedPath = addedPath.slice(0, -1); // truncate the last digit
-        const modifiedPath = `${truncatedPath}${lastDigit - 1}`; // deduce 1 from the index
-
-        newPaths.push(modifiedPath);
+      if (pathIndex < index) {
+        // If the path's index is less than the deleted index, keep it unchanged
+        newPaths.push(addedPath);
+      } else if (pathIndex > index) {
+        // If the path's index is greater than the deleted index, decrement it by 1
+        const basePath = addedPath.slice(0, -1);
+        newPaths.push(`${basePath}${pathIndex - 1}`);
       }
+      // If pathIndex === index, we don't add it to newPaths since it's being deleted
     });
 
-    setAddedItemPaths([...newPaths]);
-
+    setAddedItemPaths(newPaths);
     getUpdate(makePath(path, field.name), [...list.filter((_, i) => i !== index)]);
   };
 
@@ -576,7 +579,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                     (!isNew &&
                       field.isDisabled &&
                       get(originalState, makePath(path, field.name)) !== undefined) ||
-                    field.min > index
+                    list.length <= field.min
                   }
                 >
                   {words("delete")}
