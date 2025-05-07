@@ -1,12 +1,12 @@
 import { createMemoryHistory } from "@remix-run/router";
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { Environment } from "@/Test";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { EnvironmentHandlerImpl } from ".";
 
 const routeManager = PrimaryRouteManager("");
 
-test("EnvironmentHandler updates environment correctly", () => {
+test("EnvironmentHandler updates environment correctly", async () => {
   const history = createMemoryHistory({
     initialEntries: ["/resources?env=123"],
   });
@@ -14,18 +14,26 @@ test("EnvironmentHandler updates environment correctly", () => {
 
   const { result } = renderHook(() => EnvironmentHandlerImpl(() => history.location, routeManager));
 
-  result.current.set(history.push, history.location, env.id);
+  await act(async () => {
+    result.current.set(history.push, history.location, env.id);
+  });
 
   expect(history.location.search).toEqual(`?env=${env.id}`);
 });
 
-test("EnvironmentHandler uses name and Id correctly", () => {
+test("EnvironmentHandler uses name and Id correctly", async () => {
   const history = createMemoryHistory();
   const env = Environment.filterable[0];
 
   const { result } = renderHook(() => EnvironmentHandlerImpl(() => history.location, routeManager));
-  result.current.setAllEnvironments(Environment.filterable);
-  result.current.set(history.push, history.location, env.id);
+
+  await act(async () => {
+    result.current.setAllEnvironments(Environment.filterable);
+  });
+
+  await act(async () => {
+    result.current.set(history.push, history.location, env.id);
+  });
 
   expect(result.current.useName()).toEqual(env.name);
   expect(result.current.useId()).toEqual(env.id);

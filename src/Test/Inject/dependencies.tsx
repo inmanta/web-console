@@ -1,10 +1,11 @@
 import React from "react";
 import { FileFetcher, FlatEnvironment } from "@/Core";
 import { AuthContextInterface, PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
+import { EnvironmentDetails } from "@/Test";
 import { MockEnvironmentHandler, MockFeatureManager, MockFileManager } from "@/Test/Mock";
-import { PrimaryRouteManager, useEnvironmentModifierImpl, DependencyProvider } from "@/UI";
+import { DependencyProvider, useEnvironmentModifierImpl } from "@/UI/Dependency";
+import { PrimaryRouteManager } from "@/UI/Routing";
 import { UrlManagerImpl } from "@/UI/Utils";
-import { EnvironmentDetails } from "../Data";
 
 interface Props {
   env?: FlatEnvironment;

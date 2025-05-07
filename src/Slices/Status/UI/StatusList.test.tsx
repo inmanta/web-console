@@ -1,7 +1,9 @@
 import React from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { ServerStatus } from "@/Core";
 import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { StatusList } from "./StatusList";
 
 const status: ServerStatus = {
@@ -59,9 +61,11 @@ const status: ServerStatus = {
 describe("Given StatusList", () => {
   it("WHEN receiving status object THEN should render correctly list", () => {
     render(
-      <MockedDependencyProvider>
-        <StatusList status={status} apiUrl="test" />
-      </MockedDependencyProvider>
+      <QueryClientProvider client={testClient}>
+        <MockedDependencyProvider>
+          <StatusList status={status} apiUrl="test" />
+        </MockedDependencyProvider>
+      </QueryClientProvider>
     );
 
     expect(screen.getByRole("list", { name: "StatusList" })).toBeVisible();

@@ -14,8 +14,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import { FlatEnvironment } from "@/Core";
 import { useClearEnvironment, useDeleteEnvironment } from "@/Data/Managers/V2/Environment";
-import { useNavigateTo } from "@/UI";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { EnvActions } from "./Actions";
 

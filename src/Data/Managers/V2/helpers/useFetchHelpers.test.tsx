@@ -1,11 +1,18 @@
 import React from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react";
 import { defaultAuthContext } from "@/Data/Auth";
 import { createCookie, removeCookie } from "@/Data/Common/CookieHelper";
 import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { useFetchHelpers } from "./";
+
 const setup = () => {
-  const wrapper = ({ children }) => <MockedDependencyProvider>{children}</MockedDependencyProvider>;
+  const wrapper = ({ children }) => (
+    <QueryClientProvider client={testClient}>
+      <MockedDependencyProvider>{children}</MockedDependencyProvider>
+    </QueryClientProvider>
+  );
 
   return wrapper;
 };

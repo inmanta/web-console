@@ -1,7 +1,7 @@
 import React from "react";
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
@@ -17,6 +17,7 @@ import {
 } from "@/Core";
 import * as Test from "@/Test";
 import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
@@ -28,59 +29,48 @@ const setup = (
   originalAttributes: InstanceAttributeModel | undefined = undefined
 ) => {
   const component = (
-    <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-      <MockedDependencyProvider>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <ServiceInstanceForm
-                fields={fields}
-                onCancel={jest.fn()}
-                onSubmit={func ? func : jest.fn()}
-                isEdit={isEdit}
-                originalAttributes={originalAttributes}
-                service_entity="service_entity"
-                isDirty={false}
-                setIsDirty={jest.fn()}
-              />
-            }
-          />
-        </Routes>
-      </MockedDependencyProvider>
-    </TestMemoryRouter>
+    <QueryClientProvider client={testClient}>
+      <TestMemoryRouter initialEntries={["/?env=aaa"]}>
+        <MockedDependencyProvider>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ServiceInstanceForm
+                  fields={fields}
+                  onCancel={jest.fn()}
+                  onSubmit={func ? func : jest.fn()}
+                  isEdit={isEdit}
+                  originalAttributes={originalAttributes}
+                  service_entity="service_entity"
+                  isDirty={false}
+                  setIsDirty={jest.fn()}
+                />
+              }
+            />
+          </Routes>
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
+    </QueryClientProvider>
   );
 
   return { component };
 };
 
-function createQueryWrapper(children: React.ReactNode) {
-  const queryClient = new QueryClient();
-
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
-}
-const server = setupServer();
+const server = setupServer(
+  http.get("/api/v1/parameter/param_name", () => {
+    return HttpResponse.json({
+      parameter: undefined,
+    });
+  })
+);
 
 beforeAll(() => {
   server.listen();
-  server.use(
-    http.get("/api/v1/parameter/param_name", () => {
-      return HttpResponse.json({
-        parameter: undefined,
-      });
-    })
-  );
 });
 
 beforeEach(() => {
-  server.resetHandlers();
-  server.use(
-    http.get("/api/v1/parameter/param_name", () => {
-      return HttpResponse.json({
-        parameter: undefined,
-      });
-    })
-  );
+  server.restoreHandlers();
 });
 
 afterAll(() => server.close());
@@ -133,7 +123,6 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with suggestions THEN sh
 
 test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestions THEN shows that field", async () => {
   // Provide the server-side API with the request handlers.
-  server.resetHandlers();
   server.use(
     http.get("/api/v1/parameter/param_name", () => {
       return HttpResponse.json({
@@ -156,7 +145,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
 
   const { component } = setup([Test.Field.textSuggestions2]);
 
-  render(createQueryWrapper(component));
+  render(component);
 
   expect(
     screen.getByRole("generic", {
@@ -171,27 +160,22 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   // simulate click on the input to show the suggestions
   await userEvent.click(textBox);
 
-  const suggestions = screen.getAllByRole("menuitem");
+  const suggestions = await screen.findAllByRole("menuitem");
 
   expect(suggestions).toHaveLength(3);
-
-  server.resetHandlers();
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestions AND no parameters could be retrieved THEN shows that field without suggestions", async () => {
   // Provide the server-side API with the request handlers.
-  const server = setupServer(
+  server.use(
     http.get("/api/v1/parameter/param_name", () => {
       return HttpResponse.error();
     })
   );
 
-  // Start the interception.
-  server.listen();
-
   const { component } = setup([Test.Field.textSuggestions2]);
 
-  render(createQueryWrapper(component));
+  render(component);
 
   expect(
     screen.getByRole("generic", {
