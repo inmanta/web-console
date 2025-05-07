@@ -42,6 +42,7 @@ const TestWrapper = () => {
               description={""}
               handleInputChange={setValue}
               serviceName={"test_entity"}
+              isDisabled={false}
               multi={false}
             />
           </StoreProvider>
