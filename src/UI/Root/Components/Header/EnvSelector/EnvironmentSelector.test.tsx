@@ -4,11 +4,10 @@ import { createMemoryHistory } from "@remix-run/router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { FlatEnvironment } from "@/Core";
-import { AuthProvider, getStoreInstance, KeycloakAuthConfig, LocalConfig } from "@/Data";
+import { AuthProvider, KeycloakAuthConfig, LocalConfig } from "@/Data";
 import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
 import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects";
 import { AuthTestWrapper, Environment, MockedDependencyProvider, Project } from "@/Test";
@@ -41,22 +40,18 @@ const setup = (
   onSelectEnvironment: (item: EnvironmentSelectorItem) => void = () => {},
   config: KeycloakAuthConfig | LocalConfig | undefined = undefined
 ) => {
-  const store = getStoreInstance();
-
   return (
     <ErrorBoundary>
       <TestMemoryRouter initialEntries={["/?env=123"]}>
         <QueryClientProvider client={testClient}>
-          <StoreProvider store={store}>
-            <AuthProvider config={config}>
-              <AuthTestWrapper>
-                <EnvSelectorWrapper
-                  onSelectEnvironment={onSelectEnvironment}
-                  selectedEnvironment={Environment.filterable[0]}
-                />
-              </AuthTestWrapper>
-            </AuthProvider>
-          </StoreProvider>
+          <AuthProvider config={config}>
+            <AuthTestWrapper>
+              <EnvSelectorWrapper
+                onSelectEnvironment={onSelectEnvironment}
+                selectedEnvironment={Environment.filterable[0]}
+              />
+            </AuthTestWrapper>
+          </AuthProvider>
         </QueryClientProvider>
       </TestMemoryRouter>
     </ErrorBoundary>

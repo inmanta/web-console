@@ -2,8 +2,6 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { getStoreInstance } from "@/Data";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -20,42 +18,37 @@ jest.mock("@/Data/Managers/V2/ServiceInstance", () => ({
 }));
 
 function setup() {
-  const storeInstance = getStoreInstance();
-
   return {
     component: (isDisabled = false) => (
       <QueryClientProvider client={testClient}>
-        <StoreProvider store={storeInstance}>
-          <MockedDependencyProvider>
-            <ModalProvider>
-              <ServiceInventoryContext.Provider
-                value={{
-                  labelFiltering: {
-                    danger: [],
-                    warning: [],
-                    success: [],
-                    info: [],
-                    no_label: [],
-                    onClick: jest.fn(),
-                  },
-                }}
-              >
-                <DeleteAction
-                  id={ServiceInstance.a.id}
-                  instance_identity={
-                    ServiceInstance.a.service_identity_attribute_value ?? ServiceInstance.a.id
-                  }
-                  version={ServiceInstance.a.version}
-                  isDisabled={isDisabled}
-                  service_entity={ServiceInstance.a.service_entity}
-                />
-              </ServiceInventoryContext.Provider>
-            </ModalProvider>
-          </MockedDependencyProvider>
-        </StoreProvider>
+        <MockedDependencyProvider>
+          <ModalProvider>
+            <ServiceInventoryContext.Provider
+              value={{
+                labelFiltering: {
+                  danger: [],
+                  warning: [],
+                  success: [],
+                  info: [],
+                  no_label: [],
+                  onClick: jest.fn(),
+                },
+              }}
+            >
+              <DeleteAction
+                id={ServiceInstance.a.id}
+                instance_identity={
+                  ServiceInstance.a.service_identity_attribute_value ?? ServiceInstance.a.id
+                }
+                version={ServiceInstance.a.version}
+                isDisabled={isDisabled}
+                service_entity={ServiceInstance.a.service_entity}
+              />
+            </ServiceInventoryContext.Provider>
+          </ModalProvider>
+        </MockedDependencyProvider>
       </QueryClientProvider>
     ),
-    storeInstance,
   };
 }
 

@@ -3,11 +3,9 @@ import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider } from "@/Test";
 import { links, metadata } from "@/Test/Data/Pagination";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -25,18 +23,14 @@ const axe = configureAxe({
 });
 
 const setup = (entries?: string[]) => {
-  const store = getStoreInstance();
-
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={entries}>
-        <StoreProvider store={store}>
-          <MockedDependencyProvider>
-            <Page>
-              <NotificationCenterPage />
-            </Page>
-          </MockedDependencyProvider>
-        </StoreProvider>
+        <MockedDependencyProvider>
+          <Page>
+            <NotificationCenterPage />
+          </Page>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

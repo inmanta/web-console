@@ -3,7 +3,7 @@ import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers/Pagination/getPaginationHandlers";
 import { ResourceHistory } from "@S/ResourceDetails/Core/ResourceHistory";
-import { useGet, REFETCH_INTERVAL } from "../../helpers";
+import { useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
 /**
@@ -40,7 +40,6 @@ export interface ResourceHistoryResponse extends ResponseBody {
  */
 interface GetResourceHistory {
   useOneTime: () => UseQueryResult<ResourceHistoryResponse, Error>;
-  useContinuous: () => UseQueryResult<ResourceHistoryResponse, Error>;
 }
 
 /**
@@ -48,7 +47,6 @@ interface GetResourceHistory {
  *
  * @returns {GetResourceHistory} An object containing the available queries
  * @returns {UseQueryResult<ResourceHistoryResponse, Error>} returns.useOneTime - Fetch the resource history with a single query
- * @returns {UseQueryResult<ResourceHistoryResponse, Error>} returns.useContinuous - Fetch the resource history with a recurrent query with an interval of 5s
  */
 export const useGetResourceHistory = (params: GetResourceHistoryParams): GetResourceHistory => {
   const { id, pageSize, sort, currentPage } = params;
@@ -69,16 +67,6 @@ export const useGetResourceHistory = (params: GetResourceHistoryParams): GetReso
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
-      }),
-    useContinuous: (): UseQueryResult<ResourceHistoryResponse, Error> =>
-      useQuery({
-        queryKey: ["get_resource_history-continuous", id, pageSize, sort, currentPage],
-        queryFn: () => get(url),
-        select: (data) => ({
-          ...data,
-          handlers: getPaginationHandlers(data.links, data.metadata),
-        }),
-        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };

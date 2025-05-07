@@ -2,10 +2,8 @@ import React from "react";
 import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -27,27 +25,23 @@ describe("ComposerActions.", () => {
     canvasContext: typeof defaultCanvasContext,
     editable: boolean = true
   ) => {
-    const store = getStoreInstance();
-
     return (
       <QueryClientProvider client={testClient}>
         <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-          <StoreProvider store={store}>
-            <MockedDependencyProvider>
-              <InstanceComposerContext.Provider
-                value={{
-                  serviceModels: [childModel],
-                  instance: instanceWithRelations,
-                  mainService: childModel,
-                  relatedInventoriesQuery: {} as UseQueryResult<Inventories, Error>,
-                }}
-              >
-                <CanvasContext.Provider value={canvasContext}>
-                  <ComposerActions serviceName="child-service" editable={editable} />
-                </CanvasContext.Provider>
-              </InstanceComposerContext.Provider>
-            </MockedDependencyProvider>
-          </StoreProvider>
+          <MockedDependencyProvider>
+            <InstanceComposerContext.Provider
+              value={{
+                serviceModels: [childModel],
+                instance: instanceWithRelations,
+                mainService: childModel,
+                relatedInventoriesQuery: {} as UseQueryResult<Inventories, Error>,
+              }}
+            >
+              <CanvasContext.Provider value={canvasContext}>
+                <ComposerActions serviceName="child-service" editable={editable} />
+              </CanvasContext.Provider>
+            </InstanceComposerContext.Provider>
+          </MockedDependencyProvider>
         </TestMemoryRouter>
       </QueryClientProvider>
     );

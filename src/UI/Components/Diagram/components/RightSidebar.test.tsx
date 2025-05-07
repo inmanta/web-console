@@ -2,8 +2,6 @@ import React from "react";
 import { dia } from "@inmanta/rappid";
 import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
-import { getStoreInstance } from "@/Data";
 import { Inventories } from "@/Data/Managers/V2/ServiceInstance";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -18,33 +16,29 @@ import { RightSidebar } from "./RightSidebar";
 
 describe("RightSidebar.", () => {
   const setup = (cellToEdit: dia.CellView | null, stencilState: StencilState) => {
-    const store = getStoreInstance();
-
     const component = (
       <QueryClientProvider client={testClient}>
         <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-          <StoreProvider store={store}>
-            <MockedDependencyProvider>
-              <InstanceComposerContext.Provider
+          <MockedDependencyProvider>
+            <InstanceComposerContext.Provider
+              value={{
+                mainService: containerModel, //Sidebar use only mainService, rest can be mocked
+                instance: null,
+                serviceModels: [],
+                relatedInventoriesQuery: {} as UseQueryResult<Inventories, Error>,
+              }}
+            >
+              <CanvasContext.Provider
                 value={{
-                  mainService: containerModel, //Sidebar use only mainService, rest can be mocked
-                  instance: null,
-                  serviceModels: [],
-                  relatedInventoriesQuery: {} as UseQueryResult<Inventories, Error>,
+                  ...defaultCanvasContext,
+                  cellToEdit,
+                  stencilState,
                 }}
               >
-                <CanvasContext.Provider
-                  value={{
-                    ...defaultCanvasContext,
-                    cellToEdit,
-                    stencilState,
-                  }}
-                >
-                  <RightSidebar editable={true} />
-                </CanvasContext.Provider>
-              </InstanceComposerContext.Provider>
-            </MockedDependencyProvider>
-          </StoreProvider>
+                <RightSidebar editable={true} />
+              </CanvasContext.Provider>
+            </InstanceComposerContext.Provider>
+          </MockedDependencyProvider>
         </TestMemoryRouter>
       </QueryClientProvider>
     );

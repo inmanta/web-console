@@ -32,7 +32,6 @@ export interface GetResourcesResponse extends Result {
  * Return signature of the useGetResources React Query hook
  */
 interface GetResources {
-  useOneTime: () => UseQueryResult<GetResourcesResponse, Error>;
   useContinuous: () => UseQueryResult<GetResourcesResponse, Error>;
 }
 
@@ -47,7 +46,6 @@ export interface GetResourcesParams {
  * React Query hook to fetch resources
  *
  * @returns {GetResources} An object containing the available queries
- * @returns {UseQueryResult<QueryResponse, Error>} returns.useOneTime - Fetch the resources with a single query
  * @returns {UseQueryResult<QueryResponse, Error>} returns.useContinuous - Fetch the resources with a recurrent query with an interval of 5s
  */
 export const useGetResources = (params: GetResourcesParams): GetResources => {
@@ -61,15 +59,6 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   const get = useGet()<Result>;
 
   return {
-    useOneTime: (): UseQueryResult<GetResourcesResponse, Error> =>
-      useQuery({
-        queryKey: ["get_resources-one_time", pageSize, filter, sort, currentPage],
-        queryFn: () => get(url),
-        select: (data) => ({
-          ...data,
-          handlers: getPaginationHandlers(data.links, data.metadata),
-        }),
-      }),
     useContinuous: (): UseQueryResult<GetResourcesResponse, Error> =>
       useQuery({
         queryKey: ["get_resources-continuous", pageSize, filter, sort, currentPage],

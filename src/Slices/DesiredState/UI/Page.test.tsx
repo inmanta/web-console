@@ -2,11 +2,9 @@ import React, { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
@@ -31,16 +29,13 @@ function setup() {
       },
     },
   });
-  const store = getStoreInstance();
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
         <TestMemoryRouter>
           <MockedDependencyProvider>
-            <StoreProvider store={store}>
-              <Page />
-            </StoreProvider>
+            <Page />
           </MockedDependencyProvider>
         </TestMemoryRouter>
       </ModalProvider>

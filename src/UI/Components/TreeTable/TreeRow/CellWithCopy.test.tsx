@@ -3,35 +3,29 @@ import { Table, Tbody, Tr } from "@patternfly/react-table";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CellWithCopy } from "./CellWithCopy";
 function setup(props) {
-  const store = getStoreInstance();
-
   const onClickFn = jest.fn();
 
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
-              <Table>
-                <Tbody>
-                  <Tr>
-                    <CellWithCopy {...props} />
-                  </Tr>
-                </Tbody>
-              </Table>
-            </TreeTableCellContext.Provider>
-          </StoreProvider>
+          <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
+            <Table>
+              <Tbody>
+                <Tr>
+                  <CellWithCopy {...props} />
+                </Tr>
+              </Tbody>
+            </Table>
+          </TreeTableCellContext.Provider>
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>

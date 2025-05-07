@@ -3,9 +3,7 @@ import { Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, queries, within as baseWithin } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { ServiceModel } from "@/Core";
-import { getStoreInstance } from "@/Data";
 import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
 import { MockedDependencyProvider } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
@@ -32,30 +30,27 @@ const setup = (
   editable: boolean = true
 ) => {
   const queryClient = new QueryClient();
-  const store = getStoreInstance();
 
   return (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter>
-        <StoreProvider store={store}>
-          <MockedDependencyProvider>
-            <InstanceComposerContext.Provider
-              value={{
-                instance: instance || null,
-                serviceModels: models,
-                mainService: mainService,
-                relatedInventoriesQuery: { data: {} } as UseQueryResult<Inventories, Error>,
-              }}
-            >
-              <CanvasProvider>
-                <Routes>
-                  <Route path="/" element={<Canvas editable={editable} />} />
-                  <Route path="/lsm/catalog/test-service/inventory" element={<></>} />
-                </Routes>
-              </CanvasProvider>
-            </InstanceComposerContext.Provider>
-          </MockedDependencyProvider>
-        </StoreProvider>
+        <MockedDependencyProvider>
+          <InstanceComposerContext.Provider
+            value={{
+              instance: instance || null,
+              serviceModels: models,
+              mainService: mainService,
+              relatedInventoriesQuery: { data: {} } as UseQueryResult<Inventories, Error>,
+            }}
+          >
+            <CanvasProvider>
+              <Routes>
+                <Route path="/" element={<Canvas editable={editable} />} />
+                <Route path="/lsm/catalog/test-service/inventory" element={<></>} />
+              </Routes>
+            </CanvasProvider>
+          </InstanceComposerContext.Provider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

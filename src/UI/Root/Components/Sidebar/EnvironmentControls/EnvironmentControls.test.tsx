@@ -2,11 +2,9 @@ import React, { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import { QueryControlProvider } from "@/Data/Managers/V2/helpers/QueryControlContext";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -17,17 +15,13 @@ import { EnvironmentControls } from "./EnvironmentControls";
 expect.extend(toHaveNoViolations);
 
 function setup() {
-  const store = getStoreInstance();
-
   const component = (
     <QueryClientProvider client={testClient}>
       <QueryControlProvider>
         <ModalProvider>
           <TestMemoryRouter initialEntries={["/?env=123"]}>
             <MockedDependencyProvider>
-              <StoreProvider store={store}>
-                <EnvironmentControls />
-              </StoreProvider>
+              <EnvironmentControls />
             </MockedDependencyProvider>
           </TestMemoryRouter>
         </ModalProvider>

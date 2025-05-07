@@ -1,32 +1,26 @@
 import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { Config } from "@/Core";
-import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { ConfigDetails } from "./ConfigDetails";
 
 function setup() {
-  const store = getStoreInstance();
-
   return {
     component: (config: Config) => (
       <QueryClientProvider client={testClient}>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <ConfigDetails
-              serviceInstanceIdentifier={{
-                id: ServiceInstance.a.id,
-                service_entity: ServiceInstance.a.service_entity,
-                version: ServiceInstance.a.version,
-              }}
-              config={config}
-              defaults={config}
-            />
-          </StoreProvider>
+          <ConfigDetails
+            serviceInstanceIdentifier={{
+              id: ServiceInstance.a.id,
+              service_entity: ServiceInstance.a.service_entity,
+              version: ServiceInstance.a.version,
+            }}
+            config={config}
+            defaults={config}
+          />
         </MockedDependencyProvider>
       </QueryClientProvider>
     ),

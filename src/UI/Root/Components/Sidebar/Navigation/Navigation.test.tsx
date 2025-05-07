@@ -1,9 +1,7 @@
 import React, { act } from "react";
 import { QueryClientProvider, QueryClient, QueryObserverResult } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { getStoreInstance } from "@/Data";
 import * as queryModule from "@/Data/Managers/V2/Compilation/GetCompilerStatus/useGetCompilerStatus";
 import { MockedDependencyProvider, MockFeatureManager } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -13,15 +11,12 @@ expect.extend(toHaveNoViolations);
 
 function setup(initialEntries?: string[]) {
   const queryClient = new QueryClient();
-  const store = getStoreInstance();
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={initialEntries}>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <Navigation environment="env" />
-          </StoreProvider>
+          <Navigation environment="env" />
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>

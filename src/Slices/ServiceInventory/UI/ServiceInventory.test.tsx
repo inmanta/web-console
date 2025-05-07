@@ -3,18 +3,10 @@ import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import {
-  Service,
-  ServiceInstance,
-  Pagination,
-  StaticScheduler,
-  MockedDependencyProvider,
-} from "@/Test";
+import { Service, ServiceInstance, Pagination, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
@@ -25,24 +17,19 @@ import { ServiceInventory } from "./ServiceInventory";
 expect.extend(toHaveNoViolations);
 
 function setup(service = Service.a, pageSize = "") {
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter initialEntries={[`/?env=aaa${pageSize}`]}>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <ModalProvider>
-              <Page>
-                <ServiceInventory
-                  serviceName={service.name}
-                  service={service}
-                  intro={<Chart summary={service.instance_summary} />}
-                />
-              </Page>
-            </ModalProvider>
-          </StoreProvider>
+          <ModalProvider>
+            <Page>
+              <ServiceInventory
+                serviceName={service.name}
+                service={service}
+                intro={<Chart summary={service.instance_summary} />}
+              />
+            </Page>
+          </ModalProvider>
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
@@ -50,7 +37,6 @@ function setup(service = Service.a, pageSize = "") {
 
   return {
     component,
-    scheduler,
   };
 }
 

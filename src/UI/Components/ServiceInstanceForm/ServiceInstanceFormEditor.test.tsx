@@ -11,7 +11,6 @@ import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import {
@@ -23,7 +22,6 @@ import {
   TextField,
   Textarea,
 } from "@/Core";
-import { getStoreInstance } from "@/Data";
 import * as Test from "@/Test";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -36,31 +34,27 @@ const setup = (
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined
 ) => {
-  const store = getStoreInstance();
-
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <ServiceInstanceForm
-                    fields={fields}
-                    onCancel={jest.fn()}
-                    onSubmit={func ? func : jest.fn()}
-                    isEdit={isEdit}
-                    originalAttributes={originalAttributes}
-                    service_entity="service_entity"
-                    isDirty={false}
-                    setIsDirty={jest.fn()}
-                  />
-                }
-              />
-            </Routes>
-          </StoreProvider>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ServiceInstanceForm
+                  fields={fields}
+                  onCancel={jest.fn()}
+                  onSubmit={func ? func : jest.fn()}
+                  isEdit={isEdit}
+                  originalAttributes={originalAttributes}
+                  service_entity="service_entity"
+                  isDirty={false}
+                  setIsDirty={jest.fn()}
+                />
+              }
+            />
+          </Routes>
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>

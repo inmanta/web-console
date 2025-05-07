@@ -2,9 +2,7 @@ import React, { PropsWithChildren } from "react";
 import { loader } from "@monaco-editor/react";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { StoreProvider } from "easy-peasy";
 import * as monaco from "monaco-editor";
-import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider } from "@/Test";
 import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -58,8 +56,6 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({ children, exp
     },
   });
 
-  const store = getStoreInstance();
-
   loader.config({ monaco });
   loader.init();
 
@@ -70,9 +66,7 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({ children, exp
       ]}
     >
       <QueryClientProvider client={queryClient}>
-        <MockedDependencyProvider>
-          <StoreProvider store={store}>{children}</StoreProvider>
-        </MockedDependencyProvider>
+        <MockedDependencyProvider>{children}</MockedDependencyProvider>
       </QueryClientProvider>
     </TestMemoryRouter>
   );

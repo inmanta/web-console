@@ -3,11 +3,9 @@ import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
@@ -18,17 +16,13 @@ import { View } from "./View";
 expect.extend(toHaveNoViolations);
 
 function setup() {
-  const store = getStoreInstance();
-
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <Page>
-              <View id={"abc"} />
-            </Page>
-          </StoreProvider>
+          <Page>
+            <View id={"abc"} />
+          </Page>
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>

@@ -1,10 +1,8 @@
 import React, { act, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
 import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
 import { MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -26,24 +24,21 @@ const server = setupServer(
 );
 const TestWrapper = () => {
   const [value, setValue] = useState("");
-  const store = getStoreInstance();
 
   return (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider>
-          <StoreProvider store={store}>
-            <AutoCompleteInputProvider
-              alreadySelected={[]}
-              attributeName={"test_attribute"}
-              attributeValue={value}
-              isOptional={false}
-              description={""}
-              handleInputChange={setValue}
-              serviceName={"test_entity"}
-              multi={false}
-            />
-          </StoreProvider>
+          <AutoCompleteInputProvider
+            alreadySelected={[]}
+            attributeName={"test_attribute"}
+            attributeValue={value}
+            isOptional={false}
+            description={""}
+            handleInputChange={setValue}
+            serviceName={"test_entity"}
+            multi={false}
+          />
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
