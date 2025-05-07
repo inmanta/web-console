@@ -1,0 +1,6 @@
+description: Allow deleting embedded entities when the minimum is not reached.
+issue-nr: 6333
+change-type: patch
+destination-branches: [master, iso8]
+sections:
+  bugfix: "{{description}}"

@@ -10,7 +10,7 @@ interface Props {
   attributeValue: string | string[] | null;
   description?: string | null;
   isOptional: boolean;
-  isDisabled?: boolean;
+  isDisabled: boolean;
   handleInputChange: (value) => void;
   alreadySelected: string[] | null;
   multi?: boolean;
@@ -38,7 +38,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
   attributeValue,
   description,
   isOptional,
-  isDisabled = false,
+  isDisabled,
   handleInputChange,
   alreadySelected,
   multi,

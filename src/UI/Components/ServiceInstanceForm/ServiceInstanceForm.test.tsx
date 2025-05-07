@@ -581,8 +581,8 @@ test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index,
   expect(textBoxes).toHaveLength(3);
   expect(textBoxes[0]).toHaveValue("flat_field_text_1");
 
-  // expect the first delete button to be disabled
-  expect(screen.getAllByRole("button", { name: words("delete") })[0]).toBeDisabled();
+  // the delete button should be enabled, as for this list, the minimum is 1
+  expect(screen.getAllByRole("button", { name: words("delete") })[0]).toBeEnabled();
 
   // Delete the second item of the list.
   await userEvent.click(within(group).getAllByRole("button", { name: words("delete") })[1]);
@@ -592,6 +592,17 @@ test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index,
   expect(updatedTextBoxes).toHaveLength(2);
   expect(updatedTextBoxes[0]).toHaveValue("flat_field_text_1");
   expect(updatedTextBoxes[1]).toHaveValue("flat_field_text_3");
+
+  // Delete another item of the list.
+  await userEvent.click(within(group).getAllByRole("button", { name: words("delete") })[0]);
+
+  const updatedTextBoxes2 = screen.getAllByRole("textbox");
+
+  expect(updatedTextBoxes2).toHaveLength(1);
+  expect(updatedTextBoxes2[0]).toHaveValue("flat_field_text_3");
+
+  // The delete button should now be disabled, as the minimum is 1
+  expect(screen.getAllByRole("button", { name: words("delete") })[0]).toBeDisabled();
 });
 
 test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with formState", async () => {
