@@ -413,7 +413,7 @@ describe("ConfigurationTab", () => {
       http.get("/api/v2/environment_settings", () => {
         return HttpResponse.json({ data: EnvironmentSettings.base });
       }),
-      http.delete("/api/v2/environment_settings/auto_deploy", () => {
+      http.post("/api/v2/environment_settings/autostart_agent_map", () => {
         return HttpResponse.json();
       }),
       http.get("/api/v2/environment_settings/autostart_agent_map", () => {

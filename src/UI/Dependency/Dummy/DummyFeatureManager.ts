@@ -1,4 +1,4 @@
-import { FeatureManager, JsonParserId, ServerStatus, StatusLicense } from "@/Core";
+import { FeatureManager, JsonParserId, StatusLicense } from "@/Core";
 
 export class DummyFeatureManager implements FeatureManager {
   getCommitHash(): string {
@@ -38,9 +38,6 @@ export class DummyFeatureManager implements FeatureManager {
     throw new Error("Method not implemented.");
   }
   getLicenseInformation(): StatusLicense {
-    throw new Error("Method not implemented.");
-  }
-  setServerStatus(_serverStatus: ServerStatus): void {
     throw new Error("Method not implemented.");
   }
 }

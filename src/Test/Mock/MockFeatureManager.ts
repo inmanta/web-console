@@ -1,4 +1,4 @@
-import { Feature, FeatureManager, JsonParserId, ServerStatus, StatusLicense } from "@/Core";
+import { Feature, FeatureManager, JsonParserId, StatusLicense } from "@/Core";
 
 /**
  * Mock implementation of the FeatureManager interface for testing purposes.
@@ -58,10 +58,6 @@ export class MockFeatureManager implements FeatureManager {
       cert_valid_until: "2025-10-01T08:59:00.000000",
       entitlement_valid_until: "2021-11-01T19:04:14.000000",
     };
-  }
-
-  setServerStatus(_serverStatus: ServerStatus): void {
-    return;
   }
 }
 
@@ -124,10 +120,6 @@ export class MockEditableFeatureManager implements FeatureManager {
       entitlement_valid_until: "2021-11-01T19:04:14.000000",
     };
   }
-
-  setServerStatus(_serverStatus: ServerStatus): void {
-    return;
-  }
 }
 
 /**
@@ -188,9 +180,5 @@ export class MockLimitedFeatureManager implements FeatureManager {
       cert_valid_until: "2025-10-01T08:59:00.000000",
       entitlement_valid_until: "2021-11-01T19:04:14.000000",
     };
-  }
-
-  setServerStatus(_serverStatus: ServerStatus): void {
-    return;
   }
 }

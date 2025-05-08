@@ -36,10 +36,23 @@ function setup() {
 }
 
 describe("ComplianceCheck page", () => {
-  const server = setupServer();
+  const server = setupServer(
+    http.get("/api/v2/dryrun/123", () => {
+      return HttpResponse.json(Mock.listResponse);
+    }),
+    http.get(`/api/v2/dryrun/123/${Mock.a.id}`, () => {
+      return HttpResponse.json(Mock.reportResponse);
+    }),
+    http.get(`/api/v2/dryrun/123/${Mock.b.id}`, () => {
+      return HttpResponse.json({ summary: Mock.b, ...Mock.reportResponse });
+    }),
+    http.get(`/api/v2/dryrun/123/${Mock.c.id}`, () => {
+      return HttpResponse.json({ summary: Mock.c, ...Mock.reportResponse });
+    })
+  );
 
   beforeAll(() => server.listen());
-  beforeEach(() => server.resetHandlers());
+  beforeEach(() => server.restoreHandlers());
   afterAll(() => server.close());
 
   test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async () => {
@@ -79,17 +92,6 @@ describe("ComplianceCheck page", () => {
   });
 
   test("GIVEN ComplianceCheck page When a report is selected from the list THEN the user sees the selected dry run report", async () => {
-    server.use(
-      http.get("/api/v2/dryrun/123", () => {
-        return HttpResponse.json(Mock.listResponse);
-      }),
-      http.get(`/api/v2/dryrun/123/${Mock.b.id}`, () => {
-        return HttpResponse.json(Mock.reportResponse);
-      }),
-      http.get(`/api/v2/dryrun/123/${Mock.c.id}`, () => {
-        return HttpResponse.json(Mock.reportResponse);
-      })
-    );
     const { component } = setup();
 
     render(component);
@@ -145,9 +147,6 @@ describe("ComplianceCheck page", () => {
       http.get("/api/v2/dryrun/123", () => {
         return HttpResponse.json(data);
       }),
-      http.get(`/api/v2/dryrun/123/${Mock.b.id}`, () => {
-        return HttpResponse.json(Mock.reportResponse);
-      }),
       http.post("/api/v2/dryrun/123", () => {
         data = { data: [Mock.a, ...Mock.listOfReports] };
         return HttpResponse.json(data);
@@ -181,14 +180,6 @@ describe("ComplianceCheck page", () => {
   });
 
   test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
-    server.use(
-      http.get("/api/v2/dryrun/123", () => {
-        return HttpResponse.json(Mock.listResponse);
-      }),
-      http.get(`/api/v2/dryrun/123/${Mock.b.id}`, () => {
-        return HttpResponse.json(Mock.reportResponse);
-      })
-    );
     const { component } = setup();
 
     render(component);
@@ -235,14 +226,6 @@ describe("ComplianceCheck page", () => {
   });
 
   test("GIVEN ComplianceCheck page WHEN SearchFilter is used, ONLY show the resources matching the search value", async () => {
-    server.use(
-      http.get("/api/v2/dryrun/123", () => {
-        return HttpResponse.json(Mock.listResponse);
-      }),
-      http.get(`/api/v2/dryrun/123/${Mock.b.id}`, () => {
-        return HttpResponse.json(Mock.reportResponse);
-      })
-    );
     const { component } = setup();
 
     render(component);
