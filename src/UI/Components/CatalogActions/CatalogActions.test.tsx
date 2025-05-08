@@ -192,4 +192,41 @@ describe("CatalogActions", () => {
 
     expect(button).toHaveAttribute("href", "/lsm/v1/service_catalog_docs?environment=env");
   });
+
+  test("Given API documentation button with authenticated user, it should include token in href link.", async () => {
+    const mockAuthHelper = {
+      getToken: () => "test-token",
+      getUser: () => null,
+      login: () => {},
+      logout: () => {},
+      updateUser: () => {},
+      isDisabled: () => false,
+    };
+
+    render(
+      <QueryClientProvider client={testClient}>
+        <StoreProvider store={getStoreInstance()}>
+          <DependencyProvider
+            dependencies={{
+              ...dependencies,
+              authHelper: mockAuthHelper,
+            }}
+          >
+            <ModalProvider>
+              <CatalogActions />
+            </ModalProvider>
+          </DependencyProvider>
+        </StoreProvider>
+      </QueryClientProvider>
+    );
+
+    const button = screen.getByRole("link", {
+      name: "API-Documentation",
+    });
+
+    expect(button).toHaveAttribute(
+      "href",
+      "/lsm/v1/service_catalog_docs?environment=env&token=test-token"
+    );
+  });
 });
