@@ -30,7 +30,7 @@ export const CatalogActions: React.FC = () => {
 
   const lsmApiLink = urlManager.getLSMAPILink(environmentHandler.useId());
 
-  // If the user is authenticated, we need to add the token to the documentation link to allow access to the
+  // If the user is authenticated, we need to add the token to the documentation link to allow access to the page.
   const getUrl = (link: string) => {
     if (authHelper.getToken()) {
       return link + "&token=" + authHelper.getToken();
