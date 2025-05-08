@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { useGetOrderDetails } from "@/Data/Managers/V2/Order";
-import { useRouteParams } from "@/UI";
 import { EmptyView, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { OrderDetailsHeading } from "./OrderDetailsHeading";
 import { OrderDetailsTable } from "./OrderDetailsTable";

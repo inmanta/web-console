@@ -10,6 +10,7 @@ interface Props {
   attributeValue: string | string[] | null;
   description?: string | null;
   isOptional: boolean;
+  isDisabled: boolean;
   handleInputChange: (value) => void;
   alreadySelected: string[];
   multi?: boolean;
@@ -36,6 +37,7 @@ export const RelatedServiceProvider: React.FC<Props> = ({
   attributeValue,
   description,
   isOptional,
+  isDisabled,
   handleInputChange,
   alreadySelected,
   multi,
@@ -64,6 +66,7 @@ export const RelatedServiceProvider: React.FC<Props> = ({
         isOptional={isOptional}
         description={description}
         handleInputChange={handleInputChange}
+        isDisabled={isDisabled}
         serviceName={serviceName}
         multi={multi}
       />

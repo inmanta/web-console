@@ -13,7 +13,6 @@ interface Result {
  * Return signature of the useGetResourceFacts React Query hook
  */
 interface GetResourceFacts {
-  useOneTime: (resourceId: string) => UseQueryResult<Fact[], Error>;
   useContinuous: (resourceId: string) => UseQueryResult<Fact[], Error>;
 }
 
@@ -21,19 +20,12 @@ interface GetResourceFacts {
  * React Query hook to fetch facts for a specific resource
  *
  * @returns {GetResourceFacts} An object containing the available queries
- * @returns {UseQueryResult<Result, Error>} returns.useOneTime - Fetch the resource facts with a single query
  * @returns {UseQueryResult<Result, Error>} returns.useContinuous - Fetch the resource facts with a recurrent query with an interval of 5s
  */
 export const useGetResourceFacts = (): GetResourceFacts => {
   const get = useGet()<Result>;
 
   return {
-    useOneTime: (resourceId: string): UseQueryResult<Fact[], Error> =>
-      useQuery({
-        queryKey: ["get_resource_facts-one_time", resourceId],
-        queryFn: () => get(`/api/v2/resource/${encodeURIComponent(resourceId)}/facts`),
-        select: (data) => data.data,
-      }),
     useContinuous: (resourceId: string): UseQueryResult<Fact[], Error> =>
       useQuery({
         queryKey: ["get_resource_facts-continuous", resourceId],

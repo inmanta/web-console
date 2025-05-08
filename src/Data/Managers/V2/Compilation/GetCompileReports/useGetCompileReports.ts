@@ -30,7 +30,6 @@ interface HookResponse extends ResponseBody {
 }
 
 interface GetCompileReports {
-  useOneTime: () => UseQueryResult<HookResponse, CustomError>;
   useContinuous: () => UseQueryResult<HookResponse, CustomError>;
 }
 
@@ -40,7 +39,6 @@ interface GetCompileReports {
  * @param params {CompileReportsParams} - Parameters for filtering, sorting and pagination
  *
  * @returns {GetCompileReports} An object containing the different available queries
- * @returns {UseQueryResult<HookResponse, CustomError>} returns.useOneTime - Fetch compile reports with a single query
  * @returns {UseQueryResult<HookResponse, CustomError>} returns.useContinuous - Fetch compile reports with a recursive query with an interval of 5s
  */
 export const useGetCompileReports = (params: CompileReportsParams): GetCompileReports => {
@@ -48,21 +46,6 @@ export const useGetCompileReports = (params: CompileReportsParams): GetCompileRe
   const get = useGet()<ResponseBody>;
 
   return {
-    useOneTime: (): UseQueryResult<HookResponse, CustomError> =>
-      useQuery({
-        queryKey: [
-          "get_compile_reports-one_time",
-          params.filter,
-          params.sort,
-          params.pageSize,
-          params.currentPage,
-        ],
-        queryFn: () => get(url),
-        select: (data) => ({
-          ...data,
-          handlers: getPaginationHandlers(data.links, data.metadata),
-        }),
-      }),
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
         queryKey: [

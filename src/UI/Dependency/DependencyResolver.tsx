@@ -1,15 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import { FlatEnvironment } from "@/Core";
 import { DependencyContext } from "./Dependency";
 
 interface Props {
-  environment: string;
+  environment: FlatEnvironment;
 }
 
 export const DependencyResolver: React.FC<Props> = ({ environment }) => {
   const { fileFetcher, environmentModifier } = useContext(DependencyContext);
 
-  fileFetcher.setEnvironment(environment);
-  environmentModifier.setEnvironment(environment);
+  useEffect(() => {
+    fileFetcher.setEnvironment(environment.id);
+    environmentModifier.setEnvironment(environment);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [environment]);
 
   return null;
 };

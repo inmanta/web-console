@@ -2,14 +2,11 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { getShortUuidFromRaw } from "@/Core";
-import { getStoreInstance } from "@/Data";
-import { Service, Callback, dependencies } from "@/Test";
+import { Service, Callback, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CallbacksView } from "@S/ServiceDetails/UI/Tabs/Callbacks";
@@ -17,25 +14,20 @@ import { CallbacksView } from "@S/ServiceDetails/UI/Tabs/Callbacks";
 const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);
 
 function setup() {
-  const store = getStoreInstance();
-
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
-          <StoreProvider store={store}>
-            <ModalProvider>
-              <CallbacksView service_entity={Service.a.name} />
-            </ModalProvider>
-          </StoreProvider>
-        </DependencyProvider>
+        <MockedDependencyProvider>
+          <ModalProvider>
+            <CallbacksView service_entity={Service.a.name} />
+          </ModalProvider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
 
   return {
     component,
-    store,
   };
 }
 

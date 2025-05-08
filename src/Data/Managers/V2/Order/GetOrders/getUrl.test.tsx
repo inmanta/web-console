@@ -1,5 +1,6 @@
-import { PageSize, Query } from "@/Core";
+import { PageSize } from "@/Core";
 import { getUrl } from "./getUrl";
+import { OrdersQueryParams } from "./useGetOrders";
 
 it.each`
   sort                                     | pageSize | currentPage | url
@@ -9,8 +10,7 @@ it.each`
 `(
   "getUrl returns correct url for orders with currentPage: $currentPage and pageSize: $pageSize",
   ({ pageSize, sort, url, currentPage }) => {
-    const query: Query.SubQuery<"GetOrders"> = {
-      kind: "GetOrders",
+    const query: OrdersQueryParams = {
       pageSize: PageSize.from(pageSize),
       sort,
       currentPage: { kind: "CurrentPage", value: currentPage },

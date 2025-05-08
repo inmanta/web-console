@@ -41,6 +41,44 @@ export const useGet = (options?: { message?: string }) => {
 };
 
 /**
+ * Custom hook to perform a GET request with an optional, manual assignment  of environment Id for a header.
+ *
+ * @param {string} [envId] - The environment Id to be used in the request headers.
+ * @param {Object} [options] - Optional configuration for the GET request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
+ *
+ * @returns {Function(path: string): Promise<Response>} A function that performs a GET request and returns the response data.
+ *
+ * @template Response - The type of the response data.
+ */
+export const useGetWithManualEnv = (envId?: string, options?: { message?: string }) => {
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname
+  );
+  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders({ env: envId, message: options?.message });
+
+  return async <Response>(path: string): Promise<Response> => {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, {
+        headers,
+      });
+
+      await handleErrors(response);
+
+      return response.json();
+    } catch (error) {
+      throw error;
+    }
+  };
+};
+
+/**
  * Custom hook to perform a GET request.
  *
  *  @param {Object} [options] - Optional configuration for the GET request.

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { EnvironmentSettings, Maybe } from "@/Core";
+import { EnvironmentSettings } from "@/Core";
 import { DictEditor, Entry, Dict } from "@/UI/Components";
 import { Row } from "./Row";
 import { Warning } from "./Warning";
@@ -14,21 +14,15 @@ export const DictInputWithRow: React.FC<Props> = ({ info }) => {
   const customInfo = {
     ...info,
     update: async (value: EnvironmentSettings.DictInputInfo["value"]) => {
-      const error = await info.update({
+      info.update({
         ...value,
         ...getSanitizedNewEntry(newEntry),
       });
-
-      if (Maybe.isNone(error)) setNewEntry(["", ""]);
-
-      return error;
+      setNewEntry(["", ""]);
     },
     reset: async () => {
-      const error = await info.reset();
-
-      if (Maybe.isNone(error)) setNewEntry(["", ""]);
-
-      return error;
+      await info.reset();
+      setNewEntry(["", ""]);
     },
     isUpdateable: () => info.isUpdateable(info) || newEntry[0].length > 0,
   };

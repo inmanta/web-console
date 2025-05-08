@@ -1,69 +1,57 @@
-import {
-  EnvironmentDetails,
-  EnvironmentModifier,
-  EnvironmentSettings,
-  Maybe,
-  RemoteData,
-} from "@/Core";
-import { useStoreState } from "@/Data/Store";
+import { useState } from "react";
+import { FlatEnvironment, EnvironmentModifier, EnvironmentSettings } from "@/Core";
+import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment";
 
-export function EnvironmentModifierImpl(): EnvironmentModifier {
-  let environment: Maybe.Type<string> = Maybe.none();
+/**
+ * EnvironmentModifierImpl is a function that returns an object with the following properties:
+ *
+ * - useIsHalted: a hook that returns a boolean value indicating if the environment is halted
+ * - setEnvironment: a function that sets the environment
+ * - setEnvironmentSettings: a function that sets the environment settings
+ * - useIsServerCompileEnabled: a hook that returns a boolean value indicating if the server compile is enabled
+ * - useIsProtectedEnvironment: a hook that returns a boolean value indicating if the environment is protected
+ * - useIsExpertModeEnabled: a hook that returns a boolean value indicating if the expert mode is enabled
+ *
+ * @returns {EnvironmentModifier} - An object with the following properties:
+ */
+export function useEnvironmentModifierImpl(): EnvironmentModifier {
+  const [env, setEnv] = useState<FlatEnvironment | null>(null);
+  const envSettings = useGetEnvironmentSettings(env?.id).useOneTime();
 
-  function useCurrentEnvironment(): EnvironmentDetails | null {
-    const storeState = useStoreState((state) => state.environment.environmentDetailsById);
-
-    if (Maybe.isSome(environment)) {
-      const state = storeState[environment.value];
-
-      if (state !== undefined && RemoteData.isSuccess(state)) {
-        return state.value;
-      }
-    }
-
-    return null;
-  }
-
-  function useEnvironmentSettings(): EnvironmentSettings.EnvironmentSettings | null {
-    const storeState = useStoreState((state) => state.environment.settingsByEnv);
-
-    if (Maybe.isSome(environment)) {
-      const state = storeState[environment.value];
-
-      if (state !== undefined && RemoteData.isSuccess(state)) {
-        return state.value;
-      }
-    }
-
-    return null;
-  }
-
-  function setEnvironment(environmentToSet: string): void {
-    environment = Maybe.some(environmentToSet);
+  function setEnvironment(environmentToSet: FlatEnvironment): void {
+    setEnv(environmentToSet);
   }
 
   function useIsHalted(): boolean {
-    const environmentDetails = useCurrentEnvironment();
+    if (env === null) return false;
 
-    if (environmentDetails === null) return false;
-
-    return environmentDetails.halted;
+    return env.halted;
   }
 
+  /**
+   * check in the environment if the current settings exist if not it will try to fallback to envSettings definitions, in case of lack of env and lack of envSettings it will return false
+   *
+   * Currently envSettings are being fetched only when visiting env settings view due to re-rendering issues that came up through changing structure of the envModifier and Handler
+   * It will be resolved with GraphQL update for the initial loading of the environments - https://github.com/inmanta/web-console/issues/6266
+   * @param {keyof EnvironmentSettings.DefinitionMap} settingName
+   * @returns {boolean}
+   */
   function useSetting(settingName: keyof EnvironmentSettings.DefinitionMap): boolean {
-    const environmentDetails = useCurrentEnvironment();
-    const environmentSettings = useEnvironmentSettings();
+    if (env === null) return false;
 
-    if (environmentDetails === null || environmentSettings === null) return false;
-
-    if (
-      environmentDetails.settings[settingName] !== undefined &&
-      environmentDetails.settings[settingName] !== null
-    ) {
-      return Boolean(environmentDetails.settings[settingName]);
-    } else {
-      return Boolean(environmentSettings.definition[settingName]?.default);
+    if (env.settings[settingName] !== undefined && env.settings[settingName] !== null) {
+      return Boolean(env.settings[settingName]);
     }
+
+    if (envSettings.data) {
+      if (
+        envSettings.data.definition[settingName] !== undefined &&
+        envSettings.data.definition[settingName] !== null
+      ) {
+        return Boolean(envSettings.data.definition[settingName]?.default);
+      }
+    }
+    return false;
   }
 
   function useIsServerCompileEnabled(): boolean {

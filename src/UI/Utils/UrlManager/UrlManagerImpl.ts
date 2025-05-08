@@ -1,5 +1,10 @@
 import { FeatureManager, UrlManager } from "@/Core";
 
+/**
+ * This class is used to manage the URLs of the application.
+ *
+ * @returns <UrlManager> UrlManagerImpl
+ */
 export class UrlManagerImpl implements UrlManager {
   constructor(
     private readonly featureManager: FeatureManager,

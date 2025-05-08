@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Diff } from "@/Core/Domain";
-import { REFETCH_INTERVAL, useGet } from "../../helpers";
+import { useGet } from "../../helpers";
 
 /**
  * Interface for the API response containing the diff data
@@ -14,7 +14,6 @@ interface Result {
  */
 interface GetDesiredStateDiff {
   useOneTime: (from: string, to: string) => UseQueryResult<Diff.Resource[], Error>;
-  useContinuous: (from: string, to: string) => UseQueryResult<Diff.Resource[], Error>;
 }
 
 /**
@@ -22,7 +21,6 @@ interface GetDesiredStateDiff {
  *
  * @returns {GetDesiredStateDiff} An object containing the available queries.
  * @returns {UseQueryResult<Diff.Resource[], Error>} returns.useOneTime - Fetch the diff with a single query.
- * @returns {UseQueryResult<Diff.Resource[], Error>} returns.useContinuous - Fetch the diff with a recurrent query with an interval of 5s.
  */
 export const useGetDesiredStateDiff = (): GetDesiredStateDiff => {
   const get = useGet()<Result>;
@@ -32,13 +30,6 @@ export const useGetDesiredStateDiff = (): GetDesiredStateDiff => {
       useQuery({
         queryKey: ["get_desired_state_diff-one_time", from, to],
         queryFn: () => get(getUrl(from, to)),
-        select: (data) => data.data,
-      }),
-    useContinuous: (from: string, to: string): UseQueryResult<Diff.Resource[], Error> =>
-      useQuery({
-        queryKey: ["get_desired_state_diff-continuous", from, to],
-        queryFn: () => get(getUrl(from, to)),
-        refetchInterval: REFETCH_INTERVAL,
         select: (data) => data.data,
       }),
   };

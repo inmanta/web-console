@@ -21,12 +21,23 @@ import { ToastAlert } from "../ToastAlert";
  */
 export const CatalogActions: React.FC = () => {
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const { urlManager, environmentHandler } = useContext(DependencyContext);
+  const { urlManager, environmentHandler, authHelper } = useContext(DependencyContext);
   const { mutate, isError, error, isSuccess } = useExportCatalog();
 
   const [message, setMessage] = useState("");
   const [toastTitle, setToastTitle] = useState("");
   const [toastType, setToastType] = useState(AlertVariant.custom);
+
+  const lsmApiLink = urlManager.getLSMAPILink(environmentHandler.useId());
+
+  // If the user is authenticated, we need to add the token to the documentation link to allow access to the page.
+  const getUrl = (link: string) => {
+    if (authHelper.getToken()) {
+      return link + "&token=" + authHelper.getToken();
+    }
+
+    return link;
+  };
 
   /**
    * Handles the submission of the form.
@@ -103,7 +114,7 @@ export const CatalogActions: React.FC = () => {
               aria-label="API-Documentation"
               icon={<FileCodeIcon />}
               component="a"
-              href={urlManager.getLSMAPILink(environmentHandler.useId())}
+              href={getUrl(lsmApiLink)}
               target="_blank"
             ></Button>
           </Tooltip>

@@ -1,65 +1,46 @@
 import React from "react";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import { dependencies, MockEnvironmentModifier } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { words } from "@/UI/words";
 import { Provider } from "./Provider";
 
-function setup({
-  details = {
-    halted: false,
-    server_compile: true,
-    protected_environment: false,
-    enable_lsm_expert_mode: false,
-  },
-  isToastVisible = true,
-} = {}) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
-  const store = getStoreInstance();
-
-  const environmentModifier = new MockEnvironmentModifier(details);
+function setup({ isToastVisible = true } = {}) {
   const afterTrigger = jest.fn();
 
   const component = (
-    <QueryClientProvider client={queryClient}>
-      <StoreProvider store={store}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentModifier,
-          }}
-        >
-          <Provider afterTrigger={afterTrigger} isToastVisible={isToastVisible} />
-        </DependencyProvider>
-      </StoreProvider>
+    <QueryClientProvider client={testClient}>
+      <MockedDependencyProvider>
+        <Provider afterTrigger={afterTrigger} isToastVisible={isToastVisible} />
+      </MockedDependencyProvider>
     </QueryClientProvider>
   );
 
   return { component, afterTrigger };
 }
 const server = setupServer(
-  http.post("/api/v1/notify/env", async () => {
+  http.post("/api/v1/notify/c85c0a64-ed45-4cba-bdc5-703f65a225f7", async () => {
     return HttpResponse.json({});
   })
 );
 
 describe("CompileWidgetProvider", () => {
   beforeAll(() => server.listen());
-  afterAll(() => server.close());
+  afterAll(() => {
+    server.close();
+    jest.clearAllMocks();
+  });
 
   test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
+    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
+      useIsServerCompileEnabled: () => true,
+    });
     const { component, afterTrigger } = setup();
 
     render(component);
@@ -70,7 +51,7 @@ describe("CompileWidgetProvider", () => {
 
     await userEvent.click(button);
 
-    const toast = screen.getByTestId("ToastAlert");
+    const toast = await screen.findByTestId("ToastAlert");
 
     expect(toast).toBeVisible();
     expect(toast).toHaveTextContent(words("common.compileWidget.toast")(false));
@@ -102,7 +83,7 @@ describe("CompileWidgetProvider", () => {
 
     await userEvent.click(button);
 
-    const toast = screen.getByTestId("ToastAlert");
+    const toast = await screen.findByTestId("ToastAlert");
 
     expect(toast).toBeVisible();
     expect(toast).toHaveTextContent(words("common.compileWidget.toast")(true));
@@ -110,31 +91,8 @@ describe("CompileWidgetProvider", () => {
     expect(afterTrigger).toHaveBeenCalled();
   });
 
-  test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THEN button is disabled", async () => {
-    const { component } = setup({
-      details: {
-        halted: false,
-        server_compile: false,
-        protected_environment: false,
-        enable_lsm_expert_mode: false,
-      },
-    });
-
-    render(component);
-
-    const button = screen.getByRole("button", { name: "RecompileButton" });
-
-    expect(button).toBeDisabled();
-  });
-
   test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile clicked THEN toast won't appear", async () => {
     const { component } = setup({
-      details: {
-        halted: false,
-        server_compile: true,
-        protected_environment: false,
-        enable_lsm_expert_mode: false,
-      },
       isToastVisible: false,
     });
 
@@ -147,5 +105,19 @@ describe("CompileWidgetProvider", () => {
     expect(screen.queryByTestId("ToastAlert")).not.toBeInTheDocument();
 
     expect(button).toBeEnabled();
+  });
+
+  test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THEN button is disabled", async () => {
+    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
+      useIsServerCompileEnabled: () => false,
+    });
+    const { component } = setup();
+
+    render(component);
+
+    const button = screen.getByRole("button", { name: "RecompileButton" });
+
+    expect(button).toBeDisabled();
   });
 });
