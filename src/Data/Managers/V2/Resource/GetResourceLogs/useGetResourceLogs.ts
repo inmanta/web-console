@@ -40,7 +40,6 @@ export interface ResourceLogsResponse extends ResponseBody {
  * Return signature of the useGetResourceLogs React Query hook
  */
 interface GetResourceLogs {
-  useOneTime: () => UseQueryResult<ResourceLogsResponse, Error>;
   useContinuous: () => UseQueryResult<ResourceLogsResponse, Error>;
 }
 
@@ -48,7 +47,6 @@ interface GetResourceLogs {
  * React Query hook to fetch logs for a specific resource
  *
  * @returns {GetResourceLogs} An object containing the available queries
- * @returns {UseQueryResult<ResourceLogsResponse, Error>} returns.useOneTime - Fetch the resource logs with a single query
  * @returns {UseQueryResult<ResourceLogsResponse, Error>} returns.useContinuous - Fetch the resource logs with a recurrent query with an interval of 5s
  */
 export const useGetResourceLogs = (params: GetResourceLogsParams): GetResourceLogs => {
@@ -63,15 +61,6 @@ export const useGetResourceLogs = (params: GetResourceLogsParams): GetResourceLo
   const get = useGet()<ResponseBody>;
 
   return {
-    useOneTime: (): UseQueryResult<ResourceLogsResponse, Error> =>
-      useQuery({
-        queryKey: ["get_resource_logs-one_time", id, pageSize, filter, sort, currentPage],
-        queryFn: () => get(url),
-        select: (data) => ({
-          ...data,
-          handlers: getPaginationHandlers(data.links, data.metadata),
-        }),
-      }),
     useContinuous: (): UseQueryResult<ResourceLogsResponse, Error> =>
       useQuery({
         queryKey: ["get_resource_logs-continuous", id, pageSize, filter, sort, currentPage],

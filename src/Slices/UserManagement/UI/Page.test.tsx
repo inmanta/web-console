@@ -7,8 +7,8 @@ import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { UserInfo } from "@/Data/Managers/V2/Auth";
-import { dependencies } from "@/Test";
-import { DependencyProvider, words } from "@/UI";
+import { MockedDependencyProvider } from "@/Test";
+import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { UserManagementPage } from "./Page";
@@ -27,13 +27,13 @@ const setup = () => {
   const component = (
     <TestMemoryRouter>
       <QueryClientProvider client={queryClient}>
-        <DependencyProvider dependencies={{ ...dependencies }}>
+        <MockedDependencyProvider>
           <ModalProvider>
             <Page>
               <UserManagementPage />
             </Page>
           </ModalProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </QueryClientProvider>
     </TestMemoryRouter>
   );

@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useUrlStateWithString } from "@/Data";
 import { useGetServiceModel } from "@/Data/Managers/V2/Service";
 import { useGetInstance, useGetInfiniteInstanceLogs } from "@/Data/Managers/V2/ServiceInstance";
-import { useRouteParams, words } from "@/UI";
+import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+import { useRouteParams } from "@/UI/Routing";
 import { InstanceDetailsContext } from "../Core/Context";
 import { VersionedPageTitleWithActions } from "./Components/Sections";
 import { ServiceInstanceDetailsLayout } from "./ServiceInstanceDetailsLayout";
-
 interface Props {
   service: string;
   instance: string;

@@ -2,13 +2,10 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
+import { MockedDependencyProvider, MockFeatureManager } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { mockedMetrics } from "../Core/Mock";
@@ -23,18 +20,14 @@ const server = setupServer(
 );
 
 const setup = (isLsmEnabled = false) => {
-  const store = getStoreInstance();
-
-  dependencies.featureManager.isLsmEnabled = jest.fn(() => isLsmEnabled);
+  jest.spyOn(MockFeatureManager.prototype, "isLsmEnabled").mockReturnValue(isLsmEnabled);
 
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
-          <StoreProvider store={store}>
-            <Dashboard />
-          </StoreProvider>
-        </DependencyProvider>
+        <MockedDependencyProvider>
+          <Dashboard />
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
@@ -44,7 +37,10 @@ const setup = (isLsmEnabled = false) => {
 
 describe("Dashboard", () => {
   beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
+  afterEach(() => {
+    server.resetHandlers();
+    jest.clearAllMocks();
+  });
   afterAll(() => server.close());
 
   it("should show loading state initially", () => {
@@ -122,7 +118,7 @@ describe("Dashboard", () => {
       })
     );
 
-    const { component } = setup();
+    const { component } = setup(true);
 
     render(component);
     expect(counter).toBe(0);

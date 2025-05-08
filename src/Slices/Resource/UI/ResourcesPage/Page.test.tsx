@@ -2,15 +2,12 @@ import React, { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { RemoteData } from "@/Core";
-import { getStoreInstance } from "@/Data";
-import { dependencies, EnvironmentDetails, MockEnvironmentHandler, Resource } from "@/Test";
+import { MockedDependencyProvider, Resource } from "@/Test";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { Page } from "./Page";
@@ -34,32 +31,18 @@ function setup(entries?: string[]) {
     },
   });
 
-  const store = getStoreInstance();
-
-  const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
-
   const component = (
     <QueryClientProvider client={client}>
       <TestMemoryRouter initialEntries={entries}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentHandler: MockEnvironmentHandler(environment),
-          }}
-        >
-          <StoreProvider store={store}>
-            <Page />
-          </StoreProvider>
-        </DependencyProvider>
+        <MockedDependencyProvider>
+          <Page />
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
 
   return {
     component,
-    environment,
-    store,
-    environmentModifier: dependencies.environmentModifier,
   };
 }
 
@@ -953,18 +936,17 @@ describe("ResourcesPage", () => {
   });
 
   test("Given the ResourcesPage When environment is halted, then deploy and repair buttons are disabled", async () => {
+    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
+      useIsHalted: () => true,
+    });
+
     server.use(
       http.get("/api/v2/resource", () => {
         return HttpResponse.json(Resource.response);
       })
     );
-    const { component, environment, store, environmentModifier } = setup();
-
-    environmentModifier.setEnvironment(environment);
-    store.dispatch.environment.setEnvironmentDetailsById({
-      id: environment,
-      value: RemoteData.success(EnvironmentDetails.halted),
-    });
+    const { component } = setup();
 
     render(component);
 

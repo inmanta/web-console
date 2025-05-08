@@ -2,34 +2,28 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import * as useUpdateEnvConfig from "@/Data/Managers/V2/Environment/UpdateEnvConfig/useUpdateEnvConfig"; //import with that exact path is required for mock to work correctly
-import { dependencies } from "@/Test";
+import * as useUpdateEnvironmentSetting from "@/Data/Managers/V2/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting"; //import with that exact path is required for mock to work correctly
+import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ExpertBanner } from "./ExpertBanner";
 
 const setup = (flag: boolean) => {
-  dependencies.environmentModifier.useIsExpertModeEnabled = jest.fn(() => flag);
-  const store = getStoreInstance();
+  jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+    ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
+    useIsExpertModeEnabled: () => flag,
+  });
 
   return (
     <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-        }}
-      >
+      <MockedDependencyProvider>
         <QueryClientProvider client={testClient}>
-          <StoreProvider store={store}>
-            <ExpertBanner />
-          </StoreProvider>
+          <ExpertBanner />
         </QueryClientProvider>
-      </DependencyProvider>
+      </MockedDependencyProvider>
     </TestMemoryRouter>
   );
 };
@@ -45,29 +39,29 @@ describe("Given ExpertBanner", () => {
 
   it("When expert_mode is set to true AND user clicks to disable expert mode it Then should fire mutation function", async () => {
     const mutateSpy = jest.fn();
-    const spy = jest.spyOn(useUpdateEnvConfig, "useUpdateEnvConfig").mockReturnValue({
-      data: undefined,
-      error: null,
-      failureCount: 0,
-      isError: false,
-      isIdle: false,
-      isSuccess: true,
-      isPending: false,
-      reset: jest.fn(),
-      isPaused: false,
-      context: undefined,
-      variables: {
-        id: "",
-        updatedValue: {
-          value: "",
+    const spy = jest
+      .spyOn(useUpdateEnvironmentSetting, "useUpdateEnvironmentSetting")
+      .mockReturnValue({
+        data: undefined,
+        error: null,
+        failureCount: 0,
+        isError: false,
+        isIdle: false,
+        isSuccess: true,
+        isPending: false,
+        reset: jest.fn(),
+        isPaused: false,
+        context: undefined,
+        variables: {
+          id: "",
+          value: false,
         },
-      },
-      failureReason: null,
-      submittedAt: 0,
-      mutateAsync: jest.fn(),
-      status: "success",
-      mutate: mutateSpy,
-    });
+        failureReason: null,
+        submittedAt: 0,
+        mutateAsync: jest.fn(),
+        status: "success",
+        mutate: mutateSpy,
+      });
 
     render(setup(true));
 
@@ -75,7 +69,7 @@ describe("Given ExpertBanner", () => {
 
     expect(mutateSpy).toHaveBeenCalledWith({
       id: "enable_lsm_expert_mode",
-      updatedValue: { value: false },
+      value: false,
     });
     spy.mockRestore();
   });

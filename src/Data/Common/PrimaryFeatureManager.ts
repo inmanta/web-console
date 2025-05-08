@@ -4,9 +4,7 @@ import {
   Extention,
   JsonParserId,
   Logger,
-  RemoteData,
   ServerStatus,
-  StateHelper,
   StatusLicense,
   EXTENSION_LIST,
   FEATURE_LIST,
@@ -18,6 +16,8 @@ import { VoidLogger } from "./VoidLogger";
  * Implements the FeatureManager interface.
  */
 export class PrimaryFeatureManager implements FeatureManager {
+  private serverStatus: ServerStatus | undefined;
+
   /**
    * Creates an instance of PrimaryFeatureManager.
    * @param stateHelper - The state helper for getting server status.
@@ -27,7 +27,6 @@ export class PrimaryFeatureManager implements FeatureManager {
    * @param appVersion - The version of the application. Defaults to an empty string.
    */
   constructor(
-    private readonly stateHelper: StateHelper<"GetServerStatus">,
     private readonly logger: Logger = new VoidLogger(),
     private readonly jsonParserId: JsonParserId = "Native",
     private readonly commitHash: string = "",
@@ -55,13 +54,11 @@ export class PrimaryFeatureManager implements FeatureManager {
   }
 
   private get(): ServerStatus {
-    const serverStatus = this.stateHelper.getOnce({ kind: "GetServerStatus" });
-
-    if (!RemoteData.isSuccess(serverStatus)) {
+    if (!this.serverStatus) {
       throw new Error("ServerStatus has not yet been set.");
     }
 
-    return serverStatus.value;
+    return this.serverStatus;
   }
 
   /**
@@ -165,6 +162,14 @@ export class PrimaryFeatureManager implements FeatureManager {
     return fullVersion.indexOf(".dev") > -1
       ? fullVersion.substring(0, fullVersion.indexOf(".dev"))
       : fullVersion;
+  }
+
+  /**
+   * Sets the server status.
+   * @param {ServerStatus} serverStatus - The server status to set.
+   */
+  setServerStatus(serverStatus: ServerStatus): void {
+    this.serverStatus = serverStatus;
   }
 
   /**

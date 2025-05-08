@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 import { Link as RRLink, useLocation } from "react-router";
 import styled from "styled-components";
-import { SearchHelper } from "@/UI";
+import { SearchHelper } from "@/UI/Routing";
 
 interface Props {
   isDisabled?: boolean;

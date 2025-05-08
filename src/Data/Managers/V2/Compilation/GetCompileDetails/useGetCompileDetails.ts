@@ -11,7 +11,6 @@ interface ResponseBody {
 }
 
 interface GetCompileDetails {
-  useOneTime: () => UseQueryResult<ResponseBody, CustomError>;
   useContinuous: () => UseQueryResult<ResponseBody, CustomError>;
 }
 
@@ -26,7 +25,6 @@ function getUrl(params: CompileDetailsParams): string {
  *  @param {string} params.id - The ID of the compile report to fetch details for
  *
  * @returns {GetCompileDetails} An object containing the different available queries
- * @returns {UseQueryResult<ResponseBody, CustomError>} returns.useOneTime - Fetch compile details with a single query
  * @returns {UseQueryResult<ResponseBody, CustomError>} returns.useContinuous - Fetch compile details with a recursive query with an interval of 5s
  */
 export const useGetCompileDetails = (params: CompileDetailsParams): GetCompileDetails => {
@@ -34,12 +32,6 @@ export const useGetCompileDetails = (params: CompileDetailsParams): GetCompileDe
   const get = useGet()<ResponseBody>;
 
   return {
-    useOneTime: (): UseQueryResult<ResponseBody, CustomError> =>
-      useQuery({
-        queryKey: ["get_compile_details-one_time", params.id],
-        queryFn: () => get(url),
-        select: (data) => data,
-      }),
     useContinuous: (): UseQueryResult<ResponseBody, CustomError> =>
       useQuery({
         queryKey: ["get_compile_details-continuous", params.id],

@@ -1,20 +1,16 @@
 import React, { act } from "react";
 import { Router } from "react-router";
-import { Masthead, Page } from "@patternfly/react-core";
+import { Badge, Masthead, Page } from "@patternfly/react-core";
 import { createMemoryHistory } from "@remix-run/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import { links, metadata } from "@/Test/Data/Pagination";
-import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
-import { Badge } from "@S/Notification/UI/Badge";
 import { Drawer } from "./Drawer";
 
 expect.extend(toHaveNoViolations);
@@ -35,30 +31,27 @@ function setup() {
     },
   });
   const history = createMemoryHistory();
-  const store = getStoreInstance();
 
   const closeCallback = jest.fn();
   const toggleCallback = jest.fn();
 
   const component = (
     <QueryClientProvider client={client}>
-      <StoreProvider store={store}>
-        <Router location={history.location} navigator={history}>
-          <DependencyProvider dependencies={dependencies}>
-            <Page
-              notificationDrawer={
-                <Drawer onClose={closeCallback} isDrawerOpen drawerRef={{ current: undefined }} />
-              }
-              isNotificationDrawerExpanded={true}
-              masthead={
-                <Masthead>
-                  <Badge onClick={toggleCallback} />
-                </Masthead>
-              }
-            />
-          </DependencyProvider>
-        </Router>
-      </StoreProvider>
+      <Router location={history.location} navigator={history}>
+        <MockedDependencyProvider>
+          <Page
+            notificationDrawer={
+              <Drawer onClose={closeCallback} isDrawerOpen drawerRef={{ current: undefined }} />
+            }
+            isNotificationDrawerExpanded={true}
+            masthead={
+              <Masthead>
+                <Badge onClick={toggleCallback} />
+              </Masthead>
+            }
+          />
+        </MockedDependencyProvider>
+      </Router>
     </QueryClientProvider>
   );
 

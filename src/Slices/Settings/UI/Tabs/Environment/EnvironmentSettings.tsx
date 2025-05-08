@@ -1,6 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { DescriptionList } from "@patternfly/react-core";
 import { FlatEnvironment, Maybe, ProjectModel } from "@/Core";
+import { useModifyEnvironment } from "@/Data/Managers/V2/Environment";
+import { useCreateProject } from "@/Data/Managers/V2/Project/CreateProject";
 import {
   EditableTextField,
   EditableMultiTextField,
@@ -17,45 +19,53 @@ interface Props {
   projects: ProjectModel[];
 }
 
+/**
+ * EnvironmentSettings component
+ *
+ * @props {Props} props - The component props
+ * @prop {FlatEnvironment} environment - The environment to modify
+ * @prop {ProjectModel[]} projects - The projects to choose from
+ *
+ * @returns {React.FC<Props>} - The EnvironmentSettings component
+ */
 export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) => {
-  const { commandResolver } = useContext(DependencyContext);
-  const modifyEnvironmentTrigger = commandResolver.useGetTrigger<"ModifyEnvironment">({
-    kind: "ModifyEnvironment",
+  const { environmentHandler } = useContext(DependencyContext);
+  const { mutate } = useModifyEnvironment(environmentHandler.useId(), {
+    onError: (error) => setError(error.message),
   });
-  const createProject = commandResolver.useGetTrigger<"CreateProject">({
-    kind: "CreateProject",
-  });
+  const [error, setError] = useState<string | null>(null);
+  const createProject = useCreateProject();
 
-  const onNameSubmit = (name: string) => modifyEnvironmentTrigger({ name: name });
+  const onNameSubmit = (name: string) => mutate({ name: name });
 
   const onRepoSubmit = (fields: Record<string, string>) =>
-    modifyEnvironmentTrigger({
+    mutate({
       name: environment.name,
       repository: fields["repo_url"],
       branch: fields["repo_branch"],
     });
 
-  const onProjectSubmit = async (projectName: string) => {
+  const onProjectSubmit = (projectName: string) => {
     const match = projects.find((project) => project.name === projectName);
 
     if (!match) {
       return Maybe.some(`No matching project found for name '${projectName}'`);
     }
 
-    return modifyEnvironmentTrigger({
+    return mutate({
       name: environment.name,
       project_id: match.id,
     });
   };
 
-  const onIconSubmit = async (icon: string) =>
-    modifyEnvironmentTrigger({
+  const onIconSubmit = (icon: string) =>
+    mutate({
       name: environment.name,
       icon,
     });
 
-  const onDescriptionSubmit = async (description: string) =>
-    modifyEnvironmentTrigger({
+  const onDescriptionSubmit = (description: string) =>
+    mutate({
       name: environment.name,
       description,
     });
@@ -66,11 +76,15 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
         initialValue={environment.name}
         label={words("settings.tabs.environment.name")}
         onSubmit={onNameSubmit}
+        error={error}
+        setError={setError}
       />
       <EditableTextAreaField
         initialValue={environment.description || ""}
         label={words("settings.tabs.environment.description")}
         onSubmit={onDescriptionSubmit}
+        error={error}
+        setError={setError}
       />
       <EditableMultiTextField
         groupName={words("settings.tabs.environment.repoSettings")}
@@ -79,6 +93,8 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
           repo_url: environment.repo_url,
         }}
         onSubmit={onRepoSubmit}
+        error={error}
+        setError={setError}
       />
       <EditableSelectField
         label={words("settings.tabs.environment.projectName")}
@@ -86,11 +102,15 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
         options={projects.map((project) => project.name)}
         onCreate={createProject}
         onSubmit={onProjectSubmit}
+        error={error}
+        setError={setError}
       />
       <EditableImageField
         label={words("settings.tabs.environment.icon")}
         initialValue={environment.icon || ""}
         onSubmit={onIconSubmit}
+        error={error}
+        setError={setError}
       />
       <Actions environment={environment} />
     </DescriptionList>

@@ -2,15 +2,14 @@ import React, { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { Either } from "@/Core";
-import { FileFetcherImpl, getStoreInstance } from "@/Data";
-import { DeferredApiHelper, dependencies, DesiredStateDiff } from "@/Test";
+import { FileFetcherImpl } from "@/Data";
+import { DeferredApiHelper, MockedDependencyProvider, DesiredStateDiff } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider, words } from "@/UI";
+import { words } from "@/UI";
 import { View } from "./Page";
 expect.extend(toHaveNoViolations);
 
@@ -22,7 +21,6 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const fileFetcher = new FileFetcherImpl(apiHelper);
 
@@ -30,11 +28,9 @@ function setup() {
 
   const component = (
     <QueryClientProvider client={testClient}>
-      <DependencyProvider dependencies={{ ...dependencies, fileFetcher }}>
-        <StoreProvider store={store}>
-          <View from="123" to="456" />
-        </StoreProvider>
-      </DependencyProvider>
+      <MockedDependencyProvider fileFetcher={fileFetcher}>
+        <View from="123" to="456" />
+      </MockedDependencyProvider>
     </QueryClientProvider>
   );
 

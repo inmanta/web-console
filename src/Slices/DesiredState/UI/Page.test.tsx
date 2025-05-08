@@ -2,14 +2,11 @@ import React, { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import { StaticScheduler, DeferredApiHelper, dependencies } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as DesiredStateVersions from "@S/DesiredState/Data/Mock";
@@ -32,25 +29,20 @@ function setup() {
       },
     },
   });
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
         <TestMemoryRouter>
-          <DependencyProvider dependencies={dependencies}>
-            <StoreProvider store={store}>
-              <Page />
-            </StoreProvider>
-          </DependencyProvider>
+          <MockedDependencyProvider>
+            <Page />
+          </MockedDependencyProvider>
         </TestMemoryRouter>
       </ModalProvider>
     </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 }
 
 describe("DesiredStatesView", () => {
