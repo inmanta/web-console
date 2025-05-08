@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   FeatureManager,
   Feature,
@@ -9,9 +10,8 @@ import {
   EXTENSION_LIST,
   FEATURE_LIST,
 } from "@/Core";
-import { VoidLogger } from "./VoidLogger";
 import { useGetServerStatus } from "../Managers/V2/Server";
-import { useEffect } from "react";
+import { VoidLogger } from "./VoidLogger";
 
 /**
  * Represents the primary feature manager.
@@ -177,7 +177,7 @@ export const PrimaryFeatureManager = (
     logger.log(
       `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
     );
-  }, [jsonParserId, appVersion, commitHash]);
+  }, [jsonParserId, appVersion, commitHash, logger]);
 
   return {
     getAppVersion,

@@ -1,4 +1,4 @@
-import { Feature, FeatureManager, JsonParserId, ServerStatus, StatusLicense } from "@/Core";
+import { Feature, FeatureManager, JsonParserId, StatusLicense } from "@/Core";
 
 /**
  * Mock implementation of the FeatureManager interface for testing purposes.
