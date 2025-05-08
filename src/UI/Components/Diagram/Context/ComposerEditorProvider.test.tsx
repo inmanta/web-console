@@ -1,77 +1,45 @@
 import React from "react";
-import { Route, Routes, useLocation } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Route, Routes } from "react-router";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { RemoteData } from "@/Core";
-import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
-import { DependencyProvider, EnvironmentHandlerImpl, PrimaryRouteManager } from "@/UI";
 import "@testing-library/jest-dom";
+import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { childModel, containerModel, mockedInstanceWithRelations, parentModel } from "../Mocks";
 import { defineObjectsForJointJS } from "../testSetup";
 import { ComposerEditorProvider } from "./ComposerEditorProvider";
 
 const setup = (instanceId: string, editable: boolean = true) => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
-  const store = getStoreInstance();
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
-
-  store.dispatch.environment.setEnvironments(
-    RemoteData.success([
-      {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        halted: false,
-        settings: {
-          enable_lsm_expert_mode: false,
-        },
-      },
-    ])
-  );
-
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <TestMemoryRouter
         initialEntries={[
           "/lsm/catalog/child-service/inventory/13920268-cce0-4491-93b5-11316aa2fc37/edit?env=aaa",
         ]}
       >
-        <StoreProvider store={store}>
-          <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
-            <Routes>
-              <Route
-                path="/lsm/catalog/child-service/inventory/:instanceId/edit"
-                element={
-                  <ComposerEditorProvider
-                    serviceName={"child-service"}
-                    editable={editable}
-                    instance={instanceId}
-                  />
-                }
-              />
-              <Route
-                path="/lsm/catalog/child-service/inventory"
-                element={<div data-testid="inventory-page" />}
-              />
-              <Route path="/" element={<div data-testid="root-page" />} />
-            </Routes>
-          </DependencyProvider>
-        </StoreProvider>
+        <MockedDependencyProvider>
+          <Routes>
+            <Route
+              path="/lsm/catalog/child-service/inventory/:instanceId/edit"
+              element={
+                <ComposerEditorProvider
+                  serviceName={"child-service"}
+                  editable={editable}
+                  instance={instanceId}
+                />
+              }
+            />
+            <Route
+              path="/lsm/catalog/child-service/inventory"
+              element={<div data-testid="inventory-page" />}
+            />
+            <Route path="/" element={<div data-testid="root-page" />} />
+          </Routes>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
@@ -170,12 +138,6 @@ describe("ComposerEditorProvider", () => {
       })
     );
 
-    expect(
-      await screen.findByRole("region", {
-        name: "ComposerEditorProvider-Loading",
-      })
-    ).toBeInTheDocument();
-
     expect(await screen.findByTestId("ErrorView")).toBeInTheDocument();
 
     expect(
@@ -197,12 +159,6 @@ describe("ComposerEditorProvider", () => {
     );
 
     render(setup("13920268-cce0-4491-93b5-11316aa2fc37"));
-
-    expect(
-      await screen.findByRole("region", {
-        name: "ComposerEditorProvider-Loading",
-      })
-    ).toBeInTheDocument();
 
     expect(await screen.findByTestId("ErrorView")).toBeInTheDocument();
 

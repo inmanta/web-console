@@ -1,15 +1,13 @@
 import React, { act } from "react";
-import { Route, Routes, useLocation } from "react-router";
+import { Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, queries, within as baseWithin } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { RemoteData, ServiceModel } from "@/Core";
-import { getStoreInstance } from "@/Data";
+import { ServiceModel } from "@/Core";
 import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
-import { dependencies } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
-import { DependencyProvider, EnvironmentHandlerImpl, PrimaryRouteManager, words } from "@/UI";
+import { words } from "@/UI";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasProvider } from "./Context/CanvasProvider";
@@ -32,60 +30,27 @@ const setup = (
   editable: boolean = true
 ) => {
   const queryClient = new QueryClient();
-  const store = getStoreInstance();
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
-
-  store.dispatch.environment.setEnvironments(
-    RemoteData.success([
-      {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        halted: false,
-        settings: {
-          enable_lsm_expert_mode: false,
-        },
-      },
-      {
-        id: "bbb",
-        name: "env-b",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        halted: false,
-        settings: {
-          enable_lsm_expert_mode: false,
-        },
-      },
-    ])
-  );
 
   return (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter>
-        <StoreProvider store={store}>
-          <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
-            <InstanceComposerContext.Provider
-              value={{
-                instance: instance || null,
-                serviceModels: models,
-                mainService: mainService,
-                relatedInventoriesQuery: { data: {} } as UseQueryResult<Inventories, Error>,
-              }}
-            >
-              <CanvasProvider>
-                <Routes>
-                  <Route path="/" element={<Canvas editable={editable} />} />
-                  <Route path="/lsm/catalog/test-service/inventory" element={<></>} />
-                </Routes>
-              </CanvasProvider>
-            </InstanceComposerContext.Provider>
-          </DependencyProvider>
-        </StoreProvider>
+        <MockedDependencyProvider>
+          <InstanceComposerContext.Provider
+            value={{
+              instance: instance || null,
+              serviceModels: models,
+              mainService: mainService,
+              relatedInventoriesQuery: { data: {} } as UseQueryResult<Inventories, Error>,
+            }}
+          >
+            <CanvasProvider>
+              <Routes>
+                <Route path="/" element={<Canvas editable={editable} />} />
+                <Route path="/lsm/catalog/test-service/inventory" element={<></>} />
+              </Routes>
+            </CanvasProvider>
+          </InstanceComposerContext.Provider>
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

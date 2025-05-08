@@ -48,7 +48,6 @@ export interface NotificationResponse extends ResponseBody {
  * Return Signature of the useGetInstance React Query
  */
 interface GetNotifications {
-  useOneTime: () => UseQueryResult<NotificationResponse, CustomError>;
   useContinuous: () => UseQueryResult<NotificationResponse, CustomError>;
 }
 
@@ -63,25 +62,10 @@ export const useGetNotifications = (params: GetNotificationsParams): GetNotifica
   const get = useGet()<ResponseBody>;
 
   return {
-    useOneTime: (): UseQueryResult<NotificationResponse, CustomError> =>
-      useQuery({
-        queryKey: [
-          "get_notifications",
-          params.pageSize.value,
-          params.filter,
-          params.currentPage.value,
-          params.origin,
-        ],
-        queryFn: () => get(getUrl(params)),
-        select: (data) => ({
-          ...data,
-          handlers: getPaginationHandlers(data.links, data.metadata),
-        }),
-      }),
     useContinuous: () =>
       useQuery({
         queryKey: [
-          "get_notifications",
+          "get_notifications_continuous",
           params.pageSize.value,
           params.filter,
           params.currentPage.value,

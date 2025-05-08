@@ -2,16 +2,12 @@ import React, { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse, delay } from "msw";
 import { setupServer } from "msw/node";
-import { RemoteData } from "@/Core";
-import { getStoreInstance } from "@/Data";
-import { dependencies, EnvironmentDetails, EnvironmentSettings } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as Mock from "@S/CompileReports/Core/Mock";
 import { Page } from "./Page";
@@ -34,36 +30,13 @@ function setup() {
       },
     },
   });
-  const store = getStoreInstance();
-
-  const routeManager = PrimaryRouteManager("");
-
-  store.dispatch.environment.setEnvironmentDetailsById({
-    id: "env",
-    value: RemoteData.success(EnvironmentDetails.a),
-  });
-  store.dispatch.environment.setSettingsData({
-    environment: "env",
-    value: RemoteData.success({
-      settings: {},
-      definition: EnvironmentSettings.definition,
-    }),
-  });
-  dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            routeManager,
-          }}
-        >
-          <StoreProvider store={store}>
-            <Page />
-          </StoreProvider>
-        </DependencyProvider>
+        <MockedDependencyProvider>
+          <Page />
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );
@@ -74,7 +47,10 @@ function setup() {
 describe("CompileReports", () => {
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
+  afterAll(() => {
+    jest.clearAllMocks();
+    server.close();
+  });
 
   test("CompileReportsView shows empty table", async () => {
     server.use(
@@ -388,6 +364,10 @@ describe("CompileReports", () => {
   });
 
   test("Given CompileReportsView When recompile is triggered Then table is updated", async () => {
+    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
+      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
+      useIsServerCompileEnabled: () => true,
+    });
     let update = false;
 
     server.use(
@@ -401,7 +381,7 @@ describe("CompileReports", () => {
           data: Mock.response.data.slice(0, 3),
         });
       }),
-      http.post("/api/v1/notify/env", () => {
+      http.post("/api/v1/notify/c85c0a64-ed45-4cba-bdc5-703f65a225f7", () => {
         update = true;
 
         return HttpResponse.json({});

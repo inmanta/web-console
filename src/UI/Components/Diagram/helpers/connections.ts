@@ -6,7 +6,6 @@ import {
   InterServiceRule,
   TypeEnum,
 } from "@/UI/Components/Diagram/interfaces";
-
 import { ServiceEntityBlock } from "../shapes";
 
 /**

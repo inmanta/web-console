@@ -1,18 +1,12 @@
 import React from "react";
-import { useLocation } from "react-router";
 import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { RemoteData } from "@/Core";
-import { getStoreInstance } from "@/Data";
 import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
-import { dependencies } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasContext, defaultCanvasContext, InstanceComposerContext } from "../Context";
 import { childModel } from "../Mocks";
@@ -31,46 +25,23 @@ describe("ComposerActions.", () => {
     canvasContext: typeof defaultCanvasContext,
     editable: boolean = true
   ) => {
-    const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
-    const store = getStoreInstance();
-
-    const env = {
-      id: "aaa",
-      name: "env-a",
-      project_id: "ppp",
-      repo_branch: "branch",
-      repo_url: "repo",
-      projectName: "project",
-      halted: false,
-      settings: {},
-    };
-
-    store.dispatch.environment.setEnvironments(RemoteData.success([env]));
-
-    store.dispatch.environment.setEnvironmentDetailsById({
-      id: "aaa",
-      value: RemoteData.success(env),
-    });
-
     return (
       <QueryClientProvider client={testClient}>
         <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-          <StoreProvider store={store}>
-            <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
-              <InstanceComposerContext.Provider
-                value={{
-                  serviceModels: [childModel],
-                  instance: instanceWithRelations,
-                  mainService: childModel,
-                  relatedInventoriesQuery: {} as UseQueryResult<Inventories, Error>,
-                }}
-              >
-                <CanvasContext.Provider value={canvasContext}>
-                  <ComposerActions serviceName="child-service" editable={editable} />
-                </CanvasContext.Provider>
-              </InstanceComposerContext.Provider>
-            </DependencyProvider>
-          </StoreProvider>
+          <MockedDependencyProvider>
+            <InstanceComposerContext.Provider
+              value={{
+                serviceModels: [childModel],
+                instance: instanceWithRelations,
+                mainService: childModel,
+                relatedInventoriesQuery: {} as UseQueryResult<Inventories, Error>,
+              }}
+            >
+              <CanvasContext.Provider value={canvasContext}>
+                <ComposerActions serviceName="child-service" editable={editable} />
+              </CanvasContext.Provider>
+            </InstanceComposerContext.Provider>
+          </MockedDependencyProvider>
         </TestMemoryRouter>
       </QueryClientProvider>
     );

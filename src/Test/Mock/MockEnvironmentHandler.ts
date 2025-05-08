@@ -1,8 +1,18 @@
 import { EnvironmentHandler, FlatEnvironment } from "@/Core";
 
-export function MockEnvironmentHandler(environment: string): EnvironmentHandler {
+/**
+ * MockEnvironmentHandler is a function that returns a mocked EnvironmentHandler object.
+ *
+ * @param {FlatEnvironment} environment - The environment to be used in the mock.
+ * @returns {EnvironmentHandler}An EnvironmentHandler object.
+ */
+export function MockEnvironmentHandler(environment: FlatEnvironment): EnvironmentHandler {
+  function useName(): string {
+    return environment.name;
+  }
+
   function useId(): string {
-    return environment;
+    return environment.id;
   }
 
   function set(): void {
@@ -10,7 +20,11 @@ export function MockEnvironmentHandler(environment: string): EnvironmentHandler 
   }
 
   function useSelected(): FlatEnvironment {
-    throw new Error("Method not implemented.");
+    return environment;
+  }
+
+  function setAllEnvironments(_environments: FlatEnvironment[]): void {
+    return;
   }
 
   function determineSelected(): FlatEnvironment | undefined {
@@ -20,6 +34,8 @@ export function MockEnvironmentHandler(environment: string): EnvironmentHandler 
   return {
     useId,
     set,
+    useName,
+    setAllEnvironments,
     useSelected,
     determineSelected,
   };

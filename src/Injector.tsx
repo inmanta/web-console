@@ -1,16 +1,10 @@
 import React, { useContext } from "react";
 import { useLocation } from "react-router";
-import { isJsonParserId, JsonParserId, SchedulerImpl } from "@/Core";
+import { isJsonParserId, JsonParserId } from "@/Core";
 import {
   PrimaryFeatureManager,
-  GetServerStatusStateHelper,
   BaseApiHelper,
   FileFetcherImpl,
-  CommandResolverImpl,
-  QueryResolverImpl,
-  CommandManagerResolverImpl,
-  QueryManagerResolverImpl,
-  Store,
   PrimaryArchiveHelper,
   PrimaryFileManager,
   PrimaryLogger,
@@ -20,30 +14,24 @@ import {
   PrimaryRouteManager,
   DependencyProvider,
   EnvironmentHandlerImpl,
-  EnvironmentModifierImpl,
+  useEnvironmentModifierImpl,
   UrlManagerImpl,
 } from "@/UI";
 import { AuthContext } from "./Data/Auth/";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
 import { ModalProvider } from "./UI/Root/Components/ModalProvider";
 
-interface Props {
-  store: Store;
-}
-
 /**
  * This component creates instances of managers, helpers, and resolvers, and provides them through a `DependencyProvider`.
  * It also contains `ModalProvider` and an `UpdateBanner`.
  *
  * @props {Props} props - The properties passed to the component.
- * @prop {Store} store - The store to be used by the managers and resolvers.
  * @prop {React.ReactNode} children - The children to be rendered within the Injector.
  * @returns {React.FC<React.PropsWithChildren<Props>>} A `DependencyProvider` that wraps a `ModalProvider`, an `UpdateBanner`, and the children.
  */
-export const Injector: React.FC<React.PropsWithChildren<Props>> = ({ store, children }) => {
+export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const authHelper = useContext(AuthContext);
   const featureManager = new PrimaryFeatureManager(
-    GetServerStatusStateHelper(store),
     new PrimaryLogger(),
     getJsonParserId(globalThis),
     COMMITHASH,
@@ -58,27 +46,17 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({ store, chil
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = PrimaryRouteManager(basePathname);
   const apiHelper = BaseApiHelper(baseUrl, authHelper);
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(
-      store,
-      apiHelper,
-      new SchedulerImpl(5000),
-      new SchedulerImpl(10000)
-    )
-  );
-  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
+
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
   const fileFetcher = new FileFetcherImpl(apiHelper);
-  const environmentModifier = EnvironmentModifierImpl();
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
+  const environmentModifier = useEnvironmentModifierImpl();
   const fileManager = new PrimaryFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
 
   return (
     <DependencyProvider
       dependencies={{
-        queryResolver,
-        commandResolver,
         urlManager,
         fileFetcher,
         environmentModifier,
@@ -90,7 +68,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({ store, chil
       }}
     >
       <ModalProvider>
-        <UpdateBanner apiHelper={apiHelper} />
+        <UpdateBanner />
         {children}
       </ModalProvider>
     </DependencyProvider>

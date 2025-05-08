@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
-import { DependencyContext, useRouteParams, words } from "@/UI";
+import { DependencyContext, words } from "@/UI";
 import { EmptyView } from "@/UI/Components";
 import { ComposerCreatorProvider } from "@/UI/Components/Diagram/Context/ComposerCreatorProvider";
+import { useRouteParams } from "@/UI/Routing";
 
 /**
  * Renders the Page component for the Instance Composer Creator Page.

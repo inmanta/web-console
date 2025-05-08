@@ -1,15 +1,11 @@
 import React, { act } from "react";
-import { useLocation } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { RemoteData } from "@/Core";
-import { getStoreInstance } from "@/Data";
-import { Service, dependencies } from "@/Test";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import { MockedDependencyProvider, Service } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { failureAndRejection } from "@S/Diagnose/Data/Mock";
 import { Diagnose } from "./Diagnose";
@@ -24,47 +20,17 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const store = getStoreInstance();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
-
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
-
-  store.dispatch.environment.setEnvironments(
-    RemoteData.success([
-      {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        halted: false,
-        settings: {
-          enable_lsm_expert_mode: false,
-        },
-      },
-    ])
-  );
-
   const component = (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
-          <StoreProvider store={store}>
-            <Diagnose
-              serviceName={Service.a.name}
-              lookBehind="1"
-              instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-              instanceIdentity={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-            />
-          </StoreProvider>
-        </DependencyProvider>
+        <MockedDependencyProvider>
+          <Diagnose
+            serviceName={Service.a.name}
+            lookBehind="1"
+            instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
+            instanceIdentity={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
+          />
+        </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
   );

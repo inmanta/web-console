@@ -1,14 +1,12 @@
 import React, { act } from "react";
-import { useLocation } from "react-router";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { AttributeModel, RemoteData, ServiceModel } from "@/Core";
-import { getStoreInstance } from "@/Data";
-import { dependencies, Service } from "@/Test";
+import { AttributeModel, ServiceModel } from "@/Core";
+import { MockedDependencyProvider, Service } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { AttributeTable } from "./AttributeTable";
 
@@ -40,40 +38,14 @@ const attribute2: AttributeModel = {
 };
 
 function setup(service: ServiceModel) {
-  const store = getStoreInstance();
-
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
-
-  store.dispatch.environment.setEnvironments(
-    RemoteData.success([
-      {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        halted: false,
-        settings: {
-          enable_lsm_expert_mode: true,
-        },
-      },
-    ])
-  );
-
   const component = (
-    <TestMemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          environmentHandler,
-        }}
-      >
-        <StoreProvider store={store}>
+    <QueryClientProvider client={testClient}>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
           <AttributeTable service={service} />
-        </StoreProvider>
-      </DependencyProvider>
-    </TestMemoryRouter>
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
+    </QueryClientProvider>
   );
 
   return component;

@@ -1,5 +1,5 @@
 import React from "react";
-import { useRouteParams } from "@/UI";
+import { useRouteParams } from "@/UI/Routing";
 import { MarkdownPreviewer } from "./MarkdownPreviewer";
 
 /**

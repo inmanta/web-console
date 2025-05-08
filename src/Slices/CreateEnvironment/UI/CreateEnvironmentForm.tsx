@@ -1,6 +1,9 @@
 import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
-import { Either, ProjectModel } from "@/Core";
+import { useQueryClient } from "@tanstack/react-query";
+import { ProjectModel } from "@/Core";
+import { useCreateEnvironment } from "@/Data/Managers/V2/Environment";
+import { useCreateProject } from "@/Data/Managers/V2/Project/CreateProject";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
@@ -14,17 +17,36 @@ interface Props {
   projects: ProjectModel[];
 }
 
+/**
+ * Create Environment Form
+ * @props {Props} props - Props
+ * @prop {ProjectModel[]} projects - Projects
+ *
+ * @returns {React.FC<Props>} Create Environment Form
+ */
 export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) => {
-  const { commandResolver, featureManager } = useContext(DependencyContext);
+  const { featureManager } = useContext(DependencyContext);
   const isLsmEnabled = featureManager.isLsmEnabled();
   const navigateTo = useNavigateTo();
   const navigateToHome = () => navigateTo("Home", undefined);
-  const createProject = commandResolver.useGetTrigger<"CreateProject">({
-    kind: "CreateProject",
+  const client = useQueryClient();
+  const createProject = useCreateProject();
+
+  const createEnvironment = useCreateEnvironment({
+    onSuccess: (data) => {
+      //reset the queries to get the rid of the data that would not include the new environment, otherwise the new view would try to access env set through search param and throw error
+      client.resetQueries({ queryKey: ["get_environments-one_time"] });
+      client.resetQueries({ queryKey: ["get_environments-continuous"] });
+
+      const target = isLsmEnabled ? "Catalog" : "DesiredState";
+
+      navigateTo(target, undefined, `?env=${data.data.id}`);
+    },
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
   });
-  const createEnvironment = commandResolver.useGetTrigger<"CreateEnvironment">({
-    kind: "CreateEnvironment",
-  });
+
   const [createEnvironmentBody, setCreateEnvironmentBody] = useState<CreateEnvironmentParams>({
     project_id: "",
     name: "",
@@ -59,7 +81,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
     });
   };
 
-  const onSubmitCreate = async () => {
+  const onSubmitCreate = () => {
     if (projectName && createEnvironmentBody.name) {
       const matchingProject = projects.find((project) => project.name === projectName);
 
@@ -68,15 +90,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
           ...createEnvironmentBody,
           project_id: matchingProject.id,
         };
-        const result = await createEnvironment(fullBody);
-
-        if (Either.isLeft(result)) {
-          setErrorMessage(result.value);
-        } else {
-          const target = isLsmEnabled ? "Catalog" : "DesiredState";
-
-          navigateTo(target, undefined, `?env=${result.value.data.id}`);
-        }
+        createEnvironment.mutate(fullBody);
       }
     }
   };
@@ -132,6 +146,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
         onSubmit={onSubmitCreate}
         onCancel={navigateToHome}
         isSubmitDisabled={!(projectName && createEnvironmentBody.name)}
+        isLoading={createEnvironment.isPending}
       />
     </Form>
   );
@@ -141,10 +156,16 @@ const FormControls: React.FC<{
   isSubmitDisabled?: boolean;
   onSubmit: () => void;
   onCancel: () => void;
-}> = ({ isSubmitDisabled, onSubmit, onCancel }) => (
+  isLoading: boolean;
+}> = ({ isSubmitDisabled, onSubmit, onCancel, isLoading }) => (
   <Flex direction={{ default: "row" }} rowGap={{ default: "rowGap2xl" }}>
     <FlexItem>
-      <Button aria-label="submit" onClick={onSubmit} isDisabled={isSubmitDisabled}>
+      <Button
+        aria-label="submit"
+        onClick={onSubmit}
+        isDisabled={isSubmitDisabled}
+        isLoading={isLoading}
+      >
         {words("submit")}
       </Button>
     </FlexItem>

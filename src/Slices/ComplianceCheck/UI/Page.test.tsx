@@ -2,22 +2,12 @@ import React, { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { delay, HttpResponse } from "msw";
-import { http } from "msw";
+import { delay, HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import {
-  CommandManagerResolverImpl,
-  CommandResolverImpl,
-  getStoreInstance,
-  QueryManagerResolverImpl,
-  QueryResolverImpl,
-} from "@/Data";
-import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { View } from "./Page";
@@ -32,26 +22,17 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const apiHelper = new DeferredApiHelper();
-
-  const scheduler = new StaticScheduler();
-  const store = getStoreInstance();
   const datePresenter = new MomentDatePresenter();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
-  );
-  const commandResolver = new CommandResolverImpl(new CommandManagerResolverImpl(store, apiHelper));
+
   const component = (
     <QueryClientProvider client={testClient}>
-      <StoreProvider store={store}>
-        <DependencyProvider dependencies={{ ...dependencies, queryResolver, commandResolver }}>
-          <View version="123" />
-        </DependencyProvider>
-      </StoreProvider>
+      <MockedDependencyProvider>
+        <View version="123" />
+      </MockedDependencyProvider>
     </QueryClientProvider>
   );
 
-  return { component, apiHelper, datePresenter };
+  return { component, datePresenter };
 }
 
 describe("ComplianceCheck page", () => {

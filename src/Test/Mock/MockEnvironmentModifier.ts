@@ -22,6 +22,9 @@ export class MockEnvironmentModifier implements EnvironmentModifier {
   useIsExpertModeEnabled(): boolean {
     return this.details ? this.details.enable_lsm_expert_mode : false;
   }
+  setEnvironmentSettings(): void {
+    return;
+  }
   setEnvironment(): void {
     return;
   }

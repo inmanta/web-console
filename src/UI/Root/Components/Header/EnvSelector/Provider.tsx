@@ -1,21 +1,27 @@
 import React, { useContext } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
+import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
+import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects/";
 import { DependencyContext } from "@/UI/Dependency";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 
+/**
+ * Provider component for the EnvironmentSelector
+ *
+ * @returns {React.FC} The Provider component
+ */
 export const Provider: React.FC = () => {
   const client = useQueryClient();
-  const { environmentHandler, queryResolver, routeManager, featureManager } =
-    useContext(DependencyContext);
+  const { environmentHandler, routeManager, featureManager } = useContext(DependencyContext);
   const location = useLocation();
   const navigate = useNavigate();
   const selected = environmentHandler.useSelected();
-  const [data] = queryResolver.useOneTime<"GetEnvironments">({
-    kind: "GetEnvironments",
-    details: false,
-  });
+
+  const hasDetails = true;
+  const environments = useGetEnvironments().useOneTime(hasDetails);
+  const projects = useGetProjects().useOneTime();
 
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
     if (selected) {
@@ -41,7 +47,8 @@ export const Provider: React.FC = () => {
 
   return (
     <EnvSelectorWithData
-      environments={data}
+      environments={environments}
+      projects={projects}
       onSelectEnvironment={onSelectEnvironment}
       selectedEnvironment={selected}
     />

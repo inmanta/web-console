@@ -22,7 +22,6 @@ interface HookResponse {
  * Return Signature of the useGetInstances React Query
  */
 interface GetInstance {
-  useOneTime: () => UseQueryResult<HookResponse, CustomError>;
   useContinuous: () => UseQueryResult<HookResponse, CustomError>;
 }
 
@@ -33,7 +32,6 @@ interface GetInstance {
  * @param {string} instanceId {string} - the instance ID for which the data needs to be fetched.
  *
  * @returns {GetInstance} An object containing the different available queries.
- * @returns {UseQueryResult<HookResponse, CustomError>} returns.useOneTime - Fetch the instances with a single query.
  * @returns {UseQueryResult<HookResponse, CustomError>} returns.useContinuous - Fetch the instances with a recurrent query with an interval of 5s.
  */
 export const useGetInstances = (
@@ -52,15 +50,6 @@ export const useGetInstances = (
   const get = useGet()<ResponseBody>;
 
   return {
-    useOneTime: (): UseQueryResult<HookResponse, CustomError> =>
-      useQuery({
-        queryKey: ["get_instances-one_time", serviceName, filter, sort, pageSize, currentPage],
-        queryFn: () => get(url),
-        select: (data) => ({
-          ...data,
-          handlers: getPaginationHandlers(data.links, data.metadata),
-        }),
-      }),
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
         queryKey: ["get_instances-continuous", serviceName, filter, sort, pageSize, currentPage],
