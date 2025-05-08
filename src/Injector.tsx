@@ -31,7 +31,7 @@ import { ModalProvider } from "./UI/Root/Components/ModalProvider";
  */
 export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const authHelper = useContext(AuthContext);
-  const featureManager = new PrimaryFeatureManager(
+  const featureManager = PrimaryFeatureManager(
     new PrimaryLogger(),
     getJsonParserId(globalThis),
     COMMITHASH,

@@ -9,6 +9,7 @@ import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
   DeferredApiHelper,
   Environment,
+  EnvironmentSettings,
   MockedDependencyProvider,
   Project,
   ServerStatus,
@@ -50,6 +51,9 @@ describe("Root", () => {
     }),
     http.get("/api/v2/environment", async () => {
       return HttpResponse.json({ data: Environment.filterable });
+    }),
+    http.get("/api/v2/environment_settings", async () => {
+      return HttpResponse.json({ data: EnvironmentSettings.base });
     })
   );
 

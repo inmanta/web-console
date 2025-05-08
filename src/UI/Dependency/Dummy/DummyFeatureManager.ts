@@ -40,7 +40,4 @@ export class DummyFeatureManager implements FeatureManager {
   getLicenseInformation(): StatusLicense {
     throw new Error("Method not implemented.");
   }
-  setServerStatus(_serverStatus: ServerStatus): void {
-    throw new Error("Method not implemented.");
-  }
 }
