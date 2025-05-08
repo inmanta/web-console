@@ -10,6 +10,7 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { CatalogActions } from "./CatalogActions";
+import { defaultAuthContext } from "@/Data";
 
 expect.extend(toHaveNoViolations);
 
@@ -177,32 +178,11 @@ describe("CatalogActions", () => {
   });
 
   test("Given API documentation button with authenticated user, it should include token in href link.", async () => {
-    const mockAuthHelper = {
-      getToken: () => "test-token",
-      getUser: () => null,
-      login: () => {},
-      logout: () => {},
-      updateUser: () => {},
-      isDisabled: () => false,
-    };
+    jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("my-token");
+    
+    const { component } = setup();
 
-    render(
-      <QueryClientProvider client={testClient}>
-        <StoreProvider store={getStoreInstance()}>
-          <DependencyProvider
-            dependencies={{
-              ...dependencies,
-              authHelper: mockAuthHelper,
-            }}
-          >
-            <ModalProvider>
-              <CatalogActions />
-            </ModalProvider>
-          </DependencyProvider>
-        </StoreProvider>
-      </QueryClientProvider>
-    );
-
+    render(component);
     const button = screen.getByRole("link", {
       name: "API-Documentation",
     });

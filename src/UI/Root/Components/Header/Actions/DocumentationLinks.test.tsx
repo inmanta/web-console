@@ -2,7 +2,7 @@ import React from "react";
 import { MemoryRouter } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { UrlManager } from "@/Core";
-import { AuthContextInterface } from "@/Data/Auth/AuthContext";
+import {  defaultAuthContext } from "@/Data/Auth/AuthContext";
 import { DependencyProvider } from "@/UI/Dependency";
 import { DocumentationLinks } from "./DocumentationLinks";
 
@@ -24,28 +24,17 @@ class MockUrlManager implements UrlManager {
   getApiUrl(): string {
     return API_URL;
   }
-  setEnvironment(): void {
-    throw new Error("Method not implemented.");
-  }
 }
 
 const mockUrlManager = new MockUrlManager();
 
-const mockAuthHelper = (token?: string): AuthContextInterface => ({
-  getToken: () => token ?? null,
-  getUser: () => null,
-  login: () => {},
-  logout: () => {},
-  updateUser: () => {},
-  isDisabled: () => false,
-});
 
 describe("DocumentationLinks", () => {
   it("renders links without token when no token is provided", () => {
     render(
       <MemoryRouter>
         <DependencyProvider
-          dependencies={{ urlManager: mockUrlManager, authHelper: mockAuthHelper() }}
+          dependencies={{ urlManager: mockUrlManager, authHelper: defaultAuthContext }}
         >
           <DocumentationLinks />
         </DependencyProvider>
@@ -64,10 +53,11 @@ describe("DocumentationLinks", () => {
   });
 
   it("renders links with token when authenticated", () => {
+    jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("my-token");
     render(
       <MemoryRouter>
         <DependencyProvider
-          dependencies={{ urlManager: mockUrlManager, authHelper: mockAuthHelper("my-token") }}
+          dependencies={{ urlManager: mockUrlManager }}
         >
           <DocumentationLinks />
         </DependencyProvider>
