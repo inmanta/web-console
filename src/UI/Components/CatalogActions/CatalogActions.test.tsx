@@ -189,7 +189,7 @@ describe("CatalogActions", () => {
 
     expect(button).toHaveAttribute(
       "href",
-      "/lsm/v1/service_catalog_docs?environment=env&token=test-token"
+      "/lsm/v1/service_catalog_docs?environment=c85c0a64-ed45-4cba-bdc5-703f65a225f7&token=test-token"
     );
   });
 });
