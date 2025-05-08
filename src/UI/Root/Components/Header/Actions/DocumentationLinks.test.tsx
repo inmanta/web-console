@@ -2,7 +2,7 @@ import React from "react";
 import { MemoryRouter } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { UrlManager } from "@/Core";
-import {  defaultAuthContext } from "@/Data/Auth/AuthContext";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import { DependencyProvider } from "@/UI/Dependency";
 import { DocumentationLinks } from "./DocumentationLinks";
 
@@ -27,7 +27,6 @@ class MockUrlManager implements UrlManager {
 }
 
 const mockUrlManager = new MockUrlManager();
-
 
 describe("DocumentationLinks", () => {
   it("renders links without token when no token is provided", () => {
@@ -56,9 +55,7 @@ describe("DocumentationLinks", () => {
     jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("my-token");
     render(
       <MemoryRouter>
-        <DependencyProvider
-          dependencies={{ urlManager: mockUrlManager }}
-        >
+        <DependencyProvider dependencies={{ urlManager: mockUrlManager }}>
           <DocumentationLinks />
         </DependencyProvider>
       </MemoryRouter>

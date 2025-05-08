@@ -179,7 +179,7 @@ describe("CatalogActions", () => {
 
   test("Given API documentation button with authenticated user, it should include token in href link.", async () => {
     jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("my-token");
-    
+
     const { component } = setup();
 
     render(component);
