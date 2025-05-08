@@ -5,6 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
+import { defaultAuthContext } from "@/Data";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
@@ -174,5 +175,21 @@ describe("CatalogActions", () => {
       "href",
       "/lsm/v1/service_catalog_docs?environment=c85c0a64-ed45-4cba-bdc5-703f65a225f7"
     ); //default id of EnvironmentDetails.env which is provided in MockedDependencyProvider
+  });
+
+  test("Given API documentation button with authenticated user, it should include token in href link.", async () => {
+    jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("my-token");
+
+    const { component } = setup();
+
+    render(component);
+    const button = screen.getByRole("link", {
+      name: "API-Documentation",
+    });
+
+    expect(button).toHaveAttribute(
+      "href",
+      "/lsm/v1/service_catalog_docs?environment=c85c0a64-ed45-4cba-bdc5-703f65a225f7&token=my-token"
+    );
   });
 });
