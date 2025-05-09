@@ -27,27 +27,11 @@ describe("EnvironmentModifier", () => {
   );
 
   test("Given the environmentModifier When the server compile setting is requested Then returns the correct value", async () => {
-    let counter = 0;
     server.use(
       http.get("/api/v2/environment_settings", () => {
-        if (counter === 0) {
-          counter++;
-          return HttpResponse.json({
-            data: {
-              settings: {
-                enable_lsm_expert_mode: false,
-                server_compile: true,
-              },
-              definition: EnvironmentSettings.definition,
-            },
-          });
-        }
         return HttpResponse.json({
           data: {
-            settings: {
-              enable_lsm_expert_mode: false,
-              server_compile: false,
-            },
+            settings: {},
             definition: EnvironmentSettings.definition,
           },
         });
@@ -75,9 +59,7 @@ describe("EnvironmentModifier", () => {
       });
     });
 
-    await waitFor(() => {
-      expect(result.current.useIsServerCompileEnabled()).toBe(false);
-    });
+    expect(result.current.useIsServerCompileEnabled()).toBe(false);
   });
 
   test("given the environmentModifier When the missing setting is requested and the definition is not missing Then return definition default value", async () => {

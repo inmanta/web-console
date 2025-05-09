@@ -4,7 +4,6 @@ import { useUpdateEnvironmentSetting } from "@/Data/Managers/V2/Environment";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
-import { useQueryClient } from "@tanstack/react-query";
 
 /**
  * A React component that displays a banner when the expert mode is enabled.
@@ -13,20 +12,15 @@ import { useQueryClient } from "@tanstack/react-query";
  * @returns { React.FC<Props> | null} The rendered banner if the expert mode is enabled, otherwise null.
  */
 export const ExpertBanner: React.FC = () => {
-  const { environmentModifier } = useContext(DependencyContext);
-  const queryClient = useQueryClient();
-  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setMessage] = useState<string | undefined>(undefined);
+  const { environmentModifier } = useContext(DependencyContext);
   const { mutate } = useUpdateEnvironmentSetting({
-    onSuccess: () => {
-      queryClient.refetchQueries();
-      setIsLoading(false);
-    },
     onError: (error) => {
       setMessage(error.message);
       setIsLoading(false);
     },
   });
+  const [isLoading, setIsLoading] = useState(false); // isLoading is to indicate the asynchronous operation is in progress, as we need to wait until setting will be updated, getters are still in the V1 - task https://github.com/inmanta/web-console/issues/5999
 
   return environmentModifier.useIsExpertModeEnabled() ? (
     <>
