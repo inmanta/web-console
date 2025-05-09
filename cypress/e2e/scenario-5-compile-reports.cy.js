@@ -122,7 +122,7 @@ describe("5 Compile reports", () => {
 
     // Expect message to be : Compile triggered from the console
     cy.get(".pf-v6-c-description-list__group")
-      .eq(3)
+      .eq(2)
       .should("contain", "Compile triggered from the console");
 
     // Expect to have no environment variables
@@ -205,7 +205,7 @@ describe("5 Compile reports", () => {
       cy.get("h1").contains("Compile Details").should("to.exist");
 
       // Expect trigger to be lsm_export
-      cy.get(".pf-v6-c-description-list__group").eq(4).should("contain", "lsm_export");
+      cy.get(".pf-v6-c-description-list__group").eq(3).should("contain", "lsm_export");
 
       // Expect environment variables inmanta_model_state: active
       cy.get("pre").eq(0).should("contain", "active").and("contain", "inmanta_model_state");
@@ -271,7 +271,7 @@ describe("5 Compile reports", () => {
       cy.get("h1").contains("Compile Details").should("to.exist");
 
       // Expect trigger to be lsm
-      cy.get(".pf-v6-c-description-list__group").eq(4).should("contain", "lsm");
+      cy.get(".pf-v6-c-description-list__group").eq(3).should("contain", "lsm");
 
       // Expect Error Type : inmanta.ast.AttributeException
       cy.get(".pf-v6-c-description-list__description")
