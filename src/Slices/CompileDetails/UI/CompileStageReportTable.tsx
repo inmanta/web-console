@@ -49,6 +49,5 @@ export const getDuration = (started: string, completed?: string) => {
   const durationMs = endTime.getTime() - startTime.getTime();
   const durationSeconds = durationMs / 1000;
 
-  // If duration is less than 1 second, return 0
   return Math.floor(durationSeconds).toString();
 };
