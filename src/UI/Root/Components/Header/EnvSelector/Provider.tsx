@@ -26,8 +26,8 @@ export const Provider: React.FC = () => {
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
     if (selected) {
       environmentHandler.set(navigate, location, item.environmentId);
-      client.resetQueries();
-      client.clear();
+      client.resetQueries({ queryKey: ["get_environments-continuous"] });
+      client.refetchQueries();
 
       return;
     }
@@ -39,8 +39,8 @@ export const Provider: React.FC = () => {
         : routeManager.getUrl("CompileReports", undefined),
     };
 
-    client.clear();
-    client.resetQueries();
+    client.resetQueries({ queryKey: ["get_environments-continuous"] });
+    client.refetchQueries();
 
     environmentHandler.set(navigate, newLocation, item.environmentId);
   };
