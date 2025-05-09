@@ -24,10 +24,9 @@ export const Provider: React.FC = () => {
   const projects = useGetProjects().useOneTime();
 
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
-    client.resetQueries();
-
     if (selected) {
       environmentHandler.set(navigate, location, item.environmentId);
+      client.resetQueries();
 
       return;
     }
@@ -40,6 +39,7 @@ export const Provider: React.FC = () => {
     };
 
     environmentHandler.set(navigate, newLocation, item.environmentId);
+    client.resetQueries();
   };
 
   return (
