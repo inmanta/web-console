@@ -275,7 +275,7 @@ describe("5 Compile reports", () => {
 
       // Expect Error Type : inmanta.ast.AttributeException
       cy.get(".pf-v6-c-description-list__description")
-        .eq(6)
+        .eq(5)
         .should("contain", "inmanta.ast.AttributeException");
     });
 
