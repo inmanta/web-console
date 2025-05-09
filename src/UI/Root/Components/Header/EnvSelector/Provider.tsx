@@ -24,10 +24,10 @@ export const Provider: React.FC = () => {
   const projects = useGetProjects().useOneTime();
 
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
+    client.resetQueries();
+
     if (selected) {
       environmentHandler.set(navigate, location, item.environmentId);
-      client.resetQueries({ queryKey: ["get_environments-continuous"] });
-      client.refetchQueries();
 
       return;
     }
@@ -38,9 +38,6 @@ export const Provider: React.FC = () => {
         ? routeManager.getUrl("Catalog", undefined)
         : routeManager.getUrl("CompileReports", undefined),
     };
-
-    client.resetQueries({ queryKey: ["get_environments-continuous"] });
-    client.refetchQueries();
 
     environmentHandler.set(navigate, newLocation, item.environmentId);
   };
