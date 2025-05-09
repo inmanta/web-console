@@ -859,6 +859,17 @@ const dict = {
   "markdownPreviewer.download.tooltip": "Download markdown file",
   "markdownPreviewer.route.label": (instance: string) => `Markdown Preview: ${instance}`,
   "markdownPreviewer.download": "Download",
+
+  /**
+   * LogViewer related text
+   */
+  "logViewer.selectLog": "Select log",
+  "logViewer.search": "Search",
+  "logViewer.duration": (duration: number) => `Duration: ${duration} ms`,
+  "logViewer.autoscroll.resume": "Resume Autoscroll",
+  "logViewer.autoscroll.pause": "Pause Autoscroll",
+  "logViewer.download": "Download",
+  "logViewer.download.aria": "Download current logs",
 };
 
 type Key = keyof typeof dict;

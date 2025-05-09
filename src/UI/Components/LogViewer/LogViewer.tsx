@@ -17,6 +17,7 @@ import {
 } from "@patternfly/react-core";
 import { DownloadIcon, ExclamationCircleIcon, PauseIcon, PlayIcon } from "@patternfly/react-icons";
 import { LogViewerSearch, LogViewer as PFLogViewer } from "@patternfly/react-log-viewer";
+import { words } from "@/UI/words";
 
 export interface LogViewerData {
     data: string[];
@@ -71,7 +72,7 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
             onClick={() => setSelectOpen((open) => !open)}
             isExpanded={selectOpen}
         >
-            {selectedLog?.name || "Select log"}
+            {selectedLog?.name || words("logViewer.selectLog")}
         </MenuToggle>
     );
 
@@ -118,7 +119,7 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
             onClick={handlePauseResume}
             icon={isPaused ? <PlayIcon /> : <PauseIcon />}
         >
-            {isPaused ? " Resume Autoscroll" : " Pause Autoscroll"}
+            {isPaused ? words("logViewer.autoscroll.resume") : words("logViewer.autoscroll.pause")}
         </Button>
     );
 
@@ -160,10 +161,10 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
                                 </Select>
                             </ToolbarItem>
                             <ToolbarItem>
-                                <LogViewerSearch placeholder="Search" minSearchChars={0} />
+                                <LogViewerSearch placeholder={words("logViewer.search")} minSearchChars={0} />
                             </ToolbarItem>
                             <ToolbarItem>
-                                <Label>Duration: {selectedLog?.duration} ms</Label>
+                                <Label>{words("logViewer.duration")(selectedLog?.duration)}</Label>
                             </ToolbarItem>
                         </ToolbarGroup>
                         <ToolbarGroup align={{ default: 'alignEnd' }}>
@@ -171,11 +172,11 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
                                 <ControlButton />
                             </ToolbarItem>
                             <ToolbarItem>
-                                <Tooltip content={<div>Download</div>} position="top">
+                                <Tooltip content={<div>{words("logViewer.download")}</div>} position="top">
                                     <Button
                                         onClick={handleDownload}
                                         variant="plain"
-                                        aria-label="Download current logs"
+                                        aria-label={words("logViewer.download.aria")}
                                     >
                                         <DownloadIcon />
                                     </Button>
