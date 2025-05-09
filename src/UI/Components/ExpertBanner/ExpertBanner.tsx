@@ -14,6 +14,7 @@ import { ToastAlert } from "../ToastAlert";
 export const ExpertBanner: React.FC = () => {
   const { environmentModifier } = useContext(DependencyContext);
   const [isLoading, setIsLoading] = useState(false);
+  const expertModeEnabled = environmentModifier.useIsExpertModeEnabled();
   const [errorMessage, setMessage] = useState<string | undefined>(undefined);
   const { mutate } = useUpdateEnvironmentSetting({
     onError: (error) => {
@@ -24,9 +25,9 @@ export const ExpertBanner: React.FC = () => {
 
   useEffect(() => {
     setIsLoading(false); //changing it onSuccess doesn't necessarily mean that the expert mode is changed yet, the most reliable way is to check the value of the expert mode directly from the environmentModifier
-  }, [environmentModifier.useIsExpertModeEnabled()]);
+  }, [expertModeEnabled]);
 
-  return environmentModifier.useIsExpertModeEnabled() ? (
+  return expertModeEnabled ? (
     <>
       {errorMessage && (
         <ToastAlert
