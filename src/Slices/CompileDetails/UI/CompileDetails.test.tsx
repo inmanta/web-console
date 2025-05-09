@@ -9,6 +9,7 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as Mock from "@S/CompileDetails/Core/Mock";
 import { CompileDetails } from "./CompileDetails";
+import { getDuration } from "./CompileStageReportTable";
 
 expect.extend(toHaveNoViolations);
 
@@ -114,5 +115,25 @@ describe("CompileDetails", () => {
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("getDuration calculates duration correctly", () => {
+    const started = "2023-01-01T10:00:00.000Z";
+    const completed = "2023-01-01T10:00:30.000Z";
+
+    // Test with completed time
+    expect(getDuration(started, completed)).toBe("30");
+
+    // Test with no completed time (should use current time)
+    const now = new Date("2023-01-01T10:00:45.000Z");
+    jest.useFakeTimers();
+    jest.setSystemTime(now);
+    expect(getDuration(started)).toBe("45");
+    jest.useRealTimers();
+
+    // Test duration less than 1 second
+    const startedRecent = "2023-01-01T10:00:00.000Z";
+    const completedRecent = "2023-01-01T10:00:00.500Z";
+    expect(getDuration(startedRecent, completedRecent)).toBe("0");
   });
 });

@@ -9,9 +9,7 @@ import {
   DescriptionListTerm,
   Flex,
   FlexItem,
-  Icon,
 } from "@patternfly/react-core";
-import { CheckCircleIcon, ExclamationCircleIcon } from "@patternfly/react-icons";
 import { Timeline } from "@/UI/Components/Timeline";
 import { words } from "@/UI/words";
 import { CompileDetails } from "@S/CompileDetails/Core/Domain";
@@ -55,22 +53,6 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
             <DescriptionListTerm>{words("compileDetails.status.update")}</DescriptionListTerm>
             <DescriptionListDescription>
               {compileDetails.force_update.toString()}
-            </DescriptionListDescription>
-          </DescriptionListGroup>
-          <DescriptionListGroup>
-            <DescriptionListTerm>{words("compileDetails.status.success")}</DescriptionListTerm>
-            <DescriptionListDescription>
-              {compileDetails.success ? (
-                <Icon status="success">
-                  <CheckCircleIcon />
-                </Icon>
-              ) : compileDetails.success === false ? (
-                <Icon status="danger">
-                  <ExclamationCircleIcon />
-                </Icon>
-              ) : (
-                ""
-              )}
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>

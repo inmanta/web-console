@@ -1379,6 +1379,7 @@ __metadata:
     "@patternfly/react-code-editor": "npm:^6.1.0"
     "@patternfly/react-core": "npm:^6.0.0"
     "@patternfly/react-icons": "npm:^6.0.0"
+    "@patternfly/react-log-viewer": "npm:^6.2.0"
     "@patternfly/react-styles": "npm:^6.0.0"
     "@patternfly/react-table": "npm:^6.0.0"
     "@patternfly/react-tokens": "npm:^6.0.0"
@@ -2122,6 +2123,21 @@ __metadata:
     react: ^17 || ^18
     react-dom: ^17 || ^18
   checksum: 10/694932ae921daf0f6902c37f1bc1fbb169725670c4b82fd1db44d14408c9f190422b4e25a186ebfd2b459637c0fca79df6216afac129ddb5fc2257bb4dfeb1c1
+  languageName: node
+  linkType: hard
+
+"@patternfly/react-log-viewer@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "@patternfly/react-log-viewer@npm:6.2.0"
+  dependencies:
+    "@patternfly/react-core": "npm:^6.0.0"
+    "@patternfly/react-icons": "npm:^6.0.0"
+    "@patternfly/react-styles": "npm:^6.0.0"
+    memoize-one: "npm:^5.1.0"
+  peerDependencies:
+    react: ^17 || ^18
+    react-dom: ^17 || ^18
+  checksum: 10/d5d107e140de5503b5b31b4b7b9af3bc22901271b363a2e62b8e622c1d01231d3bd571516213a55f3eeb00fae59ddcdaa43901763afb042e74ec2082834061c2
   languageName: node
   linkType: hard
 
@@ -11805,6 +11821,13 @@ __metadata:
   dependencies:
     fs-monkey: "npm:^1.0.4"
   checksum: 10/7c9cdb453a6b06e87f11e2dbe6c518fd3c1c1581b370ffa24f42f3fd5b1db8c2203f596e43321a0032963f3e9b66400f2c3cf043904ac496d6ae33eafd0878fe
+  languageName: node
+  linkType: hard
+
+"memoize-one@npm:^5.1.0":
+  version: 5.2.1
+  resolution: "memoize-one@npm:5.2.1"
+  checksum: 10/b7141dc148b5c6fdd51e77ecf0421fd2581681eb8756e0b3dfbd4fe765b5e2b5a6bc90214bb6f19a96b6aed44de17eda3407142a7be9e24ccd0774bbd9874d1b
   languageName: node
   linkType: hard
 

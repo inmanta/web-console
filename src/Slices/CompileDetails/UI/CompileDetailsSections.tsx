@@ -22,12 +22,7 @@ export const CompileDetailsSections: React.FC<Props> = ({ compileDetails, ...pro
         </PageSectionWithTitle>
       )}
       <PageSectionWithTitle title={words("compileDetails.stages.title")}>
-        {compileDetails.reports && (
-          <CompileStageReportTable
-            reports={compileDetails.reports}
-            compileStarted={compileDetails.started}
-          />
-        )}
+        {compileDetails.reports && <CompileStageReportTable reports={compileDetails.reports} />}
       </PageSectionWithTitle>
     </div>
   );
