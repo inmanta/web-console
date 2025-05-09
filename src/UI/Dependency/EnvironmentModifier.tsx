@@ -19,7 +19,12 @@ export function useEnvironmentModifierImpl(): EnvironmentModifier {
   const envSettings = useGetEnvironmentSettings(env?.id).useOneTime();
 
   function setEnvironment(environmentToSet: FlatEnvironment): void {
-    setEnv(environmentToSet);
+    setEnv((prev) => {
+      if (prev?.id === environmentToSet.id) {
+        envSettings.refetch();
+      }
+      return environmentToSet;
+    });
   }
 
   function useIsHalted(): boolean {
@@ -37,14 +42,13 @@ export function useEnvironmentModifierImpl(): EnvironmentModifier {
    * @returns {boolean}
    */
   function useSetting(settingName: keyof EnvironmentSettings.DefinitionMap): boolean {
-    if (env === null) return false;
-
-    if (env.settings[settingName] !== undefined && env.settings[settingName] !== null) {
-      return Boolean(env.settings[settingName]);
-    }
-
     if (envSettings.data) {
       if (
+        envSettings.data.settings[settingName] !== undefined &&
+        envSettings.data.settings[settingName] !== null
+      ) {
+        return Boolean(envSettings.data.settings[settingName]);
+      } else if (
         envSettings.data.definition[settingName] !== undefined &&
         envSettings.data.definition[settingName] !== null
       ) {
