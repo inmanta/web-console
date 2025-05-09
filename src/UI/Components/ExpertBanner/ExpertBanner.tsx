@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Banner, Button, Flex, Spinner } from "@patternfly/react-core";
-import { useQueryClient } from "@tanstack/react-query";
 import { useUpdateEnvironmentSetting } from "@/Data/Managers/V2/Environment";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -14,19 +13,18 @@ import { ToastAlert } from "../ToastAlert";
  */
 export const ExpertBanner: React.FC = () => {
   const { environmentModifier } = useContext(DependencyContext);
-  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setMessage] = useState<string | undefined>(undefined);
   const { mutate } = useUpdateEnvironmentSetting({
-    onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ["get_environment_settings-one_time"] });
-      setIsLoading(false);
-    },
     onError: (error) => {
       setMessage(error.message);
       setIsLoading(false);
     },
   });
+
+  useEffect(() => {
+    setIsLoading(false); //changing it onSuccess doesn't necessarily mean that the expert mode is changed yet, the most reliable way is to check the value of the expert mode directly from the environmentModifier
+  }, [environmentModifier.useIsExpertModeEnabled()]);
 
   return environmentModifier.useIsExpertModeEnabled() ? (
     <>

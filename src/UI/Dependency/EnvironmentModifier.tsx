@@ -19,7 +19,12 @@ export function useEnvironmentModifierImpl(): EnvironmentModifier {
   const envSettings = useGetEnvironmentSettings(env?.id).useOneTime();
 
   function setEnvironment(environmentToSet: FlatEnvironment): void {
-    setEnv(environmentToSet);
+    setEnv((prev) => {
+      if (prev && prev.id === environmentToSet.id && !envSettings.isPending) {
+        envSettings.refetch(); //env could get updated without env.id changing, so we need to refetch the envSettings to get the latest data - solution until GraphQL is implemented
+      }
+      return environmentToSet;
+    });
   }
 
   function useIsHalted(): boolean {
