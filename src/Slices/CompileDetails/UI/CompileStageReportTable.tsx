@@ -1,32 +1,30 @@
 import React from "react";
-import { Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
-import { useExpansion } from "@/Data";
-import { words } from "@/UI";
-import { MomentDatePresenter } from "@/UI/Utils";
-import { CompileStageReport } from "@S/CompileDetails/Core/Domain";
-import { CompileStageReportTablePresenter } from "./CompileStageReportTablePresenter";
-import { CompileStageReportTableRow } from "./CompileStageReportTableRow";
 import { LogViewerComponent, LogViewerData } from "@/UI/Components/LogViewer";
+import { CompileStageReport } from "@S/CompileDetails/Core/Domain";
 
 interface Props {
-  compileStarted?: string | null;
   reports: CompileStageReport[];
 }
 
-export const CompileStageReportTable: React.FC<Props> = ({ compileStarted, reports, ...props }) => {
+/**
+ * CompileStageReportTable component displays a table of compile stage reports
+ * with a log viewer for each report.
+ *
+ * @prop {CompileStageReport[]} reports - The array of compile stage reports
+ */
+export const CompileStageReportTable: React.FC<Props> = ({ reports }) => {
   const logs: LogViewerData[] = reports.map((report) => {
     return {
       data: [report.command, report.errstream, report.outstream],
       name: report.name,
       id: report.id,
       duration: getDuration(report.started, report.completed),
-      failed: report.returncode !== null && report.returncode !== undefined && report.returncode !== 0,
+      failed:
+        report.returncode !== null && report.returncode !== undefined && report.returncode !== 0,
     };
   });
 
-  return (
-    <LogViewerComponent logs={logs} />
-  );
+  return <LogViewerComponent logs={logs} />;
 };
 
 /**
@@ -42,4 +40,3 @@ const getDuration = (started: string, completed?: string) => {
   const duration = endTime.getTime() - startTime.getTime();
   return duration;
 };
-

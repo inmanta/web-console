@@ -30,7 +30,7 @@ else
 fi
 
 VERSION=${version:-iso}
-RELEASE=${release:-8-dev}
+RELEASE=${release:-9-dev}
 DOCKER_FLAG=${flag:-}
 BRANCH=${branch:-master}
 

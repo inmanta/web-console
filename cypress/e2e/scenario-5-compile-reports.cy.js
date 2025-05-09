@@ -128,26 +128,17 @@ describe("5 Compile reports", () => {
     // Expect to have no environment variables
     cy.get(".pf-v6-c-code-block__content").should("have.text", "{}");
 
-    // Expect to have 3 stages in collapsible
-    cy.get("tbody").should(($rowElements) => {
-      expect($rowElements).to.have.length(3);
-    });
+    // Expect to find text about environment variables
+    cy.get("span").contains("Using extra environment variables during compile").should("exist");
 
-    // Click on init stage arrow
-    cy.get("#expand-toggle0").click();
+    // click on the select to pick a different stage
+    cy.get("button").contains("Init").click();
 
-    // expect to see Command Empty, Return code 0 an output stream and no error stream.
-    cy.get(".pf-v6-c-table__expandable-row.pf-m-expanded")
-      .find(".pf-v6-c-description-list__group")
-      .should(($rowGroups) => {
-        expect($rowGroups).to.have.length(4);
+    // Click on the last menu item
+    cy.get(".pf-v6-c-menu__list-item").last().click();
 
-        expect($rowGroups.eq(0), "Command-row").to.contain("Empty");
-        expect($rowGroups.eq(1), "Return-code-row").to.contain("0");
-        expect($rowGroups.eq(2), "Output-stream-row").to.contain(
-          "Using extra environment variables during compile"
-        );
-      });
+    // expect the text in the toggle now to be Recompiling configuration model
+    cy.get("button").contains("Recompiling configuration model").should("exist");
   });
 
   if (isIso) {

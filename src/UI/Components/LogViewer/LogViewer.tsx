@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import { LogViewerSearch, LogViewer as PFLogViewer } from "@patternfly/react-log-viewer";
 import {
     Button,
     Icon,
@@ -14,10 +13,10 @@ import {
     ToolbarItem,
     Tooltip,
     Flex,
-    FlexItem
+    FlexItem,
 } from "@patternfly/react-core";
-import DownloadIcon from "@patternfly/react-icons/dist/esm/icons/download-icon";
-import { ExclamationCircleIcon, ExpandIcon, PauseIcon, PlayIcon } from "@patternfly/react-icons";
+import { DownloadIcon, ExclamationCircleIcon, PauseIcon, PlayIcon } from "@patternfly/react-icons";
+import { LogViewerSearch, LogViewer as PFLogViewer } from "@patternfly/react-log-viewer";
 
 export interface LogViewerData {
     data: string[];
@@ -40,7 +39,7 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
     const [selectedLogId, setSelectedLogId] = useState(logs[0]?.id || "");
     const [selectOpen, setSelectOpen] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
-    const logViewerRef = useRef<any>(null);
+    const logViewerRef = useRef<HTMLDivElement>(null);
     const isManualResume = useRef(false);
 
     // Find the selected log
@@ -59,20 +58,20 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
     };
 
     // Select dropdown toggle
-    const toggle = (toggleRef: React.Ref<any>) => (
-        <MenuToggle ref={toggleRef} onClick={() => setSelectOpen((open) => !open)} isExpanded={selectOpen}>
+    const toggle = (toggleRef) => (
+        <MenuToggle
+            ref={toggleRef}
+            onClick={() => setSelectOpen((open) => !open)}
+            isExpanded={selectOpen}
+        >
             {selectedLog?.name || "Select log"}
         </MenuToggle>
     );
 
     // Select dropdown options
     const selectOptions = logs.map((log) => (
-        <SelectOption
-            key={log.id}
-            value={log.id}
-            isSelected={selectedLogId === log.id}
-        >
-            <Flex alignItems={{ default: 'alignItemsCenter' }} spaceItems={{ default: 'spaceItemsSm' }}>
+        <SelectOption key={log.id} value={log.id} isSelected={selectedLogId === log.id}>
+            <Flex alignItems={{ default: "alignItemsCenter" }} spaceItems={{ default: "spaceItemsSm" }}>
                 {log.failed && (
                     <FlexItem>
                         <Icon status="danger">
@@ -103,7 +102,7 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
             onClick={handlePauseResume}
             icon={isPaused ? <PlayIcon /> : <PauseIcon />}
         >
-            {isPaused ? ` Resume Autoscroll` : ` Pause Autoscroll`}
+            {isPaused ? " Resume Autoscroll" : " Pause Autoscroll"}
         </Button>
     );
 
@@ -114,9 +113,9 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
             innerRef={logViewerRef}
             height={500}
             isTextWrapped
-            scrollToRow={isPaused ? undefined : logText.split('\n').length}
+            scrollToRow={isPaused ? undefined : logText.split("\n").length}
             onScroll={({ scrollOffsetToBottom }) => {
-                // Don't pause if this is a manual resume action, 
+                // Don't pause if this is a manual resume action,
                 // this is to prevent the double update of the pause flag
                 if (!isManualResume.current && scrollOffsetToBottom > 1 && !isPaused) {
                     setIsPaused(true);
@@ -143,19 +142,25 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
                                 >
                                     <SelectList>{selectOptions}</SelectList>
                                 </Select>
-                                <ToolbarItem>
-                                    <LogViewerSearch placeholder="Search" minSearchChars={0} />
-                                </ToolbarItem>
+                            </ToolbarItem>
+                            <ToolbarItem>
+                                <LogViewerSearch placeholder="Search" minSearchChars={0} />
                             </ToolbarItem>
                             <ToolbarItem>
                                 <Label>Duration: {selectedLog?.duration} ms</Label>
                             </ToolbarItem>
+                        </ToolbarGroup>
+                        <ToolbarGroup align={{ default: 'alignEnd' }}>
                             <ToolbarItem>
                                 <ControlButton />
                             </ToolbarItem>
                             <ToolbarItem>
                                 <Tooltip content={<div>Download</div>} position="top">
-                                    <Button onClick={handleDownload} variant="plain" aria-label="Download current logs">
+                                    <Button
+                                        onClick={handleDownload}
+                                        variant="plain"
+                                        aria-label="Download current logs"
+                                    >
                                         <DownloadIcon />
                                     </Button>
                                 </Tooltip>

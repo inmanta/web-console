@@ -1,5 +1,7 @@
 import React from "react";
 import {
+  CodeBlock,
+  CodeBlockCode,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -13,7 +15,7 @@ interface Props {
 }
 
 export const CompileErrorsSection: React.FC<Props> = ({ errors }) => (
-  <DescriptionList isHorizontal isFillColumns columnModifier={{ default: "2Col" }}>
+  <DescriptionList isAutoFit>
     {errors.map((compileError, idx) => [
       <DescriptionListGroup key={`type-${idx}`}>
         <DescriptionListTerm>{words("compileDetails.errors.type")}</DescriptionListTerm>
@@ -21,7 +23,13 @@ export const CompileErrorsSection: React.FC<Props> = ({ errors }) => (
       </DescriptionListGroup>,
       <DescriptionListGroup key={`message-${idx}`}>
         <DescriptionListTerm>{words("compileDetails.errors.message")}</DescriptionListTerm>
-        <DescriptionListDescription>{compileError.message}</DescriptionListDescription>
+        <DescriptionListDescription>
+          <CodeBlock>
+            <CodeBlockCode>
+              {JSON.stringify(compileError.message, null, 2)}
+            </CodeBlockCode>
+          </CodeBlock>
+        </DescriptionListDescription>
       </DescriptionListGroup>,
     ])}
   </DescriptionList>
