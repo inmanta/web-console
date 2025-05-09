@@ -14,6 +14,12 @@ interface Props {
   errors: CompileError[];
 }
 
+/**
+ * Renders a section displaying compile errors with type and message details.
+ *
+ * @prop {CompileError[]} errors - The array of compile errors
+ * @returns {React.ReactNode} The rendered component
+ */
 export const CompileErrorsSection: React.FC<Props> = ({ errors }) => (
   <DescriptionList isAutoFit>
     {errors.map((compileError, idx) => [

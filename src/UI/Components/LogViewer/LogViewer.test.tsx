@@ -9,14 +9,14 @@ const mockLogs: LogViewerData[] = [
     id: "1",
     name: "Log 1",
     data: ["Line 1", "Line 2", "Line 3"],
-    duration: 100,
+    duration: "1",
     failed: false,
   },
   {
     id: "2",
     name: "Failed Log",
     data: ["Error line 1", "Error line 2"],
-    duration: 200,
+    duration: "20",
     failed: true,
   },
 ];
@@ -40,7 +40,7 @@ describe("LogViewerComponent", () => {
     expect(logViewer).toHaveTextContent("Line 3");
 
     // Check if duration is displayed
-    expect(screen.getByText(/Duration: 100 ms/)).toBeInTheDocument();
+    expect(screen.getByText(/Duration: 1 s/)).toBeInTheDocument();
   });
 
   it("switches between logs when selecting from dropdown", async () => {

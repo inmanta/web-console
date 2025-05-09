@@ -865,7 +865,7 @@ const dict = {
    */
   "logViewer.selectLog": "Select log",
   "logViewer.search": "Search",
-  "logViewer.duration": (duration: number) => `Duration: ${duration || "..."} ms`,
+  "logViewer.duration": (duration: string) => `Duration: ${duration || "..."} s`,
   "logViewer.autoscroll.resume": "Resume Autoscroll",
   "logViewer.autoscroll.pause": "Pause Autoscroll",
   "logViewer.download": "Download",

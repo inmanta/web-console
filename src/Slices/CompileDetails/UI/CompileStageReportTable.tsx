@@ -28,15 +28,27 @@ export const CompileStageReportTable: React.FC<Props> = ({ reports }) => {
 };
 
 /**
- * Get the duration of a compile stage
+ * Get the duration of a compile stage in seconds
  * If the completed time is not provided, use the current time
+ *
  * @param started - The start time of the compile stage
  * @param completed - The end time of the compile stage
- * @returns The duration of the compile stage
+ *
+ * @note We use Math.floor here as it's reliable for this specific duration calculation.
+ * Since we're working with integer milliseconds from Date.getTime() and only dividing by 1000,
+ * there are no floating-point precision concerns. Math.floor will accurately round down
+ * to the nearest second.
+ *
+ * We are returning a string as the duration is displayed in the UI as a string.
+ * And because the number 0 equals to false.
+ * @returns The duration of the compile stage in seconds
  */
-const getDuration = (started: string, completed?: string) => {
+export const getDuration = (started: string, completed?: string) => {
   const startTime = new Date(started);
   const endTime = new Date(completed || new Date().toISOString());
-  const duration = endTime.getTime() - startTime.getTime();
-  return duration;
+  const durationMs = endTime.getTime() - startTime.getTime();
+  const durationSeconds = durationMs / 1000;
+
+  // If duration is less than 1 second, return 0
+  return durationSeconds < 1 ? "0" : Math.floor(durationSeconds).toString();
 };

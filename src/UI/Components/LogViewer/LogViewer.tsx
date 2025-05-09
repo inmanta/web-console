@@ -23,7 +23,7 @@ export interface LogViewerData {
   data: string[];
   id: string;
   name: string;
-  duration: number;
+  duration: string;
   failed: boolean;
 }
 
