@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Banner, Button, Flex, Spinner } from "@patternfly/react-core";
+import { useQueryClient } from "@tanstack/react-query";
 import { useUpdateEnvironmentSetting } from "@/Data/Managers/V2/Environment";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
-import { useQueryClient } from "@tanstack/react-query";
 
 /**
  * A React component that displays a banner when the expert mode is enabled.
@@ -19,7 +19,7 @@ export const ExpertBanner: React.FC = () => {
   const [errorMessage, setMessage] = useState<string | undefined>(undefined);
   const { mutate } = useUpdateEnvironmentSetting({
     onSuccess: () => {
-      queryClient.refetchQueries();
+      queryClient.refetchQueries({ queryKey: ["get_environment_settings-one_time"] });
       setIsLoading(false);
     },
     onError: (error) => {

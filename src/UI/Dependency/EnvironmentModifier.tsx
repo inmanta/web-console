@@ -19,12 +19,7 @@ export function useEnvironmentModifierImpl(): EnvironmentModifier {
   const envSettings = useGetEnvironmentSettings(env?.id).useOneTime();
 
   function setEnvironment(environmentToSet: FlatEnvironment): void {
-    setEnv((prev) => {
-      if (prev?.id === environmentToSet.id) {
-        envSettings.refetch();
-      }
-      return environmentToSet;
-    });
+    setEnv(environmentToSet);
   }
 
   function useIsHalted(): boolean {
