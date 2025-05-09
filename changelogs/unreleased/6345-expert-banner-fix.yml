@@ -1,0 +1,5 @@
+description: Fix Expert mode banner flickering and spinner not hiding after making the banner reappear.
+issue-nr: 6345
+change-type: patch
+destination-branches: [master, iso8]
+

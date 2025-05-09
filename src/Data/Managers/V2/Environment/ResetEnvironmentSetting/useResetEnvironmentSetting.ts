@@ -21,7 +21,7 @@ export const useResetEnvironmentSetting = (
     mutationFn: (id) => deleteFn(`/api/v2/environment_settings/${id}`),
     mutationKey: ["reset_environment_setting"],
     onSuccess: () => {
-      client.refetchQueries();
+      client.refetchQueries({ queryKey: ["get_environment_settings-one_time"] });
     },
     ...options,
   });

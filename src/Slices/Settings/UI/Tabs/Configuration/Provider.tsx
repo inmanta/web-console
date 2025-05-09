@@ -76,7 +76,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
 
   const updateSetting = useUpdateEnvironmentSetting({
     onSuccess: () => {
-      client.refetchQueries();
+      client.refetchQueries({ queryKey: ["get_environment_settings-one_time"] });
       document.dispatchEvent(new Event("settings-update"));
       setErrorMessage("");
       setShowUpdateBanner(true);
@@ -90,7 +90,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
   const resetSetting = useResetEnvironmentSetting({
     onSuccess: () => {
       setErrorMessage("");
-      client.refetchQueries();
+      client.refetchQueries({ queryKey: ["get_environment_settings-one_time"] });
     },
     onError: (error) => setErrorMessage(error.message),
   });
