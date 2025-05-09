@@ -46,7 +46,10 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
     const selectedLog = logs.find((log) => log.id === selectedLogId) || logs[0];
     const logText = selectedLog?.data?.join("\n") || "";
 
-    // Download handler
+    /**
+     * Handles downloading the current log content as a text file.
+     * Creates a blob from the log text and triggers a download with the log name.
+     */
     const handleDownload = () => {
         const blob = new Blob([logText], { type: "text/plain" });
         const url = window.URL.createObjectURL(blob);
@@ -57,7 +60,11 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
         window.URL.revokeObjectURL(url);
     };
 
-    // Select dropdown toggle
+    /**
+     * Renders the toggle button for the log selection dropdown.
+     * @param toggleRef - Reference to the toggle button element
+     * @returns MenuToggle component with current log name
+     */
     const toggle = (toggleRef) => (
         <MenuToggle
             ref={toggleRef}
@@ -84,6 +91,10 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
         </SelectOption>
     ));
 
+    /**
+     * Handles toggling between paused and resumed states for auto-scrolling.
+     * Sets a flag to prevent scroll events from re-pausing immediately after manual resume.
+     */
     const handlePauseResume = () => {
         if (isPaused) {
             // Set the flag to prevent scroll event from re-pausing
@@ -96,6 +107,11 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
         setIsPaused(!isPaused);
     };
 
+    /**
+     * Renders the pause/resume control button component.
+     * Shows either pause or resume icon and text based on current state.
+     * @returns Button component for controlling auto-scroll
+     */
     const ControlButton = () => (
         <Button
             variant="link"
