@@ -25,9 +25,7 @@ export const CompileErrorsSection: React.FC<Props> = ({ errors }) => (
         <DescriptionListTerm>{words("compileDetails.errors.message")}</DescriptionListTerm>
         <DescriptionListDescription>
           <CodeBlock>
-            <CodeBlockCode>
-              {JSON.stringify(compileError.message, null, 2)}
-            </CodeBlockCode>
+            <CodeBlockCode>{JSON.stringify(compileError.message, null, 2)}</CodeBlockCode>
           </CodeBlock>
         </DescriptionListDescription>
       </DescriptionListGroup>,
