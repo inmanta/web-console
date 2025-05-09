@@ -27,7 +27,6 @@ export const Provider: React.FC = () => {
     if (selected) {
       environmentHandler.set(navigate, location, item.environmentId);
       client.resetQueries();
-      client.clear();
 
       return;
     }
@@ -39,10 +38,8 @@ export const Provider: React.FC = () => {
         : routeManager.getUrl("CompileReports", undefined),
     };
 
-    client.clear();
-    client.resetQueries();
-
     environmentHandler.set(navigate, newLocation, item.environmentId);
+    client.resetQueries();
   };
 
   return (
