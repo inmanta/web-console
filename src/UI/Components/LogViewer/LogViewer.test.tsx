@@ -58,7 +58,7 @@ describe("LogViewerComponent", () => {
     const logViewer = screen.getByTestId("log-viewer");
     expect(logViewer).toHaveTextContent("Error line 1");
     expect(logViewer).toHaveTextContent("Error line 2");
-    expect(screen.getByText(/Duration: 200 ms/)).toBeInTheDocument();
+    expect(screen.getByText(/Duration: 20 s/)).toBeInTheDocument();
   });
 
   it("shows error icon for failed logs", async () => {

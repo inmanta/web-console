@@ -50,5 +50,5 @@ export const getDuration = (started: string, completed?: string) => {
   const durationSeconds = durationMs / 1000;
 
   // If duration is less than 1 second, return 0
-  return durationSeconds < 1 ? "0" : Math.floor(durationSeconds).toString();
+  return Math.floor(durationSeconds).toString();
 };
