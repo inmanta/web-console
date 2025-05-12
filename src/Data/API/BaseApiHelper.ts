@@ -57,7 +57,7 @@ export const BaseApiHelper = (
   }
 
   /**
-   * Formats error messages for API requests. If the response status is 401 or 403, it will also handle the authorization flow.
+   * Formats error messages for API requests. If the response status is 401, it will also handle the authorization flow.
    * @param message The error message.
    * @param response The response object.
    * @returns Formatted error message including status code and status text.
@@ -65,7 +65,7 @@ export const BaseApiHelper = (
   function formatError(message: string, response: Response): string {
     let errorMessage = message;
 
-    if (response.status === 401 || response.status === 403) {
+    if (response.status === 401) {
       errorMessage += ` ${words("error.authorizationFailed")}`;
 
       authHelper.login();
