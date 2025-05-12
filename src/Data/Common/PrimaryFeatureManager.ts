@@ -11,14 +11,12 @@ import {
   FEATURE_LIST,
 } from "@/Core";
 import { useGetServerStatus } from "../Managers/V2/Server";
-import { VoidLogger } from "./VoidLogger";
 
 /**
  * Represents the primary feature manager.
  * Implements the FeatureManager interface.
  */
 export const PrimaryFeatureManager = (
-  logger: Logger = new VoidLogger(),
   jsonParserId: JsonParserId = "Native",
   commitHash: string = "",
   appVersion: string = ""
@@ -174,10 +172,10 @@ export const PrimaryFeatureManager = (
   }
 
   useEffect(() => {
-    logger.log(
-      `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
+    console.info(
+      `[inmanta-web-console] Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
     );
-  }, [jsonParserId, appVersion, commitHash, logger]);
+  }, [jsonParserId, appVersion, commitHash]);
 
   return {
     getAppVersion,
