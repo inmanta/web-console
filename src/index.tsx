@@ -24,6 +24,7 @@ const root = createRoot(container);
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      refetchOnWindowFocus: false,
       retry: false,
     },
   },
