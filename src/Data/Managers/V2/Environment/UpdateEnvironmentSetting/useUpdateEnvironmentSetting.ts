@@ -29,7 +29,7 @@ export const useUpdateEnvironmentSetting = (
     mutationFn: ({ id, value }) => post(`/api/v2/environment_settings/${id}`, { value }),
     mutationKey: ["update_environment_setting"],
     onSuccess: () => {
-      queryClient.refetchQueries();
+      queryClient.refetchQueries({ queryKey: ["get_environment_settings-one_time"] });
     },
     ...options,
   });
