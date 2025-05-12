@@ -77,8 +77,14 @@ afterAll(() => {
       .join("\n\n");
 
     consoleIssues.length = 0; // Clear for next test run
-    throw new Error(
-      `\x1b[31mFAILURE: Tests produced the following console warnings/errors:\n\n${summary}\x1b[0m`
-    );
+
+    // Create error object with custom message
+    const errorMessage = `\x1b[31mFAILURE: Tests produced the following console warnings/errors:\n\n${summary}\x1b[0m`;
+    const error = new Error(errorMessage);
+
+    // Remove this file from the stack trace
+    Error.captureStackTrace(error, afterAll);
+
+    throw error;
   }
 });
