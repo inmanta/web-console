@@ -21,7 +21,7 @@ export function useEnvironmentModifierImpl(): EnvironmentModifier {
   function setEnvironment(environmentToSet: FlatEnvironment): void {
     setEnv((prev) => {
       if (prev && prev.id === environmentToSet.id && !envSettings.isPending) {
-        envSettings.refetch(); //env could get updated without env.id changing, so we need to refetch the envSettings to get the latest data - solution until GraphQL is implemented
+        envSettings.refetch(); //env could get updated without env.id changing, so we need to refetch the envSettings to get the latest data - solution until GraphQL is implemented - https://github.com/inmanta/web-console/issues/6352
       }
       return environmentToSet;
     });
