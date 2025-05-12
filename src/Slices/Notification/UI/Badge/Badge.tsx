@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NotificationBadge, NotificationBadgeVariant } from "@patternfly/react-core";
 import { UseQueryResult } from "@tanstack/react-query";
-import { PageSize } from "@/Core";
 import {
-  NotificationResponse,
-  useGetNotifications,
-} from "@/Data/Managers/V2/Notification/GetNotifications";
+  useGetNotificationQL,
+  NotificationQLResponse,
+  NotificationQL,
+} from "@/Data/Managers/V2/Notification";
 import { ToastAlert } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Notification } from "@S/Notification/Core/Domain";
+import { DependencyContext } from "@/UI";
 
 /**
  * Notification badge component that displays a visual indicator for notifications.
@@ -17,11 +17,13 @@ import { Notification } from "@S/Notification/Core/Domain";
  * @param {() => void} onClick - Callback function triggered when the badge is clicked
  */
 export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
-  const response = useGetNotifications({
-    pageSize: PageSize.from("250"),
-    origin: "drawer",
-    currentPage: { kind: "CurrentPage", value: "" },
-  }).useContinuous();
+  const { environmentHandler } = useContext(DependencyContext);
+  const envID = environmentHandler.useId();
+  const response = useGetNotificationQL({
+    envID,
+    cleared: false,
+    orderBy: "desc",
+  });
 
   return <View {...{ response, onClick }} />;
 };
@@ -29,12 +31,12 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
 /**
  * Props for the View component.
  *
- * @property {() => void} onClick - Callback function triggered when the badge is clicked
- * @property {UseQueryResult<NotificationResponse, Error>} response - Query result containing notification data
+ * @property {(): void} onClick - Callback function triggered when the badge is clicked
+ * @property {UseQueryResult<NotificationQLResponse, Error>} response - Query result containing notification data
  */
 interface Props {
   onClick(): void;
-  response: UseQueryResult<NotificationResponse, Error>;
+  response: UseQueryResult<NotificationQLResponse, Error>;
 }
 
 /**
@@ -50,20 +52,10 @@ const View: React.FC<Props> = ({ response, onClick }) => {
     setError(response.error.message);
   }, [response]);
 
-  if (response.isSuccess) {
-    const variant = getVariantFromNotifications(response.data.data);
-
-    return (
-      <NotificationBadge
-        aria-label="Badge-Success"
-        data-variant={variant}
-        variant={variant}
-        onClick={onClick}
-      />
-    );
-  }
-
-  if (response.isError) {
+  if (
+    response.isError ||
+    (response.isSuccess && response.data.errors && response.data.errors.length > 0)
+  ) {
     return (
       <>
         <ToastAlert
@@ -81,6 +73,19 @@ const View: React.FC<Props> = ({ response, onClick }) => {
     );
   }
 
+  if (response.isSuccess) {
+    const variant = getVariantFromNotifications(response.data.data.notifications.edges);
+
+    return (
+      <NotificationBadge
+        aria-label="Badge-Success"
+        data-variant={variant}
+        variant={variant}
+        onClick={onClick}
+      />
+    );
+  }
+
   return (
     <NotificationBadge aria-label="Badge" variant={NotificationBadgeVariant.read} isDisabled />
   );
@@ -91,10 +96,10 @@ const View: React.FC<Props> = ({ response, onClick }) => {
  * Returns 'attention' for unread error notifications, 'unread' for any unread notifications,
  * and 'read' for all other cases.
  *
- * @param {Notification[]} notifications - List of notifications to analyze
+ * @param {NotificationQL[]} notifications - List of notifications to analyze
  * @returns {NotificationBadgeVariant} The appropriate badge variant
  */
-const getVariantFromNotifications = (notifications: Notification[]): NotificationBadgeVariant => {
+const getVariantFromNotifications = (notifications: NotificationQL[]): NotificationBadgeVariant => {
   if (notifications.some(isUnreadError)) {
     return NotificationBadgeVariant.attention;
   }
@@ -107,24 +112,24 @@ const getVariantFromNotifications = (notifications: Notification[]): Notificatio
 /**
  * Checks if a notification is both unread and has error severity.
  *
- * @param {Notification} notification - The notification to check
+ * @param {NotificationQL} notification - The notification to check
  * @returns {boolean} True if the notification is unread and has error severity
  */
-const isUnreadError = (notification: Notification) =>
+const isUnreadError = (notification: NotificationQL) =>
   isUnread(notification) && isError(notification);
 
 /**
  * Checks if a notification has error severity.
  *
- * @param {Notification} notification - The notification to check
+ * @param {NotificationQL} notification - The notification to check
  * @returns {boolean} True if the notification has error severity
  */
-const isError = (notification: Notification) => notification.severity === "error";
+const isError = (notification: NotificationQL) => notification.node.severity === "error";
 
 /**
  * Checks if a notification is unread.
  *
- * @param {Notification} notification - The notification to check
+ * @param {NotificationQL} notification - The notification to check
  * @returns {boolean} True if the notification is unread
  */
-const isUnread = (notification: Notification) => notification.read === false;
+const isUnread = (notification: NotificationQL) => notification.node.read === false;
