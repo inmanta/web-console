@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { DependencyContext } from "@/UI";
+import { AuthContext } from "@/Data/Auth";
 
 export interface CustomError extends Error {
   status?: number;
@@ -11,7 +11,7 @@ export interface CustomError extends Error {
  * @returns An object containing the HTTP helper functions.
  */
 export const useFetchHelpers = () => {
-  const { authHelper } = useContext(DependencyContext);
+  const authHelper = useContext(AuthContext);
 
   /**
    * Handles errors returned from API responses.
@@ -21,7 +21,7 @@ export const useFetchHelpers = () => {
    * @throws An error with the error message from the API response.
    */
   async function handleErrors(response: Response, customErrorMessage?: string) {
-    if (response.status === 401 || response.status === 403) {
+    if (response.status === 401) {
       authHelper.login();
     }
 
