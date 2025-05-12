@@ -4,7 +4,6 @@ import {
   Feature,
   Extention,
   JsonParserId,
-  Logger,
   ServerStatus,
   StatusLicense,
   EXTENSION_LIST,
