@@ -16,23 +16,27 @@ const consoleIssues = [];
 const originalWarn = console.warn;
 const originalError = console.error;
 
+// Helper function to format console args
+const formatConsoleArgs = (args) => {
+  return args
+    .map((arg) => {
+      if (typeof arg === "object" && arg !== null) {
+        try {
+          return JSON.stringify(arg, null, 2);
+        } catch (_error) {
+          return `[${typeof arg}: Circular or complex object]`;
+        }
+      }
+      return String(arg);
+    })
+    .join(" ");
+};
+
 // Setup console spies
 jest.spyOn(console, "warn").mockImplementation((...args) => {
-  // Format the args for better readability
-  const formattedArgs = args.map((arg) => {
-    if (typeof arg === "object" && arg !== null) {
-      try {
-        return JSON.stringify(arg, null, 2);
-      } catch (_error) {
-        return `[${typeof arg}: Circular or complex object]`;
-      }
-    }
-    return String(arg);
-  });
-
   consoleIssues.push({
     type: "warn",
-    message: formattedArgs.join(" "),
+    message: formatConsoleArgs(args),
   });
 
   // Call original implementation
@@ -40,21 +44,9 @@ jest.spyOn(console, "warn").mockImplementation((...args) => {
 });
 
 jest.spyOn(console, "error").mockImplementation((...args) => {
-  // Format the args for better readability
-  const formattedArgs = args.map((arg) => {
-    if (typeof arg === "object" && arg !== null) {
-      try {
-        return JSON.stringify(arg, null, 2);
-      } catch (_error) {
-        return `[${typeof arg}: Circular or complex object]`;
-      }
-    }
-    return String(arg);
-  });
-
   consoleIssues.push({
     type: "error",
-    message: formattedArgs.join(" "),
+    message: formatConsoleArgs(args),
   });
 
   // Call original implementation
