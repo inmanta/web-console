@@ -7,6 +7,15 @@ interface Props {
   cleared: boolean;
   orderBy: string;
 }
+
+/**
+ * NotificationQL interface for the notifications fetched through GraphQL.
+ *
+ * @property {Object} node - The node object containing the notification details.
+ * @property {string} node.title - The title of the notification.
+ * @property {string} node.severity - The severity of the notification.
+ * @property {boolean} node.read - Whether the notification has been read.
+ */
 export interface NotificationQL {
   node: {
     title: string;
@@ -15,6 +24,13 @@ export interface NotificationQL {
   };
 }
 
+/**
+ * Response type for the notifications query through GraphQL.
+ *
+ * @property {Object} data - The data object containing the notifications.
+ * @property {Array} errors - The errors array containing any errors that occurred.
+ * @property {Object} extensions - The extensions object containing any additional data.
+ */
 export interface NotificationQLResponse {
   data: {
     notifications: {
@@ -22,7 +38,7 @@ export interface NotificationQLResponse {
     };
   };
   errors: string[] | null;
-  extenstions: Record<string, unknown>;
+  extensions: Record<string, unknown>;
 }
 
 /**
