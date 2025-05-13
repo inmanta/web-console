@@ -1,6 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { gql } from "graphql-request";
 import { useCreateGraphQLRequest } from "../../helpers/useGraphQL";
+import { CustomError } from "../../helpers";
 
 interface Props {
   envID: string;
@@ -42,16 +43,19 @@ export interface NotificationQLResponse {
 }
 
 /**
+ * Return Signature of the useGetInstance React Query
+ */
+interface GetNotifications {
+  useContinuous: () => UseQueryResult<NotificationQLResponse, CustomError>;
+}
+
+/**
  * React Query hook for fetching notifications using GraphQL.
  *
  * @param {Props} props - The props object containing environment ID, cleared status, and order by.
- * @returns {UseQueryResult<NotificationResponse, Error>} A query result containing notifications data or an error.
+ * @returns GetNotifications A query result containing notifications data or an error.
  */
-export const useGetNotificationQL = ({
-  envID,
-  cleared,
-  orderBy,
-}: Props): UseQueryResult<NotificationQLResponse, Error> => {
+export const useGetNotificationQL = ({ envID, cleared, orderBy }: Props): GetNotifications => {
   const query = gql`
     query {
       notifications(
@@ -71,9 +75,12 @@ export const useGetNotificationQL = ({
 
   const queryFn = useCreateGraphQLRequest<NotificationQLResponse>(query);
 
-  return useQuery({
-    queryKey: ["graphQL", "get_notifications", "continuous", envID],
-    queryFn,
-    refetchInterval: 5000,
-  });
+  return {
+    useContinuous: () =>
+      useQuery({
+        queryKey: ["graphQL", "get_notifications", "continuous", envID],
+        queryFn,
+        refetchInterval: 5000,
+      }),
+  };
 };

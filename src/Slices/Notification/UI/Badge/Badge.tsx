@@ -23,7 +23,7 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
     envID,
     cleared: false,
     orderBy: "desc",
-  });
+  }).useContinuous();
 
   return <View {...{ response, onClick }} />;
 };
