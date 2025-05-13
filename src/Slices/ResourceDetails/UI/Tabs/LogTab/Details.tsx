@@ -5,7 +5,7 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import { isObjectEmpty, Maybe } from "@/Core";
+import { isObjectEmpty } from "@/Core";
 import { JsonFormatter, XmlFormatter } from "@/Data";
 import { AttributeClassifier, AttributeList, CodeText } from "@/UI/Components";
 import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
@@ -24,12 +24,7 @@ export const Details: React.FC<Props> = ({ log }) => {
         </DescriptionListDescription>
       </DescriptionListGroup>
       {!isObjectEmpty(log.kwargs) && (
-        <DescriptionListGroup>
-          <DescriptionListTerm>Kwargs</DescriptionListTerm>
-          <DescriptionListDescription>
-            <AttributeList attributes={classifier.classify(log.kwargs)} variant="monospace" />
-          </DescriptionListDescription>
-        </DescriptionListGroup>
+        <AttributeList attributes={classifier.classify(log.kwargs)} variant="monospace" />
       )}
     </DescriptionList>
   );
@@ -38,5 +33,5 @@ export const Details: React.FC<Props> = ({ log }) => {
 const classifier = new AttributeClassifier(
   new JsonFormatter(),
   new XmlFormatter(),
-  (key: string, value: string) => Maybe.some({ kind: "Python", key, value })
+  (key: string, value: string) => ({ kind: "Code", key, value })
 );
