@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { request } from "graphql-request";
 import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "./useFetchHelpers";

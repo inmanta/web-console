@@ -6,9 +6,9 @@ import {
   NotificationQLResponse,
   NotificationQL,
 } from "@/Data/Managers/V2/Notification";
+import { DependencyContext } from "@/UI";
 import { ToastAlert } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { DependencyContext } from "@/UI";
 
 /**
  * Notification badge component that displays a visual indicator for notifications.
