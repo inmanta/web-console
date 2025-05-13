@@ -4,7 +4,7 @@ import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "./useFetchHelpers";
 
 /**
- * Gook that provides GraphQL request functionality.
+ * Hook that provides GraphQL request functionality.
  *
  * This hook creates a GraphQL request with proper headers and base URL configuration.
  * At the time of implementation, our GraphQL endpoint does not support variables in POST requests,
@@ -33,7 +33,6 @@ import { useFetchHelpers } from "./useFetchHelpers";
  *   queryFn,
  * });
  */
-
 export function useCreateGraphQLRequest<Type>(query: string): () => Promise<Type> {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
