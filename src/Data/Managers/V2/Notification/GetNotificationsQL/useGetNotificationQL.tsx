@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { Notification, Severity } from "@/Slices/Notification/Core/Domain";
+import { Notification } from "@/Slices/Notification/Core/Domain";
 import { CustomError } from "../../helpers";
 import { useGraphQLRequest } from "../../helpers/useGraphQL";
 
