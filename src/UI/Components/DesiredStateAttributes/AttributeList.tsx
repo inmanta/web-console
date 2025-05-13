@@ -20,6 +20,13 @@ interface Props {
 
 type AttributeTextVariant = "default" | "monospace";
 
+/**
+ * A component that displays a list of attributes.
+ *
+ * @prop {ClassifiedAttribute[]} attributes - The attributes to display.
+ * @prop {AttributeTextVariant} variant - The variant of the attribute text.
+ * @returns {React.FC} A component that displays a list of attributes.
+ */
 export const AttributeList: React.FC<Props> = ({ attributes, variant = "default" }) => (
   <DescriptionList isHorizontal>
     {attributes.map((attribute) => (

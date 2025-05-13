@@ -14,6 +14,12 @@ interface Props {
   log: ResourceLog;
 }
 
+/**
+ * A component that displays the details of a resource log.
+ *
+ * @prop {ResourceLog} log - The resource log to display.
+ * @returns {React.FC} A component that displays the details of a resource log.
+ */
 export const Details: React.FC<Props> = ({ log }) => {
   return (
     <DescriptionList>
