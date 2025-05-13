@@ -3,11 +3,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { delay, graphql, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { NotificationQLResponse } from "@/Data/Managers/V2/Notification/GetNotificationsQL/useGetNotificationQL";
 import { DeferredApiHelper, MockedDependencyProvider } from "@/Test";
-import { metadata, links } from "@/Test/Data/Pagination";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Badge } from "./Badge";
-import { NotificationQLResponse } from "@/Data/Managers/V2/Notification/GetNotificationsQL/useGetNotificationQL";
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
