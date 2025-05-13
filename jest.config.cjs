@@ -62,7 +62,7 @@ module.exports = {
 
   // The react-syntax-highlighter, mermaid and @inmanta/rappid esm modules have to be handled by jest
   transformIgnorePatterns: [
-    "node_modules/(?!(react-syntax-highlighter|@inmanta/rappid|mermaid|monaco-editor|@monaco-editor/react)/)",
+    "node_modules/(?!(react-syntax-highlighter|@inmanta/rappid|mermaid|monaco-editor|@monaco-editor/react)|graphql-request/)",
   ],
   globals: {
     "ts-jest": {

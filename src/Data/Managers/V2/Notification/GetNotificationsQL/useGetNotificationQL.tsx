@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { useCreateGraphQLRequest } from "../../helpers/useGraphQL";
 import { CustomError } from "../../helpers";
+import { useCreateGraphQLRequest } from "../../helpers/useGraphQL";
 
 interface Props {
   envID: string;

@@ -14,7 +14,7 @@ import { words } from "@/UI/words";
  * Notification badge component that displays a visual indicator for notifications.
  * Shows different variants based on the notification status (read/unread, error/non-error).
  *
- * @param {() => void} onClick - Callback function triggered when the badge is clicked
+ * @param {(): void} onClick - Callback function triggered when the badge is clicked
  */
 export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   const { environmentHandler } = useContext(DependencyContext);
@@ -47,9 +47,12 @@ const View: React.FC<Props> = ({ response, onClick }) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!response.isError) return;
-
-    setError(response.error.message);
+    if (response.isError) {
+      setError(response.error.message);
+    }
+    if (response.isSuccess && response.data.errors && response.data.errors.length > 0) {
+      setError(response.data.errors.join(", "));
+    }
   }, [response]);
 
   if (

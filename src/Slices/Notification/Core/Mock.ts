@@ -1,3 +1,4 @@
+import { NotificationQL } from "@/Data/Managers/V2/Notification/GetNotificationsQL";
 import { Notification } from "./Domain";
 
 export const unread: Notification = {
@@ -31,3 +32,21 @@ export const withoutUri: Notification = {
 };
 
 export const list: Notification[] = [unread, read, error, withoutUri];
+
+export const readQL: NotificationQL = {
+  node: read,
+};
+
+export const errorQL: NotificationQL = {
+  node: error,
+};
+
+export const unreadQL: NotificationQL = {
+  node: unread,
+};
+
+export const withoutUriQL: NotificationQL = {
+  node: withoutUri,
+};
+
+export const listQL: NotificationQL[] = [readQL, errorQL, unreadQL, withoutUriQL];
