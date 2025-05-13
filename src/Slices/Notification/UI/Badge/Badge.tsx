@@ -3,8 +3,8 @@ import { NotificationBadge, NotificationBadgeVariant } from "@patternfly/react-c
 import { UseQueryResult } from "@tanstack/react-query";
 import {
   useGetNotificationQL,
-  NotificationQLResponse,
-  NotificationQL,
+  PartialNotification,
+  NotificationQueryResponse,
 } from "@/Data/Managers/V2/Notification";
 import { DependencyContext } from "@/UI";
 import { ToastAlert } from "@/UI/Components";
@@ -32,11 +32,11 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
  * Props for the View component.
  *
  * @property {(): void} onClick - Callback function triggered when the badge is clicked
- * @property {UseQueryResult<NotificationQLResponse, Error>} response - Query result containing notification data
+ * @property {UseQueryResult<NotificationQueryResponse, Error>} response - Query result containing notification data
  */
 interface Props {
   onClick(): void;
-  response: UseQueryResult<NotificationQLResponse, Error>;
+  response: UseQueryResult<NotificationQueryResponse, Error>;
 }
 
 /**
@@ -77,7 +77,7 @@ const View: React.FC<Props> = ({ response, onClick }) => {
   }
 
   if (response.isSuccess) {
-    const variant = getVariantFromNotifications(response.data.data.notifications.edges);
+    const variant = getVariantFromNotifications(response.data.notifications);
 
     return (
       <NotificationBadge
@@ -102,7 +102,9 @@ const View: React.FC<Props> = ({ response, onClick }) => {
  * @param {NotificationQL[]} notifications - List of notifications to analyze
  * @returns {NotificationBadgeVariant} The appropriate badge variant
  */
-const getVariantFromNotifications = (notifications: NotificationQL[]): NotificationBadgeVariant => {
+const getVariantFromNotifications = (
+  notifications: PartialNotification[]
+): NotificationBadgeVariant => {
   if (notifications.some(isUnreadError)) {
     return NotificationBadgeVariant.attention;
   }
@@ -118,7 +120,7 @@ const getVariantFromNotifications = (notifications: NotificationQL[]): Notificat
  * @param {NotificationQL} notification - The notification to check
  * @returns {boolean} True if the notification is unread and has error severity
  */
-const isUnreadError = (notification: NotificationQL) =>
+const isUnreadError = (notification: PartialNotification) =>
   isUnread(notification) && isError(notification);
 
 /**
@@ -127,7 +129,7 @@ const isUnreadError = (notification: NotificationQL) =>
  * @param {NotificationQL} notification - The notification to check
  * @returns {boolean} True if the notification has error severity
  */
-const isError = (notification: NotificationQL) => notification.node.severity === "error";
+const isError = (notification: PartialNotification) => notification.severity === "error";
 
 /**
  * Checks if a notification is unread.
@@ -135,4 +137,4 @@ const isError = (notification: NotificationQL) => notification.node.severity ===
  * @param {NotificationQL} notification - The notification to check
  * @returns {boolean} True if the notification is unread
  */
-const isUnread = (notification: NotificationQL) => notification.node.read === false;
+const isUnread = (notification: PartialNotification) => notification.read === false;

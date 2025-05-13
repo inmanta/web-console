@@ -1,28 +1,13 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { gql } from "graphql-request";
+import { Notification, Severity } from "@/Slices/Notification/Core/Domain";
 import { CustomError } from "../../helpers";
-import { useCreateGraphQLRequest } from "../../helpers/useGraphQL";
+import { useGraphQLRequest } from "../../helpers/useGraphQL";
 
 interface Props {
   envID: string;
   cleared: boolean;
   orderBy: string;
-}
-
-/**
- * NotificationQL interface for the notifications fetched through GraphQL.
- *
- * @property {Object} node - The node object containing the notification details.
- * @property {string} node.title - The title of the notification.
- * @property {string} node.severity - The severity of the notification.
- * @property {boolean} node.read - Whether the notification has been read.
- */
-export interface NotificationQL {
-  node: {
-    title: string;
-    severity: string;
-    read: boolean;
-  };
 }
 
 /**
@@ -35,7 +20,9 @@ export interface NotificationQL {
 export interface NotificationQLResponse {
   data: {
     notifications: {
-      edges: NotificationQL[];
+      edges: {
+        node: PartialNotification;
+      }[];
     };
   };
   errors: string[] | null;
@@ -46,7 +33,25 @@ export interface NotificationQLResponse {
  * Return Signature of the useGetInstance React Query
  */
 interface GetNotifications {
-  useContinuous: () => UseQueryResult<NotificationQLResponse, CustomError>;
+  useContinuous: () => UseQueryResult<NotificationQueryResponse, CustomError>;
+}
+
+/**
+ * Partial Notification type that represents the Notification type but with only the title, severity, and read properties.
+ */
+export type PartialNotification = Pick<Notification, "title" | "severity" | "read">;
+
+/**
+ * Response of the useGetNotificationQL hook after it has been processed.
+ *
+ * @property {PartialNotification[]} data - The data object containing the notifications.
+ * @property {string[] | null} errors - The errors array containing any errors that occurred.
+ * @property {Record<string, unknown>} extensions - The extensions object containing any additional data.
+ */
+export interface NotificationQueryResponse {
+  notifications: PartialNotification[];
+  errors: string[] | null;
+  extensions: Record<string, unknown>;
 }
 
 /**
@@ -73,14 +78,22 @@ export const useGetNotificationQL = ({ envID, cleared, orderBy }: Props): GetNot
     }
   `;
 
-  const queryFn = useCreateGraphQLRequest<NotificationQLResponse>(query);
+  const queryFn = useGraphQLRequest<NotificationQLResponse>(query);
 
   return {
     useContinuous: () =>
       useQuery({
-        queryKey: ["graphQL", "get_notifications", "continuous", envID],
+        queryKey: ["get_notifications", "continuous", envID],
         queryFn,
         refetchInterval: 5000,
+        select: (data) => {
+          const notifications = data.data.notifications.edges.map((edge) => edge.node);
+          return {
+            notifications,
+            errors: data.errors,
+            extensions: data.extensions,
+          };
+        },
       }),
   };
 };
