@@ -1,4 +1,5 @@
 import React from "react";
+import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -8,7 +9,7 @@ import {
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { DiscoveredResource } from "@/Data/Managers/V2/DiscoveredResources";
-import { CodeHighlighter, Toggle } from "@/UI/Components";
+import { Toggle } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DiscoveredResourceLink } from "./Components";
 
@@ -65,10 +66,13 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
                 <DescriptionListGroup>
                   <DescriptionListTerm>{words("discovered_resources.values")}</DescriptionListTerm>
                   <DescriptionListDescription>
-                    <CodeHighlighter
-                      keyId="Json"
+                    <CodeEditor
                       code={JSON.stringify(row.values, null, 2)}
-                      language="json"
+                      language={Language.json}
+                      isDownloadEnabled
+                      isCopyEnabled
+                      isReadOnly
+                      height="400px"
                     />
                   </DescriptionListDescription>
                 </DescriptionListGroup>

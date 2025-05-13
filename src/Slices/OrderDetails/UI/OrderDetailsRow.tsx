@@ -1,4 +1,5 @@
 import React from "react";
+import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -11,7 +12,7 @@ import { Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
-import { CodeHighlighter, TextWithCopy, Toggle } from "@/UI/Components";
+import { TextWithCopy, Toggle } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { OrderDependencies } from "./OrderDependencies";
 import { OrderStateDetails } from "./OrderStateDetails";
@@ -85,10 +86,13 @@ export const OrderDetailsRow: React.FC<Props> = ({
                 <DescriptionListTerm>{words("orders.row.config")}</DescriptionListTerm>
                 <DescriptionListDescription>
                   {row.config && Object.keys(row.config).length ? (
-                    <CodeHighlighter
-                      keyId="Json"
+                    <CodeEditor
                       code={JSON.stringify(row.config, null, 2)}
-                      language="json"
+                      language={Language.json}
+                      isDownloadEnabled
+                      isCopyEnabled
+                      isReadOnly
+                      height="400px"
                     />
                   ) : (
                     <Label color="blue" variant="outline" icon={<InfoAltIcon />}>
@@ -101,10 +105,12 @@ export const OrderDetailsRow: React.FC<Props> = ({
                 <TopAlignedLayout aria-label="Expanded-Body">
                   <DescriptionListTerm>{words("orders.row.body")}</DescriptionListTerm>
                   <DescriptionListDescription>
-                    <CodeHighlighter
-                      keyId="Json"
+                    <CodeEditor
                       code={JSON.stringify(row.attributes || row.edits, null, 2)}
-                      language="json"
+                      language={Language.json}
+                      isDownloadEnabled
+                      isCopyEnabled
+                      height="400px"
                     />
                   </DescriptionListDescription>
                 </TopAlignedLayout>
