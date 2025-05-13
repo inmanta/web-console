@@ -1,0 +1,3 @@
+description: Resolve peer dependencies not met and update set of dependencies to latest versions
+change-type: patch
+destination-branches: [master, iso8]
