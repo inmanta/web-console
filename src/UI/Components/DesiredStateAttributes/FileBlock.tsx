@@ -6,7 +6,17 @@ import { useGetFile } from "@/Data/Managers/V2/Server/GetFile";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { Delayed } from "@/UI/Utils";
 import { words } from "@/UI/words";
-export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
+
+interface Props {
+  hash: string;
+}
+/**
+ * FileBlock component
+ *
+ * @param {string} hash - The hash of the file to display
+ * @returns {React.FC<Props>} - The FileBlock component
+ */
+export const FileBlock: React.FC<Props> = ({ hash }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { mutate, data, error, isError, isSuccess, isPending } = useGetFile(hash);
 
