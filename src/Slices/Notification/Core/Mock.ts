@@ -1,4 +1,3 @@
-import { PartialNotification } from "@/Data/Managers/V2/Notification/GetNotificationsQL";
 import { Notification } from "./Domain";
 
 export const unread: Notification = {
@@ -32,23 +31,3 @@ export const withoutUri: Notification = {
 };
 
 export const list: Notification[] = [unread, read, error, withoutUri];
-
-interface NotificationGraphQLMock {
-  node: PartialNotification;
-}
-
-export const readQL: NotificationGraphQLMock = {
-  node: read,
-};
-
-export const errorQL: NotificationGraphQLMock = {
-  node: error,
-};
-
-export const unreadQL: NotificationGraphQLMock = {
-  node: unread,
-};
-
-export const withoutUriQL: NotificationGraphQLMock = {
-  node: withoutUri,
-};

@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { delay, graphql, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { NotificationQLResponse } from "@/Data/Managers/V2/Notification/GetNotificationsQL/useGetNotificationQL";
+import { NotificationsResponse } from "@/Data/Managers/V2/Notification";
 import { DeferredApiHelper, MockedDependencyProvider } from "@/Test";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Badge } from "./Badge";
@@ -38,19 +38,19 @@ describe("Badge", () => {
   afterAll(() => server.close());
 
   test.each`
-    data                                          | condition                  | variant
-    ${[]}                                         | ${"no notifications"}      | ${"read"}
-    ${[Mock.readQL]}                              | ${"only read"}             | ${"read"}
-    ${[Mock.unreadQL]}                            | ${"an unread"}             | ${"unread"}
-    ${[Mock.unreadQL, Mock.readQL]}               | ${"unread + read"}         | ${"unread"}
-    ${[Mock.errorQL]}                             | ${"an unread error"}       | ${"attention"}
-    ${[Mock.errorQL, Mock.unreadQL, Mock.readQL]} | ${"error + unread + read"} | ${"attention"}
+    data                                                                  | condition                  | variant
+    ${[]}                                                                 | ${"no notifications"}      | ${"read"}
+    ${[{ node: Mock.read }]}                                              | ${"only read"}             | ${"read"}
+    ${[{ node: Mock.unread }]}                                            | ${"an unread"}             | ${"unread"}
+    ${[{ node: Mock.unread }, { node: Mock.read }]}                       | ${"unread + read"}         | ${"unread"}
+    ${[{ node: Mock.error }]}                                             | ${"an unread error"}       | ${"attention"}
+    ${[{ node: Mock.error }, { node: Mock.unread }, { node: Mock.read }]} | ${"error + unread + read"} | ${"attention"}
   `(
     "Given Badge WHEN notifications contain $condition THEN $variant variant is shown",
     async ({ data, variant }) => {
       server.use(
         queryBase.operation(() => {
-          return HttpResponse.json<{ data: NotificationQLResponse }>({
+          return HttpResponse.json<{ data: NotificationsResponse }>({
             data: {
               data: {
                 notifications: {
@@ -81,7 +81,7 @@ describe("Badge", () => {
       queryBase.operation(() => {
         delay(100);
 
-        return HttpResponse.json<{ data: NotificationQLResponse }>({
+        return HttpResponse.json<{ data: NotificationsResponse }>({
           data: {
             data: {
               notifications: {
@@ -104,6 +104,7 @@ describe("Badge", () => {
     expect(badge).toBeDisabled();
     expect(badge).not.toHaveAttribute("data-variant");
   });
+
   test("Given Badge WHEN request fails THEN error is shown", async () => {
     server.use(
       queryBase.operation(() => {

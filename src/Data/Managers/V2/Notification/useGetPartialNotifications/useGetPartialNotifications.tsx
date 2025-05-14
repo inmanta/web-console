@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { gql } from "graphql-request";
 import { Notification } from "@/Slices/Notification/Core/Domain";
-import { CustomError } from "../../helpers";
+import { CustomError, REFETCH_INTERVAL } from "../../helpers";
 import { useGraphQLRequest } from "../../helpers/useGraphQL";
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
  * @property {Array} errors - The errors array containing any errors that occurred.
  * @property {Object} extensions - The extensions object containing any additional data.
  */
-export interface NotificationQLResponse {
+export interface NotificationsResponse {
   data: {
     notifications: {
       edges: {
@@ -33,7 +33,14 @@ export interface NotificationQLResponse {
  * Return Signature of the useGetInstance React Query
  */
 interface GetNotifications {
-  useContinuous: () => UseQueryResult<NotificationQueryResponse, CustomError>;
+  useContinuous: () => UseQueryResult<
+    {
+      notifications: PartialNotification[];
+      errors: string[] | null;
+      extensions: Record<string, unknown>;
+    },
+    CustomError
+  >;
 }
 
 /**
@@ -42,25 +49,16 @@ interface GetNotifications {
 export type PartialNotification = Pick<Notification, "title" | "severity" | "read">;
 
 /**
- * Response of the useGetNotificationQL hook after it has been processed.
- *
- * @property {PartialNotification[]} data - The data object containing the notifications.
- * @property {string[] | null} errors - The errors array containing any errors that occurred.
- * @property {Record<string, unknown>} extensions - The extensions object containing any additional data.
- */
-export interface NotificationQueryResponse {
-  notifications: PartialNotification[];
-  errors: string[] | null;
-  extensions: Record<string, unknown>;
-}
-
-/**
  * React Query hook for fetching notifications using GraphQL.
  *
  * @param {Props} props - The props object containing environment ID, cleared status, and order by.
  * @returns GetNotifications A query result containing notifications data or an error.
  */
-export const useGetNotificationQL = ({ envID, cleared, orderBy }: Props): GetNotifications => {
+export const useGetPartialNotifications = ({
+  envID,
+  cleared,
+  orderBy,
+}: Props): GetNotifications => {
   const query = gql`
     query {
       notifications(
@@ -78,14 +76,14 @@ export const useGetNotificationQL = ({ envID, cleared, orderBy }: Props): GetNot
     }
   `;
 
-  const queryFn = useGraphQLRequest<NotificationQLResponse>(query);
+  const queryFn = useGraphQLRequest<NotificationsResponse>(query);
 
   return {
     useContinuous: () =>
       useQuery({
         queryKey: ["get_notifications", "continuous", envID],
         queryFn,
-        refetchInterval: 5000,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data) => {
           const notifications = data.data.notifications.edges.map((edge) => edge.node);
           return {

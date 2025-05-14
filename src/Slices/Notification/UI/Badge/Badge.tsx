@@ -1,11 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { NotificationBadge, NotificationBadgeVariant } from "@patternfly/react-core";
-import { UseQueryResult } from "@tanstack/react-query";
-import {
-  useGetNotificationQL,
-  PartialNotification,
-  NotificationQueryResponse,
-} from "@/Data/Managers/V2/Notification";
+import { useGetPartialNotifications, PartialNotification } from "@/Data/Managers/V2/Notification";
 import { DependencyContext } from "@/UI";
 import { ToastAlert } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -19,53 +14,31 @@ import { words } from "@/UI/words";
 export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const envID = environmentHandler.useId();
-  const response = useGetNotificationQL({
+  const { data, isSuccess, isError, error } = useGetPartialNotifications({
     envID,
     cleared: false,
     orderBy: "desc",
   }).useContinuous();
 
-  return <View {...{ response, onClick }} />;
-};
-
-/**
- * Props for the View component.
- *
- * @property {(): void} onClick - Callback function triggered when the badge is clicked
- * @property {UseQueryResult<NotificationQueryResponse, Error>} response - Query result containing notification data
- */
-interface Props {
-  onClick(): void;
-  response: UseQueryResult<NotificationQueryResponse, Error>;
-}
-
-/**
- * Internal view component that renders the notification badge based on the query response.
- * Handles loading, error, and success states.
- */
-const View: React.FC<Props> = ({ response, onClick }) => {
-  const [error, setError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    if (response.isError) {
-      setError(response.error.message);
+    if (isError) {
+      setErrorMessage(error.message);
     }
-    if (response.isSuccess && response.data.errors && response.data.errors.length > 0) {
-      setError(response.data.errors.join(", "));
+    if (isSuccess && data.errors && data.errors.length > 0) {
+      setErrorMessage(data.errors.join(", "));
     }
-  }, [response]);
+  }, [data, isError, isSuccess, error]);
 
-  if (
-    response.isError ||
-    (response.isSuccess && response.data.errors && response.data.errors.length > 0)
-  ) {
+  if (errorMessage) {
     return (
       <>
         <ToastAlert
           data-testid="ToastAlert"
-          message={error}
+          message={errorMessage}
           title={words("error")}
-          setMessage={setError}
+          setMessage={setErrorMessage}
         />
         <NotificationBadge
           aria-label="Badge-Error"
@@ -76,8 +49,8 @@ const View: React.FC<Props> = ({ response, onClick }) => {
     );
   }
 
-  if (response.isSuccess) {
-    const variant = getVariantFromNotifications(response.data.notifications);
+  if (isSuccess) {
+    const variant = getVariantFromNotifications(data.notifications);
 
     return (
       <NotificationBadge
@@ -99,7 +72,7 @@ const View: React.FC<Props> = ({ response, onClick }) => {
  * Returns 'attention' for unread error notifications, 'unread' for any unread notifications,
  * and 'read' for all other cases.
  *
- * @param {NotificationQL[]} notifications - List of notifications to analyze
+ * @param {PartialNotification[]} notifications - List of notifications to analyze
  * @returns {NotificationBadgeVariant} The appropriate badge variant
  */
 const getVariantFromNotifications = (
@@ -117,7 +90,7 @@ const getVariantFromNotifications = (
 /**
  * Checks if a notification is both unread and has error severity.
  *
- * @param {NotificationQL} notification - The notification to check
+ * @param {PartialNotification} notification - The notification to check
  * @returns {boolean} True if the notification is unread and has error severity
  */
 const isUnreadError = (notification: PartialNotification) =>
@@ -126,7 +99,7 @@ const isUnreadError = (notification: PartialNotification) =>
 /**
  * Checks if a notification has error severity.
  *
- * @param {NotificationQL} notification - The notification to check
+ * @param {PartialNotification} notification - The notification to check
  * @returns {boolean} True if the notification has error severity
  */
 const isError = (notification: PartialNotification) => notification.severity === "error";
@@ -134,7 +107,7 @@ const isError = (notification: PartialNotification) => notification.severity ===
 /**
  * Checks if a notification is unread.
  *
- * @param {NotificationQL} notification - The notification to check
+ * @param {PartialNotification} notification - The notification to check
  * @returns {boolean} True if the notification is unread
  */
 const isUnread = (notification: PartialNotification) => notification.read === false;
