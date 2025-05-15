@@ -1,8 +1,10 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination, Sort } from "@/Core";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
 import { Agent, AgentStatus } from "@/Slices/Agents/Core/Domain";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, REFETCH_INTERVAL, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
@@ -55,12 +57,14 @@ interface GetAgents {
  * @returns {UseQueryResult<QueryData, CustomError>} returns.useContinuous - Fetch agents with continuous polling.
  */
 export const useGetAgents = (): GetAgents => {
-  const get = useGet()<Response>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<Response>;
 
   return {
     useContinuous: (params: GetAgentsParams): UseQueryResult<QueryData, CustomError> =>
       useQuery({
-        queryKey: ["get_agents-continuous", ...Array.from(Object.values(params))],
+        queryKey: ["get_agents-continuous", ...Array.from(Object.values(params)), env],
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,

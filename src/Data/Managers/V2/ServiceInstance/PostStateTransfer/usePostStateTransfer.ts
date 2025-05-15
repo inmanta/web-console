@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import {
   UseMutationOptions,
   UseMutationResult,
@@ -5,6 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 interface PostStateTransfer {
@@ -32,7 +34,9 @@ export const usePostStateTransfer = (
   options?: UseMutationOptions<StateTransferResponse, Error, PostStateTransfer>
 ): UseMutationResult<StateTransferResponse, Error, PostStateTransfer> => {
   const client = useQueryClient();
-  const post = usePost()<PostStateTransfer>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<PostStateTransfer>;
 
   return useMutation({
     mutationFn: (body) =>

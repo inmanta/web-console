@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { DependencyContext, PrimaryBaseUrlManager } from "@/UI";
+import { PrimaryBaseUrlManager } from "@/UI";
 import { useFetchHelpers } from "../helpers";
 
 /**
@@ -14,16 +13,14 @@ import { useFetchHelpers } from "../helpers";
  *
  * @template Response - The type of the response data.
  */
-export const useGet = (options?: { message?: string }) => {
+export const useGet = (envId: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-  const { environmentHandler } = useContext(DependencyContext);
-  const env = environmentHandler.useId();
   const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders({ env, message: options?.message });
+  const headers = createHeaders({ env: envId, message: options?.message });
 
   return async <Response>(path: string): Promise<Response> => {
     try {
@@ -41,7 +38,7 @@ export const useGet = (options?: { message?: string }) => {
 };
 
 /**
- * Custom hook to perform a GET request with an optional, manual assignment  of environment Id for a header.
+ * Custom hook to perform a GET request with an optional, assignment  of environment Id for a header.
  *
  * @param {string} [envId] - The environment Id to be used in the request headers.
  * @param {Object} [options] - Optional configuration for the GET request.
@@ -53,7 +50,7 @@ export const useGet = (options?: { message?: string }) => {
  *
  * @template Response - The type of the response data.
  */
-export const useGetWithManualEnv = (envId?: string, options?: { message?: string }) => {
+export const useGetWithOptionalEnv = (envId?: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
@@ -116,42 +113,6 @@ export const useGetWithoutEnv = (options?: { message?: string }) => {
 };
 
 /**
- * Custom hook to perform a GET Zip request.
- *
- * @param {Object} [options] - Optional configuration for the GET request.
- * @param {string} [options.message] - Optional message to include in the request headers.
- *
- * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
- *
- * @returns {Function<Blob>} A function that performs a GET zip request and returns the response blob.
- */
-export const useGetZip = (options?: { message?: string }) => {
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname
-  );
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-  const { environmentHandler } = useContext(DependencyContext);
-  const env = environmentHandler.useId();
-  const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders({ env, message: options?.message });
-
-  return async (path: string): Promise<Blob> => {
-    try {
-      const response = await fetch(`${baseUrl}${path}`, {
-        headers,
-      });
-
-      await handleErrors(response);
-
-      return response.blob();
-    } catch (error) {
-      throw error;
-    }
-  };
-};
-
-/**
  * Custom hook to perform a GET zip request.
  *
  *  @param {Object} [options] - Optional configuration for the GET request.
@@ -196,16 +157,14 @@ export const useGetZipWithoutEnv = (options?: { message?: string }) => {
  *
  * @template Body - The type of the request body.
  */
-export const usePost = (options?: { message?: string }) => {
+export const usePost = (envId: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-  const { environmentHandler } = useContext(DependencyContext);
-  const env = environmentHandler.useId();
   const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders({ env, message: options?.message });
+  const headers = createHeaders({ env: envId, message: options?.message });
 
   return async <Body>(path: string, body: Body) => {
     try {
@@ -280,50 +239,6 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
  * @param {string} [options.message] - Optional message to include in the request headers.
  *
  * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
- *
- * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PUT request.
- *
- * @template Body - The type of the request body.
- */
-export const usePut = (options?: { message?: string }) => {
-  const baseUrlManager = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname
-  );
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-  const { environmentHandler } = useContext(DependencyContext);
-  const env = environmentHandler.useId();
-  const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders({ env, message: options?.message });
-
-  return async <Body>(path: string, body: Body) => {
-    try {
-      const response = await fetch(`${baseUrl}${path}`, {
-        method: "PUT",
-        headers,
-        body: JSON.stringify(body),
-      });
-
-      await handleErrors(response);
-
-      const text = await response.text();
-
-      if (text) {
-        return JSON.parse(text);
-      }
-    } catch (error) {
-      throw error;
-    }
-  };
-};
-
-/**
- * Custom hook to create a PUT request function.
- *
- * @param {Object} [options] - Optional configuration for the PUT request.
- * @param {string} [options.message] - Optional message to include in the request headers.
- *
- * This hook constructs the base URL and headers, and provides a function to perform a PUT request to the specified path.
  * In comparison to usePut, this hook does not use the environment context, so it can be used only to perform requests that are environment-agnostic.
  *
  * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PUT request.
@@ -372,16 +287,14 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
  *
  * @template Body - The type of the request body.
  */
-export const usePatch = (options?: { message?: string }) => {
+export const usePatch = (envId: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-  const { environmentHandler } = useContext(DependencyContext);
-  const env = environmentHandler.useId();
   const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders({ env, message: options?.message });
+  const headers = createHeaders({ env: envId, message: options?.message });
 
   return async <Body>(path: string, body: Body) => {
     try {
@@ -457,16 +370,14 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
  *
  * @returns {Function} A function that performs a DELETE request and returns the response data.
  */
-export const useDelete = (options?: { message?: string }) => {
+export const useDelete = (envId: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-  const { environmentHandler } = useContext(DependencyContext);
-  const env = environmentHandler.useId();
   const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders({ env, message: options?.message });
+  const headers = createHeaders({ env: envId, message: options?.message });
 
   if (options?.message) {
     headers.append("message", options.message);

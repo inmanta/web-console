@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
+import { DependencyContext } from "@/UI";
 import { useDelete } from "../../helpers";
 
 /**
@@ -15,7 +17,9 @@ export const useDestroyInstance = (
   message: string,
   options?: UseMutationOptions<void, Error, void, unknown>
 ): UseMutationResult<void, Error, void, unknown> => {
-  const deleteFn = useDelete({ message });
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const deleteFn = useDelete(env, { message });
 
   return useMutation({
     mutationFn: () =>

@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { DependencyContext } from "@/UI/Dependency";
 import { useGet } from "../../helpers/useQueries";
 
 interface RawResponse {
@@ -12,13 +14,15 @@ interface RawResponse {
  * @returns A string containing the file content.
  */
 export const useGetFile = (fileId: string) => {
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
   const sanitizeFileId = (fileId: string): string => {
     return window.encodeURIComponent(fileId);
   };
-  const get = useGet()<RawResponse>;
+  const get = useGet(env)<RawResponse>;
 
   return useMutation({
-    mutationKey: ["get_file", fileId],
+    mutationKey: ["get_file", fileId, env],
     mutationFn: async () => {
       const data = await get(`/api/v1/file/${sanitizeFileId(fileId)}`);
 

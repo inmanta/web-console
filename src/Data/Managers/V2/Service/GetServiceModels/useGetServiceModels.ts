@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceModel } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
 /**
@@ -18,12 +20,14 @@ interface GetServiceModels {
  * @returns {UseQueryResult<ServiceModel[], CustomError>} returns.useContinuous - Fetch the service models with an interval of 5s.
  */
 export const useGetServiceModels = (): GetServiceModels => {
-  const get = useGet()<{ data: ServiceModel[] }>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<{ data: ServiceModel[] }>;
 
   return {
     useContinuous: (): UseQueryResult<ServiceModel[], CustomError> =>
       useQuery({
-        queryKey: ["get_service_models-continuous"],
+        queryKey: ["get_service_models-continuous", env],
         queryFn: () => get("/lsm/v1/service_catalog?instance_summary=True"),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => data.data,

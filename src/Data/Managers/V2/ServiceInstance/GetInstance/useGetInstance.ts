@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceInstanceModel } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
 /**
@@ -22,18 +24,20 @@ interface GetInstance {
  */
 export const useGetInstance = (service: string, instanceId: string): GetInstance => {
   const url = `/lsm/v1/service_inventory/${service}/${instanceId}?include_deployment_progress=true`;
-  const get = useGet()<{ data: ServiceInstanceModel }>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<{ data: ServiceInstanceModel }>;
 
   return {
     useOneTime: (): UseQueryResult<ServiceInstanceModel, CustomError> =>
       useQuery({
-        queryKey: ["get_instance-one_time", service, instanceId],
+        queryKey: ["get_instance-one_time", service, instanceId, env],
         queryFn: () => get(url),
         select: (data): ServiceInstanceModel => data.data,
       }),
     useContinuous: (): UseQueryResult<ServiceInstanceModel, CustomError> =>
       useQuery({
-        queryKey: ["get_instance-continuous", service, instanceId],
+        queryKey: ["get_instance-continuous", service, instanceId, env],
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data): ServiceInstanceModel => data.data,

@@ -1,9 +1,11 @@
+import { useContext } from "react";
 import {
   UseMutationResult,
   useMutation,
   UseMutationOptions,
   useQueryClient,
 } from "@tanstack/react-query";
+import { DependencyContext } from "@/UI";
 import { usePatch } from "../../helpers";
 
 /**
@@ -37,7 +39,9 @@ export interface UpdateNotificationParams {
 export const useUpdateNotification = (
   options?: UseMutationOptions<void, Error, UpdateNotificationParams>
 ): UseMutationResult<void, Error, UpdateNotificationParams> => {
-  const patch = usePatch();
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const patch = usePatch(env);
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -47,7 +51,7 @@ export const useUpdateNotification = (
     onSuccess: () => {
       // Invalidate relevant queries based on origin
       queryClient.invalidateQueries({
-        queryKey: ["get_notifications"],
+        queryKey: ["get_notifications", env],
       });
     },
     ...options,

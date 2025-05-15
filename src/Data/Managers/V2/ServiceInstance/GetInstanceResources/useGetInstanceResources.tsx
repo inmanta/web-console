@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { InstanceResourceModel } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
 /**
@@ -25,12 +27,14 @@ export const useGetInstanceResources = (
   version: string
 ): getInstanceResources => {
   const url = `/lsm/v1/service_inventory/${service_entity}/${id}/resources?current_version=${version}`;
-  const get = useGet()<{ data: InstanceResourceModel[] }>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<{ data: InstanceResourceModel[] }>;
 
   return {
     useContinuous: (): UseQueryResult<InstanceResourceModel[], CustomError> =>
       useQuery({
-        queryKey: ["get_instance_resources-continuous", id, version, service_entity],
+        queryKey: ["get_instance_resources-continuous", id, version, service_entity, env],
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data): InstanceResourceModel[] => data.data,

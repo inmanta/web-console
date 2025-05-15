@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { EnvironmentSettings } from "@/Core/Domain/EnvironmentSettings";
-import { useGetWithManualEnv } from "../../helpers";
+import { useGetWithOptionalEnv } from "../../helpers";
 
 /**
  * Return Signature of the useGetEnvironmentSettings React Query
@@ -16,7 +16,7 @@ interface GetEnvironmentSettings {
  * @returns {UseQueryResult<EnvironmentSettings, Error>} returns.useOneTime - Fetch environment settings with a single query.
  */
 export const useGetEnvironmentSettings = (envId?: string): GetEnvironmentSettings => {
-  const get = useGetWithManualEnv(envId)<{ data: EnvironmentSettings }>;
+  const get = useGetWithOptionalEnv(envId)<{ data: EnvironmentSettings }>;
   return {
     useOneTime: (): UseQueryResult<EnvironmentSettings, Error> =>
       useQuery({

@@ -1,9 +1,11 @@
+import { useContext } from "react";
 import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { DependencyContext } from "@/UI";
 import { useDelete } from "../../helpers";
 
 /**
@@ -15,7 +17,9 @@ export const useDeleteCallback = (
   options?: UseMutationOptions<void, Error, string, unknown>
 ): UseMutationResult<void, Error, string, unknown> => {
   const client = useQueryClient();
-  const deleteFn = useDelete();
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const deleteFn = useDelete(env);
 
   return useMutation({
     mutationFn: (id) => deleteFn(`/lsm/v1/callbacks/${encodeURIComponent(id)}`),

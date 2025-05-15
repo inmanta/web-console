@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { TokenInfo } from "@/Core/Domain";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 /**
@@ -17,7 +19,9 @@ interface Response {
 export const useGenerateToken = (
   options?: UseMutationOptions<Response, Error, TokenInfo>
 ): UseMutationResult<Response, Error, TokenInfo> => {
-  const post = usePost()<TokenInfo>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<TokenInfo>;
 
   return useMutation({
     mutationFn: (params) => post("/api/v2/environment_auth", params),

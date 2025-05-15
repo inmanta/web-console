@@ -1,6 +1,8 @@
+import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 import { words } from "@/UI";
+import { DependencyContext } from "@/UI";
 import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
 import { usePost } from "../../helpers";
 
@@ -20,7 +22,9 @@ interface PostOrderBody {
 export const usePostOrder = (
   options?: UseMutationOptions<PostResponse, Error, ComposerServiceOrderItem[]>
 ): UseMutationResult<PostResponse, Error, ComposerServiceOrderItem[]> => {
-  const post = usePost()<PostOrderBody>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<PostOrderBody>;
 
   return useMutation({
     mutationFn: (service_order_items) =>

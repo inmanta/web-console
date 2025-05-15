@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 /**
@@ -35,7 +37,9 @@ export enum DeployAgentsAction {
 export const useDeployAgents = (
   options?: UseMutationOptions<void, Error, Params>
 ): UseMutationResult<void, Error, Params> => {
-  const post = usePost()<Body>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<Body>;
 
   return useMutation({
     mutationFn: ({ method, agents }) =>

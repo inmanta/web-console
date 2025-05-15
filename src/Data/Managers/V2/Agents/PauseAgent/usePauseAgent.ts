@@ -1,9 +1,11 @@
+import { useContext } from "react";
 import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 /**
@@ -24,7 +26,9 @@ export const usePauseAgent = (
 ): UseMutationResult<void, Error, PauseAgentParams, unknown> => {
   const client = useQueryClient();
 
-  const post = usePost()<null>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<null>;
 
   return useMutation({
     mutationFn: ({ name, action }) =>

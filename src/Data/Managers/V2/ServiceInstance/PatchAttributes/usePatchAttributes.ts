@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { Config, Field, InstanceAttributeModel } from "@/Core";
+import { DependencyContext } from "@/UI";
 import { usePatch } from "../../helpers";
 import { BodyV1, BodyV2, getBodyV1, getBodyV2 } from "./helpers";
 
@@ -25,8 +27,10 @@ export const usePatchAttributes = (
   version: number,
   options: UseMutationOptions<Response, Error, MutationBody>
 ): UseMutationResult<Response, Error, MutationBody, unknown> => {
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
   const url = `/lsm/${apiVersion}/service_inventory/${service_entity}/${id}?current_version=${version}`;
-  const patch = usePatch()<BodyV1 | BodyV2>;
+  const patch = usePatch(env)<BodyV1 | BodyV2>;
 
   return useMutation({
     mutationFn: (body) => {
@@ -38,7 +42,7 @@ export const usePatchAttributes = (
 
       return patch(url, convertedBody);
     },
-    mutationKey: ["post_instance_config", service_entity, id, version, apiVersion],
+    mutationKey: ["post_instance_config", service_entity, id, version, apiVersion, env],
     ...options,
   });
 };
