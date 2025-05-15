@@ -7,7 +7,6 @@ import {
   FileFetcherImpl,
   PrimaryArchiveHelper,
   PrimaryFileManager,
-  PrimaryLogger,
 } from "@/Data";
 import {
   PrimaryBaseUrlManager,
@@ -32,7 +31,6 @@ import { ModalProvider } from "./UI/Root/Components/ModalProvider";
 export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const authHelper = useContext(AuthContext);
   const featureManager = PrimaryFeatureManager(
-    new PrimaryLogger(),
     getJsonParserId(globalThis),
     COMMITHASH,
     APP_VERSION
