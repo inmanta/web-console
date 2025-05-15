@@ -4,7 +4,6 @@ export * from "./AttributesTable";
 export * from "./BlockingModal";
 export * from "./BooleanSwitch";
 export * from "./ClipboardCopyButton";
-export * from "./CodeHighlighter";
 export * from "./CodeText";
 export * from "./CompileWidget";
 export * from "./ConfirmUserActionForm";

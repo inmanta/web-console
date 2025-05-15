@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
+import { CodeEditor } from "@patternfly/react-code-editor";
 import { Alert, AlertActionCloseButton, Button, Spinner } from "@patternfly/react-core";
 import { DownloadIcon } from "@patternfly/react-icons";
 import { RemoteData } from "@/Core";
-import { CodeHighlighter } from "@/UI/Components/CodeHighlighter";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { DependencyContext } from "@/UI/Dependency";
 import { Delayed } from "@/UI/Utils";
@@ -51,7 +51,7 @@ export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
             </Alert>
           ),
           success: (content) => (
-            <CodeHighlighter keyId="fileblock" code={content} language="text" close={close} />
+            <CodeEditor code={content} isReadOnly isDownloadEnabled height="300px" />
           ),
         },
         fileContent

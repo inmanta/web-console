@@ -1,5 +1,7 @@
 import React from "react";
+import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import {
+  CodeBlock,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -7,7 +9,6 @@ import {
 } from "@patternfly/react-core";
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { CodeHighlighter } from "@/UI/Components/CodeHighlighter";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 import { FileBlock } from "./FileBlock";
@@ -19,14 +20,15 @@ interface Props {
 
 type AttributeTextVariant = "default" | "monospace";
 
+/**
+ * A component that displays a list of attributes.
+ *
+ * @prop {ClassifiedAttribute[]} attributes - The attributes to display.
+ * @prop {AttributeTextVariant} variant - The variant of the attribute text.
+ * @returns {React.FC} A component that displays a list of attributes.
+ */
 export const AttributeList: React.FC<Props> = ({ attributes, variant = "default" }) => (
-  <DescriptionList
-    isHorizontal
-    isAutoColumnWidths
-    horizontalTermWidthModifier={{
-      default: "25ch",
-    }}
-  >
+  <DescriptionList isHorizontal>
     {attributes.map((attribute) => (
       <DescriptionListGroup key={attribute.key}>
         <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
@@ -71,12 +73,44 @@ const AttributeValue: React.FC<{
       return <FileBlock hash={attribute.value} />;
 
     case "Json":
-      return <CodeHighlighter keyId="json" code={attribute.value} language="json" />;
+      return (
+        <CodeEditor
+          isReadOnly
+          code={attribute.value}
+          isLanguageLabelVisible
+          language={Language.json}
+          isDownloadEnabled
+          isCopyEnabled
+          height="300px"
+        />
+      );
 
     case "Xml":
-      return <CodeHighlighter keyId="xml" code={attribute.value} language="xml" />;
+      return (
+        <CodeEditor
+          isReadOnly
+          code={attribute.value}
+          isLanguageLabelVisible
+          language={Language.xml}
+          isDownloadEnabled
+          isCopyEnabled
+          height="300px"
+        />
+      );
     case "Python":
-      return <CodeHighlighter keyId="python" code={attribute.value} language="python" />;
+      return (
+        <CodeEditor
+          isReadOnly
+          code={attribute.value}
+          isLanguageLabelVisible
+          language={Language.python}
+          isDownloadEnabled
+          isCopyEnabled
+          height="300px"
+        />
+      );
+    case "Code":
+      return <CodeBlock>{attribute.value}</CodeBlock>;
   }
 };
 
