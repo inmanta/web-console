@@ -10,6 +10,7 @@ import { words } from "@/UI/words";
 interface Props {
   hash: string;
 }
+
 /**
  * FileBlock component
  *
