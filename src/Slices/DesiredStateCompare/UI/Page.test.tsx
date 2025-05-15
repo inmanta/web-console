@@ -146,7 +146,7 @@ describe("DesiredStateCompare", () => {
     });
   });
 
-  test.only("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can fetch file content", async () => {
+  test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can fetch file content", async () => {
     const { component } = setup();
 
     render(component);
