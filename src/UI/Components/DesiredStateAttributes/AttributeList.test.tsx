@@ -15,7 +15,7 @@ test("Given the AttributeList component When rendered with the monospace variant
     </QueryClientProvider>
   );
   render(component);
-  
+
   const singleLineValue = await screen.findByText(attributes["b"]);
 
   expect(singleLineValue).toHaveStyle("font-family:  var(--pf-t--global--font--family--mono)");
