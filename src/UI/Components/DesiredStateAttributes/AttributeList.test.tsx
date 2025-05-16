@@ -1,10 +1,10 @@
 import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { AttributeList, getHeightEditor } from "./AttributeList";
-import { ClassifiedAttribute } from "./ClassifiedAttribute";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
+import { AttributeList, getHeightEditor } from "./AttributeList";
+import { ClassifiedAttribute } from "./ClassifiedAttribute";
 import { attributes, classified } from "./Data";
 
 test("Given the AttributeList component When rendered with the monospace variant Then the font-family is correct", async () => {
