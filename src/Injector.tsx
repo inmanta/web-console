@@ -1,12 +1,7 @@
 import React, { useContext } from "react";
 import { useLocation } from "react-router";
 import { isJsonParserId, JsonParserId } from "@/Core";
-import {
-  PrimaryFeatureManager,
-  PrimaryArchiveHelper,
-  PrimaryFileManager,
-  PrimaryLogger,
-} from "@/Data";
+import { PrimaryFeatureManager, PrimaryArchiveHelper, PrimaryFileManager } from "@/Data";
 import {
   PrimaryBaseUrlManager,
   PrimaryRouteManager,

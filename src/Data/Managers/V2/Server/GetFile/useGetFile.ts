@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI";
+import { DependencyContext } from "@/UI/Dependency";
 import { useGet } from "../../helpers/useQueries";
 
 interface RawResponse {
