@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Diff } from "@/Core/Domain";
+import { DependencyContext } from "@/UI/Dependency";
 import { useGet } from "../../helpers";
 
 /**
@@ -23,12 +25,14 @@ interface GetDesiredStateDiff {
  * @returns {UseQueryResult<Diff.Resource[], Error>} returns.useOneTime - Fetch the diff with a single query.
  */
 export const useGetDesiredStateDiff = (): GetDesiredStateDiff => {
-  const get = useGet()<Result>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<Result>;
 
   return {
     useOneTime: (from: string, to: string): UseQueryResult<Diff.Resource[], Error> =>
       useQuery({
-        queryKey: ["get_desired_state_diff-one_time", from, to],
+        queryKey: ["get_desired_state_diff-one_time", from, to, env],
         queryFn: () => get(getUrl(from, to)),
         select: (data) => data.data,
       }),

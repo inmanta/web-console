@@ -1,9 +1,11 @@
+import { useContext } from "react";
 import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 /**
@@ -15,11 +17,13 @@ export const useTriggerDryRun = (
   options?: UseMutationOptions<void, Error, string>
 ): UseMutationResult<void, Error, string> => {
   const client = useQueryClient();
-  const post = usePost()<void>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<void>;
 
   return useMutation({
     mutationFn: (version) => post(`/api/v2/dryrun/${version}`),
-    mutationKey: ["trigger_dry_run"],
+    mutationKey: ["trigger_dry_run", env],
     ...options,
     onSuccess: () => {
       // Refetch the dry run queries

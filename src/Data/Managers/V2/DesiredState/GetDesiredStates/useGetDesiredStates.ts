@@ -1,8 +1,10 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DateRange, IntRange, PageSize, Pagination } from "@/Core";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
 import { DesiredStateVersion, DesiredStateVersionStatus } from "@/Slices/DesiredState/Core/Domain";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, REFETCH_INTERVAL, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
@@ -58,7 +60,9 @@ interface GetDesiredStates {
  * @returns {UseQueryResult<QueryData, CustomError>} returns.useContinuous - Fetch the desired states with a recurrent query with an interval of 5s.
  */
 export const useGetDesiredStates = (): GetDesiredStates => {
-  const get = useGet()<Result>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<Result>;
 
   return {
     useContinuous: (
@@ -67,7 +71,7 @@ export const useGetDesiredStates = (): GetDesiredStates => {
       currentPage: CurrentPage
     ): UseQueryResult<QueryData, CustomError> =>
       useQuery({
-        queryKey: ["get_desired_states-continuous", pageSize, filter, currentPage],
+        queryKey: ["get_desired_states-continuous", pageSize, filter, currentPage, env],
         queryFn: () => get(getUrl({ pageSize, filter, currentPage })),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({

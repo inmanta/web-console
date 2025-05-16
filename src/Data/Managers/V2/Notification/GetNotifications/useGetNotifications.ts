@@ -1,7 +1,9 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers/Pagination/getPaginationHandlers";
+import { DependencyContext } from "@/UI/Dependency";
 import { Notification, Severity } from "@S/Notification/Core/Domain";
 import { Origin } from "@S/Notification/Core/Utils";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
@@ -59,7 +61,9 @@ interface GetNotifications {
  * @returns {UseQueryResult} A query result containing notifications data or an error
  */
 export const useGetNotifications = (params: GetNotificationsParams): GetNotifications => {
-  const get = useGet()<ResponseBody>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<ResponseBody>;
 
   return {
     useContinuous: () =>
@@ -70,6 +74,7 @@ export const useGetNotifications = (params: GetNotificationsParams): GetNotifica
           params.filter,
           params.currentPage.value,
           params.origin,
+          env,
         ],
         refetchInterval: REFETCH_INTERVAL,
         queryFn: () => get(getUrl(params)),

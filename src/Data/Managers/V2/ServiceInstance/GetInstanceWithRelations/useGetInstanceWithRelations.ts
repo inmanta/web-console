@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
 /*
@@ -33,7 +35,9 @@ export const useGetInstanceWithRelations = (
 ): GetInstanceWithRelationsHook => {
   const getUrl = (id: string) =>
     `/lsm/v1/service_inventory?service_id=${id}&include_deployment_progress=false&exclude_read_only_attributes=false&include_referenced_by=${includesReferencedBy}&include_metadata=true`;
-  const get = useGet()<{ data: ServiceInstanceModel }>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<{ data: ServiceInstanceModel }>;
 
   /**
    * This function is responsible for extracting the names of all inter-service relations from the provided service model or embedded entity.
@@ -165,7 +169,7 @@ export const useGetInstanceWithRelations = (
      */
     useOneTime: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
-        queryKey: ["get_instance_with_relations-one_time", instanceId],
+        queryKey: ["get_instance_with_relations-one_time", instanceId, env],
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
         enabled: serviceModel !== undefined,
@@ -173,7 +177,7 @@ export const useGetInstanceWithRelations = (
       }),
     useContinuous: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
-        queryKey: ["get_instance_with_relations-continuous", instanceId],
+        queryKey: ["get_instance_with_relations-continuous", instanceId, env],
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
         refetchInterval: REFETCH_INTERVAL,

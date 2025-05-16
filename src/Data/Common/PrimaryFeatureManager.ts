@@ -4,27 +4,23 @@ import {
   Feature,
   Extention,
   JsonParserId,
-  Logger,
   ServerStatus,
   StatusLicense,
   EXTENSION_LIST,
   FEATURE_LIST,
 } from "@/Core";
-import { useGetServerStatus } from "../Managers/V2/Server";
-import { VoidLogger } from "./VoidLogger";
+import { words } from "@/UI";
 
 /**
  * Represents the primary feature manager.
  * Implements the FeatureManager interface.
  */
 export const PrimaryFeatureManager = (
-  logger: Logger = new VoidLogger(),
   jsonParserId: JsonParserId = "Native",
   commitHash: string = "",
-  appVersion: string = ""
+  appVersion: string = "",
+  features?: Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices"> | null
 ): FeatureManager => {
-  const serverStatus = useGetServerStatus().useOneTime();
-
   /**
    * Gets the version of the application.
    * @returns The version of the application.
@@ -41,12 +37,12 @@ export const PrimaryFeatureManager = (
     return commitHash;
   }
 
-  function get(): ServerStatus {
-    if (!serverStatus.data) {
-      throw new Error("ServerStatus has not yet been set.");
+  function get(): Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices"> {
+    if (!features) {
+      throw new Error(words("features.missing"));
     }
 
-    return serverStatus.data;
+    return features;
   }
 
   /**
@@ -174,10 +170,10 @@ export const PrimaryFeatureManager = (
   }
 
   useEffect(() => {
-    logger.log(
+    console.info(
       `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
     );
-  }, [jsonParserId, appVersion, commitHash, logger]);
+  }, [jsonParserId, appVersion, commitHash]);
 
   return {
     getAppVersion,

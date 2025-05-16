@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import {
   UseMutationOptions,
   UseMutationResult,
@@ -5,6 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 /**
@@ -30,12 +32,14 @@ export const usePostExpertStateTransfer = (
   options?: UseMutationOptions<void, Error, PostExpertStateTransfer>
 ): UseMutationResult<void, Error, PostExpertStateTransfer, unknown> => {
   const client = useQueryClient();
-  const post = usePost()<PostExpertStateTransfer>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<PostExpertStateTransfer>;
 
   return useMutation({
     mutationFn: (data) =>
       post(`/lsm/v1/service_inventory/${service_entity}/${instance_id}/expert/state`, data),
-    mutationKey: ["post_state_transfer_expert"],
+    mutationKey: ["post_state_transfer_expert", env],
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: [service_entity, instance_id],

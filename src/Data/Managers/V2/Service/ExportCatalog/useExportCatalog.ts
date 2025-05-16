@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 /**
@@ -8,11 +10,13 @@ import { usePost } from "../../helpers";
  */
 export const useExportCatalog = (): UseMutationResult<void, Error, void, unknown> => {
   const client = useQueryClient();
-  const post = usePost()<void>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<void>;
 
   return useMutation({
     mutationFn: () => post("/lsm/v1/exporter/export_service_definition"),
-    mutationKey: ["update_catalog"],
+    mutationKey: ["update_catalog", env],
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["get_service_models-one_time"] });
       client.invalidateQueries({ queryKey: ["get_service_models-continuous"] });

@@ -1,8 +1,10 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Resource, Sort } from "@/Core/Domain";
 import { Handlers, Links } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
+import { DependencyContext } from "@/UI/Dependency";
 import { useGet, REFETCH_INTERVAL } from "../../helpers";
 import { getUrl } from "./getUrl";
 
@@ -56,12 +58,14 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
     sort,
     currentPage: currentPage || { kind: "CurrentPage", value: "" },
   });
-  const get = useGet()<Result>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<Result>;
 
   return {
     useContinuous: (): UseQueryResult<GetResourcesResponse, Error> =>
       useQuery({
-        queryKey: ["get_resources-continuous", pageSize, filter, sort, currentPage],
+        queryKey: ["get_resources-continuous", pageSize, filter, sort, currentPage, env],
         queryFn: () => get(url),
         select: (data) => ({
           ...data,

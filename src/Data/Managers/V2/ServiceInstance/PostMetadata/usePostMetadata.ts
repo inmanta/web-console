@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 interface PostMetadataInfo {
@@ -18,7 +20,9 @@ interface PostMetadataInfo {
  * @returns {UseMutationResult<void, Error, PostMetadataInfo, unknown>}- The mutation object from `useMutation` hook.
  */
 export const usePostMetadata = (): UseMutationResult<void, Error, PostMetadataInfo, unknown> => {
-  const post = usePost()<PostMetadataInfo>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<PostMetadataInfo>;
 
   return useMutation({
     mutationFn: (info) =>
@@ -26,6 +30,6 @@ export const usePostMetadata = (): UseMutationResult<void, Error, PostMetadataIn
         `/lsm/v1/service_inventory/${info.service_entity}/${info.service_id}/metadata/${encodeURIComponent(info.key)}`,
         info
       ),
-    mutationKey: ["post_metadata"],
+    mutationKey: ["post_metadata", env],
   });
 };

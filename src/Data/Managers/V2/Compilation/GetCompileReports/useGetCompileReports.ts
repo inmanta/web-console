@@ -1,9 +1,11 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { CompileStatus, Sort, PageSize, Pagination } from "@/Core/Domain";
 import { DateRange } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, REFETCH_INTERVAL, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
@@ -43,7 +45,9 @@ interface GetCompileReports {
  */
 export const useGetCompileReports = (params: CompileReportsParams): GetCompileReports => {
   const url = getUrl(params);
-  const get = useGet()<ResponseBody>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<ResponseBody>;
 
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
@@ -54,6 +58,7 @@ export const useGetCompileReports = (params: CompileReportsParams): GetCompileRe
           params.sort,
           params.pageSize,
           params.currentPage,
+          env,
         ],
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,

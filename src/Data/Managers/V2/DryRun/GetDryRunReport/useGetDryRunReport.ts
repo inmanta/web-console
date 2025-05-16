@@ -1,6 +1,8 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Diff } from "@/Core";
 import { ParsedNumber } from "@/Core/Language";
+import { DependencyContext } from "@/UI/Dependency";
 import { useGet } from "../../helpers";
 
 /**
@@ -50,12 +52,14 @@ interface GetDryRunReport {
  * @returns {UseQueryResult<Report, Error>} returns.useOneTime - Fetch the  dry run report with a single query
  */
 export const useGetDryRunReport = (): GetDryRunReport => {
-  const get = useGet()<Response>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<Response>;
 
   return {
     useOneTime: (version: string, reportId: string): UseQueryResult<Report, Error> =>
       useQuery({
-        queryKey: ["get_dry_run_reports-one_time", version, reportId],
+        queryKey: ["get_dry_run_reports-one_time", version, reportId, env],
         queryFn: () => get(`/api/v2/dryrun/${version}/${encodeURIComponent(reportId)}`),
         select: (data) => data.data,
       }),

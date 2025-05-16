@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 import { useGet } from "../../helpers";
 
 interface ResponseData {
@@ -17,7 +19,9 @@ interface ResponseData {
  * @returns The result of the query, {data, status, error, isLoading}.
  */
 export const useSuggestedValues = (suggestions: FormSuggestion | null | undefined) => {
-  const get = useGet()<ResponseData>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<ResponseData>;
 
   if (!suggestions) {
     return {
@@ -47,7 +51,7 @@ export const useSuggestedValues = (suggestions: FormSuggestion | null | undefine
      */
     useOneTime: () =>
       useQuery({
-        queryKey: ["get_parameter-one_time", suggestions.parameter_name],
+        queryKey: ["get_parameter-one_time", suggestions.parameter_name, env],
         queryFn: () => get(`/api/v1/parameter/${suggestions.parameter_name}`),
         select: (data) => data.parameter,
       }),

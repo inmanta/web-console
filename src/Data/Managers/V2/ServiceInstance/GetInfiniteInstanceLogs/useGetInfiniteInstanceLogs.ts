@@ -1,6 +1,8 @@
+import { useContext } from "react";
 import { UseInfiniteQueryResult, useInfiniteQuery } from "@tanstack/react-query";
 import { Pagination } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
 interface LogsResponse {
@@ -30,12 +32,14 @@ export const useGetInfiniteInstanceLogs = (
   service: string,
   instance: string
 ): GetInfiniteInstanceLogs => {
-  const get = useGet()<LogsResponse>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<LogsResponse>;
 
   return {
     useContinuous: (selectedVersion: string): UseInfiniteQueryResult<InstanceLog[], CustomError> =>
       useInfiniteQuery({
-        queryKey: ["get_instance_logs-continuous", service, instance],
+        queryKey: ["get_instance_logs-continuous", service, instance, env],
         queryFn: ({ pageParam }) => {
           const initialParameters = selectedVersion
             ? `limit=50&end=${Number(selectedVersion) + 1}`

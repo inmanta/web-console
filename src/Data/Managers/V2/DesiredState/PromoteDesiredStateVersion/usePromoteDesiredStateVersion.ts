@@ -1,9 +1,11 @@
+import { useContext } from "react";
 import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 /**
@@ -15,11 +17,13 @@ export const usePromoteDesiredStateVersion = (
   options?: UseMutationOptions<void, Error, string>
 ): UseMutationResult<void, Error, string> => {
   const client = useQueryClient();
-  const post = usePost()<void>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<void>;
 
   return useMutation({
     mutationFn: (version) => post(`/api/v2/desiredstate/${version}/promote`),
-    mutationKey: ["promote_version"],
+    mutationKey: ["promote_version", env],
     ...options,
     onSuccess: () => {
       // Refetch the desired state queries to update the list

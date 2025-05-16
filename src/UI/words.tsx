@@ -67,7 +67,7 @@ const dict = {
 
   "notFound.title": "404: We couldn't find that page",
   "notFound.home": "Go home",
-
+  "features.missing": "Features have not yet been set.",
   "validation.title": (amount: number) => `Errors found: ${amount}`,
   "validation.empty": "Invalid JSON",
 

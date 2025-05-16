@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 /**
@@ -9,11 +11,13 @@ import { usePost } from "../../helpers";
 export const useResumeEnvironment = (
   options?: UseMutationOptions<void, Error, void>
 ): UseMutationResult<void, Error, void> => {
-  const post = usePost();
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env);
 
   return useMutation({
     mutationFn: () => post("/api/v2/actions/environment/resume", null),
-    mutationKey: ["resume_environment"],
+    mutationKey: ["resume_environment", env],
     ...options,
   });
 };

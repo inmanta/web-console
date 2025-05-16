@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceInstanceModel } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
 /**
@@ -29,7 +31,9 @@ interface GetInventoryList {
  * @returns {UseQueryResult<Inventories, CustomError>} returns.useContinuous - Fetch the service inventories  with a recursive query with an interval of 5s.
  */
 export const useGetInventoryList = (serviceNames: string[]): GetInventoryList => {
-  const get = useGet()<{ data: ServiceInstanceModel[] }>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<{ data: ServiceInstanceModel[] }>;
 
   /**
    * Fetches the inventory for all services.
@@ -53,12 +57,12 @@ export const useGetInventoryList = (serviceNames: string[]): GetInventoryList =>
   return {
     useOneTime: (): UseQueryResult<Inventories, CustomError> =>
       useQuery({
-        queryKey: ["get_inventory_list-one_time", serviceNames],
+        queryKey: ["get_inventory_list-one_time", serviceNames, env],
         queryFn: fetchAllServices,
       }),
     useContinuous: (): UseQueryResult<Inventories, CustomError> =>
       useQuery({
-        queryKey: ["get_inventory_list-continuous", serviceNames],
+        queryKey: ["get_inventory_list-continuous", serviceNames, env],
         queryFn: fetchAllServices,
         refetchInterval: REFETCH_INTERVAL,
       }),

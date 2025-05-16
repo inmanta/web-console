@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { CreateCallbackBody } from "@/Slices/ServiceDetails/Core/Callback";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 /**
@@ -10,11 +12,13 @@ import { usePost } from "../../helpers";
 export const useCreateCallback = (
   options?: UseMutationOptions<void, Error, CreateCallbackBody, unknown>
 ): UseMutationResult<void, Error, CreateCallbackBody, unknown> => {
-  const postFn = usePost();
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const postFn = usePost(env);
 
   return useMutation({
     mutationFn: (body) => postFn("/lsm/v1/callbacks", body),
-    mutationKey: ["post_callback"],
+    mutationKey: ["post_callback", env],
     ...options,
   });
 };

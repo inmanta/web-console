@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Resource } from "@/Core/Domain";
+import { DependencyContext } from "@/UI/Dependency";
 import { REFETCH_INTERVAL, useGet } from "../../helpers";
 
 /**
@@ -26,15 +28,17 @@ export const useGetDesiredStateResourceDetails = (
   version: string,
   id: string
 ): GetDesiredStateResourceDetails => {
-  const get = useGet()<Result>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<Result>;
 
   return {
     useContinuous: (): UseQueryResult<Resource.VersionedDetails, Error> =>
       useQuery({
-        queryKey: ["get_desired_state_resource_details-continuous", version, id],
+        queryKey: ["get_desired_states_resource_details-continuous", id, version, env],
         queryFn: () => get(getUrl(version, id)),
-        refetchInterval: REFETCH_INTERVAL,
         select: (data) => data.data,
+        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };

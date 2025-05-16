@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { BackendMetricData } from "@/Slices/Dashboard/Core/Domain";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
@@ -23,12 +25,14 @@ interface GetMetrics {
  * @returns {UseQueryResult<BackendMetricData, CustomError>} returns.useOneTime - Fetch metrics with a single query.
  */
 export const useGetMetrics = (): GetMetrics => {
-  const get = useGet()<{ data: BackendMetricData }>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<{ data: BackendMetricData }>;
 
   return {
     useOneTime: (params: GetMetricsParams): UseQueryResult<BackendMetricData, CustomError> =>
       useQuery({
-        queryKey: ["get_metrics-one_time", params],
+        queryKey: ["get_metrics-one_time", params, env],
         queryFn: () => get(getUrl(params)),
         select: (data) => data.data,
       }),

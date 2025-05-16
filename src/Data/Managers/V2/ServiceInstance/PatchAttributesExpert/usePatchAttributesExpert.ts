@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
+import { DependencyContext } from "@/UI";
 import { usePatch } from "../../helpers";
 
 /**
@@ -35,12 +37,14 @@ export const usePatchAttributesExpert = (
   service_entity: string,
   options?: UseMutationOptions<void, Error, ExpertPatchAttributes>
 ): UseMutationResult<void, Error, ExpertPatchAttributes, unknown> => {
-  const patch = usePatch()<ExpertPatchAttributes>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const patch = usePatch(env)<ExpertPatchAttributes>;
 
   return useMutation({
     mutationFn: (data) =>
       patch(`/lsm/v2/service_inventory/${service_entity}/${instance_id}/expert`, data),
-    mutationKey: ["patch_expert_edit"],
+    mutationKey: ["patch_expert_edit", instance_id, service_entity, env],
     ...options,
   });
 };

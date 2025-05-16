@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { RawDiagnostics } from "@/Slices/Diagnose/Core/Domain";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet } from "../../helpers";
 
 /**
@@ -19,14 +21,16 @@ interface GetDiagnostics {
  * @returns {UseQueryResult<ServiceInstanceModel, CustomError>} returns.useOneTime - Fetch the diagnose report with a single query.
  */
 export const useGetDiagnostics = (service: string, instanceId: string): GetDiagnostics => {
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
   const url = (lookBehind) =>
     `/lsm/v1/service_inventory/${service}/${instanceId}/diagnose?rejection_lookbehind=${lookBehind}&failure_lookbehind=${lookBehind}`;
-  const get = useGet()<{ data: RawDiagnostics }>;
+  const get = useGet(env)<{ data: RawDiagnostics }>;
 
   return {
     useOneTime: (lookBehind: string): UseQueryResult<RawDiagnostics, CustomError> =>
       useQuery({
-        queryKey: ["get_diagnostics-one_time", service, instanceId, lookBehind],
+        queryKey: ["get_diagnostics-one_time", service, instanceId, lookBehind, env],
         queryFn: () => get(url(lookBehind)),
         select: (data) => data.data,
       }),

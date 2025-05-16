@@ -1,8 +1,10 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DateRange, EventType, InstanceEvent, PageSize, Pagination, Sort } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 import { getUrl } from "./getUrl";
 
@@ -86,12 +88,14 @@ interface GetInstance {
  * @returns {UseQueryResult<HookResponse, CustomError>} returns.useContinuous - Fetch the instances events with a recurrent query with an interval of 5s.
  */
 export const useGetInstanceEvents = (params: GetInstanceEventParams): GetInstance => {
-  const get = useGet()<ResponseBody>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<ResponseBody>;
 
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: ["get_instance_events-continuous", ...Array.from(Object.values(params))],
+        queryKey: ["get_instance_events-continuous", ...Array.from(Object.values(params)), env],
         queryFn: () => get(getUrl(params)),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({

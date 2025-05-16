@@ -1,6 +1,8 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { DependencyContext } from "@/UI/Dependency";
 import { getPaginationHandlers } from "../../Helpers/Pagination/getPaginationHandlers";
 import { useGet, REFETCH_INTERVAL } from "../helpers";
 import { getUrl } from "./getUrl";
@@ -75,7 +77,9 @@ interface GetDiscoveredResources {
 export const useGetDiscoveredResources = (
   params: GetDiscoveredResourcesParams
 ): GetDiscoveredResources => {
-  const get = useGet()<ResponseBody>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<ResponseBody>;
 
   return {
     useContinuous: (): UseQueryResult<DiscoveredResourceResponse, Error> =>
@@ -86,6 +90,7 @@ export const useGetDiscoveredResources = (
           params.sort,
           params.pageSize,
           params.filter,
+          env,
         ],
         queryFn: () => get(getUrl(params)),
         select: (data) => ({

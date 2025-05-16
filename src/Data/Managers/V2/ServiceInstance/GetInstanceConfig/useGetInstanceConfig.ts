@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Config } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet } from "../../helpers";
 
 /**
@@ -20,12 +22,14 @@ interface GetInstanceConfig {
  */
 export const useGetInstanceConfig = (service: string, id: string): GetInstanceConfig => {
   const url = `/lsm/v1/service_inventory/${service}/${id}/config`;
-  const get = useGet()<{ data: Config }>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<{ data: Config }>;
 
   return {
     useOneTime: (): UseQueryResult<Config, CustomError> =>
       useQuery({
-        queryKey: ["get_instance_config-one_time", service, id],
+        queryKey: ["get_instance_config-one_time", service, id, env],
         queryFn: () => get(url),
         select: (data) => data.data,
       }),
