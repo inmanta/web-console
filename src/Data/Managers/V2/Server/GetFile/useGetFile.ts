@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI";
 import { useGet } from "../../helpers/useQueries";
 
 interface RawResponse {
@@ -39,7 +40,7 @@ export const useGetFile = (fileId: string) => {
         }
       }
 
-      return "No data";
+      return words("noData");
     },
   });
 };

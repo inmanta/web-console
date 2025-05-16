@@ -46,6 +46,7 @@ const dict = {
   "copy.raw": "Copy raw",
   "copy.raw.tooltip": "Copy with escaped newlines",
   "copy.clipboard": "Copy to clipboard",
+  noData: "There is no data available to display.",
 
   /**
    * Error related text

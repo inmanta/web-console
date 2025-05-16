@@ -5,6 +5,7 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
+import { words } from "@/UI";
 import { useGetFile } from "./useGetFile";
 
 const wrapper = ({ children }: { children: React.ReactNode }) => {
@@ -88,7 +89,7 @@ describe("useGetFile", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(result.current.data).toBe("No data");
+    expect(result.current.data).toBe(words("noData"));
   });
 
   test("handles server error", async () => {
