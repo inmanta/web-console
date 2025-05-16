@@ -128,17 +128,17 @@ describe("5 Compile reports", () => {
     // Expect to have no environment variables
     cy.get(".pf-v6-c-code-block__content").should("have.text", "{}");
 
-    // Expect to find text about environment variables
-    cy.get("span").contains("Using extra environment variables during compile").should("exist");
-
     // click on the select to pick a different stage
-    cy.get("button").contains("Init").click();
+    cy.get("button").contains("Recompiling configuration model").click();
 
     // Click on the last menu item
-    cy.get(".pf-v6-c-menu__list-item").last().click();
+    cy.get(".pf-v6-c-menu__list-item").first().click();
 
     // expect the text in the toggle now to be Recompiling configuration model
-    cy.get("button").contains("Recompiling configuration model").should("exist");
+    cy.get("button").contains("Init").should("exist");
+
+    // Expect to find text about environment variables
+    cy.get("span").contains("Using extra environment variables during compile").should("exist");
   });
 
   if (isIso) {

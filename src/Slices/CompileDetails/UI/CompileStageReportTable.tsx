@@ -24,7 +24,9 @@ export const CompileStageReportTable: React.FC<Props> = ({ reports }) => {
     };
   });
 
-  return <LogViewerComponent logs={logs} />;
+  const defaultSelected = logs.find((log) => log.failed)?.id;
+
+  return <LogViewerComponent logs={logs} defaultSelected={defaultSelected} />;
 };
 
 /**

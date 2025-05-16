@@ -1,6 +1,7 @@
 import React from "react";
 import { CodeEditorControl } from "@patternfly/react-code-editor";
 import { CopyIcon, DownloadIcon, CodeIcon } from "@patternfly/react-icons";
+import copy from "copy-to-clipboard";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -49,7 +50,7 @@ export const escapeNewlines = (text: string): string => {
  *  @prop {string} instance - The instance name
  * @returns {React.FC<Props>} A React Component that provides the controls for the CodeEditor.
  */
-export const CodeEditorControls: React.FC<Props> = ({ code, service, instance }) => {
+export const MarkdownCodeEditorControls: React.FC<Props> = ({ code, service, instance }) => {
   return (
     <>
       <CodeEditorControl
@@ -57,7 +58,7 @@ export const CodeEditorControls: React.FC<Props> = ({ code, service, instance })
         aria-label={words("copy")}
         tooltipProps={{ content: words("copy") }}
         onClick={() => {
-          navigator.clipboard.writeText(code);
+          copy(code);
         }}
       />
       <CodeEditorControl
@@ -65,7 +66,7 @@ export const CodeEditorControls: React.FC<Props> = ({ code, service, instance })
         aria-label={words("copy.raw")}
         tooltipProps={{ content: words("copy.raw.tooltip") }}
         onClick={() => {
-          navigator.clipboard.writeText(escapeNewlines(code));
+          copy(escapeNewlines(code));
         }}
       />
       <CodeEditorControl

@@ -1,12 +1,8 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
+import copy from "copy-to-clipboard";
 import { words } from "@/UI/words";
-import { CodeEditorControls, escapeNewlines } from "./CodeEditorControls";
-
-// Mock the clipboard API
-const mockClipboard = {
-  writeText: jest.fn(),
-};
+import { MarkdownCodeEditorControls, escapeNewlines } from "./MarkdownCodeEditorControls";
 
 // Mock the PatternFly CodeEditorControl component since all we want to test is the onClick event.
 // The original component relies on the Monaco Editor which is not available in the test environment.
@@ -18,11 +14,8 @@ jest.mock("@patternfly/react-code-editor", () => ({
   ),
 }));
 
-beforeAll(() => {
-  Object.assign(navigator, {
-    clipboard: mockClipboard,
-  });
-});
+// Mock copy-to-clipboard
+jest.mock("copy-to-clipboard", () => jest.fn());
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -36,7 +29,7 @@ describe("CodeEditorControls", () => {
   };
 
   it("should render all control buttons", () => {
-    render(<CodeEditorControls {...defaultProps} />);
+    render(<MarkdownCodeEditorControls {...defaultProps} />);
 
     expect(screen.getByTestId("control-Copy")).toBeInTheDocument();
     expect(screen.getByTestId("control-Copy raw")).toBeInTheDocument();
@@ -46,21 +39,21 @@ describe("CodeEditorControls", () => {
   });
 
   it("should copy markdown content when copy button is clicked", () => {
-    render(<CodeEditorControls {...defaultProps} />);
+    render(<MarkdownCodeEditorControls {...defaultProps} />);
 
     const copyButton = screen.getByTestId("control-Copy");
     fireEvent.click(copyButton);
 
-    expect(mockClipboard.writeText).toHaveBeenCalledWith(defaultProps.code);
+    expect(copy).toHaveBeenCalledWith(defaultProps.code);
   });
 
   it("should copy raw markdown content with escaped newlines when raw copy button is clicked", () => {
-    render(<CodeEditorControls {...defaultProps} />);
+    render(<MarkdownCodeEditorControls {...defaultProps} />);
 
     const rawCopyButton = screen.getByTestId("control-Copy raw");
     fireEvent.click(rawCopyButton);
 
-    expect(mockClipboard.writeText).toHaveBeenCalledWith("# Test Markdown\\n\\nThis is a test");
+    expect(copy).toHaveBeenCalledWith("# Test Markdown\\n\\nThis is a test");
   });
 });
 

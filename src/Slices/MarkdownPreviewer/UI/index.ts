@@ -1,4 +1,4 @@
 export { Page as MarkdownPreviewerPage } from "./Page";
 export * from "./MarkdownPreviewer";
-export * from "./CodeEditorControls";
+export * from "./MarkdownCodeEditorControls";
 export * from "./DocumentationContent";

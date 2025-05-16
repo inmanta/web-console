@@ -6,7 +6,7 @@ import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { PageContainer } from "@/UI/Components";
 import { getThemePreference } from "@/UI/Components/DarkmodeOption";
 import { words } from "@/UI/words";
-import { CodeEditorControls, useDocumentationContent } from ".";
+import { MarkdownCodeEditorControls, useDocumentationContent } from ".";
 
 interface Props {
   service: string;
@@ -60,7 +60,11 @@ export const MarkdownPreviewer: React.FC<Props> = ({ service, instance, instance
             height="calc(100vh - 550px)"
             onChange={setMarkdownContent}
             customControls={
-              <CodeEditorControls code={markdownContent} service={service} instance={instance} />
+              <MarkdownCodeEditorControls
+                code={markdownContent}
+                service={service}
+                instance={instance}
+              />
             }
           />
         </FlexItem>

@@ -13,6 +13,7 @@ import styled from "styled-components";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { TextWithCopy, Toggle } from "@/UI/Components";
+import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
 import { words } from "@/UI/words";
 import { OrderDependencies } from "./OrderDependencies";
 import { OrderStateDetails } from "./OrderStateDetails";
@@ -90,7 +91,9 @@ export const OrderDetailsRow: React.FC<Props> = ({
                       code={JSON.stringify(row.config, null, 2)}
                       language={Language.json}
                       isDownloadEnabled
-                      isCopyEnabled
+                      customControls={
+                        <CodeEditorCopyControl code={JSON.stringify(row.config, null, 2)} />
+                      }
                       isReadOnly
                       height="400px"
                     />
@@ -109,7 +112,12 @@ export const OrderDetailsRow: React.FC<Props> = ({
                       code={JSON.stringify(row.attributes || row.edits, null, 2)}
                       language={Language.json}
                       isDownloadEnabled
-                      isCopyEnabled
+                      customControls={
+                        <CodeEditorCopyControl
+                          code={JSON.stringify(row.attributes || row.edits, null, 2)}
+                        />
+                      }
+                      isReadOnly
                       height="400px"
                     />
                   </DescriptionListDescription>

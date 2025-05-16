@@ -12,6 +12,7 @@ module.exports = {
     isDownloadEnabled,
     isCopyEnabled,
     isLanguageLabelVisible,
+    customControls,
     ...props
   }) => {
     return (
@@ -19,6 +20,7 @@ module.exports = {
         <pre data-testid="code-editor-content" {...props}>
           {code}
         </pre>
+        {customControls && <div data-testid="code-editor-custom-controls">{customControls}</div>}
         {onChange && (
           <textarea
             data-testid="code-editor-textarea"
@@ -30,8 +32,13 @@ module.exports = {
       </div>
     );
   },
-  CodeEditorControl: ({ onClick, icon, "aria-label": ariaLabel, ...props }) => (
-    <button onClick={onClick} aria-label={ariaLabel} {...props}>
+  CodeEditorControl: ({ onClick, icon, "aria-label": ariaLabel, tooltipProps, ...props }) => (
+    <button
+      onClick={onClick}
+      aria-label={ariaLabel}
+      data-tooltip={tooltipProps?.content}
+      {...props}
+    >
       {icon}
     </button>
   ),

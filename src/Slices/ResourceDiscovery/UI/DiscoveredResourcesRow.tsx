@@ -10,6 +10,7 @@ import { Tbody, Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { DiscoveredResource } from "@/Data/Managers/V2/DiscoveredResources";
 import { Toggle } from "@/UI/Components";
+import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
 import { words } from "@/UI/words";
 import { DiscoveredResourceLink } from "./Components";
 
@@ -70,7 +71,9 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
                       code={JSON.stringify(row.values, null, 2)}
                       language={Language.json}
                       isDownloadEnabled
-                      isCopyEnabled
+                      customControls={
+                        <CodeEditorCopyControl code={JSON.stringify(row.values, null, 2)} />
+                      }
                       isReadOnly
                       height="400px"
                     />
