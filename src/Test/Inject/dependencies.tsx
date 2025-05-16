@@ -1,5 +1,5 @@
 import React from "react";
-import { FileFetcher, FlatEnvironment } from "@/Core";
+import { FlatEnvironment } from "@/Core";
 import { AuthContextInterface, PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
 import { EnvironmentDetails } from "@/Test";
 import { MockEnvironmentHandler, MockFeatureManager, MockFileManager } from "@/Test/Mock";
@@ -9,7 +9,6 @@ import { UrlManagerImpl } from "@/UI/Utils";
 
 interface Props {
   env?: FlatEnvironment;
-  fileFetcher?: FileFetcher;
   authHelper?: AuthContextInterface;
 }
 
@@ -20,7 +19,6 @@ interface Props {
  */
 export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> = ({
   env = EnvironmentDetails.env,
-  fileFetcher,
   authHelper = defaultAuthContext,
   children,
 }) => {
@@ -42,7 +40,6 @@ export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> 
         urlManager,
         environmentHandler,
         archiveHelper,
-        fileFetcher,
         authHelper,
       }}
     >

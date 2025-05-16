@@ -128,4 +128,33 @@ describe("ResourceDetailsView", () => {
       expect(results).toHaveNoViolations();
     });
   });
+
+  test("GIVEN ResourceLogsView WHEN clicking download button THEN downloads the file content", async () => {
+    const fileId = "abc123";
+    const fileContent = "file content";
+    const base64Content = btoa(fileContent);
+
+    server.use(
+      http.get("/api/v2/resource/abc", () => {
+        return HttpResponse.json({ data: ResourceDetails.a });
+      }),
+      http.get(`/api/v1/file/${fileId}`, () => {
+        return HttpResponse.json({ content: base64Content });
+      })
+    );
+
+    const { component } = setup();
+    render(component);
+
+    // Wait for the ResourceDetails to load
+    await screen.findByLabelText("ResourceDetails-Success");
+
+    // Find and click the download button
+    const downloadButton = await screen.findByRole("button", { name: words("resources.file.get") });
+    await userEvent.click(downloadButton);
+
+    // Wait for the code viewer with content to load
+    const codeEditor = await screen.findByText(fileContent);
+    expect(codeEditor).toBeVisible();
+  });
 });

@@ -1,61 +1,85 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { CodeEditor } from "@patternfly/react-code-editor";
 import { Alert, AlertActionCloseButton, Button, Spinner } from "@patternfly/react-core";
 import { DownloadIcon } from "@patternfly/react-icons";
-import { RemoteData } from "@/Core";
+import { useGetFile } from "@/Data/Managers/V2/Server/GetFile";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
-import { DependencyContext } from "@/UI/Dependency";
 import { Delayed } from "@/UI/Utils";
+import { words } from "@/UI/words";
 
-export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
-  const { fileFetcher } = useContext(DependencyContext);
-  const [fileContent, setFileContent] = useState<RemoteData.Type<string, string>>(
-    RemoteData.notAsked()
-  );
+interface Props {
+  hash: string;
+}
 
-  const getFile = async () => {
-    setFileContent(RemoteData.loading());
-    setFileContent(RemoteData.fromEither(await fileFetcher.get(hash)));
-  };
-  const close = () => setFileContent(RemoteData.notAsked);
+/**
+ * FileBlock component
+ *
+ * @param {string} hash - The hash of the file to display
+ * @returns {React.FC<Props>} - The FileBlock component
+ */
+export const FileBlock: React.FC<Props> = ({ hash }) => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { mutate, data, error, isError, isSuccess, isPending } = useGetFile(hash);
 
-  return (
+  const close = () => setErrorMessage(null);
+
+  useEffect(() => {
+    if (isError) {
+      setErrorMessage(error.message);
+    }
+  }, [isError, error]);
+
+  const copyAndButton = (
     <>
-      <TextWithCopy value={hash} tooltipContent="Copy to clipboard" />
+      <TextWithCopy value={hash} tooltipContent={words("copy.clipboard")} />
       <Button
         variant="link"
         icon={<DownloadIcon />}
-        onClick={getFile}
-        isDisabled={RemoteData.isSuccess(fileContent) || RemoteData.isLoading(fileContent)}
+        onClick={() => mutate()}
+        isDisabled={isPending || isSuccess}
       >
-        Get File
+        {words("resources.file.get")}
       </Button>
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => (
-            <Delayed delay={500}>
-              <div>
-                <Spinner size="sm" />
-              </div>
-            </Delayed>
-          ),
-          failed: (message) => (
-            <Alert
-              variant="danger"
-              isInline
-              title="Something went wrong with fetching the file content"
-              actionClose={<AlertActionCloseButton onClose={close} />}
-            >
-              {message}
-            </Alert>
-          ),
-          success: (content) => (
-            <CodeEditor code={content} isReadOnly isDownloadEnabled height="300px" />
-          ),
-        },
-        fileContent
-      )}
     </>
   );
+
+  if (errorMessage) {
+    return (
+      <>
+        {copyAndButton}
+        <Alert
+          variant="danger"
+          isInline
+          title={words("resources.file.error")}
+          actionClose={<AlertActionCloseButton onClose={close} />}
+        >
+          {errorMessage}
+        </Alert>
+      </>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <>
+        {copyAndButton}
+        <CodeEditor code={data} isReadOnly isDownloadEnabled height="300px" />
+      </>
+    );
+  }
+
+  if (isPending) {
+    return (
+      <>
+        {copyAndButton}
+        <Delayed delay={500}>
+          <div>
+            <Spinner size="sm" />
+          </div>
+        </Delayed>
+      </>
+    );
+  }
+
+  return copyAndButton;
 };
