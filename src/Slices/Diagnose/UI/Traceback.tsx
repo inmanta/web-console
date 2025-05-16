@@ -1,8 +1,8 @@
 import React from "react";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import { ExpandableSection } from "@patternfly/react-core";
-import { words } from "@/UI/words";
 import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
+import { words } from "@/UI/words";
 
 /**
  * A component that displays a traceback.

@@ -10,9 +10,9 @@ import {
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
+import { CodeEditorCopyControl } from "../CodeEditorControls";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 import { FileBlock } from "./FileBlock";
-import { CodeEditorCopyControl } from "../CodeEditorControls";
 
 interface Props {
   attributes: ClassifiedAttribute[];

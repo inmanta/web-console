@@ -1,8 +1,8 @@
 import React from "react";
 import { CodeEditorControl } from "@patternfly/react-code-editor";
 import { CopyIcon, DownloadIcon, CodeIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
 import copy from "copy-to-clipboard";
+import { words } from "@/UI/words";
 
 interface Props {
   code: string;

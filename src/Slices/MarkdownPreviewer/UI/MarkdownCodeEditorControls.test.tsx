@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
+import copy from "copy-to-clipboard";
 import { words } from "@/UI/words";
 import { MarkdownCodeEditorControls, escapeNewlines } from "./MarkdownCodeEditorControls";
-import copy from "copy-to-clipboard";
 
 // Mock the PatternFly CodeEditorControl component since all we want to test is the onClick event.
 // The original component relies on the Monaco Editor which is not available in the test environment.

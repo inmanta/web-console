@@ -13,10 +13,10 @@ import styled from "styled-components";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { TextWithCopy, Toggle } from "@/UI/Components";
+import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
 import { words } from "@/UI/words";
 import { OrderDependencies } from "./OrderDependencies";
 import { OrderStateDetails } from "./OrderStateDetails";
-import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
 
 interface Props {
   row: ServiceOrderItem;

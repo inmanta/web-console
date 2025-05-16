@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { CodeEditorCopyControl } from "./CodeEditorControls";
 import copy from "copy-to-clipboard";
+import { CodeEditorCopyControl } from "./CodeEditorControls";
 
 // Mock copy-to-clipboard
 jest.mock("copy-to-clipboard", () => jest.fn());
