@@ -31,47 +31,49 @@ describe("LogViewerComponent", () => {
     render(<LogViewerComponent logs={mockLogs} />);
 
     // Check if first log name is displayed in select
-    expect(screen.getByRole("button", { name: /Log 1/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Failed Log/i })).toBeInTheDocument();
 
     // Check if log content is displayed
     const logViewer = screen.getByTestId("log-viewer");
-    expect(logViewer).toHaveTextContent("Line 1");
-    expect(logViewer).toHaveTextContent("Line 2");
-    expect(logViewer).toHaveTextContent("Line 3");
+    expect(logViewer).toHaveTextContent("Error line 1");
+    expect(logViewer).toHaveTextContent("Error line 2");
 
     // Check if duration is displayed
-    expect(screen.getByText(/Duration: 1 s/)).toBeInTheDocument();
+    expect(screen.getByText(/Duration: 20 s/)).toBeInTheDocument();
   });
 
   it("switches between logs when selecting from dropdown", async () => {
     render(<LogViewerComponent logs={mockLogs} />);
 
     // Open dropdown
-    const toggle = screen.getByRole("button", { name: /Log 1/i });
+    const toggle = screen.getByRole("button", { name: /Failed Log/i });
     await userEvent.click(toggle);
 
     // Select second log
-    const option = screen.getByRole("option", { name: /Failed Log/i });
+    const option = screen.getByRole("option", { name: /Log 1/i });
     await userEvent.click(option);
 
     // Check if new log content is displayed
     const logViewer = screen.getByTestId("log-viewer");
-    expect(logViewer).toHaveTextContent("Error line 1");
-    expect(logViewer).toHaveTextContent("Error line 2");
-    expect(screen.getByText(/Duration: 20 s/)).toBeInTheDocument();
+    expect(logViewer).toHaveTextContent("Line 1");
+    expect(logViewer).toHaveTextContent("Line 2");
+    expect(logViewer).toHaveTextContent("Line 3");
+    expect(screen.getByText(/Duration: 1 s/)).toBeInTheDocument();
   });
 
   it("shows error icon for failed logs", async () => {
     render(<LogViewerComponent logs={mockLogs} />);
 
-    // Open dropdown
-    const toggle = screen.getByRole("button", { name: /Log 1/i });
-    await userEvent.click(toggle);
-
-    // Find the failed log option and check for icon
-    const failedLogOption = screen.getByRole("option", { name: /Failed Log/i });
-    const icon = failedLogOption.querySelector(".pf-v6-c-icon__content.pf-m-danger");
+    // Check for error icon in toggle button
+    const toggle = screen.getByRole("button", { name: /Failed Log/i });
+    const icon = toggle.querySelector(".pf-v6-c-icon__content.pf-m-danger");
     expect(icon).toBeInTheDocument();
+
+    // Open dropdown and check icon in option
+    await userEvent.click(toggle);
+    const failedLogOption = screen.getByRole("option", { name: /Failed Log/i });
+    const optionIcon = failedLogOption.querySelector(".pf-v6-c-icon__content.pf-m-danger");
+    expect(optionIcon).toBeInTheDocument();
   });
 
   it("toggles auto-scroll when pause/resume button is clicked", async () => {

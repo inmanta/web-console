@@ -29,15 +29,24 @@ export interface LogViewerData {
 
 interface LogViewerProps {
   logs: LogViewerData[];
+  defaultSelected?: string;
 }
 
 /**
  * LogViewer component displays logs with a dropdown to select log parts and a download button.
  * Uses PatternFly's LogViewer for rendering logs.
- * @param logs Array of log objects, each with data, id, name, duration, and failed status.
+ *
+ * @prop {LogViewerData[]} logs - Array of log objects, each with data, id, name, duration, and failed status.
+ * @prop {string} defaultSelected - The id of the log to select by default.
+ *
+ * @note If the defaultSelected log is not found in the logs array, the last log will be selected.
+ *
+ * @returns {React.FC<LogViewerProps>} LogViewer component
  */
-export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
-  const [selectedLogId, setSelectedLogId] = useState(logs[0]?.id || "");
+export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs, defaultSelected }) => {
+  const [selectedLogId, setSelectedLogId] = useState(
+    defaultSelected || logs[logs.length - 1]?.id || ""
+  );
   const [selectOpen, setSelectOpen] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const logViewerRef = useRef<HTMLDivElement>(null);
@@ -72,6 +81,11 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs }) => {
       onClick={() => setSelectOpen((open) => !open)}
       isExpanded={selectOpen}
     >
+      {selectedLog?.failed && (
+        <Icon status="danger">
+          <ExclamationCircleIcon />
+        </Icon>
+      )}
       {selectedLog?.name || words("logViewer.selectLog")}
     </MenuToggle>
   );

@@ -12,6 +12,7 @@ import styled from "styled-components";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 import { FileBlock } from "./FileBlock";
+import { CodeEditorCopyControl } from "../CodeEditorControls";
 
 interface Props {
   attributes: ClassifiedAttribute[];
@@ -80,8 +81,8 @@ const AttributeValue: React.FC<{
           isLanguageLabelVisible
           language={Language.json}
           isDownloadEnabled
-          isCopyEnabled
-          height="300px"
+          customControls={<CodeEditorCopyControl code={attribute.value} />}
+          height={getHeightEditor(attribute)}
         />
       );
 
@@ -93,8 +94,8 @@ const AttributeValue: React.FC<{
           isLanguageLabelVisible
           language={Language.xml}
           isDownloadEnabled
-          isCopyEnabled
-          height="300px"
+          customControls={<CodeEditorCopyControl code={attribute.value} />}
+          height={getHeightEditor(attribute)}
         />
       );
     case "Python":
@@ -105,8 +106,8 @@ const AttributeValue: React.FC<{
           isLanguageLabelVisible
           language={Language.python}
           isDownloadEnabled
-          isCopyEnabled
-          height="300px"
+          customControls={<CodeEditorCopyControl code={attribute.value} />}
+          height={getHeightEditor(attribute)}
         />
       );
     case "Code":
@@ -126,3 +127,21 @@ const TextContainer = styled.span<{ $variant?: AttributeTextVariant }>`
       ? "font-family: var(--pf-t--global--font--family--mono)"
       : "inherit"};
 `;
+
+/**
+ * Determines the height for code editors based on content length
+ * @param attribute The attribute to determine height for
+ * @returns "300px" if lines > 15, otherwise "sizeToFit"
+ */
+export const getHeightEditor = (attribute: ClassifiedAttribute): string => {
+  if (
+    attribute.kind === "Json" ||
+    attribute.kind === "Xml" ||
+    attribute.kind === "Python" ||
+    attribute.kind === "Code"
+  ) {
+    const lineCount = attribute.value.split("\n").length;
+    return lineCount > 15 ? "300px" : "sizeToFit";
+  }
+  return "sizeToFit";
+};
