@@ -4,6 +4,8 @@
  * @param resourceVersionId - The full resource version ID with format "resourceId,v=number"
  * @returns The base resource ID without the version suffix
  */
-export function getResourceIdFromResourceVersionId(resourceVersionId: string): string {
+export function getResourceIdFromResourceVersionId(
+  resourceVersionId: string,
+): string {
   return resourceVersionId.replace(/,v=[0-9]+$/, "");
 }

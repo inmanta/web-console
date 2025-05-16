@@ -8,7 +8,8 @@ describe("getResourceIdFromResourceVersionId", () => {
   });
 
   it("should handle complex resource IDs with commas", () => {
-    const resourceVersionId = "resource::namespace::type[name,with,commas],v=456";
+    const resourceVersionId =
+      "resource::namespace::type[name,with,commas],v=456";
     const result = getResourceIdFromResourceVersionId(resourceVersionId);
     expect(result).toBe("resource::namespace::type[name,with,commas]");
   });
@@ -34,6 +35,8 @@ describe("getResourceIdFromResourceVersionId", () => {
     const resourceVersionId =
       "unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2";
     const result = getResourceIdFromResourceVersionId(resourceVersionId);
-    expect(result).toBe("unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f]");
+    expect(result).toBe(
+      "unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f]",
+    );
   });
 });
