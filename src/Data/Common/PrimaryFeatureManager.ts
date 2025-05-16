@@ -9,6 +9,7 @@ import {
   EXTENSION_LIST,
   FEATURE_LIST,
 } from "@/Core";
+import { words } from "@/UI";
 
 /**
  * Represents the primary feature manager.
@@ -38,7 +39,7 @@ export const PrimaryFeatureManager = (
 
   function get(): Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices"> {
     if (!features) {
-      throw new Error("ServerStatus has not yet been set.");
+      throw new Error(words("features.missing"));
     }
 
     return features;

@@ -4,6 +4,7 @@ import { useFetchHelpers } from "../helpers";
 /**
  * Custom hook to perform a GET request.
  *
+ * @param {string} env - The environment Id to be used in the request headers.
  * @param {Object} [options] - Optional configuration for the GET request.
  * @param {string} [options.message] - Optional message to include in the request headers.
  *
@@ -13,14 +14,14 @@ import { useFetchHelpers } from "../helpers";
  *
  * @template Response - The type of the response data.
  */
-export const useGet = (envId: string, options?: { message?: string }) => {
+export const useGet = (env: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders({ env: envId, message: options?.message });
+  const headers = createHeaders({ env, message: options?.message });
 
   return async <Response>(path: string): Promise<Response> => {
     try {
@@ -40,7 +41,7 @@ export const useGet = (envId: string, options?: { message?: string }) => {
 /**
  * Custom hook to perform a GET request with an optional, assignment  of environment Id for a header.
  *
- * @param {string} [envId] - The environment Id to be used in the request headers.
+ * @param {string} [env] - The environment Id to be used in the request headers.
  * @param {Object} [options] - Optional configuration for the GET request.
  * @param {string} [options.message] - Optional message to include in the request headers.
  *
@@ -50,7 +51,7 @@ export const useGet = (envId: string, options?: { message?: string }) => {
  *
  * @template Response - The type of the response data.
  */
-export const useGetWithOptionalEnv = (envId?: string, options?: { message?: string }) => {
+export const useGetWithOptionalEnv = (env?: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
@@ -58,7 +59,7 @@ export const useGetWithOptionalEnv = (envId?: string, options?: { message?: stri
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
 
   const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders({ env: envId, message: options?.message });
+  const headers = createHeaders({ env, message: options?.message });
 
   return async <Response>(path: string): Promise<Response> => {
     try {
@@ -78,7 +79,7 @@ export const useGetWithOptionalEnv = (envId?: string, options?: { message?: stri
 /**
  * Custom hook to perform a GET request.
  *
- *  @param {Object} [options] - Optional configuration for the GET request.
+ * @param {Object} [options] - Optional configuration for the GET request.
  * @param {string} [options.message] - Optional message to include in the request headers.
  *
  * This hook constructs the base URL and headers, and provides a function to perform a GET request to the specified path.
@@ -150,6 +151,7 @@ export const useGetZipWithoutEnv = (options?: { message?: string }) => {
 /**
  * Custom hook to create a POST request function.
  *
+ * @param {string} env - The environment Id to be used in the request headers.
  * @param {Object} [options] - Optional configuration for the POST request.
  * @param {string} [options.message] - Optional message to include in the request headers.
  *
@@ -157,14 +159,14 @@ export const useGetZipWithoutEnv = (options?: { message?: string }) => {
  *
  * @template Body - The type of the request body.
  */
-export const usePost = (envId: string, options?: { message?: string }) => {
+export const usePost = (env: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders({ env: envId, message: options?.message });
+  const headers = createHeaders({ env, message: options?.message });
 
   return async <Body>(path: string, body: Body) => {
     try {
@@ -278,6 +280,7 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
 /**
  * Custom hook to create a PATCH request function.
  *
+ * @param {string} env - The environment Id to be used in the request headers.
  * @param {Object} [options] - Optional configuration for the PATCH request.
  * @param {string} [options.message] - Optional message to include in the request headers.
  *
@@ -287,14 +290,14 @@ export const usePutWithoutEnv = (options?: { message?: string }) => {
  *
  * @template Body - The type of the request body.
  */
-export const usePatch = (envId: string, options?: { message?: string }) => {
+export const usePatch = (env: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders({ env: envId, message: options?.message });
+  const headers = createHeaders({ env, message: options?.message });
 
   return async <Body>(path: string, body: Body) => {
     try {
@@ -363,6 +366,7 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
 /**
  * Custom hook to perform a DELETE request.
  *
+ * @param {string} env - The environment Id to be used in the request headers.
  * @param {Object} [options] - Optional configuration for the DELETE request.
  * @param {string} [options.message] - Optional message to include in the request headers.
  *
@@ -370,14 +374,14 @@ export const usePatchWithoutEnv = (options?: { message?: string }) => {
  *
  * @returns {Function} A function that performs a DELETE request and returns the response data.
  */
-export const useDelete = (envId: string, options?: { message?: string }) => {
+export const useDelete = (env: string, options?: { message?: string }) => {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
   );
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const { createHeaders, handleErrors } = useFetchHelpers();
-  const headers = createHeaders({ env: envId, message: options?.message });
+  const headers = createHeaders({ env, message: options?.message });
 
   if (options?.message) {
     headers.append("message", options.message);
