@@ -18,6 +18,7 @@ export const a: Details = {
       "std::File[internal,path=/tmp/dir1/file2],v=4",
     ],
     another_key: "val",
+    hash: "abc123",
   },
   status: Status.deployed,
   requires_status: {

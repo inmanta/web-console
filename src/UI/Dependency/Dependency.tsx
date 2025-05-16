@@ -1,6 +1,5 @@
 import React, { createContext } from "react";
 import {
-  FileFetcher,
   UrlManager,
   EnvironmentModifier,
   RouteManager,
@@ -12,7 +11,6 @@ import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth/AuthContex
 import {
   DummyEnvironmentModifier,
   DummyFeatureManager,
-  DummyFileFetcher,
   DummyUrlManager,
   DummyRouteManager,
   DummyEnvironmentHandler,
@@ -21,7 +19,6 @@ import {
 
 export interface Dependencies {
   urlManager: UrlManager;
-  fileFetcher: FileFetcher;
   environmentModifier: EnvironmentModifier;
   featureManager: FeatureManager;
   routeManager: RouteManager;
@@ -32,7 +29,6 @@ export interface Dependencies {
 
 export const DependencyContext = createContext<Dependencies>({
   urlManager: new DummyUrlManager(),
-  fileFetcher: new DummyFileFetcher(),
   environmentModifier: new DummyEnvironmentModifier(),
   featureManager: new DummyFeatureManager(),
   routeManager: new DummyRouteManager(),
@@ -47,7 +43,6 @@ export const DependencyProvider: React.FC<{
 }> = ({
   dependencies: {
     urlManager,
-    fileFetcher,
     environmentModifier,
     featureManager,
     routeManager,
@@ -60,7 +55,6 @@ export const DependencyProvider: React.FC<{
   <DependencyContext.Provider
     value={{
       urlManager: urlManager || new DummyUrlManager(),
-      fileFetcher: fileFetcher || new DummyFileFetcher(),
       environmentModifier: environmentModifier || new DummyEnvironmentModifier(),
       featureManager: featureManager || new DummyFeatureManager(),
       routeManager: routeManager || new DummyRouteManager(),

@@ -3,8 +3,6 @@ import { useLocation } from "react-router";
 import { isJsonParserId, JsonParserId } from "@/Core";
 import {
   PrimaryFeatureManager,
-  BaseApiHelper,
-  FileFetcherImpl,
   PrimaryArchiveHelper,
   PrimaryFileManager,
   PrimaryLogger,
@@ -45,10 +43,8 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = PrimaryRouteManager(basePathname);
-  const apiHelper = BaseApiHelper(baseUrl, authHelper);
 
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
-  const fileFetcher = new FileFetcherImpl(apiHelper);
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
   const environmentModifier = useEnvironmentModifierImpl();
   const fileManager = new PrimaryFileManager();
@@ -58,7 +54,6 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
     <DependencyProvider
       dependencies={{
         urlManager,
-        fileFetcher,
         environmentModifier,
         featureManager,
         routeManager,
