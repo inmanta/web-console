@@ -65,6 +65,7 @@ export const useGetVersionResources = ({
     sort,
     currentPage,
   });
+  
   return {
     useContinuous: (): UseQueryResult<QueryResponse, Error> =>
       useQuery({

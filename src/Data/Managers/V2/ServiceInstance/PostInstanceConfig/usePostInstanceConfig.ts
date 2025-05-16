@@ -29,7 +29,7 @@ export const usePostInstanceConfig = (
 
   return useMutation({
     mutationFn: (body) => post(`/lsm/v1/service_inventory/${service_entity}/${id}/config`, body),
-    mutationKey: ["post_instance_config"],
+    mutationKey: ["post_instance_config", env],
     onSuccess: () => {
       client.refetchQueries({
         queryKey: ["get_instance_config-one_time", service_entity, id],

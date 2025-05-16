@@ -24,7 +24,6 @@ interface GetServiceModel {
 export const useGetServiceModel = (service: string): GetServiceModel => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-
   const get = useGet(env)<{ data: ServiceModel }>;
 
   return {

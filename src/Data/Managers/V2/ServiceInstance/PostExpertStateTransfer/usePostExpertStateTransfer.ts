@@ -39,7 +39,7 @@ export const usePostExpertStateTransfer = (
   return useMutation({
     mutationFn: (data) =>
       post(`/lsm/v1/service_inventory/${service_entity}/${instance_id}/expert/state`, data),
-    mutationKey: ["post_state_transfer_expert"],
+    mutationKey: ["post_state_transfer_expert", env],
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: [service_entity, instance_id],

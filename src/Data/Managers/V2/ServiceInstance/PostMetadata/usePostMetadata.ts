@@ -30,6 +30,6 @@ export const usePostMetadata = (): UseMutationResult<void, Error, PostMetadataIn
         `/lsm/v1/service_inventory/${info.service_entity}/${info.service_id}/metadata/${encodeURIComponent(info.key)}`,
         info
       ),
-    mutationKey: ["post_metadata"],
+    mutationKey: ["post_metadata", env],
   });
 };

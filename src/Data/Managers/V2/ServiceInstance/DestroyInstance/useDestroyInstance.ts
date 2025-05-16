@@ -26,7 +26,7 @@ export const useDestroyInstance = (
       deleteFn(
         `/lsm/v2/service_inventory/${service_entity}/${instance_id}/expert?current_version=${version}`
       ),
-    mutationKey: ["destroy_instance"],
+    mutationKey: ["destroy_instance", env],
     ...options,
   });
 };

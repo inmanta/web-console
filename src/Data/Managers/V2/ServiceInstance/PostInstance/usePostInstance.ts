@@ -34,7 +34,7 @@ export const usePostInstance = (
   return useMutation({
     mutationFn: ({ fields, attributes }) =>
       post(`/lsm/v1/service_inventory/${service_entity}`, prepBody(fields, attributes)),
-    mutationKey: ["post_instance"],
+    mutationKey: ["post_instance", env],
     ...options,
   });
 };

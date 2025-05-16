@@ -23,7 +23,7 @@ export const usePromoteDesiredStateVersion = (
 
   return useMutation({
     mutationFn: (version) => post(`/api/v2/desiredstate/${version}/promote`),
-    mutationKey: ["promote_version"],
+    mutationKey: ["promote_version", env],
     ...options,
     onSuccess: () => {
       // Refetch the desired state queries to update the list

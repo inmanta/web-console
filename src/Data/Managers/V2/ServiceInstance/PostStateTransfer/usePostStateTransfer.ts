@@ -41,7 +41,7 @@ export const usePostStateTransfer = (
   return useMutation({
     mutationFn: (body) =>
       post(`/lsm/v1/service_inventory/${service_entity}/${instance_id}/state`, body),
-    mutationKey: ["post_state_transfer"],
+    mutationKey: ["post_state_transfer", env],
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: [service_entity, instance_id],

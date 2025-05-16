@@ -17,7 +17,7 @@ export const useHaltEnvironment = (
 
   return useMutation({
     mutationFn: () => post("/api/v2/actions/environment/halt", null),
-    mutationKey: ["halt_environment"],
+    mutationKey: ["halt_environment", env],
     ...options,
   });
 };

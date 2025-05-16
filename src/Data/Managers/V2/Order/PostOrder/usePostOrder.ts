@@ -32,7 +32,7 @@ export const usePostOrder = (
         service_order_items,
         description: words("instanceComposer.orderDescription"),
       }),
-    mutationKey: ["post_order"],
+    mutationKey: ["post_order", env],
     ...options,
   });
 };

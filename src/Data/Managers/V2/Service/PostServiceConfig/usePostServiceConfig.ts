@@ -27,7 +27,7 @@ export const usePostServiceConfig = (
 
   return useMutation({
     mutationFn: (body) => post(`/lsm/v1/service_catalog/${service_entity}/config`, body),
-    mutationKey: ["post_config"],
+    mutationKey: ["post_config", env],
     onSuccess: () => {
       client.resetQueries({
         queryKey: ["get_service_config-one_time", service_entity],

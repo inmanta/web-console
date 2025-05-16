@@ -16,7 +16,7 @@ export const useDeleteDesiredStateVersion = (): UseMutationResult<void, Error, s
 
   return useMutation({
     mutationFn: (version) => deleteFn(`/api/v1/version/${version}`),
-    mutationKey: ["delete_desired_state_version"],
+    mutationKey: ["delete_desired_state_version", env],
     onSuccess: () => {
       //invalidate the desired state queries to update the list
       client.invalidateQueries({

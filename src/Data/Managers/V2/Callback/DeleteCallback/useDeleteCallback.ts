@@ -23,7 +23,7 @@ export const useDeleteCallback = (
 
   return useMutation({
     mutationFn: (id) => deleteFn(`/lsm/v1/callbacks/${encodeURIComponent(id)}`),
-    mutationKey: ["delete_callback"],
+    mutationKey: ["delete_callback", env],
     onSuccess: () => {
       //invalidate the get_callbacks query to update the list
       client.invalidateQueries({

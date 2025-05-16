@@ -25,7 +25,7 @@ export const useModifyEnvironment = (
 
   return useMutation({
     mutationFn: (params) => post(`/api/v2/environment/${environmentId}`, params),
-    mutationKey: ["modify_environment", environmentId],
+    mutationKey: ["modify_environment", environmentId, env],
     onSuccess: () => {
       client.refetchQueries();
     },

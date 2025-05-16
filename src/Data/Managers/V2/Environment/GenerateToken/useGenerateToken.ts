@@ -25,7 +25,7 @@ export const useGenerateToken = (
 
   return useMutation({
     mutationFn: (params) => post("/api/v2/environment_auth", params),
-    mutationKey: ["generate_token"],
+    mutationKey: ["generate_token", env],
     ...options,
   });
 };

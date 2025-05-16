@@ -18,7 +18,7 @@ export const useCreateCallback = (
 
   return useMutation({
     mutationFn: (body) => postFn("/lsm/v1/callbacks", body),
-    mutationKey: ["post_callback"],
+    mutationKey: ["post_callback", env],
     ...options,
   });
 };

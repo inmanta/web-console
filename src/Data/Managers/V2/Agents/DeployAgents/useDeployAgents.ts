@@ -47,7 +47,7 @@ export const useDeployAgents = (
         agent_trigger_method: method === "Deploy" ? "push_incremental_deploy" : "push_full_deploy",
         agents: agents,
       }),
-    mutationKey: ["deploy_agents"],
+    mutationKey: ["deploy_agents", env],
     ...options,
   });
 };

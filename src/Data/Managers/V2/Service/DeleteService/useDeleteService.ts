@@ -24,7 +24,7 @@ export const useDeleteService = (
 
   return useMutation({
     mutationFn: () => deleteFn(`/lsm/v1/service_catalog/${service_entity}`),
-    mutationKey: ["delete_service"],
+    mutationKey: ["delete_service", env],
     onSuccess: () => {
       client.refetchQueries({ queryKey: ["get_service_models-continuous"] });
       client.refetchQueries({ queryKey: ["get_service_models-one_time"] });

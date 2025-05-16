@@ -23,7 +23,7 @@ export const useTriggerDryRun = (
 
   return useMutation({
     mutationFn: (version) => post(`/api/v2/dryrun/${version}`),
-    mutationKey: ["trigger_dry_run"],
+    mutationKey: ["trigger_dry_run", env],
     ...options,
     onSuccess: () => {
       // Refetch the dry run queries

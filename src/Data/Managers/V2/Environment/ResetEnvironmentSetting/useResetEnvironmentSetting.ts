@@ -23,7 +23,7 @@ export const useResetEnvironmentSetting = (
 
   return useMutation({
     mutationFn: (id) => deleteFn(`/api/v2/environment_settings/${id}`),
-    mutationKey: ["reset_environment_setting"],
+    mutationKey: ["reset_environment_setting", env],
     onSuccess: () => {
       client.refetchQueries({ queryKey: ["get_environment_settings-one_time"] });
     },
