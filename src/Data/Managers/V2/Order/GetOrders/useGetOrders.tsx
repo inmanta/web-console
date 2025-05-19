@@ -1,8 +1,10 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination, Sort } from "@/Core";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
 import { ServiceOrder, SortKey } from "@/Slices/Orders/Core/Query";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 import { getUrl } from "./getUrl";
 
@@ -45,12 +47,14 @@ interface GetOrders {
  * @returns {UseQueryResult<QueryData, CustomError>} returns.useContinuous - Fetch the orders with an interval of 5s.
  */
 export const useGetOrders = (): GetOrders => {
-  const get = useGet()<Result>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<Result>;
 
   return {
     useContinuous: (params): UseQueryResult<QueryData, CustomError> =>
       useQuery({
-        queryKey: ["get_orders-continuous", ...Array.from(Object.values(params))],
+        queryKey: ["get_orders-continuous", ...Array.from(Object.values(params)), env],
         queryFn: () => get(getUrl(params)),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({

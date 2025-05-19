@@ -1,8 +1,10 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core";
 import { Resource } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
+import { DependencyContext } from "@/UI/Dependency";
 import { REFETCH_INTERVAL, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
 
@@ -53,7 +55,9 @@ export const useGetVersionResources = ({
   sort,
   currentPage,
 }: GetVersionResourcesParams): GetVersionResources => {
-  const get = useGet()<Result>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<Result>;
   const url = getUrl({
     version,
     pageSize,
@@ -61,6 +65,7 @@ export const useGetVersionResources = ({
     sort,
     currentPage,
   });
+
   return {
     useContinuous: (): UseQueryResult<QueryResponse, Error> =>
       useQuery({
@@ -71,6 +76,7 @@ export const useGetVersionResources = ({
           filter,
           sort,
           currentPage,
+          env,
         ],
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,

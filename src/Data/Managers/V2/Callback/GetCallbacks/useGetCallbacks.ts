@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Callback } from "@/Slices/ServiceDetails/Core/Callback";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet } from "../../helpers";
 
 /**
@@ -23,12 +25,14 @@ interface GetDesiredStates {
  * @returns {UseQueryResult<Callback[], CustomError>} returns.useOneTime - Fetch the callbacks with a single query.
  */
 export const useGetCallbacks = (): GetDesiredStates => {
-  const get = useGet()<Response>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<Response>;
 
   return {
     useOneTime: (): UseQueryResult<Callback[], CustomError> =>
       useQuery({
-        queryKey: ["get_callbacks-one_time"],
+        queryKey: ["get_callbacks-one_time", env],
         queryFn: () => get(getUrl()),
         select: (data) => data.data,
       }),

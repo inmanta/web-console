@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination, Sort } from "@/Core/Domain";
 import { Handlers, Links } from "@/Core/Domain/Pagination/Pagination";
@@ -5,6 +6,7 @@ import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
 import { Fact } from "@/Slices/Facts/Core/Domain";
 import { SortKey } from "@/Slices/Facts/Core/Query";
+import { DependencyContext } from "@/UI/Dependency";
 import { useGet, REFETCH_INTERVAL } from "../../helpers";
 import { getUrl } from "./getUrl";
 
@@ -58,12 +60,14 @@ interface GetFacts {
  * @returns {UseQueryResult<GetFactsResponse, Error>} returns.useContinuous - Fetch the facts with a recurrent query with an interval of 5s
  */
 export const useGetFacts = (params: GetFactsParams): GetFacts => {
-  const get = useGet()<Result>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<Result>;
 
   return {
     useContinuous: (): UseQueryResult<GetFactsResponse, Error> =>
       useQuery({
-        queryKey: ["get_facts-continuous", ...Array.from(Object.values(params))],
+        queryKey: ["get_facts-continuous", ...Array.from(Object.values(params)), env],
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,

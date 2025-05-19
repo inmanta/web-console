@@ -1,9 +1,11 @@
+import { useContext } from "react";
 import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 /**
@@ -23,13 +25,14 @@ export const usePauseAgent = (
   options?: UseMutationOptions<void, Error, PauseAgentParams, unknown>
 ): UseMutationResult<void, Error, PauseAgentParams, unknown> => {
   const client = useQueryClient();
-
-  const post = usePost()<null>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<null>;
 
   return useMutation({
     mutationFn: ({ name, action }) =>
       post(`/api/v2/agent/${encodeURIComponent(name)}/${action}`, null),
-    mutationKey: ["pause_agent"],
+    mutationKey: ["pause_agent", env],
     onSuccess: () => {
       client.refetchQueries({ queryKey: ["get_agents-continuous"], type: "active" });
     },

@@ -1,8 +1,10 @@
+import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Pagination, ServiceInstanceModelWithTargetStates } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { ServiceInstanceParams } from "@/Core/Domain/ServiceInstanceParams";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
+import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 import { getUrl } from "./getUrl";
 
@@ -39,6 +41,8 @@ export const useGetInstances = (
   params: ServiceInstanceParams
 ): GetInstance => {
   const { filter, sort, pageSize, currentPage } = params;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
 
   const url = getUrl({
     name: serviceName,
@@ -47,12 +51,20 @@ export const useGetInstances = (
     pageSize,
     currentPage,
   });
-  const get = useGet()<ResponseBody>;
+  const get = useGet(env)<ResponseBody>;
 
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: ["get_instances-continuous", serviceName, filter, sort, pageSize, currentPage],
+        queryKey: [
+          "get_instances-continuous",
+          serviceName,
+          filter,
+          sort,
+          pageSize,
+          currentPage,
+          env,
+        ],
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({

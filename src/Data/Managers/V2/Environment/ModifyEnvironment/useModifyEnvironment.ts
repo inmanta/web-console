@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import {
   UseMutationOptions,
   UseMutationResult,
@@ -5,6 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ModifyEnvironmentParams } from "@/Core";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 /**
@@ -17,11 +19,13 @@ export const useModifyEnvironment = (
   options?: UseMutationOptions<void, Error, ModifyEnvironmentParams>
 ): UseMutationResult<void, Error, ModifyEnvironmentParams> => {
   const client = useQueryClient();
-  const post = usePost()<ModifyEnvironmentParams>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<ModifyEnvironmentParams>;
 
   return useMutation({
     mutationFn: (params) => post(`/api/v2/environment/${environmentId}`, params),
-    mutationKey: ["modify_environment", environmentId],
+    mutationKey: ["modify_environment", environmentId, env],
     onSuccess: () => {
       client.refetchQueries();
     },

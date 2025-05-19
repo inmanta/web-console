@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Config } from "@/Core";
+import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
 export interface Params {
@@ -19,11 +21,13 @@ export const usePostServiceConfig = (
   service_entity: string
 ): UseMutationResult<Response, Error, Params, unknown> => {
   const client = useQueryClient();
-  const post = usePost()<Params>;
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const post = usePost(env)<Params>;
 
   return useMutation({
     mutationFn: (body) => post(`/lsm/v1/service_catalog/${service_entity}/config`, body),
-    mutationKey: ["post_config"],
+    mutationKey: ["post_config", env],
     onSuccess: () => {
       client.resetQueries({
         queryKey: ["get_service_config-one_time", service_entity],
