@@ -142,7 +142,7 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs, defaultSele
       data={logText}
       hasLineNumbers
       innerRef={logViewerRef}
-      height={500}
+      height={800}
       isTextWrapped
       scrollToRow={isPaused ? undefined : logText.split("\n").length}
       onScroll={({ scrollOffsetToBottom }) => {

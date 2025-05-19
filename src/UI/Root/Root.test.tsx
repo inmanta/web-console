@@ -66,6 +66,9 @@ describe("Root", () => {
 
     render(component);
 
+    // Wait for the env selector toggle to be visible and then check for accessibility violations after everything is rendered
+    expect(await screen.findByTestId("env-selector-toggle")).toBeVisible();
+
     await act(async () => {
       const results = await axe(document.body);
 

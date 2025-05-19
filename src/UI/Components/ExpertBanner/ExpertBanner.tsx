@@ -12,9 +12,9 @@ import { ToastAlert } from "../ToastAlert";
  * @returns { React.FC<Props> | null} The rendered banner if the expert mode is enabled, otherwise null.
  */
 export const ExpertBanner: React.FC = () => {
-  const { environmentModifier } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const [isLoading, setIsLoading] = useState(false);
-  const expertModeEnabled = environmentModifier.useIsExpertModeEnabled();
+  const expertModeEnabled = environmentHandler.useIsExpertModeEnabled();
   const [errorMessage, setMessage] = useState<string | undefined>(undefined);
   const { mutate } = useUpdateEnvironmentSetting({
     onError: (error) => {
@@ -24,7 +24,7 @@ export const ExpertBanner: React.FC = () => {
   });
 
   useEffect(() => {
-    setIsLoading(false); //changing it onSuccess doesn't necessarily mean that the expert mode is changed yet, the most reliable way is to check the value of the expert mode directly from the environmentModifier
+    setIsLoading(false); //changing it onSuccess doesn't necessarily mean that the expert mode is changed yet, the most reliable way is to check the value of the expert mode directly from the environmentHandler
   }, [expertModeEnabled]);
 
   return expertModeEnabled ? (

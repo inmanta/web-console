@@ -23,20 +23,34 @@ export function MockEnvironmentHandler(environment: FlatEnvironment): Environmen
     return environment;
   }
 
-  function setAllEnvironments(_environments: FlatEnvironment[]): void {
-    return;
-  }
-
   function determineSelected(): FlatEnvironment | undefined {
     throw new Error("Method not implemented.");
   }
 
+  function useIsHalted(): boolean {
+    return environment.halted;
+  }
+
+  function useIsProtectedEnvironment(): boolean {
+    return Boolean(environment.settings.protected_environment);
+  }
+
+  function useIsServerCompileEnabled(): boolean {
+    return Boolean(environment.settings.server_compile);
+  }
+
+  function useIsExpertModeEnabled(): boolean {
+    return Boolean(environment.settings.enable_lsm_expert_mode);
+  }
   return {
     useId,
     set,
     useName,
-    setAllEnvironments,
     useSelected,
     determineSelected,
+    useIsHalted,
+    useIsProtectedEnvironment,
+    useIsServerCompileEnabled,
+    useIsExpertModeEnabled,
   };
 }

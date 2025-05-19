@@ -7,10 +7,11 @@ import {
   PrimaryRouteManager,
   DependencyProvider,
   EnvironmentHandlerImpl,
-  useEnvironmentModifierImpl,
   UrlManagerImpl,
+  words,
 } from "@/UI";
 import { AuthContext } from "./Data/Auth/";
+import { useGetEnvironments } from "./Data/Managers/V2/Environment/GetEnvironments";
 import { useGetServerStatus } from "./Data/Managers/V2/Server";
 import { ErrorView } from "./UI/Components/ErrorView";
 import { LoadingView } from "./UI/Components/LoadingView";
@@ -26,7 +27,8 @@ import { ModalProvider } from "./UI/Root/Components/ModalProvider";
  * @returns {React.FC<React.PropsWithChildren<Props>>} A `DependencyProvider` that wraps a `ModalProvider`, an `UpdateBanner`, and the children.
  */
 export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const { data, isSuccess, isError, error, refetch } = useGetServerStatus().useOneTime();
+  const serverStatus = useGetServerStatus().useOneTime();
+  const environments = useGetEnvironments().useOneTime();
   const authHelper = useContext(AuthContext);
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -39,24 +41,27 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
     getJsonParserId(globalThis),
     COMMITHASH,
     APP_VERSION,
-    data
+    serverStatus.data
   );
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
-  const environmentModifier = useEnvironmentModifierImpl();
+  const environmentHandler = EnvironmentHandlerImpl(
+    useLocation,
+    routeManager,
+    environments.data || []
+  );
   const fileManager = new PrimaryFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
 
-  if (isError) {
-    return <ErrorView aria-label="Injector-Error" retry={refetch} message={error.message} />;
+  if (environments.isError || serverStatus.isError) {
+    const message = environments.error?.message || serverStatus.error?.message || words("error");
+    return <ErrorView ariaLabel="Injector-Error" message={message} />;
   }
 
-  if (isSuccess) {
+  if (environments.isSuccess && serverStatus.isSuccess) {
     return (
       <DependencyProvider
         dependencies={{
           urlManager,
-          environmentModifier,
           featureManager,
           routeManager,
           environmentHandler,
@@ -72,7 +77,7 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
     );
   }
 
-  return <LoadingView aria-label="Injector-Loading" />;
+  return <LoadingView ariaLabel="Injector-Loading" />;
 };
 
 const getJsonParserId = (container: unknown): JsonParserId | undefined => {
