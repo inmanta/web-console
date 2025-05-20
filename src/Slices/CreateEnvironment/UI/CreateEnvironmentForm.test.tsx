@@ -147,7 +147,7 @@ describe("CreateEnvironmentForm", () => {
     });
 
     await userEvent.click(await screen.findByRole("button", { name: "submit" }));
-    
+
     expect(mockFn).toHaveBeenCalledWith("Catalog", undefined, "?env=environment_id_a");
   });
 
