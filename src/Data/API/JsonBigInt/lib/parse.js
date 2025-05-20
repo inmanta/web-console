@@ -440,6 +440,6 @@ var json_parse = function (options) {
   };
 };
 
-module.exports = json_parse;
+export default json_parse;
 
 /* eslint-enable */

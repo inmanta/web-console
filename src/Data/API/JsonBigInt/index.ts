@@ -17,11 +17,9 @@
 
 // Use CommonJS require to import CJS modules
 
-/* eslint-disable @typescript-eslint/no-require-imports */
-const jsonParse = require("./lib/parse.js");
+import jsonParse from "./lib/parse.js";
 
-/* eslint-disable @typescript-eslint/no-require-imports */
-const jsonStringify = require("./lib/stringify.js").stringify;
+import { stringify as jsonStringify } from "./lib/stringify.js";
 
 export interface JSONBigIntOptions {
   [key: string]: unknown;

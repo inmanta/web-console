@@ -1,5 +1,5 @@
 /* eslint-disable */
-var BigNumber = require("bignumber.js");
+import BigNumber from "bignumber.js";
 
 /*
     json2.js
@@ -158,10 +158,7 @@ var BigNumber = require("bignumber.js");
     test, toJSON, toString, valueOf
 */
 
-// Create a JSON object only if one does not already exist. We create the
-// methods in a closure to avoid creating global variables.
-
-var JSON = module.exports;
+const JSONBigInt = {};
 
 (function () {
   "use strict";
@@ -337,8 +334,8 @@ var JSON = module.exports;
 
   // If the JSON object does not yet have a stringify method, give it one.
 
-  if (typeof JSON.stringify !== "function") {
-    JSON.stringify = function (value, replacer, space) {
+  if (typeof JSONBigInt.stringify !== "function") {
+    JSONBigInt.stringify = function (value, replacer, space) {
       // The stringify method takes a value and an optional replacer, and an optional
       // space parameter, and returns a JSON text. The replacer can be a function
       // that can replace values, or an array of strings that will select the keys.
@@ -371,7 +368,7 @@ var JSON = module.exports;
         typeof replacer !== "function" &&
         (typeof replacer !== "object" || typeof replacer.length !== "number")
       ) {
-        throw new Error("JSON.stringify");
+        throw new Error("JSONBigInt.stringify");
       }
 
       // Make a fake root object containing our value under the key of ''.
@@ -383,3 +380,5 @@ var JSON = module.exports;
 })();
 
 /* eslint-enable */
+
+export const stringify = JSONBigInt.stringify;
