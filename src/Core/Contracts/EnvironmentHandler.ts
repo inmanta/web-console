@@ -18,6 +18,7 @@ import { Navigate } from "@/Core/Language";
  */
 export interface EnvironmentHandler {
   set(navigate: Navigate, location: Location, environmentId: string): void;
+  setAllEnvironments(environments: FlatEnvironment[]): void;
   useSelected(): FlatEnvironment | undefined;
 
   /**

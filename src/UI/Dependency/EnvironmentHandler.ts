@@ -21,12 +21,16 @@ import { SearchHelper } from "@/UI/Routing/SearchHelper";
  */
 export function EnvironmentHandlerImpl(
   useLocation: () => Location,
-  routeManager: RouteManager,
-  environments: FlatEnvironment[]
+  routeManager: RouteManager
 ): EnvironmentHandler {
   const { search } = useLocation();
+  const [environments, setEnvironments] = useState<FlatEnvironment[]>([]);
   const [env, setEnv] = useState<FlatEnvironment | null>(null);
   const envSettings = useGetEnvironmentSettings(env?.id).useOneTime();
+
+  function setAllEnvironments(environments: FlatEnvironment[]): void {
+    setEnvironments(environments);
+  }
 
   function set(navigate: Navigate, location: Location, environmentId: string): void {
     const { pathname, search } = location;
@@ -136,5 +140,6 @@ export function EnvironmentHandlerImpl(
     useIsServerCompileEnabled,
     useIsProtectedEnvironment,
     useIsExpertModeEnabled,
+    setAllEnvironments,
   };
 }

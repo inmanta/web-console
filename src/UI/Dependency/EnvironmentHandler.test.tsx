@@ -46,9 +46,13 @@ describe("EnvironmentHandler", () => {
     const env = Environment.filterable[0];
 
     const { result } = renderHook(
-      () => EnvironmentHandlerImpl(() => history.location, routeManager, Environment.filterable),
+      () => EnvironmentHandlerImpl(() => history.location, routeManager),
       { wrapper }
     );
+
+    await act(async () => {
+      result.current.setAllEnvironments(Environment.filterable);
+    });
 
     await act(async () => {
       result.current.set(history.push, history.location, env.id);
@@ -72,9 +76,13 @@ describe("EnvironmentHandler", () => {
     const env = Environment.filterable[0];
 
     const { result, rerender } = renderHook(
-      () => EnvironmentHandlerImpl(() => history.location, routeManager, Environment.filterable),
+      () => EnvironmentHandlerImpl(() => history.location, routeManager),
       { wrapper }
     );
+
+    await act(async () => {
+      result.current.setAllEnvironments(Environment.filterable);
+    });
 
     await act(async () => {
       result.current.set(history.push, history.location, env.id);
@@ -89,13 +97,17 @@ describe("EnvironmentHandler", () => {
     expect(result.current.useId()).toEqual(env.id);
   });
 
-  test("EnvironmentHandler determines selected environment correctly", () => {
+  test("EnvironmentHandler determines selected environment correctly", async () => {
     const history = createMemoryHistory();
 
     const { result } = renderHook(
-      () => EnvironmentHandlerImpl(() => history.location, routeManager, Environment.filterable),
+      () => EnvironmentHandlerImpl(() => history.location, routeManager),
       { wrapper }
     );
+
+    await act(async () => {
+      result.current.setAllEnvironments(Environment.filterable);
+    });
 
     expect(result.current.determineSelected([], history.location.search)).toBeUndefined();
     history.push(`?env=${Environment.filterable[0].id}`);
@@ -141,9 +153,14 @@ describe("EnvironmentHandler", () => {
     const history = createMemoryHistory();
 
     const { result, rerender } = renderHook(
-      () => EnvironmentHandlerImpl(() => history.location, routeManager, Environment.filterable),
+      () => EnvironmentHandlerImpl(() => history.location, routeManager),
       { wrapper }
     );
+
+    await act(async () => {
+      result.current.setAllEnvironments(Environment.filterable);
+    });
+
     // No setting is specified, and the default is true
     await act(async () => {
       result.current.set(history.push, history.location, Environment.filterable[0].id);
@@ -184,9 +201,13 @@ describe("EnvironmentHandler", () => {
     );
     const history = createMemoryHistory();
     const { result, rerender } = renderHook(
-      () => EnvironmentHandlerImpl(() => history.location, routeManager, Environment.filterable),
+      () => EnvironmentHandlerImpl(() => history.location, routeManager),
       { wrapper }
     );
+
+    await act(async () => {
+      result.current.setAllEnvironments(Environment.filterable);
+    });
 
     await act(async () => {
       result.current.set(history.push, history.location, Environment.filterable[0].id);
@@ -220,9 +241,13 @@ describe("EnvironmentHandler", () => {
     const history = createMemoryHistory();
 
     const { result, rerender } = renderHook(
-      () => EnvironmentHandlerImpl(() => history.location, routeManager, Environment.filterable),
+      () => EnvironmentHandlerImpl(() => history.location, routeManager),
       { wrapper }
     );
+
+    await act(async () => {
+      result.current.setAllEnvironments(Environment.filterable);
+    });
 
     await act(async () => {
       result.current.set(history.push, history.location, Environment.filterable[0].id);

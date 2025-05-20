@@ -8,13 +8,8 @@ import {
   DependencyProvider,
   EnvironmentHandlerImpl,
   UrlManagerImpl,
-  words,
 } from "@/UI";
 import { AuthContext } from "./Data/Auth/";
-import { useGetEnvironments } from "./Data/Managers/V2/Environment/GetEnvironments";
-import { useGetServerStatus } from "./Data/Managers/V2/Server";
-import { ErrorView } from "./UI/Components/ErrorView";
-import { LoadingView } from "./UI/Components/LoadingView";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
 import { ModalProvider } from "./UI/Root/Components/ModalProvider";
 
@@ -27,8 +22,6 @@ import { ModalProvider } from "./UI/Root/Components/ModalProvider";
  * @returns {React.FC<React.PropsWithChildren<Props>>} A `DependencyProvider` that wraps a `ModalProvider`, an `UpdateBanner`, and the children.
  */
 export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const serverStatus = useGetServerStatus().useOneTime();
-  const environments = useGetEnvironments().useOneTime();
   const authHelper = useContext(AuthContext);
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -40,46 +33,30 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const featureManager = PrimaryFeatureManager(
     getJsonParserId(globalThis),
     COMMITHASH,
-    APP_VERSION,
-    serverStatus.data
+    APP_VERSION
   );
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
-  const environmentHandler = EnvironmentHandlerImpl(
-    useLocation,
-    routeManager,
-    environments.data || []
-  );
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
   const fileManager = new PrimaryFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
 
-  if (environments.isError || serverStatus.isError) {
-    const message = environments.error?.message || serverStatus.error?.message || words("error");
-    const refetch = environments.isError ? environments.refetch : serverStatus.refetch;
-
-    return <ErrorView ariaLabel="Injector-Error" message={message} retry={refetch} />;
-  }
-
-  if (environments.isSuccess && serverStatus.isSuccess) {
-    return (
-      <DependencyProvider
-        dependencies={{
-          urlManager,
-          featureManager,
-          routeManager,
-          environmentHandler,
-          archiveHelper,
-          authHelper,
-        }}
-      >
-        <ModalProvider>
-          <UpdateBanner />
-          {children}
-        </ModalProvider>
-      </DependencyProvider>
-    );
-  }
-
-  return <LoadingView ariaLabel="Injector-Loading" />;
+  return (
+    <DependencyProvider
+      dependencies={{
+        urlManager,
+        featureManager,
+        routeManager,
+        environmentHandler,
+        archiveHelper,
+        authHelper,
+      }}
+    >
+      <ModalProvider>
+        <UpdateBanner />
+        {children}
+      </ModalProvider>
+    </DependencyProvider>
+  );
 };
 
 const getJsonParserId = (container: unknown): JsonParserId | undefined => {

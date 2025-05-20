@@ -42,6 +42,11 @@ export function MockEnvironmentHandler(environment: FlatEnvironment): Environmen
   function useIsExpertModeEnabled(): boolean {
     return Boolean(environment.settings.enable_lsm_expert_mode);
   }
+
+  function setAllEnvironments(): void {
+    return;
+  }
+
   return {
     useId,
     set,
@@ -52,5 +57,6 @@ export function MockEnvironmentHandler(environment: FlatEnvironment): Environmen
     useIsProtectedEnvironment,
     useIsServerCompileEnabled,
     useIsExpertModeEnabled,
+    setAllEnvironments,
   };
 }
