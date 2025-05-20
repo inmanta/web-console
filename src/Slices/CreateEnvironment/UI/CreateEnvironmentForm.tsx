@@ -37,20 +37,30 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       //update the data in the cache to avoid crash after navigating to the new env
       client.setQueryData(
         ["get_environments-one_time", false],
-        (previousData: { data: Environment[] }) => {
-          return { data: [...previousData.data, data.data] };
+        (previousData: { data: Environment[] | undefined }) => {
+          const oldData = previousData?.data || [];
+          return { data: [...oldData, data.data] };
         }
       );
       client.setQueryData(
         ["get_environments-one_time", true],
         (previousData: { data: Environment[] }) => {
-          return { data: [...previousData.data, data.data] };
+          const oldData = previousData?.data || [];
+          return { data: [...oldData, data.data] };
         }
       );
       client.setQueryData(
         ["get_environments-continuous", false],
         (previousData: { data: Environment[] }) => {
-          return { data: [...previousData.data, data.data] };
+          const oldData = previousData?.data || [];
+          return { data: [...oldData, data.data] };
+        }
+      );
+      client.setQueryData(
+        ["get_environments-continuous", true],
+        (previousData: { data: Environment[] }) => {
+          const oldData = previousData?.data || [];
+          return { data: [...oldData, data.data] };
         }
       );
 
