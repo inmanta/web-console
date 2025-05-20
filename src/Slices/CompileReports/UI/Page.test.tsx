@@ -21,7 +21,7 @@ const axe = configureAxe({
 });
 const server = setupServer();
 
-function setup(serverCompileEnabled: boolean = true) {
+function setup(serverCompileEnabled: boolean = false) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

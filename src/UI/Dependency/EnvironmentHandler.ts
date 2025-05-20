@@ -98,18 +98,19 @@ export function EnvironmentHandlerImpl(
    * @returns {boolean}
    */
   function useSetting(settingName: keyof EnvironmentSettings.DefinitionMap): boolean {
-    if (envSettings.data) {
-      if (
-        envSettings.data.settings[settingName] !== undefined &&
-        envSettings.data.settings[settingName] !== null
-      ) {
-        return Boolean(envSettings.data.settings[settingName]);
-      } else if (
-        envSettings.data.definition[settingName] !== undefined &&
-        envSettings.data.definition[settingName] !== null
-      ) {
-        return Boolean(envSettings.data.definition[settingName]?.default);
-      }
+    if (!envSettings.data) {
+      return false;
+    }
+    if (
+      envSettings.data.settings[settingName] !== undefined &&
+      envSettings.data.settings[settingName] !== null
+    ) {
+      return Boolean(envSettings.data.settings[settingName]);
+    } else if (
+      envSettings.data.definition[settingName] !== undefined &&
+      envSettings.data.definition[settingName] !== null
+    ) {
+      return Boolean(envSettings.data.definition[settingName]?.default);
     }
     return false;
   }
