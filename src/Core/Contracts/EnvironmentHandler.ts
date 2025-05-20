@@ -7,6 +7,10 @@ import { Navigate } from "@/Core/Language";
  * It provides functions to set the current environment, get the selected environment, and determine the selected environment from the URL.
  *
  * - set: a function that sets the current environment
+ * - useSelected: a hook that returns the selected environment
+ * - useName: a hook that returns the name of the selected environment
+ * - useId: a hook that returns the id of the selected environment
+ * - determineSelected: a function that determines the selected environment from the URL
  * - useIsHalted: a hook that returns a boolean value indicating if the environment is halted
  * - useIsServerCompileEnabled: a hook that returns a boolean value indicating if the server compile is enabled
  * - useIsProtectedEnvironment: a hook that returns a boolean value indicating if the environment is protected
