@@ -55,8 +55,8 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   if (environments.isError || serverStatus.isError) {
     const message = environments.error?.message || serverStatus.error?.message || words("error");
     const refetch = environments.isError ? environments.refetch : serverStatus.refetch;
-    
-    return <ErrorView ariaLabel="Injector-Error" message={message} retry={refetch}/>;
+
+    return <ErrorView ariaLabel="Injector-Error" message={message} retry={refetch} />;
   }
 
   if (environments.isSuccess && serverStatus.isSuccess) {
