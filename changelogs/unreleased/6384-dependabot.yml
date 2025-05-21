@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump undici from 5.28.5 to 5.29.0
+destination-branches:
+- master
+- iso8
+sections: {}
