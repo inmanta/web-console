@@ -1549,6 +1549,7 @@ __metadata:
     "@types/file-saver": "npm:^2.0.7"
     "@types/jest": "npm:^29.5.12"
     "@types/jest-axe": "npm:^3.5.9"
+    "@types/json-bigint": "npm:^1.0.4"
     "@types/loadable__component": "npm:^5.13.9"
     "@types/lodash": "npm:^4.17.16"
     "@types/lodash-es": "npm:^4.17.12"
@@ -1561,7 +1562,6 @@ __metadata:
     "@types/uuid": "npm:^10"
     "@types/webpack": "npm:^5.28.5"
     babel-loader: "npm:^9.2.1"
-    bignumber.js: "npm:^9.0.0"
     copy-to-clipboard: "npm:^3.3.3"
     copy-webpack-plugin: "npm:^12.0.2"
     css-loader: "npm:^7.1.2"
@@ -1592,6 +1592,7 @@ __metadata:
     jest-environment-jsdom: "npm:^29.7.0"
     jest-fetch-mock: "npm:^3.0.3"
     jest-junit: "npm:^16.0.0"
+    json-bigint: "https://github.com/sidorares/json-bigint.git#3391780b2a3f613bb51536c47e6cddbca31013eb"
     keycloak-js: "npm:^25.0.5"
     lint-staged: "npm:^15.2.10"
     lodash: "npm:^4.17.21"
@@ -1634,7 +1635,7 @@ __metadata:
     tsconfig-paths-webpack-plugin: "npm:^4.1.0"
     typescript: "npm:^5.4.5"
     typescript-eslint: "npm:^8.13.0"
-    undici: "npm:^5"
+    undici: "npm:^6"
     url-loader: "npm:^4.1.1"
     uuid: "npm:^10.0.0"
     webpack: "npm:^5.99.6"
@@ -3191,6 +3192,13 @@ __metadata:
     "@types/tough-cookie": "npm:*"
     parse5: "npm:^7.0.0"
   checksum: 10/15fbb9a0bfb4a5845cf6e795f2fd12400aacfca53b8c7e5bca4a3e5e8fa8629f676327964d64258aefb127d2d8a2be86dad46359efbfca0e8c9c2b790e7f8a88
+  languageName: node
+  linkType: hard
+
+"@types/json-bigint@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@types/json-bigint@npm:1.0.4"
+  checksum: 10/7aee137b3796121cec755247ea56577611c8e5df89224c567fa71999764d01e12199c4089c6be8a9e4e6a6a8f5c6f309eee2965cc3dd8d576f4c4ba432566041
   languageName: node
   linkType: hard
 
@@ -11264,6 +11272,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json-bigint@https://github.com/sidorares/json-bigint.git#3391780b2a3f613bb51536c47e6cddbca31013eb":
+  version: 1.0.0
+  resolution: "json-bigint@https://github.com/sidorares/json-bigint.git#commit=3391780b2a3f613bb51536c47e6cddbca31013eb"
+  dependencies:
+    bignumber.js: "npm:^9.0.0"
+  checksum: 10/e34d91ce09a0f69f33fb813a949ca033b97d46e430e6cabf316381e63847e9b45cb97a59286db117a65c4677058adcb3ad64860caf870f61c3bac875ef0df58a
+  languageName: node
+  linkType: hard
+
 "json-buffer@npm:3.0.1":
   version: 3.0.1
   resolution: "json-buffer@npm:3.0.1"
@@ -16601,12 +16618,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^5.28.5":
-  version: 5.28.5
-  resolution: "undici@npm:5.28.5"
+"undici@npm:^5.29.0":
+  version: 5.29.0
+  resolution: "undici@npm:5.29.0"
   dependencies:
     "@fastify/busboy": "npm:^2.0.0"
-  checksum: 10/459cd84ab75fe90d696fa2634a8b5b23f9e1080b27236c6809bd74e51862be85df6d95b4a8fed3ee42554495008cb3c05f1bc9d4a1807478f433cca567003d70
+  checksum: 10/0ceca8924a32acdcc0cfb8dd2d368c217840970aa3f5e314fc169608474be6341c5b8e50cad7bd257dbe3b4e432bc5d0a0d000f83644b54fa11a48735ec52b93
   languageName: node
   linkType: hard
 
