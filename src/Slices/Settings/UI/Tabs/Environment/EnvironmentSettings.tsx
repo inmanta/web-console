@@ -82,7 +82,7 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
           actionClose={<AlertActionCloseButton onClose={onErrorClose} />}
           isInline
         />
-      )}{" "}
+      )}
       <EditableTextField
         initialValue={environment.name}
         label={words("settings.tabs.environment.name")}
