@@ -4,18 +4,22 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider } from "@/Test";
+import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { words } from "@/UI/words";
 import { Provider } from "./Provider";
 
-function setup({ isToastVisible = true } = {}) {
+function setup({ isToastVisible = true, serverCompileEnabled = true } = {}) {
   const afterTrigger = jest.fn();
 
   const component = (
     <QueryClientProvider client={testClient}>
-      <MockedDependencyProvider>
+      <MockedDependencyProvider
+        env={{
+          ...EnvironmentDetails.env,
+          settings: { ...EnvironmentDetails.env.settings, server_compile: serverCompileEnabled },
+        }}
+      >
         <Provider afterTrigger={afterTrigger} isToastVisible={isToastVisible} />
       </MockedDependencyProvider>
     </QueryClientProvider>
@@ -37,10 +41,6 @@ describe("CompileWidgetProvider", () => {
   });
 
   test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
-    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
-      useIsServerCompileEnabled: () => true,
-    });
     const { component, afterTrigger } = setup();
 
     render(component);
@@ -108,11 +108,9 @@ describe("CompileWidgetProvider", () => {
   });
 
   test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THEN button is disabled", async () => {
-    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
-      useIsServerCompileEnabled: () => false,
+    const { component } = setup({
+      serverCompileEnabled: false,
     });
-    const { component } = setup();
 
     render(component);
 

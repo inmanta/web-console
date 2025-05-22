@@ -70,6 +70,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
     const selectedEnvWithProjectName = envsWithProjectName.find(
       (env) => env.id === selectedEnvironment?.id
     );
+
     return (
       <EnvSelectorWrapper
         selectorItems={envsWithProjectName.map(environmentToSelector)}

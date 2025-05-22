@@ -5,9 +5,8 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse, delay } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider } from "@/Test";
+import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as Mock from "@S/CompileReports/Core/Mock";
 import { Page } from "./Page";
@@ -22,7 +21,7 @@ const axe = configureAxe({
 });
 const server = setupServer();
 
-function setup() {
+function setup(serverCompileEnabled: boolean = false) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -34,7 +33,12 @@ function setup() {
   const component = (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider
+          env={{
+            ...EnvironmentDetails.env,
+            settings: { ...EnvironmentDetails.env.settings, server_compile: serverCompileEnabled },
+          }}
+        >
           <Page />
         </MockedDependencyProvider>
       </TestMemoryRouter>
@@ -364,10 +368,6 @@ describe("CompileReports", () => {
   });
 
   test("Given CompileReportsView When recompile is triggered Then table is updated", async () => {
-    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
-      useIsServerCompileEnabled: () => true,
-    });
     let update = false;
 
     server.use(
@@ -387,7 +387,7 @@ describe("CompileReports", () => {
         return HttpResponse.json({});
       })
     );
-    const { component } = setup();
+    const { component } = setup(true);
 
     render(component);
 

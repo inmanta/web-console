@@ -28,14 +28,14 @@ interface Props {
  * @returns {React.FC<Props>} A React functional component that renders the edit form.
  */
 export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
-  const { environmentModifier, routeManager } = useContext(DependencyContext);
+  const { environmentHandler, routeManager } = useContext(DependencyContext);
   const [isDirty, setIsDirty] = useState(false);
 
   const isDisabled = true;
   const fieldCreator = new FieldCreator(new EditModifierHandler(), isDisabled);
   const fields = fieldCreator.create(serviceEntity);
 
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 

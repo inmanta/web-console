@@ -22,9 +22,9 @@ interface Props {
 
 export const ConfigDetails: React.FC<Props> = ({ config, defaults, serviceInstanceIdentifier }) => {
   const { service_entity, id, version } = serviceInstanceIdentifier;
-  const { environmentModifier } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const { mutate } = usePostInstanceConfig(service_entity, id);
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
 
   const [isExpanded, setIsExpanded] = useState(true);
 

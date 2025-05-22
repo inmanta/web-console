@@ -1,4 +1,4 @@
-import { FeatureManager, JsonParserId, StatusLicense } from "@/Core";
+import { FeatureManager, JsonParserId, ServerStatus, StatusLicense } from "@/Core";
 
 export class DummyFeatureManager implements FeatureManager {
   getCommitHash(): string {
@@ -38,6 +38,11 @@ export class DummyFeatureManager implements FeatureManager {
     throw new Error("Method not implemented.");
   }
   getLicenseInformation(): StatusLicense {
+    throw new Error("Method not implemented.");
+  }
+  setAllFeatures(
+    _features: Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices">
+  ): void {
     throw new Error("Method not implemented.");
   }
 }

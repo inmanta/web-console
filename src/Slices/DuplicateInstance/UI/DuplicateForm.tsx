@@ -28,12 +28,12 @@ interface Props {
  * @returns {React.FC<Props>} - The DuplicateForm component.
  */
 export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
-  const { environmentModifier, routeManager } = useContext(DependencyContext);
+  const { environmentHandler, routeManager } = useContext(DependencyContext);
   const [isDirty, setIsDirty] = useState(false);
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.create(serviceEntity);
   const [errorMessage, setErrorMessage] = useState("");
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
   const navigate = useNavigate();
   const url = routeManager.useUrl("InstanceDetails", {
     service: serviceEntity.name,

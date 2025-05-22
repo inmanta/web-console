@@ -53,7 +53,7 @@ export const AttributesEditor: React.FC<Props> = ({
   const [selectedSet, setSelectedSet] = useState(dropdownOptions[0]);
   const [editorDataOriginal, setEditorDataOriginal] = useState<string>("");
 
-  const { environmentModifier } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const [isEditorValid, setIsEditorValid] = useState<boolean>(true);
   const [editorState, setEditorState] = useState<string>(editorDataOriginal);
 
@@ -150,7 +150,7 @@ export const AttributesEditor: React.FC<Props> = ({
           </StyledSelect>
         </FlexItem>
         <FlexItem>
-          {environmentModifier.useIsExpertModeEnabled() && isLatestVersion && (
+          {environmentHandler.useIsExpertModeEnabled() && isLatestVersion && (
             <Button
               isDisabled={!isEditorValid}
               aria-label="Expert-Submit-Button"
@@ -167,7 +167,7 @@ export const AttributesEditor: React.FC<Props> = ({
         data={editorDataOriginal}
         service_entity={service_entity}
         onChange={onEditorUpdate}
-        readOnly={!environmentModifier.useIsExpertModeEnabled()}
+        readOnly={!environmentHandler.useIsExpertModeEnabled()}
       />
       <ConfirmationModal
         title={words("instanceDetails.expert.editModal.title")}

@@ -23,12 +23,12 @@ interface Props {
  * @returns {React.FC<Props>} - The dropdown item that has logic to promote the desired state version wrapped in tooltip.
  */
 export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
-  const { environmentModifier } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const { setErrorMessage } = useContext(GetDesiredStatesContext);
   const { mutate } = usePromoteDesiredStateVersion({
     onError: (error) => setErrorMessage(error.message),
   });
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
 
   /**
    * method triggering mutation to promote the desired state version

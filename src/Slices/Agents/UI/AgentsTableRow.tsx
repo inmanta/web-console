@@ -10,8 +10,8 @@ interface Props {
 }
 
 export const AgentsTableRow: React.FC<Props> = ({ row }) => {
-  const { environmentModifier } = useContext(DependencyContext);
-  const isHalted = environmentModifier.useIsHalted();
+  const { environmentHandler } = useContext(DependencyContext);
+  const isHalted = environmentHandler.useIsHalted();
 
   return (
     <Tbody isExpanded={false}>

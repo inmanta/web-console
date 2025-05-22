@@ -3,9 +3,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { Config } from "@/Core";
-import { MockedDependencyProvider, Service } from "@/Test";
+import { EnvironmentDetails, MockedDependencyProvider, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { ConfigList } from "./ConfigList";
 expect.extend(toHaveNoViolations);
 
@@ -20,7 +19,7 @@ function setup() {
   return {
     component: (config: Config) => (
       <QueryClientProvider client={testClient}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider env={EnvironmentDetails.halted}>
           <ConfigList serviceName={Service.a.name} config={config} />
         </MockedDependencyProvider>
       </QueryClientProvider>
@@ -29,11 +28,6 @@ function setup() {
 }
 
 it("Config Details takes environment halted status in account", async () => {
-  jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-    ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
-    useIsHalted: () => true,
-  });
-
   const { component } = setup();
   const { rerender } = render(component({}));
 
