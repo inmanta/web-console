@@ -2,7 +2,7 @@ import { PathHelper, TreeExpansionManager } from "@/UI/Components/TreeTable/Help
 import { CatalogAttributeHelper } from "./AttributeHelper";
 import { CatalogTreeTableHelper } from "./TreeTableHelper";
 //mock is to avoid TypeError - Temporary workaround - to be removed - https://github.com/inmanta/web-console/issues/6194
-jest.mock("@/Data/Queries/Slices/ServiceInstance/useDeleteInstance");
+jest.mock("@/Data/Queries/Slices/ServiceInstance");
 
 test("TreeTableHelper getExpansionState returns correct expansionState", () => {
   const service = {
