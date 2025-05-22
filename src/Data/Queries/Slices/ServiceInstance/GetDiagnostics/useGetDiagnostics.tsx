@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { CustomError, useGet } from "@/Data/Queries";
 import { RawDiagnostics } from "@/Slices/Diagnose/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
-import { CustomError, useGet } from "@/Data/Queries";
 
 /**
  * Return Signature of the useGetDiagnostics React Query

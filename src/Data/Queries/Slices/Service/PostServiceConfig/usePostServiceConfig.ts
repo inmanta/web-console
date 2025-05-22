@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Config } from "@/Core";
-import { DependencyContext } from "@/UI";
 import { usePost } from "@/Data/Queries";
+import { DependencyContext } from "@/UI";
 
 export interface Params {
   values: Config;

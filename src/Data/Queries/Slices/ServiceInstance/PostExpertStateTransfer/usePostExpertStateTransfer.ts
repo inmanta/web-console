@@ -6,8 +6,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
-import { DependencyContext } from "@/UI";
 import { usePost } from "@/Data/Queries";
+import { DependencyContext } from "@/UI";
 
 /**
  * Required attributes to construct the post request to force update the state of an instance in Expert mode

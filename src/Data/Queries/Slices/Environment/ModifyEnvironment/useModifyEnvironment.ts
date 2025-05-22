@@ -6,8 +6,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ModifyEnvironmentParams } from "@/Core";
-import { DependencyContext } from "@/UI";
 import { usePost } from "@/Data/Queries";
+import { DependencyContext } from "@/UI";
 
 /**
  * React Query hook for modifying an environment.

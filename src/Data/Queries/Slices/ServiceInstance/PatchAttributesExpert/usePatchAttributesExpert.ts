@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
-import { DependencyContext } from "@/UI";
 import { usePatch } from "@/Data/Queries";
+import { DependencyContext } from "@/UI";
 
 /**
  * Required attributes to construct the patch request to edit an instance attribute set in Expert mode

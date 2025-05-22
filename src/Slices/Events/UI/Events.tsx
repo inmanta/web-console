@@ -3,6 +3,7 @@ import { ServiceModel } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGetInstanceEvents } from "@/Data/Queries";
+import { Filter } from "@/Slices/Events/Core/Types";
 import {
   EventsTablePresenter,
   EventsTableWrapper,
@@ -13,7 +14,6 @@ import {
   ErrorView,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Filter } from "@/Slices/Events/Core/Types";
 import { EventsTableControls } from "./EventsTableControls";
 
 interface Props {

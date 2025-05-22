@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { InstanceResourceModel } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
+import { DependencyContext } from "@/UI/Dependency";
 
 /**
  * Return Signature of the useGetInstanceResources React Query

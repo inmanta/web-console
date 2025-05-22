@@ -1,8 +1,8 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
-import { Fact } from "@S/Facts/Core/Domain";
 import { SortKey } from "@/Slices/Facts/Core/Types";
+import { Fact } from "@S/Facts/Core/Domain";
 import { FactsRow } from "./FactsRow";
 import { FactsTablePresenter } from "./FactsTablePresenter";
 
@@ -24,15 +24,15 @@ export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSor
     const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
     const sortParams = hasSort
       ? {
-        sort: {
-          sortBy: {
-            index: activeSortIndex,
-            direction: sort.order,
+          sort: {
+            sortBy: {
+              index: activeSortIndex,
+              direction: sort.order,
+            },
+            onSort,
+            columnIndex,
           },
-          onSort,
-          columnIndex,
-        },
-      }
+        }
       : {};
 
     return (

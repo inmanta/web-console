@@ -2,8 +2,8 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Diff } from "@/Core";
 import { ParsedNumber } from "@/Core/Language";
-import { DependencyContext } from "@/UI/Dependency";
 import { useGet } from "@/Data/Queries";
+import { DependencyContext } from "@/UI/Dependency";
 
 /**
  * DryRun interface

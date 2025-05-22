@@ -541,8 +541,9 @@ const DictListFieldInput: React.FC<DictListProps> = ({
             text: field.name,
             id: `DictListFieldInput-${makePath(path, field.name)}`,
           }}
-          titleDescription={`${field.description !== null ? field.description : ""
-            } (${words("inventory.createInstance.items")(list.length)})`}
+          titleDescription={`${
+            field.description !== null ? field.description : ""
+          } (${words("inventory.createInstance.items")(list.length)})`}
           actions={
             <Button
               variant="link"

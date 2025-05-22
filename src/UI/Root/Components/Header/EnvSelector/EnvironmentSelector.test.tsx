@@ -36,7 +36,7 @@ const EnvSelectorWrapper = ({
 };
 
 const setup = (
-  onSelectEnvironment: (item: EnvironmentSelectorItem) => void = () => { },
+  onSelectEnvironment: (item: EnvironmentSelectorItem) => void = () => {},
   config: KeycloakAuthConfig | LocalConfig | undefined = undefined
 ) => {
   return (
@@ -216,7 +216,7 @@ describe("EnvironmentSelector", () => {
   });
 
   test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user request returns 404 we should display Selector as is by default", async () => {
-    const onSelectEnv = () => { };
+    const onSelectEnv = () => {};
     server.use(
       http.get("/api/v2/environment", async () => {
         return HttpResponse.json({
@@ -248,7 +248,7 @@ describe("EnvironmentSelector", () => {
   });
 
   test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched username on load", async () => {
-    const onSelectEnv = () => { };
+    const onSelectEnv = () => {};
     server.use(
       http.get("/api/v2/environment", async () => {
         return HttpResponse.json({

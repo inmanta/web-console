@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet } from "@/Data/Queries";
+import { DependencyContext } from "@/UI/Dependency";
 
 /**
  * Return Signature of the useGetJSONSchema React Query

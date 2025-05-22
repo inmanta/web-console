@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Resource } from "@/Core/Domain";
-import { DependencyContext } from "@/UI/Dependency";
 import { useGet, REFETCH_INTERVAL } from "@/Data/Queries";
+import { DependencyContext } from "@/UI/Dependency";
 
 /**
  * Resource.Details interface for the resource details API response

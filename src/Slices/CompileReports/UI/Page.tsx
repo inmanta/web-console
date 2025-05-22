@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGetCompileReports } from "@/Data/Queries";
+import { Filter } from "@/Slices/CompileReports/Core/Types";
 import {
   EmptyView,
   PageContainer,
@@ -10,7 +11,6 @@ import {
   LoadingView,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Filter } from "@/Slices/CompileReports/Core/Types";
 import { CompileReportsTableControls } from "./CompileReportsTableControls";
 import { TableProvider } from "./TableProvider";
 

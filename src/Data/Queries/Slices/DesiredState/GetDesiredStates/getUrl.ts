@@ -21,26 +21,27 @@ export function getUrl(params: GetDesiredStatesParams, timezone = moment.tz.gues
   const filterParam =
     filterWithDefaults && Object.keys(filterWithDefaults).length > 0
       ? `&${qs.stringify(
-        {
-          filter: {
-            status: filterWithDefaults.status,
-            date: filterWithDefaults.date?.map(
-              (timestampWithOperator) =>
-                `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${moment
-                  .tz(timestampWithOperator.date, timezone)
-                  .utc()
-                  .format("YYYY-MM-DD+HH:mm:ss")}`
-            ),
-            version: filterWithDefaults.version?.map(
-              ({ value, operator }) => `${RangeOperator.serializeOperator(operator)}:${value}`
-            ),
+          {
+            filter: {
+              status: filterWithDefaults.status,
+              date: filterWithDefaults.date?.map(
+                (timestampWithOperator) =>
+                  `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${moment
+                    .tz(timestampWithOperator.date, timezone)
+                    .utc()
+                    .format("YYYY-MM-DD+HH:mm:ss")}`
+              ),
+              version: filterWithDefaults.version?.map(
+                ({ value, operator }) => `${RangeOperator.serializeOperator(operator)}:${value}`
+              ),
+            },
           },
-        },
-        { allowDots: true, arrayFormat: "repeat" }
-      )}`
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
       : "";
   const sortParam = "&sort=version.desc";
 
-  return `/api/v2/desiredstate?limit=${pageSize.value}${sortParam}${filterParam}${currentPage.value ? `&${currentPage.value}` : ""
-    }`;
+  return `/api/v2/desiredstate?limit=${pageSize.value}${sortParam}${filterParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }

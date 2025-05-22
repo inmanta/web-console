@@ -18,14 +18,15 @@ export function getUrl(params: GetInstanceEventParams, timezone = moment.tz.gues
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-        { filter: filterToParam(filter, timezone) },
-        { allowDots: true, arrayFormat: "repeat" }
-      )}`
+          { filter: filterToParam(filter, timezone) },
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
-  return `/lsm/v1/service_inventory/${serviceName}/${id}/events?limit=${pageSize.value
-    }${sortParam}${filterParam}${currentPage.value ? `&${currentPage.value}` : ""}`;
+  return `/lsm/v1/service_inventory/${serviceName}/${id}/events?limit=${
+    pageSize.value
+  }${sortParam}${filterParam}${currentPage.value ? `&${currentPage.value}` : ""}`;
 }
 
 /**

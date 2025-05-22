@@ -95,8 +95,8 @@ describe("EditInstancePage", () => {
         });
       }
     ),
-    http.patch("/lsm/v1/service_inventory/service_name_a/service_instance_id_a", async () => { }),
-    http.patch("/lsm/v2/service_inventory/service_name_d/service_instance_id_a", async () => { })
+    http.patch("/lsm/v1/service_inventory/service_name_a/service_instance_id_a", async () => {}),
+    http.patch("/lsm/v2/service_inventory/service_name_d/service_instance_id_a", async () => {})
   );
 
   beforeAll(() => {

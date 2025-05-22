@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { CustomError, useGet } from "@/Data/Queries";
 import { Callback } from "@/Slices/ServiceDetails/Core/Callback";
 import { DependencyContext } from "@/UI/Dependency";
-import { CustomError, useGet } from "@/Data/Queries";
 
 /**
  * interface of Response of the useGetCallbacks Query Call

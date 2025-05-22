@@ -2,9 +2,9 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { useGet, getPaginationHandlers } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { ResourceHistory } from "@S/ResourceDetails/Core/ResourceHistory";
-import { useGet, getPaginationHandlers } from "@/Data/Queries";
 import { getUrl } from "./getUrl";
 
 /**

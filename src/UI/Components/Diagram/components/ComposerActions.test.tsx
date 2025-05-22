@@ -114,9 +114,9 @@ describe("ComposerActions.", () => {
     ${null}           | ${true}  | ${new Set().add("test")} | ${true}  | ${null}
     ${null}           | ${true}  | ${null}                  | ${false} | ${null}
     ${null} | ${true} | ${null} | ${true} | ${new Map().set("test_id", {
-    name: "test",
-    relations: [{ name: "relation-test", currentAmount: 0, min: 1 }],
-  })}
+  name: "test",
+  relations: [{ name: "relation-test", currentAmount: 0, min: 1 }],
+})}
   `(
     "should have deploy button disabled when at least one of conditions are not met",
     ({ serviceOrderItems, isDirty, looseElement, editable, interServiceRelationsOnCanvas }) => {

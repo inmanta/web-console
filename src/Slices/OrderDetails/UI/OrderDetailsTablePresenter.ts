@@ -10,7 +10,8 @@ import { words } from "@/UI/words";
  *
  */
 export class OrderDetailsTablePresenter
-  implements TablePresenter<ServiceOrderItem, ServiceOrderItem> {
+  implements TablePresenter<ServiceOrderItem, ServiceOrderItem>
+{
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 

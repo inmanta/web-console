@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
-import { DependencyContext } from "@/UI";
 import { usePost } from "@/Data/Queries";
+import { DependencyContext } from "@/UI";
 
 /**
  * React Query hook for updating environment catalog.

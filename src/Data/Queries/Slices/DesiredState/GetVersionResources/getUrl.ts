@@ -15,18 +15,19 @@ export function getUrl(params: GetVersionResourcesParams): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-        {
-          filter: {
-            agent: filter.agent,
-            resource_id_value: filter.value,
-            resource_type: filter.type,
+          {
+            filter: {
+              agent: filter.agent,
+              resource_id_value: filter.value,
+              resource_type: filter.type,
+            },
           },
-        },
-        { allowDots: true, arrayFormat: "repeat" }
-      )}`
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
-  return `/api/v2/desiredstate/${version}?limit=${pageSize.value}${filterParam}${sortParam}${currentPage.value ? `&${currentPage.value}` : ""
-    }`;
+  return `/api/v2/desiredstate/${version}?limit=${pageSize.value}${filterParam}${sortParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }

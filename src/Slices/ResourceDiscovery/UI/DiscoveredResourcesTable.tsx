@@ -32,15 +32,15 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
     const sortParams = tablePresenter.getSortableColumnNames().includes(apiName)
       ? {
-        sort: {
-          sortBy: {
-            index: tablePresenter.getIndexForColumnName(sort.name),
-            direction: sort.order,
+          sort: {
+            sortBy: {
+              index: tablePresenter.getIndexForColumnName(sort.name),
+              direction: sort.order,
+            },
+            onSort,
+            columnIndex,
           },
-          onSort,
-          columnIndex,
-        },
-      }
+        }
       : {};
 
     return (

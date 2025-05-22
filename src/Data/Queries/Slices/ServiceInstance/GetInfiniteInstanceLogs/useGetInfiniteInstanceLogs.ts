@@ -2,8 +2,8 @@ import { useContext } from "react";
 import { UseInfiniteQueryResult, useInfiniteQuery } from "@tanstack/react-query";
 import { Pagination } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
+import { DependencyContext } from "@/UI/Dependency";
 
 interface LogsResponse {
   data: InstanceLog[];

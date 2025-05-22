@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
 import { ServiceOrder } from "@/Slices/Orders/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
-import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
 
 /**
  * Result interface for the order details API response

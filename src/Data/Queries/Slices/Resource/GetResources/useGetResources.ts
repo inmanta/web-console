@@ -4,8 +4,8 @@ import { PageSize, Resource, Sort } from "@/Core/Domain";
 import { Handlers, Links } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Queries";
-import { DependencyContext } from "@/UI/Dependency";
 import { useGet, REFETCH_INTERVAL } from "@/Data/Queries";
+import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
 
 /**

@@ -1,8 +1,8 @@
 import moment from "moment-timezone";
 import qs from "qs";
 import { CompileStatus, RangeOperator } from "@/Core";
-import { Filter } from "@/Slices/CompileReports/Core/Types";
 import { urlEncodeParams } from "@/Data/Queries";
+import { Filter } from "@/Slices/CompileReports/Core/Types";
 import { CompileReportsParams } from "./useGetCompileReports";
 
 export function getUrl(params: CompileReportsParams, timezone = moment.tz.guess()): string {
@@ -11,15 +11,16 @@ export function getUrl(params: CompileReportsParams, timezone = moment.tz.guess(
   const serializedFilters =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-        { filter: filterToParam(filter, timezone) },
-        { allowDots: true, arrayFormat: "repeat" }
-      )}`
+          { filter: filterToParam(filter, timezone) },
+          { allowDots: true, arrayFormat: "repeat" }
+        )}`
       : "";
   const filterParam = serializedFilters.length > 1 ? serializedFilters : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
 
-  return `/api/v2/compilereport?limit=${pageSize.value}${sortParam}${filterParam}${currentPage.value ? `&${currentPage.value}` : ""
-    }`;
+  return `/api/v2/compilereport?limit=${pageSize.value}${sortParam}${filterParam}${
+    currentPage.value ? `&${currentPage.value}` : ""
+  }`;
 }
 
 const filterToParam = (filter: Filter, timezone: string) => {

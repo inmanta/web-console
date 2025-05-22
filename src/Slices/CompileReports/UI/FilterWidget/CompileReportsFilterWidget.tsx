@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
 import { CompileStatus, DateRange } from "@/Core";
+import { Filter, Kind, List } from "@/Slices/CompileReports/Core/Types";
 import { FilterPicker } from "@/UI/Components";
 import { TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
-import { Filter, Kind, List } from "@/Slices/CompileReports/Core/Types";
 import { StatusFilter } from "./StatusFilter";
 
 interface Props {

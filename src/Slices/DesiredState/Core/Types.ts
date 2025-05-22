@@ -14,4 +14,3 @@ export enum FilterKind {
 }
 
 export const FilterList: FilterKind[] = [FilterKind.Version, FilterKind.Date, FilterKind.Status];
-

@@ -1,8 +1,8 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
+import { Filter } from "@/Slices/Facts/Core/Types";
 import { FreeTextFilter } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Filter } from "@/Slices/Facts/Core/Types";
 
 interface Props {
   filter: Filter;

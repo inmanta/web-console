@@ -4,10 +4,10 @@ import { PageSize, Pagination, Sort } from "@/Core/Domain";
 import { Handlers, Links } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Queries";
+import { useGet, REFETCH_INTERVAL } from "@/Data/Queries";
 import { Fact } from "@/Slices/Facts/Core/Domain";
 import { SortKey } from "@/Slices/Facts/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
-import { useGet, REFETCH_INTERVAL } from "@/Data/Queries";
 import { getUrl } from "./getUrl";
 
 /**

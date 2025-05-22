@@ -1,7 +1,7 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent, ToolbarGroup } from "@patternfly/react-core";
-import { CompileWidget } from "@/UI/Components";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
+import { CompileWidget } from "@/UI/Components";
 import { CompareSelectionWidget } from "./CompareSelectionWidget";
 import { FilterWidget } from "./FilterWidget";
 
