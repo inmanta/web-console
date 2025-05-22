@@ -11,7 +11,7 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import * as queryModule from "@/Data/Queries";
+import * as queryModule from "@/Data/Queries/Helpers/useQueries";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { Service, ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { words } from "@/UI";
