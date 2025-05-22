@@ -76,10 +76,11 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
     <DescriptionList>
       {error && (
         <Alert
+          data-testid="environment-settings-error"
           variant="danger"
           title={error}
           aria-live="polite"
-          actionClose={<AlertActionCloseButton onClose={onErrorClose} />}
+          actionClose={<AlertActionCloseButton aria-label="environment-settings-error-close" onClose={onErrorClose} />}
           isInline
         />
       )}
