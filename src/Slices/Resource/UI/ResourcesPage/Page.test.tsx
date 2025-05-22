@@ -5,9 +5,8 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider, Resource } from "@/Test";
+import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
 import { words } from "@/UI";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { Page } from "./Page";
@@ -22,7 +21,7 @@ const axe = configureAxe({
   },
 });
 
-function setup(entries?: string[]) {
+function setup(entries?: string[], halted: boolean = false) {
   const client = new QueryClient({
     defaultOptions: {
       queries: {
@@ -34,7 +33,7 @@ function setup(entries?: string[]) {
   const component = (
     <QueryClientProvider client={client}>
       <TestMemoryRouter initialEntries={entries}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
           <Page />
         </MockedDependencyProvider>
       </TestMemoryRouter>
@@ -936,17 +935,12 @@ describe("ResourcesPage", () => {
   });
 
   test("Given the ResourcesPage When environment is halted, then deploy and repair buttons are disabled", async () => {
-    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
-      useIsHalted: () => true,
-    });
-
     server.use(
       http.get("/api/v2/resource", () => {
         return HttpResponse.json(Resource.response);
       })
     );
-    const { component } = setup();
+    const { component } = setup(undefined, true);
 
     render(component);
 

@@ -7,13 +7,9 @@ import {
   PrimaryRouteManager,
   DependencyProvider,
   EnvironmentHandlerImpl,
-  useEnvironmentModifierImpl,
   UrlManagerImpl,
 } from "@/UI";
 import { AuthContext } from "./Data/Auth/";
-import { useGetServerStatus } from "./Data/Managers/V2/Server";
-import { ErrorView } from "./UI/Components/ErrorView";
-import { LoadingView } from "./UI/Components/LoadingView";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
 import { ModalProvider } from "./UI/Root/Components/ModalProvider";
 
@@ -26,7 +22,6 @@ import { ModalProvider } from "./UI/Root/Components/ModalProvider";
  * @returns {React.FC<React.PropsWithChildren<Props>>} A `DependencyProvider` that wraps a `ModalProvider`, an `UpdateBanner`, and the children.
  */
 export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const { data, isSuccess, isError, error, refetch } = useGetServerStatus().useOneTime();
   const authHelper = useContext(AuthContext);
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
@@ -38,41 +33,30 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const featureManager = PrimaryFeatureManager(
     getJsonParserId(globalThis),
     COMMITHASH,
-    APP_VERSION,
-    data
+    APP_VERSION
   );
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
-  const environmentModifier = useEnvironmentModifierImpl();
   const fileManager = new PrimaryFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
 
-  if (isError) {
-    return <ErrorView aria-label="Injector-Error" retry={refetch} message={error.message} />;
-  }
-
-  if (isSuccess) {
-    return (
-      <DependencyProvider
-        dependencies={{
-          urlManager,
-          environmentModifier,
-          featureManager,
-          routeManager,
-          environmentHandler,
-          archiveHelper,
-          authHelper,
-        }}
-      >
-        <ModalProvider>
-          <UpdateBanner />
-          {children}
-        </ModalProvider>
-      </DependencyProvider>
-    );
-  }
-
-  return <LoadingView aria-label="Injector-Loading" />;
+  return (
+    <DependencyProvider
+      dependencies={{
+        urlManager,
+        featureManager,
+        routeManager,
+        environmentHandler,
+        archiveHelper,
+        authHelper,
+      }}
+    >
+      <ModalProvider>
+        <UpdateBanner />
+        {children}
+      </ModalProvider>
+    </DependencyProvider>
+  );
 };
 
 const getJsonParserId = (container: unknown): JsonParserId | undefined => {

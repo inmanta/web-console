@@ -27,8 +27,8 @@ interface Props {
  */
 export const ResourcePageActionButton: React.FC<Props> = ({ method, tooltip, textContent }) => {
   const [showSpinner, setShowSpinner] = useState(false);
-  const { environmentModifier } = useContext(DependencyContext);
-  const isHalted = environmentModifier.useIsHalted();
+  const { environmentHandler } = useContext(DependencyContext);
+  const isHalted = environmentHandler.useIsHalted();
 
   const { mutate } = useDeployAgents();
 

@@ -5,7 +5,6 @@ export * from "./FileManager";
 export * from "./Formatter";
 export * from "./PageManager";
 export * from "./RouteManager";
-export * from "./EnvironmentModifier";
 export * from "./UrlManager";
 export * from "./EnvironmentHandler";
 export * from "./JsonParser";

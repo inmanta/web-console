@@ -28,13 +28,13 @@ interface Props {
  * @returns {React.FC<Props>} A React functional component.
  */
 export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
-  const { environmentModifier, routeManager } = useContext(DependencyContext);
+  const { environmentHandler, routeManager } = useContext(DependencyContext);
   const [isDirty, setIsDirty] = useState(false);
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.create(serviceEntity);
   const location = useLocation();
   const [errorMessage, setErrorMessage] = useState("");
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
   const navigate = useNavigate();
   const url = routeManager.useUrl("Inventory", {
     service: serviceEntity.name,

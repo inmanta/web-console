@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
-import { ProjectModel } from "@/Core";
+import { Environment, ProjectModel } from "@/Core";
 import { useCreateEnvironment } from "@/Data/Managers/V2/Environment";
 import { useCreateProject } from "@/Data/Managers/V2/Project/CreateProject";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
@@ -34,9 +34,16 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
 
   const createEnvironment = useCreateEnvironment({
     onSuccess: (data) => {
-      //reset the queries to get the rid of the data that would not include the new environment, otherwise the new view would try to access env set through search param and throw error
-      client.resetQueries({ queryKey: ["get_environments-one_time"] });
-      client.resetQueries({ queryKey: ["get_environments-continuous"] });
+      const dataUpdater = (previousData: { data: Environment[] | undefined }) => {
+        const oldData = previousData?.data || [];
+        return { data: [...oldData, data.data] };
+      };
+
+      //update the data in the cache to avoid crash after navigating to the new env
+      client.setQueryData(["get_environments-one_time", false], dataUpdater);
+      client.setQueryData(["get_environments-one_time", true], dataUpdater);
+      client.setQueryData(["get_environments-continuous", false], dataUpdater);
+      client.setQueryData(["get_environments-continuous", true], dataUpdater);
 
       const target = isLsmEnabled ? "Catalog" : "DesiredState";
 

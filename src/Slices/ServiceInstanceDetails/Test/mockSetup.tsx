@@ -3,8 +3,7 @@ import { loader } from "@monaco-editor/react";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as monaco from "monaco-editor";
-import { MockedDependencyProvider } from "@/Test";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
+import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInstanceDetails } from "../UI/Page";
 
@@ -43,11 +42,6 @@ interface Props {
  * @returns {React.FC<PropsWithChildren<Props>>} A React Component that provides the test setup for Instance Details Page
  */
 export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({ children, expertMode }) => {
-  jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-    ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
-    useIsExpertModeEnabled: () => expertMode,
-  });
-
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -66,7 +60,11 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({ children, exp
       ]}
     >
       <QueryClientProvider client={queryClient}>
-        <MockedDependencyProvider>{children}</MockedDependencyProvider>
+        <MockedDependencyProvider
+          env={{ ...EnvironmentDetails.a, settings: { enable_lsm_expert_mode: expertMode } }}
+        >
+          {children}
+        </MockedDependencyProvider>
       </QueryClientProvider>
     </TestMemoryRouter>
   );
