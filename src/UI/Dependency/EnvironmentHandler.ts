@@ -7,7 +7,7 @@ import {
   Navigate,
   RouteManager,
 } from "@/Core";
-import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment";
+import { useGetEnvironmentSettings } from "@/Data/Queries/V2/Environment";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
 /**
