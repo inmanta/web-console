@@ -80,7 +80,12 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
           variant="danger"
           title={error}
           aria-live="polite"
-          actionClose={<AlertActionCloseButton aria-label="environment-settings-error-close" onClose={onErrorClose} />}
+          actionClose={
+            <AlertActionCloseButton
+              aria-label="environment-settings-error-close"
+              onClose={onErrorClose}
+            />
+          }
           isInline
         />
       )}
