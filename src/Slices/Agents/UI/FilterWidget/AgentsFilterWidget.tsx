@@ -4,7 +4,7 @@ import { FilterPicker } from "@/UI/Components";
 import { FreeTextFilter, SelectOptionFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
 import { AgentStatus } from "@S/Agents/Core/Domain";
-import { Filter } from "@S/Agents/Core/Query";
+import { Filter } from "@/Slices/Agents/Core/Types";
 
 enum Kind {
   Name = "Name",

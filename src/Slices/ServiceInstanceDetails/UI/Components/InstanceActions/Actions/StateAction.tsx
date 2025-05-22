@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useState } from "react";
 import { DropdownGroup, DropdownItem, Content } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
-import { usePostStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
+import { usePostStateTransfer } from "@/Data/Queries/V2/ServiceInstance";
 import { DependencyContext, words } from "@/UI";
 import { ConfirmationModal } from "../../ConfirmModal";
 import { ToastAlertMessage } from "../../ToastAlert";

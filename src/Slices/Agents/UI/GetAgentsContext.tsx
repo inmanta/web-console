@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { PageSize, Sort } from "@/Core";
 import { CurrentPage, initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { Filter } from "@S/Agents/Core/Query";
+import { Filter } from "@/Slices/Agents/Core/Types";
 
 interface GetAgentsProvider {
   filter: Filter;

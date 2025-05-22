@@ -4,7 +4,7 @@ import { CompileStatus, DateRange } from "@/Core";
 import { FilterPicker } from "@/UI/Components";
 import { TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
-import { Filter, Kind, List } from "@S/CompileReports/Core/Query";
+import { Filter, Kind, List } from "@/Slices/CompileReports/Core/Types";
 import { StatusFilter } from "./StatusFilter";
 
 interface Props {

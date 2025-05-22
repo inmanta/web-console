@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { useGetServiceModels } from "@/Data/Managers/V2/Service";
+import { useGetServiceModels } from "@/Data/Queries/V2/Service";
 import {
   useGetInstanceWithRelations,
   useGetInventoryList,
-} from "@/Data/Managers/V2/ServiceInstance";
+} from "@/Data/Queries/V2/ServiceInstance";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";

@@ -1,6 +1,6 @@
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
-import { ServiceOrder } from "../Core/Query";
+import { ServiceOrder } from "../Core/Types";
 
 /**
  * OrdersTablePresenter @Class

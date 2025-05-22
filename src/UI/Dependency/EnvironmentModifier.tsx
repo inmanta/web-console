@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FlatEnvironment, EnvironmentModifier, EnvironmentSettings } from "@/Core";
-import { useGetEnvironmentSettings } from "@/Data/Managers/V2/Environment";
+import { useGetEnvironmentSettings } from "@/Data/Queries/V2/Environment";
 
 /**
  * EnvironmentModifierImpl is a function that returns an object with the following properties:

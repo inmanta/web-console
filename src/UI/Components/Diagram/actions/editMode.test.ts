@@ -1,6 +1,6 @@
 import { dia } from "@inmanta/rappid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/ServiceInstance";
+import { InstanceWithRelations } from "@/Data/Queries/V2/ServiceInstance";
 import { containerModel, mockedInstanceWithRelations, serviceModels } from "../Mocks";
 import { appendEmbeddedEntity, appendInstance, addInfoIcon } from "../actions/editMode";
 import { ComposerPaper } from "../paper";

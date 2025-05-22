@@ -8,8 +8,8 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { FlatEnvironment } from "@/Core";
 import { AuthProvider, KeycloakAuthConfig, LocalConfig } from "@/Data";
-import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
-import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects";
+import { useGetEnvironments } from "@/Data/Queries/V2/Environment";
+import { useGetProjects } from "@/Data/Queries/V2/Project/GetProjects";
 import { AuthTestWrapper, Environment, MockedDependencyProvider, Project } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -37,7 +37,7 @@ const EnvSelectorWrapper = ({
 };
 
 const setup = (
-  onSelectEnvironment: (item: EnvironmentSelectorItem) => void = () => {},
+  onSelectEnvironment: (item: EnvironmentSelectorItem) => void = () => { },
   config: KeycloakAuthConfig | LocalConfig | undefined = undefined
 ) => {
   return (
@@ -217,7 +217,7 @@ describe("EnvironmentSelector", () => {
   });
 
   test("GIVEN EnvironmentSelector WHEN jwt auth is enabled and current_user request returns 404 we should display Selector as is by default", async () => {
-    const onSelectEnv = () => {};
+    const onSelectEnv = () => { };
     server.use(
       http.get("/api/v2/environment", async () => {
         return HttpResponse.json({
@@ -249,7 +249,7 @@ describe("EnvironmentSelector", () => {
   });
 
   test("GIVEN EnvironmentSelector WHEN jwt auth is enabled will display fetched username on load", async () => {
-    const onSelectEnv = () => {};
+    const onSelectEnv = () => { };
     server.use(
       http.get("/api/v2/environment", async () => {
         return HttpResponse.json({

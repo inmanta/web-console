@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Content, PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
 import { Diff } from "@/Core";
-import { useGetDesiredStateDiff } from "@/Data/Managers/V2/DesiredState";
+import { useGetDesiredStateDiff } from "@/Data/Queries/V2/DesiredState";
 import { DiffWizard, EmptyView, LoadingView, ErrorView } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";

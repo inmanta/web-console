@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useUrlStateWithString } from "@/Data";
-import { useGetServiceModel } from "@/Data/Managers/V2/Service";
-import { useGetInstance, useGetInfiniteInstanceLogs } from "@/Data/Managers/V2/ServiceInstance";
+import { useGetServiceModel } from "@/Data/Queries/V2/Service";
+import { useGetInstance, useGetInfiniteInstanceLogs } from "@/Data/Queries/V2/ServiceInstance";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";

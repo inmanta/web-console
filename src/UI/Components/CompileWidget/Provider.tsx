@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { AlertVariant } from "@patternfly/react-core";
-import { useTriggerCompile } from "@/Data/Managers/V2/Compilation/TriggerCompile";
+import { useTriggerCompile } from "@/Data/Queries/V2/Compilation/TriggerCompile";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";

@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Button, Flex } from "@patternfly/react-core";
 import moment from "moment";
 import styled from "styled-components";
-import { useGetMetrics } from "@/Data/Managers/V2/Dashboard/GetMetrics";
+import { useGetMetrics } from "@/Data/Queries/V2/Dashboard/GetMetrics";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetOrders } from "@/Data/Managers/V2/Order";
+import { useGetOrders } from "@/Data/Queries/V2/Order";
 import {
   EmptyView,
   PageContainer,
@@ -11,7 +11,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { SortKey } from "../Core/Query";
+import { SortKey } from "../Core/Types";
 import { OrdersTable } from "./OrdersTable";
 import { OrdersTablePresenter } from "./OrdersTablePresenter";
 import { TableControls } from "./TableControls";

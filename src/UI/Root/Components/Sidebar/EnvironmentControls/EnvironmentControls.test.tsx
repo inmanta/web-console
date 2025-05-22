@@ -5,7 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { QueryControlProvider } from "@/Data/Managers/V2/helpers/QueryControlContext";
+import { QueryControlProvider } from "@/Data/Queries/Helpers";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";

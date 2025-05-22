@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetParameters } from "@/Data/Managers/V2/Parameters";
+import { useGetParameters } from "@/Data/Queries/V2/Parameters";
 import {
   EmptyView,
   PageContainer,
@@ -10,7 +10,7 @@ import {
   ErrorView,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Filter, SortKey } from "@S/Parameters/Core/Query";
+import { Filter, SortKey } from "@/Slices/Parameters/Core/Types";
 import { ParametersTable } from "./ParametersTable";
 import { ParametersTablePresenter } from "./ParametersTablePresenter";
 import { TableControls } from "./TableControls";

@@ -1,6 +1,6 @@
 import React from "react";
 import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
-import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
+import { NotificationFilter } from "@/Data/Queries/V2/Notification/GetNotifications";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { severityList } from "@S/Notification/Core/Domain";

@@ -5,7 +5,7 @@ import { EnvironmentSettings } from "@/Core";
 import {
   useResetEnvironmentSetting,
   useUpdateEnvironmentSetting,
-} from "@/Data/Managers/V2/Environment";
+} from "@/Data/Queries/V2/Environment";
 import { Container } from "./Container";
 import { InputInfoCreator } from "./InputInfoCreator";
 

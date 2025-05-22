@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useContext } from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { useGetServerStatus } from "@/Data/Managers/V2/Server";
+import { useGetServerStatus } from "@/Data/Queries/V2/Server";
 import { Description, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";

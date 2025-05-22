@@ -3,7 +3,7 @@ import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
 import { CompileStatus } from "@/Core";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Kind } from "@S/CompileReports/Core/Query";
+import { Kind } from "@/Slices/CompileReports/Core/Types";
 
 interface Props {
   isVisible: boolean;

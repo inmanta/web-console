@@ -2,7 +2,7 @@ import { createContext } from "react";
 import { dia } from "@inmanta/rappid";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
+import { InstanceWithRelations, Inventories } from "@/Data/Queries/V2/ServiceInstance";
 import { DiagramHandlers } from "../init";
 import {
   ComposerServiceOrderItem,
@@ -75,23 +75,23 @@ interface CanvasProviderInterface {
  */
 export const defaultCanvasContext: CanvasProviderInterface = {
   diagramHandlers: null,
-  setDiagramHandlers: () => {},
+  setDiagramHandlers: () => { },
   dictToDisplay: null,
-  setDictToDisplay: () => {},
+  setDictToDisplay: () => { },
   formState: {},
-  setFormState: () => {},
+  setFormState: () => { },
   fields: [],
-  setFields: () => {},
+  setFields: () => { },
   cellToEdit: null,
-  setCellToEdit: () => {},
+  setCellToEdit: () => { },
   looseElement: new Set(),
-  setLooseElement: () => {},
+  setLooseElement: () => { },
   serviceOrderItems: new Map(),
-  setServiceOrderItems: () => {},
+  setServiceOrderItems: () => { },
   interServiceRelationsOnCanvas: new Map(),
-  setInterServiceRelationsOnCanvas: () => {},
+  setInterServiceRelationsOnCanvas: () => { },
   stencilState: {},
-  setStencilState: () => {},
+  setStencilState: () => { },
   isDirty: false,
 };
 

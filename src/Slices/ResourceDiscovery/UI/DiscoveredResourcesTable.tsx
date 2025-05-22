@@ -2,7 +2,7 @@ import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { useExpansion } from "@/Data";
-import { DiscoveredResource, SortKey } from "@/Data/Managers/V2/DiscoveredResources";
+import { DiscoveredResource, SortKey } from "@/Data/Queries/V2/DiscoveredResources";
 import { words } from "@/UI";
 import { DiscoveredResourceRow } from "./DiscoveredResourcesRow";
 import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
@@ -32,15 +32,15 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
     const sortParams = tablePresenter.getSortableColumnNames().includes(apiName)
       ? {
-          sort: {
-            sortBy: {
-              index: tablePresenter.getIndexForColumnName(sort.name),
-              direction: sort.order,
-            },
-            onSort,
-            columnIndex,
+        sort: {
+          sortBy: {
+            index: tablePresenter.getIndexForColumnName(sort.name),
+            direction: sort.order,
           },
-        }
+          onSort,
+          columnIndex,
+        },
+      }
       : {};
 
     return (

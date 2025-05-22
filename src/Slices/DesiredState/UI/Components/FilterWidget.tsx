@@ -7,7 +7,7 @@ import { FilterPicker } from "@/UI/Components";
 import { IntRangeFilter, SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
-import { Filter, FilterKind, FilterList } from "@S/DesiredState/Core/Query";
+import { Filter, FilterKind, FilterList } from "@/Slices/DesiredState/Core/Types";
 
 interface Props {
   filter: Filter;

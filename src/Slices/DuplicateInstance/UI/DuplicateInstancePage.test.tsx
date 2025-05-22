@@ -5,7 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
+import * as queryModule from "@/Data/Queries/Helpers";
 import { MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";

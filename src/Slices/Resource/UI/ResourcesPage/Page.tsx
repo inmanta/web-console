@@ -3,7 +3,7 @@ import { Flex, FlexItem } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetResources } from "@/Data/Managers/V2/Resource/GetResources";
+import { useGetResources } from "@/Data/Queries/V2/Resource/GetResources";
 import {
   EmptyView,
   PageContainer,

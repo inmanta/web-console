@@ -5,7 +5,7 @@ import { FilterPicker } from "@/UI/Components";
 import { SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import { Filter, FilterKind, FilterList } from "@S/Events/Core/Query";
+import { Filter, FilterKind, FilterList } from "@/Slices/Events/Core/Types";
 import { VersionFilter } from "./VersionFilter";
 
 interface Props {

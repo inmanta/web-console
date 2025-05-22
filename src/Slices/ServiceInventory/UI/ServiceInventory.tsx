@@ -2,7 +2,7 @@ import React, { ReactElement, createContext, useEffect } from "react";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetInstances } from "@/Data/Managers/V2/ServiceInstance";
+import { useGetInstances } from "@/Data/Queries/V2/ServiceInstance";
 import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { TableControls } from "./Components";

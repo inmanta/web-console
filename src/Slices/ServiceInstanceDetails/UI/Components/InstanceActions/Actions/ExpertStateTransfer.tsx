@@ -11,7 +11,7 @@ import {
 } from "@patternfly/react-core";
 import { uniqueId } from "lodash";
 import { ParsedNumber } from "@/Core";
-import { usePostExpertStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
+import { usePostExpertStateTransfer } from "@/Data/Queries/V2/ServiceInstance";
 import { DependencyContext, words } from "@/UI";
 import { ConfirmationModal } from "../../ConfirmModal";
 import { ToastAlertMessage } from "../../ToastAlert";

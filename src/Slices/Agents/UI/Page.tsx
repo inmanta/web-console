@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetAgents } from "@/Data/Managers/V2/Agents";
+import { useGetAgents } from "@/Data/Queries/V2/Agents";
 import {
   EmptyView,
   ToastAlert,
@@ -11,7 +11,7 @@ import {
   ErrorView,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Filter } from "@S/Agents/Core/Query";
+import { Filter } from "@/Slices/Agents/Core/Types";
 import { AgentsTableControls } from "./AgentsTableControls";
 import { GetAgentsContext } from "./GetAgentsContext";
 import { TableProvider } from "./TableProvider";

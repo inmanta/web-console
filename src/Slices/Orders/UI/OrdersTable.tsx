@@ -2,7 +2,7 @@ import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { words } from "@/UI";
-import { ServiceOrder, SortKey } from "../Core/Query";
+import { ServiceOrder, SortKey } from "../Core/Types";
 import { OrdersRow } from "./OrdersRow";
 import { OrdersTablePresenter } from "./OrdersTablePresenter";
 
@@ -36,15 +36,15 @@ export const OrdersTable: React.FC<Props> = ({ tablePresenter, rows, sort, setSo
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
     const sortParams = tablePresenter.getSortableColumnNames().includes(apiName)
       ? {
-          sort: {
-            sortBy: {
-              index: tablePresenter.getIndexForColumnName(sort.name),
-              direction: sort.order,
-            },
-            onSort,
-            columnIndex,
+        sort: {
+          sortBy: {
+            index: tablePresenter.getIndexForColumnName(sort.name),
+            direction: sort.order,
           },
-        }
+          onSort,
+          columnIndex,
+        },
+      }
       : {};
 
     return (

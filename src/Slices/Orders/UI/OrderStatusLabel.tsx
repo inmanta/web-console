@@ -1,7 +1,7 @@
 import React from "react";
 import { Label, Spinner } from "@patternfly/react-core";
 import { words } from "@/UI";
-import { ServiceOrderItemState, ServiceOrderState } from "../Core/Query";
+import { ServiceOrderItemState, ServiceOrderState } from "../Core/Types";
 
 /**
  * Custom label tag for orders and serviceOrderItems

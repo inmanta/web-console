@@ -4,7 +4,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
+import { InstanceWithRelations, Inventories } from "@/Data/Queries/V2/ServiceInstance";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -114,9 +114,9 @@ describe("ComposerActions.", () => {
     ${null}           | ${true}  | ${new Set().add("test")} | ${true}  | ${null}
     ${null}           | ${true}  | ${null}                  | ${false} | ${null}
     ${null} | ${true} | ${null} | ${true} | ${new Map().set("test_id", {
-  name: "test",
-  relations: [{ name: "relation-test", currentAmount: 0, min: 1 }],
-})}
+    name: "test",
+    relations: [{ name: "relation-test", currentAmount: 0, min: 1 }],
+  })}
   `(
     "should have deploy button disabled when at least one of conditions are not met",
     ({ serviceOrderItems, isDirty, looseElement, editable, interServiceRelationsOnCanvas }) => {

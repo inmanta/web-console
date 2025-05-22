@@ -2,7 +2,7 @@ import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
 import { FreeTextFilter } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Filter } from "@S/Facts/Core/Query";
+import { Filter } from "@/Slices/Facts/Core/Types";
 
 interface Props {
   filter: Filter;

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { ServiceModel } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetInstanceEvents } from "@/Data/Managers/V2/ServiceInstance/GetEvents";
+import { useGetInstanceEvents } from "@/Data/Queries/V2/ServiceInstance/GetEvents";
 import {
   EventsTablePresenter,
   EventsTableWrapper,
@@ -13,7 +13,7 @@ import {
   ErrorView,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Filter } from "@S/Events/Core/Query";
+import { Filter } from "@/Slices/Events/Core/Types";
 import { EventsTableControls } from "./EventsTableControls";
 
 interface Props {

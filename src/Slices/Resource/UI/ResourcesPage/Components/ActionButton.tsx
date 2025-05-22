@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
-import { DeployAgentsAction, useDeployAgents } from "@/Data/Managers/V2/Agents";
+import { DeployAgentsAction, useDeployAgents } from "@/Data/Queries/V2/Agents";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";

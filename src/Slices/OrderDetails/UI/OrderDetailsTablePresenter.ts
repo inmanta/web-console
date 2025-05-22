@@ -1,4 +1,4 @@
-import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
+import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 
@@ -10,8 +10,7 @@ import { words } from "@/UI/words";
  *
  */
 export class OrderDetailsTablePresenter
-  implements TablePresenter<ServiceOrderItem, ServiceOrderItem>
-{
+  implements TablePresenter<ServiceOrderItem, ServiceOrderItem> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 

@@ -2,7 +2,7 @@ import React from "react";
 import { dia } from "@inmanta/rappid";
 import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { Inventories } from "@/Data/Managers/V2/ServiceInstance";
+import { Inventories } from "@/Data/Queries/V2/ServiceInstance";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";

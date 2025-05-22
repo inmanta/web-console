@@ -16,11 +16,11 @@ import { PageSize } from "@/Core";
 import {
   NotificationResponse,
   useGetNotifications,
-} from "@/Data/Managers/V2/Notification/GetNotifications";
+} from "@/Data/Queries/V2/Notification/GetNotifications";
 import {
   UpdateNotificationParams,
   useUpdateNotification,
-} from "@/Data/Managers/V2/Notification/UpdateNotification";
+} from "@/Data/Queries/V2/Notification/UpdateNotification";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Item, OnUpdate } from "./Item";
@@ -98,9 +98,9 @@ const View: React.FC<ViewProps> = ({ response, onClose, mutate, drawerRef }) => 
 
   const getOnUpdate =
     (ids: string[]): OnUpdate =>
-    (body) => {
-      mutate({ body, ids });
-    };
+      (body) => {
+        mutate({ body, ids });
+      };
 
   const onClearAll = () => {
     if (!response.isSuccess) return;
@@ -130,13 +130,13 @@ const View: React.FC<ViewProps> = ({ response, onClose, mutate, drawerRef }) => 
         <NotificationDrawerList>
           {response.isSuccess
             ? response.data.data.map((notification) => (
-                <Item
-                  data-testid="menuitem"
-                  {...{ notification }}
-                  key={notification.id}
-                  onUpdate={getOnUpdate([notification.id])}
-                />
-              ))
+              <Item
+                data-testid="menuitem"
+                {...{ notification }}
+                key={notification.id}
+                onUpdate={getOnUpdate([notification.id])}
+              />
+            ))
             : null}
         </NotificationDrawerList>
       </NotificationDrawerBody>

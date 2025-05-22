@@ -1,7 +1,7 @@
 import { dia } from "@inmanta/rappid";
 import { DirectedGraph } from "@joint/layout-directed-graph";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { InstanceWithRelations } from "@/Data/Managers/V2/ServiceInstance";
+import { InstanceWithRelations } from "@/Data/Queries/V2/ServiceInstance";
 import { words } from "@/UI/words";
 import { dispatchUpdateStencil } from "../Context/dispatchers";
 import { findCorrespondingId, findFullInterServiceRelations } from "../helpers";

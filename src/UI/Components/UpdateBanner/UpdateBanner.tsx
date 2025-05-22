@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Banner, Flex } from "@patternfly/react-core";
-import { useGetVersionFileInfo } from "@/Data/Managers/V2/Server";
+import { useGetVersionFileInfo } from "@/Data/Queries/V2/Server";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 

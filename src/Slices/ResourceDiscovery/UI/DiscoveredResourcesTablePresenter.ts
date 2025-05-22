@@ -1,10 +1,9 @@
-import { DiscoveredResource } from "@/Data/Managers/V2/DiscoveredResources";
+import { DiscoveredResource } from "@/Data/Queries/V2/DiscoveredResources";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 
 export class DiscoveredResourcesTablePresenter
-  implements TablePresenter<DiscoveredResource, DiscoveredResource>
-{
+  implements TablePresenter<DiscoveredResource, DiscoveredResource> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 

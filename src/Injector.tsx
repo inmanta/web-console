@@ -11,7 +11,7 @@ import {
   UrlManagerImpl,
 } from "@/UI";
 import { AuthContext } from "./Data/Auth/";
-import { useGetServerStatus } from "./Data/Managers/V2/Server";
+import { useGetServerStatus } from "./Data/Queries/V2/Server";
 import { ErrorView } from "./UI/Components/ErrorView";
 import { LoadingView } from "./UI/Components/LoadingView";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";

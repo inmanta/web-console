@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useUrlStateWithString } from "@/Data";
-import { useGetInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { useGetInstance } from "@/Data/Queries/V2/ServiceInstance";
 import { Description, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";

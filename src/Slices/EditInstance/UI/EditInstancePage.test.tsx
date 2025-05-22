@@ -6,7 +6,7 @@ import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { cloneDeep } from "lodash";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
+import * as queryModule from "@/Data/Queries/Helpers";
 import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -95,8 +95,8 @@ describe("EditInstancePage", () => {
         });
       }
     ),
-    http.patch("/lsm/v1/service_inventory/service_name_a/service_instance_id_a", async () => {}),
-    http.patch("/lsm/v2/service_inventory/service_name_d/service_instance_id_a", async () => {})
+    http.patch("/lsm/v1/service_inventory/service_name_a/service_instance_id_a", async () => { }),
+    http.patch("/lsm/v2/service_inventory/service_name_d/service_instance_id_a", async () => { })
   );
 
   beforeAll(() => {

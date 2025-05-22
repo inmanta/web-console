@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
-import { usePostInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { usePostInstance } from "@/Data/Queries/V2/ServiceInstance";
 import {
   CreateModifierHandler,
   ToastAlert,
