@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
-import { usePatchAttributes } from "@/Data/Queries/V2/ServiceInstance/PatchAttributes";
+import { usePatchAttributes } from "@/Data/Queries/Slices/ServiceInstance/PatchAttributes";
 import {
   FieldCreator,
   ServiceInstanceForm,

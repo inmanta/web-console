@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetCompileReports } from "@/Data/Queries/V2/Compilation/GetCompileReports";
+import { useGetCompileReports } from "@/Data/Queries/Slices/Compilation/GetCompileReports";
 import {
   EmptyView,
   PageContainer,

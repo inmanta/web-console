@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
 import { Td, Tr } from "@patternfly/react-table";
-import { useRemoveUser, UserInfo } from "@/Data/Queries/V2/Auth";
+import { useRemoveUser, UserInfo } from "@/Data/Queries/Slices/Auth";
 import { words } from "@/UI";
 import { ConfirmUserActionForm } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";

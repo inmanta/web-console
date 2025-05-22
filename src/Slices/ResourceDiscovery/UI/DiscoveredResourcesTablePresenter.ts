@@ -1,4 +1,4 @@
-import { DiscoveredResource } from "@/Data/Queries/V2/DiscoveredResources";
+import { DiscoveredResource } from "@/Data/Queries/Slices/DiscoveredResources";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 

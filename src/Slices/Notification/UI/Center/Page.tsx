@@ -4,7 +4,7 @@ import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWi
 import {
   NotificationFilter,
   useGetNotifications,
-} from "@/Data/Queries/V2/Notification/GetNotifications";
+} from "@/Data/Queries/Slices/Notification/GetNotifications";
 import {
   EmptyView,
   PageContainer,

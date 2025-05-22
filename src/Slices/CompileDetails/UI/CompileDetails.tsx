@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetCompileDetails } from "@/Data/Queries/V2/Compilation/GetCompileDetails";
+import { useGetCompileDetails } from "@/Data/Queries/Slices/Compilation/GetCompileDetails";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { CompileDetailsSections } from "./CompileDetailsSections";
 

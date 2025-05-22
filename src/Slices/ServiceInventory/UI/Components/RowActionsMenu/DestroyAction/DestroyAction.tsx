@@ -3,7 +3,7 @@ import { MenuItem, Content } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { useDestroyInstance } from "@/Data/Queries/V2/ServiceInstance";
+import { useDestroyInstance } from "@/Data/Queries/Slices/ServiceInstance";
 import { DependencyContext } from "@/UI";
 import { ToastAlert, ConfirmUserActionForm } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";

@@ -9,7 +9,7 @@ import {
   Spinner,
   ToolbarGroup,
 } from "@patternfly/react-core";
-import { DryRun } from "@/Data/Queries/V2/DryRun";
+import { DryRun } from "@/Data/Queries/Slices/DryRun";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { Progress as DomainProgress } from "@S/ComplianceCheck/Core/Domain";
 

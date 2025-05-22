@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { PageSize, ServiceInstanceParams } from "@/Core";
 import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetInstances } from "@/Data/Queries/V2/ServiceInstance";
+import { useGetInstances } from "@/Data/Queries/Slices/ServiceInstance";
 import { AutoCompleteInput } from "./AutoCompleteInput";
 
 interface Props {

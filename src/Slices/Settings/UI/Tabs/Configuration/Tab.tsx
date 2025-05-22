@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetEnvironmentSettings } from "@/Data/Queries/V2/Environment/GetEnvironmentSettings";
+import { useGetEnvironmentSettings } from "@/Data/Queries/Slices/Environment/GetEnvironmentSettings";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { Provider } from "./Provider";
 

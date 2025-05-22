@@ -6,7 +6,7 @@ import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { UserInfo } from "@/Data/Queries/V2/Auth";
+import { UserInfo } from "@/Data/Queries/Slices/Auth";
 import { MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";

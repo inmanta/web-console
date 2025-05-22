@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useGetCurrentUser } from "@/Data/Queries/V2/Auth";
+import { useGetCurrentUser } from "@/Data/Queries/Slices/Auth";
 import { AuthContext } from "../AuthContext";
 
 /**

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Button, Icon, Tooltip } from "@patternfly/react-core";
 import { PlayIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { useResumeEnvironment } from "@/Data/Queries/V2/Environment";
+import { useResumeEnvironment } from "@/Data/Queries/Slices/Environment";
 import { useQueryControl } from "@/Data/Queries/Helpers";
 import { words } from "@/UI/words";
 import { ModalContext } from "../../ModalProvider";

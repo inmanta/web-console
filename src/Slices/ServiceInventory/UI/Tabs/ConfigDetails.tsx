@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
-import { usePostInstanceConfig } from "@/Data/Queries/V2/ServiceInstance";
+import { usePostInstanceConfig } from "@/Data/Queries/Slices/ServiceInstance";
 import { DefaultSwitch, EmptyView, SettingsList } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";

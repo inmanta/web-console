@@ -2,7 +2,7 @@ import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { useExpansion } from "@/Data";
-import { DiscoveredResource, SortKey } from "@/Data/Queries/V2/DiscoveredResources";
+import { DiscoveredResource, SortKey } from "@/Data/Queries/Slices/DiscoveredResources";
 import { words } from "@/UI";
 import { DiscoveredResourceRow } from "./DiscoveredResourcesRow";
 import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";

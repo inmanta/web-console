@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetResourceFacts } from "@/Data/Queries/V2/Resource";
+import { useGetResourceFacts } from "@/Data/Queries/Slices/Resource";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { FactsTable } from "./FactsTable";
 

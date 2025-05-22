@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import { DescriptionList } from "@patternfly/react-core";
 import { FlatEnvironment, Maybe, ProjectModel } from "@/Core";
-import { useModifyEnvironment } from "@/Data/Queries/V2/Environment";
-import { useCreateProject } from "@/Data/Queries/V2/Project/CreateProject";
+import { useModifyEnvironment } from "@/Data/Queries/Slices/Environment";
+import { useCreateProject } from "@/Data/Queries/Slices/Project/CreateProject";
 import {
   EditableTextField,
   EditableMultiTextField,

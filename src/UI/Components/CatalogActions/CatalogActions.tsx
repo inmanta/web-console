@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AlertVariant, Button, Content, Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
-import { useExportCatalog } from "@/Data/Queries/V2/Service";
+import { useExportCatalog } from "@/Data/Queries/Slices/Service";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";

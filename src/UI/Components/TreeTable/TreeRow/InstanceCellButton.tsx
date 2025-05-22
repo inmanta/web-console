@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Spinner } from "@patternfly/react-core";
-import { useGetInstance } from "@/Data/Queries/V2/ServiceInstance";
+import { useGetInstance } from "@/Data/Queries/Slices/ServiceInstance";
 
 interface Props {
   id: string;

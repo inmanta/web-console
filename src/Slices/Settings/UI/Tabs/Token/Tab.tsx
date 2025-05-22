@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ClientType, toggleValueInList } from "@/Core";
-import { useGenerateToken } from "@/Data/Queries/V2/Environment";
+import { useGenerateToken } from "@/Data/Queries/Slices/Environment";
 import { TokenForm } from "./TokenForm";
 
 /**

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Config } from "@/Core";
-import { usePostServiceConfig } from "@/Data/Queries/V2/Service";
+import { usePostServiceConfig } from "@/Data/Queries/Slices/Service";
 import { BooleanSwitch, EmptyView, SettingsList } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";

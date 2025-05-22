@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
-import { useGetServiceConfig } from "@/Data/Queries/V2/Service";
+import { useGetServiceConfig } from "@/Data/Queries/Slices/Service";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { ConfigList } from "./ConfigList";
 

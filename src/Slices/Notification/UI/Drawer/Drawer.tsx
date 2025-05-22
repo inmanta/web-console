@@ -16,11 +16,11 @@ import { PageSize } from "@/Core";
 import {
   NotificationResponse,
   useGetNotifications,
-} from "@/Data/Queries/V2/Notification/GetNotifications";
+} from "@/Data/Queries/Slices/Notification/GetNotifications";
 import {
   UpdateNotificationParams,
   useUpdateNotification,
-} from "@/Data/Queries/V2/Notification/UpdateNotification";
+} from "@/Data/Queries/Slices/Notification/UpdateNotification";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Item, OnUpdate } from "./Item";

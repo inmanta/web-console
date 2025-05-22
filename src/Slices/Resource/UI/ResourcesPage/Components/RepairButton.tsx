@@ -1,5 +1,5 @@
 import React from "react";
-import { DeployAgentsAction } from "@/Data/Queries/V2/Agents";
+import { DeployAgentsAction } from "@/Data/Queries/Slices/Agents";
 import { words } from "@/UI/words";
 import { ResourcePageActionButton } from "./ActionButton";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetResourceDetails } from "@/Data/Queries/V2/Resource";
+import { useGetResourceDetails } from "@/Data/Queries/Slices/Resource";
 import { RequiresTable, LoadingRequiresTable, ErrorView } from "@/UI/Components";
 import { EmptyView } from "@/UI/Components/EmptyView";
 import { words } from "@/UI/words";

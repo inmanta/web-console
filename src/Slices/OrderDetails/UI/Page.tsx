@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useGetOrderDetails } from "@/Data/Queries/V2/Order";
+import { useGetOrderDetails } from "@/Data/Queries/Slices/Order";
 import { EmptyView, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";

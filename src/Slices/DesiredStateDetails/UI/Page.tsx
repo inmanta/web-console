@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Resource } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetVersionResources } from "@/Data/Queries/V2/DesiredState";
+import { useGetVersionResources } from "@/Data/Queries/Slices/DesiredState";
 import {
   EmptyView,
   PageContainer,

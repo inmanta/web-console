@@ -5,7 +5,7 @@ import { PageSize } from "@/Core";
 import {
   NotificationResponse,
   useGetNotifications,
-} from "@/Data/Queries/V2/Notification/GetNotifications";
+} from "@/Data/Queries/Slices/Notification/GetNotifications";
 import { ToastAlert } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { Notification } from "@S/Notification/Core/Domain";
