@@ -12,4 +12,3 @@ export interface TreeTableHelper {
   getEmptyAttributeSets(): string[];
   getAttributes(): Attributes;
 }
-

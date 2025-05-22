@@ -8,61 +8,61 @@ import { ExpansionState, TreeExpansionManager } from "./TreeExpansionManager";
 import { TreeTableHelper } from "./TreeTableHelperInterface";
 
 export abstract class BaseTreeTableHelper<A extends AttributeTree> implements TreeTableHelper {
-    constructor(
-        private readonly pathHelper: PathHelper,
-        private readonly expansionManager: TreeExpansionManager,
-        private readonly attributeHelper: AttributeHelper<A>,
-        protected readonly attributes: A["source"],
-        private readonly extractValues: (
-            node: Extract<MultiAttributeNode<A["target"]>, { kind: "Leaf" }>
-        ) => Cell[]
-    ) { }
+  constructor(
+    private readonly pathHelper: PathHelper,
+    private readonly expansionManager: TreeExpansionManager,
+    private readonly attributeHelper: AttributeHelper<A>,
+    protected readonly attributes: A["source"],
+    private readonly extractValues: (
+      node: Extract<MultiAttributeNode<A["target"]>, { kind: "Leaf" }>
+    ) => Cell[]
+  ) {}
 
-    abstract getColumns(): string[];
+  abstract getColumns(): string[];
 
-    getExpansionState(): ExpansionState {
-        return this.expansionManager.create(this.attributeHelper.getPaths(this.attributes));
-    }
+  getExpansionState(): ExpansionState {
+    return this.expansionManager.create(this.attributeHelper.getPaths(this.attributes));
+  }
 
-    createRows(
-        expansionState: ExpansionState,
-        setState: (state: ExpansionState) => void
-    ): { rows: TreeRow[]; openAll: () => void; closeAll: () => void } {
-        const createOnToggle = (key: string) => () =>
-            setState(this.expansionManager.toggle(expansionState, key));
-        const createCloseAll = () => setState(this.expansionManager.toggleAll(expansionState, false));
-        const createOpenAll = () => setState(this.expansionManager.toggleAll(expansionState, true));
+  createRows(
+    expansionState: ExpansionState,
+    setState: (state: ExpansionState) => void
+  ): { rows: TreeRow[]; openAll: () => void; closeAll: () => void } {
+    const createOnToggle = (key: string) => () =>
+      setState(this.expansionManager.toggle(expansionState, key));
+    const createCloseAll = () => setState(this.expansionManager.toggleAll(expansionState, false));
+    const createOpenAll = () => setState(this.expansionManager.toggleAll(expansionState, true));
 
-        const isExpandedByParent = (path: string) =>
-            this.expansionManager.get(expansionState, this.pathHelper.getParent(path));
+    const isExpandedByParent = (path: string) =>
+      this.expansionManager.get(expansionState, this.pathHelper.getParent(path));
 
-        const isChildExpanded = (path: string) => this.expansionManager.get(expansionState, path);
+    const isChildExpanded = (path: string) => this.expansionManager.get(expansionState, path);
 
-        const treeRowCreator = new TreeRowCreator<A["target"]>(
-            this.pathHelper,
-            isExpandedByParent,
-            isChildExpanded,
-            createOnToggle,
-            this.extractValues,
-            this.attributes as Attributes
-        );
+    const treeRowCreator = new TreeRowCreator<A["target"]>(
+      this.pathHelper,
+      isExpandedByParent,
+      isChildExpanded,
+      createOnToggle,
+      this.extractValues,
+      this.attributes as Attributes
+    );
 
-        const nodes = this.attributeHelper.getMultiAttributeNodes(this.attributes);
+    const nodes = this.attributeHelper.getMultiAttributeNodes(this.attributes);
 
-        return {
-            rows: Object.entries(nodes).map(([key, node]) =>
-                treeRowCreator.create(key, node, this.attributeHelper.getAttributeAnnotations(key))
-            ),
-            openAll: createOpenAll,
-            closeAll: createCloseAll,
-        };
-    }
+    return {
+      rows: Object.entries(nodes).map(([key, node]) =>
+        treeRowCreator.create(key, node, this.attributeHelper.getAttributeAnnotations(key))
+      ),
+      openAll: createOpenAll,
+      closeAll: createCloseAll,
+    };
+  }
 
-    getEmptyAttributeSets(): string[] {
-        return [];
-    }
+  getEmptyAttributeSets(): string[] {
+    return [];
+  }
 
-    getAttributes(): Attributes {
-        return this.attributes as Attributes;
-    }
-} 
+  getAttributes(): Attributes {
+    return this.attributes as Attributes;
+  }
+}
