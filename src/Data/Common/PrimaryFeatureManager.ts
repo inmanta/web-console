@@ -20,9 +20,10 @@ export const PrimaryFeatureManager = (
   commitHash: string = "",
   appVersion: string = ""
 ): FeatureManager => {
-  const [features, setFeatures] = useState<
-    Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices"> | null
-  >(null);
+  const [features, setFeatures] = useState<Pick<
+    ServerStatus,
+    "features" | "extensions" | "version" | "edition" | "slices"
+  > | null>(null);
 
   /**
    * Gets the version of the application.
