@@ -1,1 +1,1 @@
-export * from "./useGetEvents";
+export { useGetInstanceEvents } from "./useGetEvents";

@@ -1,4 +1,4 @@
-export * from "./CreateCallback";
-export * from "./DeleteCallback";
-export * from "./GetCallbacks";
+export { useCreateCallback } from "./CreateCallback";
+export { useDeleteCallback } from "./DeleteCallback";
+export { useGetCallbacks } from "./GetCallbacks";
 

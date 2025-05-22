@@ -1,1 +1,1 @@
-export * from "./useSuggestions";
+export { useSuggestedValues } from "./useSuggestions";
