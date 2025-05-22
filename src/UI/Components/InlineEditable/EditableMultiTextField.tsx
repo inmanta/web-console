@@ -57,9 +57,8 @@ export const EditableMultiTextField: React.FC<Props> = ({
   };
 
   const onEditClick = () => {
-    setEditable(true)
+    setEditable(true);
     setError(null);
-
   };
 
   const onSubmitClick = () => onSubmitRequest(fieldValues);
