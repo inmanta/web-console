@@ -1,11 +1,12 @@
 import { Attributes } from "@/Core";
-import { Cell, TreeRow, TreeRowCreator } from "@/UI/Components/TreeTable/TreeRow";
 import { AttributeTree } from "@/UI/Components/TreeTable/types";
+import { Cell, TreeRow } from "../TreeRow/TreeRow";
+import { TreeRowCreator } from "../TreeRow/TreeRowCreator";
+import { TreeTableHelper } from "../types/TreeTableHelper";
 import { AttributeHelper } from "./AttributeHelper";
 import { MultiAttributeNode } from "./AttributeNode";
 import { PathHelper } from "./PathHelper";
 import { ExpansionState, TreeExpansionManager } from "./TreeExpansionManager";
-import { TreeTableHelper } from "./TreeTableHelperInterface";
 
 export abstract class BaseTreeTableHelper<A extends AttributeTree> implements TreeTableHelper {
   constructor(

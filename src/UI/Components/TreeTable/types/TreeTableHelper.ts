@@ -1,6 +1,6 @@
 import { Attributes } from "@/Core";
-import { TreeRow } from "@/UI/Components/TreeTable/TreeRow";
-import { ExpansionState } from "./TreeExpansionManager";
+import { ExpansionState } from "../Helpers/TreeExpansionManager";
+import { TreeRow } from "../TreeRow/TreeRow";
 
 export interface TreeTableHelper {
   getColumns(): string[];
