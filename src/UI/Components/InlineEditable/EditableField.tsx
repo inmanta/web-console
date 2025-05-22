@@ -57,11 +57,11 @@ export const EditableField: React.FC<Props> = ({
   const onSubmitRequest = async (value: string) => {
     setEditable(false);
     onSubmit(value);
-    setError(null);
   };
 
   const onEditClick = () => {
     setEditable(true);
+    setError(null);
   };
 
   const onSubmitClick = () => onSubmitRequest(value);

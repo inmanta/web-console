@@ -48,7 +48,6 @@ export const EditableMultiTextField: React.FC<Props> = ({
   const onSubmitRequest = async (values: Record<string, string>) => {
     setEditable(false);
     onSubmit(values);
-    setError(null);
   };
 
   const onKeyDown = (event) => {
@@ -58,7 +57,9 @@ export const EditableMultiTextField: React.FC<Props> = ({
   };
 
   const onEditClick = () => {
-    setEditable(true);
+    setEditable(true)
+    setError(null);
+
   };
 
   const onSubmitClick = () => onSubmitRequest(fieldValues);
