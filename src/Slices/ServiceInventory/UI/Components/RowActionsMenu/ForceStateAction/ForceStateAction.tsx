@@ -47,7 +47,7 @@ export const ForceStateAction: React.FC<Props> = ({
     </MenuItem>
   ));
 
-  const { authHelper, environmentModifier } = useContext(DependencyContext);
+  const { authHelper, environmentHandler } = useContext(DependencyContext);
 
   const { mutate } = usePostExpertStateTransfer(id, service_entity, {
     onError: (error) => {
@@ -55,7 +55,7 @@ export const ForceStateAction: React.FC<Props> = ({
     },
   });
 
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
 
   /**
    * Opens a modal with confirmation buttons.

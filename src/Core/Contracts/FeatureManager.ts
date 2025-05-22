@@ -1,4 +1,4 @@
-import { ServerStatus } from "../Domain/ServerStatus";
+import { ServerStatus } from "../Domain";
 import { JsonParserId } from "./JsonParser";
 
 /**

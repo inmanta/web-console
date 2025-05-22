@@ -22,8 +22,9 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     if (environments.isSuccess && serverStatus.isSuccess) {
       environmentHandler.setAllEnvironments(environments.data);
       featureManager.setAllFeatures(serverStatus.data);
-      setIsInitialized(true);
+      setIsInitialized(true); // This is used to sync the component rendering with updating hooks
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environments.data, environments.isSuccess, serverStatus.data, serverStatus.isSuccess]);
 

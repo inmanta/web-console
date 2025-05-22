@@ -35,7 +35,7 @@ import { DeleteAction, DestroyAction, ExpertStateTransfer, StateAction } from ".
  */
 export const InstanceActions: React.FC = () => {
   const { instance, serviceModelQuery } = useContext(InstanceDetailsContext);
-  const { routeManager, environmentModifier, featureManager } = useContext(DependencyContext);
+  const { routeManager, environmentHandler, featureManager } = useContext(DependencyContext);
 
   const editDisabled =
     instance.deleted || isTransferDisabled(instance, "on_update", serviceModelQuery.data);
@@ -75,7 +75,7 @@ export const InstanceActions: React.FC = () => {
 
   return (
     <RightAlignedButtons>
-      {environmentModifier.useIsExpertModeEnabled() && (
+      {environmentHandler.useIsExpertModeEnabled() && (
         <Dropdown
           isOpen={isExpertDropdownOpen}
           onOpenChange={(isOpen: boolean) => !blockedInterface && setIsExpertDropdownOpen(isOpen)}

@@ -5,10 +5,9 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider } from "@/Test";
+import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as AgentsMock from "@S/Agents/Core/Mock";
 import { Page } from "./Page";
@@ -22,11 +21,11 @@ const axe = configureAxe({
   },
 });
 
-function setup() {
+function setup(halted: boolean = false) {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
           <Page />
         </MockedDependencyProvider>
       </TestMemoryRouter>
@@ -374,10 +373,6 @@ describe("Agents", () => {
   });
 
   test("Given the Agents view with the environment halted, When setting keep_paused_on_resume on an agent, Then the correct request is fired", async () => {
-    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
-      useIsHalted: () => true,
-    });
     const data = JSON.parse(JSON.stringify(AgentsMock.response)); //copy the object to avoid mutation overflow to others places
     server.use(
       http.post("/api/v2/agent/aws/keep_paused_on_resume", () => {
@@ -388,7 +383,7 @@ describe("Agents", () => {
         return HttpResponse.json(data);
       })
     );
-    const { component } = setup();
+    const { component } = setup(true);
 
     render(component);
 
@@ -429,7 +424,7 @@ describe("Agents", () => {
       })
     );
 
-    const { component } = setup();
+    const { component } = setup(true);
 
     render(component);
 
@@ -464,7 +459,7 @@ describe("Agents", () => {
         return HttpResponse.json(AgentsMock.response);
       })
     );
-    const { component } = setup();
+    const { component } = setup(true);
 
     render(component);
 

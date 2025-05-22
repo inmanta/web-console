@@ -4,18 +4,25 @@ import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider } from "@/Test";
+import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Actions } from "./Actions";
 
-function setup() {
+function setup(protectedEnvironment: boolean = false) {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider
+          env={{
+            ...EnvironmentDetails.env,
+            settings: {
+              ...EnvironmentDetails.env.settings,
+              protected_environment: protectedEnvironment,
+            },
+          }}
+        >
           <ModalProvider>
             <Actions environment={{ id: "env", name: "connect" }} />
           </ModalProvider>
@@ -162,11 +169,7 @@ describe("Environment Actions", () => {
   });
 
   test("GIVEN Environment Actions WHEN the environment is protected THEN clear and delete are disabled", async () => {
-    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
-      useIsProtectedEnvironment: () => true,
-    });
-    const { component } = setup();
+    const { component } = setup(true);
 
     render(component);
     expect(await screen.findByRole("button", { name: "Clear environment" })).toBeDisabled();

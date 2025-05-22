@@ -7,7 +7,6 @@ import {
   PrimaryRouteManager,
   DependencyProvider,
   EnvironmentHandlerImpl,
-  useEnvironmentModifierImpl,
   UrlManagerImpl,
 } from "@/UI";
 import { AuthContext } from "./Data/Auth/";
@@ -38,7 +37,6 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   );
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
-  const environmentModifier = useEnvironmentModifierImpl();
   const fileManager = new PrimaryFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
 
@@ -46,7 +44,6 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
     <DependencyProvider
       dependencies={{
         urlManager,
-        environmentModifier,
         featureManager,
         routeManager,
         environmentHandler,

@@ -22,7 +22,7 @@ interface Props {
  * @returns {React.FC<Props>} A button wrapped in a tooltip that performs the pause/unpause action.
  */
 export const ActionButton: React.FC<Props> = ({ name, paused }) => {
-  const { environmentModifier } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const { setErrorMessage } = useContext(GetAgentsContext);
   const { mutate } = usePauseAgent({
     onError: (error) => {
@@ -32,7 +32,7 @@ export const ActionButton: React.FC<Props> = ({ name, paused }) => {
   const onSubmit = async () => {
     mutate({ name, action: paused ? "unpause" : "pause" });
   };
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
 
   return (
     <ActionDisabledTooltip

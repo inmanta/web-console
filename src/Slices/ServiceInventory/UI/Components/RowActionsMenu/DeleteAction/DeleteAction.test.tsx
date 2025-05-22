@@ -3,10 +3,9 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
-import { ServiceInstance, MockedDependencyProvider } from "@/Test";
+import { ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { DeleteAction } from "./DeleteAction";
 
@@ -17,11 +16,11 @@ jest.mock("@/Data/Managers/V2/ServiceInstance", () => ({
   useDeleteInstance: () => ({ mutate: mockedMutate }),
 }));
 
-function setup() {
+function setup(halted: boolean = false) {
   return {
     component: (isDisabled = false) => (
       <QueryClientProvider client={testClient}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
           <ModalProvider>
             <ServiceInventoryContext.Provider
               value={{
@@ -99,11 +98,7 @@ describe("DeleteModal ", () => {
   });
 
   it("Takes environment halted status in account", async () => {
-    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
-      useIsHalted: () => true,
-    });
-    const { component } = setup();
+    const { component } = setup(true);
     const { rerender } = render(component(true));
 
     rerender(component(false));

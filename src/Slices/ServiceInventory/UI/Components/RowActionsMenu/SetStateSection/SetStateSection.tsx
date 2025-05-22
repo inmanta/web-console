@@ -41,13 +41,13 @@ export const SetStateSection: React.FC<Props> = ({
   };
 
   const isDisabled = !targets || targets.length === 0;
-  const { authHelper, environmentModifier } = useContext(DependencyContext);
+  const { authHelper, environmentHandler } = useContext(DependencyContext);
   const { mutate } = usePostStateTransfer(id, service_entity, {
     onError: (error) => {
       setStateErrorMessage(error.message);
     },
   });
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
 
   /**
    * Opens a modal with a confirmation buttons.
