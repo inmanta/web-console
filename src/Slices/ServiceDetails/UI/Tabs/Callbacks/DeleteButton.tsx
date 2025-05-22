@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Button } from "@patternfly/react-core";
-import { useDeleteCallback } from "@/Data/Queries/Slices/Callback";
+import { useDeleteCallback } from "@/Data/Queries";
 import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";

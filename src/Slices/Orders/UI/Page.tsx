@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetOrders } from "@/Data/Queries/Slices/Order";
+import { useGetOrders } from "@/Data/Queries";
 import {
   EmptyView,
   PageContainer,

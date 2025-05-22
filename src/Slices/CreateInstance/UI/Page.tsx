@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetServiceModel } from "@/Data/Queries/Slices/Service";
+import { useGetServiceModel } from "@/Data/Queries";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";

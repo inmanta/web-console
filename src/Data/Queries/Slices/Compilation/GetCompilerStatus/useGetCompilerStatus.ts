@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DependencyContext } from "@/UI/Dependency";
-import { CustomError, REFETCH_INTERVAL, useHead } from "@/Data/Queries/Helpers";
+import { CustomError, REFETCH_INTERVAL, useHead } from "@/Data/Queries";
 
 type HookResponse = {
   isCompiling: boolean;

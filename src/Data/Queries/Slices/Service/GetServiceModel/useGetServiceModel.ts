@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceModel } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
+import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
 
 /**
  * Return Signature of the useGetServiceModel React Query

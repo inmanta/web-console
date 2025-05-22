@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DependencyContext } from "@/UI/Dependency";
-import { REFETCH_INTERVAL, useGet } from "@/Data/Queries/Helpers";
+import { REFETCH_INTERVAL, useGet } from "@/Data/Queries";
 import { DryRun } from "../GetDryRunReport";
 
 /**

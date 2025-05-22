@@ -3,7 +3,7 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Diff } from "@/Core";
 import { ParsedNumber } from "@/Core/Language";
 import { DependencyContext } from "@/UI/Dependency";
-import { useGet } from "@/Data/Queries/Helpers";
+import { useGet } from "@/Data/Queries";
 
 /**
  * DryRun interface

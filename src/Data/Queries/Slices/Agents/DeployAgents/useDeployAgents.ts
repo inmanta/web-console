@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { DependencyContext } from "@/UI";
-import { usePost } from "@/Data/Queries/Helpers";
+import { usePost } from "@/Data/Queries";
 
 
 /**

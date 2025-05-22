@@ -8,7 +8,7 @@ import * as monaco from "monaco-editor";
 import { createRoot } from "react-dom/client";
 import { Root } from "@/UI/Root";
 import { AuthProvider } from "./Data/Auth/AuthProvider";
-import { QueryControlProvider } from "./Data/Queries/Helpers";
+import { QueryControlProvider } from "./Data/Queries";
 import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";

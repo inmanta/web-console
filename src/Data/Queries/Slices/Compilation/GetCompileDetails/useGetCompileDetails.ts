@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { CompileDetails } from "@/Slices/CompileDetails/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
-import { CustomError, REFETCH_INTERVAL, useGet } from "@/Data/Queries/Helpers";
+import { CustomError, REFETCH_INTERVAL, useGet } from "@/Data/Queries";
 
 interface CompileDetailsParams {
   id: string;

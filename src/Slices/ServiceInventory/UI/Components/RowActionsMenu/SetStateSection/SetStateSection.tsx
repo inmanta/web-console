@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Button, MenuItem, Content } from "@patternfly/react-core";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { usePostStateTransfer } from "@/Data/Queries/Slices/ServiceInstance";
+import { usePostStateTransfer } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";

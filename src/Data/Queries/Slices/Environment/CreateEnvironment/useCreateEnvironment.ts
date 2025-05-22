@@ -1,6 +1,6 @@
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { Environment } from "@/Core";
-import { usePutWithoutEnv } from "@/Data/Queries/Helpers";
+import { usePutWithoutEnv } from "@/Data/Queries";
 
 /**
  * Interface for the parameters for the create environment mutation.

@@ -3,9 +3,8 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DateRange, EventType, InstanceEvent, PageSize, Pagination, Sort } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { getPaginationHandlers } from "@/Data/Queries/Helpers";
 import { DependencyContext } from "@/UI/Dependency";
-import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
+import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
 import { getUrl } from "./getUrl";
 
 /**

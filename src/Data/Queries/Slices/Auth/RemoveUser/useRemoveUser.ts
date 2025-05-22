@@ -1,5 +1,5 @@
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useDeleteWithoutEnv } from "@/Data/Queries/Helpers";
+import { useDeleteWithoutEnv } from "@/Data/Queries";
 
 /**
  * React Query hook for removing a user from the server.

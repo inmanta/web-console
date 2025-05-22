@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetProjects } from "@/Data/Queries/Slices/Project/GetProjects";
+import { useGetProjects } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { CreateEnvironmentForm } from "./CreateEnvironmentForm";

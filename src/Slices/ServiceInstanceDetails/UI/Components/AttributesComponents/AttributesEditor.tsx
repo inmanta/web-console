@@ -13,7 +13,7 @@ import { InstanceAttributeModel } from "@/Core";
 import {
   ExpertPatchAttributes,
   usePatchAttributesExpert,
-} from "@/Data/Queries/Slices/ServiceInstance";
+} from "@/Data/Queries";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";

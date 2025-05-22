@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { DependencyContext } from "@/UI";
-import { usePost } from "@/Data/Queries/Helpers";
+import { usePost } from "@/Data/Queries";
 
 /**
  * Interface for pausing/resuming agents parameters

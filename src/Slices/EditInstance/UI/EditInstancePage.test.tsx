@@ -6,7 +6,7 @@ import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { cloneDeep } from "lodash";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import * as queryModule from "@/Data/Queries/Helpers";
+import * as queryModule from "@/Data/Queries/Helpers/useQueries";
 import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { testClient } from "@/Test/Utils/react-query-setup";

@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { useGet } from "@/Data/Queries/Helpers";
+import { useGet } from "@/Data/Queries";
 
 interface ResponseData {
   parameter: Record<string, Record<string, unknown>>;

@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { EnvironmentSettings } from "@/Core/Domain/EnvironmentSettings";
-import { useGetWithOptionalEnv } from "@/Data/Queries/Helpers";
+import { useGetWithOptionalEnv } from "@/Data/Queries";
 
 /**
  * Return Signature of the useGetEnvironmentSettings React Query

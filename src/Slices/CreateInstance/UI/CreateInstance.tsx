@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
-import { usePostInstance } from "@/Data/Queries/Slices/ServiceInstance";
+import { usePostInstance } from "@/Data/Queries/";
 import {
   CreateModifierHandler,
   Description,

@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetCallbacks } from "@/Data/Queries/Slices/Callback/GetCallbacks";
+import { useGetCallbacks } from "@/Data/Queries";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { CallbacksTable } from "./CallbacksTable";
 

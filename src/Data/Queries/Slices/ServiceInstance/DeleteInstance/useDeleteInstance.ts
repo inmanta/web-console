@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
 import { DependencyContext } from "@/UI";
-import { useDelete } from "@/Data/Queries/Helpers";
+import { useDelete } from "@/Data/Queries";
 
 /**
  * React Query hook for Deleting an instance.

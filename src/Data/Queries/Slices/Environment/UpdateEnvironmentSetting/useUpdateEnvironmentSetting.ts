@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { EnvironmentSettings } from "@/Core";
 import { DependencyContext } from "@/UI";
-import { usePost } from "@/Data/Queries/Helpers";
+import { usePost } from "@/Data/Queries";
 
 /**
  * Interface for the parameters for the update environment setting mutation.

@@ -4,7 +4,7 @@ import { UseMutationResult } from "@tanstack/react-query";
 import {
   CreateProjectParams,
   CreateProjectResponse,
-} from "@/Data/Queries/Slices/Project/CreateProject";
+} from "@/Data/Queries";
 import { SingleTextSelect } from "../SingleTextSelect";
 import { InlinePlainAlert } from "./InlinePlainAlert";
 

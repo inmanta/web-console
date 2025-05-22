@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Dropdown, DropdownItem, MenuToggle, MenuToggleElement } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
-import { useUpdateNotification } from "@/Data/Queries/Slices/Notification/UpdateNotification";
+import { useUpdateNotification } from "@/Data/Queries";
 import { words } from "@/UI/words";
 
 /**

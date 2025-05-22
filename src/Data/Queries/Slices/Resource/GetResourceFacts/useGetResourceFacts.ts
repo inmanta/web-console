@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Fact } from "@/Slices/Facts/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
-import { useGet, REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
+import { useGet, REFETCH_INTERVAL } from "@/Data/Queries";
 
 /**
  * Result interface for the resource facts API response

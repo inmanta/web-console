@@ -1,6 +1,6 @@
 import React from "react";
 import { DataList } from "@patternfly/react-core";
-import { NotificationResponse } from "@/Data/Queries/Slices/Notification/GetNotifications";
+import { NotificationResponse } from "@/Data/Queries";
 import { Item } from "./Item";
 
 interface Props {

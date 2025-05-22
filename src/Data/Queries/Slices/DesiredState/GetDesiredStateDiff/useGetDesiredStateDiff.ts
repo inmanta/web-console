@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Diff } from "@/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
-import { useGet } from "@/Data/Queries/Helpers";
+import { useGet } from "@/Data/Queries";
 
 /**
  * Interface for the API response containing the diff data

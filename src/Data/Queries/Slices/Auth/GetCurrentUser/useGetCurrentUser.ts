@@ -1,5 +1,5 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { CustomError, useGetWithoutEnv } from "@/Data/Queries/Helpers";
+import { CustomError, useGetWithoutEnv } from "@/Data/Queries";
 
 interface LoggedUser {
   username: string;

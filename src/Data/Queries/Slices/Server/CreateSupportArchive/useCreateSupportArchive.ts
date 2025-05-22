@@ -1,5 +1,5 @@
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
-import { CustomError, useGetZipWithoutEnv } from "@/Data/Queries/Helpers";
+import { CustomError, useGetZipWithoutEnv } from "@/Data/Queries";
 
 /**
  * React Query hook for downloading support archive.

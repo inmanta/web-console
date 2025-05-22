@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usePostWithoutEnv } from "@/Data/Queries/Helpers";
+import { usePostWithoutEnv } from "@/Data/Queries";
 
 interface AddUSerResponse {
   data: {

@@ -2,11 +2,10 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { getPaginationHandlers } from "@/Data/Queries/Helpers/Pagination/getPaginationHandlers";
 import { DependencyContext } from "@/UI/Dependency";
 import { Notification, Severity } from "@S/Notification/Core/Domain";
 import { Origin } from "@S/Notification/Core/Utils";
-import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
+import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
 import { getUrl } from "./getUrl";
 
 /**

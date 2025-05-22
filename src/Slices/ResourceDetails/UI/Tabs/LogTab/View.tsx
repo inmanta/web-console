@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { toggleValueInList } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetResourceLogs } from "@/Data/Queries/Slices/Resource";
+import { useGetResourceLogs } from "@/Data/Queries";
 import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";

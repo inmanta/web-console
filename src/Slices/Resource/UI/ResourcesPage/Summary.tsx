@@ -2,7 +2,7 @@ import React from "react";
 import { ToolbarItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Resource } from "@/Core";
-import { GetResourcesResponse } from "@/Data/Queries/Slices/Resource/GetResources";
+import { GetResourcesResponse } from "@/Data/Queries";
 import { ResourceStatusBar } from "@/UI/Components";
 import { DeployButton, RepairButton } from "./Components";
 

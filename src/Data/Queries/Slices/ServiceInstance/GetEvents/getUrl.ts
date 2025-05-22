@@ -1,7 +1,7 @@
 import moment from "moment-timezone";
 import qs from "qs";
 import { RangeOperator } from "@/Core";
-import { urlEncodeParams } from "@/Data/Queries/Helpers";
+import { urlEncodeParams } from "@/Data/Queries";
 import { Filter, GetInstanceEventParams } from "./useGetEvents";
 
 /**

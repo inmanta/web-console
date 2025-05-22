@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { ServiceModel } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetInstanceEvents } from "@/Data/Queries/Slices/ServiceInstance/GetEvents";
+import { useGetInstanceEvents } from "@/Data/Queries";
 import {
   EventsTablePresenter,
   EventsTableWrapper,

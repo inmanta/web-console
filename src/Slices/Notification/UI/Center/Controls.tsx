@@ -1,6 +1,6 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { NotificationFilter } from "@/Data/Queries/Slices/Notification/GetNotifications";
+import { NotificationFilter } from "@/Data/Queries";
 import { MessageFilter } from "./MessageFilter";
 import { ReadFilter } from "./ReadFilter";
 import { SeverityFilter } from "./SeverityFilter";

@@ -2,7 +2,7 @@ import moment from "moment-timezone";
 import qs from "qs";
 import { CompileStatus, RangeOperator } from "@/Core";
 import { Filter } from "@/Slices/CompileReports/Core/Types";
-import { urlEncodeParams } from "@/Data/Queries/Helpers";
+import { urlEncodeParams } from "@/Data/Queries";
 import { CompileReportsParams } from "./useGetCompileReports";
 
 export function getUrl(params: CompileReportsParams, timezone = moment.tz.guess()): string {

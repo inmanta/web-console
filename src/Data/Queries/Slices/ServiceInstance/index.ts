@@ -2,6 +2,7 @@ export * from "./DeleteInstance";
 export * from "./DestroyInstance";
 export * from "./FormSuggestions";
 export * from "./GetDiagnostics";
+export * from "./GetEvents";
 export * from "./GetInfiniteInstanceLogs";
 export * from "./GetInstanceResources";
 export * from "./GetInstance";

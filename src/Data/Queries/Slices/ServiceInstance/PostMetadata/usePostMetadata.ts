@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
 import { DependencyContext } from "@/UI";
-import { usePost } from "@/Data/Queries/Helpers";
+import { usePost } from "@/Data/Queries";
 
 interface PostMetadataInfo {
   service_entity: string;

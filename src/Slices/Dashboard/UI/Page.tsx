@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useGetEnvironmentDetails } from "@/Data/Queries/Slices/Environment";
+import { useGetEnvironmentDetails } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";

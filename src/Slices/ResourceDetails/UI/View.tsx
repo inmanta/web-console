@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { useUrlStateWithString } from "@/Data";
-import { useGetResourceDetails } from "@/Data/Queries/Slices/Resource";
+import { useGetResourceDetails } from "@/Data/Queries";
 import {
   Description,
   ErrorView,

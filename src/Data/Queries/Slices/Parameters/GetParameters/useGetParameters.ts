@@ -3,10 +3,9 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DateRange, PageSize, Parameter, Sort } from "@/Core/Domain";
 import { Handlers, Links, Metadata } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { getPaginationHandlers } from "@/Data/Queries/Helpers";
 import { SortKey } from "@/Slices/Parameters/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
-import { useGet, REFETCH_INTERVAL } from "@/Data/Queries/Helpers";
+import { useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
 import { getUrl } from "./getUrl";
 
 /**

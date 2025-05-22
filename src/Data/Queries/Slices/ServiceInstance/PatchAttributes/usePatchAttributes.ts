@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { Config, Field, InstanceAttributeModel } from "@/Core";
 import { DependencyContext } from "@/UI";
-import { usePatch } from "@/Data/Queries/Helpers";
+import { usePatch } from "@/Data/Queries";
 import { BodyV1, BodyV2, getBodyV1, getBodyV2 } from "./helpers";
 
 interface MutationBody {

@@ -3,7 +3,7 @@ import { UseMutationResult } from "@tanstack/react-query";
 import {
   CreateProjectParams,
   CreateProjectResponse,
-} from "@/Data/Queries/Slices/Project/CreateProject";
+} from "@/Data/Queries";
 import { CreatableSelectInput } from "./CreatableSelectInput";
 import { EditableField, FieldProps, StaticViewComponent } from "./EditableField";
 import { InlineValue } from "./InlineFillers";

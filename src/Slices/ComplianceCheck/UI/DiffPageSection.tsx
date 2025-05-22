@@ -4,7 +4,7 @@ import { Diff, ParsedNumber } from "@/Core";
 import {
   DryRun,
   useGetDryRunReport,
-} from "@/Data/Queries/Slices/DryRun/GetDryRunReport/useGetDryRunReport";
+} from "@/Data/Queries";
 import { EmptyView, DiffWizard, LoadingView, ErrorView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { LoadingIndicator } from "./Components";

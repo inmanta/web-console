@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { DependencyContext } from "@/UI";
-import { useDelete } from "@/Data/Queries/Helpers";
+import { useDelete } from "@/Data/Queries";
 
 /**
  * React Query hook for deleting callback of given id

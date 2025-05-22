@@ -1,6 +1,6 @@
 import { ui } from "@inmanta/rappid";
 import { ServiceModel } from "@/Core";
-import { Inventories } from "@/Data/Queries/Slices/ServiceInstance";
+import { Inventories } from "@/Data/Queries";
 import { InstanceStencilTab } from "./instanceStencil";
 import { InventoryStencilTab } from "./inventoryStencil";
 

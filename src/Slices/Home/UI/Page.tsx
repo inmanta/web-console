@@ -1,8 +1,7 @@
 import React from "react";
 import { PageSection } from "@patternfly/react-core";
 import { Environment } from "@/Core";
-import { useGetEnvironments } from "@/Data/Queries/Slices/Environment/GetEnvironments";
-import { useGetProjects } from "@/Data/Queries/Slices/Project/GetProjects";
+import { useGetEnvironments, useGetProjects } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageSectionWithTitle } from "@/UI/Components";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ParsedNumber } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Queries/Slices/DesiredState";
+import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Queries";
 import {
   ToastAlert,
   PageContainer,

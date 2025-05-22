@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { DependencyContext } from "@/UI";
-import { usePatch } from "@/Data/Queries/Helpers";
+import { usePatch } from "@/Data/Queries";
 
 /**
  * Body parameters for updating a notification.
