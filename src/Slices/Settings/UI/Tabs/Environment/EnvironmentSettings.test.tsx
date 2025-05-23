@@ -81,7 +81,7 @@ describe("EnvironmentSettings", () => {
     await userEvent.type(textBox, "dev{enter}");
 
     await waitFor(() => {
-      expect(screen.queryByRole("generic", { name: "Name-error-message" })).toBeNull();
+      expect(screen.queryByTestId("environment-settings-error")).toBeNull();
     });
 
     await act(async () => {
@@ -117,7 +117,7 @@ describe("EnvironmentSettings", () => {
     expect(screen.queryByRole("textbox", { name: "Name-input" })).not.toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.queryByRole("generic", { name: "Name-error-message" })).toBeNull();
+      expect(screen.queryByTestId("environment-settings-error")).toBeNull();
     });
 
     await act(async () => {
@@ -129,7 +129,7 @@ describe("EnvironmentSettings", () => {
 
   test.each`
     displayName                 | elementName
-    ${"with the close button"}  | ${"Name-close-error"}
+    ${"with the close button"}  | ${"environment-settings-error-close"}
     ${"by starting a new edit"} | ${"Name-toggle-edit"}
   `(
     "Given environment settings When a name edit yields an error Then the error message is shown and can be closed $displayName",
@@ -151,14 +151,14 @@ describe("EnvironmentSettings", () => {
 
       await userEvent.type(textBox, "dev{enter}");
 
-      expect(await screen.findByRole("generic", { name: "Name-error-message" })).toBeVisible();
+      expect(await screen.findByTestId("environment-settings-error")).toBeVisible();
 
       expect(screen.queryByRole("textbox", { name: "Name-input" })).not.toBeInTheDocument();
 
       // Closing the alert
       await userEvent.click(screen.getByRole("button", { name: elementName }));
 
-      expect(screen.queryByRole("generic", { name: "Name-error-message" })).not.toBeInTheDocument();
+      expect(screen.queryByTestId("environment-settings-error")).not.toBeInTheDocument();
 
       await act(async () => {
         const results = await axe(document.body);
@@ -228,9 +228,7 @@ describe("EnvironmentSettings", () => {
     await userEvent.click(screen.getByRole("button", { name: "Repository Settings-submit-edit" }));
 
     await waitFor(() => {
-      expect(
-        screen.queryByRole("generic", { name: "Repository Settings-error-message" })
-      ).toBeNull();
+      expect(screen.queryByTestId("environment-settings-error")).toBeNull();
     });
 
     await act(async () => {
@@ -268,9 +266,7 @@ describe("EnvironmentSettings", () => {
     expect(screen.queryByRole("textbox", { name: "repo_url-input" })).not.toBeInTheDocument();
 
     await waitFor(() => {
-      expect(
-        screen.queryByRole("generic", { name: "Repository Settings-error-message" })
-      ).toBeNull();
+      expect(screen.queryByTestId("environment-settings-error")).toBeNull();
     });
 
     await act(async () => {
@@ -282,7 +278,7 @@ describe("EnvironmentSettings", () => {
 
   test.each`
     displayName                 | elementName
-    ${"with the close button"}  | ${"Repository Settings-close-error"}
+    ${"with the close button"}  | ${"environment-settings-error-close"}
     ${"by starting a new edit"} | ${"Repository Settings-toggle-edit"}
   `(
     "Given environment settings When a repo edit yields an error Then the error message is shown and can be closed $displayName",
@@ -308,22 +304,14 @@ describe("EnvironmentSettings", () => {
 
       await userEvent.type(textBox, "dev{enter}");
 
-      expect(
-        await screen.findByRole("generic", {
-          name: "Repository Settings-error-message",
-        })
-      ).toBeVisible();
+      expect(await screen.findByTestId("environment-settings-error")).toBeVisible();
 
       expect(screen.queryByRole("textbox", { name: "repo_branch-input" })).not.toBeInTheDocument();
 
       // Closing the alert
       await userEvent.click(screen.getByRole("button", { name: elementName }));
 
-      expect(
-        screen.queryByRole("generic", {
-          name: "Repository Settings-error-message",
-        })
-      ).not.toBeInTheDocument();
+      expect(screen.queryByTestId("environment-settings-error")).not.toBeInTheDocument();
 
       await act(async () => {
         const results = await axe(document.body);
@@ -422,7 +410,7 @@ describe("EnvironmentSettings", () => {
     ).not.toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.queryByRole("generic", { name: "Project Name-error-message" })).toBeNull();
+      expect(screen.queryByTestId("environment-settings-error")).toBeNull();
     });
 
     await act(async () => {
@@ -434,7 +422,7 @@ describe("EnvironmentSettings", () => {
 
   test.each`
     displayName                 | elementName
-    ${"with the close button"}  | ${"Project Name-close-error"}
+    ${"with the close button"}  | ${"environment-settings-error-close"}
     ${"by starting a new edit"} | ${"Project Name-toggle-edit"}
   `(
     "Given environment settings When a project name edit yields an error Then the error message is shown and can be closed $displayName",
@@ -459,11 +447,7 @@ describe("EnvironmentSettings", () => {
       await userEvent.click(screen.getByRole("option", { name: "project_name_b" }));
 
       await userEvent.click(screen.getByRole("button", { name: "Project Name-submit-edit" }));
-      expect(
-        await screen.findByRole("generic", {
-          name: "Project Name-error-message",
-        })
-      ).toBeVisible();
+      expect(await screen.findByTestId("environment-settings-error")).toBeVisible();
 
       expect(
         screen.queryByRole("textbox", { name: "Project Name-typeahead" })
@@ -472,9 +456,7 @@ describe("EnvironmentSettings", () => {
       // Closing the alert
       await userEvent.click(screen.getByRole("button", { name: elementName }));
 
-      expect(
-        screen.queryByRole("generic", { name: "Project Name-error-message" })
-      ).not.toBeInTheDocument();
+      expect(screen.queryByTestId("environment-settings-error")).not.toBeInTheDocument();
 
       await act(async () => {
         const results = await axe(document.body);
