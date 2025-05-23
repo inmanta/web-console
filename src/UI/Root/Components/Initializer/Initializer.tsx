@@ -1,6 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
-import { useGetServerStatus } from "@/Data/Managers/V2/Server/GetServerStatus";
+import { useGetEnvironments, useGetServerStatus } from "@/Data/Queries";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 

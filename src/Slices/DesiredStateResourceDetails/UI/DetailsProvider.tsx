@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetDesiredStateResourceDetails } from "@/Data/Managers/V2/DesiredState";
+import { useGetDesiredStateResourceDetails } from "@/Data/Queries";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { Details } from "./Details";
 

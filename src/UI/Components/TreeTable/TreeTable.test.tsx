@@ -8,7 +8,8 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI/words";
 import { CatalogAttributeHelper, CatalogTreeTableHelper } from "./Catalog";
 import { PathHelper, TreeExpansionManager } from "./Helpers";
-import { InventoryAttributeHelper, InventoryTreeTableHelper } from "./Inventory";
+import { InventoryAttributeHelper } from "./Inventory";
+import { InventoryTreeTableHelper } from "./Inventory/TreeTableHelper";
 import { TreeTable } from "./TreeTable";
 
 function inventorySetup(

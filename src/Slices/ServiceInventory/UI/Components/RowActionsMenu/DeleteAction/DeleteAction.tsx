@@ -3,7 +3,7 @@ import { MenuItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { useDeleteInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { useDeleteInstance } from "@/Data/Queries";
 import { ToastAlert, ActionDisabledTooltip, ConfirmUserActionForm } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";

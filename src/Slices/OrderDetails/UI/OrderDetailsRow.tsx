@@ -10,7 +10,7 @@ import {
 import { InfoAltIcon } from "@patternfly/react-icons";
 import { Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
-import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
+import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { TextWithCopy, Toggle } from "@/UI/Components";
 import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";

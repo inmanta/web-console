@@ -10,7 +10,7 @@ import {
 import { Details } from "@/Core/Domain/Resource/Resource";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetResourceHistory } from "@/Data/Managers/V2/Resource/GetResourceHistory";
+import { useGetResourceHistory } from "@/Data/Queries";
 import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";

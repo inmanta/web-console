@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
 import { DateRange, IntRange } from "@/Core";
 
+import { Filter, FilterKind, FilterList } from "@/Slices/DesiredState/Core/Types";
 import { MomentDatePresenter } from "@/UI";
 import { FilterPicker } from "@/UI/Components";
 import { IntRangeFilter, SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
-import { Filter, FilterKind, FilterList } from "@S/DesiredState/Core/Query";
 
 interface Props {
   filter: Filter;

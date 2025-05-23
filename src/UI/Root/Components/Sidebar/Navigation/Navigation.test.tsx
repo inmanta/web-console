@@ -2,7 +2,7 @@ import React, { act } from "react";
 import { QueryClientProvider, QueryClient, QueryObserverResult } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
-import * as queryModule from "@/Data/Managers/V2/Compilation/GetCompilerStatus/useGetCompilerStatus";
+import * as queryModule from "@/Data/Queries/Slices/Compilation/GetCompilerStatus/useGetCompilerStatus";
 import { MockedDependencyProvider, MockFeatureManager } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";

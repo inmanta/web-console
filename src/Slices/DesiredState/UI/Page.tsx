@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { ParsedNumber } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Managers/V2/DesiredState";
+import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Queries";
+import { Filter } from "@/Slices/DesiredState/Core/Types";
 import {
   ToastAlert,
   PageContainer,
@@ -14,7 +15,6 @@ import {
 } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
-import { Filter } from "@S/DesiredState/Core/Query";
 import { DesiredStateVersionStatus } from "../Core/Domain";
 import { TableControls } from "./Components";
 import { DesiredStatesTable } from "./DesiredStatesTable";

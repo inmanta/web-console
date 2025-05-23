@@ -1,5 +1,5 @@
 import { isObject } from "@/Core";
-import { SearchHelper } from "@/UI/Routing";
+import { SearchHelper } from "@/UI/Routing/SearchHelper";
 import { provide, Location, Replace, Update, StateConfig } from "./helpers";
 
 const searchHelper = new SearchHelper();

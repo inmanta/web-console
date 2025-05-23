@@ -1,7 +1,6 @@
 import React from "react";
-import { useGetResourceDetails } from "@/Data/Managers/V2/Resource";
-import { RequiresTable, LoadingRequiresTable, ErrorView } from "@/UI/Components";
-import { EmptyView } from "@/UI/Components/EmptyView";
+import { useGetResourceDetails } from "@/Data/Queries";
+import { RequiresTable, LoadingRequiresTable, ErrorView, EmptyView } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface Props {

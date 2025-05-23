@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider, UseQueryResult } from "@tanstack/reac
 import { render, queries, within as baseWithin } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ServiceModel } from "@/Core";
-import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
+import { InstanceWithRelations, Inventories } from "@/Data/Queries";
 import { MockedDependencyProvider } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
 import { words } from "@/UI";
