@@ -2,11 +2,7 @@ import { dia, ui } from "@inmanta/rappid";
 import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import { CreateModifierHandler, FieldCreator, createFormState } from "../../ServiceInstanceForm";
-import {
-  dispatchAddInterServiceRelationToTracker,
-  dispatchUpdateServiceOrderItems,
-  dispatchUpdateStencil,
-} from "../Context/dispatchers";
+import { dispatchUpdateServiceOrderItems, dispatchUpdateStencil } from "../Context/dispatchers";
 import { AddInterServiceRelationsToTracker, createComposerEntity } from "../actions/general";
 import { ActionEnum, EventActionEnum } from "../interfaces";
 import { transformEmbeddedToStencilElements } from "./helpers";
@@ -80,10 +76,8 @@ export class InstanceStencilTab {
 
       // Add inter-service relations to tracker only on valid drop, it means that the element will be successfully created on the diagram
       const serviceModel = elementView.model.get("serviceModel");
-      if (serviceModel) {
-        if (serviceModel.inter_service_relations.length > 0) {
-          AddInterServiceRelationsToTracker(elementView.model, serviceModel);
-        }
+      if (serviceModel && serviceModel.inter_service_relations.length > 0) {
+        AddInterServiceRelationsToTracker(elementView.model, serviceModel);
       }
 
       dispatchUpdateServiceOrderItems(elementView.model, ActionEnum.CREATE);
