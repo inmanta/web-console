@@ -2,7 +2,8 @@ import React from "react";
 import { Attributes } from "@/Core";
 import { TreeTable } from "@/UI/Components/TreeTable/";
 import { PathHelper, TreeExpansionManager } from "@/UI/Components/TreeTable/Helpers";
-import { InventoryAttributeHelper, InventoryTreeTableHelper } from "../TreeTable/Inventory";
+import { InventoryAttributeHelper } from "../TreeTable/Inventory";
+import { InventoryTreeTableHelper } from "../TreeTable/Inventory/TreeTableHelper";
 
 interface Props {
   attributes: Attributes;

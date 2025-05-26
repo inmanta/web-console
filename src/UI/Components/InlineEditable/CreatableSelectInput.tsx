@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FormGroup } from "@patternfly/react-core";
 import { UseMutationResult } from "@tanstack/react-query";
-import {
-  CreateProjectParams,
-  CreateProjectResponse,
-} from "@/Data/Managers/V2/Project/CreateProject";
+import { CreateProjectParams, CreateProjectResponse } from "@/Data/Queries";
 import { SingleTextSelect } from "../SingleTextSelect";
 import { InlinePlainAlert } from "./InlinePlainAlert";
 

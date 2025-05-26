@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, TableVariant, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
 import { useExpansion } from "@/Data";
-import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
+import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
 import { words } from "@/UI";
 import { OrderDetailsRow } from "./OrderDetailsRow";
 import { OrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";

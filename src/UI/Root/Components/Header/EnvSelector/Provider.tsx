@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
-import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects/";
+import { useGetEnvironments, useGetProjects } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";

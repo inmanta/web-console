@@ -10,10 +10,7 @@ import {
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { InstanceAttributeModel } from "@/Core";
-import {
-  ExpertPatchAttributes,
-  usePatchAttributesExpert,
-} from "@/Data/Managers/V2/ServiceInstance";
+import { ExpertPatchAttributes, usePatchAttributesExpert } from "@/Data/Queries";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";

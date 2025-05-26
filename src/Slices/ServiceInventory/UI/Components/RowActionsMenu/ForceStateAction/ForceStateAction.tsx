@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Button, Divider, DrilldownMenu, MenuItem, Content } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { usePostExpertStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
+import { usePostExpertStateTransfer } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";

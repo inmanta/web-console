@@ -12,7 +12,7 @@ import { DeleteAction } from "./DeleteAction";
 const mockedMutate = jest.fn();
 
 //mock is used to assert correct function call
-jest.mock("@/Data/Managers/V2/ServiceInstance", () => ({
+jest.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
   useDeleteInstance: () => ({ mutate: mockedMutate }),
 }));
 

@@ -1,7 +1,6 @@
 import React from "react";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import {
-  CodeBlock,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -111,7 +110,15 @@ const AttributeValue: React.FC<{
         />
       );
     case "Code":
-      return <CodeBlock>{attribute.value}</CodeBlock>;
+      return (
+        <CodeEditor
+          isReadOnly
+          code={attribute.value}
+          isDownloadEnabled
+          customControls={<CodeEditorCopyControl code={attribute.value} />}
+          height={getHeightEditor(attribute)}
+        />
+      );
   }
 };
 

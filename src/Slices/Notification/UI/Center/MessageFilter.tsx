@@ -1,5 +1,5 @@
 import React from "react";
-import { NotificationFilter } from "@/Data/Managers/V2/Notification/GetNotifications";
+import { NotificationFilter } from "@/Data/Queries";
 import { FreeTextFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
 

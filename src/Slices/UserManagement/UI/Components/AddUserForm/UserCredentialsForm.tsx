@@ -14,7 +14,7 @@ import {
   Spinner,
 } from "@patternfly/react-core";
 import { ExclamationCircleIcon, EyeIcon, EyeSlashIcon } from "@patternfly/react-icons";
-import { useAddUser } from "@/Data/Managers/V2/Auth";
+import { useAddUser } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 

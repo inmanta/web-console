@@ -5,7 +5,7 @@ import { Tbody, Tr, Td } from "@patternfly/react-table";
 import { DependencyContext } from "@/UI";
 import { DateWithTooltip } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { ServiceOrder } from "../Core/Query";
+import { ServiceOrder } from "../Core/Types";
 import { OrderProgressBar } from "./OrderProgressBar";
 import { OrderStatusLabel } from "./OrderStatusLabel";
 

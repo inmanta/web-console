@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
 import { ServiceModel } from "@/Core";
-import { useGetInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { useGetInstance } from "@/Data/Queries";
 import { Description, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { EditForm } from "./EditForm";

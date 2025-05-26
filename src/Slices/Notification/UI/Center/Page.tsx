@@ -1,10 +1,7 @@
 import React from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  NotificationFilter,
-  useGetNotifications,
-} from "@/Data/Managers/V2/Notification/GetNotifications";
+import { NotificationFilter, useGetNotifications } from "@/Data/Queries";
 import {
   EmptyView,
   PageContainer,
