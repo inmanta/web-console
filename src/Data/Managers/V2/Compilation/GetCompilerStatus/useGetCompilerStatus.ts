@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, REFETCH_INTERVAL, useHead } from "../../helpers";
-import { QueryFactory } from "@/Data/Managers/QueryFactory";
+import { KeyFactory } from "@/Data/Managers/KeyFactory";
 
 type HookResponse = {
   isCompiling: boolean;
@@ -28,11 +28,11 @@ export const useGetCompilerStatus = (): GetCompilerStatus => {
   const env = environmentHandler.useId();
   const url = getUrl(env);
   const head = useHead();
-
+  const keyFactory = new KeyFactory("compilation", "getCompilerStatus");
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: QueryFactory.compilation.getCompilerStatus(env),
+        queryKey: keyFactory.unique(env),
         queryFn: () => head(url),
         select: (response) => ({
           isCompiling: response.status === 200,
