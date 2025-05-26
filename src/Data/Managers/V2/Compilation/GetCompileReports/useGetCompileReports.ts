@@ -8,6 +8,7 @@ import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, REFETCH_INTERVAL, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
+import { KeyFactory } from "@/Data/Managers/KeyFactory";
 
 interface Filter {
   requested?: DateRange.DateRange[];
@@ -48,18 +49,12 @@ export const useGetCompileReports = (params: CompileReportsParams): GetCompileRe
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
+  const keyFactory = new KeyFactory("compilation", "getCompileReports");
 
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: [
-          "get_compile_reports-continuous",
-          params.filter,
-          params.sort,
-          params.pageSize,
-          params.currentPage,
-          env,
-        ],
+        queryKey: keyFactory.unique(env, [Object.values(params).join(",")]),
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({

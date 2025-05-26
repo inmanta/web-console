@@ -3,6 +3,7 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { CompileDetails } from "@/Slices/CompileDetails/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, REFETCH_INTERVAL, useGet } from "../../helpers";
+import { KeyFactory } from "@/Data/Managers/KeyFactory";
 
 interface CompileDetailsParams {
   id: string;
@@ -34,11 +35,12 @@ export const useGetCompileDetails = (params: CompileDetailsParams): GetCompileDe
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
+  const key = new KeyFactory("compilation", "getCompileDetails");
 
   return {
     useContinuous: (): UseQueryResult<ResponseBody, CustomError> =>
       useQuery({
-        queryKey: ["get_compile_details-continuous", params.id, env],
+        queryKey: key.unique(params.id, [env]),
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => data,
