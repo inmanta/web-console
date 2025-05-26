@@ -9,7 +9,6 @@ import {
 import { convertToTitleCase } from "@/UI/Utils";
 import { CancelEditButton, EnableEditButton, SubmitEditButton } from "./InlineEditButtons";
 import { InlineEditButtonFiller, InlineLabelItem } from "./InlineFillers";
-import { InlinePlainAlert } from "./InlinePlainAlert";
 
 export interface FieldProps {
   label: string;
@@ -17,7 +16,6 @@ export interface FieldProps {
   initialValue: string;
   initiallyEditable?: boolean;
   onSubmit: (value: string) => void;
-  error?: string | null;
   setError: (error: string | null) => void;
 }
 
@@ -47,7 +45,6 @@ export const EditableField: React.FC<Props> = ({
   EditView,
   StaticView,
   alignActions,
-  error,
   setError,
 }) => {
   const alignment = alignActions === "end" ? "alignSelfFlexEnd" : "alignSelfFlexStart";
@@ -99,14 +96,6 @@ export const EditableField: React.FC<Props> = ({
           </FlexItem>
         </Flex>
       </DescriptionListTerm>
-      {error && (
-        <InlinePlainAlert
-          aria-label={`${label}-error-message`}
-          errorMessage={error}
-          closeButtonAriaLabel={`${label}-close-error`}
-          onCloseAlert={onCloseAlert}
-        />
-      )}
       <DescriptionListDescription>
         {!editable && <StaticView aria-label={`${label}-value`} value={value} />}
         {editable && (

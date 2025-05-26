@@ -11,14 +11,12 @@ import {
 import { convertToTitleCase } from "@/UI/Utils";
 import { CancelEditButton, EnableEditButton, SubmitEditButton } from "./InlineEditButtons";
 import { InlineValue } from "./InlineFillers";
-import { InlinePlainAlert } from "./InlinePlainAlert";
 
 interface Props {
   groupName: string;
   initialValues: Record<string, string>;
   initiallyEditable?: boolean;
   onSubmit: (fieldDescriptors: Record<string, string>) => void;
-  error?: string | null;
   setError: (error: string | null) => void;
 }
 
@@ -40,7 +38,6 @@ export const EditableMultiTextField: React.FC<Props> = ({
   initialValues,
   initiallyEditable,
   onSubmit,
-  error,
   setError,
 }) => {
   const [editable, setEditable] = useState(initiallyEditable);
@@ -95,14 +92,6 @@ export const EditableMultiTextField: React.FC<Props> = ({
           </>
         )}
       </DescriptionListTerm>
-      {error && (
-        <InlinePlainAlert
-          aria-label={`${groupName}-error-message`}
-          errorMessage={error}
-          closeButtonAriaLabel={`${groupName}-close-error`}
-          onCloseAlert={onCloseAlert}
-        />
-      )}
       <DescriptionListDescription>
         <DescriptionList>
           {Object.entries(fieldValues).map(([label, value]) => (
