@@ -87,7 +87,7 @@ export function createComposerEntity({
 }
 
 /**
- * Function that iterate through inter-service relations and adds their contraints to the tracker
+ * Function that iterate through inter-service relations and adds their constraints to the tracker
  * @param {ServiceEntityBlock} instanceAsTable - JointJS shape object
  * @param {ServiceModel | EmbeddedEntity} serviceModel - ServiceModel or EmbeddedEntity object
  * @returns {void}
