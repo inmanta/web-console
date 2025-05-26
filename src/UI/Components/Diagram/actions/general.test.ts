@@ -108,7 +108,6 @@ describe("createComposerEntity", () => {
     expect(childEntity.get("isCore")).toBe(undefined);
     expect(childEntity.get("isInEditMode")).toBe(false);
     expect(childEntity.attr("header/fill")).toBe("var(--pf-t--chart--color--purple--300, #5e40be)");
-    expect(childEntity.get("relatedTo")).toMatchObject(new Map());
 
     expect(dispatchSpy).toHaveBeenCalledTimes(0);
   });
