@@ -18,14 +18,14 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
   const environments = useGetEnvironments().useContinuous();
 
   useEffect(() => {
-    if (environments.isSuccess && serverStatus.isSuccess) {
+    if (environments.data && serverStatus.data) {
       environmentHandler.setAllEnvironments(environments.data);
       featureManager.setAllFeatures(serverStatus.data);
       setInitialized(true); // This is used to sync the component rendering with updating hooks
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [environments.isSuccess, serverStatus.isSuccess]);
+  }, [environments.data, serverStatus.data]);
 
   if (serverStatus.isError) {
     return (
