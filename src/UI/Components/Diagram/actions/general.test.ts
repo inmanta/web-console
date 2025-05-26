@@ -69,7 +69,9 @@ describe("createComposerEntity", () => {
     expect(embeddedEntity.attr("headerLabel/text")).toBe("test-type");
   });
 
-  it("creates a new entity with inster-service relations", () => {
+  it("creates a new entity with inter-service relations", () => {
+    const dispatchSpy = jest.spyOn(document, "dispatchEvent");
+
     const childEntity = createComposerEntity({
       serviceModel: childModel,
       isCore: false,
@@ -82,6 +84,33 @@ describe("createComposerEntity", () => {
     expect(childEntity.get("isInEditMode")).toBe(false);
     expect(childEntity.attr("header/fill")).toBe("var(--pf-t--chart--color--purple--300, #5e40be)");
     expect(childEntity.get("relatedTo")).toMatchObject(new Map());
+
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      new CustomEvent("addInterServiceRelationToTracker", {
+        detail: {
+          id: childEntity.id,
+        },
+      })
+    );
+  });
+
+  it("creates a new entity with inter-service relations from inventory stencil", () => {
+    const dispatchSpy = jest.spyOn(document, "dispatchEvent");
+    const childEntity = createComposerEntity({
+      serviceModel: childModel,
+      isCore: false,
+      isInEditMode: false,
+      isFromInventoryStencil: true,
+    });
+
+    expect(childEntity.get("holderName")).toBe(undefined);
+    expect(childEntity.get("isEmbeddedEntity")).toBe(undefined);
+    expect(childEntity.get("isCore")).toBe(undefined);
+    expect(childEntity.get("isInEditMode")).toBe(false);
+    expect(childEntity.attr("header/fill")).toBe("var(--pf-t--chart--color--purple--300, #5e40be)");
+    expect(childEntity.get("relatedTo")).toMatchObject(new Map());
+
+    expect(dispatchSpy).toHaveBeenCalledTimes(0);
   });
 
   it.each`

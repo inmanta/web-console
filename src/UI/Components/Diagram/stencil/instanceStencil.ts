@@ -2,8 +2,12 @@ import { dia, ui } from "@inmanta/rappid";
 import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import { CreateModifierHandler, FieldCreator, createFormState } from "../../ServiceInstanceForm";
-import { dispatchUpdateServiceOrderItems, dispatchUpdateStencil } from "../Context/dispatchers";
-import { createComposerEntity } from "../actions/general";
+import {
+  dispatchAddInterServiceRelationToTracker,
+  dispatchUpdateServiceOrderItems,
+  dispatchUpdateStencil,
+} from "../Context/dispatchers";
+import { AddInterServiceRelationsToTracker, createComposerEntity } from "../actions/general";
 import { ActionEnum, EventActionEnum } from "../interfaces";
 import { transformEmbeddedToStencilElements } from "./helpers";
 
@@ -48,6 +52,7 @@ export class InstanceStencilTab {
           attributes: createFormState(fields),
           isEmbeddedEntity: true,
           holderName: cell.get("holderName"),
+          isFromInventoryStencil: true,
         });
       },
       dragEndClone: (el) => el.clone().set("items", el.get("items")).set("id", el.get("id")), //cloned element loses key value pairs, so we need to set them again
@@ -71,6 +76,14 @@ export class InstanceStencilTab {
     this.stencil.on("element:drop", (elementView) => {
       if (elementView.model.get("isEmbeddedEntity")) {
         dispatchUpdateStencil(elementView.model.get("name"), EventActionEnum.ADD);
+      }
+
+      // Add inter-service relations to tracker only on valid drop, it means that the element will be successfully created on the diagram
+      const serviceModel = elementView.model.get("serviceModel");
+      if (serviceModel) {
+        if (serviceModel.inter_service_relations.length > 0) {
+          AddInterServiceRelationsToTracker(elementView.model, serviceModel);
+        }
       }
 
       dispatchUpdateServiceOrderItems(elementView.model, ActionEnum.CREATE);

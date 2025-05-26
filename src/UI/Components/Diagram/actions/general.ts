@@ -1,5 +1,5 @@
 import { dia } from "@inmanta/rappid";
-import { InstanceAttributeModel } from "@/Core";
+import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { dispatchAddInterServiceRelationToTracker } from "../Context/dispatchers";
 import { getKeyAttributesNames } from "../helpers";
 import {
@@ -23,6 +23,7 @@ import { Link, ServiceEntityBlock } from "../shapes";
  * @param {boolean} [cantBeRemoved] - boolean value determining if the instance can't be removed
  * @param {string} [stencilName] - name of the stencil that should be disabled in the sidebar
  * @param {string} [id] - unique id of the entity, optional
+ * @param {boolean} [isFromInventoryStencil] - boolean value determining if the instance is created through inventory stencil
  *
  * @returns {ServiceEntityBlock} created JointJS shape
  */
@@ -38,6 +39,7 @@ export function createComposerEntity({
   cantBeRemoved = false,
   stencilName,
   id,
+  isFromInventoryStencil = false,
 }: ComposerEntityOptions): ServiceEntityBlock {
   //Create shape for Entity
   const instanceAsTable = new ServiceEntityBlock();
@@ -71,21 +73,8 @@ export function createComposerEntity({
   instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
   instanceAsTable.set("cantBeRemoved", cantBeRemoved);
 
-  if (serviceModel.inter_service_relations.length > 0) {
-    instanceAsTable.set("relatedTo", new Map());
-    const relations: InterServiceRelationOnCanvasWithMin[] = [];
-
-    serviceModel.inter_service_relations.forEach((relation) => {
-      if (relation.lower_limit > 0) {
-        relations.push({
-          name: relation.entity_type,
-          min: relation.lower_limit,
-          currentAmount: 0,
-        });
-      }
-    });
-
-    dispatchAddInterServiceRelationToTracker(instanceAsTable.id, serviceModel.name, relations);
+  if (serviceModel.inter_service_relations.length > 0 && !isFromInventoryStencil) {
+    AddInterServiceRelationsToTracker(instanceAsTable, serviceModel);
   }
 
   if (attributes) {
@@ -96,6 +85,32 @@ export function createComposerEntity({
 
   return instanceAsTable;
 }
+
+/**
+ * Function that evaluates inter-service relations and adds them to the instanceAsTable
+ * @param {ServiceEntityBlock} instanceAsTable - JointJS shape object
+ * @param {ServiceModel | EmbeddedEntity} serviceModel - ServiceModel or EmbeddedEntity object
+ * @returns {void}
+ */
+export const AddInterServiceRelationsToTracker = (
+  instanceAsTable: ServiceEntityBlock,
+  serviceModel: ServiceModel | EmbeddedEntity
+) => {
+  instanceAsTable.set("relatedTo", new Map());
+  const relations: InterServiceRelationOnCanvasWithMin[] = [];
+
+  serviceModel.inter_service_relations.forEach((relation) => {
+    if (relation.lower_limit > 0) {
+      relations.push({
+        name: relation.entity_type,
+        min: relation.lower_limit,
+        currentAmount: 0,
+      });
+    }
+  });
+
+  dispatchAddInterServiceRelationToTracker(instanceAsTable.id, serviceModel.name, relations);
+};
 
 /**
  * Function that create connection/link between two Entities
