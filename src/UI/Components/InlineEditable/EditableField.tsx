@@ -68,8 +68,6 @@ export const EditableField: React.FC<Props> = ({
     setValue(initialValue);
   };
 
-  const onCloseAlert = () => setError(null);
-
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);

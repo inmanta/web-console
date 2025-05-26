@@ -65,8 +65,6 @@ export const EditableMultiTextField: React.FC<Props> = ({
     setFieldValues(initialValues);
   };
 
-  const onCloseAlert = () => setError(null);
-
   const onChange = (label: string) => (input: string) => {
     const updated = { ...fieldValues };
 
