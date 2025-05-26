@@ -204,6 +204,9 @@ interface ComposerEntityOptions {
 
   /** Optional identifier of the entity. */
   id?: string;
+
+  /** Optional flag indicating if the entity is created through inventory stencil. */
+  isFromInventoryStencil?: boolean;
 }
 
 export {

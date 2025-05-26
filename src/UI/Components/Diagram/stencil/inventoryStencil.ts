@@ -87,6 +87,7 @@ export class InventoryStencilTab {
           isCore: false,
           isInEditMode: false,
           attributes: cell.get("instanceAttributes"),
+          isFromInventoryStencil: true,
         });
 
         //set id to the one that is stored in the stencil which equal to the instance id
