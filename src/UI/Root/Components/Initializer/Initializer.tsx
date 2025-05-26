@@ -14,18 +14,18 @@ import { DependencyContext } from "@/UI/Dependency";
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [initialized, setInitialized] = useState(false);
   const { environmentHandler, featureManager } = useContext(DependencyContext);
-  const serverStatus = useGetServerStatus().useOneTime();
-  const environments = useGetEnvironments().useOneTime();
+  const serverStatus = useGetServerStatus().useContinuous();
+  const environments = useGetEnvironments().useContinuous();
 
   useEffect(() => {
-    if (environments.isSuccess && serverStatus.isSuccess) {
+    if (environments.data && serverStatus.data) {
       environmentHandler.setAllEnvironments(environments.data);
       featureManager.setAllFeatures(serverStatus.data);
       setInitialized(true); // This is used to sync the component rendering with updating hooks
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [environments.data, environments.isSuccess, serverStatus.data, serverStatus.isSuccess]);
+  }, [environments.data, serverStatus.data]);
 
   if (serverStatus.isError) {
     return (

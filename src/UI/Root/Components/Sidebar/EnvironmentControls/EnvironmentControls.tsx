@@ -17,7 +17,7 @@ export const EnvironmentControls: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);
 
   const id = environmentHandler.useId();
-  const { data, isSuccess, isError } = useGetEnvironmentDetails().useOneTime(id);
+  const { data, isSuccess, isError } = useGetEnvironmentDetails().useContinuous(id);
 
   useEffect(() => {
     if (isSuccess) {
