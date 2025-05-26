@@ -1,12 +1,13 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Environment } from "@/Core";
-import { useGetWithoutEnv } from "../../helpers";
+import { useGetWithoutEnv, REFETCH_INTERVAL } from "../../helpers";
 
 /**
  * Return Signature of the useGetEnvironmentDetails React Query
  */
 interface GetEnvironmentDetails {
   useOneTime: (id: string) => UseQueryResult<Environment, Error>;
+  useContinuous: (id: string) => UseQueryResult<Environment, Error>;
 }
 
 /**
@@ -25,6 +26,14 @@ export const useGetEnvironmentDetails = (): GetEnvironmentDetails => {
         queryFn: () => get(`/api/v2/environment/${id}?details=true`),
         retry: false,
         select: (data) => data.data,
+      }),
+    useContinuous: (id: string): UseQueryResult<Environment, Error> =>
+      useQuery({
+        queryKey: ["get_environment_details-continuous", id],
+        queryFn: () => get(`/api/v2/environment/${id}?details=true`),
+        retry: false,
+        select: (data) => data.data,
+        refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };
