@@ -175,7 +175,7 @@ export const PrimaryFeatureManager = (
 
   function setAllFeatures(
     features: Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices">
-  ) {
+  ): void {
     setFeatures(features);
   }
 
