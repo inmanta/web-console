@@ -1,8 +1,8 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
+import { SortKey } from "@/Slices/Facts/Core/Types";
 import { Fact } from "@S/Facts/Core/Domain";
-import { SortKey } from "@S/Facts/Core/Query";
 import { FactsRow } from "./FactsRow";
 import { FactsTablePresenter } from "./FactsTablePresenter";
 

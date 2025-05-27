@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetFacts } from "@/Data/Managers/V2/Facts/GetFacts";
+import { useGetFacts } from "@/Data/Queries";
+import { Filter, SortKey } from "@/Slices/Facts/Core/Types";
 import {
   EmptyView,
   ErrorView,
@@ -10,7 +11,6 @@ import {
   PaginationWidget,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Filter, SortKey } from "@S/Facts/Core/Query";
 import { FactsTable } from "./FactsTable";
 import { FactsTablePresenter } from "./FactsTablePresenter";
 import { TableControls } from "./TableControls";

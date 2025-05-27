@@ -3,6 +3,7 @@ export * from "./ActionDisabledTooltip";
 export * from "./AttributesTable";
 export * from "./BlockingModal";
 export * from "./BooleanSwitch";
+export * from "./CatalogActions";
 export * from "./ClipboardCopyButton";
 export * from "./CodeText";
 export * from "./CompileWidget";

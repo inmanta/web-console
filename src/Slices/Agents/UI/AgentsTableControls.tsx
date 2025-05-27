@@ -1,6 +1,6 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { Filter } from "@S/Agents/Core/Query";
+import { Filter } from "@/Slices/Agents/Core/Types";
 import { AgentsFilterWidget } from "./FilterWidget/AgentsFilterWidget";
 
 interface Props {

@@ -1,10 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { PageSection } from "@patternfly/react-core";
 import { Diff, ParsedNumber } from "@/Core";
-import {
-  DryRun,
-  useGetDryRunReport,
-} from "@/Data/Managers/V2/DryRun/GetDryRunReport/useGetDryRunReport";
+import { DryRun, useGetDryRunReport } from "@/Data/Queries";
 import { EmptyView, DiffWizard, LoadingView, ErrorView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { LoadingIndicator } from "./Components";

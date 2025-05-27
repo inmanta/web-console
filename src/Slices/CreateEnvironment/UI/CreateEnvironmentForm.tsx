@@ -1,11 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
-import { ProjectModel } from "@/Core";
+import { Environment, ProjectModel } from "@/Core";
 import { keySlices } from "@/Data/Managers/KeyFactory";
 import { KeyFactory } from "@/Data/Managers/KeyFactory";
-import { useCreateEnvironment } from "@/Data/Managers/V2/Environment";
-import { useCreateProject } from "@/Data/Managers/V2/Project/CreateProject";
+import { useCreateEnvironment, useCreateProject } from "@/Data/Queries";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
@@ -37,8 +36,14 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
 
   const createEnvironment = useCreateEnvironment({
     onSuccess: (data) => {
-      //reset the queries to get the rid of the data that would not include the new environment, otherwise the new view would try to access env set through search param and throw error
-      client.resetQueries({ queryKey: keyFactory.root() });
+      const dataUpdater = (previousData: { data: Environment[] | undefined }) => {
+        const oldData = previousData?.data || [];
+        return { data: [...oldData, data.data] };
+      };
+
+      //update the data in the cache to avoid crash after navigating to the new env
+      client.setQueryData(keyFactory.list([true]), dataUpdater);
+      client.setQueryData(keyFactory.list([false]), dataUpdater);
 
       const target = isLsmEnabled ? "Catalog" : "DesiredState";
 

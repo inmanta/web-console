@@ -2,9 +2,8 @@ import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Row, Service, MockedDependencyProvider } from "@/Test";
+import { Row, Service, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { InventoryTable } from "./InventoryTable";
@@ -17,16 +16,15 @@ const dummySetter = () => {
 const tablePresenterWithIdentity = () => new InventoryTablePresenter("service_id", "Service ID");
 
 function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
-  jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-    ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
-    useIsExpertModeEnabled: () => expertMode,
-    useIsHalted: () => false,
-  });
-
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider
+          env={{
+            ...EnvironmentDetails.env,
+            settings: { ...EnvironmentDetails.env.settings, enable_lsm_expert_mode: expertMode },
+          }}
+        >
           <ModalProvider>
             <InventoryTable
               rows={[Row.a]}

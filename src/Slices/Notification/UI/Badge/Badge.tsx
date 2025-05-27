@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NotificationBadge, NotificationBadgeVariant } from "@patternfly/react-core";
 import { UseQueryResult } from "@tanstack/react-query";
 import { PageSize } from "@/Core";
-import {
-  NotificationResponse,
-  useGetNotifications,
-} from "@/Data/Managers/V2/Notification/GetNotifications";
+import { NotificationResponse, useGetNotifications } from "@/Data/Queries";
 import { ToastAlert } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { Notification } from "@S/Notification/Core/Domain";

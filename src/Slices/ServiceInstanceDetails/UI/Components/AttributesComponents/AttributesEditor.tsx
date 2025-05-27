@@ -10,10 +10,7 @@ import {
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { InstanceAttributeModel } from "@/Core";
-import {
-  ExpertPatchAttributes,
-  usePatchAttributesExpert,
-} from "@/Data/Managers/V2/ServiceInstance";
+import { ExpertPatchAttributes, usePatchAttributesExpert } from "@/Data/Queries";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
@@ -53,7 +50,7 @@ export const AttributesEditor: React.FC<Props> = ({
   const [selectedSet, setSelectedSet] = useState(dropdownOptions[0]);
   const [editorDataOriginal, setEditorDataOriginal] = useState<string>("");
 
-  const { environmentModifier } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const [isEditorValid, setIsEditorValid] = useState<boolean>(true);
   const [editorState, setEditorState] = useState<string>(editorDataOriginal);
 
@@ -150,7 +147,7 @@ export const AttributesEditor: React.FC<Props> = ({
           </StyledSelect>
         </FlexItem>
         <FlexItem>
-          {environmentModifier.useIsExpertModeEnabled() && isLatestVersion && (
+          {environmentHandler.useIsExpertModeEnabled() && isLatestVersion && (
             <Button
               isDisabled={!isEditorValid}
               aria-label="Expert-Submit-Button"
@@ -167,7 +164,7 @@ export const AttributesEditor: React.FC<Props> = ({
         data={editorDataOriginal}
         service_entity={service_entity}
         onChange={onEditorUpdate}
-        readOnly={!environmentModifier.useIsExpertModeEnabled()}
+        readOnly={!environmentHandler.useIsExpertModeEnabled()}
       />
       <ConfirmationModal
         title={words("instanceDetails.expert.editModal.title")}

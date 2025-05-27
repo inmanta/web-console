@@ -3,10 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import _ from "lodash";
 import { EnvironmentSettings } from "@/Core";
 import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import {
-  useResetEnvironmentSetting,
-  useUpdateEnvironmentSetting,
-} from "@/Data/Managers/V2/Environment";
+import { useResetEnvironmentSetting, useUpdateEnvironmentSetting } from "@/Data/Queries";
 import { Container } from "./Container";
 import { InputInfoCreator } from "./InputInfoCreator";
 

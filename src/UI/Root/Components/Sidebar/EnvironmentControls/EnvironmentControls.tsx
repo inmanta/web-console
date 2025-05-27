@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { Flex, FlexItem, Label, Stack, StackItem } from "@patternfly/react-core";
-import { useGetEnvironmentDetails } from "@/Data/Managers/V2/Environment";
+import { useGetEnvironmentDetails } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { HaltButton } from "./HaltButton";
@@ -17,7 +17,7 @@ export const EnvironmentControls: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);
 
   const id = environmentHandler.useId();
-  const { data, isSuccess, isError } = useGetEnvironmentDetails().useOneTime(id);
+  const { data, isSuccess, isError } = useGetEnvironmentDetails().useContinuous(id);
 
   useEffect(() => {
     if (isSuccess) {

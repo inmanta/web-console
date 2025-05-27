@@ -4,22 +4,21 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import * as useUpdateEnvironmentSetting from "@/Data/Managers/V2/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting"; //import with that exact path is required for mock to work correctly
-import { MockedDependencyProvider } from "@/Test";
+import * as useUpdateEnvironmentSetting from "@/Data/Queries/Slices/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting"; //import with that exact path is required for mock to work correctly
+import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ExpertBanner } from "./ExpertBanner";
 
 const setup = (flag: boolean) => {
-  jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-    ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
-    useIsExpertModeEnabled: () => flag,
-  });
-
   return (
     <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-      <MockedDependencyProvider>
+      <MockedDependencyProvider
+        env={{
+          ...EnvironmentDetails.env,
+          settings: { ...EnvironmentDetails.env.settings, enable_lsm_expert_mode: flag },
+        }}
+      >
         <QueryClientProvider client={testClient}>
           <ExpertBanner />
         </QueryClientProvider>

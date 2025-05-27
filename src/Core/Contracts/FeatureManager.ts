@@ -1,3 +1,4 @@
+import { ServerStatus } from "../Domain";
 import { JsonParserId } from "./JsonParser";
 
 /**
@@ -17,6 +18,9 @@ export interface FeatureManager {
   getCommitHash(): string;
   getAppVersion(): string;
   getLicenseInformation(): StatusLicense | undefined;
+  setAllFeatures(
+    features: Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices">
+  ): void;
 }
 
 // Status license tells whether the license is still valid.

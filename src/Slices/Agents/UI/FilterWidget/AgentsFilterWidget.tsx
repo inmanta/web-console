@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
+import { Filter } from "@/Slices/Agents/Core/Types";
 import { FilterPicker } from "@/UI/Components";
 import { FreeTextFilter, SelectOptionFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
 import { AgentStatus } from "@S/Agents/Core/Domain";
-import { Filter } from "@S/Agents/Core/Query";
 
 enum Kind {
   Name = "Name",

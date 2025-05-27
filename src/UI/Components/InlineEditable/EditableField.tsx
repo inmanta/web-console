@@ -9,7 +9,6 @@ import {
 import { convertToTitleCase } from "@/UI/Utils";
 import { CancelEditButton, EnableEditButton, SubmitEditButton } from "./InlineEditButtons";
 import { InlineEditButtonFiller, InlineLabelItem } from "./InlineFillers";
-import { InlinePlainAlert } from "./InlinePlainAlert";
 
 export interface FieldProps {
   label: string;
@@ -17,7 +16,6 @@ export interface FieldProps {
   initialValue: string;
   initiallyEditable?: boolean;
   onSubmit: (value: string) => void;
-  error: string | null;
   setError: (error: string | null) => void;
 }
 
@@ -35,7 +33,6 @@ interface Props extends FieldProps {
   EditView: EditViewComponent;
   StaticView: StaticViewComponent;
   alignActions?: "start" | "end";
-  error: string | null;
   setError: (error: string | null) => void;
 }
 
@@ -48,22 +45,24 @@ export const EditableField: React.FC<Props> = ({
   EditView,
   StaticView,
   alignActions,
-  error,
   setError,
 }) => {
   const alignment = alignActions === "end" ? "alignSelfFlexEnd" : "alignSelfFlexStart";
   const [editable, setEditable] = useState(initiallyEditable);
   const [value, setValue] = useState(initialValue);
+
   const onSubmitRequest = async (value: string) => {
     setEditable(false);
     onSubmit(value);
   };
+
   const onEditClick = () => {
     setEditable(true);
     setError(null);
   };
 
   const onSubmitClick = () => onSubmitRequest(value);
+
   const onCancelEditClick = () => {
     setEditable(false);
     setValue(initialValue);
@@ -95,14 +94,6 @@ export const EditableField: React.FC<Props> = ({
           </FlexItem>
         </Flex>
       </DescriptionListTerm>
-      {error && (
-        <InlinePlainAlert
-          aria-label={`${label}-error-message`}
-          errorMessage={error}
-          closeButtonAriaLabel={`${label}-close-error`}
-          onCloseAlert={() => setError(null)}
-        />
-      )}
       <DescriptionListDescription>
         {!editable && <StaticView aria-label={`${label}-value`} value={value} />}
         {editable && (

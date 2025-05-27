@@ -1,0 +1,42 @@
+import { useContext } from "react";
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
+import { CustomError, useGet } from "@/Data/Queries";
+import { BackendMetricData } from "@/Slices/Dashboard/Core/Domain";
+import { DependencyContext } from "@/UI/Dependency";
+import { getUrl } from "./getUrl";
+
+export interface GetMetricsParams {
+  startDate: string;
+  endDate: string;
+  isLsmAvailable: boolean;
+}
+
+/**
+ * Return Signature of the useGetMetrics React Query
+ */
+interface GetMetrics {
+  useOneTime: (params: GetMetricsParams) => UseQueryResult<BackendMetricData, CustomError>;
+}
+
+/**
+ * React Query hook for fetching metrics.
+ *
+ * @returns {GetMetrics} An object containing the different available queries.
+ * @returns {UseQueryResult<BackendMetricData, CustomError>} returns.useOneTime - Fetch metrics with a single query.
+ */
+export const useGetMetrics = (): GetMetrics => {
+  const { environmentHandler } = useContext(DependencyContext);
+  const env = environmentHandler.useId();
+  const get = useGet(env)<{ data: BackendMetricData }>;
+  const keyFactory = new KeyFactory(keySlices.dashboard, "get_metrics");
+
+  return {
+    useOneTime: (params: GetMetricsParams): UseQueryResult<BackendMetricData, CustomError> =>
+      useQuery({
+        queryKey: keyFactory.list([...Object.values(params), env]),
+        queryFn: () => get(getUrl(params)),
+        select: (data) => data.data,
+      }),
+  };
+};

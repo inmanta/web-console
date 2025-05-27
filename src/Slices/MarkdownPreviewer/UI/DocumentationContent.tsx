@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useGetServiceModel } from "@/Data/Managers/V2/Service";
-import { useGetInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { useGetServiceModel, useGetInstance } from "@/Data/Queries";
 import { words } from "@/UI/words";
 
 /**

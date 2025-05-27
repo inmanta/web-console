@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
-import { usePostInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { usePostInstance } from "@/Data/Queries/";
 import {
   CreateModifierHandler,
   Description,
@@ -28,13 +28,13 @@ interface Props {
  * @returns {React.FC<Props>} A React functional component.
  */
 export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
-  const { environmentModifier, routeManager } = useContext(DependencyContext);
+  const { environmentHandler, routeManager } = useContext(DependencyContext);
   const [isDirty, setIsDirty] = useState(false);
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.create(serviceEntity);
   const location = useLocation();
   const [errorMessage, setErrorMessage] = useState("");
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
   const navigate = useNavigate();
   const url = routeManager.useUrl("Inventory", {
     service: serviceEntity.name,

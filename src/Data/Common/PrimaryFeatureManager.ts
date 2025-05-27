@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   FeatureManager,
   Feature,
@@ -18,9 +18,13 @@ import { words } from "@/UI";
 export const PrimaryFeatureManager = (
   jsonParserId: JsonParserId = "Native",
   commitHash: string = "",
-  appVersion: string = "",
-  features?: Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices"> | null
+  appVersion: string = ""
 ): FeatureManager => {
+  const [features, setFeatures] = useState<Pick<
+    ServerStatus,
+    "features" | "extensions" | "version" | "edition" | "slices"
+  > | null>(null);
+
   /**
    * Gets the version of the application.
    * @returns The version of the application.
@@ -169,6 +173,12 @@ export const PrimaryFeatureManager = (
     return licenceInformation?.status;
   }
 
+  function setAllFeatures(
+    features: Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices">
+  ): void {
+    setFeatures(features);
+  }
+
   useEffect(() => {
     console.info(
       `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
@@ -189,5 +199,6 @@ export const PrimaryFeatureManager = (
     getServerVersion,
     getEdition,
     getLicenseInformation,
+    setAllFeatures,
   };
 };

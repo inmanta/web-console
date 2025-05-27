@@ -1,7 +1,6 @@
 import React, { createContext } from "react";
 import {
   UrlManager,
-  EnvironmentModifier,
   RouteManager,
   EnvironmentHandler,
   FeatureManager,
@@ -9,7 +8,6 @@ import {
 } from "@/Core";
 import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
-  DummyEnvironmentModifier,
   DummyFeatureManager,
   DummyUrlManager,
   DummyRouteManager,
@@ -19,7 +17,6 @@ import {
 
 export interface Dependencies {
   urlManager: UrlManager;
-  environmentModifier: EnvironmentModifier;
   featureManager: FeatureManager;
   routeManager: RouteManager;
   environmentHandler: EnvironmentHandler;
@@ -29,7 +26,6 @@ export interface Dependencies {
 
 export const DependencyContext = createContext<Dependencies>({
   urlManager: new DummyUrlManager(),
-  environmentModifier: new DummyEnvironmentModifier(),
   featureManager: new DummyFeatureManager(),
   routeManager: new DummyRouteManager(),
   environmentHandler: DummyEnvironmentHandler(),
@@ -43,7 +39,6 @@ export const DependencyProvider: React.FC<{
 }> = ({
   dependencies: {
     urlManager,
-    environmentModifier,
     featureManager,
     routeManager,
     environmentHandler,
@@ -55,7 +50,6 @@ export const DependencyProvider: React.FC<{
   <DependencyContext.Provider
     value={{
       urlManager: urlManager || new DummyUrlManager(),
-      environmentModifier: environmentModifier || new DummyEnvironmentModifier(),
       featureManager: featureManager || new DummyFeatureManager(),
       routeManager: routeManager || new DummyRouteManager(),
       environmentHandler: environmentHandler || DummyEnvironmentHandler(),

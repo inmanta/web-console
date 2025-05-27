@@ -8,7 +8,7 @@ import {
 } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
-import { DiscoveredResource } from "@/Data/Managers/V2/DiscoveredResources";
+import { DiscoveredResource } from "@/Data/Queries";
 import { Toggle } from "@/UI/Components";
 import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
 import { words } from "@/UI/words";
