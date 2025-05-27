@@ -12,7 +12,7 @@ import { DependencyContext } from "@/UI/Dependency";
  * @returns {React.FC<React.PropsWithChildren<unknown>>} The Initializer component
  */
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const [initialized, setInitialized] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   const { environmentHandler, featureManager } = useContext(DependencyContext);
   const serverStatus = useGetServerStatus().useContinuous();
   const environments = useGetEnvironments().useContinuous();
@@ -21,7 +21,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     if (environments.data && serverStatus.data) {
       environmentHandler.setAllEnvironments(environments.data);
       featureManager.setAllFeatures(serverStatus.data);
-      setInitialized(true); // This is used to sync the component rendering with updating hooks
+      setIsInitialized(true); // This is used to sync the component rendering with updating hooks
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,7 +47,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     );
   }
 
-  if (serverStatus.isSuccess && environments.isSuccess && initialized) {
+  if (serverStatus.isSuccess && environments.isSuccess && isInitialized) {
     return <>{children}</>;
   }
 

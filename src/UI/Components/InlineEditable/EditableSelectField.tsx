@@ -32,7 +32,6 @@ export const EditableSelectField: React.FC<Props> = ({
   initiallyEditable,
   onCreate,
   onSubmit,
-  error,
   setError,
 }) => {
   return (
@@ -52,7 +51,6 @@ export const EditableSelectField: React.FC<Props> = ({
         />
       )}
       StaticView={StaticView}
-      error={error}
       setError={setError}
     />
   );

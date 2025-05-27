@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { DescriptionList } from "@patternfly/react-core";
+import { Alert, AlertActionCloseButton, DescriptionList } from "@patternfly/react-core";
 import { FlatEnvironment, Maybe, ProjectModel } from "@/Core";
 import { useModifyEnvironment, useCreateProject } from "@/Data/Queries";
 import {
@@ -34,6 +34,8 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
   });
   const [error, setError] = useState<string | null>(null);
   const createProject = useCreateProject();
+
+  const onErrorClose = () => setError(null);
 
   const onNameSubmit = (name: string) => mutate({ name: name });
 
@@ -71,18 +73,31 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
 
   return (
     <DescriptionList>
+      {error && (
+        <Alert
+          data-testid="environment-settings-error"
+          variant="danger"
+          title={error}
+          aria-live="polite"
+          actionClose={
+            <AlertActionCloseButton
+              aria-label="environment-settings-error-close"
+              onClose={onErrorClose}
+            />
+          }
+          isInline
+        />
+      )}
       <EditableTextField
         initialValue={environment.name}
         label={words("settings.tabs.environment.name")}
         onSubmit={onNameSubmit}
-        error={error}
         setError={setError}
       />
       <EditableTextAreaField
         initialValue={environment.description || ""}
         label={words("settings.tabs.environment.description")}
         onSubmit={onDescriptionSubmit}
-        error={error}
         setError={setError}
       />
       <EditableMultiTextField
@@ -92,7 +107,6 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
           repo_url: environment.repo_url,
         }}
         onSubmit={onRepoSubmit}
-        error={error}
         setError={setError}
       />
       <EditableSelectField
@@ -101,14 +115,12 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
         options={projects.map((project) => project.name)}
         onCreate={createProject}
         onSubmit={onProjectSubmit}
-        error={error}
         setError={setError}
       />
       <EditableImageField
         label={words("settings.tabs.environment.icon")}
         initialValue={environment.icon || ""}
         onSubmit={onIconSubmit}
-        error={error}
         setError={setError}
       />
       <Actions environment={environment} />
