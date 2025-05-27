@@ -220,7 +220,7 @@ describe("CreateEnvironmentForm", () => {
     expect(mockFn).toHaveBeenCalledWith("Catalog", undefined, "?env=environment_id_a");
   });
 
-  test.only("Given CreateEnvironmentForm When a new project and valid environment are set and submit is clicked Then sends the correct requests", async () => {
+  test("Given CreateEnvironmentForm When a new project and valid environment are set and submit is clicked Then sends the correct requests", async () => {
     const mockFn = jest.fn();
     jest.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
 
