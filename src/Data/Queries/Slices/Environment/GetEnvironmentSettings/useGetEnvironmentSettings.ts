@@ -18,7 +18,7 @@ interface GetEnvironmentSettings {
  */
 export const useGetEnvironmentSettings = (env?: string): GetEnvironmentSettings => {
   const get = useGetWithOptionalEnv(env)<{ data: EnvironmentSettings }>;
-  const keyFactory = new KeyFactory(keySlices.environment, "get_environment_settings");
+  const keyFactory = new KeyFactory(keySlices.environment, "get_environment_setting");
   return {
     useOneTime: (): UseQueryResult<EnvironmentSettings, Error> =>
       useQuery({

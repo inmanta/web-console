@@ -38,7 +38,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   const { closeModal } = useContext(ModalContext);
   const navigateTo = useNavigateTo();
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.environment, "get_environment_settings");
+  const keyFactory = new KeyFactory(keySlices.environment, "get_environment");
 
   const [candidateEnv, setCandidateEnv] = useState("");
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
@@ -65,7 +65,6 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   const clearEnv = useClearEnvironment(environment.id, {
     onSuccess: () => {
       client.invalidateQueries({ queryKey: keyFactory.root() });
-
       closeModal();
     },
     onError: (error) => {

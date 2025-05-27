@@ -20,7 +20,7 @@ interface GetProjects {
  */
 export const useGetProjects = (): GetProjects => {
   const get = useGetWithoutEnv()<{ data: ProjectModel[] }>;
-  const keyFactory = new KeyFactory(keySlices.project, "get_projects");
+  const keyFactory = new KeyFactory(keySlices.project, "get_project");
 
   return {
     useOneTime: (hasEnvironmentDetails = false): UseQueryResult<ProjectModel[], Error> =>

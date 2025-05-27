@@ -24,7 +24,7 @@ export const usePostInstanceConfig = (
   id: string
 ): UseMutationResult<Response, Error, Body, unknown> => {
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.serviceInstance);
+  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_instance_config");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<Body>;

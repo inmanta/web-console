@@ -48,7 +48,7 @@ export const useGetCompileReports = (params: CompileReportsParams): GetCompileRe
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
-  const keyFactory = new KeyFactory(keySlices.compilation, "getCompileReports");
+  const keyFactory = new KeyFactory(keySlices.compilation, "get_compile_report");
 
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>

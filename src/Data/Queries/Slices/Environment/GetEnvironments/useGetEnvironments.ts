@@ -20,7 +20,7 @@ interface GetEnvironments {
  */
 export const useGetEnvironments = (): GetEnvironments => {
   const get = useGetWithoutEnv()<{ data: Environment[] }>;
-  const keyFactory = new KeyFactory(keySlices.environment, "get_environments");
+  const keyFactory = new KeyFactory(keySlices.environment, "get_environment");
 
   return {
     useOneTime: (hasDetails = false): UseQueryResult<Environment[], Error> =>

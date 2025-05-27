@@ -4,6 +4,7 @@ import { Pagination } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 
 interface LogsResponse {
   data: InstanceLog[];
@@ -35,11 +36,12 @@ export const useGetInfiniteInstanceLogs = (
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<LogsResponse>;
+  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_instance_logs");
 
   return {
     useContinuous: (selectedVersion: string): UseInfiniteQueryResult<InstanceLog[], CustomError> =>
       useInfiniteQuery({
-        queryKey: ["get_instance_logs-continuous", service, instance, env],
+        queryKey: keyFactory.list([service, instance, env]),
         queryFn: ({ pageParam }) => {
           const initialParameters = selectedVersion
             ? `limit=50&end=${Number(selectedVersion) + 1}`

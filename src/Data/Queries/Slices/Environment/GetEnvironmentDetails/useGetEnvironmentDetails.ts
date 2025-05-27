@@ -32,7 +32,7 @@ export const useGetEnvironmentDetails = (): GetEnvironmentDetails => {
       }),
     useContinuous: (id: string): UseQueryResult<Environment, Error> =>
       useQuery({
-        queryKey: ["get_environment_details-continuous", id],
+        queryKey: keyFactory.single(id),
         queryFn: () => get(`/api/v2/environment/${id}?details=true`),
         retry: false,
         select: (data) => data.data,

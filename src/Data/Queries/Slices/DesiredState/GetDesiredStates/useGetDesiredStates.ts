@@ -63,7 +63,7 @@ export const useGetDesiredStates = (): GetDesiredStates => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
-  const keyFactory = new KeyFactory(keySlices.desiredState, "get_desired_states");
+  const keyFactory = new KeyFactory(keySlices.desiredState, "get_desired_state");
 
   return {
     useContinuous: (
