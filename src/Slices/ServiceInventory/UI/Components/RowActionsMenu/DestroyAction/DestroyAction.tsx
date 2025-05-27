@@ -3,6 +3,7 @@ import { MenuItem, Content } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { useDestroyInstance } from "@/Data/Managers/V2/ServiceInstance";
 import { DependencyContext } from "@/UI";
 import { ToastAlert, ConfirmUserActionForm } from "@/UI/Components";
@@ -33,6 +34,7 @@ export const DestroyAction: React.FC<Props> = ({
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { authHelper } = useContext(DependencyContext);
   const client = useQueryClient();
+  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_instance");
   const [errorMessage, setErrorMessage] = useState("");
 
   const username = authHelper.getUser();
@@ -43,11 +45,8 @@ export const DestroyAction: React.FC<Props> = ({
       setErrorMessage(error.message);
     },
     onSuccess: () => {
-      client.invalidateQueries({
-        queryKey: ["get_instances-one_time", service_entity],
-      });
       client.refetchQueries({
-        queryKey: ["get_instances-continuous", service_entity],
+        queryKey: keyFactory.root(),
       });
     },
   });

@@ -4,6 +4,7 @@ import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { DependencyContext } from "@/UI/Dependency";
 import { getPaginationHandlers } from "../../Helpers/Pagination/getPaginationHandlers";
+import { KeyFactory, keySlices } from "../../KeyFactory";
 import { useGet, REFETCH_INTERVAL } from "../helpers";
 import { getUrl } from "./getUrl";
 
@@ -80,18 +81,21 @@ export const useGetDiscoveredResources = (
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
+  const keyFactory = new KeyFactory(keySlices.discoveredResource, "get_discovered_resources");
+
+  const filterArray = params.filter ? Object.values(params.filter).map(String) : [];
+  const sortArray = params.sort ? [params.sort.name, params.sort.order] : [];
 
   return {
     useContinuous: (): UseQueryResult<DiscoveredResourceResponse, Error> =>
       useQuery({
-        queryKey: [
-          "get_discovered_resources-continuous",
-          params.currentPage,
-          params.sort,
-          params.pageSize,
-          params.filter,
+        queryKey: keyFactory.list([
+          params.currentPage.value,
+          params.pageSize.value,
           env,
-        ],
+          ...filterArray,
+          ...sortArray,
+        ]),
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,

@@ -11,6 +11,7 @@ import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import { LogLevelsList, EventTypesList, LogLevelString, EventType } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { useCreateCallback } from "@/Data/Managers/V2/Callback";
 import { MultiTextSelect, SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -34,6 +35,7 @@ interface Props {
  */
 export const CreateCallbackForm: React.FC<Props> = ({ service_entity, numberOfColumns }) => {
   const client = useQueryClient();
+  const keyFactory = new KeyFactory(keySlices.callback, "get_callback");
   const [url, setUrl] = useState<string | null>(null);
   const [id, setId] = useState<string | null>(null);
   const [logLevel, setLogLevel] = useState<string | null>(null);
@@ -50,7 +52,7 @@ export const CreateCallbackForm: React.FC<Props> = ({ service_entity, numberOfCo
     onSuccess: () => {
       //invalidate the get_callbacks query to update the list
       client.invalidateQueries({
-        queryKey: ["get_callbacks-one_time"],
+        queryKey: keyFactory.root(),
       });
       setUrl(null);
       setId(null);

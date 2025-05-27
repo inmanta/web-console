@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ModifyEnvironmentParams } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
@@ -19,6 +20,7 @@ export const useModifyEnvironment = (
   options?: UseMutationOptions<void, Error, ModifyEnvironmentParams>
 ): UseMutationResult<void, Error, ModifyEnvironmentParams> => {
   const client = useQueryClient();
+  const keyFactory = new KeyFactory(keySlices.environment, "get_environment");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<ModifyEnvironmentParams>;
@@ -27,7 +29,7 @@ export const useModifyEnvironment = (
     mutationFn: (params) => post(`/api/v2/environment/${environmentId}`, params),
     mutationKey: ["modify_environment", environmentId, env],
     onSuccess: () => {
-      client.refetchQueries();
+      client.refetchQueries({ queryKey: keyFactory.root() });
     },
     ...options,
   });

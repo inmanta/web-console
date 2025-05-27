@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
@@ -34,6 +35,8 @@ export const usePostStateTransfer = (
   options?: UseMutationOptions<StateTransferResponse, Error, PostStateTransfer>
 ): UseMutationResult<StateTransferResponse, Error, PostStateTransfer> => {
   const client = useQueryClient();
+  const keyFactoryForId = new KeyFactory(keySlices.serviceInstance);
+  const keyFactoryForInstances = new KeyFactory(keySlices.serviceInstance, "get_service_instance");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<PostStateTransfer>;
@@ -43,15 +46,8 @@ export const usePostStateTransfer = (
       post(`/lsm/v1/service_inventory/${service_entity}/${instance_id}/state`, body),
     mutationKey: ["post_state_transfer", env],
     onSuccess: () => {
-      client.invalidateQueries({
-        queryKey: [service_entity, instance_id],
-      });
-      client.invalidateQueries({
-        queryKey: ["get_service_instances-one_time"],
-      });
-      client.invalidateQueries({
-        queryKey: ["get_service_instances-continuous"],
-      });
+      client.refetchQueries({ queryKey: keyFactoryForId.single(instance_id) });
+      client.invalidateQueries({ queryKey: keyFactoryForInstances.root() });
     },
     ...options,
   });

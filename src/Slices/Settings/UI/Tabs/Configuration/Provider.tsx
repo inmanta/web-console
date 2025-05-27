@@ -2,6 +2,7 @@ import React, { useEffect, useReducer, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import _ from "lodash";
 import { EnvironmentSettings } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import {
   useResetEnvironmentSetting,
   useUpdateEnvironmentSetting,
@@ -71,12 +72,13 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     resetedValueName: "",
   });
   const client = useQueryClient();
+  const keyFactory = new KeyFactory(keySlices.environment, "get_environment_settings");
   const [showUpdateBanner, setShowUpdateBanner] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const updateSetting = useUpdateEnvironmentSetting({
     onSuccess: () => {
-      client.refetchQueries({ queryKey: ["get_environment_settings-one_time"] });
+      client.refetchQueries({ queryKey: keyFactory.root() });
       document.dispatchEvent(new Event("settings-update"));
       setErrorMessage("");
       setShowUpdateBanner(true);
@@ -90,7 +92,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
   const resetSetting = useResetEnvironmentSetting({
     onSuccess: () => {
       setErrorMessage("");
-      client.refetchQueries({ queryKey: ["get_environment_settings-one_time"] });
+      client.refetchQueries({ queryKey: keyFactory.root() });
     },
     onError: (error) => setErrorMessage(error.message),
   });

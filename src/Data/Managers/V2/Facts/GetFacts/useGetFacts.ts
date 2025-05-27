@@ -4,6 +4,7 @@ import { PageSize, Pagination, Sort } from "@/Core/Domain";
 import { Handlers, Links } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { Fact } from "@/Slices/Facts/Core/Domain";
 import { SortKey } from "@/Slices/Facts/Core/Query";
 import { DependencyContext } from "@/UI/Dependency";
@@ -63,11 +64,12 @@ export const useGetFacts = (params: GetFactsParams): GetFacts => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
+  const keyFactory = new KeyFactory(keySlices.facts, "get_facts");
 
   return {
     useContinuous: (): UseQueryResult<GetFactsResponse, Error> =>
       useQuery({
-        queryKey: ["get_facts-continuous", ...Array.from(Object.values(params)), env],
+        queryKey: keyFactory.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,

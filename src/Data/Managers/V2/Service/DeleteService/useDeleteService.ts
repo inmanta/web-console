@@ -5,6 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { DependencyContext } from "@/UI";
 import { useDelete } from "../../helpers";
 
@@ -18,6 +19,7 @@ export const useDeleteService = (
   options?: UseMutationOptions<void, Error, void>
 ): UseMutationResult<void, Error, void> => {
   const client = useQueryClient();
+  const keyFactory = new KeyFactory(keySlices.service, "get_service_model");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const deleteFn = useDelete(env);
@@ -26,10 +28,7 @@ export const useDeleteService = (
     mutationFn: () => deleteFn(`/lsm/v1/service_catalog/${service_entity}`),
     mutationKey: ["delete_service", env],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: ["get_service_models-continuous"] });
-      client.refetchQueries({ queryKey: ["get_service_models-one_time"] });
-      client.refetchQueries({ queryKey: ["get_service_model-one_time"] });
-      client.refetchQueries({ queryKey: ["get_service_model-continuous"] });
+      client.refetchQueries({ queryKey: keyFactory.root() });
     },
     ...options,
   });

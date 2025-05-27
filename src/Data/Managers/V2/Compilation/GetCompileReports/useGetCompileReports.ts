@@ -4,11 +4,11 @@ import { CompileStatus, Sort, PageSize, Pagination } from "@/Core/Domain";
 import { DateRange } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, REFETCH_INTERVAL, useGet } from "../../helpers";
 import { getUrl } from "./getUrl";
-import { KeyFactory } from "@/Data/Managers/KeyFactory";
 
 interface Filter {
   requested?: DateRange.DateRange[];
@@ -49,12 +49,12 @@ export const useGetCompileReports = (params: CompileReportsParams): GetCompileRe
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
-  const keyFactory = new KeyFactory("compilation", "getCompileReports");
+  const keyFactory = new KeyFactory(keySlices.compilation, "getCompileReports");
 
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: keyFactory.unique(env, [Object.values(params).join(",")]),
+        queryKey: keyFactory.list([env, ...Object.values(params)]),
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({

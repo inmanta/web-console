@@ -3,6 +3,7 @@ import { MenuItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { useDeleteInstance } from "@/Data/Managers/V2/ServiceInstance";
 import { ToastAlert, ActionDisabledTooltip, ConfirmUserActionForm } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -22,6 +23,7 @@ export const DeleteAction: React.FC<Props> = ({
   service_entity,
 }) => {
   const client = useQueryClient();
+  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_service_instance");
   const { triggerModal, closeModal } = useContext(ModalContext);
   const [errorMessage, setErrorMessage] = useState("");
   const { environmentModifier } = useContext(DependencyContext);
@@ -31,11 +33,8 @@ export const DeleteAction: React.FC<Props> = ({
       setErrorMessage(error.message);
     },
     onSuccess: () => {
-      client.invalidateQueries({
-        queryKey: ["get_instances-one_time", service_entity],
-      });
       client.refetchQueries({
-        queryKey: ["get_instances-continuous", service_entity],
+        queryKey: keyFactory.root(),
       });
     },
   });

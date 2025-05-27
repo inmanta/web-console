@@ -1,5 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { EnvironmentSettings } from "@/Core/Domain/EnvironmentSettings";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { useGetWithOptionalEnv } from "../../helpers";
 
 /**
@@ -17,10 +18,11 @@ interface GetEnvironmentSettings {
  */
 export const useGetEnvironmentSettings = (env?: string): GetEnvironmentSettings => {
   const get = useGetWithOptionalEnv(env)<{ data: EnvironmentSettings }>;
+  const keyFactory = new KeyFactory(keySlices.environment, "get_environment_settings");
   return {
     useOneTime: (): UseQueryResult<EnvironmentSettings, Error> =>
       useQuery({
-        queryKey: ["get_environment_settings-one_time", env],
+        queryKey: keyFactory.single(env || "undefined"),
         queryFn: () => get("/api/v2/environment_settings"),
         retry: false,
         enabled: env !== undefined,

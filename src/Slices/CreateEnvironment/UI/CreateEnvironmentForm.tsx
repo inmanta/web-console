@@ -2,6 +2,8 @@ import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
 import { ProjectModel } from "@/Core";
+import { keySlices } from "@/Data/Managers/KeyFactory";
+import { KeyFactory } from "@/Data/Managers/KeyFactory";
 import { useCreateEnvironment } from "@/Data/Managers/V2/Environment";
 import { useCreateProject } from "@/Data/Managers/V2/Project/CreateProject";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
@@ -30,13 +32,13 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
   const navigateTo = useNavigateTo();
   const navigateToHome = () => navigateTo("Home", undefined);
   const client = useQueryClient();
+  const keyFactory = new KeyFactory(keySlices.environment, "get_environment");
   const createProject = useCreateProject();
 
   const createEnvironment = useCreateEnvironment({
     onSuccess: (data) => {
       //reset the queries to get the rid of the data that would not include the new environment, otherwise the new view would try to access env set through search param and throw error
-      client.resetQueries({ queryKey: ["get_environments-one_time"] });
-      client.resetQueries({ queryKey: ["get_environments-continuous"] });
+      client.resetQueries({ queryKey: keyFactory.root() });
 
       const target = isLsmEnabled ? "Catalog" : "DesiredState";
 

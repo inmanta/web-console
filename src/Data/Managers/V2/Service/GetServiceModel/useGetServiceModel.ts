@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceModel } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
@@ -25,17 +26,18 @@ export const useGetServiceModel = (service: string): GetServiceModel => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<{ data: ServiceModel }>;
+  const keyFactory = new KeyFactory(keySlices.service, "get_service_model");
 
   return {
     useOneTime: (): UseQueryResult<ServiceModel, CustomError> =>
       useQuery({
-        queryKey: ["get_service_model-one_time", service, env],
+        queryKey: keyFactory.single(service, [env]),
         queryFn: () => get(`/lsm/v1/service_catalog/${service}?instance_summary=True`),
         select: (data) => data.data,
       }),
     useContinuous: (): UseQueryResult<ServiceModel, CustomError> =>
       useQuery({
-        queryKey: ["get_service_model-continuous", service, env],
+        queryKey: keyFactory.single(service, [env]),
         queryFn: () => get(`/lsm/v1/service_catalog/${service}?instance_summary=True`),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => data.data,

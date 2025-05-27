@@ -3,6 +3,7 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { getPaginationHandlers } from "@/Data/Managers/Helpers/Pagination/getPaginationHandlers";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { ResourceHistory } from "@S/ResourceDetails/Core/ResourceHistory";
 import { useGet } from "../../helpers";
@@ -61,11 +62,13 @@ export const useGetResourceHistory = (params: GetResourceHistoryParams): GetReso
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
+  const keyFactory = new KeyFactory(keySlices.resource, "get_resource_history");
+  const sortArray = sort ? [sort.name, sort.order] : [];
 
   return {
     useOneTime: (): UseQueryResult<ResourceHistoryResponse, Error> =>
       useQuery({
-        queryKey: ["get_resource_history-one_time", id, pageSize, sort, currentPage, env],
+        queryKey: keyFactory.list([id, pageSize.value, ...sortArray, currentPage.value, env]),
         queryFn: () => get(url),
         select: (data) => ({
           ...data,

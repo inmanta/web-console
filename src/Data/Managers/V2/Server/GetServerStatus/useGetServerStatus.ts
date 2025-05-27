@@ -1,5 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServerStatus } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { REFETCH_INTERVAL, useGetWithoutEnv } from "../../helpers";
 
 /**
@@ -19,11 +20,12 @@ interface GetServerStatus {
  */
 export const useGetServerStatus = (): GetServerStatus => {
   const get = useGetWithoutEnv()<{ data: ServerStatus }>;
+  const keyFactory = new KeyFactory(keySlices.server, "get_server_status");
 
   return {
     useOneTime: (): UseQueryResult<ServerStatus, Error> =>
       useQuery({
-        queryKey: ["get_server_status-one_time"],
+        queryKey: keyFactory.root(),
         queryFn: () => get("/api/v1/serverstatus"),
         retry: false,
         select: (data) => data.data,
@@ -31,7 +33,7 @@ export const useGetServerStatus = (): GetServerStatus => {
 
     useContinuous: (): UseQueryResult<ServerStatus, Error> =>
       useQuery({
-        queryKey: ["get_server_status-continuous"],
+        queryKey: keyFactory.root(),
         queryFn: () => get("/api/v1/serverstatus"),
         retry: false,
         select: (data) => data.data,

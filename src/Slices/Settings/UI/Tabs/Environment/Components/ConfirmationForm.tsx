@@ -13,6 +13,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import { FlatEnvironment } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { useClearEnvironment, useDeleteEnvironment } from "@/Data/Managers/V2/Environment";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { useNavigateTo } from "@/UI/Routing";
@@ -37,6 +38,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   const { closeModal } = useContext(ModalContext);
   const navigateTo = useNavigateTo();
   const client = useQueryClient();
+  const keyFactory = new KeyFactory(keySlices.environment, "get_environment_settings");
 
   const [candidateEnv, setCandidateEnv] = useState("");
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
@@ -49,8 +51,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
     onSuccess: () => {
       //reset the queries removes the cache which improves the ux when navigating back to the environments page,
       // without it the user won't see loading state and will see the old data for a split second and then removed env will be removed from the view
-      client.resetQueries({ queryKey: ["get_environments-one_time"] });
-      client.resetQueries({ queryKey: ["get_environments-continuous"] });
+      client.resetQueries({ queryKey: keyFactory.root() });
 
       closeModal();
       redirectToHome();
@@ -63,8 +64,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
 
   const clearEnv = useClearEnvironment(environment.id, {
     onSuccess: () => {
-      client.invalidateQueries({ queryKey: ["get_environments-one_time"] });
-      client.invalidateQueries({ queryKey: ["get_environments-continuous"] });
+      client.invalidateQueries({ queryKey: keyFactory.root() });
 
       closeModal();
     },

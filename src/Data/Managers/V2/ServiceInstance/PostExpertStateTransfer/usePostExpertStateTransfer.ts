@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { DependencyContext } from "@/UI";
 import { usePost } from "../../helpers";
 
@@ -35,21 +36,14 @@ export const usePostExpertStateTransfer = (
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<PostExpertStateTransfer>;
+  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_service_instance");
 
   return useMutation({
     mutationFn: (data) =>
       post(`/lsm/v1/service_inventory/${service_entity}/${instance_id}/expert/state`, data),
     mutationKey: ["post_state_transfer_expert", env],
     onSuccess: () => {
-      client.invalidateQueries({
-        queryKey: [service_entity, instance_id],
-      });
-      client.invalidateQueries({
-        queryKey: ["get_service_instances-one_time"],
-      });
-      client.invalidateQueries({
-        queryKey: ["get_service_instances-continuous"],
-      });
+      client.refetchQueries({ queryKey: keyFactory.single(instance_id) });
     },
     ...options,
   });

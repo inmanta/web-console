@@ -1,5 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ProjectModel } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { REFETCH_INTERVAL, useGetWithoutEnv } from "../../helpers";
 
 /**
@@ -19,11 +20,12 @@ interface GetProjects {
  */
 export const useGetProjects = (): GetProjects => {
   const get = useGetWithoutEnv()<{ data: ProjectModel[] }>;
+  const keyFactory = new KeyFactory(keySlices.project, "get_projects");
 
   return {
     useOneTime: (hasEnvironmentDetails = false): UseQueryResult<ProjectModel[], Error> =>
       useQuery({
-        queryKey: ["get_projects-one_time", hasEnvironmentDetails],
+        queryKey: keyFactory.list([hasEnvironmentDetails]),
         queryFn: () => get(`/api/v2/project?environment_details=${hasEnvironmentDetails}`),
         retry: false,
         select: (data) => data.data,
@@ -31,7 +33,7 @@ export const useGetProjects = (): GetProjects => {
 
     useContinuous: (hasEnvironmentDetails = false): UseQueryResult<ProjectModel[], Error> =>
       useQuery({
-        queryKey: ["get_projects-continuous", hasEnvironmentDetails],
+        queryKey: keyFactory.list([hasEnvironmentDetails]),
         queryFn: () => get(`/api/v2/project?environment_details=${hasEnvironmentDetails}`),
         retry: false,
         select: (data) => data.data,

@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { ServiceOrder } from "@/Slices/Orders/Core/Query";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
@@ -28,11 +29,12 @@ export const useGetOrderDetails = (): GetOrderDetails => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
+  const keyFactory = new KeyFactory(keySlices.order, "get_order_details");
 
   return {
     useContinuous: (id): UseQueryResult<ServiceOrder, CustomError> =>
       useQuery({
-        queryKey: ["get_order_details-continuous", id, env],
+        queryKey: keyFactory.single(id, [env]),
         queryFn: () => get(`/lsm/v2/order/${id}`),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => data.data,

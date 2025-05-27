@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { useGet } from "../../helpers";
 
@@ -44,6 +45,8 @@ export const useSuggestedValues = (suggestions: FormSuggestion | null | undefine
     };
   }
 
+  const keyFactory = new KeyFactory(keySlices.parameters, "get_parameter");
+
   return {
     /**
      * Custom hook to fetch the parameter from the API once.
@@ -51,7 +54,7 @@ export const useSuggestedValues = (suggestions: FormSuggestion | null | undefine
      */
     useOneTime: () =>
       useQuery({
-        queryKey: ["get_parameter-one_time", suggestions.parameter_name, env],
+        queryKey: keyFactory.single(suggestions.parameter_name || "", [env]),
         queryFn: () => get(`/api/v1/parameter/${suggestions.parameter_name}`),
         select: (data) => data.parameter,
       }),

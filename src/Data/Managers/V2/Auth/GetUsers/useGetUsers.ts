@@ -3,6 +3,7 @@
  * @returns An object containing a custom hook to fetch user information.
  */
 import { useQuery } from "@tanstack/react-query";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { useGetWithoutEnv } from "../../helpers";
 
 /**
@@ -19,6 +20,7 @@ export interface UserInfo {
  */
 export const useGetUsers = () => {
   const get = useGetWithoutEnv()<{ data: UserInfo[] }>;
+  const keyFactory = new KeyFactory(keySlices.auth, "get_user");
 
   return {
     /**
@@ -27,7 +29,7 @@ export const useGetUsers = () => {
      */
     useOneTime: () =>
       useQuery({
-        queryKey: ["get_users-one_time"],
+        queryKey: keyFactory.list(),
         queryFn: () => get("/api/v2/user"),
         select: (data) => data.data,
       }),

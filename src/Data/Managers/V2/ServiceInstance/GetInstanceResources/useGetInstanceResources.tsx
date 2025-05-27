@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { InstanceResourceModel } from "@/Core";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomError, useGet, REFETCH_INTERVAL } from "../../helpers";
 
@@ -30,11 +31,12 @@ export const useGetInstanceResources = (
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<{ data: InstanceResourceModel[] }>;
+  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_instance_resources");
 
   return {
     useContinuous: (): UseQueryResult<InstanceResourceModel[], CustomError> =>
       useQuery({
-        queryKey: ["get_instance_resources-continuous", id, version, service_entity, env],
+        queryKey: keyFactory.single(id, [version, service_entity, env]),
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data): InstanceResourceModel[] => data.data,

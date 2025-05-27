@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { DependencyContext } from "@/UI";
 import { useDelete } from "../../helpers";
 
@@ -10,6 +11,7 @@ import { useDelete } from "../../helpers";
  */
 export const useDeleteDesiredStateVersion = (): UseMutationResult<void, Error, string, unknown> => {
   const client = useQueryClient();
+  const keyFactory = new KeyFactory(keySlices.desiredState, "get_desired_state");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const deleteFn = useDelete(env);
@@ -19,11 +21,8 @@ export const useDeleteDesiredStateVersion = (): UseMutationResult<void, Error, s
     mutationKey: ["delete_desired_state_version", env],
     onSuccess: () => {
       //invalidate the desired state queries to update the list
-      client.invalidateQueries({
-        queryKey: ["get_desired_states-continuous"],
-      });
-      client.invalidateQueries({
-        queryKey: ["get_desired_states-one_time"],
+      client.refetchQueries({
+        queryKey: keyFactory.root(),
       });
     },
   });

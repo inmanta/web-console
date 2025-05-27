@@ -1,52 +1,81 @@
-import { KeyFactory } from '../KeyFactory';
+import { KeyFactory } from "./KeyFactory";
 
-describe('KeyFactory', () => {
-  describe('constructor', () => {
-    it('should initialize with sliceKey and optional key', () => {
-      const factory = new KeyFactory('compilation', 'getCompileDetails');
-      expect(factory['sliceKey']).toBe('compilation');
-      expect(factory['key']).toBe('getCompileDetails');
+describe("KeyFactory", () => {
+  describe("constructor", () => {
+    it("should initialize with sliceKey and optional queryKey", () => {
+      const factory = new KeyFactory("testSlice", "testQuery");
+      expect(factory).toBeInstanceOf(KeyFactory);
     });
 
-    it('should initialize with only sliceKey when key is not provided', () => {
-      const factory = new KeyFactory('compilation');
-      expect(factory['sliceKey']).toBe('compilation');
-      expect(factory['key']).toBe('');
+    it("should initialize with only sliceKey", () => {
+      const factory = new KeyFactory("testSlice");
+      expect(factory).toBeInstanceOf(KeyFactory);
     });
   });
 
-  describe('all()', () => {
-    it('should return array with sliceKey and key', () => {
-      const factory = new KeyFactory('compilation', 'getCompileDetails');
-      expect(factory.all()).toEqual(['compilation', 'getCompileDetails']);
+  describe("root", () => {
+    it("should return array with sliceKey and queryKey when both are provided", () => {
+      const factory = new KeyFactory("testSlice", "testQuery");
+      expect(factory.root()).toEqual(["testSlice", "testQuery"]);
     });
 
-    it('should return array with sliceKey and empty string when key is not provided', () => {
-      const factory = new KeyFactory('compilation');
-      expect(factory.all()).toEqual(['compilation', '']);
+    it("should return array with only sliceKey when queryKey is not provided", () => {
+      const factory = new KeyFactory("testSlice");
+      expect(factory.root()).toEqual(["testSlice"]);
     });
   });
 
-  describe('unique()', () => {
-    it('should combine base keys with id', () => {
-      const factory = new KeyFactory('compilation', 'getCompileDetails');
-      expect(factory.unique('123')).toEqual(['compilation', 'getCompileDetails', '123']);
+  describe("slice", () => {
+    it("should return array with only sliceKey", () => {
+      const factory = new KeyFactory("testSlice", "testQuery");
+      expect(factory.slice()).toEqual(["testSlice"]);
+    });
+  });
+
+  describe("list", () => {
+    it("should return array with root keys plus 'list' when no params provided", () => {
+      const factory = new KeyFactory("testSlice", "testQuery");
+      expect(factory.list()).toEqual(["testSlice", "testQuery", "list"]);
     });
 
-    it('should combine base keys with id and extra keys', () => {
-      const factory = new KeyFactory('compilation', 'getCompileDetails');
-      expect(factory.unique('123', ['extra1', 'extra2'])).toEqual([
-        'compilation',
-        'getCompileDetails',
-        '123',
-        'extra1',
-        'extra2'
+    it("should return array with root keys plus 'list' and params when params provided", () => {
+      const factory = new KeyFactory("testSlice", "testQuery");
+      expect(factory.list(["param1", "param2"])).toEqual([
+        "testSlice",
+        "testQuery",
+        "list",
+        "param1",
+        "param2",
       ]);
     });
 
-    it('should work without extra keys', () => {
-      const factory = new KeyFactory('compilation');
-      expect(factory.unique('123')).toEqual(['compilation', '', '123']);
+    it("should work without queryKey", () => {
+      const factory = new KeyFactory("testSlice");
+      expect(factory.list(["param1"])).toEqual(["testSlice", "list", "param1"]);
     });
   });
-}); 
+
+  describe("single", () => {
+    it("should return array with root keys plus 'single' and id when no params provided", () => {
+      const factory = new KeyFactory("testSlice", "testQuery");
+      expect(factory.single("123")).toEqual(["testSlice", "testQuery", "single", "123"]);
+    });
+
+    it("should return array with root keys plus 'single', id and params when params provided", () => {
+      const factory = new KeyFactory("testSlice", "testQuery");
+      expect(factory.single("123", ["param1", "param2"])).toEqual([
+        "testSlice",
+        "testQuery",
+        "single",
+        "123",
+        "param1",
+        "param2",
+      ]);
+    });
+
+    it("should work without queryKey", () => {
+      const factory = new KeyFactory("testSlice");
+      expect(factory.single("123", ["param1"])).toEqual(["testSlice", "single", "123", "param1"]);
+    });
+  });
+});

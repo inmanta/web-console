@@ -5,6 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { DependencyContext } from "@/UI";
 import { useDelete } from "../../helpers";
 
@@ -17,6 +18,7 @@ export const useResetEnvironmentSetting = (
   options?: UseMutationOptions<void, Error, string>
 ): UseMutationResult<void, Error, string> => {
   const client = useQueryClient();
+  const keyFactory = new KeyFactory(keySlices.environment, "get_environment_setting");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const deleteFn = useDelete(env);
@@ -25,7 +27,7 @@ export const useResetEnvironmentSetting = (
     mutationFn: (id) => deleteFn(`/api/v2/environment_settings/${id}`),
     mutationKey: ["reset_environment_setting", env],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: ["get_environment_settings-one_time"] });
+      client.refetchQueries({ queryKey: keyFactory.root() });
     },
     ...options,
   });

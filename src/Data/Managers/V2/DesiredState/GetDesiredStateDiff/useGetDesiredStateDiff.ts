@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Diff } from "@/Core/Domain";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { useGet } from "../../helpers";
 
@@ -28,11 +29,12 @@ export const useGetDesiredStateDiff = (): GetDesiredStateDiff => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
+  const keyFactory = new KeyFactory(keySlices.desiredState, "get_desired_state_diff");
 
   return {
     useOneTime: (from: string, to: string): UseQueryResult<Diff.Resource[], Error> =>
       useQuery({
-        queryKey: ["get_desired_state_diff-one_time", from, to, env],
+        queryKey: keyFactory.single(from, [to, env]),
         queryFn: () => get(getUrl(from, to)),
         select: (data) => data.data,
       }),

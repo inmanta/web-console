@@ -1,4 +1,5 @@
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
+import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { useDeleteWithoutEnv } from "../../helpers";
 
 /**
@@ -8,6 +9,7 @@ import { useDeleteWithoutEnv } from "../../helpers";
  */
 export const useRemoveUser = (): UseMutationResult<void, Error, string, unknown> => {
   const client = useQueryClient();
+  const keyFactory = new KeyFactory(keySlices.auth, "get_user");
   const deleteFn = useDeleteWithoutEnv();
 
   return useMutation({
@@ -15,7 +17,7 @@ export const useRemoveUser = (): UseMutationResult<void, Error, string, unknown>
     mutationKey: ["removeUser"],
     onSuccess: () => {
       // Refetch the users query to update the list
-      client.invalidateQueries({ queryKey: ["get_users-one_time"] });
+      client.invalidateQueries({ queryKey: keyFactory.root() });
     },
   });
 };
