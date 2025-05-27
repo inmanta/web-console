@@ -1,6 +1,6 @@
 import React, { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse } from "msw";
@@ -148,7 +148,6 @@ describe("CreateEnvironmentForm", () => {
 
     await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
-    
     expect(mockFn).toHaveBeenCalledWith("Catalog", undefined, "?env=environment_id_a");
   });
 
@@ -242,7 +241,7 @@ describe("CreateEnvironmentForm", () => {
       }),
       http.put("/api/v2/environment", async ({ request }) => {
         const body = await request.json();
-        console.log(body && body["name"] === "dev" && body["project_id"] === "proj-id-new")
+        console.log(body && body["name"] === "dev" && body["project_id"] === "proj-id-new");
         if (body && body["name"] === "dev" && body["project_id"] === "proj-id-new") {
           return HttpResponse.json({ data: Environment.a });
         }
@@ -286,7 +285,7 @@ describe("CreateEnvironmentForm", () => {
     expect(await screen.findByRole("button", { name: "submit" })).toBeEnabled();
     await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
-      expect(mockFn).toHaveBeenCalledWith("Catalog", undefined, "?env=environment_id_a");
+    expect(mockFn).toHaveBeenCalledWith("Catalog", undefined, "?env=environment_id_a");
   });
 
   test("Given CreateEnvironmentForm When creating a new project is not successful Then shows error message", async () => {
