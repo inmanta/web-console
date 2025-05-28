@@ -103,7 +103,7 @@ export const AddInterServiceRelationsToTracker = (
     if (1 > 0) {
       relations.push({
         name: relation.entity_type,
-        min: 1,
+        min: relation.lower_limit,
         currentAmount: 0,
       });
     }
