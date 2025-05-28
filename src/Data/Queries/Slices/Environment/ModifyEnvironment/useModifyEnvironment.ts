@@ -20,7 +20,8 @@ export const useModifyEnvironment = (
   options?: UseMutationOptions<void, Error, ModifyEnvironmentParams>
 ): UseMutationResult<void, Error, ModifyEnvironmentParams> => {
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.environment, "get_environment");
+  const envKeyFactory = new KeyFactory(keySlices.environment, "get_environment");
+  const detailsKeyFactory = new KeyFactory(keySlices.environment, "get_environment_details");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<ModifyEnvironmentParams>;
@@ -29,7 +30,8 @@ export const useModifyEnvironment = (
     mutationFn: (params) => post(`/api/v2/environment/${environmentId}`, params),
     mutationKey: ["modify_environment", environmentId, env],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: keyFactory.root() });
+      client.refetchQueries({ queryKey: envKeyFactory.root() });
+      client.refetchQueries({ queryKey: detailsKeyFactory.root() });
     },
     ...options,
   });
