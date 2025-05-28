@@ -45,6 +45,9 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       client.setQueryData(keyFactory.list([true]), dataUpdater);
       client.setQueryData(keyFactory.list([false]), dataUpdater);
 
+      client.refetchQueries({ queryKey: keyFactory.list([true]) });
+      client.refetchQueries({ queryKey: keyFactory.list([false]) });
+      
       const target = isLsmEnabled ? "Catalog" : "DesiredState";
 
       navigateTo(target, undefined, `?env=${data.data.id}`);
