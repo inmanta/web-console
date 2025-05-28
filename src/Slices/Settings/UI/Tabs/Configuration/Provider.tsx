@@ -69,7 +69,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     resetedValueName: "",
   });
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.environment, "get_environment_settings");
+  const keyFactory = new KeyFactory(keySlices.environment, "get_environment_setting");
   const [showUpdateBanner, setShowUpdateBanner] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 

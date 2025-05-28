@@ -241,7 +241,7 @@ describe("CreateEnvironmentForm", () => {
       }),
       http.put("/api/v2/environment", async ({ request }) => {
         const body = await request.json();
-        console.log(body && body["name"] === "dev" && body["project_id"] === "proj-id-new");
+        
         if (body && body["name"] === "dev" && body["project_id"] === "proj-id-new") {
           return HttpResponse.json({ data: Environment.a });
         }
