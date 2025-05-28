@@ -25,10 +25,15 @@ export const ErrorsContainer: React.FC = () => {
   if (interServiceRelationsThatAreMissing.length === 0 || !isDirty) {
     return null;
   }
+ 
+  //map the interServiceRelationsThatAreMissing to a get a list of relations that are missing
+  const errorsToMap = interServiceRelationsThatAreMissing.map(([_id, value]) => (
+    value
+  )).map(entity => entity.relations.filter(r => r.currentAmount < r.min)).flat();
 
   return (
     <ErrorMessageContainer
-      title={words("validation.title")(interServiceRelationsThatAreMissing.length)}
+      title={words("validation.title")(errorsToMap.length)}
     >
       {interServiceRelationsThatAreMissing.map(([id, value]) => (
         <MissingRelationsForGivenCell key={id} entity={value} />
@@ -55,7 +60,7 @@ interface Props {
 const MissingRelationsForGivenCell: React.FC<Props> = ({ entity }) => {
   const { name, relations } = entity;
 
-  return relations.map((relation, index) => (
+  return relations.filter(r => r.currentAmount < r.min).map((relation, index) => (
     <Content
       key={`missingRelationsParagraph-${name}_${relation.name}_${index}`}
       aria-label={`missingRelationsParagraph-${name}_${relation.name}_${index}`}

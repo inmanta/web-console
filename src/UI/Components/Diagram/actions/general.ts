@@ -98,12 +98,12 @@ export const AddInterServiceRelationsToTracker = (
 ) => {
   instanceAsTable.set("relatedTo", new Map());
   const relations: InterServiceRelationOnCanvasWithMin[] = [];
-
+console.log(serviceModel.inter_service_relations)
   serviceModel.inter_service_relations.forEach((relation) => {
-    if (relation.lower_limit > 0) {
+    if (1 > 0) {
       relations.push({
         name: relation.entity_type,
-        min: relation.lower_limit,
+        min: 1,
         currentAmount: 0,
       });
     }
