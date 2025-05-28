@@ -178,7 +178,6 @@ describe("Environment", () => {
     //change Repository url value
     cy.wait(1000);
     cy.get('[aria-label="Repository Settings-toggle-edit"]:enabled').click();
-    cy.wait(1000);
 
     //delay is needed to fix error that says that this input is disabled
     cy.get('[aria-label="repo_url-input"]').type("New Value Repo Url", {
@@ -194,10 +193,7 @@ describe("Environment", () => {
     cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type("New Value Project Name");
 
     cy.get("button").contains('Create "New Value Project Name"').click();
-    cy.wait(1000);
-
     cy.get('[aria-label="Project Name-submit-edit"]').click();
-    cy.wait(1000);
 
     deleteEnv("New Value Name", testProjectName(3));
   });
