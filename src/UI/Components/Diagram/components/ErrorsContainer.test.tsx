@@ -59,7 +59,10 @@ describe("Given a Validation component", () => {
     const isDirty = true;
     const interServiceRelationsOnCanvas = new Map().set("1", {
       name: "test",
-      relations: [{ name: "relation-test", currentAmount: 0, min: 1 }, { name: "relation-test2", currentAmount: 0, min: 1 }],
+      relations: [
+        { name: "relation-test", currentAmount: 0, min: 1 },
+        { name: "relation-test2", currentAmount: 0, min: 1 },
+      ],
     });
 
     render(setup(isDirty, interServiceRelationsOnCanvas));

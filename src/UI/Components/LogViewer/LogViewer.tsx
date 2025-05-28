@@ -83,9 +83,9 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs, defaultSele
     >
       {selectedLog?.failed && (
         <>
-        <Icon status="danger">
-          <ExclamationCircleIcon />
-        </Icon>{" "}
+          <Icon status="danger">
+            <ExclamationCircleIcon />
+          </Icon>{" "}
         </>
       )}
       {selectedLog?.name || words("logViewer.selectLog")}

@@ -98,7 +98,7 @@ export const AddInterServiceRelationsToTracker = (
 ) => {
   instanceAsTable.set("relatedTo", new Map());
   const relations: InterServiceRelationOnCanvasWithMin[] = [];
-console.log(serviceModel.inter_service_relations)
+
   serviceModel.inter_service_relations.forEach((relation) => {
     if (1 > 0) {
       relations.push({
