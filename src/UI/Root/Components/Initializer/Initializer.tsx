@@ -14,8 +14,8 @@ import { DependencyContext } from "@/UI/Dependency";
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [isInitialized, setIsInitialized] = useState(false);
   const { environmentHandler, featureManager } = useContext(DependencyContext);
-  const serverStatus = useGetServerStatus().useContinuous();
-  const environments = useGetEnvironments().useContinuous();
+  const serverStatus = useGetServerStatus().useOneTime();
+  const environments = useGetEnvironments().useOneTime();
 
   useEffect(() => {
     if (environments.data && serverStatus.data) {
