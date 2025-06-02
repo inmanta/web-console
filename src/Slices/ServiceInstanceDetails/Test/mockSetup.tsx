@@ -55,18 +55,18 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({ children, exp
   loader.init();
 
   return (
-    <TestMemoryRouter
-      initialEntries={[
-        "/lsm/catalog/mobileCore/inventory/core1/1d96a1ab/details?env=c85c0a64-ed45-4cba-bdc5-703f65a225f7",
-      ]}
-    >
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <TestMemoryRouter
+        initialEntries={[
+          "/lsm/catalog/mobileCore/inventory/core1/1d96a1ab/details?env=c85c0a64-ed45-4cba-bdc5-703f65a225f7",
+        ]}
+      >
         <MockedDependencyProvider
           env={{ ...EnvironmentDetails.a, settings: { enable_lsm_expert_mode: expertMode } }}
         >
           <ModalProvider>{children}</ModalProvider>
         </MockedDependencyProvider>
-      </QueryClientProvider>
-    </TestMemoryRouter>
+      </TestMemoryRouter>
+    </QueryClientProvider>
   );
 };

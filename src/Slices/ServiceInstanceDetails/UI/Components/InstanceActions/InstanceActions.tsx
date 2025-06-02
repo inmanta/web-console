@@ -16,6 +16,7 @@ import {
   getExpertStateTargets,
   isTransferDisabled,
 } from "@/Slices/ServiceInstanceDetails/Utils";
+import { ToastAlertMessage } from "@/Slices/ServiceInventory/UI/Components/ToastAlertMessage";
 import { DependencyContext, words } from "@/UI";
 import { Link } from "@/UI/Components";
 import { DeleteAction, DestroyAction, ExpertStateTransfer, StateAction } from "./Actions";
@@ -42,6 +43,7 @@ export const InstanceActions: React.FC = () => {
   const deleteDisabled =
     instance.deleted || isTransferDisabled(instance, "on_delete", serviceModelQuery.data);
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isExpertDropdownOpen, setIsExpertDropdownOpen] = useState<boolean>(false);
   const [blockedInterface, setBlockedInterface] = useState<boolean>(false);
@@ -75,6 +77,13 @@ export const InstanceActions: React.FC = () => {
 
   return (
     <RightAlignedButtons>
+      {errorMessage && (
+        <ToastAlertMessage
+          stateErrorMessage={errorMessage}
+          id="error-toast-actions"
+          setStateErrorMessage={setErrorMessage}
+        />
+      )}
       {environmentHandler.useIsExpertModeEnabled() && (
         <Dropdown
           isOpen={isExpertDropdownOpen}
@@ -89,6 +98,7 @@ export const InstanceActions: React.FC = () => {
               version={instance.version}
               onClose={() => setIsDropdownOpen(false)}
               setInterfaceBlocked={setBlockedInterface}
+              setErrorMessage={setErrorMessage}
             />
             {!instance.deleted && expertStateTargets.length > 0 && (
               <>
@@ -103,6 +113,7 @@ export const InstanceActions: React.FC = () => {
                   version={instance.version}
                   onClose={() => setIsDropdownOpen(false)}
                   setInterfaceBlocked={setBlockedInterface}
+                  setErrorMessage={setErrorMessage}
                 />
               </>
             )}
@@ -182,6 +193,7 @@ export const InstanceActions: React.FC = () => {
             version={instance.version}
             onClose={() => setIsDropdownOpen(false)}
             setInterfaceBlocked={setBlockedInterface}
+            setErrorMessage={setErrorMessage}
           />
           {stateTargets.length > 0 && (
             <>
@@ -197,6 +209,7 @@ export const InstanceActions: React.FC = () => {
                   version={instance.version}
                   onClose={() => setIsDropdownOpen(false)}
                   setInterfaceBlocked={setBlockedInterface}
+                  setErrorMessage={setErrorMessage}
                 />
               </DropdownGroup>
             </>

@@ -1,12 +1,11 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext } from "react";
 import { useNavigate } from "react-router";
-import { Alert, DropdownItem, Content } from "@patternfly/react-core";
+import { Alert, DropdownItem, Content, Spinner, Button } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
 import { useDestroyInstance } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
-import { ConfirmationModal } from "../../ConfirmModal";
-import { ToastAlertMessage } from "../../ToastAlert";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
 interface Props {
   instance_display_identity: string;
@@ -15,6 +14,7 @@ interface Props {
   version: ParsedNumber;
   onClose: () => void;
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 /**
@@ -37,9 +37,9 @@ export const DestroyAction: React.FC<Props> = ({
   version,
   onClose,
   setInterfaceBlocked,
+  setErrorMessage,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const { triggerModal, closeModal } = useContext(ModalContext);
 
   const navigate = useNavigate();
 
@@ -50,8 +50,10 @@ export const DestroyAction: React.FC<Props> = ({
   const message = words("instanceDetails.API.message.update")(username);
 
   const { mutate, isPending } = useDestroyInstance(instance_id, service_entity, version, message, {
-    onSuccess: () =>
-      navigate(`/console/lsm/catalog/${service_entity}/inventory?env=${environment}`),
+    onSuccess: () => {
+      closeModal();
+      navigate(`/console/lsm/catalog/${service_entity}/inventory?env=${environment}`);
+    },
     onError: (error) => {
       setErrorMessage(error.message);
     },
@@ -62,17 +64,54 @@ export const DestroyAction: React.FC<Props> = ({
    */
   const onDestroySelect = () => {
     setInterfaceBlocked(true);
-    setIsModalOpen(true);
+    triggerModal({
+      title: words("inventory.destroyInstance.title"),
+      content: (
+        <>
+          <Content component="p">
+            {words("inventory.destroyInstance.header")(instance_display_identity, service_entity)}
+          </Content>
+          <br />
+          <Alert
+            variant="danger"
+            title={words("instanceDetails.expert.confirm.warning")}
+            isInline
+          />
+        </>
+      ),
+      iconVariant: "danger",
+      cancelCb: closeModalCallback,
+      actions: [
+        <Button
+          key="confirm"
+          variant="primary"
+          data-testid={`${instance_display_identity}-destroy-modal-confirm`}
+          onClick={onSubmitDestroy}
+          isDisabled={isPending}
+        >
+          {words("yes")}
+          {isPending && <Spinner size="sm" />}
+        </Button>,
+        <Button
+          key="cancel"
+          variant="link"
+          data-testid={`${instance_display_identity}-destroy-modal-cancel`}
+          onClick={closeModalCallback}
+        >
+          {words("no")}
+        </Button>,
+      ],
+    });
   };
 
   /**
    * shorthand method to handle the state updates when the modal is closed.
    */
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
+  const closeModalCallback = useCallback(() => {
+    closeModal();
     setInterfaceBlocked(false);
     onClose();
-  }, [setIsModalOpen, setInterfaceBlocked, onClose]);
+  }, [closeModal, setInterfaceBlocked, onClose]);
 
   /**
    * async method sending out the request to destroy the instance
@@ -91,28 +130,6 @@ export const DestroyAction: React.FC<Props> = ({
       >
         {words("inventory.destroyInstance.button")}
       </DropdownItem>
-      <ConfirmationModal
-        title={words("inventory.destroyInstance.title")}
-        onConfirm={onSubmitDestroy}
-        id={instance_display_identity}
-        isModalOpen={isModalOpen}
-        onCancel={closeModal}
-        isPending={isPending}
-      >
-        <Content component="p">
-          {words("inventory.destroyInstance.header")(instance_display_identity, service_entity)}
-        </Content>
-        <br />
-        <Alert variant="danger" title={words("instanceDetails.expert.confirm.warning")} isInline />
-      </ConfirmationModal>
-      {errorMessage && (
-        <ToastAlertMessage
-          message={errorMessage}
-          id="error-toast-expert-destroy"
-          setMessage={setErrorMessage}
-          variant="danger"
-        />
-      )}
     </>
   );
 };

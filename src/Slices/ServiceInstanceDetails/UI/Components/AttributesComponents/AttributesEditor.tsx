@@ -6,6 +6,7 @@ import {
   FormSelect,
   FormSelectOption,
   Content,
+  Spinner,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
@@ -15,7 +16,7 @@ import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Con
 import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
 import { JSONEditor } from "@/UI/Components/JSONEditor";
-import { ConfirmationModal } from "../ConfirmModal";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { ToastAlertMessage } from "../ToastAlert";
 
 interface Props {
@@ -41,6 +42,7 @@ export const AttributesEditor: React.FC<Props> = ({
   service_entity,
   selectedVersion,
 }) => {
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const { authHelper } = useContext(DependencyContext);
   const { instance } = useContext(InstanceDetailsContext);
   const isLatestVersion = String(instance.version) === selectedVersion;
@@ -54,12 +56,11 @@ export const AttributesEditor: React.FC<Props> = ({
   const [isEditorValid, setIsEditorValid] = useState<boolean>(true);
   const [editorState, setEditorState] = useState<string>(editorDataOriginal);
 
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const { mutate, isPending } = usePatchAttributesExpert(instance.id, instance.service_entity, {
     onError: (error) => setErrorMessage(error.message),
-    onSuccess: () => setIsModalOpen(false),
+    onSuccess: closeModal,
   });
 
   /**
@@ -153,7 +154,39 @@ export const AttributesEditor: React.FC<Props> = ({
               aria-label="Expert-Submit-Button"
               aria-disabled={!isEditorValid}
               variant="danger"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() =>
+                triggerModal({
+                  title: words("instanceDetails.expert.editModal.title"),
+                  ariaLabel: "Confirm-Expert-Edit-Modal",
+                  dataTestId: "Confirm-Expert-Edit",
+                  iconVariant: "danger",
+                  content: (
+                    <Content component="p">
+                      {words("instanceDetails.expert.editModal.message")(selectedSet)}
+                    </Content>
+                  ),
+                  actions: [
+                    <Button
+                      key="confirm"
+                      variant="primary"
+                      data-testid={"Confirm-Expert-Edit-modal-confirm"}
+                      onClick={onConfirm}
+                      isDisabled={isPending}
+                    >
+                      {words("yes")}
+                      {isPending && <Spinner size="sm" />}
+                    </Button>,
+                    <Button
+                      key="cancel"
+                      variant="link"
+                      data-testid={"Confirm-Expert-Edit-modal-cancel"}
+                      onClick={closeModal}
+                    >
+                      {words("no")}
+                    </Button>,
+                  ],
+                })
+              }
             >
               Force Update
             </Button>
@@ -166,18 +199,6 @@ export const AttributesEditor: React.FC<Props> = ({
         onChange={onEditorUpdate}
         readOnly={!environmentHandler.useIsExpertModeEnabled()}
       />
-      <ConfirmationModal
-        title={words("instanceDetails.expert.editModal.title")}
-        onConfirm={onConfirm}
-        id="Confirm-Expert-Edit"
-        isModalOpen={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        isPending={isPending}
-      >
-        <Content component="p">
-          {words("instanceDetails.expert.editModal.message")(selectedSet)}
-        </Content>
-      </ConfirmationModal>
       {errorMessage && (
         <ToastAlertMessage
           message={errorMessage}

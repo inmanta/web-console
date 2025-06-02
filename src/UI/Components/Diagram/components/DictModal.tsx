@@ -32,7 +32,7 @@ export const DictModal: React.FC = () => {
         },
       });
     }
-  }, [dictToDisplay]);
+  }, [dictToDisplay, triggerModal, closeModal, setDictToDisplay]);
 
   return null;
 };
