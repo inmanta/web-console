@@ -1,9 +1,6 @@
 import React from "react";
 import { UseMutationResult } from "@tanstack/react-query";
-import {
-  CreateProjectParams,
-  CreateProjectResponse,
-} from "@/Data/Managers/V2/Project/CreateProject";
+import { CreateProjectParams, CreateProjectResponse } from "@/Data/Queries";
 import { CreatableSelectInput } from "./CreatableSelectInput";
 import { EditableField, FieldProps, StaticViewComponent } from "./EditableField";
 import { InlineValue } from "./InlineFillers";
@@ -35,7 +32,6 @@ export const EditableSelectField: React.FC<Props> = ({
   initiallyEditable,
   onCreate,
   onSubmit,
-  error,
   setError,
 }) => {
   return (
@@ -55,7 +51,6 @@ export const EditableSelectField: React.FC<Props> = ({
         />
       )}
       StaticView={StaticView}
-      error={error}
       setError={setError}
     />
   );

@@ -5,7 +5,7 @@ import { get } from "lodash-es";
 import { v4 as uuidv4 } from "uuid";
 import { InstanceAttributeModel, DictListField, Field, NestedField, FormSuggestion } from "@/Core";
 import { toOptionalBoolean } from "@/Data";
-import { useSuggestedValues } from "@/Data/Managers/V2/ServiceInstance";
+import { useSuggestedValues } from "@/Data/Queries";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { words } from "@/UI/words";
 import { BooleanFormInput } from "./BooleanFormInput";

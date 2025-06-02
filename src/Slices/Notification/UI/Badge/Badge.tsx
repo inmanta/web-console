@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { NotificationBadge, NotificationBadgeVariant } from "@patternfly/react-core";
-import { useGetPartialNotifications, PartialNotification } from "@/Data/Managers/V2/Notification";
+import { useGetPartialNotifications, PartialNotification } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 import { ToastAlert } from "@/UI/Components";
 import { words } from "@/UI/words";

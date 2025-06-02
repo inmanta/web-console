@@ -1,4 +1,4 @@
-import { ServiceOrder } from "@/Slices/Orders/Core/Query";
+import { ServiceOrder } from "@/Slices/Orders/Core/Types";
 
 export const responseOrderFailed: ServiceOrder = {
   description: "Failed CREATE order",

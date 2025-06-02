@@ -52,7 +52,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
   selectedVersion,
 }) => {
   const { logsQuery, instance } = useContext(InstanceDetailsContext);
-  const { environmentModifier } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const [expanded, setExpanded] = useState(0);
   const navigateTo = useNavigateTo();
 
@@ -94,7 +94,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
   };
 
   const MarkdownPreviewerButton = () => {
-    if (!environmentModifier.useIsExpertModeEnabled()) {
+    if (!environmentHandler.useIsExpertModeEnabled()) {
       return null;
     }
 

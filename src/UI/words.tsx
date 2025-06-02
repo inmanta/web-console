@@ -45,6 +45,8 @@ const dict = {
   copy: "Copy",
   "copy.raw": "Copy raw",
   "copy.raw.tooltip": "Copy with escaped newlines",
+  "copy.clipboard": "Copy to clipboard",
+  noData: "There is no data available to display.",
 
   /**
    * Error related text
@@ -65,7 +67,7 @@ const dict = {
 
   "notFound.title": "404: We couldn't find that page",
   "notFound.home": "Go home",
-
+  "features.missing": "Features have not yet been set.",
   "validation.title": (amount: number) => `Errors found: ${amount}`,
   "validation.empty": "Invalid JSON",
 
@@ -551,6 +553,8 @@ const dict = {
     "Request the agents to check the current state of each resource in a state different from the deployed state and make the current state of those resources in line with the desired state.",
   "resources.repair.tooltip":
     "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
+  "resources.file.get": "Get file",
+  "resources.file.error": "Error fetching file content",
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",

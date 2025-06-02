@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Navigate } from "react-router";
 import { EnvironmentRole, FlatEnvironment } from "@/Core";
-import { DependencyContext, DependencyResolver } from "@/UI/Dependency";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { PageFrame } from "./PageFrame";
 
@@ -19,11 +19,6 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 
   return (
     <>
-      {environment && (
-        <>
-          <DependencyResolver environment={environment} />
-        </>
-      )}
       <PageFrame environmentId={environmentId}>
         {environmentId === words("error.environment.missing") ? (
           <Navigate to={routeManager.getUrl("Home", undefined)} />

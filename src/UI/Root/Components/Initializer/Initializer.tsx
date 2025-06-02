@@ -1,6 +1,5 @@
-import React, { useEffect, useContext } from "react";
-import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
-import { useGetServerStatus } from "@/Data/Managers/V2/Server/GetServerStatus";
+import React, { useEffect, useContext, useState } from "react";
+import { useGetEnvironments, useGetServerStatus } from "@/Data/Queries";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 
@@ -13,16 +12,20 @@ import { DependencyContext } from "@/UI/Dependency";
  * @returns {React.FC<React.PropsWithChildren<unknown>>} The Initializer component
  */
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const serverStatus = useGetServerStatus().useOneTime();
-  const environments = useGetEnvironments().useOneTime();
+  const [isInitialized, setIsInitialized] = useState(false);
+  const { environmentHandler, featureManager } = useContext(DependencyContext);
+  const serverStatus = useGetServerStatus().useContinuous();
+  const environments = useGetEnvironments().useContinuous();
 
   useEffect(() => {
-    if (environments.isSuccess) {
+    if (environments.data && serverStatus.data) {
       environmentHandler.setAllEnvironments(environments.data);
+      featureManager.setAllFeatures(serverStatus.data);
+      setIsInitialized(true); // This is used to sync the component rendering with updating hooks
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [environments.data, environments.isSuccess]);
+  }, [environments.data, serverStatus.data]);
 
   if (serverStatus.isError) {
     return (
@@ -44,7 +47,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     );
   }
 
-  if (serverStatus.isSuccess && environments.isSuccess) {
+  if (serverStatus.isSuccess && environments.isSuccess && isInitialized) {
     return <>{children}</>;
   }
 

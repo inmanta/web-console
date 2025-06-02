@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   FeatureManager,
   Feature,
@@ -9,7 +9,7 @@ import {
   EXTENSION_LIST,
   FEATURE_LIST,
 } from "@/Core";
-import { useGetServerStatus } from "../Managers/V2/Server";
+import { words } from "@/UI";
 
 /**
  * Represents the primary feature manager.
@@ -20,7 +20,10 @@ export const PrimaryFeatureManager = (
   commitHash: string = "",
   appVersion: string = ""
 ): FeatureManager => {
-  const serverStatus = useGetServerStatus().useOneTime();
+  const [features, setFeatures] = useState<Pick<
+    ServerStatus,
+    "features" | "extensions" | "version" | "edition" | "slices"
+  > | null>(null);
 
   /**
    * Gets the version of the application.
@@ -38,12 +41,12 @@ export const PrimaryFeatureManager = (
     return commitHash;
   }
 
-  function get(): ServerStatus {
-    if (!serverStatus.data) {
-      throw new Error("ServerStatus has not yet been set.");
+  function get(): Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices"> {
+    if (!features) {
+      throw new Error(words("features.missing"));
     }
 
-    return serverStatus.data;
+    return features;
   }
 
   /**
@@ -170,6 +173,12 @@ export const PrimaryFeatureManager = (
     return licenceInformation?.status;
   }
 
+  function setAllFeatures(
+    features: Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices">
+  ): void {
+    setFeatures(features);
+  }
+
   useEffect(() => {
     console.info(
       `[inmanta-web-console] Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
@@ -190,5 +199,6 @@ export const PrimaryFeatureManager = (
     getServerVersion,
     getEdition,
     getLicenseInformation,
+    setAllFeatures,
   };
 };

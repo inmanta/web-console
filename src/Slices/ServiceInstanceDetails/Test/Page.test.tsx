@@ -446,7 +446,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     expect(screen.getByTestId("Status-deployed")).toBeVisible();
 
-    expect(screen.getByText("test_resource[]")).toBeVisible();
+    expect(screen.getByText("hello[world,v=42]")).toBeVisible();
 
     // Change Version to older
     await userEvent.click(screen.getAllByLabelText("History-Row")[1]);
@@ -456,7 +456,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     expect(screen.getByTestId("Status-deployed")).not.toBeVisible();
 
-    expect(screen.getByText("test_resource[]")).not.toBeVisible();
+    expect(screen.getByText("hello[world,v=42]")).not.toBeVisible();
 
     // Change Version to latest
     await userEvent.click(screen.getAllByLabelText("History-Row")[0]);

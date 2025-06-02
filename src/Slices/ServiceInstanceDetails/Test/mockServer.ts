@@ -98,7 +98,7 @@ const getJSONSchema = http.get("/lsm/v1/service_catalog/mobileCore/schema", () =
 
 const getResources = http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab/resources", () => {
   return HttpResponse.json({
-    data: [{ resource_id: "test_resource[],", resource_state: "deployed" }],
+    data: [{ resource_id: "hello[world,v=42]", resource_state: "deployed" }],
   });
 });
 

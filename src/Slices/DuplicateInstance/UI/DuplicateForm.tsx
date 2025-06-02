@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
-import { usePostInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { usePostInstance } from "@/Data/Queries";
 import {
   CreateModifierHandler,
   ToastAlert,
@@ -28,12 +28,12 @@ interface Props {
  * @returns {React.FC<Props>} - The DuplicateForm component.
  */
 export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
-  const { environmentModifier, routeManager } = useContext(DependencyContext);
+  const { environmentHandler, routeManager } = useContext(DependencyContext);
   const [isDirty, setIsDirty] = useState(false);
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.create(serviceEntity);
   const [errorMessage, setErrorMessage] = useState("");
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
   const navigate = useNavigate();
   const url = routeManager.useUrl("InstanceDetails", {
     service: serviceEntity.name,

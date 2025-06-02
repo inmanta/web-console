@@ -1,4 +1,4 @@
-import { ServiceOrderItem } from "@/Slices/Orders/Core/Query";
+import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 

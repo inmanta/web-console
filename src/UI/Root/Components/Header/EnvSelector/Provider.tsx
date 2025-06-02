@@ -1,8 +1,6 @@
 import React, { useContext } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useQueryClient } from "@tanstack/react-query";
-import { useGetEnvironments } from "@/Data/Managers/V2/Environment";
-import { useGetProjects } from "@/Data/Managers/V2/Project/GetProjects/";
+import { useGetEnvironments, useGetProjects } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
@@ -13,7 +11,6 @@ import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
  * @returns {React.FC} The Provider component
  */
 export const Provider: React.FC = () => {
-  const client = useQueryClient();
   const { environmentHandler, routeManager, featureManager } = useContext(DependencyContext);
   const location = useLocation();
   const navigate = useNavigate();
@@ -26,8 +23,6 @@ export const Provider: React.FC = () => {
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
     if (selected) {
       environmentHandler.set(navigate, location, item.environmentId);
-      client.resetQueries();
-
       return;
     }
 
@@ -39,7 +34,6 @@ export const Provider: React.FC = () => {
     };
 
     environmentHandler.set(navigate, newLocation, item.environmentId);
-    client.resetQueries();
   };
 
   return (

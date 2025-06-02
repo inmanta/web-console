@@ -1,19 +1,12 @@
 import React, { useContext } from "react";
 import { useLocation } from "react-router";
 import { isJsonParserId, JsonParserId } from "@/Core";
-import {
-  PrimaryFeatureManager,
-  BaseApiHelper,
-  FileFetcherImpl,
-  PrimaryArchiveHelper,
-  PrimaryFileManager,
-} from "@/Data";
+import { PrimaryFeatureManager, PrimaryArchiveHelper, PrimaryFileManager } from "@/Data";
 import {
   PrimaryBaseUrlManager,
   PrimaryRouteManager,
   DependencyProvider,
   EnvironmentHandlerImpl,
-  useEnvironmentModifierImpl,
   UrlManagerImpl,
 } from "@/UI";
 import { AuthContext } from "./Data/Auth/";
@@ -30,12 +23,6 @@ import { ModalProvider } from "./UI/Root/Components/ModalProvider";
  */
 export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const authHelper = useContext(AuthContext);
-  const featureManager = PrimaryFeatureManager(
-    getJsonParserId(globalThis),
-    COMMITHASH,
-    APP_VERSION
-  );
-
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
@@ -43,12 +30,13 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = PrimaryRouteManager(basePathname);
-  const apiHelper = BaseApiHelper(baseUrl, authHelper);
-
+  const featureManager = PrimaryFeatureManager(
+    getJsonParserId(globalThis),
+    COMMITHASH,
+    APP_VERSION
+  );
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
-  const fileFetcher = new FileFetcherImpl(apiHelper);
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
-  const environmentModifier = useEnvironmentModifierImpl();
   const fileManager = new PrimaryFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
 
@@ -56,8 +44,6 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
     <DependencyProvider
       dependencies={{
         urlManager,
-        fileFetcher,
-        environmentModifier,
         featureManager,
         routeManager,
         environmentHandler,

@@ -11,15 +11,14 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
+import * as queryModule from "@/Data/Queries/Helpers/useQueries";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
-import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
+import { Service, ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { words } from "@/UI";
-import * as envModifier from "@/UI/Dependency/EnvironmentModifier";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ConfigSectionContent } from "./ConfigSectionContent";
 
-function setup() {
+function setup(halted: boolean = false) {
   const client = new QueryClient();
 
   const instanceIdentifier: VersionedServiceInstanceIdentifier = {
@@ -31,7 +30,7 @@ function setup() {
   const component = (
     <QueryClientProvider client={client}>
       <TestMemoryRouter initialEntries={["/?env=aaa"]}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
           <InstanceDetailsContext.Provider
             value={{
               instance: ServiceInstance.a,
@@ -155,12 +154,7 @@ describe("ConfigSectionContent", () => {
   });
 
   test("ConfigTab handles hooks with environment modifier correctly", async () => {
-    jest.spyOn(envModifier, "useEnvironmentModifierImpl").mockReturnValue({
-      ...jest.requireActual("@/UI/Dependency/EnvironmentModifier"),
-      useIsHalted: () => true,
-    });
-
-    const { component } = setup();
+    const { component } = setup(true);
 
     render(component);
 

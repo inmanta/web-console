@@ -1,6 +1,7 @@
 import React from "react";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import { ExpandableSection } from "@patternfly/react-core";
+import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
 import { words } from "@/UI/words";
 
 /**
@@ -17,7 +18,7 @@ export const Traceback: React.FC<{ trace: string }> = ({ trace }) => {
         language={Language.python}
         isReadOnly
         isDownloadEnabled
-        isCopyEnabled
+        customControls={<CodeEditorCopyControl code={trace} />}
         height="400px"
       />
     </ExpandableSection>

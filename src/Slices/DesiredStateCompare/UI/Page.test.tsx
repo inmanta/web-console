@@ -5,9 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { Either } from "@/Core";
-import { FileFetcherImpl } from "@/Data";
-import { DeferredApiHelper, MockedDependencyProvider, DesiredStateDiff } from "@/Test";
+import { MockedDependencyProvider, DesiredStateDiff } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { View } from "./Page";
@@ -21,25 +19,36 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const apiHelper = new DeferredApiHelper();
-  const fileFetcher = new FileFetcherImpl(apiHelper);
-
-  fileFetcher.setEnvironment("env");
-
   const component = (
     <QueryClientProvider client={testClient}>
-      <MockedDependencyProvider fileFetcher={fileFetcher}>
+      <MockedDependencyProvider>
         <View from="123" to="456" />
       </MockedDependencyProvider>
     </QueryClientProvider>
   );
 
-  return { component, apiHelper };
+  return { component };
 }
 describe("DesiredStateCompare", () => {
+  let counterForFile123 = 0;
+  let counterForFile567 = 0;
   const server = setupServer(
     http.get("/api/v2/desiredstate/diff/123/456", () => {
       return HttpResponse.json(DesiredStateDiff.response);
+    }),
+    http.get("/api/v1/file/a47be15ee60a88c7bcc4bce900d921a8d34d1234", () => {
+      if (counterForFile123 === 1) {
+        return HttpResponse.json({ message: "error" }, { status: 500 });
+      }
+      counterForFile123++;
+      return HttpResponse.json({ content: window.btoa("abcdefgh") });
+    }),
+    http.get("/api/v1/file/a47be15ee60a88c7bcc4bce900d921a8d34d5678", () => {
+      if (counterForFile567 === 1) {
+        return HttpResponse.json({ message: "error" }, { status: 500 });
+      }
+      counterForFile567++;
+      return HttpResponse.json({ content: window.btoa("efghijkl") });
     })
   );
 
@@ -138,7 +147,7 @@ describe("DesiredStateCompare", () => {
   });
 
   test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can fetch file content", async () => {
-    const { component, apiHelper } = setup();
+    const { component } = setup();
 
     render(component);
 
@@ -151,17 +160,6 @@ describe("DesiredStateCompare", () => {
         name: words("desiredState.compare.file.show"),
       })
     );
-
-    expect(
-      within(blocks[1]).getByRole("button", {
-        name: words("desiredState.compare.file.show"),
-      })
-    ).toBeDisabled();
-
-    await act(async () => {
-      await apiHelper.resolve(Either.right({ content: window.btoa("abcdefgh") }));
-      await apiHelper.resolve(Either.right({ content: window.btoa("efghijkl") }));
-    });
 
     await userEvent.click(
       within(blocks[1]).getByRole("button", {
@@ -181,12 +179,7 @@ describe("DesiredStateCompare", () => {
       })
     );
 
-    await act(async () => {
-      await apiHelper.resolve(Either.left("errormessage"));
-      await apiHelper.resolve(Either.left("errormessage"));
-    });
-
-    expect(within(blocks[1]).getByRole("generic", { name: "ErrorDiffView" })).toBeVisible();
+    expect(await within(blocks[1]).findByRole("generic", { name: "ErrorDiffView" })).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);

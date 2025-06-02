@@ -4,10 +4,8 @@ import { render, screen } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { FileFetcherImpl } from "@/Data";
 import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
-  DeferredApiHelper,
   Environment,
   EnvironmentSettings,
   MockedDependencyProvider,
@@ -21,13 +19,11 @@ jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("mocked_token");
 jest.spyOn(defaultAuthContext, "getUser").mockReturnValue("mocked_user");
 function setup() {
   const queryClient = new QueryClient();
-  const apiHelper = new DeferredApiHelper();
-  const fileFetcher = new FileFetcherImpl(apiHelper);
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={["/"]}>
-        <MockedDependencyProvider fileFetcher={fileFetcher}>
+        <MockedDependencyProvider>
           <Root />
         </MockedDependencyProvider>
       </TestMemoryRouter>

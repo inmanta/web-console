@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
-import { DeployAgentsAction, useDeployAgents } from "@/Data/Managers/V2/Agents";
+import { DeployAgentsAction, useDeployAgents } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -27,8 +27,8 @@ interface Props {
  */
 export const ResourcePageActionButton: React.FC<Props> = ({ method, tooltip, textContent }) => {
   const [showSpinner, setShowSpinner] = useState(false);
-  const { environmentModifier } = useContext(DependencyContext);
-  const isHalted = environmentModifier.useIsHalted();
+  const { environmentHandler } = useContext(DependencyContext);
+  const isHalted = environmentHandler.useIsHalted();
 
   const { mutate } = useDeployAgents();
 

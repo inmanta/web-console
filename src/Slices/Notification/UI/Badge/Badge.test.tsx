@@ -3,13 +3,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { delay, graphql, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { NotificationsResponse } from "@/Data/Managers/V2/Notification";
-import { DeferredApiHelper, MockedDependencyProvider } from "@/Test";
+import { NotificationsResponse } from "@/Data/Queries";
+import { MockedDependencyProvider } from "@/Test";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Badge } from "./Badge";
 
 function setup() {
-  const apiHelper = new DeferredApiHelper();
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -26,7 +25,7 @@ function setup() {
     </QueryClientProvider>
   );
 
-  return { component, apiHelper };
+  return { component };
 }
 const server = setupServer();
 
