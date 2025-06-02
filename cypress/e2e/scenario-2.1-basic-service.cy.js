@@ -300,7 +300,7 @@ if (Cypress.env("edition") === "iso") {
       // change the service id to make instance unique
       cy.get(".monaco-editor").click().focused().type("{ctrl+f}"); // open search tool
 
-      cy.wait(2000); // let the editor settle to avoid typing text to fail
+      cy.wait(1000); // let the editor settle to avoid typing text to fail
 
       cy.get('[aria-label="Find"]').type("0001");
 
