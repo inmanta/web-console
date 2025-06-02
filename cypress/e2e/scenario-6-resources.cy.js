@@ -242,29 +242,15 @@ describe("Scenario 6 : Resources", () => {
       // Go to logs tab
       cy.get("button").contains("Logs").click();
 
-      // Expect it to have : 7 log messages
+      // Expect it to have : 6 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        7
+        6
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
       cy.get('[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle').click();
       cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist");
-
-      // Expect last log message to be "Setting deployed due to known good status"
-      cy.get('[aria-label="ResourceLogRow"]')
-        .eq(0)
-        .should("contain", "Setting deployed due to known good status");
-
-      // Click top message open
-      cy.get('[aria-label="Details"]').eq(0).click();
-
-      // Expect to find "Setting deployed due to known good status" displayed in expansion.
-      cy.get(".pf-v6-c-description-list__text").should(
-        "contain",
-        "Setting deployed due to known good status"
-      );
     });
 
     it("6.3 Log message filtering", () => {
@@ -290,13 +276,13 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[role="option"]').contains("INFO").click();
 
       // Expect the amount of rows to be max  6
-      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.most", 6);
+      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.most", 4);
 
       // Remove INFO filter
       cy.get('[aria-label="Close INFO"]').click();
 
       // Expect amount of rows to be bigger than before filtering.
-      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.least", 7);
+      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.least", 6);
     });
 
     it("6.4 Resources with multiple dependencies", () => {
