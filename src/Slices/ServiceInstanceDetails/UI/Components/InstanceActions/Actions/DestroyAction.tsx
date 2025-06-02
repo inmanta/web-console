@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from "react";
 import { useNavigate } from "react-router";
-import { Alert, DropdownItem, Content, Spinner, Button } from "@patternfly/react-core";
+import { DropdownItem, Content, Spinner, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
 import { useDestroyInstance } from "@/Data/Queries";
@@ -41,24 +41,6 @@ export const DestroyAction: React.FC<Props> = ({
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
 
-  const navigate = useNavigate();
-
-  const { environmentHandler, authHelper } = useContext(DependencyContext);
-
-  const environment = environmentHandler.useId();
-  const username = authHelper.getUser();
-  const message = words("instanceDetails.API.message.update")(username);
-
-  const { mutate, isPending } = useDestroyInstance(instance_id, service_entity, version, message, {
-    onSuccess: () => {
-      closeModal();
-      navigate(`/console/lsm/catalog/${service_entity}/inventory?env=${environment}`);
-    },
-    onError: (error) => {
-      setErrorMessage(error.message);
-    },
-  });
-
   /**
    * When the destroy action is selected, block the interface and open the modal
    */
@@ -67,40 +49,16 @@ export const DestroyAction: React.FC<Props> = ({
     triggerModal({
       title: words("inventory.destroyInstance.title"),
       content: (
-        <>
-          <Content component="p">
-            {words("inventory.destroyInstance.header")(instance_display_identity, service_entity)}
-          </Content>
-          <br />
-          <Alert
-            variant="danger"
-            title={words("instanceDetails.expert.confirm.warning")}
-            isInline
-          />
-        </>
+        <ModalContent
+          instance_id={instance_id}
+          service_entity={service_entity}
+          instance_display_identity={instance_display_identity}
+          version={version}
+          setErrorMessage={setErrorMessage}
+          closeModalCallback={closeModalCallback}
+        />
       ),
       iconVariant: "danger",
-      cancelCb: closeModalCallback,
-      actions: [
-        <Button
-          key="confirm"
-          variant="primary"
-          data-testid={`${instance_display_identity}-destroy-modal-confirm`}
-          onClick={onSubmitDestroy}
-          isDisabled={isPending}
-        >
-          {words("yes")}
-          {isPending && <Spinner size="sm" />}
-        </Button>,
-        <Button
-          key="cancel"
-          variant="link"
-          data-testid={`${instance_display_identity}-destroy-modal-cancel`}
-          onClick={closeModalCallback}
-        >
-          {words("no")}
-        </Button>,
-      ],
     });
   };
 
@@ -113,13 +71,6 @@ export const DestroyAction: React.FC<Props> = ({
     onClose();
   }, [closeModal, setInterfaceBlocked, onClose]);
 
-  /**
-   * async method sending out the request to destroy the instance
-   */
-  const onSubmitDestroy = async (): Promise<void> => {
-    mutate();
-  };
-
   return (
     <>
       <DropdownItem
@@ -130,6 +81,82 @@ export const DestroyAction: React.FC<Props> = ({
       >
         {words("inventory.destroyInstance.button")}
       </DropdownItem>
+    </>
+  );
+};
+
+interface ModalContentProps {
+  instance_id: string;
+  service_entity: string;
+  instance_display_identity: string;
+  version: ParsedNumber;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  closeModalCallback: () => void;
+}
+
+const ModalContent: React.FC<ModalContentProps> = ({
+  instance_id,
+  service_entity,
+  instance_display_identity,
+  version,
+  setErrorMessage,
+  closeModalCallback,
+}) => {
+  const navigate = useNavigate();
+
+  const { environmentHandler, authHelper } = useContext(DependencyContext);
+
+  const environment = environmentHandler.useId();
+  const username = authHelper.getUser();
+  const message = words("instanceDetails.API.message.update")(username);
+
+  const { mutate, isPending } = useDestroyInstance(instance_id, service_entity, version, message, {
+    onSuccess: () => {
+      closeModalCallback();
+      navigate(`/console/lsm/catalog/${service_entity}/inventory?env=${environment}`);
+    },
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
+  });
+
+  /**
+   * async method sending out the request to destroy the instance
+   */
+  const onSubmitDestroy = async (): Promise<void> => {
+    mutate();
+  };
+
+  return (
+    <>
+      <Content component="p">
+        {words("inventory.destroyInstance.header")(instance_display_identity, service_entity)}
+      </Content>
+      <br />
+      <Flex>
+        <FlexItem>
+          <Button
+            key="confirm"
+            variant="primary"
+            data-testid={`${instance_display_identity}-destroy-modal-confirm`}
+            onClick={onSubmitDestroy}
+            isDisabled={isPending}
+          >
+            {words("yes")}
+            {isPending && <Spinner size="sm" />}
+          </Button>
+        </FlexItem>
+        <FlexItem>
+          <Button
+            key="cancel"
+            variant="link"
+            data-testid={`${instance_display_identity}-destroy-modal-cancel`}
+            onClick={closeModalCallback}
+          >
+            {words("no")}
+          </Button>
+        </FlexItem>
+      </Flex>
     </>
   );
 };
