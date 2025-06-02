@@ -1,14 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ClipboardCopyButton,
   CodeBlock,
   CodeBlockAction,
   CodeBlockCode,
-  Modal,
-  ModalBody,
-  ModalHeader,
 } from "@patternfly/react-core";
 import { CanvasContext } from "../Context/Context";
+import { DictDialogData } from "../interfaces";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { words } from "@/UI";
 
 /**
  * Modal to display the values of a dictionary.
@@ -18,22 +18,30 @@ import { CanvasContext } from "../Context/Context";
  * @returns {React.FC} The DictModal component.
  */
 export const DictModal: React.FC = () => {
+  const {triggerModal, closeModal} = useContext(ModalContext);
   const { dictToDisplay, setDictToDisplay } = useContext(CanvasContext);
+
+  useEffect(() => {
+    if (dictToDisplay) {
+      triggerModal({
+        title: words("instanceComposer.dictModal")(dictToDisplay.title),
+        content: <ModalContent dictToDisplay={dictToDisplay} />,
+        cancelCb: () => {
+          closeModal();
+          setDictToDisplay(null);
+        },
+      });
+    }
+  }, [dictToDisplay]);
+
+  return null;
+};
+
+const ModalContent: React.FC<{ dictToDisplay: DictDialogData }> = ({ dictToDisplay }) => {
   const [copied, setCopied] = useState(false);
 
-  return dictToDisplay !== null ? (
-    <Modal
-      disableFocusTrap
-      isOpen={true}
-      variant="medium"
-      onClose={() => {
-        setDictToDisplay(null);
-      }}
-    >
-      <ModalHeader title={"Values of " + dictToDisplay.title} labelId="dict-modal-title" />
-      <ModalBody tabIndex={0} id="dict-modal-body" aria-label="Scrollable modal content">
-        {dictToDisplay && (
-          <CodeBlock
+  return (
+    <CodeBlock
             actions={
               <CodeBlockAction>
                 <ClipboardCopyButton
@@ -52,11 +60,8 @@ export const DictModal: React.FC = () => {
             }
           >
             <CodeBlockCode id="code-content">
-              {JSON.stringify(dictToDisplay.value, null, 2)}
-            </CodeBlockCode>
-          </CodeBlock>
-        )}
-      </ModalBody>
-    </Modal>
-  ) : null;
+        {JSON.stringify(dictToDisplay.value, null, 2)}
+      </CodeBlockCode>
+    </CodeBlock>
+  );
 };

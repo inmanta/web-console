@@ -15,6 +15,7 @@ import { InstanceComposerContext } from "./Context/Context";
 import { mockedInstanceTwo, mockedInstanceTwoServiceModel, serviceModels } from "./Mocks";
 import "@testing-library/jest-dom";
 import { defineObjectsForJointJS } from "./testSetup";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 
 const allQueries = {
   ...queries,
@@ -33,6 +34,7 @@ const setup = (
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ModalProvider>
       <TestMemoryRouter>
         <MockedDependencyProvider>
           <InstanceComposerContext.Provider
@@ -52,6 +54,7 @@ const setup = (
           </InstanceComposerContext.Provider>
         </MockedDependencyProvider>
       </TestMemoryRouter>
+      </ModalProvider>
     </QueryClientProvider>
   );
 };
@@ -107,13 +110,9 @@ describe("Canvas.tsx", () => {
 
     expect(modal).toBeVisible();
 
-    const title = document.querySelector("#dict-modal-title");
+    expect(screen.getByText(words("instanceComposer.dictModal")("dictOne"))).toBeVisible();
 
-    expect(title).toHaveTextContent(words("instanceComposer.dictModal")("dictOne"));
-
-    const value = document.querySelector("#dict-modal-body");
-
-    expect(value).toHaveTextContent("{}");
+    expect(screen.getByText("{}")).toBeVisible();
 
     const copyButton = await screen.findByLabelText("Copy to clipboard");
 

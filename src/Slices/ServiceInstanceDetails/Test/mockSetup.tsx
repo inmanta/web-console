@@ -4,6 +4,7 @@ import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as monaco from "monaco-editor";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInstanceDetails } from "../UI/Page";
 
@@ -63,7 +64,7 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({ children, exp
         <MockedDependencyProvider
           env={{ ...EnvironmentDetails.a, settings: { enable_lsm_expert_mode: expertMode } }}
         >
-          {children}
+          <ModalProvider>{children}</ModalProvider>
         </MockedDependencyProvider>
       </QueryClientProvider>
     </TestMemoryRouter>
