@@ -35,25 +35,25 @@ const setup = (
   return (
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
-      <TestMemoryRouter>
-        <MockedDependencyProvider>
-          <InstanceComposerContext.Provider
-            value={{
-              instance: instance || null,
-              serviceModels: models,
-              mainService: mainService,
-              relatedInventoriesQuery: { data: {} } as UseQueryResult<Inventories, Error>,
-            }}
-          >
-            <CanvasProvider>
-              <Routes>
-                <Route path="/" element={<Canvas editable={editable} />} />
-                <Route path="/lsm/catalog/test-service/inventory" element={<></>} />
-              </Routes>
-            </CanvasProvider>
-          </InstanceComposerContext.Provider>
-        </MockedDependencyProvider>
-      </TestMemoryRouter>
+        <TestMemoryRouter>
+          <MockedDependencyProvider>
+            <InstanceComposerContext.Provider
+              value={{
+                instance: instance || null,
+                serviceModels: models,
+                mainService: mainService,
+                relatedInventoriesQuery: { data: {} } as UseQueryResult<Inventories, Error>,
+              }}
+            >
+              <CanvasProvider>
+                <Routes>
+                  <Route path="/" element={<Canvas editable={editable} />} />
+                  <Route path="/lsm/catalog/test-service/inventory" element={<></>} />
+                </Routes>
+              </CanvasProvider>
+            </InstanceComposerContext.Provider>
+          </MockedDependencyProvider>
+        </TestMemoryRouter>
       </ModalProvider>
     </QueryClientProvider>
   );

@@ -18,7 +18,7 @@ import { words } from "@/UI";
  * @returns {React.FC} The DictModal component.
  */
 export const DictModal: React.FC = () => {
-  const {triggerModal, closeModal} = useContext(ModalContext);
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const { dictToDisplay, setDictToDisplay } = useContext(CanvasContext);
 
   useEffect(() => {
@@ -42,24 +42,24 @@ const ModalContent: React.FC<{ dictToDisplay: DictDialogData }> = ({ dictToDispl
 
   return (
     <CodeBlock
-            actions={
-              <CodeBlockAction>
-                <ClipboardCopyButton
-                  id="basic-copy-button"
-                  textId="copy-to-clipboard"
-                  aria-label="Copy to clipboard"
-                  onClick={() => navigator.clipboard.writeText(JSON.stringify(dictToDisplay.value))}
-                  exitDelay={copied ? 1500 : 600}
-                  maxWidth="110px"
-                  variant="plain"
-                  onTooltipHidden={() => setCopied(false)}
-                >
-                  {copied ? "Successfully copied to clipboard!" : "Copy to clipboard"}
-                </ClipboardCopyButton>
-              </CodeBlockAction>
-            }
+      actions={
+        <CodeBlockAction>
+          <ClipboardCopyButton
+            id="basic-copy-button"
+            textId="copy-to-clipboard"
+            aria-label="Copy to clipboard"
+            onClick={() => navigator.clipboard.writeText(JSON.stringify(dictToDisplay.value))}
+            exitDelay={copied ? 1500 : 600}
+            maxWidth="110px"
+            variant="plain"
+            onTooltipHidden={() => setCopied(false)}
           >
-            <CodeBlockCode id="code-content">
+            {copied ? "Successfully copied to clipboard!" : "Copy to clipboard"}
+          </ClipboardCopyButton>
+        </CodeBlockAction>
+      }
+    >
+      <CodeBlockCode id="code-content">
         {JSON.stringify(dictToDisplay.value, null, 2)}
       </CodeBlockCode>
     </CodeBlock>
