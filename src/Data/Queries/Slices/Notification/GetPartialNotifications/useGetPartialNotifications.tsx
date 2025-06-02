@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { Notification } from "@/Slices/Notification/Core/Domain";
 import { CustomError, REFETCH_INTERVAL, useGraphQLRequest } from "@/Data/Queries";
+import { Notification } from "@/Slices/Notification/Core/Domain";
 
 interface Props {
   envID: string;
