@@ -195,6 +195,7 @@ describe("Environment", () => {
     cy.get("button").contains('Create "New Value Project Name"').click();
     cy.get('[aria-label="Project Name-submit-edit"]').click();
 
+    openSettings("New Value Name");
     deleteEnv("New Value Name", testProjectName(3));
   });
 
