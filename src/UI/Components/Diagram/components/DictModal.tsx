@@ -5,10 +5,10 @@ import {
   CodeBlockAction,
   CodeBlockCode,
 } from "@patternfly/react-core";
+import { words } from "@/UI";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { CanvasContext } from "../Context/Context";
 import { DictDialogData } from "../interfaces";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { words } from "@/UI";
 
 /**
  * Modal to display the values of a dictionary.

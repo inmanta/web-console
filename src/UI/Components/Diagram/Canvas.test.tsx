@@ -9,13 +9,13 @@ import { MockedDependencyProvider } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
 import { words } from "@/UI";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasProvider } from "./Context/CanvasProvider";
 import { InstanceComposerContext } from "./Context/Context";
 import { mockedInstanceTwo, mockedInstanceTwoServiceModel, serviceModels } from "./Mocks";
 import "@testing-library/jest-dom";
 import { defineObjectsForJointJS } from "./testSetup";
-import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 
 const allQueries = {
   ...queries,
