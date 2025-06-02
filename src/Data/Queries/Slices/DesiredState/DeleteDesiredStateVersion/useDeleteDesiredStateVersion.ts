@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { useDelete } from "@/Data/Queries";
+import { useDelete, KeyFactory, keySlices } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 
 /**

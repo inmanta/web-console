@@ -5,8 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ProjectModel } from "@/Core";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { usePutWithoutEnv } from "@/Data/Queries";
+import { usePutWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
 
 /**
  * Interface for the parameters for the create project mutation.

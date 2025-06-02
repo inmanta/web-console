@@ -1,7 +1,6 @@
 import { UseQueryOptions, UseQueryResult, useQuery } from "@tanstack/react-query";
 import { VersionInfo } from "@/Core";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { CustomError, useGetWithoutEnv } from "@/Data/Queries";
+import { CustomError, useGetWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
 
 /**
  * React Query hook for getting version file info.

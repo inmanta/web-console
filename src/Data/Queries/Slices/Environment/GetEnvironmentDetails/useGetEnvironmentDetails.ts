@@ -1,7 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Environment } from "@/Core";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { useGetWithoutEnv, REFETCH_INTERVAL } from "@/Data/Queries";
+import { useGetWithoutEnv, REFETCH_INTERVAL, KeyFactory, keySlices } from "@/Data/Queries";
 
 /**
  * Return Signature of the useGetEnvironmentDetails React Query

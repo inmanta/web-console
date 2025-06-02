@@ -1,7 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServerStatus } from "@/Core";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { REFETCH_INTERVAL, useGetWithoutEnv } from "@/Data/Queries";
+import { REFETCH_INTERVAL, useGetWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
 
 /**
  * Return Signature of the useGetServerStatus React Query

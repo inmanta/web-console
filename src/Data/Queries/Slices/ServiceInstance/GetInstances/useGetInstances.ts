@@ -3,8 +3,14 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Pagination, ServiceInstanceModelWithTargetStates } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { ServiceInstanceParams } from "@/Core/Domain/ServiceInstanceParams";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
+import {
+  CustomError,
+  useGet,
+  REFETCH_INTERVAL,
+  getPaginationHandlers,
+  KeyFactory,
+  keySlices,
+} from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
 

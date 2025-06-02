@@ -5,8 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { usePost } from "@/Data/Queries";
+import { usePost, KeyFactory, keySlices } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 
 /**

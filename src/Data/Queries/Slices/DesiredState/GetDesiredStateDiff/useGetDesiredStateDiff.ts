@@ -1,8 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Diff } from "@/Core/Domain";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { useGet } from "@/Data/Queries";
+import { useGet, KeyFactory, keySlices } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**

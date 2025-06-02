@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { usePostWithoutEnv } from "@/Data/Queries";
+import { usePostWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
 
 interface AddUSerResponse {
   data: {

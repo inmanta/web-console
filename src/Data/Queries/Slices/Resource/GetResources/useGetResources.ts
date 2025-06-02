@@ -3,7 +3,6 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Resource, Sort } from "@/Core/Domain";
 import { Handlers, Links } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
 import { getPaginationHandlers } from "@/Data/Queries";
 import { useGet, REFETCH_INTERVAL } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";

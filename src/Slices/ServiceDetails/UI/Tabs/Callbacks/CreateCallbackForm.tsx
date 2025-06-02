@@ -11,8 +11,7 @@ import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import { LogLevelsList, EventTypesList, LogLevelString, EventType } from "@/Core";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { useCreateCallback } from "@/Data/Queries";
+import { useCreateCallback, KeyFactory, keySlices } from "@/Data/Queries";
 import { MultiTextSelect, SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
 

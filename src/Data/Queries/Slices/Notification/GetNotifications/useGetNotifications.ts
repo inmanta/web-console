@@ -2,8 +2,14 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
+import {
+  CustomError,
+  useGet,
+  REFETCH_INTERVAL,
+  getPaginationHandlers,
+  KeyFactory,
+  keySlices,
+} from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { Notification, Severity } from "@S/Notification/Core/Domain";
 import { Origin } from "@S/Notification/Core/Utils";

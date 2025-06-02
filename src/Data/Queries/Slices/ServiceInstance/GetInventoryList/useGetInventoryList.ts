@@ -1,8 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceInstanceModel } from "@/Core";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
+import { CustomError, useGet, REFETCH_INTERVAL, KeyFactory, keySlices } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**

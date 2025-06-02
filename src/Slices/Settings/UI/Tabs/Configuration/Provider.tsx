@@ -2,8 +2,12 @@ import React, { useEffect, useReducer, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import _ from "lodash";
 import { EnvironmentSettings } from "@/Core";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { useResetEnvironmentSetting, useUpdateEnvironmentSetting } from "@/Data/Queries";
+import {
+  useResetEnvironmentSetting,
+  useUpdateEnvironmentSetting,
+  KeyFactory,
+  keySlices,
+} from "@/Data/Queries";
 import { Container } from "./Container";
 import { InputInfoCreator } from "./InputInfoCreator";
 

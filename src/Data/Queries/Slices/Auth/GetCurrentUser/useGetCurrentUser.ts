@@ -1,6 +1,5 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { CustomError, useGetWithoutEnv } from "@/Data/Queries";
+import { CustomError, useGetWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
 
 interface LoggedUser {
   username: string;

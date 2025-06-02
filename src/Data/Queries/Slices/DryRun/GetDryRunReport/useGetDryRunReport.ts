@@ -2,8 +2,7 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Diff } from "@/Core";
 import { ParsedNumber } from "@/Core/Language";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { useGet } from "@/Data/Queries";
+import { useGet, KeyFactory, keySlices } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**

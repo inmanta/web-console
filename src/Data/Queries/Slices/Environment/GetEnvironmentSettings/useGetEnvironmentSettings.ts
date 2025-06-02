@@ -1,7 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { EnvironmentSettings } from "@/Core/Domain/EnvironmentSettings";
-import { KeyFactory, keySlices } from "@/Data/Managers/KeyFactory";
-import { useGetWithOptionalEnv } from "@/Data/Queries";
+import { useGetWithOptionalEnv, KeyFactory, keySlices } from "@/Data/Queries";
 
 /**
  * Return Signature of the useGetEnvironmentSettings React Query
