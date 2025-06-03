@@ -5,8 +5,9 @@ import {
   UseMutationOptions,
   useQueryClient,
 } from "@tanstack/react-query";
-import { usePatch, KeyFactory, keySlices } from "@/Data/Queries";
+import { usePatch } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
+import { getNotificationsFactory } from "../GetNotifications";
 
 /**
  * Body parameters for updating a notification.
@@ -43,7 +44,6 @@ export const useUpdateNotification = (
   const env = environmentHandler.useId();
   const patch = usePatch(env);
   const queryClient = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.notification, "get_notification");
 
   return useMutation({
     mutationFn: async (params: UpdateNotificationParams) => {
@@ -52,7 +52,7 @@ export const useUpdateNotification = (
     onSuccess: () => {
       // Invalidate relevant queries based on origin
       queryClient.refetchQueries({
-        queryKey: keyFactory.root(),
+        queryKey: getNotificationsFactory.root(),
       });
     },
     ...options,

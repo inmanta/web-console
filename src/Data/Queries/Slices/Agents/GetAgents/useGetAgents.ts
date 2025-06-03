@@ -8,7 +8,7 @@ import {
   useGet,
   getPaginationHandlers,
   KeyFactory,
-  keySlices,
+  SliceKeys,
 } from "@/Data/Queries";
 import { Agent, AgentStatus } from "@/Slices/Agents/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
@@ -66,12 +66,11 @@ export const useGetAgents = (): GetAgents => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Response>;
-  const keyFactory = new KeyFactory(keySlices.agents, "get_agent");
 
   return {
     useContinuous: (params: GetAgentsParams): UseQueryResult<QueryData, CustomError> =>
       useQuery({
-        queryKey: keyFactory.list([...Array.from(Object.values(params)), env]),
+        queryKey: getAgentFactory.list([...Array.from(Object.values(params)), env]),
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,
@@ -81,3 +80,5 @@ export const useGetAgents = (): GetAgents => {
       }),
   };
 };
+
+export const getAgentFactory = new KeyFactory(SliceKeys.agents, "get_agent");

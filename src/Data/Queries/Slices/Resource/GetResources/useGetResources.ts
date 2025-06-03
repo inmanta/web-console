@@ -8,7 +8,7 @@ import {
   useGet,
   REFETCH_INTERVAL,
   KeyFactory,
-  keySlices,
+  SliceKeys,
 } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
@@ -66,14 +66,19 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
-  const keyFactory = new KeyFactory(keySlices.resource, "get_resources");
   const filterArray = filter ? Object.values(filter) : [];
   const sortArray = sort ? [sort.name, sort.order] : [];
 
   return {
     useContinuous: (): UseQueryResult<GetResourcesResponse, Error> =>
       useQuery({
-        queryKey: keyFactory.list([pageSize, ...filterArray, ...sortArray, currentPage, env]),
+        queryKey: getResourcesFactory.list([
+          pageSize,
+          ...filterArray,
+          ...sortArray,
+          currentPage,
+          env,
+        ]),
         queryFn: () => get(url),
         select: (data) => ({
           ...data,
@@ -83,3 +88,5 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
       }),
   };
 };
+
+export const getResourcesFactory = new KeyFactory(SliceKeys.resource, "get_resources");

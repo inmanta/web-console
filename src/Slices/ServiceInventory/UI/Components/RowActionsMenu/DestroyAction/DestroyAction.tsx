@@ -3,7 +3,7 @@ import { MenuItem, Content } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { useDestroyInstance, KeyFactory, keySlices } from "@/Data/Queries";
+import { useDestroyInstance, getInstanceFactory } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 import { ToastAlert, ConfirmUserActionForm } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -33,7 +33,6 @@ export const DestroyAction: React.FC<Props> = ({
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { authHelper } = useContext(DependencyContext);
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_instance");
   const [errorMessage, setErrorMessage] = useState("");
 
   const username = authHelper.getUser();
@@ -45,7 +44,7 @@ export const DestroyAction: React.FC<Props> = ({
     },
     onSuccess: () => {
       client.refetchQueries({
-        queryKey: keyFactory.root(),
+        queryKey: getInstanceFactory.root(),
       });
     },
   });

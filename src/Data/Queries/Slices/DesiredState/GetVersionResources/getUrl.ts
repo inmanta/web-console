@@ -8,7 +8,7 @@ import { GetVersionResourcesParams } from "./useGetVersionResources";
  * @param query - The query parameters containing version, pagination, filter, and sort information
  * @returns The constructed URL for fetching the resources
  */
-export function getUrl(params: GetVersionResourcesParams): string {
+export function getVersionResourcesUrl(params: GetVersionResourcesParams): string {
   const { version, filter, sort, pageSize, currentPage } =
     urlEncodeParams<GetVersionResourcesParams>(params);
 

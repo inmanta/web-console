@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServerStatus } from "@/Core";
-import { REFETCH_INTERVAL, useGetWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
+import { REFETCH_INTERVAL, useGetWithoutEnv, KeyFactory, SliceKeys } from "@/Data/Queries";
 
 /**
  * Return Signature of the useGetServerStatus React Query
@@ -19,12 +19,11 @@ interface GetServerStatus {
  */
 export const useGetServerStatus = (): GetServerStatus => {
   const get = useGetWithoutEnv()<{ data: ServerStatus }>;
-  const keyFactory = new KeyFactory(keySlices.server, "get_server_status");
 
   return {
     useOneTime: (): UseQueryResult<ServerStatus, Error> =>
       useQuery({
-        queryKey: keyFactory.root(),
+        queryKey: getServerStatusFactory.root(),
         queryFn: () => get("/api/v1/serverstatus"),
         retry: false,
         select: (data) => data.data,
@@ -32,7 +31,7 @@ export const useGetServerStatus = (): GetServerStatus => {
 
     useContinuous: (): UseQueryResult<ServerStatus, Error> =>
       useQuery({
-        queryKey: keyFactory.root(),
+        queryKey: getServerStatusFactory.root(),
         queryFn: () => get("/api/v1/serverstatus"),
         retry: false,
         select: (data) => data.data,
@@ -40,3 +39,5 @@ export const useGetServerStatus = (): GetServerStatus => {
       }),
   };
 };
+
+export const getServerStatusFactory = new KeyFactory(SliceKeys.server, "get_server_status");

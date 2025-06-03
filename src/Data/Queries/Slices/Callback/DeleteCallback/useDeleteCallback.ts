@@ -5,8 +5,9 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useDelete, KeyFactory, keySlices } from "@/Data/Queries";
+import { useDelete } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
+import { getCallbackFactory } from "../GetCallbacks/useGetCallbacks";
 
 /**
  * React Query hook for deleting callback of given id
@@ -17,7 +18,6 @@ export const useDeleteCallback = (
   options?: UseMutationOptions<void, Error, string, unknown>
 ): UseMutationResult<void, Error, string, unknown> => {
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.callback, "get_callback");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const deleteFn = useDelete(env);
@@ -28,7 +28,7 @@ export const useDeleteCallback = (
     onSuccess: () => {
       //invalidate the get_callbacks query to update the list
       client.invalidateQueries({
-        queryKey: keyFactory.root(),
+        queryKey: getCallbackFactory.root(),
       });
     },
     ...options,

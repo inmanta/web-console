@@ -1,5 +1,6 @@
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useDeleteWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
+import { useDeleteWithoutEnv } from "@/Data/Queries";
+import { getUserFactory } from "../GetUsers/useGetUsers";
 
 /**
  * React Query hook for removing a user from the server.
@@ -8,7 +9,6 @@ import { useDeleteWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
  */
 export const useRemoveUser = (): UseMutationResult<void, Error, string, unknown> => {
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.auth, "get_user");
   const deleteFn = useDeleteWithoutEnv();
 
   return useMutation({
@@ -16,7 +16,7 @@ export const useRemoveUser = (): UseMutationResult<void, Error, string, unknown>
     mutationKey: ["removeUser"],
     onSuccess: () => {
       // Refetch the users query to update the list
-      client.invalidateQueries({ queryKey: keyFactory.root() });
+      client.invalidateQueries({ queryKey: getUserFactory.root() });
     },
   });
 };

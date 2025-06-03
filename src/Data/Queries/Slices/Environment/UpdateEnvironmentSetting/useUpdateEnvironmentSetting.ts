@@ -6,8 +6,9 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { EnvironmentSettings } from "@/Core";
-import { usePost, KeyFactory, keySlices } from "@/Data/Queries";
+import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
+import { getEnvironmentSettingsFactory } from "../GetEnvironmentSettings";
 
 /**
  * Interface for the parameters for the update environment setting mutation.
@@ -29,13 +30,12 @@ export const useUpdateEnvironmentSetting = (
   const env = environmentHandler.useId();
   const post = usePost(env);
   const queryClient = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.environment, "get_environment_setting");
 
   return useMutation({
     mutationFn: ({ id, value }) => post(`/api/v2/environment_settings/${id}`, { value }),
     mutationKey: ["update_environment_setting", env],
     onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: keyFactory.root() });
+      queryClient.refetchQueries({ queryKey: getEnvironmentSettingsFactory.root() });
     },
     ...options,
   });

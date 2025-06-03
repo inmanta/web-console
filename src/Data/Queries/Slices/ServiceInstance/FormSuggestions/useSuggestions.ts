@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
-import { useGet, KeyFactory, keySlices } from "@/Data/Queries";
+import { useGet, getParametersFactory } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 
 interface ResponseData {
@@ -44,8 +44,6 @@ export const useSuggestedValues = (suggestions: FormSuggestion | null | undefine
     };
   }
 
-  const keyFactory = new KeyFactory(keySlices.parameters, "get_parameter");
-
   return {
     /**
      * Custom hook to fetch the parameter from the API once.
@@ -53,7 +51,7 @@ export const useSuggestedValues = (suggestions: FormSuggestion | null | undefine
      */
     useOneTime: () =>
       useQuery({
-        queryKey: keyFactory.single(suggestions.parameter_name || "", [env]),
+        queryKey: getParametersFactory.single(suggestions.parameter_name || "no_parameter", [env]),
         queryFn: () => get(`/api/v1/parameter/${suggestions.parameter_name}`),
         select: (data) => data.parameter,
       }),

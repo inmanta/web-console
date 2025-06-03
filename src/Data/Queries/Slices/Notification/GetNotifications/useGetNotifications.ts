@@ -8,7 +8,7 @@ import {
   REFETCH_INTERVAL,
   getPaginationHandlers,
   KeyFactory,
-  keySlices,
+  SliceKeys,
 } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { Notification, Severity } from "@S/Notification/Core/Domain";
@@ -70,13 +70,12 @@ export const useGetNotifications = (params: GetNotificationsParams): GetNotifica
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
-  const keyFactory = new KeyFactory(keySlices.notification, "get_notifications");
   const filter = params.filter ? Object.values(params.filter) : [];
 
   return {
     useContinuous: () =>
       useQuery({
-        queryKey: keyFactory.list([
+        queryKey: getNotificationsFactory.list([
           params.pageSize.value,
           ...filter,
           params.currentPage.value,
@@ -92,3 +91,5 @@ export const useGetNotifications = (params: GetNotificationsParams): GetNotifica
       }),
   };
 };
+
+export const getNotificationsFactory = new KeyFactory(SliceKeys.notification, "get_notifications");

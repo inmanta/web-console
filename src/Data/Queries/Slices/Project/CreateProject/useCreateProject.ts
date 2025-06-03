@@ -5,7 +5,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ProjectModel } from "@/Core";
-import { usePutWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
+import { usePutWithoutEnv } from "@/Data/Queries";
+import { getProjectsFactory } from "../GetProjects";
 
 /**
  * Interface for the parameters for the create project mutation.
@@ -32,14 +33,13 @@ export const useCreateProject = (
 ): UseMutationResult<CreateProjectResponse, Error, CreateProjectParams> => {
   const put = usePutWithoutEnv()<CreateProjectParams>;
   const queryClient = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.project, "get_project");
 
   return useMutation({
     mutationFn: (params: CreateProjectParams) => put("/api/v2/project", params),
     ...options,
     onSuccess: () => {
       // Invalidate and refetch projects query
-      queryClient.refetchQueries({ queryKey: keyFactory.root() });
+      queryClient.refetchQueries({ queryKey: getProjectsFactory.root() });
     },
   });
 };

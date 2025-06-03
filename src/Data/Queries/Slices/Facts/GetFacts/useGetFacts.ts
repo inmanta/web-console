@@ -8,7 +8,7 @@ import {
   REFETCH_INTERVAL,
   getPaginationHandlers,
   KeyFactory,
-  keySlices,
+  SliceKeys,
 } from "@/Data/Queries";
 import { Fact } from "@/Slices/Facts/Core/Domain";
 import { SortKey } from "@/Slices/Facts/Core/Types";
@@ -68,12 +68,11 @@ export const useGetFacts = (params: GetFactsParams): GetFacts => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
-  const keyFactory = new KeyFactory(keySlices.facts, "get_facts");
 
   return {
     useContinuous: (): UseQueryResult<GetFactsResponse, Error> =>
       useQuery({
-        queryKey: keyFactory.list([...Object.values(params), env]),
+        queryKey: getFactsFactory.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,
@@ -83,3 +82,5 @@ export const useGetFacts = (params: GetFactsParams): GetFacts => {
       }),
   };
 };
+
+export const getFactsFactory = new KeyFactory(SliceKeys.facts, "get_facts");

@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
-import { usePost, KeyFactory, keySlices } from "@/Data/Queries";
+import { usePost, KeyFactory, SliceKeys } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 
 interface PostStateTransfer {
@@ -34,8 +34,8 @@ export const usePostStateTransfer = (
   options?: UseMutationOptions<StateTransferResponse, Error, PostStateTransfer>
 ): UseMutationResult<StateTransferResponse, Error, PostStateTransfer> => {
   const client = useQueryClient();
-  const keyFactoryForId = new KeyFactory(keySlices.serviceInstance);
-  const keyFactoryForInstances = new KeyFactory(keySlices.serviceInstance, "get_service_instance");
+  const keyFactoryForId = new KeyFactory(SliceKeys.serviceInstance);
+  const keyFactoryForInstances = new KeyFactory(SliceKeys.serviceInstance, "get_service_instance");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<PostStateTransfer>;

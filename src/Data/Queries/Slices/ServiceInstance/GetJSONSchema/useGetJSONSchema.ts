@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { CustomError, useGet, KeyFactory, keySlices } from "@/Data/Queries";
+import { CustomError, useGet, KeyFactory, SliceKeys } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**
@@ -22,14 +22,15 @@ export const useGetJSONSchema = (service_id: string): GetJSONSchema => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<{ data: unknown }>;
-  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_JSON_schema");
 
   return {
     useOneTime: () =>
       useQuery({
-        queryKey: keyFactory.single(service_id, [env]),
+        queryKey: getJSONSchemaFactory.single(service_id, [env]),
         queryFn: () => get(`/lsm/v1/service_catalog/${service_id}/schema`),
         select: (data) => data.data,
       }),
   };
 };
+
+export const getJSONSchemaFactory = new KeyFactory(SliceKeys.serviceInstance, "get_JSON_schema");

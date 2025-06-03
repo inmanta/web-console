@@ -8,7 +8,7 @@ import {
   REFETCH_INTERVAL,
   getPaginationHandlers,
   KeyFactory,
-  keySlices,
+  SliceKeys,
 } from "@/Data/Queries";
 import { SortKey } from "@/Slices/Parameters/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
@@ -74,13 +74,12 @@ export const useGetParameters = (params: GetParametersParams): GetParameters => 
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
-  const keyFactory = new KeyFactory(keySlices.parameters, "get_parameters");
   const filterArray = params.filter ? Object.values(params.filter) : [];
 
   return {
     useContinuous: (): UseQueryResult<GetParametersResponse, Error> =>
       useQuery({
-        queryKey: keyFactory.list([pageSize, ...filterArray, sort, currentPage, env]),
+        queryKey: getParametersFactory.list([pageSize, ...filterArray, sort, currentPage, env]),
         queryFn: () => get(url),
         select: (data) => ({
           ...data,
@@ -90,3 +89,5 @@ export const useGetParameters = (params: GetParametersParams): GetParameters => 
       }),
   };
 };
+
+export const getParametersFactory = new KeyFactory(SliceKeys.parameters, "get_parameter");

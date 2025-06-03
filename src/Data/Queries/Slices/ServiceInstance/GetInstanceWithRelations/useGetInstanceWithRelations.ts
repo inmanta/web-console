@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
-import { CustomError, useGet, REFETCH_INTERVAL, KeyFactory, keySlices } from "@/Data/Queries";
+import { CustomError, useGet, REFETCH_INTERVAL, KeyFactory, SliceKeys } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 
 /*
@@ -162,8 +162,6 @@ export const useGetInstanceWithRelations = (
     };
   };
 
-  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_instance_with_relations");
-
   return {
     /**
      * Custom hook to fetch the parameter from the API once.
@@ -171,7 +169,7 @@ export const useGetInstanceWithRelations = (
      */
     useOneTime: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
-        queryKey: keyFactory.single(instanceId, [env]),
+        queryKey: getInstanceWithRelationsFactory.single(instanceId, [env]),
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
         enabled: serviceModel !== undefined,
@@ -179,7 +177,7 @@ export const useGetInstanceWithRelations = (
       }),
     useContinuous: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
-        queryKey: keyFactory.single(instanceId, [env]),
+        queryKey: getInstanceWithRelationsFactory.single(instanceId, [env]),
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
         refetchInterval: REFETCH_INTERVAL,
@@ -187,3 +185,8 @@ export const useGetInstanceWithRelations = (
       }),
   };
 };
+
+export const getInstanceWithRelationsFactory = new KeyFactory(
+  SliceKeys.serviceInstance,
+  "get_instance_with_relations"
+);

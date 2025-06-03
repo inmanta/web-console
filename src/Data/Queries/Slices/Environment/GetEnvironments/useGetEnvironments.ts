@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Environment } from "@/Core";
-import { REFETCH_INTERVAL, useGetWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
+import { REFETCH_INTERVAL, useGetWithoutEnv, KeyFactory, SliceKeys } from "@/Data/Queries";
 
 /**
  * Return Signature of the useGetEnvironments React Query
@@ -19,12 +19,11 @@ interface GetEnvironments {
  */
 export const useGetEnvironments = (): GetEnvironments => {
   const get = useGetWithoutEnv()<{ data: Environment[] }>;
-  const keyFactory = new KeyFactory(keySlices.environment, "get_environment");
 
   return {
     useOneTime: (hasDetails = false): UseQueryResult<Environment[], Error> =>
       useQuery({
-        queryKey: keyFactory.list([hasDetails]),
+        queryKey: getEnvironmentsFactory.list([hasDetails]),
         queryFn: () => get(`/api/v2/environment?details=${hasDetails}`),
         retry: false,
         select: (data) => data.data,
@@ -32,7 +31,7 @@ export const useGetEnvironments = (): GetEnvironments => {
 
     useContinuous: (hasDetails = false): UseQueryResult<Environment[], Error> =>
       useQuery({
-        queryKey: keyFactory.list([hasDetails]),
+        queryKey: getEnvironmentsFactory.list([hasDetails]),
         queryFn: () => get(`/api/v2/environment?details=${hasDetails}`),
         retry: false,
         select: (data) => data.data,
@@ -40,3 +39,5 @@ export const useGetEnvironments = (): GetEnvironments => {
       }),
   };
 };
+
+export const getEnvironmentsFactory = new KeyFactory(SliceKeys.environment, "get_environments");

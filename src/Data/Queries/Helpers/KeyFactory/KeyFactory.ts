@@ -1,6 +1,14 @@
 type KeyArray = (string | number | boolean)[];
 
+/**
+ * Factory class for generating unique keys for React Query
+ */
 export class KeyFactory {
+  /**
+   * Constructor for the KeyFactory class
+   * @param {string} sliceKey - The slice key for the query
+   * @param {string} queryKey - The query key for the query
+   */
   constructor(
     private readonly sliceKey: string,
     private readonly queryKey?: string
@@ -9,6 +17,10 @@ export class KeyFactory {
     this.sliceKey = sliceKey;
   }
 
+  /**
+   * returns the root key for the query
+   * @returns {string[]} The root key for the query
+   */
   public root(): string[] {
     const keyArray = [this.sliceKey];
     if (this.queryKey) {
@@ -17,20 +29,35 @@ export class KeyFactory {
     return keyArray;
   }
 
+  /**
+   * returns the slice key for the query
+   * @returns {string[]} The slice key for the query
+   */
   public slice(): string[] {
     return [this.sliceKey];
   }
 
+  /**
+   * Generates the list key for the query that fetch a list of items/objects
+   * @param {KeyArray} params - The parameters for the query
+   * @returns {string[]} The list key for the query
+   */
   public list(params?: KeyArray): KeyArray {
     return [...this.root(), "list", ...(params || [])];
   }
 
+  /**
+   * Generates the  key for the query that fetch single item/object
+   * @param {string} id - The id for the query
+   * @param {KeyArray} params - The parameters for the query
+   * @returns {string[]} The single key for the query
+   */
   public single(id: string, params?: KeyArray): KeyArray {
     return [...this.root(), "single", id, ...(params || [])];
   }
 }
 
-export enum keySlices {
+export enum SliceKeys {
   agents = "agents",
   auth = "auth",
   callback = "callback",

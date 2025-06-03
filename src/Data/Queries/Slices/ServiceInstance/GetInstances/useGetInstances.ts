@@ -3,15 +3,9 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Pagination, ServiceInstanceModelWithTargetStates } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { ServiceInstanceParams } from "@/Core/Domain/ServiceInstanceParams";
-import {
-  CustomError,
-  useGet,
-  REFETCH_INTERVAL,
-  getPaginationHandlers,
-  KeyFactory,
-  keySlices,
-} from "@/Data/Queries";
+import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
+import { getInstanceFactory } from "../GetInstance";
 import { getUrl } from "./getUrl";
 
 interface ResponseBody {
@@ -58,7 +52,6 @@ export const useGetInstances = (
     currentPage,
   });
   const get = useGet(env)<ResponseBody>;
-  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_instance");
 
   const filterArray = filter ? Object.values(filter) : [];
   const sortArray = sort ? [sort.name, sort.order] : [];
@@ -66,7 +59,7 @@ export const useGetInstances = (
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: keyFactory.list([
+        queryKey: getInstanceFactory.list([
           serviceName,
           ...filterArray,
           ...sortArray,

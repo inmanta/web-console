@@ -5,8 +5,9 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { usePost, KeyFactory, keySlices } from "@/Data/Queries";
+import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
+import { getAgentFactory } from "../GetAgents/useGetAgents";
 
 /**
  * Interface for pausing/resuming agents parameters
@@ -25,7 +26,7 @@ export const usePauseAgent = (
   options?: UseMutationOptions<void, Error, PauseAgentParams, unknown>
 ): UseMutationResult<void, Error, PauseAgentParams, unknown> => {
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.agents, "get_agent");
+
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<null>;
@@ -35,7 +36,7 @@ export const usePauseAgent = (
       post(`/api/v2/agent/${encodeURIComponent(name)}/${action}`, null),
     mutationKey: ["pause_agent", env],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: keyFactory.root(), type: "active" });
+      client.refetchQueries({ queryKey: getAgentFactory.root(), type: "active" });
     },
     ...options,
   });

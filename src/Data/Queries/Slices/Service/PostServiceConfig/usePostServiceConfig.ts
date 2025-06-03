@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Config } from "@/Core";
-import { usePost, KeyFactory, keySlices } from "@/Data/Queries";
+import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-
+import { getServiceConfigFactory } from "../GetServiceConfig";
 export interface Params {
   values: Config;
 }
@@ -21,7 +21,6 @@ export const usePostServiceConfig = (
   service_entity: string
 ): UseMutationResult<Response, Error, Params, unknown> => {
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.service, "get_service_config");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<Params>;
@@ -30,7 +29,7 @@ export const usePostServiceConfig = (
     mutationFn: (body) => post(`/lsm/v1/service_catalog/${service_entity}/config`, body),
     mutationKey: ["post_config", env],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: keyFactory.single(service_entity) });
+      client.refetchQueries({ queryKey: getServiceConfigFactory.single(service_entity) });
     },
   });
 };

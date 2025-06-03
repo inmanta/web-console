@@ -9,7 +9,7 @@ import {
   REFETCH_INTERVAL,
   getPaginationHandlers,
   KeyFactory,
-  keySlices,
+  SliceKeys,
 } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
@@ -97,12 +97,11 @@ export const useGetInstanceEvents = (params: GetInstanceEventParams): GetInstanc
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
-  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_instance_events");
 
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: keyFactory.list([...Object.values(params), env]),
+        queryKey: getInstanceEventsFactory.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
@@ -112,3 +111,8 @@ export const useGetInstanceEvents = (params: GetInstanceEventParams): GetInstanc
       }),
   };
 };
+
+export const getInstanceEventsFactory = new KeyFactory(
+  SliceKeys.serviceInstance,
+  "get_instance_events"
+);

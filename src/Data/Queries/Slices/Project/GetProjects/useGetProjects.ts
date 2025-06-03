@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ProjectModel } from "@/Core";
-import { REFETCH_INTERVAL, useGetWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
+import { REFETCH_INTERVAL, useGetWithoutEnv, KeyFactory, SliceKeys } from "@/Data/Queries";
 
 /**
  * Return Signature of the useGetProjects React Query
@@ -19,12 +19,11 @@ interface GetProjects {
  */
 export const useGetProjects = (): GetProjects => {
   const get = useGetWithoutEnv()<{ data: ProjectModel[] }>;
-  const keyFactory = new KeyFactory(keySlices.project, "get_project");
 
   return {
     useOneTime: (hasEnvironmentDetails = false): UseQueryResult<ProjectModel[], Error> =>
       useQuery({
-        queryKey: keyFactory.list([hasEnvironmentDetails]),
+        queryKey: getProjectsFactory.list([hasEnvironmentDetails]),
         queryFn: () => get(`/api/v2/project?environment_details=${hasEnvironmentDetails}`),
         retry: false,
         select: (data) => data.data,
@@ -32,7 +31,7 @@ export const useGetProjects = (): GetProjects => {
 
     useContinuous: (hasEnvironmentDetails = false): UseQueryResult<ProjectModel[], Error> =>
       useQuery({
-        queryKey: keyFactory.list([hasEnvironmentDetails]),
+        queryKey: getProjectsFactory.list([hasEnvironmentDetails]),
         queryFn: () => get(`/api/v2/project?environment_details=${hasEnvironmentDetails}`),
         retry: false,
         select: (data) => data.data,
@@ -40,3 +39,5 @@ export const useGetProjects = (): GetProjects => {
       }),
   };
 };
+
+export const getProjectsFactory = new KeyFactory(SliceKeys.project, "get_project");

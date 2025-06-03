@@ -1,5 +1,5 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { CustomError, useGetWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
+import { CustomError, useGetWithoutEnv, KeyFactory, SliceKeys } from "@/Data/Queries";
 
 interface LoggedUser {
   username: string;
@@ -13,7 +13,6 @@ interface LoggedUser {
 export const useGetCurrentUser = () => {
   const url = "/api/v2/current_user";
   const get = useGetWithoutEnv()<{ data: LoggedUser }>;
-  const keyFactory = new KeyFactory(keySlices.auth, "get_current_user");
 
   return {
     /**
@@ -23,8 +22,10 @@ export const useGetCurrentUser = () => {
     useOneTime: (): UseQueryResult<LoggedUser, CustomError> =>
       useQuery({
         queryFn: () => get(url),
-        queryKey: keyFactory.single("get_user"),
+        queryKey: getCurrentUserFactory.single("get_user"),
         select: (data) => data.data,
       }),
   };
 };
+
+export const getCurrentUserFactory = new KeyFactory(SliceKeys.auth, "get_current_user");

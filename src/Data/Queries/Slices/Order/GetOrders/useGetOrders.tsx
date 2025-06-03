@@ -8,7 +8,7 @@ import {
   REFETCH_INTERVAL,
   getPaginationHandlers,
   KeyFactory,
-  keySlices,
+  SliceKeys,
 } from "@/Data/Queries";
 import { ServiceOrder, SortKey } from "@/Slices/Orders/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
@@ -56,12 +56,11 @@ export const useGetOrders = (): GetOrders => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
-  const keyFactory = new KeyFactory(keySlices.order, "get_order");
 
   return {
     useContinuous: (params): UseQueryResult<QueryData, CustomError> =>
       useQuery({
-        queryKey: keyFactory.list([...Object.values(params), env]),
+        queryKey: getOrdersFactory.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
@@ -71,3 +70,5 @@ export const useGetOrders = (): GetOrders => {
       }),
   };
 };
+
+export const getOrdersFactory = new KeyFactory(SliceKeys.order, "get_order");

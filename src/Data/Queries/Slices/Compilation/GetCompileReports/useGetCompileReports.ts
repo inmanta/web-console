@@ -9,7 +9,7 @@ import {
   useGet,
   getPaginationHandlers,
   KeyFactory,
-  keySlices,
+  SliceKeys,
 } from "@/Data/Queries";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
@@ -54,12 +54,11 @@ export const useGetCompileReports = (params: CompileReportsParams): GetCompileRe
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
-  const keyFactory = new KeyFactory(keySlices.compilation, "get_compile_report");
 
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: keyFactory.list([env, ...Object.values(params)]),
+        queryKey: getCompileReportsFactory.list([env, ...Object.values(params)]),
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
@@ -69,3 +68,5 @@ export const useGetCompileReports = (params: CompileReportsParams): GetCompileRe
       }),
   };
 };
+
+export const getCompileReportsFactory = new KeyFactory(SliceKeys.compilation, "get_compile_report");

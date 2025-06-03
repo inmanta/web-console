@@ -8,11 +8,11 @@ import {
   useGet,
   getPaginationHandlers,
   KeyFactory,
-  keySlices,
+  SliceKeys,
 } from "@/Data/Queries";
 import { DesiredStateVersion, DesiredStateVersionStatus } from "@/Slices/DesiredState/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
-import { getUrl } from "./getUrl";
+import { getDesiredStatesUrl } from "./getUrl";
 
 /**
  * interface of filter object for desired states
@@ -69,7 +69,6 @@ export const useGetDesiredStates = (): GetDesiredStates => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
-  const keyFactory = new KeyFactory(keySlices.desiredState, "get_desired_state");
 
   return {
     useContinuous: (
@@ -78,13 +77,13 @@ export const useGetDesiredStates = (): GetDesiredStates => {
       currentPage: CurrentPage
     ): UseQueryResult<QueryData, CustomError> =>
       useQuery({
-        queryKey: keyFactory.list([
+        queryKey: getDesiredStatesFactory.list([
           pageSize.value,
           ...Object.values(filter),
           currentPage.value,
           env,
         ]),
-        queryFn: () => get(getUrl({ pageSize, filter, currentPage })),
+        queryFn: () => get(getDesiredStatesUrl({ pageSize, filter, currentPage })),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
           ...data,
@@ -93,3 +92,5 @@ export const useGetDesiredStates = (): GetDesiredStates => {
       }),
   };
 };
+
+export const getDesiredStatesFactory = new KeyFactory(SliceKeys.desiredState, "get_desired_state");

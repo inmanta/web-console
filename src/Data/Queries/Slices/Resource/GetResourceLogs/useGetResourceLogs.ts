@@ -7,7 +7,7 @@ import {
   REFETCH_INTERVAL,
   getPaginationHandlers,
   KeyFactory,
-  keySlices,
+  SliceKeys,
 } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { ResourceLog, ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
@@ -68,14 +68,13 @@ export const useGetResourceLogs = (params: GetResourceLogsParams): GetResourceLo
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
-  const keyFactory = new KeyFactory(keySlices.resource, "get_resource_logs");
   const filterArray = filter ? Object.values(filter) : [];
   const sortArray = sort ? [sort.name, sort.order] : [];
 
   return {
     useContinuous: (): UseQueryResult<ResourceLogsResponse, Error> =>
       useQuery({
-        queryKey: keyFactory.list([
+        queryKey: getResourceLogsFactory.list([
           id,
           pageSize.value,
           ...filterArray,
@@ -92,3 +91,5 @@ export const useGetResourceLogs = (params: GetResourceLogsParams): GetResourceLo
       }),
   };
 };
+
+export const getResourceLogsFactory = new KeyFactory(SliceKeys.resource, "get_resource_logs");

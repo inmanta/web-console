@@ -1,6 +1,6 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Environment } from "@/Core";
-import { useGetWithoutEnv, REFETCH_INTERVAL, KeyFactory, keySlices } from "@/Data/Queries";
+import { useGetWithoutEnv, REFETCH_INTERVAL, KeyFactory, SliceKeys } from "@/Data/Queries";
 
 /**
  * Return Signature of the useGetEnvironmentDetails React Query
@@ -19,19 +19,17 @@ interface GetEnvironmentDetails {
 export const useGetEnvironmentDetails = (): GetEnvironmentDetails => {
   const get = useGetWithoutEnv()<{ data: Environment }>;
 
-  const keyFactory = new KeyFactory(keySlices.environment, "get_environment_details");
-
   return {
     useOneTime: (id: string): UseQueryResult<Environment, Error> =>
       useQuery({
-        queryKey: keyFactory.single(id),
+        queryKey: getEnvironmentDetailsFactory.single(id),
         queryFn: () => get(`/api/v2/environment/${id}?details=true`),
         retry: false,
         select: (data) => data.data,
       }),
     useContinuous: (id: string): UseQueryResult<Environment, Error> =>
       useQuery({
-        queryKey: keyFactory.single(id),
+        queryKey: getEnvironmentDetailsFactory.single(id),
         queryFn: () => get(`/api/v2/environment/${id}?details=true`),
         retry: false,
         select: (data) => data.data,
@@ -39,3 +37,8 @@ export const useGetEnvironmentDetails = (): GetEnvironmentDetails => {
       }),
   };
 };
+
+export const getEnvironmentDetailsFactory = new KeyFactory(
+  SliceKeys.environment,
+  "get_environment_details"
+);

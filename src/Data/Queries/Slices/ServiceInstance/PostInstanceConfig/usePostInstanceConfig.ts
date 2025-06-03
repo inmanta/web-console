@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Config } from "@/Core";
-import { usePost, KeyFactory, keySlices } from "@/Data/Queries";
+import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
+import { getInstanceConfigFactory } from "../GetInstanceConfig";
 
 interface Body {
   current_version: number;
@@ -23,7 +24,6 @@ export const usePostInstanceConfig = (
   id: string
 ): UseMutationResult<Response, Error, Body, unknown> => {
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_instance_config");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<Body>;
@@ -33,7 +33,7 @@ export const usePostInstanceConfig = (
     mutationKey: ["post_instance_config", env],
     onSuccess: () => {
       client.refetchQueries({
-        queryKey: keyFactory.single(id),
+        queryKey: getInstanceConfigFactory.single(id),
       });
     },
   });

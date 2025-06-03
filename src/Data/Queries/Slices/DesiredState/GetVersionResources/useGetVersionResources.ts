@@ -8,10 +8,10 @@ import {
   useGet,
   getPaginationHandlers,
   KeyFactory,
-  keySlices,
+  SliceKeys,
 } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
-import { getUrl } from "./getUrl";
+import { getVersionResourcesUrl } from "./getUrl";
 
 /**
  * Interface for the API response containing the resources data
@@ -63,14 +63,13 @@ export const useGetVersionResources = ({
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
-  const url = getUrl({
+  const url = getVersionResourcesUrl({
     version,
     pageSize,
     filter,
     sort,
     currentPage,
   });
-  const keyFactory = new KeyFactory(keySlices.desiredState, "get_version_resources");
 
   const filterArray = filter ? Object.values(filter).map(String) : [];
   const sortArray = sort ? [sort.name, sort.order] : [];
@@ -78,7 +77,7 @@ export const useGetVersionResources = ({
   return {
     useContinuous: (): UseQueryResult<QueryResponse, Error> =>
       useQuery({
-        queryKey: keyFactory.list([
+        queryKey: getVersionResourcesFactory.list([
           version,
           pageSize.value,
           currentPage.value,
@@ -95,3 +94,8 @@ export const useGetVersionResources = ({
       }),
   };
 };
+
+export const getVersionResourcesFactory = new KeyFactory(
+  SliceKeys.desiredState,
+  "get_version_resources"
+);

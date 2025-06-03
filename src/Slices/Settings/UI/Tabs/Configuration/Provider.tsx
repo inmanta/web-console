@@ -5,8 +5,7 @@ import { EnvironmentSettings } from "@/Core";
 import {
   useResetEnvironmentSetting,
   useUpdateEnvironmentSetting,
-  KeyFactory,
-  keySlices,
+  getEnvironmentSettingsFactory,
 } from "@/Data/Queries";
 import { Container } from "./Container";
 import { InputInfoCreator } from "./InputInfoCreator";
@@ -73,13 +72,12 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
     resetedValueName: "",
   });
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.environment, "get_environment_setting");
   const [showUpdateBanner, setShowUpdateBanner] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const updateSetting = useUpdateEnvironmentSetting({
     onSuccess: () => {
-      client.refetchQueries({ queryKey: keyFactory.root() });
+      client.refetchQueries({ queryKey: getEnvironmentSettingsFactory.root() });
       document.dispatchEvent(new Event("settings-update"));
       setErrorMessage("");
       setShowUpdateBanner(true);
@@ -93,7 +91,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
   const resetSetting = useResetEnvironmentSetting({
     onSuccess: () => {
       setErrorMessage("");
-      client.refetchQueries({ queryKey: keyFactory.root() });
+      client.refetchQueries({ queryKey: getEnvironmentSettingsFactory.root() });
     },
     onError: (error) => setErrorMessage(error.message),
   });

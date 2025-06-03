@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usePostWithoutEnv, KeyFactory, keySlices } from "@/Data/Queries";
+import { usePostWithoutEnv } from "@/Data/Queries";
+import { getUserFactory } from "../GetUsers/useGetUsers";
 
 interface AddUSerResponse {
   data: {
@@ -19,7 +20,6 @@ interface AddUserBody {
  */
 export const useAddUser = () => {
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.auth, "get_user");
   const post = usePostWithoutEnv()<AddUserBody>;
 
   return useMutation<AddUSerResponse, Error, AddUserBody>({
@@ -27,7 +27,7 @@ export const useAddUser = () => {
     mutationKey: ["add_user"],
     onSuccess: () => {
       //refetch the users query to update the list
-      client.invalidateQueries({ queryKey: keyFactory.root() });
+      client.invalidateQueries({ queryKey: getUserFactory.root() });
     },
   });
 };

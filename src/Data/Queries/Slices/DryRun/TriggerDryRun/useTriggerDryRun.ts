@@ -5,8 +5,9 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { usePost, KeyFactory, keySlices } from "@/Data/Queries";
+import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
+import { getDryRunsFactory } from "../GetDryRuns";
 
 /**
  * React Query hook for triggering a dry run
@@ -17,7 +18,6 @@ export const useTriggerDryRun = (
   options?: UseMutationOptions<void, Error, string>
 ): UseMutationResult<void, Error, string> => {
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.dryRun, "get_dry_run");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<void>;
@@ -29,7 +29,7 @@ export const useTriggerDryRun = (
     onSuccess: () => {
       // Refetch the dry run queries
       client.refetchQueries({
-        queryKey: keyFactory.root(),
+        queryKey: getDryRunsFactory.root(),
       });
     },
   });

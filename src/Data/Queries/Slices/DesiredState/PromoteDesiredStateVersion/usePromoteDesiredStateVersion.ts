@@ -5,7 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { usePost, KeyFactory, keySlices } from "@/Data/Queries";
+import { usePost, getDesiredStatesFactory } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 
 /**
@@ -17,7 +17,6 @@ export const usePromoteDesiredStateVersion = (
   options?: UseMutationOptions<void, Error, string>
 ): UseMutationResult<void, Error, string> => {
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.desiredState, "get_desired_state");
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<void>;
@@ -29,7 +28,7 @@ export const usePromoteDesiredStateVersion = (
     onSuccess: () => {
       // Refetch the desired state queries to update the list
       client.refetchQueries({
-        queryKey: keyFactory.root(),
+        queryKey: getDesiredStatesFactory.root(),
       });
     },
   });

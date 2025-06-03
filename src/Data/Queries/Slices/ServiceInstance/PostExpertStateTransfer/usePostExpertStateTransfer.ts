@@ -6,8 +6,9 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ParsedNumber } from "@/Core";
-import { usePost, KeyFactory, keySlices } from "@/Data/Queries";
+import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
+import { getInstanceFactory } from "../GetInstance";
 
 /**
  * Required attributes to construct the post request to force update the state of an instance in Expert mode
@@ -35,14 +36,13 @@ export const usePostExpertStateTransfer = (
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<PostExpertStateTransfer>;
-  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_service_instance");
 
   return useMutation({
     mutationFn: (data) =>
       post(`/lsm/v1/service_inventory/${service_entity}/${instance_id}/expert/state`, data),
     mutationKey: ["post_state_transfer_expert", env],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: keyFactory.single(instance_id) });
+      client.refetchQueries({ queryKey: getInstanceFactory.single(instance_id) });
     },
     ...options,
   });

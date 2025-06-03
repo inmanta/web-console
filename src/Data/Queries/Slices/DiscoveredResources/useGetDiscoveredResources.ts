@@ -7,7 +7,7 @@ import {
   REFETCH_INTERVAL,
   getPaginationHandlers,
   KeyFactory,
-  keySlices,
+  SliceKeys,
 } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
@@ -85,7 +85,6 @@ export const useGetDiscoveredResources = (
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
-  const keyFactory = new KeyFactory(keySlices.discoveredResource, "get_discovered_resources");
 
   const filterArray = params.filter ? Object.values(params.filter).map(String) : [];
   const sortArray = params.sort ? [params.sort.name, params.sort.order] : [];
@@ -93,7 +92,7 @@ export const useGetDiscoveredResources = (
   return {
     useContinuous: (): UseQueryResult<DiscoveredResourceResponse, Error> =>
       useQuery({
-        queryKey: keyFactory.list([
+        queryKey: getDiscoveredResourcesFactory.list([
           params.currentPage.value,
           params.pageSize.value,
           env,
@@ -109,3 +108,8 @@ export const useGetDiscoveredResources = (
       }),
   };
 };
+
+export const getDiscoveredResourcesFactory = new KeyFactory(
+  SliceKeys.discoveredResource,
+  "get_discovered_resources"
+);

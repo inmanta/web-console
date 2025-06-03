@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Resource } from "@/Core/Domain";
-import { useGet, REFETCH_INTERVAL, KeyFactory, keySlices } from "@/Data/Queries";
+import { useGet, REFETCH_INTERVAL, KeyFactory, SliceKeys } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**
@@ -28,15 +28,16 @@ export const useGetResourceDetails = (): GetResourceDetails => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Response>;
-  const keyFactory = new KeyFactory(keySlices.resource, "get_resource_details");
 
   return {
     useContinuous: (id: string): UseQueryResult<Resource.Details, Error> =>
       useQuery({
-        queryKey: keyFactory.single(id, [env]),
+        queryKey: getResourceDetailsFactory.single(id, [env]),
         queryFn: () => get(`/api/v2/resource/${encodeURIComponent(id)}`),
         select: (data) => data.data,
         refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };
+
+export const getResourceDetailsFactory = new KeyFactory(SliceKeys.resource, "get_resource_details");

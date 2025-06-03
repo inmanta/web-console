@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceInstanceModel } from "@/Core";
-import { CustomError, useGet, REFETCH_INTERVAL, KeyFactory, keySlices } from "@/Data/Queries";
+import { CustomError, useGet, REFETCH_INTERVAL, KeyFactory, SliceKeys } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**
@@ -27,21 +27,22 @@ export const useGetInstance = (service: string, instanceId: string): GetInstance
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<{ data: ServiceInstanceModel }>;
-  const keyFactory = new KeyFactory(keySlices.serviceInstance, "get_instance");
 
   return {
     useOneTime: (): UseQueryResult<ServiceInstanceModel, CustomError> =>
       useQuery({
-        queryKey: keyFactory.single(instanceId, [service, env]),
+        queryKey: getInstanceFactory.single(instanceId, [service, env]),
         queryFn: () => get(url),
         select: (data): ServiceInstanceModel => data.data,
       }),
     useContinuous: (): UseQueryResult<ServiceInstanceModel, CustomError> =>
       useQuery({
-        queryKey: keyFactory.single(instanceId, [service, env]),
+        queryKey: getInstanceFactory.single(instanceId, [service, env]),
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data): ServiceInstanceModel => data.data,
       }),
   };
 };
+
+export const getInstanceFactory = new KeyFactory(SliceKeys.serviceInstance, "get_instance");

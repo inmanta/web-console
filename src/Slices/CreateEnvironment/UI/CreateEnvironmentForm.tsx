@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
 import { Environment, ProjectModel } from "@/Core";
-import { useCreateEnvironment, useCreateProject, KeyFactory, keySlices } from "@/Data/Queries";
+import { useCreateEnvironment, useCreateProject, getEnvironmentsFactory } from "@/Data/Queries";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
@@ -29,7 +29,6 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
   const navigateTo = useNavigateTo();
   const navigateToHome = () => navigateTo("Home", undefined);
   const client = useQueryClient();
-  const keyFactory = new KeyFactory(keySlices.environment, "get_environment");
   const createProject = useCreateProject();
 
   const createEnvironment = useCreateEnvironment({
@@ -40,11 +39,11 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       };
 
       //update the data in the cache to avoid crash after navigating to the new env
-      client.setQueryData(keyFactory.list([true]), dataUpdater);
-      client.setQueryData(keyFactory.list([false]), dataUpdater);
+      client.setQueryData(getEnvironmentsFactory.list([true]), dataUpdater);
+      client.setQueryData(getEnvironmentsFactory.list([false]), dataUpdater);
 
-      client.refetchQueries({ queryKey: keyFactory.list([true]) });
-      client.refetchQueries({ queryKey: keyFactory.list([false]) });
+      client.refetchQueries({ queryKey: getEnvironmentsFactory.list([true]) });
+      client.refetchQueries({ queryKey: getEnvironmentsFactory.list([false]) });
 
       const target = isLsmEnabled ? "Catalog" : "DesiredState";
 
