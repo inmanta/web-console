@@ -69,17 +69,17 @@ export const useGetResourceLogs = (params: GetResourceLogsParams): GetResourceLo
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
   const filterArray = filter ? Object.values(filter) : [];
-  const sortArray = sort ? [sort.name, sort.order] : [];
+  const sortArray = sort ? [sort] : [];
 
   return {
     useContinuous: (): UseQueryResult<ResourceLogsResponse, Error> =>
       useQuery({
         queryKey: getResourceLogsFactory.list([
           id,
-          pageSize.value,
+          pageSize,
           ...filterArray,
           ...sortArray,
-          currentPage.value,
+          currentPage,
           env,
         ]),
         queryFn: () => get(url),

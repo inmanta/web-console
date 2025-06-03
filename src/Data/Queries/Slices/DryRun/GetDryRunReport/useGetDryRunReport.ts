@@ -59,7 +59,7 @@ export const useGetDryRunReport = (): GetDryRunReport => {
   return {
     useOneTime: (version: string, reportId: string): UseQueryResult<Report, Error> =>
       useQuery({
-        queryKey: getDryRunReportFactory.single(reportId, [version, env]),
+        queryKey: getDryRunReportFactory.single(reportId, [{ version }, env]),
         queryFn: () => get(`/api/v2/dryrun/${version}/${encodeURIComponent(reportId)}`),
         select: (data) => data.data,
       }),

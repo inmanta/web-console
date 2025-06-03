@@ -1,16 +1,16 @@
-type KeyArray = (string | number | boolean)[];
+type KeyArray = (string | Record<string, string | number | boolean>)[];
 
 /**
  * Factory class for generating keys arrays for React Query,
  *
  * Made to ease maintenance and readability of the code responsible for fetching data from the API
- * 
+ *
  * Managing all queries gets harder as the project grows, this class is here to help with that.
- * 
- * - It eliminates room for errors when we try to invalidate/refetch data, across the codebase. 
+ *
+ * - It eliminates room for errors when we try to invalidate/refetch data, across the codebase.
  * - it makes code easier to debug through react query devtools, as the queries are more uniform and structured.
  * - it will also make it easier to update queries in the future, as we now don't need to search for all off the modifications to the query across the codebase
- * 
+ *
  * Conventions:
  * - All queries related to the same slice will have the same slice key
  * - All queries related to the same query will have the same query key
@@ -19,18 +19,18 @@ type KeyArray = (string | number | boolean)[];
  * - All specific queries will have it's own reusable factory, that should be used in case of invalidation/refetch, unless there is already related factory, for example getEnvironment and GetEnvironments should share the Factory
  * - all query keys will be in singular form and differs only of the function used
  * @example
- *    - get specific environment 
- * 
+ *    - get specific environment
+ *
  * export const exampleFactory = new KeyFactory(SliceKeys.environment, "get_environment");
  *  {...}
  * queryKey: exampleFactory.single(someId, [...params]),
  *  {...}
- * 
-*    - get all environments
+ *
+ *    - get all environments
  *  {...}
  * queryKey: exampleFactory.list([..params]),
  *  {...}
- * 
+ *
  */
 export class KeyFactory {
   /**
@@ -49,7 +49,7 @@ export class KeyFactory {
   /**
    * returns the root key for the query, used when we want to refetch all the data related to the given specific query,
    * for example all get environment queries(single and list)
-   * 
+   *
    * @returns {string[]} The root key for the query
    */
   public root(): string[] {
@@ -63,7 +63,7 @@ export class KeyFactory {
   /**
    * returns the slice key for the query, used when we want for example to refetch all the data related to the given slice,
    * for example all environemnts queries(get environments, get environment settings and so on)
-   * 
+   *
    * @returns {string[]} The slice key for the query
    */
   public slice(): string[] {
@@ -72,7 +72,7 @@ export class KeyFactory {
 
   /**
    * Generates the list key for the query that fetch a list of items/objects
-   * 
+   *
    * @param {KeyArray} params - The parameters for the query
    * @returns {string[]} The list key for the query
    */
@@ -82,7 +82,7 @@ export class KeyFactory {
 
   /**
    * Generates the  key for the query that fetch single item/object
-   * 
+   *
    * @param {string} id - The id for the query
    * @param {KeyArray} params - The parameters for the query
    * @returns {string[]} The single key for the query

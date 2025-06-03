@@ -67,7 +67,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
   const filterArray = filter ? Object.values(filter) : [];
-  const sortArray = sort ? [sort.name, sort.order] : [];
+  const sortArray = sort ? [sort] : [];
 
   return {
     useContinuous: (): UseQueryResult<GetResourcesResponse, Error> =>

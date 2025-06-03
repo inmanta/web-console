@@ -31,13 +31,13 @@ export const useGetInstance = (service: string, instanceId: string): GetInstance
   return {
     useOneTime: (): UseQueryResult<ServiceInstanceModel, CustomError> =>
       useQuery({
-        queryKey: getInstanceFactory.single(instanceId, [service, env]),
+        queryKey: getInstanceFactory.single(instanceId, [{ service }, env]),
         queryFn: () => get(url),
         select: (data): ServiceInstanceModel => data.data,
       }),
     useContinuous: (): UseQueryResult<ServiceInstanceModel, CustomError> =>
       useQuery({
-        queryKey: getInstanceFactory.single(instanceId, [service, env]),
+        queryKey: getInstanceFactory.single(instanceId, [{ service }, env]),
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data): ServiceInstanceModel => data.data,

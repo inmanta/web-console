@@ -35,7 +35,7 @@ export const useGetDesiredStateResourceDetails = (
   return {
     useContinuous: (): UseQueryResult<Resource.VersionedDetails, Error> =>
       useQuery({
-        queryKey: getDesiredStateResourceDetailsFactory.single(id, [version, env]),
+        queryKey: getDesiredStateResourceDetailsFactory.single(id, [{ version }, env]),
         queryFn: () => get(getUrl(version, id)),
         select: (data) => data.data,
         refetchInterval: REFETCH_INTERVAL,

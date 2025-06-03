@@ -30,7 +30,7 @@ export const useGetDiagnostics = (service: string, instanceId: string): GetDiagn
   return {
     useOneTime: (lookBehind: string): UseQueryResult<RawDiagnostics, CustomError> =>
       useQuery({
-        queryKey: getDiagnosticsFactory.single(instanceId, [service, lookBehind, env]),
+        queryKey: getDiagnosticsFactory.single(instanceId, [{ service }, { lookBehind }, env]),
         queryFn: () => get(url(lookBehind)),
         select: (data) => data.data,
       }),

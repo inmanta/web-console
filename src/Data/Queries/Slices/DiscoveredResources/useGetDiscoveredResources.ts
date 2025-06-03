@@ -86,8 +86,8 @@ export const useGetDiscoveredResources = (
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
 
-  const filterArray = params.filter ? Object.values(params.filter).map(String) : [];
-  const sortArray = params.sort ? [params.sort.name, params.sort.order] : [];
+  const filterArray = params.filter ? Object.values(params.filter) : [];
+  const sortArray = params.sort ? [params.sort] : [];
 
   return {
     useContinuous: (): UseQueryResult<DiscoveredResourceResponse, Error> =>

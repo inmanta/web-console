@@ -60,16 +60,16 @@ export const useGetResourceHistory = (params: GetResourceHistoryParams): GetReso
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
-  const sortArray = sort ? [sort.name, sort.order] : [];
+  const sortArray = sort ? [sort] : [];
 
   return {
     useOneTime: (): UseQueryResult<ResourceHistoryResponse, Error> =>
       useQuery({
         queryKey: getResourceHistoryFactory.list([
           id,
-          pageSize.value,
+          { pageSize: pageSize.value },
           ...sortArray,
-          currentPage.value,
+          { currentPage: currentPage.value },
           env,
         ]),
         queryFn: () => get(url),

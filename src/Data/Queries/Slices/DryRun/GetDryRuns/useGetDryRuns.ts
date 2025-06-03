@@ -32,7 +32,7 @@ export const useGetDryRuns = (): GetDryRuns => {
   return {
     useContinuous: (version: string): UseQueryResult<DryRun[], Error> =>
       useQuery({
-        queryKey: getDryRunsFactory.list([version, env]),
+        queryKey: getDryRunsFactory.list([{ version }, env]),
         queryFn: () => get(`/api/v2/dryrun/${version}`),
         select: (data) => data.data,
         refetchInterval: REFETCH_INTERVAL,

@@ -39,7 +39,7 @@ export const useGetInfiniteInstanceLogs = (
   return {
     useContinuous: (selectedVersion: string): UseInfiniteQueryResult<InstanceLog[], CustomError> =>
       useInfiniteQuery({
-        queryKey: getInfiniteInstanceLogsFactory.list([service, instance, env]),
+        queryKey: getInfiniteInstanceLogsFactory.list([{ service }, { instance }, env]),
         queryFn: ({ pageParam }) => {
           const initialParameters = selectedVersion
             ? `limit=50&end=${Number(selectedVersion) + 1}`

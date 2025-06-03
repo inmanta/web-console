@@ -23,7 +23,7 @@ export const useGetEnvironments = (): GetEnvironments => {
   return {
     useOneTime: (hasDetails = false): UseQueryResult<Environment[], Error> =>
       useQuery({
-        queryKey: getEnvironmentsFactory.list([hasDetails]),
+        queryKey: getEnvironmentsFactory.list([{ hasDetails }]),
         queryFn: () => get(`/api/v2/environment?details=${hasDetails}`),
         retry: false,
         select: (data) => data.data,
@@ -31,7 +31,7 @@ export const useGetEnvironments = (): GetEnvironments => {
 
     useContinuous: (hasDetails = false): UseQueryResult<Environment[], Error> =>
       useQuery({
-        queryKey: getEnvironmentsFactory.list([hasDetails]),
+        queryKey: getEnvironmentsFactory.list([{ hasDetails }]),
         queryFn: () => get(`/api/v2/environment?details=${hasDetails}`),
         retry: false,
         select: (data) => data.data,

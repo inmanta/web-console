@@ -71,16 +71,16 @@ export const useGetVersionResources = ({
     currentPage,
   });
 
-  const filterArray = filter ? Object.values(filter).map(String) : [];
-  const sortArray = sort ? [sort.name, sort.order] : [];
+  const filterArray = filter ? [...(Object.values(filter) as Record<string, string>[])] : [];
+  const sortArray = sort ? [sort] : [];
 
   return {
     useContinuous: (): UseQueryResult<QueryResponse, Error> =>
       useQuery({
         queryKey: getVersionResourcesFactory.list([
           version,
-          pageSize.value,
-          currentPage.value,
+          { pageSize: pageSize.value },
+          { currentPage: currentPage.value },
           env,
           ...filterArray,
           ...sortArray,

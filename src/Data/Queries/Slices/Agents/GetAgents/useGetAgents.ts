@@ -70,7 +70,7 @@ export const useGetAgents = (): GetAgents => {
   return {
     useContinuous: (params: GetAgentsParams): UseQueryResult<QueryData, CustomError> =>
       useQuery({
-        queryKey: getAgentFactory.list([...Array.from(Object.values(params)), env]),
+        queryKey: getAgentFactory.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,

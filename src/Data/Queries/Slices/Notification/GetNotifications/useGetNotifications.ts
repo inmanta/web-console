@@ -76,9 +76,9 @@ export const useGetNotifications = (params: GetNotificationsParams): GetNotifica
     useContinuous: () =>
       useQuery({
         queryKey: getNotificationsFactory.list([
-          params.pageSize.value,
+          params.pageSize,
           ...filter,
-          params.currentPage.value,
+          params.currentPage,
           params.origin,
           env,
         ]),

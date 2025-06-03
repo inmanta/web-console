@@ -34,7 +34,7 @@ export const useGetInstanceResources = (
   return {
     useContinuous: (): UseQueryResult<InstanceResourceModel[], CustomError> =>
       useQuery({
-        queryKey: getInstanceResourcesFactory.single(id, [version, service_entity, env]),
+        queryKey: getInstanceResourcesFactory.single(id, [{ version }, { service_entity }, env]),
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data): InstanceResourceModel[] => data.data,

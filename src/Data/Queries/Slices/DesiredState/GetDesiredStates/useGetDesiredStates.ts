@@ -78,9 +78,9 @@ export const useGetDesiredStates = (): GetDesiredStates => {
     ): UseQueryResult<QueryData, CustomError> =>
       useQuery({
         queryKey: getDesiredStatesFactory.list([
-          pageSize.value,
+          pageSize,
           ...Object.values(filter),
-          currentPage.value,
+          currentPage,
           env,
         ]),
         queryFn: () => get(getDesiredStatesUrl({ pageSize, filter, currentPage })),

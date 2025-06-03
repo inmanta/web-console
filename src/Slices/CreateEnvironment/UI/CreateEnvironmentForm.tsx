@@ -39,11 +39,11 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       };
 
       //update the data in the cache to avoid crash after navigating to the new env
-      client.setQueryData(getEnvironmentsFactory.list([true]), dataUpdater);
-      client.setQueryData(getEnvironmentsFactory.list([false]), dataUpdater);
+      client.setQueryData(getEnvironmentsFactory.list([{ hasDetails: true }]), dataUpdater);
+      client.setQueryData(getEnvironmentsFactory.list([{ hasDetails: false }]), dataUpdater);
 
-      client.refetchQueries({ queryKey: getEnvironmentsFactory.list([true]) });
-      client.refetchQueries({ queryKey: getEnvironmentsFactory.list([false]) });
+      client.refetchQueries({ queryKey: getEnvironmentsFactory.list([{ hasDetails: true }]) });
+      client.refetchQueries({ queryKey: getEnvironmentsFactory.list([{ hasDetails: false }]) });
 
       const target = isLsmEnabled ? "Catalog" : "DesiredState";
 

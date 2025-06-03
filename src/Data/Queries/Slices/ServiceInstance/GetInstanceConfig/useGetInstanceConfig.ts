@@ -29,7 +29,7 @@ export const useGetInstanceConfig = (service: string, id: string): GetInstanceCo
   return {
     useOneTime: (): UseQueryResult<Config, CustomError> =>
       useQuery({
-        queryKey: getInstanceConfigFactory.single(id, [service, env]),
+        queryKey: getInstanceConfigFactory.single(id, [{ service }, env]),
         queryFn: () => get(url),
         select: (data) => data.data,
       }),
