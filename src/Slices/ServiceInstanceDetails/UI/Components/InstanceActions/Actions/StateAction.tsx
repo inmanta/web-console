@@ -113,7 +113,7 @@ interface ModalContentProps {
  *  @prop {ParsedNumber} version - the current version of the instance
  *  @prop {function} setErrorMessage - callback method to set the error message
  *  @prop {function} setInterfaceBlocked - callback method to set the interface blocked
- * 
+ *
  * @returns {React.FC<ModalContentProps>} A React Component displaying the Modal Content
  */
 const ModalContent: React.FC<ModalContentProps> = ({

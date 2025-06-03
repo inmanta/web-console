@@ -40,7 +40,7 @@ export const DictModal: React.FC = () => {
 /**
  * The ModalContent Component
  *  @prop {DictDialogData} dictToDisplay - The dictionary to display
- * 
+ *
  * @returns {React.FC<ModalContentProps>} A React Component displaying the Modal Content
  */
 const ModalContent: React.FC<{ dictToDisplay: DictDialogData }> = ({ dictToDisplay }) => {
