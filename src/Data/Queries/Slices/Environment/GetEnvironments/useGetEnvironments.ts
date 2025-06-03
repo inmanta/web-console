@@ -40,4 +40,4 @@ export const useGetEnvironments = (): GetEnvironments => {
   };
 };
 
-export const getEnvironmentsFactory = new KeyFactory(SliceKeys.environment, "get_environments");
+export const getEnvironmentsFactory = new KeyFactory(SliceKeys.environment, "get_environment");
