@@ -104,7 +104,6 @@ export const ExpertStateTransfer: React.FC<Props> = ({
     </>
   );
 };
-// TODO Move the whole logic to trigger because when modal is open the action component is closed, non-existent so useState won't work
 
 interface ModalContentProps {
   instance_id: string;
@@ -117,6 +116,20 @@ interface ModalContentProps {
   closeModalCallback: () => void;
 }
 
+/**
+ * The ModalContent Component
+ *
+ * @props {ModalContentProps} props - The props of the components
+ *  @prop {string} instance_id - the hashed id of the instance
+ *  @prop {string} service_entity - the service entity type of the instance
+ *  @prop {string} targetState - the target state to be set
+ *  @prop {string} instance_display_identity - the display value of the instance Id
+ *  @prop {string} value - the value of the state to be set
+ *  @prop {ParsedNumber} version - the current version of the instance
+ *  @prop {function} setErrorMessage - callback method to set the error message
+ * 
+ * @returns {React.FC<ModalContentProps>} A React Component displaying the Modal Content
+ */
 const ModalContent: React.FC<ModalContentProps> = ({
   instance_id,
   service_entity,

@@ -37,6 +37,12 @@ export const DictModal: React.FC = () => {
   return null;
 };
 
+/**
+ * The ModalContent Component
+ *  @prop {DictDialogData} dictToDisplay - The dictionary to display
+ * 
+ * @returns {React.FC<ModalContentProps>} A React Component displaying the Modal Content
+ */
 const ModalContent: React.FC<{ dictToDisplay: DictDialogData }> = ({ dictToDisplay }) => {
   const [copied, setCopied] = useState(false);
 

@@ -100,6 +100,19 @@ interface ModalContentProps {
   closeCallback: () => void;
 }
 
+/**
+ * The ModalContent Component
+ *
+ * @props {ModalContentProps} props - The props of the components
+ *  @prop {string} instance_id - the hashed id of the instance
+ *  @prop {string} service_entity - the service entity type of the instance
+ *  @prop {string} instance_display_identity - the display value of the instance Id
+ *  @prop {ParsedNumber} version - the current version of the instance
+ *  @prop {function} setErrorMessage - callback method to set the error message
+ *  @prop {function} closeCallback - callback method to close the modal
+ * 
+ * @returns {React.FC<ModalContentProps>} A React Component displaying the Modal Content
+ */
 const ModalContent: React.FC<ModalContentProps> = ({
   instance_id,
   service_entity,
