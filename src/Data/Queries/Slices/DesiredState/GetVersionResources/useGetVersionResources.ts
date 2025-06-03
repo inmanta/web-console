@@ -11,7 +11,7 @@ import {
   SliceKeys,
 } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
-import { getVersionResourcesUrl } from "./getUrl";
+import { getVersionResourcesUrl } from "./getVersionResourcesUrl";
 
 /**
  * Interface for the API response containing the resources data

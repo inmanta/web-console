@@ -1,7 +1,7 @@
 import moment from "moment-timezone";
 import { PageSize } from "@/Core";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
-import { getDesiredStatesUrl } from "./getUrl";
+import { getDesiredStatesUrl } from "./getDesiredStatesUrl";
 import { GetDesiredStatesParams } from "./useGetDesiredStates";
 
 it.each`

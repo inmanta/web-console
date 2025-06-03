@@ -12,7 +12,7 @@ import {
 } from "@/Data/Queries";
 import { DesiredStateVersion, DesiredStateVersionStatus } from "@/Slices/DesiredState/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
-import { getDesiredStatesUrl } from "./getUrl";
+import { getDesiredStatesUrl } from "./getDesiredStatesUrl";
 
 /**
  * interface of filter object for desired states
