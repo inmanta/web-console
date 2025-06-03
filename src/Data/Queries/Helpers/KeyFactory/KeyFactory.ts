@@ -15,7 +15,9 @@ type KeyArray = (string | number | boolean)[];
  * - All queries related to the same slice will have the same slice key
  * - All queries related to the same query will have the same query key
  * - All queries related to the same slice and query will have the same key base
- * - all query keys will be in singular form and differs only of the function used:
+ * - Query keys from parameters should be identifiable, in case of boolean, or non-string values, they should be converted wrapped in Record<name,value> to improve readability in devTools
+ * - All specific queries will have it's own reusable factory, that should be used in case of invalidation/refetch, unless there is already related factory, for example getEnvironment and GetEnvironments should share the Factory
+ * - all query keys will be in singular form and differs only of the function used
  * @example
  *    - get specific environment 
  * 
@@ -28,8 +30,6 @@ type KeyArray = (string | number | boolean)[];
  *  {...}
  * queryKey: exampleFactory.list([..params]),
  *  {...}
- * 
- * - All specific queries will have it's own reusable factory, that should be used in case of invalidation/refetch, unless there is already related factory, for example getEnvironment and GetEnvironments should share the Factory
  * 
  */
 export class KeyFactory {
