@@ -3,8 +3,6 @@ import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
 import { Environment, ProjectModel } from "@/Core";
 import { useCreateEnvironment, useCreateProject, KeyFactory, keySlices } from "@/Data/Queries";
-import { keySlices } from "@/Data/Queries/Helpers/KeyFactory";
-import { KeyFactory } from "@/Data/Queries/Helpers/KeyFactory";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
