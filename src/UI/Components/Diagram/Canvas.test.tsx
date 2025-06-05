@@ -9,6 +9,7 @@ import { MockedDependencyProvider } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
 import { words } from "@/UI";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasProvider } from "./Context/CanvasProvider";
 import { InstanceComposerContext } from "./Context/Context";
@@ -33,25 +34,27 @@ const setup = (
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TestMemoryRouter>
-        <MockedDependencyProvider>
-          <InstanceComposerContext.Provider
-            value={{
-              instance: instance || null,
-              serviceModels: models,
-              mainService: mainService,
-              relatedInventoriesQuery: { data: {} } as UseQueryResult<Inventories, Error>,
-            }}
-          >
-            <CanvasProvider>
-              <Routes>
-                <Route path="/" element={<Canvas editable={editable} />} />
-                <Route path="/lsm/catalog/test-service/inventory" element={<></>} />
-              </Routes>
-            </CanvasProvider>
-          </InstanceComposerContext.Provider>
-        </MockedDependencyProvider>
-      </TestMemoryRouter>
+      <ModalProvider>
+        <TestMemoryRouter>
+          <MockedDependencyProvider>
+            <InstanceComposerContext.Provider
+              value={{
+                instance: instance || null,
+                serviceModels: models,
+                mainService: mainService,
+                relatedInventoriesQuery: { data: {} } as UseQueryResult<Inventories, Error>,
+              }}
+            >
+              <CanvasProvider>
+                <Routes>
+                  <Route path="/" element={<Canvas editable={editable} />} />
+                  <Route path="/lsm/catalog/test-service/inventory" element={<></>} />
+                </Routes>
+              </CanvasProvider>
+            </InstanceComposerContext.Provider>
+          </MockedDependencyProvider>
+        </TestMemoryRouter>
+      </ModalProvider>
     </QueryClientProvider>
   );
 };
@@ -107,13 +110,9 @@ describe("Canvas.tsx", () => {
 
     expect(modal).toBeVisible();
 
-    const title = document.querySelector("#dict-modal-title");
+    expect(screen.getByText(words("instanceComposer.dictModal")("dictOne"))).toBeVisible();
 
-    expect(title).toHaveTextContent(words("instanceComposer.dictModal")("dictOne"));
-
-    const value = document.querySelector("#dict-modal-body");
-
-    expect(value).toHaveTextContent("{}");
+    expect(screen.getByText("{}")).toBeVisible();
 
     const copyButton = await screen.findByLabelText("Copy to clipboard");
 

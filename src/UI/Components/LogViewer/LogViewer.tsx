@@ -82,9 +82,11 @@ export const LogViewerComponent: React.FC<LogViewerProps> = ({ logs, defaultSele
       isExpanded={selectOpen}
     >
       {selectedLog?.failed && (
-        <Icon status="danger">
-          <ExclamationCircleIcon />
-        </Icon>
+        <>
+          <Icon status="danger">
+            <ExclamationCircleIcon />
+          </Icon>{" "}
+        </>
       )}
       {selectedLog?.name || words("logViewer.selectLog")}
     </MenuToggle>

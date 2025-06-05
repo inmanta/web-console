@@ -6,16 +6,17 @@ import {
   FormSelect,
   FormSelectOption,
   Content,
+  Spinner,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
-import { InstanceAttributeModel } from "@/Core";
+import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
 import { ExpertPatchAttributes, usePatchAttributesExpert } from "@/Data/Queries";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
 import { JSONEditor } from "@/UI/Components/JSONEditor";
-import { ConfirmationModal } from "../ConfirmModal";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { ToastAlertMessage } from "../ToastAlert";
 
 interface Props {
@@ -41,11 +42,9 @@ export const AttributesEditor: React.FC<Props> = ({
   service_entity,
   selectedVersion,
 }) => {
-  const { authHelper } = useContext(DependencyContext);
+  const { triggerModal } = useContext(ModalContext);
   const { instance } = useContext(InstanceDetailsContext);
   const isLatestVersion = String(instance.version) === selectedVersion;
-
-  const username = authHelper.getUser();
 
   const [selectedSet, setSelectedSet] = useState(dropdownOptions[0]);
   const [editorDataOriginal, setEditorDataOriginal] = useState<string>("");
@@ -54,13 +53,7 @@ export const AttributesEditor: React.FC<Props> = ({
   const [isEditorValid, setIsEditorValid] = useState<boolean>(true);
   const [editorState, setEditorState] = useState<string>(editorDataOriginal);
 
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
-  const { mutate, isPending } = usePatchAttributesExpert(instance.id, instance.service_entity, {
-    onError: (error) => setErrorMessage(error.message),
-    onSuccess: () => setIsModalOpen(false),
-  });
 
   /**
    * Handles the change of the selected attribute Set.
@@ -94,30 +87,6 @@ export const AttributesEditor: React.FC<Props> = ({
     },
     [setEditorState, setIsEditorValid]
   );
-
-  /**
-   * onConfirm async method sending the patch request to Expert edit the attributes
-   */
-  const onConfirm = async (): Promise<void> => {
-    const message = words("instanceDetails.API.message.update")(username);
-
-    const patchAttributes: ExpertPatchAttributes = {
-      comment: message,
-      attribute_set_name: selectedSet,
-      current_version: instance.version,
-      patch_id: uuidv4(),
-      edit: [
-        {
-          edit_id: `${instance.id}_version=${instance.version}`,
-          operation: "replace",
-          target: ".",
-          value: editorState,
-        },
-      ],
-    };
-
-    mutate(patchAttributes);
-  };
 
   useEffect(() => {
     setEditorDataOriginal(JSON.stringify(attributeSets[selectedSet], null, 2));
@@ -153,7 +122,22 @@ export const AttributesEditor: React.FC<Props> = ({
               aria-label="Expert-Submit-Button"
               aria-disabled={!isEditorValid}
               variant="danger"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() =>
+                triggerModal({
+                  title: words("instanceDetails.expert.editModal.title"),
+                  ariaLabel: "Confirm-Expert-Edit-Modal",
+                  dataTestId: "Confirm-Expert-Edit",
+                  iconVariant: "danger",
+                  content: (
+                    <ModalContent
+                      instance={instance}
+                      selectedSet={selectedSet}
+                      editorState={editorState}
+                      setErrorMessage={setErrorMessage}
+                    />
+                  ),
+                })
+              }
             >
               Force Update
             </Button>
@@ -166,18 +150,6 @@ export const AttributesEditor: React.FC<Props> = ({
         onChange={onEditorUpdate}
         readOnly={!environmentHandler.useIsExpertModeEnabled()}
       />
-      <ConfirmationModal
-        title={words("instanceDetails.expert.editModal.title")}
-        onConfirm={onConfirm}
-        id="Confirm-Expert-Edit"
-        isModalOpen={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        isPending={isPending}
-      >
-        <Content component="p">
-          {words("instanceDetails.expert.editModal.message")(selectedSet)}
-        </Content>
-      </ConfirmationModal>
       {errorMessage && (
         <ToastAlertMessage
           message={errorMessage}
@@ -193,3 +165,89 @@ export const AttributesEditor: React.FC<Props> = ({
 const StyledSelect = styled(FormSelect)`
   width: 180px;
 `;
+
+interface ModalContentProps {
+  instance: ServiceInstanceModel;
+  selectedSet: string;
+  editorState: string;
+  setErrorMessage: (error: string) => void;
+}
+
+/**
+ * The ModalContent Component
+ *
+ * @returns {React.FC} A React Component displaying the Modal Content
+ */
+const ModalContent: React.FC<ModalContentProps> = ({
+  instance,
+  selectedSet,
+  editorState,
+  setErrorMessage,
+}) => {
+  const { authHelper } = useContext(DependencyContext);
+
+  const username = authHelper.getUser();
+
+  const { closeModal } = useContext(ModalContext);
+  const { mutate, isPending } = usePatchAttributesExpert(instance.id, instance.service_entity, {
+    onError: (error) => setErrorMessage(error.message),
+    onSuccess: closeModal,
+  });
+
+  /**
+   * onConfirm async method sending the patch request to Expert edit the attributes
+   */
+  const onConfirm = async (): Promise<void> => {
+    const message = words("instanceDetails.API.message.update")(username);
+
+    const patchAttributes: ExpertPatchAttributes = {
+      comment: message,
+      attribute_set_name: selectedSet,
+      current_version: instance.version,
+      patch_id: uuidv4(),
+      edit: [
+        {
+          edit_id: `${instance.id}_version=${instance.version}`,
+          operation: "replace",
+          target: ".",
+          value: editorState,
+        },
+      ],
+    };
+
+    mutate(patchAttributes);
+  };
+
+  return (
+    <>
+      <Content component="p">
+        {words("instanceDetails.expert.editModal.message")(selectedSet)}
+      </Content>
+      <br />
+      <Flex>
+        <FlexItem>
+          <Button
+            key="confirm"
+            variant="primary"
+            data-testid={"Confirm-Expert-Edit-modal-confirm"}
+            onClick={onConfirm}
+            isDisabled={isPending}
+          >
+            {words("yes")}
+            {isPending && <Spinner size="sm" />}
+          </Button>
+        </FlexItem>
+        <FlexItem>
+          <Button
+            key="cancel"
+            variant="link"
+            data-testid={"Confirm-Expert-Edit-modal-cancel"}
+            onClick={closeModal}
+          >
+            {words("no")}
+          </Button>
+        </FlexItem>
+      </Flex>
+    </>
+  );
+};
