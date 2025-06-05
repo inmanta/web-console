@@ -268,7 +268,9 @@ describe("Page Actions - Failed", () => {
     await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
-    expect(screen.getByTestId("error-toast-expert-state-message")).toBeVisible();
+    const errorToast = screen.getByTestId("error-toast-actions-error-message");
+
+    expect(errorToast).toBeVisible();
   });
 
   it("Expert actions - Destroy", async () => {
@@ -304,7 +306,9 @@ describe("Page Actions - Failed", () => {
     await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
-    expect(screen.getByTestId("error-toast-expert-destroy-message")).toBeVisible();
+    const errorToast = screen.getByTestId("error-toast-actions-error-message");
+
+    expect(errorToast).toBeVisible();
 
     await waitFor(() => expect(mockedUsedNavigate).not.toHaveBeenCalled());
   });
@@ -355,7 +359,9 @@ describe("Page Actions - Failed", () => {
     await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
-    expect(screen.getByTestId("error-toast-delete-instance-message")).toBeVisible();
+    const errorToast = screen.getByTestId("error-toast-actions-error-message");
+
+    expect(errorToast).toBeVisible();
   });
 
   it("Normal Instance Actions Enabled - update state action", async () => {
@@ -397,6 +403,8 @@ describe("Page Actions - Failed", () => {
 
     await userEvent.click(confirmButton);
 
-    expect(screen.getByTestId("error-toast-state-transfer-message")).toBeVisible();
+    const errorToast = screen.getByTestId("error-toast-actions-error-message");
+
+    expect(errorToast).toBeVisible();
   });
 });

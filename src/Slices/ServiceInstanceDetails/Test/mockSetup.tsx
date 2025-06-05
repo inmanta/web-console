@@ -4,6 +4,7 @@ import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as monaco from "monaco-editor";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInstanceDetails } from "../UI/Page";
 
@@ -54,18 +55,18 @@ export const SetupWrapper: React.FC<PropsWithChildren<Props>> = ({ children, exp
   loader.init();
 
   return (
-    <TestMemoryRouter
-      initialEntries={[
-        "/lsm/catalog/mobileCore/inventory/core1/1d96a1ab/details?env=c85c0a64-ed45-4cba-bdc5-703f65a225f7",
-      ]}
-    >
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <TestMemoryRouter
+        initialEntries={[
+          "/lsm/catalog/mobileCore/inventory/core1/1d96a1ab/details?env=c85c0a64-ed45-4cba-bdc5-703f65a225f7",
+        ]}
+      >
         <MockedDependencyProvider
           env={{ ...EnvironmentDetails.a, settings: { enable_lsm_expert_mode: expertMode } }}
         >
-          {children}
+          <ModalProvider>{children}</ModalProvider>
         </MockedDependencyProvider>
-      </QueryClientProvider>
-    </TestMemoryRouter>
+      </TestMemoryRouter>
+    </QueryClientProvider>
   );
 };

@@ -16,11 +16,14 @@ type IconVariant = "success" | "danger" | "warning" | "info" | "custom";
  */
 interface Params {
   title: string;
+  ariaLabel?: string;
+  dataTestId?: string;
   description?: React.ReactNode;
   content: React.ReactNode;
   actions?: React.ReactNode | null;
   variant?: ModalVariant;
   iconVariant?: IconVariant;
+  cancelCb?: () => void;
 }
 
 /**
@@ -66,11 +69,14 @@ export const ModalContext = createContext<ModalContextInterface>(defaultModalCon
 export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const [ariaLabel, setAriaLabel] = useState("GlobalModal");
+  const [dataTestId, setDataTestId] = useState("GlobalModal");
   const [description, setDescription] = useState<React.ReactNode>();
   const [content, setContent] = useState<React.ReactNode>();
-  const [actions, setAction] = useState<React.ReactNode>([]);
+  const [actions, setAction] = useState<React.ReactNode | undefined>(undefined);
   const [variant, setVariant] = useState<ModalVariant>(ModalVariant.small);
   const [iconVariant, setIconVariant] = useState<IconVariant | undefined>("info");
+  const [cancelCb, setCancelCb] = useState<(() => void) | null>(null);
 
   /**
    * Triggers the modal with the provided properties.
@@ -93,15 +99,21 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const triggerModal = (params: Params) => {
     const {
       title,
+      ariaLabel = "GlobalModal",
+      dataTestId = "GlobalModal",
       description = null,
       content,
-      actions = [],
+      actions = undefined,
       variant = ModalVariant.small,
       iconVariant,
+      cancelCb = null,
     } = params;
 
+    setCancelCb(cancelCb);
     setTitle(title);
     setDescription(description);
+    setAriaLabel(ariaLabel);
+    setDataTestId(dataTestId);
     setContent(content);
     setIsOpen(true);
     setAction(actions);
@@ -111,6 +123,9 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   const closeModal = () => {
     setIsOpen(false);
+    if (cancelCb) {
+      cancelCb();
+    }
   };
 
   return (
@@ -121,14 +136,14 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
       }}
     >
       <Modal
-        data-testid="GlobalModal"
-        aria-labelledby="GlobalModal"
+        data-testid={dataTestId}
+        aria-labelledby={ariaLabel}
         disableFocusTrap
         description={description}
         variant={variant}
         title={title}
         isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        onClose={closeModal}
         actions={actions}
         ouiaId="GlobalModal"
         titleIconVariant={iconVariant}
