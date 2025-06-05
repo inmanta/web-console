@@ -68,10 +68,10 @@ beforeEach(() => {
 
 if (Cypress.env("edition") === "iso") {
   describe("Scenario 2.1 Service Catalog - basic-service", () => {
-    // before(() => {
-    //   clearEnvironment();
-    //   forceUpdateEnvironment();
-    // });
+    before(() => {
+      clearEnvironment();
+      forceUpdateEnvironment();
+    });
 
     it("2.1.1 Add Instance Cancel form", () => {
       // Go from Home page to Service Inventory of Basic-service
