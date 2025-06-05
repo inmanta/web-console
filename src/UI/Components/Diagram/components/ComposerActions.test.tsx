@@ -112,7 +112,6 @@ describe("ComposerActions.", () => {
     ${new Map()}      | ${true}  | ${null}                  | ${true}  | ${null}
     ${null}           | ${false} | ${null}                  | ${true}  | ${null}
     ${null}           | ${true}  | ${new Set().add("test")} | ${true}  | ${null}
-    ${null}           | ${true}  | ${null}                  | ${false} | ${null}
     ${null} | ${true} | ${null} | ${true} | ${new Map().set("test_id", {
   name: "test",
   relations: [{ name: "relation-test", currentAmount: 0, min: 1 }],
@@ -133,6 +132,11 @@ describe("ComposerActions.", () => {
       expect(screen.getByRole("button", { name: "Deploy" })).toBeDisabled();
     }
   );
+
+  it("should not render deploy button when editable is false", () => {
+    render(setup(null, validContextForEnabledDeploy, false));
+    expect(screen.queryByRole("button", { name: "Deploy" })).not.toBeInTheDocument();
+  });
 
   it("should have deploy button enabled when all conditions are met", () => {
     render(setup(null, validContextForEnabledDeploy));
