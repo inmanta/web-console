@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
 import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 
 /*
@@ -169,7 +170,7 @@ export const useGetInstanceWithRelations = (
      */
     useOneTime: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
-        queryKey: ["get_instance_with_relations-one_time", instanceId, env],
+        queryKey: getInstanceWithRelationsKey.single(instanceId, [env]),
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
         enabled: serviceModel !== undefined,
@@ -177,7 +178,7 @@ export const useGetInstanceWithRelations = (
       }),
     useContinuous: (): UseQueryResult<InstanceWithRelations, CustomError> =>
       useQuery({
-        queryKey: ["get_instance_with_relations-continuous", instanceId, env],
+        queryKey: getInstanceWithRelationsKey.single(instanceId, [env]),
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
         refetchInterval: REFETCH_INTERVAL,
@@ -185,3 +186,8 @@ export const useGetInstanceWithRelations = (
       }),
   };
 };
+
+export const getInstanceWithRelationsKey = new KeyFactory(
+  SliceKeys.serviceInstance,
+  "get_instance_with_relations"
+);

@@ -1,7 +1,7 @@
 import moment from "moment-timezone";
 import { PageSize } from "@/Core";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
-import { getUrl } from "./getUrl";
+import { getDesiredStatesUrl } from "./getDesiredStatesUrl";
 import { GetDesiredStatesParams } from "./useGetDesiredStates";
 
 it.each`
@@ -22,6 +22,6 @@ it.each`
       currentPage: { kind: "CurrentPage", value: currentPage },
     };
 
-    expect(getUrl(query, "Europe/Brussels")).toEqual(url);
+    expect(getDesiredStatesUrl(query, "Europe/Brussels")).toEqual(url);
   }
 );

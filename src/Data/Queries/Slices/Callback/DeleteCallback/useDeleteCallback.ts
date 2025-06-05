@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { useDelete } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
+import { getCallbackKey } from "../GetCallbacks/useGetCallbacks";
 
 /**
  * React Query hook for deleting callback of given id
@@ -27,7 +28,7 @@ export const useDeleteCallback = (
     onSuccess: () => {
       //invalidate the get_callbacks query to update the list
       client.invalidateQueries({
-        queryKey: ["get_callbacks-one_time"],
+        queryKey: getCallbackKey.root(),
       });
     },
     ...options,

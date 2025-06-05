@@ -4,6 +4,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { useGetWithoutEnv } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 /**
  * Represents the user information.
@@ -27,9 +28,11 @@ export const useGetUsers = () => {
      */
     useOneTime: () =>
       useQuery({
-        queryKey: ["get_users-one_time"],
+        queryKey: getUserKey.list(),
         queryFn: () => get("/api/v2/user"),
         select: (data) => data.data,
       }),
   };
 };
+
+export const getUserKey = new KeyFactory(SliceKeys.auth, "get_user");

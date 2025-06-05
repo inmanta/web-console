@@ -1,6 +1,7 @@
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { EnvironmentSettings } from "@/Core/Domain/EnvironmentSettings";
 import { useGetWithOptionalEnv } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 /**
  * Return Signature of the useGetEnvironmentSettings React Query
@@ -20,7 +21,7 @@ export const useGetEnvironmentSettings = (env?: string): GetEnvironmentSettings 
   return {
     useOneTime: (): UseQueryResult<EnvironmentSettings, Error> =>
       useQuery({
-        queryKey: ["get_environment_settings-one_time", env],
+        queryKey: getEnvironmentSettingsKey.single(env || "no_env"),
         queryFn: () => get("/api/v2/environment_settings"),
         retry: false,
         enabled: env !== undefined,
@@ -30,3 +31,8 @@ export const useGetEnvironmentSettings = (env?: string): GetEnvironmentSettings 
       }),
   };
 };
+
+export const getEnvironmentSettingsKey = new KeyFactory(
+  SliceKeys.environment,
+  "get_environment_setting"
+);

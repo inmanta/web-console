@@ -4,6 +4,7 @@ import { CompileStatus, Sort, PageSize, Pagination } from "@/Core/Domain";
 import { DateRange } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { CustomError, REFETCH_INTERVAL, useGet, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
@@ -51,14 +52,7 @@ export const useGetCompileReports = (params: CompileReportsParams): GetCompileRe
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: [
-          "get_compile_reports-continuous",
-          params.filter,
-          params.sort,
-          params.pageSize,
-          params.currentPage,
-          env,
-        ],
+        queryKey: getCompileReportsKey.list([env, ...Object.values(params)]),
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
@@ -68,3 +62,5 @@ export const useGetCompileReports = (params: CompileReportsParams): GetCompileRe
       }),
   };
 };
+
+export const getCompileReportsKey = new KeyFactory(SliceKeys.compilation, "get_compile_report");

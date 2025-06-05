@@ -530,7 +530,7 @@ describe("DesiredStatesView", () => {
       expect(results).toHaveNoViolations();
     });
     expect(POSTRequestsFired).toBe(1);
-    expect(GETRequestsFired).toBe(3);
+    expect(GETRequestsFired).toBe(4);
   });
 
   it("Given the Desired states view When promoting a version results in an error, then the error is shown", async () => {

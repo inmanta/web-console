@@ -3,7 +3,7 @@ import { MenuItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { useDeleteInstance } from "@/Data/Queries";
+import { useDeleteInstance, getInstanceKey } from "@/Data/Queries";
 import { ToastAlert, ActionDisabledTooltip, ConfirmUserActionForm } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -31,11 +31,8 @@ export const DeleteAction: React.FC<Props> = ({
       setErrorMessage(error.message);
     },
     onSuccess: () => {
-      client.invalidateQueries({
-        queryKey: ["get_instances-one_time", service_entity],
-      });
       client.refetchQueries({
-        queryKey: ["get_instances-continuous", service_entity],
+        queryKey: getInstanceKey.root(),
       });
     },
   });

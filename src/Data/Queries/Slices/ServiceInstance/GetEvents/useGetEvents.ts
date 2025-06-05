@@ -4,6 +4,7 @@ import { DateRange, EventType, InstanceEvent, PageSize, Pagination, Sort } from 
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
 
@@ -94,7 +95,7 @@ export const useGetInstanceEvents = (params: GetInstanceEventParams): GetInstanc
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: ["get_instance_events-continuous", ...Array.from(Object.values(params)), env],
+        queryKey: getInstanceEventsKey.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
@@ -104,3 +105,8 @@ export const useGetInstanceEvents = (params: GetInstanceEventParams): GetInstanc
       }),
   };
 };
+
+export const getInstanceEventsKey = new KeyFactory(
+  SliceKeys.serviceInstance,
+  "get_instance_events"
+);

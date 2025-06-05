@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { CustomError, useGet } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**
@@ -26,9 +27,11 @@ export const useGetJSONSchema = (service_id: string): GetJSONSchema => {
   return {
     useOneTime: () =>
       useQuery({
-        queryKey: ["get_JSON_schema-one_time", service_id, env],
+        queryKey: getJSONSchemaKey.single(service_id, [env]),
         queryFn: () => get(`/lsm/v1/service_catalog/${service_id}/schema`),
         select: (data) => data.data,
       }),
   };
 };
+
+export const getJSONSchemaKey = new KeyFactory(SliceKeys.serviceInstance, "get_JSON_schema");

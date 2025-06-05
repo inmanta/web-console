@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDelete } from "@/Data/Queries";
+import { getDesiredStatesKey } from "@/Data/Queries/Slices/DesiredState/GetDesiredStates/useGetDesiredStates";
 import { DependencyContext } from "@/UI";
 
 /**
@@ -19,11 +20,8 @@ export const useDeleteDesiredStateVersion = (): UseMutationResult<void, Error, s
     mutationKey: ["delete_desired_state_version", env],
     onSuccess: () => {
       //invalidate the desired state queries to update the list
-      client.invalidateQueries({
-        queryKey: ["get_desired_states-continuous"],
-      });
-      client.invalidateQueries({
-        queryKey: ["get_desired_states-one_time"],
+      client.refetchQueries({
+        queryKey: getDesiredStatesKey.root(),
       });
     },
   });

@@ -1,5 +1,5 @@
 import { PageSize } from "@/Core";
-import { getUrl } from "./getUrl";
+import { getVersionResourcesUrl } from "./getVersionResourcesUrl";
 import { GetVersionResourcesParams } from "./useGetVersionResources";
 
 it.each`
@@ -18,6 +18,6 @@ it.each`
       currentPage: { kind: "CurrentPage", value: currentPage },
     };
 
-    expect(getUrl(query)).toEqual(url);
+    expect(getVersionResourcesUrl(query)).toEqual(url);
   }
 );

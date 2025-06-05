@@ -3,6 +3,7 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Diff } from "@/Core";
 import { ParsedNumber } from "@/Core/Language";
 import { useGet } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**
@@ -59,9 +60,11 @@ export const useGetDryRunReport = (): GetDryRunReport => {
   return {
     useOneTime: (version: string, reportId: string): UseQueryResult<Report, Error> =>
       useQuery({
-        queryKey: ["get_dry_run_reports-one_time", version, reportId, env],
+        queryKey: getDryRunReportKey.single(reportId, [{ version }, env]),
         queryFn: () => get(`/api/v2/dryrun/${version}/${encodeURIComponent(reportId)}`),
         select: (data) => data.data,
       }),
   };
 };
+
+export const getDryRunReportKey = new KeyFactory(SliceKeys.dryRun, "get_dry_run_report");

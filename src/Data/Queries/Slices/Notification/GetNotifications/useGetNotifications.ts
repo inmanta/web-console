@@ -3,6 +3,7 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { Notification, Severity } from "@S/Notification/Core/Domain";
 import { Origin } from "@S/Notification/Core/Utils";
@@ -63,18 +64,18 @@ export const useGetNotifications = (params: GetNotificationsParams): GetNotifica
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
+  const filter = params.filter ? Object.values(params.filter) : [];
 
   return {
     useContinuous: () =>
       useQuery({
-        queryKey: [
-          "get_notifications_continuous",
-          params.pageSize.value,
-          params.filter,
-          params.currentPage.value,
+        queryKey: getNotificationsKey.list([
+          params.pageSize,
+          ...filter,
+          params.currentPage,
           params.origin,
           env,
-        ],
+        ]),
         refetchInterval: REFETCH_INTERVAL,
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
@@ -84,3 +85,5 @@ export const useGetNotifications = (params: GetNotificationsParams): GetNotifica
       }),
   };
 };
+
+export const getNotificationsKey = new KeyFactory(SliceKeys.notification, "get_notifications");

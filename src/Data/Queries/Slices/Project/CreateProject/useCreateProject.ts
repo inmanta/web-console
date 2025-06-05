@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { ProjectModel } from "@/Core";
 import { usePutWithoutEnv } from "@/Data/Queries";
+import { getProjectsKey } from "../GetProjects";
 
 /**
  * Interface for the parameters for the create project mutation.
@@ -38,8 +39,7 @@ export const useCreateProject = (
     ...options,
     onSuccess: () => {
       // Invalidate and refetch projects query
-      queryClient.refetchQueries({ queryKey: ["get_projects-one_time"] });
-      queryClient.refetchQueries({ queryKey: ["get_projects-continuous"] });
+      queryClient.refetchQueries({ queryKey: getProjectsKey.root() });
     },
   });
 };

@@ -3,6 +3,7 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceModel } from "@/Core";
 import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
+import { getServiceModelKey } from "../GetServiceModel";
 
 /**
  * Return Signature of the useGetServiceModel React Query
@@ -27,7 +28,7 @@ export const useGetServiceModels = (): GetServiceModels => {
   return {
     useContinuous: (): UseQueryResult<ServiceModel[], CustomError> =>
       useQuery({
-        queryKey: ["get_service_models-continuous", env],
+        queryKey: getServiceModelKey.list([env]),
         queryFn: () => get("/lsm/v1/service_catalog?instance_summary=True"),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => data.data,

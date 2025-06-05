@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
+import { getDryRunsKey } from "../GetDryRuns";
 
 /**
  * React Query hook for triggering a dry run
@@ -28,10 +29,7 @@ export const useTriggerDryRun = (
     onSuccess: () => {
       // Refetch the dry run queries
       client.refetchQueries({
-        queryKey: ["get_dry_runs-continuous"],
-      });
-      client.refetchQueries({
-        queryKey: ["get_dry_run_report-one_time"],
+        queryKey: getDryRunsKey.root(),
       });
     },
   });

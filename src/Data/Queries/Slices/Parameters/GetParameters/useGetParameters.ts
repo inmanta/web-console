@@ -4,6 +4,7 @@ import { DateRange, PageSize, Parameter, Sort } from "@/Core/Domain";
 import { Handlers, Links, Metadata } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { SortKey } from "@/Slices/Parameters/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
@@ -68,11 +69,12 @@ export const useGetParameters = (params: GetParametersParams): GetParameters => 
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
+  const filterArray = params.filter ? Object.values(params.filter) : [];
 
   return {
     useContinuous: (): UseQueryResult<GetParametersResponse, Error> =>
       useQuery({
-        queryKey: ["get_parameters-continuous", pageSize, filter, sort, currentPage, env],
+        queryKey: getParametersKey.list([pageSize, ...filterArray, sort, currentPage, env]),
         queryFn: () => get(url),
         select: (data) => ({
           ...data,
@@ -82,3 +84,5 @@ export const useGetParameters = (params: GetParametersParams): GetParameters => 
       }),
   };
 };
+
+export const getParametersKey = new KeyFactory(SliceKeys.parameters, "get_parameter");

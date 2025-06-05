@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceInstanceModel } from "@/Core";
 import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**
@@ -57,14 +58,16 @@ export const useGetInventoryList = (serviceNames: string[]): GetInventoryList =>
   return {
     useOneTime: (): UseQueryResult<Inventories, CustomError> =>
       useQuery({
-        queryKey: ["get_inventory_list-one_time", serviceNames, env],
+        queryKey: getInventoryListKey.list([...serviceNames, env]),
         queryFn: fetchAllServices,
       }),
     useContinuous: (): UseQueryResult<Inventories, CustomError> =>
       useQuery({
-        queryKey: ["get_inventory_list-continuous", serviceNames, env],
+        queryKey: getInventoryListKey.list([...serviceNames, env]),
         queryFn: fetchAllServices,
         refetchInterval: REFETCH_INTERVAL,
       }),
   };
 };
+
+export const getInventoryListKey = new KeyFactory(SliceKeys.serviceInstance, "get_inventory_list");

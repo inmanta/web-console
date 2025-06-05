@@ -4,8 +4,9 @@ import { PageSize, Pagination } from "@/Core";
 import { Resource } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { REFETCH_INTERVAL, useGet, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
-import { getUrl } from "./getUrl";
+import { getVersionResourcesUrl } from "./getVersionResourcesUrl";
 
 /**
  * Interface for the API response containing the resources data
@@ -57,7 +58,7 @@ export const useGetVersionResources = ({
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<Result>;
-  const url = getUrl({
+  const url = getVersionResourcesUrl({
     version,
     pageSize,
     filter,
@@ -65,18 +66,20 @@ export const useGetVersionResources = ({
     currentPage,
   });
 
+  const filterArray = filter ? [...(Object.values(filter) as Record<string, string>[])] : [];
+  const sortArray = sort ? [sort] : [];
+
   return {
     useContinuous: (): UseQueryResult<QueryResponse, Error> =>
       useQuery({
-        queryKey: [
-          "get_version_resources-continuous",
+        queryKey: getVersionResourcesKey.list([
           version,
-          pageSize,
-          filter,
-          sort,
-          currentPage,
+          { pageSize: pageSize.value },
+          { currentPage: currentPage.value },
           env,
-        ],
+          ...filterArray,
+          ...sortArray,
+        ]),
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
@@ -86,3 +89,8 @@ export const useGetVersionResources = ({
       }),
   };
 };
+
+export const getVersionResourcesKey = new KeyFactory(
+  SliceKeys.desiredState,
+  "get_version_resources"
+);

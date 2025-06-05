@@ -12,7 +12,10 @@ import { GetDesiredStatesParams } from "./useGetDesiredStates";
  * @param timezone - The timezone to use for date conversions (default: guessed timezone).
  * @returns The constructed URL for fetching desired states.
  */
-export function getUrl(params: GetDesiredStatesParams, timezone = moment.tz.guess()): string {
+export function getDesiredStatesUrl(
+  params: GetDesiredStatesParams,
+  timezone = moment.tz.guess()
+): string {
   const { filter, pageSize, currentPage } = urlEncodeParams<GetDesiredStatesParams>(params);
 
   const defaultFilter = {};
