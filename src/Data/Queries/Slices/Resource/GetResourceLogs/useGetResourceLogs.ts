@@ -3,6 +3,7 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { ResourceLog, ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
 import { getUrl } from "./getUrl";
@@ -62,11 +63,20 @@ export const useGetResourceLogs = (params: GetResourceLogsParams): GetResourceLo
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
+  const filterArray = filter ? Object.values(filter) : [];
+  const sortArray = sort ? [sort] : [];
 
   return {
     useContinuous: (): UseQueryResult<ResourceLogsResponse, Error> =>
       useQuery({
-        queryKey: ["get_resource_logs-continuous", id, pageSize, filter, sort, currentPage, env],
+        queryKey: getResourceLogsKey.list([
+          id,
+          pageSize,
+          ...filterArray,
+          ...sortArray,
+          currentPage,
+          env,
+        ]),
         queryFn: () => get(url),
         select: (data) => ({
           ...data,
@@ -76,3 +86,5 @@ export const useGetResourceLogs = (params: GetResourceLogsParams): GetResourceLo
       }),
   };
 };
+
+export const getResourceLogsKey = new KeyFactory(SliceKeys.resource, "get_resource_logs");

@@ -1,5 +1,6 @@
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDeleteWithoutEnv } from "@/Data/Queries";
+import { getUserKey } from "../GetUsers/useGetUsers";
 
 /**
  * React Query hook for removing a user from the server.
@@ -15,7 +16,7 @@ export const useRemoveUser = (): UseMutationResult<void, Error, string, unknown>
     mutationKey: ["removeUser"],
     onSuccess: () => {
       // Refetch the users query to update the list
-      client.invalidateQueries({ queryKey: ["get_users-one_time"] });
+      client.invalidateQueries({ queryKey: getUserKey.root() });
     },
   });
 };

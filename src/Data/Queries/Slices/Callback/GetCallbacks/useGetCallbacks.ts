@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { CustomError, useGet } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { Callback } from "@/Slices/ServiceDetails/Core/Callback";
 import { DependencyContext } from "@/UI/Dependency";
 
@@ -32,11 +33,13 @@ export const useGetCallbacks = (): GetDesiredStates => {
   return {
     useOneTime: (): UseQueryResult<Callback[], CustomError> =>
       useQuery({
-        queryKey: ["get_callbacks-one_time", env],
-        queryFn: () => get(getUrl()),
+        queryKey: getCallbackKey.list([env]),
+        queryFn: () => get(getCallbacksUrl()),
         select: (data) => data.data,
       }),
   };
 };
 
-export const getUrl = (): string => "/lsm/v1/callbacks";
+export const getCallbacksUrl = (): string => "/lsm/v1/callbacks";
+
+export const getCallbackKey = new KeyFactory(SliceKeys.callback, "get_callback");

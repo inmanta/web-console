@@ -3,7 +3,7 @@ import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-
 import { Config } from "@/Core";
 import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-
+import { getServiceConfigKey } from "../GetServiceConfig";
 export interface Params {
   values: Config;
 }
@@ -29,9 +29,7 @@ export const usePostServiceConfig = (
     mutationFn: (body) => post(`/lsm/v1/service_catalog/${service_entity}/config`, body),
     mutationKey: ["post_config", env],
     onSuccess: () => {
-      client.resetQueries({
-        queryKey: ["get_service_config-one_time", service_entity],
-      });
+      client.refetchQueries({ queryKey: getServiceConfigKey.single(service_entity) });
     },
   });
 };

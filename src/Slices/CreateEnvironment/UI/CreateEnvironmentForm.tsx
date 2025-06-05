@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
 import { Environment, ProjectModel } from "@/Core";
-import { useCreateEnvironment, useCreateProject } from "@/Data/Queries";
+import { useCreateEnvironment, useCreateProject, getEnvironmentsKey } from "@/Data/Queries";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
@@ -39,10 +39,11 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       };
 
       //update the data in the cache to avoid crash after navigating to the new env
-      client.setQueryData(["get_environments-one_time", false], dataUpdater);
-      client.setQueryData(["get_environments-one_time", true], dataUpdater);
-      client.setQueryData(["get_environments-continuous", false], dataUpdater);
-      client.setQueryData(["get_environments-continuous", true], dataUpdater);
+      client.setQueryData(getEnvironmentsKey.list([{ hasDetails: true }]), dataUpdater);
+      client.setQueryData(getEnvironmentsKey.list([{ hasDetails: false }]), dataUpdater);
+
+      client.refetchQueries({ queryKey: getEnvironmentsKey.list([{ hasDetails: true }]) });
+      client.refetchQueries({ queryKey: getEnvironmentsKey.list([{ hasDetails: false }]) });
 
       const target = isLsmEnabled ? "Catalog" : "DesiredState";
 

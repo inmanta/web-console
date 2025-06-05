@@ -5,6 +5,7 @@ import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { ServiceInstanceParams } from "@/Core/Domain/ServiceInstanceParams";
 import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
+import { getInstanceKey } from "../GetInstance";
 import { getUrl } from "./getUrl";
 
 interface ResponseBody {
@@ -52,18 +53,20 @@ export const useGetInstances = (
   });
   const get = useGet(env)<ResponseBody>;
 
+  const filterArray = filter ? Object.values(filter) : [];
+  const sortArray = sort ? [sort.name, sort.order] : [];
+
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: [
-          "get_instances-continuous",
+        queryKey: getInstanceKey.list([
           serviceName,
-          filter,
-          sort,
+          ...filterArray,
+          ...sortArray,
           pageSize,
           currentPage,
           env,
-        ],
+        ]),
         queryFn: () => get(url),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({

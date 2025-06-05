@@ -3,7 +3,7 @@ import { MenuItem, Content } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { useDestroyInstance } from "@/Data/Queries";
+import { useDestroyInstance, getInstanceKey } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 import { ToastAlert, ConfirmUserActionForm } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -43,11 +43,8 @@ export const DestroyAction: React.FC<Props> = ({
       setErrorMessage(error.message);
     },
     onSuccess: () => {
-      client.invalidateQueries({
-        queryKey: ["get_instances-one_time", service_entity],
-      });
       client.refetchQueries({
-        queryKey: ["get_instances-continuous", service_entity],
+        queryKey: getInstanceKey.root(),
       });
     },
   });

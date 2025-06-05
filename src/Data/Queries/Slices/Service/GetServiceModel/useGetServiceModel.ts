@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { ServiceModel } from "@/Core";
 import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**
@@ -29,16 +30,18 @@ export const useGetServiceModel = (service: string): GetServiceModel => {
   return {
     useOneTime: (): UseQueryResult<ServiceModel, CustomError> =>
       useQuery({
-        queryKey: ["get_service_model-one_time", service, env],
+        queryKey: getServiceModelKey.single(service, [env]),
         queryFn: () => get(`/lsm/v1/service_catalog/${service}?instance_summary=True`),
         select: (data) => data.data,
       }),
     useContinuous: (): UseQueryResult<ServiceModel, CustomError> =>
       useQuery({
-        queryKey: ["get_service_model-continuous", service, env],
+        queryKey: getServiceModelKey.single(service, [env]),
         queryFn: () => get(`/lsm/v1/service_catalog/${service}?instance_summary=True`),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => data.data,
       }),
   };
 };
+
+export const getServiceModelKey = new KeyFactory(SliceKeys.service, "get_service_model");

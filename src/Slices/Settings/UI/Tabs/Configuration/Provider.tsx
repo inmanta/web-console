@@ -2,7 +2,11 @@ import React, { useEffect, useReducer, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import _ from "lodash";
 import { EnvironmentSettings } from "@/Core";
-import { useResetEnvironmentSetting, useUpdateEnvironmentSetting } from "@/Data/Queries";
+import {
+  useResetEnvironmentSetting,
+  useUpdateEnvironmentSetting,
+  getEnvironmentSettingsKey,
+} from "@/Data/Queries";
 import { Container } from "./Container";
 import { InputInfoCreator } from "./InputInfoCreator";
 
@@ -73,7 +77,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
 
   const updateSetting = useUpdateEnvironmentSetting({
     onSuccess: () => {
-      client.refetchQueries({ queryKey: ["get_environment_settings-one_time"] });
+      client.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
       document.dispatchEvent(new Event("settings-update"));
       setErrorMessage("");
       setShowUpdateBanner(true);
@@ -87,7 +91,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
   const resetSetting = useResetEnvironmentSetting({
     onSuccess: () => {
       setErrorMessage("");
-      client.refetchQueries({ queryKey: ["get_environment_settings-one_time"] });
+      client.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
     },
     onError: (error) => setErrorMessage(error.message),
   });

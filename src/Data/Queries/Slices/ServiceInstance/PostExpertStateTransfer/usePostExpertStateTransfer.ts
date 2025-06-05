@@ -8,6 +8,7 @@ import {
 import { ParsedNumber } from "@/Core";
 import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
+import { getInstanceKey } from "../GetInstance";
 
 /**
  * Required attributes to construct the post request to force update the state of an instance in Expert mode
@@ -41,15 +42,7 @@ export const usePostExpertStateTransfer = (
       post(`/lsm/v1/service_inventory/${service_entity}/${instance_id}/expert/state`, data),
     mutationKey: ["post_state_transfer_expert", env],
     onSuccess: () => {
-      client.invalidateQueries({
-        queryKey: [service_entity, instance_id],
-      });
-      client.invalidateQueries({
-        queryKey: ["get_service_instances-one_time"],
-      });
-      client.invalidateQueries({
-        queryKey: ["get_service_instances-continuous"],
-      });
+      client.refetchQueries({ queryKey: getInstanceKey.single(instance_id) });
     },
     ...options,
   });

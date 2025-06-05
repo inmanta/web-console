@@ -3,6 +3,7 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
 
@@ -80,17 +81,19 @@ export const useGetDiscoveredResources = (
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
 
+  const filterArray = params.filter ? Object.values(params.filter) : [];
+  const sortArray = params.sort ? [params.sort] : [];
+
   return {
     useContinuous: (): UseQueryResult<DiscoveredResourceResponse, Error> =>
       useQuery({
-        queryKey: [
-          "get_discovered_resources-continuous",
-          params.currentPage,
-          params.sort,
-          params.pageSize,
-          params.filter,
+        queryKey: getDiscoveredResourcesKey.list([
+          params.currentPage.value,
+          params.pageSize.value,
           env,
-        ],
+          ...filterArray,
+          ...sortArray,
+        ]),
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,
@@ -100,3 +103,8 @@ export const useGetDiscoveredResources = (
       }),
   };
 };
+
+export const getDiscoveredResourcesKey = new KeyFactory(
+  SliceKeys.discoveredResource,
+  "get_discovered_resources"
+);

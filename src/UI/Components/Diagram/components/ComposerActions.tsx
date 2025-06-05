@@ -148,20 +148,21 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
           <Button variant="tertiary" width={200} onClick={handleRedirect}>
             {words("cancel")}
           </Button>
-          <Button
-            variant="primary"
-            width={200}
-            onClick={handleDeploy}
-            isDisabled={
-              serviceOrderItems.size < 1 ||
-              !isDirty ||
-              looseElement.size > 0 ||
-              !editable ||
-              missingInterServiceRelations.length > 0
-            }
-          >
-            {words("deploy")}
-          </Button>
+          {editable && (
+            <Button
+              variant="primary"
+              width={200}
+              onClick={handleDeploy}
+              isDisabled={
+                serviceOrderItems.size < 1 ||
+                !isDirty ||
+                looseElement.size > 0 ||
+                missingInterServiceRelations.length > 0
+              }
+            >
+              {words("deploy")}
+            </Button>
+          )}
         </Flex>
       </FlexItem>
     </Flex>

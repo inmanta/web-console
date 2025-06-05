@@ -5,7 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { usePost } from "@/Data/Queries";
+import { usePost, getDesiredStatesKey } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 
 /**
@@ -27,11 +27,8 @@ export const usePromoteDesiredStateVersion = (
     ...options,
     onSuccess: () => {
       // Refetch the desired state queries to update the list
-      client.invalidateQueries({
-        queryKey: ["get_desired_states-continuous"],
-      });
-      client.invalidateQueries({
-        queryKey: ["get_desired_states-one_time"],
+      client.refetchQueries({
+        queryKey: getDesiredStatesKey.root(),
       });
     },
   });

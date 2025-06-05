@@ -282,6 +282,7 @@ describe("CreateEnvironmentForm", () => {
     await userEvent.clear(textBox);
     await userEvent.type(textBox, "dev{enter}");
 
+    expect(await screen.findByRole("button", { name: "submit" })).toBeEnabled();
     await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
     expect(mockFn).toHaveBeenCalledWith("Catalog", undefined, "?env=environment_id_a");

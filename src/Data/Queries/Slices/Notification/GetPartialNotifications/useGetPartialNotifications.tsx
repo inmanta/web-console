@@ -1,6 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { gql } from "graphql-request";
 import { CustomError, REFETCH_INTERVAL, useGraphQLRequest } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { Notification } from "@/Slices/Notification/Core/Domain";
 
 interface Props {
@@ -80,7 +81,7 @@ export const useGetPartialNotifications = ({
   return {
     useContinuous: () =>
       useQuery({
-        queryKey: ["get_notifications", "continuous", envID],
+        queryKey: GetPartialNotificationsKey.list([envID]),
         queryFn,
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => {
@@ -94,3 +95,8 @@ export const useGetPartialNotifications = ({
       }),
   };
 };
+
+export const GetPartialNotificationsKey = new KeyFactory(
+  SliceKeys.notification,
+  "get_partial_notifications"
+);

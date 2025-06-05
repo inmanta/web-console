@@ -131,7 +131,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance,
                   {words(editable ? "instanceComposer.title.edit" : "instanceComposer.title.view")}
                 </FlexItem>
                 <FlexItem>
-                  <ComposerActions serviceName={serviceName} editable />
+                  <ComposerActions serviceName={serviceName} editable={editable} />
                 </FlexItem>
               </Flex>
             }
