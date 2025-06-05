@@ -5,7 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { usePost, getDesiredStatesFactory } from "@/Data/Queries";
+import { usePost, getDesiredStatesKey } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 
 /**
@@ -28,7 +28,7 @@ export const usePromoteDesiredStateVersion = (
     onSuccess: () => {
       // Refetch the desired state queries to update the list
       client.refetchQueries({
-        queryKey: getDesiredStatesFactory.root(),
+        queryKey: getDesiredStatesKey.root(),
       });
     },
   });

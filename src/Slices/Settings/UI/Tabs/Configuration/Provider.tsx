@@ -5,7 +5,7 @@ import { EnvironmentSettings } from "@/Core";
 import {
   useResetEnvironmentSetting,
   useUpdateEnvironmentSetting,
-  getEnvironmentSettingsFactory,
+  getEnvironmentSettingsKey,
 } from "@/Data/Queries";
 import { Container } from "./Container";
 import { InputInfoCreator } from "./InputInfoCreator";
@@ -77,7 +77,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
 
   const updateSetting = useUpdateEnvironmentSetting({
     onSuccess: () => {
-      client.refetchQueries({ queryKey: getEnvironmentSettingsFactory.root() });
+      client.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
       document.dispatchEvent(new Event("settings-update"));
       setErrorMessage("");
       setShowUpdateBanner(true);
@@ -91,7 +91,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
   const resetSetting = useResetEnvironmentSetting({
     onSuccess: () => {
       setErrorMessage("");
-      client.refetchQueries({ queryKey: getEnvironmentSettingsFactory.root() });
+      client.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
     },
     onError: (error) => setErrorMessage(error.message),
   });

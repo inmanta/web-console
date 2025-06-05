@@ -2,14 +2,8 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination, Sort } from "@/Core";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  CustomError,
-  useGet,
-  REFETCH_INTERVAL,
-  getPaginationHandlers,
-  KeyFactory,
-  SliceKeys,
-} from "@/Data/Queries";
+import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { ServiceOrder, SortKey } from "@/Slices/Orders/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
@@ -60,7 +54,7 @@ export const useGetOrders = (): GetOrders => {
   return {
     useContinuous: (params): UseQueryResult<QueryData, CustomError> =>
       useQuery({
-        queryKey: getOrdersFactory.list([...Object.values(params), env]),
+        queryKey: getOrdersKey.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
@@ -71,4 +65,4 @@ export const useGetOrders = (): GetOrders => {
   };
 };
 
-export const getOrdersFactory = new KeyFactory(SliceKeys.order, "get_order");
+export const getOrdersKey = new KeyFactory(SliceKeys.order, "get_order");

@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { CustomError, useGet, KeyFactory, SliceKeys } from "@/Data/Queries";
+import { CustomError, useGet } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { RawDiagnostics } from "@/Slices/Diagnose/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 
@@ -30,11 +31,11 @@ export const useGetDiagnostics = (service: string, instanceId: string): GetDiagn
   return {
     useOneTime: (lookBehind: string): UseQueryResult<RawDiagnostics, CustomError> =>
       useQuery({
-        queryKey: getDiagnosticsFactory.single(instanceId, [{ service }, { lookBehind }, env]),
+        queryKey: getDiagnosticsKey.single(instanceId, [{ service }, { lookBehind }, env]),
         queryFn: () => get(url(lookBehind)),
         select: (data) => data.data,
       }),
   };
 };
 
-export const getDiagnosticsFactory = new KeyFactory(SliceKeys.serviceInstance, "get_diagnostics");
+export const getDiagnosticsKey = new KeyFactory(SliceKeys.serviceInstance, "get_diagnostics");

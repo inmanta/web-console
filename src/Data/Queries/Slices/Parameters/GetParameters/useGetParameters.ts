@@ -3,13 +3,8 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DateRange, PageSize, Parameter, Sort } from "@/Core/Domain";
 import { Handlers, Links, Metadata } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  useGet,
-  REFETCH_INTERVAL,
-  getPaginationHandlers,
-  KeyFactory,
-  SliceKeys,
-} from "@/Data/Queries";
+import { useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { SortKey } from "@/Slices/Parameters/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
@@ -79,7 +74,7 @@ export const useGetParameters = (params: GetParametersParams): GetParameters => 
   return {
     useContinuous: (): UseQueryResult<GetParametersResponse, Error> =>
       useQuery({
-        queryKey: getParametersFactory.list([pageSize, ...filterArray, sort, currentPage, env]),
+        queryKey: getParametersKey.list([pageSize, ...filterArray, sort, currentPage, env]),
         queryFn: () => get(url),
         select: (data) => ({
           ...data,
@@ -90,4 +85,4 @@ export const useGetParameters = (params: GetParametersParams): GetParameters => 
   };
 };
 
-export const getParametersFactory = new KeyFactory(SliceKeys.parameters, "get_parameter");
+export const getParametersKey = new KeyFactory(SliceKeys.parameters, "get_parameter");

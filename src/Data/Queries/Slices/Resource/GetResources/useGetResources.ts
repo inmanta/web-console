@@ -3,13 +3,8 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Resource, Sort } from "@/Core/Domain";
 import { Handlers, Links } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  getPaginationHandlers,
-  useGet,
-  REFETCH_INTERVAL,
-  KeyFactory,
-  SliceKeys,
-} from "@/Data/Queries";
+import { getPaginationHandlers, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
 
@@ -72,13 +67,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   return {
     useContinuous: (): UseQueryResult<GetResourcesResponse, Error> =>
       useQuery({
-        queryKey: getResourcesFactory.list([
-          pageSize,
-          ...filterArray,
-          ...sortArray,
-          currentPage,
-          env,
-        ]),
+        queryKey: getResourcesKey.list([pageSize, ...filterArray, ...sortArray, currentPage, env]),
         queryFn: () => get(url),
         select: (data) => ({
           ...data,
@@ -89,4 +78,4 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   };
 };
 
-export const getResourcesFactory = new KeyFactory(SliceKeys.resource, "get_resources");
+export const getResourcesKey = new KeyFactory(SliceKeys.resource, "get_resources");

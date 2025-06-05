@@ -21,14 +21,14 @@ type KeyArray = (string | Record<string, string | number | boolean>)[];
  * @example
  *    - get specific environment
  *
- * export const exampleFactory = new KeyFactory(SliceKeys.environment, "get_environment");
+ * export const exampleKey = new KeyFactory(SliceKeys.environment, "get_environment");
  *  {...}
- * queryKey: exampleFactory.single(someId, [...params]),
+ * queryKey: exampleKey.single(someId, [...params]),
  *  {...}
  *
  *    - get all environments
  *  {...}
- * queryKey: exampleFactory.list([..params]),
+ * queryKey: exampleKey.list([..params]),
  *  {...}
  *
  */

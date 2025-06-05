@@ -3,7 +3,7 @@ import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-
 import { Config } from "@/Core";
 import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { getInstanceConfigFactory } from "../GetInstanceConfig";
+import { getInstanceConfigKey } from "../GetInstanceConfig";
 
 interface Body {
   current_version: number;
@@ -33,7 +33,7 @@ export const usePostInstanceConfig = (
     mutationKey: ["post_instance_config", env],
     onSuccess: () => {
       client.refetchQueries({
-        queryKey: getInstanceConfigFactory.single(id),
+        queryKey: getInstanceConfigKey.single(id),
       });
     },
   });

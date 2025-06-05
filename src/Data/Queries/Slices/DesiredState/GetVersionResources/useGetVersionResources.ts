@@ -3,13 +3,8 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core";
 import { Resource } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  REFETCH_INTERVAL,
-  useGet,
-  getPaginationHandlers,
-  KeyFactory,
-  SliceKeys,
-} from "@/Data/Queries";
+import { REFETCH_INTERVAL, useGet, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { getVersionResourcesUrl } from "./getVersionResourcesUrl";
 
@@ -77,7 +72,7 @@ export const useGetVersionResources = ({
   return {
     useContinuous: (): UseQueryResult<QueryResponse, Error> =>
       useQuery({
-        queryKey: getVersionResourcesFactory.list([
+        queryKey: getVersionResourcesKey.list([
           version,
           { pageSize: pageSize.value },
           { currentPage: currentPage.value },
@@ -95,7 +90,7 @@ export const useGetVersionResources = ({
   };
 };
 
-export const getVersionResourcesFactory = new KeyFactory(
+export const getVersionResourcesKey = new KeyFactory(
   SliceKeys.desiredState,
   "get_version_resources"
 );

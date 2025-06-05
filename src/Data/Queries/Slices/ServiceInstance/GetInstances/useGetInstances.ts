@@ -5,7 +5,7 @@ import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { ServiceInstanceParams } from "@/Core/Domain/ServiceInstanceParams";
 import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
-import { getInstanceFactory } from "../GetInstance";
+import { getInstanceKey } from "../GetInstance";
 import { getUrl } from "./getUrl";
 
 interface ResponseBody {
@@ -59,7 +59,7 @@ export const useGetInstances = (
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: getInstanceFactory.list([
+        queryKey: getInstanceKey.list([
           serviceName,
           ...filterArray,
           ...sortArray,

@@ -1,6 +1,7 @@
 import { UseQueryOptions, UseQueryResult, useQuery } from "@tanstack/react-query";
 import { VersionInfo } from "@/Core";
-import { CustomError, useGetWithoutEnv, KeyFactory, SliceKeys } from "@/Data/Queries";
+import { CustomError, useGetWithoutEnv } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 /**
  * React Query hook for getting version file info.
@@ -13,10 +14,10 @@ export const useGetVersionFileInfo = (
   const get = useGetWithoutEnv()<VersionInfo>;
 
   return useQuery({
-    queryKey: getVersionFileInfoFactory.root(),
+    queryKey: getVersionFileInfoKey.root(),
     queryFn: () => get("/console/version.json"),
     ...options,
   });
 };
 
-export const getVersionFileInfoFactory = new KeyFactory(SliceKeys.server, "get_version_file_info");
+export const getVersionFileInfoKey = new KeyFactory(SliceKeys.server, "get_version_file_info");

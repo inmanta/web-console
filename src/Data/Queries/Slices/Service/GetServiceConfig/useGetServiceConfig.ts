@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { Config } from "@/Core";
-import { CustomError, useGet, KeyFactory, SliceKeys } from "@/Data/Queries";
+import { CustomError, useGet } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**
@@ -27,11 +28,11 @@ export const useGetServiceConfig = (service: string): GetServiceConfig => {
   return {
     useOneTime: (): UseQueryResult<Config, CustomError> =>
       useQuery({
-        queryKey: getServiceConfigFactory.single(service, [env]),
+        queryKey: getServiceConfigKey.single(service, [env]),
         queryFn: () => get(`/lsm/v1/service_catalog/${service}/config`),
         select: (data) => data.data,
       }),
   };
 };
 
-export const getServiceConfigFactory = new KeyFactory(SliceKeys.service, "get_service_config");
+export const getServiceConfigKey = new KeyFactory(SliceKeys.service, "get_service_config");

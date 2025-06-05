@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { getDryRunsFactory } from "../GetDryRuns";
+import { getDryRunsKey } from "../GetDryRuns";
 
 /**
  * React Query hook for triggering a dry run
@@ -29,7 +29,7 @@ export const useTriggerDryRun = (
     onSuccess: () => {
       // Refetch the dry run queries
       client.refetchQueries({
-        queryKey: getDryRunsFactory.root(),
+        queryKey: getDryRunsKey.root(),
       });
     },
   });

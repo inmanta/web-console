@@ -8,8 +8,8 @@ import {
 import { ModifyEnvironmentParams } from "@/Core";
 import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { getEnvironmentDetailsFactory } from "../GetEnvironmentDetails";
-import { getEnvironmentsFactory } from "../GetEnvironments";
+import { getEnvironmentDetailsKey } from "../GetEnvironmentDetails";
+import { getEnvironmentsKey } from "../GetEnvironments";
 
 /**
  * React Query hook for modifying an environment.
@@ -29,8 +29,8 @@ export const useModifyEnvironment = (
     mutationFn: (params) => post(`/api/v2/environment/${environmentId}`, params),
     mutationKey: ["modify_environment", environmentId, env],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: getEnvironmentDetailsFactory.root() });
-      client.refetchQueries({ queryKey: getEnvironmentsFactory.root() });
+      client.refetchQueries({ queryKey: getEnvironmentDetailsKey.root() });
+      client.refetchQueries({ queryKey: getEnvironmentsKey.root() });
     },
     ...options,
   });

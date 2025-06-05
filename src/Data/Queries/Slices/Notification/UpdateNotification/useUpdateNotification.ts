@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { usePatch } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { getNotificationsFactory } from "../GetNotifications";
+import { getNotificationsKey } from "../GetNotifications";
 
 /**
  * Body parameters for updating a notification.
@@ -52,7 +52,7 @@ export const useUpdateNotification = (
     onSuccess: () => {
       // Invalidate relevant queries based on origin
       queryClient.refetchQueries({
-        queryKey: getNotificationsFactory.root(),
+        queryKey: getNotificationsKey.root(),
       });
     },
     ...options,

@@ -8,7 +8,7 @@ import {
 import { EnvironmentSettings } from "@/Core";
 import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { getEnvironmentSettingsFactory } from "../GetEnvironmentSettings";
+import { getEnvironmentSettingsKey } from "../GetEnvironmentSettings";
 
 /**
  * Interface for the parameters for the update environment setting mutation.
@@ -35,7 +35,7 @@ export const useUpdateEnvironmentSetting = (
     mutationFn: ({ id, value }) => post(`/api/v2/environment_settings/${id}`, { value }),
     mutationKey: ["update_environment_setting", env],
     onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: getEnvironmentSettingsFactory.root() });
+      queryClient.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
     },
     ...options,
   });

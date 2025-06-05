@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { getServiceModelFactory } from "../GetServiceModel";
+import { getServiceModelKey } from "../GetServiceModel";
 
 /**
  * React Query hook for updating environment catalog.
@@ -19,7 +19,7 @@ export const useExportCatalog = (): UseMutationResult<void, Error, void, unknown
     mutationFn: () => post("/lsm/v1/exporter/export_service_definition"),
     mutationKey: ["update_catalog", env],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: getServiceModelFactory.root() });
+      client.refetchQueries({ queryKey: getServiceModelKey.root() });
     },
   });
 };

@@ -3,14 +3,8 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DateRange, EventType, InstanceEvent, PageSize, Pagination, Sort } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  CustomError,
-  useGet,
-  REFETCH_INTERVAL,
-  getPaginationHandlers,
-  KeyFactory,
-  SliceKeys,
-} from "@/Data/Queries";
+import { CustomError, useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
 
@@ -101,7 +95,7 @@ export const useGetInstanceEvents = (params: GetInstanceEventParams): GetInstanc
   return {
     useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: getInstanceEventsFactory.list([...Object.values(params), env]),
+        queryKey: getInstanceEventsKey.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
@@ -112,7 +106,7 @@ export const useGetInstanceEvents = (params: GetInstanceEventParams): GetInstanc
   };
 };
 
-export const getInstanceEventsFactory = new KeyFactory(
+export const getInstanceEventsKey = new KeyFactory(
   SliceKeys.serviceInstance,
   "get_instance_events"
 );

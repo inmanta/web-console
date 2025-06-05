@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { useDelete } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { getEnvironmentSettingsFactory } from "../GetEnvironmentSettings";
+import { getEnvironmentSettingsKey } from "../GetEnvironmentSettings";
 
 /**
  * React Query hook for resetting an environment setting to its default value.
@@ -26,7 +26,7 @@ export const useResetEnvironmentSetting = (
     mutationFn: (id) => deleteFn(`/api/v2/environment_settings/${id}`),
     mutationKey: ["reset_environment_setting", env],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: getEnvironmentSettingsFactory.root() });
+      client.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
     },
     ...options,
   });

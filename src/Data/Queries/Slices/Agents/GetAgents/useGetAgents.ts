@@ -2,14 +2,8 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination, Sort } from "@/Core";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  CustomError,
-  REFETCH_INTERVAL,
-  useGet,
-  getPaginationHandlers,
-  KeyFactory,
-  SliceKeys,
-} from "@/Data/Queries";
+import { CustomError, REFETCH_INTERVAL, useGet, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { Agent, AgentStatus } from "@/Slices/Agents/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
@@ -70,7 +64,7 @@ export const useGetAgents = (): GetAgents => {
   return {
     useContinuous: (params: GetAgentsParams): UseQueryResult<QueryData, CustomError> =>
       useQuery({
-        queryKey: getAgentFactory.list([...Object.values(params), env]),
+        queryKey: getAgentKey.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,
@@ -81,4 +75,4 @@ export const useGetAgents = (): GetAgents => {
   };
 };
 
-export const getAgentFactory = new KeyFactory(SliceKeys.agents, "get_agent");
+export const getAgentKey = new KeyFactory(SliceKeys.agents, "get_agent");

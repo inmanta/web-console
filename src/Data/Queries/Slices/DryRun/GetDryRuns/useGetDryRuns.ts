@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { REFETCH_INTERVAL, useGet, KeyFactory, SliceKeys } from "@/Data/Queries";
+import { REFETCH_INTERVAL, useGet } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { DryRun } from "../GetDryRunReport";
 
@@ -32,7 +33,7 @@ export const useGetDryRuns = (): GetDryRuns => {
   return {
     useContinuous: (version: string): UseQueryResult<DryRun[], Error> =>
       useQuery({
-        queryKey: getDryRunsFactory.list([{ version }, env]),
+        queryKey: getDryRunsKey.list([{ version }, env]),
         queryFn: () => get(`/api/v2/dryrun/${version}`),
         select: (data) => data.data,
         refetchInterval: REFETCH_INTERVAL,
@@ -40,4 +41,4 @@ export const useGetDryRuns = (): GetDryRuns => {
   };
 };
 
-export const getDryRunsFactory = new KeyFactory(SliceKeys.dryRun, "get_dry_runs");
+export const getDryRunsKey = new KeyFactory(SliceKeys.dryRun, "get_dry_runs");

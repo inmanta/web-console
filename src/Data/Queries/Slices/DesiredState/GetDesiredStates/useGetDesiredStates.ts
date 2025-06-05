@@ -2,14 +2,8 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { DateRange, IntRange, PageSize, Pagination } from "@/Core";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import {
-  CustomError,
-  REFETCH_INTERVAL,
-  useGet,
-  getPaginationHandlers,
-  KeyFactory,
-  SliceKeys,
-} from "@/Data/Queries";
+import { CustomError, REFETCH_INTERVAL, useGet, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DesiredStateVersion, DesiredStateVersionStatus } from "@/Slices/DesiredState/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { getDesiredStatesUrl } from "./getDesiredStatesUrl";
@@ -77,12 +71,7 @@ export const useGetDesiredStates = (): GetDesiredStates => {
       currentPage: CurrentPage
     ): UseQueryResult<QueryData, CustomError> =>
       useQuery({
-        queryKey: getDesiredStatesFactory.list([
-          pageSize,
-          ...Object.values(filter),
-          currentPage,
-          env,
-        ]),
+        queryKey: getDesiredStatesKey.list([pageSize, ...Object.values(filter), currentPage, env]),
         queryFn: () => get(getDesiredStatesUrl({ pageSize, filter, currentPage })),
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => ({
@@ -93,4 +82,4 @@ export const useGetDesiredStates = (): GetDesiredStates => {
   };
 };
 
-export const getDesiredStatesFactory = new KeyFactory(SliceKeys.desiredState, "get_desired_state");
+export const getDesiredStatesKey = new KeyFactory(SliceKeys.desiredState, "get_desired_state");

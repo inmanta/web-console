@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { useDelete } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { getServiceModelFactory } from "../GetServiceModel";
+import { getServiceModelKey } from "../GetServiceModel";
 
 /**
  * React Query hook for Deleting an Service.
@@ -27,7 +27,7 @@ export const useDeleteService = (
     mutationFn: () => deleteFn(`/lsm/v1/service_catalog/${service_entity}`),
     mutationKey: ["delete_service", env],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: getServiceModelFactory.root() });
+      client.refetchQueries({ queryKey: getServiceModelKey.root() });
     },
     ...options,
   });

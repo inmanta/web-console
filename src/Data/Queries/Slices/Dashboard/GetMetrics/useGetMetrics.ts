@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { CustomError, useGet, KeyFactory, SliceKeys } from "@/Data/Queries";
+import { CustomError, useGet } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { BackendMetricData } from "@/Slices/Dashboard/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
@@ -32,11 +33,11 @@ export const useGetMetrics = (): GetMetrics => {
   return {
     useOneTime: (params: GetMetricsParams): UseQueryResult<BackendMetricData, CustomError> =>
       useQuery({
-        queryKey: getMetricsFactory.list([...Object.values(params), env]),
+        queryKey: getMetricsKey.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
         select: (data) => data.data,
       }),
   };
 };
 
-export const getMetricsFactory = new KeyFactory(SliceKeys.dashboard, "get_metrics");
+export const getMetricsKey = new KeyFactory(SliceKeys.dashboard, "get_metrics");

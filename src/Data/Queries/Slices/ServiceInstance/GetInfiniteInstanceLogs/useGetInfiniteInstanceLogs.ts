@@ -2,7 +2,8 @@ import { useContext } from "react";
 import { UseInfiniteQueryResult, useInfiniteQuery } from "@tanstack/react-query";
 import { Pagination } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { CustomError, useGet, REFETCH_INTERVAL, KeyFactory, SliceKeys } from "@/Data/Queries";
+import { CustomError, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 
 interface LogsResponse {
@@ -39,7 +40,7 @@ export const useGetInfiniteInstanceLogs = (
   return {
     useContinuous: (selectedVersion: string): UseInfiniteQueryResult<InstanceLog[], CustomError> =>
       useInfiniteQuery({
-        queryKey: getInfiniteInstanceLogsFactory.list([{ service }, { instance }, env]),
+        queryKey: getInfiniteInstanceLogsKey.list([{ service }, { instance }, env]),
         queryFn: ({ pageParam }) => {
           const initialParameters = selectedVersion
             ? `limit=50&end=${Number(selectedVersion) + 1}`
@@ -72,7 +73,7 @@ export const useGetInfiniteInstanceLogs = (
   };
 };
 
-export const getInfiniteInstanceLogsFactory = new KeyFactory(
+export const getInfiniteInstanceLogsKey = new KeyFactory(
   SliceKeys.serviceInstance,
   "get_instance_logs"
 );

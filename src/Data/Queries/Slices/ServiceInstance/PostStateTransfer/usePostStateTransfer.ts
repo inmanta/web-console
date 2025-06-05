@@ -8,7 +8,7 @@ import {
 import { ParsedNumber } from "@/Core";
 import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { getInstanceFactory } from "../GetInstance";
+import { getInstanceKey } from "../GetInstance";
 
 interface PostStateTransfer {
   message: string;
@@ -44,8 +44,8 @@ export const usePostStateTransfer = (
       post(`/lsm/v1/service_inventory/${service_entity}/${instance_id}/state`, body),
     mutationKey: ["post_state_transfer", env],
     onSuccess: () => {
-      client.refetchQueries({ queryKey: getInstanceFactory.single(instance_id) });
-      client.invalidateQueries({ queryKey: getInstanceFactory.root() });
+      client.refetchQueries({ queryKey: getInstanceKey.single(instance_id) });
+      client.invalidateQueries({ queryKey: getInstanceKey.root() });
     },
     ...options,
   });

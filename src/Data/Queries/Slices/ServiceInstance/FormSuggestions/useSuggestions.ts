@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
-import { useGet, getParametersFactory } from "@/Data/Queries";
+import { useGet, getParametersKey } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 
 interface ResponseData {
@@ -51,7 +51,7 @@ export const useSuggestedValues = (suggestions: FormSuggestion | null | undefine
      */
     useOneTime: () =>
       useQuery({
-        queryKey: getParametersFactory.single(suggestions.parameter_name || "no_parameter", [env]),
+        queryKey: getParametersKey.single(suggestions.parameter_name || "no_parameter", [env]),
         queryFn: () => get(`/api/v1/parameter/${suggestions.parameter_name}`),
         select: (data) => data.parameter,
       }),

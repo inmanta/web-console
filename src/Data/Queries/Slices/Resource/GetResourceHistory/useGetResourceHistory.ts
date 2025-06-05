@@ -2,7 +2,8 @@ import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGet, getPaginationHandlers, KeyFactory, SliceKeys } from "@/Data/Queries";
+import { useGet, getPaginationHandlers } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { ResourceHistory } from "@S/ResourceDetails/Core/ResourceHistory";
 import { getUrl } from "./getUrl";
@@ -65,7 +66,7 @@ export const useGetResourceHistory = (params: GetResourceHistoryParams): GetReso
   return {
     useOneTime: (): UseQueryResult<ResourceHistoryResponse, Error> =>
       useQuery({
-        queryKey: getResourceHistoryFactory.list([
+        queryKey: getResourceHistoryKey.list([
           id,
           { pageSize: pageSize.value },
           ...sortArray,
@@ -81,4 +82,4 @@ export const useGetResourceHistory = (params: GetResourceHistoryParams): GetReso
   };
 };
 
-export const getResourceHistoryFactory = new KeyFactory(SliceKeys.resource, "get_resource_history");
+export const getResourceHistoryKey = new KeyFactory(SliceKeys.resource, "get_resource_history");
