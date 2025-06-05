@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDelete } from "@/Data/Queries";
-import { DependencyContext } from "@/UI";
 import { getDesiredStatesKey } from "@/Data/Queries/Slices/DesiredState/GetDesiredStates/useGetDesiredStates";
+import { DependencyContext } from "@/UI";
+
 /**
  * React Query hook for deleting version of Desired State
  *
