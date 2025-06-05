@@ -1,9 +1,8 @@
 import { useContext } from "react";
 import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDelete } from "@/Data/Queries";
-import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI";
-
+import { getDesiredStatesKey } from "@/Data/Queries/Slices/DesiredState/GetDesiredStates/useGetDesiredStates";
 /**
  * React Query hook for deleting version of Desired State
  *
@@ -21,13 +20,8 @@ export const useDeleteDesiredStateVersion = (): UseMutationResult<void, Error, s
     onSuccess: () => {
       //invalidate the desired state queries to update the list
       client.refetchQueries({
-        queryKey: deleteDesiredStateVersionKey.root(),
+        queryKey: getDesiredStatesKey.root(),
       });
     },
   });
 };
-
-export const deleteDesiredStateVersionKey = new KeyFactory(
-  SliceKeys.desiredState,
-  "delete_desired_state_version"
-);
