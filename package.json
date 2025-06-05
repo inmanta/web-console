@@ -157,6 +157,8 @@
     "copy-to-clipboard": "^3.3.3",
     "easy-peasy": "^6.0.4",
     "file-saver": "^2.0.5",
+    "graphql": "^16.11.0",
+    "graphql-request": "^7.1.2",
     "json-bigint": "https://github.com/sidorares/json-bigint.git#3391780b2a3f613bb51536c47e6cddbca31013eb",
     "keycloak-js": "^25.0.5",
     "lodash": "^4.17.21",
