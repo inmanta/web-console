@@ -2,7 +2,13 @@ import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
 import { Environment, ProjectModel } from "@/Core";
-import { useCreateEnvironment, useCreateProject, getEnvironmentsKey } from "@/Data/Queries";
+import {
+  useCreateEnvironment,
+  useCreateProject,
+  getEnvironmentsKey,
+  getPartialEnvironmentsKey,
+  PartialEnvironment,
+} from "@/Data/Queries";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
@@ -41,7 +47,25 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       //update the data in the cache to avoid crash after navigating to the new env
       client.setQueryData(getEnvironmentsKey.list([{ hasDetails: true }]), dataUpdater);
       client.setQueryData(getEnvironmentsKey.list([{ hasDetails: false }]), dataUpdater);
+      client.setQueryData(
+        getPartialEnvironmentsKey.root(),
+        (previousData: { data: PartialEnvironment[] | undefined }) => {
+          const oldData = previousData?.data || [];
+          return {
+            data: [
+              ...oldData,
+              {
+                id: data.data.id,
+                name: data.data.name,
+                halted: data.data.halted,
+                isExpertMode: false,
+              },
+            ],
+          };
+        }
+      );
 
+      client.refetchQueries({ queryKey: getPartialEnvironmentsKey.root() });
       client.refetchQueries({ queryKey: getEnvironmentsKey.list([{ hasDetails: true }]) });
       client.refetchQueries({ queryKey: getEnvironmentsKey.list([{ hasDetails: false }]) });
 
