@@ -1,54 +1,56 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NotificationBadge, NotificationBadgeVariant } from "@patternfly/react-core";
-import { UseQueryResult } from "@tanstack/react-query";
-import { PageSize } from "@/Core";
-import { NotificationResponse, useGetNotifications } from "@/Data/Queries";
+import { useGetPartialNotifications, PartialNotification } from "@/Data/Queries";
+import { DependencyContext } from "@/UI";
 import { ToastAlert } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Notification } from "@S/Notification/Core/Domain";
 
 /**
  * Notification badge component that displays a visual indicator for notifications.
  * Shows different variants based on the notification status (read/unread, error/non-error).
  *
- * @param {() => void} onClick - Callback function triggered when the badge is clicked
+ * @param {(): void} onClick - Callback function triggered when the badge is clicked
  */
 export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
-  const response = useGetNotifications({
-    pageSize: PageSize.from("250"),
-    origin: "drawer",
-    currentPage: { kind: "CurrentPage", value: "" },
+  const { environmentHandler } = useContext(DependencyContext);
+  const envID = environmentHandler.useId();
+  const { data, isSuccess, isError, error } = useGetPartialNotifications({
+    envID,
+    cleared: false,
+    orderBy: "desc",
   }).useContinuous();
 
-  return <View {...{ response, onClick }} />;
-};
-
-/**
- * Props for the View component.
- *
- * @property {() => void} onClick - Callback function triggered when the badge is clicked
- * @property {UseQueryResult<NotificationResponse, Error>} response - Query result containing notification data
- */
-interface Props {
-  onClick(): void;
-  response: UseQueryResult<NotificationResponse, Error>;
-}
-
-/**
- * Internal view component that renders the notification badge based on the query response.
- * Handles loading, error, and success states.
- */
-const View: React.FC<Props> = ({ response, onClick }) => {
-  const [error, setError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    if (!response.isError) return;
+    if (isError) {
+      setErrorMessage(error.message);
+    }
+    if (isSuccess && data.errors && data.errors.length > 0) {
+      setErrorMessage(data.errors.join(", "));
+    }
+  }, [data, isError, isSuccess, error]);
 
-    setError(response.error.message);
-  }, [response]);
+  if (errorMessage) {
+    return (
+      <>
+        <ToastAlert
+          data-testid="ToastAlert"
+          message={errorMessage}
+          title={words("error")}
+          setMessage={setErrorMessage}
+        />
+        <NotificationBadge
+          aria-label="Badge-Error"
+          variant={NotificationBadgeVariant.read}
+          isDisabled
+        />
+      </>
+    );
+  }
 
-  if (response.isSuccess) {
-    const variant = getVariantFromNotifications(response.data.data);
+  if (isSuccess) {
+    const variant = getVariantFromNotifications(data.notifications);
 
     return (
       <NotificationBadge
@@ -57,24 +59,6 @@ const View: React.FC<Props> = ({ response, onClick }) => {
         variant={variant}
         onClick={onClick}
       />
-    );
-  }
-
-  if (response.isError) {
-    return (
-      <>
-        <ToastAlert
-          data-testid="ToastAlert"
-          message={error}
-          title={words("error")}
-          setMessage={setError}
-        />
-        <NotificationBadge
-          aria-label="Badge-Error"
-          variant={NotificationBadgeVariant.read}
-          isDisabled
-        />
-      </>
     );
   }
 
@@ -88,10 +72,12 @@ const View: React.FC<Props> = ({ response, onClick }) => {
  * Returns 'attention' for unread error notifications, 'unread' for any unread notifications,
  * and 'read' for all other cases.
  *
- * @param {Notification[]} notifications - List of notifications to analyze
+ * @param {PartialNotification[]} notifications - List of notifications to analyze
  * @returns {NotificationBadgeVariant} The appropriate badge variant
  */
-const getVariantFromNotifications = (notifications: Notification[]): NotificationBadgeVariant => {
+const getVariantFromNotifications = (
+  notifications: PartialNotification[]
+): NotificationBadgeVariant => {
   if (notifications.some(isUnreadError)) {
     return NotificationBadgeVariant.attention;
   }
@@ -104,24 +90,24 @@ const getVariantFromNotifications = (notifications: Notification[]): Notificatio
 /**
  * Checks if a notification is both unread and has error severity.
  *
- * @param {Notification} notification - The notification to check
+ * @param {PartialNotification} notification - The notification to check
  * @returns {boolean} True if the notification is unread and has error severity
  */
-const isUnreadError = (notification: Notification) =>
+const isUnreadError = (notification: PartialNotification) =>
   isUnread(notification) && isError(notification);
 
 /**
  * Checks if a notification has error severity.
  *
- * @param {Notification} notification - The notification to check
+ * @param {PartialNotification} notification - The notification to check
  * @returns {boolean} True if the notification has error severity
  */
-const isError = (notification: Notification) => notification.severity === "error";
+const isError = (notification: PartialNotification) => notification.severity === "error";
 
 /**
  * Checks if a notification is unread.
  *
- * @param {Notification} notification - The notification to check
+ * @param {PartialNotification} notification - The notification to check
  * @returns {boolean} True if the notification is unread
  */
-const isUnread = (notification: Notification) => notification.read === false;
+const isUnread = (notification: PartialNotification) => notification.read === false;

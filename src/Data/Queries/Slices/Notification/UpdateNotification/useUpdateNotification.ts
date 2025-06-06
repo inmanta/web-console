@@ -52,7 +52,7 @@ export const useUpdateNotification = (
     onSuccess: () => {
       // Invalidate relevant queries based on origin
       queryClient.refetchQueries({
-        queryKey: getNotificationsKey.root(),
+        queryKey: getNotificationsKey.slice(),
       });
     },
     ...options,

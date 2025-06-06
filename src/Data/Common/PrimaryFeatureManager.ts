@@ -181,7 +181,7 @@ export const PrimaryFeatureManager = (
 
   useEffect(() => {
     console.info(
-      `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
+      `[inmanta-web-console] Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
     );
   }, [jsonParserId, appVersion, commitHash]);
 
