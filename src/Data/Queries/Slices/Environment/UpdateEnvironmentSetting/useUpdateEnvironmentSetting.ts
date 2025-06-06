@@ -9,6 +9,7 @@ import { EnvironmentSettings } from "@/Core";
 import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 import { getEnvironmentSettingsKey } from "../GetEnvironmentSettings";
+import { getPartialEnvironmentsKey } from "../GetPartialEnvironments";
 
 /**
  * Interface for the parameters for the update environment setting mutation.
@@ -36,6 +37,7 @@ export const useUpdateEnvironmentSetting = (
     mutationKey: ["update_environment_setting", env],
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
+      queryClient.refetchQueries({ queryKey: getPartialEnvironmentsKey.root() });
     },
     ...options,
   });

@@ -1,13 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Location } from "react-router";
-import {
-  EnvironmentHandler,
-  EnvironmentSettings,
-  FlatEnvironment,
-  Navigate,
-  RouteManager,
-} from "@/Core";
+import { EnvironmentHandler, EnvironmentSettings, Navigate, RouteManager } from "@/Core";
 import { useGetEnvironmentSettings } from "@/Data/Queries";
+import { PartialEnvironment } from "@/Data/Queries";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
 /**
@@ -24,11 +19,11 @@ export function EnvironmentHandlerImpl(
   routeManager: RouteManager
 ): EnvironmentHandler {
   const { search } = useLocation();
-  const [environments, setEnvironments] = useState<FlatEnvironment[]>([]);
-  const [env, setEnv] = useState<FlatEnvironment | null>(null);
+  const [environments, setEnvironments] = useState<PartialEnvironment[]>([]);
+  const [env, setEnv] = useState<PartialEnvironment | null>(null);
   const envSettings = useGetEnvironmentSettings(env?.id).useOneTime();
 
-  function setAllEnvironments(environments: FlatEnvironment[]): void {
+  function setAllEnvironments(environments: PartialEnvironment[]): void {
     setEnvironments(environments);
   }
 
@@ -62,14 +57,14 @@ export function EnvironmentHandlerImpl(
     return environment.name;
   }
 
-  const useSelected = useCallback((): FlatEnvironment | undefined => {
+  const useSelected = useCallback((): PartialEnvironment | undefined => {
     return determineSelected(environments, search);
   }, [environments, search]);
 
   function determineSelected(
-    allEnvironments: FlatEnvironment[],
+    allEnvironments: PartialEnvironment[],
     search: string
-  ): FlatEnvironment | undefined {
+  ): PartialEnvironment | undefined {
     const searchHelper = new SearchHelper();
     const parsed = searchHelper.parse(search);
     const envId = parsed["env"];
@@ -124,7 +119,7 @@ export function EnvironmentHandlerImpl(
   }
 
   function useIsExpertModeEnabled(): boolean {
-    return useSetting("enable_lsm_expert_mode");
+    return useSelected()?.isExpertMode || false;
   }
 
   useEffect(() => {

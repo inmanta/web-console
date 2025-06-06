@@ -43,7 +43,7 @@ describe("EnvironmentHandler", () => {
     );
 
     const history = createMemoryHistory();
-    const env = Environment.filterable[0];
+    const env = Environment.partialFilterable[0];
 
     const { result } = renderHook(
       () => EnvironmentHandlerImpl(() => history.location, routeManager),
@@ -51,7 +51,7 @@ describe("EnvironmentHandler", () => {
     );
 
     await act(async () => {
-      result.current.setAllEnvironments(Environment.filterable);
+      result.current.setAllEnvironments(Environment.partialFilterable);
     });
 
     await act(async () => {
@@ -73,7 +73,7 @@ describe("EnvironmentHandler", () => {
       })
     );
     const history = createMemoryHistory();
-    const env = Environment.filterable[0];
+    const env = Environment.partialFilterable[0];
 
     const { result, rerender } = renderHook(
       () => EnvironmentHandlerImpl(() => history.location, routeManager),
@@ -81,7 +81,7 @@ describe("EnvironmentHandler", () => {
     );
 
     await act(async () => {
-      result.current.setAllEnvironments(Environment.filterable);
+      result.current.setAllEnvironments(Environment.partialFilterable);
     });
 
     await act(async () => {
@@ -106,21 +106,21 @@ describe("EnvironmentHandler", () => {
     );
 
     await act(async () => {
-      result.current.setAllEnvironments(Environment.filterable);
+      result.current.setAllEnvironments(Environment.partialFilterable);
     });
 
     expect(result.current.determineSelected([], history.location.search)).toBeUndefined();
-    history.push(`?env=${Environment.filterable[0].id}`);
+    history.push(`?env=${Environment.partialFilterable[0].id}`);
     expect(result.current.determineSelected([], history.location.search)).toBeUndefined();
 
     expect(
-      result.current.determineSelected(Environment.filterable, history.location.search)
-    ).toEqual(Environment.filterable[0]);
+      result.current.determineSelected(Environment.partialFilterable, history.location.search)
+    ).toEqual(Environment.partialFilterable[0]);
 
-    result.current.set(history.push, history.location, Environment.filterable[1].id);
+    result.current.set(history.push, history.location, Environment.partialFilterable[1].id);
     expect(
-      result.current.determineSelected(Environment.filterable, history.location.search)
-    ).toEqual(Environment.filterable[1]);
+      result.current.determineSelected(Environment.partialFilterable, history.location.search)
+    ).toEqual(Environment.partialFilterable[1]);
   });
 
   test("Given the environmentModifier When the server compile setting is requested Then returns the correct value", async () => {
@@ -158,12 +158,12 @@ describe("EnvironmentHandler", () => {
     );
 
     await act(async () => {
-      result.current.setAllEnvironments(Environment.filterable);
+      result.current.setAllEnvironments(Environment.partialFilterable);
     });
 
     // No setting is specified, and the default is true
     await act(async () => {
-      result.current.set(history.push, history.location, Environment.filterable[0].id);
+      result.current.set(history.push, history.location, Environment.partialFilterable[0].id);
     });
 
     await act(async () => {
@@ -176,7 +176,7 @@ describe("EnvironmentHandler", () => {
 
     // trigger the useEffect to fetch once again with new settings set to false
     await act(async () => {
-      result.current.set(history.push, history.location, Environment.filterable[1].id);
+      result.current.set(history.push, history.location, Environment.partialFilterable[1].id);
     });
 
     await act(async () => {
@@ -206,11 +206,11 @@ describe("EnvironmentHandler", () => {
     );
 
     await act(async () => {
-      result.current.setAllEnvironments(Environment.filterable);
+      result.current.setAllEnvironments(Environment.partialFilterable);
     });
 
     await act(async () => {
-      result.current.set(history.push, history.location, Environment.filterable[0].id);
+      result.current.set(history.push, history.location, Environment.partialFilterable[0].id);
     });
 
     await act(async () => {
@@ -246,11 +246,11 @@ describe("EnvironmentHandler", () => {
     );
 
     await act(async () => {
-      result.current.setAllEnvironments(Environment.filterable);
+      result.current.setAllEnvironments(Environment.partialFilterable);
     });
 
     await act(async () => {
-      result.current.set(history.push, history.location, Environment.filterable[0].id);
+      result.current.set(history.push, history.location, Environment.partialFilterable[0].id);
     });
 
     await act(async () => {
