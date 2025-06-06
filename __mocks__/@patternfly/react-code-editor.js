@@ -13,6 +13,7 @@ module.exports = {
     isCopyEnabled,
     isLanguageLabelVisible,
     customControls,
+    isDarkTheme,
     ...props
   }) => {
     return (

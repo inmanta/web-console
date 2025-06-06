@@ -10,6 +10,7 @@ import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { CodeEditorCopyControl } from "../CodeEditorControls";
+import { getThemePreference } from "../DarkmodeOption";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 import { FileBlock } from "./FileBlock";
 
@@ -76,6 +77,7 @@ const AttributeValue: React.FC<{
       return (
         <CodeEditor
           isReadOnly
+          isDarkTheme={getThemePreference() === "dark"}
           code={attribute.value}
           isLanguageLabelVisible
           language={Language.json}
@@ -89,6 +91,7 @@ const AttributeValue: React.FC<{
       return (
         <CodeEditor
           isReadOnly
+          isDarkTheme={getThemePreference() === "dark"}
           code={attribute.value}
           isLanguageLabelVisible
           language={Language.xml}
@@ -101,6 +104,7 @@ const AttributeValue: React.FC<{
       return (
         <CodeEditor
           isReadOnly
+          isDarkTheme={getThemePreference() === "dark"}
           code={attribute.value}
           isLanguageLabelVisible
           language={Language.python}
@@ -113,6 +117,7 @@ const AttributeValue: React.FC<{
       return (
         <CodeEditor
           isReadOnly
+          isDarkTheme={getThemePreference() === "dark"}
           code={attribute.value}
           isDownloadEnabled
           customControls={<CodeEditorCopyControl code={attribute.value} />}
