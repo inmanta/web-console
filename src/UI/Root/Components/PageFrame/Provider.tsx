@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Navigate } from "react-router";
-import { EnvironmentRole, FlatEnvironment } from "@/Core";
+import { EnvironmentRole } from "@/Core";
+import { PartialEnvironment } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { PageFrame } from "./PageFrame";
-
 interface Props {
   environmentRole: EnvironmentRole;
 }
@@ -32,7 +32,7 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 
 const getEnvironmentId = (
   environmentRole: EnvironmentRole,
-  environment: FlatEnvironment | undefined
+  environment: PartialEnvironment | undefined
 ): string | undefined => {
   if (environmentRole === "Forbidden") return undefined;
 

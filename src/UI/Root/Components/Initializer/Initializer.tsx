@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { useGetEnvironments, useGetServerStatus } from "@/Data/Queries";
+import { useGetPartialEnvironments, useGetServerStatus } from "@/Data/Queries";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 
@@ -15,17 +15,17 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
   const [isInitialized, setIsInitialized] = useState(false);
   const { environmentHandler, featureManager } = useContext(DependencyContext);
   const serverStatus = useGetServerStatus().useOneTime();
-  const environments = useGetEnvironments().useOneTime();
+  const partialEnvironments = useGetPartialEnvironments().useOneTime();
 
   useEffect(() => {
-    if (environments.data && serverStatus.data) {
-      environmentHandler.setAllEnvironments(environments.data);
+    if (serverStatus.data && partialEnvironments.data && partialEnvironments.data.environments) {
+      environmentHandler.setAllEnvironments(partialEnvironments.data.environments);
       featureManager.setAllFeatures(serverStatus.data);
       setIsInitialized(true); // This is used to sync the component rendering with updating hooks
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [environments.data, serverStatus.data]);
+  }, [serverStatus.data, partialEnvironments.data]);
 
   if (serverStatus.isError) {
     return (
@@ -37,17 +37,17 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     );
   }
 
-  if (environments.isError) {
+  if (partialEnvironments.isError) {
     return (
       <ErrorView
         ariaLabel="Initializer-Error"
-        message={environments.error.message}
-        retry={environments.refetch}
+        message={partialEnvironments.error.message}
+        retry={partialEnvironments.refetch}
       />
     );
   }
 
-  if (serverStatus.isSuccess && environments.isSuccess && isInitialized) {
+  if (serverStatus.isSuccess && partialEnvironments.isSuccess && isInitialized) {
     return <>{children}</>;
   }
 

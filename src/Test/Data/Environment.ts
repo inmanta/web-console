@@ -1,4 +1,5 @@
 import { EnvironmentExpertOnly, EnvironmentModel, FlatEnvironment } from "@/Core";
+import { PartialEnvironment } from "@/Data/Queries";
 
 export const env: FlatEnvironment = {
   id: "env",
@@ -133,4 +134,39 @@ export const filterable: EnvironmentExpertOnly[] = [
       enable_lsm_expert_mode: true,
     },
   },
+];
+
+export const partialA: PartialEnvironment = {
+  id: "123",
+  name: "test-env1",
+  halted: false,
+  isExpertMode: false,
+};
+
+export const partialB: PartialEnvironment = {
+  id: "456",
+  name: "dev-env2",
+  halted: false,
+  isExpertMode: false,
+};
+
+export const partialHalted: PartialEnvironment = {
+  id: "789",
+  name: "test-env2",
+  halted: true,
+  isExpertMode: false,
+};
+
+export const partialExpertMode: PartialEnvironment = {
+  id: "101",
+  name: "env2",
+  halted: false,
+  isExpertMode: true,
+};
+
+export const partialFilterable: PartialEnvironment[] = [
+  partialA,
+  partialB,
+  partialHalted,
+  partialExpertMode,
 ];
