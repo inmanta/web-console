@@ -2,6 +2,7 @@ import React from "react";
 import { Alert, Dropdown, Spinner, MenuToggle } from "@patternfly/react-core";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Environment, FlatEnvironment, ProjectModel } from "@/Core";
+import { PartialEnvironment } from "@/Data/Queries";
 import { words } from "@/UI/words";
 import { EnvironmentSelectorItem, EnvSelectorWrapper } from "./EnvSelectorWrapper";
 
@@ -9,7 +10,7 @@ interface Props {
   environments: UseQueryResult<Environment[], Error>;
   projects: UseQueryResult<ProjectModel[], Error>;
   onSelectEnvironment(item: EnvironmentSelectorItem): void;
-  selectedEnvironment?: FlatEnvironment;
+  selectedEnvironment?: PartialEnvironment;
 }
 
 /**
@@ -20,7 +21,7 @@ interface Props {
  * @props {Props} props - The component props
  * @prop {UseQueryResult<Environment[], Error>} environments - Query result containing environment data
  * @prop {Function} onSelectEnvironment - Callback function when an environment is selected
- * @prop {FlatEnvironment} selectedEnvironment - Currently selected environment (if any)
+ * @prop {PartialEnvironment} selectedEnvironment - Currently selected environment (if any)
  * @returns {React.FC<Props>} A dropdown component for environment selection with appropriate state handling
  */
 
@@ -106,7 +107,12 @@ const environmentToSelector = ({
   environmentId: id,
 });
 
-const environmentToName = ({
-  name,
-  projectName,
-}: Pick<FlatEnvironment, "name" | "projectName">): string => `${name} (${projectName})`;
+const environmentToName = (
+  environment: Pick<FlatEnvironment, "name" | "projectName"> | PartialEnvironment
+): string => {
+  if ("projectName" in environment) {
+    return `${environment.name} (${environment.projectName})`;
+  } else {
+    return `${environment.name} (Unknown Project)`;
+  }
+};
