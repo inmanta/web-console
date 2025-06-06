@@ -24,9 +24,9 @@ export interface PartialEnvironmentsResponse {
 }
 
 /**
- * Return Signature of the useGetInstance React Query
+ * Return Signature of the useGetPartialEnvironments React Query
  */
-interface GetEnvironments {
+interface GetPartialEnvironments {
   useOneTime: () => UseQueryResult<
     {
       environments: PartialEnvironment[];
@@ -47,9 +47,9 @@ export interface PartialEnvironment extends Pick<Environment, "id" | "name" | "h
 /**
  * React Query hook for fetching environments using GraphQL.
  *
- * @returns GetEnvironments A query result containing environments data or an error.
+ * @returns GetPartialEnvironments A query result containing environments data or an error.
  */
-export const useGetPartialEnvironments = (): GetEnvironments => {
+export const useGetPartialEnvironments = (): GetPartialEnvironments => {
   const query = gql`
     query {
       environments {
