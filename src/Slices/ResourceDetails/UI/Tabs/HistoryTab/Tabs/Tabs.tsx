@@ -77,7 +77,11 @@ const requiresTab = (requires: string[]): TabDescriptor<TabKey> => ({
  * @returns {React.FC<{ attributes: Record<string, unknown> }>} A React Component displaying the attributes of the resource
  */
 const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({ attributes }) => {
-  const classifier = new AttributeClassifier(new JsonFormatter(), new XmlFormatter());
+  const classifier = new AttributeClassifier(
+    new JsonFormatter(),
+    new XmlFormatter(),
+    (key: string, value: string) => ({ kind: "Code", key, value })
+  );
   const classifiedAttributes = classifier.classify(attributes);
 
   return (

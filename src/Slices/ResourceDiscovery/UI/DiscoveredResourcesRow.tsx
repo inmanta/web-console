@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { DiscoveredResource } from "@/Data/Queries";
 import { Toggle } from "@/UI/Components";
 import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
+import { getThemePreference } from "@/UI/Components/DarkmodeOption";
 import { words } from "@/UI/words";
 import { DiscoveredResourceLink } from "./Components";
 
@@ -69,6 +70,7 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
                   <DescriptionListDescription>
                     <CodeEditor
                       code={JSON.stringify(row.values, null, 2)}
+                      isDarkTheme={getThemePreference() === "dark"}
                       language={Language.json}
                       isDownloadEnabled
                       customControls={
