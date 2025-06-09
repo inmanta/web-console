@@ -18,7 +18,7 @@ export interface EnvironmentPreview extends Pick<Environment, "id" | "name" | "h
  * @property {Array} errors - The errors array containing any errors that occurred.
  * @property {Object} extensions - The extensions object containing any additional data.
  */
-export interface EnvironmentPreviewsResponse {
+export interface EnvironmentPreviewResponse {
   data: {
     environments: {
       edges: {
@@ -65,7 +65,7 @@ export const useGetEnvironmentPreview = (): GetEnvironmentPreview => {
     }
   `;
 
-  const queryFn = useGraphQLRequest<EnvironmentPreviewsResponse>(query);
+  const queryFn = useGraphQLRequest<EnvironmentPreviewResponse>(query);
 
   return {
     useOneTime: () =>

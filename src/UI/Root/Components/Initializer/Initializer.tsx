@@ -15,17 +15,17 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
   const [isInitialized, setIsInitialized] = useState(false);
   const { environmentHandler, featureManager } = useContext(DependencyContext);
   const serverStatus = useGetServerStatus().useOneTime();
-  const EnvironmentPreviews = useGetEnvironmentPreview().useOneTime();
+  const EnvironmentPreview = useGetEnvironmentPreview().useOneTime();
 
   useEffect(() => {
-    if (serverStatus.data && EnvironmentPreviews.data && EnvironmentPreviews.data.environments) {
-      environmentHandler.setAllEnvironments(EnvironmentPreviews.data.environments);
+    if (serverStatus.data && EnvironmentPreview.data && EnvironmentPreview.data.environments) {
+      environmentHandler.setAllEnvironments(EnvironmentPreview.data.environments);
       featureManager.setAllFeatures(serverStatus.data);
       setIsInitialized(true); // This is used to sync the component rendering with updating hooks
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serverStatus.data, EnvironmentPreviews.data]);
+  }, [serverStatus.data, EnvironmentPreview.data]);
 
   if (serverStatus.isError) {
     return (
@@ -37,17 +37,17 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     );
   }
 
-  if (EnvironmentPreviews.isError) {
+  if (EnvironmentPreview.isError) {
     return (
       <ErrorView
         ariaLabel="Initializer-Error"
-        message={EnvironmentPreviews.error.message}
-        retry={EnvironmentPreviews.refetch}
+        message={EnvironmentPreview.error.message}
+        retry={EnvironmentPreview.refetch}
       />
     );
   }
 
-  if (serverStatus.isSuccess && EnvironmentPreviews.isSuccess && isInitialized) {
+  if (serverStatus.isSuccess && EnvironmentPreview.isSuccess && isInitialized) {
     return <>{children}</>;
   }
 

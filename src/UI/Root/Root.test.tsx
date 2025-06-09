@@ -5,7 +5,7 @@ import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, graphql, http } from "msw";
 import { setupServer } from "msw/node";
 import { defaultAuthContext } from "@/Data/Auth/AuthContext";
-import { EnvironmentPreviewsResponse } from "@/Data/Queries";
+import { EnvironmentPreviewResponse } from "@/Data/Queries";
 import {
   Environment,
   EnvironmentSettings,
@@ -48,7 +48,7 @@ describe("Root", () => {
       return HttpResponse.json({ data: Project.list });
     }),
     queryBase.operation(() => {
-      return HttpResponse.json<{ data: EnvironmentPreviewsResponse }>({
+      return HttpResponse.json<{ data: EnvironmentPreviewResponse }>({
         data: {
           data: {
             environments: {
