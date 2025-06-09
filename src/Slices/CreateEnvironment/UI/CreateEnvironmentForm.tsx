@@ -48,7 +48,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       client.setQueryData(getEnvironmentsKey.list([{ hasDetails: true }]), dataUpdater);
       client.setQueryData(getEnvironmentsKey.list([{ hasDetails: false }]), dataUpdater);
       client.setQueryData(
-        GetEnvironmentPreviewKey.root(),
+        GetEnvironmentPreviewKey.list(),
         (previousData: { data: EnvironmentPreview[] | undefined }) => {
           const oldData = previousData?.data || [];
           return {
