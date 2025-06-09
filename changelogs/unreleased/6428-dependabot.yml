@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @loadable/component from 5.16.4 to 5.16.7
+destination-branches:
+- master
+- iso8
+sections: {}
