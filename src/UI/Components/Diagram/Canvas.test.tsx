@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import React from "react";
 import { Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, queries, within as baseWithin } from "@testing-library/react";
@@ -102,9 +102,7 @@ describe("Canvas.tsx", () => {
 
     const dictValue = await screen.findByJointSelector("itemLabel_dictOne_value");
 
-    await act(async () => {
-      await user.click(dictValue.children[0]);
-    });
+    await user.click(dictValue.children[0]);
 
     const modal = await screen.findByRole("dialog");
 
@@ -116,9 +114,7 @@ describe("Canvas.tsx", () => {
 
     const copyButton = await screen.findByLabelText("Copy to clipboard");
 
-    await act(async () => {
-      await user.click(copyButton);
-    });
+    await user.click(copyButton);
 
     const clipboardItems = await navigator.clipboard.read();
     const blob = await clipboardItems[0].getType(clipboardItems[0].types[0]);
@@ -128,9 +124,7 @@ describe("Canvas.tsx", () => {
 
     const closeButton = await screen.findByLabelText("Close");
 
-    await act(async () => {
-      await user.click(closeButton);
-    });
+    await user.click(closeButton);
 
     expect(modal).not.toBeVisible();
   });
@@ -146,9 +140,7 @@ describe("Canvas.tsx", () => {
     render(component);
     const headerLabel = await screen.findByJointSelector("headerLabel");
 
-    await act(async () => {
-      await user.click(headerLabel);
-    });
+    await user.click(headerLabel);
 
     expect(screen.queryByText("Remove")).toBeNull();
     expect(screen.queryByText("Cancel")).toBeNull();
@@ -167,9 +159,7 @@ describe("Canvas.tsx", () => {
     render(component);
     const headerLabel = await screen.findByJointSelector("headerLabel");
 
-    await act(async () => {
-      await user.click(headerLabel);
-    });
+    await user.click(headerLabel);
 
     expect(screen.getByText("Remove")).toBeVisible();
     expect(screen.getByText("Cancel")).toBeVisible();
