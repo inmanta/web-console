@@ -1535,7 +1535,7 @@ __metadata:
     "@eslint/js": "npm:^9.26.0"
     "@inmanta/rappid": "npm:^4.0.0"
     "@joint/layout-directed-graph": "npm:^4.0.1"
-    "@loadable/component": "npm:^5.16.3"
+    "@loadable/component": "npm:^5.16.7"
     "@monaco-editor/react": "npm:^4.6.0"
     "@patternfly/react-charts": "npm:^7.2.2"
     "@patternfly/react-code-editor": "npm:^6.1.0"
@@ -2039,16 +2039,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@loadable/component@npm:^5.16.3":
-  version: 5.16.4
-  resolution: "@loadable/component@npm:5.16.4"
+"@loadable/component@npm:^5.16.7":
+  version: 5.16.7
+  resolution: "@loadable/component@npm:5.16.7"
   dependencies:
     "@babel/runtime": "npm:^7.12.18"
     hoist-non-react-statics: "npm:^3.3.1"
     react-is: "npm:^16.12.0"
   peerDependencies:
-    react: ^16.3.0 || ^17.0.0 || ^18.0.0
-  checksum: 10/ff434e13df559184f6bc85155a72edfbd1d6b814dfd06cb066908e8fc27f6265fa905bb72bf2fb139074d7777491c22c4d44ce077a4f4852157928ff7118de46
+    react: ^16.3.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10/2ddec033ae94b9411dcc34a8ef2e08c338e6f887ae3e426af8c726be4f9f7cc64e4379fce6a96bf50611e4e557f848e3c15b6947a731a363bb44a7a0aea62af1
   languageName: node
   linkType: hard
 
