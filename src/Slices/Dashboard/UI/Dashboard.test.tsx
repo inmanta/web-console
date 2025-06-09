@@ -4,7 +4,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider, MockFeatureManager } from "@/Test";
+import { MockedDependencyProvider, MockOrchestratorProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
@@ -20,7 +20,7 @@ const server = setupServer(
 );
 
 const setup = (isLsmEnabled = false) => {
-  jest.spyOn(MockFeatureManager.prototype, "isLsmEnabled").mockReturnValue(isLsmEnabled);
+  jest.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(isLsmEnabled);
 
   const component = (
     <QueryClientProvider client={testClient}>

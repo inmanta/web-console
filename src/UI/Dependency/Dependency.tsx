@@ -3,12 +3,12 @@ import {
   UrlManager,
   RouteManager,
   EnvironmentHandler,
-  FeatureManager,
+  OrchestratorProvider,
   ArchiveHelper,
 } from "@/Core";
 import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
-  DummyFeatureManager,
+  DummyOrchestratorProvider,
   DummyUrlManager,
   DummyRouteManager,
   DummyEnvironmentHandler,
@@ -17,7 +17,7 @@ import {
 
 export interface Dependencies {
   urlManager: UrlManager;
-  featureManager: FeatureManager;
+  orchestratorProvider: OrchestratorProvider;
   routeManager: RouteManager;
   environmentHandler: EnvironmentHandler;
   archiveHelper: ArchiveHelper;
@@ -26,7 +26,7 @@ export interface Dependencies {
 
 export const DependencyContext = createContext<Dependencies>({
   urlManager: new DummyUrlManager(),
-  featureManager: new DummyFeatureManager(),
+  orchestratorProvider: new DummyOrchestratorProvider(),
   routeManager: new DummyRouteManager(),
   environmentHandler: DummyEnvironmentHandler(),
   archiveHelper: new DummyArchiveHelper(),
@@ -39,7 +39,7 @@ export const DependencyProvider: React.FC<{
 }> = ({
   dependencies: {
     urlManager,
-    featureManager,
+    orchestratorProvider,
     routeManager,
     environmentHandler,
     archiveHelper,
@@ -50,7 +50,7 @@ export const DependencyProvider: React.FC<{
   <DependencyContext.Provider
     value={{
       urlManager: urlManager || new DummyUrlManager(),
-      featureManager: featureManager || new DummyFeatureManager(),
+      orchestratorProvider: orchestratorProvider || new DummyOrchestratorProvider(),
       routeManager: routeManager || new DummyRouteManager(),
       environmentHandler: environmentHandler || DummyEnvironmentHandler(),
       archiveHelper: archiveHelper || new DummyArchiveHelper(),

@@ -17,7 +17,7 @@ import { OrdersTablePresenter } from "./OrdersTablePresenter";
 import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
-  const { featureManager } = useContext(DependencyContext);
+  const { orchestratorProvider } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "Orders",
@@ -36,7 +36,7 @@ export const Page: React.FC = () => {
     currentPage,
   });
 
-  const disabledOrderView = !featureManager.isOrderViewEnabled();
+  const disabledOrderView = !orchestratorProvider.isOrderViewEnabled();
 
   //when sorting is triggered, reset the current page
   useEffect(() => {

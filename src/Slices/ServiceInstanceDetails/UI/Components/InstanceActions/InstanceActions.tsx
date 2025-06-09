@@ -36,7 +36,7 @@ import { DeleteAction, DestroyAction, ExpertStateTransfer, StateAction } from ".
  */
 export const InstanceActions: React.FC = () => {
   const { instance, serviceModelQuery } = useContext(InstanceDetailsContext);
-  const { routeManager, environmentHandler, featureManager } = useContext(DependencyContext);
+  const { routeManager, environmentHandler, orchestratorProvider } = useContext(DependencyContext);
 
   const editDisabled =
     instance.deleted || isTransferDisabled(instance, "on_update", serviceModelQuery.data);
@@ -127,7 +127,7 @@ export const InstanceActions: React.FC = () => {
         popperProps={{ position: "right" }}
       >
         <DropdownList>
-          {featureManager.isComposerEnabled() ? (
+          {orchestratorProvider.isComposerEnabled() ? (
             <DropdownItem
               key="Edit-Composer"
               aria-label="Edit-Composer"

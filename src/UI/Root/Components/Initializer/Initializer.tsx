@@ -13,14 +13,14 @@ import { DependencyContext } from "@/UI/Dependency";
  */
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [isInitialized, setIsInitialized] = useState(false);
-  const { environmentHandler, featureManager } = useContext(DependencyContext);
+  const { environmentHandler, orchestratorProvider } = useContext(DependencyContext);
   const serverStatus = useGetServerStatus().useOneTime();
   const environments = useGetEnvironments().useOneTime();
 
   useEffect(() => {
     if (environments.data && serverStatus.data) {
       environmentHandler.setAllEnvironments(environments.data);
-      featureManager.setAllFeatures(serverStatus.data);
+      orchestratorProvider.setAllFeatures(serverStatus.data);
       setIsInitialized(true); // This is used to sync the component rendering with updating hooks
     }
 

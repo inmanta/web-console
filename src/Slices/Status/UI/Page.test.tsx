@@ -7,7 +7,7 @@ import { axe, toHaveNoViolations } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { PrimaryArchiveHelper } from "@/Data/Common/PrimaryArchiveHelper";
-import { MockedDependencyProvider, MockFeatureManager, ServerStatus } from "@/Test";
+import { MockedDependencyProvider, MockOrchestratorProvider, ServerStatus } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { StatusPage } from ".";
@@ -79,7 +79,7 @@ describe("StatusPage", () => {
   });
 
   test("GIVEN StatusPage without support extension THEN download button is not present", async () => {
-    jest.spyOn(MockFeatureManager.prototype, "isSupportEnabled").mockReturnValue(false);
+    jest.spyOn(MockOrchestratorProvider.prototype, "isSupportEnabled").mockReturnValue(false);
     const { component } = setup();
 
     render(component);
@@ -94,7 +94,7 @@ describe("StatusPage", () => {
   });
 
   test("GIVEN StatusPage with support extension THEN download button is present", async () => {
-    jest.spyOn(MockFeatureManager.prototype, "isSupportEnabled").mockReturnValue(true);
+    jest.spyOn(MockOrchestratorProvider.prototype, "isSupportEnabled").mockReturnValue(true);
 
     const { component } = setup();
 

@@ -1,10 +1,10 @@
-import { Feature, FeatureManager, JsonParserId, ServerStatus, StatusLicense } from "@/Core";
+import { Feature, OrchestratorProvider, JsonParserId, ServerStatus, StatusLicense } from "@/Core";
 
 /**
- * Mock implementation of the FeatureManager interface for testing purposes.
+ * Mock implementation of the orchestratorProvider interface for testing purposes.
  * This class provides hardcoded values for all feature-related functionality.
  */
-export class MockFeatureManager implements FeatureManager {
+export class MockOrchestratorProvider implements OrchestratorProvider {
   getCommitHash(): string {
     return "123456abcdef";
   }
@@ -68,10 +68,10 @@ export class MockFeatureManager implements FeatureManager {
 }
 
 /**
- * Mock implementation of the FeatureManager interface for testing purposes.
+ * Mock implementation of the OrchestratorProvider interface for testing purposes.
  * This class provides hardcoded values for all feature-related functionality.
  */
-export class MockEditableFeatureManager implements FeatureManager {
+export class MockEditableOrchestratorProvider implements OrchestratorProvider {
   getCommitHash(): string {
     return "123456abcdef";
   }
@@ -135,10 +135,10 @@ export class MockEditableFeatureManager implements FeatureManager {
 }
 
 /**
- * Mock implementation of the FeatureManager interface for testing purposes.
+ * Mock implementation of the orchestratorProvider interface for testing purposes.
  * This class provides hardcoded values for all feature-related functionality.
  */
-export class MockLimitedFeatureManager implements FeatureManager {
+export class MockLimitedOrchestratorProvider implements OrchestratorProvider {
   getCommitHash(): string {
     return "123456abcdef";
   }

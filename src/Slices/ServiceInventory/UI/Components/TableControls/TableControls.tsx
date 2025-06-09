@@ -35,9 +35,9 @@ export const TableControls: React.FC<Props> = ({
   paginationWidget,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { routeManager, featureManager } = useContext(DependencyContext);
+  const { routeManager, orchestratorProvider } = useContext(DependencyContext);
 
-  const composerEnabled = featureManager.isComposerEnabled();
+  const composerEnabled = orchestratorProvider.isComposerEnabled();
 
   const states = service.lifecycle.states.map((state) => state.name).sort();
 

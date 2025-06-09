@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {
-  FeatureManager,
+  OrchestratorProvider as OrchestratorProviderType,
   Feature,
   Extention,
   JsonParserId,
@@ -13,13 +13,13 @@ import { words } from "@/UI";
 
 /**
  * Represents the primary feature manager.
- * Implements the FeatureManager interface.
+ * Implements the OrchestratorProvider interface.
  */
-export const PrimaryFeatureManager = (
+export const OrchestratorProvider = (
   jsonParserId: JsonParserId = "Native",
   commitHash: string = "",
   appVersion: string = ""
-): FeatureManager => {
+): OrchestratorProviderType => {
   const [features, setFeatures] = useState<Pick<
     ServerStatus,
     "features" | "extensions" | "version" | "edition" | "slices"

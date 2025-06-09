@@ -23,7 +23,7 @@ import { TableControls } from "./TableControls";
  * @returns {React.FC} A React Component displaying the discovered resources
  */
 export const Page: React.FC = () => {
-  const { featureManager } = useContext(DependencyContext);
+  const { orchestratorProvider } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "DiscoveredResources",
@@ -46,7 +46,7 @@ export const Page: React.FC = () => {
     currentPage,
   }).useContinuous();
 
-  const disabledDiscoveredResourcesView = !featureManager.isResourceDiscoveryEnabled();
+  const disabledDiscoveredResourcesView = !orchestratorProvider.isResourceDiscoveryEnabled();
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
