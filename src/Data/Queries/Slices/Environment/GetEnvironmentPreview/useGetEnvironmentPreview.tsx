@@ -86,5 +86,5 @@ export const useGetEnvironmentPreview = (): GetEnvironmentPreview => {
 
 export const GetEnvironmentPreviewKey = new KeyFactory(
   SliceKeys.environment,
-  "get_partial_environment"
+  "get_environment_preview"
 );
