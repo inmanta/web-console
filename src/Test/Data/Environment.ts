@@ -136,37 +136,37 @@ export const filterable: EnvironmentExpertOnly[] = [
   },
 ];
 
-export const partialA: EnvironmentPreview = {
+export const previewA: EnvironmentPreview = {
   id: "123",
   name: "test-env1",
   halted: false,
   isExpertMode: false,
 };
 
-export const partialB: EnvironmentPreview = {
+export const previewB: EnvironmentPreview = {
   id: "456",
   name: "dev-env2",
   halted: false,
   isExpertMode: false,
 };
 
-export const partialHalted: EnvironmentPreview = {
+export const previewHalted: EnvironmentPreview = {
   id: "789",
   name: "test-env2",
   halted: true,
   isExpertMode: false,
 };
 
-export const partialExpertMode: EnvironmentPreview = {
+export const previewExpertMode: EnvironmentPreview = {
   id: "101",
   name: "env2",
   halted: false,
   isExpertMode: true,
 };
 
-export const partialFilterable: EnvironmentPreview[] = [
-  partialA,
-  partialB,
-  partialHalted,
-  partialExpertMode,
+export const previewFilterable: EnvironmentPreview[] = [
+  previewA,
+  previewB,
+  previewHalted,
+  previewExpertMode,
 ];

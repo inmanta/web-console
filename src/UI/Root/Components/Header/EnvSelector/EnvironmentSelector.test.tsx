@@ -47,7 +47,7 @@ const setup = (
             <AuthTestWrapper>
               <EnvSelectorWrapper
                 onSelectEnvironment={onSelectEnvironment}
-                selectedEnvironment={Environment.partialFilterable[0]}
+                selectedEnvironment={Environment.previewFilterable[0]}
               />
             </AuthTestWrapper>
           </AuthProvider>
