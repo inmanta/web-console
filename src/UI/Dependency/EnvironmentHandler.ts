@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Location } from "react-router";
 import { EnvironmentHandler, EnvironmentSettings, Navigate, RouteManager } from "@/Core";
 import { useGetEnvironmentSettings } from "@/Data/Queries";
-import { PartialEnvironment } from "@/Data/Queries";
+import { EnvironmentPreview } from "@/Data/Queries";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
 /**
@@ -19,11 +19,11 @@ export function EnvironmentHandlerImpl(
   routeManager: RouteManager
 ): EnvironmentHandler {
   const { search } = useLocation();
-  const [environments, setEnvironments] = useState<PartialEnvironment[]>([]);
-  const [env, setEnv] = useState<PartialEnvironment | null>(null);
+  const [environments, setEnvironments] = useState<EnvironmentPreview[]>([]);
+  const [env, setEnv] = useState<EnvironmentPreview | null>(null);
   const envSettings = useGetEnvironmentSettings(env?.id).useOneTime();
 
-  function setAllEnvironments(environments: PartialEnvironment[]): void {
+  function setAllEnvironments(environments: EnvironmentPreview[]): void {
     setEnvironments(environments);
   }
 
@@ -57,14 +57,14 @@ export function EnvironmentHandlerImpl(
     return environment.name;
   }
 
-  const useSelected = useCallback((): PartialEnvironment | undefined => {
+  const useSelected = useCallback((): EnvironmentPreview | undefined => {
     return determineSelected(environments, search);
   }, [environments, search]);
 
   function determineSelected(
-    allEnvironments: PartialEnvironment[],
+    allEnvironments: EnvironmentPreview[],
     search: string
-  ): PartialEnvironment | undefined {
+  ): EnvironmentPreview | undefined {
     const searchHelper = new SearchHelper();
     const parsed = searchHelper.parse(search);
     const envId = parsed["env"];

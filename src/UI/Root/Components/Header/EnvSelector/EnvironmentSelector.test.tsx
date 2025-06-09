@@ -7,7 +7,7 @@ import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { AuthProvider, KeycloakAuthConfig, LocalConfig } from "@/Data";
-import { PartialEnvironment, useGetEnvironments, useGetProjects } from "@/Data/Queries";
+import { EnvironmentPreview, useGetEnvironments, useGetProjects } from "@/Data/Queries";
 import { AuthTestWrapper, Environment, MockedDependencyProvider, Project } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -20,7 +20,7 @@ const EnvSelectorWrapper = ({
   selectedEnvironment,
 }: {
   onSelectEnvironment: (item: EnvironmentSelectorItem) => void;
-  selectedEnvironment?: PartialEnvironment;
+  selectedEnvironment?: EnvironmentPreview;
 }) => {
   const environments = useGetEnvironments().useOneTime(true);
   const projects = useGetProjects().useOneTime();

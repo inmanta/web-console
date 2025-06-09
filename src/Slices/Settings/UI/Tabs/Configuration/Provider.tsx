@@ -6,7 +6,7 @@ import {
   useResetEnvironmentSetting,
   useUpdateEnvironmentSetting,
   getEnvironmentSettingsKey,
-  getPartialEnvironmentsKey,
+  GetEnvironmentPreviewKey,
 } from "@/Data/Queries";
 import { Container } from "./Container";
 import { InputInfoCreator } from "./InputInfoCreator";
@@ -79,7 +79,7 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
   const updateSetting = useUpdateEnvironmentSetting({
     onSuccess: () => {
       client.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
-      client.refetchQueries({ queryKey: getPartialEnvironmentsKey.root() });
+      client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
       document.dispatchEvent(new Event("settings-update"));
       setErrorMessage("");
       setShowUpdateBanner(true);

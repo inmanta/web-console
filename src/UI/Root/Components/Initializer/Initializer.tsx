@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { useGetPartialEnvironments, useGetServerStatus } from "@/Data/Queries";
+import { useGetEnvironmentPreview, useGetServerStatus } from "@/Data/Queries";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 
@@ -15,17 +15,17 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
   const [isInitialized, setIsInitialized] = useState(false);
   const { environmentHandler, featureManager } = useContext(DependencyContext);
   const serverStatus = useGetServerStatus().useOneTime();
-  const partialEnvironments = useGetPartialEnvironments().useOneTime();
+  const EnvironmentPreviews = useGetEnvironmentPreview().useOneTime();
 
   useEffect(() => {
-    if (serverStatus.data && partialEnvironments.data && partialEnvironments.data.environments) {
-      environmentHandler.setAllEnvironments(partialEnvironments.data.environments);
+    if (serverStatus.data && EnvironmentPreviews.data && EnvironmentPreviews.data.environments) {
+      environmentHandler.setAllEnvironments(EnvironmentPreviews.data.environments);
       featureManager.setAllFeatures(serverStatus.data);
       setIsInitialized(true); // This is used to sync the component rendering with updating hooks
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serverStatus.data, partialEnvironments.data]);
+  }, [serverStatus.data, EnvironmentPreviews.data]);
 
   if (serverStatus.isError) {
     return (
@@ -37,17 +37,17 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     );
   }
 
-  if (partialEnvironments.isError) {
+  if (EnvironmentPreviews.isError) {
     return (
       <ErrorView
         ariaLabel="Initializer-Error"
-        message={partialEnvironments.error.message}
-        retry={partialEnvironments.refetch}
+        message={EnvironmentPreviews.error.message}
+        retry={EnvironmentPreviews.refetch}
       />
     );
   }
 
-  if (serverStatus.isSuccess && partialEnvironments.isSuccess && isInitialized) {
+  if (serverStatus.isSuccess && EnvironmentPreviews.isSuccess && isInitialized) {
     return <>{children}</>;
   }
 

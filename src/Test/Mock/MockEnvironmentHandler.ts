@@ -1,5 +1,5 @@
 import { EnvironmentHandler, FlatEnvironment } from "@/Core";
-import { PartialEnvironment } from "@/Data/Queries";
+import { EnvironmentPreview } from "@/Data/Queries";
 
 /**
  * MockEnvironmentHandler is a function that returns a mocked EnvironmentHandler object.
@@ -20,7 +20,7 @@ export function MockEnvironmentHandler(environment: FlatEnvironment): Environmen
     throw new Error("Method not implemented.");
   }
 
-  function useSelected(): PartialEnvironment {
+  function useSelected(): EnvironmentPreview {
     return {
       id: environment.id,
       name: environment.name,
@@ -29,7 +29,7 @@ export function MockEnvironmentHandler(environment: FlatEnvironment): Environmen
     };
   }
 
-  function determineSelected(): PartialEnvironment | undefined {
+  function determineSelected(): EnvironmentPreview | undefined {
     throw new Error("Method not implemented.");
   }
 

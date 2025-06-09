@@ -1,6 +1,6 @@
 import { Location } from "react-router";
 import { Navigate } from "@/Core/Language";
-import { PartialEnvironment } from "@/Data/Queries";
+import { EnvironmentPreview } from "@/Data/Queries";
 
 /**
  * EnvironmentHandler is a contract for managing the environment selection and navigation.
@@ -18,14 +18,14 @@ import { PartialEnvironment } from "@/Data/Queries";
  */
 export interface EnvironmentHandler {
   set(navigate: Navigate, location: Location, environmentId: string): void;
-  setAllEnvironments(environments: PartialEnvironment[]): void;
-  useSelected(): PartialEnvironment | undefined;
+  setAllEnvironments(environments: EnvironmentPreview[]): void;
+  useSelected(): EnvironmentPreview | undefined;
   useName(): string;
   useId(): string;
   determineSelected(
-    allEnvironments: PartialEnvironment[],
+    allEnvironments: EnvironmentPreview[],
     search: string
-  ): PartialEnvironment | undefined;
+  ): EnvironmentPreview | undefined;
   useIsHalted(): boolean;
   useIsServerCompileEnabled(): boolean;
   useIsProtectedEnvironment(): boolean;

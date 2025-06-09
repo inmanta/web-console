@@ -1,5 +1,5 @@
 import { EnvironmentExpertOnly, EnvironmentModel, FlatEnvironment } from "@/Core";
-import { PartialEnvironment } from "@/Data/Queries";
+import { EnvironmentPreview } from "@/Data/Queries";
 
 export const env: FlatEnvironment = {
   id: "env",
@@ -136,35 +136,35 @@ export const filterable: EnvironmentExpertOnly[] = [
   },
 ];
 
-export const partialA: PartialEnvironment = {
+export const partialA: EnvironmentPreview = {
   id: "123",
   name: "test-env1",
   halted: false,
   isExpertMode: false,
 };
 
-export const partialB: PartialEnvironment = {
+export const partialB: EnvironmentPreview = {
   id: "456",
   name: "dev-env2",
   halted: false,
   isExpertMode: false,
 };
 
-export const partialHalted: PartialEnvironment = {
+export const partialHalted: EnvironmentPreview = {
   id: "789",
   name: "test-env2",
   halted: true,
   isExpertMode: false,
 };
 
-export const partialExpertMode: PartialEnvironment = {
+export const partialExpertMode: EnvironmentPreview = {
   id: "101",
   name: "env2",
   halted: false,
   isExpertMode: true,
 };
 
-export const partialFilterable: PartialEnvironment[] = [
+export const partialFilterable: EnvironmentPreview[] = [
   partialA,
   partialB,
   partialHalted,

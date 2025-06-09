@@ -6,8 +6,8 @@ import {
   useCreateEnvironment,
   useCreateProject,
   getEnvironmentsKey,
-  getPartialEnvironmentsKey,
-  PartialEnvironment,
+  GetEnvironmentPreviewKey,
+  EnvironmentPreview,
 } from "@/Data/Queries";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -48,8 +48,8 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       client.setQueryData(getEnvironmentsKey.list([{ hasDetails: true }]), dataUpdater);
       client.setQueryData(getEnvironmentsKey.list([{ hasDetails: false }]), dataUpdater);
       client.setQueryData(
-        getPartialEnvironmentsKey.root(),
-        (previousData: { data: PartialEnvironment[] | undefined }) => {
+        GetEnvironmentPreviewKey.root(),
+        (previousData: { data: EnvironmentPreview[] | undefined }) => {
           const oldData = previousData?.data || [];
           return {
             data: [
@@ -65,7 +65,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
         }
       );
 
-      client.refetchQueries({ queryKey: getPartialEnvironmentsKey.root() });
+      client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
       client.refetchQueries({ queryKey: getEnvironmentsKey.list([{ hasDetails: true }]) });
       client.refetchQueries({ queryKey: getEnvironmentsKey.list([{ hasDetails: false }]) });
 

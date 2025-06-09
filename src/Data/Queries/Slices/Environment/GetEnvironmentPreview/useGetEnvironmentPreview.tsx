@@ -5,17 +5,24 @@ import { CustomError, useGraphQLRequest } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 /**
+ * Partial Environment type that represents the Environment type but with only the id, name, halted, and extra isExpertMode property.
+ */
+export interface EnvironmentPreview extends Pick<Environment, "id" | "name" | "halted"> {
+  isExpertMode: boolean;
+}
+
+/**
  * Response type for the environments query through GraphQL.
  *
  * @property {Object} data - The data object containing the environments.
  * @property {Array} errors - The errors array containing any errors that occurred.
  * @property {Object} extensions - The extensions object containing any additional data.
  */
-export interface PartialEnvironmentsResponse {
+export interface EnvironmentPreviewsResponse {
   data: {
     environments: {
       edges: {
-        node: PartialEnvironment;
+        node: EnvironmentPreview;
       }[];
     };
   };
@@ -24,12 +31,12 @@ export interface PartialEnvironmentsResponse {
 }
 
 /**
- * Return Signature of the useGetPartialEnvironments React Query
+ * Return Signature of the useGetEnvironmentPreview React Query
  */
-interface GetPartialEnvironments {
+interface GetEnvironmentPreview {
   useOneTime: () => UseQueryResult<
     {
-      environments: PartialEnvironment[];
+      environments: EnvironmentPreview[];
       errors: string[] | null;
       extensions: Record<string, unknown>;
     },
@@ -38,18 +45,11 @@ interface GetPartialEnvironments {
 }
 
 /**
- * Partial Environment type that represents the Environment type but with only the id, name, halted, and extra isExpertMode property.
- */
-export interface PartialEnvironment extends Pick<Environment, "id" | "name" | "halted"> {
-  isExpertMode: boolean;
-}
-
-/**
  * React Query hook for fetching environments using GraphQL.
  *
- * @returns GetPartialEnvironments A query result containing environments data or an error.
+ * @returns GetEnvironmentPreview A query result containing environments data or an error.
  */
-export const useGetPartialEnvironments = (): GetPartialEnvironments => {
+export const useGetEnvironmentPreview = (): GetEnvironmentPreview => {
   const query = gql`
     query {
       environments {
@@ -65,12 +65,12 @@ export const useGetPartialEnvironments = (): GetPartialEnvironments => {
     }
   `;
 
-  const queryFn = useGraphQLRequest<PartialEnvironmentsResponse>(query);
+  const queryFn = useGraphQLRequest<EnvironmentPreviewsResponse>(query);
 
   return {
     useOneTime: () =>
       useQuery({
-        queryKey: getPartialEnvironmentsKey.list([]),
+        queryKey: GetEnvironmentPreviewKey.list([]),
         queryFn,
         select: (data) => {
           const environments = data.data.environments.edges.map((edge) => edge.node);
@@ -84,7 +84,7 @@ export const useGetPartialEnvironments = (): GetPartialEnvironments => {
   };
 };
 
-export const getPartialEnvironmentsKey = new KeyFactory(
+export const GetEnvironmentPreviewKey = new KeyFactory(
   SliceKeys.environment,
   "get_partial_environment"
 );

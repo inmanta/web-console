@@ -1,5 +1,5 @@
 import { EnvironmentHandler } from "@/Core";
-import { PartialEnvironment } from "@/Data/Queries";
+import { EnvironmentPreview } from "@/Data/Queries";
 
 export function DummyEnvironmentHandler(): EnvironmentHandler {
   function useId(): string {
@@ -14,11 +14,11 @@ export function DummyEnvironmentHandler(): EnvironmentHandler {
     throw new Error("Method not implemented.");
   }
 
-  function useSelected(): PartialEnvironment {
+  function useSelected(): EnvironmentPreview {
     throw new Error("Method not implemented.");
   }
 
-  function determineSelected(): PartialEnvironment | undefined {
+  function determineSelected(): EnvironmentPreview | undefined {
     throw new Error("Method not implemented.");
   }
 
