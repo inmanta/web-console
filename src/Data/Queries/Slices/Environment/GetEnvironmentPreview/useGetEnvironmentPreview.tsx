@@ -15,8 +15,8 @@ export interface EnvironmentPreview extends Pick<Environment, "id" | "name" | "h
  * Response type for the environments query through GraphQL.
  *
  * @property {Object} data - The data object containing the environments.
- * @property {Array} errors - The errors array containing any errors that occurred.
- * @property {Object} extensions - The extensions object containing any additional data.
+ * @property {string[] | null} errors - The errors array containing any errors that occurred.
+ * @property {Record<string, unknown>} extensions - The extensions object containing any additional data.
  */
 export interface EnvironmentPreviewResponse {
   data: {
