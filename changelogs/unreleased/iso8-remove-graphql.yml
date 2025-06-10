@@ -1,2 +1,3 @@
 description: Remove GraphQL query from iso8 as its used only from iso9
+change-type: minor
 destination-branches: [iso8]
