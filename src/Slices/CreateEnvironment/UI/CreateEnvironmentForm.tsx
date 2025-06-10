@@ -30,8 +30,8 @@ interface Props {
  * @returns {React.FC<Props>} Create Environment Form
  */
 export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) => {
-  const { featureManager } = useContext(DependencyContext);
-  const isLsmEnabled = featureManager.isLsmEnabled();
+  const { orchestratorProvider } = useContext(DependencyContext);
+  const isLsmEnabled = orchestratorProvider.isLsmEnabled();
   const navigateTo = useNavigateTo();
   const navigateToHome = () => navigateTo("Home", undefined);
   const client = useQueryClient();

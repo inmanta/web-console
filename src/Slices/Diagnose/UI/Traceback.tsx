@@ -2,6 +2,7 @@ import React from "react";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import { ExpandableSection } from "@patternfly/react-core";
 import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
+import { getThemePreference } from "@/UI/Components/DarkmodeOption";
 import { words } from "@/UI/words";
 
 /**
@@ -15,6 +16,7 @@ export const Traceback: React.FC<{ trace: string }> = ({ trace }) => {
     <ExpandableSection toggleText={words("diagnose.rejection.traceback")}>
       <CodeEditor
         code={trace}
+        isDarkTheme={getThemePreference() === "dark"}
         language={Language.python}
         isReadOnly
         isDownloadEnabled

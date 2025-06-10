@@ -1535,7 +1535,7 @@ __metadata:
     "@eslint/js": "npm:^9.26.0"
     "@inmanta/rappid": "npm:^4.0.0"
     "@joint/layout-directed-graph": "npm:^4.0.1"
-    "@loadable/component": "npm:^5.16.3"
+    "@loadable/component": "npm:^5.16.7"
     "@monaco-editor/react": "npm:^4.6.0"
     "@patternfly/react-charts": "npm:^7.2.2"
     "@patternfly/react-code-editor": "npm:^6.1.0"
@@ -1563,7 +1563,7 @@ __metadata:
     "@types/lodash": "npm:^4.17.16"
     "@types/lodash-es": "npm:^4.17.12"
     "@types/markdown-it-emoji": "npm:^3"
-    "@types/node": "npm:^22.15.21"
+    "@types/node": "npm:^22.15.30"
     "@types/qs": "npm:^6.9.17"
     "@types/react": "npm:^18.3.5"
     "@types/react-dom": "npm:^18.3.5"
@@ -1571,6 +1571,7 @@ __metadata:
     "@types/uuid": "npm:^10"
     "@types/webpack": "npm:^5.28.5"
     babel-loader: "npm:^9.2.1"
+    bignumber.js: "npm:^9.0.0"
     copy-to-clipboard: "npm:^3.3.3"
     copy-webpack-plugin: "npm:^12.0.2"
     css-loader: "npm:^7.1.2"
@@ -1603,7 +1604,6 @@ __metadata:
     jest-environment-jsdom: "npm:^29.7.0"
     jest-fetch-mock: "npm:^3.0.3"
     jest-junit: "npm:^16.0.0"
-    json-bigint: "https://github.com/sidorares/json-bigint.git#3391780b2a3f613bb51536c47e6cddbca31013eb"
     keycloak-js: "npm:^25.0.5"
     lint-staged: "npm:^15.2.10"
     lodash: "npm:^4.17.21"
@@ -1652,7 +1652,7 @@ __metadata:
     webpack: "npm:^5.99.6"
     webpack-bundle-analyzer: "npm:^4.10.2"
     webpack-cli: "npm:^5.1.4"
-    webpack-dev-server: "npm:^5.2.0"
+    webpack-dev-server: "npm:^5.2.2"
     webpack-merge: "npm:^6.0.1"
     webpack-version-file: "npm:^0.1.7"
     xml-formatter: "npm:^3.6.2"
@@ -2039,16 +2039,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@loadable/component@npm:^5.16.3":
-  version: 5.16.4
-  resolution: "@loadable/component@npm:5.16.4"
+"@loadable/component@npm:^5.16.7":
+  version: 5.16.7
+  resolution: "@loadable/component@npm:5.16.7"
   dependencies:
     "@babel/runtime": "npm:^7.12.18"
     hoist-non-react-statics: "npm:^3.3.1"
     react-is: "npm:^16.12.0"
   peerDependencies:
-    react: ^16.3.0 || ^17.0.0 || ^18.0.0
-  checksum: 10/ff434e13df559184f6bc85155a72edfbd1d6b814dfd06cb066908e8fc27f6265fa905bb72bf2fb139074d7777491c22c4d44ce077a4f4852157928ff7118de46
+    react: ^16.3.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10/2ddec033ae94b9411dcc34a8ef2e08c338e6f887ae3e426af8c726be4f9f7cc64e4379fce6a96bf50611e4e557f848e3c15b6947a731a363bb44a7a0aea62af1
   languageName: node
   linkType: hard
 
@@ -3061,6 +3061,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/express-serve-static-core@npm:^4.17.21":
+  version: 4.19.6
+  resolution: "@types/express-serve-static-core@npm:4.19.6"
+  dependencies:
+    "@types/node": "npm:*"
+    "@types/qs": "npm:*"
+    "@types/range-parser": "npm:*"
+    "@types/send": "npm:*"
+  checksum: 10/a2e00b6c5993f0dd63ada2239be81076fe0220314b9e9fde586e8946c9c09ce60f9a2dd0d74410ee2b5fd10af8c3e755a32bb3abf134533e2158142488995455
+  languageName: node
+  linkType: hard
+
 "@types/express@npm:*, @types/express@npm:^4.17.21":
   version: 4.17.21
   resolution: "@types/express@npm:4.17.21"
@@ -3335,12 +3347,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.15.21":
-  version: 22.15.21
-  resolution: "@types/node@npm:22.15.21"
+"@types/node@npm:^22.15.30":
+  version: 22.15.30
+  resolution: "@types/node@npm:22.15.30"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10/cb4189587cca445bfb8166c0ed39f9344d743f37f3da892f2999a99bbabda45dc773237e61ecb7d1dc83dd95718cb1b5715b0be5dd7953565b19019e36a7cf39
+  checksum: 10/16d03f30df7851eea4f31d9a2470a53b24dc7d3909ed1782e2538e3aafe398451da17b83d6f730dfdcd0a843ccdbe841176ecfbde6bdb51963e8d11f58a10ade
   languageName: node
   linkType: hard
 
@@ -11310,15 +11322,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-bigint@https://github.com/sidorares/json-bigint.git#3391780b2a3f613bb51536c47e6cddbca31013eb":
-  version: 1.0.0
-  resolution: "json-bigint@https://github.com/sidorares/json-bigint.git#commit=3391780b2a3f613bb51536c47e6cddbca31013eb"
-  dependencies:
-    bignumber.js: "npm:^9.0.0"
-  checksum: 10/e34d91ce09a0f69f33fb813a949ca033b97d46e430e6cabf316381e63847e9b45cb97a59286db117a65c4677058adcb3ad64860caf870f61c3bac875ef0df58a
-  languageName: node
-  linkType: hard
-
 "json-buffer@npm:3.0.1":
   version: 3.0.1
   resolution: "json-buffer@npm:3.0.1"
@@ -17439,13 +17442,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-dev-server@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "webpack-dev-server@npm:5.2.0"
+"webpack-dev-server@npm:^5.2.2":
+  version: 5.2.2
+  resolution: "webpack-dev-server@npm:5.2.2"
   dependencies:
     "@types/bonjour": "npm:^3.5.13"
     "@types/connect-history-api-fallback": "npm:^1.5.4"
     "@types/express": "npm:^4.17.21"
+    "@types/express-serve-static-core": "npm:^4.17.21"
     "@types/serve-index": "npm:^1.9.4"
     "@types/serve-static": "npm:^1.15.5"
     "@types/sockjs": "npm:^0.3.36"
@@ -17458,7 +17462,7 @@ __metadata:
     connect-history-api-fallback: "npm:^2.0.0"
     express: "npm:^4.21.2"
     graceful-fs: "npm:^4.2.6"
-    http-proxy-middleware: "npm:^2.0.7"
+    http-proxy-middleware: "npm:^2.0.9"
     ipaddr.js: "npm:^2.1.0"
     launch-editor: "npm:^2.6.1"
     open: "npm:^10.0.3"
@@ -17479,7 +17483,7 @@ __metadata:
       optional: true
   bin:
     webpack-dev-server: bin/webpack-dev-server.js
-  checksum: 10/f93ca46b037e547a9db157db72ef98ab177659ad13a6e63302d87bd77b32e524dd7133f1ad18f5a51ec68712911c59be8d4e06aa7bcbe6f56a9e9ce3774cf7f6
+  checksum: 10/59517409cd38c01a875a03b9658f3d20d492b5b8bead9ded4a0f3d33e6857daf2d352fe89f0181dcaea6d0fbe84b0494cb4750a87120fe81cdbb3c32b499451c
   languageName: node
   linkType: hard
 

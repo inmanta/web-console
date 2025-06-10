@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useLocation } from "react-router";
 import { isJsonParserId, JsonParserId } from "@/Core";
-import { PrimaryFeatureManager, PrimaryArchiveHelper, PrimaryFileManager } from "@/Data";
+import { OrchestratorProvider, PrimaryArchiveHelper, PrimaryFileManager } from "@/Data";
 import {
   PrimaryBaseUrlManager,
   PrimaryRouteManager,
@@ -30,12 +30,12 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = PrimaryRouteManager(basePathname);
-  const featureManager = PrimaryFeatureManager(
+  const orchestratorProvider = OrchestratorProvider(
     getJsonParserId(globalThis),
     COMMITHASH,
     APP_VERSION
   );
-  const urlManager = new UrlManagerImpl(featureManager, baseUrl);
+  const urlManager = new UrlManagerImpl(orchestratorProvider, baseUrl);
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
   const fileManager = new PrimaryFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
@@ -44,7 +44,7 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
     <DependencyProvider
       dependencies={{
         urlManager,
-        featureManager,
+        orchestratorProvider,
         routeManager,
         environmentHandler,
         archiveHelper,

@@ -38,11 +38,11 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
   diagnoseDisabled,
   version,
 }) => {
-  const { routeManager, featureManager } = useContext(DependencyContext);
+  const { routeManager, orchestratorProvider } = useContext(DependencyContext);
 
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const composerEnabled = featureManager.isComposerEnabled();
+  const composerEnabled = orchestratorProvider.isComposerEnabled();
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
@@ -100,7 +100,7 @@ export const RowActions: React.FunctionComponent<InstanceActionsProps> = ({
             </DropdownItem>
           </Link>
         )}
-        {featureManager.isComposerEnabled() && (
+        {orchestratorProvider.isComposerEnabled() && (
           <Link
             variant="plain"
             pathname={routeManager.getUrl("InstanceComposerViewer", {

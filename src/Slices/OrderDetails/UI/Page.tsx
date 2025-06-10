@@ -9,12 +9,12 @@ import { OrderDetailsTable } from "./OrderDetailsTable";
 import { OrderDetailsTablePresenter } from "./OrderDetailsTablePresenter";
 
 export const Page: React.FC = () => {
-  const { featureManager } = useContext(DependencyContext);
+  const { orchestratorProvider } = useContext(DependencyContext);
   const { id } = useRouteParams<"OrderDetails">();
 
   const { data, isSuccess, isError, error, refetch } = useGetOrderDetails().useContinuous(id);
 
-  const disabledOrderDetailsView = !featureManager.isOrderViewEnabled();
+  const disabledOrderDetailsView = !orchestratorProvider.isOrderViewEnabled();
 
   if (isError) {
     return (

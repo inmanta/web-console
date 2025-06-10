@@ -10,10 +10,10 @@ import { words } from "@/UI/words";
  * @returns {React.ReactNode} The rendered component.
  */
 export const UpdateBanner: React.FC = () => {
-  const { featureManager } = useContext(DependencyContext);
+  const { orchestratorProvider } = useContext(DependencyContext);
   const [showBannerState, setShowBannerState] = useState(false);
-  const currentVersion = featureManager.getAppVersion();
-  const currentCommit = featureManager.getCommitHash();
+  const currentVersion = orchestratorProvider.getAppVersion();
+  const currentCommit = orchestratorProvider.getCommitHash();
   const { data, isSuccess } = useGetVersionFileInfo();
 
   useEffect(() => {

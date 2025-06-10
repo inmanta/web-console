@@ -1,6 +1,6 @@
 export * from "./ImageHelper";
 export * from "./PrimaryArchiveHelper";
-export * from "./PrimaryFeatureManager";
+export * from "./OrchestratorProvider";
 export * from "./PrimaryFileManager";
 export * from "./AttributeConverter";
 export * from "./JsonFormatter";

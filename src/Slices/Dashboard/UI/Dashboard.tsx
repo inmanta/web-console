@@ -20,7 +20,7 @@ import { Section } from "./Section";
  */
 
 export const Dashboard: React.FC = () => {
-  const { featureManager } = useContext(DependencyContext);
+  const { orchestratorProvider } = useContext(DependencyContext);
   const [startDate, setStartDate] = useState(moment().add(-7, "days").toISOString());
   const [endDate, setEndDate] = useState(moment().toISOString());
   const {
@@ -32,7 +32,7 @@ export const Dashboard: React.FC = () => {
   } = useGetMetrics().useOneTime({
     startDate,
     endDate,
-    isLsmAvailable: featureManager.isLsmEnabled(),
+    isLsmAvailable: orchestratorProvider.isLsmEnabled(),
   });
 
   const updateCharts = () => {
@@ -53,7 +53,7 @@ export const Dashboard: React.FC = () => {
           </Button>
         </RefreshWrapper>
         <Flex direction={{ default: "column" }} gap={{ default: "gapLg" }}>
-          {featureManager.isLsmEnabled() && (
+          {orchestratorProvider.isLsmEnabled() && (
             <Section
               title={words("navigation.lifecycleServiceManager")}
               metricType="lsm"

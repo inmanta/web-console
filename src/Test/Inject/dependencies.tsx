@@ -2,7 +2,7 @@ import React from "react";
 import { FlatEnvironment } from "@/Core";
 import { AuthContextInterface, PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
 import { EnvironmentDetails } from "@/Test";
-import { MockEnvironmentHandler, MockFeatureManager, MockFileManager } from "@/Test/Mock";
+import { MockEnvironmentHandler, MockOrchestratorProvider, MockFileManager } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { UrlManagerImpl } from "@/UI/Utils";
@@ -25,8 +25,8 @@ export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> 
   const baseUrl = "";
   const routeManager = PrimaryRouteManager(baseUrl);
   const environmentHandler = MockEnvironmentHandler(env);
-  const featureManager = new MockFeatureManager();
-  const urlManager = new UrlManagerImpl(featureManager, baseUrl);
+  const orchestratorProvider = new MockOrchestratorProvider();
+  const urlManager = new UrlManagerImpl(orchestratorProvider, baseUrl);
   const fileManager = new MockFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
 
@@ -34,7 +34,7 @@ export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> 
     <DependencyProvider
       dependencies={{
         routeManager,
-        featureManager,
+        orchestratorProvider,
         urlManager,
         environmentHandler,
         archiveHelper,
