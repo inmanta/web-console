@@ -49,7 +49,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       client.setQueryData(getEnvironmentsKey.list([{ hasDetails: false }]), dataUpdater);
       client.setQueryData(
         GetEnvironmentPreviewKey.list(),
-        (previousData: EnvironmentPreviewResponse) => {
+        (previousData: EnvironmentPreviewResponse | undefined) => {
           const newEnv = {
             id: data.data.id,
             name: data.data.name,
@@ -57,15 +57,25 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
             isExpertMode: false,
           };
 
+          if (previousData) {
           previousData.data.environments.edges.push({
             node: newEnv,
           });
-
           const envsAsArray = previousData.data.environments.edges.map((edge) => edge.node);
 
           environmentHandler.setAllEnvironments(envsAsArray);
-
           return previousData;
+
+        } 
+        environmentHandler.setAllEnvironments([newEnv]);
+
+        return {
+          data: {
+            environments: {
+              edges: [{ node: newEnv }],
+            },
+          },
+        };
         }
       );
 
