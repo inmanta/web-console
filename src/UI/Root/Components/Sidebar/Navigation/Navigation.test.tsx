@@ -3,7 +3,7 @@ import { QueryClientProvider, QueryClient, QueryObserverResult } from "@tanstack
 import { render, screen, within } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import * as queryModule from "@/Data/Queries/Slices/Compilation/GetCompilerStatus/useGetCompilerStatus";
-import { MockedDependencyProvider, MockFeatureManager } from "@/Test";
+import { MockedDependencyProvider, MockOrchestratorProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { Navigation } from "./Navigation";
@@ -74,9 +74,11 @@ describe("Navigation", () => {
   });
 
   test("GIVEN Navigation WHEN no features enabled THEN no extra features are not shown", () => {
-    jest.spyOn(MockFeatureManager.prototype, "isLsmEnabled").mockReturnValue(false);
-    jest.spyOn(MockFeatureManager.prototype, "isOrderViewEnabled").mockReturnValue(false);
-    jest.spyOn(MockFeatureManager.prototype, "isResourceDiscoveryEnabled").mockReturnValue(false);
+    jest.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(false);
+    jest.spyOn(MockOrchestratorProvider.prototype, "isOrderViewEnabled").mockReturnValue(false);
+    jest
+      .spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled")
+      .mockReturnValue(false);
 
     const { component } = setup();
 
@@ -106,9 +108,11 @@ describe("Navigation", () => {
   });
 
   test("GIVEN Navigation WHEN all features are enabled THEN all extra features are shown", () => {
-    jest.spyOn(MockFeatureManager.prototype, "isLsmEnabled").mockReturnValue(true);
-    jest.spyOn(MockFeatureManager.prototype, "isOrderViewEnabled").mockReturnValue(true);
-    jest.spyOn(MockFeatureManager.prototype, "isResourceDiscoveryEnabled").mockReturnValue(true);
+    jest.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(true);
+    jest.spyOn(MockOrchestratorProvider.prototype, "isOrderViewEnabled").mockReturnValue(true);
+    jest
+      .spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled")
+      .mockReturnValue(true);
 
     const { component } = setup();
 

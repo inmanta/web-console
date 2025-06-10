@@ -1,6 +1,6 @@
-import { FeatureManager, JsonParserId, ServerStatus, StatusLicense } from "@/Core";
+import { OrchestratorProvider, JsonParserId, ServerStatus, StatusLicense } from "@/Core";
 
-export class DummyFeatureManager implements FeatureManager {
+export class DummyOrchestratorProvider implements OrchestratorProvider {
   getCommitHash(): string {
     throw new Error("Method not implemented.");
   }

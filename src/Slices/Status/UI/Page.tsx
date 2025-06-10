@@ -44,7 +44,7 @@ export const Page: React.FC = () => {
  * @returns {React.FC<PropsWithChildren>} The Wrapper
  */
 const Wrapper: React.FC<PropsWithChildren> = ({ children }: PropsWithChildren) => {
-  const { featureManager } = useContext(DependencyContext);
+  const { orchestratorProvider } = useContext(DependencyContext);
 
   return (
     <PageContainer pageTitle={words("status.title")}>
@@ -52,7 +52,7 @@ const Wrapper: React.FC<PropsWithChildren> = ({ children }: PropsWithChildren) =
         <FlexItem>
           <Description>{words("status.description")}</Description>
         </FlexItem>
-        {featureManager.isSupportEnabled() && (
+        {orchestratorProvider.isSupportEnabled() && (
           <FlexItem>
             <SupportArchive />
           </FlexItem>

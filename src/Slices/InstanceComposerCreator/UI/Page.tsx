@@ -13,9 +13,9 @@ import { useRouteParams } from "@/UI/Routing";
  */
 export const Page: React.FC = () => {
   const { service: serviceName } = useRouteParams<"InstanceComposer">();
-  const { featureManager } = useContext(DependencyContext);
+  const { orchestratorProvider } = useContext(DependencyContext);
 
-  if (!featureManager.isComposerEnabled()) {
+  if (!orchestratorProvider.isComposerEnabled()) {
     <EmptyView
       message={words("instanceComposer.disabled")}
       aria-label="ComposerCreateView-Empty"

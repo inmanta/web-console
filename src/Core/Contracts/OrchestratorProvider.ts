@@ -4,7 +4,7 @@ import { JsonParserId } from "./JsonParser";
 /**
  * Interface that represents the feature manager.
  */
-export interface FeatureManager {
+export interface OrchestratorProvider {
   isLicencedFeatureEnabled(feature: Feature): boolean;
   isLsmEnabled(): boolean;
   isSupportEnabled(): boolean;
