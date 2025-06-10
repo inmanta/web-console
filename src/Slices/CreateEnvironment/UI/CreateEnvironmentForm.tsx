@@ -58,24 +58,25 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
           };
 
           if (previousData) {
-          previousData.data.environments.edges.push({
-            node: newEnv,
-          });
-          const envsAsArray = previousData.data.environments.edges.map((edge) => edge.node);
+            previousData.data.environments.edges.push({
+              node: newEnv,
+            });
+            const envsAsArray = previousData.data.environments.edges.map((edge) => edge.node);
 
-          environmentHandler.setAllEnvironments(envsAsArray);
-          return previousData;
+            environmentHandler.setAllEnvironments(envsAsArray);
 
-        } 
-        environmentHandler.setAllEnvironments([newEnv]);
+            return previousData;
+          }
 
-        return {
-          data: {
-            environments: {
-              edges: [{ node: newEnv }],
+          environmentHandler.setAllEnvironments([newEnv]);
+
+          return {
+            data: {
+              environments: {
+                edges: [{ node: newEnv }],
+              },
             },
-          },
-        };
+          };
         }
       );
 
