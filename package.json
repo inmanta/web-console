@@ -30,7 +30,7 @@
     "install:orchestrator:keycloak": "sh ./shell-scripts/setup-auth.sh version='oss' release='dev' branch='oss_case_1'",
     "install:orchestrator:local-auth": "sh ./shell-scripts/setup-auth.sh version='oss' release='dev' branch='oss_case_1' auth='localauth'",
     "install:orchestrator": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
-    "install:orchestrator:iso": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
+    "install:orchestrator:iso": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' release='8-dev'",
     "install:orchestrator:oss": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' version='oss' release='dev' branch='oss_case_1'",
     "install:orchestrator:ci": "sh ./shell-scripts/setup-orchestrator.sh",
     "kill-server": "sh ./shell-scripts/clear-server.sh",
