@@ -81,7 +81,7 @@ const openSettings = (envName) => {
 
   cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Settings").click();
   cy.url().should("contain", "/console/settings?env=");
-  cy.get('[aria-label="Name-value"]').should("contain", envName);
+  cy.get('[data-testid="Name-value"]').should("contain", envName);
 };
 
 describe("Environment", () => {
@@ -156,7 +156,7 @@ describe("Environment", () => {
     cy.get('[aria-label="Name-input"]').clear();
     cy.get('[aria-label="Name-input"]').type("New Value Name");
     cy.get('[aria-label="Name-submit-edit"]').click();
-    cy.get('[aria-label="Name-value"]').should("contain", "New Value Name");
+    cy.get('[data-testid="Name-value"]').should("contain", "New Value Name");
 
     //change Description value
     cy.wait(1000);
@@ -164,7 +164,7 @@ describe("Environment", () => {
     cy.get('[aria-label="Description-input"]').clear();
     cy.get('[aria-label="Description-input"]').type("New Value Description");
     cy.get('[aria-label="Description-submit-edit"]').click();
-    cy.get('[aria-label="Description-value"]').should("contain", "New Value Description");
+    cy.get('[data-testid="Description-value"]').should("contain", "New Value Description");
 
     //change Repository Branch value
     cy.wait(1000);
@@ -173,7 +173,7 @@ describe("Environment", () => {
     //delay is needed to fix error that says that this input is disabled
     cy.get('[aria-label="repo_branch-input"]').type("New Value Repo Branch");
     cy.get('[aria-label="Repository Settings-submit-edit"]:enabled').click();
-    cy.get('[aria-label="repo_branch-value"]').should("contain", "New Value Repo Branch");
+    cy.get('[data-testid="repo_branch-value"]').should("contain", "New Value Repo Branch");
 
     //change Repository url value
     cy.wait(1000);
@@ -184,7 +184,7 @@ describe("Environment", () => {
       delay: 10,
     });
     cy.get('[aria-label="Repository Settings-submit-edit"]:enabled').click();
-    cy.get('[aria-label="repo_url-value"]').should("contain", "New Value Repo Url");
+    cy.get('[data-testid="repo_url-value"]').should("contain", "New Value Repo Url");
 
     //change Project Name value
     cy.wait(1000);

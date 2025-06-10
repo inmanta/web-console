@@ -44,12 +44,12 @@ describe("EnvironmentSettings", () => {
     const { component } = setup();
 
     render(component);
-    expect(await screen.findByLabelText("Name-value")).toBeVisible();
+    expect(await screen.findByTestId("Name-value")).toBeVisible();
 
     await userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
 
     expect(await screen.findByRole("textbox", { name: "Name-input" })).toBeVisible();
-    expect(screen.queryByLabelText("Name-value")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("Name-value")).not.toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -112,7 +112,7 @@ describe("EnvironmentSettings", () => {
     await userEvent.click(screen.getByRole("button", { name: "Name-cancel-edit" }));
 
     // The field is shown with the original value
-    expect(await screen.findByRole("textbox", { name: "Name-value" })).toHaveTextContent("env");
+    expect(await screen.findByTestId("Name-value")).toHaveTextContent("env");
 
     expect(screen.queryByRole("textbox", { name: "Name-input" })).not.toBeInTheDocument();
 
@@ -173,15 +173,15 @@ describe("EnvironmentSettings", () => {
 
     render(component);
 
-    expect(await screen.findByRole("textbox", { name: "repo_branch-value" })).toBeVisible();
-    expect(await screen.findByRole("textbox", { name: "repo_url-value" })).toBeVisible();
+    expect(await screen.findByTestId("repo_branch-value")).toBeVisible();
+    expect(await screen.findByTestId("repo_url-value")).toBeVisible();
 
     await userEvent.click(screen.getByRole("button", { name: "Repository Settings-toggle-edit" }));
 
     expect(await screen.findByRole("textbox", { name: "repo_branch-input" })).toBeVisible();
     expect(await screen.findByRole("textbox", { name: "repo_url-input" })).toBeVisible();
-    expect(screen.queryByRole("textbox", { name: "repo_branch-value" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("textbox", { name: "repo_url-value" })).not.toBeInTheDocument();
+    expect(screen.queryByTestId("repo_branch-value")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("repo_url-value")).not.toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -326,7 +326,7 @@ describe("EnvironmentSettings", () => {
 
     render(component);
 
-    expect(await screen.findByRole("textbox", { name: "Project Name-value" })).toBeVisible();
+    expect(await screen.findByTestId("Project Name-value")).toBeVisible();
 
     await userEvent.click(screen.getByRole("button", { name: "Project Name-toggle-edit" }));
 
@@ -336,7 +336,7 @@ describe("EnvironmentSettings", () => {
       })
     ).toBeVisible();
 
-    expect(screen.queryByRole("textbox", { name: "Project Name-value" })).not.toBeInTheDocument();
+    expect(screen.queryByTestId("Project Name-value")).not.toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -371,9 +371,7 @@ describe("EnvironmentSettings", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Project Name-submit-edit" }));
 
-    expect(await screen.findByRole("textbox", { name: "Project Name-value" })).toHaveTextContent(
-      "project_name_b"
-    );
+    expect(await screen.findByTestId("Project Name-value")).toHaveTextContent("project_name_b");
     expect(
       screen.queryByRole("textbox", { name: "Project Name-typeahead" })
     ).not.toBeInTheDocument();
@@ -402,9 +400,7 @@ describe("EnvironmentSettings", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Project Name-cancel-edit" }));
 
-    expect(await screen.findByRole("textbox", { name: "Project Name-value" })).toHaveTextContent(
-      "project_name_b"
-    );
+    expect(await screen.findByTestId("Project Name-value")).toHaveTextContent("project_name_b");
     expect(
       screen.queryByRole("textbox", { name: "Project Name-typeahead" })
     ).not.toBeInTheDocument();
@@ -470,13 +466,13 @@ describe("EnvironmentSettings", () => {
     const { component } = setup();
 
     render(component);
-    expect(await screen.findByRole("textbox", { name: "Description-value" })).toBeVisible();
+    expect(await screen.findByTestId("Description-value")).toBeVisible();
 
     await userEvent.click(screen.getByRole("button", { name: "Description-toggle-edit" }));
 
     expect(await screen.findByRole("textbox", { name: "Description-input" })).toBeVisible();
 
-    expect(screen.queryByRole("textbox", { name: "Description-value" })).not.toBeInTheDocument();
+    expect(screen.queryByTestId("Description-value")).not.toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -489,13 +485,13 @@ describe("EnvironmentSettings", () => {
     const { component } = setup();
 
     render(component);
-    expect(await screen.findByLabelText("Icon-value")).toBeVisible();
+    expect(await screen.findByTestId("Icon-value")).toBeVisible();
 
     await userEvent.click(screen.getByRole("button", { name: "Icon-toggle-edit" }));
 
     expect(await screen.findByRole("textbox", { name: "Icon-input" })).toBeVisible();
 
-    expect(screen.queryByLabelText("Icon-value")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("Icon-value")).not.toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);

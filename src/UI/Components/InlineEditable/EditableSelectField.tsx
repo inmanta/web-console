@@ -57,7 +57,5 @@ export const EditableSelectField: React.FC<Props> = ({
 };
 
 const StaticView: StaticViewComponent = ({ value, ...props }) => (
-  <InlineValue role="textbox" {...props}>
-    {value}
-  </InlineValue>
+  <InlineValue {...props}>{value}</InlineValue>
 );
