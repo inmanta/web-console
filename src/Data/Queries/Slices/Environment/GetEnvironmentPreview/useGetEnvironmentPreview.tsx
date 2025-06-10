@@ -5,16 +5,16 @@ import { CustomError, useGraphQLRequest } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 /**
- * Partial Environment type that represents the Environment type but with only the id, name, halted, and extra isExpertMode property.
+ * Environment Preview type that represents the Environment type but with only the id, name, halted, extended of isExpertMode property.
  */
 export interface EnvironmentPreview extends Pick<Environment, "id" | "name" | "halted"> {
   isExpertMode: boolean;
 }
 
 /**
- * Response type for the environments query through GraphQL.
+ * Response type for the environments preview query through GraphQL.
  *
- * @property {Object} data - The data object containing the environments.
+ * @property {Object} data - The data object containing the environment previews.
  * @property {string[] | null} errors - The errors array containing any errors that occurred.
  * @property {Record<string, unknown>} extensions - The extensions object containing any additional data.
  */
@@ -45,9 +45,9 @@ interface GetEnvironmentPreview {
 }
 
 /**
- * React Query hook for fetching environments using GraphQL.
+ * React Query hook for fetching environments previews using GraphQL.
  *
- * @returns GetEnvironmentPreview A query result containing environments data or an error.
+ * @returns GetEnvironmentPreview A query result containing environment previews data or an error.
  */
 export const useGetEnvironmentPreview = (): GetEnvironmentPreview => {
   const query = gql`
