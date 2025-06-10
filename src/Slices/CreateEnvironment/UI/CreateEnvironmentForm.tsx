@@ -50,22 +50,22 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       client.setQueryData(
         GetEnvironmentPreviewKey.list(),
         (previousData: EnvironmentPreviewResponse) => {
-            const newEnv = {
-              id: data.data.id,
-              name: data.data.name,
-              halted: data.data.halted,
-              isExpertMode: false,
-            }
+          const newEnv = {
+            id: data.data.id,
+            name: data.data.name,
+            halted: data.data.halted,
+            isExpertMode: false,
+          };
 
-            previousData.data.environments.edges.push({
-              node: newEnv,
-            });
+          previousData.data.environments.edges.push({
+            node: newEnv,
+          });
 
           const envsAsArray = previousData.data.environments.edges.map((edge) => edge.node);
 
           environmentHandler.setAllEnvironments(envsAsArray);
-  
-          return previousData
+
+          return previousData;
         }
       );
 
