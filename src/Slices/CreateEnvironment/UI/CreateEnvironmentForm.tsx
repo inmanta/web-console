@@ -7,7 +7,7 @@ import {
   useCreateProject,
   getEnvironmentsKey,
   GetEnvironmentPreviewKey,
-  EnvironmentPreview,
+  EnvironmentPreviewResponse,
 } from "@/Data/Queries";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -30,7 +30,7 @@ interface Props {
  * @returns {React.FC<Props>} Create Environment Form
  */
 export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) => {
-  const { orchestratorProvider } = useContext(DependencyContext);
+  const { orchestratorProvider, environmentHandler } = useContext(DependencyContext);
   const isLsmEnabled = orchestratorProvider.isLsmEnabled();
   const navigateTo = useNavigateTo();
   const navigateToHome = () => navigateTo("Home", undefined);
@@ -49,23 +49,27 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       client.setQueryData(getEnvironmentsKey.list([{ hasDetails: false }]), dataUpdater);
       client.setQueryData(
         GetEnvironmentPreviewKey.list(),
-        (previousData: { data: EnvironmentPreview[] | undefined }) => {
-          const oldData = previousData?.data || [];
-          return {
-            data: [
-              ...oldData,
-              {
-                id: data.data.id,
-                name: data.data.name,
-                halted: data.data.halted,
-                isExpertMode: false,
-              },
-            ],
-          };
+        (previousData: EnvironmentPreviewResponse) => {
+            const newEnv = {
+              id: data.data.id,
+              name: data.data.name,
+              halted: data.data.halted,
+              isExpertMode: false,
+            }
+
+            previousData.data.environments.edges.push({
+              node: newEnv,
+            });
+
+          const envsAsArray = previousData.data.environments.edges.map((edge) => edge.node);
+
+          environmentHandler.setAllEnvironments(envsAsArray);
+  
+          return previousData
         }
       );
 
-      client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
+      client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.list() });
       client.refetchQueries({ queryKey: getEnvironmentsKey.list([{ hasDetails: true }]) });
       client.refetchQueries({ queryKey: getEnvironmentsKey.list([{ hasDetails: false }]) });
 
