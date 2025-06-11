@@ -62,7 +62,7 @@ module.exports = {
 
   // The mermaid and @inmanta/rappid esm modules have to be handled by jest
   transformIgnorePatterns: [
-    "node_modules/(?!(@inmanta/rappid|mermaid|monaco-editor|@monaco-editor/react)|graphql-request/)",
+    "node_modules/(?!(@inmanta/rappid|mermaid|monaco-editor|@monaco-editor/react)/)",
   ],
   globals: {
     "ts-jest": {
