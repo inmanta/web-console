@@ -1,12 +1,15 @@
 import React, { act } from "react";
-import { QueryClientProvider, QueryClient, QueryObserverResult } from "@tanstack/react-query";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
-import * as queryModule from "@/Data/Queries/Slices/Compilation/GetCompilerStatus/useGetCompilerStatus";
+import { graphql, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { IsCompilingResponse } from "@/Data/Queries";
 import { MockedDependencyProvider, MockOrchestratorProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { Navigation } from "./Navigation";
+
 expect.extend(toHaveNoViolations);
 
 function setup(initialEntries?: string[]) {
@@ -166,20 +169,37 @@ describe("Navigation", () => {
   });
 
   test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Reports' Indication is visible", async () => {
-    jest.spyOn(queryModule, "useGetCompilerStatus").mockReturnValue({
-      useContinuous: () =>
-        ({
+    const queryBase = graphql.link("/api/v2/graphql");
+
+    const server = setupServer(
+      queryBase.operation(() => {
+        return HttpResponse.json<{ data: IsCompilingResponse }>({
           data: {
-            isCompiling: true,
+            data: {
+              environments: {
+                edges: [
+                  {
+                    node: {
+                      isCompiling: true,
+                    },
+                  },
+                ],
+              },
+            },
+            errors: [],
+            extensions: {},
           },
-          isSuccess: true,
-        }) as unknown as QueryObserverResult<{ isCompiling: boolean }, Error>,
-    });
+        });
+      })
+    );
+
+    server.listen();
     const { component } = setup(["/lsm/catalog"]);
 
     render(component);
-    const Indication = screen.getByLabelText("CompileReportsIndication");
+    const Indication = await screen.findByLabelText("CompileReportsIndication");
 
     expect(Indication).toBeVisible();
+    server.close();
   });
 });

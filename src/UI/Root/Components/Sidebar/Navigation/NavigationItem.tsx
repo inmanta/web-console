@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router";
 import { Label, NavItem, Tooltip } from "@patternfly/react-core";
 import { LockIcon } from "@patternfly/react-icons";
-import { useGetCompilerStatus } from "@/Data/Queries";
+import { useGetIsCompiling } from "@/Data/Queries";
 import { CompileReportsIndication } from "@/Slices/Resource/UI/ResourcesPage/Components/CompileReportsIndication";
 import { SearchHelper } from "@/UI/Routing";
 
@@ -83,7 +83,7 @@ const ExternalItem: React.FC<Label & Url> = ({ label, url }) => (
 );
 
 const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
-  const { data, isSuccess } = useGetCompilerStatus().useContinuous();
+  const { data, isSuccess } = useGetIsCompiling().useContinuous();
 
   return (
     <NavItem itemId={label}>
@@ -96,7 +96,7 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
         aria-label="Sidebar-Navigation-Item"
       >
         {label}
-        {isSuccess && data.isCompiling && (
+        {isSuccess && data.compilingPreview.isCompiling && (
           <Tooltip key={"ongoing-compilation-tooltip"} content={"Compiling"}>
             <CompileReportsIndication role="presentation" aria-label="CompileReportsIndication" />
           </Tooltip>
