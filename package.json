@@ -182,7 +182,7 @@
     "styled-components": "^5.3.11",
     "undici": "^5",
     "uuid": "^10.0.0",
-    "xml-formatter": "^3.6.2"
+    "xml-formatter": "^3.6.6"
   },
   "resolutions": {
     "browserslist": "^4.16.5",
