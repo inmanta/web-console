@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ModifyEnvironmentParams } from "@/Core";
-import { usePost } from "@/Data/Queries";
+import { GetEnvironmentPreviewKey, usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 import { getEnvironmentDetailsKey } from "../GetEnvironmentDetails";
 import { getEnvironmentsKey } from "../GetEnvironments";
@@ -31,6 +31,7 @@ export const useModifyEnvironment = (
     onSuccess: () => {
       client.refetchQueries({ queryKey: getEnvironmentDetailsKey.root() });
       client.refetchQueries({ queryKey: getEnvironmentsKey.root() });
+      client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
     },
     ...options,
   });

@@ -1,4 +1,5 @@
-import { EnvironmentHandler, FlatEnvironment } from "@/Core";
+import { EnvironmentHandler } from "@/Core";
+import { EnvironmentPreview } from "@/Data/Queries";
 
 export function DummyEnvironmentHandler(): EnvironmentHandler {
   function useId(): string {
@@ -13,11 +14,11 @@ export function DummyEnvironmentHandler(): EnvironmentHandler {
     throw new Error("Method not implemented.");
   }
 
-  function useSelected(): FlatEnvironment {
+  function useSelected(): EnvironmentPreview {
     throw new Error("Method not implemented.");
   }
 
-  function determineSelected(): FlatEnvironment | undefined {
+  function determineSelected(): EnvironmentPreview | undefined {
     throw new Error("Method not implemented.");
   }
 

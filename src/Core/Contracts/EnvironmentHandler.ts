@@ -1,6 +1,6 @@
 import { Location } from "react-router";
-import { FlatEnvironment } from "@/Core/Domain";
 import { Navigate } from "@/Core/Language";
+import { EnvironmentPreview } from "@/Data/Queries";
 
 /**
  * EnvironmentHandler is a contract for managing the environment selection and navigation.
@@ -18,14 +18,14 @@ import { Navigate } from "@/Core/Language";
  */
 export interface EnvironmentHandler {
   set(navigate: Navigate, location: Location, environmentId: string): void;
-  setAllEnvironments(environments: FlatEnvironment[]): void;
-  useSelected(): FlatEnvironment | undefined;
+  setAllEnvironments(environments: EnvironmentPreview[]): void;
+  useSelected(): EnvironmentPreview | undefined;
   useName(): string;
   useId(): string;
   determineSelected(
-    allEnvironments: FlatEnvironment[],
+    allEnvironments: EnvironmentPreview[],
     search: string
-  ): FlatEnvironment | undefined;
+  ): EnvironmentPreview | undefined;
   useIsHalted(): boolean;
   useIsServerCompileEnabled(): boolean;
   useIsProtectedEnvironment(): boolean;

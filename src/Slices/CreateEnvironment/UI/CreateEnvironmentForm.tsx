@@ -2,7 +2,13 @@ import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
 import { Environment, ProjectModel } from "@/Core";
-import { useCreateEnvironment, useCreateProject, getEnvironmentsKey } from "@/Data/Queries";
+import {
+  useCreateEnvironment,
+  useCreateProject,
+  getEnvironmentsKey,
+  GetEnvironmentPreviewKey,
+  EnvironmentPreviewResponse,
+} from "@/Data/Queries";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
@@ -24,7 +30,7 @@ interface Props {
  * @returns {React.FC<Props>} Create Environment Form
  */
 export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) => {
-  const { orchestratorProvider } = useContext(DependencyContext);
+  const { orchestratorProvider, environmentHandler } = useContext(DependencyContext);
   const isLsmEnabled = orchestratorProvider.isLsmEnabled();
   const navigateTo = useNavigateTo();
   const navigateToHome = () => navigateTo("Home", undefined);
@@ -41,7 +47,40 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       //update the data in the cache to avoid crash after navigating to the new env
       client.setQueryData(getEnvironmentsKey.list([{ hasDetails: true }]), dataUpdater);
       client.setQueryData(getEnvironmentsKey.list([{ hasDetails: false }]), dataUpdater);
+      client.setQueryData(
+        GetEnvironmentPreviewKey.list(),
+        (previousData: EnvironmentPreviewResponse | undefined) => {
+          const newEnv = {
+            id: data.data.id,
+            name: data.data.name,
+            halted: data.data.halted,
+            isExpertMode: false,
+          };
 
+          if (previousData) {
+            previousData.data.environments.edges.push({
+              node: newEnv,
+            });
+            const envsAsArray = previousData.data.environments.edges.map((edge) => edge.node);
+
+            environmentHandler.setAllEnvironments(envsAsArray);
+
+            return previousData;
+          }
+
+          environmentHandler.setAllEnvironments([newEnv]);
+
+          return {
+            data: {
+              environments: {
+                edges: [{ node: newEnv }],
+              },
+            },
+          };
+        }
+      );
+
+      client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.list() });
       client.refetchQueries({ queryKey: getEnvironmentsKey.list([{ hasDetails: true }]) });
       client.refetchQueries({ queryKey: getEnvironmentsKey.list([{ hasDetails: false }]) });
 

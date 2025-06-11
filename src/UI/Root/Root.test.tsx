@@ -2,9 +2,10 @@ import React, { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { HttpResponse, http } from "msw";
+import { HttpResponse, graphql, http } from "msw";
 import { setupServer } from "msw/node";
 import { defaultAuthContext } from "@/Data/Auth/AuthContext";
+import { EnvironmentPreviewResponse } from "@/Data/Queries";
 import {
   Environment,
   EnvironmentSettings,
@@ -38,12 +39,35 @@ function setup() {
 expect.extend(toHaveNoViolations);
 
 describe("Root", () => {
+  const queryBase = graphql.link("/api/v2/graphql");
   const server = setupServer(
     http.get("/api/v1/serverstatus", async () => {
       return HttpResponse.json({ data: ServerStatus.withLsm });
     }),
     http.get("/api/v2/project", async () => {
       return HttpResponse.json({ data: Project.list });
+    }),
+    queryBase.operation(() => {
+      return HttpResponse.json<{ data: EnvironmentPreviewResponse }>({
+        data: {
+          data: {
+            environments: {
+              edges: [
+                {
+                  node: {
+                    id: "1",
+                    name: "Environment 1",
+                    isExpertMode: false,
+                    halted: false,
+                  },
+                },
+              ],
+            },
+          },
+          errors: [],
+          extensions: {},
+        },
+      });
     }),
     http.get("/api/v2/environment", async () => {
       return HttpResponse.json({ data: Environment.filterable });

@@ -2,6 +2,7 @@ import React from "react";
 import { Alert, Dropdown, Spinner, MenuToggle } from "@patternfly/react-core";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Environment, FlatEnvironment, ProjectModel } from "@/Core";
+import { EnvironmentPreview } from "@/Data/Queries";
 import { words } from "@/UI/words";
 import { EnvironmentSelectorItem, EnvSelectorWrapper } from "./EnvSelectorWrapper";
 
@@ -9,7 +10,7 @@ interface Props {
   environments: UseQueryResult<Environment[], Error>;
   projects: UseQueryResult<ProjectModel[], Error>;
   onSelectEnvironment(item: EnvironmentSelectorItem): void;
-  selectedEnvironment?: FlatEnvironment;
+  selectedEnvironment?: EnvironmentPreview;
 }
 
 /**
@@ -20,7 +21,7 @@ interface Props {
  * @props {Props} props - The component props
  * @prop {UseQueryResult<Environment[], Error>} environments - Query result containing environment data
  * @prop {Function} onSelectEnvironment - Callback function when an environment is selected
- * @prop {FlatEnvironment} selectedEnvironment - Currently selected environment (if any)
+ * @prop {EnvironmentPreview} selectedEnvironment - Currently selected environment (if any)
  * @returns {React.FC<Props>} A dropdown component for environment selection with appropriate state handling
  */
 
@@ -106,7 +107,21 @@ const environmentToSelector = ({
   environmentId: id,
 });
 
-const environmentToName = ({
-  name,
-  projectName,
-}: Pick<FlatEnvironment, "name" | "projectName">): string => `${name} (${projectName})`;
+/**
+ * Generate the name of the environment with the project name or fallback to the environment name and unknown project
+ *
+ * This function is to provide fallback for the scenario when there is no selected environment in the array of environments with project names,
+ * as we are filtering at the end of the process of conversion
+ *
+ * @param {Pick<FlatEnvironment, "name" | "projectName"> | EnvironmentPreview} environment - The FlatEnvironment object to convert
+ * @returns {string} The converted string representation of the environment name
+ */
+const environmentToName = (
+  environment: Pick<FlatEnvironment, "name" | "projectName"> | EnvironmentPreview
+): string => {
+  if ("projectName" in environment) {
+    return `${environment.name} (${environment.projectName})`;
+  } else {
+    return `${environment.name} (Unknown Project)`;
+  }
+};

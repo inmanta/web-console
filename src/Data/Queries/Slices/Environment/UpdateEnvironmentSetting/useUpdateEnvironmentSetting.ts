@@ -8,6 +8,7 @@ import {
 import { EnvironmentSettings } from "@/Core";
 import { usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
+import { GetEnvironmentPreviewKey } from "../GetEnvironmentPreview";
 import { getEnvironmentSettingsKey } from "../GetEnvironmentSettings";
 
 /**
@@ -36,6 +37,7 @@ export const useUpdateEnvironmentSetting = (
     mutationKey: ["update_environment_setting", env],
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: getEnvironmentSettingsKey.root() });
+      queryClient.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
     },
     ...options,
   });

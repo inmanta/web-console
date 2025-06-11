@@ -6,21 +6,21 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { FlatEnvironment } from "@/Core";
 import { AuthProvider, KeycloakAuthConfig, LocalConfig } from "@/Data";
-import { useGetEnvironments, useGetProjects } from "@/Data/Queries";
+import { EnvironmentPreview, useGetEnvironments, useGetProjects } from "@/Data/Queries";
 import { AuthTestWrapper, Environment, MockedDependencyProvider, Project } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
+
 const EnvSelectorWrapper = ({
   onSelectEnvironment,
   selectedEnvironment,
 }: {
   onSelectEnvironment: (item: EnvironmentSelectorItem) => void;
-  selectedEnvironment?: FlatEnvironment;
+  selectedEnvironment?: EnvironmentPreview;
 }) => {
   const environments = useGetEnvironments().useOneTime(true);
   const projects = useGetProjects().useOneTime();
@@ -47,7 +47,7 @@ const setup = (
             <AuthTestWrapper>
               <EnvSelectorWrapper
                 onSelectEnvironment={onSelectEnvironment}
-                selectedEnvironment={Environment.filterable[0]}
+                selectedEnvironment={Environment.previewFilterable[0]}
               />
             </AuthTestWrapper>
           </AuthProvider>
@@ -125,7 +125,7 @@ describe("EnvironmentSelector", () => {
 
     render(setup());
 
-    const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
+    const toggle = await screen.findByText(`${envA.name} (${envA.projectName})`);
 
     await userEvent.click(toggle);
 
@@ -157,7 +157,7 @@ describe("EnvironmentSelector", () => {
 
     render(setup(onSelectEnv));
 
-    const toggle = screen.getByText(`${envA.name} (${envA.projectName})`);
+    const toggle = await screen.findByText(`${envA.name} (${envA.projectName})`);
 
     await userEvent.click(toggle);
 
@@ -196,7 +196,7 @@ describe("EnvironmentSelector", () => {
     const envB = Environment.filterable[2];
 
     render(setup(onSelectEnv));
-    const toggle = screen.getByRole("button", {
+    const toggle = await screen.findByRole("button", {
       name: `${envA.name} (${envA.projectName})`,
     });
 
@@ -244,6 +244,7 @@ describe("EnvironmentSelector", () => {
     await waitFor(() => {
       expect(screen.queryByText("test_user")).not.toBeInTheDocument();
     });
+
     expect(screen.getByText("test-env1 (default)")).toBeVisible();
   });
 
