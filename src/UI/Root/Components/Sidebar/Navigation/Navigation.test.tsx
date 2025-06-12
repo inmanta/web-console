@@ -2,9 +2,6 @@ import React, { act } from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { graphql, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
-import { IsCompilingResponse } from "@/Data/Queries";
 import { MockedDependencyProvider, MockOrchestratorProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
@@ -169,37 +166,11 @@ describe("Navigation", () => {
   });
 
   test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Reports' Indication is visible", async () => {
-    const queryBase = graphql.link("/api/v2/graphql");
-
-    const server = setupServer(
-      queryBase.operation(() => {
-        return HttpResponse.json<{ data: IsCompilingResponse }>({
-          data: {
-            data: {
-              environments: {
-                edges: [
-                  {
-                    node: {
-                      isCompiling: true,
-                    },
-                  },
-                ],
-              },
-            },
-            errors: [],
-            extensions: {},
-          },
-        });
-      })
-    );
-
-    server.listen();
     const { component } = setup(["/lsm/catalog"]);
 
     render(component);
     const Indication = await screen.findByLabelText("CompileReportsIndication");
 
     expect(Indication).toBeVisible();
-    server.close();
   });
 });

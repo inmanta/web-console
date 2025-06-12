@@ -1,4 +1,5 @@
 import React, { act } from "react";
+import Router from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -10,7 +11,12 @@ import { MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { DuplicateInstancePage } from "./DuplicateInstancePage";
+import { Page } from "./Page";
+
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
+  useParams: jest.fn(),
+}));
 
 expect.extend(toHaveNoViolations);
 
@@ -21,15 +27,12 @@ const axe = configureAxe({
   },
 });
 
-function setup(entity = "a") {
+function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider>
-          <DuplicateInstancePage
-            serviceEntity={Service[entity]}
-            instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-          />
+          <Page />
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
@@ -39,7 +42,15 @@ function setup(entity = "a") {
 }
 
 describe("DuplicateInstancePage", () => {
-  const server = setupServer();
+  const instance = "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3";
+  const server = setupServer(
+    http.get("/lsm/v1/service_catalog/service_name_a", () => {
+      return HttpResponse.json({ data: Service.a });
+    }),
+    http.get("/lsm/v1/service_catalog/service_name_all_attrs", () => {
+      return HttpResponse.json({ data: Service.ServiceWithAllAttrs });
+    })
+  );
 
   beforeAll(() => {
     server.listen();
@@ -52,6 +63,8 @@ describe("DuplicateInstancePage", () => {
   afterAll(() => server.close());
 
   test("Duplicate Instance View shows failed state", async () => {
+    jest.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_a", instance });
+
     server.use(
       http.get(
         "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
@@ -76,7 +89,9 @@ describe("DuplicateInstancePage", () => {
   });
 
   test("DuplicateInstance View shows success form", async () => {
-    const mockFn = jest.fn();
+    jest.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_a", instance });
+
+    const mockFn = jest.fn().mockResolvedValue({ data: ServiceInstance.a });
 
     jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
 
@@ -107,12 +122,6 @@ describe("DuplicateInstancePage", () => {
     await userEvent.type(bandwidthField, "3");
 
     await userEvent.click(screen.getByText(words("confirm")));
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
 
     expect(mockFn).toHaveBeenCalledWith("/lsm/v1/service_inventory/service_name_a", {
       attributes: {
@@ -155,10 +164,17 @@ describe("DuplicateInstancePage", () => {
         order_id: 9764848531585,
       },
     });
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test("Given the DuplicateInstance View When changing a embedded entity Then the correct request is fired", async () => {
-    const mockFn = jest.fn();
+    jest.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_a", instance });
+    const mockFn = jest.fn().mockResolvedValue({ data: ServiceInstance.a });
 
     jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
     server.use(
@@ -245,7 +261,10 @@ describe("DuplicateInstancePage", () => {
   });
 
   test("Given the DuplicateInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
-    const mockFn = jest.fn();
+    jest
+      .spyOn(Router, "useParams")
+      .mockReturnValue({ service: "service_name_all_attrs", instance });
+    const mockFn = jest.fn().mockResolvedValue({ data: ServiceInstance.allAttrs });
 
     jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
 
@@ -257,7 +276,7 @@ describe("DuplicateInstancePage", () => {
         }
       )
     );
-    const { component } = setup("ServiceWithAllAttrs");
+    const { component } = setup();
 
     render(component);
 

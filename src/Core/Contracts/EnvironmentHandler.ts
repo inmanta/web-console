@@ -27,6 +27,7 @@ export interface EnvironmentHandler {
     search: string
   ): EnvironmentPreview | undefined;
   useIsHalted(): boolean;
+  useIsCompiling(): boolean;
   useIsServerCompileEnabled(): boolean;
   useIsProtectedEnvironment(): boolean;
   useIsExpertModeEnabled(): boolean;

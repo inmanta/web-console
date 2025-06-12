@@ -83,6 +83,11 @@ export function EnvironmentHandlerImpl(
 
     return env.halted;
   }
+  function useIsCompiling(): boolean {
+    if (env === null) return false;
+
+    return env.isCompiling;
+  }
 
   /**
    * check in the environment if the current settings exist if not it will try to fallback to envSettings definitions, in case of lack of env and lack of envSettings it will return false
@@ -137,5 +142,6 @@ export function EnvironmentHandlerImpl(
     useIsProtectedEnvironment,
     useIsExpertModeEnabled,
     setAllEnvironments,
+    useIsCompiling,
   };
 }

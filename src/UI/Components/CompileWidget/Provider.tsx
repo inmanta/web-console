@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AlertVariant } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
-import { getIsCompilingKey, useTriggerCompile } from "@/Data/Queries";
+import { GetEnvironmentPreviewKey, useTriggerCompile } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
@@ -29,7 +29,7 @@ export const Provider: React.FC<Props> = ({ afterTrigger, isToastVisible = false
       }
     },
     onSuccess: () => {
-      client.refetchQueries({ queryKey: getIsCompilingKey.single(env) });
+      client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
       afterTrigger && afterTrigger();
     },
   });
