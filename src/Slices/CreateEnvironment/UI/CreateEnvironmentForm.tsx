@@ -54,6 +54,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
             id: data.data.id,
             name: data.data.name,
             halted: data.data.halted,
+            isCompiling: false,
             isExpertMode: false,
           };
 

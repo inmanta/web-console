@@ -9,13 +9,13 @@ import { Navigation } from "./Navigation";
 
 expect.extend(toHaveNoViolations);
 
-function setup(initialEntries?: string[]) {
+function setup(initialEntries?: string[], isCompiling: boolean = false) {
   const queryClient = new QueryClient();
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={initialEntries}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider isCompiling={isCompiling}>
           <Navigation environment="env" />
         </MockedDependencyProvider>
       </TestMemoryRouter>
@@ -166,7 +166,7 @@ describe("Navigation", () => {
   });
 
   test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Reports' Indication is visible", async () => {
-    const { component } = setup(["/lsm/catalog"]);
+    const { component } = setup(["/lsm/catalog"], true);
 
     render(component);
     const Indication = await screen.findByLabelText("CompileReportsIndication");
