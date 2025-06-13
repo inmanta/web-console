@@ -83,6 +83,7 @@ export function EnvironmentHandlerImpl(
 
     return env.halted;
   }
+  
   function useIsCompiling(): boolean {
     if (env === null) return false;
 

@@ -12,6 +12,7 @@ import { EnvironmentPreview } from "@/Data/Queries";
  * - useId: a hook that returns the id of the selected environment
  * - determineSelected: a function that determines the selected environment from the URL
  * - useIsHalted: a hook that returns a boolean value indicating if the environment is halted
+ * - useIsCompiling: a hook that returns a boolean value indicating if the environment is compiling
  * - useIsServerCompileEnabled: a hook that returns a boolean value indicating if the server compile is enabled
  * - useIsProtectedEnvironment: a hook that returns a boolean value indicating if the environment is protected
  * - useIsExpertModeEnabled: a hook that returns a boolean value indicating if the expert mode is enabled
