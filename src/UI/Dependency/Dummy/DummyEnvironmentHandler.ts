@@ -22,6 +22,10 @@ export function DummyEnvironmentHandler(): EnvironmentHandler {
     throw new Error("Method not implemented.");
   }
 
+  function useIsCompiling(): boolean {
+    throw new Error("Method not implemented.");
+  }
+
   function useIsHalted(): boolean {
     throw new Error("Method not implemented.");
   }
@@ -49,6 +53,7 @@ export function DummyEnvironmentHandler(): EnvironmentHandler {
     useSelected,
     determineSelected,
     useIsHalted,
+    useIsCompiling,
     useIsServerCompileEnabled,
     useIsProtectedEnvironment,
     useIsExpertModeEnabled,

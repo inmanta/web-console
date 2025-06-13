@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { gql } from "graphql-request";
 import { Environment } from "@/Core/Domain";
-import { CustomError, useGraphQLRequest } from "@/Data/Queries";
+import { CustomError, REFETCH_INTERVAL, useGraphQLRequest } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 /**
@@ -9,6 +9,7 @@ import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
  */
 export interface EnvironmentPreview extends Pick<Environment, "id" | "name" | "halted"> {
   isExpertMode: boolean;
+  isCompiling: boolean;
 }
 
 /**
@@ -59,6 +60,7 @@ export const useGetEnvironmentPreview = (): GetEnvironmentPreview => {
             id
             halted
             isExpertMode
+            isCompiling
           }
         }
       }
@@ -72,6 +74,7 @@ export const useGetEnvironmentPreview = (): GetEnvironmentPreview => {
       useQuery({
         queryKey: GetEnvironmentPreviewKey.list([]),
         queryFn,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data) => {
           const environments = data.data.environments.edges.map((edge) => edge.node);
           return {

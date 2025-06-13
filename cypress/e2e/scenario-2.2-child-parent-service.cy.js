@@ -25,16 +25,26 @@ const checkStatusCompile = (id) => {
   let statusCodeCompile = 200;
 
   if (statusCodeCompile === 200) {
-    cy.intercept(`/api/v1/notify/${id}`).as("IsCompiling");
+    cy.intercept("/api/v2/graphql").as("IsCompiling");
     // the timeout is necessary to avoid errors.
     // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
-    // the default timeout in cypress is 5000, but since we have recursion it goes into timeout for the nested awaits because of the recursion.
-    cy.wait("@IsCompiling", { timeout: 15000 }).then((req) => {
+    cy.wait("@IsCompiling").then((req) => {
       statusCodeCompile = req.response.statusCode;
+      const environments = req.response.body.data.data.environments;
 
-      if (statusCodeCompile === 200) {
-        checkStatusCompile(id);
+      if (environments) {
+        const edges = environments.edges;
+
+        if (edges && edges.length > 0) {
+          const environment = edges.find((env) => env.node.id === id);
+
+          if (environment && !environment.node.isCompiling) {
+            return;
+          }
+        }
       }
+
+      checkStatusCompile(id);
     });
   }
 };

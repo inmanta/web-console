@@ -7,7 +7,10 @@ import { EnvironmentPreview } from "@/Data/Queries";
  * @param {FlatEnvironment} environment - The environment to be used in the mock.
  * @returns {EnvironmentHandler}An EnvironmentHandler object.
  */
-export function MockEnvironmentHandler(environment: FlatEnvironment): EnvironmentHandler {
+export function MockEnvironmentHandler(
+  environment: FlatEnvironment,
+  isCompiling: boolean = false
+): EnvironmentHandler {
   function useName(): string {
     return environment.name;
   }
@@ -25,12 +28,17 @@ export function MockEnvironmentHandler(environment: FlatEnvironment): Environmen
       id: environment.id,
       name: environment.name,
       halted: environment.halted,
+      isCompiling: false,
       isExpertMode: Boolean(environment.settings.enable_lsm_expert_mode),
     };
   }
 
   function determineSelected(): EnvironmentPreview | undefined {
     throw new Error("Method not implemented.");
+  }
+
+  function useIsCompiling(): boolean {
+    return isCompiling;
   }
 
   function useIsHalted(): boolean {
@@ -60,6 +68,7 @@ export function MockEnvironmentHandler(environment: FlatEnvironment): Environmen
     useSelected,
     determineSelected,
     useIsHalted,
+    useIsCompiling,
     useIsProtectedEnvironment,
     useIsServerCompileEnabled,
     useIsExpertModeEnabled,

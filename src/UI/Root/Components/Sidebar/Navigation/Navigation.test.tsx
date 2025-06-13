@@ -1,21 +1,21 @@
 import React, { act } from "react";
-import { QueryClientProvider, QueryClient, QueryObserverResult } from "@tanstack/react-query";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
-import * as queryModule from "@/Data/Queries/Slices/Compilation/GetCompilerStatus/useGetCompilerStatus";
 import { MockedDependencyProvider, MockOrchestratorProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { Navigation } from "./Navigation";
+
 expect.extend(toHaveNoViolations);
 
-function setup(initialEntries?: string[]) {
+function setup(initialEntries?: string[], isCompiling: boolean = false) {
   const queryClient = new QueryClient();
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <TestMemoryRouter initialEntries={initialEntries}>
-        <MockedDependencyProvider>
+        <MockedDependencyProvider isCompiling={isCompiling}>
           <Navigation environment="env" />
         </MockedDependencyProvider>
       </TestMemoryRouter>
@@ -166,19 +166,10 @@ describe("Navigation", () => {
   });
 
   test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Reports' Indication is visible", async () => {
-    jest.spyOn(queryModule, "useGetCompilerStatus").mockReturnValue({
-      useContinuous: () =>
-        ({
-          data: {
-            isCompiling: true,
-          },
-          isSuccess: true,
-        }) as unknown as QueryObserverResult<{ isCompiling: boolean }, Error>,
-    });
-    const { component } = setup(["/lsm/catalog"]);
+    const { component } = setup(["/lsm/catalog"], true);
 
     render(component);
-    const Indication = screen.getByLabelText("CompileReportsIndication");
+    const Indication = await screen.findByLabelText("CompileReportsIndication");
 
     expect(Indication).toBeVisible();
   });

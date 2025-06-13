@@ -57,6 +57,7 @@ describe("Root", () => {
                   node: {
                     id: "1",
                     name: "Environment 1",
+                    isCompiling: false,
                     isExpertMode: false,
                     halted: false,
                   },
