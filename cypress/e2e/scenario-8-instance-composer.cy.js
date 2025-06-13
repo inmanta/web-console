@@ -43,10 +43,7 @@ const checkStatusCompile = (id) => {
             return;
           }
         }
-      } else {
-        //this endpoint is also used for notifications, so we don't need to call it again in that case, it will lower the amount of awaits
-        return;
-      }
+      } 
 
       checkStatusCompile(id);
     });
