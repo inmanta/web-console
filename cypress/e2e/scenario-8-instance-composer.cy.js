@@ -43,7 +43,7 @@ const checkStatusCompile = (id) => {
             return;
           }
         }
-      } 
+      }
 
       checkStatusCompile(id);
     });
