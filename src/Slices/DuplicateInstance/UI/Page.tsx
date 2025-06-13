@@ -41,7 +41,9 @@ export const Page: React.FC = () => {
     return (
       <PageWrapper identifier={instance}>
         <ErrorView
-          message={serviceModel.error?.message || serviceInstance.error?.message || "Unknown error"}
+          message={
+            serviceModel.error?.message || serviceInstance.error?.message || words("error.unknown")
+          }
           ariaLabel="DuplicateInstance-Failed"
           retry={retry}
         />
