@@ -49,7 +49,6 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const { mutate } = usePostInstance(serviceEntity.name, {
     onError: (error) => {
       setIsDirty(true);
-      console.log("error", error);
       setErrorMessage(error.message);
     },
     onSuccess: ({ data }) => {
