@@ -837,6 +837,10 @@ const dict = {
    */
   "userManagement.title": "User Management",
   "userManagement.name": "Name",
+  "userManagement.changePassword": "Change Password",
+  "userManagement.changePassword.placeholder": "New Password...",
+  "userManagement.changePassword.message": (username: string) =>
+    `Please provide a new password for user ${username}`,
   "userManagement.actions": "Actions",
   "userManagement.filter.placeholder": "Username...",
   "userManagement.addUser": "Add User",

@@ -11,7 +11,7 @@ import { UserInfoRow } from "./Components/UserInfoRow";
 export const UserManagementPage: React.FC = () => {
   const { triggerModal } = useContext(ModalContext);
 
-  const { data, isLoading, isError, error, refetch } = useGetUsers().useOneTime();
+  const { data, isSuccess, isError, error, refetch } = useGetUsers().useOneTime();
 
   /**
    * Opens a modal with a form for user credentials.
@@ -28,9 +28,7 @@ export const UserManagementPage: React.FC = () => {
     });
   };
 
-  if (isLoading) return <LoadingView ariaLabel="UserManagement-Loading" />;
-
-  if (isError)
+  if (isError) {
     return (
       <ErrorView
         data-testid="ErrorView"
@@ -40,36 +38,43 @@ export const UserManagementPage: React.FC = () => {
         retry={refetch}
       />
     );
+  }
 
-  return (
-    <PageContainer pageTitle={words("userManagement.title")}>
-      <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
-        <FlexItem>
-          <Button variant="primary" onClick={openModal} aria-label="add_user-button">
-            {words("userManagement.addUser")}
-          </Button>
-        </FlexItem>
-      </Flex>
-      {!data || data.length === 0 ? (
-        <EmptyView
-          message={words("userManagement.empty.message")}
-          aria-label="UserManagement-Empty"
-        />
-      ) : (
-        <Table aria-label="users-table">
-          <Thead>
-            <Tr>
-              <Th width={80}>{words("userManagement.name")}</Th>
-              <Th width={20}>{words("userManagement.actions")}</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data.map((user) => (
-              <UserInfoRow key={`Row-${user.username}`} user={user} />
-            ))}
-          </Tbody>
-        </Table>
-      )}
-    </PageContainer>
-  );
+  if (isSuccess) {
+    return (
+      <PageContainer pageTitle={words("userManagement.title")}>
+        <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+          <FlexItem>
+            <Button variant="primary" onClick={openModal} aria-label="add_user-button">
+              {words("userManagement.addUser")}
+            </Button>
+          </FlexItem>
+        </Flex>
+        {data.length === 0 ? (
+          <EmptyView
+            message={words("userManagement.empty.message")}
+            aria-label="UserManagement-Empty"
+          />
+        ) : (
+          <Table aria-label="users-table">
+            <Thead>
+              <Tr>
+                <Th width={80}>{words("userManagement.name")}</Th>
+                <Th isStickyColumn stickyMinWidth="320px">
+                  {words("userManagement.actions")}
+                </Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {data.map((user) => (
+                <UserInfoRow key={`Row-${user.username}`} user={user} />
+              ))}
+            </Tbody>
+          </Table>
+        )}
+      </PageContainer>
+    );
+  }
+
+  return <LoadingView ariaLabel="UserManagement-Loading" />;
 };
