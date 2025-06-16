@@ -13,19 +13,27 @@ import { DependencyContext } from "@/UI/Dependency";
  */
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isEnvironmentPreviewInitialized, setIsEnvironmentPreviewInitialized] = useState(false);
   const { environmentHandler, orchestratorProvider } = useContext(DependencyContext);
   const serverStatus = useGetServerStatus().useOneTime();
   const EnvironmentPreview = useGetEnvironmentPreview().useOneTime();
 
   useEffect(() => {
-    if (serverStatus.data && EnvironmentPreview.data && EnvironmentPreview.data.environments) {
-      environmentHandler.setAllEnvironments(EnvironmentPreview.data.environments);
+    if (serverStatus.data) {
       orchestratorProvider.setAllFeatures(serverStatus.data);
       setIsInitialized(true); // This is used to sync the component rendering with updating hooks
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serverStatus.data, EnvironmentPreview.data]);
+  }, [serverStatus.data]);
+
+  useEffect(() => {
+    if (EnvironmentPreview.data && EnvironmentPreview.data.environments) {
+      environmentHandler.setAllEnvironments(EnvironmentPreview.data.environments);
+      setIsEnvironmentPreviewInitialized(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [EnvironmentPreview.data]);
 
   if (serverStatus.isError) {
     return (
@@ -47,7 +55,12 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     );
   }
 
-  if (serverStatus.isSuccess && EnvironmentPreview.isSuccess && isInitialized) {
+  if (
+    serverStatus.isSuccess &&
+    EnvironmentPreview.isSuccess &&
+    isInitialized &&
+    isEnvironmentPreviewInitialized
+  ) {
     return <>{children}</>;
   }
 
