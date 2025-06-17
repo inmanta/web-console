@@ -7,7 +7,6 @@ import { MarkdownPreviewerPage } from "@/Slices/MarkdownPreviewer/UI";
 import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
 import { OrdersPage } from "@/Slices/Orders/UI";
 import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
-import { RoleManagementPage } from "@/Slices/RoleManagement/UI/Page";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { ServiceInstanceDetailsPage } from "@/Slices/ServiceInstanceDetails/UI";
 import { UserManagementPage } from "@/Slices/UserManagement/UI/Page";
@@ -59,10 +58,6 @@ export class PrimaryPageManager implements PageManager {
       UserManagement: {
         ...this.routeDictionary.UserManagement,
         element: <UserManagementPage />,
-      },
-      RoleManagement: {
-        ...this.routeDictionary.RoleManagement,
-        element: <RoleManagementPage />,
       },
 
       /**

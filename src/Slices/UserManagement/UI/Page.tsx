@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
-import { useGetUsers } from "@/Data/Queries";
+import { useGetEnvironmentPreview, useGetRoles, useGetUsers } from "@/Data/Queries";
 import { UserCredentialsForm } from "@/Slices/UserManagement/UI/Components/AddUserForm";
 import { words } from "@/UI";
 import { EmptyView, ErrorView, LoadingView, PageContainer, ToastAlert } from "@/UI/Components";
@@ -12,6 +12,8 @@ export const UserManagementPage: React.FC = () => {
   const { triggerModal } = useContext(ModalContext);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const { data, isSuccess, isError, error, refetch } = useGetUsers().useOneTime();
+  const roles = useGetRoles().useOneTime();
+  const environments = useGetEnvironmentPreview().useOneTime();
 
   /**
    * Opens a modal with a form for user credentials.
@@ -40,7 +42,7 @@ export const UserManagementPage: React.FC = () => {
     );
   }
 
-  if (isSuccess) {
+  if (environments.isSuccess && isSuccess && roles.isSuccess) {
     return (
       <PageContainer pageTitle={words("userManagement.title")}>
         {alertMessage && (
@@ -67,7 +69,13 @@ export const UserManagementPage: React.FC = () => {
           <Table aria-label="users-table">
             <Thead>
               <Tr>
-                <Th width={80}>{words("userManagement.name")}</Th>
+                <Th
+                  style={{ width: "15px" }}
+                  aria-hidden
+                  screenReaderText={words("common.emptyColumnHeader")}
+                />
+                <Th width={40}>{words("userManagement.name")}</Th>
+                <Th width={40}>{words("userManagement.roles")}</Th>
                 <Th
                   isStickyColumn
                   stickyMinWidth="340px"
@@ -82,6 +90,7 @@ export const UserManagementPage: React.FC = () => {
                   key={`Row-${user.username}`}
                   user={user}
                   setAlertMessage={setAlertMessage}
+                  environments={environments.data.environments}
                 />
               ))}
             </Tbody>

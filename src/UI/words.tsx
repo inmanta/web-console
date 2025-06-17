@@ -839,6 +839,8 @@ const dict = {
    */
   "userManagement.title": "User Management",
   "userManagement.name": "Name",
+  "userManagement.roles": "Roles",
+  "userManagement.environment": "Environment",
   "userManagement.changePassword": "Change Password",
   "userManagement.changePassword.placeholder": "New Password...",
   "userManagement.changePassword.success": "Password changed successfully",

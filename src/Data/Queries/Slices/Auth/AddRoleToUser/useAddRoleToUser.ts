@@ -11,7 +11,13 @@ interface AddRoleToUserBody {
  * @param {string} user - The username of the user to add the role to.
  * @returns {Mutation<void, Error, AddRoleToUserBody>} - The mutation function.
  */
-export const useAddRoleToUser = ({user, options}: {user: string, options?: UseMutationOptions<void, Error, AddRoleToUserBody>}) => {
+export const useAddRoleToUser = ({
+  user,
+  options,
+}: {
+  user: string;
+  options?: UseMutationOptions<void, Error, AddRoleToUserBody>;
+}) => {
   const post = usePostWithoutEnv()<AddRoleToUserBody>;
 
   return useMutation<void, Error, AddRoleToUserBody>({

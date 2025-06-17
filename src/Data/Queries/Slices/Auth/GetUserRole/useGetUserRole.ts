@@ -6,12 +6,17 @@ import { useQuery } from "@tanstack/react-query";
 import { useGetWithoutEnv } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
+export interface UserRoleInfo {
+  name: string;
+  environment: string;
+}
+
 /**
  * Custom hook to fetch user role information from the API.
  * @returns An object containing a custom hook to fetch user role information.
  */
 export const useGetUserRoles = () => {
-  const get = useGetWithoutEnv()<{ data: string[] }>;
+  const get = useGetWithoutEnv()<{ data: UserRoleInfo[] }>;
 
   return {
     /**

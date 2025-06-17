@@ -6,7 +6,13 @@ import { useDeleteWithoutEnv } from "@/Data/Queries";
  * @param {string} user - The username of the user to remove the role from.
  * @returns {Mutation<void, Error>} - The mutation function.
  */
-export const useRemoveRoleFromUser = ({user, options}: {user: string, options?: UseMutationOptions<void, Error>}) => {
+export const useRemoveRoleFromUser = ({
+  user,
+  options,
+}: {
+  user: string;
+  options?: UseMutationOptions<void, Error>;
+}) => {
   const deleteRole = useDeleteWithoutEnv();
 
   return useMutation<void, Error>({

@@ -1,14 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
-import { Td, Tr } from "@patternfly/react-table";
-import { useRemoveUser, UserInfo } from "@/Data/Queries";
+import { Table, Th, Thead, Td, Tr, Tbody } from "@patternfly/react-table";
+import { EnvironmentPreview, useGetUserRoles, useRemoveUser, UserInfo } from "@/Data/Queries";
 import { words } from "@/UI";
-import { ConfirmUserActionForm } from "@/UI/Components";
+import { ConfirmUserActionForm, Toggle } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { ChangePasswordForm } from "./ChangePasswordForm";
 
 interface Props {
   user: UserInfo;
+  environments: EnvironmentPreview[];
   setAlertMessage: (message: string) => void;
 }
 
@@ -19,7 +20,9 @@ interface Props {
  *
  * @returns {React.FC<Props>} The rendered user info row with button to be able to delete the user.
  */
-export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
+export const UserInfoRow: React.FC<Props> = ({ user, environments, setAlertMessage }) => {
+  const roles = useGetUserRoles().useOneTime(user.username);
+  const [isExpanded, setIsExpanded] = useState(false);
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { mutate } = useRemoveUser();
 
@@ -67,23 +70,64 @@ export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
     });
   };
 
-  return (
-    <Tr aria-label={`row-${user.username}`} data-testid="user-row">
-      <Td dataLabel={user.username}>{user.username}</Td>
-      <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
-        <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
-          <FlexItem>
-            <Button variant="primary" onClick={openChangePasswordModal} size="sm">
-              {words("userManagement.changePassword")}
-            </Button>
-          </FlexItem>
-          <FlexItem>
-            <Button variant="danger" onClick={openDeleteModal} size="sm">
-              {words("delete")}
-            </Button>
-          </FlexItem>
-        </Flex>
-      </Td>
-    </Tr>
-  );
+  if (roles.isSuccess) {
+    return (
+      <>
+        <Tr aria-label={`row-${user.username}`} data-testid="user-row">
+          <Td>
+            <Toggle
+              expanded={isExpanded}
+              onToggle={() => setIsExpanded(!isExpanded)}
+              aria-label={"Toggle-user-row"}
+            />
+          </Td>
+          <Td dataLabel={user.username}>{user.username}</Td>
+          <Td dataLabel={words("userManagement.roles")}>
+            {roles.data.map((role) => role.name).join(", ")}
+          </Td>
+          <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
+            <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+              <FlexItem>
+                <Button variant="primary" onClick={openChangePasswordModal} size="sm">
+                  {words("userManagement.changePassword")}
+                </Button>
+              </FlexItem>
+              <FlexItem>
+                <Button variant="danger" onClick={openDeleteModal} size="sm">
+                  {words("delete")}
+                </Button>
+              </FlexItem>
+            </Flex>
+          </Td>
+        </Tr>
+        {isExpanded && (
+          <Tr aria-label="Expanded-Details">
+            <Td colSpan={4}>
+              <Table aria-label="role-table">
+                <Thead>
+                  <Tr>
+                    <Th width={40}>{words("userManagement.environment")}</Th>
+                    <Th width={60}>{words("userManagement.roles")}</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {environments.map((environment) => (
+                    <Tr key={`Row-${environment.name}`}>
+                      <Td>{environment.name}</Td>
+                      <Td>
+                        {roles.data
+                          .filter((role) => role.environment === environment.id)
+                          .map((role) => role.name)
+                          .join(", ")}
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Td>
+          </Tr>
+        )}
+      </>
+    );
+  }
 };
