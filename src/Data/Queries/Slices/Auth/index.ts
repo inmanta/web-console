@@ -4,3 +4,7 @@ export * from "./Login";
 export * from "./GetUsers";
 export * from "./RemoveUser";
 export * from "./ChangeUserPassword";
+export * from "./GetRoles";
+export * from "./GetUserRole";
+export * from "./AddRoleToUser";
+export * from "./RemoveRoleFromUser";
