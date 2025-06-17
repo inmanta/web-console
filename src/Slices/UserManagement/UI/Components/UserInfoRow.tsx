@@ -74,12 +74,12 @@ export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
       <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
         <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
           <FlexItem>
-            <Button variant="primary" onClick={openChangePasswordModal}>
+            <Button variant="primary" onClick={openChangePasswordModal} size="sm">
               {words("userManagement.changePassword")}
             </Button>
           </FlexItem>
           <FlexItem>
-            <Button variant="danger" onClick={openDeleteModal}>
+            <Button variant="danger" onClick={openDeleteModal} size="sm">
               {words("delete")}
             </Button>
           </FlexItem>
