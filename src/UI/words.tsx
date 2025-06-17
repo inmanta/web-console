@@ -47,6 +47,7 @@ const dict = {
   "copy.raw.tooltip": "Copy with escaped newlines",
   "copy.clipboard": "Copy to clipboard",
   noData: "There is no data available to display.",
+  success: "Success",
 
   /**
    * Error related text
@@ -838,6 +839,11 @@ const dict = {
    */
   "userManagement.title": "User Management",
   "userManagement.name": "Name",
+  "userManagement.changePassword": "Change Password",
+  "userManagement.changePassword.placeholder": "New Password...",
+  "userManagement.changePassword.success": "Password changed successfully",
+  "userManagement.changePassword.message": (username: string) =>
+    `Please provide a new password for user ${username}`,
   "userManagement.actions": "Actions",
   "userManagement.filter.placeholder": "Username...",
   "userManagement.addUser": "Add User",
