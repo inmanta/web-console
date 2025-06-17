@@ -80,6 +80,7 @@ export const ChangePasswordForm: React.FC<Props> = ({ user, setAlertMessage }) =
       <Flex>
         <FlexItem>
           <Button
+            data-testid="change-password-button"
             variant="primary"
             type="submit"
             isLoading={isPending}
