@@ -15,6 +15,7 @@ import { InstanceComposer } from "@/Slices/InstanceComposerCreator";
 import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
 import { MarkdownPreviewer } from "@/Slices/MarkdownPreviewer";
+import { RoleManagement } from "@/Slices/RoleManagement";
 import { ServiceDetails } from "@/Slices/ServiceDetails";
 import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
 import { Agents } from "@S/Agents";
@@ -57,6 +58,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     Settings: Settings.route(baseUrl),
     Status: Status.route(baseUrl),
     UserManagement: UserManagement.route(baseUrl),
+    RoleManagement: RoleManagement.route(baseUrl),
 
     /**
      * LSM

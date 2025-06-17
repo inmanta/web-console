@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Td, Tr } from "@patternfly/react-table";
 import { useRemoveUser, UserInfo } from "@/Data/Queries";
-import { words } from "@/UI";
-import { ConfirmUserActionForm } from "@/UI/Components";
+import { DependencyContext, words } from "@/UI";
+import { ConfirmUserActionForm, Link } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { ChangePasswordForm } from "./ChangePasswordForm";
 
@@ -21,7 +21,7 @@ interface Props {
  */
 export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
-
+  const { routeManager } = useContext(DependencyContext);
   const { mutate } = useRemoveUser();
 
   /**
@@ -73,6 +73,11 @@ export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
       <Td dataLabel={user.username}>{user.username}</Td>
       <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
         <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+          <FlexItem>
+            <Link pathname={routeManager.getUrl("RoleManagement", { username: user.username })}>
+              {words("userManagement.manageRoles")}
+            </Link>
+          </FlexItem>
           <FlexItem>
             <Button variant="primary" onClick={openChangePasswordModal}>
               {words("userManagement.changePassword")}

@@ -8,6 +8,7 @@ export const kinds = [
   "Settings",
   "Status",
   "UserManagement",
+  "RoleManagement",
 
   /**
    * LSM
@@ -98,6 +99,7 @@ interface RouteParamKeysManifest {
   ResourceLogs: "resourceId";
   ServiceDetails: "service";
   OrderDetails: "id";
+  RoleManagement: "username";
 }
 
 export type RouteParams<K extends RouteKind> = K extends keyof RouteParamKeysManifest
