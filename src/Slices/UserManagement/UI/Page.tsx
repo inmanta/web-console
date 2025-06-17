@@ -68,9 +68,7 @@ export const UserManagementPage: React.FC = () => {
             <Thead>
               <Tr>
                 <Th width={80}>{words("userManagement.name")}</Th>
-                <Th isStickyColumn stickyMinWidth="320px">
-                  {words("userManagement.actions")}
-                </Th>
+                <Th isStickyColumn stickyMinWidth="340px" aria-hidden screenReaderText={words("common.emptyColumnHeader")}/>
               </Tr>
             </Thead>
             <Tbody>

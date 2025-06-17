@@ -80,7 +80,7 @@ export const LoginPageComponent: React.FC<Props> = ({ submitButtonText }) => {
     <LoginForm
       showHelperText={isError}
       helperText={error?.message}
-      helperTextIcon={<ExclamationCircleIcon />}
+      helperTextIcon={<ExclamationCircleIcon color="var(--pf-t--global--icon--color--status--danger--default)" />}
       usernameLabel={words("username")}
       usernameValue={username}
       onChangeUsername={handleUsernameChange}
