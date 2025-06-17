@@ -141,6 +141,7 @@ export const previewA: EnvironmentPreview = {
   name: "test-env1",
   halted: false,
   isExpertMode: false,
+  isCompiling: false,
 };
 
 export const previewB: EnvironmentPreview = {
@@ -148,6 +149,7 @@ export const previewB: EnvironmentPreview = {
   name: "dev-env2",
   halted: false,
   isExpertMode: false,
+  isCompiling: false,
 };
 
 export const previewHalted: EnvironmentPreview = {
@@ -155,6 +157,7 @@ export const previewHalted: EnvironmentPreview = {
   name: "test-env2",
   halted: true,
   isExpertMode: false,
+  isCompiling: false,
 };
 
 export const previewExpertMode: EnvironmentPreview = {
@@ -162,6 +165,15 @@ export const previewExpertMode: EnvironmentPreview = {
   name: "env2",
   halted: false,
   isExpertMode: true,
+  isCompiling: false,
+};
+
+export const previewCompiling: EnvironmentPreview = {
+  id: "102",
+  name: "env3",
+  halted: false,
+  isExpertMode: false,
+  isCompiling: true,
 };
 
 export const previewFilterable: EnvironmentPreview[] = [
@@ -169,4 +181,5 @@ export const previewFilterable: EnvironmentPreview[] = [
   previewB,
   previewHalted,
   previewExpertMode,
+  previewCompiling,
 ];

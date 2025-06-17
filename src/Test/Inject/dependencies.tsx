@@ -10,6 +10,7 @@ import { UrlManagerImpl } from "@/UI/Utils";
 interface Props {
   env?: FlatEnvironment;
   authHelper?: AuthContextInterface;
+  isCompiling?: boolean;
 }
 
 /**
@@ -20,11 +21,12 @@ interface Props {
 export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> = ({
   env = EnvironmentDetails.env,
   authHelper = defaultAuthContext,
+  isCompiling = false,
   children,
 }) => {
   const baseUrl = "";
   const routeManager = PrimaryRouteManager(baseUrl);
-  const environmentHandler = MockEnvironmentHandler(env);
+  const environmentHandler = MockEnvironmentHandler(env, isCompiling);
   const orchestratorProvider = new MockOrchestratorProvider();
   const urlManager = new UrlManagerImpl(orchestratorProvider, baseUrl);
   const fileManager = new MockFileManager();
