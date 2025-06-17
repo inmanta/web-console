@@ -9,6 +9,7 @@ import { ChangePasswordForm } from "./ChangePasswordForm";
 
 interface Props {
   user: UserInfo;
+  setAlertMessage: (message: string) => void;
 }
 
 /**
@@ -18,7 +19,7 @@ interface Props {
  *
  * @returns {React.FC<Props>} The rendered user info row with button to be able to delete the user.
  */
-export const UserInfoRow: React.FC<Props> = ({ user }) => {
+export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
 
   const { mutate } = useRemoveUser();
@@ -60,7 +61,7 @@ export const UserInfoRow: React.FC<Props> = ({ user }) => {
             <p>{words("userManagement.changePassword.message")(user.username)}</p>
           </FlexItem>
           <FlexItem>
-            <ChangePasswordForm user={user.username} />
+            <ChangePasswordForm user={user.username} setAlertMessage={setAlertMessage} />
           </FlexItem>
         </Flex>
       ),

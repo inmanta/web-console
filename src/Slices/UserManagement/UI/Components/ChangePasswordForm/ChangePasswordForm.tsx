@@ -1,6 +1,8 @@
 import React, { useContext, useState } from "react";
 import {
   Button,
+  Flex,
+  FlexItem,
   Form,
   FormGroup,
   FormHelperText,
@@ -10,11 +12,12 @@ import {
 } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { useChangeUserPassword } from "@/Data/Queries";
-import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
 interface Props {
   user: string;
+  setAlertMessage: (message: string) => void;
 }
 
 /**
@@ -24,17 +27,18 @@ interface Props {
  *
  * @returns {React.FC<Props>} The rendered change password form.
  */
-export const ChangePasswordForm: React.FC<Props> = ({ user }) => {
+export const ChangePasswordForm: React.FC<Props> = ({ user, setAlertMessage }) => {
   const { closeModal } = useContext(ModalContext);
   const [password, setPassword] = useState("");
 
   const { mutate, isPending, isError, error } = useChangeUserPassword(user, {
     onSuccess: () => {
+      setAlertMessage(words("userManagement.changePassword.success"));
       closeModal();
     },
   });
 
-  /** 
+  /**
    * Handles the submission of the form.
    *
    * This function is responsible for preventing the default form submission behavior and then calling the mutate function with the current password.
@@ -50,7 +54,7 @@ export const ChangePasswordForm: React.FC<Props> = ({ user }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} width={300}>
       {isError && error && (
         <FormHelperText>
           <HelperText>
@@ -66,15 +70,30 @@ export const ChangePasswordForm: React.FC<Props> = ({ user }) => {
       )}
       <FormGroup label="New Password" isRequired>
         <TextInput
+          aria-label="new-password-input"
           type="password"
           placeholder={words("userManagement.changePassword.placeholder")}
           value={password}
           onChange={(_event, value) => setPassword(value)}
         />
       </FormGroup>
-      <Button variant="primary" type="submit" isLoading={isPending}>
-        {words("userManagement.changePassword")}
-      </Button>
+      <Flex>
+        <FlexItem>
+          <Button
+            variant="primary"
+            type="submit"
+            isLoading={isPending}
+            isDisabled={isPending || password.length < 1}
+          >
+            {words("userManagement.changePassword")}
+          </Button>
+        </FlexItem>
+        <FlexItem>
+          <Button variant="link" type="button" onClick={closeModal}>
+            {words("cancel")}
+          </Button>
+        </FlexItem>
+      </Flex>
     </Form>
   );
 };

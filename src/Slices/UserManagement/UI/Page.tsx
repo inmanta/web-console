@@ -1,16 +1,16 @@
-import React, { useContext } from "react";
-import { Button, Flex, FlexItem } from "@patternfly/react-core";
+import React, { useContext, useState } from "react";
+import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
 import { useGetUsers } from "@/Data/Queries";
 import { UserCredentialsForm } from "@/Slices/UserManagement/UI/Components/AddUserForm";
 import { words } from "@/UI";
-import { EmptyView, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+import { EmptyView, ErrorView, LoadingView, PageContainer, ToastAlert } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { UserInfoRow } from "./Components/UserInfoRow";
 
 export const UserManagementPage: React.FC = () => {
   const { triggerModal } = useContext(ModalContext);
-
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const { data, isSuccess, isError, error, refetch } = useGetUsers().useOneTime();
 
   /**
@@ -43,6 +43,14 @@ export const UserManagementPage: React.FC = () => {
   if (isSuccess) {
     return (
       <PageContainer pageTitle={words("userManagement.title")}>
+        {alertMessage && (
+          <ToastAlert
+            title={words("success")}
+            type={AlertVariant.success}
+            message={alertMessage}
+            setMessage={setAlertMessage}
+          />
+        )}
         <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
           <FlexItem>
             <Button variant="primary" onClick={openModal} aria-label="add_user-button">
@@ -67,7 +75,11 @@ export const UserManagementPage: React.FC = () => {
             </Thead>
             <Tbody>
               {data.map((user) => (
-                <UserInfoRow key={`Row-${user.username}`} user={user} />
+                <UserInfoRow
+                  key={`Row-${user.username}`}
+                  user={user}
+                  setAlertMessage={setAlertMessage}
+                />
               ))}
             </Tbody>
           </Table>
