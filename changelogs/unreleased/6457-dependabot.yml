@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump react-dropzone from 14.2.3 to 14.3.8
+destination-branches:
+- master
+sections: {}
