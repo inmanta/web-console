@@ -1,7 +1,7 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { usePostWithoutEnv } from "@/Data/Queries";
 
-interface AddRoleToUserBody {
+export interface AddRoleToUserBody {
   environment: string;
   role: string;
 }

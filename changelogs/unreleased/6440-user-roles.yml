@@ -1,0 +1,6 @@
+description: Add option to manage user roles for access policies  
+issue-nr: 6440
+change-type: patch
+destination-branches: [master, iso8]
+sections:
+  minor-improvement: "{{description}}"

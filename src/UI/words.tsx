@@ -840,6 +840,7 @@ const dict = {
   "userManagement.title": "User Management",
   "userManagement.name": "Name",
   "userManagement.roles": "Roles",
+  "userManagement.rolesPlaceholder": "Select roles...",
   "userManagement.environment": "Environment",
   "userManagement.changePassword": "Change Password",
   "userManagement.changePassword.placeholder": "New Password...",
@@ -853,6 +854,8 @@ const dict = {
   "userManagement.deleteUserMessage": (username: string) =>
     `Are you sure you want to delete user ${username}?`,
   "userManagement.empty.message": "No users found",
+  "userManagement.noEnvironments": "No environments found",
+  "userManagement.noRoles": "No roles found",
 
   /**
    * Markdown Previewer related text

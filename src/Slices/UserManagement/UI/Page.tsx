@@ -11,9 +11,17 @@ import { UserInfoRow } from "./Components/UserInfoRow";
 export const UserManagementPage: React.FC = () => {
   const { triggerModal } = useContext(ModalContext);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertTitle, setAlertTitle] = useState<string>(words("success"));
+  const [alertVariant, setAlertVariant] = useState<AlertVariant>(AlertVariant.success);
   const { data, isSuccess, isError, error, refetch } = useGetUsers().useOneTime();
   const roles = useGetRoles().useOneTime();
   const environments = useGetEnvironmentPreview().useOneTime();
+
+  const setAlert = (title: string, variant: AlertVariant, message: string) => {
+    setAlertTitle(title);
+    setAlertVariant(variant);
+    setAlertMessage(message);
+  };
 
   /**
    * Opens a modal with a form for user credentials.
@@ -30,14 +38,29 @@ export const UserManagementPage: React.FC = () => {
     });
   };
 
-  if (isError) {
+  if (isError || environments.isError || roles.isError) {
+    const errorMessage =
+      error?.message || environments.error?.message || roles.error?.message || "";
+
+    const retry = () => {
+      if (isError) {
+        refetch();
+      }
+      if (environments.isError) {
+        environments.refetch();
+      }
+      if (roles.isError) {
+        roles.refetch();
+      }
+    };
+
     return (
       <ErrorView
         data-testid="ErrorView"
         title={words("error")}
-        message={words("error.general")(error.message)}
+        message={words("error.general")(errorMessage)}
         ariaLabel="UserManagement-Failed"
-        retry={refetch}
+        retry={retry}
       />
     );
   }
@@ -47,8 +70,8 @@ export const UserManagementPage: React.FC = () => {
       <PageContainer pageTitle={words("userManagement.title")}>
         {alertMessage && (
           <ToastAlert
-            title={words("success")}
-            type={AlertVariant.success}
+            title={alertTitle}
+            type={alertVariant}
             message={alertMessage}
             setMessage={setAlertMessage}
           />
@@ -89,7 +112,8 @@ export const UserManagementPage: React.FC = () => {
                 <UserInfoRow
                   key={`Row-${user.username}`}
                   user={user}
-                  setAlertMessage={setAlertMessage}
+                  allRoles={roles.data}
+                  setAlert={setAlert}
                   environments={environments.data.environments}
                 />
               ))}
