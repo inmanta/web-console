@@ -1,4 +1,4 @@
-import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
+import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 
 // A type for the possible AttributeSets.
@@ -9,6 +9,8 @@ export interface TreeRowData {
   id: string;
   name: string;
   value: unknown;
+  type: "Value" | "Embedded" | "Relation";
+  serviceName?: string;
   children?: TreeRowData[];
 }
 
@@ -91,6 +93,7 @@ export const getAttributeSetsFromInstance = (
  */
 export const formatTreeRowData = (
   attributes: Record<string, unknown>,
+  serviceModel: Partial<ServiceModel>,
   path: string = ""
 ): TreeRowData[] => {
   const result: TreeRowData[] = [];
@@ -104,6 +107,7 @@ export const formatTreeRowData = (
         value: value,
         id: path + key,
         name: key,
+        type: "Value",
         children: [],
       };
 
@@ -111,19 +115,32 @@ export const formatTreeRowData = (
       // it means we need to display a collapsible section.
       // The children property tells whether a section is a value, or a collapsible section.
       if (value && typeof value === "object") {
+        node.type = "Embedded";
+
         // In case we are dealing with an array of arrays, we want to keep track of the index to display it in the table.
         if (Array.isArray(value)) {
           for (let index = 0; index < value.length; index++) {
             const item = value[index];
+            let model: Partial<ServiceModel> = serviceModel;
 
+            // If the item is an object, we need to add the properties into the children
             if (typeof item === "object" && item !== null) {
-              // If the item is an object, we need to add the properties into the children
+              const embeddedNode = model.embedded_entities?.find(
+                (embeddedEntity) => embeddedEntity.name === key
+              );
+
+              if (embeddedNode) {
+                model = embeddedNode;
+              }
+
               node?.children?.push({
                 name: `${index}`,
                 id: path + key + "." + index,
+                type: "Embedded",
                 value: item,
                 children: formatTreeRowData(
                   item as Record<string, unknown>,
+                  model,
                   path + key + "." + index + "."
                 ),
               });
@@ -133,15 +150,26 @@ export const formatTreeRowData = (
                 name: `${index}`,
                 id: path + key + "." + index,
                 value: item,
+                type: "Value",
               });
             }
           }
         } else {
-          // this case is when we are dealing with a normal object. We call the recursion.
+          // this case is when we are dealing with a normal object. We call the recursion. This often happens when there's only one embedded entity in the list.
           node?.children?.push(
-            ...formatTreeRowData(value as Record<string, unknown>, path + key + ".")
+            ...formatTreeRowData(value as Record<string, unknown>, serviceModel, path + key + ".")
           );
         }
+      }
+
+      // we need to check if the item is an inter-service relation
+      const relationNode = serviceModel.inter_service_relations?.find(
+        (relation) => relation.name === key
+      );
+
+      if (relationNode) {
+        node.type = "Relation";
+        node.serviceName = relationNode.entity_type;
       }
 
       result.push(node);

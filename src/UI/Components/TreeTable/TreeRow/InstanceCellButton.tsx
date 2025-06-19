@@ -5,7 +5,7 @@ import { useGetInstance } from "@/Data/Queries";
 interface Props {
   id: string;
   serviceName: string;
-  onClick: (cellValue: string, serviceName?: string | undefined) => void;
+  onClick: (cellValue: string, serviceName?: string | undefined, instanceId?: string) => void;
 }
 
 export const InstanceCellButton: React.FC<Props> = ({ id, serviceName, onClick }) => {
@@ -24,7 +24,7 @@ export const InstanceCellButton: React.FC<Props> = ({ id, serviceName, onClick }
     const identifier = service_identity_attribute_value ? service_identity_attribute_value : id;
 
     return (
-      <Button variant="link" isInline onClick={() => onClick(identifier, serviceName)}>
+      <Button variant="link" isInline onClick={() => onClick(identifier, serviceName, id)}>
         {identifier}
       </Button>
     );

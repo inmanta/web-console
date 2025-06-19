@@ -100,7 +100,16 @@ interface LinkCellProps {
   onClick: (cellValue: string, serviceName?: string | undefined) => void;
 }
 
-const MultiLinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) => {
+/**
+ * This component is used to display a link to a service instance.
+ * If the value is a comma-separated list of IDs, it will display a list of links.
+ * Otherwise, it will display a single link.
+ * @param value - The value to display.
+ * @param serviceName - The name of the service.
+ * @param onClick - The function to call when the link is clicked.
+ * @returns A React component that displays a link to a service instance.
+ */
+export const MultiLinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) => {
   if (isValueOfMultipleIds(value)) {
     const ids = splitValue(value);
 

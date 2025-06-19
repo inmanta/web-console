@@ -1,4 +1,5 @@
 const path = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -7,6 +8,7 @@ const MomentTimezoneDataPlugin = require("moment-timezone-data-webpack-plugin");
 const { merge } = require("webpack-merge");
 const common = require("./webpack.common.cjs");
 const currentYear = new Date().getFullYear();
+
 
 module.exports = merge(common, {
   mode: "production",
@@ -33,6 +35,7 @@ module.exports = merge(common, {
     },
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: "[name].bundle.css",
