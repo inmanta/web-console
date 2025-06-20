@@ -17,7 +17,6 @@ export const UserManagementPage: React.FC = () => {
   const roles = useGetRoles().useOneTime();
   const environments = useGetEnvironmentPreview().useOneTime();
 
-
   /**
    * Sets the alert message.
    *
