@@ -104,7 +104,7 @@ describe("CellWithCopy", () => {
 
     await userEvent.click(cell);
 
-    expect(onClickFn).toHaveBeenCalledWith(props.value, props.serviceName);
+    expect(onClickFn).toHaveBeenCalledWith(props.value, props.serviceName, props.value);
   });
 
   test("Given CellWithCopy When a cell has entity, multiple values and on click Then multiple links are rendered", async () => {
@@ -125,7 +125,7 @@ describe("CellWithCopy", () => {
 
     await userEvent.click(firstCell);
 
-    expect(onClickFn).toHaveBeenCalledWith(someValue, props.serviceName);
+    expect(onClickFn).toHaveBeenCalledWith(someValue, props.serviceName, someValue);
 
     const otherCell = await screen.findByText(someOtherValue);
 
@@ -133,6 +133,6 @@ describe("CellWithCopy", () => {
 
     await userEvent.click(otherCell);
 
-    expect(onClickFn).toHaveBeenCalledWith(someOtherValue, props.serviceName);
+    expect(onClickFn).toHaveBeenCalledWith(someOtherValue, props.serviceName, someOtherValue);
   });
 });
