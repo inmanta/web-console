@@ -84,14 +84,16 @@ function shouldRenderLink(value: string, hasRelation?: boolean): boolean {
   return !!(hasRelation && value.length > 0 && value !== "{}");
 }
 
-function splitValue(value: string): string[] {
-  const parts = value.split(",").map((val) => val.trim());
+function splitValue(value: unknown): string[] {
+  if (typeof value !== "string") {
+    return [String(value)];
+  }
 
-  return parts;
+  return value.split(",").map((val) => val.trim());
 }
 
-function isValueOfMultipleIds(value: string): boolean {
-  return splitValue(value).length > 0;
+function isValueOfMultipleIds(value: unknown): boolean {
+  return typeof value === "string" && splitValue(value).length > 0;
 }
 
 interface LinkCellProps {

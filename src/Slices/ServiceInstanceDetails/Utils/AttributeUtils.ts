@@ -111,10 +111,20 @@ export const formatTreeRowData = (
         children: [],
       };
 
+      // we need to check if the item is an inter-service relation
+      const relationNode = serviceModel.inter_service_relations?.find(
+        (relation) => relation.name === key
+      );
+
+      if (relationNode) {
+        node.type = "Relation";
+        node.serviceName = relationNode.entity_type;
+      }
+
       // If we are facing an object (Arrays are also considered as objects in JS),
       // it means we need to display a collapsible section.
       // The children property tells whether a section is a value, or a collapsible section.
-      if (value && typeof value === "object") {
+      if (value && typeof value === "object" && !relationNode) {
         node.type = "Embedded";
 
         // In case we are dealing with an array of arrays, we want to keep track of the index to display it in the table.
@@ -160,16 +170,6 @@ export const formatTreeRowData = (
             ...formatTreeRowData(value as Record<string, unknown>, serviceModel, path + key + ".")
           );
         }
-      }
-
-      // we need to check if the item is an inter-service relation
-      const relationNode = serviceModel.inter_service_relations?.find(
-        (relation) => relation.name === key
-      );
-
-      if (relationNode) {
-        node.type = "Relation";
-        node.serviceName = relationNode.entity_type;
       }
 
       result.push(node);

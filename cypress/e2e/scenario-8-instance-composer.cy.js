@@ -73,8 +73,6 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
 };
 
 if (Cypress.env("edition") === "iso") {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
   describe("Scenario 8 - Instance Composer", async () => {
     before(() => {
       clearEnvironment();
@@ -490,17 +488,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Expand row 27"]').click(); //toggle extra_embedded
       cy.get('[aria-label="Expand row 28"]').click(); //toggle fist entity of extra_embedded
 
-      cy.get('[aria-label="parent_service_value"]')
-        .invoke("text")
-        .then((text) => {
-          expect(text).to.match(uuidRegex);
-        });
+      cy.get('[data-testid="parent_service"]').first().should("have.text", "test_name2");
+      cy.get('[data-testid="parent_service"]').eq(1).should("have.text", "null");
+      cy.get('[data-testid="parent_service"]').eq(2).should("have.text", "test_name");
 
-      cy.get('[aria-label="embedded.parent_service_value"]')
-        .invoke("text")
-        .then((text) => {
-          expect(text).to.match(uuidRegex);
-        });
       cy.get('[aria-label="extra_embedded.0.parent_service_value"]').should("have.text", "null");
     });
 
@@ -689,11 +680,7 @@ if (Cypress.env("edition") === "iso") {
       //check if relation is assigned correctly
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();
 
-      cy.get('[aria-label="parent_entity_value"]')
-        .invoke("text")
-        .then((text) => {
-          expect(text).to.match(uuidRegex);
-        });
+      cy.get('[data-testid="parent_entity"]').should("have.text", "test_name");
 
       // click on edit instance with composer
       cy.get('[aria-label="Actions-Toggle"]').click();
@@ -759,11 +746,7 @@ if (Cypress.env("edition") === "iso") {
       //Make sure we are at the active attributes
       cy.get('[aria-label="Select-AttributeSet"]').select("active_attributes");
 
-      cy.get('[aria-label="parent_entity_value"]')
-        .invoke("text")
-        .then((text) => {
-          expect(text).to.match(uuidRegex);
-        });
+      cy.get('[data-testid="parent_entity"]').should("have.text", "test_name2");
 
       cy.get("#Compare").click();
 
@@ -911,30 +894,10 @@ if (Cypress.env("edition") === "iso") {
         });
 
       //assert that in Active attribute we have only 1 relation
-      cy.get('[aria-label="Expand row 2"]').click();
-
-      cy.get('[data-testid="0"]')
-        .invoke("text")
-        .then((text) => {
-          expect(text).to.match(uuidRegex);
-        });
-
-      cy.get('[data-testid="1"]').should("not.exist");
+      cy.get('[data-testid="parent_entity"]').should("have.text", "test_name");
 
       //assert that in Rollback attribute we have 2 relations
       cy.get('[aria-label="Select-AttributeSet"]').select("rollback_attributes");
-
-      cy.get('[data-testid="0"]')
-        .invoke("text")
-        .then((text) => {
-          expect(text).to.match(uuidRegex);
-        });
-
-      cy.get('[data-testid="1"]')
-        .invoke("text")
-        .then((text) => {
-          expect(text).to.match(uuidRegex);
-        });
     });
   });
 }

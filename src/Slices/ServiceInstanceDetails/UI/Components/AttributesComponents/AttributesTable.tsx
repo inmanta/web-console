@@ -307,7 +307,7 @@ export const AttributesTable: React.FC<Props> = ({
         >
           {node.type === "Relation" ? (
             <MultiLinkCell
-              value={node.value as string}
+              value={String(node.value)}
               serviceName={node.serviceName}
               onClick={navigateToInstanceDetails}
             />
