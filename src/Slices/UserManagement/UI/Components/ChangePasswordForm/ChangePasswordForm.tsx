@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import {
+  AlertVariant,
   Button,
   Flex,
   FlexItem,
@@ -17,7 +18,7 @@ import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
 interface Props {
   user: string;
-  setAlertMessage: (message: string) => void;
+  setAlert: (title: string, variant: AlertVariant, message: string) => void;
 }
 
 /**
@@ -27,13 +28,17 @@ interface Props {
  *
  * @returns {React.FC<Props>} The rendered change password form.
  */
-export const ChangePasswordForm: React.FC<Props> = ({ user, setAlertMessage }) => {
+export const ChangePasswordForm: React.FC<Props> = ({ user, setAlert }) => {
   const { closeModal } = useContext(ModalContext);
   const [password, setPassword] = useState("");
 
   const { mutate, isPending, isError, error } = useChangeUserPassword(user, {
     onSuccess: () => {
-      setAlertMessage(words("userManagement.changePassword.success"));
+      setAlert(
+        words("success"),
+        AlertVariant.success,
+        words("userManagement.changePassword.success")
+      );
       closeModal();
     },
   });
