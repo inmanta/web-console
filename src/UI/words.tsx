@@ -856,6 +856,7 @@ const dict = {
   "userManagement.empty.message": "No users found",
   "userManagement.noEnvironments": "No environments found",
   "userManagement.noRoles": "No roles found",
+  "userManagement.noRolesAssigned": "No roles assigned",
 
   /**
    * Markdown Previewer related text

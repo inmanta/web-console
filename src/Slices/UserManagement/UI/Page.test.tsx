@@ -122,7 +122,12 @@ describe("UserManagementPage", () => {
   });
 
   it("should display user list when users are returned by API", async () => {
-    server.use(mockedUsers);
+    server.use(
+      mockedUsers,
+      http.get("/api/v2/role_assignment/test_user", async () =>
+        HttpResponse.json({ data: [{ name: "admin", environment: "1" }] })
+      ),
+    );
 
     server.listen();
     const component = setup();
@@ -145,6 +150,11 @@ describe("UserManagementPage", () => {
     expect(screen.getByText("test_user2")).toBeInTheDocument();
 
     expect(screen.getAllByText("Delete")).toHaveLength(2);
+
+    expect(await screen.findByLabelText("roles-success")).toBeInTheDocument();
+
+    expect(await screen.findByText("admin")).toBeInTheDocument();
+    expect(await screen.findByText("No roles assigned")).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);

@@ -29,7 +29,9 @@ export const RolesMainColumn = ({ roles, setAlert }: Props) => {
   if (roles.isSuccess) {
     return (
       <Td dataLabel={words("userManagement.roles")} aria-label="roles-success">
-        {[...new Set(roles.data.map((role) => role.name))].join(", ")}
+        {roles.data.length > 0
+          ? [...new Set(roles.data.map((role) => role.name))].join(", ")
+          : words("userManagement.noRolesAssigned")}
       </Td>
     );
   }

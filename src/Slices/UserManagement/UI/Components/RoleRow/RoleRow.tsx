@@ -138,26 +138,28 @@ export const RoleRow = ({ username, environment, roles, allRoles, setAlert }: Pr
             </FlexItem>
             <FlexItem>
               <Flex>
-                {selectedRolesForEnvironment
-                  .map((role) => role.name)
-                  .map((name) => {
-                    return (
-                      <FlexItem key={`container-chip-${name}-${environment.id}`}>
-                        <Label
-                          variant="outline"
-                          color="blue"
-                          key={`chip-${name}-${environment.id}`}
-                          aria-label={`chip-role-${name}-${environment.id}`}
-                          closeBtnAriaLabel={`remove-role-${name}-${environment.id}`}
-                          onClose={() =>
-                            removeRole.mutate({ role: name, environment: environment.id })
-                          }
-                        >
-                          {name}
-                        </Label>
-                      </FlexItem>
-                    );
-                  })}
+                {selectedRolesForEnvironment.length  > 0
+                  ? selectedRolesForEnvironment
+                      .map((role) => role.name)
+                      .map((name) => {
+                        return (
+                          <FlexItem key={`container-chip-${name}-${environment.id}`}>
+                            <Label
+                              variant="outline"
+                              color="blue"
+                              key={`chip-${name}-${environment.id}`}
+                              aria-label={`chip-role-${name}-${environment.id}`}
+                              closeBtnAriaLabel={`remove-role-${name}-${environment.id}`}
+                              onClose={() =>
+                                removeRole.mutate({ role: name, environment: environment.id })
+                              }
+                            >
+                              {name}
+                            </Label>
+                          </FlexItem>
+                        );
+                      })
+                  : words("userManagement.noRolesAssigned")}
               </Flex>
             </FlexItem>
           </Flex>

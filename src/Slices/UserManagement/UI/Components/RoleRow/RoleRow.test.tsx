@@ -157,6 +157,22 @@ describe("RoleRow", () => {
       const select = screen.getByLabelText("toggle-roles-Test Environment");
       expect(select).toHaveTextContent(words("userManagement.rolesPlaceholder"));
     });
+
+    it("should show no roles assigned when no roles are available", () => {
+      const { component } = setup({
+        roles: {
+          isSuccess: true,
+          isLoading: false,
+          isError: false,
+          data: [] as UserRoleInfo[],
+          error: null,
+        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+      });
+
+      render(component);
+
+      expect(screen.getByText("No roles assigned")).toBeInTheDocument();
+    });
   });
 
   describe("Role Addition", () => {
