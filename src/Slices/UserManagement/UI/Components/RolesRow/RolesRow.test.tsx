@@ -198,7 +198,7 @@ describe("RolesRow", () => {
       await userEvent.click(roleOption);
 
       expect(mockMutate).toHaveBeenCalledWith({
-        role: "admin",
+        name: "admin",
         environment: "env1",
       });
     });
@@ -276,7 +276,7 @@ describe("RolesRow", () => {
       await userEvent.click(roleOption);
 
       expect(mockMutate).toHaveBeenCalledWith({
-        role: "admin",
+        name: "admin",
         environment: "env1",
       });
     });
@@ -305,7 +305,7 @@ describe("RolesRow", () => {
       await userEvent.click(adminLabelCloseButton);
 
       expect(mockMutate).toHaveBeenCalledWith({
-        role: "admin",
+        name: "admin",
         environment: "env1",
       });
     });
