@@ -1,4 +1,5 @@
 import React from "react";
+import { Table, Tbody } from "@patternfly/react-table";
 import {
   QueryClient,
   QueryClientProvider,
@@ -36,7 +37,6 @@ const setup = (props = {}) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: { retry: false },
-      mutations: { retry: false },
     },
   });
 
@@ -63,11 +63,11 @@ const setup = (props = {}) => {
     <QueryClientProvider client={queryClient}>
       <MockedDependencyProvider>
         <ModalProvider>
-          <table>
-            <tbody>
+          <Table>
+            <Tbody>
               <RoleRow {...mergedProps} />
-            </tbody>
-          </table>
+            </Tbody>
+          </Table>
         </ModalProvider>
       </MockedDependencyProvider>
     </QueryClientProvider>
@@ -86,7 +86,7 @@ const setup = (props = {}) => {
 const defaultAddRoleMock = {
   mutate: jest.fn(),
   isPending: false,
-} as unknown as UseMutationResult<void, Error, AddRoleToUserBody, unknown>;
+} as unknown as UseMutationResult<void, Error, AddRoleToUserBody, unknown>; // workaround not to pass all irrelevant props to the component for given scenario, same for other tests
 
 const defaultRemoveRoleMock = {
   mutate: jest.fn(),
@@ -109,7 +109,7 @@ describe("RoleRow", () => {
           isError: false,
           data: [],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>, // workaround not to pass all irrelevant props to the component for given scenario, same for other tests
+        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
       });
 
       render(component);

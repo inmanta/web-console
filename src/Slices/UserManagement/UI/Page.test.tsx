@@ -335,6 +335,68 @@ describe("UserManagementPage", () => {
     });
   });
 
+  it("should display error alert view when users roles API call fails", async () => {
+    let counter = 0;
+    server.use(
+      mockedUsers,
+      http.get("/api/v2/role_assignment/test_user", async () => {
+        if (counter > 0) {
+          return HttpResponse.json({
+            data: [{ name: "admin", environment: "1" }],
+          });
+        }
+        counter++;
+
+        return HttpResponse.json(
+          {
+            message: "Access to this resource is unauthorized",
+          },
+          {
+            status: 401,
+          }
+        );
+      })
+    );
+
+    server.listen();
+    const component = setup();
+
+    render(component);
+
+    const successView = await screen.findByLabelText("users-table");
+
+    expect(successView).toBeInTheDocument();
+
+    const userRows = screen.getAllByTestId("user-row");
+
+    expect(userRows).toHaveLength(2);
+
+    const toast = await screen.findByTestId("ToastAlert");
+
+    expect(toast).toBeInTheDocument();
+
+    const errorMessage = await screen.findByText(
+      "The following error occured: Access to this resource is unauthorized"
+    );
+
+    expect(errorMessage).toBeVisible();
+
+    //assert that correct retry function is called
+    const retryButton = await screen.findByText("Retry");
+    await userEvent.click(retryButton);
+
+    const role = await screen.findByText("admin");
+    expect(role).toBeInTheDocument();
+
+    expect(errorMessage).not.toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
   it("should sent request to add user to the list", async () => {
     const data: UserInfo[] = [
       { username: "test_user", auth_method: "database" },

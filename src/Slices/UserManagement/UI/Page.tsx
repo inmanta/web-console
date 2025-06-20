@@ -17,6 +17,14 @@ export const UserManagementPage: React.FC = () => {
   const roles = useGetRoles().useOneTime();
   const environments = useGetEnvironmentPreview().useOneTime();
 
+
+  /**
+   * Sets the alert message.
+   *
+   * @param {string} title - The title of the alert.
+   * @param {AlertVariant} variant - The variant of the alert.
+   * @param {string} message - The message of the alert.
+   */
   const setAlert = (title: string, variant: AlertVariant, message: string) => {
     setAlertTitle(title);
     setAlertVariant(variant);

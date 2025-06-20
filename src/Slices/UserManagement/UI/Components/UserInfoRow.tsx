@@ -1,19 +1,13 @@
-import React, { useContext, useState } from "react";
-import { AlertVariant, Button, Flex, FlexItem, Spinner } from "@patternfly/react-core";
+import React, { useContext, useEffect, useState } from "react";
+import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Th, Thead, Td, Tr, Tbody } from "@patternfly/react-table";
-import { UseQueryResult } from "@tanstack/react-query";
-import {
-  EnvironmentPreview,
-  useGetUserRoles,
-  useRemoveUser,
-  UserInfo,
-  UserRoleInfo,
-} from "@/Data/Queries";
+import { EnvironmentPreview, useGetUserRoles, useRemoveUser, UserInfo } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ConfirmUserActionForm, EmptyView, Toggle } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { ChangePasswordForm } from "./ChangePasswordForm";
 import { RoleRow } from "./RoleRow";
+import { RolesMainColumn } from "./RolesMainColumn/RolesMainColumn";
 
 interface Props {
   user: UserInfo;
@@ -79,18 +73,22 @@ export const UserInfoRow: React.FC<Props> = ({ user, allRoles, environments, set
     });
   };
 
+  const onToggle = (): void => setIsExpanded(!isExpanded);
+
+  useEffect(() => {
+    if (roles.isError) {
+      setAlert(words("error"), AlertVariant.danger, words("error.general")(roles.error.message));
+    }
+  }, [roles.isError, roles.error, setAlert]);
+
   return (
     <>
       <Tr aria-label={`row-${user.username}`} data-testid="user-row">
         <Td>
-          <Toggle
-            expanded={isExpanded}
-            onToggle={() => setIsExpanded(!isExpanded)}
-            aria-label={"Toggle-user-row"}
-          />
+          <Toggle expanded={isExpanded} onToggle={onToggle} aria-label={"Toggle-user-row"} />
         </Td>
         <Td dataLabel={user.username}>{user.username}</Td>
-        <RoleTopColumn roles={roles} />
+        <RolesMainColumn roles={roles} setAlert={setAlert} />
         <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
           <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
             <FlexItem>
@@ -118,10 +116,14 @@ export const UserInfoRow: React.FC<Props> = ({ user, allRoles, environments, set
               </Thead>
               <Tbody>
                 {environments.length < 1 ? (
-                  <EmptyView
-                    message={words("userManagement.noEnvironments")}
-                    aria-label="Environments-Empty"
-                  />
+                  <Tr>
+                    <Td colSpan={2}>
+                      <EmptyView
+                        message={words("userManagement.noEnvironments")}
+                        aria-label="Environments-Empty"
+                      />
+                    </Td>
+                  </Tr>
                 ) : (
                   environments.map((environment) => (
                     <RoleRow
@@ -141,29 +143,4 @@ export const UserInfoRow: React.FC<Props> = ({ user, allRoles, environments, set
       )}
     </>
   );
-};
-
-/**
- * A functional component that renders the top column of the role table.
- * @param {UseQueryResult<UserRoleInfo[], Error>} roles - The roles of the user.
- * @returns {React.FC<Props>} The rendered role top column.
- */
-export const RoleTopColumn = ({ roles }: { roles: UseQueryResult<UserRoleInfo[], Error> }) => {
-  if (roles.isLoading) {
-    return (
-      <Td dataLabel={words("userManagement.roles")}>
-        <Spinner size="sm" />
-      </Td>
-    );
-  }
-
-  if (roles.isSuccess) {
-    return (
-      <Td dataLabel={words("userManagement.roles")}>
-        {[...new Set(roles.data.map((role) => role.name))].join(", ")}
-      </Td>
-    );
-  }
-
-  return <Td dataLabel={words("userManagement.roles")}></Td>;
 };

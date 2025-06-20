@@ -1,6 +1,11 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { useDeleteWithoutEnv } from "@/Data/Queries";
 
+/**
+ * Body for removing a role from a user.
+ * @param {string} role - The role to remove from the user.
+ * @param {string} environment - The environment within which the role is applied
+ */
 export interface RemoveRoleFromUserProps {
   role: string;
   environment: string;

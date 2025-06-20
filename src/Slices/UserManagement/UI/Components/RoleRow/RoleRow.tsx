@@ -10,7 +10,7 @@ import {
   UserRoleInfo,
 } from "@/Data/Queries";
 import { words } from "@/UI";
-import { MultiTextSelect } from "@/UI/Components";
+import { ErrorView, MultiTextSelect } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
 interface Props {
@@ -60,6 +60,11 @@ export const RoleRow = ({ username, environment, roles, allRoles, setAlert }: Pr
     },
   });
 
+  /**
+   * Handles the selection of roles.
+   * @param {string | ((prevState: string[]) => string[])} selected - The selected role.
+   * @param {UserRoleInfo[]} selectedRoles - The already selected roles.
+   */
   const onSelect = (
     selected: string | ((prevState: string[]) => string[]),
     selectedRoles: UserRoleInfo[]
@@ -72,6 +77,20 @@ export const RoleRow = ({ username, environment, roles, allRoles, setAlert }: Pr
       }
     }
   };
+
+  if (roles.isError) {
+    return (
+      <Tr key={`Row-${environment.name}`}>
+        <Td colSpan={2}>
+          <ErrorView
+            message={words("error.general")(roles.error.message)}
+            aria-label="Environments-Error"
+            retry={roles.refetch}
+          />
+        </Td>
+      </Tr>
+    );
+  }
 
   if (roles.isSuccess) {
     const selectedRolesForEnvironment = roles.data.filter(
