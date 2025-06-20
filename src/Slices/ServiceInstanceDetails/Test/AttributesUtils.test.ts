@@ -8,6 +8,45 @@ import {
 } from "../Utils";
 import { historyData, instanceData } from "./mockData";
 
+const mockServiceModel = {
+  name: "TestService",
+  environment: "test-env",
+  description: "A mock service model for arrayKey test",
+  lifecycle: {
+    initial_state: "init",
+    states: [
+      { name: "init", deleted: false, export_resources: false, purge_resources: false },
+      { name: "active", deleted: false, export_resources: true, purge_resources: false },
+    ],
+    transfers: [],
+  },
+  attributes: [
+    {
+      name: "arrayKey",
+      type: "array",
+      description: "An array of objects with subKeys",
+      modifier: "rw",
+      default_value: [],
+      default_value_set: false,
+      validation_type: null,
+      validation_parameters: null,
+    },
+  ],
+  service_identity: undefined,
+  service_identity_display_name: undefined,
+  entity_annotations: {},
+  config: {},
+  instance_summary: undefined,
+  embedded_entities: [],
+  inter_service_relations: [],
+  strict_modifier_enforcement: false,
+  key_attributes: ["arrayKey"],
+  owner: null,
+  owned_entities: [],
+  version: undefined,
+  relation_to_owner: undefined,
+};
+
 describe("getAvailableAttributesSets", () => {
   it("should return an empty object if no log matches the version", () => {
     const logs: InstanceLog[] = historyData;
@@ -175,7 +214,7 @@ describe("getAttributeSetsFromInstance", () => {
 
 describe("formatTreeRowData", () => {
   it("should return an empty array when the attributes object is empty", () => {
-    const result = formatTreeRowData({});
+    const result = formatTreeRowData({}, mockServiceModel);
 
     expect(result).toEqual([]);
   });
@@ -186,27 +225,28 @@ describe("formatTreeRowData", () => {
       key2: 123,
       key3: true,
     };
-
-    const result = formatTreeRowData(attributes);
-
+    const result = formatTreeRowData(attributes, mockServiceModel);
     expect(result).toMatchObject([
       {
         id: expect.stringMatching(/^key1/),
         name: "key1",
         value: "value1",
         children: [],
+        type: "Value",
       },
       {
         id: expect.stringMatching(/^key2/),
         name: "key2",
         value: 123,
         children: [],
+        type: "Value",
       },
       {
         id: expect.stringMatching(/^key3/),
         name: "key3",
         value: true,
         children: [],
+        type: "Value",
       },
     ]);
   });
@@ -218,25 +258,26 @@ describe("formatTreeRowData", () => {
         child2: 456,
       },
     };
-
-    const result = formatTreeRowData(attributes);
-
+    const result = formatTreeRowData(attributes, mockServiceModel);
     expect(result).toMatchObject([
       {
         id: expect.stringMatching(/^parent/),
         name: "parent",
         value: { child1: "value1", child2: 456 },
+        type: "Embedded",
         children: [
           {
             id: expect.stringMatching(/^parent.child1/),
             name: "child1",
             value: "value1",
+            type: "Value",
             children: [],
           },
           {
             id: expect.stringMatching(/^parent.child2/),
             name: "child2",
             value: 456,
+            type: "Value",
             children: [],
           },
         ],
@@ -248,37 +289,55 @@ describe("formatTreeRowData", () => {
     const attributes = {
       arrayKey: [{ subKey1: "subValue1" }, { subKey2: "subValue2" }],
     };
-
-    const result = formatTreeRowData(attributes);
-
+    const model = {
+      ...mockServiceModel,
+      attributes: [
+        ...mockServiceModel.attributes,
+        {
+          name: "arrayKey",
+          type: "array",
+          modifier: "rw",
+          default_value: [],
+          default_value_set: false,
+          validation_type: null,
+          validation_parameters: null,
+        },
+      ],
+    };
+    const result = formatTreeRowData(attributes, model);
     expect(result).toMatchObject([
       {
         id: expect.stringMatching(/^arrayKey/),
         name: "arrayKey",
         value: [{ subKey1: "subValue1" }, { subKey2: "subValue2" }],
+        type: "Embedded",
         children: [
           {
-            id: expect.stringMatching(/^arrayKey/),
+            id: expect.stringMatching(/^arrayKey.0/),
             name: "0",
             value: { subKey1: "subValue1" },
+            type: "Embedded",
             children: [
               {
                 id: expect.stringMatching(/^arrayKey.0.subKey1/),
                 name: "subKey1",
                 value: "subValue1",
+                type: "Value",
                 children: [],
               },
             ],
           },
           {
-            id: expect.stringMatching(/^arrayKey/),
+            id: expect.stringMatching(/^arrayKey.1/),
             name: "1",
             value: { subKey2: "subValue2" },
+            type: "Embedded",
             children: [
               {
                 id: expect.stringMatching(/^arrayKey.1.subKey2/),
                 name: "subKey2",
                 value: "subValue2",
+                type: "Value",
                 children: [],
               },
             ],
@@ -296,29 +355,212 @@ describe("formatTreeRowData", () => {
         },
       },
     };
-
-    const result = formatTreeRowData(attributes);
-
+    const result = formatTreeRowData(attributes, mockServiceModel);
     expect(result).toMatchObject([
       {
         id: expect.stringMatching(/^level1/),
         name: "level1",
         value: { level2: { level3: "deepValue" } },
+        type: "Embedded",
         children: [
           {
             id: expect.stringMatching(/^level1.level2/),
             name: "level2",
             value: { level3: "deepValue" },
+            type: "Embedded",
             children: [
               {
                 id: expect.stringMatching(/^level1.level2.level3/),
                 name: "level3",
                 value: "deepValue",
+                type: "Value",
                 children: [],
               },
             ],
           },
         ],
+      },
+    ]);
+  });
+
+  it("should format an array of primitives correctly", () => {
+    const attributes = {
+      numbers: [1, 2, 3],
+    };
+    const model = {
+      ...mockServiceModel,
+      attributes: [
+        ...mockServiceModel.attributes,
+        {
+          name: "numbers",
+          type: "array",
+          modifier: "rw",
+          default_value: [],
+          default_value_set: false,
+          validation_type: null,
+          validation_parameters: null,
+        },
+      ],
+    };
+    const result = formatTreeRowData(attributes, model);
+    expect(result).toMatchObject([
+      {
+        id: expect.stringMatching(/^numbers/),
+        name: "numbers",
+        value: [1, 2, 3],
+        type: "Embedded",
+        children: [
+          { id: expect.stringMatching(/^numbers.0/), name: "0", value: 1, type: "Value" },
+          { id: expect.stringMatching(/^numbers.1/), name: "1", value: 2, type: "Value" },
+          { id: expect.stringMatching(/^numbers.2/), name: "2", value: 3, type: "Value" },
+        ],
+      },
+    ]);
+  });
+
+  it("should format an array of arrays correctly", () => {
+    const attributes = {
+      matrix: [
+        [1, 2],
+        [3, 4],
+      ],
+    };
+    const model = {
+      ...mockServiceModel,
+      attributes: [
+        ...mockServiceModel.attributes,
+        {
+          name: "matrix",
+          type: "array",
+          modifier: "rw",
+          default_value: [],
+          default_value_set: false,
+          validation_type: null,
+          validation_parameters: null,
+        },
+      ],
+    };
+    const result = formatTreeRowData(attributes, model);
+    expect(result).toMatchObject([
+      {
+        id: expect.stringMatching(/^matrix/),
+        name: "matrix",
+        value: [
+          [1, 2],
+          [3, 4],
+        ],
+        type: "Embedded",
+        children: [
+          {
+            id: expect.stringMatching(/^matrix.0/),
+            name: "0",
+            value: [1, 2],
+            type: "Embedded",
+            children: [
+              { id: expect.stringMatching(/^matrix.0.0/), name: "0", value: 1, type: "Value" },
+              { id: expect.stringMatching(/^matrix.0.1/), name: "1", value: 2, type: "Value" },
+            ],
+          },
+          {
+            id: expect.stringMatching(/^matrix.1/),
+            name: "1",
+            value: [3, 4],
+            type: "Embedded",
+            children: [
+              { id: expect.stringMatching(/^matrix.1.0/), name: "0", value: 3, type: "Value" },
+              { id: expect.stringMatching(/^matrix.1.1/), name: "1", value: 4, type: "Value" },
+            ],
+          },
+        ],
+      },
+    ]);
+  });
+
+  it("should format an attribute that matches an embedded entity name", () => {
+    const attributes = {
+      site: { name: "siteA", infra_vendor: "aws" },
+    };
+    const model = {
+      ...mockServiceModel,
+      embedded_entities: [
+        {
+          name: "site",
+          type: "siteType",
+          description: "A site entity",
+          modifier: "rw",
+          lower_limit: 1,
+          upper_limit: 1,
+          attributes: [
+            {
+              name: "name",
+              type: "string",
+              modifier: "rw",
+              default_value: null,
+              default_value_set: false,
+              validation_type: null,
+              validation_parameters: null,
+            },
+            {
+              name: "infra_vendor",
+              type: "string",
+              modifier: "rw",
+              default_value: null,
+              default_value_set: false,
+              validation_type: null,
+              validation_parameters: null,
+            },
+          ],
+          embedded_entities: [],
+          inter_service_relations: [],
+          key_attributes: [],
+        },
+      ],
+    };
+    const result = formatTreeRowData(attributes, model);
+    expect(result).toMatchObject([
+      {
+        id: expect.stringMatching(/^site/),
+        name: "site",
+        value: { name: "siteA", infra_vendor: "aws" },
+        type: "Embedded",
+        children: [
+          { id: expect.stringMatching(/^site.name/), name: "name", value: "siteA", type: "Value" },
+          {
+            id: expect.stringMatching(/^site.infra_vendor/),
+            name: "infra_vendor",
+            value: "aws",
+            type: "Value",
+          },
+        ],
+      },
+    ]);
+  });
+
+  it("should format an attribute that matches an inter_service_relation name as Relation", () => {
+    const attributes = {
+      relatedService: "service-123",
+    };
+    const model = {
+      ...mockServiceModel,
+      inter_service_relations: [
+        {
+          name: "relatedService",
+          entity_type: "OtherService",
+          lower_limit: 0,
+          upper_limit: 1,
+          modifier: "rw",
+        },
+      ],
+    };
+    const result = formatTreeRowData(attributes, model);
+    expect(result).toMatchObject([
+      {
+        id: expect.stringMatching(/^relatedService/),
+        name: "relatedService",
+        value: "service-123",
+        type: "Relation",
+        serviceName: "OtherService",
+        children: [],
       },
     ]);
   });
@@ -333,33 +575,33 @@ describe("sortTreeRows", () => {
 
   it("should sort a flat array of TreeRowData in ascending order", () => {
     const tableData: TreeRowData[] = [
-      { id: "2", name: "Banana", value: "fruit", children: [] },
-      { id: "1", name: "Apple", value: "fruit", children: [] },
-      { id: "3", name: "Cherry", value: "fruit", children: [] },
+      { id: "2", name: "Banana", value: "fruit", type: "Value", children: [] },
+      { id: "1", name: "Apple", value: "fruit", type: "Value", children: [] },
+      { id: "3", name: "Cherry", value: "fruit", type: "Value", children: [] },
     ];
 
     const result = sortTreeRows(tableData, "asc");
 
     expect(result).toEqual([
-      { id: "1", name: "Apple", value: "fruit", children: [] },
-      { id: "2", name: "Banana", value: "fruit", children: [] },
-      { id: "3", name: "Cherry", value: "fruit", children: [] },
+      { id: "1", name: "Apple", value: "fruit", type: "Value", children: [] },
+      { id: "2", name: "Banana", value: "fruit", type: "Value", children: [] },
+      { id: "3", name: "Cherry", value: "fruit", type: "Value", children: [] },
     ]);
   });
 
   it("should sort a flat array of TreeRowData in descending order", () => {
     const tableData: TreeRowData[] = [
-      { id: "2", name: "Banana", value: "fruit", children: [] },
-      { id: "1", name: "Apple", value: "fruit", children: [] },
-      { id: "3", name: "Cherry", value: "fruit", children: [] },
+      { id: "2", name: "Banana", value: "fruit", type: "Value", children: [] },
+      { id: "1", name: "Apple", value: "fruit", type: "Value", children: [] },
+      { id: "3", name: "Cherry", value: "fruit", type: "Value", children: [] },
     ];
 
     const result = sortTreeRows(tableData, "desc");
 
     expect(result).toEqual([
-      { id: "3", name: "Cherry", value: "fruit", children: [] },
-      { id: "2", name: "Banana", value: "fruit", children: [] },
-      { id: "1", name: "Apple", value: "fruit", children: [] },
+      { id: "3", name: "Cherry", value: "fruit", type: "Value", children: [] },
+      { id: "2", name: "Banana", value: "fruit", type: "Value", children: [] },
+      { id: "1", name: "Apple", value: "fruit", type: "Value", children: [] },
     ]);
   });
 
@@ -369,15 +611,17 @@ describe("sortTreeRows", () => {
         id: "2",
         name: "Banana",
         value: "fruit",
+        type: "Value",
         children: [
-          { id: "4", name: "C", value: "subfruit", children: [] },
-          { id: "5", name: "A", value: "subfruit", children: [] },
+          { id: "4", name: "C", value: "subfruit", type: "Value", children: [] },
+          { id: "5", name: "A", value: "subfruit", type: "Value", children: [] },
         ],
       },
       {
         id: "1",
         name: "Apple",
         value: "fruit",
+        type: "Value",
         children: [],
       },
     ];
@@ -389,15 +633,17 @@ describe("sortTreeRows", () => {
         id: "1",
         name: "Apple",
         value: "fruit",
+        type: "Value",
         children: [],
       },
       {
         id: "2",
         name: "Banana",
         value: "fruit",
+        type: "Value",
         children: [
-          { id: "5", name: "A", value: "subfruit", children: [] },
-          { id: "4", name: "C", value: "subfruit", children: [] },
+          { id: "5", name: "A", value: "subfruit", type: "Value", children: [] },
+          { id: "4", name: "C", value: "subfruit", type: "Value", children: [] },
         ],
       },
     ]);
@@ -409,15 +655,17 @@ describe("sortTreeRows", () => {
         id: "2",
         name: "Banana",
         value: "fruit",
+        type: "Value",
         children: [
-          { id: "4", name: "C", value: "subfruit", children: [] },
-          { id: "5", name: "A", value: "subfruit", children: [] },
+          { id: "4", name: "C", value: "subfruit", type: "Value", children: [] },
+          { id: "5", name: "A", value: "subfruit", type: "Value", children: [] },
         ],
       },
       {
         id: "1",
         name: "Apple",
         value: "fruit",
+        type: "Value",
         children: [],
       },
     ];
@@ -429,15 +677,17 @@ describe("sortTreeRows", () => {
         id: "2",
         name: "Banana",
         value: "fruit",
+        type: "Value",
         children: [
-          { id: "4", name: "C", value: "subfruit", children: [] },
-          { id: "5", name: "A", value: "subfruit", children: [] },
+          { id: "4", name: "C", value: "subfruit", type: "Value", children: [] },
+          { id: "5", name: "A", value: "subfruit", type: "Value", children: [] },
         ],
       },
       {
         id: "1",
         name: "Apple",
         value: "fruit",
+        type: "Value",
         children: [],
       },
     ]);
@@ -445,17 +695,17 @@ describe("sortTreeRows", () => {
 
   it("should handle ties in sorting correctly", () => {
     const tableData: TreeRowData[] = [
-      { id: "2", name: "Banana", value: "fruit", children: [] },
-      { id: "1", name: "Apple", value: "fruit", children: [] },
-      { id: "3", name: "Banana", value: "fruit", children: [] },
+      { id: "2", name: "Banana", value: "fruit", type: "Value", children: [] },
+      { id: "1", name: "Apple", value: "fruit", type: "Value", children: [] },
+      { id: "3", name: "Banana", value: "fruit", type: "Value", children: [] },
     ];
 
     const result = sortTreeRows(tableData, "asc");
 
     expect(result).toEqual([
-      { id: "1", name: "Apple", value: "fruit", children: [] },
-      { id: "2", name: "Banana", value: "fruit", children: [] },
-      { id: "3", name: "Banana", value: "fruit", children: [] },
+      { id: "1", name: "Apple", value: "fruit", type: "Value", children: [] },
+      { id: "2", name: "Banana", value: "fruit", type: "Value", children: [] },
+      { id: "3", name: "Banana", value: "fruit", type: "Value", children: [] },
     ]);
   });
 });
