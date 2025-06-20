@@ -8,12 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import {
-  AddRoleToUserBody,
-  EnvironmentPreview,
-  RemoveRoleFromUserProps,
-  UserRoleInfo,
-} from "@/Data/Queries";
+import { ManageRoleToUserBody, EnvironmentPreview, UserRoleInfo } from "@/Data/Queries";
 import { useAddRoleToUser, useRemoveRoleFromUser } from "@/Data/Queries";
 import { MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
@@ -86,12 +81,12 @@ const setup = (props = {}) => {
 const defaultAddRoleMock = {
   mutate: jest.fn(),
   isPending: false,
-} as unknown as UseMutationResult<void, Error, AddRoleToUserBody, unknown>; // workaround not to pass all irrelevant props to the component for given scenario, same for other tests
+} as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>; // workaround not to pass all irrelevant props to the component for given scenario, same for other tests
 
 const defaultRemoveRoleMock = {
   mutate: jest.fn(),
   isPending: false,
-} as unknown as UseMutationResult<void, Error, RemoveRoleFromUserProps, unknown>;
+} as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>;
 
 describe("RoleRow", () => {
   beforeEach(() => {
@@ -212,7 +207,7 @@ describe("RoleRow", () => {
       mockUseAddRoleToUser.mockReturnValue({
         ...defaultAddRoleMock,
         isPending: true,
-      } as unknown as UseMutationResult<void, Error, AddRoleToUserBody, unknown>);
+      } as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>);
 
       const { component } = setup({
         roles: {
@@ -233,7 +228,7 @@ describe("RoleRow", () => {
       mockUseAddRoleToUser.mockReturnValue({
         ...defaultAddRoleMock,
         isPending: true,
-      } as unknown as UseMutationResult<void, Error, AddRoleToUserBody, unknown>);
+      } as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>);
 
       const { component } = setup({
         roles: {
@@ -319,7 +314,7 @@ describe("RoleRow", () => {
       mockUseRemoveRoleFromUser.mockReturnValue({
         ...defaultRemoveRoleMock,
         isPending: true,
-      } as unknown as UseMutationResult<void, Error, RemoveRoleFromUserProps, unknown>);
+      } as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>);
 
       const { component } = setup({
         roles: {
@@ -340,7 +335,7 @@ describe("RoleRow", () => {
       mockUseRemoveRoleFromUser.mockReturnValue({
         ...defaultRemoveRoleMock,
         isPending: true,
-      } as unknown as UseMutationResult<void, Error, RemoveRoleFromUserProps, unknown>);
+      } as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>);
 
       const { component } = setup({
         roles: {
@@ -455,11 +450,11 @@ describe("RoleRow", () => {
       mockUseAddRoleToUser.mockReturnValue({
         ...defaultAddRoleMock,
         isPending: true,
-      } as unknown as UseMutationResult<void, Error, AddRoleToUserBody, unknown>);
+      } as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>);
       mockUseRemoveRoleFromUser.mockReturnValue({
         ...defaultRemoveRoleMock,
         isPending: true,
-      } as unknown as UseMutationResult<void, Error, RemoveRoleFromUserProps, unknown>);
+      } as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>);
 
       const { component } = setup({
         roles: {

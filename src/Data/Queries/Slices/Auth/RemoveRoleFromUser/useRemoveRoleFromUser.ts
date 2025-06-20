@@ -1,19 +1,10 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { useDeleteWithoutEnv } from "@/Data/Queries";
-
-/**
- * Body for removing a role from a user.
- * @param {string} role - The role to remove from the user.
- * @param {string} environment - The environment within which the role is applied
- */
-export interface RemoveRoleFromUserProps {
-  role: string;
-  environment: string;
-}
+import { ManageRoleToUserBody } from "../AddRoleToUser/useAddRoleToUser";
 
 interface Props {
   user: string;
-  options?: UseMutationOptions<void, Error, RemoveRoleFromUserProps>;
+  options?: UseMutationOptions<void, Error, ManageRoleToUserBody>;
 }
 
 /**
@@ -24,7 +15,7 @@ interface Props {
 export const useRemoveRoleFromUser = ({ user, options }: Props) => {
   const deleteRole = useDeleteWithoutEnv();
 
-  return useMutation<void, Error, RemoveRoleFromUserProps>({
+  return useMutation<void, Error, ManageRoleToUserBody>({
     mutationFn: ({ role, environment }) =>
       deleteRole(`/api/v2/role_assignment/${user}?role=${role}&environment=${environment}`),
     mutationKey: ["delete_role_from_user", user],
