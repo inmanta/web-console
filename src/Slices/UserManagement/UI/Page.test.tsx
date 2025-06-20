@@ -7,7 +7,7 @@ import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { graphql } from "msw";
 import { setupServer } from "msw/node";
-import { EnvironmentPreviewResponse, UserInfo, UserRoleInfo } from "@/Data/Queries";
+import { EnvironmentPreviewResponse, UserInfo, UserRole } from "@/Data/Queries";
 import { MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
@@ -626,7 +626,7 @@ describe("UserManagementPage", () => {
 
   it("should handle successful addition of a role to a user", async () => {
     const userData = [{ username: "test_user", auth_method: "database" }];
-    const userRoles: UserRoleInfo[] = [];
+    const userRoles: UserRole[] = [];
 
     server.use(
       http.get("/api/v2/user", async () => HttpResponse.json({ data: userData })),
@@ -674,7 +674,7 @@ describe("UserManagementPage", () => {
 
   it("should handle failed addition of a role to a user", async () => {
     const userData = [{ username: "test_user", auth_method: "database" }];
-    const userRoles: UserRoleInfo[] = [];
+    const userRoles: UserRole[] = [];
 
     server.use(
       http.get("/api/v2/user", async () => HttpResponse.json({ data: userData })),
@@ -711,7 +711,7 @@ describe("UserManagementPage", () => {
   it("should handle successful removal of a role from a user", async () => {
     const userData = [{ username: "test_user", auth_method: "database" }];
     const roles = ["admin", "viewer"];
-    let userRoles: UserRoleInfo[] = [
+    let userRoles: UserRole[] = [
       { name: "admin", environment: "1" },
       { name: "viewer", environment: "1" },
     ];
@@ -761,7 +761,7 @@ describe("UserManagementPage", () => {
   it("should handle failed removal of a role from a user", async () => {
     const userData = [{ username: "test_user", auth_method: "database" }];
     const roles = ["admin", "viewer"];
-    const userRoles: UserRoleInfo[] = [
+    const userRoles: UserRole[] = [
       { name: "admin", environment: "1" },
       { name: "viewer", environment: "1" },
     ];

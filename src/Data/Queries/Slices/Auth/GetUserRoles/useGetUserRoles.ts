@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useGetWithoutEnv } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
-export interface UserRoleInfo {
+export interface UserRole {
   name: string;
   environment: string;
 }
@@ -12,7 +12,7 @@ export interface UserRoleInfo {
  * @returns An object containing a custom hook to fetch user role information.
  */
 export const useGetUserRoles = () => {
-  const get = useGetWithoutEnv()<{ data: UserRoleInfo[] }>;
+  const get = useGetWithoutEnv()<{ data: UserRole[] }>;
 
   return {
     useOneTime: (username: string) =>

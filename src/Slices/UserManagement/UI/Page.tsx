@@ -6,7 +6,7 @@ import { UserCredentialsForm } from "@/Slices/UserManagement/UI/Components/AddUs
 import { words } from "@/UI";
 import { EmptyView, ErrorView, LoadingView, PageContainer, ToastAlert } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { UserInfoRow } from "./Components/UserInfoRow";
+import { UserRow } from "./Components/UserRow";
 
 export const UserManagementPage: React.FC = () => {
   const { triggerModal } = useContext(ModalContext);
@@ -116,7 +116,7 @@ export const UserManagementPage: React.FC = () => {
             </Thead>
             <Tbody>
               {data.map((user) => (
-                <UserInfoRow
+                <UserRow
                   key={`Row-${user.username}`}
                   user={user}
                   allRoles={roles.data}

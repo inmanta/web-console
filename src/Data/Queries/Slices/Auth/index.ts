@@ -5,6 +5,6 @@ export * from "./GetUsers";
 export * from "./RemoveUser";
 export * from "./ChangeUserPassword";
 export * from "./GetRoles";
-export * from "./GetUserRole";
+export * from "./GetUserRoles";
 export * from "./AddRoleToUser";
 export * from "./RemoveRoleFromUser";

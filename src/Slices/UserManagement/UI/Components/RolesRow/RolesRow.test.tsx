@@ -8,12 +8,12 @@ import {
 } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { ManageRoleToUserBody, EnvironmentPreview, UserRoleInfo } from "@/Data/Queries";
+import { UserRole, EnvironmentPreview } from "@/Data/Queries";
 import { useAddRoleToUser, useRemoveRoleFromUser } from "@/Data/Queries";
 import { MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
-import { RoleRow } from "./RoleRow";
+import { RolesRow } from "./RolesRow";
 
 // Mock the hooks
 jest.mock("@/Data/Queries", () => ({
@@ -47,7 +47,7 @@ const setup = (props = {}) => {
       isError: false,
       data: [],
       error: null,
-    } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+    } as unknown as UseQueryResult<UserRole[], Error>,
     allRoles: ["admin", "viewer", "editor"],
     setAlert: mockSetAlert,
   };
@@ -60,7 +60,7 @@ const setup = (props = {}) => {
         <ModalProvider>
           <Table>
             <Tbody>
-              <RoleRow {...mergedProps} />
+              <RolesRow {...mergedProps} />
             </Tbody>
           </Table>
         </ModalProvider>
@@ -81,14 +81,14 @@ const setup = (props = {}) => {
 const defaultAddRoleMock = {
   mutate: jest.fn(),
   isPending: false,
-} as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>; // workaround not to pass all irrelevant props to the component for given scenario, same for other tests
+} as unknown as UseMutationResult<void, Error, UserRole, unknown>; // workaround not to pass all irrelevant props to the component for given scenario, same for other tests
 
 const defaultRemoveRoleMock = {
   mutate: jest.fn(),
   isPending: false,
-} as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>;
+} as unknown as UseMutationResult<void, Error, UserRole, unknown>;
 
-describe("RoleRow", () => {
+describe("RolesRow", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseAddRoleToUser.mockReturnValue(defaultAddRoleMock);
@@ -104,7 +104,7 @@ describe("RoleRow", () => {
           isError: false,
           data: [],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -123,9 +123,9 @@ describe("RoleRow", () => {
           data: [
             { name: "admin", environment: "env1" },
             { name: "viewer", environment: "env2" },
-          ] as UserRoleInfo[],
+          ] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -142,9 +142,9 @@ describe("RoleRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRoleInfo[],
+          data: [{ name: "admin", environment: "env1" }] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -159,9 +159,9 @@ describe("RoleRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [] as UserRoleInfo[],
+          data: [] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -183,9 +183,9 @@ describe("RoleRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [] as UserRoleInfo[],
+          data: [] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -207,16 +207,16 @@ describe("RoleRow", () => {
       mockUseAddRoleToUser.mockReturnValue({
         ...defaultAddRoleMock,
         isPending: true,
-      } as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>);
+      } as unknown as UseMutationResult<void, Error, UserRole, unknown>);
 
       const { component } = setup({
         roles: {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [] as UserRoleInfo[],
+          data: [] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -228,16 +228,16 @@ describe("RoleRow", () => {
       mockUseAddRoleToUser.mockReturnValue({
         ...defaultAddRoleMock,
         isPending: true,
-      } as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>);
+      } as unknown as UseMutationResult<void, Error, UserRole, unknown>);
 
       const { component } = setup({
         roles: {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [] as UserRoleInfo[],
+          data: [] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -261,9 +261,9 @@ describe("RoleRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRoleInfo[],
+          data: [{ name: "admin", environment: "env1" }] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -292,9 +292,9 @@ describe("RoleRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRoleInfo[],
+          data: [{ name: "admin", environment: "env1" }] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -314,16 +314,16 @@ describe("RoleRow", () => {
       mockUseRemoveRoleFromUser.mockReturnValue({
         ...defaultRemoveRoleMock,
         isPending: true,
-      } as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>);
+      } as unknown as UseMutationResult<void, Error, UserRole, unknown>);
 
       const { component } = setup({
         roles: {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRoleInfo[],
+          data: [{ name: "admin", environment: "env1" }] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -335,16 +335,16 @@ describe("RoleRow", () => {
       mockUseRemoveRoleFromUser.mockReturnValue({
         ...defaultRemoveRoleMock,
         isPending: true,
-      } as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>);
+      } as unknown as UseMutationResult<void, Error, UserRole, unknown>);
 
       const { component } = setup({
         roles: {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRoleInfo[],
+          data: [{ name: "admin", environment: "env1" }] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -365,9 +365,9 @@ describe("RoleRow", () => {
             { name: "admin", environment: "env1" },
             { name: "viewer", environment: "env2" },
             { name: "editor", environment: "env1" },
-          ] as UserRoleInfo[],
+          ] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -387,9 +387,9 @@ describe("RoleRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRoleInfo[],
+          data: [{ name: "admin", environment: "env1" }] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -410,9 +410,9 @@ describe("RoleRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRoleInfo[],
+          data: [{ name: "admin", environment: "env1" }] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -434,9 +434,9 @@ describe("RoleRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [] as UserRoleInfo[],
+          data: [] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);
@@ -450,20 +450,20 @@ describe("RoleRow", () => {
       mockUseAddRoleToUser.mockReturnValue({
         ...defaultAddRoleMock,
         isPending: true,
-      } as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>);
+      } as unknown as UseMutationResult<void, Error, UserRole, unknown>);
       mockUseRemoveRoleFromUser.mockReturnValue({
         ...defaultRemoveRoleMock,
         isPending: true,
-      } as unknown as UseMutationResult<void, Error, ManageRoleToUserBody, unknown>);
+      } as unknown as UseMutationResult<void, Error, UserRole, unknown>);
 
       const { component } = setup({
         roles: {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRoleInfo[],
+          data: [{ name: "admin", environment: "env1" }] as UserRole[],
           error: null,
-        } as unknown as UseQueryResult<UserRoleInfo[], Error>,
+        } as unknown as UseQueryResult<UserRole[], Error>,
       });
 
       render(component);

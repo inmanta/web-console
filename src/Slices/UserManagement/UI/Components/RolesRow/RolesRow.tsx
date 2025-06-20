@@ -7,7 +7,7 @@ import {
   getUserRoleKey,
   useAddRoleToUser,
   useRemoveRoleFromUser,
-  UserRoleInfo,
+  UserRole,
 } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ErrorView, MultiTextSelect } from "@/UI/Components";
@@ -16,7 +16,7 @@ import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 interface Props {
   username: string;
   environment: EnvironmentPreview;
-  roles: UseQueryResult<UserRoleInfo[], Error>;
+  roles: UseQueryResult<UserRole[], Error>;
   allRoles: string[];
   setAlert: (title: string, variant: AlertVariant, message: string) => void;
 }
@@ -26,11 +26,11 @@ interface Props {
  * @props {Props} props - The props of the component.
  * @prop {string} username - The username of the user to remove the role from.
  * @prop {EnvironmentPreview} environment - The environment of the user within we want to add or remove the role.
- * @prop {UseQueryResult<UserRoleInfo[], Error>} roles - The roles of the user.
+ * @prop {UseQueryResult<UserRole[], Error>} roles - The roles of the user.
  * @prop {string[]} allRoles - The all roles of the user.
  * @prop {setAlert} setAlert - The function to set the alert.
  */
-export const RoleRow = ({ username, environment, roles, allRoles, setAlert }: Props) => {
+export const RolesRow = ({ username, environment, roles, allRoles, setAlert }: Props) => {
   const { closeModal } = useContext(ModalContext);
   const client = useQueryClient();
 
@@ -63,17 +63,17 @@ export const RoleRow = ({ username, environment, roles, allRoles, setAlert }: Pr
   /**
    * Handles the selection of roles.
    * @param {string | ((prevState: string[]) => string[])} selected - The selected role.
-   * @param {UserRoleInfo[]} selectedRoles - The already selected roles.
+   * @param {UserRole[]} selectedRoles - The already selected roles.
    */
   const onSelect = (
     selected: string | ((prevState: string[]) => string[]),
-    selectedRoles: UserRoleInfo[]
+    selectedRoles: UserRole[]
   ) => {
     if (typeof selected === "string") {
       if (selectedRoles.some((role) => role.name === selected)) {
-        removeRole.mutate({ role: selected, environment: environment.id });
+        removeRole.mutate({ name: selected, environment: environment.id });
       } else {
-        addRole.mutate({ role: selected, environment: environment.id });
+        addRole.mutate({ name: selected, environment: environment.id });
       }
     }
   };
@@ -139,26 +139,23 @@ export const RoleRow = ({ username, environment, roles, allRoles, setAlert }: Pr
             <FlexItem>
               <Flex>
                 {selectedRolesForEnvironment.length > 0
-                  ? selectedRolesForEnvironment
-                      .map((role) => role.name)
-                      .map((name) => {
-                        return (
-                          <FlexItem key={`container-chip-${name}-${environment.id}`}>
-                            <Label
-                              variant="outline"
-                              color="blue"
-                              key={`chip-${name}-${environment.id}`}
-                              aria-label={`chip-role-${name}-${environment.id}`}
-                              closeBtnAriaLabel={`remove-role-${name}-${environment.id}`}
-                              onClose={() =>
-                                removeRole.mutate({ role: name, environment: environment.id })
-                              }
-                            >
-                              {name}
-                            </Label>
-                          </FlexItem>
-                        );
-                      })
+                  ? selectedRolesForEnvironment.map((role) => {
+                      const name = role.name;
+                      return (
+                        <FlexItem key={`container-chip-${name}-${environment.id}`}>
+                          <Label
+                            variant="outline"
+                            color="blue"
+                            key={`chip-${name}-${environment.id}`}
+                            aria-label={`chip-role-${name}-${environment.id}`}
+                            closeBtnAriaLabel={`remove-role-${name}-${environment.id}`}
+                            onClose={() => removeRole.mutate({ name, environment: environment.id })}
+                          >
+                            {name}
+                          </Label>
+                        </FlexItem>
+                      );
+                    })
                   : words("userManagement.noRolesAssigned")}
               </Flex>
             </FlexItem>

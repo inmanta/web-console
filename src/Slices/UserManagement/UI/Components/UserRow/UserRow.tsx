@@ -5,9 +5,9 @@ import { EnvironmentPreview, useGetUserRoles, useRemoveUser, UserInfo } from "@/
 import { words } from "@/UI";
 import { ConfirmUserActionForm, EmptyView, Toggle } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { ChangePasswordForm } from "./ChangePasswordForm";
-import { RoleRow } from "./RoleRow";
-import { RolesToggleCell } from "./RolesToggleCell";
+import { ChangePasswordForm } from "../ChangePasswordForm";
+import { RolesRow } from "../RolesRow";
+import { RolesToggleCell } from "../RolesToggleCell";
 
 interface Props {
   user: UserInfo;
@@ -23,7 +23,7 @@ interface Props {
  *
  * @returns {React.FC<Props>} The rendered user info row with button to be able to delete the user.
  */
-export const UserInfoRow: React.FC<Props> = ({ user, allRoles, environments, setAlert }) => {
+export const UserRow: React.FC<Props> = ({ user, allRoles, environments, setAlert }) => {
   const roles = useGetUserRoles().useOneTime(user.username);
   const [isExpanded, setIsExpanded] = useState(false);
   const { triggerModal, closeModal } = useContext(ModalContext);
@@ -126,7 +126,7 @@ export const UserInfoRow: React.FC<Props> = ({ user, allRoles, environments, set
                   </Tr>
                 ) : (
                   environments.map((environment) => (
-                    <RoleRow
+                    <RolesRow
                       key={`${environment.name}-role-row`}
                       username={user.username}
                       environment={environment}
