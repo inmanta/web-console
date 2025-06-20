@@ -70,10 +70,10 @@ export const RolesRow = ({ username, environment, roles, allRoles, setAlert }: P
     selectedRoles: UserRole[]
   ) => {
     if (typeof selected === "string") {
-      if (selectedRoles.some((role) => role.name === selected)) {
-        removeRole.mutate({ name: selected, environment: environment.id });
+      if (selectedRoles.some((role) => role.role === selected)) {
+        removeRole.mutate({ role: selected, environment: environment.id });
       } else {
-        addRole.mutate({ name: selected, environment: environment.id });
+        addRole.mutate({ role: selected, environment: environment.id });
       }
     }
   };
@@ -109,7 +109,7 @@ export const RolesRow = ({ username, environment, roles, allRoles, setAlert }: P
                     toggleAriaLabel={`toggle-roles-${environment.name}`}
                     noInputField
                     isDisabled={removeRole.isPending || addRole.isPending || allRoles.length === 0}
-                    selected={selectedRolesForEnvironment.map((role) => role.name)}
+                    selected={selectedRolesForEnvironment.map((role) => role.role)}
                     setSelected={(selected) => {
                       onSelect(selected, selectedRolesForEnvironment);
                     }}
@@ -123,7 +123,7 @@ export const RolesRow = ({ username, environment, roles, allRoles, setAlert }: P
                         value: option,
                         children: option,
                         isSelected: selectedRolesForEnvironment
-                          .map((role) => role.name)
+                          .map((role) => role.role)
                           .includes(option),
                       };
                     })}
@@ -140,18 +140,19 @@ export const RolesRow = ({ username, environment, roles, allRoles, setAlert }: P
               <Flex>
                 {selectedRolesForEnvironment.length > 0
                   ? selectedRolesForEnvironment.map((role) => {
-                      const name = role.name;
                       return (
-                        <FlexItem key={`container-chip-${name}-${environment.id}`}>
+                        <FlexItem key={`container-chip-${role.role}-${environment.id}`}>
                           <Label
                             variant="outline"
                             color="blue"
-                            key={`chip-${name}-${environment.id}`}
-                            aria-label={`chip-role-${name}-${environment.id}`}
-                            closeBtnAriaLabel={`remove-role-${name}-${environment.id}`}
-                            onClose={() => removeRole.mutate({ name, environment: environment.id })}
+                            key={`chip-${role.role}-${environment.id}`}
+                            aria-label={`chip-role-${role.role}-${environment.id}`}
+                            closeBtnAriaLabel={`remove-role-${role.role}-${environment.id}`}
+                            onClose={() =>
+                              removeRole.mutate({ role: role.role, environment: environment.id })
+                            }
                           >
-                            {name}
+                            {role.role}
                           </Label>
                         </FlexItem>
                       );

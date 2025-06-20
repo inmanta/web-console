@@ -2,8 +2,6 @@ import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { usePostWithoutEnv } from "@/Data/Queries";
 import { UserRole } from "../GetUserRoles/useGetUserRoles";
 
-
-
 /**
  * Custom hook for adding a role to a user.
  * @param {string} user - The username of the user to add the role to.
@@ -23,10 +21,7 @@ export const useAddRoleToUser = ({
   }>;
 
   return useMutation<void, Error, UserRole>({
-    mutationFn: (body) => post(`/api/v2/role_assignment/${user}`, {
-      role: body.name,
-      environment: body.environment,
-    }),
+    mutationFn: (body) => post(`/api/v2/role_assignment/${user}`, body),
     mutationKey: ["add_role_to_user", user],
     ...options,
   });

@@ -16,8 +16,8 @@ export const useRemoveRoleFromUser = ({ user, options }: Props) => {
   const deleteRole = useDeleteWithoutEnv();
 
   return useMutation<void, Error, UserRole>({
-    mutationFn: ({ name, environment }) =>
-      deleteRole(`/api/v2/role_assignment/${user}?role=${name}&environment=${environment}`),
+    mutationFn: ({ role, environment }) =>
+      deleteRole(`/api/v2/role_assignment/${user}?role=${role}&environment=${environment}`),
     mutationKey: ["delete_role_from_user", user],
     ...options,
   });

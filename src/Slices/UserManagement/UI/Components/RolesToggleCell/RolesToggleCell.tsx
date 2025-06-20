@@ -36,7 +36,7 @@ export const RolesToggleCell: React.FC<Props> = ({ roles, setAlert, toggle }) =>
       <Td dataLabel={words("userManagement.roles")} aria-label="roles-success">
         <Button variant="link" onClick={toggle}>
           {roles.data.length > 0
-            ? [...new Set(roles.data.map((role) => role.name))].join(", ")
+            ? [...new Set(roles.data.map((role) => role.role))].join(", ")
             : words("userManagement.noRolesAssigned")}
         </Button>
       </Td>

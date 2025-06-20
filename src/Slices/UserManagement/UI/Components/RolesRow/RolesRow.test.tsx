@@ -121,8 +121,8 @@ describe("RolesRow", () => {
           isLoading: false,
           isError: false,
           data: [
-            { name: "admin", environment: "env1" },
-            { name: "viewer", environment: "env2" },
+            { role: "admin", environment: "env1" },
+            { role: "viewer", environment: "env2" },
           ] as UserRole[],
           error: null,
         } as unknown as UseQueryResult<UserRole[], Error>,
@@ -142,7 +142,7 @@ describe("RolesRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRole[],
+          data: [{ role: "admin", environment: "env1" }] as UserRole[],
           error: null,
         } as unknown as UseQueryResult<UserRole[], Error>,
       });
@@ -198,7 +198,7 @@ describe("RolesRow", () => {
       await userEvent.click(roleOption);
 
       expect(mockMutate).toHaveBeenCalledWith({
-        name: "admin",
+        role: "admin",
         environment: "env1",
       });
     });
@@ -261,7 +261,7 @@ describe("RolesRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRole[],
+          data: [{ role: "admin", environment: "env1" }] as UserRole[],
           error: null,
         } as unknown as UseQueryResult<UserRole[], Error>,
       });
@@ -276,7 +276,7 @@ describe("RolesRow", () => {
       await userEvent.click(roleOption);
 
       expect(mockMutate).toHaveBeenCalledWith({
-        name: "admin",
+        role: "admin",
         environment: "env1",
       });
     });
@@ -292,7 +292,7 @@ describe("RolesRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRole[],
+          data: [{ role: "admin", environment: "env1" }] as UserRole[],
           error: null,
         } as unknown as UseQueryResult<UserRole[], Error>,
       });
@@ -305,7 +305,7 @@ describe("RolesRow", () => {
       await userEvent.click(adminLabelCloseButton);
 
       expect(mockMutate).toHaveBeenCalledWith({
-        name: "admin",
+        role: "admin",
         environment: "env1",
       });
     });
@@ -321,7 +321,7 @@ describe("RolesRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRole[],
+          data: [{ role: "admin", environment: "env1" }] as UserRole[],
           error: null,
         } as unknown as UseQueryResult<UserRole[], Error>,
       });
@@ -342,7 +342,7 @@ describe("RolesRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRole[],
+          data: [{ role: "admin", environment: "env1" }] as UserRole[],
           error: null,
         } as unknown as UseQueryResult<UserRole[], Error>,
       });
@@ -362,9 +362,9 @@ describe("RolesRow", () => {
           isLoading: false,
           isError: false,
           data: [
-            { name: "admin", environment: "env1" },
-            { name: "viewer", environment: "env2" },
-            { name: "editor", environment: "env1" },
+            { role: "admin", environment: "env1" },
+            { role: "viewer", environment: "env2" },
+            { role: "editor", environment: "env1" },
           ] as UserRole[],
           error: null,
         } as unknown as UseQueryResult<UserRole[], Error>,
@@ -387,7 +387,7 @@ describe("RolesRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRole[],
+          data: [{ role: "admin", environment: "env1" }] as UserRole[],
           error: null,
         } as unknown as UseQueryResult<UserRole[], Error>,
       });
@@ -410,7 +410,7 @@ describe("RolesRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRole[],
+          data: [{ role: "admin", environment: "env1" }] as UserRole[],
           error: null,
         } as unknown as UseQueryResult<UserRole[], Error>,
       });
@@ -461,7 +461,7 @@ describe("RolesRow", () => {
           isSuccess: true,
           isLoading: false,
           isError: false,
-          data: [{ name: "admin", environment: "env1" }] as UserRole[],
+          data: [{ role: "admin", environment: "env1" }] as UserRole[],
           error: null,
         } as unknown as UseQueryResult<UserRole[], Error>,
       });

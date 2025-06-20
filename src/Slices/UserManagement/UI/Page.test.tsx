@@ -125,7 +125,7 @@ describe("UserManagementPage", () => {
     server.use(
       mockedUsers,
       http.get("/api/v2/role_assignment/test_user", async () =>
-        HttpResponse.json({ data: [{ name: "admin", environment: "1" }] })
+        HttpResponse.json({ data: [{ role: "admin", environment: "1" }] })
       )
     );
 
@@ -352,7 +352,7 @@ describe("UserManagementPage", () => {
       http.get("/api/v2/role_assignment/test_user", async () => {
         if (counter > 0) {
           return HttpResponse.json({
-            data: [{ name: "admin", environment: "1" }],
+            data: [{ role: "admin", environment: "1" }],
           });
         }
         counter++;
@@ -644,7 +644,7 @@ describe("UserManagementPage", () => {
           body.role === "admin" &&
           body.environment === "1"
         ) {
-          userRoles.push({ name: "admin", environment: "1" });
+          userRoles.push({ role: "admin", environment: "1" });
           return HttpResponse.json({});
         }
         // Simulate failure for other roles or malformed body
@@ -712,8 +712,8 @@ describe("UserManagementPage", () => {
     const userData = [{ username: "test_user", auth_method: "database" }];
     const roles = ["admin", "viewer"];
     let userRoles: UserRole[] = [
-      { name: "admin", environment: "1" },
-      { name: "viewer", environment: "1" },
+      { role: "admin", environment: "1" },
+      { role: "viewer", environment: "1" },
     ];
 
     server.use(
@@ -727,7 +727,7 @@ describe("UserManagementPage", () => {
         const url = new URL(request.url);
         const role = url.searchParams.get("role");
         if (role === "admin") {
-          userRoles = userRoles.filter((role) => role.name !== "admin");
+          userRoles = userRoles.filter((role) => role.role !== "admin");
           return HttpResponse.json({});
         }
 
@@ -762,8 +762,8 @@ describe("UserManagementPage", () => {
     const userData = [{ username: "test_user", auth_method: "database" }];
     const roles = ["admin", "viewer"];
     const userRoles: UserRole[] = [
-      { name: "admin", environment: "1" },
-      { name: "viewer", environment: "1" },
+      { role: "admin", environment: "1" },
+      { role: "viewer", environment: "1" },
     ];
 
     server.use(

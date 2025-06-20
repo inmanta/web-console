@@ -3,7 +3,7 @@ import { useGetWithoutEnv } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 export interface UserRole {
-  name: string;
+  role: string;
   environment: string;
 }
 

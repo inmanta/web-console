@@ -13,7 +13,7 @@ export const UserManagementPage: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [alertTitle, setAlertTitle] = useState<string>(words("success"));
   const [alertVariant, setAlertVariant] = useState<AlertVariant>(AlertVariant.success);
-  const { data, isSuccess, isError, error, refetch } = useGetUsers().useOneTime();
+  const users = useGetUsers().useOneTime();
   const roles = useGetRoles().useOneTime();
   const environments = useGetEnvironmentPreview().useOneTime();
 
@@ -45,13 +45,13 @@ export const UserManagementPage: React.FC = () => {
     });
   };
 
-  if (isError || environments.isError || roles.isError) {
+  if (users.isError || environments.isError || roles.isError) {
     const errorMessage =
-      error?.message || environments.error?.message || roles.error?.message || "";
+      users.error?.message || environments.error?.message || roles.error?.message || "";
 
     const retry = () => {
-      if (isError) {
-        refetch();
+      if (users.isError) {
+        users.refetch();
       }
       if (environments.isError) {
         environments.refetch();
@@ -72,7 +72,7 @@ export const UserManagementPage: React.FC = () => {
     );
   }
 
-  if (environments.isSuccess && isSuccess && roles.isSuccess) {
+  if (environments.isSuccess && users.isSuccess && roles.isSuccess) {
     return (
       <PageContainer pageTitle={words("userManagement.title")}>
         {alertMessage && (
@@ -90,7 +90,7 @@ export const UserManagementPage: React.FC = () => {
             </Button>
           </FlexItem>
         </Flex>
-        {data.length === 0 ? (
+        {users.data.length === 0 ? (
           <EmptyView
             message={words("userManagement.empty.message")}
             aria-label="UserManagement-Empty"
@@ -115,7 +115,7 @@ export const UserManagementPage: React.FC = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {data.map((user) => (
+              {users.data.map((user) => (
                 <UserRow
                   key={`Row-${user.username}`}
                   user={user}
