@@ -8,6 +8,13 @@ interface Props {
   onClick: (cellValue: string, serviceName?: string | undefined, instanceId?: string) => void;
 }
 
+/**
+ * This component is used to display a button that links to a service instance.
+ * It fetches the instance data from the API and displays the instance name.
+ * @prop id - The ID of the service instance.
+ * @prop serviceName - The name of the service.
+ * @prop onClick - The function to call when the button is clicked.
+ */
 export const InstanceCellButton: React.FC<Props> = ({ id, serviceName, onClick }) => {
   const { data, isLoading, isError, isSuccess } = useGetInstance(serviceName, id).useOneTime();
 

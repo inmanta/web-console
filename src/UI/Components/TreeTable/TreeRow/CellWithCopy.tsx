@@ -19,11 +19,11 @@ interface Props {
  * This component is used to display a cell with a value and a copy button.
  * If the value is a comma-separated list of IDs, it will display a list of links.
  * Otherwise, it will display a single link.
- * @param label - The label of the cell.
- * @param value - The value of the cell.
- * @param className - The class name of the cell.
- * @param hasRelation - Whether the value has a relation.
- * @param serviceName - The name of the service.
+ * @prop label - The label of the cell.
+ * @prop value - The value of the cell.
+ * @prop className - The class name of the cell.
+ * @prop hasRelation - Whether the value has a relation.
+ * @prop serviceName - The name of the service.
  * @returns A React component that displays a cell with a value and a copy button.
  */
 export const CellWithCopy: React.FC<Props> = ({
@@ -143,9 +143,9 @@ interface LinkCellProps {
  * This component is used to display a link to a service instance.
  * If the value is a comma-separated list of IDs, it will display a list of links.
  * Otherwise, it will display a single link.
- * @param value - The value to display.
- * @param serviceName - The name of the service.
- * @param onClick - The function to call when the link is clicked.
+ * @prop value - The value to display.
+ * @prop serviceName - The name of the service.
+ * @prop onClick - The function to call when the link is clicked.
  * @returns A React component that displays a link to a service instance.
  */
 export const MultiLinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) => {
@@ -174,9 +174,9 @@ export const MultiLinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onC
  * This component is used to display a link to a service instance.
  * If the value is a comma-separated list of IDs, it will display a list of links.
  * Otherwise, it will display a single link.
- * @param value - The value to display. (this is usually a string, but can also be an empty string or null)
- * @param serviceName - The name of the service.
- * @param onClick - The function to call when the link is clicked.
+ * @prop value - The value to display. (this is usually a string, but can also be an empty string or null)
+ * @prop serviceName - The name of the service.
+ * @prop onClick - The function to call when the link is clicked.
  * @returns A React component that displays a link to a service instance.
  */
 const LinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) =>
