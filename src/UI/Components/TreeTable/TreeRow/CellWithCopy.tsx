@@ -15,6 +15,17 @@ interface Props {
   serviceName?: string;
 }
 
+/**
+ * This component is used to display a cell with a value and a copy button.
+ * If the value is a comma-separated list of IDs, it will display a list of links.
+ * Otherwise, it will display a single link.
+ * @param label - The label of the cell.
+ * @param value - The value of the cell.
+ * @param className - The class name of the cell.
+ * @param hasRelation - Whether the value has a relation.
+ * @param serviceName - The name of the service.
+ * @returns A React component that displays a cell with a value and a copy button.
+ */
 export const CellWithCopy: React.FC<Props> = ({
   label,
   value,
@@ -66,10 +77,20 @@ const StyledPopoverBody = styled.div`
   white-space: pre-wrap;
 `;
 
+/**
+ * This function formats the value.
+ * @param value - The value to format.
+ * @returns The formatted value.
+ */
 function formatValue(value: string): string {
   return isJson(value) ? JSON.stringify(JSON.parse(value), null, 2) : value;
 }
 
+/**
+ * This function checks if the value is a JSON object.
+ * @param value - The value to check.
+ * @returns True if the value is a JSON object, false otherwise.
+ */
 function isJson(value: string): boolean {
   try {
     JSON.parse(value);
@@ -80,10 +101,21 @@ function isJson(value: string): boolean {
   return true;
 }
 
+/**
+ * This function checks if the value should render a link.
+ * @param value - The value to check.
+ * @param hasRelation - Whether the value has a relation.
+ * @returns True if the value should render a link, false otherwise.
+ */
 function shouldRenderLink(value: string, hasRelation?: boolean): boolean {
   return !!(hasRelation && value.length > 0 && value !== "{}");
 }
 
+/**
+ * This function splits the value into a list of IDs.
+ * @param value - The value to split.
+ * @returns A list of IDs.
+ */
 function splitValue(value: unknown): string[] {
   if (typeof value !== "string") {
     return [String(value)];
@@ -92,6 +124,11 @@ function splitValue(value: unknown): string[] {
   return value.split(",").map((val) => val.trim());
 }
 
+/**
+ * This function checks if the value is a comma-separated list of IDs.
+ * @param value - The value to check.
+ * @returns True if the value is a comma-separated list of IDs, false otherwise.
+ */
 function isValueOfMultipleIds(value: unknown): boolean {
   return typeof value === "string" && splitValue(value).length > 0;
 }
@@ -133,6 +170,15 @@ export const MultiLinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onC
   return <LinkCell value={value} serviceName={serviceName} onClick={onClick} />;
 };
 
+/**
+ * This component is used to display a link to a service instance.
+ * If the value is a comma-separated list of IDs, it will display a list of links.
+ * Otherwise, it will display a single link.
+ * @param value - The value to display. (this is usually a string, but can also be an empty string or null)
+ * @param serviceName - The name of the service.
+ * @param onClick - The function to call when the link is clicked.
+ * @returns A React component that displays a link to a service instance.
+ */
 const LinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) =>
   serviceName && value && value.length > 0 ? (
     <InstanceCellButton id={value} serviceName={serviceName} onClick={onClick} />
