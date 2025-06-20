@@ -78,7 +78,6 @@ export const AttributesTable: React.FC<Props> = ({
     serviceName?: string,
     instanceId?: string
   ) => {
-    console.log(cellValue, serviceName, instanceId);
     if (!serviceName || !instanceId) {
       return;
     }
