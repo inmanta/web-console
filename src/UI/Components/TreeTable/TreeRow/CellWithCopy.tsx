@@ -132,7 +132,7 @@ export const MultiLinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onC
 };
 
 const LinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) =>
-  serviceName && value.length > 0 ? (
+  serviceName && value && value.length > 0 ? (
     <InstanceCellButton id={value} serviceName={serviceName} onClick={onClick} />
   ) : (
     <Button
