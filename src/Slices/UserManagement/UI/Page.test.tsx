@@ -126,7 +126,7 @@ describe("UserManagementPage", () => {
       mockedUsers,
       http.get("/api/v2/role_assignment/test_user", async () =>
         HttpResponse.json({ data: [{ name: "admin", environment: "1" }] })
-      ),
+      )
     );
 
     server.listen();
@@ -740,8 +740,8 @@ describe("UserManagementPage", () => {
     render(component);
     // Wait for user row
     await screen.findByText("test_user");
-    // Expand user row
-    await userEvent.click(screen.getAllByLabelText("Toggle-user-row")[0]);
+    // Expand user row through roles toggle column
+    await userEvent.click(await screen.findByText("admin, viewer"));
     // Wait for role table
     await screen.findByText("Environment 1");
 

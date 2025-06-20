@@ -7,7 +7,7 @@ import { ConfirmUserActionForm, EmptyView, Toggle } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { ChangePasswordForm } from "./ChangePasswordForm";
 import { RoleRow } from "./RoleRow";
-import { RolesMainColumn } from "./RolesMainColumn/RolesMainColumn";
+import { RolesToggleCell } from "./RolesToggleCell";
 
 interface Props {
   user: UserInfo;
@@ -88,7 +88,7 @@ export const UserInfoRow: React.FC<Props> = ({ user, allRoles, environments, set
           <Toggle expanded={isExpanded} onToggle={onToggle} aria-label={"Toggle-user-row"} />
         </Td>
         <Td dataLabel={user.username}>{user.username}</Td>
-        <RolesMainColumn roles={roles} setAlert={setAlert} />
+        <RolesToggleCell roles={roles} setAlert={setAlert} toggle={onToggle} />
         <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
           <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
             <FlexItem>

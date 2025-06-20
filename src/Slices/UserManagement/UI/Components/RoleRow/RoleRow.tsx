@@ -25,7 +25,7 @@ interface Props {
  * A functional component that renders a row in the user information table.
  * @props {Props} props - The props of the component.
  * @prop {string} username - The username of the user to remove the role from.
- * @prop {EnvironmentPreview} environment - The environment of the user to remove the role from.
+ * @prop {EnvironmentPreview} environment - The environment of the user within we want to add or remove the role.
  * @prop {UseQueryResult<UserRoleInfo[], Error>} roles - The roles of the user.
  * @prop {string[]} allRoles - The all roles of the user.
  * @prop {setAlert} setAlert - The function to set the alert.
@@ -138,7 +138,7 @@ export const RoleRow = ({ username, environment, roles, allRoles, setAlert }: Pr
             </FlexItem>
             <FlexItem>
               <Flex>
-                {selectedRolesForEnvironment.length  > 0
+                {selectedRolesForEnvironment.length > 0
                   ? selectedRolesForEnvironment
                       .map((role) => role.name)
                       .map((name) => {

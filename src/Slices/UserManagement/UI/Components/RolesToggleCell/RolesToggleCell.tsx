@@ -8,6 +8,7 @@ import { words } from "@/UI";
 interface Props {
   roles: UseQueryResult<UserRoleInfo[], Error>;
   setAlert: (title: string, variant: AlertVariant, message: string) => void;
+  toggle: () => void;
 }
 
 /**
@@ -15,7 +16,7 @@ interface Props {
  * @param {UseQueryResult<UserRoleInfo[], Error>} roles - The roles of the user.
  * @returns {React.FC<Props>} The rendered role top column.
  */
-export const RolesMainColumn = ({ roles, setAlert }: Props) => {
+export const RolesToggleCell = ({ roles, setAlert, toggle }: Props) => {
   /**
    * Refetch the roles and clears the alert.
    *
@@ -29,9 +30,11 @@ export const RolesMainColumn = ({ roles, setAlert }: Props) => {
   if (roles.isSuccess) {
     return (
       <Td dataLabel={words("userManagement.roles")} aria-label="roles-success">
-        {roles.data.length > 0
-          ? [...new Set(roles.data.map((role) => role.name))].join(", ")
-          : words("userManagement.noRolesAssigned")}
+        <Button variant="link" onClick={toggle}>
+          {roles.data.length > 0
+            ? [...new Set(roles.data.map((role) => role.name))].join(", ")
+            : words("userManagement.noRolesAssigned")}
+        </Button>
       </Td>
     );
   }
