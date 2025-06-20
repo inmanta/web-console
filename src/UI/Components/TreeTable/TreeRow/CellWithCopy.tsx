@@ -110,7 +110,7 @@ interface LinkCellProps {
  * @returns A React component that displays a link to a service instance.
  */
 export const MultiLinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) => {
-  if (isValueOfMultipleIds(value)) {
+  if (value && isValueOfMultipleIds(value)) {
     const ids = splitValue(value);
 
     return (
