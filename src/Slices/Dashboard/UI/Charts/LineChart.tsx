@@ -12,7 +12,7 @@ import {
   ChartScatter,
   ChartLegend,
   ChartLabelProps,
-} from "@patternfly/react-charts";
+} from "@patternfly/react-charts/victory";
 import styled, { css } from "styled-components";
 import { LineChartProps } from "../../Core/Domain";
 import { interpolateMetrics } from "../helper";
