@@ -5,5 +5,6 @@ import styled from "styled-components";
 export const TabContentWrapper = styled.div`
   max-height: calc(100vh - 350px);
   padding-top: var(--pf-t--global--spacer--action--horizontal--spacious);
+  padding-right: var(--pf-t--global--spacer--md);
   overflow: auto;
 `;

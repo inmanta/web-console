@@ -99,7 +99,10 @@ export const DocumentationTabContent: React.FC<Props> = ({
     }
 
     return (
-      <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+      <Flex
+        justifyContent={{ default: "justifyContentFlexEnd" }}
+        style={{ paddingBottom: "var(--pf-t--global--spacer--md)" }}
+      >
         <FlexItem>
           <Button
             variant="secondary"
