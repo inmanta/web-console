@@ -14,7 +14,7 @@ if (Cypress.env("local-auth")) {
 
     cy.get("h1").contains("User Management").should("be.visible");
 
-    cy.get('[data-testid="user-row"]').should("have.length", 1);
+    cy.get('[data-testid="user-row"]').should("have.length", 6);
 
     cy.get('[aria-label="add_user-button"]').click();
 
@@ -32,7 +32,7 @@ if (Cypress.env("local-auth")) {
 
     cy.get('[aria-label="confirm-button"]').click();
 
-    cy.get('[data-testid="user-row"]').should("have.length", 2);
+    cy.get('[data-testid="user-row"]').should("have.length", 7);
   });
 
   it("should be able to remove user", () => {
@@ -50,13 +50,13 @@ if (Cypress.env("local-auth")) {
 
     cy.get("h1").contains("User Management").should("be.visible");
 
-    cy.get('[data-testid="user-row"]').should("have.length", 2);
+    cy.get('[data-testid="user-row"]').should("have.length", 7);
 
     cy.get('[data-testid="user-row"]').eq(1).find("button").contains("Delete").click();
 
     cy.get("button").contains("Yes").click();
 
-    cy.get('[data-testid="user-row"]', { timeout: 20000 }).should("have.length", 1);
+    cy.get('[data-testid="user-row"]', { timeout: 20000 }).should("have.length", 6);
   });
   it("should be able to change user password", () => {
     cy.visit("/console/");
@@ -73,7 +73,7 @@ if (Cypress.env("local-auth")) {
 
     cy.get("h1").contains("User Management").should("be.visible");
 
-    cy.get('[data-testid="user-row"]').should("have.length", 1);
+    cy.get('[data-testid="user-row"]').should("have.length", 6);
 
     cy.get('[data-testid="user-row"]').eq(0).find("button").contains("Change Password").click();
 
