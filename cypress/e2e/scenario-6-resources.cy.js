@@ -552,7 +552,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get("#dependency-service").contains("Show inventory").click();
 
       // Expect the number in the chart to the success label to be 8
-      cy.get(".pf-v5-c-chart").within(() => {
+      cy.get(".pf-v6-c-chart").within(() => {
         cy.get("#legend-ChartLabel-2", { timeout: 90000 }).should("contain", "success: 2");
       });
 
