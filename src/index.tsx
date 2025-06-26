@@ -13,6 +13,68 @@ import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
 
+// Configure MonacoEnvironment for worker loading in Vite
+self.MonacoEnvironment = {
+  getWorkerUrl: function (moduleId, label) {
+    switch (label) {
+      case 'json':
+        return '/monaco-editor-workers/jsonWorker.js';
+      case 'xml':
+        return '/monaco-editor-workers/xmlWorker.js';
+      case 'python':
+        return '/monaco-editor-workers/pythonWorker.js';
+      default:
+        return '/monaco-editor-workers/editor.worker.js';
+    }
+  }
+};
+
+// Register JSON language
+monaco.languages.register({ id: 'json' });
+monaco.languages.setMonarchTokensProvider('json', {
+  tokenizer: {
+    root: [
+      [/[{}]/, 'delimiter.bracket'],
+      [/[[\]]/, 'delimiter.array'],
+      [/:/, 'delimiter'],
+      [/,/, 'delimiter'],
+      [/"[^"]*"/, 'string'],
+      [/true|false|null/, 'keyword'],
+      [/\d+/, 'number']
+    ]
+  }
+});
+
+// Register XML language
+monaco.languages.register({ id: 'xml' });
+monaco.languages.setMonarchTokensProvider('xml', {
+  tokenizer: {
+    root: [
+      [/</, 'delimiter'],
+      [/>/, 'delimiter'],
+      [/[^<>]+/, 'string']
+    ]
+  }
+});
+
+// Register Python language
+monaco.languages.register({ id: 'python' });
+monaco.languages.setMonarchTokensProvider('python', {
+  tokenizer: {
+    root: [
+      [/#.*$/, 'comment'],
+      [/def|class|if|else|elif|for|while|try|except|finally|with|as|import|from/, 'keyword'],
+      [/True|False|None/, 'keyword'],
+      [/"[^"]*"/, 'string'],
+      [/'[^']*'/, 'string'],
+      [/\d+/, 'number']
+    ]
+  }
+});
+
+// Register plain text language
+monaco.languages.register({ id: 'plaintext' });
+
 loader.config({ monaco });
 loader.init();
 
