@@ -8,7 +8,7 @@ import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { DestroyAction } from "./DestroyAction";
 
-const mockedMutate = vi.fn();
+const mockedMutate = vi.hoisted(() => vi.fn());
 
 vi.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
   useDestroyInstance: () => ({ mutate: mockedMutate }),

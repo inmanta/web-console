@@ -46,7 +46,7 @@ describe("Agents", () => {
 
   afterAll(() => {
     server.close();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("AgentsView shows empty table", async () => {

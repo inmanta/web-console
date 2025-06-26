@@ -110,11 +110,37 @@ export default defineConfig({
             ],
         },
         deps: {
-            inline: ['@inmanta/rappid', 'mermaid', 'monaco-editor', '@monaco-editor/react', 'graphql-request'],
+            inline: [
+                '@inmanta/rappid',
+                'mermaid',
+                'monaco-editor',
+                '@monaco-editor/react',
+                'graphql-request',
+                '@patternfly/react-styles'
+            ],
         },
         server: {
             deps: {
-                inline: ['@inmanta/rappid', 'mermaid', 'monaco-editor', '@monaco-editor/react', 'graphql-request'],
+                inline: [
+                    '@inmanta/rappid',
+                    'mermaid',
+                    'monaco-editor',
+                    '@monaco-editor/react',
+                    'graphql-request',
+                    '@patternfly/react-styles'
+                ],
+            },
+        },
+        resolve: {
+            alias: {
+                'monaco-editor': resolve(__dirname, '__mocks__/monaco-editor.js'),
+                '@patternfly/react-log-viewer': resolve(__dirname, '__mocks__/@patternfly/react-log-viewer/index.js'),
+                '@patternfly/react-code-editor': resolve(__dirname, '__mocks__/@patternfly/react-code-editor.js'),
+            },
+        },
+        css: {
+            modules: {
+                classNameStrategy: 'non-scoped',
             },
         },
     },
@@ -128,6 +154,7 @@ export default defineConfig({
             'mermaid',
             '@inmanta/rappid',
             'graphql-request',
+            '@patternfly/react-styles',
         ],
         exclude: [
             '@joint/core',

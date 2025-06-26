@@ -13,7 +13,7 @@ import { words } from "@/UI";
 import { Login } from "./Page";
 
 
-const mockedUsedNavigate = vi.fn();
+const mockedUsedNavigate = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router", () => ({
   ...vi.importActual("react-router"),

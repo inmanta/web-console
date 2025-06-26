@@ -1,4 +1,4 @@
-const mockUseParams = vi.fn();
+const mockUseParams = vi.hoisted(() => vi.fn());
 vi.mock("react-router", () => ({
   ...vi.importActual("react-router"),
   useParams: mockUseParams,

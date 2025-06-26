@@ -1,9 +1,9 @@
 import { RefObject } from "react";
 import { scrollRowIntoView } from "./ScrollRowIntoView";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
-test("GIVEN scrollElementIntoView WHEN provided with valid element as a prameter THEN scrollIntoView executes", () => {
+test("GIVEN scrollElementIntoView WHEN provided with valid element as a parameter THEN scrollIntoView executes", () => {
   const container = document.createElement("span");
   const scrollIntoViewMock = vi.fn();
 

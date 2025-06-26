@@ -2,7 +2,9 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { CodeEditorCopyControl } from "./CodeEditorControls";
 import copy from "copy-to-clipboard";
 
-vi.mock("copy-to-clipboard", () => vi.fn());
+vi.mock("copy-to-clipboard", () => ({
+  default: vi.fn(),
+}));
 
 vi.mock("@patternfly/react-code-editor", () => ({
   CodeEditorControl: ({ onClick, icon, "aria-label": ariaLabel }) => (

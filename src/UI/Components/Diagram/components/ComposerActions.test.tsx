@@ -12,7 +12,7 @@ import { childModel } from "../Mocks";
 import { RelationCounterForCell } from "../interfaces";
 import { ComposerActions } from "./ComposerActions";
 
-const mockedNavigate = vi.fn();
+const mockedNavigate = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router", () => ({
   ...vi.importActual("react-router"),

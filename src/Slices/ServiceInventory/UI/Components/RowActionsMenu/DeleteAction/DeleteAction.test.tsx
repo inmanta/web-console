@@ -8,7 +8,7 @@ import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { DeleteAction } from "./DeleteAction";
 
-const mockedMutate = vi.fn();
+const mockedMutate = vi.hoisted(() => vi.fn());
 
 vi.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
   useDeleteInstance: () => ({ mutate: mockedMutate }),

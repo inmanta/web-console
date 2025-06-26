@@ -1,6 +1,5 @@
-import React, { act, useContext, useEffect } from "react";
+import { act, useContext, useEffect } from "react";
 import { dia } from "@inmanta/rappid";
-import "@testing-library/jest-dom";
 import { screen } from "@testing-library/dom";
 import { render, renderHook } from "@testing-library/react";
 import { ActionEnum, EventActionEnum } from "../interfaces";

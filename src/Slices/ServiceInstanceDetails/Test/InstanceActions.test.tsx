@@ -3,7 +3,7 @@ import { userEvent } from "@testing-library/user-event";
 import { defaultServer, serverFailedActions } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
 
-const mockedUsedNavigate = vi.fn();
+const mockedUsedNavigate = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router", () => ({
   ...vi.importActual("react-router"),

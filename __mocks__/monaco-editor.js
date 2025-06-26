@@ -97,4 +97,11 @@ const monaco = {
   },
 };
 
-module.exports = monaco;
+// Export as both CommonJS and ESM for compatibility
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = monaco;
+  module.exports.default = monaco;
+} else {
+  export default monaco;
+  export { monaco };
+}

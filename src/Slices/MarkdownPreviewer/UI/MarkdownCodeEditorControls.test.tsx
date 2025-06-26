@@ -14,7 +14,9 @@ vi.mock("@patternfly/react-code-editor", () => ({
 }));
 
 // Mock copy-to-clipboard
-vi.mock("copy-to-clipboard", () => vi.fn());
+vi.mock("copy-to-clipboard", () => ({
+  default: vi.fn(),
+}));
 
 afterEach(() => {
   vi.clearAllMocks();

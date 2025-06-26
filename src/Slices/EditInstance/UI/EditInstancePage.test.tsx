@@ -1,5 +1,5 @@
 import { act } from "react";
-import { Router } from "react-router";
+import { useParams } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -7,7 +7,6 @@ import { configureAxe } from "jest-axe";
 import { cloneDeep } from "lodash";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import * as queryModule from "@/Data/Queries/Helpers/useQueries";
 import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -15,10 +14,21 @@ import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
 
-vi.mock("react-router", () => ({
-  ...vi.requireActual("react-router"),
-  useParams: vi.fn(),
+// Mock usePatch before the test
+const mockPatchFn = vi.fn();
+vi.mock("@/Data/Queries/Helpers/useQueries", () => ({
+  usePatch: () => mockPatchFn,
 }));
+
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useParams: vi.fn(),
+  };
+});
+
+const mockedUseParams = vi.mocked(useParams);
 
 const axe = configureAxe({
   rules: {
@@ -126,6 +136,7 @@ describe("EditInstancePage", () => {
   });
   beforeEach(() => {
     vi.clearAllMocks();
+    mockPatchFn.mockClear();
   });
 
   afterAll(() => {
@@ -134,7 +145,7 @@ describe("EditInstancePage", () => {
   });
 
   test("Edit Instance View shows failed state", async () => {
-    vi.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_b", instance });
+    mockedUseParams.mockReturnValue({ service: "service_name_b", instance });
 
     const { component } = setup();
 
@@ -152,7 +163,7 @@ describe("EditInstancePage", () => {
   });
 
   test("EditInstance View shows success form", async () => {
-    vi.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_a", instance });
+    mockedUseParams.mockReturnValue({ service: "service_name_a", instance });
 
     const { component } = setup();
 
@@ -178,10 +189,8 @@ describe("EditInstancePage", () => {
   });
 
   test("Given the EditInstance View When changing a v1 embedded entity Then the correct request is fired", async () => {
-    vi.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_a", instance });
-    const patchMock = vi.fn();
+    mockedUseParams.mockReturnValue({ service: "service_name_a", instance });
 
-    vi.spyOn(queryModule, "usePatch").mockReturnValue(patchMock);
     const { component } = setup();
 
     render(component);
@@ -204,7 +213,7 @@ describe("EditInstancePage", () => {
 
     await userEvent.click(screen.getByText(words("confirm")));
 
-    expect(patchMock).toHaveBeenCalledWith(
+    expect(mockPatchFn).toHaveBeenCalledWith(
       "/lsm/v1/service_inventory/service_name_a/service_instance_id_a?current_version=3",
       { attributes: { bandwidth: "22" } }
     );
@@ -217,10 +226,7 @@ describe("EditInstancePage", () => {
   });
 
   test("Given the EditInstance View When changing a v2 embedded entity Then the correct request  with correct body is fired", async () => {
-    vi.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_d", instance });
-    const patchMock = vi.fn();
-
-    vi.spyOn(queryModule, "usePatch").mockReturnValue(patchMock);
+    mockedUseParams.mockReturnValue({ service: "service_name_d", instance });
 
     const { component } = setup();
 
@@ -267,7 +273,7 @@ describe("EditInstancePage", () => {
       patch_id: expect.any(String),
     };
 
-    expect(patchMock).toHaveBeenCalledWith(
+    expect(mockPatchFn).toHaveBeenCalledWith(
       "/lsm/v2/service_inventory/service_name_d/service_instance_id_a?current_version=3",
       body
     );
@@ -280,9 +286,7 @@ describe("EditInstancePage", () => {
   });
 
   test("Given the EditInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
-    vi
-      .spyOn(Router, "useParams")
-      .mockReturnValue({ service: "service_name_all_attrs", instance });
+    mockedUseParams.mockReturnValue({ service: "service_name_all_attrs", instance });
     const { component } = setup();
 
     render(component);
@@ -487,9 +491,7 @@ describe("EditInstancePage", () => {
   });
 
   test("Given the EditInstance View When adding new nested embedded entity Then the inputs for it are displayed correctly", async () => {
-    vi
-      .spyOn(Router, "useParams")
-      .mockReturnValue({ service: "service_name_all_attrs", instance });
+    mockedUseParams.mockReturnValue({ service: "service_name_all_attrs", instance });
     const { component } = setup();
 
     render(component);
@@ -626,7 +628,7 @@ describe("EditInstancePage", () => {
   });
 
   test("GIVEN the EditInstance View WHEN changing an embedded entity with nested embedded entities THEN the new fields are enabled", async () => {
-    vi.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_c", instance });
+    mockedUseParams.mockReturnValue({ service: "service_name_c", instance });
 
     const { component } = setup();
 

@@ -1,7 +1,7 @@
 import React, { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import { HttpResponse, graphql, http } from "msw";
 import { setupServer } from "msw/node";
 import { defaultAuthContext } from "@/Data/Auth/AuthContext";
@@ -16,8 +16,8 @@ import {
 import { TestMemoryRouter } from "../Routing/TestMemoryRouter";
 import { Root } from "./Root";
 
-jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("mocked_token");
-jest.spyOn(defaultAuthContext, "getUser").mockReturnValue("mocked_user");
+vi.spyOn(defaultAuthContext, "getToken").mockReturnValue("mocked_token");
+vi.spyOn(defaultAuthContext, "getUser").mockReturnValue("mocked_user");
 function setup() {
   const queryClient = new QueryClient();
 
@@ -35,8 +35,6 @@ function setup() {
     component,
   };
 }
-
-expect.extend(toHaveNoViolations);
 
 describe("Root", () => {
   const queryBase = graphql.link("/api/v2/graphql");
@@ -82,11 +80,10 @@ describe("Root", () => {
   afterEach(() => server.resetHandlers());
   afterAll(() => {
     server.close();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("GIVEN the app THEN the app should be accessible", async () => {
-    fetchMock.mockResponse(JSON.stringify({}));
     const { component } = setup();
 
     render(component);
@@ -99,7 +96,6 @@ describe("Root", () => {
   });
 
   test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
-    fetchMock.mockResponse(JSON.stringify({}));
     const { component } = setup();
 
     render(component);
@@ -108,7 +104,6 @@ describe("Root", () => {
   });
 
   test("GIVEN the app THEN the documentation link should be visible", async () => {
-    fetchMock.mockResponse(JSON.stringify({}));
     const { component } = setup();
 
     render(component);

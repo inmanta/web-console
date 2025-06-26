@@ -1,8 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MarkdownContainer } from "./MarkdownContainer";
 
-vi.mock("mermaid");
-
 describe("MarkdownContainer", () => {
   it("renders the Markdown content correctly", () => {
     const markdownContent = "# Heading\n\n**This is some bold text.**";
