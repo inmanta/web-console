@@ -16,9 +16,13 @@ import { Page } from "./Page";
 
 // Mock usePatch before the test
 const mockPatchFn = vi.fn();
-vi.mock("@/Data/Queries/Helpers/useQueries", () => ({
-  usePatch: () => mockPatchFn,
-}));
+vi.mock("@/Data/Queries/Helpers/useQueries", async (importActual) => {
+  const actual = await importActual();
+  return {
+    ...actual,
+    usePatch: () => mockPatchFn,
+  };
+});
 
 vi.mock("react-router", async (importOriginal) => {
   const actual = await importOriginal();

@@ -1,8 +1,11 @@
 const mockUseParams = vi.hoisted(() => vi.fn());
-vi.mock("react-router", () => ({
-  ...vi.importActual("react-router"),
-  useParams: mockUseParams,
-}));
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useParams: mockUseParams,
+  };
+});
 
 import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";

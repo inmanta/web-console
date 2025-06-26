@@ -15,10 +15,13 @@ import { Login } from "./Page";
 
 const mockedUsedNavigate = vi.hoisted(() => vi.fn());
 
-vi.mock("react-router", () => ({
-  ...vi.importActual("react-router"),
-  useNavigate: () => mockedUsedNavigate,
-}));
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useNavigate: () => mockedUsedNavigate,
+  };
+});
 
 const setup = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
   const queryClient = new QueryClient();

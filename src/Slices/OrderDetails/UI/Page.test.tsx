@@ -15,10 +15,13 @@ import {
 import { OrderDetailsPage } from ".";
 
 
-vi.mock("react-router", () => ({
-  ...vi.importActual("react-router"),
-  useParams: vi.fn().mockReturnValue({ id: "1234" }),
-}));
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useParams: vi.fn().mockReturnValue({ id: "1234" }),
+  };
+});
 
 
 const DetailsPage = (

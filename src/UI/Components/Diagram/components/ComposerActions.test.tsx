@@ -13,11 +13,23 @@ import { RelationCounterForCell } from "../interfaces";
 import { ComposerActions } from "./ComposerActions";
 
 const mockedNavigate = vi.hoisted(() => vi.fn());
-
-vi.mock("react-router", () => ({
-  ...vi.importActual("react-router"),
-  useNavigate: () => mockedNavigate,
+const mockedLocation = vi.hoisted(() => ({
+  pathname: "/",
+  search: "?env=aaa",
+  hash: "",
+  state: null,
 }));
+
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useNavigate: () => mockedNavigate,
+    useLocation: () => mockedLocation,
+    Link: actual.Link,
+    NavLink: actual.NavLink,
+  };
+});
 
 describe("ComposerActions.", () => {
   const setup = (
