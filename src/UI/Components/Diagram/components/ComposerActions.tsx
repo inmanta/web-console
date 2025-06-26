@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from "react";
-import "@inmanta/rappid/joint-plus.css";
+import "@rappidcss";
 import { useLocation, useNavigate } from "react-router";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { usePostOrder, usePostMetadata } from "@/Data/Queries";

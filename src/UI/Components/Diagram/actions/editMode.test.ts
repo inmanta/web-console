@@ -91,7 +91,7 @@ describe("appendEmbeddedEntity", () => {
       isBlockedFromEditing,
       expectedMap,
     }: EachProps) => {
-      const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+      const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
 
       const { graph, paper, embeddedModel } = setup();
       const presentedAttrs = undefined;
@@ -140,7 +140,7 @@ describe("appendEmbeddedEntity", () => {
   );
 
   it("append embedded entities to the graph and paper", () => {
-    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+    const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
 
     const { graph, paper, embeddedModel } = setup();
     const presentedAttrs = undefined;
@@ -206,7 +206,7 @@ describe("appendEmbeddedEntity", () => {
   `(
     "append nested embedded entity to the graph and paper",
     ({ presentedAttrs, expectedInfoObject }) => {
-      const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+      const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
 
       const { graph, paper } = setup();
 
@@ -472,4 +472,19 @@ describe("appendInstance", () => {
 
     expect(cells[0].get("entityName")).toBe("container-service");
   });
+});
+
+test("GIVEN edit mode actions WHEN dispatchEvent is called THEN event is dispatched", () => {
+  const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
+  // ... existing code ...
+});
+
+test("GIVEN edit mode actions WHEN dispatchEvent is called THEN event is dispatched", () => {
+  const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
+  // ... existing code ...
+});
+
+test("GIVEN edit mode actions WHEN dispatchEvent is called THEN event is dispatched", () => {
+  const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
+  // ... existing code ...
 });

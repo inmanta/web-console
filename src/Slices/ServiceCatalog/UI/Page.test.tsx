@@ -3,7 +3,7 @@ import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { ServiceModel } from "@/Core";
@@ -14,7 +14,6 @@ import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceCatalogPage } from ".";
 
-expect.extend(toHaveNoViolations);
 
 const [env1] = Environment.filterable.map((env) => env.id);
 

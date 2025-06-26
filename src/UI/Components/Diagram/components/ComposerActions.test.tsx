@@ -1,4 +1,3 @@
-import React from "react";
 import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -12,10 +11,11 @@ import { CanvasContext, defaultCanvasContext, InstanceComposerContext } from "..
 import { childModel } from "../Mocks";
 import { RelationCounterForCell } from "../interfaces";
 import { ComposerActions } from "./ComposerActions";
-const mockedNavigate = jest.fn();
 
-jest.mock("react-router", () => ({
-  ...jest.requireActual("react-router"),
+const mockedNavigate = vi.fn();
+
+vi.mock("react-router", () => ({
+  ...vi.importActual("react-router"),
   useNavigate: () => mockedNavigate,
 }));
 
@@ -62,11 +62,11 @@ describe("ComposerActions.", () => {
       },
     }),
     diagramHandlers: {
-      getCoordinates: jest.fn(),
-      saveAndClearCanvas: jest.fn(),
-      loadState: jest.fn(),
-      addInstance: jest.fn(),
-      editEntity: jest.fn(),
+      getCoordinates: vi.fn(),
+      saveAndClearCanvas: vi.fn(),
+      loadState: vi.fn(),
+      addInstance: vi.fn(),
+      editEntity: vi.fn(),
     } as typeof defaultCanvasContext.diagramHandlers,
     isDirty: true,
     looseElement: new Set<string>(),
@@ -113,9 +113,9 @@ describe("ComposerActions.", () => {
     ${null}           | ${false} | ${null}                  | ${true}  | ${null}
     ${null}           | ${true}  | ${new Set().add("test")} | ${true}  | ${null}
     ${null} | ${true} | ${null} | ${true} | ${new Map().set("test_id", {
-  name: "test",
-  relations: [{ name: "relation-test", currentAmount: 0, min: 1 }],
-})}
+    name: "test",
+    relations: [{ name: "relation-test", currentAmount: 0, min: 1 }],
+  })}
   `(
     "should have deploy button disabled when at least one of conditions are not met",
     ({ serviceOrderItems, isDirty, looseElement, editable, interServiceRelationsOnCanvas }) => {

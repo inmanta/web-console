@@ -1,8 +1,8 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, cleanup } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { defaultAuthContext } from "@/Data";
@@ -11,8 +11,6 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { CatalogActions } from "./CatalogActions";
-
-expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {
@@ -178,7 +176,7 @@ describe("CatalogActions", () => {
   });
 
   test("Given API documentation button with authenticated user, it should include token in href link.", async () => {
-    jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("my-token");
+    vi.spyOn(defaultAuthContext, "getToken").mockReturnValue("my-token");
 
     const { component } = setup();
 

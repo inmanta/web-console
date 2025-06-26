@@ -1,4 +1,4 @@
-import React, { act, useState } from "react";
+import { act, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
@@ -48,9 +48,9 @@ const TestWrapper = () => {
 
 test("Given the AutoCompleteInputProvider When typing an instance name or id Then the correct request is fired", async () => {
   server.listen();
-  const mockFn = jest.fn();
+  const mockFn = vi.fn();
 
-  jest.spyOn(queryModule, "useGet").mockReturnValue(async (path) => {
+  vi.spyOn(queryModule, "useGet").mockReturnValue(async (path) => {
     mockFn(path);
     const response = await fetch(path);
 

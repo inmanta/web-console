@@ -1,12 +1,10 @@
-import React, { act } from "react";
+import { act } from "react";
 import { render, screen } from "@testing-library/react";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { configureAxe } from "vitest-axe";
 import { words } from "@/UI";
 import { MetricName } from "../Core/Domain";
 import { mockedMetrics } from "../Core/Mock";
 import { GraphCard } from "./GraphCard";
-
-expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {

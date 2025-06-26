@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -16,7 +16,7 @@ function inventorySetup(
   attributes: Attributes,
   service?: ServiceModel,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setTab?: jest.Mock<any, any, any>
+  setTab?: ReturnType<typeof vi.fn>
 ) {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -90,7 +90,7 @@ test("TreeTable with 1st level of attributes containing annotations should not r
   };
 
   // mock the setTab function
-  const setTab = jest.fn();
+  const setTab = vi.fn();
 
   render(
     inventorySetup(

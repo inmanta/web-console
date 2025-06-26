@@ -1,18 +1,16 @@
-import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
 import { ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { words } from "@/UI/words";
 import { DeleteAction } from "./DeleteAction";
 
-const mockedMutate = jest.fn();
+const mockedMutate = vi.fn();
 
-//mock is used to assert correct function call
-jest.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
+vi.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
   useDeleteInstance: () => ({ mutate: mockedMutate }),
 }));
 
@@ -30,7 +28,7 @@ function setup(halted: boolean = false) {
                   success: [],
                   info: [],
                   no_label: [],
-                  onClick: jest.fn(),
+                  onClick: vi.fn(),
                 },
               }}
             >

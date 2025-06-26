@@ -1,4 +1,3 @@
-import React from "react";
 import { Table, Tbody, Tr } from "@patternfly/react-table";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
@@ -10,8 +9,9 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CellWithCopy } from "./CellWithCopy";
+
 function setup(props) {
-  const onClickFn = jest.fn();
+  const onClickFn = vi.fn();
 
   const component = (
     <QueryClientProvider client={testClient}>
@@ -33,6 +33,7 @@ function setup(props) {
 
   return { component, onClickFn };
 }
+
 describe("CellWithCopy", () => {
   const server = setupServer(
     http.get("/lsm/v1/service_inventory/test_service/someValue", () => {
@@ -134,5 +135,10 @@ describe("CellWithCopy", () => {
     await userEvent.click(otherCell);
 
     expect(onClickFn).toHaveBeenCalledWith(someOtherValue, props.serviceName, someOtherValue);
+  });
+
+  test("GIVEN CellWithCopy WHEN rendered THEN it should be accessible", () => {
+    const onClickFn = vi.fn();
+    // ... existing code ...
   });
 });

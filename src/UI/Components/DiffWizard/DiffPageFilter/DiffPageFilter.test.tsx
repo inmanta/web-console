@@ -1,4 +1,3 @@
-import React from "react";
 import { render, fireEvent, screen } from "@testing-library/react";
 import { Diff } from "@/Core";
 import { DiffPageFilter } from "./DiffPageFilter";
@@ -10,8 +9,8 @@ describe("DiffPageFilter", () => {
     const { container } = render(
       <DiffPageFilter
         statuses={mockStatuses}
-        setStatuses={() => {}}
-        setSearchFilter={() => {}}
+        setStatuses={() => { }}
+        setSearchFilter={() => { }}
         searchFilter=""
       />
     );
@@ -20,12 +19,12 @@ describe("DiffPageFilter", () => {
   });
 
   it("updates search filter correctly", () => {
-    const setSearchFilterMock = jest.fn();
+    const setSearchFilterMock = vi.fn();
 
     render(
       <DiffPageFilter
         statuses={mockStatuses}
-        setStatuses={() => {}}
+        setStatuses={() => { }}
         setSearchFilter={setSearchFilterMock}
         searchFilter=""
       />

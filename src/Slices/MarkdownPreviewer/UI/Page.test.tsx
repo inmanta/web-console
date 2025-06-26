@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { instanceData } from "@/Slices/ServiceInstanceDetails/Test/mockData";
 import { defaultServer } from "@/Slices/ServiceInstanceDetails/Test/mockServer";
@@ -8,12 +7,12 @@ import { words } from "@/UI/words";
 import { MarkdownPreviewer } from "./MarkdownPreviewer";
 
 // Mock the getThemePreference function
-jest.mock("@/UI/Components/DarkmodeOption", () => ({
-  getThemePreference: jest.fn().mockReturnValue("light"),
+vi.mock("@/UI/Components/DarkmodeOption", () => ({
+  getThemePreference: vi.fn().mockReturnValue("light"),
 }));
 
 // Mock the CodeEditor component to avoid Monaco editor issues
-jest.mock("@patternfly/react-code-editor", () => ({
+vi.mock("@patternfly/react-code-editor", () => ({
   CodeEditor: ({ code, onChange }: { code: string; onChange: (value: string) => void }) => (
     <div data-testid="code-editor">
       <textarea
@@ -88,7 +87,7 @@ describe("MarkdownPreviewer", () => {
 
   it("should handle dark theme correctly", async () => {
     // Override the mock to return dark theme
-    (getThemePreference as jest.Mock).mockReturnValue("dark");
+    (getThemePreference as ReturnType<typeof vi.fn>).mockReturnValue("dark");
 
     render(setup());
 
@@ -123,5 +122,10 @@ describe("MarkdownPreviewer", () => {
       expect(elements).toHaveLength(2); // One in editor, one in preview
       elements.forEach((element) => expect(element).toBeVisible());
     });
+  });
+
+  it("should render with dark theme when theme preference is dark", () => {
+    (getThemePreference as ReturnType<typeof vi.fn>).mockReturnValue("dark");
+    // ... existing code ...
   });
 });

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   QueryClient,
   QueryClientProvider,
@@ -78,14 +77,14 @@ describe("ConfigSectionContent", () => {
   });
 
   test("ConfigTab can reset all settings", async () => {
-    const mockFn = jest.fn().mockImplementation((_url, body) => {
+    const mockFn = vi.fn().mockImplementation((_url, body) => {
       data = {
         ...data,
         ...body.values,
       };
     });
 
-    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+    vi.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
     const { component } = setup();
 
     render(component);
@@ -122,14 +121,14 @@ describe("ConfigSectionContent", () => {
       auto_update_designed: false,
       auto_update_inprogress: false,
     };
-    const mockFn = jest.fn().mockImplementation((_url, body) => {
+    const mockFn = vi.fn().mockImplementation((_url, body) => {
       data = {
         ...data,
         ...body.values,
       };
     });
 
-    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+    vi.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
     const { component } = setup();
 
     render(component);

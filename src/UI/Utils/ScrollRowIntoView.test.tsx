@@ -5,25 +5,25 @@ jest.useFakeTimers();
 
 test("GIVEN scrollElementIntoView WHEN provided with valid element as a prameter THEN scrollIntoView executes", () => {
   const container = document.createElement("span");
-  const scrollIntoViewMock = jest.fn();
+  const scrollIntoViewMock = vi.fn();
 
   window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 
   const useRefSpy: RefObject<HTMLSpanElement> = { current: container };
 
   scrollRowIntoView(useRefSpy);
-  jest.runAllTimers();
+  vi.runAllTimers();
 
-  expect(scrollIntoViewMock).toBeCalled();
+  expect(scrollIntoViewMock).toHaveBeenCalled();
 });
 
 test("GIVEN scrollElementIntoView WHEN run with null parameter THEN function executes scrollIntoView()", () => {
-  const scrollIntoViewMock = jest.fn();
+  const scrollIntoViewMock = vi.fn();
 
   window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 
   const ref: RefObject<HTMLSpanElement> = { current: null };
 
   scrollRowIntoView(ref);
-  expect(scrollIntoViewMock).not.toBeCalled();
+  expect(scrollIntoViewMock).not.toHaveBeenCalled();
 });

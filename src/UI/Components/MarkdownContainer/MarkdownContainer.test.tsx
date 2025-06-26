@@ -1,9 +1,7 @@
-import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MarkdownContainer } from "./MarkdownContainer";
 
-// Mock mermaid module
-jest.mock("mermaid");
+vi.mock("mermaid");
 
 describe("MarkdownContainer", () => {
   it("renders the Markdown content correctly", () => {

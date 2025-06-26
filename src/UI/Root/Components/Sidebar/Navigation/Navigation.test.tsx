@@ -1,13 +1,11 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import { MockedDependencyProvider, MockOrchestratorProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { Navigation } from "./Navigation";
-
-expect.extend(toHaveNoViolations);
 
 function setup(initialEntries?: string[], isCompiling: boolean = false) {
   const queryClient = new QueryClient();
@@ -27,7 +25,7 @@ function setup(initialEntries?: string[], isCompiling: boolean = false) {
 
 describe("Navigation", () => {
   afterAll(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("GIVEN Navigation THEN it should be accessible", async () => {
@@ -74,10 +72,9 @@ describe("Navigation", () => {
   });
 
   test("GIVEN Navigation WHEN no features enabled THEN no extra features are not shown", () => {
-    jest.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(false);
-    jest.spyOn(MockOrchestratorProvider.prototype, "isOrderViewEnabled").mockReturnValue(false);
-    jest
-      .spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled")
+    vi.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(false);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isOrderViewEnabled").mockReturnValue(false);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled")
       .mockReturnValue(false);
 
     const { component } = setup();
@@ -108,10 +105,9 @@ describe("Navigation", () => {
   });
 
   test("GIVEN Navigation WHEN all features are enabled THEN all extra features are shown", () => {
-    jest.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(true);
-    jest.spyOn(MockOrchestratorProvider.prototype, "isOrderViewEnabled").mockReturnValue(true);
-    jest
-      .spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled")
+    vi.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(true);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isOrderViewEnabled").mockReturnValue(true);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled")
       .mockReturnValue(true);
 
     const { component } = setup();

@@ -1,4 +1,3 @@
-import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -37,8 +36,8 @@ describe("Given ExpertBanner", () => {
   });
 
   it("When expert_mode is set to true AND user clicks to disable expert mode it Then should fire mutation function", async () => {
-    const mutateSpy = jest.fn();
-    const spy = jest
+    const mutateSpy = vi.fn();
+    const spy = vi
       .spyOn(useUpdateEnvironmentSetting, "useUpdateEnvironmentSetting")
       .mockReturnValue({
         data: undefined,
@@ -48,7 +47,7 @@ describe("Given ExpertBanner", () => {
         isIdle: false,
         isSuccess: true,
         isPending: false,
-        reset: jest.fn(),
+        reset: vi.fn(),
         isPaused: false,
         context: undefined,
         variables: {
@@ -57,7 +56,7 @@ describe("Given ExpertBanner", () => {
         },
         failureReason: null,
         submittedAt: 0,
-        mutateAsync: jest.fn(),
+        mutateAsync: vi.fn(),
         status: "success",
         mutate: mutateSpy,
       });

@@ -1,19 +1,17 @@
-import React, { act } from "react";
+import { act } from "react";
 import { Router } from "react-router";
 import { Badge, Masthead, Page } from "@patternfly/react-core";
 import { createMemoryHistory } from "@remix-run/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
 import { links, metadata } from "@/Test/Data/Pagination";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Drawer } from "./Drawer";
-
-expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {
@@ -32,8 +30,8 @@ function setup() {
   });
   const history = createMemoryHistory();
 
-  const closeCallback = jest.fn();
-  const toggleCallback = jest.fn();
+  const closeCallback = vi.fn();
+  const toggleCallback = vi.fn();
 
   const component = (
     <QueryClientProvider client={client}>

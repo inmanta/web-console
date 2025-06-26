@@ -1,9 +1,8 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { screen } from "@testing-library/dom";
-import { render, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { KeycloakAuthConfig, LocalConfig } from "@/Data/Auth";
@@ -13,12 +12,11 @@ import { AuthTestWrapper } from "@/Test/Inject";
 import { words } from "@/UI";
 import { Login } from "./Page";
 
-expect.extend(toHaveNoViolations);
 
-const mockedUsedNavigate = jest.fn();
+const mockedUsedNavigate = vi.fn();
 
-jest.mock("react-router", () => ({
-  ...jest.requireActual("react-router"),
+vi.mock("react-router", () => ({
+  ...vi.importActual("react-router"),
   useNavigate: () => mockedUsedNavigate,
 }));
 
@@ -56,7 +54,7 @@ describe("Login", () => {
   });
 
   it("if user login with valid credentials we should set the cookie and navigate to home", async () => {
-    const spiedCreateCookie = jest.spyOn(CookieHelper, "createCookie");
+    const spiedCreateCookie = vi.spyOn(CookieHelper, "createCookie");
 
     const server = setupServer(
       http.post("/api/v2/login", async ({ request }) => {

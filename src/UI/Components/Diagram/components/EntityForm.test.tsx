@@ -1,4 +1,3 @@
-import React from "react";
 import { dia } from "@inmanta/rappid";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
@@ -35,8 +34,8 @@ describe("EntityForm.", () => {
     graph.addCell(cell);
     const cellView = paper.findViewByModel(cell);
 
-    const onRemove = jest.fn();
-    const editEntity = jest.fn().mockReturnValue(cellView.model);
+    const onRemove = vi.fn();
+    const editEntity = vi.fn().mockReturnValue(cellView.model);
 
     const component = (
       <QueryClientProvider client={testClient}>
@@ -46,8 +45,8 @@ describe("EntityForm.", () => {
               value={{
                 ...defaultCanvasContext,
                 diagramHandlers: {
-                  saveAndClearCanvas: () => {},
-                  loadState: () => {},
+                  saveAndClearCanvas: () => { },
+                  loadState: () => { },
                   addInstance: (_services, _instance) => [new ServiceEntityBlock()],
                   getCoordinates: () => getCellsCoordinates(graph),
                   editEntity: (_cell, serviceModel, attributeValues) =>

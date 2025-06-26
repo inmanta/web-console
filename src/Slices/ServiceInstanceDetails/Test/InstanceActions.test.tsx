@@ -3,10 +3,10 @@ import { userEvent } from "@testing-library/user-event";
 import { defaultServer, serverFailedActions } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
 
-const mockedUsedNavigate = jest.fn();
+const mockedUsedNavigate = vi.fn();
 
-jest.mock("react-router", () => ({
-  ...jest.requireActual("react-router"),
+vi.mock("react-router", () => ({
+  ...vi.importActual("react-router"),
   useNavigate: () => mockedUsedNavigate,
 }));
 

@@ -70,7 +70,7 @@ describe("createComposerEntity", () => {
   });
 
   it("creates a new entity with inter-service relations", () => {
-    const dispatchSpy = jest.spyOn(document, "dispatchEvent");
+    const dispatchSpy = vi.spyOn(document, "dispatchEvent");
 
     const childEntity = createComposerEntity({
       serviceModel: childModel,
@@ -95,7 +95,7 @@ describe("createComposerEntity", () => {
   });
 
   it("creates a new entity with inter-service relations from inventory stencil", () => {
-    const dispatchSpy = jest.spyOn(document, "dispatchEvent");
+    const dispatchSpy = vi.spyOn(document, "dispatchEvent");
     const childEntity = createComposerEntity({
       serviceModel: childModel,
       isCore: false,

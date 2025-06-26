@@ -1,9 +1,14 @@
-import React, { act } from "react";
-import Router from "react-router";
+const mockUseParams = vi.fn();
+vi.mock("react-router", () => ({
+  ...vi.importActual("react-router"),
+  useParams: mockUseParams,
+}));
+
+import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import * as queryModule from "@/Data/Queries/Helpers/useQueries";
@@ -13,12 +18,6 @@ import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
 
-jest.mock("react-router", () => ({
-  ...jest.requireActual("react-router"),
-  useParams: jest.fn(),
-}));
-
-expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {
@@ -63,7 +62,7 @@ describe("DuplicateInstancePage", () => {
   afterAll(() => server.close());
 
   test("Duplicate Instance View shows failed state", async () => {
-    jest.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_a", instance });
+    mockUseParams.mockReturnValue({ service: "service_name_a", instance });
 
     server.use(
       http.get(
@@ -89,11 +88,11 @@ describe("DuplicateInstancePage", () => {
   });
 
   test("DuplicateInstance View shows success form", async () => {
-    jest.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_a", instance });
+    mockUseParams.mockReturnValue({ service: "service_name_a", instance });
 
-    const mockFn = jest.fn().mockResolvedValue({ data: ServiceInstance.a });
+    const mockFn = vi.fn().mockResolvedValue({ data: ServiceInstance.a });
 
-    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+    vi.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
 
     server.use(
       http.get(
@@ -173,10 +172,10 @@ describe("DuplicateInstancePage", () => {
   });
 
   test("Given the DuplicateInstance View When changing a embedded entity Then the correct request is fired", async () => {
-    jest.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_a", instance });
-    const mockFn = jest.fn().mockResolvedValue({ data: ServiceInstance.a });
+    mockUseParams.mockReturnValue({ service: "service_name_a", instance });
+    const mockFn = vi.fn().mockResolvedValue({ data: ServiceInstance.a });
 
-    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+    vi.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
     server.use(
       http.get(
         "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
@@ -261,12 +260,10 @@ describe("DuplicateInstancePage", () => {
   });
 
   test("Given the DuplicateInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
-    jest
-      .spyOn(Router, "useParams")
-      .mockReturnValue({ service: "service_name_all_attrs", instance });
-    const mockFn = jest.fn().mockResolvedValue({ data: ServiceInstance.allAttrs });
+    mockUseParams.mockReturnValue({ service: "service_name_all_attrs", instance });
+    const mockFn = vi.fn().mockResolvedValue({ data: ServiceInstance.allAttrs });
 
-    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+    vi.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
 
     server.use(
       http.get(
@@ -442,5 +439,78 @@ describe("DuplicateInstancePage", () => {
         name: "Delete",
       })
     ).toBeEnabled();
+  });
+
+  test("GIVEN DuplicateInstance page WHEN user submits form THEN instance is duplicated", async () => {
+    mockUseParams.mockReturnValue({ service: "service_name_a", instance });
+    const mockFn = vi.fn().mockResolvedValue({ data: ServiceInstance.a });
+
+    vi.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
+    server.use(
+      http.get(
+        "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+        () => {
+          return HttpResponse.json({ data: ServiceInstance.a });
+        }
+      )
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    expect(
+      await screen.findByRole("generic", { name: "DuplicateInstance-Success" })
+    ).toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    await userEvent.click(screen.getByText(words("confirm")));
+
+    expect(mockFn).toHaveBeenCalledWith("/lsm/v1/service_inventory/service_name_a", {
+      attributes: {
+        bandwidth: "3",
+        circuits: [
+          {
+            csp_endpoint: {
+              attributes: { owner_account_id: "666023226898" },
+              cloud_service_provider: "AWS",
+              ipx_access: [1000010782, 1000013639],
+              region: "us-east-1",
+            },
+            customer_endpoint: {
+              encapsulation: "qinq",
+              inner_vlan: 567,
+              ipx_access: 1000312922,
+              outer_vlan: 1234,
+            },
+            service_id: 9489784960,
+          },
+          {
+            csp_endpoint: {
+              attributes: { owner_account_id: "666023226898" },
+              cloud_service_provider: "AWS",
+              ipx_access: [1000010782, 1000013639],
+              region: "us-east-1",
+            },
+            customer_endpoint: {
+              encapsulation: "qinq",
+              inner_vlan: 567,
+              ipx_access: 1000312923,
+              outer_vlan: 1234,
+            },
+            service_id: 5527919402,
+          },
+        ],
+        customer_locations: "",
+        iso_release: "",
+        network: "local",
+        order_id: 9764848531585,
+      },
+    });
   });
 });

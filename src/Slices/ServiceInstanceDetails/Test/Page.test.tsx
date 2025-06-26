@@ -1,7 +1,7 @@
 import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import {
   defaultServer,
   errorServerHistory,
@@ -10,8 +10,6 @@ import {
   serverWithDocumentation,
 } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
-
-expect.extend(toHaveNoViolations);
 
 describe("ServiceInstanceDetailsPage", () => {
   it("Should render the view in its loading states", async () => {
@@ -302,7 +300,7 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 2");
 
     expect(
-      screen.getByText(/this version doesn’t contain documentation for topography yet\./i)
+      screen.getByText(/this version doesn't contain documentation for topography yet\./i)
     ).toBeVisible();
 
     // in this version, topography attribute didn't exist yet in any attribute set, but is available in the ServiceModel.
@@ -311,7 +309,7 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 1");
 
     expect(
-      screen.getByText(/this version doesn’t contain documentation for topography yet\./i)
+      screen.getByText(/this version doesn't contain documentation for topography yet\./i)
     ).toBeVisible();
 
     // Events
