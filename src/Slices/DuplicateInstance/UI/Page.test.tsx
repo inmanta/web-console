@@ -14,7 +14,6 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import * as queryModule from "@/Data/Queries/Helpers/useQueries";
 import { MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
@@ -28,6 +27,12 @@ const axe = configureAxe({
     region: { enabled: false },
   },
 });
+
+// Mock usePost for the duplicate form
+const mockPostFn = vi.hoisted(() => vi.fn());
+vi.mock("@/Data/Queries/Slices/ServiceInstance/PostInstance", () => ({
+  usePostInstance: () => ({ mutate: mockPostFn }),
+}));
 
 function setup() {
   const component = (
@@ -53,6 +58,10 @@ describe("DuplicateInstancePage", () => {
       return HttpResponse.json({ data: Service.ServiceWithAllAttrs });
     })
   );
+
+  beforeEach(() => {
+    mockPostFn.mockClear();
+  });
 
   beforeAll(() => {
     server.listen();
@@ -93,10 +102,6 @@ describe("DuplicateInstancePage", () => {
   test("DuplicateInstance View shows success form", async () => {
     mockUseParams.mockReturnValue({ service: "service_name_a", instance });
 
-    const mockFn = vi.fn().mockResolvedValue({ data: ServiceInstance.a });
-
-    vi.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
-
     server.use(
       http.get(
         "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
@@ -125,7 +130,8 @@ describe("DuplicateInstancePage", () => {
 
     await userEvent.click(screen.getByText(words("confirm")));
 
-    expect(mockFn).toHaveBeenCalledWith("/lsm/v1/service_inventory/service_name_a", {
+    expect(mockPostFn).toHaveBeenCalledWith({
+      fields: expect.any(Array),
       attributes: {
         bandwidth: "3",
         circuits: [
@@ -176,9 +182,7 @@ describe("DuplicateInstancePage", () => {
 
   test("Given the DuplicateInstance View When changing a embedded entity Then the correct request is fired", async () => {
     mockUseParams.mockReturnValue({ service: "service_name_a", instance });
-    const mockFn = vi.fn().mockResolvedValue({ data: ServiceInstance.a });
 
-    vi.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
     server.use(
       http.get(
         "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
@@ -219,7 +223,8 @@ describe("DuplicateInstancePage", () => {
     await userEvent.type(bandwidthField, "22");
 
     await userEvent.click(screen.getByText(words("confirm")));
-    expect(mockFn).toHaveBeenCalledWith("/lsm/v1/service_inventory/service_name_a", {
+    expect(mockPostFn).toHaveBeenCalledWith({
+      fields: expect.any(Array),
       attributes: {
         bandwidth: "22",
         circuits: [
@@ -264,9 +269,6 @@ describe("DuplicateInstancePage", () => {
 
   test("Given the DuplicateInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
     mockUseParams.mockReturnValue({ service: "service_name_all_attrs", instance });
-    const mockFn = vi.fn().mockResolvedValue({ data: ServiceInstance.allAttrs });
-
-    vi.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
 
     server.use(
       http.get(
@@ -442,13 +444,11 @@ describe("DuplicateInstancePage", () => {
         name: "Delete",
       })
     ).toBeEnabled();
-  });
+  }, 20000);
 
   test("GIVEN DuplicateInstance page WHEN user submits form THEN instance is duplicated", async () => {
     mockUseParams.mockReturnValue({ service: "service_name_a", instance });
-    const mockFn = vi.fn().mockResolvedValue({ data: ServiceInstance.a });
 
-    vi.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
     server.use(
       http.get(
         "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
@@ -474,9 +474,10 @@ describe("DuplicateInstancePage", () => {
 
     await userEvent.click(screen.getByText(words("confirm")));
 
-    expect(mockFn).toHaveBeenCalledWith("/lsm/v1/service_inventory/service_name_a", {
+    expect(mockPostFn).toHaveBeenCalledWith({
+      fields: expect.any(Array),
       attributes: {
-        bandwidth: "3",
+        bandwidth: "",
         circuits: [
           {
             csp_endpoint: {

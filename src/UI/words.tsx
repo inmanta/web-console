@@ -264,7 +264,7 @@ const dict = {
   "instanceDetails.tabs.disabled.resources-tooltip":
     "This tab is only available for the latest version.",
   "instanceDetails.documentation.noAttributeForVersion": (attributeName) =>
-    `This version doesn't contain documentation for ${attributeName} yet.`,
+    `There is no documentation for ${attributeName} in this version.`,
   "instanceDetails.documentation.openPreviewer": "Open in Previewer",
   active_attributes: "Active",
   candidate_attributes: "Candidate",

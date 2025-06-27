@@ -39,6 +39,10 @@ export default defineConfig({
             // Force uuid to use CJS entry point
             'uuid': 'uuid',
             '@rappidcss': resolve(__dirname, 'node_modules/@inmanta/rappid/joint-plus.css'),
+            // Only mock monaco-editor in test environment
+            ...(process.env.NODE_ENV === 'test' ? {
+                'monaco-editor': resolve(__dirname, '__mocks__/monaco-editor.mjs'),
+            } : {}),
         },
     },
     server: {
@@ -133,9 +137,9 @@ export default defineConfig({
         },
         resolve: {
             alias: {
-                'monaco-editor': resolve(__dirname, '__mocks__/monaco-editor.js'),
                 '@patternfly/react-log-viewer': resolve(__dirname, '__mocks__/@patternfly/react-log-viewer/index.js'),
                 '@patternfly/react-code-editor': resolve(__dirname, '__mocks__/@patternfly/react-code-editor.js'),
+                'monaco-editor': resolve(__dirname, '__mocks__/monaco-editor.mjs'),
             },
         },
         css: {

@@ -4,6 +4,9 @@ import React from 'react';
 
 import 'jest-axe/extend-expect';
 
+// Import PatternFly CSS to ensure CSS variables are available in tests
+import "@patternfly/react-core/dist/styles/base.css";
+
 // Define mocks using vi.hoisted to ensure they're available during hoisting
 const logViewerMock = vi.hoisted(() => ({
     LogViewer: ({ data, toolbar, onScroll, hasLineNumbers = false, scrollToRow }) => {
@@ -167,8 +170,8 @@ vi.mock("@patternfly/react-code-editor", () => codeEditorMock);
 
 // Mock mermaid
 vi.mock("mermaid", () => ({
-  default: {
-    initialize: vi.fn(),
-    render: vi.fn().mockResolvedValue({ svg: "<svg>Mock Mermaid Diagram</svg>" }),
-  },
+    default: {
+        initialize: vi.fn(),
+        render: vi.fn().mockResolvedValue({ svg: "<svg>Mock Mermaid Diagram</svg>" }),
+    },
 }));

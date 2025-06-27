@@ -10,7 +10,7 @@ declare global {
   const COMMITHASH: string;
   const APP_VERSION: string;
     
-    // itest globals
+    // vitest globals
     const vi: typeof import('vitest')['vi'];
 }
 
