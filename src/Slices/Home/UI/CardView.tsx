@@ -20,7 +20,7 @@ import { PlusCircleIcon } from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { words } from "@/UI/words";
-import fallBackImage from "/images/inmanta-wings.svg";
+import fallBackImage from "@images/inmanta-wings.svg";
 
 interface Props {
   environments: FlatEnvironment[];

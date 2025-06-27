@@ -1,4 +1,5 @@
 import "@patternfly/react-core/dist/styles/base.css";
+import "monaco-editor/min/vs/editor/editor.main.css";
 import "@/Core/Language/Extensions";
 import React from "react";
 import loader from "@monaco-editor/loader";
@@ -18,13 +19,13 @@ self.MonacoEnvironment = {
   getWorkerUrl: function (moduleId, label) {
     switch (label) {
       case 'json':
-        return '/monaco-editor-workers/jsonWorker.js';
+        return './jsonWorker.js';
       case 'xml':
-        return '/monaco-editor-workers/xmlWorker.js';
+        return './xmlWorker.js';
       case 'python':
-        return '/monaco-editor-workers/pythonWorker.js';
+        return './pythonWorker.js';
       default:
-        return '/monaco-editor-workers/editor.worker.js';
+        return './editor.worker.js';
     }
   }
 };

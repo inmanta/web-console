@@ -2,6 +2,7 @@ import { defineConfig, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { execSync } from 'child_process';
+import { copyFileSync, existsSync } from 'fs';
 
 // Get git commit hash
 const getGitCommitHash = () => {
@@ -15,10 +16,40 @@ const getGitCommitHash = () => {
 // Get package version
 const packageJson = require('./package.json');
 
+// Custom plugin to copy monaco workers to dist root
+const monacoWorkersPlugin = () => {
+    return {
+        name: 'monaco-workers',
+        closeBundle() {
+            const workersDir = resolve(__dirname, 'public/monaco-editor-workers');
+            const distDir = resolve(__dirname, 'dist');
+
+            if (existsSync(workersDir)) {
+                const files = ['editor.worker.js', 'jsonWorker.js', 'xmlWorker.js', 'pythonWorker.js'];
+                files.forEach(file => {
+                    const src = resolve(workersDir, file);
+                    const dest = resolve(distDir, file);
+                    if (existsSync(src)) {
+                        try {
+                            copyFileSync(src, dest);
+                            console.log(`Copied ${file} to dist root`);
+                        } catch (error) {
+                            console.error(`Failed to copy ${file}:`, error);
+                        }
+                    }
+                });
+            }
+        }
+    };
+};
+
 export default defineConfig({
     plugins: [
-        react()
+        react(),
+        monacoWorkersPlugin()
     ],
+    base: './',
+    publicDir: 'public',
     define: {
         COMMITHASH: JSON.stringify(getGitCommitHash()),
         APP_VERSION: JSON.stringify(packageJson.version),
@@ -86,13 +117,32 @@ export default defineConfig({
     build: {
         outDir: 'dist',
         sourcemap: true,
+        assetsInlineLimit: 4096, // Inline assets smaller than 4kb
+        cssCodeSplit: true, // Enable CSS code splitting
         rollupOptions: {
-            external: ['@inmanta/rappid'],
             output: {
+                assetFileNames: (assetInfo) => {
+                    // Output assets directly to dist root, similar to webpack
+                    if (!assetInfo.name) return 'assets/[name].[hash].[ext]';
+                    const info = assetInfo.name.split('.');
+                    const ext = info[info.length - 1];
+                    // Handle CSS, images, and other assets
+                    if (/\.(css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/.test(assetInfo.name)) {
+                        return `${info[0]}.${ext}`;
+                    }
+                    return `${info[0]}.${ext}`;
+                },
+                chunkFileNames: '[name].[hash].js',
+                entryFileNames: '[name].[hash].js',
                 manualChunks: {
                     vendor: ['react', 'react-dom'],
-                    patternfly: ['@patternfly/react-core', '@patternfly/react-icons'],
+                    patternfly: ['@patternfly/react-core', '@patternfly/react-icons', '@patternfly/react-styles', '@patternfly/react-table', '@patternfly/react-tokens'],
                     monaco: ['@monaco-editor/react', 'monaco-editor'],
+                    rappid: ['@inmanta/rappid'],
+                    utils: ['lodash', 'lodash-es', 'uuid', 'moment', 'moment-timezone', 'bignumber.js'],
+                    graphql: ['graphql', 'graphql-request'],
+                    routing: ['react-router', '@remix-run/router'],
+                    state: ['easy-peasy', '@tanstack/react-query'],
                 },
             },
         },
@@ -162,7 +212,6 @@ export default defineConfig({
         ],
         exclude: [
             '@joint/core',
-            '@tanstack/react-query',
         ],
         force: true,
     },
