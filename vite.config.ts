@@ -2,7 +2,7 @@ import { defineConfig, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { execSync } from 'child_process';
-import { copyFileSync, existsSync } from 'fs';
+import { copyFileSync, mkdirSync, existsSync, writeFileSync } from 'fs';
 
 // Get git commit hash
 const getGitCommitHash = () => {
@@ -22,8 +22,10 @@ const monacoWorkersPlugin = () => {
         name: 'monaco-workers',
         closeBundle() {
             const workersDir = resolve(__dirname, 'public/monaco-editor-workers');
+            const imagesDir = resolve(__dirname, 'public/images');
             const distDir = resolve(__dirname, 'dist');
 
+            // Copy monaco workers
             if (existsSync(workersDir)) {
                 const files = ['editor.worker.js', 'jsonWorker.js', 'xmlWorker.js', 'pythonWorker.js'];
                 files.forEach(file => {
@@ -32,12 +34,52 @@ const monacoWorkersPlugin = () => {
                     if (existsSync(src)) {
                         try {
                             copyFileSync(src, dest);
-                            console.log(`Copied ${file} to dist root`);
                         } catch (error) {
                             console.error(`Failed to copy ${file}:`, error);
                         }
                     }
                 });
+            }
+
+            // Copy favicon.ico
+            const faviconSrc = resolve(imagesDir, 'favicon.ico');
+            const faviconDest = resolve(distDir, 'favicon.ico');
+            if (existsSync(faviconSrc)) {
+                try {
+                    copyFileSync(faviconSrc, faviconDest);
+                } catch (error) {
+                    console.error('Failed to copy favicon.ico:', error);
+                }
+            }
+        }
+    };
+};
+
+// Custom plugin to generate version.json
+const versionPlugin = () => {
+    return {
+        name: 'version-generator',
+        closeBundle() {
+            const distDir = resolve(__dirname, 'dist');
+            const buildDate = new Date().toISOString();
+            const version = packageJson.version;
+            const commitHash = getGitCommitHash();
+
+            const versionJson = {
+                version_info: {
+                    buildDate: buildDate,
+                    version: version,
+                    commitHash: commitHash
+                }
+            };
+
+            try {
+                writeFileSync(
+                    resolve(distDir, 'version.json'),
+                    JSON.stringify(versionJson, null, 2)
+                );
+            } catch (error) {
+                console.error('Failed to generate version.json:', error);
             }
         }
     };
@@ -46,7 +88,8 @@ const monacoWorkersPlugin = () => {
 export default defineConfig({
     plugins: [
         react(),
-        monacoWorkersPlugin()
+        monacoWorkersPlugin(),
+        versionPlugin()
     ],
     base: './',
     publicDir: 'public',
