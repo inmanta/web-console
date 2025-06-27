@@ -1249,13 +1249,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/busboy@npm:^2.0.0":
-  version: 2.1.1
-  resolution: "@fastify/busboy@npm:2.1.1"
-  checksum: 10/2bb8a7eca8289ed14c9eb15239bc1019797454624e769b39a0b90ed204d032403adc0f8ed0d2aef8a18c772205fa7808cf5a1b91f21c7bfc7b6032150b1062c5
-  languageName: node
-  linkType: hard
-
 "@gar/promisify@npm:^1.1.3":
   version: 1.1.3
   resolution: "@gar/promisify@npm:1.1.3"
@@ -1373,7 +1366,6 @@ __metadata:
     "@testing-library/jest-dom": "npm:^6.6.3"
     "@testing-library/react": "npm:^16.3.0"
     "@testing-library/user-event": "npm:^14.5.2"
-    "@types/fetch-mock": "npm:^7.3.8"
     "@types/file-saver": "npm:^2.0.7"
     "@types/jest-axe": "npm:^3.5.9"
     "@types/json-bigint": "npm:^1.0.4"
@@ -1405,7 +1397,6 @@ __metadata:
     eslint-plugin-react: "npm:^7.37.5"
     eslint-plugin-react-hooks: "npm:^5.2.0"
     eslint-plugin-testing-library: "npm:^7.2.0"
-    fetch-mock: "npm:^11.1.5"
     file-saver: "npm:^2.0.5"
     globals: "npm:^15.9.0"
     graphql: "npm:^16.11.0"
@@ -1427,7 +1418,6 @@ __metadata:
     moment: "npm:^2.30.1"
     moment-timezone: "npm:^0.5.45"
     monaco-editor: "npm:^0.52.2"
-    monaco-editor-webpack-plugin: "npm:^7.1.0"
     msw: "npm:^2.3.2"
     prettier: "npm:^3.3.3"
     process: "npm:^0.11.10"
@@ -1445,7 +1435,6 @@ __metadata:
     ts-prune: "npm:^0.10.3"
     typescript: "npm:^5.4.5"
     typescript-eslint: "npm:^8.13.0"
-    undici: "npm:^5"
     uuid: "npm:^10.0.0"
     victory: "npm:^37.3.6"
     vite: "npm:^5.2.8"
@@ -2742,13 +2731,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/fetch-mock@npm:^7.3.8":
-  version: 7.3.8
-  resolution: "@types/fetch-mock@npm:7.3.8"
-  checksum: 10/de8f44a697b2276c81d2e1ce63e3d2805b5d33b9405f2b313619d58da241e21fdc97402d722b8d17c28e4747cb65d129784d22cf8e5b04f0866b9a219a89e4bd
-  languageName: node
-  linkType: hard
-
 "@types/file-saver@npm:^2.0.7":
   version: 2.0.7
   resolution: "@types/file-saver@npm:2.0.7"
@@ -2760,13 +2742,6 @@ __metadata:
   version: 7946.0.16
   resolution: "@types/geojson@npm:7946.0.16"
   checksum: 10/34d07421bdd60e7b99fa265441d17ac6e9aef48e3ce22d04324127d0de1daf7fbaa0bd3be1cece2092eb6995f21da84afa5231e24621a2910ff7340bc98f496f
-  languageName: node
-  linkType: hard
-
-"@types/glob-to-regexp@npm:^0.4.4":
-  version: 0.4.4
-  resolution: "@types/glob-to-regexp@npm:0.4.4"
-  checksum: 10/be9c924d664592a16129c825aa392365335ce455c34e1c9d3f6dd8b45371088bb5d4a45bbb576559f2b63d4f8bcf464cbd5baafb08cdf89b71d3b6a79356b747
   languageName: node
   linkType: hard
 
@@ -4111,13 +4086,6 @@ __metadata:
   dependencies:
     tweetnacl: "npm:^0.14.3"
   checksum: 10/13a4cde058250dbf1fa77a4f1b9a07d32ae2e3b9e28e88a0c7a1827835bc3482f3e478c4a0cfd4da6ff0c46dae07da1061123a995372b32cc563d9975f975404
-  languageName: node
-  linkType: hard
-
-"big.js@npm:^5.2.2":
-  version: 5.2.2
-  resolution: "big.js@npm:5.2.2"
-  checksum: 10/c04416aeb084f4aa1c5857722439c327cc0ada9bd99ab80b650e3f30e2e4f1b92a04527ed1e7df8ffcd7c0ea311745a04af12d53e2f091bf09a06f1292003827
   languageName: node
   linkType: hard
 
@@ -5957,13 +5925,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"emojis-list@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "emojis-list@npm:3.0.0"
-  checksum: 10/114f47d6d45612621497d2b1556c8f142c35332a591780a54e863e42d281e72d6c7d7c419f2e419319d4eb7f6ebf1db82d9744905d90f275db20d06a763b5e19
-  languageName: node
-  linkType: hard
-
 "encoding@npm:^0.1.13":
   version: 0.1.13
   resolution: "encoding@npm:0.1.13"
@@ -6932,22 +6893,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fetch-mock@npm:^11.1.5":
-  version: 11.1.5
-  resolution: "fetch-mock@npm:11.1.5"
-  dependencies:
-    "@types/glob-to-regexp": "npm:^0.4.4"
-    dequal: "npm:^2.0.3"
-    glob-to-regexp: "npm:^0.4.1"
-    is-subset: "npm:^0.1.1"
-    regexparam: "npm:^3.0.0"
-  peerDependenciesMeta:
-    node-fetch:
-      optional: true
-  checksum: 10/06e3dc58a0ab1b13b0a71f3e76b70f5f500c448755c5d519d00ea482470e51de87505190714820c3d6e33ccf8d2e96ee34cbd768e05ccff562ff4cf4088f3801
-  languageName: node
-  linkType: hard
-
 "fflate@npm:^0.8.1":
   version: 0.8.2
   resolution: "fflate@npm:0.8.2"
@@ -7460,13 +7405,6 @@ __metadata:
   dependencies:
     is-glob: "npm:^4.0.1"
   checksum: 10/32cd106ce8c0d83731966d31517adb766d02c3812de49c30cfe0675c7c0ae6630c11214c54a5ae67aca882cf738d27fd7768f21aa19118b9245950554be07247
-  languageName: node
-  linkType: hard
-
-"glob-to-regexp@npm:^0.4.1":
-  version: 0.4.1
-  resolution: "glob-to-regexp@npm:0.4.1"
-  checksum: 10/9009529195a955c40d7b9690794aeff5ba665cc38f1519e111c58bb54366fd0c106bde80acf97ba4e533208eb53422c83b136611a54c5fefb1edd8dc267cb62e
   languageName: node
   linkType: hard
 
@@ -8406,13 +8344,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-subset@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "is-subset@npm:0.1.1"
-  checksum: 10/cce9aeb579b5676af9237e77a106d2721bfb34ec12b0e90d858b2585472ca223002b5a54da1203460749db8bb525ee5fa96ec8306c714f0170650a131f1be413
-  languageName: node
-  linkType: hard
-
 "is-symbol@npm:^1.0.2, is-symbol@npm:^1.0.3":
   version: 1.0.4
   resolution: "is-symbol@npm:1.0.4"
@@ -9091,17 +9022,6 @@ __metadata:
     rfdc: "npm:^1.4.1"
     wrap-ansi: "npm:^9.0.0"
   checksum: 10/c76542f18306195e464fe10203ee679a7beafa9bf0dc679ebacb416387cca8f5307c1d8ba35483d26ba611dc2fac5a1529733dce28f2660556082fb7eebb79f9
-  languageName: node
-  linkType: hard
-
-"loader-utils@npm:2.0.4 || 1.4.2":
-  version: 2.0.4
-  resolution: "loader-utils@npm:2.0.4"
-  dependencies:
-    big.js: "npm:^5.2.2"
-    emojis-list: "npm:^3.0.0"
-    json5: "npm:^2.1.2"
-  checksum: 10/28bd9af2025b0cb2fc6c9c2d8140a75a3ab61016e5a86edf18f63732216e985a50bf2479a662555beb472a54d12292e380423705741bfd2b54cab883aa067f18
   languageName: node
   linkType: hard
 
@@ -9848,18 +9768,6 @@ __metadata:
   version: 2.30.1
   resolution: "moment@npm:2.30.1"
   checksum: 10/ae42d876d4ec831ef66110bdc302c0657c664991e45cf2afffc4b0f6cd6d251dde11375c982a5c0564ccc0fa593fc564576ddceb8c8845e87c15f58aa6baca69
-  languageName: node
-  linkType: hard
-
-"monaco-editor-webpack-plugin@npm:^7.1.0":
-  version: 7.1.0
-  resolution: "monaco-editor-webpack-plugin@npm:7.1.0"
-  dependencies:
-    loader-utils: "npm:^2.0.2"
-  peerDependencies:
-    monaco-editor: ">= 0.31.0"
-    webpack: ^4.5.0 || 5.x
-  checksum: 10/d73ebac884d130bcff1bf9503f061c085aeee1121277994ec20f63166f228dd44224a220be6bf1c39a98d49277a38dbc9cc6a45623578b18f80ec21a22a79847
   languageName: node
   linkType: hard
 
@@ -11135,13 +11043,6 @@ __metadata:
     gopd: "npm:^1.2.0"
     set-function-name: "npm:^2.0.2"
   checksum: 10/8ab897ca445968e0b96f6237641510f3243e59c180ee2ee8d83889c52ff735dd1bf3657fcd36db053e35e1d823dd53f2565d0b8021ea282c9fe62401c6c3bd6d
-  languageName: node
-  linkType: hard
-
-"regexparam@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "regexparam@npm:3.0.0"
-  checksum: 10/80574803cb9f31d1ec7b10ce1db5be629868794ce331c7098fd9725c4c0891347c2fedc18b17de17bda2441da6ef30218b1ad2d481a4081e33ef773de04f9082
   languageName: node
   linkType: hard
 
@@ -12883,15 +12784,6 @@ __metadata:
   version: 7.8.0
   resolution: "undici-types@npm:7.8.0"
   checksum: 10/fcff3fbab234f067fbd69e374ee2c198ba74c364ceaf6d93db7ca267e784457b5518cd01d0d2329b075f412574205ea3172a9a675facb49b4c9efb7141cd80b7
-  languageName: node
-  linkType: hard
-
-"undici@npm:^5.29.0":
-  version: 5.29.0
-  resolution: "undici@npm:5.29.0"
-  dependencies:
-    "@fastify/busboy": "npm:^2.0.0"
-  checksum: 10/0ceca8924a32acdcc0cfb8dd2d368c217840970aa3f5e314fc169608474be6341c5b8e50cad7bd257dbe3b4e432bc5d0a0d000f83644b54fa11a48735ec52b93
   languageName: node
   linkType: hard
 
