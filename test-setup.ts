@@ -53,18 +53,18 @@ const codeEditorMock = vi.hoisted(() => ({
       { "data-testid": "code-editor", style: { height }, ...props },
       React.createElement("pre", { "data-testid": "code-editor-content" }, code),
       customControls &&
-      React.createElement(
-        "div",
-        { "data-testid": "code-editor-custom-controls" },
-        customControls
-      ),
+        React.createElement(
+          "div",
+          { "data-testid": "code-editor-custom-controls" },
+          customControls
+        ),
       onChange &&
-      React.createElement("textarea", {
-        "data-testid": "code-editor-textarea",
-        value: code,
-        onChange: (event) => onChange(event.target.value),
-        style: { display: "none" },
-      })
+        React.createElement("textarea", {
+          "data-testid": "code-editor-textarea",
+          value: code,
+          onChange: (event) => onChange(event.target.value),
+          style: { display: "none" },
+        })
     );
   },
   CodeEditorControl: ({ onClick, icon, "aria-label": ariaLabel, tooltipProps, ...props }) =>
