@@ -18,63 +18,63 @@ import ErrorBoundary from "./UI/Utils/ErrorBoundary";
 self.MonacoEnvironment = {
   getWorkerUrl: function (moduleId, label) {
     switch (label) {
-      case 'json':
-        return './jsonWorker.js';
-      case 'xml':
-        return './xmlWorker.js';
-      case 'python':
-        return './pythonWorker.js';
+      case "json":
+        return "./jsonWorker.js";
+      case "xml":
+        return "./xmlWorker.js";
+      case "python":
+        return "./pythonWorker.js";
       default:
-        return './editor.worker.js';
+        return "./editor.worker.js";
     }
-  }
+  },
 };
 
 // Register JSON language
-monaco.languages.register({ id: 'json' });
-monaco.languages.setMonarchTokensProvider('json', {
+monaco.languages.register({ id: "json" });
+monaco.languages.setMonarchTokensProvider("json", {
   tokenizer: {
     root: [
-      [/[{}]/, 'delimiter.bracket'],
-      [/[[\]]/, 'delimiter.array'],
-      [/:/, 'delimiter'],
-      [/,/, 'delimiter'],
-      [/"[^"]*"/, 'string'],
-      [/true|false|null/, 'keyword'],
-      [/\d+/, 'number']
-    ]
-  }
+      [/[{}]/, "delimiter.bracket"],
+      [/[[\]]/, "delimiter.array"],
+      [/:/, "delimiter"],
+      [/,/, "delimiter"],
+      [/"[^"]*"/, "string"],
+      [/true|false|null/, "keyword"],
+      [/\d+/, "number"],
+    ],
+  },
 });
 
 // Register XML language
-monaco.languages.register({ id: 'xml' });
-monaco.languages.setMonarchTokensProvider('xml', {
+monaco.languages.register({ id: "xml" });
+monaco.languages.setMonarchTokensProvider("xml", {
   tokenizer: {
     root: [
-      [/</, 'delimiter'],
-      [/>/, 'delimiter'],
-      [/[^<>]+/, 'string']
-    ]
-  }
+      [/</, "delimiter"],
+      [/>/, "delimiter"],
+      [/[^<>]+/, "string"],
+    ],
+  },
 });
 
 // Register Python language
-monaco.languages.register({ id: 'python' });
-monaco.languages.setMonarchTokensProvider('python', {
+monaco.languages.register({ id: "python" });
+monaco.languages.setMonarchTokensProvider("python", {
   tokenizer: {
     root: [
-      [/#.*$/, 'comment'],
-      [/def|class|if|else|elif|for|while|try|except|finally|with|as|import|from/, 'keyword'],
-      [/True|False|None/, 'keyword'],
-      [/"[^"]*"/, 'string'],
-      [/'[^']*'/, 'string'],
-      [/\d+/, 'number']
-    ]
-  }
+      [/#.*$/, "comment"],
+      [/def|class|if|else|elif|for|while|try|except|finally|with|as|import|from/, "keyword"],
+      [/True|False|None/, "keyword"],
+      [/"[^"]*"/, "string"],
+      [/'[^']*'/, "string"],
+      [/\d+/, "number"],
+    ],
+  },
 });
 
 // Register plain text language
-monaco.languages.register({ id: 'plaintext' });
+monaco.languages.register({ id: "plaintext" });
 
 loader.config({ monaco });
 loader.init();

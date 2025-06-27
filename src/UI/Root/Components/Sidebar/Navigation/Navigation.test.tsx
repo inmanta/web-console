@@ -74,8 +74,9 @@ describe("Navigation", () => {
   test("GIVEN Navigation WHEN no features enabled THEN no extra features are not shown", () => {
     vi.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(false);
     vi.spyOn(MockOrchestratorProvider.prototype, "isOrderViewEnabled").mockReturnValue(false);
-    vi.spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled")
-      .mockReturnValue(false);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled").mockReturnValue(
+      false
+    );
 
     const { component } = setup();
 
@@ -107,8 +108,9 @@ describe("Navigation", () => {
   test("GIVEN Navigation WHEN all features are enabled THEN all extra features are shown", () => {
     vi.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(true);
     vi.spyOn(MockOrchestratorProvider.prototype, "isOrderViewEnabled").mockReturnValue(true);
-    vi.spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled")
-      .mockReturnValue(true);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled").mockReturnValue(
+      true
+    );
 
     const { component } = setup();
 

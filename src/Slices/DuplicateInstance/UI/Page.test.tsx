@@ -20,7 +20,6 @@ import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
 
-
 const axe = configureAxe({
   rules: {
     // disable landmark rules when testing isolated components.

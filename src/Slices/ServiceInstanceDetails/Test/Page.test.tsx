@@ -393,9 +393,9 @@ describe("ServiceInstanceDetailsPage", () => {
     });
 
     expect(rowsVersion3).toHaveLength(3);
-    
+
     // Check that exactly one row has the warning class
-    const warningRows = rowsVersion3.filter(row => row.classList.contains("warning"));
+    const warningRows = rowsVersion3.filter((row) => row.classList.contains("warning"));
     expect(warningRows).toHaveLength(1);
 
     expect(

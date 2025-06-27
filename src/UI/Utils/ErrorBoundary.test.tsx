@@ -1,7 +1,5 @@
-
 import { render, screen } from "@testing-library/react";
 import ErrorBoundary from "./ErrorBoundary";
-
 
 const Bomb = () => {
   throw new Error("BOOM");
@@ -26,7 +24,7 @@ test("GIVEN ErrorBoundary WHEN no error is thrown THEN error page should NOT be 
 test("GIVEN ErrorBoundary WHEN an error is thrown THEN error page should be shown.", async () => {
   // because we know we are throwing an unhandeled error here, we spy on the console error to avoid spamming the logs in the test-output.
 
-  vi.spyOn(console, "error").mockImplementation(() => { });
+  vi.spyOn(console, "error").mockImplementation(() => {});
 
   const explode = true;
 

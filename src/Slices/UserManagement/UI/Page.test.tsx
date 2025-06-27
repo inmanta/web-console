@@ -13,7 +13,6 @@ import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { UserManagementPage } from "./Page";
 
-
 const setup = () => {
   const queryClient = new QueryClient({
     defaultOptions: {

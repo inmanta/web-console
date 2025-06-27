@@ -31,7 +31,7 @@ test("TreeTableHelper createRows returns correct list", () => {
   );
   // Act
 
-  const cb = () => { };
+  const cb = () => {};
   const { rows } = treeTableHelper.createRows({ c: false }, cb);
   // Assert
   const expectedRows = [

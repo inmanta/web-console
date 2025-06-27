@@ -10,9 +10,12 @@ import { ExpertBanner } from "./ExpertBanner";
 import * as useUpdateEnvironmentSettingModule from "@/Data/Queries/Slices/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting";
 
 // Mock useUpdateEnvironmentSetting before the test
-vi.mock("@/Data/Queries/Slices/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting", () => ({
-  useUpdateEnvironmentSetting: vi.fn(),
-}));
+vi.mock(
+  "@/Data/Queries/Slices/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting",
+  () => ({
+    useUpdateEnvironmentSetting: vi.fn(),
+  })
+);
 
 const setup = (flag: boolean) => {
   return (
@@ -104,38 +107,40 @@ describe("Given ExpertBanner", () => {
   it("When expert_mode is set to true AND user clicks to disable expert mode it AND something was wrong with the request Then AlertToast with error message should open", async () => {
     let onErrorCallback: ((error: { message: string }) => void) | undefined;
 
-    vi.mocked(useUpdateEnvironmentSettingModule.useUpdateEnvironmentSetting).mockImplementation((options) => {
-      if (options?.onError) {
-        onErrorCallback = options.onError;
-      }
+    vi.mocked(useUpdateEnvironmentSettingModule.useUpdateEnvironmentSetting).mockImplementation(
+      (options) => {
+        if (options?.onError) {
+          onErrorCallback = options.onError;
+        }
 
-      return {
-        data: undefined,
-        error: null,
-        failureCount: 0,
-        isError: false,
-        isIdle: false,
-        isSuccess: true,
-        isPending: false,
-        reset: vi.fn(),
-        isPaused: false,
-        context: undefined,
-        variables: {
-          id: "enable_lsm_expert_mode",
-          value: false,
-        },
-        failureReason: null,
-        submittedAt: 0,
-        mutateAsync: vi.fn(),
-        status: "success",
-        mutate: vi.fn((variables) => {
-          // Simulate the error callback being triggered
-          setTimeout(() => {
-            onErrorCallback?.({ message: "Request or referenced resource does not exist" });
-          }, 0);
-        }),
-      };
-    });
+        return {
+          data: undefined,
+          error: null,
+          failureCount: 0,
+          isError: false,
+          isIdle: false,
+          isSuccess: true,
+          isPending: false,
+          reset: vi.fn(),
+          isPaused: false,
+          context: undefined,
+          variables: {
+            id: "enable_lsm_expert_mode",
+            value: false,
+          },
+          failureReason: null,
+          submittedAt: 0,
+          mutateAsync: vi.fn(),
+          status: "success",
+          mutate: vi.fn((variables) => {
+            // Simulate the error callback being triggered
+            setTimeout(() => {
+              onErrorCallback?.({ message: "Request or referenced resource does not exist" });
+            }, 0);
+          }),
+        };
+      }
+    );
 
     render(setup(true));
 
@@ -143,7 +148,7 @@ describe("Given ExpertBanner", () => {
 
     await act(async () => {
       // Wait for the setTimeout to complete
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     });
 
     await waitFor(() => {

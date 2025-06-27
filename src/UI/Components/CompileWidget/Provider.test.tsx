@@ -39,7 +39,6 @@ describe("CompileWidgetProvider", () => {
     vi.clearAllMocks();
   });
 
-
   test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
     const { component, afterTrigger } = setup();
 

@@ -142,9 +142,9 @@ describe("StatusPage", () => {
   });
 
   test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
-    vi
-      .spyOn(PrimaryArchiveHelper.prototype, "triggerDownload")
-      .mockImplementation(() => new Blob(["testing"], { type: "application/octet-stream" }));
+    vi.spyOn(PrimaryArchiveHelper.prototype, "triggerDownload").mockImplementation(
+      () => new Blob(["testing"], { type: "application/octet-stream" })
+    );
 
     server.use(
       http.get("/api/v1/support", () => {

@@ -5,13 +5,13 @@
 declare global {
   // Test globals are provided by vitest/globals
   // DOM testing library matchers are provided by @testing-library/jest-dom
-  
+
   // Global constants defined in vite.config.ts
   const COMMITHASH: string;
   const APP_VERSION: string;
-    
-    // vitest globals
-    const vi: typeof import('vitest')['vi'];
+
+  // vitest globals
+  const vi: (typeof import("vitest"))["vi"];
 }
 
-export { }; 
+export {};

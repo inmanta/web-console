@@ -9,8 +9,8 @@ describe("DiffPageFilter", () => {
     const { container } = render(
       <DiffPageFilter
         statuses={mockStatuses}
-        setStatuses={() => { }}
-        setSearchFilter={() => { }}
+        setStatuses={() => {}}
+        setSearchFilter={() => {}}
         searchFilter=""
       />
     );
@@ -24,7 +24,7 @@ describe("DiffPageFilter", () => {
     render(
       <DiffPageFilter
         statuses={mockStatuses}
-        setStatuses={() => { }}
+        setStatuses={() => {}}
         setSearchFilter={setSearchFilterMock}
         searchFilter=""
       />

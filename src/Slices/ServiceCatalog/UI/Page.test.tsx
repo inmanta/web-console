@@ -14,7 +14,6 @@ import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceCatalogPage } from ".";
 
-
 const [env1] = Environment.filterable.map((env) => env.id);
 
 function setup() {

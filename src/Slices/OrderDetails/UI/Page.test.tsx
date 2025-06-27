@@ -14,7 +14,6 @@ import {
 } from "../Data/Mock";
 import { OrderDetailsPage } from ".";
 
-
 vi.mock("react-router", async (importOriginal) => {
   const actual = await importOriginal();
   return {
@@ -22,7 +21,6 @@ vi.mock("react-router", async (importOriginal) => {
     useParams: vi.fn().mockReturnValue({ id: "1234" }),
   };
 });
-
 
 const DetailsPage = (
   <Page>

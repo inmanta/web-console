@@ -9,7 +9,6 @@ import { baseSetup } from "@/Test/Utils/base-setup";
 import { emptyResponse, orderResponse } from "../Data/Mock";
 import { OrdersPage } from ".";
 
-
 const OrderPage = (
   <Page>
     <OrdersPage />

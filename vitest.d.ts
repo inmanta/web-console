@@ -1,9 +1,9 @@
-import 'vitest'
+import "vitest";
 
 interface CustomMatchers<R = unknown> {
-    toHaveNoViolations: () => R
+  toHaveNoViolations: () => R;
 }
 
-declare module 'vitest' {
-    interface Matchers<T = any> extends CustomMatchers<T> { }
-} 
+declare module "vitest" {
+  interface Matchers<T = any> extends CustomMatchers<T> {}
+}

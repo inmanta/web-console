@@ -12,7 +12,6 @@ import { AuthTestWrapper } from "@/Test/Inject";
 import { words } from "@/UI";
 import { Login } from "./Page";
 
-
 const mockedUsedNavigate = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router", async (importOriginal) => {
