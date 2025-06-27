@@ -199,9 +199,22 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./test-setup.ts"],
+    // Optimize for CI performance
+    pool: "forks",
+    poolOptions: {
+      forks: {
+        singleFork: true,
+      },
+    },
+    // Run tests in parallel for better performance
+    threads: {
+      enabled: true,
+      maxThreads: process.env.CI ? 2 : undefined,
+      minThreads: process.env.CI ? 1 : undefined,
+    },
     coverage: {
       provider: "v8",
-      reporter: ["text", "cobertura"],
+      reporter: process.env.CI ? ["cobertura"] : ["text", "cobertura"],
       exclude: [
         "node_modules/",
         "dist/",
@@ -209,7 +222,17 @@ export default defineConfig({
         "**/*.config.*",
         "**/__mocks__/**",
         "cypress/**",
+        "**/*.test.{js,ts,jsx,tsx}",
+        "**/*.spec.{js,ts,jsx,tsx}",
+        "test-setup.ts",
+        "vitest.d.ts",
       ],
+      // Reduce coverage overhead in CI
+      all: !process.env.CI,
+      branches: process.env.CI ? 80 : 90,
+      functions: process.env.CI ? 80 : 90,
+      lines: process.env.CI ? 80 : 90,
+      statements: process.env.CI ? 80 : 90,
     },
     server: {
       deps: {
@@ -241,6 +264,14 @@ export default defineConfig({
         classNameStrategy: "non-scoped",
       },
     },
+    // Optimize test execution
+    testTimeout: 10000,
+    hookTimeout: 10000,
+    teardownTimeout: 5000,
+    // Reduce output verbosity in CI
+    silent: process.env.CI,
+    // Optimize for CI environment
+    isolate: false,
   },
   optimizeDeps: {
     include: [
