@@ -1,13 +1,11 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
+import * as useUpdateEnvironmentSettingModule from "@/Data/Queries/Slices/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ExpertBanner } from "./ExpertBanner";
-import * as useUpdateEnvironmentSettingModule from "@/Data/Queries/Slices/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting";
 
 // Mock useUpdateEnvironmentSetting before the test
 vi.mock(
@@ -132,7 +130,7 @@ describe("Given ExpertBanner", () => {
           submittedAt: 0,
           mutateAsync: vi.fn(),
           status: "success",
-          mutate: vi.fn((variables) => {
+          mutate: vi.fn(() => {
             // Simulate the error callback being triggered
             setTimeout(() => {
               onErrorCallback?.({ message: "Request or referenced resource does not exist" });

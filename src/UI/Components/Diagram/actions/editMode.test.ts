@@ -473,18 +473,3 @@ describe("appendInstance", () => {
     expect(cells[0].get("entityName")).toBe("container-service");
   });
 });
-
-test("GIVEN edit mode actions WHEN dispatchEvent is called THEN event is dispatched", () => {
-  const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
-  // ... existing code ...
-});
-
-test("GIVEN edit mode actions WHEN dispatchEvent is called THEN event is dispatched", () => {
-  const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
-  // ... existing code ...
-});
-
-test("GIVEN edit mode actions WHEN dispatchEvent is called THEN event is dispatched", () => {
-  const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
-  // ... existing code ...
-});

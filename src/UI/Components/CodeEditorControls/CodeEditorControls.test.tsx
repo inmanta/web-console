@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { CodeEditorCopyControl } from "./CodeEditorControls";
 import copy from "copy-to-clipboard";
+import { CodeEditorCopyControl } from "./CodeEditorControls";
 
 vi.mock("copy-to-clipboard", () => ({
   default: vi.fn(),

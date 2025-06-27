@@ -15,7 +15,6 @@ import { TreeTable } from "./TreeTable";
 function inventorySetup(
   attributes: Attributes,
   service?: ServiceModel,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setTab?: ReturnType<typeof vi.fn>
 ) {
   const component = (

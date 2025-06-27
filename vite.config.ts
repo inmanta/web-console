@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { defineConfig, UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
@@ -279,3 +280,5 @@ export default defineConfig({
     target: "es2020",
   },
 } as UserConfig);
+
+/* eslint-enable */

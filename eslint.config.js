@@ -51,6 +51,10 @@ export default [
         typescript: {
           alwaysTryTypes: true,
         },
+        node: {
+          extensions: [".js", ".jsx", ".ts", ".tsx"],
+          moduleDirectory: ["node_modules", "src/"],
+        },
       },
     },
 

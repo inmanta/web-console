@@ -40,6 +40,12 @@
       ],
       "@S/*": [
         "src/Slices/*"
+      ],
+      "@images/*": [
+        "public/images/*"
+      ],
+      "@rappidcss": [
+        "node_modules/@inmanta/rappid/joint-plus.css"
       ]
     }
   },

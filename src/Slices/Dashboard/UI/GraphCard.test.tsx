@@ -1,6 +1,6 @@
 import { act } from "react";
 import { render, screen } from "@testing-library/react";
-import { configureAxe } from "vitest-axe";
+import { configureAxe } from "jest-axe";
 import { words } from "@/UI";
 import { MetricName } from "../Core/Domain";
 import { mockedMetrics } from "../Core/Mock";

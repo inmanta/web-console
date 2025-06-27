@@ -5,5 +5,6 @@ interface CustomMatchers<R = unknown> {
 }
 
 declare module "vitest" {
-  interface Matchers<T = any> extends CustomMatchers<T> {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  interface Matchers<T = unknown> extends CustomMatchers<T> { }
 }

@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
-import moment from "moment-timezone";
 import React from "react";
+import moment from "moment-timezone";
 
 import "jest-axe/extend-expect";
 
@@ -9,7 +9,7 @@ import "@patternfly/react-core/dist/styles/base.css";
 
 // Define mocks using vi.hoisted to ensure they're available during hoisting
 const logViewerMock = vi.hoisted(() => ({
-  LogViewer: ({ data, toolbar, onScroll, hasLineNumbers = false, scrollToRow }) => {
+  LogViewer: ({ data, toolbar, onScroll, _hasLineNumbers = false, _scrollToRow }) => {
     const handleScroll = (event) => {
       // Use the custom event detail if available, otherwise use default value
       const scrollOffsetToBottom = event?.detail?.scrollOffsetToBottom ?? 100;
@@ -38,14 +38,14 @@ const codeEditorMock = vi.hoisted(() => ({
   CodeEditor: ({
     code,
     onChange,
-    language,
+    _language,
     height,
-    isReadOnly,
-    isDownloadEnabled,
-    isCopyEnabled,
-    isLanguageLabelVisible,
+    _isReadOnly,
+    _isDownloadEnabled,
+    _isCopyEnabled,
+    _isLanguageLabelVisible,
     customControls,
-    isDarkTheme,
+    _isDarkTheme,
     ...props
   }) => {
     return React.createElement(
@@ -53,18 +53,18 @@ const codeEditorMock = vi.hoisted(() => ({
       { "data-testid": "code-editor", style: { height }, ...props },
       React.createElement("pre", { "data-testid": "code-editor-content" }, code),
       customControls &&
-        React.createElement(
-          "div",
-          { "data-testid": "code-editor-custom-controls" },
-          customControls
-        ),
+      React.createElement(
+        "div",
+        { "data-testid": "code-editor-custom-controls" },
+        customControls
+      ),
       onChange &&
-        React.createElement("textarea", {
-          "data-testid": "code-editor-textarea",
-          value: code,
-          onChange: (event) => onChange(event.target.value),
-          style: { display: "none" },
-        })
+      React.createElement("textarea", {
+        "data-testid": "code-editor-textarea",
+        value: code,
+        onChange: (event) => onChange(event.target.value),
+        style: { display: "none" },
+      })
     );
   },
   CodeEditorControl: ({ onClick, icon, "aria-label": ariaLabel, tooltipProps, ...props }) =>
@@ -134,7 +134,7 @@ const originalWarn = console.warn;
 const originalError = console.error;
 
 // Helper function to format console args
-const formatConsoleArgs = (args: any[]) => {
+const formatConsoleArgs = (args: unknown[]) => {
   return args
     .map((arg) => {
       if (typeof arg === "object" && arg !== null) {

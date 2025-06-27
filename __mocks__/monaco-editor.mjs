@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi } from "vitest";
 
 // Considering we aren't allowed to use the CDN for the monaco editor, we need to mock it for Jest to work.
 // This is a simplified mock that covers the basic functionality needed for the tests.

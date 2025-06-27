@@ -136,9 +136,4 @@ describe("CellWithCopy", () => {
 
     expect(onClickFn).toHaveBeenCalledWith(someOtherValue, props.serviceName, someOtherValue);
   });
-
-  test("GIVEN CellWithCopy WHEN rendered THEN it should be accessible", () => {
-    const onClickFn = vi.fn();
-    // ... existing code ...
-  });
 });

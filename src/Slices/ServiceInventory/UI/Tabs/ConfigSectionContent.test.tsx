@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   QueryClient,
   QueryClientProvider,
@@ -43,9 +44,9 @@ vi.mock("@/Data/Queries", () => ({
   },
   useGetInstanceConfig: () => ({
     useOneTime: () => {
-      const [_, setRerender] = require("react").useState({});
+      const [_, setRerender] = useState({});
       // Subscribe to refetch so we can force rerender
-      require("react").useEffect(() => {
+      useEffect(() => {
         const cb = () => setRerender({});
         subscribeRefetch(cb);
         return () => {
@@ -63,7 +64,7 @@ vi.mock("@/Data/Queries", () => ({
     },
   }),
   usePostInstanceConfig: () => ({
-    mutate: (params: any) => {
+    mutate: (params: { values?: Record<string, unknown> }) => {
       mockMutate(params);
       if (params.values) {
         mockConfigData = { ...mockConfigData, ...params.values };
