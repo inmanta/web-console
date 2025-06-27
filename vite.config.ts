@@ -211,16 +211,6 @@ export default defineConfig({
         "cypress/**",
       ],
     },
-    deps: {
-      inline: [
-        "@inmanta/rappid",
-        "mermaid",
-        "monaco-editor",
-        "@monaco-editor/react",
-        "graphql-request",
-        "@patternfly/react-styles",
-      ],
-    },
     server: {
       deps: {
         inline: [
