@@ -113,8 +113,8 @@ export default defineConfig({
       // Only mock monaco-editor in test environment
       ...(process.env.NODE_ENV === "test"
         ? {
-            "monaco-editor": resolve(__dirname, "__mocks__/monaco-editor.mjs"),
-          }
+          "monaco-editor": resolve(__dirname, "__mocks__/monaco-editor.mjs"),
+        }
         : {}),
     },
   },
@@ -161,6 +161,9 @@ export default defineConfig({
     sourcemap: true,
     assetsInlineLimit: 4096, // Inline assets smaller than 4kb
     cssCodeSplit: true, // Enable CSS code splitting
+    minify: "esbuild", // Use esbuild for faster minification
+    target: "es2020", // Target modern browsers
+    chunkSizeWarningLimit: 1000, // Increase chunk size warning limit
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
@@ -266,6 +269,11 @@ export default defineConfig({
     ],
     exclude: ["@joint/core"],
     force: true,
+    esbuildOptions: {
+      target: "es2020",
+      // Reduce memory usage during dependency optimization
+      maxParallel: 4,
+    },
   },
   ssr: {
     noExternal: ["monaco-editor", "@monaco-editor/react", "mermaid", "@inmanta/rappid"],
