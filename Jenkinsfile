@@ -41,7 +41,7 @@ pipeline {
                             yarn format:check;
                             yarn tsc;
                             yarn check-circular-deps;
-                            yarn build;
+                            node --max-old-space-size=8192 ./node_modules/.bin/vite build;
                             yarn test:ci'''
                         }
                     }
@@ -50,7 +50,7 @@ pipeline {
                     steps {
                         timeout(time: 20, unit: 'MINUTES') {
                             dir('web-console') {
-                                sh '''yarn run build;
+                                sh '''node --max-old-space-size=8192 ./node_modules/.bin/vite build;
                                 sudo systemctl restart docker && sudo docker network prune -f;
                                 yarn run install:orchestrator:ci;
                                 yarn run cypress-test:iso;'''
