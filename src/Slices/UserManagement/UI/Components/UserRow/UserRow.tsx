@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Th, Thead, Td, Tr, Tbody } from "@patternfly/react-table";
-import { EnvironmentPreview, useGetUserRoles, useRemoveUser, UserInfo } from "@/Data/Queries";
+import { EnvironmentPreview, useRemoveUser, UserInfo } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ConfirmUserActionForm, EmptyView, Toggle } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -24,7 +24,6 @@ interface Props {
  * @returns {React.FC<Props>} The rendered user info row with button to be able to delete the user.
  */
 export const UserRow: React.FC<Props> = ({ user, allRoles, environments, setAlert }) => {
-  const roles = useGetUserRoles().useOneTime(user.username);
   const [isExpanded, setIsExpanded] = useState(false);
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { mutate } = useRemoveUser();
@@ -75,12 +74,6 @@ export const UserRow: React.FC<Props> = ({ user, allRoles, environments, setAler
 
   const onToggle = (): void => setIsExpanded(!isExpanded);
 
-  useEffect(() => {
-    if (roles.isError) {
-      setAlert(words("error"), AlertVariant.danger, words("error.general")(roles.error.message));
-    }
-  }, [roles.isError, roles.error, setAlert]);
-
   return (
     <>
       <Tr aria-label={`row-${user.username}`} data-testid="user-row">
@@ -88,7 +81,7 @@ export const UserRow: React.FC<Props> = ({ user, allRoles, environments, setAler
           <Toggle expanded={isExpanded} onToggle={onToggle} aria-label={"Toggle-user-row"} />
         </Td>
         <Td dataLabel={user.username}>{user.username}</Td>
-        <RolesToggleCell roles={roles} setAlert={setAlert} toggle={onToggle} />
+        <RolesToggleCell roles={user.roles} toggle={onToggle} />
         <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
           <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
             <FlexItem>
@@ -130,7 +123,7 @@ export const UserRow: React.FC<Props> = ({ user, allRoles, environments, setAler
                       key={`${environment.name}-role-row`}
                       username={user.username}
                       environment={environment}
-                      roles={roles}
+                      roles={user.roles}
                       allRoles={allRoles}
                       setAlert={setAlert}
                     />

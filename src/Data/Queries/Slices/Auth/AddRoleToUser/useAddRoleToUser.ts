@@ -1,6 +1,6 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { usePostWithoutEnv } from "@/Data/Queries";
-import { UserRole } from "../GetUserRoles/useGetUserRoles";
+import { UserRole } from "../GetUsers";
 
 /**
  * Custom hook for adding a role to a user.

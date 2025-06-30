@@ -1,11 +1,6 @@
 import React from "react";
 import { Table, Tbody } from "@patternfly/react-table";
-import {
-  QueryClient,
-  QueryClientProvider,
-  UseMutationResult,
-  UseQueryResult,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, UseMutationResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { UserRole, EnvironmentPreview } from "@/Data/Queries";
@@ -20,9 +15,6 @@ jest.mock("@/Data/Queries", () => ({
   ...jest.requireActual("@/Data/Queries"),
   useAddRoleToUser: jest.fn(),
   useRemoveRoleFromUser: jest.fn(),
-  getUserRoleKey: {
-    single: jest.fn(() => ["user-role", "test-user"]),
-  },
 }));
 
 const mockUseAddRoleToUser = jest.mocked(useAddRoleToUser);
@@ -41,13 +33,7 @@ const setup = (props = {}) => {
   const defaultProps = {
     username: "test-user",
     environment: { id: "env1", name: "Test Environment" } as EnvironmentPreview,
-    roles: {
-      isSuccess: true,
-      isLoading: false,
-      isError: false,
-      data: [],
-      error: null,
-    } as unknown as UseQueryResult<UserRole[], Error>,
+    roles: [],
     allRoles: ["admin", "viewer", "editor"],
     setAlert: mockSetAlert,
   };
@@ -95,37 +81,13 @@ describe("RolesRow", () => {
     mockUseRemoveRoleFromUser.mockReturnValue(defaultRemoveRoleMock);
   });
 
-  describe("Loading State", () => {
-    it("should render skeleton when roles are loading", () => {
-      const { component } = setup({
-        roles: {
-          isSuccess: false,
-          isLoading: true,
-          isError: false,
-          data: [],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
-      });
-
-      render(component);
-
-      expect(screen.getByTestId("roles-skeleton-row-Test Environment")).toBeInTheDocument();
-    });
-  });
-
   describe("Success State", () => {
     it("should render environment name and role management UI when roles load successfully", () => {
       const { component } = setup({
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [
-            { role: "admin", environment: "env1" },
-            { role: "viewer", environment: "env2" },
-          ] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [
+          { role: "admin", environment: "env1" },
+          { role: "viewer", environment: "env2" },
+        ],
       });
 
       render(component);
@@ -138,13 +100,7 @@ describe("RolesRow", () => {
 
     it("should show correct placeholder text when roles are available", () => {
       const { component } = setup({
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [{ role: "admin", environment: "env1" }] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [{ role: "admin", environment: "env1" }],
       });
 
       render(component);
@@ -155,13 +111,7 @@ describe("RolesRow", () => {
 
     it("should show no roles assigned when no roles are available", () => {
       const { component } = setup({
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [],
       });
 
       render(component);
@@ -179,13 +129,7 @@ describe("RolesRow", () => {
       });
 
       const { component } = setup({
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [],
       });
 
       render(component);
@@ -210,13 +154,7 @@ describe("RolesRow", () => {
       } as unknown as UseMutationResult<void, Error, UserRole, unknown>);
 
       const { component } = setup({
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [],
       });
 
       render(component);
@@ -231,13 +169,7 @@ describe("RolesRow", () => {
       } as unknown as UseMutationResult<void, Error, UserRole, unknown>);
 
       const { component } = setup({
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [],
       });
 
       render(component);
@@ -257,13 +189,7 @@ describe("RolesRow", () => {
       });
 
       const { component } = setup({
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [{ role: "admin", environment: "env1" }] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [{ role: "admin", environment: "env1" }],
       });
 
       render(component);
@@ -288,13 +214,7 @@ describe("RolesRow", () => {
       });
 
       const { component } = setup({
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [{ role: "admin", environment: "env1" }] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [{ role: "admin", environment: "env1" }],
       });
 
       render(component);
@@ -317,13 +237,7 @@ describe("RolesRow", () => {
       } as unknown as UseMutationResult<void, Error, UserRole, unknown>);
 
       const { component } = setup({
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [{ role: "admin", environment: "env1" }] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [{ role: "admin", environment: "env1" }],
       });
 
       render(component);
@@ -338,13 +252,7 @@ describe("RolesRow", () => {
       } as unknown as UseMutationResult<void, Error, UserRole, unknown>);
 
       const { component } = setup({
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [{ role: "admin", environment: "env1" }] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [{ role: "admin", environment: "env1" }],
       });
 
       render(component);
@@ -357,17 +265,11 @@ describe("RolesRow", () => {
   describe("Environment Filtering", () => {
     it("should only show roles for the specific environment", () => {
       const { component } = setup({
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [
-            { role: "admin", environment: "env1" },
-            { role: "viewer", environment: "env2" },
-            { role: "editor", environment: "env1" },
-          ] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [
+          { role: "admin", environment: "env1" },
+          { role: "viewer", environment: "env2" },
+          { role: "editor", environment: "env1" },
+        ],
       });
 
       render(component);
@@ -383,13 +285,7 @@ describe("RolesRow", () => {
     it("should pass correct options to MultiTextSelect", async () => {
       const { component } = setup({
         allRoles: ["admin", "viewer", "editor"],
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [{ role: "admin", environment: "env1" }] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [{ role: "admin", environment: "env1" }],
       });
 
       render(component);
@@ -406,13 +302,7 @@ describe("RolesRow", () => {
     it("should mark selected roles as selected in options", async () => {
       const { component } = setup({
         allRoles: ["admin", "viewer", "editor"],
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [{ role: "admin", environment: "env1" }] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [{ role: "admin", environment: "env1" }],
       });
 
       render(component);
@@ -430,13 +320,7 @@ describe("RolesRow", () => {
     it("should disable MultiTextSelect when no roles are available", () => {
       const { component } = setup({
         allRoles: [],
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [],
       });
 
       render(component);
@@ -457,13 +341,7 @@ describe("RolesRow", () => {
       } as unknown as UseMutationResult<void, Error, UserRole, unknown>);
 
       const { component } = setup({
-        roles: {
-          isSuccess: true,
-          isLoading: false,
-          isError: false,
-          data: [{ role: "admin", environment: "env1" }] as UserRole[],
-          error: null,
-        } as unknown as UseQueryResult<UserRole[], Error>,
+        roles: [{ role: "admin", environment: "env1" }],
       });
 
       render(component);

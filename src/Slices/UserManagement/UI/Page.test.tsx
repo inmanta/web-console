@@ -45,8 +45,13 @@ const setup = () => {
 const mockedUsers = http.get("/api/v2/user", async () => {
   return HttpResponse.json({
     data: [
-      { username: "test_user", auth_method: "database" },
-      { username: "test_user2", auth_method: "oidc" },
+      {
+        username: "test_user",
+        auth_method: "database",
+        is_admin: true,
+        roles: [{ role: "admin", environment: "1" }],
+      },
+      { username: "test_user2", auth_method: "oidc", is_admin: false, roles: [] },
     ],
   });
 });
@@ -125,7 +130,9 @@ describe("UserManagementPage", () => {
     server.use(
       mockedUsers,
       http.get("/api/v2/role_assignment/test_user", async () =>
-        HttpResponse.json({ data: [{ role: "admin", environment: "1" }] })
+        HttpResponse.json({
+          data: [{ role: "admin", environment: "1", is_admin: false, roles: [] }],
+        })
       )
     );
 
@@ -150,8 +157,6 @@ describe("UserManagementPage", () => {
     expect(screen.getByText("test_user2")).toBeInTheDocument();
 
     expect(screen.getAllByText("Delete")).toHaveLength(2);
-
-    expect(await screen.findByLabelText("roles-success")).toBeInTheDocument();
 
     expect(await screen.findByText("admin")).toBeInTheDocument();
     expect(await screen.findByText("No roles assigned")).toBeInTheDocument();
@@ -235,6 +240,62 @@ describe("UserManagementPage", () => {
     });
   });
 
+  it("should display error view when users API call fails", async () => {
+    let counter = 0;
+    server.use(
+      http.get("/api/v2/user", async () => {
+        if (counter > 0) {
+          return HttpResponse.json({
+            data: [{ username: "test_user", auth_method: "database", is_admin: false, roles: [] }],
+          });
+        }
+        counter++;
+
+        return HttpResponse.json(
+          {
+            message: "Access to this resource is unauthorized",
+          },
+          {
+            status: 401,
+          }
+        );
+      })
+    );
+
+    server.listen();
+    const component = setup();
+
+    render(component);
+
+    const loadingView = await screen.findByLabelText("UserManagement-Loading");
+
+    expect(loadingView).toBeInTheDocument();
+
+    const errorView = await screen.findByLabelText("UserManagement-Failed");
+
+    expect(errorView).toBeInTheDocument();
+
+    const errorMessage = await screen.findByText(
+      "The following error occured: Access to this resource is unauthorized"
+    );
+
+    expect(errorMessage).toBeVisible();
+
+    //assert that correct retry function is called
+    const retryButton = await screen.findByText("Retry");
+    await userEvent.click(retryButton);
+
+    const successView = await screen.findByLabelText("users-table");
+
+    expect(successView).toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
   it("should display error view when roles API call fails", async () => {
     let counter = 0;
 
@@ -289,128 +350,10 @@ describe("UserManagementPage", () => {
     });
   });
 
-  it("should display error view when users API call fails", async () => {
-    let counter = 0;
-    server.use(
-      http.get("/api/v2/user", async () => {
-        if (counter > 0) {
-          return HttpResponse.json({
-            data: [{ username: "test_user", auth_method: "database" }],
-          });
-        }
-        counter++;
-
-        return HttpResponse.json(
-          {
-            message: "Access to this resource is unauthorized",
-          },
-          {
-            status: 401,
-          }
-        );
-      })
-    );
-
-    server.listen();
-    const component = setup();
-
-    render(component);
-
-    const loadingView = await screen.findByLabelText("UserManagement-Loading");
-
-    expect(loadingView).toBeInTheDocument();
-
-    const errorView = await screen.findByLabelText("UserManagement-Failed");
-
-    expect(errorView).toBeInTheDocument();
-
-    const errorMessage = await screen.findByText(
-      "The following error occured: Access to this resource is unauthorized"
-    );
-
-    expect(errorMessage).toBeVisible();
-
-    //assert that correct retry function is called
-    const retryButton = await screen.findByText("Retry");
-    await userEvent.click(retryButton);
-
-    const successView = await screen.findByLabelText("users-table");
-
-    expect(successView).toBeInTheDocument();
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-  });
-
-  it("should display error alert view when users roles API call fails", async () => {
-    let counter = 0;
-    server.use(
-      mockedUsers,
-      http.get("/api/v2/role_assignment/test_user", async () => {
-        if (counter > 0) {
-          return HttpResponse.json({
-            data: [{ role: "admin", environment: "1" }],
-          });
-        }
-        counter++;
-
-        return HttpResponse.json(
-          {
-            message: "Access to this resource is unauthorized",
-          },
-          {
-            status: 401,
-          }
-        );
-      })
-    );
-
-    server.listen();
-    const component = setup();
-
-    render(component);
-
-    const successView = await screen.findByLabelText("users-table");
-
-    expect(successView).toBeInTheDocument();
-
-    const userRows = screen.getAllByTestId("user-row");
-
-    expect(userRows).toHaveLength(2);
-
-    const toast = await screen.findByTestId("ToastAlert");
-
-    expect(toast).toBeInTheDocument();
-
-    const errorMessage = await screen.findByText(
-      "The following error occured: Access to this resource is unauthorized"
-    );
-
-    expect(errorMessage).toBeVisible();
-
-    //assert that correct retry function is called
-    const retryButton = await screen.findByText("Retry");
-    await userEvent.click(retryButton);
-
-    const role = await screen.findByText("admin");
-    expect(role).toBeInTheDocument();
-
-    expect(errorMessage).not.toBeInTheDocument();
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-  });
-
   it("should sent request to add user to the list", async () => {
     const data: UserInfo[] = [
-      { username: "test_user", auth_method: "database" },
-      { username: "test_user2", auth_method: "oidc" },
+      { username: "test_user", auth_method: "database", is_admin: false, roles: [] },
+      { username: "test_user2", auth_method: "oidc", is_admin: false, roles: [] },
     ];
 
     server.use(
@@ -444,7 +387,12 @@ describe("UserManagementPage", () => {
           );
         }
 
-        data.push({ username: reqBody?.username, auth_method: "database" });
+        data.push({
+          username: reqBody?.username,
+          auth_method: "database",
+          is_admin: false,
+          roles: [],
+        });
 
         return HttpResponse.json({
           username: "new_user",
@@ -511,7 +459,9 @@ describe("UserManagementPage", () => {
   it("should sent request to change user password", async () => {
     server.use(
       http.get("/api/v2/user", async () => {
-        return HttpResponse.json({ data: [{ username: "test_user", auth_method: "database" }] });
+        return HttpResponse.json({
+          data: [{ username: "test_user", auth_method: "database", is_admin: false, roles: [] }],
+        });
       }),
       http.patch("/api/v2/user/test_user/password", async ({ request }) => {
         const reqBody = await request.json();
@@ -575,8 +525,8 @@ describe("UserManagementPage", () => {
 
   it("should sent request to remove user from the list", async () => {
     const data: UserInfo[] = [
-      { username: "test_user", auth_method: "database" },
-      { username: "test_user2", auth_method: "oidc" },
+      { username: "test_user", auth_method: "database", is_admin: false, roles: [] },
+      { username: "test_user2", auth_method: "oidc", is_admin: false, roles: [] },
     ];
 
     server.use(
@@ -625,14 +575,12 @@ describe("UserManagementPage", () => {
   });
 
   it("should handle successful addition of a role to a user", async () => {
-    const userData = [{ username: "test_user", auth_method: "database" }];
-    const userRoles: UserRole[] = [];
+    const userData = [
+      { username: "test_user", auth_method: "database", is_admin: false, roles: [] as UserRole[] },
+    ];
 
     server.use(
       http.get("/api/v2/user", async () => HttpResponse.json({ data: userData })),
-      http.get("/api/v2/role_assignment/test_user", async () =>
-        HttpResponse.json({ data: userRoles })
-      ),
       // Success for add role
       http.post("/api/v2/role_assignment/test_user", async ({ request }) => {
         const body = await request.json();
@@ -644,7 +592,7 @@ describe("UserManagementPage", () => {
           body.role === "admin" &&
           body.environment === "1"
         ) {
-          userRoles.push({ role: "admin", environment: "1" });
+          userData[0].roles.push({ role: "admin", environment: "1" });
           return HttpResponse.json({});
         }
         // Simulate failure for other roles or malformed body
@@ -673,14 +621,12 @@ describe("UserManagementPage", () => {
   });
 
   it("should handle failed addition of a role to a user", async () => {
-    const userData = [{ username: "test_user", auth_method: "database" }];
-    const userRoles: UserRole[] = [];
+    const userData = [
+      { username: "test_user", auth_method: "database", is_admin: false, roles: [] },
+    ];
 
     server.use(
       http.get("/api/v2/user", async () => HttpResponse.json({ data: userData })),
-      http.get("/api/v2/role_assignment/test_user", async () =>
-        HttpResponse.json({ data: userRoles })
-      ),
       // Success for add role
       http.post("/api/v2/role_assignment/test_user", async () => {
         // Simulate failure for other roles or malformed body
@@ -709,25 +655,29 @@ describe("UserManagementPage", () => {
   });
 
   it("should handle successful removal of a role from a user", async () => {
-    const userData = [{ username: "test_user", auth_method: "database" }];
     const roles = ["admin", "viewer"];
-    let userRoles: UserRole[] = [
-      { role: "admin", environment: "1" },
-      { role: "viewer", environment: "1" },
+
+    const userData = [
+      {
+        username: "test_user",
+        auth_method: "database",
+        is_admin: false,
+        roles: [
+          { role: "admin", environment: "1" },
+          { role: "viewer", environment: "1" },
+        ],
+      },
     ];
 
     server.use(
       http.get("/api/v2/user", async () => HttpResponse.json({ data: userData })),
       http.get("/api/v2/role", async () => HttpResponse.json({ data: roles })),
-      http.get("/api/v2/role_assignment/test_user", async () =>
-        HttpResponse.json({ data: userRoles })
-      ),
       // Success for remove role
       http.delete("/api/v2/role_assignment/test_user", async ({ request }) => {
         const url = new URL(request.url);
         const role = url.searchParams.get("role");
         if (role === "admin") {
-          userRoles = userRoles.filter((role) => role.role !== "admin");
+          userData[0].roles = userData[0].roles.filter((role) => role.role !== "admin");
           return HttpResponse.json({});
         }
 
@@ -759,20 +709,23 @@ describe("UserManagementPage", () => {
   });
 
   it("should handle failed removal of a role from a user", async () => {
-    const userData = [{ username: "test_user", auth_method: "database" }];
     const roles = ["admin", "viewer"];
-    const userRoles: UserRole[] = [
-      { role: "admin", environment: "1" },
-      { role: "viewer", environment: "1" },
+
+    const userData = [
+      {
+        username: "test_user",
+        auth_method: "database",
+        is_admin: false,
+        roles: [
+          { role: "admin", environment: "1" },
+          { role: "viewer", environment: "1" },
+        ],
+      },
     ];
 
     server.use(
       http.get("/api/v2/user", async () => HttpResponse.json({ data: userData })),
       http.get("/api/v2/role", async () => HttpResponse.json({ data: roles })),
-
-      http.get("/api/v2/role_assignment/test_user", async () =>
-        HttpResponse.json({ data: userRoles })
-      ),
       // Failure for remove role
       http.delete("/api/v2/role_assignment/test_user", async () => {
         return HttpResponse.json({ message: "Failed to remove role" }, { status: 400 });

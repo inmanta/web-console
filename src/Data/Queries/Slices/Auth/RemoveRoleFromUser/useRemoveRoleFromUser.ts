@@ -1,6 +1,6 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { useDeleteWithoutEnv } from "@/Data/Queries";
-import { UserRole } from "../GetUserRoles/useGetUserRoles";
+import { UserRole } from "../GetUsers";
 
 interface Props {
   user: string;
