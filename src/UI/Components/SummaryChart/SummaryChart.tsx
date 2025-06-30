@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ChartDonut, ChartLegend } from "@patternfly/react-charts";
+import { ChartDonut, ChartLegend } from "@patternfly/react-charts/victory";
 import {
   t_global_color_status_success_default,
   chart_color_blue_300,

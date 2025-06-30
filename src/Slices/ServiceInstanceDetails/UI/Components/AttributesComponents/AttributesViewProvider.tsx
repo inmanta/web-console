@@ -30,7 +30,7 @@ interface Props {
  * @returns {React.FC<>} A React Component displaying the Attributes depending on the toggled AttributeView.
  */
 export const AttributesViewProvider: React.FC<Props> = ({ selectedView }) => {
-  const { logsQuery, instance } = useContext(InstanceDetailsContext);
+  const { logsQuery, serviceModelQuery, instance } = useContext(InstanceDetailsContext);
 
   const [selectedVersion] = useUrlStateWithString<string>({
     default: String(instance.version),
@@ -39,11 +39,11 @@ export const AttributesViewProvider: React.FC<Props> = ({ selectedView }) => {
   });
   const isLatest = selectedVersion === String(instance.version);
 
-  if (logsQuery.isLoading) {
+  if (logsQuery.isLoading || serviceModelQuery.isLoading) {
     return <LoadingView />;
   }
 
-  if (!logsQuery.data) {
+  if (!logsQuery.data || !serviceModelQuery.data) {
     return NoDataState;
   }
 
@@ -64,7 +64,11 @@ export const AttributesViewProvider: React.FC<Props> = ({ selectedView }) => {
   return (
     <>
       {selectedView === AttributeViewToggles.TABLE && (
-        <AttributesTable attributeSets={attributeSets} dropdownOptions={dropdownOptions} />
+        <AttributesTable
+          attributeSets={attributeSets}
+          dropdownOptions={dropdownOptions}
+          serviceModel={serviceModelQuery.data}
+        />
       )}
       {selectedView === AttributeViewToggles.EDITOR && (
         <AttributesEditor

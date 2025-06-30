@@ -115,7 +115,7 @@ describe("Scenario 4 Desired State", () => {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Should show the chart
-      cy.get(".pf-v5-c-chart").should("be.visible");
+      cy.get(".pf-v6-c-chart").should("be.visible");
 
       // Should show the ServiceInventory-Success Component.
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
