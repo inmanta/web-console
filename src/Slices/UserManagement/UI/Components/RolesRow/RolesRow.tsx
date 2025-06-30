@@ -144,12 +144,12 @@ export const RolesRow = ({ username, environment, roles, allRoles, setAlert }: P
                   );
                 })
               ) : (
-                <FlexItem key={`container-chip-no-roles`} aria-label={`container-chip-no-roles`}>
+                <FlexItem key={"container-chip-no-roles"} aria-label={"container-chip-no-roles"}>
                   <Label
                     variant="outline"
                     color="blue"
-                    key={`chip-no-roles`}
-                    aria-label={`chip-role-no-roles`}
+                    key={"chip-no-roles"}
+                    aria-label={"chip-role-no-roles"}
                   >
                     {words("userManagement.noRolesAssigned")}
                   </Label>
