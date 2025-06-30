@@ -58,6 +58,7 @@ if (Cypress.env("local-auth")) {
 
     cy.get('[data-testid="user-row"]', { timeout: 20000 }).should("have.length", 6);
   });
+
   it("should be able to change user password", () => {
     cy.visit("/console/");
 
@@ -102,5 +103,110 @@ if (Cypress.env("local-auth")) {
     cy.get('[id="pf-login-password-id"]').type("12345678{enter}");
 
     cy.get("h1").contains("Home").should("be.visible");
+  });
+
+  it("should be able to add role to user", () => {
+    cy.visit("/console/");
+
+    cy.get('[id="pf-login-username-id"]').type("admin");
+    cy.get('[id="pf-login-password-id"]').type("12345678{enter}");
+
+    cy.get("h1").contains("Home").should("be.visible");
+
+    cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
+    cy.get("[id=toggle-button]").click();
+
+    cy.get('[role="menuitem"]').contains("User Management").click();
+
+    cy.get("h1").contains("User Management").should("be.visible");
+
+    cy.get('[data-testid="user-row"]').should("have.length", 6);
+
+    cy.get('[aria-label="row-admin"]').within(() => {
+      cy.get("button").contains("No roles assigned").should("be.visible");
+
+      cy.get('[aria-label="Toggle-user-row"]').click();
+    });
+
+    cy.get("button").contains("Select roles...").click();
+
+    cy.get('[aria-label="environment-admin"]').click();
+
+    cy.get("span").contains("environment-admin").should("be.visible");
+
+    cy.get('[aria-label="row-admin"]').within(() => {
+      cy.get("button").contains("No roles assigned").should("not.exist");
+
+      cy.get("button").contains("environment-admin").should("be.visible");
+    });
+
+    cy.get('[aria-label="Expanded-Details"]').within(() => {
+      cy.get("span").contains("No roles assigned").should("not.exist");
+
+      cy.get("span").contains("environment-admin").should("be.visible");
+    });
+
+    cy.get('[aria-label="noc"]').click();
+
+    cy.get('[aria-label="row-admin"]').within(() => {
+      cy.get("button").contains("environment-admin, noc").should("be.visible");
+    });
+
+    cy.get('[aria-label="Expanded-Details"]').within(() => {
+      cy.get("span").contains("environment-admin").should("be.visible");
+      cy.get("span").contains("noc").should("be.visible");
+    });
+  });
+
+  it("should be able to remove role to user", () => {
+    cy.visit("/console/");
+
+    cy.get('[id="pf-login-username-id"]').type("admin");
+    cy.get('[id="pf-login-password-id"]').type("12345678{enter}");
+
+    cy.get("h1").contains("Home").should("be.visible");
+
+    cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
+    cy.get("[id=toggle-button]").click();
+
+    cy.get('[role="menuitem"]').contains("User Management").click();
+
+    cy.get("h1").contains("User Management").should("be.visible");
+
+    cy.get('[data-testid="user-row"]').should("have.length", 6);
+
+    cy.get("button").contains("environment-admin, noc").click();
+
+    cy.get('[aria-label="Expanded-Details"]').within(() => {
+      cy.get("span").contains("environment-admin").should("be.visible");
+      cy.get("span").contains("noc").should("be.visible");
+
+      cy.get('[aria-label="container-chip-noc"]').within(() => {
+        cy.get("button").click();
+      });
+
+      cy.get('[aria-label="container-chip-environment-admin"]').should("be.visible");
+      cy.get('[aria-label="container-chip-noc"]').should("not.exist");
+    });
+
+    cy.get('[aria-label="row-admin"]').within(() => {
+      cy.get("button").contains("environment-admin").should("be.visible");
+    });
+
+    cy.get("button").contains("Select roles...").click();
+
+    cy.get('[aria-label="environment-admin"]').click();
+
+    cy.get('[aria-label="Expanded-Details"]').within(() => {
+      cy.get('[aria-label="container-chip-environment-admin"]').should("not.exist");
+      cy.get('[aria-label="container-chip-noc"]').should("not.exist");
+
+      cy.get("span").contains("No roles assigned").should("be.visible");
+    });
+
+    cy.get('[aria-label="row-admin"]').within(() => {
+      cy.get("button").contains("environment-admin").should("not.exist");
+      cy.get("button").contains("No roles assigned").should("be.visible");
+    });
   });
 }
