@@ -9,9 +9,15 @@ import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
 const server = setupServer(
-  http.get("/lsm/v1/service_inventory/test_entity", () => {
+  http.get("/lsm/v1/service_inventory/test_entity", ({ request }) => {
+    const url = new URL(request.url);
+    const filter = url.searchParams.get("id_or_service_identity");
+    let data = [ServiceInstance.a];
+    if (filter === "ab") {
+      data = [];
+    }
     return HttpResponse.json({
-      data: [ServiceInstance.a],
+      data,
       metadata: {
         total: 0,
         before: 0,
@@ -21,26 +27,6 @@ const server = setupServer(
     });
   })
 );
-
-// Mock useGetInstances before the test
-vi.mock("@/Data/Queries", () => ({
-  useGetInstances: () => ({
-    useContinuous: () => ({
-      data: {
-        data: [ServiceInstance.a],
-        handlers: {},
-        metadata: {
-          total: 0,
-          before: 0,
-          after: 0,
-          page_size: 250,
-        },
-      },
-      isLoading: false,
-      isSuccess: true,
-    }),
-  }),
-}));
 
 const TestWrapper = () => {
   const [value, setValue] = useState("");
@@ -75,22 +61,28 @@ test("Given the AutoCompleteInputProvider When typing an instance name or id The
     "Select an instance of test_entity"
   );
 
-  // Since we're mocking useGetInstances directly, we can't track the individual API calls
-  // The test now focuses on the component behavior rather than the specific API calls
   expect(relationInputField).toBeInTheDocument();
 
-  //fireEvents in that scenario triggers update in the components which then triggers "act warning"
+  // Type 'a' and check input value and option
   await act(async () => {
     fireEvent.change(relationInputField, { target: { value: "a" } });
   });
+  expect(relationInputField).toHaveValue("a");
+  expect(await screen.findByText("service_name_a")).toBeInTheDocument();
 
+  // Type 'ab' and check input value and option
   await act(async () => {
     fireEvent.change(relationInputField, { target: { value: "ab" } });
   });
+  expect(relationInputField).toHaveValue("ab");
+  expect(screen.queryByText("service_name_a")).not.toBeInTheDocument();
 
+  // Clear input and check value and option
   await act(async () => {
     fireEvent.change(relationInputField, { target: { value: "" } });
   });
+  expect(relationInputField).toHaveValue("");
+  expect(await screen.findByText("service_name_a")).toBeInTheDocument();
 
   server.close();
 });
