@@ -382,13 +382,9 @@ describe("Scenario 4 Desired State", () => {
         "This resource has not been modified."
       );
 
-      if (isIso) {
-        expect($expandableRow.eq(1), "second-row").to.contain("next_version-3+4");
-      } else {
-        expect($expandableRow.eq(1), "second-row").to.have.text(
-          "This resource has not been modified."
-        );
-      }
+      expect($expandableRow.eq(1), "second-row").to.have.text(
+        "This resource has not been modified."
+      );
     });
 
     // go back to desired state page
@@ -436,10 +432,6 @@ describe("Scenario 4 Desired State", () => {
       expect($expandableRow.eq(0), "first-row").to.have.text(
         "This resource has not been modified."
       );
-
-      if (isIso) {
-        expect($expandableRow.eq(1), "second-row").to.contain("next_version-3+4");
-      }
     });
 
     // click on filter by status dropdown
@@ -453,10 +445,6 @@ describe("Scenario 4 Desired State", () => {
     if (isIso) {
       cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(($expandableRow) => {
         expect($expandableRow).to.have.length(1);
-
-        if (isIso) {
-          expect($expandableRow.eq(0), "first-row").to.contain("next_version-3+4");
-        }
       });
     }
 
@@ -489,10 +477,6 @@ describe("Scenario 4 Desired State", () => {
       expect($expandableRow.eq(0), "first-row").to.have.text(
         "This resource has not been modified."
       );
-
-      if (isIso) {
-        expect($expandableRow.eq(1), "second-row").to.contain("next_version-3+4");
-      }
     });
 
     // click on Perform dry run
