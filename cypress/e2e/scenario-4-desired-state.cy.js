@@ -382,13 +382,9 @@ describe("Scenario 4 Desired State", () => {
         "This resource has not been modified."
       );
 
-      if (isIso) {
-        expect($expandableRow.eq(1), "second-row").to.contain("next_version-3+4");
-      } else {
-        expect($expandableRow.eq(1), "second-row").to.have.text(
-          "This resource has not been modified."
-        );
-      }
+      expect($expandableRow.eq(1), "second-row").to.have.text(
+        "This resource has not been modified."
+      );
     });
 
     // go back to desired state page
