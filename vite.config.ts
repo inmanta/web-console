@@ -199,7 +199,6 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./test-setup.ts"],
-    reporters: [["default", { summary: false }]],
     coverage: {
       provider: "v8",
       reporter: ["text", "cobertura"],
@@ -221,18 +220,6 @@ export default defineConfig({
         "graphql-request",
         "@patternfly/react-styles",
       ],
-    },
-    server: {
-      deps: {
-        inline: [
-          "@inmanta/rappid",
-          "mermaid",
-          "monaco-editor",
-          "@monaco-editor/react",
-          "graphql-request",
-          "@patternfly/react-styles",
-        ],
-      },
     },
     resolve: {
       alias: {
