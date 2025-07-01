@@ -11,7 +11,7 @@
     "start": "vite",
     "start:https": "vite --https",
     "test": "vitest --run",
-    "test:ci": "CI=true vitest --pool=threads --coverage --reporter=verbose",
+    "test:ci": "CI=true vitest --coverage --reporter=verbose",
     "test:ui": "vitest --ui",
     "format": "prettier --check --write \"./**/*.{cjs,js,jsx,ts,tsx}\"",
     "format:check": "prettier --check \"./**/*.{cjs,js,jsx,ts,tsx}\"",
@@ -105,8 +105,8 @@
     "ts-prune": "^0.10.3",
     "typescript": "^5.4.5",
     "typescript-eslint": "^8.13.0",
-    "vite": "^5.2.8",
-    "vitest": "^1.3.1",
+    "vite": "^7.0.0",
+    "vitest": "^3.2.4",
     "vitest-axe": "^0.1.0"
   },
   "browser": {

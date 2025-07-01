@@ -210,6 +210,7 @@ export default defineConfig({
         "**/__mocks__/**",
         "cypress/**",
       ],
+      maxThreads: process.env.CI ? 1 : undefined,
     },
     deps: {
       inline: [
@@ -239,6 +240,8 @@ export default defineConfig({
         classNameStrategy: "non-scoped",
       },
     },
+    maxThreads: process.env.CI ? 2 : undefined,
+    cache: true,
   },
   optimizeDeps: {
     include: [
