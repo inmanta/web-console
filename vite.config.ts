@@ -158,7 +158,7 @@ export default defineConfig({
   },
   build: {
     outDir: "dist",
-    sourcemap: true,
+    sourcemap: false,
     assetsInlineLimit: 4096, // Inline assets smaller than 4kb
     cssCodeSplit: true, // Enable CSS code splitting
     rollupOptions: {
@@ -200,7 +200,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./test-setup.ts"],
     coverage: {
-      provider: "istanbul",
+      provider: "v8",
       reporter: ["text", "cobertura"],
       exclude: [
         "node_modules/",
