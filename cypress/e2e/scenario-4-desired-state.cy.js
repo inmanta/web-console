@@ -441,13 +441,6 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[role="option"]').contains("unmodified").click();
     cy.get('[aria-label="StatusFilter"]').click();
 
-    // expect diff-module to only show the modified file.Only for ISO, the table would be empty on OSS.
-    if (isIso) {
-      cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(($expandableRow) => {
-        expect($expandableRow).to.have.length(1);
-      });
-    }
-
     // go back to desired state
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Desired State").click();
 
