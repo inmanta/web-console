@@ -68,10 +68,7 @@ pipeline {
             }
             post {
                 always {
-                    dir('web-console') {
-                        sh '''npx junit-merge -d cypress/reports/junit -o cypress/reports/cypress-report.xml'''
-                    }
-                    junit 'web-console/junit.xml'
+                    junit 'web-console/cypress/reports/junit/*.xml'
                     cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
                     archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**', allowEmptyArchive: true, onlyIfSuccessful: false
                     deleteDir()
