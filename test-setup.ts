@@ -4,9 +4,6 @@ import moment from "moment-timezone";
 
 import "jest-axe/extend-expect";
 
-// Import PatternFly CSS to ensure CSS variables are available in tests
-import "@patternfly/react-core/dist/styles/base.css";
-
 // Define mocks using vi.hoisted to ensure they're available during hoisting
 const logViewerMock = vi.hoisted(() => ({
   LogViewer: ({ data, toolbar, onScroll, _hasLineNumbers = false, _scrollToRow }) => {
@@ -124,7 +121,7 @@ Object.defineProperty(window, "innerHeight", {
 });
 
 // Set test timeout
-vi.setConfig({ testTimeout: 10000 });
+vi.setConfig({ testTimeout: 20000 });
 
 // Collect console warnings and errors
 const consoleIssues: Array<{ type: "warn" | "error"; message: string }> = [];

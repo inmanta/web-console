@@ -629,7 +629,7 @@ describe("EditInstancePage", () => {
 
       expect(results).toHaveNoViolations();
     });
-  }, 20000);
+  });
 
   test("GIVEN the EditInstance View WHEN changing an embedded entity with nested embedded entities THEN the new fields are enabled", async () => {
     mockedUseParams.mockReturnValue({ service: "service_name_c", instance });
