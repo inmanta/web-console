@@ -3,7 +3,7 @@ import { defineConfig, UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { execSync } from "child_process";
-import { copyFileSync, mkdirSync, existsSync, writeFileSync } from "fs";
+import { copyFileSync, existsSync, writeFileSync } from "fs";
 
 // Get git commit hash
 const getGitCommitHash = () => {
@@ -199,6 +199,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./test-setup.ts"],
+    reporters: [["default", { summary: false }]],
     coverage: {
       provider: "v8",
       reporter: ["text", "cobertura"],
