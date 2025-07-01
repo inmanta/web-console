@@ -104,10 +104,12 @@ Object.defineProperty(window, "matchMedia", {
   })),
 });
 
-// JointJS mock
-Object.defineProperty(window, "SVGAngle", {
-  value: vi.fn(),
-});
+// JointJS mock - only define if not already defined
+if (!window.SVGAngle) {
+  Object.defineProperty(window, "SVGAngle", {
+    value: vi.fn(),
+  });
+}
 
 // Set window size for tests
 Object.defineProperty(window, "innerWidth", {

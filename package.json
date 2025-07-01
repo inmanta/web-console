@@ -11,7 +11,7 @@
     "start": "vite",
     "start:https": "vite --https",
     "test": "vitest --run",
-    "test:ci": "CI=true vitest --pool=forks --coverage --reporter=verbose --maxConcurrency=8 --poolOptions.forks.singleFork=true --poolOptions.forks.isolate=false",
+    "test:ci": "CI=true vitest --pool=forks --coverage --reporter=verbose --maxConcurrency=4",
     "test:ui": "vitest --ui",
     "format": "prettier --check --write \"./**/*.{cjs,js,jsx,ts,tsx}\"",
     "format:check": "prettier --check \"./**/*.{cjs,js,jsx,ts,tsx}\"",
