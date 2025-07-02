@@ -518,7 +518,7 @@ describe("Scenario 4 Desired State", () => {
       }
     });
     // expect the view to still contain the diff of the last dry-run comparison
-    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(
+    cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
       ($expandableRow) => {
         expect($expandableRow).to.have.length(isIso ? 2 : 5);
         expect($expandableRow.eq(0), "first-row").to.have.text(
