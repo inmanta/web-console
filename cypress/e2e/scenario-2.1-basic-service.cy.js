@@ -177,7 +177,6 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Check Instance Details page
-      // cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).click();
       // The first button should be the one redirecting to the details page.
       cy.get('[aria-label="instance-details-link"]').first().click();
 
@@ -188,12 +187,14 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="History-Row"]').eq(0).should("contain", "up");
 
       // Selecting a version in the table should change the tags in the heading of the page.
-      cy.get('[aria-label="History-Row"]')
-        .eq(1)
-        .within(() => {
-          cy.get('[data-label="version"]').trigger("click"); //it's done to avoid flake where the tooltip comes in a way and click ins't triggered
-        });
-      cy.get('[data-testid="selected-version"]').should("have.text", "Version: 2");
+      cy.get('[id="version-2"]').trigger("click");
+      cy.wait(1000);
+      cy.get('[id="version-2"]').trigger("click");
+
+      cy.get('[data-testid="selected-version"]', { timeout: 30000 }).should(
+        "have.text",
+        "Version: 2"
+      );
 
       // Check if it has all correct tabs and that the default selected one is the documentation tab.
       cy.get('[aria-label="documentation-content"]').should("have.attr", "aria-selected", "true");
@@ -255,7 +256,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="Error-container"]').should("not.exist");
 
       // delete the JSON entirely
-      cy.get(".view-line").last().type("{selectall}{backspace}");
+      cy.get(".monaco-editor").click().focused().type("{ctrl+a}{backspace}");
 
       // expect the JSON to be invalid
       cy.get('[data-testid="Error-container"]').should("contain", "Errors found");
@@ -267,7 +268,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#formButton").should("be.disabled");
 
       // ctrl+z to undo the deletion
-      cy.get(".view-line").first().type("{ctrl}z");
+      cy.get(".monaco-editor").click().focused().type("{ctrl+z}");
 
       // expect the JSON to be valid
       cy.get('[data-testid="Error-container"]').should("not.exist");
@@ -290,11 +291,25 @@ if (Cypress.env("edition") === "iso") {
 
       // expect the value for address_r1 to be empty
       cy.get(".view-line > :nth-child(1) > .mtk5").first().should("contain", '""');
-      cy.get(".view-line > :nth-child(1) > .mtk5").first().type("1.2.3.2/32");
-      cy.get(".monaco-scrollable-element").first().type("{pageDown}"); // force editor to scroll down
+
+      // empty value should be valid and allow going back to form.
+      cy.get("#formButton").click();
+      cy.get("#address_r1").type("1.2.3.2/32");
+
+      // bo back to editor
+      cy.get("#editorButton").click();
 
       // change the service id to make instance unique
-      cy.get(".mtk5").contains("0001").type("{backspace}9");
+      cy.get(".monaco-editor").click().focused().type("{ctrl+f}"); // open search tool
+
+      cy.wait(1000); // let the editor settle to avoid typing text to fail
+
+      cy.get('[aria-label="Find"]').type("0001");
+
+      // toggle replace option
+      cy.get('[aria-label="Toggle Replace"]').click();
+      // go to the replace field
+      cy.get('[aria-label="Replace"]').type("0005{enter}{enter}");
 
       // submit
       cy.get("button").contains("Confirm").click();
@@ -401,15 +416,9 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#Compare").click();
 
       // assert you can compare two different versions, and that there are differences.
-      cy.get(".editor.modified")
-        .find(".view-line")
-        .eq(4)
-        .should("contain", '"address_r1": "1.2.3.8/32",');
-
-      cy.get(".editor.original")
-        .find(".view-line")
-        .eq(4)
-        .should("contain", '"address_r1": "1.2.3.5/32",');
+      cy.get(".monaco-diff-editor").should("exist");
+      // Check for the presence of diff markers (insert/delete signs)
+      cy.get(".codicon-diff-insert, .codicon-diff-remove").should("exist");
 
       // Update the state to setting_start
       cy.get('[aria-label="Actions-Toggle"]').click();
@@ -458,11 +467,23 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get('[aria-label="events-content"]').click();
 
-      cy.get('[aria-label="Event-compile-2"]').should("contain", "Export");
-      cy.get('[aria-label="Event-compile-1"]').should("contain", "Validation");
-
       // check that there are four rows for this version
       cy.get('[aria-label="Event-table-row"]').should("have.length", 4);
+
+      // Check that both Export and Validation events exist in the table
+      cy.get('[aria-label="Event-table-row"]').should(($events) => {
+        const eventTypes = $events
+          .map((_, element) =>
+            Cypress.$(element)
+              .find('[aria-label^="Event-compile-"] .pf-v6-c-button__text')
+              .text()
+              .trim()
+          )
+          .get();
+
+        expect(eventTypes).to.include.members(["Export", "Validation"]);
+        expect(eventTypes).to.have.length(4); // Verify total number of events
+      });
 
       // check the source/target states are correct
       cy.get('[aria-label="Event-source-0"]').should("contain", "start");

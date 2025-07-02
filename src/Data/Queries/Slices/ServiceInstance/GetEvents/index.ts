@@ -1,0 +1,1 @@
+export { useGetInstanceEvents } from "./useGetEvents";

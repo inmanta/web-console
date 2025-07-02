@@ -1,18 +1,13 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, delay } from "msw";
 import { setupServer } from "msw/node";
-import { RemoteData } from "@/Core";
-import { getStoreInstance } from "@/Data";
-import { dependencies, EnvironmentDetails, EnvironmentSettings } from "@/Test";
+import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as Mock from "@S/CompileReports/Core/Mock";
 import { Page } from "./Page";
 
@@ -26,7 +21,7 @@ const axe = configureAxe({
 });
 const server = setupServer();
 
-function setup() {
+function setup(serverCompileEnabled: boolean = false) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -34,37 +29,19 @@ function setup() {
       },
     },
   });
-  const store = getStoreInstance();
-
-  const routeManager = PrimaryRouteManager("");
-
-  store.dispatch.environment.setEnvironmentDetailsById({
-    id: "env",
-    value: RemoteData.success(EnvironmentDetails.a),
-  });
-  store.dispatch.environment.setSettingsData({
-    environment: "env",
-    value: RemoteData.success({
-      settings: {},
-      definition: EnvironmentSettings.definition,
-    }),
-  });
-  dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            routeManager,
+      <TestMemoryRouter>
+        <MockedDependencyProvider
+          env={{
+            ...EnvironmentDetails.env,
+            settings: { ...EnvironmentDetails.env.settings, server_compile: serverCompileEnabled },
           }}
         >
-          <StoreProvider store={store}>
-            <Page />
-          </StoreProvider>
-        </DependencyProvider>
-      </MemoryRouter>
+          <Page />
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 
@@ -74,7 +51,10 @@ function setup() {
 describe("CompileReports", () => {
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
+  afterAll(() => {
+    jest.clearAllMocks();
+    server.close();
+  });
 
   test("CompileReportsView shows empty table", async () => {
     server.use(
@@ -161,12 +141,12 @@ describe("CompileReports", () => {
   });
 
   test("CompileReportsView shows updated table", async () => {
-    let delay = 0;
+    let counter = 0;
 
     server.use(
       http.get("/api/v2/compilereport", () => {
-        if (delay === 0) {
-          delay++;
+        if (counter === 0) {
+          counter++;
 
           return HttpResponse.json({
             data: [],
@@ -191,7 +171,9 @@ describe("CompileReports", () => {
       await screen.findByRole("generic", { name: "CompileReportsView-Empty" })
     ).toBeInTheDocument();
 
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await act(async () => {
+      await delay(5000);
+    });
 
     expect(
       await screen.findByRole("grid", { name: "CompileReportsView-Success" })
@@ -399,13 +381,13 @@ describe("CompileReports", () => {
           data: Mock.response.data.slice(0, 3),
         });
       }),
-      http.post("/api/v1/notify/env", () => {
+      http.post("/api/v1/notify/c85c0a64-ed45-4cba-bdc5-703f65a225f7", () => {
         update = true;
 
         return HttpResponse.json({});
       })
     );
-    const { component } = setup();
+    const { component } = setup(true);
 
     render(component);
 

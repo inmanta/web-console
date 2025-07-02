@@ -1,0 +1,6 @@
+description: Include the Json-bigint package in the project.
+issue-nr: 6379
+change-type: patch
+destination-branches: [master, iso8]
+sections:
+  minor-improvement: "{{description}}"

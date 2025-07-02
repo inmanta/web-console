@@ -1,32 +1,36 @@
 import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
-import { Query, RemoteData } from "@/Core";
+import { Details } from "@/Core/Domain/Resource/Resource";
 import { JsonFormatter, XmlFormatter } from "@/Data";
-import { AttributeClassifier, AttributeList, RemoteDataView } from "@/UI/Components";
+import { AttributeClassifier, AttributeList } from "@/UI/Components";
 
 interface Props {
-  data: Query.UsedApiData<"GetResourceDetails">;
+  details: Details;
 }
 
-export const AttributesTab: React.FC<Props> = ({ data }) => {
-  const classifier = new AttributeClassifier(new JsonFormatter(), new XmlFormatter());
-
-  const classifiedAttributes = RemoteData.mapSuccess(
-    (resource) => classifier.classify(resource.attributes),
-    data
+/**
+ * The AttributesTab component.
+ *
+ * This component is responsible of displaying the attributes of a resource.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {Details} details - The details of the resource
+ * @returns {React.FC<Props>} A React Component displaying the attributes of a resource
+ */
+export const AttributesTab: React.FC<Props> = ({ details }) => {
+  const classifier = new AttributeClassifier(
+    new JsonFormatter(),
+    new XmlFormatter(),
+    (key: string, value: string) => ({ kind: "Code", key, value })
   );
 
+  const classifiedAttributes = classifier.classify(details.attributes);
+
   return (
-    <RemoteDataView
-      data={classifiedAttributes}
-      label="ResourceAttributes"
-      SuccessView={(attributes) => (
-        <Card isCompact>
-          <CardBody>
-            <AttributeList attributes={attributes} />
-          </CardBody>
-        </Card>
-      )}
-    />
+    <Card isCompact>
+      <CardBody>
+        <AttributeList attributes={classifiedAttributes} />
+      </CardBody>
+    </Card>
   );
 };

@@ -1,5 +1,4 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
@@ -7,10 +6,11 @@ import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { UserInfo } from "@/Data/Managers/V2/Auth";
-import { dependencies } from "@/Test";
-import { DependencyProvider, words } from "@/UI";
+import { UserInfo } from "@/Data/Queries";
+import { MockedDependencyProvider } from "@/Test";
+import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { UserManagementPage } from "./Page";
 
 expect.extend(toHaveNoViolations);
@@ -25,17 +25,17 @@ const setup = () => {
   });
 
   const component = (
-    <MemoryRouter>
+    <TestMemoryRouter>
       <QueryClientProvider client={queryClient}>
-        <DependencyProvider dependencies={{ ...dependencies }}>
+        <MockedDependencyProvider>
           <ModalProvider>
             <Page>
               <UserManagementPage />
             </Page>
           </ModalProvider>
-        </DependencyProvider>
+        </MockedDependencyProvider>
       </QueryClientProvider>
-    </MemoryRouter>
+    </TestMemoryRouter>
   );
 
   return component;
@@ -260,6 +260,73 @@ describe("UserManagementPage", () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    server.close();
+  });
+
+  it("should sent request to change user password", async () => {
+    const server = setupServer(
+      http.get("/api/v2/user", async () => {
+        return HttpResponse.json({ data: [{ username: "test_user", auth_method: "database" }] });
+      }),
+      http.patch("/api/v2/user/test_user/password", async ({ request }) => {
+        const reqBody = await request.json();
+
+        if (typeof reqBody !== "object") {
+          return HttpResponse.json(
+            {
+              message: "Invalid request: wrong request body format",
+            },
+            {
+              status: 400,
+            }
+          );
+        }
+
+        if (reqBody?.password.length <= 8) {
+          return HttpResponse.json(
+            {
+              message: "Invalid request: the password should be at least 8 characters long",
+            },
+            {
+              status: 400,
+            }
+          );
+        }
+
+        return HttpResponse.json();
+      })
+    );
+
+    server.listen();
+    const component = setup();
+
+    render(component);
+
+    const successView = await screen.findByLabelText("users-table");
+
+    expect(successView).toBeInTheDocument();
+
+    await userEvent.click(screen.getByText("Change Password"));
+
+    const newPasswordInput = await screen.findByLabelText("new-password-input");
+
+    await userEvent.type(newPasswordInput, "123");
+
+    await userEvent.click(screen.getByTestId("change-password-button"));
+
+    const errorMessage = await screen.findByLabelText("error-message");
+
+    expect(errorMessage).toBeInTheDocument();
+    expect(errorMessage).toHaveTextContent(
+      "Invalid request: the password should be at least 8 characters long"
+    );
+
+    await userEvent.type(newPasswordInput, "12345678");
+
+    await userEvent.click(screen.getByTestId("change-password-button"));
+
+    expect(await screen.findByText("Password changed successfully")).toBeInTheDocument();
 
     server.close();
   });

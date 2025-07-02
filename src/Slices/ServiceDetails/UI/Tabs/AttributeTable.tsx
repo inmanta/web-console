@@ -1,9 +1,9 @@
 import React from "react";
 import { ServiceModel } from "@/Core";
-import { useNavigateTo } from "@/UI";
 import { TreeTable, TreeTableCellContext } from "@/UI/Components";
 import { CatalogAttributeHelper, CatalogTreeTableHelper } from "@/UI/Components/TreeTable/Catalog";
 import { PathHelper, TreeExpansionManager } from "@/UI/Components/TreeTable/Helpers";
+import { useNavigateTo } from "@/UI/Routing";
 
 interface Props {
   service: ServiceModel;

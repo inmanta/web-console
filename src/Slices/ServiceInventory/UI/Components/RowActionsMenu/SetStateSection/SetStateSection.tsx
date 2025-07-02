@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Button, MenuItem, Content } from "@patternfly/react-core";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { usePostStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
+import { usePostStateTransfer } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -41,13 +41,13 @@ export const SetStateSection: React.FC<Props> = ({
   };
 
   const isDisabled = !targets || targets.length === 0;
-  const { authHelper, environmentModifier } = useContext(DependencyContext);
+  const { authHelper, environmentHandler } = useContext(DependencyContext);
   const { mutate } = usePostStateTransfer(id, service_entity, {
     onError: (error) => {
       setStateErrorMessage(error.message);
     },
   });
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
 
   /**
    * Opens a modal with a confirmation buttons.

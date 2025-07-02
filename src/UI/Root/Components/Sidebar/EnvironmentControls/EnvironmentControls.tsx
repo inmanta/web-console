@@ -1,61 +1,46 @@
 import React, { useContext, useEffect } from "react";
 import { Flex, FlexItem, Label, Stack, StackItem } from "@patternfly/react-core";
-import { RemoteData } from "@/Core";
+import { useGetEnvironmentDetails } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { HaltButton } from "./HaltButton";
 import { ResumeButton } from "./ResumeButton";
 
+/**
+ * This component is used to display the environment controls.
+ * It is used to halt and resume the environment.
+ * It also displays the status of the environment.
+ *
+ * @returns {React.FC}
+ */
 export const EnvironmentControls: React.FC = () => {
-  const { queryResolver, environmentHandler } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
 
   const id = environmentHandler.useId();
-  const [data] = queryResolver.useContinuous<"GetEnvironmentDetails">({
-    kind: "GetEnvironmentDetails",
-    details: false,
-    id,
-  });
+  const { data, isSuccess, isError } = useGetEnvironmentDetails().useContinuous(id);
 
   useEffect(() => {
-    RemoteData.fold(
-      {
-        notAsked: () => null,
-        loading: () => null,
-        failed: () => {
-          document.dispatchEvent(new CustomEvent("status-down"));
+    if (isSuccess) {
+      document.dispatchEvent(new CustomEvent("status-up"));
+    }
+    if (isError) {
+      document.dispatchEvent(new CustomEvent("status-down"));
+    }
+  }, [isError, isSuccess]);
 
-          return null;
-        },
-        success: () => {
-          document.dispatchEvent(new CustomEvent("status-up"));
-
-          return null;
-        },
-      },
-      data
+  if (isSuccess) {
+    return (
+      <Stack hasGutter>
+        <StackItem>
+          {data.halted && <Label status="warning">{words("environment.halt.label")}</Label>}
+        </StackItem>
+        <StackItem>
+          <Flex>
+            <FlexItem>{data.halted ? <ResumeButton /> : <HaltButton />}</FlexItem>
+          </Flex>
+        </StackItem>
+      </Stack>
     );
-  }, [data]);
-
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => null,
-      failed: () => null,
-      success: (data) => {
-        return (
-          <Stack hasGutter>
-            <StackItem>
-              {data.halted && <Label status="warning">{words("environment.halt.label")}</Label>}
-            </StackItem>
-            <StackItem>
-              <Flex>
-                <FlexItem>{data.halted ? <ResumeButton /> : <HaltButton />}</FlexItem>
-              </Flex>
-            </StackItem>
-          </Stack>
-        );
-      },
-    },
-    data
-  );
+  }
+  return null;
 };

@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { PageSize, ParsedNumber } from "@/Core";
 import { CurrentPage, initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { Filter } from "@S/DesiredState/Core/Query";
+import { Filter } from "@/Slices/DesiredState/Core/Types";
 import { CompareSelection } from "./Utils";
 
 interface GetDesiredStatesProvider {

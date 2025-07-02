@@ -1,20 +1,17 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { cloneDeep } from "lodash";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
-import { Service, ServiceInstance, MockEnvironmentModifier, dependencies } from "@/Test";
+import * as queryModule from "@/Data/Queries/Helpers/useQueries";
+import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { EditInstancePage } from "./EditInstancePage";
 
 expect.extend(toHaveNoViolations);
@@ -43,29 +40,20 @@ const axeLimited = configureAxe({
 });
 
 function setup(entity = "a", multiNested = false) {
-  const store = getStoreInstance();
-
   const service = multiNested
     ? { ...Service[entity], embedded_entities: multiNestedEditable }
     : Service[entity];
 
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentModifier: new MockEnvironmentModifier(),
-          }}
-        >
-          <StoreProvider store={store}>
-            <EditInstancePage
-              serviceEntity={service}
-              instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-            />
-          </StoreProvider>
-        </DependencyProvider>
-      </MemoryRouter>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
+          <EditInstancePage
+            serviceEntity={service}
+            instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
+          />
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

@@ -6,7 +6,7 @@ import {
 } from "@patternfly/react-tokens";
 import { words } from "@/UI";
 import { LegendBar, LegendItemDetails } from "@/UI/Components";
-import { ServiceOrderItem } from "../Core/Query";
+import { ServiceOrderItem } from "../Core/Types";
 
 interface Props {
   serviceOrderItems: ServiceOrderItem[];

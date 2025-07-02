@@ -9,16 +9,16 @@ import { setupServer } from "msw/node";
 import { KeycloakAuthConfig, LocalConfig } from "@/Data/Auth";
 import { AuthProvider } from "@/Data/Auth/AuthProvider";
 import * as CookieHelper from "@/Data/Common/CookieHelper";
-import { dependencies } from "@/Test";
 import { AuthTestWrapper } from "@/Test/Inject";
+import { words } from "@/UI";
 import { Login } from "./Page";
 
 expect.extend(toHaveNoViolations);
 
 const mockedUsedNavigate = jest.fn();
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
   useNavigate: () => mockedUsedNavigate,
 }));
 
@@ -28,7 +28,7 @@ const setup = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider config={config}>
-        <AuthTestWrapper dependencies={dependencies}>
+        <AuthTestWrapper>
           <Login />
         </AuthTestWrapper>
       </AuthProvider>
@@ -37,21 +37,25 @@ const setup = (config: KeycloakAuthConfig | LocalConfig | undefined) => {
 };
 
 describe("Login", () => {
-  it("login form is properly rendered", async () => {
+  it("login page is properly rendered with PatternFly components", async () => {
     render(setup({ method: "database" }));
 
-    expect(screen.getByLabelText("input-username")).toBeInTheDocument();
-    expect(screen.getByLabelText("input-password")).toBeInTheDocument();
-    expect(screen.getByLabelText("login-button")).toBeInTheDocument();
+    // Check for PatternFly LoginPage elements
+    expect(screen.getByText(words("login.title"))).toBeInTheDocument();
+    expect(screen.getByText(words("login.subtitle"))).toBeInTheDocument();
+
+    // Check for form elements
+    expect(screen.getByRole("textbox", { name: "Username" })).toBeInTheDocument();
+    expect(document.getElementById("pf-login-password-id")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Log in" })).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  it("if user login with valid credentials we should set the cookie and reload the page", async () => {
+  it("if user login with valid credentials we should set the cookie and navigate to home", async () => {
     const spiedCreateCookie = jest.spyOn(CookieHelper, "createCookie");
 
     const server = setupServer(
@@ -80,43 +84,23 @@ describe("Login", () => {
     server.listen();
     render(component);
 
-    const usernameInput = screen.getByLabelText("input-username");
-
+    const usernameInput = screen.getByRole("textbox", { name: "Username" });
     await userEvent.type(usernameInput, "test_user");
 
-    const passwordInput = screen.getByLabelText("input-password");
-
+    const passwordInput = document.getElementById("pf-login-password-id") as HTMLInputElement;
     await userEvent.type(passwordInput, "test_password");
 
-    const showPasswordButton = screen.getByLabelText("show-password");
-
-    await userEvent.click(showPasswordButton);
-
-    const passwordInput1 = screen.getByLabelText("input-password");
-
-    expect(passwordInput1).toHaveAttribute("type", "text");
-
-    const hidePasswordButton = screen.getByLabelText("hide-password");
-
-    await userEvent.click(hidePasswordButton);
-
-    const passwordInput2 = screen.getByLabelText("input-password");
-
-    expect(passwordInput2).toHaveAttribute("type", "password");
-
-    const logInButton = screen.getByLabelText("login-button");
-
+    const logInButton = screen.getByRole("button", { name: "Log in" });
     await userEvent.click(logInButton);
 
     await waitFor(() =>
       expect(spiedCreateCookie).toHaveBeenCalledWith("inmanta_user", "test-token", 1)
     );
 
-    await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith("/"));
+    await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith("/console"));
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
 
@@ -149,27 +133,23 @@ describe("Login", () => {
     server.listen();
     render(component);
 
-    const usernameInput = screen.getByLabelText("input-username");
-
+    const usernameInput = screen.getByRole("textbox", { name: "Username" });
     await userEvent.type(usernameInput, "test_user");
 
-    const passwordInput = screen.getByLabelText("input-password");
-
+    const passwordInput = document.getElementById("pf-login-password-id") as HTMLInputElement;
     await userEvent.type(passwordInput, "test_password");
 
-    const logInButton = screen.getByLabelText("login-button");
-
+    const logInButton = screen.getByRole("button", { name: "Log in" });
     await userEvent.click(logInButton);
 
     await waitFor(() => {
-      expect(screen.getByLabelText("error-message")).toHaveTextContent(
-        "Access to this resource is unauthorized"
-      );
+      const helperText = screen.getByText("Access to this resource is unauthorized");
+      expect(helperText).toBeInTheDocument();
+      expect(helperText.closest(".pf-v6-c-helper-text__item-text")).toBeInTheDocument();
     });
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
 
@@ -188,7 +168,7 @@ describe("Login", () => {
 
         return HttpResponse.json(
           {
-            message: "Access to this resource is unauthorized",
+            message: "Username or password is incorrect",
           },
           {
             status: 401,
@@ -203,19 +183,17 @@ describe("Login", () => {
 
     render(component);
 
-    const logInButton = screen.getByLabelText("login-button");
-
+    const logInButton = screen.getByRole("button", { name: "Log in" });
     await userEvent.click(logInButton);
 
     await waitFor(() => {
-      expect(screen.getByLabelText("error-message")).toHaveTextContent(
-        "Access to this resource is unauthorized"
-      );
+      const helperText = screen.getByText("Username or password is incorrect");
+      expect(helperText).toBeInTheDocument();
+      expect(helperText.closest(".pf-v6-c-helper-text__item-text")).toBeInTheDocument();
     });
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
 

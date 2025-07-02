@@ -1,9 +1,8 @@
 import React from "react";
 import { LoginPage, ListVariant } from "@patternfly/react-core";
-import styled from "styled-components";
 import { words } from "@/UI";
-import logo from "@images/logo.svg";
-import { LoginForm } from "./UI/LoginForm";
+import logo from "@images/cut-wings.svg";
+import { LoginPageComponent } from "./UI/LoginForm";
 
 /**
  * PF-MIGRATION TODO : UPDATE based on new guidelines
@@ -15,25 +14,13 @@ import { LoginForm } from "./UI/LoginForm";
  */
 export const Login: React.FC = () => {
   return (
-    <Wrapper>
-      <LoginPage
-        brandImgSrc={logo}
-        footerListVariants={ListVariant.inline}
-        brandImgAlt="Inmanta logo"
-        loginTitle={words("login.title")}
-        loginSubtitle={words("login.subtitle")}
-      >
-        <LoginForm submitButtonText={words("login.login")} />
-      </LoginPage>
-    </Wrapper>
+    <LoginPage
+      backgroundImgSrc={logo}
+      footerListVariants={ListVariant.inline}
+      loginTitle={words("login.title")}
+      loginSubtitle={words("login.subtitle")}
+    >
+      <LoginPageComponent submitButtonText={words("login.login")} />
+    </LoginPage>
   );
 };
-
-const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
-  z-index: 99999;
-  position: absolute;
-  top: 0;
-  left: 0;
-`;

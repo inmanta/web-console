@@ -1,0 +1,5 @@
+description: Hide deploy button in the Instance Composer Viewer mode
+issue-nr: 6417
+change-type: patch
+destination-branches: [master, iso8]
+

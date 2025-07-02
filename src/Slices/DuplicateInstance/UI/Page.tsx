@@ -1,6 +1,6 @@
 import React from "react";
-import { useRouteParams } from "@/UI";
 import { PageContainer, ServiceProvider } from "@/UI/Components";
+import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { DuplicateInstancePage } from "./DuplicateInstancePage";
 

@@ -5,8 +5,8 @@ import { setupServiceInstanceDetails } from "./mockSetup";
 
 const mockedUsedNavigate = jest.fn();
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
   useNavigate: () => mockedUsedNavigate,
 }));
 
@@ -109,7 +109,7 @@ describe("Page Actions - Success", () => {
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
     await waitFor(() =>
       expect(mockedUsedNavigate).toHaveBeenCalledWith(
-        "/console/lsm/catalog/mobileCore/inventory?env=aaa"
+        "/console/lsm/catalog/mobileCore/inventory?env=c85c0a64-ed45-4cba-bdc5-703f65a225f7"
       )
     );
   });
@@ -268,7 +268,9 @@ describe("Page Actions - Failed", () => {
     await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
-    expect(screen.getByTestId("error-toast-expert-state-message")).toBeVisible();
+    const errorToast = screen.getByTestId("error-toast-actions-error-message");
+
+    expect(errorToast).toBeVisible();
   });
 
   it("Expert actions - Destroy", async () => {
@@ -304,7 +306,9 @@ describe("Page Actions - Failed", () => {
     await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
-    expect(screen.getByTestId("error-toast-expert-destroy-message")).toBeVisible();
+    const errorToast = screen.getByTestId("error-toast-actions-error-message");
+
+    expect(errorToast).toBeVisible();
 
     await waitFor(() => expect(mockedUsedNavigate).not.toHaveBeenCalled());
   });
@@ -355,7 +359,9 @@ describe("Page Actions - Failed", () => {
     await userEvent.click(confirmButton);
 
     expect(screen.getByRole("dialog")).toBeVisible();
-    expect(screen.getByTestId("error-toast-delete-instance-message")).toBeVisible();
+    const errorToast = screen.getByTestId("error-toast-actions-error-message");
+
+    expect(errorToast).toBeVisible();
   });
 
   it("Normal Instance Actions Enabled - update state action", async () => {
@@ -397,6 +403,8 @@ describe("Page Actions - Failed", () => {
 
     await userEvent.click(confirmButton);
 
-    expect(screen.getByTestId("error-toast-state-transfer-message")).toBeVisible();
+    const errorToast = screen.getByTestId("error-toast-actions-error-message");
+
+    expect(errorToast).toBeVisible();
   });
 });

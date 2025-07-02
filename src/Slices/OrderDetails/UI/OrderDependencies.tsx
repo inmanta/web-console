@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Label } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
-import { ServiceOrderItemDependencies } from "@/Slices/Orders/Core/Query";
+import { ServiceOrderItemDependencies } from "@/Slices/Orders/Core/Types";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { words } from "@/UI";
 import { TextWithCopy } from "@/UI/Components";

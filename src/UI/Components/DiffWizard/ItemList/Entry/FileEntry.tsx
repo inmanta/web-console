@@ -1,56 +1,64 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import { Bullseye, Button, Grid, GridItem } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Diff, Either, RemoteData } from "@/Core";
+import { Diff } from "@/Core";
+import { useGetFile } from "@/Data/Queries";
 import { EntryInfo } from "@/UI/Components/DiffWizard/types";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { DefaultEntry } from "./DefaultEntry";
 import { DiffView } from "./DiffView";
 import { Title } from "./utils";
 
+/**
+ * A component that displays a file entry in the diff wizard.
+ * @param title - The title of the file entry.
+ * @param fromValue - The value of the file entry from the previous state.
+ * @param toValue - The value of the file entry from the current state.
+ */
 export const FileEntry: React.FC<EntryInfo> = ({ title, fromValue, toValue }) => {
-  const { fileFetcher } = useContext(DependencyContext);
-  const [files, setFiles] = useState<RemoteData.RemoteData<string, Diff.Values>>(
-    RemoteData.notAsked()
-  );
-
+  const fromFile = useGetFile(fromValue);
+  const toFile = useGetFile(toValue);
   const onShow = async () => {
-    setFiles(RemoteData.loading());
-    const [from, to] = await Promise.all([
-      fromValue.length > 0 ? fileFetcher.get(fromValue) : Promise.resolve(Either.right("")),
-      toValue.length > 0 ? fileFetcher.get(toValue) : Promise.resolve(Either.right("")),
-    ]);
-
-    if (Either.isLeft(from)) return setFiles(RemoteData.failed(from.value));
-
-    if (Either.isLeft(to)) return setFiles(RemoteData.failed(to.value));
-
-    return setFiles(RemoteData.success({ from: from.value, to: to.value }));
+    if (fromValue.length > 0 && toValue.length > 0) {
+      fromFile.mutate();
+      toFile.mutate();
+    }
   };
 
-  const onHide = () => setFiles(RemoteData.notAsked());
+  const onHide = () => {
+    fromFile.reset();
+    toFile.reset();
+  };
 
-  return (
+  const wrapper = (content: React.ReactNode) => (
     <>
       <DefaultEntry {...{ title, fromValue, toValue }} />
       <Grid>
         <GridItem span={2}>
           <Title>{words("desiredState.compare.file.attributeLabel")}</Title>
         </GridItem>
-        <GridItem span={10}>
-          {RemoteData.fold(
-            {
-              notAsked: () => <DefaultView {...{ onShow }} />,
-              loading: () => <DefaultView {...{ onShow, isLoading: true }} />,
-              failed: (error) => <FailedView {...{ error, onShow }} />,
-              success: (files) => <SuccessView {...{ onHide, files }} />,
-            },
-            files
-          )}
-        </GridItem>
+        <GridItem span={10}>{content}</GridItem>
       </Grid>
     </>
+  );
+
+  if (fromFile.isError || toFile.isError) {
+    return wrapper(
+      <FailedView
+        error={fromFile.error?.message || toFile.error?.message || words("error")}
+        onShow={onShow}
+      />
+    );
+  }
+
+  if (fromFile.isSuccess && toFile.isSuccess) {
+    return wrapper(
+      <SuccessView onHide={onHide} files={{ from: fromFile.data, to: toFile.data }} />
+    );
+  }
+
+  return wrapper(
+    <DefaultView onShow={onShow} isLoading={fromFile.isPending || toFile.isPending} />
   );
 };
 

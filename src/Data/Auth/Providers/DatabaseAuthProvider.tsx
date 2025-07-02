@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import { createCookie, getCookie, removeCookie } from "../../Common/CookieHelper";
 import { AuthContext } from "../AuthContext";
 
@@ -10,16 +11,31 @@ import { AuthContext } from "../AuthContext";
 export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<string | null>(null);
   const navigate = useNavigate();
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname
+  );
+  const basePathname = baseUrlManager.getBasePathname();
+
+  const clearCookies = (): void => {
+    removeCookie("inmanta_user");
+    localStorage.removeItem("inmanta_user");
+  };
 
   const getUser = (): string | null => user;
 
   const logout = useCallback((): void => {
-    removeCookie("inmanta_user");
-    localStorage.removeItem("inmanta_user");
-    navigate("/login");
-  }, [navigate]);
+    clearCookies();
+    navigate(`${basePathname}/login`);
+  }, [navigate, basePathname]);
 
-  const login = (): void => navigate("/login");
+  const login = (): void => {
+    // The login function is called when we also get a 401 error.
+    // This means that the user is not authenticated and
+    // we need to clear the cookies to avoid lingering cookies that are invalid.
+    clearCookies();
+    navigate(`${basePathname}/login`);
+  };
 
   const getToken = (): string | null => getCookie("inmanta_user");
 

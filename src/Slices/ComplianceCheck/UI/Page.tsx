@@ -1,13 +1,21 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Content, PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
-import { Diff, Maybe, RemoteData } from "@/Core";
+import { Diff } from "@/Core";
+import { DryRun, useGetDryRuns } from "@/Data/Queries";
 import { DiffWizard, ToastAlert } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { SelectReportAction, TriggerDryRunAction } from "./Components";
 import { DiffPageSection } from "./DiffPageSection";
-import { MaybeReport } from "./types";
+
+/**
+ * ComplianceCheck Page component
+ *
+ * This component serves as the main entry point for the Compliance Check feature.
+ * It extracts the version parameter from the route and passes it to the View component.
+ *
+ * @returns {React.FC} The Page component that renders the compliance check view
+ */
 
 export const Page: React.FC = () => {
   const { version } = useRouteParams<"ComplianceCheck">();
@@ -19,77 +27,58 @@ interface Props {
   version: string;
 }
 
+/**
+ * View component for the Compliance Check page
+ *
+ * This component handles the main functionality of the Compliance Check feature:
+ * - Fetches and displays dry run reports for the specified version
+ * - Allows selecting different reports
+ * - Provides filtering by status and search text
+ * - Shows error messages when data fetching fails
+ *
+ * @props {Props} props - The component props
+ * @prop {string} version - The version to fetch dry run reports for
+ *
+ * @returns {React.FC<Props>} The View component that renders the compliance check interface
+ */
+
 export const View: React.FC<Props> = ({ version }) => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [data, refetch] = queryResolver.useContinuous<"GetDryRuns">({
-    kind: "GetDryRuns",
-    version: parseInt(version),
-  });
+  const { data, isSuccess, isError, error } = useGetDryRuns().useContinuous(version);
   const [errorMessage, setErrorMessage] = useState("");
-  const [updatedList, setUpdatedList] = useState(false);
   const [statuses, setStatuses] = useState(Diff.defaultStatuses);
-  const [selectedReport, setSelectedReport] = useState<MaybeReport>(Maybe.none());
+  const [selectedReport, setSelectedReport] = useState<DryRun | null>(null);
   const [searchFilter, setSearchFilter] = useState("");
-  const firstReport = useRef<MaybeReport>(Maybe.none());
+  const firstReport = useRef<DryRun | null>(null);
 
   /**
    * Setting the errorMessage when data failed
    */
   useEffect(() => {
-    if (!RemoteData.isFailed(data)) return;
-
-    setErrorMessage(data.value);
-  }, [data]);
+    if (isError) {
+      setErrorMessage(error.message);
+    }
+  }, [isError, error?.message]);
 
   /**
    * Setting the firstReport mutable ref when data changes
    */
   useEffect(() => {
-    if (!RemoteData.isSuccess(data) || data.value.length <= 0) {
-      firstReport.current = Maybe.none();
-
-      return;
-    }
-
-    firstReport.current = Maybe.some(data.value[0]);
-  }, [data]);
-
-  /**
-   * Setting the selected report when data changed and there is no selected report
-   * Update the selected report when chosen one has new data available
-   */
-  useEffect(() => {
-    if (!RemoteData.isSuccess(data) || data.value.length <= 0) return;
-
-    if (Maybe.isSome(selectedReport)) {
-      const fetchedSelectedReport = data.value.find(
-        (report) => report.id === selectedReport.value.id
-      );
-
-      if (!!fetchedSelectedReport && fetchedSelectedReport.todo !== selectedReport.value.todo) {
-        setSelectedReport(Maybe.some(fetchedSelectedReport));
-      } else {
-        return;
+    if (isSuccess) {
+      if (data.length <= 0) {
+        firstReport.current = null;
       }
+
+      firstReport.current = data[0];
     } else {
-      setSelectedReport(Maybe.some(data.value[0]));
+      firstReport.current = null;
     }
-  }, [selectedReport, data]);
+  }, [data, isSuccess]);
 
   useEffect(() => {
-    if (!updatedList) return;
-
-    if (RemoteData.isSuccess(data)) {
+    if (isSuccess) {
       setSelectedReport(firstReport.current);
     }
-
-    setUpdatedList(false);
-  }, [updatedList, data]);
-
-  const updateList = async () => {
-    await (refetch as () => Promise<void>)();
-    setUpdatedList(true);
-  };
+  }, [isSuccess, data]);
 
   return (
     <>
@@ -118,7 +107,7 @@ export const View: React.FC<Props> = ({ version }) => {
               searchFilter={searchFilter}
               setSearchFilter={setSearchFilter}
             />
-            <TriggerDryRunAction version={version} updateList={updateList} />
+            <TriggerDryRunAction version={version} />
           </ToolbarContent>
         </Toolbar>
       </PageSection>

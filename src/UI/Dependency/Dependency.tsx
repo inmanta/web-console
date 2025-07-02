@@ -1,22 +1,14 @@
 import React, { createContext } from "react";
 import {
-  CommandResolver,
-  FileFetcher,
-  QueryResolver,
   UrlManager,
-  EnvironmentModifier,
   RouteManager,
   EnvironmentHandler,
-  FeatureManager,
+  OrchestratorProvider,
   ArchiveHelper,
 } from "@/Core";
 import { AuthContextInterface, defaultAuthContext } from "@/Data/Auth/AuthContext";
 import {
-  DummyCommandResolver,
-  DummyEnvironmentModifier,
-  DummyFeatureManager,
-  DummyFileFetcher,
-  DummyQueryResolver,
+  DummyOrchestratorProvider,
   DummyUrlManager,
   DummyRouteManager,
   DummyEnvironmentHandler,
@@ -24,12 +16,8 @@ import {
 } from "./Dummy";
 
 export interface Dependencies {
-  commandResolver: CommandResolver;
-  queryResolver: QueryResolver;
   urlManager: UrlManager;
-  fileFetcher: FileFetcher;
-  environmentModifier: EnvironmentModifier;
-  featureManager: FeatureManager;
+  orchestratorProvider: OrchestratorProvider;
   routeManager: RouteManager;
   environmentHandler: EnvironmentHandler;
   archiveHelper: ArchiveHelper;
@@ -37,12 +25,8 @@ export interface Dependencies {
 }
 
 export const DependencyContext = createContext<Dependencies>({
-  commandResolver: new DummyCommandResolver(),
-  queryResolver: new DummyQueryResolver(),
   urlManager: new DummyUrlManager(),
-  fileFetcher: new DummyFileFetcher(),
-  environmentModifier: new DummyEnvironmentModifier(),
-  featureManager: new DummyFeatureManager(),
+  orchestratorProvider: new DummyOrchestratorProvider(),
   routeManager: new DummyRouteManager(),
   environmentHandler: DummyEnvironmentHandler(),
   archiveHelper: new DummyArchiveHelper(),
@@ -54,12 +38,8 @@ export const DependencyProvider: React.FC<{
   children?: React.ReactNode;
 }> = ({
   dependencies: {
-    commandResolver,
-    queryResolver,
     urlManager,
-    fileFetcher,
-    environmentModifier,
-    featureManager,
+    orchestratorProvider,
     routeManager,
     environmentHandler,
     archiveHelper,
@@ -69,12 +49,8 @@ export const DependencyProvider: React.FC<{
 }) => (
   <DependencyContext.Provider
     value={{
-      commandResolver: commandResolver || new DummyCommandResolver(),
-      queryResolver: queryResolver || new DummyQueryResolver(),
       urlManager: urlManager || new DummyUrlManager(),
-      fileFetcher: fileFetcher || new DummyFileFetcher(),
-      environmentModifier: environmentModifier || new DummyEnvironmentModifier(),
-      featureManager: featureManager || new DummyFeatureManager(),
+      orchestratorProvider: orchestratorProvider || new DummyOrchestratorProvider(),
       routeManager: routeManager || new DummyRouteManager(),
       environmentHandler: environmentHandler || DummyEnvironmentHandler(),
       archiveHelper: archiveHelper || new DummyArchiveHelper(),

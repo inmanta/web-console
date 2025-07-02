@@ -1,118 +1,160 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { Page } from "@patternfly/react-core";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
-import { getStoreInstance, QueryResolverImpl } from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolverImpl,
-  StaticScheduler,
-  Resource,
-} from "@/Test";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
-import { ResourceDetailsQueryManager, ResourceDetailsStateHelper } from "@S/ResourceDetails/Data";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { View } from "./View";
 
 expect.extend(toHaveNoViolations);
 
 function setup() {
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      ResourceDetailsQueryManager(apiHelper, ResourceDetailsStateHelper(store), scheduler),
-    ])
-  );
-
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-        }}
-      >
-        <StoreProvider store={store}>
+    <QueryClientProvider client={testClient}>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
           <Page>
-            <View id={Resource.id} />
+            <View id={"abc"} />
           </Page>
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, scheduler, apiHelper };
+  return { component };
 }
+describe("ResourceDetailsView", () => {
+  const server = setupServer();
 
-test("GIVEN The Resource details view THEN details data is fetched immediately", async () => {
-  const { component, apiHelper } = setup();
+  beforeAll(() => server.listen());
+  beforeEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
-  render(component);
+  test("GIVEN The Resource details view THEN details data is fetched immediately", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc", () => {
+        return HttpResponse.json({ data: ResourceDetails.a });
+      })
+    );
+    const { component } = setup();
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0].url).toEqual(`/api/v2/resource/${Resource.encodedId}`);
+    render(component);
+    expect(screen.getByLabelText("ResourceDetails-Loading")).toBeVisible();
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
+    expect(await screen.findByLabelText("ResourceDetails-Success")).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(await screen.findByText(ResourceDetails.a.attributes.path)).toBeVisible();
+  test("GIVEN The Resource details view WHEN the user clicks on the requires tab AND the requires table is empty THEN the empty state is shown", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc", () => {
+        return HttpResponse.json({
+          data: { ...ResourceDetails.a, requires_status: {} },
+        });
+      })
+    );
+    const { component } = setup();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    render(component);
+    expect(await screen.findByLabelText("ResourceDetails-Success")).toBeVisible();
 
-    expect(results).toHaveNoViolations();
-  });
-});
+    await userEvent.click(
+      screen.getAllByRole("tab", {
+        name: words("resources.requires.title"),
+      })[0]
+    );
 
-test("GIVEN The Resource details view WHEN the user clicks on the requires tab THEN the requires table is shown", async () => {
-  const { component, apiHelper } = setup();
+    expect(await screen.findByLabelText("ResourceRequires-Empty")).toBeVisible();
 
-  render(component);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
-  });
-
-  await userEvent.click(
-    screen.getAllByRole("tab", {
-      name: words("resources.requires.title"),
-    })[0]
-  );
-
-  expect(apiHelper.resolvedRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests).toHaveLength(0);
-
-  expect(await screen.findByRole("grid", { name: "ResourceRequires-Success" })).toBeVisible();
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
-  });
-});
-
-test("GIVEN The Resource details view THEN shows status label", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
+      expect(results).toHaveNoViolations();
+    });
   });
 
-  expect(screen.getByTestId("Status-deployed")).toBeVisible();
+  test("GIVEN The Resource details view WHEN the user clicks on the requires tab THEN the requires table is shown", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc", () => {
+        return HttpResponse.json({ data: ResourceDetails.a });
+      })
+    );
+    const { component } = setup();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    render(component);
+    expect(await screen.findByLabelText("ResourceDetails-Success")).toBeVisible();
 
-    expect(results).toHaveNoViolations();
+    await userEvent.click(
+      screen.getAllByRole("tab", {
+        name: words("resources.requires.title"),
+      })[0]
+    );
+    expect(await screen.findByRole("grid", { name: "ResourceRequires-Success" })).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("GIVEN The Resource details view THEN shows status label", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc", () => {
+        return HttpResponse.json({ data: ResourceDetails.a });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByTestId("Status-deployed")).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("GIVEN ResourceLogsView WHEN clicking download button THEN downloads the file content", async () => {
+    const fileId = "abc123";
+    const fileContent = "file content";
+    const base64Content = btoa(fileContent);
+
+    server.use(
+      http.get("/api/v2/resource/abc", () => {
+        return HttpResponse.json({ data: ResourceDetails.a });
+      }),
+      http.get(`/api/v1/file/${fileId}`, () => {
+        return HttpResponse.json({ content: base64Content });
+      })
+    );
+
+    const { component } = setup();
+    render(component);
+
+    // Wait for the ResourceDetails to load
+    await screen.findByLabelText("ResourceDetails-Success");
+
+    // Find and click the download button
+    const downloadButton = await screen.findByRole("button", { name: words("resources.file.get") });
+    await userEvent.click(downloadButton);
+
+    // Wait for the code viewer with content to load
+    const codeEditor = await screen.findByText(fileContent);
+    expect(codeEditor).toBeVisible();
   });
 });

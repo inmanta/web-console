@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { AlertVariant } from "@patternfly/react-core";
-import { useTriggerCompile } from "@/Data/Managers/V2/Compilation/TriggerCompile";
+import { useTriggerCompile } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
@@ -12,9 +12,9 @@ interface Props {
 }
 
 export const Provider: React.FC<Props> = ({ afterTrigger, isToastVisible = false }) => {
-  const { environmentModifier, environmentHandler } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const [toastMessage, setToastMessage] = useState("");
-  const isServerCompileEnabled = environmentModifier.useIsServerCompileEnabled();
+  const isServerCompileEnabled = environmentHandler.useIsServerCompileEnabled();
   const env = environmentHandler.useId();
 
   const { mutate } = useTriggerCompile({

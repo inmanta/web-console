@@ -3,6 +3,7 @@ import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
 import { InstanceComposerPage } from "@/Slices/InstanceComposerCreator/UI";
 import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
 import { InstanceComposerViewerPage } from "@/Slices/InstanceComposerViewer/UI";
+import { MarkdownPreviewerPage } from "@/Slices/MarkdownPreviewer/UI";
 import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
 import { OrdersPage } from "@/Slices/Orders/UI";
 import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
@@ -171,6 +172,10 @@ export class PrimaryPageManager implements PageManager {
       ComplianceCheck: {
         ...this.routeDictionary.ComplianceCheck,
         element: <ComplianceCheckPage />,
+      },
+      MarkdownPreviewer: {
+        ...this.routeDictionary.MarkdownPreviewer,
+        element: <MarkdownPreviewerPage />,
       },
     };
   }

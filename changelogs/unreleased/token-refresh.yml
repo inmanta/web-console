@@ -1,0 +1,5 @@
+description: Enforce clearing the cookies when the user is not authenticated.
+change-type: patch
+destination-branches: [master, iso8]
+sections:
+  bugfix: "{{description}}"

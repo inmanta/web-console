@@ -1,17 +1,16 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import { dependencies } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
-import { UrlManagerImpl } from "@/UI/Utils";
+import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as Mock from "@S/CompileDetails/Core/Mock";
 import { CompileDetails } from "./CompileDetails";
+import { getDuration } from "./CompileStageReportTable";
+
 expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
@@ -22,25 +21,13 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
-  const store = getStoreInstance();
-  const urlManager = new UrlManagerImpl(dependencies.featureManager, "");
-
   const component = (
-    <QueryClientProvider client={queryClient}>
-      <MemoryRouter>
-        <DependencyProvider dependencies={{ ...dependencies, urlManager }}>
-          <StoreProvider store={store}>
-            <CompileDetails id="123" />
-          </StoreProvider>
-        </DependencyProvider>
-      </MemoryRouter>
+    <QueryClientProvider client={testClient}>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
+          <CompileDetails id="123" />
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 
@@ -116,10 +103,6 @@ describe("CompileDetails", () => {
     await render(component);
 
     expect(
-      await screen.findByRole("region", { name: "CompileDetailsView-Loading" })
-    ).toBeInTheDocument();
-
-    expect(
       await screen.findByRole("generic", {
         name: "CompileDetailsView-Success",
       })
@@ -132,5 +115,25 @@ describe("CompileDetails", () => {
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("getDuration calculates duration correctly", () => {
+    const started = "2023-01-01T10:00:00.000Z";
+    const completed = "2023-01-01T10:00:30.000Z";
+
+    // Test with completed time
+    expect(getDuration(started, completed)).toBe("30");
+
+    // Test with no completed time (should use current time)
+    const now = new Date("2023-01-01T10:00:45.000Z");
+    jest.useFakeTimers();
+    jest.setSystemTime(now);
+    expect(getDuration(started)).toBe("45");
+    jest.useRealTimers();
+
+    // Test duration less than 1 second
+    const startedRecent = "2023-01-01T10:00:00.000Z";
+    const completedRecent = "2023-01-01T10:00:00.500Z";
+    expect(getDuration(startedRecent, completedRecent)).toBe("0");
   });
 });

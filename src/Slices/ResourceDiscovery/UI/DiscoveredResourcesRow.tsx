@@ -1,4 +1,5 @@
 import React from "react";
+import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -7,9 +8,11 @@ import {
 } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
-import { CodeHighlighter, Toggle } from "@/UI/Components";
+import { DiscoveredResource } from "@/Data/Queries";
+import { Toggle } from "@/UI/Components";
+import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
+import { getThemePreference } from "@/UI/Components/DarkmodeOption";
 import { words } from "@/UI/words";
-import { DiscoveredResource } from "../Core/Query";
 import { DiscoveredResourceLink } from "./Components";
 
 interface Props {
@@ -65,10 +68,16 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
                 <DescriptionListGroup>
                   <DescriptionListTerm>{words("discovered_resources.values")}</DescriptionListTerm>
                   <DescriptionListDescription>
-                    <CodeHighlighter
-                      keyId="Json"
+                    <CodeEditor
                       code={JSON.stringify(row.values, null, 2)}
-                      language="json"
+                      isDarkTheme={getThemePreference() === "dark"}
+                      language={Language.json}
+                      isDownloadEnabled
+                      customControls={
+                        <CodeEditorCopyControl code={JSON.stringify(row.values, null, 2)} />
+                      }
+                      isReadOnly
+                      height="400px"
                     />
                   </DescriptionListDescription>
                 </DescriptionListGroup>

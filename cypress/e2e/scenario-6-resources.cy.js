@@ -84,7 +84,7 @@ describe("Scenario 6 : Resources", () => {
     // Expect 0/0 resources to be visible
     cy.get('[aria-label="Deployment state summary"]').should("contain", isIso ? "0 / 0" : "5 / 5");
     // Expect table to be empty in case of ISO project
-    isIso && cy.get('[aria-label="ResourcesView-Empty"]').should("to.be.visible");
+    isIso && cy.get('[aria-label="ResourcesPage-Empty"]').should("to.be.visible");
   });
 
   if (isIso) {
@@ -242,29 +242,15 @@ describe("Scenario 6 : Resources", () => {
       // Go to logs tab
       cy.get("button").contains("Logs").click();
 
-      // Expect it to have : 7 log messages
+      // Expect it to have : 6 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        7
+        6
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
       cy.get('[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle').click();
       cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist");
-
-      // Expect last log message to be "Setting deployed due to known good status"
-      cy.get('[aria-label="ResourceLogRow"]')
-        .eq(0)
-        .should("contain", "Setting deployed due to known good status");
-
-      // Click top message open
-      cy.get('[aria-label="Details"]').eq(0).click();
-
-      // Expect to find "Setting deployed due to known good status" displayed in expansion.
-      cy.get(".pf-v6-c-description-list__text").should(
-        "contain",
-        "Setting deployed due to known good status"
-      );
     });
 
     it("6.3 Log message filtering", () => {
@@ -290,13 +276,13 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[role="option"]').contains("INFO").click();
 
       // Expect the amount of rows to be max  6
-      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.most", 6);
+      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.most", 4);
 
       // Remove INFO filter
       cy.get('[aria-label="Close INFO"]').click();
 
       // Expect amount of rows to be bigger than before filtering.
-      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.least", 7);
+      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.least", 6);
     });
 
     it("6.4 Resources with multiple dependencies", () => {
@@ -569,27 +555,32 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="LegendItem-deployed"]', { timeout: 60000 }).should("have.text", "49");
 
+      // set page size to 20 for the test, 100 should be the default
+      cy.get('[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle').click();
+      cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist");
+      cy.contains(".pf-v6-c-menu__list-item", "20").click();
+
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "1 - 20");
 
       //Go to next page
       cy.get('[aria-label="Go to next page"]').first().click();
-      cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "21 - 40");
 
       //Go to last page
       cy.get('[aria-label="Go to next page"]').first().click();
-      cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "41 - 49");
 
       //Go to previous page
       cy.get('[aria-label="Go to previous page"]').first().click();
-      cy.get('[aria-label="ResourcesView-Success"]').should("be.visible");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
@@ -745,19 +736,16 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle').click();
       cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist");
 
-      // Expect last log message to contain "Setting deployed due to known good status"
+      // Expect last log message to contain "Successfully stored version 5"
       cy.get('[aria-label="ResourceLogRow"]')
         .eq(0)
-        .should("contain", "Setting deployed due to known good status");
+        .should("contain", "Successfully stored version 5");
 
       // Click top message open
       cy.get('[aria-label="Details"]').eq(0).click();
 
-      // Expect to find "Setting deployed due to known good status" displayed in expansion.
-      cy.get(".pf-v6-c-description-list__text").should(
-        "contain",
-        "Setting deployed due to known good status"
-      );
+      // Expect to find "Successfully stored version 5" displayed in expansion.
+      cy.get(".pf-v6-c-description-list__text").should("contain", "Successfully stored version 5");
     });
   }
 });

@@ -12,10 +12,9 @@ import {
   ActionGroup,
   ValidatedOptions,
   Spinner,
-  Content,
 } from "@patternfly/react-core";
 import { ExclamationCircleIcon, EyeIcon, EyeSlashIcon } from "@patternfly/react-icons";
-import { useAddUser } from "@/Data/Managers/V2/Auth";
+import { useAddUser } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
@@ -147,7 +146,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           isBlock
           isDisabled={isPending}
         >
-          {isPending ? <Spinner size="md" /> : <Content component="p">{submitButtonText}</Content>}
+          {isPending ? <Spinner size="md" /> : submitButtonText}
         </Button>
       </ActionGroup>
     </Form>

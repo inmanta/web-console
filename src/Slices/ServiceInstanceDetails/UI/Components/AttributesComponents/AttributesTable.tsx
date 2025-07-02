@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import {
   FormSelect,
   FormSelectOption,
@@ -24,18 +25,20 @@ import {
   ThProps,
 } from "@patternfly/react-table";
 import styled from "styled-components";
-import { InstanceAttributeModel } from "@/Core";
+import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import {
   AttributeSets,
   formatTreeRowData,
   sortTreeRows,
   TreeRowData,
 } from "@/Slices/ServiceInstanceDetails/Utils";
-import { words } from "@/UI";
+import { DependencyContext, words } from "@/UI";
+import { MultiLinkCell } from "@/UI/Components/TreeTable/TreeRow/CellWithCopy";
 
 interface Props {
   dropdownOptions: string[];
   attributeSets: Partial<Record<AttributeSets, InstanceAttributeModel>>;
+  serviceModel: ServiceModel;
 }
 
 /**
@@ -50,7 +53,14 @@ interface Props {
  *  @prop {Partial<Record<AttributeSets, InstanceAttributeModel>>} attributeSets - The attributeSets available for the selected version.
  * @returns {React.FC<Props>} A React Component displaying the Attributes in a TreeRowTable
  */
-export const AttributesTable: React.FC<Props> = ({ dropdownOptions, attributeSets }) => {
+export const AttributesTable: React.FC<Props> = ({
+  dropdownOptions,
+  attributeSets,
+  serviceModel,
+}) => {
+  const { routeManager } = useContext(DependencyContext);
+  const navigate = useNavigate();
+
   const [selectedSet, setSelectedSet] = useState(dropdownOptions[0]);
   const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>([""]);
 
@@ -62,6 +72,24 @@ export const AttributesTable: React.FC<Props> = ({ dropdownOptions, attributeSet
   const [expandedDetailsNodeIds, setExpandedDetailsNodeIds] = useState<string[]>([""]);
   const [tableData, setTableData] = useState<TreeRowData[]>([]);
   const [isToggleOpen, setIsToggleOpen] = useState(false);
+
+  const navigateToInstanceDetails = (
+    cellValue: string,
+    serviceName?: string,
+    instanceId?: string
+  ) => {
+    if (!serviceName || !instanceId) {
+      return;
+    }
+
+    const url = routeManager.getUrl("InstanceDetails", {
+      service: serviceName,
+      instance: cellValue,
+      instanceId: instanceId,
+    });
+
+    navigate(`${url}${location.search}`);
+  };
 
   /**
    * Get the sorting parameters according to PF guidelines.
@@ -142,7 +170,7 @@ export const AttributesTable: React.FC<Props> = ({ dropdownOptions, attributeSet
         collapseAll();
         break;
       case "Reset-sort":
-        setTableData(formatTreeRowData(attributeSets[selectedSet]));
+        setTableData(formatTreeRowData(attributeSets[selectedSet], serviceModel));
         setActiveSortIndex(0);
         setActiveSortDirection(undefined);
         break;
@@ -276,7 +304,15 @@ export const AttributesTable: React.FC<Props> = ({ dropdownOptions, attributeSet
           aria-label={node.id + "_value"}
           modifier="truncate"
         >
-          {printValue(node)}
+          {node.type === "Relation" ? (
+            <MultiLinkCell
+              value={String(node.value)}
+              serviceName={node.serviceName}
+              onClick={navigateToInstanceDetails}
+            />
+          ) : (
+            printValue(node)
+          )}
         </Td>
       </TreeRowWrapper>,
       ...childRows,
@@ -285,8 +321,8 @@ export const AttributesTable: React.FC<Props> = ({ dropdownOptions, attributeSet
   };
 
   useEffect(() => {
-    setTableData(formatTreeRowData(attributeSets[selectedSet]));
-  }, [attributeSets, selectedSet]);
+    setTableData(formatTreeRowData(attributeSets[selectedSet], serviceModel));
+  }, [attributeSets, selectedSet, serviceModel]);
 
   useEffect(() => {
     // When the version changes, it can happen that the selectedSet isn't available in the dropdown.

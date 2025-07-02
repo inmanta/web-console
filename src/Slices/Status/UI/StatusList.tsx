@@ -28,7 +28,7 @@ interface Props {
  * @returns {React.FC<Props>} The rendered status list component.
  */
 export const StatusList: React.FC<Props> = ({ status, apiUrl, className, ...props }) => {
-  const { featureManager } = useContext(DependencyContext);
+  const { orchestratorProvider } = useContext(DependencyContext);
 
   return (
     <DataList {...props} className={className} aria-label="StatusList" isCompact>
@@ -56,7 +56,7 @@ export const StatusList: React.FC<Props> = ({ status, apiUrl, className, ...prop
       />
       <StatusItem
         name="Web Console"
-        details={[["commit hash", featureManager.getCommitHash()]]}
+        details={[["commit hash", orchestratorProvider.getCommitHash()]]}
         icon={
           <Icon size="lg" status="info">
             <DesktopIcon />

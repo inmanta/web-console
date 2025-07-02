@@ -1,13 +1,15 @@
 import React, { act } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Attributes, EntityLike, ServiceModel } from "@/Core";
-import { dependencies } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI/words";
 import { CatalogAttributeHelper, CatalogTreeTableHelper } from "./Catalog";
 import { PathHelper, TreeExpansionManager } from "./Helpers";
-import { InventoryAttributeHelper, InventoryTreeTableHelper } from "./Inventory";
+import { InventoryAttributeHelper } from "./Inventory";
+import { InventoryTreeTableHelper } from "./Inventory/TreeTableHelper";
 import { TreeTable } from "./TreeTable";
 
 function inventorySetup(
@@ -17,24 +19,22 @@ function inventorySetup(
   setTab?: jest.Mock<any, any, any>
 ) {
   const component = (
-    <DependencyProvider
-      dependencies={{
-        ...dependencies,
-      }}
-    >
-      <TreeTable
-        treeTableHelper={
-          new InventoryTreeTableHelper(
-            new PathHelper("$"),
-            new TreeExpansionManager("$"),
-            new InventoryAttributeHelper("$", service),
-            attributes
-          )
-        }
-        setTab={setTab}
-        version={1}
-      />
-    </DependencyProvider>
+    <QueryClientProvider client={testClient}>
+      <MockedDependencyProvider>
+        <TreeTable
+          treeTableHelper={
+            new InventoryTreeTableHelper(
+              new PathHelper("$"),
+              new TreeExpansionManager("$"),
+              new InventoryAttributeHelper("$", service),
+              attributes
+            )
+          }
+          setTab={setTab}
+          version={1}
+        />
+      </MockedDependencyProvider>
+    </QueryClientProvider>
   );
 
   return component;
@@ -142,23 +142,21 @@ test("TreeTable 2nd level of nested property can be expanded", async () => {
 
 function catalogSetup(service: EntityLike) {
   const component = (
-    <DependencyProvider
-      dependencies={{
-        ...dependencies,
-      }}
-    >
-      <TreeTable
-        treeTableHelper={
-          new CatalogTreeTableHelper(
-            new PathHelper("$"),
-            new TreeExpansionManager("$"),
-            new CatalogAttributeHelper("$"),
-            service
-          )
-        }
-        version={1}
-      />
-    </DependencyProvider>
+    <QueryClientProvider client={testClient}>
+      <MockedDependencyProvider>
+        <TreeTable
+          treeTableHelper={
+            new CatalogTreeTableHelper(
+              new PathHelper("$"),
+              new TreeExpansionManager("$"),
+              new CatalogAttributeHelper("$"),
+              service
+            )
+          }
+          version={1}
+        />
+      </MockedDependencyProvider>
+    </QueryClientProvider>
   );
 
   return component;
