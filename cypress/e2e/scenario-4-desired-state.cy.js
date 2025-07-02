@@ -426,14 +426,15 @@ describe("Scenario 4 Desired State", () => {
       ($expandableRow) => {
         expect($expandableRow).to.have.length(isIso ? 2 : 5);
 
-      expect($expandableRow.eq(0), "first-row").to.have.text(
-        "This resource has not been modified."
-      );
+        expect($expandableRow.eq(0), "first-row").to.have.text(
+          "This resource has not been modified.",
+        );
 
-      expect($expandableRow.eq(1), "second-row").to.have.text(
-        "This resource has not been modified."
-      );
-    });
+        expect($expandableRow.eq(1), "second-row").to.have.text(
+          "This resource has not been modified.",
+        );
+      },
+    );
 
     // go back to desired state page
     cy.get(".pf-v5-c-nav__link").contains("Desired State").click();
@@ -485,12 +486,14 @@ describe("Scenario 4 Desired State", () => {
     });
 
     // await the end of the dry-run and expect to find two rows with expandable content.
-    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(($expandableRow) => {
-      expect($expandableRow).to.have.length(isIso ? 2 : 5);
-      expect($expandableRow.eq(0), "first-row").to.have.text(
-        "This resource has not been modified."
-      );
-    });
+    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(
+      ($expandableRow) => {
+        expect($expandableRow).to.have.length(isIso ? 2 : 5);
+        expect($expandableRow.eq(0), "first-row").to.have.text(
+          "This resource has not been modified.",
+        );
+      },
+    );
 
     // click on filter by status dropdown
     cy.get('[aria-label="StatusFilter"]').click();
@@ -525,12 +528,14 @@ describe("Scenario 4 Desired State", () => {
       }
     });
     // expect the view to still contain the diff of the last dry-run comparison
-    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(($expandableRow) => {
-      expect($expandableRow).to.have.length(isIso ? 2 : 5);
-      expect($expandableRow.eq(0), "first-row").to.have.text(
-        "This resource has not been modified."
-      );
-    });
+    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(
+      ($expandableRow) => {
+        expect($expandableRow).to.have.length(isIso ? 2 : 5);
+        expect($expandableRow.eq(0), "first-row").to.have.text(
+          "This resource has not been modified.",
+        );
+      },
+    );
 
     // click on Perform dry run
     cy.get(".pf-v5-c-button").contains("Perform dry run").click();
