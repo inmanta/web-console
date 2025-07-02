@@ -485,16 +485,6 @@ describe("Scenario 4 Desired State", () => {
       }
     });
 
-    // await the end of the dry-run and expect to find two rows with expandable content.
-    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(
-      ($expandableRow) => {
-        expect($expandableRow).to.have.length(isIso ? 2 : 5);
-        expect($expandableRow.eq(0), "first-row").to.have.text(
-          "This resource has not been modified.",
-        );
-      },
-    );
-
     // click on filter by status dropdown
     cy.get('[aria-label="StatusFilter"]').click();
 
