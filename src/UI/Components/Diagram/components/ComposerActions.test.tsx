@@ -194,7 +194,7 @@ describe("ComposerActions.", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
 
-    expect(screen.getByText("Failed to save instance coordinates on deploy.")).toBeVisible();
+    expect(await screen.findByText("Failed to save instance coordinates on deploy.")).toBeVisible();
   });
 
   it("shows error message when deploy button is clicked and request fails", async () => {

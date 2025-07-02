@@ -1,4 +1,4 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";

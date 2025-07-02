@@ -210,17 +210,21 @@ export default defineConfig({
         "**/__mocks__/**",
         "cypress/**",
       ],
-      maxThreads: process.env.CI ? 1 : undefined,
+      maxThreads: process.env.CI ? 1 : 0,
     },
     deps: {
-      inline: [
-        "@inmanta/rappid",
-        "mermaid",
-        "monaco-editor",
-        "@monaco-editor/react",
-        "graphql-request",
-        "@patternfly/react-styles",
-      ],
+      optimizer: {
+        web: {
+          include: [
+            "@inmanta/rappid",
+            "mermaid",
+            "monaco-editor",
+            "@monaco-editor/react",
+            "graphql-request",
+            "@patternfly/react-styles",
+          ],
+        },
+      },
     },
     resolve: {
       alias: {
