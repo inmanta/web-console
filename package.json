@@ -11,7 +11,7 @@
     "start": "vite",
     "start:https": "vite --https",
     "test": "vitest --run",
-    "test:ci": "CI=true vitest --coverage --reporter=verbose --silent",
+    "test:ci": "CI=true vitest --silent",
     "test:ui": "vitest --ui",
     "format": "prettier --check --write \"./**/*.{cjs,js,jsx,ts,tsx}\"",
     "format:check": "prettier --check \"./**/*.{cjs,js,jsx,ts,tsx}\"",

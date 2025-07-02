@@ -201,7 +201,11 @@ export default defineConfig({
     setupFiles: ["./test-setup.ts"],
     coverage: {
       provider: "v8",
-      reporter: ["text", "cobertura"],
+      enabled: process.env.CI ? true : false,
+      reporter: [
+        ["text", { summary: false }],
+        ["cobertura", { summary: false }],
+      ],
       exclude: [
         "node_modules/",
         "dist/",
@@ -210,6 +214,7 @@ export default defineConfig({
         "**/__mocks__/**",
         "cypress/**",
       ],
+      include: ["src/**/*"],
       maxThreads: process.env.CI ? 1 : 0,
     },
     deps: {
