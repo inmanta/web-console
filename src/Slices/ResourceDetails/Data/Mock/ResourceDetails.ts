@@ -1,6 +1,7 @@
+import { Details, Status } from "@/Core/Domain/Resource/Resource";
 import { id } from "@/Test/Data/Resource";
 
-export const a = {
+export const a: Details = {
   resource_id: id,
   resource_type: "std::File",
   agent: "internal",
@@ -17,11 +18,12 @@ export const a = {
       "std::File[internal,path=/tmp/dir1/file2],v=4",
     ],
     another_key: "val",
+    hash: "abc123",
   },
-  status: "deployed",
+  status: Status.deployed,
   requires_status: {
-    "std::Directory[internal,path=/tmp/dir1]": "deployed",
-    "std::File[internal,path=/tmp/dir1/file2]": "deploying",
+    "std::Directory[internal,path=/tmp/dir1]": Status.deployed,
+    "std::File[internal,path=/tmp/dir1/file2]": Status.deploying,
   },
 };
 

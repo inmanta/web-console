@@ -1,18 +1,15 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
-import { dependencies, Service, ServiceInstance } from "@/Test";
+import * as queryModule from "@/Data/Queries/Helpers/useQueries";
+import { MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CreateInstance } from "./CreateInstance";
 
 expect.extend(toHaveNoViolations);
@@ -25,17 +22,13 @@ const axe = configureAxe({
 });
 
 function setup(service) {
-  const store = getStoreInstance();
-
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
-          <StoreProvider store={store}>
-            <CreateInstance serviceEntity={service} />
-          </StoreProvider>
-        </DependencyProvider>
-      </MemoryRouter>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
+          <CreateInstance serviceEntity={service} />
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

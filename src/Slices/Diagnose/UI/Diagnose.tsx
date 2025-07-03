@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetDiagnostics } from "@/Data/Managers/V2/ServiceInstance";
+import { useGetDiagnostics } from "@/Data/Queries";
 import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DiagnoseCardLayout } from "./DiagnoseCardLayout";

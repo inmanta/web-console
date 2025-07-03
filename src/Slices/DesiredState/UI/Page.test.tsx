@@ -1,17 +1,14 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import { StaticScheduler, DeferredApiHelper, dependencies } from "@/Test";
+import { MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as DesiredStateVersions from "@S/DesiredState/Data/Mock";
 import { Page } from "./Page";
 
@@ -32,25 +29,20 @@ function setup() {
       },
     },
   });
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
 
   const component = (
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
-        <MemoryRouter>
-          <DependencyProvider dependencies={dependencies}>
-            <StoreProvider store={store}>
-              <Page />
-            </StoreProvider>
-          </DependencyProvider>
-        </MemoryRouter>
+        <TestMemoryRouter>
+          <MockedDependencyProvider>
+            <Page />
+          </MockedDependencyProvider>
+        </TestMemoryRouter>
       </ModalProvider>
     </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 }
 
 describe("DesiredStatesView", () => {
@@ -538,7 +530,7 @@ describe("DesiredStatesView", () => {
       expect(results).toHaveNoViolations();
     });
     expect(POSTRequestsFired).toBe(1);
-    expect(GETRequestsFired).toBe(3);
+    expect(GETRequestsFired).toBe(4);
   });
 
   it("Given the Desired states view When promoting a version results in an error, then the error is shown", async () => {

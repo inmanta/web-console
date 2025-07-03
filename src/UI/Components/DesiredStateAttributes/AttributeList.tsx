@@ -1,4 +1,5 @@
 import React from "react";
+import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -7,8 +8,9 @@ import {
 } from "@patternfly/react-core";
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { CodeHighlighter } from "@/UI/Components/CodeHighlighter";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
+import { CodeEditorCopyControl } from "../CodeEditorControls";
+import { getThemePreference } from "../DarkmodeOption";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 import { FileBlock } from "./FileBlock";
 
@@ -19,14 +21,15 @@ interface Props {
 
 type AttributeTextVariant = "default" | "monospace";
 
+/**
+ * A component that displays a list of attributes.
+ *
+ * @prop {ClassifiedAttribute[]} attributes - The attributes to display.
+ * @prop {AttributeTextVariant} variant - The variant of the attribute text.
+ * @returns {React.FC} A component that displays a list of attributes.
+ */
 export const AttributeList: React.FC<Props> = ({ attributes, variant = "default" }) => (
-  <DescriptionList
-    isHorizontal
-    isAutoColumnWidths
-    horizontalTermWidthModifier={{
-      default: "25ch",
-    }}
-  >
+  <DescriptionList isHorizontal>
     {attributes.map((attribute) => (
       <DescriptionListGroup key={attribute.key}>
         <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
@@ -71,12 +74,56 @@ const AttributeValue: React.FC<{
       return <FileBlock hash={attribute.value} />;
 
     case "Json":
-      return <CodeHighlighter keyId="json" code={attribute.value} language="json" />;
+      return (
+        <CodeEditor
+          isReadOnly
+          isDarkTheme={getThemePreference() === "dark"}
+          code={attribute.value}
+          isLanguageLabelVisible
+          language={Language.json}
+          isDownloadEnabled
+          customControls={<CodeEditorCopyControl code={attribute.value} />}
+          height={getHeightEditor(attribute)}
+        />
+      );
 
     case "Xml":
-      return <CodeHighlighter keyId="xml" code={attribute.value} language="xml" />;
+      return (
+        <CodeEditor
+          isReadOnly
+          isDarkTheme={getThemePreference() === "dark"}
+          code={attribute.value}
+          isLanguageLabelVisible
+          language={Language.xml}
+          isDownloadEnabled
+          customControls={<CodeEditorCopyControl code={attribute.value} />}
+          height={getHeightEditor(attribute)}
+        />
+      );
     case "Python":
-      return <CodeHighlighter keyId="python" code={attribute.value} language="python" />;
+      return (
+        <CodeEditor
+          isReadOnly
+          isDarkTheme={getThemePreference() === "dark"}
+          code={attribute.value}
+          isLanguageLabelVisible
+          language={Language.python}
+          isDownloadEnabled
+          customControls={<CodeEditorCopyControl code={attribute.value} />}
+          height={getHeightEditor(attribute)}
+        />
+      );
+    case "Code":
+      return (
+        <CodeEditor
+          isReadOnly
+          isDarkTheme={getThemePreference() === "dark"}
+          code={attribute.value}
+          isDownloadEnabled
+          customControls={<CodeEditorCopyControl code={attribute.value} />}
+          height={getHeightEditor(attribute)}
+        />
+      );
   }
 };
 
@@ -92,3 +139,21 @@ const TextContainer = styled.span<{ $variant?: AttributeTextVariant }>`
       ? "font-family: var(--pf-t--global--font--family--mono)"
       : "inherit"};
 `;
+
+/**
+ * Determines the height for code editors based on content length
+ * @param attribute The attribute to determine height for
+ * @returns "300px" if lines > 15, otherwise "sizeToFit"
+ */
+export const getHeightEditor = (attribute: ClassifiedAttribute): string => {
+  if (
+    attribute.kind === "Json" ||
+    attribute.kind === "Xml" ||
+    attribute.kind === "Python" ||
+    attribute.kind === "Code"
+  ) {
+    const lineCount = attribute.value.split("\n").length;
+    return lineCount > 15 ? "300px" : "sizeToFit";
+  }
+  return "sizeToFit";
+};

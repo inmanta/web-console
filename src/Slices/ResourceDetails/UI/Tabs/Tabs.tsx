@@ -1,6 +1,6 @@
 import React from "react";
 import { ColumnsIcon, HistoryIcon, ListIcon, ModuleIcon, TableIcon } from "@patternfly/react-icons";
-import { Query } from "@/Core";
+import { Details } from "@/Core/Domain/Resource/Resource";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
@@ -21,9 +21,22 @@ interface Props {
   id: string;
   activeTab: TabKey;
   setActiveTab: (tab: TabKey) => void;
-  data: Query.UsedApiData<"GetResourceDetails">;
+  data: Details;
 }
 
+/**
+ * The Tabs component.
+ *
+ * This component is responsible of displaying the tabs of the resource details.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {string} id - The id of the resource
+ *  @prop {TabKey} activeTab - The active tab
+ *  @prop {(tab: TabKey) => void} setActiveTab - The function to set the active tab
+ *  @prop {Details} data - The data of the resource
+ *
+ * @returns {React.FC<Props>} A React Component displaying the tabs of the resource details
+ */
 export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab, data }) => {
   return (
     <IconTabs
@@ -40,24 +53,21 @@ export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab, data }) => 
   );
 };
 
-const requiresTab = (data: Query.UsedApiData<"GetResourceDetails">): TabDescriptor<TabKey> => ({
+const requiresTab = (data: Details): TabDescriptor<TabKey> => ({
   id: TabKey.Requires,
   title: words("resources.requires.title"),
   icon: <ModuleIcon />,
-  view: <RequiresTab {...{ data }} />,
+  view: <RequiresTab details={data} />,
 });
 
-const attributesTab = (data: Query.UsedApiData<"GetResourceDetails">): TabDescriptor<TabKey> => ({
+const attributesTab = (data: Details): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("resources.attributes.title"),
   icon: <ListIcon />,
-  view: <AttributesTab {...{ data }} />,
+  view: <AttributesTab details={data} />,
 });
 
-const historyTab = (
-  id: string,
-  data: Query.UsedApiData<"GetResourceDetails">
-): TabDescriptor<TabKey> => ({
+const historyTab = (id: string, data: Details): TabDescriptor<TabKey> => ({
   id: TabKey.History,
   title: words("resources.history.title"),
   icon: <HistoryIcon />,

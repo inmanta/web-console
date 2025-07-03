@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
-import { DependencyContext, useRouteParams, words } from "@/UI";
+import { DependencyContext, words } from "@/UI";
 import { EmptyView } from "@/UI/Components";
 import { ComposerEditorProvider } from "@/UI/Components/Diagram/Context/ComposerEditorProvider";
+import { useRouteParams } from "@/UI/Routing";
 
 /**
  * Renders the Page component for the Instance Composer Editor Page.
@@ -12,9 +13,9 @@ import { ComposerEditorProvider } from "@/UI/Components/Diagram/Context/Composer
  */
 export const Page: React.FC = () => {
   const { service: serviceName, instance } = useRouteParams<"InstanceComposerEditor">();
-  const { featureManager } = useContext(DependencyContext);
+  const { orchestratorProvider } = useContext(DependencyContext);
 
-  if (!featureManager.isComposerEnabled()) {
+  if (!orchestratorProvider.isComposerEnabled()) {
     return (
       <EmptyView
         message={words("instanceComposer.disabled")}

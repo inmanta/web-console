@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
-import { Either, EnvironmentRole, FlatEnvironment } from "@/Core";
-import { DependencyContext, DependencyResolver } from "@/UI/Dependency";
+import { Navigate } from "react-router";
+import { EnvironmentRole } from "@/Core";
+import { EnvironmentPreview } from "@/Data/Queries";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { PageFrame } from "./PageFrame";
-import { PageInitializer } from "./PageInitializer";
-
 interface Props {
   environmentRole: EnvironmentRole;
 }
@@ -16,20 +15,12 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 }) => {
   const { environmentHandler, routeManager } = useContext(DependencyContext);
   const environment = environmentHandler.useSelected();
-
-  const eitherEnvironmentId = getEnvironmentId(environmentRole, environment);
-  const environmentId = Either.withFallback(undefined, eitherEnvironmentId);
+  const environmentId = getEnvironmentId(environmentRole, environment);
 
   return (
     <>
-      {environmentId && (
-        <>
-          <PageInitializer environment={environmentId} />
-          <DependencyResolver environment={environmentId} />
-        </>
-      )}
       <PageFrame environmentId={environmentId}>
-        {Either.isLeft(eitherEnvironmentId) ? (
+        {environmentId === words("error.environment.missing") ? (
           <Navigate to={routeManager.getUrl("Home", undefined)} />
         ) : (
           children
@@ -41,15 +32,17 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 
 const getEnvironmentId = (
   environmentRole: EnvironmentRole,
-  environment: FlatEnvironment | undefined
-): Either.Type<string, string | undefined> => {
-  if (environmentRole === "Forbidden") return Either.right(undefined);
+  environment: EnvironmentPreview | undefined
+): string | undefined => {
+  if (environmentRole === "Forbidden") return undefined;
 
   if (environmentRole === "Required") {
-    if (environment) return Either.right(environment.id);
+    if (environment) return environment.id;
 
-    return Either.left(words("error.environment.missing"));
+    return words("error.environment.missing");
   }
 
-  return Either.right(environment ? environment.id : undefined);
+  if (environment) return environment.id;
+
+  return undefined;
 };

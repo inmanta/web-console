@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump monaco-editor from 0.52.0 to 0.52.2
+destination-branches:
+- master
+sections: {}

@@ -1,201 +1,193 @@
-import React, { act } from "react";
-import { MemoryRouter } from "react-router";
+import React from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { Either, RemoteData } from "@/Core";
-import { QueryResolverImpl, getStoreInstance } from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolverImpl,
-  StaticScheduler,
-} from "@/Test";
-import { Resource } from "@/Test/Data";
-import { DependencyProvider } from "@/UI/Dependency";
-import {
-  ResourceDetailsQueryManager,
-  ResourceDetailsStateHelper,
-  ResourceHistoryQueryManager,
-  ResourceHistoryStateHelper,
-} from "@S/ResourceDetails/Data";
+import { HttpResponse, http, delay } from "msw";
+import { setupServer } from "msw/node";
+import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ResourceHistory } from "@S/ResourceDetails/Data/Mock";
+import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { ResourceHistoryView } from "./ResourceHistoryView";
 
 function setup() {
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([
-      ResourceHistoryQueryManager(apiHelper, ResourceHistoryStateHelper(store), scheduler),
-      ResourceDetailsQueryManager(apiHelper, ResourceDetailsStateHelper(store), scheduler),
-    ])
-  );
-
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-        }}
-      >
-        <StoreProvider store={store}>
-          <ResourceHistoryView resourceId={Resource.id} details={RemoteData.notAsked()} />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={testClient}>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
+          <ResourceHistoryView resourceId="abc" details={ResourceDetails.response.data} />
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 }
 
-test("ResourceHistoryView shows empty table", async () => {
-  const { component, apiHelper } = setup();
+describe("ResourceHistoryView", () => {
+  const server = setupServer();
 
-  render(component);
+  beforeAll(() => server.listen());
+  beforeEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 
-  expect(
-    await screen.findByRole("region", { name: "ResourceHistory-Loading" })
-  ).toBeInTheDocument();
+  test("ResourceHistoryView shows empty table", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc/history", () => {
+        delay(100);
 
-  apiHelper.resolve(
-    Either.right({
-      data: [],
-      metadata: { total: 0, before: 0, after: 0, page_size: 10 },
-      links: { self: "" },
-    })
-  );
-
-  expect(await screen.findByRole("generic", { name: "ResourceHistory-Empty" })).toBeInTheDocument();
-});
-
-test("ResourceHistoryView shows failed table", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  expect(
-    await screen.findByRole("region", { name: "ResourceHistory-Loading" })
-  ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.left("error"));
-
-  expect(await screen.findByRole("region", { name: "ResourceHistory-Failed" })).toBeInTheDocument();
-});
-
-test("ResourceHistoryView shows success table", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  expect(
-    await screen.findByRole("region", { name: "ResourceHistory-Loading" })
-  ).toBeInTheDocument();
-
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    environment: "env",
-    url: `/api/v2/resource/${Resource.encodedId}/history?limit=100&sort=date.desc`,
-    method: "GET",
-  });
-
-  apiHelper.resolve(Either.right(ResourceHistory.response));
-
-  expect(await screen.findByRole("grid", { name: "ResourceHistory-Success" })).toBeInTheDocument();
-});
-
-test("ResourceHistoryView shows sorting buttons for sortable columns", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-  apiHelper.resolve(Either.right(ResourceHistory.response));
-  expect(await screen.findByRole("button", { name: /Date/i })).toBeVisible();
-});
-
-test("ResourceHistoryView sets sorting parameters correctly on click", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-  apiHelper.resolve(Either.right(ResourceHistory.response));
-  const stateButton = await screen.findByRole("button", { name: /date/i });
-
-  expect(stateButton).toBeVisible();
-
-  await userEvent.click(stateButton);
-
-  expect(apiHelper.pendingRequests[0].url).toContain("&sort=date.asc");
-});
-
-test("GIVEN The ResourceHistoryView WHEN the user clicks on the expansion toggle THEN the tabs are shown", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right(ResourceHistory.response));
-  });
-
-  await userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
-
-  expect(screen.getAllByRole("tab", { name: "Desired State" })[0]).toBeVisible();
-  expect(screen.getAllByRole("tab", { name: "Requires" })[0]).toBeVisible();
-});
-
-test("GIVEN The ResourceHistoryView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
-  const { component, apiHelper } = setup();
-
-  render(component);
-
-  //mock that response has more than one site
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({
-        ...ResourceHistory.response,
-        metadata: {
-          total: 103,
-          before: 0,
-          after: 3,
-          page_size: 100,
-        },
-        links: {
-          ...ResourceHistory.response.links,
-          next: "/fake-link?end=fake-first-param",
-        },
+        return HttpResponse.json({
+          data: [],
+          metadata: { total: 0, before: 0, after: 0, page_size: 10 },
+          links: { self: "" },
+        });
       })
     );
+    const { component } = setup();
+
+    render(component);
+
+    expect(screen.getByRole("region", { name: "ResourceHistory-Loading" })).toBeInTheDocument();
+
+    expect(
+      await screen.findByRole("generic", { name: "ResourceHistory-Empty" })
+    ).toBeInTheDocument();
   });
 
-  const nextPageButton = screen.getByLabelText("Go to next page");
-
-  expect(nextPageButton).toBeEnabled();
-
-  await userEvent.click(nextPageButton);
-
-  //expect the api url to contain start and end keywords that are used for pagination when we are moving to the next page
-  expect(apiHelper.pendingRequests[0].url).toMatch(/(&start=|&end=)/);
-  expect(apiHelper.pendingRequests[0].url).toMatch(/(&sort=date.desc)/);
-
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({
-        ...ResourceHistory.response,
-        metadata: {
-          total: 103,
-          before: 100,
-          after: 0,
-          page_size: 100,
-        },
+  test("ResourceHistoryView shows error view", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc/history", () => {
+        return HttpResponse.json({ message: "error" }, { status: 500 });
       })
     );
+    const { component } = setup();
+
+    render(component);
+
+    expect(
+      await screen.findByRole("region", { name: "ResourceHistory-Error" })
+    ).toBeInTheDocument();
   });
 
-  //sort on the second page
-  await userEvent.click(screen.getByRole("button", { name: "Date" }));
+  test("ResourceHistoryView shows success table", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc/history", () => {
+        return HttpResponse.json(ResourceHistory.response);
+      })
+    );
+    const { component } = setup();
 
-  // expect the api url to not contain start and end keywords that are used for pagination to assert we are back on the first page.
-  // we are asserting on the second request as the first request is for the updated sorting event, and second is chained to back to the first page with still correct sorting
-  expect(apiHelper.pendingRequests[1].url).not.toMatch(/(&start=|&end=)/);
-  expect(apiHelper.pendingRequests[1].url).toMatch(/(&sort=date.asc)/);
+    render(component);
+
+    expect(
+      await screen.findByRole("grid", { name: "ResourceHistory-Success" })
+    ).toBeInTheDocument();
+  });
+
+  test("ResourceHistoryView sets sorting parameters correctly on click", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc/history", ({ request }) => {
+        if (request.url.includes("&sort=date.asc")) {
+          return HttpResponse.json({
+            ...ResourceHistory.response,
+            data: ResourceHistory.response.data.reverse(),
+          });
+        }
+
+        return HttpResponse.json(ResourceHistory.response);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+    const stateButton = await screen.findByRole("button", { name: /date/i });
+
+    expect(stateButton).toBeVisible();
+
+    const rows = await screen.findAllByLabelText("Resource History Table Row");
+
+    expect(rows[0]).toHaveTextContent("4 years ago2");
+    expect(rows[1]).toHaveTextContent("4 years ago1");
+
+    await userEvent.click(stateButton);
+
+    const updatedRows = await screen.findAllByLabelText("Resource History Table Row");
+
+    expect(updatedRows[0]).toHaveTextContent("4 years ago1");
+    expect(updatedRows[1]).toHaveTextContent("4 years ago2");
+  });
+
+  test("GIVEN The ResourceHistoryView WHEN the user clicks on the expansion toggle THEN the tabs are shown", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc/history", () => {
+        return HttpResponse.json(ResourceHistory.response);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByLabelText("ResourceHistory-Success")).toBeVisible();
+
+    await userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
+
+    expect(screen.getAllByRole("tab", { name: "Desired State" })[0]).toBeVisible();
+    expect(screen.getAllByRole("tab", { name: "Requires" })[0]).toBeVisible();
+  });
+
+  test("GIVEN The ResourceHistoryView WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+    server.use(
+      http.get("/api/v2/resource/abc/history", ({ request }) => {
+        if (request.url.includes("&end=")) {
+          return HttpResponse.json({
+            ...ResourceHistory.response,
+            data: ResourceHistory.response.data.slice(0, 1),
+            metadata: {
+              total: 103,
+              before: 100,
+              after: 0,
+              page_size: 100,
+            },
+          });
+        }
+
+        return HttpResponse.json({
+          ...ResourceHistory.response,
+          metadata: {
+            total: 103,
+            before: 0,
+            after: 83,
+            page_size: 100,
+          },
+          links: {
+            ...ResourceHistory.response.links,
+            next: "/fake-link?end=fake-first-param",
+          },
+        });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    const rows = await screen.findAllByLabelText("Resource History Table Row");
+
+    expect(rows).toHaveLength(2);
+
+    const nextPageButton = screen.getByLabelText("Go to next page");
+
+    await userEvent.click(nextPageButton);
+
+    const updatedRows = await screen.findAllByLabelText("Resource History Table Row");
+
+    expect(updatedRows).toHaveLength(1);
+
+    //sort on the second page
+    await userEvent.click(screen.getByRole("button", { name: "Date" }));
+
+    const updatedRows1 = await screen.findAllByLabelText("Resource History Table Row");
+
+    expect(updatedRows1).toHaveLength(2);
+  });
 });

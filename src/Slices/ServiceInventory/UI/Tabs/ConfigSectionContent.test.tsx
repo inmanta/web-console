@@ -1,5 +1,4 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
 import {
   QueryClient,
   QueryClientProvider,
@@ -8,36 +7,19 @@ import {
 } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import {
-  EnvironmentDetails,
-  EnvironmentModifier,
-  RemoteData,
-  ServiceModel,
-  VersionedServiceInstanceIdentifier,
-} from "@/Core";
+import { ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import { getStoreInstance } from "@/Data";
-import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
+import * as queryModule from "@/Data/Queries/Helpers/useQueries";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
-
-import {
-  dependencies,
-  MockEnvironmentHandler,
-  MockEnvironmentModifier,
-  Service,
-  ServiceInstance,
-} from "@/Test";
+import { Service, ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
-import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ConfigSectionContent } from "./ConfigSectionContent";
 
-function setup(environmentModifier: EnvironmentModifier = new MockEnvironmentModifier()) {
+function setup(halted: boolean = false) {
   const client = new QueryClient();
-  const store = getStoreInstance();
 
   const instanceIdentifier: VersionedServiceInstanceIdentifier = {
     id: ServiceInstance.a.id,
@@ -47,38 +29,29 @@ function setup(environmentModifier: EnvironmentModifier = new MockEnvironmentMod
 
   const component = (
     <QueryClientProvider client={client}>
-      <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentModifier,
-            environmentHandler: MockEnvironmentHandler(Service.a.environment),
-          }}
-        >
-          <StoreProvider store={store}>
-            <InstanceDetailsContext.Provider
-              value={{
-                instance: ServiceInstance.a,
-                logsQuery: {} as unknown as UseInfiniteQueryResult<InstanceLog[], Error>,
-                serviceModelQuery: {
-                  data: Service.a,
-                  isLoading: false,
-                  isError: false,
-                  isSuccess: true,
-                } as UseQueryResult<ServiceModel, Error>,
-              }}
-            >
-              <ConfigSectionContent serviceInstanceIdentifier={instanceIdentifier} />
-            </InstanceDetailsContext.Provider>
-          </StoreProvider>
-        </DependencyProvider>
-      </MemoryRouter>
+      <TestMemoryRouter initialEntries={["/?env=aaa"]}>
+        <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
+          <InstanceDetailsContext.Provider
+            value={{
+              instance: ServiceInstance.a,
+              logsQuery: {} as unknown as UseInfiniteQueryResult<InstanceLog[], Error>,
+              serviceModelQuery: {
+                data: Service.a,
+                isLoading: false,
+                isError: false,
+                isSuccess: true,
+              } as UseQueryResult<ServiceModel, Error>,
+            }}
+          >
+            <ConfigSectionContent serviceInstanceIdentifier={instanceIdentifier} />
+          </InstanceDetailsContext.Provider>
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 
   return {
     component,
-    store,
   };
 }
 let data = {
@@ -181,15 +154,8 @@ describe("ConfigSectionContent", () => {
   });
 
   test("ConfigTab handles hooks with environment modifier correctly", async () => {
-    const environmentModifier = EnvironmentModifierImpl();
+    const { component } = setup(true);
 
-    environmentModifier.setEnvironment(Service.a.environment);
-    const { component, store } = setup(environmentModifier);
-
-    store.dispatch.environment.setEnvironmentDetailsById({
-      id: Service.a.environment,
-      value: RemoteData.success({ halted: true } as EnvironmentDetails),
-    });
     render(component);
 
     const toggle = await screen.findByRole("switch", {

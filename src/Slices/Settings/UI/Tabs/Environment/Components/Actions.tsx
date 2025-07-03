@@ -28,8 +28,8 @@ interface Props {
  */
 export const Actions: React.FC<Props> = ({ environment }) => {
   const { triggerModal } = useContext(ModalContext);
-  const { environmentModifier } = useContext(DependencyContext);
-  const isProtected = environmentModifier.useIsProtectedEnvironment();
+  const { environmentHandler } = useContext(DependencyContext);
+  const isProtected = environmentHandler.useIsProtectedEnvironment();
 
   /**
    * Opens a modal with a confirmation form.

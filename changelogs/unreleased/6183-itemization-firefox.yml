@@ -1,0 +1,6 @@
+description: Improve itemization in Firefox for the status page.
+issue-nr: 6183
+change-type: patch
+destination-branches: [master, iso8]
+sections:
+  minor-improvement: "{{description}}"

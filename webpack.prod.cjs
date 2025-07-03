@@ -1,4 +1,5 @@
 const path = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -33,9 +34,10 @@ module.exports = merge(common, {
     },
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[name].bundle.css",
+      filename: "[name].[contenthash].css",
+      chunkFilename: "[name].[contenthash].bundle.css",
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src", "index.html"),
@@ -63,6 +65,7 @@ module.exports = merge(common, {
           path.resolve(__dirname, "node_modules/patternfly"),
           path.resolve(__dirname, "node_modules/@patternfly/patternfly"),
           path.resolve(__dirname, "node_modules/@patternfly/react-styles/css"),
+          path.resolve(__dirname, "node_modules/@patternfly/react-code-editor"),
           path.resolve(__dirname, "node_modules/@patternfly/react-core/dist/styles/base.css"),
           path.resolve(
             __dirname,
@@ -81,12 +84,18 @@ module.exports = merge(common, {
             "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css"
           ),
           path.resolve(__dirname, "node_modules/@inmanta/rappid/joint-plus.css"),
+          path.resolve(
+            __dirname,
+            "node_modules/@patternfly/react-log-viewer/dist/esm/LogViewer/css"
+          ),
         ],
         use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
     ],
   },
   output: {
+    filename: "[name].[contenthash].js",
+    chunkFilename: "[name].[contenthash].bundle.js",
     publicPath: "",
   },
 });

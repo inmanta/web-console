@@ -1,31 +1,34 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Button, ToolbarGroup } from "@patternfly/react-core";
-import { Maybe } from "@/Core";
+import { useTriggerDryRun } from "@/Data/Queries";
 import { ToastAlert } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
 interface Props {
   version: string;
-  updateList(): void;
 }
 
-export const TriggerDryRunAction: React.FC<Props> = ({ version, updateList }) => {
-  const { commandResolver } = useContext(DependencyContext);
+/**
+ * TriggerDryRunAction component
+ *
+ * This component allows users to trigger a dry run for a given version.
+ * It displays a toast alert for error messages and a button to trigger the dry run.
+ *
+ * @props {Props} props - The component props
+ * @prop {string} version - The version to trigger the dry run for
+ *
+ * @returns {React.FC<Props>} The TriggerDryRunAction component
+ */
+export const TriggerDryRunAction: React.FC<Props> = ({ version }) => {
   const [errorMessage, setErrorMessage] = useState("");
-  const trigger = commandResolver.useGetTrigger<"TriggerDryRun">({
-    kind: "TriggerDryRun",
-    version,
+  const { mutate } = useTriggerDryRun({
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
   });
 
   const onTrigger = async () => {
-    const error = await trigger();
-
-    if (Maybe.isSome(error)) {
-      setErrorMessage(error.value);
-    }
-
-    updateList();
+    mutate(version);
   };
 
   return (

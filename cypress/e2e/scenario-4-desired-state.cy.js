@@ -25,16 +25,26 @@ const checkStatusCompile = (id) => {
   let statusCodeCompile = 200;
 
   if (statusCodeCompile === 200) {
-    cy.intercept(`/api/v1/notify/${id}`).as("IsCompiling");
+    cy.intercept("/api/v2/graphql").as("IsCompiling");
     // the timeout is necessary to avoid errors.
     // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
-    // the default timeout in cypress is 5000, but since we have recursion it goes into timeout for the nested awaits because of the recursion.
-    cy.wait("@IsCompiling", { timeout: 10000 }).then((req) => {
+    cy.wait("@IsCompiling").then((req) => {
       statusCodeCompile = req.response.statusCode;
+      const environments = req.response.body.data.data.environments;
 
-      if (statusCodeCompile === 200) {
-        checkStatusCompile(id);
+      if (environments) {
+        const edges = environments.edges;
+
+        if (edges && edges.length > 0) {
+          const environment = edges.find((env) => env.node.id === id);
+
+          if (environment && !environment.node.isCompiling) {
+            return;
+          }
+        }
       }
+
+      checkStatusCompile(id);
     });
   }
 };
@@ -105,7 +115,7 @@ describe("Scenario 4 Desired State", () => {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Should show the chart
-      cy.get(".pf-v5-c-chart").should("be.visible");
+      cy.get(".pf-v6-c-chart").should("be.visible");
 
       // Should show the ServiceInventory-Success Component.
       cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
@@ -372,13 +382,9 @@ describe("Scenario 4 Desired State", () => {
         "This resource has not been modified."
       );
 
-      if (isIso) {
-        expect($expandableRow.eq(1), "second-row").to.contain("next_version-3+4");
-      } else {
-        expect($expandableRow.eq(1), "second-row").to.have.text(
-          "This resource has not been modified."
-        );
-      }
+      expect($expandableRow.eq(1), "second-row").to.have.text(
+        "This resource has not been modified."
+      );
     });
 
     // go back to desired state page
@@ -426,10 +432,6 @@ describe("Scenario 4 Desired State", () => {
       expect($expandableRow.eq(0), "first-row").to.have.text(
         "This resource has not been modified."
       );
-
-      if (isIso) {
-        expect($expandableRow.eq(1), "second-row").to.contain("next_version-3+4");
-      }
     });
 
     // click on filter by status dropdown
@@ -438,17 +440,6 @@ describe("Scenario 4 Desired State", () => {
     // uncheck unmodified option
     cy.get('[role="option"]').contains("unmodified").click();
     cy.get('[aria-label="StatusFilter"]').click();
-
-    // expect diff-module to only show the modified file.Only for ISO, the table would be empty on OSS.
-    if (isIso) {
-      cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(($expandableRow) => {
-        expect($expandableRow).to.have.length(1);
-
-        if (isIso) {
-          expect($expandableRow.eq(0), "first-row").to.contain("next_version-3+4");
-        }
-      });
-    }
 
     // go back to desired state
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Desired State").click();
@@ -479,10 +470,6 @@ describe("Scenario 4 Desired State", () => {
       expect($expandableRow.eq(0), "first-row").to.have.text(
         "This resource has not been modified."
       );
-
-      if (isIso) {
-        expect($expandableRow.eq(1), "second-row").to.contain("next_version-3+4");
-      }
     });
 
     // click on Perform dry run

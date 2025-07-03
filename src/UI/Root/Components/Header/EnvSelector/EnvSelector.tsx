@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import {
   Content,
   Divider,
@@ -50,6 +50,7 @@ export const EnvSelector: React.FC<Props> = ({
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
         <MenuToggle
           id="toggle-button"
+          data-testid="env-selector-toggle"
           ref={toggleRef}
           isExpanded={isOpen}
           aria-label={toggleText}

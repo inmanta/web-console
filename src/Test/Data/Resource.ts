@@ -77,10 +77,10 @@ export const response = {
   ],
   links: { self: "/api/v2/resource?limit=20&sort=resource_type.DESC" },
   metadata: {
-    total: 22,
+    total: 102,
     before: 0,
     after: 2,
-    page_size: 20,
+    page_size: 100,
     deploy_summary: {
       total: 20,
       by_state: {
@@ -173,7 +173,7 @@ export const responseFromVersion: Resource.ResponseFromVersion = {
     total: 6,
     before: 0,
     after: 0,
-    page_size: 20,
+    page_size: 100,
   },
 };
 

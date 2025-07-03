@@ -14,6 +14,20 @@ interface Props {
   index: number;
 }
 
+/**
+ * The ResourceHistoryTableRow component.
+ *
+ * This component is responsible of displaying the history of a resource.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {ResourceHistoryRow} row - The row of the resource history
+ *  @prop {boolean} isExpanded - Whether the row is expanded
+ *  @prop {() => void} onToggle - The function to toggle the row
+ *  @prop {number} numberOfColumns - The number of columns
+ *  @prop {number} index - The index of the row
+ *
+ * @returns {React.FC<Props>} A React Component displaying the history of a resource
+ */
 export const ResourceHistoryTableRow: React.FC<Props> = ({
   row,
   isExpanded,

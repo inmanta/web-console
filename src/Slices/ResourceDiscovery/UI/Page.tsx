@@ -1,16 +1,29 @@
 import React, { useContext, useEffect } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { EmptyView, PageContainer, OldPaginationWidget, RemoteDataView } from "@/UI/Components";
+import { Filter, SortKey, useGetDiscoveredResources } from "@/Data/Queries";
+import {
+  EmptyView,
+  PageContainer,
+  PaginationWidget,
+  LoadingView,
+  ErrorView,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Filter, SortKey } from "@S/ResourceDiscovery/Core/Query";
 import { DiscoveredResourcesTable } from "./DiscoveredResourcesTable";
 import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
 import { TableControls } from "./TableControls";
 
+/**
+ * The Page component.
+ *
+ * This component is responsible of displaying the discovered resources.
+ *
+ * @returns {React.FC} A React Component displaying the discovered resources
+ */
 export const Page: React.FC = () => {
-  const { queryResolver, featureManager } = useContext(DependencyContext);
+  const { orchestratorProvider } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "DiscoveredResources",
@@ -26,16 +39,14 @@ export const Page: React.FC = () => {
     default: { name: "discovered_resource_id", order: "asc" },
     route: "DiscoveredResources",
   });
-
-  const [data, retry] = queryResolver.useContinuous<"GetDiscoveredResources">({
-    kind: "GetDiscoveredResources",
+  const { data, isError, isSuccess, refetch, error } = useGetDiscoveredResources({
     sort,
     filter,
     pageSize,
     currentPage,
-  });
+  }).useContinuous();
 
-  const disabledDiscoveredResourcesView = !featureManager.isResourceDiscoveryEnabled();
+  const disabledDiscoveredResourcesView = !orchestratorProvider.isResourceDiscoveryEnabled();
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
@@ -43,43 +54,51 @@ export const Page: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
-  return (
-    <PageContainer pageTitle={words("discovered_resources.title")}>
-      <TableControls
-        paginationWidget={
-          <OldPaginationWidget
-            data={data}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            setCurrentPage={setCurrentPage}
+  if (isError) {
+    return (
+      <ErrorView
+        message={error.message}
+        ariaLabel="DiscoveredResourcesView-Error"
+        retry={refetch}
+      />
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <PageContainer pageTitle={words("discovered_resources.title")}>
+        <TableControls
+          paginationWidget={
+            <PaginationWidget
+              data={data}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              setCurrentPage={setCurrentPage}
+            />
+          }
+        />
+
+        {disabledDiscoveredResourcesView || data.data.length <= 0 ? (
+          <EmptyView
+            message={
+              disabledDiscoveredResourcesView
+                ? words("resources.discovery.disabled")
+                : words("resources.empty.message")
+            }
+            aria-label="DiscoveredResourcesView-Empty"
           />
-        }
-      />
-      <RemoteDataView
-        data={data}
-        label="DiscoveredResourcesView"
-        retry={retry}
-        SuccessView={(resources) =>
-          disabledDiscoveredResourcesView || resources.data.length <= 0 ? (
-            <EmptyView
-              message={
-                disabledDiscoveredResourcesView
-                  ? words("resources.discovery.disabled")
-                  : words("resources.empty.message")
-              }
-              aria-label="ResourcesView-Empty"
-            />
-          ) : (
-            <DiscoveredResourcesTable
-              rows={resources.data}
-              aria-label="DiscoveredResourcesView-Success"
-              tablePresenter={new DiscoveredResourcesTablePresenter()}
-              sort={sort}
-              setSort={setSort}
-            />
-          )
-        }
-      />
-    </PageContainer>
-  );
+        ) : (
+          <DiscoveredResourcesTable
+            rows={data.data}
+            aria-label="DiscoveredResourcesView-Success"
+            tablePresenter={new DiscoveredResourcesTablePresenter()}
+            sort={sort}
+            setSort={setSort}
+          />
+        )}
+      </PageContainer>
+    );
+  }
+
+  return <LoadingView ariaLabel="DiscoveredResourcesView-Loading" />;
 };

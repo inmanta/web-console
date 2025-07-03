@@ -1,78 +1,52 @@
-import React, { act } from "react";
+import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { EnvironmentDetails, RemoteData } from "@/Core";
-import { CommandManagerResolverImpl, CommandResolverImpl, getStoreInstance } from "@/Data";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
-import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
+import { ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { DestroyAction } from "./DestroyAction";
+
 const mockedMutate = jest.fn();
 
 //mock is used to assert correct function call
-jest.mock("@/Data/Managers/V2/ServiceInstance", () => ({
+jest.mock("@/Data/Queries/Slices/ServiceInstance", () => ({
   useDestroyInstance: () => ({ mutate: mockedMutate }),
 }));
 
-function setup() {
-  const apiHelper = new DeferredApiHelper();
-
-  const storeInstance = getStoreInstance();
-
-  storeInstance.dispatch.environment.setEnvironmentDetailsById({
-    id: ServiceInstance.a.environment,
-    value: RemoteData.success({ halted: false } as EnvironmentDetails),
-  });
-
-  dependencies.environmentModifier.setEnvironment(ServiceInstance.a.environment);
-
-  const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolverImpl(storeInstance, apiHelper)
-  );
-
+function setup(halted: boolean = false) {
   return {
     component: () => (
       <QueryClientProvider client={testClient}>
-        <StoreProvider store={storeInstance}>
-          <DependencyProvider
-            dependencies={{
-              ...dependencies,
-              commandResolver,
-            }}
-          >
-            <ModalProvider>
-              <ServiceInventoryContext.Provider
-                value={{
-                  labelFiltering: {
-                    danger: [],
-                    warning: [],
-                    success: [],
-                    info: [],
-                    no_label: [],
-                    onClick: jest.fn(),
-                  },
-                }}
-              >
-                <DestroyAction
-                  id={ServiceInstance.a.id}
-                  instance_identity={
-                    ServiceInstance.a.service_identity_attribute_value ?? ServiceInstance.a.id
-                  }
-                  version={ServiceInstance.a.version}
-                  service_entity={ServiceInstance.a.service_entity}
-                />
-              </ServiceInventoryContext.Provider>
-            </ModalProvider>
-          </DependencyProvider>
-        </StoreProvider>
+        <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
+          <ModalProvider>
+            <ServiceInventoryContext.Provider
+              value={{
+                labelFiltering: {
+                  danger: [],
+                  warning: [],
+                  success: [],
+                  info: [],
+                  no_label: [],
+                  onClick: jest.fn(),
+                },
+              }}
+            >
+              <DestroyAction
+                id={ServiceInstance.a.id}
+                instance_identity={
+                  ServiceInstance.a.service_identity_attribute_value ?? ServiceInstance.a.id
+                }
+                version={ServiceInstance.a.version}
+                service_entity={ServiceInstance.a.service_entity}
+              />
+            </ServiceInventoryContext.Provider>
+          </ModalProvider>
+        </MockedDependencyProvider>
       </QueryClientProvider>
     ),
-    storeInstance,
   };
 }
 
@@ -121,15 +95,9 @@ describe("DeleteModal ", () => {
   });
 
   it("Doesn't take environment halted status in account", async () => {
-    const { component, storeInstance } = setup();
+    const { component } = setup(true);
     const { rerender } = render(component());
 
-    act(() => {
-      storeInstance.dispatch.environment.setEnvironmentDetailsById({
-        id: ServiceInstance.a.environment,
-        value: RemoteData.success({ halted: true } as EnvironmentDetails),
-      });
-    });
     rerender(component());
     expect(await screen.findByText(words("inventory.destroyInstance.button"))).toBeEnabled();
   });

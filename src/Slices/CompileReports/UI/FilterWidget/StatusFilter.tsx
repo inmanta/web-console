@@ -1,9 +1,9 @@
 import React from "react";
 import { SelectOptionProps, ToolbarFilter } from "@patternfly/react-core";
 import { CompileStatus } from "@/Core";
+import { Kind } from "@/Slices/CompileReports/Core/Types";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Kind } from "@S/CompileReports/Core/Query";
 
 interface Props {
   isVisible: boolean;

@@ -25,16 +25,26 @@ const checkStatusCompile = (id) => {
   let statusCodeCompile = 200;
 
   if (statusCodeCompile === 200) {
-    cy.intercept(`/api/v1/notify/${id}`).as("IsCompiling");
+    cy.intercept("/api/v2/graphql").as("IsCompiling");
     // the timeout is necessary to avoid errors.
     // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
-    // the default timeout in cypress is 5000, but since we have recursion it goes into timeout for the nested awaits because of the recursion.
-    cy.wait("@IsCompiling", { timeout: 15000 }).then((req) => {
+    cy.wait("@IsCompiling").then((req) => {
       statusCodeCompile = req.response.statusCode;
+      const environments = req.response.body.data.data.environments;
 
-      if (statusCodeCompile === 200) {
-        checkStatusCompile(id);
+      if (environments) {
+        const edges = environments.edges;
+
+        if (edges && edges.length > 0) {
+          const environment = edges.find((env) => env.node.id === id);
+
+          if (environment && !environment.node.isCompiling) {
+            return;
+          }
+        }
       }
+
+      checkStatusCompile(id);
     });
   }
 };
@@ -85,7 +95,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-m-current").should("contain", "Details");
 
       // Expect 0 Instances
-      cy.get(".pf-v5-c-chart").within(() => {
+      cy.get(".pf-v6-c-chart").within(() => {
         cy.get("svg").find("title").should("contain", "Number of instances by label");
         cy.get("svg").find("text").should("contain", "0").and("contain", "Instances");
       });
@@ -204,7 +214,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Details").click();
 
       // Expect the number in the chart to be 1
-      cy.get(".pf-v5-c-chart").within(() => {
+      cy.get(".pf-v6-c-chart").within(() => {
         cy.get("svg").find("title").should("contain", "Number of instances by label");
         cy.get("svg").find("text").should("contain", "1").and("contain", "Instances");
       });
@@ -238,7 +248,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Expect the number in the chart to be 2
-      cy.get(".pf-v5-c-chart").within(() => {
+      cy.get(".pf-v6-c-chart").within(() => {
         cy.get("svg").find("title").should("contain", "Number of instances by label");
         cy.get("svg").find("text").should("contain", "2").and("contain", "Instances");
       });
@@ -275,7 +285,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".pf-m-current").should("contain", "Details");
 
       // Expect the number in the chart to be 2
-      cy.get(".pf-v5-c-chart").within(() => {
+      cy.get(".pf-v6-c-chart").within(() => {
         cy.get("svg").find("title").should("contain", "Number of instances by label");
         cy.get("svg").find("text").should("contain", "2").and("contain", "Instances");
       });

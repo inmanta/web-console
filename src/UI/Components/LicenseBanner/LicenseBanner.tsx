@@ -7,8 +7,8 @@ import { words } from "@/UI/words";
  * @returns Either a banner informing the user his/her license has expired.
  */
 export const LicenseBanner: React.FC = () => {
-  const { featureManager } = useContext(DependencyContext);
-  const status = featureManager.getLicenseInformation();
+  const { orchestratorProvider } = useContext(DependencyContext);
+  const status = orchestratorProvider.getLicenseInformation();
   const expirationMessage = getExpirationMessage(
     status?.entitlement_valid_until,
     status?.cert_valid_until

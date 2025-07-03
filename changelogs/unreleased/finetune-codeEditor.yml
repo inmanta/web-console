@@ -1,0 +1,4 @@
+description: Finetune the code editor to handle dark mode better.
+change-type: patch
+issue-nr: 6413
+destination-branches: [master, iso8]

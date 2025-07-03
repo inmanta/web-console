@@ -1,26 +1,21 @@
 import React from "react";
-import { MemoryRouter, useLocation } from "react-router-dom";
 import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { RemoteData } from "@/Core";
-import { getStoreInstance } from "@/Data";
-import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
-import { dependencies } from "@/Test";
+import { InstanceWithRelations, Inventories } from "@/Data/Queries";
+import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasContext, defaultCanvasContext, InstanceComposerContext } from "../Context";
 import { childModel } from "../Mocks";
 import { RelationCounterForCell } from "../interfaces";
 import { ComposerActions } from "./ComposerActions";
 const mockedNavigate = jest.fn();
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
   useNavigate: () => mockedNavigate,
 }));
 
@@ -30,47 +25,24 @@ describe("ComposerActions.", () => {
     canvasContext: typeof defaultCanvasContext,
     editable: boolean = true
   ) => {
-    const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
-    const store = getStoreInstance();
-
-    const env = {
-      id: "aaa",
-      name: "env-a",
-      project_id: "ppp",
-      repo_branch: "branch",
-      repo_url: "repo",
-      projectName: "project",
-      halted: false,
-      settings: {},
-    };
-
-    store.dispatch.environment.setEnvironments(RemoteData.success([env]));
-
-    store.dispatch.environment.setEnvironmentDetailsById({
-      id: "aaa",
-      value: RemoteData.success(env),
-    });
-
     return (
       <QueryClientProvider client={testClient}>
-        <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
-          <StoreProvider store={store}>
-            <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
-              <InstanceComposerContext.Provider
-                value={{
-                  serviceModels: [childModel],
-                  instance: instanceWithRelations,
-                  mainService: childModel,
-                  relatedInventoriesQuery: {} as UseQueryResult<Inventories, Error>,
-                }}
-              >
-                <CanvasContext.Provider value={canvasContext}>
-                  <ComposerActions serviceName="child-service" editable={editable} />
-                </CanvasContext.Provider>
-              </InstanceComposerContext.Provider>
-            </DependencyProvider>
-          </StoreProvider>
-        </MemoryRouter>
+        <TestMemoryRouter initialEntries={["/?env=aaa"]}>
+          <MockedDependencyProvider>
+            <InstanceComposerContext.Provider
+              value={{
+                serviceModels: [childModel],
+                instance: instanceWithRelations,
+                mainService: childModel,
+                relatedInventoriesQuery: {} as UseQueryResult<Inventories, Error>,
+              }}
+            >
+              <CanvasContext.Provider value={canvasContext}>
+                <ComposerActions serviceName="child-service" editable={editable} />
+              </CanvasContext.Provider>
+            </InstanceComposerContext.Provider>
+          </MockedDependencyProvider>
+        </TestMemoryRouter>
       </QueryClientProvider>
     );
   };
@@ -140,7 +112,6 @@ describe("ComposerActions.", () => {
     ${new Map()}      | ${true}  | ${null}                  | ${true}  | ${null}
     ${null}           | ${false} | ${null}                  | ${true}  | ${null}
     ${null}           | ${true}  | ${new Set().add("test")} | ${true}  | ${null}
-    ${null}           | ${true}  | ${null}                  | ${false} | ${null}
     ${null} | ${true} | ${null} | ${true} | ${new Map().set("test_id", {
   name: "test",
   relations: [{ name: "relation-test", currentAmount: 0, min: 1 }],
@@ -161,6 +132,11 @@ describe("ComposerActions.", () => {
       expect(screen.getByRole("button", { name: "Deploy" })).toBeDisabled();
     }
   );
+
+  it("should not render deploy button when editable is false", () => {
+    render(setup(null, validContextForEnabledDeploy, false));
+    expect(screen.queryByRole("button", { name: "Deploy" })).not.toBeInTheDocument();
+  });
 
   it("should have deploy button enabled when all conditions are met", () => {
     render(setup(null, validContextForEnabledDeploy));

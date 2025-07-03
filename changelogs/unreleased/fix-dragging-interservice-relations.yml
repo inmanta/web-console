@@ -1,0 +1,5 @@
+description: Fix the issue where dragging from stencil sidebar in instance composer inter-service relations was not working as expected.
+change-type: patch
+destination-branches: [master, iso8]
+sections:
+  bugfix: "{{description}}"

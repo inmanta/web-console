@@ -3,7 +3,7 @@ import { MenuItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { useDeleteInstance } from "@/Data/Managers/V2/ServiceInstance";
+import { useDeleteInstance, getInstanceKey } from "@/Data/Queries";
 import { ToastAlert, ActionDisabledTooltip, ConfirmUserActionForm } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -24,23 +24,20 @@ export const DeleteAction: React.FC<Props> = ({
   const client = useQueryClient();
   const { triggerModal, closeModal } = useContext(ModalContext);
   const [errorMessage, setErrorMessage] = useState("");
-  const { environmentModifier } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
 
   const { mutate, isPending } = useDeleteInstance(id, service_entity, version, {
     onError: (error) => {
       setErrorMessage(error.message);
     },
     onSuccess: () => {
-      client.invalidateQueries({
-        queryKey: ["get_instances-one_time", service_entity],
-      });
       client.refetchQueries({
-        queryKey: ["get_instances-continuous", service_entity],
+        queryKey: getInstanceKey.root(),
       });
     },
   });
 
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
 
   /**
    * Opens a modal with a confirmation form.

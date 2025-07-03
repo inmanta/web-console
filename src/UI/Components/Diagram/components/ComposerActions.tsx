@@ -1,9 +1,9 @@
 import React, { useCallback, useContext, useState } from "react";
 import "@inmanta/rappid/joint-plus.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
-import { usePostMetadata, usePostOrder } from "@/Data/Managers/V2/ServiceInstance";
-import { ServiceOrder } from "@/Slices/Orders/Core/Query";
+import { usePostOrder, usePostMetadata } from "@/Data/Queries";
+import { ServiceOrder } from "@/Slices/Orders/Core/Types";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../../ToastAlert";
@@ -148,20 +148,21 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
           <Button variant="tertiary" width={200} onClick={handleRedirect}>
             {words("cancel")}
           </Button>
-          <Button
-            variant="primary"
-            width={200}
-            onClick={handleDeploy}
-            isDisabled={
-              serviceOrderItems.size < 1 ||
-              !isDirty ||
-              looseElement.size > 0 ||
-              !editable ||
-              missingInterServiceRelations.length > 0
-            }
-          >
-            {words("deploy")}
-          </Button>
+          {editable && (
+            <Button
+              variant="primary"
+              width={200}
+              onClick={handleDeploy}
+              isDisabled={
+                serviceOrderItems.size < 1 ||
+                !isDirty ||
+                looseElement.size > 0 ||
+                missingInterServiceRelations.length > 0
+              }
+            >
+              {words("deploy")}
+            </Button>
+          )}
         </Flex>
       </FlexItem>
     </Flex>

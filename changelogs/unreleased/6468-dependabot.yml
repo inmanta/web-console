@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump qs and @types/qs
+destination-branches:
+- master
+sections: {}

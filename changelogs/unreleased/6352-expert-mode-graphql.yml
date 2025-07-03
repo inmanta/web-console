@@ -1,0 +1,5 @@
+description: Implement GraphQL query for environment handler and expert mode
+issue-nr: 6352
+change-type: major
+destination-branches: [master]
+

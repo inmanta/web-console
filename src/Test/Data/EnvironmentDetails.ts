@@ -1,6 +1,6 @@
-import { EnvironmentDetails } from "@/Core";
+import { FlatEnvironment } from "@/Core";
 
-export const a: EnvironmentDetails = {
+export const a: FlatEnvironment = {
   id: "c85c0a64-ed45-4cba-bdc5-703f65a225f7",
   name: "dev",
   project_id: "62ee61ef-d830-4f44-af41-a3eeba50ca4a",
@@ -15,6 +15,8 @@ export const a: EnvironmentDetails = {
     server_compile: true,
   },
   halted: false,
+  projectName: "project",
 };
 
-export const halted: EnvironmentDetails = { ...a, halted: true };
+export const env: FlatEnvironment = { ...a, name: "env" };
+export const halted: FlatEnvironment = { ...a, halted: true };

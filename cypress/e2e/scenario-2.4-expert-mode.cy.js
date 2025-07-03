@@ -25,16 +25,26 @@ const checkStatusCompile = (id) => {
   let statusCodeCompile = 200;
 
   if (statusCodeCompile === 200) {
-    cy.intercept(`/api/v1/notify/${id}`).as("IsCompiling");
+    cy.intercept("/api/v2/graphql").as("IsCompiling");
     // the timeout is necessary to avoid errors.
     // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
-    // the default timeout in cypress is 5000, but since we have recursion it goes into timeout for the nested awaits because of the recursion.
-    cy.wait("@IsCompiling", { timeout: 10000 }).then((req) => {
+    cy.wait("@IsCompiling").then((req) => {
       statusCodeCompile = req.response.statusCode;
+      const environments = req.response.body.data.data.environments;
 
-      if (statusCodeCompile === 200) {
-        checkStatusCompile(id);
+      if (environments) {
+        const edges = environments.edges;
+
+        if (edges && edges.length > 0) {
+          const environment = edges.find((env) => env.node.id === id);
+
+          if (environment && !environment.node.isCompiling) {
+            return;
+          }
+        }
       }
+
+      checkStatusCompile(id);
     });
   }
 };
@@ -147,7 +157,43 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="version-4-state"]', { timeout: 60000 }).should("have.text", "creating");
     });
 
-    it("2.4.2 Edit instance attributes", () => {
+    it("2.4.2 Verify markdown preview in documentation tab", () => {
+      cy.visit("/console/");
+      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+      cy.get("#basic-service").contains("Show inventory").click();
+
+      // Go to the instance details
+      cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();
+
+      // Go to the documentation tab
+      cy.get('[aria-label="documentation-content"]').click();
+
+      // Verify the preview button exists and is clickable
+      cy.get('[aria-label="preview-button"]')
+        .should("exist")
+        .and("be.visible")
+        .and("be.enabled")
+        .click();
+
+      // Verify the preview view is shown
+      cy.get('[aria-label="Markdown-Previewer-Success"]').should("exist").and("be.visible");
+
+      // Edit the markdown text
+      cy.get(".monaco-editor")
+        .click()
+        .focused()
+        .type("{ctrl+a}{backspace}") // Clear existing content
+        .type("# Test Heading\n\nThis is a test paragraph with **bold** text.");
+
+      // Verify the preview updates with the new content
+      cy.get(".markdown-body")
+        .should("contain", "Test Heading")
+        .and("contain", "This is a test paragraph")
+        .and("contain", "bold");
+    });
+
+    it("2.4.3 Edit instance attributes", () => {
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
@@ -169,37 +215,42 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".monaco-editor", { timeout: 15000 }).should("be.visible"); // assure the editor is loaded before further assertions.
 
       // edit the first line to make editor invalid (Delete the first character of the name property)
-      cy.get(".mtk20").contains("name").type("{home}{rightArrow}{del}");
+      cy.get(".mtk20").contains("name").type("{ctrl+rightArrow}{backspace}");
 
       // expect the Force Update to be disabled
       cy.get('[aria-label="Expert-Submit-Button"]').should("be.disabled");
 
-      // Scroll the editor to ensure the element is visible
-      cy.get(".monaco-editor").scrollIntoView();
-
       // Adjust the name property of the instance and make editor valid again
-      cy.get(".mtk20").contains("ame").type("{home}{rightArrow}n");
+      cy.get(".mtk20").contains("nam").type("{ctrl+rightArrow}e");
 
-      // edit the value of the name by removing characters
-      cy.get(".mtk5")
-        .contains("basic-service")
-        .type(
-          "{end}{leftArrow}{leftArrow}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}"
-        );
+      cy.wait(1000);
+
+      // edit the value of the interface_r1_name by removing a character
+      cy.get(".monaco-editor").click().focused().type("{ctrl+f}"); // open search tool
+
+      cy.wait(1000); // let the editor settle to avoid typing text to fail
+
+      // search for eth0
+      cy.get('[aria-label="Find"]').type("eth0");
+
+      // toggle replace option
+      cy.get('[aria-label="Toggle Replace"]').click();
+      // go to the replace field
+      cy.get('[aria-label="Replace"]').type("eth1{enter}{enter}");
 
       // confirm edit
       cy.get('[aria-label="Expert-Submit-Button"]').click();
       cy.get("button").contains("Yes").click();
 
-      // Go back to inventory using the breadcrumbs
-      cy.get('[aria-label="BreadcrumbItem"]').contains("Service Inventory: basic-service").click();
+      // select attributes tab
+      cy.get('[aria-label="attributes-content"]').click();
+      cy.get("#Table").click();
 
-      // Expect the name of the instance to be updated in the inventory
-      // (Until the BE fixes the history logs not being updated when force updating attributes)
-      cy.get('[aria-label="IdentityCell-basic"]').should("be.visible");
+      // expect the value of the interface_r1_name to be updated
+      cy.get('[aria-label="interface_r1_name_value"]').should("have.text", "eth1");
     });
 
-    it("2.4.3 Destroy previously created instance", () => {
+    it("2.4.4 Destroy previously created instance", () => {
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();

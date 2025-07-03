@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { useGetInstanceConfig } from "@/Data/Managers/V2/ServiceInstance";
+import { useGetInstanceConfig } from "@/Data/Queries";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { ConfigDetails } from "./ConfigDetails";

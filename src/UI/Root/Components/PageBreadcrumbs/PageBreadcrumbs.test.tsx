@@ -1,18 +1,21 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
+import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
 function setup(initialEntries?: string[]) {
   const component = (
-    <DependencyProvider dependencies={{ routeManager: PrimaryRouteManager("") }}>
-      <MemoryRouter initialEntries={initialEntries}>
-        <PageBreadcrumbs />
-      </MemoryRouter>
-    </DependencyProvider>
+    <QueryClientProvider client={testClient}>
+      <MockedDependencyProvider>
+        <TestMemoryRouter initialEntries={initialEntries}>
+          <PageBreadcrumbs />
+        </TestMemoryRouter>
+      </MockedDependencyProvider>
+    </QueryClientProvider>
   );
 
   return { component };

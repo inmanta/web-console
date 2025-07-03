@@ -1,4 +1,4 @@
-import { generatePath, matchPath, PathMatch, useLocation } from "react-router-dom";
+import { generatePath, matchPath, PathMatch, useLocation } from "react-router";
 import {
   RouteDictionary,
   RouteManager,
@@ -14,6 +14,7 @@ import { DuplicateInstance } from "@/Slices/DuplicateInstance";
 import { InstanceComposer } from "@/Slices/InstanceComposerCreator";
 import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
+import { MarkdownPreviewer } from "@/Slices/MarkdownPreviewer";
 import { ServiceDetails } from "@/Slices/ServiceDetails";
 import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
 import { Agents } from "@S/Agents";
@@ -72,6 +73,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     InstanceComposerEditor: InstanceComposerEditor.route(baseUrl),
     InstanceComposerViewer: InstanceComposerViewer.route(baseUrl),
     Inventory: ServiceInventory.route(baseUrl),
+    MarkdownPreviewer: MarkdownPreviewer.route(baseUrl),
     ServiceDetails: ServiceDetails.route(baseUrl),
     Orders: Orders.route(baseUrl),
     OrderDetails: OrderDetails.route(baseUrl),

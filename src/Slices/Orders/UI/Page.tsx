@@ -1,16 +1,23 @@
 import React, { useContext, useEffect } from "react";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { EmptyView, PageContainer, OldPaginationWidget, RemoteDataView } from "@/UI/Components";
+import { useGetOrders } from "@/Data/Queries";
+import {
+  EmptyView,
+  PageContainer,
+  LoadingView,
+  PaginationWidget,
+  ErrorView,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { SortKey } from "../Core/Query";
+import { SortKey } from "../Core/Types";
 import { OrdersTable } from "./OrdersTable";
 import { OrdersTablePresenter } from "./OrdersTablePresenter";
 import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
-  const { queryResolver, featureManager } = useContext(DependencyContext);
+  const { orchestratorProvider } = useContext(DependencyContext);
 
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "Orders",
@@ -23,15 +30,13 @@ export const Page: React.FC = () => {
     default: { name: "created_at", order: "desc" },
     route: "Orders",
   });
-
-  const [data, retry] = queryResolver.useContinuous<"GetOrders">({
-    kind: "GetOrders",
+  const { data, isSuccess, isError, error, refetch } = useGetOrders().useContinuous({
     sort,
     pageSize,
     currentPage,
   });
 
-  const disabledOrderView = !featureManager.isOrderViewEnabled();
+  const disabledOrderView = !orchestratorProvider.isOrderViewEnabled();
 
   //when sorting is triggered, reset the current page
   useEffect(() => {
@@ -39,40 +44,49 @@ export const Page: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sort.order]);
 
+  if (isError) {
+    return (
+      <PageContainer pageTitle={words("orders.title")}>
+        <ErrorView ariaLabel="OrdersView-Error" retry={refetch} message={error.message} />;
+      </PageContainer>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <PageContainer pageTitle={words("orders.title")}>
+        <TableControls
+          paginationWidget={
+            <PaginationWidget
+              data={data}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              setCurrentPage={setCurrentPage}
+            />
+          }
+        />
+        {data.data.length <= 0 || disabledOrderView ? (
+          <EmptyView
+            message={disabledOrderView ? words("orders.disabled") : words("orders.table.empty")}
+            aria-label="OrdersView-Empty"
+          />
+        ) : (
+          <div aria-label="OrdersView-Success">
+            <OrdersTable
+              rows={data.data}
+              tablePresenter={new OrdersTablePresenter()}
+              sort={sort}
+              setSort={setSort}
+            />
+          </div>
+        )}
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer pageTitle={words("orders.title")}>
-      <TableControls
-        paginationWidget={
-          <OldPaginationWidget
-            data={data}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            setCurrentPage={setCurrentPage}
-          />
-        }
-      />
-      <RemoteDataView
-        data={data}
-        label="OrdersView"
-        retry={retry}
-        SuccessView={(orders) =>
-          orders.data.length <= 0 || disabledOrderView ? (
-            <EmptyView
-              message={disabledOrderView ? words("orders.disabled") : words("orders.table.empty")}
-              aria-label="OrdersView-Empty"
-            />
-          ) : (
-            <div aria-label="OrdersView-Success">
-              <OrdersTable
-                rows={orders.data}
-                tablePresenter={new OrdersTablePresenter()}
-                sort={sort}
-                setSort={setSort}
-              />
-            </div>
-          )
-        }
-      />
+      <LoadingView ariaLabel="OrdersView-Loading" />
     </PageContainer>
   );
 };

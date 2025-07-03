@@ -6,18 +6,17 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { Maybe } from "@/Core";
 import { convertToTitleCase } from "@/UI/Utils";
 import { CancelEditButton, EnableEditButton, SubmitEditButton } from "./InlineEditButtons";
 import { InlineEditButtonFiller, InlineLabelItem } from "./InlineFillers";
-import { InlinePlainAlert } from "./InlinePlainAlert";
 
 export interface FieldProps {
   label: string;
   isRequired?: boolean;
   initialValue: string;
   initiallyEditable?: boolean;
-  onSubmit: (value: string) => Promise<Maybe.Type<string>>;
+  onSubmit: (value: string) => void;
+  setError: (error: string | null) => void;
 }
 
 export type EditViewComponent = React.FC<{
@@ -34,6 +33,7 @@ interface Props extends FieldProps {
   EditView: EditViewComponent;
   StaticView: StaticViewComponent;
   alignActions?: "start" | "end";
+  setError: (error: string | null) => void;
 }
 
 export const EditableField: React.FC<Props> = ({
@@ -45,29 +45,28 @@ export const EditableField: React.FC<Props> = ({
   EditView,
   StaticView,
   alignActions,
+  setError,
 }) => {
   const alignment = alignActions === "end" ? "alignSelfFlexEnd" : "alignSelfFlexStart";
   const [editable, setEditable] = useState(initiallyEditable);
-  const [submitError, setSubmitError] = useState("");
   const [value, setValue] = useState(initialValue);
+
   const onSubmitRequest = async (value: string) => {
     setEditable(false);
-    const error = await onSubmit(value);
-
-    if (Maybe.isSome(error)) {
-      setSubmitError(error.value);
-    }
+    onSubmit(value);
   };
+
   const onEditClick = () => {
     setEditable(true);
-    setSubmitError("");
+    setError(null);
   };
+
   const onSubmitClick = () => onSubmitRequest(value);
+
   const onCancelEditClick = () => {
     setEditable(false);
     setValue(initialValue);
   };
-  const onCloseAlert = () => setSubmitError("");
 
   useEffect(() => {
     setValue(initialValue);
@@ -95,16 +94,8 @@ export const EditableField: React.FC<Props> = ({
           </FlexItem>
         </Flex>
       </DescriptionListTerm>
-      {submitError && (
-        <InlinePlainAlert
-          aria-label={`${label}-error-message`}
-          errorMessage={submitError}
-          closeButtonAriaLabel={`${label}-close-error`}
-          onCloseAlert={onCloseAlert}
-        />
-      )}
       <DescriptionListDescription>
-        {!editable && <StaticView aria-label={`${label}-value`} value={value} />}
+        {!editable && <StaticView data-testid={`${label}-value`} value={value} />}
         {editable && (
           <Flex spaceItems={{ default: "spaceItemsNone" }}>
             <FlexItem grow={{ default: "grow" }}>

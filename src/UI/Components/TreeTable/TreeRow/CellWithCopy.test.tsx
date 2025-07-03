@@ -1,41 +1,33 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import { Table /* data-codemods */, Tbody, Tr } from "@patternfly/react-table";
+import { Table, Tbody, Tr } from "@patternfly/react-table";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import { dependencies, ServiceInstance } from "@/Test";
+import { MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
-import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CellWithCopy } from "./CellWithCopy";
-
 function setup(props) {
-  const store = getStoreInstance();
-
   const onClickFn = jest.fn();
 
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
-          <StoreProvider store={store}>
-            <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
-              <Table>
-                <Tbody>
-                  <Tr>
-                    <CellWithCopy {...props} />
-                  </Tr>
-                </Tbody>
-              </Table>
-            </TreeTableCellContext.Provider>
-          </StoreProvider>
-        </DependencyProvider>
-      </MemoryRouter>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
+          <TreeTableCellContext.Provider value={{ onClick: onClickFn }}>
+            <Table>
+              <Tbody>
+                <Tr>
+                  <CellWithCopy {...props} />
+                </Tr>
+              </Tbody>
+            </Table>
+          </TreeTableCellContext.Provider>
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 
@@ -112,7 +104,7 @@ describe("CellWithCopy", () => {
 
     await userEvent.click(cell);
 
-    expect(onClickFn).toHaveBeenCalledWith(props.value, props.serviceName);
+    expect(onClickFn).toHaveBeenCalledWith(props.value, props.serviceName, props.value);
   });
 
   test("Given CellWithCopy When a cell has entity, multiple values and on click Then multiple links are rendered", async () => {
@@ -133,7 +125,7 @@ describe("CellWithCopy", () => {
 
     await userEvent.click(firstCell);
 
-    expect(onClickFn).toHaveBeenCalledWith(someValue, props.serviceName);
+    expect(onClickFn).toHaveBeenCalledWith(someValue, props.serviceName, someValue);
 
     const otherCell = await screen.findByText(someOtherValue);
 
@@ -141,6 +133,6 @@ describe("CellWithCopy", () => {
 
     await userEvent.click(otherCell);
 
-    expect(onClickFn).toHaveBeenCalledWith(someOtherValue, props.serviceName);
+    expect(onClickFn).toHaveBeenCalledWith(someOtherValue, props.serviceName, someOtherValue);
   });
 });

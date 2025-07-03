@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump xml-formatter from 3.6.2 to 3.6.6
+destination-branches:
+- master
+sections: {}
