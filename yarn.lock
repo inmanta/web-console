@@ -1364,12 +1364,12 @@ __metadata:
     "@loadable/component": "npm:^5.16.7"
     "@monaco-editor/react": "npm:^4.6.0"
     "@patternfly/react-charts": "npm:^8.2.2"
-    "@patternfly/react-code-editor": "npm:^6.1.0"
-    "@patternfly/react-core": "npm:^6.0.0"
-    "@patternfly/react-icons": "npm:^6.0.0"
+    "@patternfly/react-code-editor": "npm:^6.2.2"
+    "@patternfly/react-core": "npm:^6.2.2"
+    "@patternfly/react-icons": "npm:^6.2.2"
     "@patternfly/react-log-viewer": "npm:^6.2.0"
-    "@patternfly/react-styles": "npm:^6.0.0"
-    "@patternfly/react-table": "npm:^6.0.0"
+    "@patternfly/react-styles": "npm:^6.2.2"
+    "@patternfly/react-table": "npm:^6.2.2"
     "@patternfly/react-tokens": "npm:^6.2.2"
     "@react-keycloak/web": "npm:^3.4.0"
     "@remix-run/router": "npm:^1.15.0"
@@ -1379,7 +1379,7 @@ __metadata:
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/jest-dom": "npm:^6.6.3"
     "@testing-library/react": "npm:^16.3.0"
-    "@testing-library/user-event": "npm:^14.5.2"
+    "@testing-library/user-event": "npm:^14.6.1"
     "@types/file-saver": "npm:^2.0.7"
     "@types/jest-axe": "npm:^3.5.9"
     "@types/json-bigint": "npm:^1.0.4"
@@ -1389,11 +1389,11 @@ __metadata:
     "@types/markdown-it-emoji": "npm:^3"
     "@types/node": "npm:^24.0.3"
     "@types/qs": "npm:^6.14.0"
-    "@types/react": "npm:^18.3.5"
-    "@types/react-dom": "npm:^18.3.5"
+    "@types/react": "npm:^19.1.8"
+    "@types/react-dom": "npm:^19.1.6"
     "@types/styled-components": "npm:^5.1.26"
     "@types/uuid": "npm:^10"
-    "@vitejs/plugin-react": "npm:^4.2.1"
+    "@vitejs/plugin-react": "npm:^4.6.0"
     "@vitest/coverage-v8": "npm:^3.2.4"
     "@vitest/ui": "npm:^1.3.1"
     bignumber.js: "npm:^9.0.0"
@@ -1436,12 +1436,12 @@ __metadata:
     prettier: "npm:^3.3.3"
     process: "npm:^0.11.10"
     qs: "npm:^6.14.0"
-    react: "npm:^18.3.1"
+    react: "npm:^19.1.0"
     react-diff-viewer-continued: "npm:^3.4.0"
-    react-dom: "npm:^18.3.1"
+    react-dom: "npm:^19.1.0"
     react-dropzone: "npm:^14.3.8"
     react-icons: "npm:^5.3.0"
-    react-is: "npm:^18.3.1"
+    react-is: "npm:^19.1.0"
     react-router: "npm:^7.5.2"
     regenerator-runtime: "npm:^0.14.1"
     rimraf: "npm:^6.0.1"
@@ -1452,7 +1452,6 @@ __metadata:
     uuid: "npm:^10.0.0"
     victory: "npm:^37.3.6"
     vite: "npm:^7.0.0"
-    vite-plugin-monaco-editor: "npm:^1.1.0"
     vite-plugin-monaco-editor-esm: "npm:^2.0.2"
     vitest: "npm:^3.2.4"
     vitest-axe: "npm:^0.1.0"
@@ -1873,7 +1872,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-code-editor@npm:^6.1.0":
+"@patternfly/react-code-editor@npm:^6.2.2":
   version: 6.2.2
   resolution: "@patternfly/react-code-editor@npm:6.2.2"
   dependencies:
@@ -1973,7 +1972,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-table@npm:^6.0.0":
+"@patternfly/react-table@npm:^6.2.2":
   version: 6.2.2
   resolution: "@patternfly/react-table@npm:6.2.2"
   dependencies:
@@ -2345,12 +2344,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^14.5.2":
-  version: 14.5.2
-  resolution: "@testing-library/user-event@npm:14.5.2"
+"@testing-library/user-event@npm:^14.6.1":
+  version: 14.6.1
+  resolution: "@testing-library/user-event@npm:14.6.1"
   peerDependencies:
     "@testing-library/dom": ">=7.21.4"
-  checksum: 10/49821459d81c6bc435d97128d6386ca24f1e4b3ba8e46cb5a96fe3643efa6e002d88c1b02b7f2ec58da593e805c59b78d7fdf0db565c1f02ba782f63ee984040
+  checksum: 10/34b74fff56a0447731a94b40d4cf246deb8dbc1c1e3aec93acd1c3377a760bb062e979f1572bb34ec164ad28ee2a391744b42d0d6d6cc16c4ce527e5e09610e1
   languageName: node
   linkType: hard
 
@@ -2975,12 +2974,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.3.5":
-  version: 18.3.5
-  resolution: "@types/react-dom@npm:18.3.5"
+"@types/react-dom@npm:^19.1.6":
+  version: 19.1.6
+  resolution: "@types/react-dom@npm:19.1.6"
   peerDependencies:
-    "@types/react": ^18.0.0
-  checksum: 10/02095b326f373867498e0eb2b5ebb60f9bd9535db0d757ea13504c4b7d75e16605cf1d43ce7a2e67893d177b51db4357cabb2842fb4257c49427d02da1a14e09
+    "@types/react": ^19.0.0
+  checksum: 10/b5b20b7f0797f34c5a11915b74dcf8b3b7a9da9fea90279975ce6f150ca5d31bb069dbb0838638a5e9e168098aa4bb4a6f61d078efa1bbb55d7f0bdfe47bb142
   languageName: node
   linkType: hard
 
@@ -2994,13 +2993,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^18.3.5":
-  version: 18.3.20
-  resolution: "@types/react@npm:18.3.20"
+"@types/react@npm:^19.1.8":
+  version: 19.1.8
+  resolution: "@types/react@npm:19.1.8"
   dependencies:
-    "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10/020c51e63b60862e6d772f0cdea0b9441182eedab6289dabd8add0708ded62003834c4e7c6f23a1ccd3ca9486b46296057c3f881c34261a0483765351f8d0bc3
+  checksum: 10/a3e6fe0f60f22828ef887f30993aa147b71532d7b1219dd00d246277eb7a9ca01ec533096237fa21ca1bccb3653373b4e8e59e5ae59f9c793058384bbc1f4d5c
   languageName: node
   linkType: hard
 
@@ -3456,7 +3454,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react@npm:^4.2.1":
+"@vitejs/plugin-react@npm:^4.6.0":
   version: 4.6.0
   resolution: "@vitejs/plugin-react@npm:4.6.0"
   dependencies:
@@ -9273,7 +9271,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loose-envify@npm:^1.1.0, loose-envify@npm:^1.4.0":
+"loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
   dependencies:
@@ -10963,15 +10961,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^18.3.1":
-  version: 18.3.1
-  resolution: "react-dom@npm:18.3.1"
+"react-dom@npm:^19.1.0":
+  version: 19.1.0
+  resolution: "react-dom@npm:19.1.0"
   dependencies:
-    loose-envify: "npm:^1.1.0"
-    scheduler: "npm:^0.23.2"
+    scheduler: "npm:^0.26.0"
   peerDependencies:
-    react: ^18.3.1
-  checksum: 10/3f4b73a3aa083091173b29812b10394dd06f4ac06aff410b74702cfb3aa29d7b0ced208aab92d5272919b612e5cda21aeb1d54191848cf6e46e9e354f3541f81
+    react: ^19.1.0
+  checksum: 10/c5b58605862c7b0bb044416b01c73647bb8e89717fb5d7a2c279b11815fb7b49b619fe685c404e59f55eb52c66831236cc565c25ee1c2d042739f4a2cc538aa2
   languageName: node
   linkType: hard
 
@@ -11051,6 +11048,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-is@npm:^19.1.0":
+  version: 19.1.0
+  resolution: "react-is@npm:19.1.0"
+  checksum: 10/4aceca94492032a19411138bf68c6ca7dce4abee7ae6c7f23db9291d2dff14d6a643717b176ef9a151e8cdf6a2b71fdbc59fd998328e086a6f752512304a252b
+  languageName: node
+  linkType: hard
+
 "react-refresh@npm:^0.17.0":
   version: 0.17.0
   resolution: "react-refresh@npm:0.17.0"
@@ -11075,12 +11079,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^18.3.1":
-  version: 18.3.1
-  resolution: "react@npm:18.3.1"
-  dependencies:
-    loose-envify: "npm:^1.1.0"
-  checksum: 10/261137d3f3993eaa2368a83110466fc0e558bc2c7f7ae7ca52d94f03aac945f45146bd85e5f481044db1758a1dbb57879e2fcdd33924e2dde1bdc550ce73f7bf
+"react@npm:^19.1.0":
+  version: 19.1.0
+  resolution: "react@npm:19.1.0"
+  checksum: 10/d0180689826fd9de87e839c365f6f361c561daea397d61d724687cae88f432a307d1c0f53a0ee95ddbe3352c10dac41d7ff1ad85530fb24951b27a39e5398db4
   languageName: node
   linkType: hard
 
@@ -11592,12 +11594,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.23.2":
-  version: 0.23.2
-  resolution: "scheduler@npm:0.23.2"
-  dependencies:
-    loose-envify: "npm:^1.1.0"
-  checksum: 10/e8d68b89d18d5b028223edf090092846868a765a591944760942b77ea1f69b17235f7e956696efbb62c8130ab90af7e0949bfb8eba7896335507317236966bc9
+"scheduler@npm:^0.26.0":
+  version: 0.26.0
+  resolution: "scheduler@npm:0.26.0"
+  checksum: 10/1ecf2e5d7de1a7a132796834afe14a2d589ba7e437615bd8c06f3e0786a3ac3434655e67aac8755d9b14e05754c177e49c064261de2673aaa3c926bc98caa002
   languageName: node
   linkType: hard
 
@@ -13568,15 +13568,6 @@ __metadata:
   peerDependencies:
     monaco-editor: ">=0.33.0"
   checksum: 10/23f63e67457bf4f12e4a8e6bcef820f47c99d7d8f11844b279cd98d5675b658a585e024bfdd79a4ddc9c45ce3ce3a75194b4a7164895a97e98b4a2ac01349eb5
-  languageName: node
-  linkType: hard
-
-"vite-plugin-monaco-editor@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "vite-plugin-monaco-editor@npm:1.1.0"
-  peerDependencies:
-    monaco-editor: ">=0.33.0"
-  checksum: 10/46ac2b301b42d0903c6eb8f165e672912b4f55e947b8d55a8c4e85d38632adc7dc450ff28012727f02a411f2e736c12c90515dcbbd95bd3345093b317db33253
   languageName: node
   linkType: hard
 

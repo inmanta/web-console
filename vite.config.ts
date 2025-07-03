@@ -200,9 +200,14 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       enabled: process.env.CI ? true : false,
-      reporter: [
-        ["text", { summary: false }],
-      ],
+      reporter: process.env.CI
+      ? [
+          ["text", { summary: false }],
+          ["cobertura", { file: "cobertura-coverage.xml" }],
+        ]
+      : [
+          ["text", { summary: false }],
+        ],
       exclude: [
         "node_modules/",
         "dist/",
