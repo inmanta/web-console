@@ -141,6 +141,25 @@ export const JSONEditor: React.FC<Props> = ({
     }
   }, [monaco, schema.data]);
 
+  // Validate initial JSON content
+  useEffect(() => {
+    // Only validate if there is content
+    if (editorState && editorState.trim()) {
+      try {
+        JSON.parse(editorState);
+        // If parse succeeds, clear any invalid JSON error
+        setErrors((prevErrors) => prevErrors.filter((e) => e !== words("validation.empty")));
+      } catch (e) {
+        // If parse fails, set invalid JSON error
+        setErrors((prevErrors) => {
+          // Avoid duplicate errors
+          if (prevErrors.includes(words("validation.empty"))) return prevErrors;
+          return [...prevErrors, words("validation.empty")];
+        });
+      }
+    }
+  }, [editorState]);
+
   const handleEditorDidMount = (editor, _monaco) => {
     // Get the editor's model
     const model = editor.getModel();

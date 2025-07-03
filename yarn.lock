@@ -1452,6 +1452,8 @@ __metadata:
     uuid: "npm:^10.0.0"
     victory: "npm:^37.3.6"
     vite: "npm:^7.0.0"
+    vite-plugin-monaco-editor: "npm:^1.1.0"
+    vite-plugin-monaco-editor-esm: "npm:^2.0.2"
     vitest: "npm:^3.2.4"
     vitest-axe: "npm:^0.1.0"
     xml-formatter: "npm:^3.6.6"
@@ -13557,6 +13559,24 @@ __metadata:
   bin:
     vite-node: vite-node.mjs
   checksum: 10/343244ecabbab3b6e1a3065dabaeefa269965a7a7c54652d4b7a7207ee82185e887af97268c61755dcb2dd6a6ce5d9e114400cbd694229f38523e935703cc62f
+  languageName: node
+  linkType: hard
+
+"vite-plugin-monaco-editor-esm@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "vite-plugin-monaco-editor-esm@npm:2.0.2"
+  peerDependencies:
+    monaco-editor: ">=0.33.0"
+  checksum: 10/23f63e67457bf4f12e4a8e6bcef820f47c99d7d8f11844b279cd98d5675b658a585e024bfdd79a4ddc9c45ce3ce3a75194b4a7164895a97e98b4a2ac01349eb5
+  languageName: node
+  linkType: hard
+
+"vite-plugin-monaco-editor@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "vite-plugin-monaco-editor@npm:1.1.0"
+  peerDependencies:
+    monaco-editor: ">=0.33.0"
+  checksum: 10/46ac2b301b42d0903c6eb8f165e672912b4f55e947b8d55a8c4e85d38632adc7dc450ff28012727f02a411f2e736c12c90515dcbbd95bd3345093b317db33253
   languageName: node
   linkType: hard
 

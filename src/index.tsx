@@ -1,11 +1,11 @@
 import "@patternfly/react-core/dist/styles/base.css";
 import "monaco-editor/min/vs/editor/editor.main.css";
 import "@/Core/Language/Extensions";
-import React from "react";
-import loader from "@monaco-editor/loader";
+import { loader } from "@monaco-editor/react";
 import { Flex } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as monaco from "monaco-editor";
+import { editorWorkerPath, jsonWorkerPath } from "./monaco-workers";
 import { createRoot } from "react-dom/client";
 import { Root } from "@/UI/Root";
 import { AuthProvider } from "./Data/Auth/AuthProvider";
@@ -14,19 +14,13 @@ import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
 
-// Configure MonacoEnvironment for worker loading in Vite
+// Monaco worker configuration telling where to find the workers.
 self.MonacoEnvironment = {
-  getWorkerUrl: function (moduleId, label) {
-    switch (label) {
-      case "json":
-        return "./jsonWorker.js";
-      case "xml":
-        return "./xmlWorker.js";
-      case "python":
-        return "./pythonWorker.js";
-      default:
-        return "./editor.worker.js";
+  getWorkerUrl(_moduleId, label) {
+    if (label === "json") {
+      return jsonWorkerPath;
     }
+    return editorWorkerPath;
   },
 };
 

@@ -3,7 +3,7 @@ import { defineConfig, UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { execSync } from "child_process";
-import { copyFileSync, existsSync, writeFileSync } from "fs";
+import { writeFileSync, readdirSync, renameSync, rmSync, readFileSync, statSync } from "fs";
 
 // Get git commit hash
 const getGitCommitHash = () => {
@@ -16,45 +16,6 @@ const getGitCommitHash = () => {
 
 // Get package version
 const packageJson = require("./package.json");
-
-// Custom plugin to copy monaco workers to dist root
-const monacoWorkersPlugin = () => {
-  return {
-    name: "monaco-workers",
-    closeBundle() {
-      const workersDir = resolve(__dirname, "public/monaco-editor-workers");
-      const imagesDir = resolve(__dirname, "public/images");
-      const distDir = resolve(__dirname, "dist");
-
-      // Copy monaco workers
-      if (existsSync(workersDir)) {
-        const files = ["editor.worker.js", "jsonWorker.js", "xmlWorker.js", "pythonWorker.js"];
-        files.forEach((file) => {
-          const src = resolve(workersDir, file);
-          const dest = resolve(distDir, file);
-          if (existsSync(src)) {
-            try {
-              copyFileSync(src, dest);
-            } catch (error) {
-              console.error(`Failed to copy ${file}:`, error);
-            }
-          }
-        });
-      }
-
-      // Copy favicon.ico
-      const faviconSrc = resolve(imagesDir, "favicon.ico");
-      const faviconDest = resolve(distDir, "favicon.ico");
-      if (existsSync(faviconSrc)) {
-        try {
-          copyFileSync(faviconSrc, faviconDest);
-        } catch (error) {
-          console.error("Failed to copy favicon.ico:", error);
-        }
-      }
-    },
-  };
-};
 
 // Custom plugin to generate version.json
 const versionPlugin = () => {
@@ -83,8 +44,41 @@ const versionPlugin = () => {
   };
 };
 
+// Custom plugin to move assets to root and rewrite references
+function moveAssetsToRootPlugin() {
+  return {
+    name: "move-assets-to-root",
+    closeBundle() {
+      const distDir = resolve(__dirname, "dist");
+      const assetsDir = resolve(distDir, "assets");
+
+      // Move all files from assets to dist root
+      if (statSync(assetsDir, { throwIfNoEntry: false })) {
+        const files = readdirSync(assetsDir);
+        for (const file of files) {
+          renameSync(resolve(assetsDir, file), resolve(distDir, file));
+        }
+        // Remove the assets directory
+        rmSync(assetsDir, { recursive: true, force: true });
+      }
+
+      // Rewrite references in all files in dist
+      const distFiles = readdirSync(distDir);
+      for (const file of distFiles) {
+        if (file.endsWith(".js") || file.endsWith(".html") || file.endsWith(".css")) {
+          const filePath = resolve(distDir, file);
+          let content = readFileSync(filePath, "utf-8");
+          // Replace assets/filename with filename
+          content = content.replace(/assets\//g, "");
+          writeFileSync(filePath, content, "utf-8");
+        }
+      }
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), monacoWorkersPlugin(), versionPlugin()],
+  plugins: [react(), versionPlugin(), moveAssetsToRootPlugin()],
   base: "./",
   publicDir: "public",
   define: {
@@ -122,6 +116,10 @@ export default defineConfig({
     port: 9000,
     host: true,
     proxy: {
+      /**
+       * We proxy the two base urls to be able the access the endpoints when running the app locally.
+       * If we do not proxy both endpoints; we face cors issues.
+       */
       "/api": {
         target: process.env.VITE_API_BASEURL || "http://localhost:8888",
         changeOrigin: true,
@@ -164,15 +162,15 @@ export default defineConfig({
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
-          // Output assets directly to dist root, similar to webpack
-          if (!assetInfo.name) return "assets/[name].[hash].[ext]";
-          const info = assetInfo.name.split(".");
-          const ext = info[info.length - 1];
+          if (!assetInfo.names || assetInfo.names.length === 0) return "assets/[name].[hash].[ext]";
+          const baseName = assetInfo.names[0];
+          // Try to get extension from the last element, or fallback to splitting baseName
+          const ext = baseName.includes(".") ? baseName.split(".").pop() : "";
           // Handle CSS, images, and other assets
-          if (/\.(css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/.test(assetInfo.name)) {
-            return `${info[0]}.${ext}`;
+          if (/(\.css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/.test(baseName)) {
+            return `${baseName}`;
           }
-          return `${info[0]}.${ext}`;
+          return `${baseName}${ext ? "." + ext : ""}`;
         },
         chunkFileNames: "[name].[hash].js",
         entryFileNames: "[name].[hash].js",
@@ -204,7 +202,6 @@ export default defineConfig({
       enabled: process.env.CI ? true : false,
       reporter: [
         ["text", { summary: false }],
-        ["cobertura", { summary: false }],
       ],
       exclude: [
         "node_modules/",
@@ -215,7 +212,7 @@ export default defineConfig({
         "cypress/**",
       ],
       include: ["src/**/*"],
-      maxThreads: process.env.CI ? 1 : 0,
+      maxThreads: process.env.CI ? 2 : 0,
     },
     deps: {
       optimizer: {
