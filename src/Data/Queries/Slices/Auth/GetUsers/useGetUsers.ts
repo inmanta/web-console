@@ -7,11 +7,21 @@ import { useGetWithoutEnv } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 /**
+ * Represents the user role
+ */
+export interface UserRole {
+  role: string;
+  environment: string;
+}
+
+/**
  * Represents the user information.
  */
 export interface UserInfo {
   username: string;
   auth_method: "oidc" | "database";
+  is_admin: boolean;
+  roles: UserRole[];
 }
 
 /**

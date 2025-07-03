@@ -181,6 +181,7 @@ export const MultiTextSelect: React.FC<Props> = ({
       variant={noInputField ? "default" : "typeahead"}
       onClick={onToggleClick}
       ref={toggleRef}
+      isDisabled={props.isDisabled}
       isExpanded={isOpen}
       isFullWidth
       aria-label={toggleAriaLabel}
