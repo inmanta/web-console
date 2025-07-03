@@ -123,9 +123,4 @@ describe("MarkdownPreviewer", () => {
       elements.forEach((element) => expect(element).toBeVisible());
     });
   });
-
-  it("should render with dark theme when theme preference is dark", () => {
-    (getThemePreference as ReturnType<typeof vi.fn>).mockReturnValue("dark");
-    // ... existing code ...
-  });
 });
