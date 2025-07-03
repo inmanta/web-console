@@ -9,7 +9,7 @@ describe("SuggestionsPopover", () => {
   const filter = "a";
   const setIsOpen = vi.fn();
   const isOpen = true;
-  const ref: RefObject<HTMLInputElement> = React.createRef();
+  const ref: RefObject<HTMLInputElement | null> = React.createRef();
 
   it("renders the popover component", () => {
     render(

@@ -19,7 +19,7 @@ import {
   dispatchUpdateStencil,
 } from "./dispatchers";
 
-const setup = (testingComponent: JSX.Element) => {
+const setup = (testingComponent: React.ReactNode) => {
   return (
     <CanvasProvider>
       <EventWrapper>{testingComponent}</EventWrapper>
@@ -28,7 +28,7 @@ const setup = (testingComponent: JSX.Element) => {
 };
 
 describe("looseElement event handler - triggered when entity is being added to the canvas, gets or loose connection to other entity - keep track on the unconnected entities", () => {
-  const TestingComponent = (): JSX.Element => {
+  const TestingComponent = (): React.ReactNode => {
     const { looseElement } = useContext(CanvasContext);
 
     return (
@@ -72,7 +72,7 @@ describe("looseElement event handler - triggered when entity is being added to t
 });
 
 describe("dictToDisplay - event handler that accepts dictionary value to display it in the modal as we aren't displaying those in the canvas", () => {
-  const TestingComponent = (): JSX.Element => {
+  const TestingComponent = (): React.ReactNode => {
     const { dictToDisplay } = useContext(CanvasContext);
 
     return (
@@ -140,7 +140,7 @@ describe("cellToEdit - event handler that receives cell object from the canvas t
 });
 
 describe("updateServiceOrderItems - event handler that keeps track of the elements of the instance that should be converted to the complete instance at the deploy", () => {
-  const InstancesComponent = (): JSX.Element => {
+  const InstancesComponent = (): React.ReactNode => {
     const { serviceOrderItems, setServiceOrderItems } = useContext(CanvasContext);
 
     useEffect(() => {
@@ -217,7 +217,7 @@ describe("updateServiceOrderItems - event handler that keeps track of the elemen
 });
 
 describe("updateStencil - eventHandler that updates how many elements(embedded/inter-service relation) are in the canvas, to keep track to disable/enable stencil elements from the left sidebar", () => {
-  const TestingComponent = (): JSX.Element => {
+  const TestingComponent = (): React.ReactNode => {
     const { stencilState, setStencilState } = useContext(CanvasContext);
 
     useEffect(() => {

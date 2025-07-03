@@ -59,7 +59,7 @@ const codeEditorMock = vi.hoisted(() => ({
         React.createElement("textarea", {
           "data-testid": "code-editor-textarea",
           value: code,
-          onChange: (event) => onChange(event.target.value),
+          onChange: (event) => onChange((event.target as HTMLTextAreaElement).value),
           style: { display: "none" },
         })
     );

@@ -32,7 +32,9 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({ envi
     <Nav>
       {groups.map(({ id, title, links }) => (
         <NavGroup title={title} key={id}>
-          {links.map(NavigationItem)}
+          {links.map((link) => (
+            <NavigationItem key={link.id} {...link} />
+          ))}
         </NavGroup>
       ))}
     </Nav>

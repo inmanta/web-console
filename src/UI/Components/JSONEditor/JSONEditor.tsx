@@ -149,7 +149,7 @@ export const JSONEditor: React.FC<Props> = ({
         JSON.parse(editorState);
         // If parse succeeds, clear any invalid JSON error
         setErrors((prevErrors) => prevErrors.filter((e) => e !== words("validation.empty")));
-      } catch (e) {
+      } catch (_e) {
         // If parse fails, set invalid JSON error
         setErrors((prevErrors) => {
           // Avoid duplicate errors

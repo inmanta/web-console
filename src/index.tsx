@@ -5,7 +5,6 @@ import { loader } from "@monaco-editor/react";
 import { Flex } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as monaco from "monaco-editor";
-import { editorWorkerPath, jsonWorkerPath } from "./monaco-workers";
 import { createRoot } from "react-dom/client";
 import { Root } from "@/UI/Root";
 import { AuthProvider } from "./Data/Auth/AuthProvider";
@@ -13,6 +12,7 @@ import { QueryControlProvider } from "./Data/Queries";
 import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
+import { editorWorkerPath, jsonWorkerPath } from "./monaco-workers";
 
 // Monaco worker configuration telling where to find the workers.
 self.MonacoEnvironment = {

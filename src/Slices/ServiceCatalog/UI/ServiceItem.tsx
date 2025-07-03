@@ -93,7 +93,11 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
         message={errorMessage}
         setMessage={setErrorMessage}
       />
-      <span ref={(element) => (rowRefs.current[service.name] = element)} />
+      <span
+        ref={(element) => {
+          rowRefs.current[service.name] = element;
+        }}
+      />
       <DataListItemRow>
         <DataListItemCells
           dataListCells={[

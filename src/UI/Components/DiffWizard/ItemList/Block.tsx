@@ -30,7 +30,13 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
 
   return (
     <>
-      <ScrollAnchor ref={(element) => (element ? (refs.current[item.id] = element) : undefined)} />
+      <ScrollAnchor
+        ref={(element) => {
+          if (element) {
+            refs.current[item.id] = element;
+          }
+        }}
+      />
       <Card isExpanded={isExpanded} isCompact aria-label="DiffBlock" data-testid="DiffBlock">
         <CardHeader
           onExpand={onExpand}

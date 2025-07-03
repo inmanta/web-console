@@ -22,7 +22,7 @@ test("GIVEN scrollElementIntoView WHEN run with null parameter THEN function exe
 
   window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 
-  const ref: RefObject<HTMLSpanElement> = { current: null };
+  const ref: RefObject<HTMLSpanElement | null> = { current: null };
 
   scrollRowIntoView(ref);
   expect(scrollIntoViewMock).not.toHaveBeenCalled();
