@@ -1,10 +1,9 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LookBackSlider } from "./LookBackSlider";
 
 it("LookBackSlider calls callback with adequate value on apply", async () => {
-  const callback = jest.fn();
+  const callback = vi.fn();
 
   render(
     <LookBackSlider instanceVersion={5} initialLookBehind={1} setSelectedVersion={callback} />

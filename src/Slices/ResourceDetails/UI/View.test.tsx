@@ -1,9 +1,9 @@
-import React, { act } from "react";
+import { act } from "react";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
@@ -12,8 +12,6 @@ import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { View } from "./View";
-
-expect.extend(toHaveNoViolations);
 
 function setup() {
   const component = (

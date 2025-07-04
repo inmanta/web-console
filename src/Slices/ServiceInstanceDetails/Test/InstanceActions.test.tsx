@@ -3,12 +3,15 @@ import { userEvent } from "@testing-library/user-event";
 import { defaultServer, serverFailedActions } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
 
-const mockedUsedNavigate = jest.fn();
+const mockedUsedNavigate = vi.hoisted(() => vi.fn());
 
-jest.mock("react-router", () => ({
-  ...jest.requireActual("react-router"),
-  useNavigate: () => mockedUsedNavigate,
-}));
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useNavigate: () => mockedUsedNavigate,
+  };
+});
 
 describe("Page Actions - Success", () => {
   const server = defaultServer;
@@ -20,6 +23,7 @@ describe("Page Actions - Success", () => {
   // so they don't affect other tests.
   afterEach(() => {
     server.resetHandlers();
+    vi.clearAllMocks();
   });
 
   // Clean up after the tests are finished.
@@ -217,6 +221,7 @@ describe("Page Actions - Failed", () => {
   // so they don't affect other tests.
   afterEach(() => {
     server.resetHandlers();
+    vi.clearAllMocks();
   });
 
   // Clean up after the tests are finished.

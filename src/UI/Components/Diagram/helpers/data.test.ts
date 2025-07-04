@@ -12,8 +12,8 @@ import {
 } from "../Mocks";
 import { shapesDataTransform, getServiceOrderItems, getKeyAttributesNames } from "./data";
 
-jest.mock("uuid", () => ({
-  v4: jest.fn(() => "1"),
+vi.mock("uuid", () => ({
+  v4: vi.fn(() => "1"),
 }));
 
 describe("shapesDataTransform", () => {

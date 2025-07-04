@@ -6,7 +6,6 @@ import {
   AlertActionCloseButton,
   SelectOptionProps,
 } from "@patternfly/react-core";
-import inlineStyles from "@patternfly/react-styles/css/components/InlineEdit/inline-edit";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
@@ -86,7 +85,7 @@ export const CreateCallbackForm: React.FC<Props> = ({ service_entity, numberOfCo
   return (
     <Tbody>
       <Tr>
-        <Td className={inlineStyles.inlineEditInput}>
+        <Td className="pf-v6-c-inline-edit__input">
           <TextInput
             aria-label="callbackUrl"
             value={url || ""}
@@ -94,7 +93,7 @@ export const CreateCallbackForm: React.FC<Props> = ({ service_entity, numberOfCo
             onChange={(_event, val) => setUrl(val)}
           />
         </Td>
-        <Td className={inlineStyles.inlineEditInput}>
+        <Td className="pf-v6-c-inline-edit__input">
           <TextInput
             aria-label="callbackId"
             value={id || ""}
@@ -102,7 +101,7 @@ export const CreateCallbackForm: React.FC<Props> = ({ service_entity, numberOfCo
             onChange={(_event, val) => setId(val)}
           />
         </Td>
-        <Td className={inlineStyles.inlineEditInput}>
+        <Td className="pf-v6-c-inline-edit__input">
           <SingleTextSelect
             options={logOptions}
             selected={logLevel}
@@ -110,7 +109,7 @@ export const CreateCallbackForm: React.FC<Props> = ({ service_entity, numberOfCo
             toggleAriaLabel="MinimalLogLevel"
           />
         </Td>
-        <StyledTd className={inlineStyles.inlineEditInput}>
+        <StyledTd className="pf-v6-c-inline-edit__input">
           <MultiTextSelect
             selected={eventTypes}
             setSelected={onSelect}

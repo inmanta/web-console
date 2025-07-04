@@ -1,7 +1,6 @@
-import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react";
-import { defaultAuthContext } from "@/Data/Auth";
+import { defaultAuthContext } from "@/Data/Auth/AuthContext";
 import { createCookie, removeCookie } from "@/Data/Common/CookieHelper";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -73,7 +72,7 @@ describe("createHeaders", () => {
   });
 
   it("should return headers with Authorization Token when authHelper hook returns the token", () => {
-    jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("token");
+    vi.spyOn(defaultAuthContext, "getToken").mockReturnValue("token");
     const wrapper = setup();
 
     createCookie("inmanta_user", "token", 1);

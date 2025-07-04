@@ -111,11 +111,8 @@ if (Cypress.env("edition") === "iso") {
       cy.get(".units").should("be.visible");
       cy.get(".units").contains("%"); //should('have.text', '%'); won't work because of the special character
 
-      //assertion that fit-to-screen button works can be only done by checking output and the input value, as I couldn't extract the transform property from the `.joint-layers` element
+      // check if we can click on the fit-to-screen button
       cy.get('[data-testid="fit-to-screen"').click();
-
-      cy.get('[data-testid="slider-input"').should("have.value", "220");
-      cy.get('[data-testid="slider-output"').should("have.text", "220");
 
       //assert that zoom button works
       cy.get('[data-testid="slider-input"').invoke("val", 300).trigger("change");

@@ -54,6 +54,7 @@ export const AttributesEditor: React.FC<Props> = ({
   const [editorState, setEditorState] = useState<string>(editorDataOriginal);
 
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
 
   /**
    * Handles the change of the selected attribute Set.
@@ -134,12 +135,15 @@ export const AttributesEditor: React.FC<Props> = ({
                       selectedSet={selectedSet}
                       editorState={editorState}
                       setErrorMessage={setErrorMessage}
+                      onSuccess={() =>
+                        setSuccessMessage(words("instanceDetails.expert.editModal.success"))
+                      }
                     />
                   ),
                 })
               }
             >
-              Force Update
+              {words("instanceDetails.expert.forceUpdate")}
             </Button>
           )}
         </FlexItem>
@@ -158,6 +162,14 @@ export const AttributesEditor: React.FC<Props> = ({
           variant="danger"
         />
       )}
+      {successMessage && (
+        <ToastAlertMessage
+          message={successMessage}
+          id="success-toast-expert-update"
+          setMessage={setSuccessMessage}
+          variant="success"
+        />
+      )}
     </>
   );
 };
@@ -171,6 +183,7 @@ interface ModalContentProps {
   selectedSet: string;
   editorState: string;
   setErrorMessage: (error: string) => void;
+  onSuccess: () => void;
 }
 
 /**
@@ -183,6 +196,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
   selectedSet,
   editorState,
   setErrorMessage,
+  onSuccess,
 }) => {
   const { authHelper } = useContext(DependencyContext);
 
@@ -191,7 +205,10 @@ const ModalContent: React.FC<ModalContentProps> = ({
   const { closeModal } = useContext(ModalContext);
   const { mutate, isPending } = usePatchAttributesExpert(instance.id, instance.service_entity, {
     onError: (error) => setErrorMessage(error.message),
-    onSuccess: closeModal,
+    onSuccess: () => {
+      onSuccess();
+      closeModal();
+    },
   });
 
   /**

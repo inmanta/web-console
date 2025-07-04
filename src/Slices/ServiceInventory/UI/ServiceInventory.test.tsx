@@ -1,9 +1,9 @@
-import React, { act } from "react";
+import { act } from "react";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { Service, ServiceInstance, Pagination, MockedDependencyProvider } from "@/Test";
@@ -13,8 +13,6 @@ import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
-
-expect.extend(toHaveNoViolations);
 
 function setup(service = Service.a, pageSize = "") {
   const component = (

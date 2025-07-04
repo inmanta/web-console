@@ -5,11 +5,11 @@ import { SuggestionsPopover } from "./SuggestionsPopover";
 
 describe("SuggestionsPopover", () => {
   const suggestions = ["apple", "banana", "cherry"];
-  const handleSuggestionClick = jest.fn();
+  const handleSuggestionClick = vi.fn();
   const filter = "a";
-  const setIsOpen = jest.fn();
+  const setIsOpen = vi.fn();
   const isOpen = true;
-  const ref: RefObject<HTMLInputElement> = React.createRef();
+  const ref: RefObject<HTMLInputElement | null> = React.createRef();
 
   it("renders the popover component", () => {
     render(

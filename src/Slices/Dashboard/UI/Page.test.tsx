@@ -1,7 +1,7 @@
 import React, { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider, EnvironmentDetails } from "@/Test";
@@ -9,7 +9,6 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
-expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {

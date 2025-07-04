@@ -1,4 +1,3 @@
-import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -10,7 +9,7 @@ import { words } from "@/UI/words";
 import { Provider } from "./Provider";
 
 function setup({ isToastVisible = true, serverCompileEnabled = true } = {}) {
-  const afterTrigger = jest.fn();
+  const afterTrigger = vi.fn();
 
   const component = (
     <QueryClientProvider client={testClient}>
@@ -37,7 +36,7 @@ describe("CompileWidgetProvider", () => {
   beforeAll(() => server.listen());
   afterAll(() => {
     server.close();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {

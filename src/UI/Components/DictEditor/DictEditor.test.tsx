@@ -1,11 +1,10 @@
-import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { DictEditor } from "./DictEditor";
 
 function setup() {
-  const setValue = jest.fn();
-  const setNewEntry = jest.fn();
+  const setValue = vi.fn();
+  const setNewEntry = vi.fn();
   const isDeleteEntryAllowed = () => true;
   const component = (value: Record<string, string>) => (
     <DictEditor

@@ -1,8 +1,8 @@
 import { PathHelper, TreeExpansionManager } from "@/UI/Components/TreeTable/Helpers";
 import { CatalogAttributeHelper } from "./AttributeHelper";
 import { CatalogTreeTableHelper } from "./TreeTableHelper";
-//mock is to avoid TypeError - Temporary workaround - to be removed - https://github.com/inmanta/web-console/issues/6194
-jest.mock("@/Data/Queries/Slices/ServiceInstance");
+
+vi.mock("@/Data/Queries/Slices/ServiceInstance");
 
 test("TreeTableHelper getExpansionState returns correct expansionState", () => {
   const service = {
@@ -64,7 +64,7 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
     service
   );
 
-  const cb = jest.fn;
+  const cb = vi.fn;
   const { rows } = treeTableHelper.createRows(
     {
       a: false,

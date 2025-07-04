@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LogViewerComponent, LogViewerData } from "./LogViewer";
@@ -24,7 +23,7 @@ const mockLogs: LogViewerData[] = [
 describe("LogViewerComponent", () => {
   beforeEach(() => {
     // Reset all mocks before each test
-    jest.resetAllMocks();
+    vi.clearAllMocks();
   });
 
   it("renders with initial log data", () => {
@@ -106,13 +105,13 @@ describe("LogViewerComponent", () => {
      */
     // Mock the download mechanism
     const mockUrl = "blob:test";
-    global.URL.createObjectURL = jest.fn().mockReturnValue(mockUrl);
-    global.URL.revokeObjectURL = jest.fn();
+    global.URL.createObjectURL = vi.fn().mockReturnValue(mockUrl);
+    global.URL.revokeObjectURL = vi.fn();
 
     // Mock createElement only for anchor elements
-    const mockLink = { click: jest.fn(), href: "", download: "" };
+    const mockLink = { click: vi.fn(), href: "", download: "" };
     const originalCreateElement = document.createElement;
-    const createElementSpy = jest.spyOn(document, "createElement").mockImplementation((tagName) => {
+    const createElementSpy = vi.spyOn(document, "createElement").mockImplementation((tagName) => {
       if (tagName.toLowerCase() === "a") {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return mockLink as any;

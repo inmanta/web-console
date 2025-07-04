@@ -1,10 +1,8 @@
-import React, { act } from "react";
+import { act } from "react";
 import { render, screen } from "@testing-library/react";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { configureAxe } from "jest-axe";
 import { words } from "@/UI/words";
 import { BlockingModal } from "./BlockingModal";
-
-expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {

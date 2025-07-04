@@ -1,7 +1,6 @@
-import React from "react";
 import { UseInfiniteQueryResult, UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { ServiceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import { InstanceDetailsContext } from "../Core/Context";
@@ -10,8 +9,8 @@ import { historyData, instanceData } from "./mockData";
 import { SetupWrapper } from "./mockSetup";
 
 const setup = (hasNextPage: boolean, hasPreviousPage: boolean) => {
-  const fetchNextPage = jest.fn();
-  const fetchPreviousPage = jest.fn();
+  const fetchNextPage = vi.fn();
+  const fetchPreviousPage = vi.fn();
 
   const component = (
     <SetupWrapper expertMode={false}>

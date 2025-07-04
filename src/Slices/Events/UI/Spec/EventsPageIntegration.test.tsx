@@ -131,7 +131,7 @@ describe("Given the Events Page", () => {
     expect(rowsAfter).toHaveLength(3);
 
     // The chips are hidden in small windows, so resize it
-    window = Object.assign(window, { innerWidth: 1200 });
+    window.innerWidth = 1200;
     await act(async () => {
       window.dispatchEvent(new Event("resize"));
     });

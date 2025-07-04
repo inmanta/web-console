@@ -1,10 +1,9 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { BooleanToggleInput } from "./BooleanToggleInput";
 
 describe("BooleanFormInput", () => {
-  const handleClick = jest.fn();
+  const handleClick = vi.fn();
 
   it("Should render toggle button input that reponds to the user input", async () => {
     render(

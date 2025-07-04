@@ -33,7 +33,7 @@ import { toggleDisabledStencil } from "./stencil/helpers";
  * @returns {DiagramHandlers} An object containing handlers for various diagram actions.
  */
 export function diagramInit(
-  canvasRef: RefObject<HTMLDivElement>,
+  canvasRef: RefObject<HTMLDivElement | null>,
   setScroller,
   connectionRules: ConnectionRules,
   editable: boolean,

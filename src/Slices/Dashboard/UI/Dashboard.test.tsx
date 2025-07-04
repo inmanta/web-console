@@ -1,4 +1,3 @@
-import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -20,7 +19,7 @@ const server = setupServer(
 );
 
 const setup = (isLsmEnabled = false) => {
-  jest.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(isLsmEnabled);
+  vi.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(isLsmEnabled);
 
   const component = (
     <QueryClientProvider client={testClient}>
@@ -39,7 +38,7 @@ describe("Dashboard", () => {
   beforeAll(() => server.listen());
   afterEach(() => {
     server.resetHandlers();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   afterAll(() => server.close());
 

@@ -6,7 +6,7 @@
  * Only the loading and hook are tested here.
  */
 
-import React, { act } from "react";
+import { act } from "react";
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -30,7 +30,7 @@ import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
-  func: undefined | jest.Mock = undefined,
+  func: undefined | ReturnType<typeof vi.fn> = undefined,
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined
 ) => {
@@ -44,13 +44,13 @@ const setup = (
               element={
                 <ServiceInstanceForm
                   fields={fields}
-                  onCancel={jest.fn()}
-                  onSubmit={func ? func : jest.fn()}
+                  onCancel={vi.fn()}
+                  onSubmit={func ? func : vi.fn()}
                   isEdit={isEdit}
                   originalAttributes={originalAttributes}
                   service_entity="service_entity"
                   isDirty={false}
-                  setIsDirty={jest.fn()}
+                  setIsDirty={vi.fn()}
                 />
               }
             />

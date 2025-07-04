@@ -1,18 +1,15 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import * as queryModule from "@/Data/Queries/Helpers/useQueries";
 import { MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CreateInstance } from "./CreateInstance";
-
-expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {
@@ -20,6 +17,16 @@ const axe = configureAxe({
     region: { enabled: false },
   },
 });
+
+// Mock usePost before the test
+const postMock = vi.hoisted(() => vi.fn());
+const getMock = vi.hoisted(() => vi.fn());
+vi.mock("@/Data/Queries/Helpers/useQueries", () => ({
+  usePost: () => postMock,
+  useGet: () => getMock,
+  useGetWithOptionalEnv: () => getMock,
+  useGetWithoutEnv: () => getMock,
+}));
 
 function setup(service) {
   const component = (
@@ -63,11 +70,11 @@ describe("CreateInstance", () => {
 
   afterAll(() => server.close());
 
+  beforeEach(() => {
+    postMock.mockClear();
+  });
+
   test("Given the CreateInstance View When creating an instance with attributes Then the correct request is fired", async () => {
-    const postMock = jest.fn();
-
-    jest.spyOn(queryModule, "usePost").mockReturnValue(postMock);
-
     const { component } = setup(Service.a);
 
     render(component);
@@ -127,9 +134,9 @@ describe("CreateInstance", () => {
 
   //TODO: Fix the test scenario
   // test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
-  //   const postMock = jest.fn();
+  //   const postMock = vi.fn();
 
-  //   jest.spyOn(queryModule, "usePost").mockReturnValue(postMock);
+  //   vi.spyOn(queryModule, "usePost").mockReturnValue(postMock);
 
   //   const { component } = setup(Service.withRelationsOnly);
 

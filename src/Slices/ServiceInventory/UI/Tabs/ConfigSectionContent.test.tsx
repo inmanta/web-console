@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import {
   QueryClient,
   QueryClientProvider,
@@ -11,12 +11,68 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import * as queryModule from "@/Data/Queries/Helpers/useQueries";
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { Service, ServiceInstance, MockedDependencyProvider, EnvironmentDetails } from "@/Test";
 import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ConfigSectionContent } from "./ConfigSectionContent";
+
+// Mock useGet from @/Data/Queries
+const mockMutate = vi.fn();
+
+// Create mutable data that can be updated by mutations
+let mockConfigData = {
+  auto_creating: false,
+  auto_designed: false,
+  auto_update_designed: false,
+  auto_update_inprogress: false,
+};
+
+// Add a subscription mechanism to simulate refetch
+let refetchSubscribers: (() => void)[] = [];
+function subscribeRefetch(cb: () => void) {
+  refetchSubscribers.push(cb);
+}
+function triggerRefetch() {
+  refetchSubscribers.forEach((cb) => cb());
+}
+
+vi.mock("@/Data/Queries", () => ({
+  useGet: () => async (path: string) => {
+    const response = await fetch(path);
+    return response.json();
+  },
+  useGetInstanceConfig: () => ({
+    useOneTime: () => {
+      const [_, setRerender] = useState({});
+      // Subscribe to refetch so we can force rerender
+      useEffect(() => {
+        const cb = () => setRerender({});
+        subscribeRefetch(cb);
+        return () => {
+          // Remove on unmount
+          refetchSubscribers = refetchSubscribers.filter((f) => f !== cb);
+        };
+      }, []);
+      return {
+        data: mockConfigData,
+        isSuccess: true,
+        isError: false,
+        error: null,
+        refetch: triggerRefetch,
+      };
+    },
+  }),
+  usePostInstanceConfig: () => ({
+    mutate: (params: { values?: Record<string, unknown> }) => {
+      mockMutate(params);
+      if (params.values) {
+        mockConfigData = { ...mockConfigData, ...params.values };
+        triggerRefetch();
+      }
+    },
+  }),
+}));
 
 function setup(halted: boolean = false) {
   const client = new QueryClient();
@@ -54,18 +110,12 @@ function setup(halted: boolean = false) {
     component,
   };
 }
-let data = {
-  auto_creating: false,
-  auto_designed: false,
-  auto_update_designed: false,
-  auto_update_inprogress: false,
-};
 
 describe("ConfigSectionContent", () => {
   const server = setupServer(
     http.get("/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config", () => {
       return HttpResponse.json({
-        data,
+        data: mockConfigData,
       });
     })
   );
@@ -73,19 +123,24 @@ describe("ConfigSectionContent", () => {
   beforeAll(() => {
     server.listen();
   });
+
+  beforeEach(() => {
+    // Reset mock data to initial state
+    mockConfigData = {
+      auto_creating: false,
+      auto_designed: false,
+      auto_update_designed: false,
+      auto_update_inprogress: false,
+    };
+    // Clear mock function calls
+    mockMutate.mockClear();
+  });
+
   afterAll(() => {
     server.close();
   });
 
   test("ConfigTab can reset all settings", async () => {
-    const mockFn = jest.fn().mockImplementation((_url, body) => {
-      data = {
-        ...data,
-        ...body.values,
-      };
-    });
-
-    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
     const { component } = setup();
 
     render(component);
@@ -100,36 +155,25 @@ describe("ConfigSectionContent", () => {
 
     await userEvent.click(resetButton, { skipHover: true });
 
-    expect(mockFn).toHaveBeenCalledWith(
-      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
-      {
-        current_version: 3,
-        values: {
-          auto_creating: true,
-          auto_designed: true,
-          auto_update_designed: true,
-          auto_update_inprogress: true,
-        },
-      }
-    );
+    expect(mockMutate).toHaveBeenCalledWith({
+      current_version: 3,
+      values: {
+        auto_creating: true,
+        auto_designed: true,
+        auto_update_designed: true,
+        auto_update_inprogress: true,
+      },
+    });
     expect(await screen.findByRole("switch", { name: "auto_creating-True" })).toBeVisible();
   });
 
   test("ConfigTab can change 1 toggle", async () => {
-    data = {
+    mockConfigData = {
       auto_creating: false,
       auto_designed: true,
       auto_update_designed: false,
       auto_update_inprogress: false,
     };
-    const mockFn = jest.fn().mockImplementation((_url, body) => {
-      data = {
-        ...data,
-        ...body.values,
-      };
-    });
-
-    jest.spyOn(queryModule, "usePost").mockReturnValue(mockFn);
     const { component } = setup();
 
     render(component);
@@ -142,15 +186,12 @@ describe("ConfigSectionContent", () => {
 
     await userEvent.click(toggle, { skipHover: true });
 
-    expect(mockFn).toHaveBeenCalledWith(
-      "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/config",
-      {
-        current_version: 3,
-        values: {
-          auto_designed: false,
-        },
-      }
-    );
+    expect(mockMutate).toHaveBeenCalledWith({
+      current_version: 3,
+      values: {
+        auto_designed: false,
+      },
+    });
   });
 
   test("ConfigTab handles hooks with environment modifier correctly", async () => {

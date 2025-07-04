@@ -1,8 +1,8 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { configureAxe } from "jest-axe";
 import { delay, HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
@@ -11,8 +11,6 @@ import { words } from "@/UI";
 import { MomentDatePresenter } from "@/UI/Utils";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { View } from "./Page";
-
-expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {

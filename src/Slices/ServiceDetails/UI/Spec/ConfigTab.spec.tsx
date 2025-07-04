@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";

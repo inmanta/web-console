@@ -61,6 +61,23 @@ const setup = (
 
 beforeAll(() => {
   defineObjectsForJointJS();
+
+  // Mock clipboard.read to return a Blob-like object with a .text() method
+  Object.defineProperty(navigator, "clipboard", {
+    value: {
+      read: vi.fn().mockResolvedValue([
+        {
+          types: ["text/plain"],
+          getType: vi.fn().mockResolvedValue({
+            text: () => Promise.resolve("{}"),
+          }),
+        },
+      ]),
+      writeText: vi.fn().mockResolvedValue(undefined),
+    },
+    writable: true,
+    configurable: true,
+  });
 });
 
 describe("Canvas.tsx", () => {

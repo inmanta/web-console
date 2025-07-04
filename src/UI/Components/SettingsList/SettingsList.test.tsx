@@ -4,7 +4,7 @@ import { BooleanSwitch } from "@/UI/Components";
 import { SettingsList } from "./SettingsList";
 
 test("ConfigView handles click on toggle correctly", () => {
-  const cb = jest.fn();
+  const cb = vi.fn();
 
   render(<SettingsList config={{ test: false }} onChange={cb} Switch={BooleanSwitch} />);
 

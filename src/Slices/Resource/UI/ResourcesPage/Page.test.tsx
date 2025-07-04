@@ -1,8 +1,8 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { configureAxe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
@@ -10,8 +10,6 @@ import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { Page } from "./Page";
-
-expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {

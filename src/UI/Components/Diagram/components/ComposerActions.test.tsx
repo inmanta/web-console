@@ -1,4 +1,3 @@
-import React from "react";
 import { QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -12,12 +11,25 @@ import { CanvasContext, defaultCanvasContext, InstanceComposerContext } from "..
 import { childModel } from "../Mocks";
 import { RelationCounterForCell } from "../interfaces";
 import { ComposerActions } from "./ComposerActions";
-const mockedNavigate = jest.fn();
 
-jest.mock("react-router", () => ({
-  ...jest.requireActual("react-router"),
-  useNavigate: () => mockedNavigate,
+const mockedNavigate = vi.hoisted(() => vi.fn());
+const mockedLocation = vi.hoisted(() => ({
+  pathname: "/",
+  search: "?env=aaa",
+  hash: "",
+  state: null,
 }));
+
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useNavigate: () => mockedNavigate,
+    useLocation: () => mockedLocation,
+    Link: actual.Link,
+    NavLink: actual.NavLink,
+  };
+});
 
 describe("ComposerActions.", () => {
   const setup = (
@@ -62,11 +74,11 @@ describe("ComposerActions.", () => {
       },
     }),
     diagramHandlers: {
-      getCoordinates: jest.fn(),
-      saveAndClearCanvas: jest.fn(),
-      loadState: jest.fn(),
-      addInstance: jest.fn(),
-      editEntity: jest.fn(),
+      getCoordinates: vi.fn(),
+      saveAndClearCanvas: vi.fn(),
+      loadState: vi.fn(),
+      addInstance: vi.fn(),
+      editEntity: vi.fn(),
     } as typeof defaultCanvasContext.diagramHandlers,
     isDirty: true,
     looseElement: new Set<string>(),
@@ -182,7 +194,7 @@ describe("ComposerActions.", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "Deploy" }));
 
-    expect(screen.getByText("Failed to save instance coordinates on deploy.")).toBeVisible();
+    expect(await screen.findByText("Failed to save instance coordinates on deploy.")).toBeVisible();
   });
 
   it("shows error message when deploy button is clicked and request fails", async () => {

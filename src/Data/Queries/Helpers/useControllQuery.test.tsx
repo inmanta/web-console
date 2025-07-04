@@ -23,14 +23,14 @@ const setup = () => {
 };
 
 describe("useCustomQuery", () => {
-  const mockedContext = jest.spyOn(QueryControlContext, "useQueryControl");
+  const mockedContext = vi.spyOn(QueryControlContext, "useQueryControl");
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("should execute the query when queriesEnabled is true", async () => {
-    const queryFn = jest.fn().mockResolvedValue("test data");
+    const queryFn = vi.fn().mockResolvedValue("test data");
     const wrapper = setup();
     const { result } = renderHook(
       () =>
@@ -50,11 +50,11 @@ describe("useCustomQuery", () => {
   it("should not execute the query when queriesEnabled is false", async () => {
     mockedContext.mockReturnValue({
       queriesEnabled: false,
-      enableQueries: jest.fn(),
-      disableQueries: jest.fn(),
+      enableQueries: vi.fn(),
+      disableQueries: vi.fn(),
     });
     const wrapper = setup();
-    const queryFn = jest.fn().mockResolvedValue("test data");
+    const queryFn = vi.fn().mockResolvedValue("test data");
 
     const { result } = renderHook(
       () =>
@@ -73,7 +73,7 @@ describe("useCustomQuery", () => {
   });
 
   it("should respect the enabled option when it's explicitly set to false", async () => {
-    const queryFn = jest.fn().mockResolvedValue("test data");
+    const queryFn = vi.fn().mockResolvedValue("test data");
     const wrapper = setup();
     const { result } = renderHook(
       () =>

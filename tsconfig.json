@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
-    "module": "ES2020",
+    "module": "ESNext",
     "target": "ES2020",
-    "lib": ["ES2020", "dom"],
+    "lib": [
+      "ES2020",
+      "dom"
+    ],
     "sourceMap": true,
-    "jsx": "react",
-    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -19,27 +22,56 @@
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "dist",
+    "types": [
+      "vitest/globals",
+      "@testing-library/jest-dom",
+      "node"
+    ],
     "typeRoots": [
       "./node_modules/@types",
-      "./node_modules/@testing-library",
-      "./src/typings.d.ts",
-      "./src/global.typings.d.ts"
+      "./src"
     ],
     "paths": {
-      "@assets/*": ["node_modules/@patternfly/react-core/dist/styles/assets/*"],
-      "@images/*": ["public/images/*"],
-      "@/*": ["src/*"],
-      "@S/*": ["src/Slices/*"]
+      "@assets/*": [
+        "node_modules/@patternfly/react-core/dist/styles/assets/*"
+      ],
+      "@/*": [
+        "src/*"
+      ],
+      "@S/*": [
+        "src/Slices/*"
+      ],
+      "@images/*": [
+        "public/images/*"
+      ],
+      "@rappidcss": [
+        "node_modules/@inmanta/rappid/joint-plus.css"
+      ]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "jestSetupAfterEnv.cjs", "cypress/support/e2e.js"],
-  "exclude": ["node_modules"],
+  "include": [
+    "src/vite-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.jsx",
+    "cypress/support/e2e.js",
+    "./test-setup.ts",
+    "./vitest.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
   "ts-node": {
     "compilerOptions": {
-      "module": "ES2020",
+      "module": "ESNext",
       "target": "ES2020",
       "esModuleInterop": true,
-      "types": ["cypress-file-upload"]
+      "types": [
+        "cypress-file-upload",
+        "vitest",
+        "jsdom"
+      ]
     }
   }
 }

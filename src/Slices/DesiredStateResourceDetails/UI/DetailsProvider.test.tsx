@@ -1,7 +1,7 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
@@ -9,8 +9,6 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as VersionedResourceDetails from "@S/DesiredStateResourceDetails/Data/Mock";
 import { DetailsProvider } from "./DetailsProvider";
-
-expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {

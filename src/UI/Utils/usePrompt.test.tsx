@@ -44,7 +44,7 @@ const setup = () => {
 
 test("GIVEN usePrompt WHEN hook's parameter is equal true and user cancel alert window THEN page doesn't change", async () => {
   // prompt window isn't reachable through testing library, so I had to mock user input
-  const prompt = jest.spyOn(window, "confirm").mockImplementation(() => false);
+  const prompt = vi.spyOn(window, "confirm").mockImplementation(() => false);
 
   render(setup());
   const button = screen.getByText("Click");
@@ -60,7 +60,7 @@ test("GIVEN usePrompt WHEN hook's parameter is equal true and user cancel alert 
 });
 
 test("GIVEN usePrompt WHEN hook's parameter is equal false THEN page is changed", async () => {
-  const prompt = jest.spyOn(window, "confirm");
+  const prompt = vi.spyOn(window, "confirm");
 
   render(setup());
 
@@ -73,7 +73,7 @@ test("GIVEN usePrompt WHEN hook's parameter is equal false THEN page is changed"
 });
 
 test("GIVEN usePrompt WHEN hook's parameter is equal true and user confirm alert window THEN page is changed", async () => {
-  const prompt = jest.spyOn(window, "confirm").mockImplementation(() => true);
+  const prompt = vi.spyOn(window, "confirm").mockImplementation(() => true);
 
   render(setup());
 

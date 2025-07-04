@@ -1,14 +1,19 @@
-import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { HttpResponse, http } from "msw";
-import { setupServer } from "msw/node";
-import * as useUpdateEnvironmentSetting from "@/Data/Queries/Slices/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting"; //import with that exact path is required for mock to work correctly
+import * as useUpdateEnvironmentSettingModule from "@/Data/Queries/Slices/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ExpertBanner } from "./ExpertBanner";
+
+// Mock useUpdateEnvironmentSetting before the test
+vi.mock(
+  "@/Data/Queries/Slices/Environment/UpdateEnvironmentSetting/useUpdateEnvironmentSetting",
+  () => ({
+    useUpdateEnvironmentSetting: vi.fn(),
+  })
+);
 
 const setup = (flag: boolean) => {
   return (
@@ -28,7 +33,33 @@ const setup = (flag: boolean) => {
 };
 
 describe("Given ExpertBanner", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("When expert_mode is set to true Then should render,", () => {
+    vi.mocked(useUpdateEnvironmentSettingModule.useUpdateEnvironmentSetting).mockReturnValue({
+      data: undefined,
+      error: null,
+      failureCount: 0,
+      isError: false,
+      isIdle: false,
+      isSuccess: true,
+      isPending: false,
+      reset: vi.fn(),
+      isPaused: false,
+      context: undefined,
+      variables: {
+        id: "",
+        value: false,
+      },
+      failureReason: null,
+      submittedAt: 0,
+      mutateAsync: vi.fn(),
+      status: "success",
+      mutate: vi.fn(),
+    });
+
     render(setup(true));
 
     expect(screen.getByText("LSM expert mode is enabled, proceed with caution.")).toBeVisible();
@@ -37,30 +68,29 @@ describe("Given ExpertBanner", () => {
   });
 
   it("When expert_mode is set to true AND user clicks to disable expert mode it Then should fire mutation function", async () => {
-    const mutateSpy = jest.fn();
-    const spy = jest
-      .spyOn(useUpdateEnvironmentSetting, "useUpdateEnvironmentSetting")
-      .mockReturnValue({
-        data: undefined,
-        error: null,
-        failureCount: 0,
-        isError: false,
-        isIdle: false,
-        isSuccess: true,
-        isPending: false,
-        reset: jest.fn(),
-        isPaused: false,
-        context: undefined,
-        variables: {
-          id: "",
-          value: false,
-        },
-        failureReason: null,
-        submittedAt: 0,
-        mutateAsync: jest.fn(),
-        status: "success",
-        mutate: mutateSpy,
-      });
+    const mutateSpy = vi.fn();
+
+    vi.mocked(useUpdateEnvironmentSettingModule.useUpdateEnvironmentSetting).mockReturnValue({
+      data: undefined,
+      error: null,
+      failureCount: 0,
+      isError: false,
+      isIdle: false,
+      isSuccess: true,
+      isPending: false,
+      reset: vi.fn(),
+      isPaused: false,
+      context: undefined,
+      variables: {
+        id: "",
+        value: false,
+      },
+      failureReason: null,
+      submittedAt: 0,
+      mutateAsync: vi.fn(),
+      status: "success",
+      mutate: mutateSpy,
+    });
 
     render(setup(true));
 
@@ -70,38 +100,88 @@ describe("Given ExpertBanner", () => {
       id: "enable_lsm_expert_mode",
       value: false,
     });
-    spy.mockRestore();
   });
 
   it("When expert_mode is set to true AND user clicks to disable expert mode it AND something was wrong with the request Then AlertToast with error message should open", async () => {
-    const server = setupServer(
-      http.post("/api/v2/environment_settings/enable_lsm_expert_mode", async () => {
-        return HttpResponse.json(
-          {
-            message: "Request or referenced resource does not exist",
+    let onErrorCallback: ((error: { message: string }) => void) | undefined;
+
+    vi.mocked(useUpdateEnvironmentSettingModule.useUpdateEnvironmentSetting).mockImplementation(
+      (options) => {
+        if (options?.onError) {
+          onErrorCallback = options.onError;
+        }
+
+        return {
+          data: undefined,
+          error: null,
+          failureCount: 0,
+          isError: false,
+          isIdle: false,
+          isSuccess: true,
+          isPending: false,
+          reset: vi.fn(),
+          isPaused: false,
+          context: undefined,
+          variables: {
+            id: "enable_lsm_expert_mode",
+            value: false,
           },
-          {
-            status: 404,
-          }
-        );
-      })
+          failureReason: null,
+          submittedAt: 0,
+          mutateAsync: vi.fn(),
+          status: "success",
+          mutate: vi.fn(() => {
+            // Simulate the error callback being triggered
+            setTimeout(() => {
+              onErrorCallback?.({ message: "Request or referenced resource does not exist" });
+            }, 0);
+          }),
+        };
+      }
     );
 
-    server.listen();
     render(setup(true));
 
     await userEvent.click(screen.getByText("Disable expert mode"));
 
-    expect(screen.getByText("Something went wrong")).toBeVisible();
-    expect(screen.getByText("Request or referenced resource does not exist")).toBeVisible();
+    await act(async () => {
+      // Wait for the setTimeout to complete
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId("ToastAlert")).toBeVisible();
+      expect(screen.getByText("Something went wrong")).toBeVisible();
+      expect(screen.getByText("Request or referenced resource does not exist")).toBeVisible();
+    });
 
     expect(screen.getByText("LSM expert mode is enabled, proceed with caution.")).toBeVisible();
     expect(screen.getByText("Disable expert mode")).toBeVisible();
-
-    server.close();
   });
 
   it("When expert_mode is set to false Then should not render,", () => {
+    vi.mocked(useUpdateEnvironmentSettingModule.useUpdateEnvironmentSetting).mockReturnValue({
+      data: undefined,
+      error: null,
+      failureCount: 0,
+      isError: false,
+      isIdle: false,
+      isSuccess: true,
+      isPending: false,
+      reset: vi.fn(),
+      isPaused: false,
+      context: undefined,
+      variables: {
+        id: "",
+        value: false,
+      },
+      failureReason: null,
+      submittedAt: 0,
+      mutateAsync: vi.fn(),
+      status: "success",
+      mutate: vi.fn(),
+    });
+
     render(setup(false));
 
     expect(screen.queryByText("LSM expert mode is enabled, proceed with caution.")).toBeNull();

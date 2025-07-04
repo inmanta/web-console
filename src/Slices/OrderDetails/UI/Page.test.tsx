@@ -1,8 +1,8 @@
-import React, { act } from "react";
+import { act } from "react";
 import { Page } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { baseSetup } from "@/Test/Utils/base-setup";
@@ -14,12 +14,13 @@ import {
 } from "../Data/Mock";
 import { OrderDetailsPage } from ".";
 
-jest.mock("react-router", () => ({
-  ...jest.requireActual("react-router"),
-  useParams: jest.fn().mockReturnValue({ id: "1234" }),
-}));
-
-expect.extend(toHaveNoViolations);
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useParams: vi.fn().mockReturnValue({ id: "1234" }),
+  };
+});
 
 const DetailsPage = (
   <Page>

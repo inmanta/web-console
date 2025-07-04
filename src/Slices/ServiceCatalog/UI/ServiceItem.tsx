@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router";
 import {
   Button,
@@ -46,7 +46,6 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
   });
   const [errorMessage, setErrorMessage] = useState("");
   const serviceKey = service.name + "-item";
-  const rowRefs = useRef<Record<string, HTMLSpanElement | null>>({});
 
   /**
    * Handles the submission of deleting the service.
@@ -86,14 +85,13 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
   };
 
   return (
-    <DataListItem id={service.name} aria-labelledby={serviceKey}>
+    <DataListItem id={service.name} aria-labelledby={serviceKey} data-testid={serviceKey}>
       <ToastAlert
         data-testid="ToastAlert"
         title={words("catalog.delete.failed")}
         message={errorMessage}
         setMessage={setErrorMessage}
       />
-      <span ref={(element) => (rowRefs.current[service.name] = element)} />
       <DataListItemRow>
         <DataListItemCells
           dataListCells={[

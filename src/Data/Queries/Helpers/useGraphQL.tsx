@@ -37,7 +37,7 @@ export function useGraphQLRequest<Type>(query: string): () => Promise<Type> {
     globalThis.location.origin,
     globalThis.location.pathname
   );
-  const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+  const baseUrl = baseUrlManager.getBaseUrl(import.meta.env.VITE_API_BASEURL);
   const { createHeaders } = useFetchHelpers();
   const headers = createHeaders();
   headers.set("Content-Type", "application/graphql");

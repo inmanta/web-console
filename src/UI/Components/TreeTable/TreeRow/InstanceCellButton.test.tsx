@@ -1,4 +1,3 @@
-import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
@@ -9,7 +8,7 @@ import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { InstanceCellButton } from "./InstanceCellButton";
 
 function setup(serviceName: string, id: string) {
-  const handleClick = jest.fn();
+  const handleClick = vi.fn();
   const component = (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
