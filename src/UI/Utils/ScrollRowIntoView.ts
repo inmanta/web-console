@@ -2,7 +2,9 @@ export function scrollRowIntoView(
   rowRef: React.RefObject<HTMLSpanElement | null>,
   options: ScrollIntoViewOptions = { block: "center" }
 ): void {
-  scrollElementIntoView(rowRef.current, options);
+  if (rowRef && rowRef.current) {
+    scrollElementIntoView(rowRef.current, options);
+  }
 }
 
 function scrollElementIntoView(

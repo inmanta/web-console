@@ -34,6 +34,8 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
         ref={(element) => {
           if (element) {
             refs.current[item.id] = element;
+          } else {
+            delete refs.current[item.id];
           }
         }}
       />

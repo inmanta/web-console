@@ -96,11 +96,6 @@ export default defineConfig({
       "lodash-es": "lodash",
       // Force rappid to use ESM version
       "@inmanta/rappid": resolve(__dirname, "./node_modules/@inmanta/rappid/joint-plus.mjs"),
-      // Handle CSS import with proper alias
-      "@inmanta/rappid/joint-plus.css": resolve(
-        __dirname,
-        "./node_modules/@inmanta/rappid/joint-plus.css"
-      ),
       // Force uuid to use CJS entry point
       uuid: "uuid",
       "@rappidcss": resolve(__dirname, "node_modules/@inmanta/rappid/joint-plus.css"),
@@ -200,7 +195,10 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       enabled: process.env.CI ? true : false,
-      reporter: [["text", { summary: false }]],
+      reporter: [
+        ["text", { summary: false }],
+        ["cobertura", { file: "cobertura-coverage.xml" }],
+      ],
       exclude: [
         "node_modules/",
         "dist/",
