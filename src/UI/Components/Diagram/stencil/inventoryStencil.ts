@@ -1,7 +1,7 @@
 import { dia, ui } from "@inmanta/rappid";
 import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
-import { Inventories } from "@/Data/Managers/V2/ServiceInstance";
+import { Inventories } from "@/Data/Queries";
 import { createComposerEntity } from "../actions/general";
 import { toggleDisabledStencil, createStencilElement } from "./helpers";
 
@@ -87,6 +87,7 @@ export class InventoryStencilTab {
           isCore: false,
           isInEditMode: false,
           attributes: cell.get("instanceAttributes"),
+          isFromInventoryStencil: true,
         });
 
         //set id to the one that is stored in the stencil which equal to the instance id

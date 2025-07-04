@@ -1,27 +1,26 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Banner, Flex } from "@patternfly/react-core";
-import { ApiHelper } from "@/Core";
-import { GetVersionFileQueryManager } from "@/Data/Managers/GetVersionFile/OnteTimeQueryManager";
+import { useGetVersionFileInfo } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
-interface Props {
-  apiHelper: ApiHelper;
-}
-
-export const UpdateBanner: React.FunctionComponent<Props> = (props) => {
-  const { featureManager } = useContext(DependencyContext);
+/**
+ * Component for displaying an update banner when a new app version is available.
+ *
+ * @returns {React.ReactNode} The rendered component.
+ */
+export const UpdateBanner: React.FC = () => {
+  const { orchestratorProvider } = useContext(DependencyContext);
   const [showBannerState, setShowBannerState] = useState(false);
-  const currentVersion = featureManager.getAppVersion();
-  const currentCommit = featureManager.getCommitHash();
+  const currentVersion = orchestratorProvider.getAppVersion();
+  const currentCommit = orchestratorProvider.getCommitHash();
+  const { data, isSuccess } = useGetVersionFileInfo();
 
-  GetVersionFileQueryManager(props.apiHelper)
-    .then(({ kind, value }) => {
-      if (kind === "Left" || currentCommit !== value.version_info.commitHash) {
-        setShowBannerState(true);
-      }
-    })
-    .catch((error) => console.log(error));
+  useEffect(() => {
+    if (isSuccess && data.version_info.commitHash !== currentCommit) {
+      setShowBannerState(true);
+    }
+  }, [isSuccess, currentCommit, data]);
 
   const banner = (
     <React.Fragment>

@@ -6,7 +6,7 @@ import {
   DescriptionListDescription,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { ServiceOrder } from "@/Slices/Orders/Core/Query";
+import { ServiceOrder } from "@/Slices/Orders/Core/Types";
 import { OrderProgressBar } from "@/Slices/Orders/UI/OrderProgressBar";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { words } from "@/UI";

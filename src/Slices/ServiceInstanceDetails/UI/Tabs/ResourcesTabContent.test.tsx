@@ -3,7 +3,6 @@ import { UseInfiniteQueryResult, UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-
 import { InstanceDetailsContext } from "../../Core/Context";
 import { instanceData } from "../../Test/mockData";
 import {

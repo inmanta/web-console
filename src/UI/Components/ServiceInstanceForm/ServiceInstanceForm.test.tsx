@@ -1,10 +1,9 @@
 import React from "react";
 import "@testing-library/jest-dom";
-import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Route, Routes } from "react-router";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import {
@@ -13,14 +12,13 @@ import {
   EnumField,
   InstanceAttributeModel,
   NestedField,
-  RemoteData,
   TextField,
   Textarea,
 } from "@/Core";
-import { getStoreInstance, QueryResolverImpl, QueryManagerResolverImpl } from "@/Data";
 import * as Test from "@/Test";
-import { DeferredApiHelper, StaticScheduler, dependencies } from "@/Test";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
+import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
@@ -30,43 +28,10 @@ const setup = (
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined
 ) => {
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, dependencies.routeManager);
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
-  );
-
-  const env = {
-    id: "aaa",
-    name: "env-a",
-    project_id: "ppp",
-    repo_branch: "branch",
-    repo_url: "repo",
-    projectName: "project",
-    halted: false,
-    settings: {},
-  };
-
-  store.dispatch.environment.setEnvironments(RemoteData.success([env]));
-
-  store.dispatch.environment.setEnvironmentDetailsById({
-    id: "aaa",
-    value: RemoteData.success(env),
-  });
-
   const component = (
-    <MemoryRouter
-      initialEntries={[
-        {
-          pathname: "/",
-          search: "?env=aaa",
-        },
-      ]}
-    >
-      <DependencyProvider dependencies={{ ...dependencies, queryResolver, environmentHandler }}>
-        <StoreProvider store={store}>
+    <QueryClientProvider client={testClient}>
+      <TestMemoryRouter initialEntries={["/?env=aaa"]}>
+        <MockedDependencyProvider>
           <Routes>
             <Route
               path="/"
@@ -84,41 +49,28 @@ const setup = (
               }
             />
           </Routes>
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 };
 
-function createQueryWrapper(children: React.ReactNode) {
-  const queryClient = new QueryClient();
-
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
-}
-const server = setupServer();
+const server = setupServer(
+  http.get("/api/v1/parameter/param_name", () => {
+    return HttpResponse.json({
+      parameter: undefined,
+    });
+  })
+);
 
 beforeAll(() => {
   server.listen();
-  server.use(
-    http.get("/api/v1/parameter/param_name", () => {
-      return HttpResponse.json({
-        parameter: undefined,
-      });
-    })
-  );
 });
 
 beforeEach(() => {
-  server.resetHandlers();
-  server.use(
-    http.get("/api/v1/parameter/param_name", () => {
-      return HttpResponse.json({
-        parameter: undefined,
-      });
-    })
-  );
+  server.restoreHandlers();
 });
 
 afterAll(() => server.close());
@@ -171,7 +123,6 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with suggestions THEN sh
 
 test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestions THEN shows that field", async () => {
   // Provide the server-side API with the request handlers.
-  server.resetHandlers();
   server.use(
     http.get("/api/v1/parameter/param_name", () => {
       return HttpResponse.json({
@@ -194,7 +145,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
 
   const { component } = setup([Test.Field.textSuggestions2]);
 
-  render(createQueryWrapper(component));
+  render(component);
 
   expect(
     screen.getByRole("generic", {
@@ -209,27 +160,22 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   // simulate click on the input to show the suggestions
   await userEvent.click(textBox);
 
-  const suggestions = screen.getAllByRole("menuitem");
+  const suggestions = await screen.findAllByRole("menuitem");
 
   expect(suggestions).toHaveLength(3);
-
-  server.resetHandlers();
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestions AND no parameters could be retrieved THEN shows that field without suggestions", async () => {
   // Provide the server-side API with the request handlers.
-  const server = setupServer(
+  server.use(
     http.get("/api/v1/parameter/param_name", () => {
       return HttpResponse.error();
     })
   );
 
-  // Start the interception.
-  server.listen();
-
   const { component } = setup([Test.Field.textSuggestions2]);
 
-  render(createQueryWrapper(component));
+  render(component);
 
   expect(
     screen.getByRole("generic", {
@@ -587,8 +533,8 @@ test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index,
   expect(textBoxes).toHaveLength(3);
   expect(textBoxes[0]).toHaveValue("flat_field_text_1");
 
-  // expect the first delete button to be disabled
-  expect(screen.getAllByRole("button", { name: words("delete") })[0]).toBeDisabled();
+  // the delete button should be enabled, as for this list, the minimum is 1
+  expect(screen.getAllByRole("button", { name: words("delete") })[0]).toBeEnabled();
 
   // Delete the second item of the list.
   await userEvent.click(within(group).getAllByRole("button", { name: words("delete") })[1]);
@@ -598,6 +544,17 @@ test("GIVEN ServiceInstanceForm WHEN Deleting an item that isn't the last index,
   expect(updatedTextBoxes).toHaveLength(2);
   expect(updatedTextBoxes[0]).toHaveValue("flat_field_text_1");
   expect(updatedTextBoxes[1]).toHaveValue("flat_field_text_3");
+
+  // Delete another item of the list.
+  await userEvent.click(within(group).getAllByRole("button", { name: words("delete") })[0]);
+
+  const updatedTextBoxes2 = screen.getAllByRole("textbox");
+
+  expect(updatedTextBoxes2).toHaveLength(1);
+  expect(updatedTextBoxes2[0]).toHaveValue("flat_field_text_3");
+
+  // The delete button should now be disabled, as the minimum is 1
+  expect(screen.getAllByRole("button", { name: words("delete") })[0]).toBeDisabled();
 });
 
 test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with formState", async () => {

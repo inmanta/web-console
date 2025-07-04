@@ -1,40 +1,33 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import { StoreProvider } from "easy-peasy";
-import { SchedulerImpl, ServiceModel } from "@/Core";
-import { QueryResolverImpl, getStoreInstance } from "@/Data";
-import { DeferredApiHelper, dependencies, DynamicQueryManagerResolverImpl, Service } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
-import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
+import { MemoryRouter } from "react-router";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ServiceModel } from "@/Core";
+import { MockedDependencyProvider, Service } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { Events } from "@S/Events/UI/Events";
 
 interface Handles {
   component: React.ReactElement;
-  scheduler: SchedulerImpl;
-  apiHelper: DeferredApiHelper;
 }
 
+/**
+ * EventsPageComposer is a test utility class that composes the Events component
+ * with all necessary providers for testing purposes.
+ *
+ * @returns {Handles} An object containing the composed component
+ */
 export class EventsPageComposer {
   compose(service: ServiceModel = Service.a): Handles {
-    const store = getStoreInstance();
-    const scheduler = new SchedulerImpl(5000);
-    const apiHelper = new DeferredApiHelper();
-    const eventsHelper = EventsQueryManager(apiHelper, EventsStateHelper(store), scheduler);
-
-    const queryResolver = new QueryResolverImpl(
-      new DynamicQueryManagerResolverImpl([eventsHelper])
-    );
-
     const component = (
-      <MemoryRouter>
-        <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
-          <StoreProvider store={store}>
+      <QueryClientProvider client={testClient}>
+        <MemoryRouter>
+          <MockedDependencyProvider>
             <Events service={service} instanceId="id1" />
-          </StoreProvider>
-        </DependencyProvider>
-      </MemoryRouter>
+          </MockedDependencyProvider>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
-    return { component, scheduler, apiHelper };
+    return { component };
   }
 }

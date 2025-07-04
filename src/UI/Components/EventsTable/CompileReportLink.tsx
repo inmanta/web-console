@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Button } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";

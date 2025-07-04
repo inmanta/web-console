@@ -1,20 +1,13 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
-import { getStoreInstance, QueryResolverImpl } from "@/Data";
-import { EnvironmentDetailsOneTimeQueryManager } from "@/Slices/Settings/Data/GetEnvironmentDetails";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolverImpl,
-  EnvironmentDetails,
-} from "@/Test";
+import { HttpResponse, http } from "msw";
+import { setupServer } from "msw/node";
+import { MockedDependencyProvider, EnvironmentDetails } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
 expect.extend(toHaveNoViolations);
 
@@ -26,70 +19,82 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const store = getStoreInstance();
-  const apiHelper = new DeferredApiHelper();
-  const environmentDetailsQueryManager = EnvironmentDetailsOneTimeQueryManager(store, apiHelper);
-
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolverImpl([environmentDetailsQueryManager])
-  );
   const component = (
-    <QueryClientProvider client={new QueryClient()}>
-      <MemoryRouter>
-        <StoreProvider store={store}>
-          <DependencyProvider
-            dependencies={{
-              ...dependencies,
-              queryResolver,
-            }}
-          >
-            <Page />
-          </DependencyProvider>
-        </StoreProvider>
-      </MemoryRouter>
+    <QueryClientProvider client={testClient}>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
+          <Page />
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 
-  return { component, apiHelper };
+  return { component };
 }
 
-test("Home view shows failed table", async () => {
-  const { component, apiHelper } = setup();
+describe("Dashboard", () => {
+  const server = setupServer();
 
-  render(component);
-
-  expect(await screen.findByRole("region", { name: "Dashboard-Loading" })).toBeInTheDocument();
-
-  apiHelper.resolve(Either.left("error"));
-
-  expect(await screen.findByRole("region", { name: "Dashboard-Failed" })).toBeInTheDocument();
-
-  await act(async () => {
-    const results = await axe(document.body);
-
-    expect(results).toHaveNoViolations();
+  beforeAll(() => {
+    server.listen();
   });
-});
 
-test("Home View shows success table", async () => {
-  const { component, apiHelper } = setup();
+  beforeEach(() => {
+    server.resetHandlers();
+  });
 
-  render(component);
+  afterAll(() => {
+    server.close();
+  });
 
-  expect(await screen.findByRole("region", { name: "Dashboard-Loading" })).toBeInTheDocument();
+  test("Home view shows failed table", async () => {
+    server.use(
+      http.get("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", () => {
+        return HttpResponse.json(
+          {
+            message: "something went wrong",
+          },
+          { status: 500 }
+        );
+      })
+    );
+    const { component } = setup();
 
-  apiHelper.resolve(
-    Either.right({
-      data: EnvironmentDetails.a,
-    })
-  );
-  expect(
-    await screen.findByText(words("dashboard.title")(EnvironmentDetails.a.name))
-  ).toBeInTheDocument();
+    render(component);
 
-  await act(async () => {
-    const results = await axe(document.body);
+    expect(await screen.findByRole("region", { name: "Dashboard-Loading" })).toBeInTheDocument();
 
-    expect(results).toHaveNoViolations();
+    expect(await screen.findByRole("region", { name: "Dashboard-Failed" })).toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("Home View shows success table", async () => {
+    server.use(
+      http.get("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7?", () => {
+        return HttpResponse.json({
+          data: EnvironmentDetails.a,
+        });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByRole("region", { name: "Dashboard-Loading" })).toBeInTheDocument();
+
+    expect(
+      await screen.findByText(words("dashboard.title")(EnvironmentDetails.env.name))
+    ).toBeInTheDocument();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

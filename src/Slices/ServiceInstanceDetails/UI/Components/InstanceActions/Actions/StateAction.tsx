@@ -1,10 +1,17 @@
-import React, { useCallback, useContext, useState } from "react";
-import { DropdownGroup, DropdownItem, Content } from "@patternfly/react-core";
+import React, { useCallback, useContext } from "react";
+import {
+  DropdownGroup,
+  DropdownItem,
+  Content,
+  Button,
+  Spinner,
+  Flex,
+  FlexItem,
+} from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
-import { usePostStateTransfer } from "@/Data/Managers/V2/ServiceInstance";
+import { usePostStateTransfer } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
-import { ConfirmationModal } from "../../ConfirmModal";
-import { ToastAlertMessage } from "../../ToastAlert";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
 interface Props {
   targets: string[];
@@ -14,6 +21,7 @@ interface Props {
   version: ParsedNumber;
   onClose: () => void;
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 /**
@@ -38,23 +46,9 @@ export const StateAction: React.FC<Props> = ({
   version,
   onClose,
   setInterfaceBlocked,
+  setErrorMessage,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [confirmationText, setConfirmationText] = useState<string>("");
-  const [targetState, setTargetState] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
-
-  const { authHelper } = useContext(DependencyContext);
-
-  const { mutate, isPending } = usePostStateTransfer(instance_id, service_entity, {
-    onSuccess: () => {
-      closeModal();
-    },
-    onError: (error) => {
-      setErrorMessage(error.message);
-      closeModal();
-    },
-  });
+  const { triggerModal } = useContext(ModalContext);
 
   /**
    * When a state is selected, block the interface, open the modal,
@@ -63,14 +57,87 @@ export const StateAction: React.FC<Props> = ({
    * @param {string} value - the selected state
    */
   const onSelect = (value: string) => {
-    setTargetState(value);
-    setConfirmationText(
-      words("inventory.statustab.confirmMessage")(instance_display_identity, value)
-    );
-
+    triggerModal({
+      title: words("instanceDetails.stateTransfer.confirmTitle"),
+      content: (
+        <ModalContent
+          instance_id={instance_id}
+          service_entity={service_entity}
+          targetState={value}
+          instance_display_identity={instance_display_identity}
+          version={version}
+          setErrorMessage={setErrorMessage}
+          setInterfaceBlocked={setInterfaceBlocked}
+        />
+      ),
+      iconVariant: "danger",
+      cancelCb: () => {
+        setInterfaceBlocked(false);
+        onClose();
+      },
+    });
     setInterfaceBlocked(true);
-    setIsModalOpen(true);
   };
+
+  return (
+    <>
+      <DropdownGroup label={words("instanceDetails.setState.label")}>
+        {targets.map((target) => (
+          <DropdownItem onClick={() => onSelect(target)} key={target}>
+            {target}
+          </DropdownItem>
+        ))}
+      </DropdownGroup>
+    </>
+  );
+};
+
+interface ModalContentProps {
+  instance_id: string;
+  service_entity: string;
+  targetState: string;
+  instance_display_identity: string;
+  version: ParsedNumber;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+/**
+ * The ModalContent Component
+ *
+ * @props {ModalContentProps} props - The props of the components
+ *  @prop {string} instance_id - the hashed id of the instance
+ *  @prop {string} service_entity - the service entity type of the instance
+ *  @prop {string} targetState - the target state to be set
+ *  @prop {string} instance_display_identity - the display value of the instance Id
+ *  @prop {ParsedNumber} version - the current version of the instance
+ *  @prop {function} setErrorMessage - callback method to set the error message
+ *  @prop {function} setInterfaceBlocked - callback method to set the interface blocked
+ *
+ * @returns {React.FC<ModalContentProps>} A React Component displaying the Modal Content
+ */
+const ModalContent: React.FC<ModalContentProps> = ({
+  instance_id,
+  service_entity,
+  targetState,
+  instance_display_identity,
+  version,
+  setErrorMessage,
+  setInterfaceBlocked,
+}) => {
+  const { authHelper } = useContext(DependencyContext);
+  const username = authHelper.getUser();
+
+  const { closeModal } = useContext(ModalContext);
+
+  const { mutate, isPending } = usePostStateTransfer(instance_id, service_entity, {
+    onSuccess: () => {
+      closeCallback();
+    },
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
+  });
 
   /**
    * async method sending out the request to update the state of the instance with selected state
@@ -78,7 +145,6 @@ export const StateAction: React.FC<Props> = ({
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
   const onSubmit = async (): Promise<void> => {
-    const username = authHelper.getUser();
     const message = words("instanceDetails.API.message.update")(username);
 
     mutate({
@@ -91,39 +157,41 @@ export const StateAction: React.FC<Props> = ({
   /**
    *  shorthand method to handle the state updates when the modal is closed
    */
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
+  const closeCallback = useCallback(() => {
+    closeModal();
     setInterfaceBlocked(false);
-    onClose();
-  }, [setInterfaceBlocked, setIsModalOpen, onClose]);
+  }, [setInterfaceBlocked, closeModal]);
 
   return (
     <>
-      <DropdownGroup label={words("instanceDetails.setState.label")}>
-        {targets.map((target) => (
-          <DropdownItem onClick={() => onSelect(target)} key={target}>
-            {target}
-          </DropdownItem>
-        ))}
-      </DropdownGroup>
-      <ConfirmationModal
-        title={words("instanceDetails.stateTransfer.confirmTitle")}
-        onConfirm={onSubmit}
-        id={instance_display_identity}
-        isModalOpen={isModalOpen}
-        onCancel={closeModal}
-        isPending={isPending}
-      >
-        <Content component="p">{confirmationText}</Content>
-      </ConfirmationModal>
-      {errorMessage && (
-        <ToastAlertMessage
-          message={errorMessage}
-          id="error-toast-state-transfer"
-          setMessage={setErrorMessage}
-          variant="danger"
-        />
-      )}
+      <Content component="p">
+        {words("inventory.statustab.confirmMessage")(instance_display_identity, targetState)}
+      </Content>
+      <br />
+      <Flex>
+        <FlexItem>
+          <Button
+            key="confirm"
+            variant="primary"
+            data-testid={`${instance_display_identity}-delete-modal-confirm`}
+            onClick={onSubmit}
+            isDisabled={isPending}
+          >
+            {words("yes")}
+            {isPending && <Spinner size="sm" />}
+          </Button>
+        </FlexItem>
+        <FlexItem>
+          <Button
+            key="cancel"
+            variant="link"
+            data-testid={`${instance_display_identity}-delete-modal-cancel`}
+            onClick={closeCallback}
+          >
+            {words("no")}
+          </Button>
+        </FlexItem>
+      </Flex>
     </>
   );
 };

@@ -1,19 +1,22 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { dependencies, Environment } from "@/Test";
+import { MockedDependencyProvider, Environment } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 
 function setup() {
   const component = (
-    <MemoryRouter>
-      <DependencyProvider dependencies={dependencies}>
-        <EnvironmentsOverview environments={Environment.filterable} />
-      </DependencyProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={testClient}>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
+          <EnvironmentsOverview environments={Environment.filterable} />
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
+    </QueryClientProvider>
   );
 
   return { component };

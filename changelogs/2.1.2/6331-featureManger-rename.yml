@@ -1,0 +1,4 @@
+description: Rename FeatureManager to OrchestratorProvider to better reflect its purpose
+issue-nr: 6331
+change-type: patch
+destination-branches: [master, iso8]

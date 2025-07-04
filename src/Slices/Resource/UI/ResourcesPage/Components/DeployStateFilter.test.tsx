@@ -33,12 +33,8 @@ test("Given the deploy state filter When changing the include/exclude options Th
   expect(await screen.findByRole("generic", { name: "skipped-exclude-inactive" })).toBeVisible();
 
   // Select include for skipped state
-  await act(async () => {
-    fireEvent.click(await screen.findByRole("generic", { name: "skipped-include-toggle" }));
-  });
-  await act(async () => {
-    fireEvent.click(menuToggle);
-  });
+  fireEvent.click(await screen.findByRole("generic", { name: "skipped-include-toggle" }));
+  fireEvent.click(menuToggle);
 
   // Check if the include active icon is shown
   expect(

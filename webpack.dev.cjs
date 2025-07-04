@@ -53,6 +53,7 @@ module.exports = merge(common, {
           path.resolve(__dirname, "node_modules/monaco-editor"),
           path.resolve(__dirname, "node_modules/@patternfly/patternfly"),
           path.resolve(__dirname, "node_modules/@patternfly/react-styles/css"),
+          path.resolve(__dirname, "node_modules/@patternfly/react-code-editor"),
           path.resolve(__dirname, "node_modules/@patternfly/react-core/dist/styles/base.css"),
           path.resolve(
             __dirname,
@@ -71,6 +72,10 @@ module.exports = merge(common, {
             "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css"
           ),
           path.resolve(__dirname, "node_modules/@inmanta/rappid/joint-plus.css"),
+          path.resolve(
+            __dirname,
+            "node_modules/@patternfly/react-log-viewer/dist/esm/LogViewer/css"
+          ),
         ],
         use: ["style-loader", "css-loader"],
       },

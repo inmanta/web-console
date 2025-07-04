@@ -1,0 +1,5 @@
+description: Upgrade Desired State Queries
+issue-nr: 6279
+change-type: patch
+destination-branches: [master, iso8]
+

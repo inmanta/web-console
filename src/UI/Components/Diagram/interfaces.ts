@@ -5,7 +5,7 @@ import {
   t_chart_color_purple_300,
 } from "@patternfly/react-tokens";
 import { EmbeddedEntity, InstanceAttributeModel, ParsedNumber, ServiceModel } from "@/Core";
-import { ServiceOrderItemAction, ServiceOrderItemConfig } from "@/Slices/Orders/Core/Query";
+import { ServiceOrderItemAction, ServiceOrderItemConfig } from "@/Slices/Orders/Core/Types";
 
 /**
  * Enum representing header colors for different types of entities.
@@ -204,6 +204,9 @@ interface ComposerEntityOptions {
 
   /** Optional identifier of the entity. */
   id?: string;
+
+  /** Optional flag indicating if the entity is created through inventory stencil. */
+  isFromInventoryStencil?: boolean;
 }
 
 export {

@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump html-webpack-plugin from 5.6.0 to 5.6.3
+destination-branches:
+- master
+- iso8
+sections: {}

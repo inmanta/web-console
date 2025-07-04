@@ -1,17 +1,22 @@
-import { FeatureManager, UrlManager } from "@/Core";
+import { OrchestratorProvider, UrlManager } from "@/Core";
 
+/**
+ * This class is used to manage the URLs of the application.
+ *
+ * @returns <UrlManager> UrlManagerImpl
+ */
 export class UrlManagerImpl implements UrlManager {
   constructor(
-    private readonly featureManager: FeatureManager,
+    private readonly orchestratorProvider: OrchestratorProvider,
     private readonly baseUrl: string
   ) {}
 
   getDocumentationLink(): string {
-    if (this.featureManager.getEdition().includes("Open Source")) {
-      return `https://docs.inmanta.com/community/${this.featureManager.getServerVersion()}`;
+    if (this.orchestratorProvider.getEdition().includes("Open Source")) {
+      return `https://docs.inmanta.com/community/${this.orchestratorProvider.getServerVersion()}`;
     }
 
-    return `https://docs.inmanta.com/inmanta-service-orchestrator/${this.featureManager.getServerMajorVersion()}/`;
+    return `https://docs.inmanta.com/inmanta-service-orchestrator/${this.orchestratorProvider.getServerMajorVersion()}/`;
   }
 
   getGeneralAPILink(): string {

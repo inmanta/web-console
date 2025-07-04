@@ -329,7 +329,7 @@ describe("ServiceInstanceDetailsPage", () => {
     // Should have the right href attribute
     expect(allEventsLink).toHaveAttribute(
       "href",
-      "/lsm/catalog/mobileCore/inventory/1d96a1ab/events?env=aaa&state.InstanceDetails.version=1&state.InstanceDetails.tab=Events"
+      "/lsm/catalog/mobileCore/inventory/1d96a1ab/events?env=c85c0a64-ed45-4cba-bdc5-703f65a225f7&state.InstanceDetails.version=1&state.InstanceDetails.tab=Events"
     );
 
     // In this version, expect only two rows with aria-label Event table row
@@ -446,7 +446,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     expect(screen.getByTestId("Status-deployed")).toBeVisible();
 
-    expect(screen.getByText("test_resource[]")).toBeVisible();
+    expect(screen.getByText("hello[world,v=42]")).toBeVisible();
 
     // Change Version to older
     await userEvent.click(screen.getAllByLabelText("History-Row")[1]);
@@ -456,7 +456,7 @@ describe("ServiceInstanceDetailsPage", () => {
 
     expect(screen.getByTestId("Status-deployed")).not.toBeVisible();
 
-    expect(screen.getByText("test_resource[]")).not.toBeVisible();
+    expect(screen.getByText("hello[world,v=42]")).not.toBeVisible();
 
     // Change Version to latest
     await userEvent.click(screen.getAllByLabelText("History-Row")[0]);

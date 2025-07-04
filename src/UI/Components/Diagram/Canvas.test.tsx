@@ -1,18 +1,16 @@
 import React, { act } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, queries, within as baseWithin } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import { RemoteData, ServiceModel } from "@/Core";
-import { getStoreInstance } from "@/Data";
-import { InstanceWithRelations, Inventories } from "@/Data/Managers/V2/ServiceInstance";
-import { dependencies } from "@/Test";
+import { ServiceModel } from "@/Core";
+import { InstanceWithRelations, Inventories } from "@/Data/Queries";
+import { MockedDependencyProvider } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
-import { DependencyProvider, EnvironmentHandlerImpl, PrimaryRouteManager, words } from "@/UI";
+import { words } from "@/UI";
 import { Canvas } from "@/UI/Components/Diagram/Canvas";
-import CustomRouter from "@/UI/Routing/CustomRouter";
-import history from "@/UI/Routing/history";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasProvider } from "./Context/CanvasProvider";
 import { InstanceComposerContext } from "./Context/Context";
 import { mockedInstanceTwo, mockedInstanceTwoServiceModel, serviceModels } from "./Mocks";
@@ -33,44 +31,12 @@ const setup = (
   editable: boolean = true
 ) => {
   const queryClient = new QueryClient();
-  const store = getStoreInstance();
-  const environmentHandler = EnvironmentHandlerImpl(useLocation, PrimaryRouteManager(""));
-
-  store.dispatch.environment.setEnvironments(
-    RemoteData.success([
-      {
-        id: "aaa",
-        name: "env-a",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        halted: false,
-        settings: {
-          enable_lsm_expert_mode: false,
-        },
-      },
-      {
-        id: "bbb",
-        name: "env-b",
-        project_id: "ppp",
-        repo_branch: "branch",
-        repo_url: "repo",
-        projectName: "project",
-        halted: false,
-        settings: {
-          enable_lsm_expert_mode: false,
-        },
-      },
-    ])
-  );
-  history.push("/?env=aaa");
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CustomRouter history={history}>
-        <StoreProvider store={store}>
-          <DependencyProvider dependencies={{ ...dependencies, environmentHandler }}>
+      <ModalProvider>
+        <TestMemoryRouter>
+          <MockedDependencyProvider>
             <InstanceComposerContext.Provider
               value={{
                 instance: instance || null,
@@ -86,9 +52,9 @@ const setup = (
                 </Routes>
               </CanvasProvider>
             </InstanceComposerContext.Provider>
-          </DependencyProvider>
-        </StoreProvider>
-      </CustomRouter>
+          </MockedDependencyProvider>
+        </TestMemoryRouter>
+      </ModalProvider>
     </QueryClientProvider>
   );
 };
@@ -144,13 +110,9 @@ describe("Canvas.tsx", () => {
 
     expect(modal).toBeVisible();
 
-    const title = document.querySelector("#dict-modal-title");
+    expect(screen.getByText(words("instanceComposer.dictModal")("dictOne"))).toBeVisible();
 
-    expect(title).toHaveTextContent(words("instanceComposer.dictModal")("dictOne"));
-
-    const value = document.querySelector("#dict-modal-body");
-
-    expect(value).toHaveTextContent("{}");
+    expect(screen.getByText("{}")).toBeVisible();
 
     const copyButton = await screen.findByLabelText("Copy to clipboard");
 

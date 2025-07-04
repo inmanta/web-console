@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
-import { usePostInstanceConfig } from "@/Data/Managers/V2/ServiceInstance";
+import { usePostInstanceConfig } from "@/Data/Queries";
 import { DefaultSwitch, EmptyView, SettingsList } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -22,9 +22,9 @@ interface Props {
 
 export const ConfigDetails: React.FC<Props> = ({ config, defaults, serviceInstanceIdentifier }) => {
   const { service_entity, id, version } = serviceInstanceIdentifier;
-  const { environmentModifier } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const { mutate } = usePostInstanceConfig(service_entity, id);
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
 
   const [isExpanded, setIsExpanded] = useState(true);
 

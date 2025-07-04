@@ -39,6 +39,9 @@ export const filterable: ProjectModel[] = [
         repo_branch: "master",
         repo_url: "github.com/test",
         halted: false,
+        settings: {
+          agent_trigger_method_on_auto_deploy: "push_full_deploy",
+        },
       },
       {
         id: "456",
@@ -47,6 +50,9 @@ export const filterable: ProjectModel[] = [
         repo_branch: "master",
         repo_url: "github.com/test2",
         halted: false,
+        settings: {
+          agent_trigger_method_on_auto_deploy: "push_full_deploy",
+        },
       },
     ],
   },
@@ -61,6 +67,9 @@ export const filterable: ProjectModel[] = [
         repo_branch: "master",
         repo_url: "gitlab.com/test",
         halted: false,
+        settings: {
+          agent_trigger_method_on_auto_deploy: "push_full_deploy",
+        },
       },
       {
         id: "101",
@@ -69,6 +78,9 @@ export const filterable: ProjectModel[] = [
         repo_branch: "master",
         repo_url: "gitlab.com/test123",
         halted: false,
+        settings: {
+          agent_trigger_method_on_auto_deploy: "push_full_deploy",
+        },
       },
     ],
   },

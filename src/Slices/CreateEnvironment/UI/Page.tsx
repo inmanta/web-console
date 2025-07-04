@@ -1,29 +1,39 @@
-import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
-import { DependencyContext } from "@/UI";
+import React from "react";
+import { useGetProjects } from "@/Data/Queries";
+import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
 
+/**
+ * Create Environment page
+ *
+ * It handles different states of the project data fetching for Create Environment form (loading, error, success)
+ * and renders the appropriate UI for each state.
+ *
+ * @returns {React.FC} The Create Environment page
+ */
 export const Page: React.FC = () => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useOneTime<"GetProjects">({
-    kind: "GetProjects",
-    environmentDetails: false,
-  });
+  const { data, isSuccess, isError, error, refetch } = useGetProjects().useOneTime();
+
+  if (isError) {
+    return (
+      <PageContainer pageTitle={words("home.create.env")}>
+        <ErrorView message={error.message} ariaLabel="CreateEnvironment-Error" retry={refetch} />
+      </PageContainer>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <PageContainer pageTitle={words("home.create.env")}>
+        <CreateEnvironmentForm projects={data} aria-label="CreateEnvironment-Success" />
+      </PageContainer>
+    );
+  }
 
   return (
-    <PageContainer pageTitle={"Create Environment"}>
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => <LoadingView ariaLabel="CreateEnvironment-Loading" />,
-          failed: (message) => <ErrorView message={message} ariaLabel="CreateEnvironment-Failed" />,
-          success: (projects) => (
-            <CreateEnvironmentForm projects={projects} aria-label="CreateEnvironment-Success" />
-          ),
-        },
-        data
-      )}
+    <PageContainer pageTitle={words("home.create.env")}>
+      <LoadingView ariaLabel="CreateEnvironment-Loading" />,
     </PageContainer>
   );
 };

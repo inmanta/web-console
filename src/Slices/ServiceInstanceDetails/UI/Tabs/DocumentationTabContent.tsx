@@ -4,6 +4,9 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionToggle,
+  Button,
+  Flex,
+  FlexItem,
 } from "@patternfly/react-core";
 import { InstanceAttributeModel, ServiceInstanceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
@@ -11,6 +14,8 @@ import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
+import { DependencyContext } from "@/UI/Dependency";
+import { useNavigateTo } from "@/UI/Routing";
 import { InstanceDetailsContext } from "../../Core/Context";
 import { TabContentWrapper } from ".";
 
@@ -47,7 +52,9 @@ export const DocumentationTabContent: React.FC<Props> = ({
   selectedVersion,
 }) => {
   const { logsQuery, instance } = useContext(InstanceDetailsContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const [expanded, setExpanded] = useState(0);
+  const navigateTo = useNavigateTo();
 
   const isLatest = selectedVersion === String(instance.version);
   let selectedSet: InstanceAttributeModel | void;
@@ -86,9 +93,40 @@ export const DocumentationTabContent: React.FC<Props> = ({
     }
   };
 
+  const MarkdownPreviewerButton = () => {
+    if (!environmentHandler.useIsExpertModeEnabled()) {
+      return null;
+    }
+
+    return (
+      <Flex
+        justifyContent={{ default: "justifyContentFlexEnd" }}
+        style={{ paddingBottom: "var(--pf-t--global--spacer--md)" }}
+      >
+        <FlexItem>
+          <Button
+            variant="secondary"
+            aria-label={"preview-button"}
+            isDanger
+            onClick={() => {
+              navigateTo("MarkdownPreviewer", {
+                service: instance.service_entity,
+                instance: instance.service_identity_attribute_value || instance.id,
+                instanceId: instance.id,
+              });
+            }}
+          >
+            {words("instanceDetails.documentation.openPreviewer")}
+          </Button>
+        </FlexItem>
+      </Flex>
+    );
+  };
+
   if (sections.length === 1) {
     return (
       <TabContentWrapper id="documentation">
+        <MarkdownPreviewerButton />
         <MarkdownCard attributeValue={sections[0].value} web_title={sections[0].title} />
       </TabContentWrapper>
     );

@@ -1,23 +1,55 @@
-import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
-import { RemoteDataView } from "@/UI/Components";
+import React, { useEffect, useContext, useState } from "react";
+import { useGetEnvironments, useGetServerStatus } from "@/Data/Queries";
+import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 
+/**
+ * Initializer component
+ *
+ * It handles different states of the server status and environments data fetching (loading, error, success)
+ * and renders the appropriate UI for each state.
+ *
+ * @returns {React.FC<React.PropsWithChildren<unknown>>} The Initializer component
+ */
 export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [statusData] = queryResolver.useOneTime<"GetServerStatus">({
-    kind: "GetServerStatus",
-  });
+  const [isInitialized, setIsInitialized] = useState(false);
+  const { environmentHandler, orchestratorProvider } = useContext(DependencyContext);
+  const serverStatus = useGetServerStatus().useOneTime();
+  const environments = useGetEnvironments().useOneTime();
 
-  const [environmentsData] = queryResolver.useOneTime<"GetEnvironments">({
-    kind: "GetEnvironments",
-    details: false,
-  });
+  useEffect(() => {
+    if (environments.data && serverStatus.data) {
+      environmentHandler.setAllEnvironments(environments.data);
+      orchestratorProvider.setAllFeatures(serverStatus.data);
+      setIsInitialized(true); // This is used to sync the component rendering with updating hooks
+    }
 
-  return (
-    <RemoteDataView
-      data={RemoteData.merge(statusData, environmentsData)}
-      SuccessView={() => <>{children}</>}
-    />
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [environments.data, serverStatus.data]);
+
+  if (serverStatus.isError) {
+    return (
+      <ErrorView
+        ariaLabel="Initializer-Error"
+        message={serverStatus.error.message}
+        retry={serverStatus.refetch}
+      />
+    );
+  }
+
+  if (environments.isError) {
+    return (
+      <ErrorView
+        ariaLabel="Initializer-Error"
+        message={environments.error.message}
+        retry={environments.refetch}
+      />
+    );
+  }
+
+  if (serverStatus.isSuccess && environments.isSuccess && isInitialized) {
+    return <>{children}</>;
+  }
+
+  return <LoadingView ariaLabel="Initializer-Loading" />;
 };
