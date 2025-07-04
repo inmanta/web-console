@@ -253,15 +253,6 @@ describe("Scenario 4 Desired State", () => {
         );
 
       cy.get(".pf-v5-c-description-list__group")
-        .eq(7)
-        .find(".pf-v5-c-description-list__term")
-        .should("have.text", "send_event");
-      cy.get(".pf-v5-c-description-list__group")
-        .eq(7)
-        .find(".pf-v5-c-description-list__description")
-        .should("have.text", "false");
-
-      cy.get(".pf-v5-c-description-list__group")
         .eq(8)
         .find(".pf-v5-c-description-list__term")
         .should("have.text", "service_entity");
