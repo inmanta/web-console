@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Banner, Button, Flex, Spinner } from "@patternfly/react-core";
-import { useUpdateEnvConfig } from "@/Data/Managers/V2/Environment";
+import { useUpdateEnvironmentSetting } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../ToastAlert";
@@ -12,17 +12,22 @@ import { ToastAlert } from "../ToastAlert";
  * @returns { React.FC<Props> | null} The rendered banner if the expert mode is enabled, otherwise null.
  */
 export const ExpertBanner: React.FC = () => {
+  const { environmentHandler } = useContext(DependencyContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const expertModeEnabled = environmentHandler.useIsExpertModeEnabled();
   const [errorMessage, setMessage] = useState<string | undefined>(undefined);
-  const { environmentModifier } = useContext(DependencyContext);
-  const { mutate } = useUpdateEnvConfig({
+  const { mutate } = useUpdateEnvironmentSetting({
     onError: (error) => {
       setMessage(error.message);
       setIsLoading(false);
     },
   });
-  const [isLoading, setIsLoading] = useState(false); // isLoading is to indicate the asynchronous operation is in progress, as we need to wait until setting will be updated, getters are still in the V1 - task https://github.com/inmanta/web-console/issues/5999
 
-  return environmentModifier.useIsExpertModeEnabled() ? (
+  useEffect(() => {
+    setIsLoading(false); //changing it onSuccess doesn't necessarily mean that the expert mode is changed yet, the most reliable way is to check the value of the expert mode directly from the environmentHandler
+  }, [expertModeEnabled]);
+
+  return expertModeEnabled ? (
     <>
       {errorMessage && (
         <ToastAlert
@@ -42,7 +47,7 @@ export const ExpertBanner: React.FC = () => {
               setIsLoading(true);
               mutate({
                 id: "enable_lsm_expert_mode",
-                updatedValue: { value: false },
+                value: false,
               });
             }}
           >

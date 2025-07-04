@@ -1,13 +1,15 @@
 import React, { useContext } from "react";
-import { Button } from "@patternfly/react-core";
+import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Td, Tr } from "@patternfly/react-table";
-import { useRemoveUser, UserInfo } from "@/Data/Managers/V2/Auth";
+import { useRemoveUser, UserInfo } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ConfirmUserActionForm } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { ChangePasswordForm } from "./ChangePasswordForm";
 
 interface Props {
   user: UserInfo;
+  setAlertMessage: (message: string) => void;
 }
 
 /**
@@ -17,16 +19,17 @@ interface Props {
  *
  * @returns {React.FC<Props>} The rendered user info row with button to be able to delete the user.
  */
-export const UserInfoRow: React.FC<Props> = ({ user }) => {
+export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
+
   const { mutate } = useRemoveUser();
 
   /**
-   * Opens a modal with a confirmation form.
+   * Opens a modal with a confirmation form for deleting a user.
    *
    * @returns {void}
    */
-  const openModal = (): void => {
+  const openDeleteModal = (): void => {
     triggerModal({
       title: words("userManagement.deleteUser.title"),
       content: (
@@ -44,13 +47,43 @@ export const UserInfoRow: React.FC<Props> = ({ user }) => {
     });
   };
 
+  /**
+   * Opens a modal with a confirmation form for changing the password of a user.
+   *
+   * @returns {void}
+   */
+  const openChangePasswordModal = (): void => {
+    triggerModal({
+      title: words("userManagement.changePassword"),
+      content: (
+        <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }}>
+          <FlexItem>
+            <p>{words("userManagement.changePassword.message")(user.username)}</p>
+          </FlexItem>
+          <FlexItem>
+            <ChangePasswordForm user={user.username} setAlertMessage={setAlertMessage} />
+          </FlexItem>
+        </Flex>
+      ),
+    });
+  };
+
   return (
     <Tr aria-label={`row-${user.username}`} data-testid="user-row">
       <Td dataLabel={user.username}>{user.username}</Td>
-      <Td dataLabel={`${user.username}-actions`}>
-        <Button variant="danger" onClick={openModal}>
-          {words("delete")}
-        </Button>
+      <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
+        <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+          <FlexItem>
+            <Button variant="primary" onClick={openChangePasswordModal} size="sm">
+              {words("userManagement.changePassword")}
+            </Button>
+          </FlexItem>
+          <FlexItem>
+            <Button variant="danger" onClick={openDeleteModal} size="sm">
+              {words("delete")}
+            </Button>
+          </FlexItem>
+        </Flex>
       </Td>
     </Tr>
   );

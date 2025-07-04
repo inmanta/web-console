@@ -1,23 +1,26 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
+import Router from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
 import { cloneDeep } from "lodash";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
-import { Service, ServiceInstance, MockEnvironmentModifier, dependencies } from "@/Test";
+import * as queryModule from "@/Data/Queries/Helpers/useQueries";
+import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
-import { EditInstancePage } from "./EditInstancePage";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { Page } from "./Page";
 
 expect.extend(toHaveNoViolations);
+
+jest.mock("react-router", () => ({
+  ...jest.requireActual("react-router"),
+  useParams: jest.fn(),
+}));
 
 const axe = configureAxe({
   rules: {
@@ -42,30 +45,14 @@ const axeLimited = configureAxe({
   },
 });
 
-function setup(entity = "a", multiNested = false) {
-  const store = getStoreInstance();
-
-  const service = multiNested
-    ? { ...Service[entity], embedded_entities: multiNestedEditable }
-    : Service[entity];
-
+function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentModifier: new MockEnvironmentModifier(),
-          }}
-        >
-          <StoreProvider store={store}>
-            <EditInstancePage
-              serviceEntity={service}
-              instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-            />
-          </StoreProvider>
-        </DependencyProvider>
-      </MemoryRouter>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
+          <Page />
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 
@@ -73,11 +60,28 @@ function setup(entity = "a", multiNested = false) {
 }
 
 describe("EditInstancePage", () => {
+  const instance = "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3";
+
   const server = setupServer(
+    http.get("/lsm/v1/service_catalog/service_name_a", () => {
+      return HttpResponse.json({ data: Service.a });
+    }),
+    http.get("/lsm/v1/service_catalog/service_name_b", () => {
+      return HttpResponse.json({ data: Service.b });
+    }),
+    http.get("/lsm/v1/service_catalog/service_name_c", () => {
+      return HttpResponse.json({ data: { ...Service.c, embedded_entities: multiNestedEditable } });
+    }),
+    http.get("/lsm/v1/service_catalog/service_name_d", () => {
+      return HttpResponse.json({ data: Service.d });
+    }),
+    http.get("/lsm/v1/service_catalog/service_name_all_attrs", () => {
+      return HttpResponse.json({ data: Service.ServiceWithAllAttrs });
+    }),
     http.get(
       "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
       () => {
-        return HttpResponse.json({ data: ServiceInstance.d });
+        return HttpResponse.json({ data: ServiceInstance.a });
       }
     ),
     http.get(
@@ -89,6 +93,14 @@ describe("EditInstancePage", () => {
           },
           { status: 500 }
         );
+      }
+    ),
+    http.get(
+      "/lsm/v1/service_inventory/service_name_c/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+      () => {
+        return HttpResponse.json({
+          data: ServiceInstance.c,
+        });
       }
     ),
     http.get(
@@ -114,12 +126,19 @@ describe("EditInstancePage", () => {
   beforeAll(() => {
     server.listen();
   });
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   afterAll(() => {
     server.close();
+    jest.clearAllMocks();
   });
 
   test("Edit Instance View shows failed state", async () => {
-    const { component } = setup("b");
+    jest.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_b", instance });
+
+    const { component } = setup();
 
     render(component);
 
@@ -135,6 +154,8 @@ describe("EditInstancePage", () => {
   });
 
   test("EditInstance View shows success form", async () => {
+    jest.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_a", instance });
+
     const { component } = setup();
 
     render(component);
@@ -159,6 +180,7 @@ describe("EditInstancePage", () => {
   });
 
   test("Given the EditInstance View When changing a v1 embedded entity Then the correct request is fired", async () => {
+    jest.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_a", instance });
     const patchMock = jest.fn();
 
     jest.spyOn(queryModule, "usePatch").mockReturnValue(patchMock);
@@ -197,11 +219,12 @@ describe("EditInstancePage", () => {
   });
 
   test("Given the EditInstance View When changing a v2 embedded entity Then the correct request  with correct body is fired", async () => {
+    jest.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_d", instance });
     const patchMock = jest.fn();
 
     jest.spyOn(queryModule, "usePatch").mockReturnValue(patchMock);
 
-    const { component } = setup("d");
+    const { component } = setup();
 
     render(component);
 
@@ -259,7 +282,10 @@ describe("EditInstancePage", () => {
   });
 
   test("Given the EditInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
-    const { component } = setup("ServiceWithAllAttrs");
+    jest
+      .spyOn(Router, "useParams")
+      .mockReturnValue({ service: "service_name_all_attrs", instance });
+    const { component } = setup();
 
     render(component);
 
@@ -463,7 +489,10 @@ describe("EditInstancePage", () => {
   });
 
   test("Given the EditInstance View When adding new nested embedded entity Then the inputs for it are displayed correctly", async () => {
-    const { component } = setup("ServiceWithAllAttrs");
+    jest
+      .spyOn(Router, "useParams")
+      .mockReturnValue({ service: "service_name_all_attrs", instance });
+    const { component } = setup();
 
     render(component);
 
@@ -599,7 +628,9 @@ describe("EditInstancePage", () => {
   });
 
   test("GIVEN the EditInstance View WHEN changing an embedded entity with nested embedded entities THEN the new fields are enabled", async () => {
-    const { component } = setup("a", true);
+    jest.spyOn(Router, "useParams").mockReturnValue({ service: "service_name_c", instance });
+
+    const { component } = setup();
 
     render(component);
 

@@ -1,7 +1,6 @@
 import React from "react";
-import { useGetServiceModels } from "@/Data/Managers/V2/Service";
-import { EmptyView, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
-import { CatalogActions } from "@/UI/Components/CatalogActions";
+import { useGetServiceModels } from "@/Data/Queries";
+import { EmptyView, ErrorView, LoadingView, PageContainer, CatalogActions } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { CatalogDataList } from "./CatalogDataList";
 

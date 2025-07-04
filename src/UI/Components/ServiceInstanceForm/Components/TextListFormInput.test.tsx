@@ -1,4 +1,4 @@
-import React from "react";
+import React, { act } from "react";
 import { TextInputTypes } from "@patternfly/react-core";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -99,7 +99,7 @@ describe("TextListInputField", () => {
     expect(handleClick).toHaveBeenCalledWith([], null);
   });
 
-  it("Should render an inputField with suggestions when suggestions are provided.", () => {
+  it("Should render an inputField with suggestions when suggestions are provided.", async () => {
     render(
       <TextListFormInput
         attributeName="text_list"
@@ -115,7 +115,10 @@ describe("TextListInputField", () => {
     // Open the suggestions popover
     const input = screen.getByRole("textbox");
 
-    fireEvent.focus(input);
+    //this action require act due to updates within the patternfly component triggering "act warning"
+    await act(async () => {
+      fireEvent.focus(input);
+    });
 
     // Check if the values are present
     const firstSuggestion = screen.getByText("apple");

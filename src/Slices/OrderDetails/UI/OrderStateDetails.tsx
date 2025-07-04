@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import {
   Card,
   CardBody,
@@ -11,7 +11,7 @@ import {
 } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { ServiceOrderItemStatus } from "@/Slices/Orders/Core/Query";
+import { ServiceOrderItemStatus } from "@/Slices/Orders/Core/Types";
 import { DependencyContext, words } from "@/UI";
 
 interface Props {

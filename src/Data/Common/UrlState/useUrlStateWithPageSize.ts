@@ -5,12 +5,14 @@ import { handleUrlState } from "./useUrlState";
 
 export const useUrlStateWithPageSize = provide(handleUrlStateWithPageSize);
 
+const LARGE_PAGES = ["ResourceDetails", "Resources"];
+
 export function handleUrlStateWithPageSize(
   config: Pick<StateConfig<PageSize.Type>, "route">,
   location: Location,
   replace: Replace
 ): [PageSize.Type, Update<PageSize.Type>] {
-  const defaultPageSize = config.route === "ResourceDetails" ? from("100") : PageSize.initial;
+  const defaultPageSize = LARGE_PAGES.includes(config.route) ? from("100") : PageSize.initial;
 
   return handleUrlState<PageSize.Type>(
     {

@@ -25,16 +25,26 @@ const checkStatusCompile = (id) => {
   let statusCodeCompile = 200;
 
   if (statusCodeCompile === 200) {
-    cy.intercept(`/api/v1/notify/${id}`).as("IsCompiling");
+    cy.intercept("/api/v2/graphql").as("IsCompiling");
     // the timeout is necessary to avoid errors.
     // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
-    // the default timeout in cypress is 5000, but since we have recursion it goes into timeout for the nested awaits because of the recursion.
-    cy.wait("@IsCompiling", { timeout: 15000 }).then((req) => {
+    cy.wait("@IsCompiling").then((req) => {
       statusCodeCompile = req.response.statusCode;
+      const environments = req.response.body.data.data.environments;
 
-      if (statusCodeCompile === 200) {
-        checkStatusCompile(id);
+      if (environments) {
+        const edges = environments.edges;
+
+        if (edges && edges.length > 0) {
+          const environment = edges.find((env) => env.node.id === id);
+
+          if (environment && !environment.node.isCompiling) {
+            return;
+          }
+        }
       }
+
+      checkStatusCompile(id);
     });
   }
 };
@@ -122,32 +132,23 @@ describe("5 Compile reports", () => {
 
     // Expect message to be : Compile triggered from the console
     cy.get(".pf-v6-c-description-list__group")
-      .eq(3)
+      .eq(2)
       .should("contain", "Compile triggered from the console");
 
     // Expect to have no environment variables
     cy.get(".pf-v6-c-code-block__content").should("have.text", "{}");
 
-    // Expect to have 3 stages in collapsible
-    cy.get("tbody").should(($rowElements) => {
-      expect($rowElements).to.have.length(3);
-    });
+    // click on the select to pick a different stage
+    cy.get("button").contains("Recompiling configuration model").click();
 
-    // Click on init stage arrow
-    cy.get("#expand-toggle0").click();
+    // Click on the last menu item
+    cy.get(".pf-v6-c-menu__list-item").first().click();
 
-    // expect to see Command Empty, Return code 0 an output stream and no error stream.
-    cy.get(".pf-v6-c-table__expandable-row.pf-m-expanded")
-      .find(".pf-v6-c-description-list__group")
-      .should(($rowGroups) => {
-        expect($rowGroups).to.have.length(4);
+    // expect the text in the toggle now to be Recompiling configuration model
+    cy.get("button").contains("Init").should("exist");
 
-        expect($rowGroups.eq(0), "Command-row").to.contain("Empty");
-        expect($rowGroups.eq(1), "Return-code-row").to.contain("0");
-        expect($rowGroups.eq(2), "Output-stream-row").to.contain(
-          "Using extra environment variables during compile"
-        );
-      });
+    // Expect to find text about environment variables
+    cy.get("span").contains("Using extra environment variables during compile").should("exist");
   });
 
   if (isIso) {
@@ -214,7 +215,7 @@ describe("5 Compile reports", () => {
       cy.get("h1").contains("Compile Details").should("to.exist");
 
       // Expect trigger to be lsm_export
-      cy.get(".pf-v6-c-description-list__group").eq(4).should("contain", "lsm_export");
+      cy.get(".pf-v6-c-description-list__group").eq(3).should("contain", "lsm_export");
 
       // Expect environment variables inmanta_model_state: active
       cy.get("pre").eq(0).should("contain", "active").and("contain", "inmanta_model_state");
@@ -280,11 +281,11 @@ describe("5 Compile reports", () => {
       cy.get("h1").contains("Compile Details").should("to.exist");
 
       // Expect trigger to be lsm
-      cy.get(".pf-v6-c-description-list__group").eq(4).should("contain", "lsm");
+      cy.get(".pf-v6-c-description-list__group").eq(3).should("contain", "lsm");
 
       // Expect Error Type : inmanta.ast.AttributeException
       cy.get(".pf-v6-c-description-list__description")
-        .eq(6)
+        .eq(5)
         .should("contain", "inmanta.ast.AttributeException");
     });
 

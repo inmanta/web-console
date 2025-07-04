@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Alert, AlertActionCloseButton, Stack } from "@patternfly/react-core";
 import { Tbody, Table } from "@patternfly/react-table";
 import { EnvironmentSettings } from "@/Core";
@@ -9,27 +9,19 @@ interface Props {
   infos: EnvironmentSettings.InputInfo[];
   errorMessage: string;
   onErrorClose: () => void;
+  showUpdateBanner: boolean;
+  setShowUpdateBanner: (showUpdateBanner: boolean) => void;
   className?: string;
 }
 
-export const Container: React.FC<Props> = ({ infos, errorMessage, onErrorClose, className }) => {
-  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
-
-  useEffect(() => {
-    const updateSuccessBanner = () => {
-      setShowUpdateBanner(true);
-      setTimeout(() => {
-        setShowUpdateBanner(false);
-      }, 2000);
-    };
-
-    document.addEventListener("settings-update", updateSuccessBanner);
-
-    return () => {
-      document.removeEventListener("settings-update", updateSuccessBanner);
-    };
-  }, [setShowUpdateBanner]);
-
+export const Container: React.FC<Props> = ({
+  infos,
+  errorMessage,
+  showUpdateBanner,
+  setShowUpdateBanner,
+  onErrorClose,
+  className,
+}) => {
   return (
     <Stack hasGutter style={{ maxWidth: "1000px" }} className={className}>
       {errorMessage && (

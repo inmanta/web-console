@@ -1,12 +1,12 @@
 import React, { act } from "react";
-import { MemoryRouter } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { configureAxe, toHaveNoViolations } from "jest-axe";
-import { Either } from "@/Core";
-import { getStoreInstance, QueryManagerResolverImpl, QueryResolverImpl } from "@/Data";
-import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import { MockedDependencyProvider } from "@/Test";
+import { testClient } from "@/Test/Utils/react-query-setup";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as VersionedResourceDetails from "@S/DesiredStateResourceDetails/Data/Mock";
 import { DetailsProvider } from "./DetailsProvider";
 
@@ -20,48 +20,45 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredApiHelper();
-  const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolverImpl(store, apiHelper, scheduler, scheduler)
-  );
-
   const component = (
-    <MemoryRouter>
-      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
-        <StoreProvider store={store}>
+    <QueryClientProvider client={testClient}>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
           <DetailsProvider version="123" resourceId="abc" />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
+    </QueryClientProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component };
 }
 
-test("GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows details", async () => {
-  const { component, apiHelper } = setup();
+describe("DetailsProvider", () => {
+  const server = setupServer(
+    http.get("/api/v2/desiredstate/123/resource/abc", () => {
+      return HttpResponse.json({ data: VersionedResourceDetails.a });
+    })
+  );
 
-  render(component);
-  expect(apiHelper.pendingRequests).toEqual([
-    {
-      method: "GET",
-      url: "/api/v2/desiredstate/123/resource/abc",
-      environment: "env",
-    },
-  ]);
-
-  await act(async () => {
-    await apiHelper.resolve(Either.right({ data: VersionedResourceDetails.a }));
+  beforeAll(() => {
+    server.listen();
+  });
+  afterAll(() => {
+    server.close();
   });
 
-  expect(screen.getByRole("generic", { name: "ResourceDetails-Success" })).toBeVisible();
-  expect(screen.getByText("requires")).toBeVisible();
+  test("GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows details", async () => {
+    const { component } = setup();
 
-  await act(async () => {
-    const results = await axe(document.body);
+    render(component);
 
-    expect(results).toHaveNoViolations();
+    expect(await screen.findByRole("generic", { name: "ResourceDetails-Success" })).toBeVisible();
+    expect(screen.getByText("requires")).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

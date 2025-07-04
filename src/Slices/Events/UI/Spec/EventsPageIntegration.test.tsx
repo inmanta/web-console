@@ -1,13 +1,20 @@
 import { act } from "react";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { Either } from "@/Core";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import { Service, Pagination } from "@/Test";
 import * as InstanceEvent from "@S/Events/Data/Mock";
 import { EventsPageComposer } from "./EventsPageComposer";
 
 /** Test with the whole events page rendered */
 describe("Given the Events Page", () => {
+  const server = setupServer();
+
+  beforeAll(() => server.listen());
+  beforeEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+
   it.each`
     filterName       | filterType  | filterValue            | placeholderText                    | filterUrlName
     ${"Source"}      | ${"select"} | ${"creating"}          | ${"Select a source state..."}      | ${"source"}
@@ -17,19 +24,26 @@ describe("Given the Events Page", () => {
   `(
     "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the events with that $filterUrlName should be fetched and shown",
     async ({ filterName, filterType, filterValue, placeholderText, filterUrlName }) => {
-      const { component, apiHelper } = new EventsPageComposer().compose(Service.a);
-
-      render(component);
-
-      await act(async () => {
-        await apiHelper.resolve(
-          Either.right({
+      server.use(
+        http.get(`/lsm/v1/service_inventory/${Service.a.name}/id1/events`, async ({ request }) => {
+          if (request.url.includes(`filter.${filterUrlName}=${filterValue}`)) {
+            return HttpResponse.json({
+              data: InstanceEvent.listB,
+              links: Pagination.links,
+              metadata: Pagination.metadata,
+            });
+          }
+          return HttpResponse.json({
             data: InstanceEvent.listA,
             links: Pagination.links,
             metadata: Pagination.metadata,
-          })
-        );
-      });
+          });
+        })
+      );
+
+      const { component } = new EventsPageComposer().compose(Service.a);
+
+      render(component);
 
       const initialRows = await screen.findAllByRole("row", {
         name: "Event table row",
@@ -57,20 +71,6 @@ describe("Given the Events Page", () => {
         await userEvent.type(input, `${filterValue}{enter}`);
       }
 
-      expect(apiHelper.pendingRequests[0].url).toEqual(
-        `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.${filterUrlName}=${filterValue}`
-      );
-
-      await act(async () => {
-        await apiHelper.resolve(
-          Either.right({
-            data: InstanceEvent.listB,
-            links: Pagination.links,
-            metadata: Pagination.metadata,
-          })
-        );
-      });
-
       const rowsAfter = await screen.findAllByRole("row", {
         name: "Event table row",
       });
@@ -80,19 +80,25 @@ describe("Given the Events Page", () => {
   );
 
   it("When using the Date filter then the events with from and to the events in the range should be fetched and shown", async () => {
-    const { component, apiHelper } = new EventsPageComposer().compose(Service.a);
-
-    render(component);
-
-    await act(async () => {
-      await apiHelper.resolve(
-        Either.right({
+    server.use(
+      http.get(`/lsm/v1/service_inventory/${Service.a.name}/id1/events`, async ({ request }) => {
+        if (request.url.includes("&filter.timestamp=ge%3A2021-04-")) {
+          return HttpResponse.json({
+            data: InstanceEvent.listB,
+            links: Pagination.links,
+            metadata: Pagination.metadata,
+          });
+        }
+        return HttpResponse.json({
           data: InstanceEvent.listA,
           links: Pagination.links,
           metadata: Pagination.metadata,
-        })
-      );
-    });
+        });
+      })
+    );
+    const { component } = new EventsPageComposer().compose(Service.a);
+
+    render(component);
 
     const initialRows = await screen.findAllByRole("row", {
       name: "Event table row",
@@ -118,20 +124,6 @@ describe("Given the Events Page", () => {
 
     await userEvent.click(await screen.findByLabelText("Apply date filter"));
 
-    expect(apiHelper.pendingRequests[0].url).toMatch(
-      `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=ge%3A2021-04-`
-    );
-
-    await act(async () => {
-      await apiHelper.resolve(
-        Either.right({
-          data: InstanceEvent.listB,
-          links: Pagination.links,
-          metadata: Pagination.metadata,
-        })
-      );
-    });
-
     const rowsAfter = await screen.findAllByRole("row", {
       name: "Event table row",
     });
@@ -154,19 +146,26 @@ describe("Given the Events Page", () => {
   `(
     "When using the Date filter then the events with only $filterType filter, the matching should be fetched and a chip shown",
     async ({ filterType, value, operator, chip }) => {
-      const { component, apiHelper } = new EventsPageComposer().compose(Service.a);
-
-      render(component);
-
-      await act(async () => {
-        await apiHelper.resolve(
-          Either.right({
+      server.use(
+        http.get(`/lsm/v1/service_inventory/${Service.a.name}/id1/events`, async ({ request }) => {
+          if (request.url.includes(`filter.timestamp=${operator}%3A2021-05-`)) {
+            return HttpResponse.json({
+              data: InstanceEvent.listB,
+              links: Pagination.links,
+              metadata: Pagination.metadata,
+            });
+          }
+          return HttpResponse.json({
             data: InstanceEvent.listA,
             links: Pagination.links,
             metadata: Pagination.metadata,
-          })
-        );
-      });
+          });
+        })
+      );
+
+      const { component } = new EventsPageComposer().compose(Service.a);
+
+      render(component);
 
       const initialRows = await screen.findAllByRole("row", {
         name: "Event table row",
@@ -188,20 +187,6 @@ describe("Given the Events Page", () => {
 
       await userEvent.click(await screen.findByLabelText("Apply date filter"));
 
-      expect(apiHelper.pendingRequests[0].url).toMatch(
-        `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=${operator}%3A2021-05-`
-      );
-
-      await act(async () => {
-        await apiHelper.resolve(
-          Either.right({
-            data: InstanceEvent.listB,
-            links: Pagination.links,
-            metadata: Pagination.metadata,
-          })
-        );
-      });
-
       const rowsAfter = await screen.findAllByRole("row", {
         name: "Event table row",
       });
@@ -222,9 +207,11 @@ describe("Given the Events Page", () => {
         })
       );
 
-      expect(apiHelper.pendingRequests[0].url).toMatch(
-        `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc`
-      );
+      const updatedRows2 = await screen.findAllByRole("row", {
+        name: "Event table row",
+      });
+
+      expect(updatedRows2).toHaveLength(14);
     }
   );
 });

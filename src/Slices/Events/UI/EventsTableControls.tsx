@@ -1,6 +1,6 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { Filter } from "@S/Events/Core/Query";
+import { Filter } from "@/Slices/Events/Core/Types";
 import { EventsFilterWidget } from "./FilterWidget";
 
 interface Props {

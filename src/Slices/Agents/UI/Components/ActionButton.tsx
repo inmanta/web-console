@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
-import { Maybe } from "@/Core";
+import { usePauseAgent } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { GetAgentsContext } from "@S/Agents/UI/GetAgentsContext";
@@ -10,28 +10,29 @@ interface Props {
   paused: boolean;
 }
 
+/**
+ * ActionButton - component that renders a button to pause or unpause an agent.
+ * It uses the `usePauseAgent` hook to perform the pause/unpause action and displays a tooltip
+ * when the environment is halted, disabling the button.
+ *
+ * @props {Props} props - The props for the ActionButton component.
+ * @prop {string} name - The name of the agent to be paused or unpaused.
+ * @prop {boolean} paused - Indicates whether the agent is currently paused.
+ *
+ * @returns {React.FC<Props>} A button wrapped in a tooltip that performs the pause/unpause action.
+ */
 export const ActionButton: React.FC<Props> = ({ name, paused }) => {
-  const { commandResolver, environmentModifier } = useContext(DependencyContext);
-  const { filter, sort, pageSize, currentPage, setErrorMessage } = useContext(GetAgentsContext);
-  const agentActionTrigger = commandResolver.useGetTrigger<"ControlAgent">({
-    kind: "ControlAgent",
-    name,
-    action: paused ? "unpause" : "pause",
+  const { environmentHandler } = useContext(DependencyContext);
+  const { setErrorMessage } = useContext(GetAgentsContext);
+  const { mutate } = usePauseAgent({
+    onError: (error) => {
+      setErrorMessage(error.message);
+    },
   });
   const onSubmit = async () => {
-    const result = await agentActionTrigger({
-      kind: "GetAgents",
-      filter,
-      sort,
-      pageSize,
-      currentPage,
-    });
-
-    if (Maybe.isSome(result)) {
-      setErrorMessage(result.value);
-    }
+    mutate({ name, action: paused ? "unpause" : "pause" });
   };
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
 
   return (
     <ActionDisabledTooltip

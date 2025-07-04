@@ -12,8 +12,8 @@ interface Props {
 }
 
 export const TableProvider: React.FC<Props> = ({ agents, ...props }) => {
-  const { environmentModifier } = useContext(DependencyContext);
-  const isHalted = environmentModifier.useIsHalted();
+  const { environmentHandler } = useContext(DependencyContext);
+  const isHalted = environmentHandler.useIsHalted();
   const tablePresenter = new AgentsTablePresenter(isHalted);
   const rows = tablePresenter.createRows(agents);
 

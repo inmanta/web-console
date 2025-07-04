@@ -1,4 +1,4 @@
-import { FeatureManager, RouteManager } from "@/Core";
+import { OrchestratorProvider, RouteManager } from "@/Core";
 import { words } from "@/UI/words";
 
 /**
@@ -24,8 +24,8 @@ interface Link {
 
 /**
  * Returns the environment group of links
- * @param routeManager - RouteManager
- * @param isEnvPresent - boolean
+ * @param {RouteManager} routeManager
+ * @param {boolean} isEnvPresent
  * @returns Group
  */
 export const envrionment = (routeManager: RouteManager, isEnvPresent: boolean): Group => ({
@@ -54,15 +54,15 @@ export const envrionment = (routeManager: RouteManager, isEnvPresent: boolean): 
 /**
  * Returns the lifecycle service manager group of links
  *
- * @param routeManager - RouteManager
- * @param isEnvPresent - boolean
- * @param featureManager - FeatureManager
+ * @param {RouteManager} routeManager
+ * @param {boolean} isEnvPresent
+ * @param {OrchestratorProvider} orchestratorProvider
  * @returns Group
  */
 export const lifecycleServiceManager = (
   routeManager: RouteManager,
   isEnvPresent: boolean,
-  featureManager: FeatureManager
+  orchestratorProvider: OrchestratorProvider
 ): Group => ({
   id: "LifecycleServiceManager",
   title: words("navigation.lifecycleServiceManager"),
@@ -75,7 +75,7 @@ export const lifecycleServiceManager = (
       locked: !isEnvPresent,
       statusIndication: false,
     },
-    ...(featureManager.isOrderViewEnabled()
+    ...(orchestratorProvider.isOrderViewEnabled()
       ? [
           {
             id: "Orders",
@@ -131,15 +131,15 @@ export const orchestrationEngine = (routeManager: RouteManager, isEnvPresent: bo
 /**
  * Returns the resource manager group of links
  *
- * @param routeManager - RouteManager
- * @param isEnvPresent - boolean
- * @param featureManager - FeatureManager
+ * @param {RouteManager} routeManager
+ * @param {boolean } isEnvPresent
+ * @param {OrchestratorProvider} orchestratorProvider
  * @returns Group
  */
 export const resourceManager = (
   routeManager: RouteManager,
   isEnvPresent: boolean,
-  featureManager: FeatureManager
+  orchestratorProvider: OrchestratorProvider
 ): Group => ({
   id: "ResourceManager",
   title: words("navigation.resourceManager"),
@@ -152,7 +152,7 @@ export const resourceManager = (
       locked: !isEnvPresent,
       statusIndication: false,
     },
-    ...(featureManager.isResourceDiscoveryEnabled()
+    ...(orchestratorProvider.isResourceDiscoveryEnabled()
       ? [
           {
             id: "Discovered Resources",

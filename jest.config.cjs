@@ -60,9 +60,9 @@ module.exports = {
 
   reporters: ["default", "jest-junit"],
 
-  // The react-syntax-highlighter, mermaid and @inmanta/rappid esm modules have to be handled by jest
+  // The mermaid and @inmanta/rappid esm modules have to be handled by jest
   transformIgnorePatterns: [
-    "node_modules/(?!(react-syntax-highlighter|@inmanta/rappid|mermaid|monaco-editor|@monaco-editor/react)/)",
+    "node_modules/(?!(@inmanta/rappid|mermaid|monaco-editor|@monaco-editor/react)|graphql-request/)",
   ],
   globals: {
     "ts-jest": {
@@ -70,4 +70,5 @@ module.exports = {
       useESM: true,
     },
   },
+  modulePathIgnorePatterns: ["<rootDir>/dist/"],
 };

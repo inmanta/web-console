@@ -11,8 +11,9 @@ import {
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { RouteKindWithId } from "@/Core";
-import { useNavigateTo, words } from "@/UI";
+import { words } from "@/UI";
 import { DependencyContext } from "@/UI/Dependency";
+import { useNavigateTo } from "@/UI/Routing";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { Notification, Body } from "@S/Notification/Core/Domain";
 import { getSeverityForNotification } from "@S/Notification/UI/Utils";

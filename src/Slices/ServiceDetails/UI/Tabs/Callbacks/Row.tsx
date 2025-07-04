@@ -9,21 +9,32 @@ import { Callback } from "@S/ServiceDetails/Core/Callback";
 import { DeleteButton } from "./DeleteButton";
 import { Details } from "./Details";
 
+/**
+ * Props interface for the Row component
+ *
+ */
 interface Props {
   callback: Callback;
-  service_entity: string;
   isExpanded: boolean;
   onToggle: () => void;
   numberOfColumns: number;
 }
-// TODO PF-6 MIGRATION : Update the toggle column to use the semantic of PF-6. Current implementation is messing up the alignment of the rows.
-export const Row: React.FC<Props> = ({
-  callback,
-  service_entity,
-  isExpanded,
-  onToggle,
-  numberOfColumns,
-}) => {
+
+/**
+ * Row is a component that renders a single row in the callbacks table.
+ * It displays the callback information and handles expansion to show details.
+ * TODO PF-6 MIGRATION : Update the toggle column to use the semantic of PF-6. Current implementation is messing up the alignment of the rows.
+ *
+ * @component
+ * @props {Props} props - The component props
+ * @prop {Callback} callback - The callback object to be displayed in the row
+ * @prop {boolean} isExpanded - Whether the row is currently expanded
+ * @prop {(): void} onExpansion - Callback function to handle row expansion
+ * @prop {boolean} numberOfColumns - Number of columns that row will occupy
+
+ * @returns {React.FC<Props>} A React component that renders a table row for a callback
+ */
+export const Row: React.FC<Props> = ({ callback, isExpanded, onToggle, numberOfColumns }) => {
   const shortUuid = getShortUuidFromRaw(callback.callback_id);
 
   return (
@@ -49,11 +60,7 @@ export const Row: React.FC<Props> = ({
         <Td>{callback.minimal_log_level_text}</Td>
         <Td>{callback.event_types && callback.event_types.length + " Event Types"}</Td>
         <Td>
-          <DeleteButton
-            callback={callback}
-            service_entity={service_entity}
-            aria-label={`DeleteCallback-${shortUuid}`}
-          />
+          <DeleteButton callback={callback} aria-label={`DeleteCallback-${shortUuid}`} />
         </Td>
       </Tr>
       {isExpanded && callback.event_types && (
@@ -68,6 +75,7 @@ export const Row: React.FC<Props> = ({
     </Tbody>
   );
 };
+
 const Toggle: React.FC<{
   text: string;
   onClick: () => void;

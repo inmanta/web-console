@@ -1,15 +1,12 @@
-import React, { useState } from "react";
-import { MemoryRouter } from "react-router-dom";
+import React, { act, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import * as queryModule from "@/Data/Managers/V2/helpers/useQueries";
-import { dependencies, ServiceInstance } from "@/Test";
+import * as queryModule from "@/Data/Queries/Helpers/useQueries";
+import { MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
 const server = setupServer(
@@ -27,26 +24,24 @@ const server = setupServer(
 );
 const TestWrapper = () => {
   const [value, setValue] = useState("");
-  const store = getStoreInstance();
 
   return (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
-          <StoreProvider store={store}>
-            <AutoCompleteInputProvider
-              alreadySelected={[]}
-              attributeName={"test_attribute"}
-              attributeValue={value}
-              isOptional={false}
-              description={""}
-              handleInputChange={setValue}
-              serviceName={"test_entity"}
-              multi={false}
-            />
-          </StoreProvider>
-        </DependencyProvider>
-      </MemoryRouter>
+      <TestMemoryRouter>
+        <MockedDependencyProvider>
+          <AutoCompleteInputProvider
+            alreadySelected={[]}
+            attributeName={"test_attribute"}
+            attributeValue={value}
+            isOptional={false}
+            description={""}
+            handleInputChange={setValue}
+            serviceName={"test_entity"}
+            isDisabled={false}
+            multi={false}
+          />
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 };
@@ -75,19 +70,28 @@ test("Given the AutoCompleteInputProvider When typing an instance name or id The
   expect(mockFn.mock.calls[1]).toStrictEqual([
     "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=",
   ]);
-  fireEvent.change(relationInputField, { target: { value: "a" } });
+
+  //fireEvents in that scenario triggers update in the components which then triggers "act warning"
+  await act(async () => {
+    fireEvent.change(relationInputField, { target: { value: "a" } });
+  });
 
   expect(mockFn.mock.calls[2]).toStrictEqual([
     "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=a",
   ]);
 
-  fireEvent.change(relationInputField, { target: { value: "ab" } });
+  await act(async () => {
+    fireEvent.change(relationInputField, { target: { value: "ab" } });
+  });
 
   expect(mockFn.mock.calls[3]).toStrictEqual([
     "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=ab",
   ]);
 
-  fireEvent.change(relationInputField, { target: { value: "" } });
+  await act(async () => {
+    fireEvent.change(relationInputField, { target: { value: "" } });
+  });
+
   expect(mockFn.mock.calls[4]).toStrictEqual([
     "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=",
   ]);

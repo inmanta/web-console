@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { PageSize, ServiceInstanceParams } from "@/Core";
 import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { useGetInstances } from "@/Data/Managers/V2/ServiceInstance";
+import { useGetInstances } from "@/Data/Queries";
 import { AutoCompleteInput } from "./AutoCompleteInput";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
   attributeValue: string | string[] | null;
   description?: string | null;
   isOptional: boolean;
-  isDisabled?: boolean;
+  isDisabled: boolean;
   handleInputChange: (value) => void;
   alreadySelected: string[] | null;
   multi?: boolean;
@@ -38,7 +38,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
   attributeValue,
   description,
   isOptional,
-  isDisabled = false,
+  isDisabled,
   handleInputChange,
   alreadySelected,
   multi,

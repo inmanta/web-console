@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import { DependencyContext } from "@/UI";
 import { DateWithTooltip } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { ServiceOrder } from "../Core/Query";
+import { ServiceOrder } from "../Core/Types";
 import { OrderProgressBar } from "./OrderProgressBar";
 import { OrderStatusLabel } from "./OrderStatusLabel";
 

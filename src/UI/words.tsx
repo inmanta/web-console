@@ -42,11 +42,18 @@ const dict = {
   password: "Password",
   "load.previous": "Load previous",
   "load.next": "Load next",
+  copy: "Copy",
+  "copy.raw": "Copy raw",
+  "copy.raw.tooltip": "Copy with escaped newlines",
+  "copy.clipboard": "Copy to clipboard",
+  noData: "There is no data available to display.",
+  success: "Success",
 
   /**
    * Error related text
    */
   error: "Something went wrong",
+  "error.unknown": "Unknown error",
   "error.general": (message: string) => `The following error occured: ${message}`,
   "error.environment.missing": "Environment is missing",
   "error.server.intro": (errorMessage: string) =>
@@ -62,22 +69,15 @@ const dict = {
 
   "notFound.title": "404: We couldn't find that page",
   "notFound.home": "Go home",
-
-  "codehighlighter.lineWrapping.on": "Wrap long lines",
-  "codehighlighter.lineWrapping.off": "Don't wrap long lines",
-  "codehighlighter.lineNumbers.on": "Show line numbers",
-  "codehighlighter.lineNumbers.off": "Hide line numbers",
-  "codehighlighter.zoom.on": "Enlarge",
-  "codehighlighter.zoom.off": "Back to original size",
-  "codehighlighter.scrollToBottom": "Scroll down and resume auto-scroll",
+  "features.missing": "Features have not yet been set.",
   "validation.title": (amount: number) => `Errors found: ${amount}`,
+  "validation.empty": "Invalid JSON",
 
   /**
    * Inventory related text
    */
   "id.copy": "Copy full service instance id to clipboard",
   "serviceIdentity.copy": "Copy identifier to clipboard",
-  copy: "Copy",
   "copy.feedback": "Copied to clipboard",
   "attributes.active": "Active Attributes",
   "attributes.candidate": "Candidate Attributes",
@@ -265,6 +265,7 @@ const dict = {
     "This tab is only available for the latest version.",
   "instanceDetails.documentation.noAttributeForVersion": (attributeName) =>
     `This version doesn't contain documentation for ${attributeName} yet.`,
+  "instanceDetails.documentation.openPreviewer": "Open in Previewer",
   active_attributes: "Active",
   candidate_attributes: "Candidate",
   rollback_attributes: "Rollback",
@@ -554,6 +555,8 @@ const dict = {
     "Request the agents to check the current state of each resource in a state different from the deployed state and make the current state of those resources in line with the desired state.",
   "resources.repair.tooltip":
     "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
+  "resources.file.get": "Get file",
+  "resources.file.error": "Error fetching file content",
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",
@@ -609,7 +612,7 @@ const dict = {
   "home.navigation.button": "Overview",
   "home.empty.message": "No environments found",
   "home.create.env.desciption": "Create new environment",
-  "home.create.env.link": "Create environment",
+  "home.create.env": "Create environment",
   "home.environment.icon": (name: string) => `Icon for environment ${name}`,
   "home.environment.select": "Select this environment",
   "home.environment.edit": "Edit environment",
@@ -836,6 +839,11 @@ const dict = {
    */
   "userManagement.title": "User Management",
   "userManagement.name": "Name",
+  "userManagement.changePassword": "Change Password",
+  "userManagement.changePassword.placeholder": "New Password...",
+  "userManagement.changePassword.success": "Password changed successfully",
+  "userManagement.changePassword.message": (username: string) =>
+    `Please provide a new password for user ${username}`,
   "userManagement.actions": "Actions",
   "userManagement.filter.placeholder": "Username...",
   "userManagement.addUser": "Add User",
@@ -843,6 +851,29 @@ const dict = {
   "userManagement.deleteUserMessage": (username: string) =>
     `Are you sure you want to delete user ${username}?`,
   "userManagement.empty.message": "No users found",
+
+  /**
+   * Markdown Previewer related text
+   */
+  "markdownPreviewer.hint.title": "Preview Only",
+  "markdownPreviewer.hint.body":
+    "This editor is for preview purposes only. Changes made here will not be saved into the service attributes.",
+  "markdownPreviewer.pageTitle": (service: string, instance: string) =>
+    `Markdown Preview: ${service} - ${instance}`,
+  "markdownPreviewer.download.tooltip": "Download markdown file",
+  "markdownPreviewer.route.label": (instance: string) => `Markdown Preview: ${instance}`,
+  "markdownPreviewer.download": "Download",
+
+  /**
+   * LogViewer related text
+   */
+  "logViewer.selectLog": "Select log",
+  "logViewer.search": "Search",
+  "logViewer.duration": (duration: string) => `Duration: ${duration} s`,
+  "logViewer.autoscroll.resume": "Resume Autoscroll",
+  "logViewer.autoscroll.pause": "Pause Autoscroll",
+  "logViewer.download": "Download",
+  "logViewer.download.aria": "Download current logs",
 };
 
 type Key = keyof typeof dict;

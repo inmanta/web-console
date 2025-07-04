@@ -1,4 +1,4 @@
-import { ServiceOrder } from "../Core/Query";
+import { ServiceOrder } from "../Core/Types";
 
 const orderData: ServiceOrder[] = [
   {

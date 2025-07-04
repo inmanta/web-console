@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Config } from "@/Core";
-import { usePostServiceConfig } from "@/Data/Managers/V2/Service";
+import { usePostServiceConfig } from "@/Data/Queries";
 import { BooleanSwitch, EmptyView, SettingsList } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -21,9 +21,9 @@ interface Props {
  * @returns {React.FC<Pops>} A rendered list of settings or an empty view message.
  */
 export const ConfigList: React.FC<Props> = ({ config, serviceName }) => {
-  const { environmentModifier } = useContext(DependencyContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const { mutate } = usePostServiceConfig(serviceName);
-  const isHalted = environmentModifier.useIsHalted();
+  const isHalted = environmentHandler.useIsHalted();
 
   return Object.keys(config).length <= 0 ? (
     <EmptyView message={words("config.empty")} />

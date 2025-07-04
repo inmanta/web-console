@@ -1,37 +1,25 @@
 import React from "react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { getStoreInstance } from "@/Data";
-import { dependencies, MockEnvironmentHandler, MockEnvironmentModifier, Service } from "@/Test";
+import { MockedDependencyProvider, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { DependencyProvider } from "@/UI/Dependency";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "@S/ServiceDetails/UI/Page";
 
 function setup() {
-  const store = getStoreInstance();
-
   const component = (
     <QueryClientProvider client={testClient}>
-      <MemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
-        <DependencyProvider
-          dependencies={{
-            ...dependencies,
-            environmentModifier: new MockEnvironmentModifier(),
-            environmentHandler: MockEnvironmentHandler(Service.a.environment),
-          }}
-        >
-          <StoreProvider store={store}>
-            <Routes>
-              <Route path="/lsm/catalog/:service/details" element={<Page />} />
-            </Routes>
-          </StoreProvider>
-        </DependencyProvider>
-      </MemoryRouter>
+      <TestMemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
+        <MockedDependencyProvider>
+          <Routes>
+            <Route path="/lsm/catalog/:service/details" element={<Page />} />
+          </Routes>
+        </MockedDependencyProvider>
+      </TestMemoryRouter>
     </QueryClientProvider>
   );
 

@@ -1,18 +1,28 @@
 import React from "react";
-import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
+import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import { ExpandableSection } from "@patternfly/react-core";
-import python from "react-syntax-highlighter/dist/esm/languages/hljs/python";
-import docco from "react-syntax-highlighter/dist/esm/styles/hljs/docco";
+import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
+import { getThemePreference } from "@/UI/Components/DarkmodeOption";
 import { words } from "@/UI/words";
 
-SyntaxHighlighter.registerLanguage("python", python);
-
+/**
+ * A component that displays a traceback.
+ *
+ * @prop {string} trace - The traceback to display.
+ * @returns {React.FC} A component that displays a traceback.
+ */
 export const Traceback: React.FC<{ trace: string }> = ({ trace }) => {
   return (
     <ExpandableSection toggleText={words("diagnose.rejection.traceback")}>
-      <SyntaxHighlighter language="python" style={docco}>
-        {trace}
-      </SyntaxHighlighter>
+      <CodeEditor
+        code={trace}
+        isDarkTheme={getThemePreference() === "dark"}
+        language={Language.python}
+        isReadOnly
+        isDownloadEnabled
+        customControls={<CodeEditorCopyControl code={trace} />}
+        height="400px"
+      />
     </ExpandableSection>
   );
 };

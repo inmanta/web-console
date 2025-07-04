@@ -16,16 +16,16 @@ import { NavigationItem } from "./NavigationItem";
  * @returns {React.FC} - Navigation component
  */
 export const Navigation: React.FC<{ environment: string | undefined }> = ({ environment }) => {
-  const { featureManager, routeManager } = useContext(DependencyContext);
+  const { orchestratorProvider, routeManager } = useContext(DependencyContext);
 
   const isEnvPresent = typeof environment !== "undefined";
   const groups = [
     envrionment(routeManager, isEnvPresent),
-    ...(featureManager.isLsmEnabled()
-      ? [lifecycleServiceManager(routeManager, isEnvPresent, featureManager)]
+    ...(orchestratorProvider.isLsmEnabled()
+      ? [lifecycleServiceManager(routeManager, isEnvPresent, orchestratorProvider)]
       : []),
     orchestrationEngine(routeManager, isEnvPresent),
-    resourceManager(routeManager, isEnvPresent, featureManager),
+    resourceManager(routeManager, isEnvPresent, orchestratorProvider),
   ];
 
   return (

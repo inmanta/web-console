@@ -12,7 +12,10 @@ module.exports = {
     app: path.resolve(__dirname, "src", "index.tsx"),
   },
   plugins: [
-    new webpack.IgnorePlugin({ resourceRegExp: /^\.\/(config|version)\.js$/ }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/(config|version)\.js$/,
+      contextRegExp: /[\\/]__mocks__[\\/]/,
+    }),
     gitRevisionPlugin,
     new webpack.DefinePlugin({
       COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
@@ -35,7 +38,7 @@ module.exports = {
     }),
     new MonacoWebpackPlugin({
       // available options:
-      languages: ["javascript", "typescript", "json"], // specify languages you need
+      languages: ["javascript", "typescript", "json", "markdown"], // specify languages you need
       features: ["!gotoSymbol"], // customize features
     }),
   ],
@@ -44,6 +47,7 @@ module.exports = {
       {
         test: /\.(tsx|ts|jsx)?$/,
         include: path.resolve(__dirname, "src"),
+        exclude: /[\\/]__mocks__[\\/]/,
         use: [
           {
             loader: "ts-loader",
