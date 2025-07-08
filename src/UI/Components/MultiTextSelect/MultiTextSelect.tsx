@@ -65,7 +65,7 @@ export const MultiTextSelect: React.FC<Props> = ({
   const [selectOptions, setSelectOptions] = useState<SelectOptionProps[]>(options);
   const [focusedItemIndex, setFocusedItemIndex] = useState<number | null>(null);
   const [activeItem, setActiveItem] = useState<string | null>(null);
-  const textInputRef = useRef<HTMLInputElement>();
+  const textInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (inputValue && !isOpen) {

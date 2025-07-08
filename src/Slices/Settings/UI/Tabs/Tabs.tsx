@@ -21,7 +21,7 @@ interface Props {
 
 export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
   const { authHelper, environmentHandler } = useContext(DependencyContext);
-  const tokenTooltipRef = useRef<HTMLElement>();
+  const tokenTooltipRef = useRef<HTMLElement | undefined>(undefined);
   const selected = environmentHandler.useSelected();
   const tokenTabDisabled = authHelper.isDisabled();
 

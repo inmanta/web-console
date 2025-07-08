@@ -1,4 +1,3 @@
-import React from "react";
 import { createMemoryHistory } from "@remix-run/router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
@@ -236,7 +235,7 @@ describe("EnvironmentHandler", () => {
         });
       })
     );
-    const consoleError = jest.spyOn(console, "error");
+    const consoleError = vi.spyOn(console, "error");
 
     const history = createMemoryHistory();
 

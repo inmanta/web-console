@@ -51,7 +51,10 @@ export default [
         typescript: {
           alwaysTryTypes: true,
         },
-        webpack: "webpack",
+        node: {
+          extensions: [".js", ".jsx", ".ts", ".tsx"],
+          moduleDirectory: ["node_modules", "src/"],
+        },
       },
     },
 
@@ -148,7 +151,7 @@ export default [
     },
   },
   {
-    files: ["**/*webpack*", "**/*jest.polyfills*", "**/*cypress.config*"],
+    files: ["**/*cypress.config*", "**/*vite.config*"],
     rules: {
       "@typescript-eslint/no-var-requires": "off",
       "@typescript-eslint/no-require-imports": "off",

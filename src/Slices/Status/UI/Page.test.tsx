@@ -1,9 +1,9 @@
-import React, { act } from "react";
+import { act } from "react";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { PrimaryArchiveHelper } from "@/Data/Common/PrimaryArchiveHelper";
@@ -11,7 +11,6 @@ import { MockedDependencyProvider, MockOrchestratorProvider, ServerStatus } from
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { StatusPage } from ".";
-expect.extend(toHaveNoViolations);
 
 function setup() {
   const component = (
@@ -41,7 +40,7 @@ describe("StatusPage", () => {
 
   afterAll(() => {
     server.close();
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   test("GIVEN StatusPage THEN shows server status", async () => {
@@ -79,7 +78,7 @@ describe("StatusPage", () => {
   });
 
   test("GIVEN StatusPage without support extension THEN download button is not present", async () => {
-    jest.spyOn(MockOrchestratorProvider.prototype, "isSupportEnabled").mockReturnValue(false);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isSupportEnabled").mockReturnValue(false);
     const { component } = setup();
 
     render(component);
@@ -94,7 +93,7 @@ describe("StatusPage", () => {
   });
 
   test("GIVEN StatusPage with support extension THEN download button is present", async () => {
-    jest.spyOn(MockOrchestratorProvider.prototype, "isSupportEnabled").mockReturnValue(true);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isSupportEnabled").mockReturnValue(true);
 
     const { component } = setup();
 
@@ -143,9 +142,9 @@ describe("StatusPage", () => {
   });
 
   test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
-    jest
-      .spyOn(PrimaryArchiveHelper.prototype, "triggerDownload")
-      .mockImplementation(() => new Blob(["testing"], { type: "application/octet-stream" }));
+    vi.spyOn(PrimaryArchiveHelper.prototype, "triggerDownload").mockImplementation(
+      () => new Blob(["testing"], { type: "application/octet-stream" })
+    );
 
     server.use(
       http.get("/api/v1/support", () => {

@@ -1,13 +1,12 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import copy from "copy-to-clipboard";
 import { CodeEditorCopyControl } from "./CodeEditorControls";
 
-// Mock copy-to-clipboard
-jest.mock("copy-to-clipboard", () => jest.fn());
+vi.mock("copy-to-clipboard", () => ({
+  default: vi.fn(),
+}));
 
-// Mock the PatternFly CodeEditorControl component
-jest.mock("@patternfly/react-code-editor", () => ({
+vi.mock("@patternfly/react-code-editor", () => ({
   CodeEditorControl: ({ onClick, icon, "aria-label": ariaLabel }) => (
     <button onClick={onClick} aria-label={ariaLabel} data-testid={`control-${ariaLabel}`}>
       {icon}
@@ -20,8 +19,8 @@ describe("CodeEditorCopyControl", () => {
     code: "const test = 'Hello World';",
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   it("should render the copy button", () => {

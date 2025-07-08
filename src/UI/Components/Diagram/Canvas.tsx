@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import "@inmanta/rappid/joint-plus.css";
+import "@rappidcss";
 import { ui } from "@inmanta/rappid";
 import styled from "styled-components";
 import { CanvasContext, InstanceComposerContext } from "./Context";
