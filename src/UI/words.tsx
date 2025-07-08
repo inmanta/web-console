@@ -264,7 +264,7 @@ const dict = {
   "instanceDetails.tabs.disabled.resources-tooltip":
     "This tab is only available for the latest version.",
   "instanceDetails.documentation.noAttributeForVersion": (attributeName) =>
-    `This version doesn't contain documentation for ${attributeName} yet.`,
+    `There is no documentation for ${attributeName} in this version.`,
   "instanceDetails.documentation.openPreviewer": "Open in Previewer",
   active_attributes: "Active",
   candidate_attributes: "Candidate",
@@ -286,9 +286,10 @@ const dict = {
   You are performing an update on the ${selectedSet} in expert mode, are you certain you want to proceed?
   `,
   "instanceDetails.expert.confirm.warning": "DANGER: This is an irreversible action!",
-  "instanceDetails.expert.confirm.state.message": (instance, state) => `
-   Are you certain you want to FORCE update the state to : ${state} for ${instance}?
-  `,
+  "instanceDetails.expert.confirm.state.message": (instance, state) =>
+    `\n   Are you certain you want to FORCE update the state to : ${state} for ${instance}?\n  `,
+  "instanceDetails.expert.forceUpdate": "Force Update",
+  "instanceDetails.expert.editModal.success": "Attributes updated successfully",
   "instanceDetails.API.message.update": (username) =>
     username ? `Triggered from the console by ${username}` : "Triggered from the console",
   "instanceDetails.state.noOperation": "no operation",

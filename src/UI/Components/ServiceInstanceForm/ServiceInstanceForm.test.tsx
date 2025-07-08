@@ -1,4 +1,3 @@
-import React from "react";
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -24,7 +23,7 @@ import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
-  func: undefined | jest.Mock = undefined,
+  func: undefined | ReturnType<typeof vi.fn> = undefined,
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined
 ) => {
@@ -38,13 +37,13 @@ const setup = (
               element={
                 <ServiceInstanceForm
                   fields={fields}
-                  onCancel={jest.fn()}
-                  onSubmit={func ? func : jest.fn()}
+                  onCancel={vi.fn()}
+                  onSubmit={func ? func : vi.fn()}
                   isEdit={isEdit}
                   originalAttributes={originalAttributes}
                   service_entity="service_entity"
                   isDirty={false}
-                  setIsDirty={jest.fn()}
+                  setIsDirty={vi.fn()}
                 />
               }
             />
@@ -561,7 +560,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   const nestedField = Test.Field.nested([{ ...Test.Field.text, name: "flat_field_text_2" }]);
   const dictListField = Test.Field.dictList([{ ...Test.Field.text, name: "flat_field_text_3" }]);
   const fields = [Test.Field.text, Test.Field.bool, nestedField, dictListField];
-  const submitCb = jest.fn();
+  const submitCb = vi.fn();
 
   const { component } = setup(fields, submitCb);
 

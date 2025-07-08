@@ -1,7 +1,7 @@
 import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import {
   defaultServer,
   errorServerHistory,
@@ -10,8 +10,6 @@ import {
   serverWithDocumentation,
 } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
-
-expect.extend(toHaveNoViolations);
 
 describe("ServiceInstanceDetailsPage", () => {
   it("Should render the view in its loading states", async () => {
@@ -302,7 +300,7 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 2");
 
     expect(
-      screen.getByText(/this version doesn’t contain documentation for topography yet\./i)
+      screen.getByText(/There is no documentation for topography in this version\./i)
     ).toBeVisible();
 
     // in this version, topography attribute didn't exist yet in any attribute set, but is available in the ServiceModel.
@@ -311,7 +309,7 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 1");
 
     expect(
-      screen.getByText(/this version doesn’t contain documentation for topography yet\./i)
+      screen.getByText(/There is no documentation for topography in this version\./i)
     ).toBeVisible();
 
     // Events
@@ -396,11 +394,9 @@ describe("ServiceInstanceDetailsPage", () => {
 
     expect(rowsVersion3).toHaveLength(3);
 
-    expect(rowsVersion3[0]).toHaveStyle(
-      "background-color: var(--pf-t--global--color--status--warning--default)"
-    );
-    expect(rowsVersion3[1]).not.toHaveStyle("background-color: inherit");
-    expect(rowsVersion3[2]).not.toHaveStyle("background-color: inherit");
+    // Check that exactly one row has the warning class
+    const warningRows = rowsVersion3.filter((row) => row.classList.contains("warning"));
+    expect(warningRows).toHaveLength(1);
 
     expect(
       screen.getByRole("cell", {

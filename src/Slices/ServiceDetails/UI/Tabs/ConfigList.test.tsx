@@ -1,12 +1,11 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { configureAxe } from "jest-axe";
 import { Config } from "@/Core";
 import { EnvironmentDetails, MockedDependencyProvider, Service } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { ConfigList } from "./ConfigList";
-expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {

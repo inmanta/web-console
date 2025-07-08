@@ -18,7 +18,7 @@ describe("addDefaultEntities", () => {
   });
 
   it("adds default entity for service with embedded entities to the graph ", () => {
-    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+    const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
     const graph = new dia.Graph({});
 
     const embedded = addDefaultEntities(graph, containerModel);
@@ -44,7 +44,7 @@ describe("addDefaultEntities", () => {
   });
 
   it("adds all default entities to the graph for service with embedded entity with lower_limit > 1 ", () => {
-    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+    const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
     const graph = new dia.Graph({});
     const customModel = {
       ...containerModel,
@@ -61,7 +61,7 @@ describe("addDefaultEntities", () => {
   });
 
   it("adds default entity for service with nested embedded entities to the graph ", () => {
-    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+    const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
 
     const graph = new dia.Graph({});
     const attributes = {

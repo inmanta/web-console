@@ -1,8 +1,8 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { configureAxe, toHaveNoViolations } from "jest-axe";
+import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { Environment, MockedDependencyProvider, Project } from "@/Test";
@@ -10,8 +10,6 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as routing from "@/UI/Routing/Utils";
 import { Page } from "./Page";
-
-expect.extend(toHaveNoViolations);
 
 const axe = configureAxe({
   rules: {
@@ -40,11 +38,11 @@ describe("CreateEnvironmentForm", () => {
   beforeAll(() => server.listen());
   beforeEach(() => {
     server.resetHandlers();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   afterAll(() => {
     server.close();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("Given CreateEnvironmentForm When project and environment are not set Then the submit button is disabled", async () => {
@@ -105,8 +103,8 @@ describe("CreateEnvironmentForm", () => {
   });
 
   test("Given CreateEnvironmentForm When an existing project and valid environment are set and submit is clicked Then sends the correct request", async () => {
-    const mockFn = jest.fn();
-    jest.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
+    const mockFn = vi.fn();
+    vi.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
     server.use(
       http.get("/api/v2/project", () => {
         return HttpResponse.json({ data: Project.filterable });
@@ -152,8 +150,8 @@ describe("CreateEnvironmentForm", () => {
   });
 
   test("Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set and submit is clicked Then sends the correct request", async () => {
-    const mockFn = jest.fn();
-    jest.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
+    const mockFn = vi.fn();
+    vi.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
 
     server.use(
       http.get("/api/v2/project", () => {
@@ -220,8 +218,8 @@ describe("CreateEnvironmentForm", () => {
   });
 
   test("Given CreateEnvironmentForm When a new project and valid environment are set and submit is clicked Then sends the correct requests", async () => {
-    const mockFn = jest.fn();
-    jest.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
+    const mockFn = vi.fn();
+    vi.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
 
     const data = Project.filterable;
     server.use(
@@ -373,8 +371,8 @@ describe("CreateEnvironmentForm", () => {
   });
 
   test("Given CreateEnvironmentForm When an existing project, a valid environment and description are set and submit is clicked Then sends the correct requests", async () => {
-    const mockFn = jest.fn();
-    jest.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
+    const mockFn = vi.fn();
+    vi.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
 
     server.use(
       http.get("/api/v2/project", () => {
@@ -427,8 +425,8 @@ describe("CreateEnvironmentForm", () => {
   });
 
   test("Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set then removed and submit is clicked Then sends the correct request", async () => {
-    const mockFn = jest.fn();
-    jest.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
+    const mockFn = vi.fn();
+    vi.spyOn(routing, "useNavigateTo").mockReturnValue(mockFn);
 
     server.use(
       http.get("/api/v2/project", () => {

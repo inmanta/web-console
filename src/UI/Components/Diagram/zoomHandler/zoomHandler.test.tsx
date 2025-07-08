@@ -30,7 +30,7 @@ describe("ZoomHandler", () => {
 
   it("should fire requestFullscreen() function when clicking fullscreen button", async () => {
     //jest + jsdom doesn't implement the fullscreen API, they are mocked in the testSetup()
-    const fullScreenSpy = jest.spyOn(document.documentElement, "requestFullscreen");
+    const fullScreenSpy = vi.spyOn(document.documentElement, "requestFullscreen");
 
     const fullscreenButton = screen.getByTestId("fullscreen");
 
@@ -46,7 +46,7 @@ describe("ZoomHandler", () => {
       value: {},
     });
     //jest + jsdom doesn't implement the fullscreen API, they are mocked in the testSetup()
-    const exitFullScreenSpy = jest.spyOn(document, "exitFullscreen");
+    const exitFullScreenSpy = vi.spyOn(document, "exitFullscreen");
 
     const fullscreenButton = screen.getByTestId("fullscreen");
 
@@ -57,7 +57,7 @@ describe("ZoomHandler", () => {
 
   it("should fire scroller's function zoomToFit() when clicking fit-to-screen button", async () => {
     //we aren't testing the zoomToFit function itself as that is part of JointJS which use logic that isn't supported by Jest
-    const zoomToFit = jest.spyOn(scroller, "zoomToFit");
+    const zoomToFit = vi.spyOn(scroller, "zoomToFit");
 
     const fitToScreenButton = screen.getByTestId("fit-to-screen");
 

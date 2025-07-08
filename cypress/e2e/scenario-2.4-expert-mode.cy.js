@@ -159,7 +159,7 @@ if (Cypress.env("edition") === "iso") {
 
     it("2.4.2 Verify markdown preview in documentation tab", () => {
       cy.visit("/console/");
-      cy.get(`[aria-label="Select-environment-test"]`).click();
+      cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 

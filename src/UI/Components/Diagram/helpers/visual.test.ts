@@ -169,7 +169,7 @@ describe("updateLabelPosition", () => {
 
 describe("toggleLooseElement", () => {
   it("dispatch a proper event with id when called", () => {
-    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+    const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
 
     const graph = new dia.Graph();
     const paper = new dia.Paper({
