@@ -11,7 +11,7 @@
     "start": "vite",
     "start:https": "HTTPS=true vite",
     "proxy": "lcp --proxyUrl http://localhost:8888",
-    "proxy:https": "lcp --proxyUrl https://mgmt.ii.inmanta.com/:8888",
+    "proxy:https": "lcp --proxyUrl https://localhost/:8888",
     "test": "vitest --run",
     "test:ci": "CI=true vitest --silent",
     "test:ui": "vitest --ui",
