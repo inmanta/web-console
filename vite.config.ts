@@ -146,8 +146,8 @@ export default defineConfig({
       // Only mock monaco-editor in test environment
       ...(process.env.NODE_ENV === "test"
         ? {
-          "monaco-editor": resolve(__dirname, "__mocks__/monaco-editor.mjs"),
-        }
+            "monaco-editor": resolve(__dirname, "__mocks__/monaco-editor.mjs"),
+          }
         : {}),
     },
   },
