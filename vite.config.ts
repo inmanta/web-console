@@ -88,13 +88,26 @@ function copyConfigPlugin() {
       const distDir = resolve(__dirname, "dist");
       const configSource = resolve(__dirname, "src/config.js");
       const configDest = resolve(distDir, "config.js");
+      const htmlFile = resolve(distDir, "index.html");
 
       try {
         // Copy config.js to dist root
         writeFileSync(configDest, readFileSync(configSource, "utf-8"));
         console.log("config.js copied to build output");
+
+        // Update HTML to include config.js script before the main script in the head section
+        if (statSync(htmlFile, { throwIfNoEntry: false })) {
+          let htmlContent = readFileSync(htmlFile, "utf-8");
+          // Insert config.js script before the main script in the head section
+          htmlContent = htmlContent.replace(
+            /(<script type="module" crossorigin src="\.\/[^"]+\.js"><\/script>)/,
+            '  <script type="module" src="./config.js"></script>\n$1'
+          );
+          writeFileSync(htmlFile, htmlContent, "utf-8");
+          console.log("HTML updated to include config.js script");
+        }
       } catch (error) {
-        console.error("Failed to copy config.js:", error);
+        console.error("Failed to copy config.js or update HTML:", error);
       }
     },
   };
@@ -133,8 +146,8 @@ export default defineConfig({
       // Only mock monaco-editor in test environment
       ...(process.env.NODE_ENV === "test"
         ? {
-            "monaco-editor": resolve(__dirname, "__mocks__/monaco-editor.mjs"),
-          }
+          "monaco-editor": resolve(__dirname, "__mocks__/monaco-editor.mjs"),
+        }
         : {}),
     },
   },
@@ -148,7 +161,7 @@ export default defineConfig({
        * If we do not proxy both endpoints; we face cors issues.
        */
       "/api": {
-        target: process.env.VITE_API_BASEURL || "http://localhost:8888",
+        target: process.env.VITE_API_BASEURL || "https://localhost:8888",
         changeOrigin: true,
         secure: false,
         protocolRewrite: PROTOCOL_REWRITE,
@@ -165,7 +178,7 @@ export default defineConfig({
         },
       },
       "/lsm": {
-        target: process.env.VITE_API_BASEURL || "http://localhost:8888",
+        target: process.env.VITE_API_BASEURL || "https://localhost:8888",
         changeOrigin: true,
         secure: false,
         protocolRewrite: PROTOCOL_REWRITE,
