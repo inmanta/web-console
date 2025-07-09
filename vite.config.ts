@@ -18,6 +18,8 @@ const getGitCommitHash = () => {
 // Get package version
 const packageJson = require("./package.json");
 
+const PROTOCOL_REWRITE = process.env.HTTPS === "true" ? "https" : "http";
+
 // Custom plugin to generate version.json
 const versionPlugin = () => {
   return {
@@ -149,7 +151,7 @@ export default defineConfig({
         target: process.env.VITE_API_BASEURL || "http://localhost:8888",
         changeOrigin: true,
         secure: false,
-        protocolRewrite: process.env.HTTPS === "true" ? "https" : "http",
+        protocolRewrite: PROTOCOL_REWRITE,
         configure: (proxy, options) => {
           proxy.on("error", (err, req, res) => {
             console.log("proxy error", err);
@@ -166,7 +168,7 @@ export default defineConfig({
         target: process.env.VITE_API_BASEURL || "http://localhost:8888",
         changeOrigin: true,
         secure: false,
-        protocolRewrite: process.env.HTTPS === "true" ? "https" : "http",
+        protocolRewrite: PROTOCOL_REWRITE,
         configure: (proxy, options) => {
           proxy.on("error", (err, req, res) => {
             console.log("proxy error", err);
