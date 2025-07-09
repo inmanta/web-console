@@ -4,8 +4,6 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { execSync } from "child_process";
 import { writeFileSync, readdirSync, renameSync, rmSync, readFileSync, statSync } from "fs";
-import fs from "fs";
-import path from "path";
 import mkcert from "vite-plugin-mkcert";
 
 // Get git commit hash
