@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { execSync } from "child_process";
 import { writeFileSync, readdirSync, renameSync, rmSync, readFileSync, statSync } from "fs";
+import mkcert from "vite-plugin-mkcert";
 
 // Get git commit hash
 const getGitCommitHash = () => {
@@ -16,6 +17,8 @@ const getGitCommitHash = () => {
 
 // Get package version
 const packageJson = require("./package.json");
+
+const PROTOCOL_REWRITE = process.env.HTTPS === "true" ? "https" : "http";
 
 // Custom plugin to generate version.json
 const versionPlugin = () => {
@@ -77,8 +80,49 @@ function moveAssetsToRootPlugin() {
   };
 }
 
+// Custom plugin to copy config.js to build output
+function copyConfigPlugin() {
+  return {
+    name: "copy-config",
+    closeBundle() {
+      const distDir = resolve(__dirname, "dist");
+      const configSource = resolve(__dirname, "src/config.js");
+      const configDest = resolve(distDir, "config.js");
+      const htmlFile = resolve(distDir, "index.html");
+
+      try {
+        // Copy config.js to dist root
+        writeFileSync(configDest, readFileSync(configSource, "utf-8"));
+        console.log("config.js copied to build output");
+
+        // Update HTML to include config.js script before the main script in the head section
+        if (statSync(htmlFile, { throwIfNoEntry: false })) {
+          let htmlContent = readFileSync(htmlFile, "utf-8");
+          // Insert config.js script before the main script in the head section
+          htmlContent = htmlContent.replace(
+            /(<script type="module" crossorigin src="\.\/[^"]+\.js"><\/script>)/,
+            '  <script type="module" src="./config.js"></script>\n$1'
+          );
+          writeFileSync(htmlFile, htmlContent, "utf-8");
+          console.log("HTML updated to include config.js script");
+        }
+      } catch (error) {
+        console.error("Failed to copy config.js or update HTML:", error);
+      }
+    },
+  };
+}
+
+const plugins = [
+  react(),
+  versionPlugin(),
+  moveAssetsToRootPlugin(),
+  copyConfigPlugin(),
+  process.env.HTTPS === "true" ? mkcert() : undefined,
+].filter(Boolean);
+
 export default defineConfig({
-  plugins: [react(), versionPlugin(), moveAssetsToRootPlugin()],
+  plugins,
   base: "./",
   publicDir: "public",
   define: {
@@ -110,15 +154,17 @@ export default defineConfig({
   server: {
     port: 9000,
     host: true,
+    https: process.env.HTTPS === "true" ? true : undefined,
     proxy: {
       /**
        * We proxy the two base urls to be able the access the endpoints when running the app locally.
        * If we do not proxy both endpoints; we face cors issues.
        */
       "/api": {
-        target: process.env.VITE_API_BASEURL || "http://localhost:8888",
+        target: process.env.VITE_API_BASEURL || "https://localhost:8888",
         changeOrigin: true,
         secure: false,
+        protocolRewrite: PROTOCOL_REWRITE,
         configure: (proxy, options) => {
           proxy.on("error", (err, req, res) => {
             console.log("proxy error", err);
@@ -132,9 +178,10 @@ export default defineConfig({
         },
       },
       "/lsm": {
-        target: process.env.VITE_API_BASEURL || "http://localhost:8888",
+        target: process.env.VITE_API_BASEURL || "https://localhost:8888",
         changeOrigin: true,
         secure: false,
+        protocolRewrite: PROTOCOL_REWRITE,
         configure: (proxy, options) => {
           proxy.on("error", (err, req, res) => {
             console.log("proxy error", err);
