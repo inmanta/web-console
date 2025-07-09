@@ -1,0 +1,3 @@
+description: Resolve missing config.js in build output
+change-type: patch
+destination-branches: [master]

@@ -9,7 +9,9 @@
     "prebuild": "yarn clean",
     "build": "vite build",
     "start": "vite",
-    "start:https": "vite --https",
+    "start:https": "HTTPS=true vite",
+    "proxy:https": "lcp --proxyUrl https://localhost:8888",
+    "proxy:http": "lcp --proxyUrl http://localhost:8888",
     "test": "vitest --run",
     "test:ci": "CI=true vitest --silent",
     "test:ui": "vitest --ui",
@@ -107,6 +109,7 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.35.1",
     "vite": "^7.0.0",
+    "vite-plugin-mkcert": "^1.17.8",
     "vite-plugin-monaco-editor-esm": "^2.0.2",
     "vitest": "^3.2.4",
     "vitest-axe": "^0.1.0"

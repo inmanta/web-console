@@ -4,6 +4,9 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { execSync } from "child_process";
 import { writeFileSync, readdirSync, renameSync, rmSync, readFileSync, statSync } from "fs";
+import fs from "fs";
+import path from "path";
+import mkcert from "vite-plugin-mkcert";
 
 // Get git commit hash
 const getGitCommitHash = () => {
@@ -77,8 +80,36 @@ function moveAssetsToRootPlugin() {
   };
 }
 
+// Custom plugin to copy config.js to build output
+function copyConfigPlugin() {
+  return {
+    name: "copy-config",
+    closeBundle() {
+      const distDir = resolve(__dirname, "dist");
+      const configSource = resolve(__dirname, "src/config.js");
+      const configDest = resolve(distDir, "config.js");
+
+      try {
+        // Copy config.js to dist root
+        writeFileSync(configDest, readFileSync(configSource, "utf-8"));
+        console.log("config.js copied to build output");
+      } catch (error) {
+        console.error("Failed to copy config.js:", error);
+      }
+    },
+  };
+}
+
+const plugins = [
+  react(),
+  versionPlugin(),
+  moveAssetsToRootPlugin(),
+  copyConfigPlugin(),
+  process.env.HTTPS === "true" ? mkcert() : undefined,
+].filter(Boolean);
+
 export default defineConfig({
-  plugins: [react(), versionPlugin(), moveAssetsToRootPlugin()],
+  plugins,
   base: "./",
   publicDir: "public",
   define: {
@@ -110,15 +141,17 @@ export default defineConfig({
   server: {
     port: 9000,
     host: true,
+    https: process.env.HTTPS === "true" ? true : undefined,
     proxy: {
       /**
        * We proxy the two base urls to be able the access the endpoints when running the app locally.
        * If we do not proxy both endpoints; we face cors issues.
        */
       "/api": {
-        target: process.env.VITE_API_BASEURL || "http://localhost:8888",
+        target: process.env.VITE_API_BASEURL || "https://localhost:8888",
         changeOrigin: true,
         secure: false,
+        protocolRewrite: process.env.HTTPS === "true" ? "https" : "http",
         configure: (proxy, options) => {
           proxy.on("error", (err, req, res) => {
             console.log("proxy error", err);
@@ -132,9 +165,10 @@ export default defineConfig({
         },
       },
       "/lsm": {
-        target: process.env.VITE_API_BASEURL || "http://localhost:8888",
+        target: process.env.VITE_API_BASEURL || "https://localhost:8888",
         changeOrigin: true,
         secure: false,
+        protocolRewrite: process.env.HTTPS === "true" ? "https" : "http",
         configure: (proxy, options) => {
           proxy.on("error", (err, req, res) => {
             console.log("proxy error", err);
