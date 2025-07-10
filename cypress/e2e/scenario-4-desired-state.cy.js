@@ -510,12 +510,9 @@ describe("Scenario 4 Desired State", () => {
       cy.get(".pf-v5-c-card__expandable-content", { timeout: 20000 }).should(
         ($expandableRow) => {
           expect($expandableRow).to.have.length(1);
-
-          if (isIso) {
-            expect($expandableRow.eq(0), "first-row").to.contain(
-              "next_version-3+4",
-            );
-          }
+          expect($expandableRow.eq(0), "first-row").to.contain(
+            "next_version-3+4",
+          );
         },
       );
     }
