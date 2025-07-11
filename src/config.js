@@ -6,4 +6,9 @@
 };
  */
 
+// local auth
+window.auth = {
+  method: "database",
+};
+
 export const features = [];

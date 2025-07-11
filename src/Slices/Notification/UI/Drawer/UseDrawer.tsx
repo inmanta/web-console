@@ -10,7 +10,7 @@ type UseDrawer = (env: boolean) => {
 
 export const useDrawer: UseDrawer = (env) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const drawerRef = useRef<HTMLDivElement | undefined>(undefined);
+  const drawerRef = useRef<HTMLDivElement>(null);
   const onDrawerClose = () => setIsDrawerOpen(false);
 
   const onDrawerOpen = () => {
@@ -29,7 +29,7 @@ export const useDrawer: UseDrawer = (env) => {
     isNotificationDrawerExpanded,
     onNotificationsToggle,
   ] = env
-    ? [
+      ? [
         <Drawer
           onClose={onDrawerClose}
           isDrawerOpen={isDrawerOpen}
@@ -40,7 +40,7 @@ export const useDrawer: UseDrawer = (env) => {
         isDrawerOpen,
         () => setIsDrawerOpen(!isDrawerOpen),
       ]
-    : [undefined, undefined, false, () => undefined];
+      : [undefined, undefined, false, () => undefined];
 
   useEffect(() => {
     if (!env) setIsDrawerOpen(false);
