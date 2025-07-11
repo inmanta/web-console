@@ -12,6 +12,8 @@ import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 export interface UserInfo {
   username: string;
   auth_method: "oidc" | "database";
+  is_admin: boolean;
+  roles: string[];
 }
 
 /**

@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
-import { Td, Tr } from "@patternfly/react-table";
+import { Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
 import { useRemoveUser, UserInfo } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ConfirmUserActionForm } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { ChangePasswordForm } from "./ChangePasswordForm";
+import { UserShieldIcon } from "@patternfly/react-icons";
 
 interface Props {
   user: UserInfo;
@@ -21,6 +22,7 @@ interface Props {
  */
 export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
+  console.log("UserInfoRow", user);
 
   const { mutate } = useRemoveUser();
 
@@ -70,7 +72,15 @@ export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
 
   return (
     <Tr aria-label={`row-${user.username}`} data-testid="user-row">
-      <Td dataLabel={user.username}>{user.username}</Td>
+      <Td dataLabel={user.username}>
+        {user.is_admin && (
+          <>
+            <UserShieldIcon />
+            {" "}
+          </>
+        )}
+        {user.username}
+      </Td>
       <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
         <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
           <FlexItem>
