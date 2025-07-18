@@ -5,6 +5,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useGetWithoutEnv } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
+import { EnvironmentRoles } from "../AddRole/useAddRole";
 
 /**
  * Represents the user information.
@@ -12,6 +13,8 @@ import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 export interface UserInfo {
   username: string;
   auth_method: "oidc" | "database";
+  is_admin: boolean;
+  roles: EnvironmentRoles;
 }
 
 /**

@@ -39,7 +39,7 @@ function setup() {
         <MockedDependencyProvider>
           <Page
             notificationDrawer={
-              <Drawer onClose={closeCallback} isDrawerOpen drawerRef={{ current: undefined }} />
+              <Drawer onClose={closeCallback} isDrawerOpen drawerRef={{ current: null }} />
             }
             isNotificationDrawerExpanded={true}
             masthead={

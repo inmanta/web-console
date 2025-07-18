@@ -10,7 +10,7 @@ type UseDrawer = (env: boolean) => {
 
 export const useDrawer: UseDrawer = (env) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const drawerRef = useRef<HTMLDivElement | undefined>(undefined);
+  const drawerRef = useRef<HTMLDivElement>(null);
   const onDrawerClose = () => setIsDrawerOpen(false);
 
   const onDrawerOpen = () => {

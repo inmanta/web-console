@@ -12,6 +12,7 @@ import {
   ActionGroup,
   ValidatedOptions,
   Spinner,
+  Flex,
 } from "@patternfly/react-core";
 import { ExclamationCircleIcon, EyeIcon, EyeSlashIcon } from "@patternfly/react-icons";
 import { useAddUser } from "@/Data/Queries";
@@ -86,7 +87,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
   }, [isSuccess, closeModal]);
 
   return (
-    <Form className="loginForm" onSubmit={handleSubmit}>
+    <Form className="loginForm" onSubmit={handleSubmit} autoComplete="off">
       {isError && error && (
         <FormHelperText>
           <HelperText>
@@ -110,6 +111,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           aria-label="input-username"
           value={username}
           onChange={handleUsernameChange}
+          autoComplete="off"
         />
       </FormGroup>
       <FormGroup label={words("password")} isRequired fieldId="pf-login-password-id">
@@ -124,6 +126,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
               validated={ValidatedOptions.default}
               value={password}
               onChange={handlePasswordChange}
+              autoComplete="off"
             />
           </InputGroupItem>
           <InputGroupItem>
@@ -137,18 +140,22 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
           </InputGroupItem>
         </InputGroup>
       </FormGroup>
-      <ActionGroup>
-        <Button
-          aria-label={submitButtonLabel}
-          variant="primary"
-          type="submit"
-          onClick={handleSubmit}
-          isBlock
-          isDisabled={isPending}
-        >
-          {isPending ? <Spinner size="md" /> : submitButtonText}
-        </Button>
-      </ActionGroup>
+      <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+        <ActionGroup>
+          <Button variant="secondary" onClick={closeModal} aria-label="cancel-button">
+            {words("cancel")}
+          </Button>
+          <Button
+            aria-label={submitButtonLabel}
+            variant="primary"
+            type="submit"
+            onClick={handleSubmit}
+            isDisabled={isPending}
+          >
+            {isPending ? <Spinner size="md" /> : submitButtonText}
+          </Button>
+        </ActionGroup>
+      </Flex>
     </Form>
   );
 };

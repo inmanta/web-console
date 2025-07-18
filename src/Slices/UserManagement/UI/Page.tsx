@@ -8,10 +8,21 @@ import { EmptyView, ErrorView, LoadingView, PageContainer, ToastAlert } from "@/
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { UserInfoRow } from "./Components/UserInfoRow";
 
+/**
+ * User Management Page
+ *
+ * This page displays a list of users and allows for user management.
+ * It should only be visible when the auth method is database.
+ *
+ * @returns {React.FC}
+ */
 export const UserManagementPage: React.FC = () => {
   const { triggerModal } = useContext(ModalContext);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const { data, isSuccess, isError, error, refetch } = useGetUsers().useOneTime();
+
+  const authConfig = globalThis && globalThis.auth;
+  const showRoles = authConfig?.provider === "policy-engine" && authConfig?.method === "database";
 
   /**
    * Opens a modal with a form for user credentials.
@@ -67,7 +78,8 @@ export const UserManagementPage: React.FC = () => {
           <Table aria-label="users-table">
             <Thead>
               <Tr>
-                <Th width={80}>{words("userManagement.name")}</Th>
+                <Th width={40}>{words("userManagement.name")}</Th>
+                {showRoles && <Th width={40}>{words("userManagement.roles")}</Th>}
                 <Th
                   isStickyColumn
                   stickyMinWidth="340px"
