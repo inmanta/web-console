@@ -1,0 +1,14 @@
+description: |
+  Add support for role management to user management page.
+  
+  This feature allows to assign and manage user roles directly from the web console.
+  
+  Note: Role management is only supported when using the database authentication method in combination with the policy-engine authorization provider.
+  
+  See the [Inmanta documentation](https://docs.inmanta.com/inmanta-service-orchestrator-dev/9/administrators/authorization.html#integration-with-database-authentication) for details on configuring roles and permissions.
+
+issue-nr: "6440"
+change-type: patch
+destination-branches: [master]
+sections:
+  feature: "{{description}}"

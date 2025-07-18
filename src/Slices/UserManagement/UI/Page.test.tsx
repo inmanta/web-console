@@ -162,8 +162,8 @@ describe("UserManagementPage", () => {
 
   it("should sent request to add user to the list", async () => {
     const data: UserInfo[] = [
-      { username: "test_user", auth_method: "database" },
-      { username: "test_user2", auth_method: "oidc" },
+      { username: "test_user", auth_method: "database", is_admin: false, roles: {} },
+      { username: "test_user2", auth_method: "oidc", is_admin: false, roles: {} },
     ];
     const server = setupServer(
       http.get("/api/v2/user", async () => {
@@ -196,7 +196,12 @@ describe("UserManagementPage", () => {
           );
         }
 
-        data.push({ username: reqBody?.username, auth_method: "database" });
+        data.push({
+          username: reqBody?.username,
+          auth_method: "database",
+          is_admin: false,
+          roles: {},
+        });
 
         return HttpResponse.json({
           username: "new_user",
@@ -331,8 +336,8 @@ describe("UserManagementPage", () => {
 
   it("should sent request to remove user from the list", async () => {
     const data: UserInfo[] = [
-      { username: "test_user", auth_method: "database" },
-      { username: "test_user2", auth_method: "oidc" },
+      { username: "test_user", auth_method: "database", is_admin: false, roles: {} },
+      { username: "test_user2", auth_method: "oidc", is_admin: false, roles: {} },
     ];
     const server = setupServer(
       http.get("/api/v2/user", async (): Promise<HttpResponse> => {

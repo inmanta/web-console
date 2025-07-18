@@ -26,10 +26,24 @@ export const useFetchHelpers = () => {
     }
 
     if (!response.ok) {
-      const error: CustomError = new Error(
-        customErrorMessage || JSON.parse(await response.text()).message
-      );
-
+      let message = customErrorMessage;
+      try {
+        const data = await response.clone().json();
+        if (data && data.message) message = data.message;
+      } catch {
+        // ignore JSON parse errors
+      }
+      if (!message) {
+        try {
+          // Try to get text if JSON failed
+          const text = await response.clone().text();
+          if (text) message = text;
+        } catch {
+          // ignore
+        }
+      }
+      if (!message) message = response.statusText || "An unknown error occurred";
+      const error: CustomError = new Error(message);
       error.status = response.status;
       throw error;
     }

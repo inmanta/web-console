@@ -1,12 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
-import { Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
+import { UserShieldIcon } from "@patternfly/react-icons";
+import { Td, Tr } from "@patternfly/react-table";
 import { useRemoveUser, UserInfo } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ConfirmUserActionForm } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { ChangePasswordForm } from "./ChangePasswordForm";
-import { UserShieldIcon } from "@patternfly/react-icons";
+import { NestedUserRoleTable } from "./NestedUserRoleTable";
 
 interface Props {
   user: UserInfo;
@@ -22,7 +23,9 @@ interface Props {
  */
 export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
-  console.log("UserInfoRow", user);
+  const authConfig = globalThis && globalThis.auth;
+  const showRoles = authConfig?.provider === "policy-engine" && authConfig?.method === "database";
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const { mutate } = useRemoveUser();
 
@@ -70,17 +73,25 @@ export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
     });
   };
 
-  return (
+  return [
     <Tr aria-label={`row-${user.username}`} data-testid="user-row">
       <Td dataLabel={user.username}>
         {user.is_admin && (
           <>
-            <UserShieldIcon />
-            {" "}
+            <UserShieldIcon />{" "}
           </>
         )}
         {user.username}
       </Td>
+      {showRoles && (
+        <Td dataLabel={words("userManagement.roles")}>
+          <Button variant="link" onClick={() => setIsExpanded(!isExpanded)} isInline>
+            {Object.keys(user.roles).length > 0
+              ? [...new Set(Object.values(user.roles).flat())].join(", ")
+              : words("userManagement.roles.none")}
+          </Button>
+        </Td>
+      )}
       <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
         <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
           <FlexItem>
@@ -95,6 +106,13 @@ export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
           </FlexItem>
         </Flex>
       </Td>
-    </Tr>
-  );
+    </Tr>,
+    showRoles && isExpanded && (
+      <Tr aria-label={`expanded-row-${user.username}`} isStriped>
+        <Td colSpan={3}>
+          <NestedUserRoleTable {...user} />
+        </Td>
+      </Tr>
+    ),
+  ];
 };

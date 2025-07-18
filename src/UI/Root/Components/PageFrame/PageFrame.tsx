@@ -16,7 +16,6 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   environmentId,
 }) => {
-
   const {
     onNotificationsToggle,
     notificationDrawer,

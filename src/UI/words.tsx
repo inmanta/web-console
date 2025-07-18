@@ -852,6 +852,13 @@ const dict = {
   "userManagement.deleteUserMessage": (username: string) =>
     `Are you sure you want to delete user ${username}?`,
   "userManagement.empty.message": "No users found",
+  "userManagement.roles": "Roles",
+  "userManagement.roles.placeholder": "Select roles...",
+  "userManagement.roles.none": "None",
+  "userManagement.roles.unavailable": "No roles available",
+  "userManagement.roles.edit": "Edit roles",
+  "userManagement.environment": "Environment",
+  "userManagement.role": "Role",
 
   /**
    * Markdown Previewer related text

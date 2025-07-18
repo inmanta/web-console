@@ -89,25 +89,31 @@ function copyConfigPlugin() {
       const configSource = resolve(__dirname, "src/config.js");
       const configDest = resolve(distDir, "config.js");
       const htmlFile = resolve(distDir, "index.html");
-
+      // Copy favicon.ico from public/images/ to dist/
+      const faviconSource = resolve(__dirname, "public/images/favicon.ico");
+      const faviconDest = resolve(distDir, "favicon.ico");
       try {
         // Copy config.js to dist root
         writeFileSync(configDest, readFileSync(configSource, "utf-8"));
         console.log("config.js copied to build output");
-
+        // Copy favicon.ico to dist root
+        if (statSync(faviconSource, { throwIfNoEntry: false })) {
+          writeFileSync(faviconDest, readFileSync(faviconSource));
+          console.log("favicon.ico copied to build output root");
+        }
         // Update HTML to include config.js script before the main script in the head section
         if (statSync(htmlFile, { throwIfNoEntry: false })) {
           let htmlContent = readFileSync(htmlFile, "utf-8");
           // Insert config.js script before the main script in the head section
           htmlContent = htmlContent.replace(
-            /(<script type="module" crossorigin src="\.\/[^"]+\.js"><\/script>)/,
+            /(<script type="module" crossorigin src="\.\/[^\"]+\.js"><\/script>)/,
             '  <script type="module" src="./config.js"></script>\n$1'
           );
           writeFileSync(htmlFile, htmlContent, "utf-8");
           console.log("HTML updated to include config.js script");
         }
       } catch (error) {
-        console.error("Failed to copy config.js or update HTML:", error);
+        console.error("Failed to copy config.js, favicon.ico, or update HTML:", error);
       }
     },
   };

@@ -142,11 +142,7 @@ export const UserCredentialsForm: React.FC<UserCredentialsFormProps> = ({
       </FormGroup>
       <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
         <ActionGroup>
-          <Button
-            variant="secondary"
-            onClick={closeModal}
-            aria-label="cancel-button"
-          >
+          <Button variant="secondary" onClick={closeModal} aria-label="cancel-button">
             {words("cancel")}
           </Button>
           <Button
