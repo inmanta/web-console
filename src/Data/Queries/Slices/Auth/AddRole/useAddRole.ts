@@ -4,7 +4,7 @@ import { usePostWithoutEnv } from "@/Data/Queries";
 /**
  * Represents the roles for a given environment.
  */
-export type EvironmentRoles = Record<string, string[]>;
+export type EnvironmentRoles = Record<string, string[]>;
 
 /**
  * Adds a role to a user, for a specific environment.

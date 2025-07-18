@@ -73,46 +73,48 @@ export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
     });
   };
 
-  return [
-    <Tr aria-label={`row-${user.username}`} data-testid="user-row">
-      <Td dataLabel={user.username}>
-        {user.is_admin && (
-          <>
-            <UserShieldIcon />{" "}
-          </>
-        )}
-        {user.username}
-      </Td>
-      {showRoles && (
-        <Td dataLabel={words("userManagement.roles")}>
-          <Button variant="link" onClick={() => setIsExpanded(!isExpanded)} isInline>
-            {Object.keys(user.roles).length > 0
-              ? [...new Set(Object.values(user.roles).flat())].join(", ")
-              : words("userManagement.roles.none")}
-          </Button>
+  return (
+    <>
+      <Tr aria-label={`row-${user.username}`} data-testid="user-row">
+        <Td dataLabel={user.username}>
+          {user.is_admin && (
+            <>
+              <UserShieldIcon />{" "}
+            </>
+          )}
+          {user.username}
         </Td>
-      )}
-      <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
-        <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
-          <FlexItem>
-            <Button variant="primary" onClick={openChangePasswordModal} size="sm">
-              {words("userManagement.changePassword")}
+        {showRoles && (
+          <Td dataLabel={words("userManagement.roles")}>
+            <Button variant="link" onClick={() => setIsExpanded(!isExpanded)} isInline>
+              {Object.keys(user.roles).length > 0
+                ? [...new Set(Object.values(user.roles).flat())].join(", ")
+                : words("userManagement.roles.none")}
             </Button>
-          </FlexItem>
-          <FlexItem>
-            <Button variant="danger" onClick={openDeleteModal} size="sm">
-              {words("delete")}
-            </Button>
-          </FlexItem>
-        </Flex>
-      </Td>
-    </Tr>,
-    showRoles && isExpanded && (
-      <Tr aria-label={`expanded-row-${user.username}`} isStriped>
-        <Td colSpan={3}>
-          <NestedUserRoleTable {...user} />
+          </Td>
+        )}
+        <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
+          <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+            <FlexItem>
+              <Button variant="primary" onClick={openChangePasswordModal} size="sm">
+                {words("userManagement.changePassword")}
+              </Button>
+            </FlexItem>
+            <FlexItem>
+              <Button variant="danger" onClick={openDeleteModal} size="sm">
+                {words("delete")}
+              </Button>
+            </FlexItem>
+          </Flex>
         </Td>
       </Tr>
-    ),
-  ];
+      {showRoles && isExpanded && (
+        <Tr aria-label={`expanded-row-${user.username}`} isStriped>
+          <Td colSpan={3}>
+            <NestedUserRoleTable {...user} />
+          </Td>
+        </Tr>
+      )}
+    </>
+  );
 };

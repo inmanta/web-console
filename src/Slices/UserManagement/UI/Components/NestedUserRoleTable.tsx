@@ -108,7 +108,7 @@ const RoleSelector: React.FC<{
       client.invalidateQueries({ queryKey: getUserKey.list() });
     },
     onError: (error) => {
-      setErrors([...errors, error.message]);
+      setErrors((prev) => [...prev, error.message]);
     },
   });
   const { mutate: deleteRole } = useDeleteRole(username, {
@@ -116,7 +116,7 @@ const RoleSelector: React.FC<{
       client.invalidateQueries({ queryKey: getUserKey.list() });
     },
     onError: (error) => {
-      setErrors([...errors, error.message]);
+      setErrors((prev) => [...prev, error.message]);
     },
   });
 
