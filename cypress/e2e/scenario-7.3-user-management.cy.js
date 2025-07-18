@@ -1,5 +1,5 @@
 if (Cypress.env("local-auth")) {
-  it.only("should display the roles for a user, and allow them to be added and removed", () => {
+  it("should display the roles for a user, and allow them to be added and removed", () => {
     cy.visit("/console/");
 
     cy.get('[id="pf-login-username-id"]').type("admin");
