@@ -27,20 +27,18 @@ export const useFetchHelpers = () => {
 
     if (!response.ok) {
       let message = customErrorMessage;
+      let bodyText: string | undefined;
       try {
-        const data = await response.clone().json();
-        if (data && data.message) message = data.message;
-      } catch {
-        // ignore JSON parse errors
-      }
-      if (!message) {
+        bodyText = await response.text();
         try {
-          // Try to get text if JSON failed
-          const text = await response.clone().text();
-          if (text) message = text;
+          const data = JSON.parse(bodyText);
+          if (data && data.message) message = data.message;
         } catch {
-          // ignore
+          // If not JSON, use the text as message
+          if (bodyText && !message) message = bodyText;
         }
+      } catch {
+        // ignore body read errors
       }
       if (!message) message = response.statusText || "An unknown error occurred";
       const error: CustomError = new Error(message);
