@@ -69,7 +69,7 @@ pipeline {
             post {
                 always {
                     junit 'web-console/cypress/reports/junit/*.xml'
-                    cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
+                    recordCoverage(tools: [[parser: 'COBERTURA']], sourceCodeRetention: 'NEVER')
                     archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**, coverage/**, test-results.txt', allowEmptyArchive: true, onlyIfSuccessful: false
                     deleteDir()
                 }

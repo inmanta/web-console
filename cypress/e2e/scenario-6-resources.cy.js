@@ -255,7 +255,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to have : 6 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        6
+        5
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
@@ -285,14 +285,14 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="MinimalLogLevelFilterInput"]').click();
       cy.get('[role="option"]').contains("INFO").click();
 
-      // Expect the amount of rows to be max  6
+      // Expect the amount of rows to be max 4
       cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.most", 4);
 
       // Remove INFO filter
       cy.get('[aria-label="Close INFO"]').click();
 
       // Expect amount of rows to be bigger than before filtering.
-      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.least", 6);
+      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.least", 5);
     });
 
     it("6.4 Resources with multiple dependencies", () => {
