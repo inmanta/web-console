@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump @patternfly/react-log-viewer from 6.2.0 to 6.3.0
+destination-branches:
+- master
+sections: {}
