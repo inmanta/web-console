@@ -52,7 +52,7 @@ pipeline {
                             dir('web-console') {
                                 sh '''yarn run build;
                                 sudo systemctl restart docker && sudo docker network prune -f;
-                                yarn run install:orchestrator:ci;
+                                yarn run install:orchestrator:ci release='8-dev';
                                 yarn run cypress-test:iso;'''
                             }
                         }
