@@ -42,6 +42,7 @@ export const EnvSelector: React.FC<Props> = ({
   // Only show the user management link if the auth method is database. Other auth methods have external user and role management.
   const authConfig = globalThis && globalThis.auth;
   const showUserManagement = !authHelper.isDisabled() && authConfig?.method === "database";
+  const showLogout = !authHelper.isDisabled();
 
   return (
     <Dropdown
@@ -86,18 +87,20 @@ export const EnvSelector: React.FC<Props> = ({
               {words("home.navigation.button")}
             </DropdownItem>
           </Tooltip>
-          {showUserManagement && (
-            <>
+          <>
+            {showUserManagement && (
               <DropdownItem
                 onClick={() => navigate(routeManager.getUrl("UserManagement", undefined))}
               >
                 {words("userManagement.title")}
               </DropdownItem>
+            )}
+            {showLogout && (
               <DropdownItem onClick={() => authHelper.logout()}>
                 {words("dashboard.logout")}
               </DropdownItem>
-            </>
-          )}
+            )}
+          </>
         </div>
         <DarkmodeOption />
       </DropdownList>

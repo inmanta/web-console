@@ -1,0 +1,5 @@
+change-type: patch
+description: Fix missing logout button when using Keycloak authentication
+destination-branches:
+- master
+sections: {}
