@@ -41,7 +41,7 @@ pipeline {
                             yarn format:check;
                             yarn tsc;
                             yarn check-circular-deps;
-                            yarn build;
+                            node --max-old-space-size=6144 ./node_modules/.bin/vite build;
                             yarn test:ci'''
                         }
                     }
@@ -50,7 +50,8 @@ pipeline {
                     steps {
                         timeout(time: 20, unit: 'MINUTES') {
                             dir('web-console') {
-                                sh '''yarn run build;
+                                sh '''node --max-old-space-size=6144 ./node_modules/.bin/vite build;
+                                sudo systemctl restart docker && sudo docker network prune -f;
                                 yarn run install:orchestrator:ci;
                                 yarn run cypress-test:iso;'''
                             }
@@ -67,12 +68,9 @@ pipeline {
             }
             post {
                 always {
-                    dir('web-console') {
-                        sh '''npx junit-merge -d cypress/reports/junit -o cypress/reports/cypress-report.xml'''
-                    }
-                    junit 'web-console/junit.xml'
-                    cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
-                    archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**', allowEmptyArchive: true, onlyIfSuccessful: false
+                    junit 'web-console/cypress/reports/junit/*.xml'
+                    recordCoverage(tools: [[parser: 'COBERTURA']], sourceCodeRetention: 'NEVER')
+                    archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**, coverage/**, test-results.txt', allowEmptyArchive: true, onlyIfSuccessful: false
                     deleteDir()
                 }
             }
