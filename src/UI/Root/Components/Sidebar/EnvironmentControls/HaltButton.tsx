@@ -2,11 +2,11 @@ import React, { useContext, useState } from "react";
 import { Alert, AlertGroup, Button, Tooltip } from "@patternfly/react-core";
 import { StopIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
+import { uniqueId } from "lodash";
 import { useHaltEnvironment } from "@/Data/Queries";
 import { useQueryControl } from "@/Data/Queries";
 import { words } from "@/UI/words";
 import { ModalContext } from "../../ModalProvider";
-import { uniqueId } from "lodash";
 
 /**
  * `HaltButton` is a React functional component that renders a button with a tooltip.

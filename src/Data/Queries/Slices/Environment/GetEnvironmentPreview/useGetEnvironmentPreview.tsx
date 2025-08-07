@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { gql } from "graphql-request";
 import { Environment } from "@/Core/Domain";
-import { CustomError, REFETCH_INTERVAL, useGraphQLRequest } from "@/Data/Queries";
+import { CustomError, useGraphQLRequest } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 /**
