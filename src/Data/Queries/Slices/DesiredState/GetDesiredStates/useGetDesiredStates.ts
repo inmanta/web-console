@@ -73,7 +73,7 @@ export const useGetDesiredStates = (): GetDesiredStates => {
       useQuery({
         queryKey: getDesiredStatesKey.list([pageSize, ...Object.values(filter), currentPage, env]),
         queryFn: () => get(getDesiredStatesUrl({ pageSize, filter, currentPage })),
-        refetchInterval: (query) => query.state.error ? false : REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),

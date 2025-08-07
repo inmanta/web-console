@@ -80,7 +80,7 @@ export const useGetParameters = (params: GetParametersParams): GetParameters => 
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
-        refetchInterval: (query) => query.state.error ? false : REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
       }),
   };
 };

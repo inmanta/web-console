@@ -63,7 +63,8 @@ describe("EnvironmentControls", () => {
         return HttpResponse.json();
       })
     );
-    const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
+    const haltEventSpy = vi.fn();
+    document.addEventListener("halt-event", haltEventSpy);
 
     const { component } = setup();
 
@@ -77,10 +78,10 @@ describe("EnvironmentControls", () => {
 
     await userEvent.click(await screen.findByText("Yes"));
 
-    expect(dispatchEventSpy).toHaveBeenCalledTimes(3);
+    expect(haltEventSpy).toHaveBeenCalledTimes(1);
   });
 
-  test("EnvironmentControls don\\t trigger backend call when dialog is not confirmed", async () => {
+  test("EnvironmentControls should not trigger backend call when dialog is not confirmed", async () => {
     const requestSpy = vi.fn();
 
     server.use(
@@ -115,7 +116,10 @@ describe("EnvironmentControls", () => {
         return HttpResponse.json();
       })
     );
-    const dispatchEventSpy = vi.spyOn(document, "dispatchEvent");
+    const haltEventSpy = vi.fn();
+    const resumeEventSpy = vi.fn();
+    document.addEventListener("halt-event", haltEventSpy);
+    document.addEventListener("resume-event", resumeEventSpy);
 
     const { component } = setup();
 
@@ -131,6 +135,38 @@ describe("EnvironmentControls", () => {
 
     await userEvent.click(await screen.findByText("Yes"));
 
-    expect(dispatchEventSpy).toHaveBeenCalledTimes(3);
+    expect(haltEventSpy).toHaveBeenCalledTimes(0);
+    expect(resumeEventSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test("EnvironmentControls should show error message when halt fails", async () => {
+    server.use(
+      http.get("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", () => {
+        return HttpResponse.json({ data: EnvironmentDetails.a });
+      }),
+      http.post("/api/v2/actions/environment/halt", () => {
+        return HttpResponse.error();
+      })
+    );
+    const haltEventSpy = vi.fn();
+    const resumeEventSpy = vi.fn();
+    document.addEventListener("halt-event", haltEventSpy);
+    document.addEventListener("resume-event", resumeEventSpy);
+
+    const { component } = setup();
+
+    render(component);
+
+    const stopButton = await screen.findByText("STOP");
+
+    expect(stopButton).toBeVisible();
+
+    await userEvent.click(stopButton);
+
+    await userEvent.click(await screen.findByText("Yes"));
+
+    expect(haltEventSpy).toHaveBeenCalledTimes(0);
+    expect(resumeEventSpy).toHaveBeenCalledTimes(0);
+    expect(await screen.findByText("Error")).toBeVisible();
   });
 });

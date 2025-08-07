@@ -70,7 +70,7 @@ export const useGetAgents = (): GetAgents => {
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
-        refetchInterval: (query) => query.state.error ? false : REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
       }),
   };
 };

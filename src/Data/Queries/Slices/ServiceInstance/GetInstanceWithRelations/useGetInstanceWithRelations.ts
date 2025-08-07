@@ -181,7 +181,7 @@ export const useGetInstanceWithRelations = (
         queryKey: getInstanceWithRelationsKey.single(instanceId, [env]),
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
-        refetchInterval: (query) => query.state.error ? false : REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         enabled: serviceModel !== undefined,
       }),
   };

@@ -37,6 +37,8 @@ export const Page: React.FC = () => {
     currentPage,
   }).useContinuous();
 
+  console.log("render facts page", isSuccess, isError);
+
   const tablePresenter = new FactsTablePresenter();
 
   //when sorting is triggered, reset the current page
@@ -46,9 +48,11 @@ export const Page: React.FC = () => {
   }, [sort.order]);
 
   if (isError) {
-    <PageContainer pageTitle={words("facts.title")}>
-      <ErrorView message={error.message} retry={refetch} ariaLabel="Facts-Failed" />
-    </PageContainer>;
+    return (
+      <PageContainer pageTitle={words("facts.title")}>
+        <ErrorView message={error.message} retry={refetch} ariaLabel="Facts-Failed" />
+      </PageContainer>
+    );
   }
 
   if (isSuccess) {

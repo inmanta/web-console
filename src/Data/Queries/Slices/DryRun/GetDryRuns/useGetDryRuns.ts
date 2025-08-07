@@ -36,7 +36,7 @@ export const useGetDryRuns = (): GetDryRuns => {
         queryKey: getDryRunsKey.list([{ version }, env]),
         queryFn: () => get(`/api/v2/dryrun/${version}`),
         select: (data) => data.data,
-        refetchInterval: (query) => query.state.error ? false : REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
       }),
   };
 };

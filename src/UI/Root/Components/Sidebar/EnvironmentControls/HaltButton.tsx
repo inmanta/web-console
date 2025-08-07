@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
-import { Button, Tooltip } from "@patternfly/react-core";
+import React, { useContext, useState } from "react";
+import { Alert, AlertGroup, Button, Tooltip } from "@patternfly/react-core";
 import { StopIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useHaltEnvironment } from "@/Data/Queries";
 import { useQueryControl } from "@/Data/Queries";
 import { words } from "@/UI/words";
 import { ModalContext } from "../../ModalProvider";
+import { uniqueId } from "lodash";
 
 /**
  * `HaltButton` is a React functional component that renders a button with a tooltip.
@@ -16,11 +17,16 @@ export const HaltButton: React.FC = () => {
   const client = useQueryClient();
   const { disableQueries, enableQueries } = useQueryControl();
   const { triggerModal, closeModal } = useContext(ModalContext);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { mutate } = useHaltEnvironment({
     onSuccess: () => {
       client.refetchQueries();
       enableQueries();
+      closeModal();
       document.dispatchEvent(new CustomEvent("halt-event"));
+    },
+    onError: (error) => {
+      setErrorMessage(error.message);
     },
   });
 
@@ -45,13 +51,18 @@ export const HaltButton: React.FC = () => {
           onClick={() => {
             disableQueries();
             mutate();
-            closeModal();
-            document.dispatchEvent(new CustomEvent("halt-event"));
           }}
         >
           {words("yes")}
         </Button>,
-        <Button key="cancel" variant="link" onClick={closeModal}>
+        <Button
+          key="cancel"
+          variant="link"
+          onClick={() => {
+            closeModal();
+            setErrorMessage(null);
+          }}
+        >
           {words("no")}
         </Button>,
       ],
@@ -59,10 +70,30 @@ export const HaltButton: React.FC = () => {
   };
 
   return (
-    <Tooltip content={<div>{words("environment.halt.button.tooltip")}</div>} position="right">
-      <Button variant="stateful" state="attention" icon={<StopIcon />} onClick={handleModalToggle}>
-        {words("environment.halt.button")}
-      </Button>
-    </Tooltip>
+    <>
+      <Tooltip content={<div>{words("environment.halt.button.tooltip")}</div>} position="right">
+        <Button
+          variant="stateful"
+          state="attention"
+          icon={<StopIcon />}
+          onClick={handleModalToggle}
+        >
+          {words("environment.halt.button")}
+        </Button>
+      </Tooltip>
+      {errorMessage && (
+        <AlertGroup aria-live="polite" isToast>
+          <Alert
+            variant="danger"
+            title="Error"
+            key={"error-" + uniqueId()}
+            timeout={5000}
+            aria-label="error-message"
+          >
+            {errorMessage}
+          </Alert>
+        </AlertGroup>
+      )}
+    </>
   );
 };
