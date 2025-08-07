@@ -37,8 +37,6 @@ export const Page: React.FC = () => {
     currentPage,
   }).useContinuous();
 
-  console.log("render facts page", isSuccess, isError);
-
   const tablePresenter = new FactsTablePresenter();
 
   //when sorting is triggered, reset the current page

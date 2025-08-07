@@ -95,7 +95,7 @@ export const EditableField: React.FC<Props> = ({
         </Flex>
       </DescriptionListTerm>
       <DescriptionListDescription>
-        {!editable && <StaticView data-testid={`${label}-value`} value={value} />}
+        {!editable && <StaticView data-testid={`${label}-value`} value={initialValue} />}
         {editable && (
           <Flex spaceItems={{ default: "spaceItemsNone" }}>
             <FlexItem grow={{ default: "grow" }}>

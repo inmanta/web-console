@@ -60,7 +60,8 @@ describe("EnvironmentSettings", () => {
     server.use(
       http.post("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", async ({ request }) => {
         const body = await request.json();
-        if (body && body["name"] === "dev") {
+
+        if (body && body["name"].includes("dev")) {
           return HttpResponse.json();
         }
         return HttpResponse.json({ message: "Invalid environment name" }, { status: 400 });
@@ -78,15 +79,17 @@ describe("EnvironmentSettings", () => {
 
     await userEvent.type(textBox, "dev{enter}");
 
-    await waitFor(() => {
-      expect(screen.queryByTestId("environment-settings-error")).toBeNull();
-    });
+    expect(screen.queryByTestId("environment-settings-error")).not.toBeInTheDocument();
 
-    await act(async () => {
-      const results = await axe(document.body);
+    await userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
 
-      expect(results).toHaveNoViolations();
-    });
+    const textBox2 = await screen.findByRole("textbox", { name: "Name-input" });
+
+    await userEvent.clear(textBox2);
+
+    await userEvent.type(textBox2, "otherName{enter}");
+
+    expect(await screen.findByTestId("environment-settings-error")).toBeVisible();
   });
 
   test("Given environment settings When canceling a name edit Then the backend request is not fired", async () => {

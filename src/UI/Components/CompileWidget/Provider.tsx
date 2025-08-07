@@ -1,36 +1,37 @@
 import React, { useContext, useState } from "react";
-import { AlertVariant } from "@patternfly/react-core";
+import { Alert, AlertGroup } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
+import { uniqueId } from "lodash";
 import { GetEnvironmentPreviewKey, useTriggerCompile } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { ToastAlert } from "../ToastAlert";
 import { CompileWidget } from "./CompileWidget";
 
 interface Props {
   afterTrigger?(): void;
-  isToastVisible?: boolean;
 }
 
-export const Provider: React.FC<Props> = ({ afterTrigger, isToastVisible = false }) => {
+export const Provider: React.FC<Props> = ({ afterTrigger }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const [toastMessage, setToastMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isServerCompileEnabled = environmentHandler.useIsServerCompileEnabled();
   const env = environmentHandler.useId();
   const client = useQueryClient();
 
   const { mutate } = useTriggerCompile({
     onMutate: ({ update }) => {
-      if (isToastVisible) {
-        setToastMessage(words("common.compileWidget.toast")(update));
-        setTimeout(() => {
-          setToastMessage("");
-        }, 2000);
-      }
+      setToastMessage(words("common.compileWidget.toast")(update));
+      setTimeout(() => {
+        setToastMessage("");
+      }, 2000);
     },
     onSuccess: () => {
       client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
       afterTrigger && afterTrigger();
+    },
+    onError: (error) => {
+      setErrorMessage(error.message);
     },
   });
 
@@ -40,15 +41,32 @@ export const Provider: React.FC<Props> = ({ afterTrigger, isToastVisible = false
 
   return (
     <>
-      {isToastVisible && (
-        <ToastAlert
-          data-testid="ToastAlert"
-          type={AlertVariant.info}
-          message={toastMessage}
-          setMessage={setToastMessage}
-          title={words("common.compileWidget.toastTitle")}
-        />
-      )}
+      <AlertGroup aria-live="polite" isToast isLiveRegion>
+        {toastMessage && (
+          <Alert
+            variant="info"
+            title="Info"
+            key={"info-" + uniqueId()}
+            timeout={5000}
+            aria-label="info-message"
+            data-testid="info-message"
+          >
+            {toastMessage}
+          </Alert>
+        )}
+        {errorMessage && (
+          <Alert
+            variant="danger"
+            title="Error"
+            key={"error-" + uniqueId()}
+            timeout={5000}
+            aria-label="error-message"
+            data-testid="error-message"
+          >
+            {errorMessage}
+          </Alert>
+        )}
+      </AlertGroup>
       <CompileWidget
         onRecompile={onRecompile(false)}
         onUpdateAndRecompile={onRecompile(true)}
