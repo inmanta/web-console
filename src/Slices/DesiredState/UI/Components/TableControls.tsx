@@ -17,7 +17,7 @@ export const TableControls: React.FC<Props> = ({ filter, setFilter, paginationWi
       <FilterWidget filter={filter} setFilter={setFilter} />
       <ToolbarItem variant="separator" />
       <ToolbarGroup>
-        <CompileWidget isToastVisible />
+        <CompileWidget/>
       </ToolbarGroup>
       <ToolbarGroup>
         <CompareSelectionWidget />
