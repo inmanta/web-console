@@ -85,7 +85,7 @@ export const HaltButton: React.FC = () => {
         <AlertGroup aria-live="polite" isToast>
           <Alert
             variant="danger"
-            title="Error"
+            title={words("error.title")}
             key={"error-" + uniqueId()}
             timeout={5000}
             aria-label="error-message"
