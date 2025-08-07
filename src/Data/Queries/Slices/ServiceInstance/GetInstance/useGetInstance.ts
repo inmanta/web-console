@@ -40,7 +40,7 @@ export const useGetInstance = (service: string, instanceId: string): GetInstance
       useQuery({
         queryKey: getInstanceKey.single(instanceId, [{ service }, env]),
         queryFn: () => get(url),
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => query.state.error ? false : REFETCH_INTERVAL,
         select: (data): ServiceInstanceModel => data.data,
       }),
   };

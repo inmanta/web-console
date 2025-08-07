@@ -73,7 +73,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => query.state.error ? false : REFETCH_INTERVAL,
       }),
   };
 };

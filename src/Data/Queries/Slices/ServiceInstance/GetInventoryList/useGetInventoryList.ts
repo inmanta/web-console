@@ -65,7 +65,7 @@ export const useGetInventoryList = (serviceNames: string[]): GetInventoryList =>
       useQuery({
         queryKey: getInventoryListKey.list([...serviceNames, env]),
         queryFn: fetchAllServices,
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => query.state.error ? false : REFETCH_INTERVAL,
       }),
   };
 };

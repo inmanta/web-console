@@ -82,7 +82,7 @@ export const useGetResourceLogs = (params: GetResourceLogsParams): GetResourceLo
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => query.state.error ? false : REFETCH_INTERVAL,
       }),
   };
 };

@@ -35,7 +35,7 @@ export const useGetOrderDetails = (): GetOrderDetails => {
       useQuery({
         queryKey: getOrderDetailsKey.single(id, [env]),
         queryFn: () => get(`/lsm/v2/order/${id}`),
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => query.state.error ? false : REFETCH_INTERVAL,
         select: (data) => data.data,
       }),
   };

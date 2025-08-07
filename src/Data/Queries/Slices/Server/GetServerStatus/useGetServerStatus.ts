@@ -36,7 +36,7 @@ export const useGetServerStatus = (): GetServerStatus => {
         queryFn: () => get("/api/v1/serverstatus"),
         retry: false,
         select: (data) => data.data,
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => query.state.error ? false : REFETCH_INTERVAL,
       }),
   };
 };

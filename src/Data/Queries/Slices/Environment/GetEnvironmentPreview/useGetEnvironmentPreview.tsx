@@ -74,7 +74,6 @@ export const useGetEnvironmentPreview = (): GetEnvironmentPreview => {
       useQuery({
         queryKey: GetEnvironmentPreviewKey.list([]),
         queryFn,
-        refetchInterval: REFETCH_INTERVAL,
         select: (data) => {
           const environments = data.data.environments.edges.map((edge) => edge.node);
           return {

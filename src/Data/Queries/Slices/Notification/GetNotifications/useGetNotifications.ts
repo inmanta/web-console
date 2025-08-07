@@ -76,7 +76,7 @@ export const useGetNotifications = (params: GetNotificationsParams): GetNotifica
           params.origin,
           env,
         ]),
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => query.state.error ? false : REFETCH_INTERVAL,
         queryFn: () => get(getUrl(params)),
         select: (data) => ({
           ...data,
