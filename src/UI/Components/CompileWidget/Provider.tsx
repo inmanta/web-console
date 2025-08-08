@@ -45,7 +45,7 @@ export const Provider: React.FC<Props> = ({ afterTrigger }) => {
         {toastMessage && (
           <Alert
             variant="info"
-            title="Info"
+            title={words("info.title")}
             key={"info-" + uniqueId()}
             timeout={5000}
             aria-label="info-message"

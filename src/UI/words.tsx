@@ -49,6 +49,7 @@ const dict = {
   noData: "There is no data available to display.",
   success: "Success",
   "success.title": "Success",
+  "info.title": "Info",
 
   /**
    * Error related text
