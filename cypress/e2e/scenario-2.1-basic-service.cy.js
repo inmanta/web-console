@@ -31,7 +31,6 @@ const checkStatusCompile = (id) => {
     cy.wait("@IsCompiling").then((req) => {
       statusCodeCompile = req.response.statusCode;
       const environments = req.response.body.data.data.environments;
-      console.log("environments", environments);
 
       if (environments) {
         const edges = environments.edges;
