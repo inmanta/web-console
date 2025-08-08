@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { gql } from "graphql-request";
 import { Environment } from "@/Core/Domain";
-import { CustomError, useGraphQLRequest } from "@/Data/Queries";
+import { CustomError, REFETCH_INTERVAL, useGraphQLRequest } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 
 /**
@@ -35,7 +35,7 @@ export interface EnvironmentPreviewResponse {
  * Return Signature of the useGetEnvironmentPreview React Query
  */
 interface GetEnvironmentPreview {
-  useOneTime: () => UseQueryResult<
+  useContinuous: () => UseQueryResult<
     {
       environments: EnvironmentPreview[];
       errors: string[] | null;
@@ -70,10 +70,11 @@ export const useGetEnvironmentPreview = (): GetEnvironmentPreview => {
   const queryFn = useGraphQLRequest<EnvironmentPreviewResponse>(query);
 
   return {
-    useOneTime: () =>
+    useContinuous: () =>
       useQuery({
         queryKey: GetEnvironmentPreviewKey.list([]),
         queryFn,
+        refetchInterval: REFETCH_INTERVAL,
         select: (data) => {
           const environments = data.data.environments.edges.map((edge) => edge.node);
           return {
