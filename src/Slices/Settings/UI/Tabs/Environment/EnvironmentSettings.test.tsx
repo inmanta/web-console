@@ -61,7 +61,7 @@ describe("EnvironmentSettings", () => {
       http.post("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", async ({ request }) => {
         const body = await request.json();
 
-        if (body && body["name"].includes("dev")) {
+        if (body && body["name"] === "dev") {
           return HttpResponse.json();
         }
         return HttpResponse.json({ message: "Invalid environment name" }, { status: 400 });

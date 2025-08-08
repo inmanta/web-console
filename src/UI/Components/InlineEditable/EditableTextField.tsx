@@ -36,10 +36,10 @@ export const EditableTextField: React.FC<FieldProps> = ({
   />
 );
 
-const EditView: EditViewComponent = ({ value, onChange, onSubmit, label, initialValue }) => (
+const EditView: EditViewComponent = ({ value, onChange, onSubmit, label }) => (
   <TextInput
     aria-label={`${label}-input`}
-    value={value || initialValue}
+    value={value}
     onChange={(_event, value) => onChange(value)}
     onKeyDown={(event) => {
       if (event.key && event.key !== "Enter") return;
