@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Flex, FlexItem } from "@patternfly/react-core";
+import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { UserShieldIcon } from "@patternfly/react-icons";
 import { Td, Tr } from "@patternfly/react-table";
 import { useRemoveUser, UserInfo } from "@/Data/Queries";
@@ -11,7 +11,7 @@ import { NestedUserRoleTable } from "./NestedUserRoleTable";
 
 interface Props {
   user: UserInfo;
-  setAlertMessage: (message: string) => void;
+  setAlertMessage: (message: string, variant: AlertVariant) => void;
 }
 
 /**
@@ -27,7 +27,11 @@ export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
   const showRoles = authConfig?.provider === "policy-engine" && authConfig?.method === "database";
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const { mutate } = useRemoveUser();
+  const { mutate } = useRemoveUser({
+    onError: (error) => {
+      setAlertMessage(error.message, AlertVariant.danger);
+    },
+  });
 
   /**
    * Opens a modal with a confirmation form for deleting a user.

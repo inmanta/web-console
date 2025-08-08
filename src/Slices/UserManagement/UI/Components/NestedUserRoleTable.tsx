@@ -155,7 +155,7 @@ const RoleSelector: React.FC<{
           {errors.map((error) => (
             <Alert
               variant="danger"
-              title="Error"
+              title={words("error.title")}
               key={"error-" + uniqueId()}
               timeout={5000}
               aria-label="error-message"

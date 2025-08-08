@@ -50,7 +50,7 @@ export const useGetInfiniteInstanceLogs = (
             `/lsm/v1/service_inventory/${service}/${instance}/log?${pageParam ? pageParam : initialParameters}`
           );
         },
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         select: (data) => {
           return data.pages.flatMap((page) => page.data);
         },

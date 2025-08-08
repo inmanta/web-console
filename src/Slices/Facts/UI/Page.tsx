@@ -46,9 +46,11 @@ export const Page: React.FC = () => {
   }, [sort.order]);
 
   if (isError) {
-    <PageContainer pageTitle={words("facts.title")}>
-      <ErrorView message={error.message} retry={refetch} ariaLabel="Facts-Failed" />
-    </PageContainer>;
+    return (
+      <PageContainer pageTitle={words("facts.title")}>
+        <ErrorView message={error.message} retry={refetch} ariaLabel="Facts-Failed" />
+      </PageContainer>
+    );
   }
 
   if (isSuccess) {

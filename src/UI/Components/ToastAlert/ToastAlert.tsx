@@ -9,6 +9,17 @@ interface Props {
   setMessage: (message: string) => void;
 }
 
+/**
+ * The ToastAlert Component
+ *
+ * @props {Props} props - The props of the components
+ *  @prop {string} title - the title of the alert
+ *  @prop {AlertVariant} type - the type of the alert
+ *  @prop {string} message - the message of the alert
+ *  @prop {function} setMessage - callback method to set the message
+ *
+ * @returns {React.FC<Props>} A React Component displaying the Toast Alert
+ */
 export const ToastAlert: React.FC<Props> = ({
   title,
   type = AlertVariant.danger,
@@ -16,7 +27,7 @@ export const ToastAlert: React.FC<Props> = ({
   setMessage,
 }) => {
   return message ? (
-    <AlertGroup isToast>
+    <AlertGroup isToast aria-live="polite" isLiveRegion>
       <Alert
         data-testid="ToastAlert"
         variant={type}

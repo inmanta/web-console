@@ -1,4 +1,9 @@
-import { UseMutationResult, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  UseMutationOptions,
+  UseMutationResult,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useDeleteWithoutEnv } from "@/Data/Queries";
 import { getUserKey } from "../GetUsers/useGetUsers";
 
@@ -7,7 +12,9 @@ import { getUserKey } from "../GetUsers/useGetUsers";
  *
  * @returns {Mutation} - The mutation object provided by `useMutation` hook.
  */
-export const useRemoveUser = (): UseMutationResult<void, Error, string, unknown> => {
+export const useRemoveUser = (
+  options?: UseMutationOptions<void, Error, string, unknown>
+): UseMutationResult<void, Error, string, unknown> => {
   const client = useQueryClient();
   const deleteFn = useDeleteWithoutEnv();
 
@@ -18,5 +25,6 @@ export const useRemoveUser = (): UseMutationResult<void, Error, string, unknown>
       // Refetch the users query to update the list
       client.invalidateQueries({ queryKey: getUserKey.root() });
     },
+    ...options,
   });
 };

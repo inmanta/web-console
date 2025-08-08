@@ -22,11 +22,13 @@ export const Tab: React.FC = () => {
   const envDetailsData = useGetEnvironmentDetails().useOneTime(id);
 
   if (envDetailsData.isError || projectsData.isError) {
-    <ErrorView
-      message={envDetailsData.error?.message || projectsData.error?.message || ""}
-      retry={(envDetailsData.isError && envDetailsData.refetch) || projectsData.refetch}
-      ariaLabel="EnvironmentDetails-Error"
-    />;
+    return (
+      <ErrorView
+        message={envDetailsData.error?.message || projectsData.error?.message || ""}
+        retry={(envDetailsData.isError && envDetailsData.refetch) || projectsData.refetch}
+        ariaLabel="EnvironmentDetails-Error"
+      />
+    );
   }
 
   if (envDetailsData.isSuccess && projectsData.isSuccess) {

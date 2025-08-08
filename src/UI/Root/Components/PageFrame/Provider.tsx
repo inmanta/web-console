@@ -18,15 +18,13 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
   const environmentId = getEnvironmentId(environmentRole, environment);
 
   return (
-    <>
-      <PageFrame environmentId={environmentId}>
-        {environmentId === words("error.environment.missing") ? (
-          <Navigate to={routeManager.getUrl("Home", undefined)} />
-        ) : (
-          children
-        )}
-      </PageFrame>
-    </>
+    <PageFrame environmentId={environmentId}>
+      {environmentId === words("error.environment.missing") ? (
+        <Navigate to={routeManager.getUrl("Home", undefined)} />
+      ) : (
+        children
+      )}
+    </PageFrame>
   );
 };
 

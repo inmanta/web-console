@@ -35,7 +35,7 @@ export interface EnvironmentPreviewResponse {
  * Return Signature of the useGetEnvironmentPreview React Query
  */
 interface GetEnvironmentPreview {
-  useOneTime: () => UseQueryResult<
+  useContinuous: () => UseQueryResult<
     {
       environments: EnvironmentPreview[];
       errors: string[] | null;
@@ -70,7 +70,7 @@ export const useGetEnvironmentPreview = (): GetEnvironmentPreview => {
   const queryFn = useGraphQLRequest<EnvironmentPreviewResponse>(query);
 
   return {
-    useOneTime: () =>
+    useContinuous: () =>
       useQuery({
         queryKey: GetEnvironmentPreviewKey.list([]),
         queryFn,

@@ -38,7 +38,7 @@ export const useGetServiceModel = (service: string): GetServiceModel => {
       useQuery({
         queryKey: getServiceModelKey.single(service, [env]),
         queryFn: () => get(`/lsm/v1/service_catalog/${service}?instance_summary=True`),
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         select: (data) => data.data,
       }),
   };

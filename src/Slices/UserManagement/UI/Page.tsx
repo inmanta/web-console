@@ -18,7 +18,10 @@ import { UserInfoRow } from "./Components/UserInfoRow";
  */
 export const UserManagementPage: React.FC = () => {
   const { triggerModal } = useContext(ModalContext);
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [alertMessage, setAlertMessage] = useState<{
+    message: string;
+    variant: AlertVariant;
+  } | null>(null);
   const { data, isSuccess, isError, error, refetch } = useGetUsers().useOneTime();
 
   const authConfig = globalThis && globalThis.auth;
@@ -56,10 +59,14 @@ export const UserManagementPage: React.FC = () => {
       <PageContainer pageTitle={words("userManagement.title")}>
         {alertMessage && (
           <ToastAlert
-            title={words("success")}
-            type={AlertVariant.success}
-            message={alertMessage}
-            setMessage={setAlertMessage}
+            title={
+              alertMessage.variant === AlertVariant.success
+                ? words("success.title")
+                : words("error.title")
+            }
+            type={alertMessage.variant}
+            message={alertMessage.message}
+            setMessage={() => setAlertMessage(null)}
           />
         )}
         <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
@@ -93,7 +100,7 @@ export const UserManagementPage: React.FC = () => {
                 <UserInfoRow
                   key={`Row-${user.username}`}
                   user={user}
-                  setAlertMessage={setAlertMessage}
+                  setAlertMessage={(message, variant) => setAlertMessage({ message, variant })}
                 />
               ))}
             </Tbody>

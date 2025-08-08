@@ -36,7 +36,7 @@ export const useGetResourceFacts = (): GetResourceFacts => {
         queryKey: getResourceFactsKey.single(resourceId, [env]),
         queryFn: () => get(`/api/v2/resource/${encodeURIComponent(resourceId)}/facts`),
         select: (data) => data.data,
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
       }),
   };
 };

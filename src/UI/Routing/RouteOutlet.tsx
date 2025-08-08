@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Outlet } from "react-router";
 import { DependencyContext } from "@/UI/Dependency";
 import { Initializer } from "@/UI/Root/Components/Initializer";
@@ -12,10 +12,12 @@ import { Initializer } from "@/UI/Root/Components/Initializer";
 export const RouteOutlet = () => {
   const { authHelper } = useContext(DependencyContext);
 
-  //instead of navigating to login page, we trigger login flow which can vary based on the auth provider
-  if (!authHelper.getToken()) {
-    authHelper.login();
-  }
+  useEffect(() => {
+    //instead of navigating to login page, we trigger login flow which can vary based on the auth provider
+    if (!authHelper.getToken()) {
+      authHelper.login();
+    }
+  }, [authHelper]);
 
   return (
     <Initializer>

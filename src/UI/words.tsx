@@ -48,11 +48,14 @@ const dict = {
   "copy.clipboard": "Copy to clipboard",
   noData: "There is no data available to display.",
   success: "Success",
+  "success.title": "Success",
+  "info.title": "Info",
 
   /**
    * Error related text
    */
   error: "Something went wrong",
+  "error.title": "Error",
   "error.unknown": "Unknown error",
   "error.general": (message: string) => `The following error occured: ${message}`,
   "error.environment.missing": "Environment is missing",

@@ -8,7 +8,7 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI/words";
 import { Provider } from "./Provider";
 
-function setup({ isToastVisible = true, serverCompileEnabled = true } = {}) {
+function setup({ serverCompileEnabled = true } = {}) {
   const afterTrigger = vi.fn();
 
   const component = (
@@ -19,7 +19,7 @@ function setup({ isToastVisible = true, serverCompileEnabled = true } = {}) {
           settings: { ...EnvironmentDetails.env.settings, server_compile: serverCompileEnabled },
         }}
       >
-        <Provider afterTrigger={afterTrigger} isToastVisible={isToastVisible} />
+        <Provider afterTrigger={afterTrigger} />
       </MockedDependencyProvider>
     </QueryClientProvider>
   );
@@ -50,7 +50,7 @@ describe("CompileWidgetProvider", () => {
 
     await userEvent.click(button);
 
-    const toast = await screen.findByTestId("ToastAlert");
+    const toast = await screen.findByTestId("info-message");
 
     expect(toast).toBeVisible();
     expect(toast).toHaveTextContent(words("common.compileWidget.toast")(false));
@@ -82,7 +82,7 @@ describe("CompileWidgetProvider", () => {
 
     await userEvent.click(button);
 
-    const toast = await screen.findByTestId("ToastAlert");
+    const toast = await screen.findByTestId("info-message");
 
     expect(toast).toBeVisible();
     expect(toast).toHaveTextContent(words("common.compileWidget.toast")(true));
@@ -90,10 +90,8 @@ describe("CompileWidgetProvider", () => {
     expect(afterTrigger).toHaveBeenCalled();
   });
 
-  test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile clicked THEN toast won't appear", async () => {
-    const { component } = setup({
-      isToastVisible: false,
-    });
+  test("GIVEN CompileButton WHEN recompile clicked THEN toast appears", async () => {
+    const { component } = setup();
 
     render(component);
 
@@ -101,7 +99,7 @@ describe("CompileWidgetProvider", () => {
 
     await userEvent.click(button);
 
-    expect(screen.queryByTestId("ToastAlert")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("info-message")).toBeInTheDocument();
 
     expect(button).toBeEnabled();
   });
@@ -116,5 +114,26 @@ describe("CompileWidgetProvider", () => {
     const button = screen.getByRole("button", { name: "RecompileButton" });
 
     expect(button).toBeDisabled();
+  });
+
+  test("GIVEN CompileButton WHEN recompile fails THEN error message is shown", async () => {
+    const { component } = setup();
+
+    server.use(
+      http.post("/api/v1/notify/c85c0a64-ed45-4cba-bdc5-703f65a225f7", async () => {
+        return HttpResponse.error();
+      })
+    );
+
+    render(component);
+
+    const button = screen.getByRole("button", { name: "RecompileButton" });
+
+    await userEvent.click(button);
+
+    const errorMessage = await screen.findByTestId("error-message");
+
+    expect(errorMessage).toBeVisible();
+    expect(errorMessage).toHaveTextContent("Error");
   });
 });

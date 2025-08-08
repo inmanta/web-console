@@ -41,7 +41,7 @@ export const useGetCompileDetails = (params: CompileDetailsParams): GetCompileDe
       useQuery({
         queryKey: getCompileDetailsKey.single(params.id, [env]),
         queryFn: () => get(url),
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         select: (data) => data,
       }),
   };

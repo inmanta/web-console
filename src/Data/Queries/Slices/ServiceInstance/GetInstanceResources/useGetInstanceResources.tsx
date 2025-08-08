@@ -37,7 +37,7 @@ export const useGetInstanceResources = (
       useQuery({
         queryKey: getInstanceResourcesKey.single(id, [{ version }, { service_entity }, env]),
         queryFn: () => get(url),
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         select: (data): InstanceResourceModel[] => data.data,
       }),
   };

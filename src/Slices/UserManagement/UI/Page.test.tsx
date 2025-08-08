@@ -385,4 +385,53 @@ describe("UserManagementPage", () => {
 
     server.close();
   });
+
+  it("should show error message when remove user fails", async () => {
+    const data: UserInfo[] = [
+      { username: "test_user", auth_method: "database", is_admin: false, roles: {} },
+      { username: "test_user2", auth_method: "oidc", is_admin: false, roles: {} },
+    ];
+    const server = setupServer(
+      http.get("/api/v2/user", async (): Promise<HttpResponse> => {
+        return HttpResponse.json({
+          data,
+        });
+      }),
+      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
+        return HttpResponse.error();
+      })
+    );
+
+    server.listen();
+    const component = setup();
+
+    render(component);
+
+    const loadingView = await screen.findByLabelText("UserManagement-Loading");
+
+    expect(loadingView).toBeInTheDocument();
+
+    const successView = await screen.findByLabelText("users-table");
+
+    expect(successView).toBeInTheDocument();
+
+    const userRows = screen.getAllByTestId("user-row");
+
+    expect(userRows).toHaveLength(2);
+
+    await userEvent.click(screen.getAllByText("Delete")[0]);
+
+    await userEvent.click(screen.getByText("Yes"));
+
+    const updatedRows = await screen.findAllByTestId("user-row");
+
+    expect(updatedRows).toHaveLength(2);
+
+    const errorMessage = await screen.findByTestId("ToastAlert");
+
+    expect(errorMessage).toBeVisible();
+    expect(errorMessage).toHaveTextContent("Error");
+
+    server.close();
+  });
 });
