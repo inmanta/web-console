@@ -631,6 +631,8 @@ const dict = {
     <>
       This action cannot be undone. This will permanently remove everything from the{" "}
       <b>{environment}</b> environment and reset it to its initial state.
+      <br />
+      Only the <b>configuration options</b> will be preserved in their current state.
     </>
   ),
   "home.environment.promptInput": (environment: string) => (
