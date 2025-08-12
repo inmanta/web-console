@@ -83,7 +83,7 @@ export const useGetPartialNotifications = ({
       useQuery({
         queryKey: GetPartialNotificationsKey.list([envID]),
         queryFn,
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         select: (data) => {
           const notifications = data.data.notifications.edges.map((edge) => edge.node);
           return {

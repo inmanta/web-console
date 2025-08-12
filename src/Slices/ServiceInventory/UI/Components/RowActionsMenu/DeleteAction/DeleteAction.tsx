@@ -29,11 +29,13 @@ export const DeleteAction: React.FC<Props> = ({
   const { mutate, isPending } = useDeleteInstance(id, service_entity, version, {
     onError: (error) => {
       setErrorMessage(error.message);
+      closeModal();
     },
     onSuccess: () => {
       client.refetchQueries({
         queryKey: getInstanceKey.root(),
       });
+      closeModal();
     },
   });
 
@@ -63,7 +65,6 @@ export const DeleteAction: React.FC<Props> = ({
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
   const onSubmit = async (): Promise<void> => {
-    closeModal();
     mutate();
   };
 

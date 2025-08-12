@@ -363,7 +363,7 @@ describe("Page Actions - Failed", () => {
 
     await userEvent.click(confirmButton);
 
-    expect(screen.getByRole("dialog")).toBeVisible();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     const errorToast = screen.getByTestId("error-toast-actions-error-message");
 
     expect(errorToast).toBeVisible();

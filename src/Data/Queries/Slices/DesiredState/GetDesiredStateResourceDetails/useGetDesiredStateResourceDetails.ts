@@ -39,7 +39,7 @@ export const useGetDesiredStateResourceDetails = (
         queryKey: getDesiredStateResourceDetailsKey.single(id, [{ version }, env]),
         queryFn: () => get(getUrl(version, id)),
         select: (data) => data.data,
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
       }),
   };
 };

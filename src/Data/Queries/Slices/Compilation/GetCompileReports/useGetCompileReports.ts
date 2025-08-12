@@ -54,7 +54,7 @@ export const useGetCompileReports = (params: CompileReportsParams): GetCompileRe
       useQuery({
         queryKey: getCompileReportsKey.list([env, ...Object.values(params)]),
         queryFn: () => get(url),
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),

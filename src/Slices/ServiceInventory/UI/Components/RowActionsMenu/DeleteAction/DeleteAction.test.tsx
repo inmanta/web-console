@@ -91,7 +91,6 @@ describe("DeleteModal ", () => {
 
     await userEvent.click(yesButton);
 
-    expect(screen.queryByText(words("yes"))).not.toBeInTheDocument();
     expect(mockedMutate).toHaveBeenCalled();
   });
 
