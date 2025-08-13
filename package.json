@@ -123,7 +123,7 @@
     "@loadable/component": "^5.16.7",
     "@monaco-editor/react": "^4.6.0",
     "@patternfly/react-charts": "^8.2.2",
-    "@patternfly/react-code-editor": "^6.2.2",
+    "@patternfly/react-code-editor": "^6.3.1",
     "@patternfly/react-core": "^6.2.2",
     "@patternfly/react-icons": "^6.3.1",
     "@patternfly/react-log-viewer": "^6.3.0",
