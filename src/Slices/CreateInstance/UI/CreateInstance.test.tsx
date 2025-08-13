@@ -51,7 +51,7 @@ describe("CreateInstance", () => {
   afterEach(() => {
     server.resetHandlers();
   });
-  
+
   afterAll(() => server.close());
 
   beforeEach(() => {
