@@ -19,15 +19,14 @@ const axe = configureAxe({
 });
 
 // Mock usePost before the test
-const postMock = vi.hoisted(() => vi.fn());
-const getMock = vi.hoisted(() => vi.fn());
-vi.mock("@/Data/Queries/Helpers/useQueries", () => ({
-  usePost: () => postMock,
-  useGet: () => getMock,
-  useGetWithOptionalEnv: () => getMock,
-  useGetWithoutEnv: () => getMock,
-}));
-
+const postMock = vi.fn();
+vi.mock("@/Data/Queries/Helpers/useQueries", async (importActual) => {
+  const actual = await importActual();
+  return {
+    ...actual,
+    usePost: () => postMock,
+  };
+});
 function setup(service) {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -47,27 +46,10 @@ describe("CreateInstance", () => {
 
   beforeAll(() => {
     server.listen();
-    server.use(
-      http.get("/lsm/v1/service_catalog/service_name_a", () => {
-        return HttpResponse.json({ data: Service.withIdentity });
-      }),
-      http.get("/lsm/v1/service_catalog/test_entity", () => {
-        return HttpResponse.json({ data: Service.withIdentity });
-      }),
-      http.get("/lsm/v1/service_inventory/test_entity", () => {
-        return HttpResponse.json({
-          data: [ServiceInstance.a],
-          metadata: {
-            total: 1,
-            before: 0,
-            after: 0,
-            page_size: 250,
-          },
-        });
-      })
-    );
   });
-
+  afterEach(() => {
+    server.resetHandlers();
+  });
   afterAll(() => server.close());
 
   beforeEach(() => {
@@ -132,49 +114,63 @@ describe("CreateInstance", () => {
     });
   });
 
-  //TODO: Fix the test scenario
-  // test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
-  //   const postMock = vi.fn();
+  test("Given the CreateInstance View When creating an instance with Inter-service-relations only Then the correct request is fired", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog/service_name_a", () => {
+        return HttpResponse.json({ data: Service.withRelationsOnly });
+      }),
+      http.get("/lsm/v1/service_catalog/test_entity", () => {
+        return HttpResponse.json({ data: Service.withRelationsOnly });
+      }),
+      http.get("/lsm/v1/service_inventory/test_entity", () => {
+        return HttpResponse.json({
+          data: [ServiceInstance.a],
+          metadata: {
+            total: 1,
+            before: 0,
+            after: 0,
+            page_size: 250,
+          },
+        });
+      })
+    );
+    const { component } = setup(Service.withRelationsOnly);
 
-  //   vi.spyOn(queryModule, "usePost").mockReturnValue(postMock);
+    render(component);
 
-  //   const { component } = setup(Service.withRelationsOnly);
+    await screen.findByPlaceholderText("Select an instance of test_entity"); // await for the relation input be rendered
 
-  //   render(component);
+    const relationInputField = await screen.findByRole("button", {
+      name: "test_entity-select-toggle",
+    });
 
-  //   await screen.findByPlaceholderText("Select an instance of test_entity"); // await for the relation input be rendered
+    await userEvent.click(relationInputField);
 
-  //   const relationInputField = screen.getByLabelText(
-  //     "test_entity-select-toggleFilterInput",
-  //   );
+    const options = screen.getAllByRole("option");
 
-  //   fireEvent.change(relationInputField, { target: { value: "a" } });
+    expect(options.length).toBe(1);
 
-  //   const options = screen.getAllByRole("option");
+    await userEvent.click(await screen.findByRole("option", { name: "service_instance_id_a" }));
 
-  //   expect(options.length).toBe(1);
+    expect(options[0]).toHaveClass("pf-m-selected");
 
-  //   await userEvent.click(options[0]);
+    await act(async () => {
+      const results = await axe(document.body);
 
-  //   expect(options[0]).toHaveClass("pf-m-selected");
+      expect(results).toHaveNoViolations();
+    });
 
-  //   await act(async () => {
-  //     const results = await axe(document.body);
+    await userEvent.click(screen.getByText(words("confirm")));
 
-  //     expect(results).toHaveNoViolations();
-  //   });
-
-  //   await userEvent.click(screen.getByText(words("confirm")));
-
-  //   expect(postMock).toHaveBeenCalledWith(
-  //     `/lsm/v1/service_inventory/${Service.withRelationsOnly.name}`,
-  //     {
-  //       attributes: {
-  //         test_entity: ["service_instance_id_a"],
-  //       },
-  //     },
-  //   );
-  // });
+    expect(postMock).toHaveBeenCalledWith(
+      `/lsm/v1/service_inventory/${Service.withRelationsOnly.name}`,
+      {
+        attributes: {
+          test_entity: ["service_instance_id_a"],
+        },
+      }
+    );
+  });
 
   test("Given the CreateInstance View When creating entity with default values Then the inputs have correct values set", async () => {
     const { component } = setup(Service.ServiceWithAllAttrs);

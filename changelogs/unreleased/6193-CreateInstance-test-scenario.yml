@@ -1,0 +1,6 @@
+change-type: patch
+description: Fix CreateInstance test scenario that was broken after refactoring to React Query
+issue-nr: 6193
+destination-branches:
+- master
+sections: {}
