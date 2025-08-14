@@ -182,7 +182,8 @@
     "word-wrap": "^1.2.4",
     "ws": "^8.17.1",
     "@babel/runtime": "^7.26.10",
-    "http-proxy-middleware": "^2.0.8"
+    "http-proxy-middleware": "^2.0.8",
+    "form-data": "^2.5.5"
   },
   "madge": {
     "fileExtensions": [
