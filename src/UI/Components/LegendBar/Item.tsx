@@ -17,11 +17,11 @@ export interface Props {
 export const Item: React.FC<Props> = ({ value, label, backgroundColor, color, onClick, id }) => (
   <Tooltip content={label} position="top" distance={4} enableFlip>
     <Container
-      value={value}
+      $value={value}
       data-value={value}
-      backgroundColor={backgroundColor}
-      color={color}
-      onClick={onClick ? () => onClick(id) : undefined}
+      $backgroundColor={backgroundColor}
+      $color={color}
+      $onClick={onClick ? () => onClick(id) : undefined}
       aria-label={`LegendItem-${id}`}
     >
       {value}
@@ -29,16 +29,21 @@ export const Item: React.FC<Props> = ({ value, label, backgroundColor, color, on
   </Tooltip>
 );
 
-export const Container = styled.div<Omit<Props, "id" | "label">>`
-  background-color: ${(p) => p.backgroundColor};
-  color: ${(p) => p.color || "white"};
+export const Container = styled.div<{
+  $value: number;
+  $backgroundColor: string;
+  $color?: string;
+  $onClick?: () => void;
+}>`
+  background-color: ${(p) => p.$backgroundColor};
+  color: ${(p) => p.$color || "white"};
   flex-basis: auto;
-  flex-grow: ${(p) => p.value};
-  flex-shrink: ${(p) => p.value};
+  flex-grow: ${(p) => p.$value};
+  flex-shrink: ${(p) => p.$value};
   height: 36px;
   text-align: center;
   line-height: 36px;
   padding: 0 8px;
-  cursor: ${(p) => (p.onClick ? "pointer" : "inherit")};
+  cursor: ${(p) => (p.$onClick ? "pointer" : "inherit")};
   user-select: none;
 `;
