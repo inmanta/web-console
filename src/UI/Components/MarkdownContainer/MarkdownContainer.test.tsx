@@ -32,7 +32,7 @@ describe("MarkdownContainer", () => {
     render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
 
     // First, check if the mermaid placeholder container is created
-    // The new implementation creates placeholder divs instead of "Loading diagram..." text
+    // The implementation creates placeholder divs
     const placeholderContainer = document.querySelector(".mermaid-container[data-mermaid-content]");
     expect(placeholderContainer).toBeInTheDocument();
 
@@ -77,7 +77,7 @@ describe("MarkdownContainer", () => {
       })
     );
 
-    // Check that the placeholder container is created with theme info
+    // Check that the placeholder container is created
     const placeholderContainer = document.querySelector(".mermaid-container[data-mermaid-content]");
     expect(placeholderContainer).toBeInTheDocument();
 
