@@ -58,7 +58,7 @@ export const getAvailableStateTargets = (
  *
  * @param {ServiceModel} serviceEntity - the serviceEntity Model,
  * when the query is pending, it can happen that it is briefly undefined
- * @returns a sorted array of available target states for the service model.
+ * @returns a sorted array of available target states and error states for the service model.
  */
 export const getExpertStateTargets = (serviceEntity?: ServiceModel): string[] => {
   if (!serviceEntity) {
@@ -73,11 +73,14 @@ export const getExpertStateTargets = (serviceEntity?: ServiceModel): string[] =>
    * A state can have mutliple targets, these will have multiple entries in the list of transfers.
    * We map over the possible transfers, an keep all the available targets, then filter out the duplicates to keep a clean list.
    */
-  const possibleTargets = new Set(
-    possibleStatesTransfers.map((transfer: TransferModel) => transfer.target)
-  );
+  const possibleTargets = possibleStatesTransfers.map((transfer: TransferModel) => transfer.target);
+  const possibleErrorTargets = possibleStatesTransfers
+    .map((transfer: TransferModel) => transfer.error)
+    .filter((error) => error !== null);
 
-  const sortedArrayOfTargets: string[] = Array.from(possibleTargets).sort();
+  // Combine both into a Set to remove duplicates and sort them
+  const combinedTargets = new Set([...possibleTargets, ...possibleErrorTargets]);
+  const sortedArrayOfTargets: string[] = Array.from(combinedTargets).sort();
 
   return sortedArrayOfTargets;
 };
