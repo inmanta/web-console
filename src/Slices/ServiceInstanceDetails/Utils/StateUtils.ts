@@ -72,10 +72,12 @@ export const getExpertStateTargets = (serviceEntity?: ServiceModel): string[] =>
    * The list contains a list of all possible transfers. A transfer consists of a state and a possible future targetState.
    * A state can have mutliple targets, these will have multiple entries in the list of transfers.
    */
-  const possibleTargets = possibleStatesTransfers.map((transfer: TransferModel) => transfer.target);
+  const possibleTargets = possibleStatesTransfers
+    .map((transfer: TransferModel) => transfer.target)
+    .filter((target): target is string => target !== null);
   const possibleErrorTargets = possibleStatesTransfers
     .map((transfer: TransferModel) => transfer.error)
-    .filter((error) => error !== null);
+    .filter((error): error is string => error !== null);
 
   // Combine both into a Set to remove duplicates and sort them
   const combinedTargets = new Set([...possibleTargets, ...possibleErrorTargets]);
