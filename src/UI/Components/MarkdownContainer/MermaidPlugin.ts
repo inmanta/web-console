@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import MarkdownIt from "markdown-it";
 import Mermaid from "mermaid";
+import { words } from "@/UI";
 
 // Define types for Mermaid API
 interface MermaidAPI {
@@ -136,7 +137,7 @@ export async function processMermaidContainers() {
       const errorSvg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="300" height="180">
           <rect x="10" y="10" width="280" height="160" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(255,0,0);stroke-dasharray:5,5;" />
-          <text x="50%" y="40%" alignment-baseline="middle" text-anchor="middle" font-family="Arial" font-size="16" fill="red">Mermaid Error</text>
+          <text x="50%" y="40%" alignment-baseline="middle" text-anchor="middle" font-family="Arial" font-size="16" fill="red">${words("inventory.error.mermaid")}</text>
           <text x="50%" y="60%" alignment-baseline="middle" text-anchor="middle" font-family="Arial" font-size="12" fill="red">${String(error).substring(0, 50)}</text>
         </svg>
       `;

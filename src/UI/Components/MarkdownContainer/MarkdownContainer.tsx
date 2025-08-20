@@ -50,13 +50,6 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
 
     if (!container) return;
 
-    // Clean up any data-processed attributes from previous renders to ensure Mermaid diagrams re-render properly
-    // Mermaid will not re-render if the data-processed attribute is present.
-    // If we do not remove it, the placeholder divs will not be replaced with the actual rendered diagrams.
-    container.querySelectorAll("[data-processed]").forEach((element) => {
-      element.removeAttribute("data-processed");
-    });
-
     const handleImageClick = (event: Event) => {
       const img = event.target as HTMLImageElement;
 
