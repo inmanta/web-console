@@ -1,6 +1,11 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MarkdownContainer } from "./MarkdownContainer";
 
+// Mock the theme function
+vi.mock("../DarkmodeOption", () => ({
+  getThemePreference: vi.fn(() => "default"),
+}));
+
 describe("MarkdownContainer", () => {
   it("renders the Markdown content correctly", () => {
     const markdownContent = "# Heading\n\n**This is some bold text.**";
@@ -26,19 +31,85 @@ describe("MarkdownContainer", () => {
 
     render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
 
-    // First, check if the loading placeholder is shown
-    expect(screen.getByText("Loading diagram...")).toBeInTheDocument();
+    // First, check if the mermaid placeholder container is created
+    // The implementation creates placeholder divs
+    const placeholderContainer = document.querySelector(".mermaid-container[data-mermaid-content]");
+    expect(placeholderContainer).toBeInTheDocument();
 
-    // Wait for the diagram to be rendered
+    // Wait for the diagram to be processed and rendered
     await waitFor(() => {
-      // The mock will replace the loading placeholder with an img tag
+      // The mock will replace the placeholder container with an img tag
       const img = screen.getByRole("img");
 
       expect(img).toBeInTheDocument();
+      // Verify the image has the correct attributes for Mermaid diagrams
+      expect(img).toHaveClass("mermaid-diagram");
+      expect(img).toHaveAttribute("data-zoomable", "true");
+      expect(img).toHaveAttribute("alt", "Mermaid diagram");
+
       // Verify the image source contains our mock SVG
       expect(img.getAttribute("src")).toContain(
         encodeURIComponent("<svg>Mock Mermaid Diagram</svg>")
       );
     });
+  });
+
+  it("applies theme configuration to Mermaid diagrams", async () => {
+    // Mock theme preference to return dark theme
+    const { getThemePreference } = await import("../DarkmodeOption");
+    vi.mocked(getThemePreference).mockReturnValue("dark");
+
+    // Import the mermaid mock to verify it was called with theme options
+    const mermaidMock = await import("mermaid");
+    const initializeSpy = vi.spyOn(mermaidMock.default, "initialize");
+
+    const markdownContent = "```mermaid\ngraph LR\n    A --> B\n```";
+    const webTitle = "Container_id";
+
+    render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
+
+    // Verify that mermaid.initialize was called with the dark theme
+    expect(initializeSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        securityLevel: "loose",
+        startOnLoad: false,
+        theme: "dark",
+      })
+    );
+
+    // Check that the placeholder container is created
+    const placeholderContainer = document.querySelector(".mermaid-container[data-mermaid-content]");
+    expect(placeholderContainer).toBeInTheDocument();
+
+    // Wait for the diagram to be processed
+    await waitFor(() => {
+      const img = screen.getByRole("img");
+      expect(img).toBeInTheDocument();
+      expect(img).toHaveClass("mermaid-diagram");
+    });
+  });
+
+  it("uses default theme when no theme preference is set", async () => {
+    // Mock theme preference to return null (no preference)
+    const { getThemePreference } = await import("../DarkmodeOption");
+    vi.mocked(getThemePreference).mockReturnValue(null);
+
+    // Import the mermaid mock to verify it was called with default theme
+    const mermaidMock = await import("mermaid");
+    const initializeSpy = vi.spyOn(mermaidMock.default, "initialize");
+
+    const markdownContent = "```mermaid\ngraph LR\n    A --> B\n```";
+    const webTitle = "Container_id";
+
+    render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
+
+    // Verify that mermaid.initialize was called with the default theme
+    expect(initializeSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        securityLevel: "loose",
+        startOnLoad: false,
+        theme: "default",
+      })
+    );
   });
 });
