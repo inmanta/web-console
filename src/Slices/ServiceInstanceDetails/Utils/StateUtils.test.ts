@@ -59,7 +59,7 @@ const createInstance = (state: string): ServiceInstanceModel => ({
   transfer_context: "stable",
 });
 
-// Core test data
+// mocked Transfers
 const mockTransfers = [
   createTransfer("up", "update_start", { on_update: true, api_set_state: true }),
   createTransfer("up", "deleting", { on_delete: true }),
