@@ -121,7 +121,7 @@
     "@inmanta/rappid": "^4.0.0",
     "@joint/layout-directed-graph": "^4.0.1",
     "@loadable/component": "^5.16.7",
-    "@monaco-editor/react": "^4.6.0",
+    "@monaco-editor/react": "^4.7.0",
     "@patternfly/react-charts": "^8.2.2",
     "@patternfly/react-code-editor": "^6.3.1",
     "@patternfly/react-core": "^6.2.2",
