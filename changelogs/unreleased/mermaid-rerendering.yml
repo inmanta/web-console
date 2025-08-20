@@ -1,0 +1,5 @@
+change-type: patch
+description: Fix Mermaid re-rendering issues.
+destination-branches:
+- master
+sections: {}
