@@ -45,8 +45,8 @@ describe("Page Actions - Success", () => {
 
     await userEvent.click(expertDropdown);
 
-    // expect 16 menu items (1 for the  destroy, and 15 state options)
-    expect(screen.getAllByRole("menuitem")).toHaveLength(16);
+    // expect 20 menu items (1 for the destroy action, and 19 others for state options)
+    expect(screen.getAllByRole("menuitem")).toHaveLength(20);
 
     const stateUp = screen.getByRole("menuitem", { name: "up" });
 
@@ -242,8 +242,8 @@ describe("Page Actions - Failed", () => {
 
     await userEvent.click(expertDropdown);
 
-    // expect 16 menu items (1 for the  destroy, and 15 state options)
-    expect(screen.getAllByRole("menuitem")).toHaveLength(16);
+    // expect 20 menu items (1 for the destroy action, and 19 others for state options)
+    expect(screen.getAllByRole("menuitem")).toHaveLength(20);
 
     const stateUp = screen.getByRole("menuitem", { name: "up" });
 
