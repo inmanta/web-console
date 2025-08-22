@@ -30,7 +30,7 @@ export class InventoryStencilTab {
   ) {
     const groups = {};
 
-    //Create object with service names as keys and all of the service instances as StencilElements, to be used in the Stencil Sidebar
+    // Create object with service names as keys and all of the service instances as StencilElements, to be used in the Stencil Sidebar
     Object.keys(serviceInventories).forEach((serviceName) => {
       const serviceModel = serviceModels.find((model) => model.name === serviceName);
 
@@ -46,16 +46,17 @@ export class InventoryStencilTab {
           : instance.id;
 
         //add the instance id to the attributes object, to then pass it to the actual object on canvas
-        return createStencilElement(
-          displayName,
-          serviceModel,
-          {
+        return createStencilElement({
+          name: displayName,
+          serviceModel: serviceModel,
+          instanceAttributes: {
             ...attributes,
             id: instance.id,
           },
-          false,
-          index === 0
-        );
+          isEmbeddedEntity: false,
+          showBorderTop: index === 0,
+          isDisabled: false,
+        });
       }));
     });
 

@@ -62,6 +62,11 @@ export function appendInstance(
 
   instanceAsTable.addTo(graph);
 
+  // Disable the corresponding stencil item in the inventory sidebar
+  if (stencilName) {
+    toggleDisabledStencil(stencilName, true);
+  }
+
   let embeddedEntities: ServiceEntityBlock[] = [];
 
   //check for any presentable attributes, where candidate attrs have priority, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
@@ -108,7 +113,7 @@ export function appendInstance(
 
       toggleDisabledStencil(appendedInstances[0].get("stencilName"), true);
     } else {
-      //If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
+      // If cell is already in the graph, we need to check if it got in its inter-service relations the one with id that corresponds with created instanceAsTable
       let isConnected = false;
       const cellAsBlock = cellAdded as ServiceEntityBlock;
       const relations = cellAsBlock.getRelations();

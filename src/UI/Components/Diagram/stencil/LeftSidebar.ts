@@ -3,42 +3,23 @@ import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Queries";
 import { InstanceStencilTab } from "./instanceStencil";
 import { InventoryStencilTab } from "./inventoryStencil";
+import { words } from "@/UI/words";
 
 /**
- * Class representing a stencil sidebar.
+ * Class representing the left sidebar.
+ * It contains the instance and inventory tabs.
+ * It is a toolbar containing templates for instances and embedded entities.
+ * As well as the list of exisiting instances in the inventory.
  */
-export class StencilSidebar {
+export class LeftSidebar {
   instanceTab: InstanceStencilTab;
   inventoryTab: InventoryStencilTab;
   tabsToolbar: ui.Toolbar;
 
-  toggleTabVisibility = (newActiveTab: Tab, oldActiveTab: Tab, newTabId: string) => {
-    oldActiveTab.stencil.el.classList.add("joint-hidden");
-    oldActiveTab.stencil.freeze();
-
-    newActiveTab.stencil.el.classList.remove("joint-hidden");
-    newActiveTab.stencil.unfreeze();
-
-    const tabs: NodeListOf<HTMLElement> = document.querySelectorAll(
-      '[aria-label="stencil-sidebar-tabs"] li'
-    );
-
-    tabs.forEach((tab) => tab.classList.toggle("pf-m-current", tab.id === newTabId));
-  };
-
-  toggleTab = (clickedElement: EventTarget) => {
-    if (clickedElement instanceof HTMLElement) {
-      // The clickedElement can also be the entire tabContainer, which we don't want to react on.
-      clickedElement.innerText === "Inventory" &&
-        this.toggleTabVisibility(this.inventoryTab, this.instanceTab, "inventory-tab");
-
-      clickedElement.innerText === "New" &&
-        this.toggleTabVisibility(this.instanceTab, this.inventoryTab, "new-tab");
-    }
-  };
 
   /**
-   * Creates a stencil sidebar.
+   * Creates the left sidebar.
+   * This is the container for the instance and inventory tabs.
    *
    * @param {HTMLElement} stencilElement - The HTML element to which the sidebar elements will be appended.
    * @param {ui.PaperScroller} scroller - The JointJS scroller associated with the stencil.
@@ -78,7 +59,7 @@ export class StencilSidebar {
               role="tab"
               name="new_tab"
             >
-              <span class="pf-v6-c-tabs__item-text">New</span>
+              <span class="pf-v6-c-tabs__item-text">${words("instanceComposer.stencil.new")}</span>
             </button>
           </li>
           <li class="pf-v6-c-tabs__item" role="presentation" id="inventory-tab">
@@ -88,7 +69,7 @@ export class StencilSidebar {
               role="tab"
               name="inventory_tab"
             >
-              <span class="pf-v6-c-tabs__item-text">Inventory</span>
+              <span class="pf-v6-c-tabs__item-text">${words("instanceComposer.stencil.inventory")}</span>
             </button>
           </li>
         </ul>
@@ -102,6 +83,48 @@ export class StencilSidebar {
     stencilElement.appendChild(this.tabsToolbar.el);
     this.tabsToolbar.render();
   }
+
+  /**
+   * Toggles the visibility of the tabs by freezing and unfreezing the old and new tabs
+   * and adding and removing the joint-hidden class.
+   * 
+   * @private
+   * @param newActiveTab - The new active tab.
+   * @param oldActiveTab - The old active tab.
+   * @param newTabId - The id of the new tab.
+   */
+  private toggleTabVisibility = (newActiveTab: Tab, oldActiveTab: Tab, newTabId: string) => {
+    oldActiveTab.stencil.el.classList.add("joint-hidden");
+    oldActiveTab.stencil.freeze();
+
+    newActiveTab.stencil.el.classList.remove("joint-hidden");
+    newActiveTab.stencil.unfreeze();
+
+    const tabs: NodeListOf<HTMLElement> = document.querySelectorAll(
+      '[aria-label="stencil-sidebar-tabs"] li'
+    );
+
+    tabs.forEach((tab) => tab.classList.toggle("pf-m-current", tab.id === newTabId));
+  };
+
+  /**
+   * Toggles the visibility of the tabs by freezing and unfreezing the old and new tabs
+   * and adding and removing the joint-hidden class.
+   * 
+   * @public
+   * @param clickedElement - The clicked element.
+   */
+  public toggleTab = (clickedElement: EventTarget) => {
+    if (clickedElement instanceof HTMLElement) {
+      // The clickedElement can also be the entire tabContainer, which we don't want to react on.
+      clickedElement.innerText === "Inventory" &&
+        this.toggleTabVisibility(this.inventoryTab, this.instanceTab, "inventory-tab");
+
+      clickedElement.innerText === "New" &&
+        this.toggleTabVisibility(this.instanceTab, this.inventoryTab, "new-tab");
+    }
+  };
+
 
   remove(): void {
     this.instanceTab.stencil.remove();

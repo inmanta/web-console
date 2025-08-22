@@ -34,9 +34,9 @@ interface Props {
  * ComposerEditorProvider component
  *
  * This component is responsible for providing the service model related data to the Canvas component through Context.
- * It fetches the service models for the entire catalog, and the inventories for the all Inter-service relations that can be connected to the created instance and most importantly instance user want to edit with all it's closest inter-service relations.
+ * It fetches the service models for the entire catalog, and the inventories for all Inter-service relations that can be connected to the created instance and most importantly instance user want to edit with all its closest inter-service relations.
  * The difference from ComposerCreatorProvider is that this component also fetches the instance data, it's done to avoid unnecessary requests when displaying composer for creating new instances
- * It also handles the state and effects related to these data.
+ * It also handles the state and effects related to this data.
  *
  * @props {Props} props - The properties that define the behavior and display of the component.
  * @prop {string} serviceName - The name of the service for which the instance is being fetched.
@@ -77,15 +77,11 @@ export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance,
   }, [serviceModelsQuery.isSuccess, serviceName, serviceModelsQuery.data, mainService]);
 
   if (serviceModelsQuery.isError) {
-    return (
-      <ErrorView
-        data-testid="ErrorView"
-        title={words("error")}
-        message={words("error.general")(serviceModelsQuery.error.message)}
-        ariaLabel="ComposerEditorProvider-ServiceModelsQuery_failed"
-        retry={serviceModelsQuery.refetch}
-      />
-    );
+    const message = words("error.general")(serviceModelsQuery.error.message);
+    const retry = serviceModelsQuery.refetch;
+    const ariaLabel = "ComposerEditorProvider-ServiceModelsQuery_failed";
+
+    return renderErrorView(message, ariaLabel, retry);
   }
 
   if (instanceWithRelationsQuery.isError) {
