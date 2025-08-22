@@ -1,10 +1,10 @@
 import { dia } from "@inmanta/rappid";
 import { DirectedGraph } from "@joint/layout-directed-graph";
-import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
+import { EmbeddedEntity, InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Queries";
 import { words } from "@/UI/words";
 import { dispatchUpdateStencil } from "../Context/dispatchers";
-import { findCorrespondingId, findFullInterServiceRelations } from "../helpers";
+import { findCorrespondingId, findFullInterServiceRelations, getEntityAttributes } from "../helpers";
 import activeImage from "../icons/active-icon.svg";
 import candidateImage from "../icons/candidate-icon.svg";
 import { EventActionEnum, relationId } from "../interfaces";
@@ -12,27 +12,37 @@ import { ServiceEntityBlock } from "../shapes";
 import { toggleDisabledStencil } from "../stencil/helpers";
 import { connectEntities, createComposerEntity } from "./general";
 
+export interface AppendInstanceParams {
+  paper: dia.Paper;
+  graph: dia.Graph;
+  instanceWithRelations: InstanceWithRelations;
+  services: ServiceModel[];
+  isMainInstance?: boolean;
+  isBlockedFromEditing?: boolean;
+}
+
 /**
  * This function converts Instance attributes to display them on the Smart Service Composer canvas.
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
  *
- * @param {dia.Graph} graph JointJS graph object
- * @param {dia.Paper} paper JointJS paper object
- * @param {InstanceWithRelations} instanceWithRelations that we want to display
- * @param {ServiceModel[]} services that hold definitions for attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
- * @param {boolean} isMainInstance boolean value determining if the instance is the core one
- * @param {boolean} isBlockedFromEditing boolean value determining if the instance is blocked from editing
+ * @param {AppendInstanceParams} params - The parameters for appending the instance.
+ * @param {dia.Paper} params.paper - JointJS paper object
+ * @param {dia.Graph} params.graph - JointJS graph object
+ * @param {InstanceWithRelations} params.instanceWithRelations - that we want to display
+ * @param {ServiceModel[]} params.services - that hold definitions for attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
+ * @param {boolean} params.isMainInstance - boolean value determining if the instance is the core one. Defaults to true.
+ * @param {boolean} params.isBlockedFromEditing - boolean value determining if the instance is blocked from editing. Defaults to false.
  *
- * @returns {ServiceEntityBlock} appendedInstance to allow connect related by inter-service relations Instances added concurrently
+ * @returns {ServiceEntityBlock[]} appendedInstance to allow connect related by inter-service relations Instances added concurrently
  */
-export function appendInstance(
-  paper: dia.Paper,
-  graph: dia.Graph,
-  instanceWithRelations: InstanceWithRelations,
-  services: ServiceModel[],
+export function appendInstance({
+  paper,
+  graph,
+  instanceWithRelations,
+  services,
   isMainInstance = true,
-  isBlockedFromEditing = false
-): ServiceEntityBlock[] {
+  isBlockedFromEditing = false,
+}: AppendInstanceParams): ServiceEntityBlock[] {
   const serviceInstance = instanceWithRelations.instance;
   const serviceInstanceModel = services.find(
     (model) => model.name === serviceInstance.service_entity
@@ -67,49 +77,29 @@ export function appendInstance(
     toggleDisabledStencil(stencilName, true);
   }
 
-  let embeddedEntities: ServiceEntityBlock[] = [];
+  let embeddedEntities: ServiceEntityBlock[] = addEmbeddedEntities({
+    graph,
+    paper,
+    instanceAsTable,
+    serviceModel: serviceInstanceModel,
+    instance: serviceInstance,
+    isBlockedFromEditing,
+  });
 
-  //check for any presentable attributes, where candidate attrs have priority, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
-  if (serviceInstance.candidate_attributes) {
-    embeddedEntities = addEmbeddedEntities(
-      graph,
-      paper,
-      instanceAsTable,
-      serviceInstanceModel,
-      serviceInstance.candidate_attributes,
-      "candidate",
-      isBlockedFromEditing
-    );
-    addInfoIcon(instanceAsTable, "candidate");
-  } else if (serviceInstance.active_attributes) {
-    embeddedEntities = addEmbeddedEntities(
-      graph,
-      paper,
-      instanceAsTable,
-      serviceInstanceModel,
-      serviceInstance.active_attributes,
-      "active",
-      isBlockedFromEditing
-    );
-    addInfoIcon(instanceAsTable, "active");
-  }
-
-  //map through inter-service related instances and either append them and connect to them or connect to already existing ones
+  // Map through inter-service related instances and either append them and connect to them or connect to already existing ones
   instanceWithRelations.interServiceRelations.forEach((interServiceRelation) => {
     const cellAdded = graph.getCell(interServiceRelation.id);
-    const isBlockedFromEditing = true;
 
-    //If cell isn't in the graph, we need to append it and connect it to the one we are currently working on
+    // If cell isn't in the graph, we need to append it and connect it to the one we are currently working on
     if (!cellAdded) {
-      const isMainInstance = false;
-      const appendedInstances = appendInstance(
+      const appendedInstances = appendInstance({
         paper,
         graph,
-        { instance: interServiceRelation, interServiceRelations: [] },
+        instanceWithRelations: { instance: interServiceRelation, interServiceRelations: [] },
         services,
-        isMainInstance,
-        isBlockedFromEditing
-      );
+        isMainInstance: false,
+        isBlockedFromEditing: true,
+      });
 
       toggleDisabledStencil(appendedInstances[0].get("stencilName"), true);
     } else {
@@ -132,8 +122,9 @@ export function appendInstance(
         }
       }
 
-      //If doesn't, or the one we are looking for isn't among the ones stored, we need go through every connected shape and do the same assertion,
-      //as the fact that we have that cell as interServiceRelation tells us that either that or its embedded entities has connection
+      // If doesn't, or the one we are looking for isn't among the ones stored, 
+      // we need go through every connected shape and do the same assertion,
+      // as the fact that we have that cell as interServiceRelation tells us that either that or its embedded entities has connection
       if (!isConnected) {
         const neighbors = graph.getNeighbors(cellAdded as dia.Element);
 
@@ -177,44 +168,71 @@ export function appendInstance(
   return [...embeddedEntities, instanceAsTable];
 }
 
+export interface AddEmbeddedEntitiesParams {
+  graph: dia.Graph;
+  paper: dia.Paper;
+  instanceAsTable: ServiceEntityBlock;
+  serviceModel: ServiceModel;
+  instance: ServiceInstanceModel;
+  isBlockedFromEditing?: boolean;
+}
+
 /**
  * Function that appends attributes into the entity and creates nested embedded entities that connects to given instance/entity
  *
- * @param {dia.Graph} graph JointJS graph object
- * @param {dia.Paper} paper JointJS paper object
- * @param {ServiceEntityBlock} instanceAsTable created Entity
- * @param {ServiceModel} serviceModel - serviceModel model of given instance/entity
- * @param {InstanceAttributeModel} attributesValues - attributes of given instance/entity
- * @param {"candidate" | "active"} presentedAttrs *optional* identify used set of attributes if they are taken from Service Instance
- * @param {ServiceEntityBlock=} instanceToConnectRelation *optional* shape to which eventually should embedded entity or  be connected to
+ * @param {AddEmbeddedEntitiesParams} params - The parameters for adding embedded entities.
+ * @param {dia.Graph} params.graph - JointJS graph object
+ * @param {dia.Paper} params.paper - JointJS paper object
+ * @param {ServiceEntityBlock} params.instanceAsTable - created Entity
+ * @param {ServiceModel} params.serviceModel - serviceModel model of given instance/entity
+ * @param {InstanceAttributeModel} params.attributesValues - attributes of given instance/entity
+ * @param {"candidate" | "active"} params.presentedAttr - identify used set of attributes if they are taken from Service Instance
+ * @param {boolean} params.isBlockedFromEditing - boolean value determining if the instance is blocked from editing. Defaults to false.
  *
  * @returns {ServiceEntityBlock[]} - returns array of created embedded entities, that are connected to given entity
  */
-function addEmbeddedEntities(
-  graph: dia.Graph,
-  paper: dia.Paper,
-  instanceAsTable: ServiceEntityBlock,
-  serviceModel: ServiceModel,
-  attributesValues: InstanceAttributeModel,
-  presentedAttr: "candidate" | "active",
-  isBlockedFromEditing = false
-): ServiceEntityBlock[] {
+function addEmbeddedEntities({
+  graph,
+  paper,
+  instanceAsTable,
+  serviceModel,
+  instance,
+  isBlockedFromEditing = false,
+}: AddEmbeddedEntitiesParams): ServiceEntityBlock[] {
   const { embedded_entities } = serviceModel;
-  //iterate through embedded entities to create and connect them
-  //we are basing iteration on service Model, if there is no value in the instance and if the value has modifier set to "r", skip that entity - "r" entities are read-only, they can't be edited and can be in multiple places which would result with enormous tree of cells in the graph and the canvas which would discourage user from using the Instance Composer
+  const attributes = instance.candidate_attributes || instance.active_attributes || undefined;
+
+  if (!attributes) {
+    return [];
+  }
+
+  const presentedAttr = instance.candidate_attributes ? "candidate" : "active";
+
+
+  // Iterate through embedded entities to create and connect them
+  // We are basing iteration on service Model, if there is no value in the instance and if the value has modifier set to "r", 
+  // skip that entity - "r" entities are read-only, 
+  // they can't be edited and can be in multiple places which would result with enormous tree of cells in the graph 
+  // and the canvas which would discourage user from using the Instance Composer
   const createdEmbedded = embedded_entities
-    .filter((entity) => !!attributesValues[entity.name] && entity.modifier !== "r")
+    .filter((entity) => !!attributes[entity.name] && entity.modifier !== "r")
     .flatMap((entity) => {
-      const appendedEntities = appendEmbeddedEntity(
+      const entityAttributes = getEntityAttributes(entity.name, attributes);
+
+      if (!entityAttributes) {
+        return [];
+      }
+
+      const appendedEntities = appendEmbeddedEntity({
         paper,
         graph,
-        entity,
-        attributesValues[entity.name] as InstanceAttributeModel,
-        instanceAsTable.id,
-        serviceModel.name,
+        embeddedEntity: entity,
+        entityAttributes,
+        embeddedTo: instanceAsTable.id,
+        holderName: serviceModel.name,
         presentedAttr,
-        !serviceModel.strict_modifier_enforcement || isBlockedFromEditing
-      );
+        isBlockedFromEditing: !serviceModel.strict_modifier_enforcement || isBlockedFromEditing,
+      });
 
       connectEntities(
         graph,
@@ -229,7 +247,7 @@ function addEmbeddedEntities(
   const relations = serviceModel.inter_service_relations || [];
 
   relations.forEach((relation) => {
-    const relationId = attributesValues[relation.name];
+    const relationId = attributes[relation.name];
 
     if (relationId) {
       if (Array.isArray(relationId)) {
@@ -242,34 +260,48 @@ function addEmbeddedEntities(
     }
   });
 
+  addInfoIcon(instanceAsTable, presentedAttr);
+
   return createdEmbedded;
+}
+
+export interface AppendEmbeddedEntityParams {
+  paper: dia.Paper;
+  graph: dia.Graph;
+  embeddedEntity: EmbeddedEntity;
+  entityAttributes: InstanceAttributeModel | InstanceAttributeModel[];
+  embeddedTo: string | dia.Cell.ID;
+  holderName: string;
+  presentedAttr?: "candidate" | "active";
+  isBlockedFromEditing?: boolean;
 }
 
 /**
  * Function that creates, appends and returns created embedded entities which then are used to connects to it's parent
  * Supports recursion to display the whole tree
  *
- * @param {dia.Graph} graph JointJS graph object
- * @param {dia.Paper} paper JointJS paper object
- * @param {EmbeddedEntity} embeddedEntity that we want to display
- * @param {InstanceAttributeModel} entityAttributes - attributes of given entity
- * @param {string | null} embeddedTo - id of the entity/shape in which this shape is embedded
- * @param {string} holderName - name of the entity to which it is embedded/connected
- * @param {"candidate" | "active"} ConnectionRules - flag whether we are displaying candidate or active attributes
- * @param {boolean} isBlockedFromEditing boolean value determining if the instance is blocked from editin
+ * @param {AppendEmbeddedEntityParams} params - The parameters for appending the embedded entity.
+ * @param {dia.Paper} params.paper - JointJS paper object
+ * @param {dia.Graph} params.graph - JointJS graph object
+ * @param {EmbeddedEntity} params.embeddedEntity - that we want to display
+ * @param {InstanceAttributeModel | InstanceAttributeModel[]} params.entityAttributes - attributes of given entity
+ * @param {string | dia.Cell.ID} params.embeddedTo - id of the entity/shape in which this shape is embedded
+ * @param {string} params.holderName - name of the entity to which it is embedded/connected
+ * @param {"candidate" | "active"} params.presentedAttr - flag whether we are displaying candidate or active attributes
+ * @param {boolean} params.isBlockedFromEditing - boolean value determining if the instance is blocked from editing
  *
  * @returns {ServiceEntityBlock[]} created JointJS shapes
  */
-export function appendEmbeddedEntity(
-  paper: dia.Paper,
-  graph: dia.Graph,
-  embeddedEntity: EmbeddedEntity,
-  entityAttributes: InstanceAttributeModel | InstanceAttributeModel[],
-  embeddedTo: string | dia.Cell.ID,
-  holderName: string,
-  presentedAttr?: "candidate" | "active",
-  isBlockedFromEditing?: boolean
-): ServiceEntityBlock[] {
+export function appendEmbeddedEntity({
+  paper,
+  graph,
+  embeddedEntity,
+  entityAttributes,
+  embeddedTo,
+  holderName,
+  presentedAttr,
+  isBlockedFromEditing,
+}: AppendEmbeddedEntityParams): ServiceEntityBlock[] {
   //Create shape for Entity
 
   /**
@@ -306,16 +338,16 @@ export function appendEmbeddedEntity(
     embeddedEntity.embedded_entities
       .filter((entity) => entity.modifier !== "r") // filter out read-only embedded entities to de-clutter the view as they can't be edited and can be in multiple places which would result with enormous tree of cells in the graph and the canvas
       .forEach((entity) => {
-        const appendedEntity = appendEmbeddedEntity(
+        const appendedEntity = appendEmbeddedEntity({
           paper,
           graph,
-          entity,
-          entityInstance[entity.name] as InstanceAttributeModel,
-          instanceAsTable.id as string,
-          embeddedEntity.name,
+          embeddedEntity: entity,
+          entityAttributes: entityInstance[entity.name] as InstanceAttributeModel,
+          embeddedTo: instanceAsTable.id as string,
+          holderName: embeddedEntity.name,
           presentedAttr,
-          isBlockedFromEditing
-        );
+          isBlockedFromEditing,
+        });
 
         connectEntities(graph, instanceAsTable, appendedEntity, isBlockedFromEditing);
       });

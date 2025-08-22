@@ -120,7 +120,7 @@ describe("ComposerActions.", () => {
   });
 
   it.each`
-    serviceOrderItems | isDirty  | looseElement             | editable | interServiceRelationsOnCanvas
+    serviceOrderItems | isDirty  | looseElements             | editable | interServiceRelationsOnCanvas
     ${new Map()}      | ${true}  | ${null}                  | ${true}  | ${null}
     ${null}           | ${false} | ${null}                  | ${true}  | ${null}
     ${null}           | ${true}  | ${new Set().add("test")} | ${true}  | ${null}
@@ -130,12 +130,12 @@ describe("ComposerActions.", () => {
 })}
   `(
     "should have deploy button disabled when at least one of conditions are not met",
-    ({ serviceOrderItems, isDirty, looseElement, editable, interServiceRelationsOnCanvas }) => {
+    ({ serviceOrderItems, isDirty, looseElements, editable, interServiceRelationsOnCanvas }) => {
       const canvasContext = {
         ...defaultCanvasContext,
         serviceOrderItems: serviceOrderItems || new Map().set("test", "test"),
         isDirty: isDirty,
-        looseElement: looseElement || new Set<string>(),
+        looseElements: looseElements || new Set<string>(),
         interServiceRelationsOnCanvas:
           interServiceRelationsOnCanvas || new Map<string, RelationCounterForCell>(),
       };

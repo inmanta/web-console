@@ -22,7 +22,7 @@ import { CanvasContext } from "./Context";
  * @returns {React.FC<React.PropsWithChildren<unknown>>} The CanvasProvider component.
  */
 export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const [looseElement, setLooseElement] = useState<Set<string>>(new Set());
+  const [looseElements, setLooseElements] = useState<Set<string>>(new Set());
   const [cellToEdit, setCellToEdit] = useState<dia.CellView | null>(null);
   const [dictToDisplay, setDictToDisplay] = useState<DictDialogData | null>(null);
   const [fields, setFields] = useState<Field[]>([]);
@@ -58,8 +58,8 @@ export const CanvasProvider: React.FC<React.PropsWithChildren<unknown>> = ({ chi
         cellToEdit,
         setCellToEdit,
 
-        looseElement,
-        setLooseElement,
+        looseElements,
+        setLooseElements,
 
         fields,
         setFields,

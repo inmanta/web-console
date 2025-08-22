@@ -148,7 +148,12 @@ export function diagramInit(
           .getCells()
           .filter((cell) => cell.get("type") !== "Link") as ServiceEntityBlock[];
       } else {
-        cells = appendInstance(paper, graph, instance, services);
+        cells = appendInstance({
+          paper,
+          graph,
+          instanceWithRelations: instance,
+          services,
+        });
 
         if (instance.instance.metadata && instance.instance.metadata.coordinates) {
           const parsedCoordinates = JSON.parse(instance.instance.metadata.coordinates);

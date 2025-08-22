@@ -96,16 +96,16 @@ describe("appendEmbeddedEntity", () => {
       const { graph, paper, embeddedModel } = setup();
       const presentedAttrs = undefined;
 
-      appendEmbeddedEntity(
+      appendEmbeddedEntity({
         paper,
         graph,
-        embeddedModel,
+        embeddedEntity: embeddedModel,
         entityAttributes,
         embeddedTo,
         holderName,
-        presentedAttrs,
-        isBlockedFromEditing
-      );
+        presentedAttr: presentedAttrs,
+        isBlockedFromEditing,
+      });
 
       const cells = graph.getCells();
 
@@ -153,15 +153,15 @@ describe("appendEmbeddedEntity", () => {
     const expectedMap = new Map().set("1234", "parent_entity");
     const expectedMap2 = new Map().set("12346", "parent_entity");
 
-    appendEmbeddedEntity(
+    appendEmbeddedEntity({
       paper,
       graph,
-      embeddedModel,
+      embeddedEntity: embeddedModel,
       entityAttributes,
       embeddedTo,
       holderName,
-      presentedAttrs
-    );
+      presentedAttr: presentedAttrs,
+    });
 
     const cells = graph.getCells();
 
@@ -228,15 +228,15 @@ describe("appendEmbeddedEntity", () => {
       const expectedMap = new Map().set("1234", "parent_entity");
       const expectedMap2 = new Map().set("12346", "parent_entity");
 
-      appendEmbeddedEntity(
+      appendEmbeddedEntity({
         paper,
         graph,
-        nestedEmbeddedModel,
+        embeddedEntity: nestedEmbeddedModel,
         entityAttributes,
         embeddedTo,
         holderName,
-        presentedAttrs
-      );
+        presentedAttr: presentedAttrs,
+      });
 
       expect(dispatchEventSpy).toHaveBeenCalledTimes(4);
 
@@ -283,16 +283,16 @@ describe("appendEmbeddedEntity", () => {
     const embeddedTo = "123";
     const holderName = "test";
 
-    appendEmbeddedEntity(
+    appendEmbeddedEntity({
       paper,
       graph,
-      rModel,
+      embeddedEntity: rModel,
       entityAttributes,
       embeddedTo,
       holderName,
-      presentedAttrs,
-      isBlockedFromEditing
-    );
+      presentedAttr: presentedAttrs,
+      isBlockedFromEditing,
+    });
 
     const cells = graph.getCells();
 
@@ -314,7 +314,14 @@ describe("appendInstance", () => {
     const { graph, paper } = setup();
 
     expect(() =>
-      appendInstance(paper, graph, mockedInstanceWithRelations, [], true, false)
+      appendInstance({
+        paper,
+        graph,
+        instanceWithRelations: mockedInstanceWithRelations,
+        services: [],
+        isMainInstance: true,
+        isBlockedFromEditing: false,
+      })
     ).toThrow("The instance attribute model is missing");
   });
 
@@ -327,7 +334,13 @@ describe("appendInstance", () => {
     };
     const isCore = true;
 
-    appendInstance(paper, graph, mockedInstance, serviceModels, isCore);
+    appendInstance({
+      paper,
+      graph,
+      instanceWithRelations: mockedInstance,
+      services: serviceModels,
+      isMainInstance: isCore,
+    });
 
     const cells = graph.getCells();
 
@@ -352,7 +365,14 @@ describe("appendInstance", () => {
   it("appends instance with relations to the graph and paper", () => {
     const { graph, paper, serviceModels } = setup();
 
-    appendInstance(paper, graph, mockedInstanceWithRelations, serviceModels, true, false);
+    appendInstance({
+      paper,
+      graph,
+      instanceWithRelations: mockedInstanceWithRelations,
+      services: serviceModels,
+      isMainInstance: true,
+      isBlockedFromEditing: false,
+    });
     const cells = graph.getCells();
 
     expect(cells).toHaveLength(7);
@@ -464,7 +484,13 @@ describe("appendInstance", () => {
     };
     const isCore = true;
 
-    appendInstance(paper, graph, mockedInstance, [rModel], isCore);
+    appendInstance({
+      paper,
+      graph,
+      instanceWithRelations: mockedInstance,
+      services: [rModel],
+      isMainInstance: isCore,
+    });
 
     const cells = graph.getCells();
 
