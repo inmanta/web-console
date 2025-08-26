@@ -40,7 +40,7 @@ describe("CodeEditorCopyControl", () => {
 });
 
 describe("CodeEditorHeightToggleControl", () => {
-  const mockOnToggle = vi.fn();
+  const mockOnToggle = jest.fn();
 
   const defaultProps = {
     code: "const test = 'Hello World';",
@@ -49,7 +49,7 @@ describe("CodeEditorHeightToggleControl", () => {
   };
 
   afterEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe("when collapsed (isExpanded: false)", () => {
