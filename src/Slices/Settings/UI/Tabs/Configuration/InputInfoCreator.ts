@@ -26,7 +26,7 @@ export class InputInfoCreator {
     private readonly setValues: (values: EnvironmentSettings.ValuesMap) => void,
     private readonly update: Update,
     private readonly reset: Reset
-  ) { }
+  ) {}
 
   create(
     settingsMap: EnvironmentSettings.ValuesMap,
