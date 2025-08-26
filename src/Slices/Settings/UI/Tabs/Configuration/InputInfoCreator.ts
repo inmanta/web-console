@@ -26,14 +26,14 @@ export class InputInfoCreator {
     private readonly setValues: (values: EnvironmentSettings.ValuesMap) => void,
     private readonly update: Update,
     private readonly reset: Reset
-  ) {}
+  ) { }
 
   create(
     settingsMap: EnvironmentSettings.ValuesMap,
     definitionMap: EnvironmentSettings.DefinitionMap,
     values: EnvironmentSettings.ValuesMap
-  ): EnvironmentSettings.InputInfo[] {
-    return Object.values(definitionMap)
+  ): EnvironmentSettings.SectionnedInputInfo {
+    const inputInfos = Object.values(definitionMap)
       .map((definition) =>
         this.definitionToInputInfo(
           settingsMap[definition.name],
@@ -43,6 +43,16 @@ export class InputInfoCreator {
         )
       )
       .sort(this.compare);
+
+    const groupedBySection = _.groupBy(inputInfos, "section");
+
+    // Return an object with sections sorted alphabetically
+    return Object.keys(groupedBySection)
+      .sort()
+      .reduce((sortedSections, sectionName) => {
+        sortedSections[sectionName] = groupedBySection[sectionName];
+        return sortedSections;
+      }, {} as EnvironmentSettings.SectionnedInputInfo);
   }
 
   private compare(a: EnvironmentSettings.InputInfo, b: EnvironmentSettings.InputInfo): number {

@@ -77,5 +77,16 @@ export const GlobalStyles = createGlobalStyle`
     background-color: var(--pf-t--global--background--color--primary--default) !important;
   }
 
+  .lined_section {
+    border-bottom: 1px solid var(--pf-t--global--border--color--default) !important;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Titlecase transform utility class */
+  .titlecase {
+    text-transform: capitalize;
+  }
+
   ${MarkdownStyles}
 `;
