@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
-import { HttpResponse, http } from "msw";
+import { DefaultBodyType, HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { UserInfo } from "@/Data/Queries";
 import { MockedDependencyProvider } from "@/Test";
@@ -171,7 +171,7 @@ describe("UserManagementPage", () => {
           data,
         });
       }),
-      http.post("/api/v2/user", async ({ request }): Promise<HttpResponse> => {
+      http.post("/api/v2/user", async ({ request }): Promise<HttpResponse<DefaultBodyType>> => {
         const reqBody = await request.json();
 
         if (typeof reqBody !== "object") {
@@ -208,7 +208,7 @@ describe("UserManagementPage", () => {
           auth_method: "database",
         });
       }),
-      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
+      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse<DefaultBodyType>> => {
         data.splice(0, 1);
 
         return HttpResponse.json({ status: 204 });
@@ -340,12 +340,12 @@ describe("UserManagementPage", () => {
       { username: "test_user2", auth_method: "oidc", is_admin: false, roles: {} },
     ];
     const server = setupServer(
-      http.get("/api/v2/user", async (): Promise<HttpResponse> => {
+      http.get("/api/v2/user", async (): Promise<HttpResponse<DefaultBodyType>> => {
         return HttpResponse.json({
           data,
         });
       }),
-      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
+      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse<DefaultBodyType>> => {
         data.splice(0, 1);
 
         return HttpResponse.json({ status: 204 });
@@ -392,12 +392,12 @@ describe("UserManagementPage", () => {
       { username: "test_user2", auth_method: "oidc", is_admin: false, roles: {} },
     ];
     const server = setupServer(
-      http.get("/api/v2/user", async (): Promise<HttpResponse> => {
+      http.get("/api/v2/user", async (): Promise<HttpResponse<DefaultBodyType>> => {
         return HttpResponse.json({
           data,
         });
       }),
-      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
+      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse<DefaultBodyType>> => {
         return HttpResponse.error();
       })
     );
