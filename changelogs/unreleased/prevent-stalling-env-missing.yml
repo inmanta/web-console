@@ -1,0 +1,6 @@
+change-type: patch
+description: Prevent stalling when environment is missing or invalid.
+destination-branches:
+- master
+- iso8
+sections: {}
