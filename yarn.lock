@@ -1212,7 +1212,7 @@ __metadata:
     "@types/file-saver": "npm:^2.0.7"
     "@types/jest-axe": "npm:^3.5.9"
     "@types/json-bigint": "npm:^1.0.4"
-    "@types/loadable__component": "npm:^5.13.9"
+    "@types/loadable__component": "npm:^5.13.10"
     "@types/lodash": "npm:^4.17.20"
     "@types/lodash-es": "npm:^4.17.12"
     "@types/markdown-it-emoji": "npm:^3.0.1"
@@ -2687,12 +2687,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/loadable__component@npm:^5.13.9":
-  version: 5.13.9
-  resolution: "@types/loadable__component@npm:5.13.9"
+"@types/loadable__component@npm:^5.13.10":
+  version: 5.13.10
+  resolution: "@types/loadable__component@npm:5.13.10"
   dependencies:
     "@types/react": "npm:*"
-  checksum: 10/a41b8883b0167fc307d6d8eaf853277bf66c0c7ea32318c8aa39eba7d99cc1f147a138a63c2e71dea27d24161545e3d6168efe44cfda2806adba83d2798153dd
+  checksum: 10/f467735a236478394ea21626dde4230dc63836fc9bbc7d5cae4fde9e0951658cb58f541401e3337b5e5e39cbc9acb7ab706179828930b9be3852db14f8d27b6b
   languageName: node
   linkType: hard
 
