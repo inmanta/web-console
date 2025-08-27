@@ -1197,7 +1197,7 @@ __metadata:
     "@patternfly/react-core": "npm:^6.2.2"
     "@patternfly/react-icons": "npm:^6.3.1"
     "@patternfly/react-log-viewer": "npm:^6.3.0"
-    "@patternfly/react-styles": "npm:^6.2.2"
+    "@patternfly/react-styles": "npm:^6.3.1"
     "@patternfly/react-table": "npm:^6.2.2"
     "@patternfly/react-tokens": "npm:^6.3.1"
     "@react-keycloak/web": "npm:^3.4.0"
