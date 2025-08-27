@@ -1,0 +1,6 @@
+change-type: patch
+description: Group settings by section
+issue-nr: 6526
+destination-branches:
+- master
+sections: {}

@@ -23,13 +23,14 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    if (isError) {
+    // We add the check for envID to prevent blocking the UI when an environment id is not valid or missing.
+    if (isError && envID) {
       setErrorMessage(error.message);
     }
-    if (isSuccess && data.errors && data.errors.length > 0) {
+    if (isSuccess && data.errors && data.errors.length > 0 && envID) {
       setErrorMessage(data.errors.join(", "));
     }
-  }, [data, isError, isSuccess, error]);
+  }, [data, isError, isSuccess, error, envID]);
 
   if (errorMessage) {
     return (

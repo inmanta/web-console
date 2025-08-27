@@ -28,6 +28,7 @@ interface BaseDefinition {
   recompile: boolean;
   update_model: boolean;
   agent_restart: boolean;
+  section: string;
 }
 
 export interface UnknownDefinition extends BaseDefinition {
@@ -90,5 +91,7 @@ export type InputInfo =
   | DictInputInfo
   | StrInputInfo
   | PositiveFloatInputInfo;
+
+export type SectionnedInputInfo = Record<string, InputInfo[]>;
 
 export type IsUpdateable = (info: Pick<InputInfo, "initial" | "value" | "default">) => boolean;
