@@ -46,7 +46,7 @@ export function EnvironmentHandlerImpl(
     const environment = useSelected();
 
     if (typeof environment === "undefined") {
-      throw new Error("environment required but missing");
+      return "";
     }
 
     return environment.id;
@@ -56,7 +56,7 @@ export function EnvironmentHandlerImpl(
     const environment = useSelected();
 
     if (typeof environment === "undefined") {
-      throw new Error("environment required but missing");
+      return "";
     }
 
     return environment.name;
