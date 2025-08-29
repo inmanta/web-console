@@ -1189,7 +1189,7 @@ __metadata:
     "@eslint/eslintrc": "npm:^3.3.1"
     "@eslint/js": "npm:^9.30.1"
     "@inmanta/rappid": "npm:^4.0.0"
-    "@joint/layout-directed-graph": "npm:^4.0.1"
+    "@joint/layout-directed-graph": "npm:^4.1.4"
     "@loadable/component": "npm:^5.16.7"
     "@monaco-editor/react": "npm:^4.7.0"
     "@patternfly/react-charts": "npm:^8.2.2"
@@ -1431,21 +1431,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joint/core@npm:~4.0.1, @joint/core@npm:~4.0.2":
+"@joint/core@npm:~4.0.1":
   version: 4.0.3
   resolution: "@joint/core@npm:4.0.3"
   checksum: 10/a41e020c7c24d18a689a920a7a2f738217636893bf7f1b6ef2914b1eebfe70c8b90902b5d04ca5fbfdb3ef01aed1e1c7ecb9385e04cefa1d3510877346fca612
   languageName: node
   linkType: hard
 
-"@joint/layout-directed-graph@npm:^4.0.1":
-  version: 4.0.3
-  resolution: "@joint/layout-directed-graph@npm:4.0.3"
+"@joint/core@npm:~4.1.3":
+  version: 4.1.3
+  resolution: "@joint/core@npm:4.1.3"
+  checksum: 10/1262f240edae537f1325bac95484d2f366208f72db99c37dafdd02b7793cdea85966d95d48b0fae39a74772f3c18432e56f9107ccec39e34372ef29a0384f5f5
+  languageName: node
+  linkType: hard
+
+"@joint/layout-directed-graph@npm:^4.1.4":
+  version: 4.1.4
+  resolution: "@joint/layout-directed-graph@npm:4.1.4"
   dependencies:
     "@dagrejs/dagre": "npm:~1.0.4"
     "@dagrejs/graphlib": "npm:~2.1.13"
-    "@joint/core": "npm:~4.0.2"
-  checksum: 10/dd878173a0214bab70a43ad4d91182b978e14247ec4b20e56c7d5ef09450283d03bcc8f33c47116128ffe80ca17a23d14317fe4fdd4d461f271eb986ea7993e8
+    "@joint/core": "npm:~4.1.3"
+  checksum: 10/a28b175c4d0f23ddacc4231a1c4f0f9a792b62144294bed7cab4f0d010a0f99af81f373a1aecee10a868f7fd9725ce2e9e5b6c6156edc367f2e7c01bfbdc9a0f
   languageName: node
   linkType: hard
 
