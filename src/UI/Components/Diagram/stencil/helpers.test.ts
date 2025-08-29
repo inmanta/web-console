@@ -8,18 +8,18 @@ import {
 
 describe("createStencilElement", () => {
   it("returns single instance of Stencil Element based on properties passed", () => {
-    const embeddedElementWithModel = createStencilElement(
-      "default",
-      containerModel.embedded_entities[0],
-      {
+    const embeddedElementWithModel = createStencilElement({
+      name: "default",
+      serviceModel: containerModel.embedded_entities[0],
+      instanceAttributes: {
         id: "123",
         attrOne: "test_value",
         attrTwo: "other_test_value",
       },
-      true,
-      true,
-      "holderName"
-    );
+      isEmbeddedEntity: true,
+      showBorderTop: true,
+      holderName: "holderName",
+    });
 
     expect(embeddedElementWithModel.attributes.name).toEqual("default");
     expect(embeddedElementWithModel.attributes.serviceModel).toStrictEqual(
@@ -52,9 +52,13 @@ describe("createStencilElement", () => {
     expect(embeddedElementWithModel.attributes.attrs?.borderTop?.height).toEqual(1);
 
     //check difference with body fill for non-embedded
-    const nonEmbedded = createStencilElement("nonEmbedded", containerModel, {
-      attrOne: "test_value",
-      attrTwo: "other_test_value",
+    const nonEmbedded = createStencilElement({
+      name: "nonEmbedded",
+      serviceModel: containerModel,
+      instanceAttributes: {
+        attrOne: "test_value",
+        attrTwo: "other_test_value",
+      },
     });
 
     expect(nonEmbedded.attributes.attrs?.body?.fill).toEqual(

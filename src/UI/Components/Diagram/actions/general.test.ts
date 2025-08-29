@@ -150,24 +150,24 @@ describe("createComposerEntity", () => {
 
 describe("updateAttributes", () => {
   it("set attributes, sanitizedAttrs and displayed items on initial update", () => {
-    const instanceAsTable = new ServiceEntityBlock().setName(parentModel.name, null);
+    const instanceEntityBlock = new ServiceEntityBlock().setName(parentModel.name, null);
     const attributes = mockedInstanceWithRelations.instance
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
 
-    updateAttributes(instanceAsTable, ["name", "service_id"], attributes, isInitial);
+    updateAttributes(instanceEntityBlock, ["name", "service_id"], attributes, isInitial);
 
-    expect(instanceAsTable.get("sanitizedAttrs")).toMatchObject({
+    expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",
       service_id: "123412",
       should_deploy_fail: false,
     });
-    expect(instanceAsTable.get("instanceAttributes")).toMatchObject({
+    expect(instanceEntityBlock.get("instanceAttributes")).toMatchObject({
       name: "test12345",
       service_id: "123412",
       should_deploy_fail: false,
     });
-    expect(instanceAsTable.get("items")).toMatchObject([
+    expect(instanceEntityBlock.get("items")).toMatchObject([
       [
         {
           id: "name",
@@ -194,46 +194,46 @@ describe("updateAttributes", () => {
   });
 
   it("when there is no key attributes only attributes and sanitizedAttrs are set", () => {
-    const instanceAsTable = new ServiceEntityBlock().setName(parentModel.name, null);
+    const instanceEntityBlock = new ServiceEntityBlock().setName(parentModel.name, null);
     const attributes = mockedInstanceWithRelations.instance
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
 
-    updateAttributes(instanceAsTable, [], attributes, isInitial);
+    updateAttributes(instanceEntityBlock, [], attributes, isInitial);
 
-    expect(instanceAsTable.get("sanitizedAttrs")).toMatchObject({
+    expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",
       service_id: "123412",
       should_deploy_fail: false,
     });
-    expect(instanceAsTable.get("instanceAttributes")).toMatchObject({
+    expect(instanceEntityBlock.get("instanceAttributes")).toMatchObject({
       name: "test12345",
       service_id: "123412",
       should_deploy_fail: false,
     });
-    expect(instanceAsTable.get("items")).toMatchObject([[], []]);
+    expect(instanceEntityBlock.get("items")).toMatchObject([[], []]);
   });
 
   it("sanitized Attributes won't be overridden if isInitial property is set to false or if there are sanitizedAttributes already set", () => {
     //sanitizedAttrs property is updated from the sidebar level as it requires fields to be present
-    const instanceAsTable = new ServiceEntityBlock().setName(parentModel.name, null);
+    const instanceEntityBlock = new ServiceEntityBlock().setName(parentModel.name, null);
     const attributes = mockedInstanceWithRelations.instance
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
 
-    updateAttributes(instanceAsTable, [], attributes, isInitial);
+    updateAttributes(instanceEntityBlock, [], attributes, isInitial);
 
-    expect(instanceAsTable.get("sanitizedAttrs")).toMatchObject({
+    expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",
       service_id: "123412",
       should_deploy_fail: false,
     });
-    expect(instanceAsTable.get("instanceAttributes")).toMatchObject({
+    expect(instanceEntityBlock.get("instanceAttributes")).toMatchObject({
       name: "test12345",
       service_id: "123412",
       should_deploy_fail: false,
     });
-    expect(instanceAsTable.get("items")).toMatchObject([[], []]);
+    expect(instanceEntityBlock.get("items")).toMatchObject([[], []]);
 
     const updatedIsInitial = false;
     const updatedAttributes = {
@@ -242,14 +242,14 @@ describe("updateAttributes", () => {
       should_deploy_fail: false,
     };
 
-    updateAttributes(instanceAsTable, [], updatedAttributes, updatedIsInitial);
+    updateAttributes(instanceEntityBlock, [], updatedAttributes, updatedIsInitial);
 
-    expect(instanceAsTable.get("sanitizedAttrs")).toMatchObject({
+    expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",
       service_id: "123412",
       should_deploy_fail: false,
     });
-    expect(instanceAsTable.get("instanceAttributes")).toMatchObject({
+    expect(instanceEntityBlock.get("instanceAttributes")).toMatchObject({
       name: "newName",
       service_id: "newId",
       should_deploy_fail: false,
@@ -257,14 +257,14 @@ describe("updateAttributes", () => {
 
     const updatedIsInitial2 = true;
 
-    updateAttributes(instanceAsTable, [], updatedAttributes, updatedIsInitial2);
+    updateAttributes(instanceEntityBlock, [], updatedAttributes, updatedIsInitial2);
 
-    expect(instanceAsTable.get("sanitizedAttrs")).toMatchObject({
+    expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",
       service_id: "123412",
       should_deploy_fail: false,
     });
-    expect(instanceAsTable.get("instanceAttributes")).toMatchObject({
+    expect(instanceEntityBlock.get("instanceAttributes")).toMatchObject({
       name: "newName",
       service_id: "newId",
       should_deploy_fail: false,

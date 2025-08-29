@@ -15,6 +15,7 @@ import { ServiceEntityBlock } from "../shapes";
 
 /**
  * Updates the position of a label relative to a link's target or source side.
+ *
  * @param {"target" | "source"} side - The side of the link where the label is positioned. Can be "target" or "source".
  * @param {g.Rect} _refBBox - The bounding box of a reference element (unused).
  * @param {SVGSVGElement} node - The SVG element representing the label.

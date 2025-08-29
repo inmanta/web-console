@@ -55,7 +55,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
     const retry = serviceModels.refetch;
     const ariaLabel = "ComposerCreatorProvider-ServiceModelsQuery_failed";
 
-    return renderErrorView(message, ariaLabel, retry);
+    return <ErrorView message={message} ariaLabel={ariaLabel} retry={retry} />;
   }
 
   if (relatedInventoriesQuery.isError) {
@@ -63,7 +63,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
     const retry = relatedInventoriesQuery.refetch;
     const ariaLabel = "ComposerCreatorProvider-RelatedInventoriesQuery_failed";
 
-    return renderErrorView(message, ariaLabel, retry);
+    return <ErrorView message={message} ariaLabel={ariaLabel} retry={retry} />;
   }
 
   if (serviceModels.isSuccess) {
@@ -74,7 +74,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
       const retry = serviceModels.refetch;
       const ariaLabel = "ComposerCreatorProvider-NoServiceModel_failed";
 
-      return renderErrorView(message, ariaLabel, retry);
+      return <ErrorView message={message} ariaLabel={ariaLabel} retry={retry} />;
     }
 
     return (
@@ -106,26 +106,3 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
 
   return <LoadingView ariaLabel="ComposerCreatorProvider-Loading" />;
 };
-
-/**
- * Renders an error view component.
- *
- * @param {string} message - The error message to display.
- * @param {string} ariaLabel - The ARIA label for accessibility.
- * @param {Function} retry - The function to call when retrying the action.
- *
- * @returns {React.ReactElement} The rendered error view component.
- */
-export const renderErrorView = (
-  message: string,
-  ariaLabel: string,
-  retry: () => void
-): React.ReactElement => (
-  <ErrorView
-    data-testid="ErrorView"
-    title={words("error")}
-    message={message}
-    ariaLabel={ariaLabel}
-    retry={retry}
-  />
-);

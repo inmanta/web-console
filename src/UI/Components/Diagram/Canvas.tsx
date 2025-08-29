@@ -9,7 +9,7 @@ import { ErrorsContainer } from "./components/ErrorsContainer";
 import { createConnectionRules } from "./helpers";
 import { diagramInit } from "./init";
 import { ActionEnum } from "./interfaces";
-import { StencilSidebar } from "./stencil";
+import { LeftSidebar } from "./stencil";
 import { createStencilState } from "./stencil/helpers";
 import { CanvasWrapper } from "./styles";
 import { ZoomHandlerService } from "./zoomHandler";
@@ -43,11 +43,11 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     setCellToEdit,
   } = useContext(CanvasContext);
   const Canvas = useRef<HTMLDivElement>(null);
-  const LeftSidebar = useRef<HTMLDivElement>(null);
+  const LeftSidebarRef = useRef<HTMLDivElement>(null);
   const ZoomHandler = useRef<HTMLDivElement>(null);
   const [scroller, setScroller] = useState<ui.PaperScroller | null>(null);
   const [isStencilStateReady, setIsStencilStateReady] = useState(false);
-  const [leftSidebar, setLeftSidebar] = useState<StencilSidebar | null>(null); // without this state it could happen that cells would load before sidebar is ready so its state could be outdated
+  const [leftSidebar, setLeftSidebar] = useState<LeftSidebar | null>(null); // without this state it could happen that cells would load before sidebar is ready so its state could be outdated
 
   // create stencil state and set flag to true to enable the other components to be created - the flag is created to allow the components to depend from that states, passing the state as a dependency would cause an infinite loop
   useEffect(() => {
@@ -83,7 +83,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
    */
   useEffect(() => {
     if (
-      !LeftSidebar.current ||
+      !LeftSidebarRef.current ||
       !ZoomHandler.current ||
       !scroller ||
       !relatedInventoriesQuery.data
@@ -91,8 +91,8 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
       return;
     }
 
-    const leftSidebar = new StencilSidebar(
-      LeftSidebar.current,
+    const leftSidebar = new LeftSidebar(
+      LeftSidebarRef.current,
       scroller,
       relatedInventoriesQuery.data,
       mainService,
@@ -153,7 +153,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
         <LeftSidebarContainer
           className={`left_sidebar ${!editable && "view_mode"}`}
           data-testid="left_sidebar"
-          ref={LeftSidebar}
+          ref={LeftSidebarRef}
         />
         <CanvasContainer
           className={`canvas ${!editable && "view_mode"}`}

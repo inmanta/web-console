@@ -23,8 +23,8 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({ children }) =>
     setServiceOrderItems,
     setCellToEdit,
     setDictToDisplay,
-    looseElement,
-    setLooseElement,
+    looseElements,
+    setLooseElements,
   } = useContext(CanvasContext);
 
   /**
@@ -35,10 +35,10 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({ children }) =>
    *
    * @returns {void}
    */
-  const handleLooseElementEvent = (event): void => {
+  const handleLooseElementsEvent = (event): void => {
     const customEvent = event as CustomEvent;
     const eventData: { kind: EventActionEnum; id: string } = JSON.parse(customEvent.detail);
-    const newSet = new Set(looseElement);
+    const newSet = new Set(looseElements);
 
     if (eventData.kind === "remove") {
       newSet.delete(eventData.id);
@@ -46,7 +46,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({ children }) =>
       newSet.add(eventData.id);
     }
 
-    setLooseElement(newSet);
+    setLooseElements(newSet);
   };
 
   /**
@@ -231,7 +231,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({ children }) =>
   useEffect(() => {
     document.addEventListener("openDictsModal", handleDictEvent);
     document.addEventListener("sendCellToSidebar", handleEditEvent);
-    document.addEventListener("looseElement", handleLooseElementEvent);
+    document.addEventListener("looseElement", handleLooseElementsEvent);
     document.addEventListener("updateServiceOrderItems", handleUpdateServiceOrderItems);
     document.addEventListener("updateStencil", handleUpdateStencilState);
     document.addEventListener(
@@ -250,7 +250,7 @@ export const EventWrapper: React.FC<React.PropsWithChildren> = ({ children }) =>
     return () => {
       document.removeEventListener("openDictsModal", handleDictEvent);
       document.removeEventListener("sendCellToSidebar", handleEditEvent);
-      document.removeEventListener("looseElement", handleLooseElementEvent);
+      document.removeEventListener("looseElement", handleLooseElementsEvent);
       document.removeEventListener("updateServiceOrderItems", handleUpdateServiceOrderItems);
       document.removeEventListener("updateStencil", handleUpdateStencilState);
       document.removeEventListener(

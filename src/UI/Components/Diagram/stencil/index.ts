@@ -1,1 +1,1 @@
-export * from "./stencil";
+export * from "./LeftSidebar";

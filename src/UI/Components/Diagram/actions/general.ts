@@ -12,6 +12,9 @@ import { Link, ServiceEntityBlock } from "../shapes";
 /**
  * Function that creates, appends and returns created Entity
  *
+ * TODO: We have a class to create new EntityBlocks, this function should be removed, and the logic handled by the class(es).
+ * One class for each sort of EntityBlock, extending a base class.
+ *
  * @param {ServiceModel | EmbeddedEntity} serviceModel that we want to base created entity on
  * @param {boolean} isCore defines whether created entity is main one in given View
  * @param {boolean} isInEditMode defines whether created entity is is representation of existing instance or new one
@@ -41,62 +44,63 @@ export function createComposerEntity({
   id,
   isFromInventoryStencil = false,
 }: ComposerEntityOptions): ServiceEntityBlock {
-  //Create shape for Entity
-  const instanceAsTable = new ServiceEntityBlock();
+  // Create shape for Entity
+  const instanceEntityBlock = new ServiceEntityBlock();
 
   if (isEmbeddedEntity && "type" in serviceModel) {
-    instanceAsTable.setName(serviceModel.name, serviceModel.type);
+    instanceEntityBlock.setName(serviceModel.name, serviceModel.type);
   } else {
-    instanceAsTable.setName(serviceModel.name, null);
+    instanceEntityBlock.setName(serviceModel.name, null);
   }
 
-  //if there is if provided, we use it, if not we use default one, created by JointJS
+  // If there is if provided, we use it, if not we use default one, created by JointJS
   if (id) {
-    instanceAsTable.set("id", id);
+    instanceEntityBlock.set("id", id);
   }
 
   if (isEmbeddedEntity) {
-    instanceAsTable.setTabColor(EntityType.EMBEDDED);
-    instanceAsTable.set("embeddedTo", embeddedTo);
-    instanceAsTable.set("isEmbeddedEntity", isEmbeddedEntity);
-    instanceAsTable.set("holderName", holderName);
+    instanceEntityBlock.setTabColor(EntityType.EMBEDDED);
+    instanceEntityBlock.set("embeddedTo", embeddedTo);
+    instanceEntityBlock.set("isEmbeddedEntity", isEmbeddedEntity);
+    instanceEntityBlock.set("holderName", holderName);
   } else if (isCore) {
-    instanceAsTable.set("isCore", isCore);
-    instanceAsTable.setTabColor(EntityType.CORE);
+    instanceEntityBlock.set("isCore", isCore);
+    instanceEntityBlock.setTabColor(EntityType.CORE);
   } else {
-    instanceAsTable.setTabColor(EntityType.RELATION);
-    instanceAsTable.set("stencilName", stencilName);
+    instanceEntityBlock.setTabColor(EntityType.RELATION);
+    instanceEntityBlock.set("stencilName", stencilName);
   }
 
-  instanceAsTable.set("isInEditMode", isInEditMode);
-  instanceAsTable.set("serviceModel", serviceModel);
-  instanceAsTable.set("isBlockedFromEditing", isBlockedFromEditing);
-  instanceAsTable.set("cantBeRemoved", cantBeRemoved);
+  instanceEntityBlock.set("isInEditMode", isInEditMode);
+  instanceEntityBlock.set("serviceModel", serviceModel);
+  instanceEntityBlock.set("isBlockedFromEditing", isBlockedFromEditing);
+  instanceEntityBlock.set("cantBeRemoved", cantBeRemoved);
 
   if (serviceModel.inter_service_relations.length > 0 && !isFromInventoryStencil) {
-    AddInterServiceRelationsToTracker(instanceAsTable, serviceModel);
+    AddInterServiceRelationsToTracker(instanceEntityBlock, serviceModel);
   }
 
   if (attributes) {
     const keyAttributes = getKeyAttributesNames(serviceModel);
 
-    updateAttributes(instanceAsTable, keyAttributes, attributes, true);
+    updateAttributes(instanceEntityBlock, keyAttributes, attributes, true);
   }
 
-  return instanceAsTable;
+  return instanceEntityBlock;
 }
 
 /**
  * Function that iterate through inter-service relations and adds their constraints to the tracker
- * @param {ServiceEntityBlock} instanceAsTable - JointJS shape object
+ *
+ * @param {ServiceEntityBlock} instanceEntityBlock - JointJS shape object
  * @param {ServiceModel | EmbeddedEntity} serviceModel - ServiceModel or EmbeddedEntity object
  * @returns {void}
  */
 export const AddInterServiceRelationsToTracker = (
-  instanceAsTable: ServiceEntityBlock,
+  instanceEntityBlock: ServiceEntityBlock,
   serviceModel: ServiceModel | EmbeddedEntity
 ) => {
-  instanceAsTable.set("relatedTo", new Map());
+  instanceEntityBlock.set("relatedTo", new Map());
   const relations: InterServiceRelationOnCanvasWithMin[] = [];
 
   serviceModel.inter_service_relations.forEach((relation) => {
@@ -109,11 +113,12 @@ export const AddInterServiceRelationsToTracker = (
     }
   });
 
-  dispatchAddInterServiceRelationToTracker(instanceAsTable.id, serviceModel.name, relations);
+  dispatchAddInterServiceRelationToTracker(instanceEntityBlock.id, serviceModel.name, relations);
 };
 
 /**
  * Function that create connection/link between two Entities
+ *
  * @param {dia.Graph} graph JointJS graph object
  * @param {ServiceEntityBlock} source JointJS shape object
  * @param {ServiceEntityBlock} target JointJS shape object
@@ -141,7 +146,7 @@ export const connectEntities = (
 };
 
 /**
- *  Function that iterates through service instance attributes for values and appends in jointJS entity for display
+ * Function that iterates through service instance attributes for values and appends in jointJS entity for display
  *
  * @param {ServiceEntityBlock} serviceEntity - shape of the entity to which columns will be appended
  * @param {string[]} keyAttributes - names of the attributes that we iterate for the values

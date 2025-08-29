@@ -42,7 +42,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
   const {
     serviceOrderItems,
     isDirty,
-    looseElement,
+    looseElements,
     diagramHandlers,
     interServiceRelationsOnCanvas,
   } = useContext(CanvasContext);
@@ -156,7 +156,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
               isDisabled={
                 serviceOrderItems.size < 1 ||
                 !isDirty ||
-                looseElement.size > 0 ||
+                looseElements.size > 0 ||
                 missingInterServiceRelations.length > 0
               }
             >

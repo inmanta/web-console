@@ -14,11 +14,17 @@ import { ColumnData, EntityType, HeaderColor } from "./interfaces";
 /**
  * https://resources.jointjs.com/tutorial/custom-elements
  * https://resources.jointjs.com/tutorial/ts-shape
+ * https://docs.jointjs.com/api/shapes/standard/HeaderedRecord/
  *
  * actions that are in ServiceEntity returns updated state of the object, we follow convention introduced by JointJS team in their demos
  */
 export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   defaults() {
+    // Recursively assigns default properties. That means if a property already exists on the child,
+    // the child property won't be replaced even if the parent property of same name has a different value.
+    // It is not exactly the same as using the spread operator.
+    // The spread operator would replace any parent properties if we defined those properties on the child.
+    // See https://resources.jointjs.com/tutorial/ts-shape for more details.
     return util.defaultsDeep(
       {
         type: "app.ServiceEntityBlock",

@@ -53,8 +53,8 @@ interface CanvasProviderInterface {
   cellToEdit: dia.CellView | null;
   setCellToEdit: (value: dia.CellView | null) => void;
 
-  looseElement: Set<string>;
-  setLooseElement: (value: Set<string>) => void;
+  looseElements: Set<string>;
+  setLooseElements: (value: Set<string>) => void;
 
   serviceOrderItems: Map<string, ComposerServiceOrderItem>;
   setServiceOrderItems: React.Dispatch<React.SetStateAction<Map<string, ComposerServiceOrderItem>>>;
@@ -84,8 +84,8 @@ export const defaultCanvasContext: CanvasProviderInterface = {
   setFields: () => {},
   cellToEdit: null,
   setCellToEdit: () => {},
-  looseElement: new Set(),
-  setLooseElement: () => {},
+  looseElements: new Set(),
+  setLooseElements: () => {},
   serviceOrderItems: new Map(),
   setServiceOrderItems: () => {},
   interServiceRelationsOnCanvas: new Map(),

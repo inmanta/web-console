@@ -48,7 +48,7 @@ export class InstanceStencilTab {
           attributes: createFormState(fields),
           isEmbeddedEntity: true,
           holderName: cell.get("holderName"),
-          isFromInventoryStencil: true,
+          isFromInventoryStencil: false,
         });
       },
       dragEndClone: (el) => el.clone().set("items", el.get("items")).set("id", el.get("id")), //cloned element loses key value pairs, so we need to set them again
