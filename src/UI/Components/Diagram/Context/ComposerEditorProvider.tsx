@@ -12,7 +12,6 @@ import { ComposerActions } from "../components";
 import { findInterServiceRelations } from "../helpers";
 import { CanvasProvider } from "./CanvasProvider";
 import { InstanceComposerContext } from "./Context";
-import { renderErrorView } from ".";
 
 /**
  * Props interface for the ComposerEditorProvider component
@@ -81,7 +80,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance,
     const retry = serviceModelsQuery.refetch;
     const ariaLabel = "ComposerEditorProvider-ServiceModelsQuery_failed";
 
-    return renderErrorView(message, ariaLabel, retry);
+    return <ErrorView message={message} ariaLabel={ariaLabel} retry={retry} />;
   }
 
   if (instanceWithRelationsQuery.isError) {
@@ -89,7 +88,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance,
     const retry = instanceWithRelationsQuery.refetch;
     const ariaLabel = "ComposerEditorProvider-InstanceWithRelationsQuery_failed";
 
-    return renderErrorView(message, ariaLabel, retry);
+    return <ErrorView message={message} ariaLabel={ariaLabel} retry={retry} />;
   }
 
   if (relatedInventoriesQuery.isError) {
@@ -97,7 +96,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance,
     const retry = relatedInventoriesQuery.refetch;
     const ariaLabel = "ComposerEditorProvider-RelatedInventoriesQuery_failed";
 
-    return renderErrorView(message, ariaLabel, retry);
+    return <ErrorView message={message} ariaLabel={ariaLabel} retry={retry} />;
   }
 
   if (serviceModelsQuery.isSuccess && !mainService) {
@@ -105,7 +104,7 @@ export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance,
     const retry = serviceModelsQuery.refetch;
     const ariaLabel = "ComposerEditorProvider-NoServiceModel_failed";
 
-    return renderErrorView(message, ariaLabel, retry);
+    return <ErrorView message={message} ariaLabel={ariaLabel} retry={retry} />;
   }
 
   if (serviceModelsQuery.isSuccess && instanceWithRelationsQuery.isSuccess && mainService) {

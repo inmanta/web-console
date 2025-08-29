@@ -11,8 +11,8 @@ import {
   getCellsCoordinates,
   getKeyAttributesNames,
   moveCellsFromColliding,
+  toggleLooseElement,
 } from "./helpers";
-import { toggleLooseElement } from "./helpers";
 import { ConnectionRules, EventActionEnum, SavedCoordinates } from "./interfaces";
 import { ComposerPaper } from "./paper";
 import { ServiceEntityBlock } from "./shapes";

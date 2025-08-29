@@ -120,7 +120,7 @@ describe("ComposerActions.", () => {
   });
 
   it.each`
-    serviceOrderItems | isDirty  | looseElements             | editable | interServiceRelationsOnCanvas
+    serviceOrderItems | isDirty  | looseElements            | editable | interServiceRelationsOnCanvas
     ${new Map()}      | ${true}  | ${null}                  | ${true}  | ${null}
     ${null}           | ${false} | ${null}                  | ${true}  | ${null}
     ${null}           | ${true}  | ${new Set().add("test")} | ${true}  | ${null}

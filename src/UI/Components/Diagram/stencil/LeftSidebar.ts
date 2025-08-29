@@ -1,9 +1,9 @@
 import { ui } from "@inmanta/rappid";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Queries";
+import { words } from "@/UI/words";
 import { InstanceStencilTab } from "./instanceStencil";
 import { InventoryStencilTab } from "./inventoryStencil";
-import { words } from "@/UI/words";
 
 /**
  * Class representing the left sidebar.
@@ -15,7 +15,6 @@ export class LeftSidebar {
   instanceTab: InstanceStencilTab;
   inventoryTab: InventoryStencilTab;
   tabsToolbar: ui.Toolbar;
-
 
   /**
    * Creates the left sidebar.
@@ -87,7 +86,7 @@ export class LeftSidebar {
   /**
    * Toggles the visibility of the tabs by freezing and unfreezing the old and new tabs
    * and adding and removing the joint-hidden class.
-   * 
+   *
    * @private
    * @param newActiveTab - The new active tab.
    * @param oldActiveTab - The old active tab.
@@ -110,7 +109,7 @@ export class LeftSidebar {
   /**
    * Toggles the visibility of the tabs by freezing and unfreezing the old and new tabs
    * and adding and removing the joint-hidden class.
-   * 
+   *
    * @public
    * @param clickedElement - The clicked element.
    */
@@ -124,7 +123,6 @@ export class LeftSidebar {
         this.toggleTabVisibility(this.instanceTab, this.inventoryTab, "new-tab");
     }
   };
-
 
   remove(): void {
     this.instanceTab.stencil.remove();

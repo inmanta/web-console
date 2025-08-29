@@ -14,6 +14,7 @@ import { ServiceEntityBlock } from "../shapes";
  * Function that will merge state from Instance Composer to proper object for order_api endpoint.
  * Instance composer state is being split into multiple objects that could be embedded into other available, so we need to recursively
  * go through all of them to group, and sort them
+ *
  * @param {ComposerServiceOrderItem} parentInstance Instance that is the main object and to which other instance are eventually connected
  * @param {ComposerServiceOrderItem[]} instances all of the instances that were created/edited in the instance, not including parentInstance
  * @param {ServiceModel | EmbeddedEntity} serviceModel - ServiceModel or EmbeddedEntity that is the model for the current iteration to build upon
