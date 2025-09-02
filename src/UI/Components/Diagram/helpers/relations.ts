@@ -1,46 +1,12 @@
 import { dia } from "@inmanta/rappid";
-import {
-  EmbeddedEntity,
-  InstanceAttributeModel,
-  InterServiceRelation,
-  ServiceInstanceModel,
-  ServiceModel,
-} from "@/Core";
+import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@/Core";
 import { ServiceEntityBlock } from "../shapes";
 
 /**
- * Extracts the IDs of the relations of a service instance.
- *
- * @param service - The service model.
- * @param instance - The service instance.
- * @returns {string[]} An array of relation IDs.
- */
-export const extractRelationsIds = (
-  service: ServiceModel,
-  instance: ServiceInstanceModel
-): string[] => {
-  const relationKeys = service.inter_service_relations.map((relation) => relation.name);
-
-  if (!relationKeys) {
-    return [];
-  }
-
-  const extractRelation = (attributes: InstanceAttributeModel): string[] =>
-    relationKeys
-      .map((key) => String(attributes[key]))
-      .filter((attribute) => attribute !== "undefined");
-
-  if (instance.candidate_attributes !== null) {
-    return extractRelation(instance.candidate_attributes);
-  } else if (instance.active_attributes !== null) {
-    return extractRelation(instance.active_attributes);
-  } else {
-    return [];
-  }
-};
-
-/**
  * Finds the inter-service relations entity types for the given service model or embedded entity.
+ *
+ * TODO: This recursive function should be adjusted to work with levels, and also cover x-level of nested inter-service relations.
+ * https://github.com/inmanta/web-console/issues/6546
  *
  * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity to find inter-service relations for.
  *
@@ -84,17 +50,17 @@ interface CorrespondingId {
 
 /**
  * Find if the relations of some instance includes Id of the instance passed through prop
- * @param {Map<dia.Cell.ID, string>} neighborRelations map of ids that could include id of instanceAsTable
- * @param {ServiceEntityBlock} instanceAsTable Instance to which should instances connect to
+ * @param {Map<dia.Cell.ID, string>} neighborRelations map of ids that could include id of instanceEntityBlock
+ * @param {ServiceEntityBlock} instanceEntityBlock Instance to which should instances connect to
  *
  * @returns {CorrespondingId | undefined}
  */
 export const findCorrespondingId = (
   neighborRelations: Map<dia.Cell.ID, string>,
-  instanceAsTable: ServiceEntityBlock
+  instanceEntityBlock: ServiceEntityBlock
 ): CorrespondingId | undefined => {
   return Array.from(neighborRelations, ([id, attributeName]) => ({
     id,
     attributeName,
-  })).find(({ id }) => id === instanceAsTable.id);
+  })).find(({ id }) => id === instanceEntityBlock.id);
 };

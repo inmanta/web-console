@@ -29,11 +29,11 @@ const setup = (testingComponent: React.ReactNode) => {
 
 describe("looseElement event handler - triggered when entity is being added to the canvas, gets or loose connection to other entity - keep track on the unconnected entities", () => {
   const TestingComponent = (): React.ReactNode => {
-    const { looseElement } = useContext(CanvasContext);
+    const { looseElements } = useContext(CanvasContext);
 
     return (
       <div>
-        <span data-testid="looseElement">{looseElement.size}</span>
+        <span data-testid="looseElement">{looseElements.size}</span>
       </div>
     );
   };

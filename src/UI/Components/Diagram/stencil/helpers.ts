@@ -9,6 +9,16 @@ import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { HeaderColor, StencilState } from "../interfaces";
 
+export interface CreateStencilElementParams {
+  name: string;
+  serviceModel: EmbeddedEntity | ServiceModel;
+  instanceAttributes: InstanceAttributeModel;
+  isEmbeddedEntity?: boolean;
+  showBorderTop?: boolean;
+  isDisabled?: boolean;
+  holderName?: string;
+}
+
 /**
  * It recursively goes through embedded entities in the service model or embedded entity and creates stencil elements for each of them.
  * Stencil Elements are the visual representation of the entities in the Stencil Sidebar
@@ -23,14 +33,15 @@ export const transformEmbeddedToStencilElements = (
   return service.embedded_entities
     .filter((embedded_entity) => embedded_entity.modifier !== "r") // filter out read-only embedded entities from the stencil as they can't be created by the user
     .flatMap((embedded_entity, index) => {
-      const stencilElement = createStencilElement(
-        embedded_entity.name,
-        embedded_entity,
-        {},
-        true,
-        index === 0,
-        service.name
-      );
+      const stencilElement = createStencilElement({
+        name: embedded_entity.name,
+        serviceModel: embedded_entity,
+        instanceAttributes: {},
+        isEmbeddedEntity: true,
+        showBorderTop: index === 0,
+        isDisabled: false,
+        holderName: service.name,
+      });
       const nestedStencilElements = transformEmbeddedToStencilElements(embedded_entity);
 
       return [stencilElement, ...nestedStencilElements];
@@ -40,22 +51,26 @@ export const transformEmbeddedToStencilElements = (
 /**
  * Creates a stencil element with the given parameters.
  *
- * @param {string} name - The name of the stencil element.
- * @param {EmbeddedEntity | ServiceModel} serviceModel - The embedded entity model associated with the entity that the stencil element represent.
- * @param {InstanceAttributeModel} instanceAttributes - The instance attributes of the entity that the stencil element represent.
- * @param {boolean} isEmbeddedEntity - A boolean indicating whether the entity that the stencil represent is embedded or not. Defaults to false.
- * @param {string} holderName - The name of the holder of the element that the stencil element represent. Optional.
+ * @param {CreateStencilElementParams} params - The parameters for creating the stencil element.
+ * @param {string} params.name - The name of the stencil element.
+ * @param {EmbeddedEntity | ServiceModel} params.serviceModel - The embedded entity model associated with the entity that the stencil element represents.
+ * @param {InstanceAttributeModel} params.instanceAttributes - The instance attributes of the entity that the stencil element represents.
+ * @param {boolean} params.isEmbeddedEntity - A boolean indicating whether the entity that the stencil represents is embedded or not. Defaults to false.
+ * @param {boolean} params.showBorderTop - A boolean indicating whether to show a border on top. Defaults to false.
+ * @param {boolean} params.isDisabled - A boolean indicating whether the element is disabled. Defaults to false.
+ * @param {string} params.holderName - The name of the holder of the element that the stencil element represents. Optional.
  *
  * @returns {shapes.standard.Path} An object representing the stencil element.
  */
-export const createStencilElement = (
-  name: string,
-  serviceModel: EmbeddedEntity | ServiceModel,
-  instanceAttributes: InstanceAttributeModel,
-  isEmbeddedEntity: boolean = false,
-  showBorderTop: boolean = false,
-  holderName?: string
-): shapes.standard.Path => {
+export const createStencilElement = ({
+  name,
+  serviceModel,
+  instanceAttributes,
+  isEmbeddedEntity = false,
+  showBorderTop = false,
+  isDisabled = false,
+  holderName,
+}: CreateStencilElementParams): shapes.standard.Path => {
   let id = uuidv4();
 
   if (instanceAttributes && instanceAttributes.id) {
@@ -69,33 +84,36 @@ export const createStencilElement = (
     serviceModel,
     instanceAttributes,
     holderName,
-    disabled: false,
+    disabled: isDisabled,
     id,
     attrs: {
       body: {
         "aria-labelledby": "body_" + name,
         width: 7,
         height: 40,
-        x: 233,
         fill: isEmbeddedEntity ? HeaderColor.EMBEDDED : HeaderColor.RELATION,
         stroke: "none",
+        className: isDisabled ? "stencil_accent-disabled" : "",
       },
       bodyTwo: {
         "aria-labelledby": "bodyTwo_" + name,
         width: 240,
         height: 40,
+        x: 10,
         fill: t_global_background_color_primary_default.var,
         stroke: "none",
+        className: isDisabled ? "stencil_body-disabled" : "",
       },
       label: {
         "aria-labelledby": "text_" + name,
         refX: undefined, // reset the default
-        x: "10",
+        x: 15,
         textAnchor: "start",
         fontFamily: "sans-serif",
         fontSize: t_global_font_size_body_default.var,
         text: "type" in serviceModel && serviceModel.type ? serviceModel.type : name,
         fill: t_global_text_color_regular.var,
+        className: isDisabled ? "stencil_text-disabled" : "",
       },
       borderBottom: {
         width: 233,
@@ -145,11 +163,11 @@ export const createStencilElement = (
  * This function enables or disables stencil elements for an inter-service relation instance by toggling specific CSS classes.
  *
  * @param {string} stencilName - The name of the stencil.
- * @param {boolean} force - if force is true, adds the disabled className . If force is false, removes disabled className
+ * @param {boolean} isDisabled - if true, adds the disabled className . If false, removes disabled className
  *
  * @returns {void}
  */
-export const toggleDisabledStencil = (stencilName: string, force?: boolean): void => {
+export const toggleDisabledStencil = (stencilName: string, isDisabled?: boolean): void => {
   //disable Inventory Stencil for inter-service relation instance
   const elements = [
     {
@@ -170,7 +188,7 @@ export const toggleDisabledStencil = (stencilName: string, force?: boolean): voi
     const element = document.querySelector(selector);
 
     if (element) {
-      element.classList.toggle(className, force);
+      element.classList.toggle(className, isDisabled);
     }
   });
 };

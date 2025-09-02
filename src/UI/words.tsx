@@ -237,6 +237,8 @@ const dict = {
   "instanceComposer.zoomHandler.fullscreen.exit": "Exit full screen",
   "instanceComposer.zoomHandler.zoomToFit": "Fit to screen",
   "instanceComposer.zoomHandler.zoom": "Slide to zoom",
+  "instanceComposer.stencil.new": "New",
+  "instanceComposer.stencil.inventory": "Inventory",
 
   /**
    * Service Instance Details text
