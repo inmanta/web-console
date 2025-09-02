@@ -2,5 +2,4 @@ change-type: patch
 description: Fix halt and resume event bug bu adding a close blocking modal event.
 destination-branches:
 - master
-- iso8
 sections: {}
