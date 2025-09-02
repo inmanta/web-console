@@ -14,6 +14,7 @@ import { Link, ServiceEntityBlock } from "../shapes";
  *
  * TODO: We have a class to create new EntityBlocks, this function should be removed, and the logic handled by the class(es).
  * One class for each sort of EntityBlock, extending a base class.
+ * https://github.com/inmanta/web-console/issues/6545
  *
  * @param {ServiceModel | EmbeddedEntity} serviceModel that we want to base created entity on
  * @param {boolean} isCore defines whether created entity is main one in given View

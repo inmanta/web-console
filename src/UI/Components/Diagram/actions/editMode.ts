@@ -1,3 +1,6 @@
+// TODO: https://github.com/inmanta/web-console/issues/6543 Undefined/Null checks
+// TODO: https://github.com/inmanta/web-console/issues/6544 Refactor appendInstance method.
+
 import { dia } from "@inmanta/rappid";
 import { DirectedGraph } from "@joint/layout-directed-graph";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
@@ -126,7 +129,7 @@ export function appendInstance({
         }
       }
 
-      // If doesn't, or the one we are looking for isn't among the ones stored,
+      // If no relations found, or the one we are looking for isn't among the ones stored,
       // we need go through every connected shape and do the same assertion,
       // as the fact that we have that cell as interServiceRelation tells us that either that or its embedded entities has connection
       if (!isConnected) {

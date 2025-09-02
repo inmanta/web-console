@@ -1,45 +1,12 @@
 import { dia } from "@inmanta/rappid";
-import { EmbeddedEntity, InterServiceRelation, ServiceInstanceModel, ServiceModel } from "@/Core";
+import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@/Core";
 import { ServiceEntityBlock } from "../shapes";
-
-/**
- * Extracts the IDs of the relations of a service instance.
- *
- * Prioritizes candidate_attributes over active_attributes when both are available.
- * Filters out null, undefined, and empty string values.
- *
- * @param service - The service model containing inter-service relation definitions.
- * @param instance - The service instance containing attribute values.
- * @returns {string[]} An array of relation IDs as strings.
- */
-export const extractRelationsIds = (
-  service: ServiceModel,
-  instance: ServiceInstanceModel
-): string[] => {
-  const relationKeys = service.inter_service_relations.map((relation) => relation.name);
-
-  if (relationKeys.length === 0) {
-    return [];
-  }
-
-  // Prefer candidate_attributes over active_attributes.
-  // rollback_attributes are not used in the composer.
-  const attributes = instance.candidate_attributes ?? instance.active_attributes;
-
-  if (!attributes) {
-    return [];
-  }
-
-  return relationKeys
-    .map((key) => attributes[key])
-    .filter(Boolean)
-    .map(String);
-};
 
 /**
  * Finds the inter-service relations entity types for the given service model or embedded entity.
  *
  * TODO: This recursive function should be adjusted to work with levels, and also cover x-level of nested inter-service relations.
+ * https://github.com/inmanta/web-console/issues/6546
  *
  * @param {ServiceModel | EmbeddedEntity} serviceModel - The service model or embedded entity to find inter-service relations for.
  *

@@ -116,10 +116,10 @@ export class LeftSidebar {
   public toggleTab = (clickedElement: EventTarget) => {
     if (clickedElement instanceof HTMLElement) {
       // The clickedElement can also be the entire tabContainer, which we don't want to react on.
-      clickedElement.innerText === "Inventory" &&
+      clickedElement.innerText === words("instanceComposer.stencil.inventory") &&
         this.toggleTabVisibility(this.inventoryTab, this.instanceTab, "inventory-tab");
 
-      clickedElement.innerText === "New" &&
+      clickedElement.innerText === words("instanceComposer.stencil.new") &&
         this.toggleTabVisibility(this.instanceTab, this.inventoryTab, "new-tab");
     }
   };
