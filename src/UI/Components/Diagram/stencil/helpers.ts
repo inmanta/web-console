@@ -53,12 +53,12 @@ export const transformEmbeddedToStencilElements = (
  *
  * @param {CreateStencilElementParams} params - The parameters for creating the stencil element.
  * @param {string} params.name - The name of the stencil element.
- * @param {EmbeddedEntity | ServiceModel} params.serviceModel - The embedded entity model associated with the entity that the stencil element represent.
- * @param {InstanceAttributeModel} params.instanceAttributes - The instance attributes of the entity that the stencil element represent.
- * @param {boolean} params.isEmbeddedEntity - A boolean indicating whether the entity that the stencil represent is embedded or not. Defaults to false.
+ * @param {EmbeddedEntity | ServiceModel} params.serviceModel - The embedded entity model associated with the entity that the stencil element represents.
+ * @param {InstanceAttributeModel} params.instanceAttributes - The instance attributes of the entity that the stencil element represents.
+ * @param {boolean} params.isEmbeddedEntity - A boolean indicating whether the entity that the stencil represents is embedded or not. Defaults to false.
  * @param {boolean} params.showBorderTop - A boolean indicating whether to show a border on top. Defaults to false.
  * @param {boolean} params.isDisabled - A boolean indicating whether the element is disabled. Defaults to false.
- * @param {string} params.holderName - The name of the holder of the element that the stencil element represent. Optional.
+ * @param {string} params.holderName - The name of the holder of the element that the stencil element represents. Optional.
  *
  * @returns {shapes.standard.Path} An object representing the stencil element.
  */
