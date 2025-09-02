@@ -19,15 +19,20 @@ export const ResumeButton: React.FC = () => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const closeModalAndEnableQueries = () => {
+    closeModal();
+    enableQueries();
+    document.dispatchEvent(new CustomEvent("close-blocking-modal"));
+  };
+
   const { mutate } = useResumeEnvironment({
     onSuccess: () => {
       client.refetchQueries();
-      enableQueries();
-      document.dispatchEvent(new CustomEvent("resume-event"));
-      closeModal();
+      closeModalAndEnableQueries();
     },
     onError: (error) => {
       setErrorMessage(error.message);
+      closeModalAndEnableQueries();
     },
   });
 
@@ -50,6 +55,7 @@ export const ResumeButton: React.FC = () => {
           key="confirm"
           variant="primary"
           onClick={() => {
+            document.dispatchEvent(new CustomEvent("resume-event"));
             mutate();
           }}
         >
