@@ -18,15 +18,21 @@ export const HaltButton: React.FC = () => {
   const { disableQueries, enableQueries } = useQueryControl();
   const { triggerModal, closeModal } = useContext(ModalContext);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const closeModalAndEnableQueries = () => {
+    closeModal();
+    enableQueries();
+    document.dispatchEvent(new CustomEvent("close-blocking-modal"));
+  };
+
   const { mutate } = useHaltEnvironment({
     onSuccess: () => {
       client.refetchQueries();
-      enableQueries();
-      closeModal();
-      document.dispatchEvent(new CustomEvent("halt-event"));
+      closeModalAndEnableQueries();
     },
     onError: (error) => {
       setErrorMessage(error.message);
+      closeModalAndEnableQueries();
     },
   });
 
@@ -50,6 +56,7 @@ export const HaltButton: React.FC = () => {
           variant="primary"
           onClick={() => {
             disableQueries();
+            document.dispatchEvent(new CustomEvent("halt-event"));
             mutate();
           }}
         >

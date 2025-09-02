@@ -11,7 +11,7 @@ const axe = configureAxe({
   },
 });
 
-test("Given BlockingModal When firing event twice Then Modal will appear and disappear", async () => {
+test("Given BlockingModal WHEN firing corresponding events THEN Modal will appear and disappear", async () => {
   render(<BlockingModal />);
 
   act(() => {
@@ -30,7 +30,7 @@ test("Given BlockingModal When firing event twice Then Modal will appear and dis
   });
 
   act(() => {
-    document.dispatchEvent(new CustomEvent("halt-event"));
+    document.dispatchEvent(new CustomEvent("close-blocking-modal"));
   });
   expect(modalHalt).not.toBeVisible();
   expect(textHalt).not.toBeVisible();
@@ -45,7 +45,7 @@ test("Given BlockingModal When firing event twice Then Modal will appear and dis
   expect(text).toBeVisible();
 
   act(() => {
-    document.dispatchEvent(new CustomEvent("resume-event"));
+    document.dispatchEvent(new CustomEvent("close-blocking-modal"));
   });
   expect(modal).not.toBeVisible();
   expect(text).not.toBeVisible();

@@ -149,9 +149,7 @@ describe("EnvironmentControls", () => {
       })
     );
     const haltEventSpy = vi.fn();
-    const resumeEventSpy = vi.fn();
     document.addEventListener("halt-event", haltEventSpy);
-    document.addEventListener("resume-event", resumeEventSpy);
 
     const { component } = setup();
 
@@ -165,8 +163,36 @@ describe("EnvironmentControls", () => {
 
     await userEvent.click(await screen.findByText("Yes"));
 
-    expect(haltEventSpy).toHaveBeenCalledTimes(0);
-    expect(resumeEventSpy).toHaveBeenCalledTimes(0);
+    expect(haltEventSpy).toHaveBeenCalledTimes(1);
+    expect(await screen.findByText("Error")).toBeVisible();
+  });
+
+  test("EnvironmentControls should show error message when resume fails", async () => {
+    server.use(
+      http.get("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", () => {
+        return HttpResponse.json({ data: { ...EnvironmentDetails.a, halted: true } });
+      }),
+      http.post("/api/v2/actions/environment/resume", () => {
+        return HttpResponse.error();
+      })
+    );
+
+    const resumeEventSpy = vi.fn();
+    document.addEventListener("resume-event", resumeEventSpy);
+
+    const { component } = setup();
+
+    render(component);
+
+    const startButton = await screen.findByText("Resume");
+
+    expect(startButton).toBeVisible();
+
+    await userEvent.click(startButton);
+
+    await userEvent.click(await screen.findByText("Yes"));
+
+    expect(resumeEventSpy).toHaveBeenCalledTimes(1);
     expect(await screen.findByText("Error")).toBeVisible();
   });
 });
