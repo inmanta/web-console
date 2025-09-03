@@ -2,17 +2,17 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import "@rappidcss";
 import { ui } from "@inmanta/rappid";
 import styled from "styled-components";
-import { CanvasContext, InstanceComposerContext } from "./Context";
-import { EventWrapper } from "./Context/EventWrapper";
-import { DictModal, RightSidebar } from "./components";
-import { ErrorsContainer } from "./components/ErrorsContainer";
-import { createConnectionRules } from "./helpers";
-import { diagramInit } from "./init";
-import { ActionEnum } from "./interfaces";
-import { LeftSidebar } from "./stencil";
-import { createStencilState } from "./stencil/helpers";
-import { CanvasWrapper } from "./styles";
-import { ZoomHandlerService } from "./zoomHandler";
+import { CanvasContext, InstanceComposerContext } from "../Context";
+import { EventWrapper } from "../Context/EventWrapper";
+import { DictModal, RightSidebar } from ".";
+import { ErrorsContainer } from "./ErrorsContainer";
+import { createConnectionRules } from "../Helpers";
+import { diagramInit } from "../init";
+import { ActionEnum } from "../interfaces";
+import { LeftSidebar } from "../Stencil";
+import { createStencilState } from "../Stencil/helpers";
+import { CanvasWrapper } from "../styles";
+import { ZoomHandlerService } from "../ZoomHandler";
 
 /**
  * Properties for the Canvas component.

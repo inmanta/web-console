@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from "react";
-import { updateServiceOrderItems } from "../helpers";
+import { updateServiceOrderItems } from "../Helpers";
 import { ActionEnum, EventActionEnum, RelationCounterForCell, StencilState } from "../interfaces";
-import { ServiceEntityBlock } from "../shapes";
-import { toggleDisabledStencil } from "../stencil/helpers";
+import { ServiceEntityBlock } from "../Shapes";
+import { toggleDisabledStencil } from "../Stencil/helpers";
 import { CanvasContext } from "./Context";
 
 /**

@@ -6,9 +6,9 @@ import {
 } from "@/Test/Data/ServiceInstance/Attributes";
 import { EventActionEnum, LabelLinkView } from "@/UI/Components/Diagram/interfaces";
 import { childModel, parentModel } from "../Mocks";
-import { createComposerEntity } from "../actions/general";
-import { ComposerPaper } from "../paper";
-import { Link } from "../shapes";
+import { createComposerEntity } from "../Actions/general";
+import { ComposerPaper } from "../Paper";
+import { Link } from "../Shapes/Link";
 import { defineObjectsForJointJS } from "../testSetup";
 import { createConnectionRules } from "./connections";
 import {

@@ -6,7 +6,7 @@ import {
   InterServiceRule,
   TypeEnum,
 } from "@/UI/Components/Diagram/interfaces";
-import { ServiceEntityBlock } from "../shapes";
+import { ServiceEntityBlock } from "../Shapes/Link";
 
 /**
  * Create object that holds all of the possible interservice relation connections

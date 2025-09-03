@@ -8,7 +8,7 @@ import {
   ActionEnum,
 } from "@/UI/Components/Diagram/interfaces";
 import { words } from "@/UI/words";
-import { ServiceEntityBlock } from "../shapes";
+import { ServiceEntityBlock } from "../Shapes/Link";
 
 /**
  * Function that will merge state from Instance Composer to proper object for order_api endpoint.

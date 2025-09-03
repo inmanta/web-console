@@ -9,7 +9,7 @@ import { CreateModifierHandler, FieldCreator } from "@/UI/Components/ServiceInst
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
 import { words } from "@/UI/words";
 import { CanvasContext } from "../Context";
-import { updateServiceOrderItems } from "../helpers";
+import { updateServiceOrderItems } from "../Helpers";
 import { ActionEnum } from "../interfaces";
 
 interface Props {

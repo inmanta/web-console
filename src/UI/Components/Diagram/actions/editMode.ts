@@ -11,12 +11,12 @@ import {
   findCorrespondingId,
   findFullInterServiceRelations,
   getEntityAttributes,
-} from "../helpers";
+} from "../Helpers";
 import activeImage from "../icons/active-icon.svg";
 import candidateImage from "../icons/candidate-icon.svg";
 import { EventActionEnum, relationId } from "../interfaces";
-import { ServiceEntityBlock } from "../shapes";
-import { toggleDisabledStencil } from "../stencil/helpers";
+import { ServiceEntityBlock } from "../Shapes";
+import { toggleDisabledStencil } from "../Stencil/helpers";
 import { connectEntities, createComposerEntity } from "./general";
 
 export interface AppendInstanceParams {

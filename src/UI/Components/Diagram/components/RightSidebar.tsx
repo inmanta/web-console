@@ -14,7 +14,7 @@ import { words } from "@/UI/words";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { dispatchUpdateStencil } from "../Context/dispatchers";
 import { EventActionEnum } from "../interfaces";
-import { toggleDisabledStencil } from "../stencil/helpers";
+import { toggleDisabledStencil } from "../Stencil/helpers";
 import { EntityForm } from "./EntityForm";
 
 interface Props {

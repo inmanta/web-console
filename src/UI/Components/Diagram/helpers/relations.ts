@@ -1,6 +1,6 @@
 import { dia } from "@inmanta/rappid";
 import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@/Core";
-import { ServiceEntityBlock } from "../shapes";
+import { ServiceEntityBlock } from "../Shapes/Link";
 
 /**
  * Finds the inter-service relations entity types for the given service model or embedded entity.

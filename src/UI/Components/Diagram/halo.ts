@@ -5,10 +5,10 @@ import {
   dispatchUpdateInterServiceRelations,
   dispatchUpdateServiceOrderItems,
 } from "./Context/dispatchers";
-import { checkIfConnectionIsAllowed } from "./helpers";
-import { toggleLooseElement } from "./helpers";
+import { checkIfConnectionIsAllowed } from "./Helpers";
+import { toggleLooseElement } from "./Helpers";
 import { ActionEnum, ConnectionRules, EventActionEnum } from "./interfaces";
-import { ServiceEntityBlock } from "./shapes";
+import { ServiceEntityBlock } from "./Shapes";
 
 /**
  * Creates a halo around a cell view in a graph.

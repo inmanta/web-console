@@ -2,9 +2,9 @@ import { dia } from "@inmanta/rappid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Queries";
 import { containerModel, mockedInstanceWithRelations, serviceModels } from "../Mocks";
-import { appendEmbeddedEntity, appendInstance, addInfoIcon } from "../actions/editMode";
-import { ComposerPaper } from "../paper";
-import { ServiceEntityBlock } from "../shapes";
+import { appendEmbeddedEntity, appendInstance, addInfoIcon } from "./editMode";
+import { ComposerPaper } from "../Paper";
+import { ServiceEntityBlock } from "../Shapes";
 import { defineObjectsForJointJS } from "../testSetup";
 
 beforeAll(() => {

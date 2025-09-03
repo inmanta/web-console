@@ -1,20 +1,16 @@
 import { dia } from "@inmanta/rappid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { dispatchAddInterServiceRelationToTracker } from "../Context/dispatchers";
-import { getKeyAttributesNames } from "../helpers";
+import { getKeyAttributesNames } from "../Helpers";
 import {
   ComposerEntityOptions,
   EntityType,
   InterServiceRelationOnCanvasWithMin,
 } from "../interfaces";
-import { Link, ServiceEntityBlock } from "../shapes";
+import { Link, ServiceEntityBlock } from "../Shapes";
 
 /**
  * Function that creates, appends and returns created Entity
- *
- * TODO: We have a class to create new EntityBlocks, this function should be removed, and the logic handled by the class(es).
- * One class for each sort of EntityBlock, extending a base class.
- * https://github.com/inmanta/web-console/issues/6545
  *
  * @param {ServiceModel | EmbeddedEntity} serviceModel that we want to base created entity on
  * @param {boolean} isCore defines whether created entity is main one in given View

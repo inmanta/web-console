@@ -11,8 +11,8 @@ import {
   InterServiceRule,
   TypeEnum,
 } from "@/UI/Components/Diagram/interfaces";
-import { createComposerEntity } from "../actions/general";
-import { Link, ServiceEntityBlock } from "../shapes";
+import { createComposerEntity } from "../Actions/general";
+import { Link, ServiceEntityBlock } from "../Shapes/Link";
 import { defineObjectsForJointJS } from "../testSetup";
 import {
   createConnectionRules,

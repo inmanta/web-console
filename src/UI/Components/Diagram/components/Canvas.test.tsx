@@ -8,14 +8,14 @@ import { InstanceWithRelations, Inventories } from "@/Data/Queries";
 import { MockedDependencyProvider } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
 import { words } from "@/UI";
-import { Canvas } from "@/UI/Components/Diagram/Canvas";
+import { Canvas } from "@/UI/Components/Diagram/Components/Canvas";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { CanvasProvider } from "./Context/CanvasProvider";
-import { InstanceComposerContext } from "./Context/Context";
-import { mockedInstanceTwo, mockedInstanceTwoServiceModel, serviceModels } from "./Mocks";
-import "@testing-library/jest-dom";
-import { defineObjectsForJointJS } from "./testSetup";
+import { CanvasProvider } from "../Context/CanvasProvider";
+import { InstanceComposerContext } from "../Context/Context";
+import { mockedInstanceTwo, mockedInstanceTwoServiceModel, serviceModels } from "../Mocks";
+
+import { defineObjectsForJointJS } from "../testSetup";
 
 const allQueries = {
   ...queries,

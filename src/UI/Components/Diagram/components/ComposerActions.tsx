@@ -8,7 +8,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ToastAlert } from "../../ToastAlert";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
-import { getServiceOrderItems } from "../helpers";
+import { getServiceOrderItems } from "../Helpers";
 import { SavedCoordinates } from "../interfaces";
 
 /**

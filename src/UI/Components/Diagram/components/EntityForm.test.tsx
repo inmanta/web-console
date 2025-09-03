@@ -7,10 +7,10 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasContext, defaultCanvasContext } from "../Context";
 import { parentModel } from "../Mocks";
-import { createComposerEntity } from "../actions";
-import { getCellsCoordinates } from "../helpers";
-import { ComposerPaper } from "../paper";
-import { ServiceEntityBlock } from "../shapes";
+import { createComposerEntity } from "../Actions";
+import { getCellsCoordinates } from "../Helpers";
+import { ComposerPaper } from "../Paper";
+import { ServiceEntityBlock } from "../Shapes/Link";
 import { defineObjectsForJointJS } from "../testSetup";
 import { EntityForm } from "./EntityForm";
 
@@ -45,8 +45,8 @@ describe("EntityForm.", () => {
               value={{
                 ...defaultCanvasContext,
                 diagramHandlers: {
-                  saveAndClearCanvas: () => {},
-                  loadState: () => {},
+                  saveAndClearCanvas: () => { },
+                  loadState: () => { },
                   addInstance: (_services, _instance) => [new ServiceEntityBlock()],
                   getCoordinates: () => getCellsCoordinates(graph),
                   editEntity: (_cell, serviceModel, attributeValues) =>

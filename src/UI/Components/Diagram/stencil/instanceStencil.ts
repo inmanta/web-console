@@ -3,7 +3,7 @@ import { t_global_background_color_primary_default } from "@patternfly/react-tok
 import { ServiceModel } from "@/Core";
 import { CreateModifierHandler, FieldCreator, createFormState } from "../../ServiceInstanceForm";
 import { dispatchUpdateServiceOrderItems, dispatchUpdateStencil } from "../Context/dispatchers";
-import { AddInterServiceRelationsToTracker, createComposerEntity } from "../actions/general";
+import { AddInterServiceRelationsToTracker, createComposerEntity } from "../Actions/general";
 import { ActionEnum, EventActionEnum } from "../interfaces";
 import { transformEmbeddedToStencilElements } from "./helpers";
 

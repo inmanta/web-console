@@ -8,7 +8,7 @@ import {
 } from "@/UI/Components/ServiceInstanceForm";
 import { dispatchUpdateStencil } from "../Context/dispatchers";
 import { EventActionEnum } from "../interfaces";
-import { ServiceEntityBlock } from "../shapes";
+import { ServiceEntityBlock } from "../Shapes";
 import { connectEntities, createComposerEntity } from "./general";
 
 /**

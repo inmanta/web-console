@@ -8,9 +8,9 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasContext, InstanceComposerContext, defaultCanvasContext } from "../Context";
 import { containerModel } from "../Mocks";
-import { addDefaultEntities } from "../actions/createMode";
+import { addDefaultEntities } from "../Actions/createMode";
 import { StencilState } from "../interfaces";
-import { ComposerPaper } from "../paper";
+import { ComposerPaper } from "../Paper";
 import { defineObjectsForJointJS } from "../testSetup";
 import { RightSidebar } from "./RightSidebar";
 

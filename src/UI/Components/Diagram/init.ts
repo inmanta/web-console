@@ -3,20 +3,20 @@ import { dia, shapes, ui } from "@inmanta/rappid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Queries";
 import { dispatchUpdateStencil } from "./Context/dispatchers";
-import { populateGraphWithDefault } from "./actions/createMode";
-import { appendInstance } from "./actions/editMode";
-import { updateAttributes } from "./actions/general";
+import { populateGraphWithDefault } from "./Actions/createMode";
+import { appendInstance } from "./Actions/editMode";
+import { updateAttributes } from "./Actions/general";
 import {
   applyCoordinatesToCells,
   getCellsCoordinates,
   getKeyAttributesNames,
   moveCellsFromColliding,
   toggleLooseElement,
-} from "./helpers";
+} from "./Helpers";
 import { ConnectionRules, EventActionEnum, SavedCoordinates } from "./interfaces";
-import { ComposerPaper } from "./paper";
-import { ServiceEntityBlock } from "./shapes";
-import { toggleDisabledStencil } from "./stencil/helpers";
+import { ComposerPaper } from "./Paper";
+import { ServiceEntityBlock } from "./Shapes";
+import { toggleDisabledStencil } from "./Stencil/helpers";
 
 /**
  * Initializes the diagram.
