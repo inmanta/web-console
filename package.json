@@ -132,7 +132,7 @@
     "@patternfly/react-tokens": "^6.3.1",
     "@react-keycloak/web": "^3.4.0",
     "@remix-run/router": "^1.15.0",
-    "@tanstack/react-query": "^5.80.7",
+    "@tanstack/react-query": "^5.86.0",
     "@tanstack/react-query-devtools": "^5.85.5",
     "bignumber.js": "^9.3.1",
     "copy-to-clipboard": "^3.3.3",
