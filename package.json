@@ -139,7 +139,7 @@
     "easy-peasy": "^6.1.0",
     "file-saver": "^2.0.5",
     "graphql": "^16.11.0",
-    "graphql-request": "^7.1.2",
+    "graphql-request": "^7.2.0",
     "keycloak-js": "^26.2.0",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
