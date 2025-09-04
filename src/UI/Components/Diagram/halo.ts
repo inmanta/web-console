@@ -7,8 +7,8 @@ import {
 } from "./Context/dispatchers";
 import { checkIfConnectionIsAllowed } from "./Helpers";
 import { toggleLooseElement } from "./Helpers";
-import { ActionEnum, ConnectionRules, EventActionEnum } from "./interfaces";
 import { ServiceEntityBlock } from "./Shapes";
+import { ActionEnum, ConnectionRules, EventActionEnum } from "./interfaces";
 
 /**
  * Creates a halo around a cell view in a graph.

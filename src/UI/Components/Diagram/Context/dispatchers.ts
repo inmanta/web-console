@@ -1,6 +1,6 @@
 import { dia } from "@inmanta/rappid";
-import { ActionEnum, EventActionEnum, InterServiceRelationOnCanvasWithMin } from "../interfaces";
 import { ServiceEntityBlock } from "../Shapes";
+import { ActionEnum, EventActionEnum, InterServiceRelationOnCanvasWithMin } from "../interfaces";
 
 /**
  * Dispatches an event to update inter-service relations.

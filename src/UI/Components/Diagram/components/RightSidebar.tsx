@@ -13,8 +13,8 @@ import styled from "styled-components";
 import { words } from "@/UI/words";
 import { CanvasContext, InstanceComposerContext } from "../Context/Context";
 import { dispatchUpdateStencil } from "../Context/dispatchers";
-import { EventActionEnum } from "../interfaces";
 import { toggleDisabledStencil } from "../Stencil/helpers";
+import { EventActionEnum } from "../interfaces";
 import { EntityForm } from "./EntityForm";
 
 interface Props {

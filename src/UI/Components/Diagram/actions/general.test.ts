@@ -3,15 +3,14 @@ import { CreateModifierHandler, FieldCreator, createFormState } from "../../Serv
 import { childModel, containerModel, mockedInstanceWithRelations, parentModel } from "../Mocks";
 import { ServiceEntityBlock } from "../Shapes";
 import { defineObjectsForJointJS } from "../testSetup";
-import { createComposerEntity, updateAttributes } from "./general";
 
 beforeAll(() => {
   defineObjectsForJointJS();
 });
 
-describe("createComposerEntity", () => {
+describe("ServiceEntityBlock constructor", () => {
   it("creates a new core entity", () => {
-    const coreEntity = createComposerEntity({
+    const coreEntity = new ServiceEntityBlock({
       serviceModel: parentModel,
       isCore: true,
       isInEditMode: false,
@@ -26,7 +25,7 @@ describe("createComposerEntity", () => {
   });
 
   it("creates a new embedded entity", () => {
-    const embeddedEntity = createComposerEntity({
+    const embeddedEntity = new ServiceEntityBlock({
       serviceModel: containerModel.embedded_entities[0],
       isCore: false,
       isInEditMode: false,
@@ -46,7 +45,7 @@ describe("createComposerEntity", () => {
   });
 
   it("creates a new embedded entit with name equal to type if the type is present", () => {
-    const embeddedEntity = createComposerEntity({
+    const embeddedEntity = new ServiceEntityBlock({
       serviceModel: {
         ...containerModel.embedded_entities[0],
         type: "test-type",
@@ -72,7 +71,7 @@ describe("createComposerEntity", () => {
   it("creates a new entity with inter-service relations", () => {
     const dispatchSpy = vi.spyOn(document, "dispatchEvent");
 
-    const childEntity = createComposerEntity({
+    const childEntity = new ServiceEntityBlock({
       serviceModel: childModel,
       isCore: false,
       isInEditMode: false,
@@ -96,7 +95,7 @@ describe("createComposerEntity", () => {
 
   it("creates a new entity with inter-service relations from inventory stencil", () => {
     const dispatchSpy = vi.spyOn(document, "dispatchEvent");
-    const childEntity = createComposerEntity({
+    const childEntity = new ServiceEntityBlock({
       serviceModel: childModel,
       isCore: false,
       isInEditMode: false,
@@ -122,7 +121,7 @@ describe("createComposerEntity", () => {
     const fields = fieldCreator.attributesToFields(serviceModel.attributes);
     const attributes = createFormState(fields);
 
-    const coreEntity = createComposerEntity({
+    const coreEntity = new ServiceEntityBlock({
       serviceModel,
       isCore,
       isEmbeddedEntity,
@@ -148,14 +147,14 @@ describe("createComposerEntity", () => {
   });
 });
 
-describe("updateAttributes", () => {
+describe("ServiceEntityBlock._updateAttributes", () => {
   it("set attributes, sanitizedAttrs and displayed items on initial update", () => {
     const instanceEntityBlock = new ServiceEntityBlock().setName(parentModel.name, null);
     const attributes = mockedInstanceWithRelations.instance
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
 
-    updateAttributes(instanceEntityBlock, ["name", "service_id"], attributes, isInitial);
+    (instanceEntityBlock as any)._updateAttributes(["name", "service_id"], attributes, isInitial);
 
     expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",
@@ -199,7 +198,7 @@ describe("updateAttributes", () => {
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
 
-    updateAttributes(instanceEntityBlock, [], attributes, isInitial);
+    (instanceEntityBlock as any)._updateAttributes([], attributes, isInitial);
 
     expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",
@@ -221,7 +220,7 @@ describe("updateAttributes", () => {
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
 
-    updateAttributes(instanceEntityBlock, [], attributes, isInitial);
+    (instanceEntityBlock as any)._updateAttributes([], attributes, isInitial);
 
     expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",
@@ -242,7 +241,7 @@ describe("updateAttributes", () => {
       should_deploy_fail: false,
     };
 
-    updateAttributes(instanceEntityBlock, [], updatedAttributes, updatedIsInitial);
+    (instanceEntityBlock as any)._updateAttributes([], updatedAttributes, updatedIsInitial);
 
     expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",
@@ -257,7 +256,7 @@ describe("updateAttributes", () => {
 
     const updatedIsInitial2 = true;
 
-    updateAttributes(instanceEntityBlock, [], updatedAttributes, updatedIsInitial2);
+    (instanceEntityBlock as any)._updateAttributes([], updatedAttributes, updatedIsInitial2);
 
     expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",

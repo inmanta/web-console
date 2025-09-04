@@ -4,15 +4,15 @@ import { ui } from "@inmanta/rappid";
 import styled from "styled-components";
 import { CanvasContext, InstanceComposerContext } from "../Context";
 import { EventWrapper } from "../Context/EventWrapper";
-import { DictModal, RightSidebar } from ".";
-import { ErrorsContainer } from "./ErrorsContainer";
 import { createConnectionRules } from "../Helpers";
-import { diagramInit } from "../init";
-import { ActionEnum } from "../interfaces";
 import { LeftSidebar } from "../Stencil";
 import { createStencilState } from "../Stencil/helpers";
-import { CanvasWrapper } from "../styles";
 import { ZoomHandlerService } from "../ZoomHandler";
+import { diagramInit } from "../init";
+import { ActionEnum } from "../interfaces";
+import { CanvasWrapper } from "../styles";
+import { ErrorsContainer } from "./ErrorsContainer";
+import { DictModal, RightSidebar } from ".";
 
 /**
  * Properties for the Canvas component.

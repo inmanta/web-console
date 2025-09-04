@@ -12,12 +12,12 @@ import {
   findFullInterServiceRelations,
   getEntityAttributes,
 } from "../Helpers";
+import { ServiceEntityBlock } from "../Shapes";
+import { toggleDisabledStencil } from "../Stencil/helpers";
 import activeImage from "../icons/active-icon.svg";
 import candidateImage from "../icons/candidate-icon.svg";
 import { EventActionEnum, relationId } from "../interfaces";
-import { ServiceEntityBlock } from "../Shapes";
-import { toggleDisabledStencil } from "../Stencil/helpers";
-import { connectEntities, createComposerEntity } from "./general";
+import { connectEntities } from "./general";
 
 export interface AppendInstanceParams {
   paper: dia.Paper;
@@ -66,7 +66,7 @@ export function appendInstance({
     ? serviceInstance.service_identity_attribute_value
     : serviceInstance.id;
 
-  const instanceEntityBlock = createComposerEntity({
+  const instanceEntityBlock = new ServiceEntityBlock({
     serviceModel: serviceInstanceModel,
     isCore: isMainInstance,
     isInEditMode: true,
@@ -319,7 +319,7 @@ export function appendEmbeddedEntity({
    */
   function appendSingleEntity(entityInstance: InstanceAttributeModel): ServiceEntityBlock {
     //Create shape for Entity
-    const instanceEntityBlock = createComposerEntity({
+    const instanceEntityBlock = new ServiceEntityBlock({
       serviceModel: embeddedEntity,
       isCore: false,
       isInEditMode: true,

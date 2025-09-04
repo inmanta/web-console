@@ -4,15 +4,15 @@ import {
   dispatchUpdateInterServiceRelations,
   dispatchUpdateServiceOrderItems,
 } from "../Context/dispatchers";
-import { anchorNamespace } from "../anchors";
-import createHalo from "../halo";
 import { checkIfConnectionIsAllowed } from "../Helpers";
 import { showLinkTools, toggleLooseElement } from "../Helpers";
+import { Link, ServiceEntityBlock } from "../Shapes";
+import { anchorNamespace } from "../anchors";
+import createHalo from "../halo";
 import collapseButton from "../icons/collapse-icon.svg";
 import expandButton from "../icons/expand-icon.svg";
 import { ActionEnum, ConnectionRules, EventActionEnum, TypeEnum } from "../interfaces";
 import { routerNamespace } from "../routers";
-import { Link, ServiceEntityBlock } from "../Shapes";
 
 /**
  * Represents the ComposerPaper class. which initializes the JointJS paper object and sets up the event listeners.

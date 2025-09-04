@@ -11,8 +11,7 @@ import {
   InterServiceRule,
   TypeEnum,
 } from "@/UI/Components/Diagram/interfaces";
-import { createComposerEntity } from "../Actions/general";
-import { Link, ServiceEntityBlock } from "../Shapes/Link";
+import { Link, ServiceEntityBlock } from "../Shapes";
 import { defineObjectsForJointJS } from "../testSetup";
 import {
   createConnectionRules,
@@ -451,7 +450,7 @@ describe("checkWhetherConnectionRulesAreExhausted", () => {
 });
 
 describe("checkIfConnectionIsAllowed", () => {
-  const serviceA = createComposerEntity({
+  const serviceA = new ServiceEntityBlock({
     serviceModel: Service.a,
     isCore: false,
     isInEditMode: false,
@@ -465,7 +464,7 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const embeddedService = createComposerEntity({
+    const embeddedService = new ServiceEntityBlock({
       serviceModel: Service.a.embedded_entities[0],
       isCore: false,
       isInEditMode: false,
@@ -492,7 +491,7 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const independendService = createComposerEntity({
+    const independendService = new ServiceEntityBlock({
       serviceModel: Service.b,
       isCore: false,
       isInEditMode: false,
@@ -518,7 +517,7 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const blockedService = createComposerEntity({
+    const blockedService = new ServiceEntityBlock({
       serviceModel: Service.a.embedded_entities[0],
       isCore: false,
       isInEditMode: false,
@@ -547,7 +546,7 @@ describe("checkIfConnectionIsAllowed", () => {
 
     serviceA.set("isBlockedFromEditing", true);
 
-    const serviceB = createComposerEntity({
+    const serviceB = new ServiceEntityBlock({
       serviceModel: Service.a.embedded_entities[0],
       isCore: false,
       isInEditMode: false,
@@ -578,14 +577,14 @@ describe("checkIfConnectionIsAllowed", () => {
       model: graph,
     });
 
-    const connectedCoreEntity = createComposerEntity({
+    const connectedCoreEntity = new ServiceEntityBlock({
       serviceModel: Service.a,
       isCore: true,
       isInEditMode: false,
       attributes: InstanceAttributesA,
     });
 
-    const connectedEmbeddedEntity = createComposerEntity({
+    const connectedEmbeddedEntity = new ServiceEntityBlock({
       serviceModel: Service.a.embedded_entities[0],
       isCore: true,
       isInEditMode: false,

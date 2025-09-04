@@ -2,21 +2,20 @@ import { RefObject } from "react";
 import { dia, shapes, ui } from "@inmanta/rappid";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Queries";
-import { dispatchUpdateStencil } from "./Context/dispatchers";
 import { populateGraphWithDefault } from "./Actions/createMode";
 import { appendInstance } from "./Actions/editMode";
-import { updateAttributes } from "./Actions/general";
+
+import { dispatchUpdateStencil } from "./Context/dispatchers";
 import {
   applyCoordinatesToCells,
   getCellsCoordinates,
-  getKeyAttributesNames,
   moveCellsFromColliding,
   toggleLooseElement,
 } from "./Helpers";
-import { ConnectionRules, EventActionEnum, SavedCoordinates } from "./interfaces";
 import { ComposerPaper } from "./Paper";
 import { ServiceEntityBlock } from "./Shapes";
 import { toggleDisabledStencil } from "./Stencil/helpers";
+import { ConnectionRules, EventActionEnum, SavedCoordinates } from "./interfaces";
 
 /**
  * Initializes the diagram.
@@ -181,13 +180,13 @@ export function diagramInit(
     },
 
     editEntity: (cellView, serviceModel, attributeValues) => {
-      const keyAttributes = getKeyAttributesNames(serviceModel);
+      const entityBlock = cellView.model as ServiceEntityBlock;
 
       //line below resolves issue that appendColumns did update values in the model, but visual representation wasn't updated
-      cellView.model.set("items", []);
-      updateAttributes(cellView.model as ServiceEntityBlock, keyAttributes, attributeValues, false);
+      entityBlock.set("items", []);
+      entityBlock.updateEntityAttributes(attributeValues, false);
 
-      return cellView.model as ServiceEntityBlock;
+      return entityBlock;
     },
     getCoordinates: () => getCellsCoordinates(graph),
   };

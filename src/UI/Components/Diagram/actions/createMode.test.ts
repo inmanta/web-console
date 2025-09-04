@@ -1,9 +1,8 @@
 import { dia } from "@inmanta/rappid";
 import { containerModel, parentModel } from "../Mocks";
-import { ServiceEntityBlock } from "../Shapes/Link";
 import { defineObjectsForJointJS } from "../testSetup";
 import { addDefaultEntities, populateGraphWithDefault } from "./createMode";
-import { createComposerEntity } from "./general";
+import { ServiceEntityBlock } from "../Shapes";
 
 beforeAll(() => {
   defineObjectsForJointJS();
@@ -68,7 +67,7 @@ describe("addDefaultEntities", () => {
       name: "",
     };
 
-    const createdEntity1 = createComposerEntity({
+    const createdEntity1 = new ServiceEntityBlock({
       serviceModel: {
         ...containerModel.embedded_entities[0],
         embedded_entities: [{ ...containerModel.embedded_entities[0] }],
@@ -80,7 +79,7 @@ describe("addDefaultEntities", () => {
       holderName: "container-service",
     });
 
-    const createdEntity2 = createComposerEntity({
+    const createdEntity2 = new ServiceEntityBlock({
       serviceModel: containerModel.embedded_entities[0],
       isCore: false,
       isInEditMode: false,

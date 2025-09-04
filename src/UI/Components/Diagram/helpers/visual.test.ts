@@ -5,8 +5,8 @@ import {
   b as InstanceAttributesB,
 } from "@/Test/Data/ServiceInstance/Attributes";
 import { EventActionEnum, LabelLinkView } from "@/UI/Components/Diagram/interfaces";
+import { ServiceEntityBlock } from "../Shapes";
 import { childModel, parentModel } from "../Mocks";
-import { createComposerEntity } from "../Actions/general";
 import { ComposerPaper } from "../Paper";
 import { Link } from "../Shapes/Link";
 import { defineObjectsForJointJS } from "../testSetup";
@@ -46,14 +46,14 @@ describe("updateLabelPosition", () => {
       model: graph,
     });
 
-    const sourceService = createComposerEntity({
+    const sourceService = new ServiceEntityBlock({
       serviceModel: Service.a,
       isCore: false,
       isEmbeddedEntity: false,
       isInEditMode: false,
       attributes: InstanceAttributesA,
     });
-    const targetService = createComposerEntity({
+    const targetService = new ServiceEntityBlock({
       serviceModel: Service.a,
       isCore: false,
       isEmbeddedEntity: false,
@@ -177,7 +177,7 @@ describe("toggleLooseElement", () => {
     });
 
     //add highlighter
-    const entity = createComposerEntity({
+    const entity = new ServiceEntityBlock({
       serviceModel: Service.a,
       isCore: false,
       isEmbeddedEntity: false,
@@ -211,7 +211,7 @@ describe("toggleLooseElement", () => {
       model: graph,
     });
 
-    const entity = createComposerEntity({
+    const entity = new ServiceEntityBlock({
       serviceModel: Service.a,
       isCore: false,
       isEmbeddedEntity: false,
@@ -242,12 +242,12 @@ describe("showLinkTools", () => {
 
     connectionRules[childModel.name][0].modifier = modifier;
 
-    const parentEntity = createComposerEntity({
+    const parentEntity = new ServiceEntityBlock({
       serviceModel: parentModel,
       isCore: false,
       isInEditMode: isParentInEditMode,
     });
-    const childEntity = createComposerEntity({
+    const childEntity = new ServiceEntityBlock({
       serviceModel: childModel,
       isCore: false,
       isInEditMode: isChildInEditMode,
@@ -327,14 +327,14 @@ describe("moveCellsFromColliding", () => {
       model: graph,
     });
 
-    const entityA = createComposerEntity({
+    const entityA = new ServiceEntityBlock({
       serviceModel: Service.a,
       isCore: false,
       isEmbeddedEntity: false,
       isInEditMode: false,
       attributes: InstanceAttributesA,
     });
-    const entityB = createComposerEntity({
+    const entityB = new ServiceEntityBlock({
       serviceModel: Service.a,
       isCore: false,
       isEmbeddedEntity: false,
@@ -362,14 +362,14 @@ describe("moveCellsFromColliding", () => {
     new dia.Paper({
       model: graph,
     });
-    const entityA = createComposerEntity({
+    const entityA = new ServiceEntityBlock({
       serviceModel: Service.a,
       isCore: false,
       isEmbeddedEntity: false,
       isInEditMode: false,
       attributes: InstanceAttributesA,
     });
-    const entityB = createComposerEntity({
+    const entityB = new ServiceEntityBlock({
       serviceModel: Service.a,
       isCore: false,
       isEmbeddedEntity: false,

@@ -3,7 +3,7 @@ import { t_global_background_color_primary_default } from "@patternfly/react-tok
 import { ServiceModel } from "@/Core";
 import { CreateModifierHandler, FieldCreator, createFormState } from "../../ServiceInstanceForm";
 import { dispatchUpdateServiceOrderItems, dispatchUpdateStencil } from "../Context/dispatchers";
-import { AddInterServiceRelationsToTracker, createComposerEntity } from "../Actions/general";
+import { ServiceEntityBlock } from "../Shapes";
 import { ActionEnum, EventActionEnum } from "../interfaces";
 import { transformEmbeddedToStencilElements } from "./helpers";
 
@@ -41,7 +41,7 @@ export class InstanceStencilTab {
         const fieldCreator = new FieldCreator(new CreateModifierHandler());
         const fields = fieldCreator.attributesToFields(serviceModel.attributes);
 
-        return createComposerEntity({
+        return new ServiceEntityBlock({
           serviceModel,
           isCore: false,
           isInEditMode: false,
@@ -74,11 +74,8 @@ export class InstanceStencilTab {
         dispatchUpdateStencil(elementView.model.get("name"), EventActionEnum.ADD);
       }
 
-      // Add inter-service relations to tracker only on valid drop, it means that the element will be successfully created on the diagram
-      const serviceModel = elementView.model.get("serviceModel");
-      if (serviceModel && serviceModel.inter_service_relations.length > 0) {
-        AddInterServiceRelationsToTracker(elementView.model, serviceModel);
-      }
+      // Inter-service relations are now automatically handled by the ServiceEntityBlock constructor
+      // when the element is created in dragStartClone, so no need to call AddInterServiceRelationsToTracker here
 
       dispatchUpdateServiceOrderItems(elementView.model, ActionEnum.CREATE);
     });

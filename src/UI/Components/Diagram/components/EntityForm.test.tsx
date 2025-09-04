@@ -6,11 +6,10 @@ import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasContext, defaultCanvasContext } from "../Context";
-import { parentModel } from "../Mocks";
-import { createComposerEntity } from "../Actions";
 import { getCellsCoordinates } from "../Helpers";
+import { parentModel } from "../Mocks";
 import { ComposerPaper } from "../Paper";
-import { ServiceEntityBlock } from "../Shapes/Link";
+import { ServiceEntityBlock } from "../Shapes";
 import { defineObjectsForJointJS } from "../testSetup";
 import { EntityForm } from "./EntityForm";
 
@@ -24,7 +23,7 @@ describe("EntityForm.", () => {
     const graph = new dia.Graph();
     const paper = new ComposerPaper({}, graph, true).paper;
 
-    const cell = createComposerEntity({
+    const cell = new ServiceEntityBlock({
       serviceModel: parentModel,
       isCore: true,
       isInEditMode,

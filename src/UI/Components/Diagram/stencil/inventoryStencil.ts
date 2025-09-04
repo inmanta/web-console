@@ -2,7 +2,7 @@ import { dia, ui } from "@inmanta/rappid";
 import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Queries";
-import { createComposerEntity } from "../Actions/general";
+import { ServiceEntityBlock } from "../Shapes";
 import { toggleDisabledStencil, createStencilElement } from "./helpers";
 
 const GRID_SIZE = 8;
@@ -83,22 +83,31 @@ export class InventoryStencilTab {
         "standard.Path": ["description"],
       },
       dragStartClone: (cell: dia.Cell) => {
-        const entity = createComposerEntity({
+        const entity = new ServiceEntityBlock({
           serviceModel: cell.get("serviceModel"),
           isCore: false,
           isInEditMode: false,
           attributes: cell.get("instanceAttributes"),
           isFromInventoryStencil: true,
+          isBlockedFromEditing: true,
+          stencilName: cell.get("name"),
+          id: cell.get("id"),
         });
-
-        //set id to the one that is stored in the stencil which equal to the instance id
-        entity.set("id", cell.get("id"));
-        entity.set("isBlockedFromEditing", true);
-        entity.set("stencilName", cell.get("name"));
 
         return entity;
       },
-      dragEndClone: (el) => el.clone().set("id", el.get("id")).set("items", el.get("items")), //cloned element loses key value pairs, so we need to set them again
+      dragEndClone: (el) => {
+        // cloned element loses key value pairs, so we need to set them again
+        const cloned = el.clone();
+        cloned.set("id", el.get("id"));
+        cloned.set("items", el.get("items"));
+        cloned.set("instanceAttributes", el.get("instanceAttributes"));
+        cloned.set("sanitizedAttrs", el.get("sanitizedAttrs"));
+        cloned.set("isFromInventoryStencil", el.get("isFromInventoryStencil"));
+        cloned.set("isBlockedFromEditing", el.get("isBlockedFromEditing"));
+        cloned.set("stencilName", el.get("stencilName"));
+        return cloned;
+      },
       layout: {
         columns: 1,
         rowHeight: "compact",

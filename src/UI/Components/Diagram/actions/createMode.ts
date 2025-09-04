@@ -7,9 +7,9 @@ import {
   createFormState,
 } from "@/UI/Components/ServiceInstanceForm";
 import { dispatchUpdateStencil } from "../Context/dispatchers";
-import { EventActionEnum } from "../interfaces";
 import { ServiceEntityBlock } from "../Shapes";
-import { connectEntities, createComposerEntity } from "./general";
+import { EventActionEnum } from "../interfaces";
+import { connectEntities } from "./general";
 
 /**
  * Populates a graph with default required entities derived from a service model.
@@ -24,7 +24,7 @@ export function populateGraphWithDefault(graph: dia.Graph, serviceModel: Service
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.attributesToFields(serviceModel.attributes);
 
-  const coreEntity = createComposerEntity({
+  const coreEntity = new ServiceEntityBlock({
     serviceModel,
     isCore: true,
     isInEditMode: false,
@@ -96,7 +96,7 @@ const addSingleEntity = (
   attributes: InstanceAttributeModel,
   holderName: string
 ): ServiceEntityBlock => {
-  const embeddedEntity = createComposerEntity({
+  const embeddedEntity = new ServiceEntityBlock({
     serviceModel: model,
     isCore: false,
     isInEditMode: false,

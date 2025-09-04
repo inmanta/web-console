@@ -7,8 +7,12 @@ import {
     t_global_font_size_body_default,
     t_global_font_size_body_lg,
 } from "@patternfly/react-tokens";
+import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
+import { dispatchAddInterServiceRelationToTracker } from "../Context/dispatchers";
+import { getKeyAttributesNames } from "../Helpers";
 import expandButton from "../icons/expand-icon.svg";
-import { ColumnData, EntityType, HeaderColor } from "../interfaces";
+import { ColumnData, EntityType, HeaderColor, ComposerEntityOptions } from "../interfaces";
+import { InterServiceRelationOnCanvasWithMin } from "../interfaces";
 
 /**
  * https://resources.jointjs.com/tutorial/custom-elements
@@ -18,10 +22,14 @@ import { ColumnData, EntityType, HeaderColor } from "../interfaces";
  * actions that are in ServiceEntity returns updated state of the object, we follow convention introduced by JointJS team in their demos
  */
 export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
-    constructor() {
+    constructor(options?: ComposerEntityOptions) {
         super();
-    }
 
+        // If options are provided, initialize the entity with the provided configuration
+        if (options) {
+            this._initializeFromOptions(options);
+        }
+    }
     defaults() {
         // Recursively assigns default properties. That means if a property already exists on the child,
         // the child property won't be replaced even if the parent property of same name has a different value.
@@ -440,6 +448,196 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         delete json.columns;
 
         return json;
+    }
+
+    /**
+     * Initializes the entity from the provided ComposerEntityOptions.
+     * This method contains all the logic that was previously in createComposerEntity.
+     *
+     * @param {ComposerEntityOptions} options - The configuration options for the entity.
+     * @private
+     */
+    private _initializeFromOptions(options: ComposerEntityOptions): void {
+        const {
+            serviceModel,
+            isCore,
+            isInEditMode,
+            attributes,
+            isEmbeddedEntity = false,
+            holderName = "",
+            embeddedTo,
+            isBlockedFromEditing = false,
+            cantBeRemoved = false,
+            stencilName,
+            id,
+            isFromInventoryStencil = false,
+        } = options;
+
+        // Set the entity name
+        if (isEmbeddedEntity && "type" in serviceModel) {
+            this.setName(serviceModel.name, serviceModel.type);
+        } else {
+            this.setName(serviceModel.name, null);
+        }
+
+        // Set custom ID if provided
+        if (id) {
+            this.set("id", id);
+        }
+
+        // Configure entity type and properties
+        if (isEmbeddedEntity) {
+            this.setTabColor(EntityType.EMBEDDED);
+            this.set("embeddedTo", embeddedTo);
+            this.set("isEmbeddedEntity", isEmbeddedEntity);
+            this.set("holderName", holderName);
+        } else if (isCore) {
+            this.set("isCore", isCore);
+            this.setTabColor(EntityType.CORE);
+        } else {
+            this.setTabColor(EntityType.RELATION);
+            this.set("stencilName", stencilName);
+        }
+
+        // Set common properties
+        this.set("isInEditMode", isInEditMode);
+        this.set("serviceModel", serviceModel);
+        this.set("isBlockedFromEditing", isBlockedFromEditing);
+        this.set("cantBeRemoved", cantBeRemoved);
+
+        // For inventory stencil entities, override the editing state to be blocked
+        if (isFromInventoryStencil) {
+            this.set("isBlockedFromEditing", true);
+        }
+
+        // Handle inter-service relations
+        if (serviceModel.inter_service_relations.length > 0 && !isFromInventoryStencil) {
+            this._addInterServiceRelationsToTracker(serviceModel);
+        }
+
+        // Handle attributes
+        if (attributes) {
+            const keyAttributes = getKeyAttributesNames(serviceModel);
+
+            // For inventory entities, show all attributes, not just key attributes
+            if (isFromInventoryStencil) {
+                // Get all attribute keys from the actual attributes for inventory entities
+                const allAttributeKeys = Object.keys(attributes);
+                this._updateAttributes(allAttributeKeys, attributes, true);
+            } else {
+                // For new entities, only show key attributes
+                this._updateAttributes(keyAttributes, attributes, true);
+            }
+        } else {
+            // Ensure instanceAttributes and sanitizedAttrs are always set, even if empty
+            this.set("instanceAttributes", {});
+            this.set("sanitizedAttrs", {});
+        }
+    }
+
+    /**
+     * Adds inter-service relations to the tracker.
+     * This method was moved from the general.ts file.
+     *
+     * @param {ServiceModel | EmbeddedEntity} serviceModel - ServiceModel or EmbeddedEntity object
+     * @private
+     */
+    private _addInterServiceRelationsToTracker(serviceModel: ServiceModel | EmbeddedEntity): void {
+        this.set("relatedTo", new Map());
+        const relations: InterServiceRelationOnCanvasWithMin[] = [];
+
+        serviceModel.inter_service_relations.forEach((relation) => {
+            if (relation.lower_limit > 0) {
+                relations.push({
+                    name: relation.entity_type,
+                    min: relation.lower_limit,
+                    currentAmount: 0,
+                });
+            }
+        });
+
+        dispatchAddInterServiceRelationToTracker(this.id, serviceModel.name, relations);
+    }
+
+    /**
+     * Public method to update entity attributes.
+     * 
+     * @param {InstanceAttributeModel} serviceInstanceAttributes - attributes of given instance/entity
+     * @param {boolean} isInitial - boolean indicating whether should we updateAttributes or edit - default = true
+     * @public
+     */
+    public updateEntityAttributes(
+        serviceInstanceAttributes: InstanceAttributeModel,
+        isInitial = false
+    ): void {
+        const serviceModel = this.get("serviceModel") as ServiceModel | EmbeddedEntity;
+        const isFromInventoryStencil = this.get("isFromInventoryStencil") as boolean;
+
+        let finalAttributes = serviceInstanceAttributes;
+        let attributeKeys: string[];
+
+        if (isFromInventoryStencil && !isInitial) {
+            // For inventory entities being updated (not initial creation), preserve all existing attributes
+            // and merge with the new ones to avoid losing attributes that aren't in the form
+            const existingAttributes = this.get("instanceAttributes") || {};
+            finalAttributes = { ...existingAttributes, ...serviceInstanceAttributes };
+            attributeKeys = Object.keys(finalAttributes);
+        } else if (isFromInventoryStencil) {
+            // For inventory entities during initial creation, show all provided attributes
+            attributeKeys = Object.keys(serviceInstanceAttributes);
+        } else {
+            // For new entities, only show key attributes
+            attributeKeys = getKeyAttributesNames(serviceModel);
+        }
+
+        this._updateAttributes(attributeKeys, finalAttributes, isInitial);
+    }
+
+    /**
+     * Updates attributes for the entity.
+     * This method was moved from the general.ts file.
+     *
+     * @param {string[]} keyAttributes - names of the attributes that we iterate for the values
+     * @param {InstanceAttributeModel} serviceInstanceAttributes - attributes of given instance/entity
+     * @param {boolean} isInitial - boolean indicating whether should we updateAttributes or edit - default = true
+     * @private
+     */
+    private _updateAttributes(
+        keyAttributes: string[],
+        serviceInstanceAttributes: InstanceAttributeModel,
+        isInitial = true
+    ): void {
+        // Ensure we have valid attributes and keyAttributes
+        if (!serviceInstanceAttributes || !keyAttributes || keyAttributes.length === 0) {
+            // Set empty attributes to avoid issues with EntityForm
+            this.set("instanceAttributes", serviceInstanceAttributes || {});
+            if (isInitial && !this.get("sanitizedAttrs")) {
+                this.set("sanitizedAttrs", serviceInstanceAttributes || {});
+            }
+            return;
+        }
+
+        const attributesToDisplay = keyAttributes.map((key) => {
+            const value = serviceInstanceAttributes ? (serviceInstanceAttributes[key] as string) : "";
+
+            return {
+                name: key,
+                value: value || "",
+            };
+        });
+
+        if (isInitial) {
+            this.appendColumns(attributesToDisplay);
+        } else {
+            this.updateColumns(attributesToDisplay, this.attributes.isCollapsed);
+        }
+
+        this.set("instanceAttributes", serviceInstanceAttributes);
+
+        if (isInitial && !this.get("sanitizedAttrs")) {
+            //for initial appending instanceAttributes are equal sanitized ones
+            this.set("sanitizedAttrs", serviceInstanceAttributes);
+        }
     }
 }
 

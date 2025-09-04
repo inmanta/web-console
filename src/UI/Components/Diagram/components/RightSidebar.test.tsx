@@ -6,11 +6,11 @@ import { Inventories } from "@/Data/Queries";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import { addDefaultEntities } from "../Actions/createMode";
 import { CanvasContext, InstanceComposerContext, defaultCanvasContext } from "../Context";
 import { containerModel } from "../Mocks";
-import { addDefaultEntities } from "../Actions/createMode";
-import { StencilState } from "../interfaces";
 import { ComposerPaper } from "../Paper";
+import { StencilState } from "../interfaces";
 import { defineObjectsForJointJS } from "../testSetup";
 import { RightSidebar } from "./RightSidebar";
 
