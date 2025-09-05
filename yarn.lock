@@ -1192,7 +1192,7 @@ __metadata:
     "@joint/layout-directed-graph": "npm:^4.0.1"
     "@loadable/component": "npm:^5.16.7"
     "@monaco-editor/react": "npm:^4.7.0"
-    "@patternfly/react-charts": "npm:^8.2.2"
+    "@patternfly/react-charts": "npm:^8.3.1"
     "@patternfly/react-code-editor": "npm:^6.3.1"
     "@patternfly/react-core": "npm:^6.2.2"
     "@patternfly/react-icons": "npm:^6.3.1"
@@ -1675,19 +1675,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-charts@npm:^8.2.2":
-  version: 8.2.2
-  resolution: "@patternfly/react-charts@npm:8.2.2"
+"@patternfly/react-charts@npm:^8.3.1":
+  version: 8.3.1
+  resolution: "@patternfly/react-charts@npm:8.3.1"
   dependencies:
-    "@patternfly/react-styles": "npm:^6.2.2"
-    "@patternfly/react-tokens": "npm:^6.2.2"
+    "@patternfly/react-styles": "npm:^6.3.1"
+    "@patternfly/react-tokens": "npm:^6.3.1"
     hoist-non-react-statics: "npm:^3.3.2"
     lodash: "npm:^4.17.21"
     tslib: "npm:^2.8.1"
   peerDependencies:
     echarts: ^5.6.0
-    react: ^17 || ^18
-    react-dom: ^17 || ^18
+    react: ^17 || ^18 || ^19
+    react-dom: ^17 || ^18 || ^19
     victory-area: ^37.3.6
     victory-axis: ^37.3.6
     victory-bar: ^37.3.6
@@ -1742,7 +1742,7 @@ __metadata:
       optional: true
     victory-zoom-container:
       optional: true
-  checksum: 10/b3f9537ec93c35584e867c1aa4a9c85836927e078eeb6672a86030cd94801403cd1f7f773202689054e5c67f5e0b694f2e8f169dbb2ba156837354528cd30c80
+  checksum: 10/6b1d19a5b51c58456b45679ec1de26e768c824669d5cb95123ed65bb7810a352c23919c589f1a880719350fa2699368b206e2edc23336bb3ceec25b57320e2df
   languageName: node
   linkType: hard
 
