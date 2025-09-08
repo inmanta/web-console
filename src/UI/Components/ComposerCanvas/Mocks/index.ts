@@ -1,2 +1,2 @@
-export * from "./isntances";
+export * from "./Instances";
 export * from "./services";
