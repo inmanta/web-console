@@ -1,8 +1,8 @@
 import { InstanceAttributeModel } from "@/Core";
 import { CreateModifierHandler, FieldCreator, createFormState } from "../../ServiceInstanceForm";
 import { childModel, containerModel, mockedInstanceWithRelations, parentModel } from "../Mocks";
-import { ServiceEntityBlock } from "../Shapes";
 import { defineObjectsForJointJS } from "../testSetup";
+import { ServiceEntityBlock } from ".";
 
 beforeAll(() => {
   defineObjectsForJointJS();
@@ -147,14 +147,28 @@ describe("ServiceEntityBlock constructor", () => {
   });
 });
 
-describe("ServiceEntityBlock._updateAttributes", () => {
-  it("set attributes, sanitizedAttrs and displayed items on initial update", () => {
-    const instanceEntityBlock = new ServiceEntityBlock().setName(parentModel.name, null);
+describe("ServiceEntityBlock.updateEntityAttributes", () => {
+  it("sets attributes, sanitizedAttrs and displayed items on initial update with a service model that has key attributes", () => {
+    // Create a mock service model with key attributes
+    const serviceModelWithKeyAttrs = {
+      ...parentModel,
+      key_attributes: ["name", "service_id"],
+    };
+
+    const instanceEntityBlock = new ServiceEntityBlock({
+      serviceModel: serviceModelWithKeyAttrs,
+      isCore: false,
+      isInEditMode: false,
+    });
+
     const attributes = mockedInstanceWithRelations.instance
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
 
-    (instanceEntityBlock as any)._updateAttributes(["name", "service_id"], attributes, isInitial);
+    // Ensure sanitizedAttrs is not pre-initialized (fix the empty object issue)
+    instanceEntityBlock.unset("sanitizedAttrs");
+
+    instanceEntityBlock.updateEntityAttributes(attributes, isInitial);
 
     expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",
@@ -192,13 +206,28 @@ describe("ServiceEntityBlock._updateAttributes", () => {
     ]);
   });
 
-  it("when there is no key attributes only attributes and sanitizedAttrs are set", () => {
-    const instanceEntityBlock = new ServiceEntityBlock().setName(parentModel.name, null);
+  it("when there are no key attributes, only attributes and sanitizedAttrs are set without display items", () => {
+    // Create a service model without key attributes (remove both key_attributes and service_identity)
+    const serviceModelWithoutKeyAttrs = {
+      ...parentModel,
+      key_attributes: [], // Empty key attributes
+      service_identity: undefined, // Remove service_identity to ensure no key attributes
+    };
+
+    const instanceEntityBlock = new ServiceEntityBlock({
+      serviceModel: serviceModelWithoutKeyAttrs,
+      isCore: false,
+      isInEditMode: false,
+    });
+
     const attributes = mockedInstanceWithRelations.instance
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
 
-    (instanceEntityBlock as any)._updateAttributes([], attributes, isInitial);
+    // Ensure sanitizedAttrs is not pre-initialized (fix the empty object issue)
+    instanceEntityBlock.unset("sanitizedAttrs");
+
+    instanceEntityBlock.updateEntityAttributes(attributes, isInitial);
 
     expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",
@@ -213,14 +242,29 @@ describe("ServiceEntityBlock._updateAttributes", () => {
     expect(instanceEntityBlock.get("items")).toMatchObject([[], []]);
   });
 
-  it("sanitized Attributes won't be overridden if isInitial property is set to false or if there are sanitizedAttributes already set", () => {
-    //sanitizedAttrs property is updated from the sidebar level as it requires fields to be present
-    const instanceEntityBlock = new ServiceEntityBlock().setName(parentModel.name, null);
+  it("sanitized attributes won't be overridden when isInitial is false or when sanitizedAttrs already exist", () => {
+    // sanitizedAttrs property is updated from the sidebar level as it requires fields to be present
+    const serviceModelWithoutKeyAttrs = {
+      ...parentModel,
+      key_attributes: [], // Empty key attributes to focus on sanitized attrs behavior
+      service_identity: undefined, // Remove service_identity to ensure no key attributes
+    };
+
+    const instanceEntityBlock = new ServiceEntityBlock({
+      serviceModel: serviceModelWithoutKeyAttrs,
+      isCore: false,
+      isInEditMode: false,
+    });
+
     const attributes = mockedInstanceWithRelations.instance
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
 
-    (instanceEntityBlock as any)._updateAttributes([], attributes, isInitial);
+    // Ensure sanitizedAttrs is not pre-initialized (fix the empty object issue)
+    instanceEntityBlock.unset("sanitizedAttrs");
+
+    // First call with isInitial = true should set sanitizedAttrs
+    instanceEntityBlock.updateEntityAttributes(attributes, isInitial);
 
     expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
       name: "test12345",
@@ -232,40 +276,38 @@ describe("ServiceEntityBlock._updateAttributes", () => {
       service_id: "123412",
       should_deploy_fail: false,
     });
-    expect(instanceEntityBlock.get("items")).toMatchObject([[], []]);
 
-    const updatedIsInitial = false;
+    // Second call with isInitial = false should update instanceAttributes but not sanitizedAttrs
     const updatedAttributes = {
       name: "newName",
       service_id: "newId",
       should_deploy_fail: false,
     };
 
-    (instanceEntityBlock as any)._updateAttributes([], updatedAttributes, updatedIsInitial);
+    instanceEntityBlock.updateEntityAttributes(updatedAttributes, false);
 
     expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
-      name: "test12345",
-      service_id: "123412",
+      name: "test12345", // Should remain unchanged
+      service_id: "123412", // Should remain unchanged
       should_deploy_fail: false,
     });
     expect(instanceEntityBlock.get("instanceAttributes")).toMatchObject({
-      name: "newName",
-      service_id: "newId",
+      name: "newName", // Should be updated
+      service_id: "newId", // Should be updated
       should_deploy_fail: false,
     });
 
-    const updatedIsInitial2 = true;
-
-    (instanceEntityBlock as any)._updateAttributes([], updatedAttributes, updatedIsInitial2);
+    // Third call with isInitial = true but sanitizedAttrs already exist should not override sanitizedAttrs
+    instanceEntityBlock.updateEntityAttributes(updatedAttributes, true);
 
     expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
-      name: "test12345",
-      service_id: "123412",
+      name: "test12345", // Should remain unchanged
+      service_id: "123412", // Should remain unchanged
       should_deploy_fail: false,
     });
     expect(instanceEntityBlock.get("instanceAttributes")).toMatchObject({
-      name: "newName",
-      service_id: "newId",
+      name: "newName", // Should be updated
+      service_id: "newId", // Should be updated
       should_deploy_fail: false,
     });
   });

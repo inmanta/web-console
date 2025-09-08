@@ -65,6 +65,7 @@ export class InstanceStencilTab {
         background: t_global_background_color_primary_default.var,
       },
     });
+
     stencilElement.appendChild(this.stencil.el);
     this.stencil.render();
     this.stencil.load(transformEmbeddedToStencilElements(service));
@@ -73,9 +74,6 @@ export class InstanceStencilTab {
       if (elementView.model.get("isEmbeddedEntity")) {
         dispatchUpdateStencil(elementView.model.get("name"), EventActionEnum.ADD);
       }
-
-      // Inter-service relations are now automatically handled by the ServiceEntityBlock constructor
-      // when the element is created in dragStartClone, so no need to call AddInterServiceRelationsToTracker here
 
       dispatchUpdateServiceOrderItems(elementView.model, ActionEnum.CREATE);
     });

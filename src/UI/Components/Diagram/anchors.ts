@@ -9,22 +9,22 @@ export const anchorNamespace = { ...anchors };
  *  https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#anchors.custom
  */
 const customAnchor = function (
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  this: any,
+  this: { paper: dia.Paper },
   view: dia.ElementView,
   magnet: SVGElement,
-  ref: g.Point
+  ref: g.Point | SVGElement
 ) {
   const { model } = view;
   const bbox = view.getNodeUnrotatedBBox(magnet);
   const center = model.getBBox().center();
   const angle = model.angle();
-  let refPoint = ref;
+  let refPoint: g.Point;
 
-  if (ref instanceof Element) {
+  if (ref instanceof SVGElement) {
     const refView = this.paper.findView(ref);
-
     refPoint = refView ? refView.getNodeBBox(ref).center() : new g.Point();
+  } else {
+    refPoint = ref;
   }
 
   refPoint.rotate(center, angle);

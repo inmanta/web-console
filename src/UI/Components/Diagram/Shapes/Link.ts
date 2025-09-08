@@ -1,6 +1,10 @@
 import { dia, shapes } from "@inmanta/rappid";
 import { updateLabelPosition } from "../Helpers";
 
+interface LinkAttributeContext {
+  model: dia.Link;
+}
+
 export const Link = shapes.standard.Link.define(
   "Link",
   {
@@ -35,8 +39,8 @@ export const Link = shapes.standard.Link.define(
     // static
     attributes: {
       "auto-orient": {
-        qualify: function () {
-          return (this as any).model.isLink();
+        qualify: function (this: LinkAttributeContext) {
+          return this.model.isLink();
         },
         set: updateLabelPosition,
       },

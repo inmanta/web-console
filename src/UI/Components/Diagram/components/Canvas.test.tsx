@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider, UseQueryResult } from "@tanstack/react-query";
 import { render, queries, within as baseWithin } from "@testing-library/react";
@@ -7,7 +6,6 @@ import { ServiceModel } from "@/Core";
 import { InstanceWithRelations, Inventories } from "@/Data/Queries";
 import { MockedDependencyProvider } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
-import { words } from "@/UI";
 import { Canvas } from "@/UI/Components/Diagram/Components/Canvas";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -108,42 +106,6 @@ describe("Canvas.tsx", () => {
     expect(header.getAttribute("fill")).toContain(
       "var(--pf-t--chart--color--yellow--300, #dca614)"
     );
-  });
-
-  it("renders shapes dict Value that can be viewed in dict Modal", async () => {
-    const component = setup(mockedInstanceTwoServiceModel, mockedInstanceTwo, [
-      mockedInstanceTwoServiceModel,
-    ]);
-
-    render(component);
-
-    const dictValue = await screen.findByJointSelector("itemLabel_dictOne_value");
-
-    await user.click(dictValue.children[0]);
-
-    const modal = await screen.findByRole("dialog");
-
-    expect(modal).toBeVisible();
-
-    expect(screen.getByText(words("instanceComposer.dictModal")("dictOne"))).toBeVisible();
-
-    expect(screen.getByText("{}")).toBeVisible();
-
-    const copyButton = await screen.findByLabelText("Copy to clipboard");
-
-    await user.click(copyButton);
-
-    const clipboardItems = await navigator.clipboard.read();
-    const blob = await clipboardItems[0].getType(clipboardItems[0].types[0]);
-    const clipboardText = await blob.text();
-
-    expect(clipboardText).toEqual("{}");
-
-    const closeButton = await screen.findByLabelText("Close");
-
-    await user.click(closeButton);
-
-    expect(modal).not.toBeVisible();
   });
 
   it("renders right sidebar without buttons and left sidebar when not editable", async () => {

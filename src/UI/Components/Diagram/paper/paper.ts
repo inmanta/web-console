@@ -9,8 +9,6 @@ import { showLinkTools, toggleLooseElement } from "../Helpers";
 import { Link, ServiceEntityBlock } from "../Shapes";
 import { anchorNamespace } from "../anchors";
 import createHalo from "../halo";
-import collapseButton from "../icons/collapse-icon.svg";
-import expandButton from "../icons/expand-icon.svg";
 import { ActionEnum, ConnectionRules, EventActionEnum, TypeEnum } from "../interfaces";
 import { routerNamespace } from "../routers";
 
@@ -90,41 +88,6 @@ export class ComposerPaper {
         return baseValidators;
       },
     });
-
-    //Event that is triggered when user clicks on the cell's dictionary icon. It's used to open the dictionary modal.
-    this.paper.on("element:showDict", (_elementView: dia.ElementView, event: dia.Event) => {
-      document.dispatchEvent(
-        new CustomEvent("openDictsModal", {
-          detail: event.target.parentElement.attributes.dict.value,
-        })
-      );
-    });
-
-    //Event that is triggered when user clicks on the toggle button for the cells that have more than 4 attributes. It's used to collapse or expand the cell.
-    this.paper.on(
-      "element:toggleButton:pointerdown",
-      (elementView: dia.ElementView, event: dia.Event) => {
-        event.preventDefault();
-        const elementAsShape = elementView.model as ServiceEntityBlock;
-
-        const isCollapsed = elementAsShape.get("isCollapsed");
-        const originalAttrs = elementAsShape.get("dataToDisplay");
-
-        elementAsShape.appendColumns(
-          isCollapsed ? originalAttrs : originalAttrs.slice(0, 4),
-          false
-        );
-        elementAsShape.attr("toggleButton/xlink:href", isCollapsed ? collapseButton : expandButton);
-
-        const bbox = elementAsShape.getBBox();
-
-        elementAsShape.attr("toggleButton/y", bbox.height - 24);
-        elementAsShape.attr("spacer/y", bbox.height - 33);
-        elementAsShape.attr("buttonBody/y", bbox.height - 32);
-
-        elementAsShape.set("isCollapsed", !isCollapsed);
-      }
-    );
 
     //Event that is triggered when user clicks on the blank space of the paper. It's used to clear the sidebar.
     this.paper.on("blank:pointerdown", () => {

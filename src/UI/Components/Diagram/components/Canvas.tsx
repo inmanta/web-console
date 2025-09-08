@@ -12,7 +12,7 @@ import { diagramInit } from "../init";
 import { ActionEnum } from "../interfaces";
 import { CanvasWrapper } from "../styles";
 import { ErrorsContainer } from "./ErrorsContainer";
-import { DictModal, RightSidebar } from ".";
+import { RightSidebar } from ".";
 
 /**
  * Properties for the Canvas component.
@@ -148,7 +148,6 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
 
   return (
     <EventWrapper>
-      <DictModal />
       <CanvasWrapper id="canvas-wrapper" data-testid="Composer-Container">
         <LeftSidebarContainer
           className={`left_sidebar ${!editable && "view_mode"}`}

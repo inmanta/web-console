@@ -5,9 +5,9 @@ import {
   b as InstanceAttributesB,
 } from "@/Test/Data/ServiceInstance/Attributes";
 import { EventActionEnum, LabelLinkView } from "@/UI/Components/Diagram/interfaces";
-import { ServiceEntityBlock } from "../Shapes";
 import { childModel, parentModel } from "../Mocks";
 import { ComposerPaper } from "../Paper";
+import { ServiceEntityBlock } from "../Shapes";
 import { Link } from "../Shapes/Link";
 import { defineObjectsForJointJS } from "../testSetup";
 import { createConnectionRules } from "./connections";
