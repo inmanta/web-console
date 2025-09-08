@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { DependencyContext, words } from "@/UI";
 import { EmptyView } from "@/UI/Components";
-import { ComposerCreatorProvider } from "@/UI/Components/Diagram/Context/ComposerCreatorProvider";
+import { ComposerCreatorProvider } from "@/UI/Components/ComposerCanvas/Context/ComposerCreatorProvider";
 import { useRouteParams } from "@/UI/Routing";
 
 /**
