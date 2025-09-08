@@ -311,4 +311,126 @@ describe("ServiceEntityBlock.updateEntityAttributes", () => {
       should_deploy_fail: false,
     });
   });
+
+  it("correctly handles boolean default values in entity", () => {
+    // Create a mock service model with boolean key attribute
+    const serviceModelWithBooleanKey = {
+      ...parentModel,
+      key_attributes: ["name", "should_deploy_fail"],
+    };
+
+    const instanceEntityBlock = new ServiceEntityBlock({
+      serviceModel: serviceModelWithBooleanKey,
+      isCore: false,
+      isInEditMode: false,
+    });
+
+    const attributes = {
+      name: "test_service",
+      should_deploy_fail: false,
+    };
+
+    instanceEntityBlock.updateEntityAttributes(attributes, true);
+
+    // Verify that boolean false value is correctly displayed as "false", not empty string
+    const items = instanceEntityBlock.get("items");
+    const values = items[1]; // Second array contains the values
+
+    expect(values).toEqual([
+      {
+        id: "name_value",
+        label: "test_service",
+      },
+      {
+        id: "should_deploy_fail_value",
+        label: "false", // Should be "false", not ""
+      },
+    ]);
+  });
+
+  it("correctly displays boolean true values in entity columns", () => {
+    // Create a mock service model with boolean key attribute
+    const serviceModelWithBooleanKey = {
+      ...parentModel,
+      key_attributes: ["name", "should_deploy_fail"],
+    };
+
+    const instanceEntityBlock = new ServiceEntityBlock({
+      serviceModel: serviceModelWithBooleanKey,
+      isCore: false,
+      isInEditMode: false,
+    });
+
+    const attributes = {
+      name: "test_service",
+      should_deploy_fail: true,
+    };
+
+    instanceEntityBlock.updateEntityAttributes(attributes, true);
+
+    // Verify that boolean true value is correctly displayed as "true" string
+    const items = instanceEntityBlock.get("items");
+    const values = items[1]; // Second array contains the values
+
+    expect(values).toEqual([
+      {
+        id: "name_value",
+        label: "test_service",
+      },
+      {
+        id: "should_deploy_fail_value",
+        label: "true", // Should be "true"
+      },
+    ]);
+  });
+
+  it("correctly initializes instanceAttributes with boolean default values when no attributes provided", () => {
+    // Create a service model with boolean attributes that have default values
+    const serviceModelWithBooleanDefaults = {
+      ...parentModel,
+      attributes: [
+        {
+          name: "should_deploy_fail",
+          type: "bool",
+          description: "Boolean with default false",
+          modifier: "rw+",
+          default_value: false,
+          default_value_set: true,
+        },
+        {
+          name: "enable_feature",
+          type: "bool",
+          description: "Boolean with default true",
+          modifier: "rw+",
+          default_value: true,
+          default_value_set: true,
+        },
+        {
+          name: "optional_flag",
+          type: "bool?",
+          description: "Optional boolean with no default",
+          modifier: "rw+",
+          default_value: null,
+          default_value_set: false,
+        },
+      ],
+    };
+
+    // Create entity without providing attributes - this should still get the defaults
+    const entityBlock = new ServiceEntityBlock({
+      serviceModel: serviceModelWithBooleanDefaults,
+      isCore: false,
+      isInEditMode: false,
+      // Note: no attributes provided
+    });
+
+    const instanceAttributes = entityBlock.get("instanceAttributes");
+
+    // Boolean attributes with default values should be present even when no attributes were provided
+    expect(instanceAttributes).toMatchObject({
+      should_deploy_fail: false, // Should have default false
+      enable_feature: true, // Should have default true
+      // optional_flag should not be present since default_value_set is false
+    });
+  });
 });

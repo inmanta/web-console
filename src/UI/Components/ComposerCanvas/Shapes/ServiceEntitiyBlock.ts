@@ -8,6 +8,11 @@ import {
   t_global_font_size_body_lg,
 } from "@patternfly/react-tokens";
 import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
+import {
+  CreateModifierHandler,
+  FieldCreator,
+  createFormState,
+} from "@/UI/Components/ServiceInstanceForm";
 import { dispatchAddInterServiceRelationToTracker } from "../Context/dispatchers";
 import { getKeyAttributesNames } from "../Helpers";
 import { ColumnData, EntityType, HeaderColor, ComposerEntityOptions } from "../interfaces";
@@ -432,9 +437,14 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
       this._updateAttributes(keyAttributes, attributes, true);
     } else {
-      // Ensure instanceAttributes and sanitizedAttrs are always set, even if empty
-      this.set("instanceAttributes", {});
-      this.set("sanitizedAttrs", {});
+      // When no attributes are provided, create default values from the service model
+      // This ensures boolean attributes with default values are properly initialized
+      const fieldCreator = new FieldCreator(new CreateModifierHandler());
+      const fields = fieldCreator.attributesToFields(serviceModel.attributes);
+      const defaultAttributes = createFormState(fields);
+
+      this.set("instanceAttributes", defaultAttributes);
+      this.set("sanitizedAttrs", defaultAttributes);
     }
   }
 
@@ -511,7 +521,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     if (hasKeyAttributes) {
       const attributesToDisplay = keyAttributes.map((key) => ({
         name: key,
-        value: (attributes[key] as string) || "",
+        value:
+          attributes[key] !== undefined && attributes[key] !== null ? String(attributes[key]) : "",
       }));
 
       this.setColumns(attributesToDisplay);
