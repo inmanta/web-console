@@ -5,6 +5,14 @@ interface LinkAttributeContext {
   model: dia.Link;
 }
 
+/**
+ * Represents the Link shape in the Composer, the lines connecting the entities.
+ *
+ * @extends shapes.standard.Link
+ * @class Link
+ * @memberof shapes
+ * @see shapes.standard.Link
+ */
 export const Link = shapes.standard.Link.define(
   "Link",
   {

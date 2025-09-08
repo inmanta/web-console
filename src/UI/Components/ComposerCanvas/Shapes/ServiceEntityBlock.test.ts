@@ -210,8 +210,8 @@ describe("ServiceEntityBlock.updateEntityAttributes", () => {
     // Create a service model without key attributes (remove both key_attributes and service_identity)
     const serviceModelWithoutKeyAttrs = {
       ...parentModel,
-      key_attributes: [], // Empty key attributes
-      service_identity: undefined, // Remove service_identity to ensure no key attributes
+      key_attributes: [],
+      service_identity: undefined,
     };
 
     const instanceEntityBlock = new ServiceEntityBlock({
@@ -246,8 +246,8 @@ describe("ServiceEntityBlock.updateEntityAttributes", () => {
     // sanitizedAttrs property is updated from the sidebar level as it requires fields to be present
     const serviceModelWithoutKeyAttrs = {
       ...parentModel,
-      key_attributes: [], // Empty key attributes to focus on sanitized attrs behavior
-      service_identity: undefined, // Remove service_identity to ensure no key attributes
+      key_attributes: [],
+      service_identity: undefined,
     };
 
     const instanceEntityBlock = new ServiceEntityBlock({
@@ -379,7 +379,7 @@ describe("ServiceEntityBlock.updateEntityAttributes", () => {
       },
       {
         id: "should_deploy_fail_value",
-        label: "true", // Should be "true"
+        label: "true",
       },
     ]);
   });
@@ -428,8 +428,8 @@ describe("ServiceEntityBlock.updateEntityAttributes", () => {
 
     // Boolean attributes with default values should be present even when no attributes were provided
     expect(instanceAttributes).toMatchObject({
-      should_deploy_fail: false, // Should have default false
-      enable_feature: true, // Should have default true
+      should_deploy_fail: false,
+      enable_feature: true,
       // optional_flag should not be present since default_value_set is false
     });
   });

@@ -83,7 +83,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           itemLabels: {
             class: "joint-entityBlock-itemLabels",
             fontSize: t_global_font_size_body_default.var,
-            //pointerEvents: "none",
             cursor: "default",
             itemText: {
               textWrap: false,
@@ -153,17 +152,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
       if (typeof item.value === "object" && !Array.isArray(item.value) && item.value !== null) {
         value.label = "{...}";
-
-        ///Add event and add data to display in Dictionary Modal
-        this.attr(`itemLabel_${item.name}_value/event`, "element:showDict");
-        this.attr(
-          `itemLabel_${item.name}_value/dict`,
-          JSON.stringify({
-            title: item.name,
-            value: item.value,
-          })
-        );
-        this.attr(`itemLabel_${item.name}_value/cursor`, "pointer");
       } else {
         value.label = String(item.value);
 
