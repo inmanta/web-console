@@ -7,8 +7,7 @@ import {
 import { EventActionEnum, LabelLinkView } from "@/UI/Components/Diagram/interfaces";
 import { childModel, parentModel } from "../Mocks";
 import { ComposerPaper } from "../Paper";
-import { ServiceEntityBlock } from "../Shapes";
-import { Link } from "../Shapes/Link";
+import { ServiceEntityBlock, Link } from "../Shapes";
 import { defineObjectsForJointJS } from "../testSetup";
 import { createConnectionRules } from "./connections";
 import {

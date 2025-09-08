@@ -11,8 +11,7 @@ import { ZoomHandlerService } from "../ZoomHandler";
 import { diagramInit } from "../init";
 import { ActionEnum } from "../interfaces";
 import { CanvasWrapper } from "../styles";
-import { ErrorsContainer } from "./ErrorsContainer";
-import { RightSidebar } from ".";
+import { RightSidebar, ErrorsContainer } from ".";
 
 /**
  * Properties for the Canvas component.

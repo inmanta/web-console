@@ -11,13 +11,13 @@ import {
   findCorrespondingId,
   findFullInterServiceRelations,
   getEntityAttributes,
+  connectEntities,
 } from "../Helpers";
 import { ServiceEntityBlock } from "../Shapes";
 import { toggleDisabledStencil } from "../Stencil/helpers";
 import activeImage from "../icons/active-icon.svg";
 import candidateImage from "../icons/candidate-icon.svg";
 import { EventActionEnum, relationId } from "../interfaces";
-import { connectEntities } from "./general";
 
 export interface AppendInstanceParams {
   paper: dia.Paper;

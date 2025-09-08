@@ -11,7 +11,7 @@ import {
   dispatchUpdateInterServiceRelations,
   dispatchUpdateServiceOrderItems,
 } from "../Context/dispatchers";
-import { ServiceEntityBlock } from "../Shapes/Link";
+import { ServiceEntityBlock } from "../Shapes";
 
 /**
  * Updates the position of a label relative to a link's target or source side.

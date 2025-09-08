@@ -18,6 +18,15 @@ import { toggleDisabledStencil } from "./Stencil/helpers";
 import { ConnectionRules, EventActionEnum, SavedCoordinates } from "./interfaces";
 
 /**
+ * Type guard to check if a cell is a ServiceEntityBlock
+ * @param cell - The cell to check
+ * @returns True if the cell is a ServiceEntityBlock
+ */
+function isServiceEntityBlock(cell: dia.Cell): cell is ServiceEntityBlock {
+  return cell.get("type") === "app.ServiceEntityBlock";
+}
+
+/**
  * Initializes the diagram.
  *
  * This function creates a new JointJS graph and paper, sets up a paper scroller, and attaches event listeners.
@@ -143,9 +152,7 @@ export function diagramInit(
       if (!instance) {
         populateGraphWithDefault(graph, mainService);
 
-        cells = graph
-          .getCells()
-          .filter((cell) => cell.get("type") !== "Link") as ServiceEntityBlock[];
+        cells = graph.getCells().filter(isServiceEntityBlock);
       } else {
         cells = appendInstance({
           paper,
@@ -180,7 +187,11 @@ export function diagramInit(
     },
 
     editEntity: (cellView, serviceModel, attributeValues) => {
-      const entityBlock = cellView.model as ServiceEntityBlock;
+      if (!isServiceEntityBlock(cellView.model)) {
+        throw new Error("Expected cellView.model to be a ServiceEntityBlock");
+      }
+
+      const entityBlock = cellView.model;
 
       //line below resolves issue that appendColumns did update values in the model, but visual representation wasn't updated
       entityBlock.set("items", []);

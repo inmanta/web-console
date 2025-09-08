@@ -4,8 +4,7 @@ import {
   dispatchUpdateInterServiceRelations,
   dispatchUpdateServiceOrderItems,
 } from "../Context/dispatchers";
-import { checkIfConnectionIsAllowed } from "../Helpers";
-import { showLinkTools, toggleLooseElement } from "../Helpers";
+import { checkIfConnectionIsAllowed, showLinkTools, toggleLooseElement } from "../Helpers";
 import { Link, ServiceEntityBlock } from "../Shapes";
 import { anchorNamespace } from "../anchors";
 import createHalo from "../halo";

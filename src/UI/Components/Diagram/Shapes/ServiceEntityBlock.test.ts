@@ -165,7 +165,7 @@ describe("ServiceEntityBlock.updateEntityAttributes", () => {
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
 
-    // Ensure sanitizedAttrs is not pre-initialized (fix the empty object issue)
+    // Ensure sanitizedAttrs is not pre-initialized for the test scenario
     instanceEntityBlock.unset("sanitizedAttrs");
 
     instanceEntityBlock.updateEntityAttributes(attributes, isInitial);
@@ -224,7 +224,7 @@ describe("ServiceEntityBlock.updateEntityAttributes", () => {
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
 
-    // Ensure sanitizedAttrs is not pre-initialized (fix the empty object issue)
+    // Ensure sanitizedAttrs is not pre-initialized for the test scenario
     instanceEntityBlock.unset("sanitizedAttrs");
 
     instanceEntityBlock.updateEntityAttributes(attributes, isInitial);
@@ -260,7 +260,7 @@ describe("ServiceEntityBlock.updateEntityAttributes", () => {
       .active_attributes as InstanceAttributeModel; // instance based on parent-service model
     const isInitial = true;
 
-    // Ensure sanitizedAttrs is not pre-initialized (fix the empty object issue)
+    // Ensure sanitizedAttrs is not pre-initialized for the test scenario
     instanceEntityBlock.unset("sanitizedAttrs");
 
     // First call with isInitial = true should set sanitizedAttrs
@@ -287,13 +287,13 @@ describe("ServiceEntityBlock.updateEntityAttributes", () => {
     instanceEntityBlock.updateEntityAttributes(updatedAttributes, false);
 
     expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
-      name: "test12345", // Should remain unchanged
-      service_id: "123412", // Should remain unchanged
+      name: "test12345",
+      service_id: "123412",
       should_deploy_fail: false,
     });
     expect(instanceEntityBlock.get("instanceAttributes")).toMatchObject({
-      name: "newName", // Should be updated
-      service_id: "newId", // Should be updated
+      name: "newName",
+      service_id: "newId",
       should_deploy_fail: false,
     });
 
@@ -301,13 +301,13 @@ describe("ServiceEntityBlock.updateEntityAttributes", () => {
     instanceEntityBlock.updateEntityAttributes(updatedAttributes, true);
 
     expect(instanceEntityBlock.get("sanitizedAttrs")).toMatchObject({
-      name: "test12345", // Should remain unchanged
-      service_id: "123412", // Should remain unchanged
+      name: "test12345",
+      service_id: "123412",
       should_deploy_fail: false,
     });
     expect(instanceEntityBlock.get("instanceAttributes")).toMatchObject({
-      name: "newName", // Should be updated
-      service_id: "newId", // Should be updated
+      name: "newName",
+      service_id: "newId",
       should_deploy_fail: false,
     });
   });

@@ -440,7 +440,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
   /**
    * Adds inter-service relations to the tracker.
-   * This method was moved from the general.ts file.
    *
    * @param {ServiceModel | EmbeddedEntity} serviceModel - ServiceModel or EmbeddedEntity object
    * @private
@@ -496,32 +495,26 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     serviceInstanceAttributes: InstanceAttributeModel,
     isInitial = true
   ): void {
-    // Ensure we have valid attributes and keyAttributes
-    if (!serviceInstanceAttributes || !keyAttributes || keyAttributes.length === 0) {
-      // Set empty attributes to avoid issues with EntityForm
-      this.set("instanceAttributes", serviceInstanceAttributes || {});
-      if (isInitial && !this.get("sanitizedAttrs")) {
-        this.set("sanitizedAttrs", serviceInstanceAttributes || {});
-      }
-      return;
+    // Normalize input - ensure we have valid attributes to work with
+    const attributes = serviceInstanceAttributes || {};
+    const hasKeyAttributes = keyAttributes && keyAttributes.length > 0;
+
+    // Always set the instance attributes
+    this.set("instanceAttributes", attributes);
+
+    // Set sanitized attributes on initial update if not already set
+    if (isInitial && !this.get("sanitizedAttrs")) {
+      this.set("sanitizedAttrs", attributes);
     }
 
-    const attributesToDisplay = keyAttributes.map((key) => {
-      const value = serviceInstanceAttributes ? (serviceInstanceAttributes[key] as string) : "";
-
-      return {
+    // Only create display columns if we have key attributes to show
+    if (hasKeyAttributes) {
+      const attributesToDisplay = keyAttributes.map((key) => ({
         name: key,
-        value: value || "",
-      };
-    });
+        value: (attributes[key] as string) || "",
+      }));
 
-    this.setColumns(attributesToDisplay);
-
-    this.set("instanceAttributes", serviceInstanceAttributes);
-
-    if (isInitial && !this.get("sanitizedAttrs")) {
-      //for initial appending instanceAttributes are equal sanitized ones
-      this.set("sanitizedAttrs", serviceInstanceAttributes);
+      this.setColumns(attributesToDisplay);
     }
   }
 }

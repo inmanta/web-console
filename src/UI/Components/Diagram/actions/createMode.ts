@@ -7,9 +7,9 @@ import {
   createFormState,
 } from "@/UI/Components/ServiceInstanceForm";
 import { dispatchUpdateStencil } from "../Context/dispatchers";
+import { connectEntities } from "../Helpers";
 import { ServiceEntityBlock } from "../Shapes";
 import { EventActionEnum } from "../interfaces";
-import { connectEntities } from "./general";
 
 /**
  * Populates a graph with default required entities derived from a service model.

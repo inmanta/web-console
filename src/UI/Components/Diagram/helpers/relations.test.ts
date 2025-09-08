@@ -1,5 +1,5 @@
 import { childModel, containerModel, parentModel } from "../Mocks";
-import { ServiceEntityBlock } from "../Shapes/Link";
+import { ServiceEntityBlock } from "../Shapes";
 import {
   findCorrespondingId,
   findFullInterServiceRelations,
