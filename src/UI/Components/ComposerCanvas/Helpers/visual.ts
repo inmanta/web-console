@@ -5,7 +5,7 @@ import {
   LabelLinkView,
   EventActionEnum,
   ActionEnum,
-} from "@/UI/Components/Diagram/interfaces";
+} from "@/UI/Components/ComposerCanvas/interfaces";
 import {
   dispatchLooseElement,
   dispatchUpdateInterServiceRelations,

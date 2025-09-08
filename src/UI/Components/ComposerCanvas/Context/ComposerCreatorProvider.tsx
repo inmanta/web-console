@@ -3,7 +3,7 @@ import { FlexItem, Flex } from "@patternfly/react-core";
 import { useGetServiceModels, useGetInventoryList } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
-import { Canvas } from "@/UI/Components/Diagram/Components";
+import { Canvas } from "@/UI/Components/ComposerCanvas/Components";
 import { ComposerActions } from "../Components";
 import { findInterServiceRelations } from "../Helpers";
 import { CanvasProvider } from "./CanvasProvider";

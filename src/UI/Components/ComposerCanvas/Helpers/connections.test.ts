@@ -10,7 +10,7 @@ import {
   EmbeddedRule,
   InterServiceRule,
   TypeEnum,
-} from "@/UI/Components/Diagram/interfaces";
+} from "@/UI/Components/ComposerCanvas/interfaces";
 import { Link, ServiceEntityBlock } from "../Shapes";
 import { defineObjectsForJointJS } from "../testSetup";
 import {

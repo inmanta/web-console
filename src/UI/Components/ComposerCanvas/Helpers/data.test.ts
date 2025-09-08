@@ -1,5 +1,5 @@
 import { Service } from "@/Test";
-import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
+import { ComposerServiceOrderItem } from "@/UI/Components/ComposerCanvas/interfaces";
 import {
   childModel,
   containerModel,

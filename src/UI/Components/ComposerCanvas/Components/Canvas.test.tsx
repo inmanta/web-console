@@ -6,7 +6,7 @@ import { ServiceModel } from "@/Core";
 import { InstanceWithRelations, Inventories } from "@/Data/Queries";
 import { MockedDependencyProvider } from "@/Test";
 import * as customQueries from "@/Test/Utils/custom-queries";
-import { Canvas } from "@/UI/Components/Diagram/Components/Canvas";
+import { Canvas } from "@/UI/Components/ComposerCanvas/Components/Canvas";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CanvasProvider } from "../Context/CanvasProvider";

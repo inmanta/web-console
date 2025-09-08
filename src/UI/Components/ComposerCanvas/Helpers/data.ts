@@ -6,7 +6,7 @@ import {
   ComposerServiceOrderItem,
   SavedCoordinates,
   ActionEnum,
-} from "@/UI/Components/Diagram/interfaces";
+} from "@/UI/Components/ComposerCanvas/interfaces";
 import { words } from "@/UI/words";
 import { ServiceEntityBlock } from "../Shapes";
 

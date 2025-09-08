@@ -4,7 +4,7 @@ import {
   a as InstanceAttributesA,
   b as InstanceAttributesB,
 } from "@/Test/Data/ServiceInstance/Attributes";
-import { EventActionEnum, LabelLinkView } from "@/UI/Components/Diagram/interfaces";
+import { EventActionEnum, LabelLinkView } from "@/UI/Components/ComposerCanvas/interfaces";
 import { childModel, parentModel } from "../Mocks";
 import { ComposerPaper } from "../Paper";
 import { ServiceEntityBlock, Link } from "../Shapes";
