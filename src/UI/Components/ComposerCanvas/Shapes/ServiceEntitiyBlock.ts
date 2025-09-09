@@ -468,7 +468,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    */
   public updateEntityAttributes(
     serviceInstanceAttributes: InstanceAttributeModel,
-    isInitial = false
+    isInitial: bool = false
   ): void {
     const serviceModel = this.get("serviceModel") as ServiceModel | EmbeddedEntity;
 
