@@ -13,11 +13,12 @@ interface Props {
 }
 
 export const InputRow: React.FC<Props> = ({ info }) => {
+  console.log("info", info);
   switch (info.type) {
     case "bool":
       return (
         <Row info={info}>
-          <BooleanInput info={info} />
+          <BooleanInput info={info}/>
         </Row>
       );
     case "int":
