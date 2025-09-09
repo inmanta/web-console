@@ -3,4 +3,5 @@ description: Add support for protected settings in the Environment Settings page
 issue-nr: 6488
 destination-branches:
 - master
-sections: {}
+sections: 
+  minor-improvement: "{{description}}"
