@@ -4,6 +4,7 @@ import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import { Td, Tr } from "@patternfly/react-table";
 import { EnvironmentSettings } from "@/Core";
 import { InputActions } from "./InputActions";
+import { ProtectedMessage } from "./ProtectedMessage";
 
 interface Props {
   info: EnvironmentSettings.InputInfo;
@@ -16,6 +17,7 @@ export const Row: React.FC<React.PropsWithChildren<Props>> = ({ info, children }
       <Tooltip content={getDescription(info)}>
         <OutlinedQuestionCircleIcon />
       </Tooltip>
+      <ProtectedMessage info={info} />
     </Td>
     <Td>{children}</Td>
     <Td>
