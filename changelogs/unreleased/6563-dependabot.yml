@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump vite from 7.0.0 to 7.0.7
+destination-branches:
+- master
+sections: {}
