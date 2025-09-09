@@ -124,7 +124,7 @@ const Row: React.FC<RowProps> = ({
           size="sm"
           isDisabled={isDisabled || !isDeleteable}
           aria-label="DeleteEntryAction"
-          ></Button>
+        ></Button>
       </Td>
     </Tr>
   );
@@ -138,4 +138,3 @@ const StyledTextInput = styled(TextInput)`
     }
   }
 `;
-

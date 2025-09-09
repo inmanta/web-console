@@ -1,10 +1,10 @@
 import React from "react";
+import { HelperText, HelperTextItem } from "@patternfly/react-core";
 import { EnvironmentSettings } from "@/Core";
-import { HelperText, HelperTextItem } from '@patternfly/react-core';
 import { words } from "@/UI";
 
 interface Props {
-    info: EnvironmentSettings.InputInfo;
+  info: EnvironmentSettings.InputInfo;
 }
 
 /**
@@ -13,12 +13,14 @@ interface Props {
  * @returns A React component.
  */
 export const ProtectedMessage: React.FC<Props> = ({ info }) => {
-    return info.protected && (
-        <HelperText>
-            <HelperTextItem variant="warning">
-                {info.protected_by && words("settings.protected.message")(info.protected_by)}
-                {!info.protected_by && words("settings.protected.message.default")}
-            </HelperTextItem>
-        </HelperText>
+  return (
+    info.protected && (
+      <HelperText>
+        <HelperTextItem variant="warning">
+          {info.protected_by && words("settings.protected.message")(info.protected_by)}
+          {!info.protected_by && words("settings.protected.message.default")}
+        </HelperTextItem>
+      </HelperText>
     )
-}
+  );
+};

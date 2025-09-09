@@ -17,7 +17,7 @@ export const InputRow: React.FC<Props> = ({ info }) => {
     case "bool":
       return (
         <Row info={info}>
-          <BooleanInput info={info}/>
+          <BooleanInput info={info} />
         </Row>
       );
     case "int":

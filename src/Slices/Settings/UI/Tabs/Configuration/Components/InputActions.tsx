@@ -19,7 +19,6 @@ export const InputActions: React.FC<Props> = ({ info }) => (
   </ActionList>
 );
 
-
 const InputUpdateAction: React.FC<{
   info: EnvironmentSettings.InputInfo;
 }> = ({ info }) => (
