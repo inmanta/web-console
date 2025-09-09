@@ -5,7 +5,7 @@ import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { ServiceInstanceModel } from "@/Core";
 import { MockedDependencyProvider } from "@/Test";
-import { childModel, testInstance, testService } from "@/UI/Components/Diagram/Mocks";
+import { childModel, testInstance, testService } from "@/UI/Components/ComposerCanvas/Mocks";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { useGetInstanceWithRelations } from "./useGetInstanceWithRelations";
 

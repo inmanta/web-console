@@ -4,7 +4,7 @@ import { usePost } from "@/Data/Queries";
 import { ServiceOrder } from "@/Slices/Orders/Core/Types";
 import { words } from "@/UI";
 import { DependencyContext } from "@/UI";
-import { ComposerServiceOrderItem } from "@/UI/Components/Diagram/interfaces";
+import { ComposerServiceOrderItem } from "@/UI/Components/ComposerCanvas/interfaces";
 
 interface PostResponse {
   data: ServiceOrder;
