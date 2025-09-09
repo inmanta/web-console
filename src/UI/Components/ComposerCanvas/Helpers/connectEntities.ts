@@ -2,7 +2,7 @@ import { dia } from "@inmanta/rappid";
 import { Link, ServiceEntityBlock } from "../Shapes";
 
 /**
- * Function that create connection/link between two Entities
+ * Function that creates connection/link between two Entities
  *
  * @param {dia.Graph} graph JointJS graph object
  * @param {ServiceEntityBlock} source JointJS shape object
