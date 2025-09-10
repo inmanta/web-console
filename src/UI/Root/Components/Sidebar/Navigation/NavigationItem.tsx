@@ -19,6 +19,7 @@ interface Link extends Label, Url {
   external: boolean;
   locked: boolean;
   statusIndication: boolean;
+  isActive?: boolean;
 }
 
 export const NavigationItem: React.FC<Link> = ({
@@ -28,6 +29,7 @@ export const NavigationItem: React.FC<Link> = ({
   external,
   locked,
   statusIndication,
+  isActive,
 }) => {
   if (locked) {
     return <LockedItem label={label} key={id} />;
@@ -41,13 +43,19 @@ export const NavigationItem: React.FC<Link> = ({
     return <CompileReportItem label={label} url={url} key={id} />;
   }
 
-  return <RegularItem key={id} label={label} url={url} />;
+  return <RegularItem key={id} label={label} url={url} isActive={isActive} />;
 };
 
-const RegularItem: React.FC<Label & Url> = ({ label, url }) => (
-  <NavItem itemId={label}>
+const RegularItem: React.FC<Label & Url & { isActive?: boolean }> = ({ label, url, isActive }) => (
+  <NavItem
+    itemId={label}
+    isActive={isActive}
+    className={isActive ? "pf-m-current" : undefined}
+    aria-current={isActive ? "page" : undefined}
+  >
     <NavLink
       aria-label="Sidebar-Navigation-Item"
+      aria-current={isActive ? "page" : undefined}
       to={{
         pathname: url,
         search: new SearchHelper().keepEnvOnly(location.search),
@@ -74,20 +82,40 @@ const LockedItem: React.FC<Label> = ({ label }) => (
   </NavItem>
 );
 
-const ExternalItem: React.FC<Label & Url> = ({ label, url }) => (
-  <NavItem itemId={label}>
-    <a href={url} target="_blank" rel="noreferrer" aria-label="Sidebar-Navigation-Item-External">
+const ExternalItem: React.FC<Label & Url & { isActive?: boolean }> = ({ label, url, isActive }) => (
+  <NavItem
+    itemId={label}
+    isActive={isActive}
+    className={isActive ? "pf-m-current" : undefined}
+    aria-current={isActive ? "page" : undefined}
+  >
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      aria-label="Sidebar-Navigation-Item-External"
+      aria-current={isActive ? "page" : undefined}
+    >
       {label}
     </a>
   </NavItem>
 );
 
-const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
+const CompileReportItem: React.FC<Label & Url & { isActive?: boolean }> = ({
+  label,
+  url,
+  isActive,
+}) => {
   const { environmentHandler } = useContext(DependencyContext);
   const isCompiling = environmentHandler.useIsCompiling();
 
   return (
-    <NavItem itemId={label}>
+    <NavItem
+      itemId={label}
+      isActive={isActive}
+      className={isActive ? "pf-m-current" : undefined}
+      aria-current={isActive ? "page" : undefined}
+    >
       <NavLink
         to={{
           pathname: url,
@@ -95,6 +123,7 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
         }}
         end
         aria-label="Sidebar-Navigation-Item"
+        aria-current={isActive ? "page" : undefined}
       >
         {label}
         {isCompiling && (
