@@ -1,10 +1,14 @@
 import React from "react";
+import { ButtonVariant } from "@patternfly/react-core";
 import { words } from "@/UI";
 import { ResourceLink } from "@/UI/Components";
 
+type ResourceType = "managed" | "discovery";
+
 interface Props {
   resourceUri: string | null;
-  type: "managed" | "discovery";
+  resourceType: ResourceType;
+  buttonType?: ButtonVariant;
 }
 
 /**
@@ -13,11 +17,18 @@ interface Props {
  *
  * uris comes in format : /api/v2/resource/<rid>
  *
- * @param resourceUri : API URI of the managed/discovery resource
+ * @Props {Props} - The props of the component
+ *  @prop {string | null} resourceUri - API URI of the managed/discovery resource
+ *  @prop {ResourceType} resourceType - type of the resource
+ *  @prop {ButtonVariant} buttonType - type of the button
  *
- * @returns DiscoveredResourceLink component
+ * @returns {React.FC} DiscoveredResourceLink component
  */
-export const DiscoveredResourceLink: React.FC<Props> = ({ resourceUri, type }) => {
+export const DiscoveredResourceLink: React.FC<Props> = ({
+  resourceUri,
+  resourceType,
+  buttonType = ButtonVariant.link,
+}) => {
   if (!resourceUri) {
     return <></>;
   }
@@ -29,7 +40,11 @@ export const DiscoveredResourceLink: React.FC<Props> = ({ resourceUri, type }) =
   }
 
   return (
-    <ResourceLink resourceId={rid} linkText={words(`discovered_resources.show_resource.${type}`)} />
+    <ResourceLink
+      resourceId={rid}
+      linkText={words(`discovered_resources.show_resource.${resourceType}`)}
+      variant={buttonType}
+    />
   );
 };
 

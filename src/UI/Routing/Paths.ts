@@ -2,6 +2,7 @@ import { RouteKind } from "@/Core";
 import { InstanceComposer } from "@/Slices/InstanceComposerCreator";
 import { InstanceComposerViewer } from "@/Slices/InstanceComposerViewer";
 import { MarkdownPreviewer } from "@/Slices/MarkdownPreviewer";
+import { DiscoveredResourceDetails } from "@/Slices/ResourceDiscoveryDetails";
 import { InstanceDetails } from "@/Slices/ServiceInstanceDetails";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -73,6 +74,7 @@ export const paths: Paths = {
    */
   Agents: Agents.path,
   DiscoveredResources: DiscoveredResources.path,
+  DiscoveredResourceDetails: DiscoveredResourceDetails.path,
   Facts: Facts.path,
   ResourceDetails: ResourceDetails.path,
   Resources: Resource.path,

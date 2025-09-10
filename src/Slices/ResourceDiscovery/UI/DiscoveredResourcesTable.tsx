@@ -1,7 +1,6 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
-import { useExpansion } from "@/Data";
 import { DiscoveredResource, SortKey } from "@/Data/Queries";
 import { words } from "@/UI";
 import { DiscoveredResourceRow } from "./DiscoveredResourcesRow";
@@ -14,6 +13,19 @@ interface Props {
   setSort: (sort: Sort.Type<SortKey>) => void;
 }
 
+/**
+ * The DiscoveredResourcesTable component.
+ *
+ * This component is responsible of displaying the discovered resources.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {DiscoveredResourcesTablePresenter} tablePresenter - The table presenter
+ *  @prop {DiscoveredResource[]} rows - The rows of the table
+ *  @prop {Sort.Type<SortKey>} sort - The sort of the table
+ *  @prop {Function} setSort - The function to set the sort of the table
+ *
+ * @returns {React.FC} DiscoveredResourcesTable component
+ */
 export const DiscoveredResourcesTable: React.FC<Props> = ({
   tablePresenter,
   rows,
@@ -21,7 +33,6 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
   setSort,
   ...props
 }) => {
-  const [isExpanded, onExpansion] = useExpansion();
   const onSort: OnSort = (_event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as SortKey,
@@ -54,18 +65,12 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")} />
           {heads}
+          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")} />
         </Tr>
       </Thead>
-      {rows.map((row) => (
-        <DiscoveredResourceRow
-          numberOfColumns={tablePresenter.getNumberOfColumns()}
-          row={row}
-          key={row.discovered_resource_id}
-          isExpanded={isExpanded(row.discovered_resource_id)}
-          onToggle={onExpansion(row.discovered_resource_id)}
-        />
+      {rows.map((row: DiscoveredResource) => (
+        <DiscoveredResourceRow row={row} key={row.discovered_resource_id} />
       ))}
     </Table>
   );

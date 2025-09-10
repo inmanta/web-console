@@ -34,6 +34,7 @@ export const kinds = [
    */
   "Agents",
   "DiscoveredResources",
+  "DiscoveredResourceDetails",
   "Facts",
   "ResourceDetails",
   "Resources",
@@ -94,6 +95,7 @@ interface RouteParamKeysManifest {
   Inventory: "service";
   MarkdownPreviewer: "service" | "instance" | "instanceId";
   ResourceDetails: "resourceId";
+  DiscoveredResourceDetails: "resourceId";
   ResourceHistory: "resourceId";
   ResourceLogs: "resourceId";
   ServiceDetails: "service";

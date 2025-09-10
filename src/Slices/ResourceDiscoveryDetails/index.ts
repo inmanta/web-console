@@ -1,0 +1,1 @@
+export * as DiscoveredResourceDetails from "./Core/Route";
