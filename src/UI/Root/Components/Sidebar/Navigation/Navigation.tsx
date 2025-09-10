@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { Nav, NavGroup } from "@patternfly/react-core";
+import { useLocation } from "react-router";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   envrionment,
@@ -17,6 +18,7 @@ import { NavigationItem } from "./NavigationItem";
  */
 export const Navigation: React.FC<{ environment: string | undefined }> = ({ environment }) => {
   const { orchestratorProvider, routeManager } = useContext(DependencyContext);
+  const { pathname } = useLocation();
 
   const isEnvPresent = typeof environment !== "undefined";
   const groups = [
@@ -28,12 +30,28 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({ envi
     resourceManager(routeManager, isEnvPresent, orchestratorProvider),
   ];
 
+  // Helper function to check if a navigation item is active
+  const isNavigationItemActive = (url: string): boolean => {
+    // Remove query parameters and hash from current pathname for comparison
+    const currentPath = pathname.split('?')[0].split('#')[0];
+    const navPath = url.split('?')[0].split('#')[0];
+
+    // Check if current path contains the navigation URL
+    return currentPath.includes(navPath) && navPath !== '';
+  };
+
+  console.log(groups);
+
   return (
     <Nav>
       {groups.map(({ id, title, links }) => (
         <NavGroup title={title} key={id}>
           {links.map((link) => (
-            <NavigationItem key={link.id} {...link} />
+            <NavigationItem
+              key={link.id}
+              {...link}
+              isActive={isNavigationItemActive(link.url)}
+            />
           ))}
         </NavGroup>
       ))}

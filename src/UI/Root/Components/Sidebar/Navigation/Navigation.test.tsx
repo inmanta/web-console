@@ -150,8 +150,9 @@ describe("Navigation", () => {
     });
 
     const link = links.find((item) => item.textContent === "Service Catalog");
+    const navItem = link?.closest('[data-pf-v6-c-nav__item]') || link?.parentElement;
 
-    expect(link).toHaveClass("active");
+    expect(navItem).toHaveClass("pf-m-current");
   });
 
   test("GIVEN Navigation WHEN Compilation Reports are not pending THEN 'Compile Reports' Indication does not exist", async () => {
@@ -170,5 +171,130 @@ describe("Navigation", () => {
     const Indication = await screen.findByLabelText("CompileReportsIndication");
 
     expect(Indication).toBeVisible();
+  });
+
+  describe("Navigation isActive functionality", () => {
+    test("GIVEN Navigation WHEN on exact route match THEN navigation item is active", () => {
+      const { component } = setup(["/lsm/catalog"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
+      const navItem = serviceCatalogLink?.closest('[data-pf-v6-c-nav__item]') || serviceCatalogLink?.parentElement;
+
+      expect(navItem).toHaveClass("pf-m-current");
+    });
+
+    test("GIVEN Navigation WHEN on sub-route THEN parent navigation item is active", () => {
+      const { component } = setup(["/lsm/catalog/details/123"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
+      const navItem = serviceCatalogLink?.closest('[data-pf-v6-c-nav__item]') || serviceCatalogLink?.parentElement;
+
+      expect(navItem).toHaveClass("pf-m-current");
+    });
+
+    test("GIVEN Navigation WHEN on different route THEN navigation items are not active", () => {
+      const { component } = setup(["/different/route"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
+      const navItem = serviceCatalogLink?.closest('[data-pf-v6-c-nav__item]') || serviceCatalogLink?.parentElement;
+
+      expect(navItem).not.toHaveClass("pf-m-current");
+    });
+
+    test("GIVEN Navigation WHEN route has query parameters THEN navigation item is still active", () => {
+      const { component } = setup(["/lsm/catalog?env=test&filter=active"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
+      const navItem = serviceCatalogLink?.closest('[data-pf-v6-c-nav__item]') || serviceCatalogLink?.parentElement;
+
+      expect(navItem).toHaveClass("pf-m-current");
+    });
+
+    test("GIVEN Navigation WHEN route has hash fragment THEN navigation item is still active", () => {
+      const { component } = setup(["/lsm/catalog#section1"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
+      const navItem = serviceCatalogLink?.closest('[data-pf-v6-c-nav__item]') || serviceCatalogLink?.parentElement;
+
+      expect(navItem).toHaveClass("pf-m-current");
+    });
+
+    test("GIVEN Navigation WHEN on root path THEN no navigation items are active", () => {
+      const { component } = setup(["/"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const navItems = within(navigation).queryAllByRole("button", { name: /pf-m-current/ });
+
+      expect(navItems).toHaveLength(0);
+    });
+
+    test("GIVEN Navigation WHEN on Resources page THEN Resources navigation item is active", () => {
+      const { component } = setup(["/resources"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const resourcesLink = links.find((item) => item.textContent === "Resources");
+      const navItem = resourcesLink?.closest('[data-pf-v6-c-nav__item]') || resourcesLink?.parentElement;
+
+      expect(navItem).toHaveClass("pf-m-current");
+    });
+
+    test("GIVEN Navigation WHEN on Desired State page THEN Desired State navigation item is active", () => {
+      const { component } = setup(["/desired-state"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const desiredStateLink = links.find((item) => item.textContent === "Desired State");
+      const navItem = desiredStateLink?.closest('[data-pf-v6-c-nav__item]') || desiredStateLink?.parentElement;
+
+      expect(navItem).toHaveClass("pf-m-current");
+    });
   });
 });

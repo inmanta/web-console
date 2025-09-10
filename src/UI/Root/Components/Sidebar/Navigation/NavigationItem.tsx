@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { NavLink } from "react-router";
+import { NavLink, useLocation } from "react-router";
 import { Label, NavItem, Tooltip } from "@patternfly/react-core";
 import { LockIcon } from "@patternfly/react-icons";
 import { CompileReportsIndication } from "@/Slices/Resource/UI/ResourcesPage/Components/CompileReportsIndication";
@@ -19,6 +19,7 @@ interface Link extends Label, Url {
   external: boolean;
   locked: boolean;
   statusIndication: boolean;
+  isActive?: boolean;
 }
 
 export const NavigationItem: React.FC<Link> = ({
@@ -28,6 +29,7 @@ export const NavigationItem: React.FC<Link> = ({
   external,
   locked,
   statusIndication,
+  isActive,
 }) => {
   if (locked) {
     return <LockedItem label={label} key={id} />;
@@ -41,11 +43,11 @@ export const NavigationItem: React.FC<Link> = ({
     return <CompileReportItem label={label} url={url} key={id} />;
   }
 
-  return <RegularItem key={id} label={label} url={url} />;
+  return <RegularItem key={id} label={label} url={url} isActive={isActive} />;
 };
 
-const RegularItem: React.FC<Label & Url> = ({ label, url }) => (
-  <NavItem itemId={label}>
+const RegularItem: React.FC<Label & Url & { isActive?: boolean }> = ({ label, url, isActive }) => (
+  <NavItem itemId={label} isActive={isActive}>
     <NavLink
       aria-label="Sidebar-Navigation-Item"
       to={{
@@ -74,20 +76,20 @@ const LockedItem: React.FC<Label> = ({ label }) => (
   </NavItem>
 );
 
-const ExternalItem: React.FC<Label & Url> = ({ label, url }) => (
-  <NavItem itemId={label}>
+const ExternalItem: React.FC<Label & Url & { isActive?: boolean }> = ({ label, url, isActive }) => (
+  <NavItem itemId={label} isActive={isActive}>
     <a href={url} target="_blank" rel="noreferrer" aria-label="Sidebar-Navigation-Item-External">
       {label}
     </a>
   </NavItem>
 );
 
-const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
+const CompileReportItem: React.FC<Label & Url & { isActive?: boolean }> = ({ label, url, isActive }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const isCompiling = environmentHandler.useIsCompiling();
 
   return (
-    <NavItem itemId={label}>
+    <NavItem itemId={label} isActive={isActive}>
       <NavLink
         to={{
           pathname: url,
