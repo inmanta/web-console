@@ -185,7 +185,9 @@ describe("Navigation", () => {
       });
 
       const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
-      const navItem = serviceCatalogLink?.closest('[data-pf-v6-c-nav__item]') || serviceCatalogLink?.parentElement;
+      const navItem =
+        serviceCatalogLink?.closest("[data-pf-v6-c-nav__item]") ||
+        serviceCatalogLink?.parentElement;
 
       expect(navItem).toHaveClass("pf-m-current");
     });
@@ -201,7 +203,9 @@ describe("Navigation", () => {
       });
 
       const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
-      const navItem = serviceCatalogLink?.closest('[data-pf-v6-c-nav__item]') || serviceCatalogLink?.parentElement;
+      const navItem =
+        serviceCatalogLink?.closest("[data-pf-v6-c-nav__item]") ||
+        serviceCatalogLink?.parentElement;
 
       expect(navItem).toHaveClass("pf-m-current");
     });
@@ -217,7 +221,9 @@ describe("Navigation", () => {
       });
 
       const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
-      const navItem = serviceCatalogLink?.closest('[data-pf-v6-c-nav__item]') || serviceCatalogLink?.parentElement;
+      const navItem =
+        serviceCatalogLink?.closest("[data-pf-v6-c-nav__item]") ||
+        serviceCatalogLink?.parentElement;
 
       expect(navItem).not.toHaveClass("pf-m-current");
     });
@@ -233,7 +239,9 @@ describe("Navigation", () => {
       });
 
       const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
-      const navItem = serviceCatalogLink?.closest('[data-pf-v6-c-nav__item]') || serviceCatalogLink?.parentElement;
+      const navItem =
+        serviceCatalogLink?.closest("[data-pf-v6-c-nav__item]") ||
+        serviceCatalogLink?.parentElement;
 
       expect(navItem).toHaveClass("pf-m-current");
     });
@@ -249,7 +257,9 @@ describe("Navigation", () => {
       });
 
       const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
-      const navItem = serviceCatalogLink?.closest('[data-pf-v6-c-nav__item]') || serviceCatalogLink?.parentElement;
+      const navItem =
+        serviceCatalogLink?.closest("[data-pf-v6-c-nav__item]") ||
+        serviceCatalogLink?.parentElement;
 
       expect(navItem).toHaveClass("pf-m-current");
     });
@@ -276,7 +286,8 @@ describe("Navigation", () => {
       });
 
       const resourcesLink = links.find((item) => item.textContent === "Resources");
-      const navItem = resourcesLink?.closest('[data-pf-v6-c-nav__item]') || resourcesLink?.parentElement;
+      const navItem =
+        resourcesLink?.closest("[data-pf-v6-c-nav__item]") || resourcesLink?.parentElement;
 
       expect(navItem).toHaveClass("pf-m-current");
     });
@@ -292,7 +303,8 @@ describe("Navigation", () => {
       });
 
       const desiredStateLink = links.find((item) => item.textContent === "Desired State");
-      const navItem = desiredStateLink?.closest('[data-pf-v6-c-nav__item]') || desiredStateLink?.parentElement;
+      const navItem =
+        desiredStateLink?.closest("[data-pf-v6-c-nav__item]") || desiredStateLink?.parentElement;
 
       expect(navItem).toHaveClass("pf-m-current");
     });

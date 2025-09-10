@@ -33,11 +33,11 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({ envi
   // Helper function to check if a navigation item is active
   const isNavigationItemActive = (url: string): boolean => {
     // Remove query parameters and hash from current pathname for comparison
-    const currentPath = pathname.split('?')[0].split('#')[0];
-    const navPath = url.split('?')[0].split('#')[0];
+    const currentPath = pathname.split("?")[0].split("#")[0];
+    const navPath = url.split("?")[0].split("#")[0];
 
     // Check if current path contains the navigation URL
-    return currentPath.includes(navPath) && navPath !== '';
+    return currentPath.includes(navPath) && navPath !== "";
   };
 
   console.log(groups);
@@ -47,11 +47,7 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({ envi
       {groups.map(({ id, title, links }) => (
         <NavGroup title={title} key={id}>
           {links.map((link) => (
-            <NavigationItem
-              key={link.id}
-              {...link}
-              isActive={isNavigationItemActive(link.url)}
-            />
+            <NavigationItem key={link.id} {...link} isActive={isNavigationItemActive(link.url)} />
           ))}
         </NavGroup>
       ))}

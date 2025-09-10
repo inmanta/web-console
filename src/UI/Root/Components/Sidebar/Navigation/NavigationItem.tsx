@@ -101,7 +101,11 @@ const ExternalItem: React.FC<Label & Url & { isActive?: boolean }> = ({ label, u
   </NavItem>
 );
 
-const CompileReportItem: React.FC<Label & Url & { isActive?: boolean }> = ({ label, url, isActive }) => {
+const CompileReportItem: React.FC<Label & Url & { isActive?: boolean }> = ({
+  label,
+  url,
+  isActive,
+}) => {
   const { environmentHandler } = useContext(DependencyContext);
   const isCompiling = environmentHandler.useIsCompiling();
 
