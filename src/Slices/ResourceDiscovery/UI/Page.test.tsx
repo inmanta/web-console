@@ -56,14 +56,14 @@ describe("DiscoveredResourcesPage", () => {
     // Check that the first row shows parsed resource ID components
     expect(within(rows[0]).getByTestId("Type")).toHaveTextContent("VirtualMachine");
 
-    expect(within(rows[0]).getByTestId("Agent")).toHaveTextContent("vcenter");
+    expect(within(rows[0]).getByTestId("Agent")).toHaveTextContent("lab");
 
-    expect(within(rows[0]).getByTestId("Value")).toHaveTextContent("lab,name=acisim");
+    expect(within(rows[0]).getByTestId("Value")).toHaveTextContent("acisim");
 
     // Check that action buttons are present
     expect(
       within(rows[0]).getByRole("button", {
-        name: "Show details",
+        name: "Show Details",
       })
     ).toBeVisible();
 
