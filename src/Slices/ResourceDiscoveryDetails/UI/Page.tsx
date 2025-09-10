@@ -3,8 +3,14 @@ import { ButtonVariant, Flex, FlexItem } from "@patternfly/react-core";
 import { useGetDiscoveredResourceDetails } from "@/Data/Queries/Slices/DiscoveredResources/useGetDiscoveredResourceDetails";
 import { DiscoveredResourceLink } from "@/Slices/ResourceDiscovery/UI/Components";
 import { Description, EmptyView, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
+import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { AttributesCard } from "./AttributesCard";
+
+export const PageWrapper: React.FC = () => {
+  const { resourceId } = useRouteParams<"DiscoveredResourceDetails">();
+  return <Page resourceId={resourceId} />;
+};
 
 export const Page: React.FC<{ resourceId: string }> = ({ resourceId }) => {
   const { data, isSuccess, isError, error, refetch } =

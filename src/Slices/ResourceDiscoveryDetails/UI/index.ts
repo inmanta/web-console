@@ -1,1 +1,1 @@
-export { Page as DiscoveredResourceDetailsPage } from "./Page";
+export { PageWrapper as DiscoveredResourceDetailsPage } from "./Page";
