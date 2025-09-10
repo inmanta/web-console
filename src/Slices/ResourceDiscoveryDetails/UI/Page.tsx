@@ -7,11 +7,23 @@ import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { AttributesCard } from "./AttributesCard";
 
+// The wrapper is purely meant to extract the logic from the routing,
+// which cannot be tested reliably in test-environments.
 export const PageWrapper: React.FC = () => {
   const { resourceId } = useRouteParams<"DiscoveredResourceDetails">();
   return <Page resourceId={resourceId} />;
 };
 
+/**
+ * The Page component.
+ *
+ * This component is responsible of displaying the discovered resource details.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {string} resourceId - The id of the discovered resource
+ *
+ * @returns {React.FC} A React Component displaying the discovered resource details
+ */
 export const Page: React.FC<{ resourceId: string }> = ({ resourceId }) => {
   const { data, isSuccess, isError, error, refetch } =
     useGetDiscoveredResourceDetails().useContinuous(resourceId);

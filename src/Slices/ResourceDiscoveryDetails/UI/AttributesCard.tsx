@@ -15,6 +15,7 @@ interface Props {
  *
  * @Props {Props} - The props of the component
  *  @prop {DiscoveredResource} resource - The discovered resource
+ *
  * @returns {React.FC<Props>} A React Component displaying the attributes of a discovered resource
  */
 export const AttributesCard: React.FC<Props> = ({ resource }) => {

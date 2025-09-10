@@ -13,6 +13,19 @@ interface Props {
   setSort: (sort: Sort.Type<SortKey>) => void;
 }
 
+/**
+ * The DiscoveredResourcesTable component.
+ *
+ * This component is responsible of displaying the discovered resources.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {DiscoveredResourcesTablePresenter} tablePresenter - The table presenter
+ *  @prop {DiscoveredResource[]} rows - The rows of the table
+ *  @prop {Sort.Type<SortKey>} sort - The sort of the table
+ *  @prop {Function} setSort - The function to set the sort of the table
+ *
+ * @returns {React.FC} DiscoveredResourcesTable component
+ */
 export const DiscoveredResourcesTable: React.FC<Props> = ({
   tablePresenter,
   rows,

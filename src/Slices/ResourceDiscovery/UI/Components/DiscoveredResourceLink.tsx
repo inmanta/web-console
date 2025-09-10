@@ -3,9 +3,11 @@ import { ButtonVariant } from "@patternfly/react-core";
 import { words } from "@/UI";
 import { ResourceLink } from "@/UI/Components";
 
+type ResourceType = "managed" | "discovery";
+
 interface Props {
   resourceUri: string | null;
-  resourceType: "managed" | "discovery";
+  resourceType: ResourceType;
   buttonType?: ButtonVariant;
 }
 
@@ -15,10 +17,12 @@ interface Props {
  *
  * uris comes in format : /api/v2/resource/<rid>
  *
- * @param resourceUri : API URI of the managed/discovery resource
- * @param type : type of the resource
+ * @Props {Props} - The props of the component
+ *  @prop {string | null} resourceUri - API URI of the managed/discovery resource
+ *  @prop {ResourceType} resourceType - type of the resource
+ *  @prop {ButtonVariant} buttonType - type of the button
  *
- * @returns DiscoveredResourceLink component
+ * @returns {React.FC} DiscoveredResourceLink component
  */
 export const DiscoveredResourceLink: React.FC<Props> = ({
   resourceUri,

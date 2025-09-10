@@ -5,24 +5,24 @@ import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**
- * Resource.Details interface for the resource details API response
+ * DiscoveredResource interface for the resource details API response
  */
 interface Response {
   data: DiscoveredResource;
 }
 
 /**
- * Return signature of the useGetResourceDetails React Query hook
+ * Return signature of the useGetDiscoveredResourceDetails React Query hook
  */
 interface GetDiscoveredResourceDetails {
   useContinuous: (id: string) => UseQueryResult<DiscoveredResource, Error>;
 }
 
 /**
- * React Query hook to fetch details of a specific resource
+ * React Query hook to fetch details of a specific discovered resource
  *
- * @returns {GetResourceDetails} An object containing the available queries
- * @returns {UseQueryResult<Resource.Details, Error>} returns.useContinuous - Fetch the resource details with a recurrent query with an interval of 5s
+ * @returns {GetDiscoveredResourceDetails} An object containing the available queries
+ * @returns {UseQueryResult<DiscoveredResource, Error>} returns.useContinuous - Fetch the discovered resource details with a recurrent query with an interval of 5s
  */
 export const useGetDiscoveredResourceDetails = (): GetDiscoveredResourceDetails => {
   const { environmentHandler } = useContext(DependencyContext);
@@ -41,6 +41,6 @@ export const useGetDiscoveredResourceDetails = (): GetDiscoveredResourceDetails 
 };
 
 export const getDiscoveredResourceDetailsKey = new KeyFactory(
-  SliceKeys.resource,
+  SliceKeys.discoveredResource,
   "get_discovered_resource_details"
 );

@@ -2,6 +2,13 @@ import { DiscoveredResource } from "@/Data/Queries";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 
+/**
+ * The DiscoveredResourcesTablePresenter class.
+ *
+ * This class is responsible of presenting the discovered resources.
+ *
+ * @returns {DiscoveredResourcesTablePresenter} DiscoveredResourcesTablePresenter class
+ */
 export class DiscoveredResourcesTablePresenter
   implements TablePresenter<DiscoveredResource, DiscoveredResource>
 {

@@ -8,8 +8,20 @@ interface Props {
   discoveryResourceUri: string | null;
 }
 
+/**
+ * Dropdown component to display the actions for a discovered resource
+ * The dropdown contains two links to the managed and discovery resources if they are present.
+ * The dropdown is disabled if both managed and discovery resources are not present.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {string | null} managedResourceUri - URI of the managed resource
+ *  @prop {string | null} discoveryResourceUri - URI of the discovery resource
+ *
+ * @returns {React.FC} ActionsDropdown component
+ */
 export const ActionsDropdown: React.FC<Props> = ({ managedResourceUri, discoveryResourceUri }) => {
   const [isOpen, setIsOpen] = useState(false);
+
   const onToggleClick = () => {
     setIsOpen(!isOpen);
   };
