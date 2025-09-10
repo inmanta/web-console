@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { NavLink, useLocation } from "react-router";
+import { NavLink } from "react-router";
 import { Label, NavItem, Tooltip } from "@patternfly/react-core";
 import { LockIcon } from "@patternfly/react-icons";
 import { CompileReportsIndication } from "@/Slices/Resource/UI/ResourcesPage/Components/CompileReportsIndication";
