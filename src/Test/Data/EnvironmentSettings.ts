@@ -9,6 +9,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
+    protected: false,
+    protected_by: null,
     section: "deployment",
   },
   push_on_auto_deploy: {
@@ -19,6 +21,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
+    protected: false,
+    protected_by: null,
     section: "deployment",
   },
   agent_trigger_method_on_auto_deploy: {
@@ -30,6 +34,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     update_model: false,
     agent_restart: false,
     allowed_values: ["push_incremental_deploy", "push_full_deploy"],
+    protected: false,
+    protected_by: null,
     section: "deployment",
   },
   environment_agent_trigger_method: {
@@ -41,6 +47,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     update_model: false,
     agent_restart: false,
     allowed_values: ["push_incremental_deploy", "push_full_deploy"],
+    protected: false,
+    protected_by: null,
     section: "deployment",
   },
   autostart_splay: {
@@ -51,6 +59,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
+    protected: false,
+    protected_by: null,
     section: "agents",
   },
   autostart_agent_deploy_interval: {
@@ -61,6 +71,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: true,
+    protected: false,
+    protected_by: null,
     section: "agents",
   },
   autostart_agent_deploy_splay_time: {
@@ -71,6 +83,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: true,
+    protected: false,
+    protected_by: null,
     section: "agents",
   },
   autostart_agent_repair_interval: {
@@ -81,6 +95,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: true,
+    protected: false,
+    protected_by: null,
     section: "agents",
   },
   autostart_agent_repair_splay_time: {
@@ -91,6 +107,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: true,
+    protected: false,
+    protected_by: null,
     section: "agents",
   },
   autostart_on_start: {
@@ -101,6 +119,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
+    protected: false,
+    protected_by: null,
     section: "agents",
   },
   auto_full_compile: {
@@ -111,6 +131,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
+    protected: false,
+    protected_by: null,
     section: "compilation",
   },
   autostart_agent_map: {
@@ -123,6 +145,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: true,
+    protected: false,
+    protected_by: null,
     section: "agents",
   },
   autostart_agent_interval: {
@@ -133,6 +157,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: true,
+    protected: false,
+    protected_by: null,
     section: "agents",
   },
   server_compile: {
@@ -143,6 +169,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
+    protected: false,
+    protected_by: null,
     section: "compilation",
   },
   resource_action_logs_retention: {
@@ -153,6 +181,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
+    protected: false,
+    protected_by: null,
     section: "maintenance",
   },
   purge_on_delete: {
@@ -163,6 +193,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
+    protected: false,
+    protected_by: null,
     section: "resources",
   },
   protected_environment: {
@@ -173,6 +205,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
+    protected: false,
+    protected_by: null,
     section: "security",
   },
   recompile_backoff: {
@@ -183,6 +217,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
+    protected: false,
+    protected_by: null,
     section: "compilation",
   },
   an_unknown_setting_type: {
@@ -193,6 +229,8 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
+    protected: false,
+    protected_by: null,
     section: "unknown",
   },
 };

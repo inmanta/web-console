@@ -29,6 +29,8 @@ interface BaseDefinition {
   update_model: boolean;
   agent_restart: boolean;
   section: string;
+  protected: boolean;
+  protected_by: string | null;
 }
 
 export interface UnknownDefinition extends BaseDefinition {

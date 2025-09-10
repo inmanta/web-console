@@ -15,6 +15,7 @@ interface Props {
   newEntry: Entry;
   setNewEntry: (entry: Entry) => void;
   isDeleteEntryAllowed: (value: Dict, key: string) => boolean;
+  isDisabled?: boolean;
 }
 
 export const DictEditor: React.FC<Props> = ({
@@ -23,6 +24,7 @@ export const DictEditor: React.FC<Props> = ({
   newEntry,
   setNewEntry,
   isDeleteEntryAllowed,
+  isDisabled = false,
 }) => {
   const updateEntry =
     (key: string) =>
@@ -44,6 +46,7 @@ export const DictEditor: React.FC<Props> = ({
             clear={clearEntry}
             isDeleteable={isDeleteEntryAllowed(value, entry[0])}
             aria-label={`Row-${entry[0]}`}
+            isDisabled={isDisabled}
           />
         ))}
         <Row
@@ -54,6 +57,7 @@ export const DictEditor: React.FC<Props> = ({
           isKeyEditable
           isDeleteable={newEntry[0].length > 0 || newEntry[1].length > 0}
           aria-label="Row-newEntry"
+          isDisabled={isDisabled}
         />
       </Tbody>
     </Table>
@@ -72,6 +76,7 @@ interface RowProps {
   clear: (key: string) => void;
   isDeleteable?: boolean;
   isKeyEditable?: boolean;
+  isDisabled?: boolean;
 }
 
 const Row: React.FC<RowProps> = ({
@@ -80,6 +85,7 @@ const Row: React.FC<RowProps> = ({
   clear,
   isKeyEditable,
   isDeleteable,
+  isDisabled,
   ...props
 }) => {
   const onKeyChange = (newKey) => {
@@ -90,34 +96,36 @@ const Row: React.FC<RowProps> = ({
 
   return (
     <Tr {...props}>
-      <SlimTd>
+      <Td>
         <StyledTextInput
           value={key}
           onChange={(_event, value) => onKeyChange(value)}
           type="text"
           aria-label="editEntryKey"
           readOnly={!isKeyEditable}
+          isDisabled={isDisabled}
         />
-      </SlimTd>
-      <SlimTd>
+      </Td>
+      <Td>
         <StyledTextInput
           value={value}
           onChange={(_event, value) => onValueChange(value)}
           type="text"
           aria-label="editEntryValue"
+          isDisabled={isDisabled}
         />
-      </SlimTd>
-      <SlimTd>
+      </Td>
+      <Td>
         <Button
           icon={<TrashAltIcon />}
           onClick={onClear}
           variant={isDeleteable ? "link" : "plain"}
           isDanger
           size="sm"
-          isDisabled={!isDeleteable}
+          isDisabled={isDisabled || !isDeleteable}
           aria-label="DeleteEntryAction"
         ></Button>
-      </SlimTd>
+      </Td>
     </Tr>
   );
 };
@@ -128,11 +136,5 @@ const StyledTextInput = styled(TextInput)`
     @media (min-width: 1450px) {
       min-width: 300px;
     }
-  }
-`;
-
-const SlimTd = styled(Td)`
-  &&& {
-    padding: 0;
   }
 `;

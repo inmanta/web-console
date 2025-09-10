@@ -25,6 +25,7 @@ const dict = {
   deploy: "Deploy",
   expand: "Expand",
   save: "Save",
+  reset: "Reset",
   yes: "Yes",
   no: "No",
   null: "null",
@@ -688,6 +689,9 @@ const dict = {
   "settings.tabs.token.generate": "Generate",
   "settings.update": "Setting Changed",
   "settings.warning.update": "Changed value has not been saved",
+  "settings.protected.message": (protected_by: string) =>
+    `This setting is protected by ${protected_by}, and cannot be changed.`,
+  "settings.protected.message.default": "This setting is protected, and cannot be changed.",
 
   /**
    * Status

@@ -11,6 +11,7 @@ export const BooleanInput: React.FC<Props> = ({ info }) => (
   <Flex direction={{ default: "row" }}>
     <FlexItem>
       <Switch
+        isDisabled={info.protected}
         isChecked={info.value}
         onChange={(_event, value) => info.set(value)}
         aria-label={`Toggle-${info.name}`}

@@ -2,14 +2,10 @@ import React from "react";
 import { ActionList, ActionListItem, Button } from "@patternfly/react-core";
 import { SaveIcon, UndoIcon } from "@patternfly/react-icons";
 import { EnvironmentSettings } from "@/Core";
-
-type Info<Properties extends keyof EnvironmentSettings.InputInfo> = Pick<
-  EnvironmentSettings.InputInfo,
-  Properties
->;
+import { words } from "@/UI";
 
 interface Props {
-  info: Info<"value" | "initial" | "update" | "reset" | "default">;
+  info: EnvironmentSettings.InputInfo;
 }
 
 export const InputActions: React.FC<Props> = ({ info }) => (
@@ -24,27 +20,29 @@ export const InputActions: React.FC<Props> = ({ info }) => (
 );
 
 const InputUpdateAction: React.FC<{
-  info: Info<"value" | "initial" | "update">;
+  info: EnvironmentSettings.InputInfo;
 }> = ({ info }) => (
   <Button
     variant="secondary"
+    isDisabled={info.protected}
     aria-label="SaveAction"
     onClick={() => info.update(info.value as never)}
     icon={<SaveIcon />}
   >
-    Save
+    {words("save")}
   </Button>
 );
 
 const InputResetAction: React.FC<{
-  info: Info<"reset">;
+  info: EnvironmentSettings.InputInfo;
 }> = ({ info }) => (
   <Button
+    isDisabled={info.protected}
     icon={<UndoIcon />}
     variant="tertiary"
     aria-label="ResetAction"
     onClick={() => info.reset()}
   >
-    Reset
+    {words("reset")}
   </Button>
 );
