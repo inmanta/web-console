@@ -1198,7 +1198,7 @@ __metadata:
     "@patternfly/react-icons": "npm:^6.3.1"
     "@patternfly/react-log-viewer": "npm:^6.3.0"
     "@patternfly/react-styles": "npm:^6.3.1"
-    "@patternfly/react-table": "npm:^6.2.2"
+    "@patternfly/react-table": "npm:^6.3.1"
     "@patternfly/react-tokens": "npm:^6.3.1"
     "@react-keycloak/web": "npm:^3.4.0"
     "@remix-run/router": "npm:^1.15.0"
@@ -1846,20 +1846,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-table@npm:^6.2.2":
-  version: 6.2.2
-  resolution: "@patternfly/react-table@npm:6.2.2"
+"@patternfly/react-table@npm:^6.3.1":
+  version: 6.3.1
+  resolution: "@patternfly/react-table@npm:6.3.1"
   dependencies:
-    "@patternfly/react-core": "npm:^6.2.2"
-    "@patternfly/react-icons": "npm:^6.2.2"
-    "@patternfly/react-styles": "npm:^6.2.2"
-    "@patternfly/react-tokens": "npm:^6.2.2"
+    "@patternfly/react-core": "npm:^6.3.1"
+    "@patternfly/react-icons": "npm:^6.3.1"
+    "@patternfly/react-styles": "npm:^6.3.1"
+    "@patternfly/react-tokens": "npm:^6.3.1"
     lodash: "npm:^4.17.21"
     tslib: "npm:^2.8.1"
   peerDependencies:
-    react: ^17 || ^18
-    react-dom: ^17 || ^18
-  checksum: 10/4fa942b2d92925303a423fcae9a9f5071851a6b82bccfd37381b4703a87e732678f05237a6a8507e59e9ec91dad22b9249ef474204a6848f0b8354499b9786a9
+    react: ^17 || ^18 || ^19
+    react-dom: ^17 || ^18 || ^19
+  checksum: 10/d64bdeb00f02169c0ff08e771c1f48b48005f921dc027349f32394778ad0b2d73447553ca2e71cf09626c672ca2762aaef6c1426ae84c07b8ce40d2ee4d178a2
   languageName: node
   linkType: hard
 
