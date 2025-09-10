@@ -1,3 +1,6 @@
+/**
+ * Splitted parts of a resource id; Agent, value and type.
+ */
 export interface SplitResourceId {
   agent: string;
   value: string;
@@ -6,8 +9,8 @@ export interface SplitResourceId {
 
 /**
  * Splits a resource id into its components. Agent, value and type.
- * @param resourceId - The resource id to split.
- * @returns {agent: string, value: string, type: string}
+ * @param {string}resourceId - The resource id to split.
+ * @returns {SplitResourceId} - The split resource id.
  */
 export const splitResourceId = (resourceId: string): SplitResourceId => {
   const regex = new RegExp(

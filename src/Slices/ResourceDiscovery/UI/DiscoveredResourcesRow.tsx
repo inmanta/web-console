@@ -14,6 +14,10 @@ interface Props {
 
 export const DiscoveredResourceRow: React.FC<Props> = ({ row }) => {
   const { routeManager } = useContext(DependencyContext);
+
+  // This is a workaround to get the agent, value and type of the discovered resource.
+  // It will be replaced once the API returns the agent, value and type in the response.
+  // see https://github.com/inmanta/web-console/issues/6565
   const { agent, value, type } = splitResourceId(row.discovered_resource_id);
 
   return (
