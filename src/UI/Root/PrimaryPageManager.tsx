@@ -35,6 +35,7 @@ import { ServiceCatalogPage } from "@S/ServiceCatalog/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
+import { DiscoveredResourceDetailsPage } from "@/Slices/ResourceDiscoveryDetails/UI";
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;
@@ -130,6 +131,10 @@ export class PrimaryPageManager implements PageManager {
       DiscoveredResources: {
         ...this.routeDictionary.DiscoveredResources,
         element: <DiscoveredResourcesPage />,
+      },
+      DiscoveredResourceDetails: {
+        ...this.routeDictionary.DiscoveredResourceDetails,
+        element: <DiscoveredResourceDetailsPage />,
       },
       Facts: { ...this.routeDictionary.Facts, element: <FactsPage /> },
       ResourceDetails: {

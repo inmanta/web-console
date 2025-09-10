@@ -21,7 +21,7 @@ export interface DiscoveredResource {
   discovered_resource_id: string;
   managed_resource_uri: string | null;
   discovery_resource_uri: string | null;
-  values: unknown;
+  values: Record<string, unknown>;
 }
 
 export type SortKey = "discovered_resource_id";

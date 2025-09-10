@@ -21,7 +21,6 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
   setSort,
   ...props
 }) => {
-  const [isExpanded, onExpansion] = useExpansion();
   const onSort: OnSort = (_event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as SortKey,
@@ -54,17 +53,14 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
-          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")} />
           {heads}
+          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")} />
         </Tr>
       </Thead>
-      {rows.map((row) => (
+      {rows.map((row: DiscoveredResource) => (
         <DiscoveredResourceRow
-          numberOfColumns={tablePresenter.getNumberOfColumns()}
           row={row}
           key={row.discovered_resource_id}
-          isExpanded={isExpanded(row.discovered_resource_id)}
-          onToggle={onExpansion(row.discovered_resource_id)}
         />
       ))}
     </Table>

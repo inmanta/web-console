@@ -516,6 +516,8 @@ const dict = {
   "resources.empty.message": "No resources found",
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
+  "discoveredResourceDetails.title": "Discovered Resource Details",
+  "discoveredResourceDetails.empty": "No discovered resource details found",
   "resources.column.type": "Type",
   "resources.column.agent": "Agent",
   "resources.column.value": "Value",
@@ -568,8 +570,13 @@ const dict = {
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",
+  "discovered.column.agent": "Agent",
+  "discovered.column.value": "Value",
+  "discovered.column.type": "Type",
   "discovered.column.managed_resource": "Managed resource",
   "discovered.column.discovery_resource": "Discovery resource",
+  "discovered.column.show_details": "Show Details",
+  "discovered.column.disabled_actions": "This resource has no managed or discovery resource associated.",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",
   "discovered_resources.show_resource.managed": "Show managed resource",

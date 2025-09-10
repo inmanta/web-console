@@ -11,16 +11,16 @@ export class DiscoveredResourcesTablePresenter
   constructor() {
     this.columnHeads = [
       {
-        displayName: words("discovered.column.resource_id"),
-        apiName: "discovered_resource_id",
+        displayName: words("discovered.column.type"),
+        apiName: "type",
       },
       {
-        displayName: words("discovered.column.managed_resource"),
-        apiName: "managed_resource_id",
+        displayName: words("discovered.column.agent"),
+        apiName: "agent",
       },
       {
-        displayName: words("discovered.column.discovery_resource"),
-        apiName: "discovery_resource_uri",
+        displayName: words("discovered.column.value"),
+        apiName: "value",
       },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
@@ -33,7 +33,8 @@ export class DiscoveredResourcesTablePresenter
     return this.columnHeads.map(({ displayName }) => displayName);
   }
   getSortableColumnNames(): string[] {
-    const sortableColumns = ["discovered_resource_id"];
+    // The api doesn't yet support sorting on type;agent;value, so we don't return any sortable columns for now.
+    const sortableColumns = [];
 
     return sortableColumns;
   }

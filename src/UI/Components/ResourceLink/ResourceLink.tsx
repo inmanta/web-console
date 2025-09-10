@@ -1,14 +1,15 @@
 import React, { useContext } from "react";
-import { Button, Truncate } from "@patternfly/react-core";
+import { Button, ButtonVariant, Truncate } from "@patternfly/react-core";
 import { Link } from "@/UI/Components/Link";
 import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   resourceId: string;
   linkText?: string;
+  variant?: ButtonVariant;
 }
 
-export const ResourceLink: React.FC<Props> = ({ resourceId, linkText }) => {
+export const ResourceLink: React.FC<Props> = ({ resourceId, linkText, variant = ButtonVariant.link }) => {
   const { routeManager } = useContext(DependencyContext);
 
   return (
@@ -18,7 +19,7 @@ export const ResourceLink: React.FC<Props> = ({ resourceId, linkText }) => {
       })}
       envOnly
     >
-      <Button variant="link">
+      <Button variant={variant}>
         <Truncate content={linkText ? linkText : resourceId} />
       </Button>
     </Link>
