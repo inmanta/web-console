@@ -7,6 +7,7 @@ import { MarkdownPreviewerPage } from "@/Slices/MarkdownPreviewer/UI";
 import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
 import { OrdersPage } from "@/Slices/Orders/UI";
 import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
+import { DiscoveredResourceDetailsPage } from "@/Slices/ResourceDiscoveryDetails/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { ServiceInstanceDetailsPage } from "@/Slices/ServiceInstanceDetails/UI";
 import { UserManagementPage } from "@/Slices/UserManagement/UI/Page";
@@ -35,7 +36,6 @@ import { ServiceCatalogPage } from "@S/ServiceCatalog/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
-import { DiscoveredResourceDetailsPage } from "@/Slices/ResourceDiscoveryDetails/UI";
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;

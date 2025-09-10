@@ -1,22 +1,18 @@
 import React, { useContext } from "react";
-import {
-  Button,
-} from "@patternfly/react-core";
-import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { DiscoveredResource } from "@/Data/Queries";
 import { Link } from "react-router";
+import { Button } from "@patternfly/react-core";
+import { Tbody, Tr, Td } from "@patternfly/react-table";
+import { splitResourceId } from "@/Data/Parsers";
+import { DiscoveredResource } from "@/Data/Queries";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ActionsDropdown } from "./Components";
-import { splitResourceId } from "@/Data/Parsers";
-import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   row: DiscoveredResource;
 }
 
-export const DiscoveredResourceRow: React.FC<Props> = ({
-  row,
-}) => {
+export const DiscoveredResourceRow: React.FC<Props> = ({ row }) => {
   const { routeManager } = useContext(DependencyContext);
   const { agent, value, type } = splitResourceId(row.discovered_resource_id);
 
@@ -48,9 +44,7 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
           dataLabel={words("discovered.column.managed_resource")}
           data-testid={words("discovered.column.managed_resource")}
           width={15}
-        >
-
-        </Td>
+        ></Td>
         <Td
           dataLabel={words("discovered.column.discovery_resource")}
           data-testid={words("discovered.column.discovery_resource")}
@@ -67,7 +61,10 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
           >
             <Button variant="link">{words("discovered.column.show_details")}</Button>
           </Link>
-          <ActionsDropdown managedResourceUri={row.managed_resource_uri} discoveryResourceUri={row.discovery_resource_uri} />
+          <ActionsDropdown
+            managedResourceUri={row.managed_resource_uri}
+            discoveryResourceUri={row.discovery_resource_uri}
+          />
         </Td>
       </Tr>
     </Tbody>

@@ -1,7 +1,6 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
-import { useExpansion } from "@/Data";
 import { DiscoveredResource, SortKey } from "@/Data/Queries";
 import { words } from "@/UI";
 import { DiscoveredResourceRow } from "./DiscoveredResourcesRow";
@@ -58,10 +57,7 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
         </Tr>
       </Thead>
       {rows.map((row: DiscoveredResource) => (
-        <DiscoveredResourceRow
-          row={row}
-          key={row.discovered_resource_id}
-        />
+        <DiscoveredResourceRow row={row} key={row.discovered_resource_id} />
       ))}
     </Table>
   );

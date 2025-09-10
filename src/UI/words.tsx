@@ -576,7 +576,8 @@ const dict = {
   "discovered.column.managed_resource": "Managed resource",
   "discovered.column.discovery_resource": "Discovery resource",
   "discovered.column.show_details": "Show Details",
-  "discovered.column.disabled_actions": "This resource has no managed or discovery resource associated.",
+  "discovered.column.disabled_actions":
+    "This resource has no managed or discovery resource associated.",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",
   "discovered_resources.show_resource.managed": "Show managed resource",

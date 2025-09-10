@@ -1,7 +1,7 @@
 export interface SplitResourceId {
-    agent: string;
-    value: string;
-    type: string;
+  agent: string;
+  value: string;
+  type: string;
 }
 
 /**
@@ -10,14 +10,17 @@ export interface SplitResourceId {
  * @returns {agent: string, value: string, type: string}
  */
 export const splitResourceId = (resourceId: string): SplitResourceId => {
-    const regex = new RegExp('^(?<type>[\\w-]+(?:::[\\w-]+)*::[\\w-]+)\\[(?<agent>[^,]+),(?:[^=]+)=(?<value>[^\\]]+)\\]?$', 'gm');
-    const match = regex.exec(resourceId);
-    if (!match) {
-        throw new Error(`Invalid resource id: ${resourceId}`);
-    }
-    return {
-        agent: match.groups?.agent ?? '',
-        value: match.groups?.value ?? '',
-        type: match.groups?.type ?? '',
-    };
-}
+  const regex = new RegExp(
+    "^(?<type>[\\w-]+(?:::[\\w-]+)*::[\\w-]+)\\[(?<agent>[^,]+),(?:[^=]+)=(?<value>[^\\]]+)\\]?$",
+    "gm"
+  );
+  const match = regex.exec(resourceId);
+  if (!match) {
+    throw new Error(`Invalid resource id: ${resourceId}`);
+  }
+  return {
+    agent: match.groups?.agent ?? "",
+    value: match.groups?.value ?? "",
+    type: match.groups?.type ?? "",
+  };
+};

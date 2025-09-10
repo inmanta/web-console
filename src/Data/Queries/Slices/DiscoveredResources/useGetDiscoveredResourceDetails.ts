@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { Resource } from "@/Core/Domain";
 import { useGet, REFETCH_INTERVAL, DiscoveredResource } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
@@ -41,4 +40,7 @@ export const useGetDiscoveredResourceDetails = (): GetDiscoveredResourceDetails 
   };
 };
 
-export const getDiscoveredResourceDetailsKey = new KeyFactory(SliceKeys.resource, "get_discovered_resource_details");
+export const getDiscoveredResourceDetailsKey = new KeyFactory(
+  SliceKeys.resource,
+  "get_discovered_resource_details"
+);

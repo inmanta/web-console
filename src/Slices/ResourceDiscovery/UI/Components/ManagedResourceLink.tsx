@@ -1,7 +1,7 @@
 import React from "react";
+import { ButtonVariant } from "@patternfly/react-core";
 import { words } from "@/UI";
 import { ResourceLink } from "@/UI/Components";
-import { ButtonVariant } from "@patternfly/react-core";
 
 interface Props {
   resourceUri: string | null;
@@ -20,7 +20,11 @@ interface Props {
  *
  * @returns DiscoveredResourceLink component
  */
-export const DiscoveredResourceLink: React.FC<Props> = ({ resourceUri, resourceType, buttonType = ButtonVariant.link }) => {
+export const DiscoveredResourceLink: React.FC<Props> = ({
+  resourceUri,
+  resourceType,
+  buttonType = ButtonVariant.link,
+}) => {
   if (!resourceUri) {
     return <></>;
   }

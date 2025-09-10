@@ -9,7 +9,11 @@ interface Props {
   variant?: ButtonVariant;
 }
 
-export const ResourceLink: React.FC<Props> = ({ resourceId, linkText, variant = ButtonVariant.link }) => {
+export const ResourceLink: React.FC<Props> = ({
+  resourceId,
+  linkText,
+  variant = ButtonVariant.link,
+}) => {
   const { routeManager } = useContext(DependencyContext);
 
   return (
