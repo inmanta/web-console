@@ -152,7 +152,8 @@ describe("Navigation", () => {
     const link = links.find((item) => item.textContent === "Service Catalog");
     const navItem = link?.closest('[data-pf-v6-c-nav__item]') || link?.parentElement;
 
-    expect(navItem).toHaveClass("pf-m-current");
+    // Check for aria-current attribute which indicates active state
+    expect(navItem).toHaveAttribute("aria-current", "page");
   });
 
   test("GIVEN Navigation WHEN Compilation Reports are not pending THEN 'Compile Reports' Indication does not exist", async () => {
