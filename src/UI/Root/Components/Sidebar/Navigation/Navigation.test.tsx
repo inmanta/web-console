@@ -150,10 +150,9 @@ describe("Navigation", () => {
     });
 
     const link = links.find((item) => item.textContent === "Service Catalog");
-    const navItem = link?.closest('[data-pf-v6-c-nav__item]') || link?.parentElement;
 
     // Check for aria-current attribute which indicates active state
-    expect(navItem).toHaveAttribute("aria-current", "page");
+    expect(link).toHaveAttribute("aria-current", "page");
   });
 
   test("GIVEN Navigation WHEN Compilation Reports are not pending THEN 'Compile Reports' Indication does not exist", async () => {
@@ -283,7 +282,7 @@ describe("Navigation", () => {
     });
 
     test("GIVEN Navigation WHEN on Desired State page THEN Desired State navigation item is active", () => {
-      const { component } = setup(["/desired-state"]);
+      const { component } = setup(["/desiredstate"]);
 
       render(component);
 

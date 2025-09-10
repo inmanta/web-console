@@ -47,9 +47,15 @@ export const NavigationItem: React.FC<Link> = ({
 };
 
 const RegularItem: React.FC<Label & Url & { isActive?: boolean }> = ({ label, url, isActive }) => (
-  <NavItem itemId={label} isActive={isActive}>
+  <NavItem
+    itemId={label}
+    isActive={isActive}
+    className={isActive ? "pf-m-current" : undefined}
+    aria-current={isActive ? "page" : undefined}
+  >
     <NavLink
       aria-label="Sidebar-Navigation-Item"
+      aria-current={isActive ? "page" : undefined}
       to={{
         pathname: url,
         search: new SearchHelper().keepEnvOnly(location.search),
@@ -77,8 +83,19 @@ const LockedItem: React.FC<Label> = ({ label }) => (
 );
 
 const ExternalItem: React.FC<Label & Url & { isActive?: boolean }> = ({ label, url, isActive }) => (
-  <NavItem itemId={label} isActive={isActive}>
-    <a href={url} target="_blank" rel="noreferrer" aria-label="Sidebar-Navigation-Item-External">
+  <NavItem
+    itemId={label}
+    isActive={isActive}
+    className={isActive ? "pf-m-current" : undefined}
+    aria-current={isActive ? "page" : undefined}
+  >
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      aria-label="Sidebar-Navigation-Item-External"
+      aria-current={isActive ? "page" : undefined}
+    >
       {label}
     </a>
   </NavItem>
@@ -89,7 +106,12 @@ const CompileReportItem: React.FC<Label & Url & { isActive?: boolean }> = ({ lab
   const isCompiling = environmentHandler.useIsCompiling();
 
   return (
-    <NavItem itemId={label} isActive={isActive}>
+    <NavItem
+      itemId={label}
+      isActive={isActive}
+      className={isActive ? "pf-m-current" : undefined}
+      aria-current={isActive ? "page" : undefined}
+    >
       <NavLink
         to={{
           pathname: url,
@@ -97,6 +119,7 @@ const CompileReportItem: React.FC<Label & Url & { isActive?: boolean }> = ({ lab
         }}
         end
         aria-label="Sidebar-Navigation-Item"
+        aria-current={isActive ? "page" : undefined}
       >
         {label}
         {isCompiling && (
