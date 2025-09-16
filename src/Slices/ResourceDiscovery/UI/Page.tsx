@@ -32,7 +32,7 @@ export const Page: React.FC = () => {
     route: "DiscoveredResources",
   });
   // The filters are currently empty, but can easily be added at a later stage when the endpoint supports it.
-  const [filter, _setFilter] = useUrlStateWithFilter<Filter>({
+  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
     route: "DiscoveredResources",
   });
   const [sort, setSort] = useUrlStateWithSort<SortKey>({
@@ -76,6 +76,8 @@ export const Page: React.FC = () => {
               setCurrentPage={setCurrentPage}
             />
           }
+          filter={filter}
+          setFilter={setFilter}
         />
 
         {disabledDiscoveredResourcesView || data.data.length <= 0 ? (

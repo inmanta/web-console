@@ -29,6 +29,9 @@ export type SortKey = "discovered_resource_id";
 export interface Filter {
   name?: string[];
   discovered_resource_id?: string[];
+  type?: string[];
+  agent?: string[];
+  value?: string[];
 }
 
 /**
