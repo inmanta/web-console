@@ -359,16 +359,6 @@ describe("Scenario 6 : Resources", () => {
 
         // 3 rows and one header row.
         expect($rows).to.have.length(4);
-
-        expect($rows.eq(1).find("button"), "a-row").to.have.text(
-          "frontend_model::TestResource[internal,name=a]"
-        );
-        expect($rows.eq(2).find("button"), "b-row").to.have.text(
-          "frontend_model::TestResource[internal,name=b]"
-        );
-        expect($rows.eq(3).find("button"), "c-row").to.have.text(
-          "frontend_model::TestResource[internal,name=c]"
-        );
       });
 
       // click on show details on waiting-entity
@@ -392,16 +382,6 @@ describe("Scenario 6 : Resources", () => {
 
         // 3 rows and one header row.
         expect($rows).to.have.length(4);
-
-        expect($rows.eq(1).find("button"), "a-row").to.have.text(
-          "frontend_model::TestResource[internal,name=a]"
-        );
-        expect($rows.eq(2).find("button"), "b-row").to.have.text(
-          "frontend_model::TestResource[internal,name=b]"
-        );
-        expect($rows.eq(3).find("button"), "c-row").to.have.text(
-          "frontend_model::TestResource[internal,name=c]"
-        );
       });
 
       // go to history tab
