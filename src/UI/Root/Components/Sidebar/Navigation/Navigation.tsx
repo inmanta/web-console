@@ -40,8 +40,6 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({ envi
     return currentPath.includes(navPath) && navPath !== "";
   };
 
-  console.log(groups);
-
   return (
     <Nav>
       {groups.map(({ id, title, links }) => (
