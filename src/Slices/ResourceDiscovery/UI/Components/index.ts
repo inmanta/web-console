@@ -1,1 +1,2 @@
-export * from "./ManagedResourceLink";
+export * from "./DiscoveredResourceLink";
+export * from "./ActionsDropdown";
