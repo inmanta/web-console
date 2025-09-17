@@ -57,8 +57,7 @@ describe("DiscoveredResourcesPage", () => {
         return HttpResponse.json({
           data: filtered,
           links: {
-            self:
-              "/api/v2/discovered?limit=20&sort=discovered_resource_id.asc&filter.value=ubuntu",
+            self: "/api/v2/discovered?limit=20&sort=discovered_resource_id.asc&filter.value=ubuntu",
           },
           metadata: {
             total: filtered.length,

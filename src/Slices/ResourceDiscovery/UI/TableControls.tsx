@@ -21,10 +21,7 @@ interface Props {
  */
 export const TableControls: React.FC<Props> = ({ paginationWidget, filter, setFilter }) => {
   return (
-    <Toolbar
-      clearAllFilters={() => setFilter({})}
-      aria-label="DiscoveredResources-toolbar"
-    >
+    <Toolbar clearAllFilters={() => setFilter({})} aria-label="DiscoveredResources-toolbar">
       <ToolbarContent>
         <FilterForm filter={filter} setFilter={setFilter} />
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
