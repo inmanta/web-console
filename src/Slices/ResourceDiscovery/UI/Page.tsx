@@ -31,7 +31,7 @@ export const Page: React.FC = () => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "DiscoveredResources",
   });
-  // The filters are currently empty, but can easily be added at a later stage when the endpoint supports it.
+  
   const [filter, setFilter] = useUrlStateWithFilter<Filter>({
     route: "DiscoveredResources",
   });
