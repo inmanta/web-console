@@ -83,7 +83,6 @@ interface GetDiscoveredResources {
 export const useGetDiscoveredResources = (
   params: GetDiscoveredResourcesParams
 ): GetDiscoveredResources => {
-  console.log("params", params);
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseBody>;
