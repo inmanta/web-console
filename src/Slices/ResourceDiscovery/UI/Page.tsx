@@ -31,7 +31,7 @@ export const Page: React.FC = () => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "DiscoveredResources",
   });
-  
+
   const [filter, setFilter] = useUrlStateWithFilter<Filter>({
     route: "DiscoveredResources",
   });
