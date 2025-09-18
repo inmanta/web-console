@@ -1212,8 +1212,8 @@ __metadata:
     "@react-keycloak/web": "npm:^3.4.0"
     "@remix-run/router": "npm:^1.15.0"
     "@stylistic/eslint-plugin-ts": "npm:^4.4.1"
-    "@tanstack/react-query": "npm:^5.86.0"
-    "@tanstack/react-query-devtools": "npm:^5.87.1"
+    "@tanstack/react-query": "npm:^5.89.0"
+    "@tanstack/react-query-devtools": "npm:^5.89.0"
     "@testing-library/dom": "npm:^10.4.0"
     "@testing-library/jest-dom": "npm:^6.7.0"
     "@testing-library/react": "npm:^16.3.0"
@@ -1289,6 +1289,7 @@ __metadata:
     typescript-eslint: "npm:^8.35.1"
     uuid: "npm:^10.0.0"
     victory: "npm:^37.3.6"
+    vite: "npm:^7.1.6"
     vite-plugin-mkcert: "npm:^1.17.8"
     vite-plugin-monaco-editor-esm: "npm:^2.0.2"
     vitest: "npm:^3.2.4"
@@ -2131,40 +2132,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.86.0":
-  version: 5.86.0
-  resolution: "@tanstack/query-core@npm:5.86.0"
-  checksum: 10/66c6811dc39e56d59d8c3a996743b067ca45add7eab193f788e6041713b730bf7859b693f31cbda0eda92fef4dd3ff969f1ac0bbd553f554c497da322ff45871
+"@tanstack/query-core@npm:5.89.0":
+  version: 5.89.0
+  resolution: "@tanstack/query-core@npm:5.89.0"
+  checksum: 10/52895f3b869563a1ab1a5449c721ca7edda492c4903ea2a95b38a72b8e05e3d515df519ff3a93ee7dee27bab6abd7ae498439334e9dcbf7126e1e6874bef4d26
   languageName: node
   linkType: hard
 
-"@tanstack/query-devtools@npm:5.86.0":
-  version: 5.86.0
-  resolution: "@tanstack/query-devtools@npm:5.86.0"
-  checksum: 10/97b24d00c22dc5c94e75b35106e3b07c0a873fa2f89646620ad62fd46098f98a86a2aa442e90a71bca59e1ef036622d7b5e98e9a97a9879f6a60b13ca43f792a
+"@tanstack/query-devtools@npm:5.87.3":
+  version: 5.87.3
+  resolution: "@tanstack/query-devtools@npm:5.87.3"
+  checksum: 10/fe91420e0ef66b4ec737502ab11f6261d15b2f24b9f419d9c878a152c0af30026b6decada2cc9ed2fdedba2d237a06e14a30b3645841ae084a01a58307fa103d
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:^5.87.1":
-  version: 5.87.1
-  resolution: "@tanstack/react-query-devtools@npm:5.87.1"
+"@tanstack/react-query-devtools@npm:^5.89.0":
+  version: 5.89.0
+  resolution: "@tanstack/react-query-devtools@npm:5.89.0"
   dependencies:
-    "@tanstack/query-devtools": "npm:5.86.0"
+    "@tanstack/query-devtools": "npm:5.87.3"
   peerDependencies:
-    "@tanstack/react-query": ^5.87.1
+    "@tanstack/react-query": ^5.89.0
     react: ^18 || ^19
-  checksum: 10/f7bf2759491816195e2dbd68221a5e10843f153ee89349ce3704887bce93fb8d0795b51a3e53b5031c8b2c452fa811297e88d3dbb46a27bbab71487ec2ac554c
+  checksum: 10/8c0c287a2db51283f29017aa4adf4fcbededfca802b36c9d92552386031de9d5f10ddf5d6f36e57e8ef94f0e17ed0f734fdaed1f96d16fc8546ba1ddb8a24cd4
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.86.0":
-  version: 5.86.0
-  resolution: "@tanstack/react-query@npm:5.86.0"
+"@tanstack/react-query@npm:^5.89.0":
+  version: 5.89.0
+  resolution: "@tanstack/react-query@npm:5.89.0"
   dependencies:
-    "@tanstack/query-core": "npm:5.86.0"
+    "@tanstack/query-core": "npm:5.89.0"
   peerDependencies:
     react: ^18 || ^19
-  checksum: 10/1d78a52c917f14bb5add0e644218a3399b636c9935356d6d68148668371f4a098489bba0ce35a854b0ff0a3935ee2c493ad020a178afc28fc1f08e78e8a26443
+  checksum: 10/8c3f81ede098325e3cfa8803bf5647c159fc7dde23f81b347a36e12366164f58a349be3e7d6f68ece6208ddeb09947f3e26091161579ffdcc2e62baae8fa25d0
   languageName: node
   linkType: hard
 
@@ -12692,6 +12693,61 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 10/59edeef7e98757a668b2ad8a1731a5657fa83e22a165a36b7359225ea98a9be39b2f486710c0cf5085edb85daee7c8b6b6b0bd85d0ef32a1aa84aef71aabd0f0
+  languageName: node
+  linkType: hard
+
+"vite@npm:^7.1.6":
+  version: 7.1.6
+  resolution: "vite@npm:7.1.6"
+  dependencies:
+    esbuild: "npm:^0.25.0"
+    fdir: "npm:^6.5.0"
+    fsevents: "npm:~2.3.3"
+    picomatch: "npm:^4.0.3"
+    postcss: "npm:^8.5.6"
+    rollup: "npm:^4.43.0"
+    tinyglobby: "npm:^0.2.15"
+  peerDependencies:
+    "@types/node": ^20.19.0 || >=22.12.0
+    jiti: ">=1.21.0"
+    less: ^4.0.0
+    lightningcss: ^1.21.0
+    sass: ^1.70.0
+    sass-embedded: ^1.70.0
+    stylus: ">=0.54.8"
+    sugarss: ^5.0.0
+    terser: ^5.16.0
+    tsx: ^4.8.1
+    yaml: ^2.4.2
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+    jiti:
+      optional: true
+    less:
+      optional: true
+    lightningcss:
+      optional: true
+    sass:
+      optional: true
+    sass-embedded:
+      optional: true
+    stylus:
+      optional: true
+    sugarss:
+      optional: true
+    terser:
+      optional: true
+    tsx:
+      optional: true
+    yaml:
+      optional: true
+  bin:
+    vite: bin/vite.js
+  checksum: 10/b0bb7c5b4d3fbaf7e34f17e9103bac7a380d9de076343ba9b81f5fafc07982aef19d7d5a701faf8c8571c75a7ab2920bfeb41cc70b84ae22dd6db79f92ad6d1b
   languageName: node
   linkType: hard
 
