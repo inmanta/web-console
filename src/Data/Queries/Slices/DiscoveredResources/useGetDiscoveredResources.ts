@@ -22,6 +22,9 @@ export interface DiscoveredResource {
   managed_resource_uri: string | null;
   discovery_resource_uri: string | null;
   values: Record<string, unknown>;
+  resource_type: string;
+  resource_id_value: string;
+  agent: string;
 }
 
 export type SortKey = "discovered_resource_id";
@@ -29,6 +32,9 @@ export type SortKey = "discovered_resource_id";
 export interface Filter {
   name?: string[];
   discovered_resource_id?: string[];
+  type?: string[];
+  agent?: string[];
+  value?: string[];
 }
 
 /**

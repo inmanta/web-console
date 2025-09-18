@@ -9,6 +9,9 @@ const mockResource: DiscoveredResource = {
   discovered_resource_id: "vcenter::VirtualMachine[lab,name=acisim]",
   managed_resource_uri: "/api/v2/resource/test-resource",
   discovery_resource_uri: "/api/v2/resource/test-resource",
+  resource_type: "VirtualMachine",
+  resource_id_value: "acisim",
+  agent: "lab",
   values: {
     name: "acisim",
     path: "/bedc/vm/acisim",

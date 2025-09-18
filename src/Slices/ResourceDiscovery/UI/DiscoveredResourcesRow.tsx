@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { Link } from "react-router";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { splitResourceId } from "@/Data/Parsers";
 import { DiscoveredResource } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -15,10 +14,9 @@ interface Props {
 export const DiscoveredResourceRow: React.FC<Props> = ({ row }) => {
   const { routeManager } = useContext(DependencyContext);
 
-  // This is a workaround to get the agent, value and type of the discovered resource.
-  // It will be replaced once the API returns the agent, value and type in the response.
-  // see https://github.com/inmanta/web-console/issues/6565
-  const { agent, value, type } = splitResourceId(row.discovered_resource_id);
+  const agent = row.agent;
+  const value = row.resource_id_value;
+  const type = row.resource_type;
 
   return (
     <Tbody>
