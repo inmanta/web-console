@@ -161,7 +161,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
         <RightSidebar editable={editable} />
         <ZoomHandlerContainer className="zoom-handler" ref={ZoomHandler} />
       </CanvasWrapper>
-      {editable && <ErrorsContainer />}
+      {/*editable && <ErrorsContainer />*/}
     </EventWrapper>
   );
 };

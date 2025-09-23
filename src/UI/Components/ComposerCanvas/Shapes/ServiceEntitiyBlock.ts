@@ -7,7 +7,7 @@ import {
   t_global_font_size_body_default,
   t_global_font_size_body_lg,
 } from "@patternfly/react-tokens";
-import { EmbeddedEntity, InstanceAttributeModel, ServiceModel } from "@/Core";
+import { EmbeddedEntity, InstanceAttributeModel, InterServiceRelation, ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
   FieldCreator,
@@ -446,7 +446,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     this.set("relatedTo", new Map());
     const relations: InterServiceRelationOnCanvasWithMin[] = [];
 
-    serviceModel.inter_service_relations.forEach((relation) => {
+    serviceModel.inter_service_relations.forEach((relation: InterServiceRelation) => {
       if (relation.lower_limit > 0) {
         relations.push({
           name: relation.entity_type,

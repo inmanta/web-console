@@ -118,10 +118,11 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
 
     orderMutation.mutate(orderItems);
   };
-  const missingInterServiceRelations = Array.from(interServiceRelationsOnCanvas).filter(
-    ([_key, value]) =>
-      value.relations.filter((relation) => relation.currentAmount < relation.min).length > 0
-  );
+
+  // const missingInterServiceRelations = Array.from(interServiceRelationsOnCanvas).filter(
+  //   ([_key, value]) =>
+  //     value.relations.filter((relation) => relation.currentAmount < relation.min).length > 0
+  // );
 
   return (
     <Flex
@@ -153,12 +154,7 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
               variant="primary"
               width={200}
               onClick={handleDeploy}
-              isDisabled={
-                serviceOrderItems.size < 1 ||
-                !isDirty ||
-                looseElements.size > 0 ||
-                missingInterServiceRelations.length > 0
-              }
+              isDisabled={serviceOrderItems.size < 1 || !isDirty || looseElements.size > 0}
             >
               {words("deploy")}
             </Button>

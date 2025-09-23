@@ -57,7 +57,7 @@ interface Props {
  * @returns {React.FC<Props>} The rendered text content component displaying the missing relations.
  */
 const MissingRelationsForGivenCell: React.FC<Props> = ({ entity }) => {
-  const { name, relations } = entity;
+  const { name, relations } = entity as RelationCounterForCell;
 
   return relations
     .filter((r) => r.currentAmount < r.min)
