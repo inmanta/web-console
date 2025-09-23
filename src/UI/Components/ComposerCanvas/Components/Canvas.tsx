@@ -124,15 +124,37 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     } else {
       const cells = diagramHandlers.addInstance(serviceModels, instance);
 
+
       cells.forEach((cell) => {
+        const attrs = cell.get("instanceAttributes");
+        const relations = cell.get("relatedTo");
+
+        // Whitelist attributes to those defined on the model for this cell
+        const serviceModel = cell.get("serviceModel");
+        const allowedAttributeKeys = new Set(
+          [
+            ...(serviceModel?.attributes?.map((a) => a.name) || []),
+            ...(serviceModel?.embedded_entities?.map((e) => e.name) || []),
+            ...(serviceModel?.inter_service_relations?.map((r) => r.name) || []),
+          ]
+        );
+        const clonedAttrs = attrs ? JSON.parse(JSON.stringify(attrs)) : attrs;
+        const filteredAttrs = clonedAttrs
+          ? Object.fromEntries(
+            Object.entries(clonedAttrs).filter(([key]) => allowedAttributeKeys.has(key))
+          )
+          : clonedAttrs;
+
         newInstances.set(cell.id, {
           instance_id: cell.id,
           service_entity: cell.get("entityName"),
           config: {},
           action: instance ? null : ActionEnum.CREATE,
-          attributes: cell.get("instanceAttributes"),
+          // Defensive deep clone + filter to avoid leakage of unrelated keys
+          attributes: filteredAttrs,
           embeddedTo: cell.get("embeddedTo"),
-          relatedTo: cell.get("relatedTo"),
+          // Clone Map to avoid sharing the same reference between instances
+          relatedTo: relations ? new Map(relations) : relations,
         });
       });
 

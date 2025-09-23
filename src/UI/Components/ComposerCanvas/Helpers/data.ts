@@ -102,6 +102,26 @@ export const shapesDataTransform = (
     });
   }
 
+  // Ensure attributes only contain keys valid for this service model
+  if (parentInstance.attributes && serviceModel) {
+    const allowedAttributeKeys = new Set<string>(
+      [
+        // native attributes on the model
+        ...(serviceModel.attributes?.map((a) => a.name) || []),
+        // embedded entities are stored by their entity name
+        ...(serviceModel.embedded_entities?.map((e) => e.name) || []),
+        // inter-service relation attributes use their relation name
+        ...(serviceModel.inter_service_relations?.map((r) => r.name) || []),
+      ]
+    );
+
+    parentInstance.attributes = Object.fromEntries(
+      Object.entries(parentInstance.attributes).filter(([key]) =>
+        allowedAttributeKeys.has(key)
+      )
+    );
+  }
+
   //if any of its embedded instances were edited, and its action is indicating no changes to main attributes, change it to "update"
   if (areEmbeddedEdited) {
     parentInstance.action = "update";
@@ -141,6 +161,8 @@ export const getServiceOrderItems = (
   instances: Map<string, ComposerServiceOrderItem>,
   services: ServiceModel[]
 ): ComposerServiceOrderItem[] => {
+  console.log("instances", instances);
+  console.log("services", services);
   const mapToArray = Array.from(instances, (instance) => instance[1]); //only value, the id is stored in the object anyway
   const deepCopiedMapToArray: ComposerServiceOrderItem[] = JSON.parse(JSON.stringify(mapToArray)); //only value, the id is stored in the object anyway
 
@@ -241,15 +263,37 @@ export const updateServiceOrderItems = (
   action: ActionEnum,
   serviceOrderItems: Map<string, ComposerServiceOrderItem>
 ): Map<string, ComposerServiceOrderItem> => {
+  const rawAttrs = cell.get("sanitizedAttrs");
+  const rawRelations = cell.getRelations();
+  const serviceModel = cell.get("serviceModel") as ServiceModel | EmbeddedEntity;
+
+  // Build whitelist of allowed attribute keys for this model
+  const allowedAttributeKeys = new Set<string>(
+    [
+      ...(serviceModel?.attributes?.map((a) => a.name) || []),
+      ...(serviceModel?.embedded_entities?.map((e) => e.name) || []),
+      ...(serviceModel?.inter_service_relations?.map((r) => r.name) || []),
+    ]
+  );
+
+  const clonedAttrs = rawAttrs ? JSON.parse(JSON.stringify(rawAttrs)) : rawAttrs;
+  const filteredAttrs = clonedAttrs
+    ? Object.fromEntries(
+      Object.entries(clonedAttrs).filter(([key]) => allowedAttributeKeys.has(key))
+    )
+    : clonedAttrs;
+
   const newInstance: ComposerServiceOrderItem = {
     instance_id: cell.id,
     service_entity: cell.getName(),
     config: {},
     action: null,
-    attributes: cell.get("sanitizedAttrs"),
+    // Deep-cloned and filtered to allowed keys
+    attributes: filteredAttrs,
     edits: null,
     embeddedTo: cell.get("embeddedTo"),
-    relatedTo: cell.getRelations(),
+    // Clone Map to prevent mutation side-effects across instances
+    relatedTo: rawRelations ? new Map(rawRelations) : rawRelations,
   };
   const copiedInstances = new Map(serviceOrderItems); // copy
 
