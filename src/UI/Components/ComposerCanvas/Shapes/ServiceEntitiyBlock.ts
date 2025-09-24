@@ -423,7 +423,9 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     if (attributes) {
       const keyAttributes = getKeyAttributesNames(serviceModel);
 
-      this._updateAttributes(keyAttributes, attributes, true);
+      // Deep clone provided attributes to avoid shared references between cells
+      const clonedAttributes = JSON.parse(JSON.stringify(attributes));
+      this._updateAttributes(keyAttributes, clonedAttributes, true);
     } else {
       // When no attributes are provided, create default values from the service model
       // This ensures boolean attributes with default values are properly initialized
@@ -494,7 +496,10 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     isInitial: boolean = true
   ): void {
     // Normalize input - ensure we have valid attributes to work with
-    const attributes = serviceInstanceAttributes || {};
+    // Deep clone only; upstream creation now guarantees no shared references
+    const attributes = serviceInstanceAttributes
+      ? JSON.parse(JSON.stringify(serviceInstanceAttributes))
+      : {};
     const hasKeyAttributes = keyAttributes && keyAttributes.length > 0;
 
     // Always set the instance attributes
@@ -502,7 +507,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
     // Set sanitized attributes on initial update if not already set
     if (isInitial && !this.get("sanitizedAttrs")) {
-      this.set("sanitizedAttrs", attributes);
+      this.set("sanitizedAttrs", JSON.parse(JSON.stringify(attributes)));
     }
 
     // Only create display columns if we have key attributes to show

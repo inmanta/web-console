@@ -233,7 +233,8 @@ function addEmbeddedEntities({
         paper,
         graph,
         embeddedEntity: entity,
-        entityAttributes,
+        // Deep clone attributes passed into each appended entity to avoid sharing
+        entityAttributes: JSON.parse(JSON.stringify(entityAttributes)),
         embeddedTo: instanceEntityBlock.id,
         holderName: serviceModel.name,
         presentedAttr,
@@ -372,9 +373,10 @@ export function appendEmbeddedEntity({
   }
 
   if (Array.isArray(entityAttributes)) {
-    return entityAttributes.map((entity) => appendSingleEntity(entity));
+    // Clone each item to avoid sharing instances across embedded entity cells
+    return entityAttributes.map((entity) => appendSingleEntity(JSON.parse(JSON.stringify(entity))));
   } else {
-    return [appendSingleEntity(entityAttributes)];
+    return [appendSingleEntity(JSON.parse(JSON.stringify(entityAttributes)))];
   }
 }
 

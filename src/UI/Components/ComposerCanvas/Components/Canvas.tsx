@@ -150,7 +150,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
           service_entity: cell.get("entityName"),
           config: {},
           action: instance ? null : ActionEnum.CREATE,
-          // Defensive deep clone + filter to avoid leakage of unrelated keys
+          // Defensive deep clone + filter to avoid unrelated keys
           attributes: filteredAttrs,
           embeddedTo: cell.get("embeddedTo"),
           // Clone Map to avoid sharing the same reference between instances

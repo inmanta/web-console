@@ -102,15 +102,25 @@ export const shapesDataTransform = (
     });
   }
 
-  // Ensure attributes only contain keys valid for this service model
-  if (parentInstance.attributes && serviceModel) {
+  /**
+   * 
+   * Inter-service “leakage” happens when unrelated keys ride along in object-shaped attributes. We must prune those keys.
+   * Tests also use simple, non-object attribute values (e.g., a string) to render UI. 
+   * If we blindly “filter” everything, those primitives get coerced into {}. 
+   * 
+   * So, we whitelist only when the attribute is a plain object (where leakage can occur). 
+   * For primitives/arrays, we pass them through unchanged so expected values still render.
+   */
+  if (
+    parentInstance.attributes &&
+    typeof parentInstance.attributes === "object" &&
+    !Array.isArray(parentInstance.attributes) &&
+    serviceModel
+  ) {
     const allowedAttributeKeys = new Set<string>(
       [
-        // native attributes on the model
         ...(serviceModel.attributes?.map((a) => a.name) || []),
-        // embedded entities are stored by their entity name
         ...(serviceModel.embedded_entities?.map((e) => e.name) || []),
-        // inter-service relation attributes use their relation name
         ...(serviceModel.inter_service_relations?.map((r) => r.name) || []),
       ]
     );
@@ -161,8 +171,6 @@ export const getServiceOrderItems = (
   instances: Map<string, ComposerServiceOrderItem>,
   services: ServiceModel[]
 ): ComposerServiceOrderItem[] => {
-  console.log("instances", instances);
-  console.log("services", services);
   const mapToArray = Array.from(instances, (instance) => instance[1]); //only value, the id is stored in the object anyway
   const deepCopiedMapToArray: ComposerServiceOrderItem[] = JSON.parse(JSON.stringify(mapToArray)); //only value, the id is stored in the object anyway
 
@@ -265,9 +273,9 @@ export const updateServiceOrderItems = (
 ): Map<string, ComposerServiceOrderItem> => {
   const rawAttrs = cell.get("sanitizedAttrs");
   const rawRelations = cell.getRelations();
+  const clonedAttrs = rawAttrs ? JSON.parse(JSON.stringify(rawAttrs)) : rawAttrs;
+  // Whitelist attributes to allowed keys from the model attached to the cell
   const serviceModel = cell.get("serviceModel") as ServiceModel | EmbeddedEntity;
-
-  // Build whitelist of allowed attribute keys for this model
   const allowedAttributeKeys = new Set<string>(
     [
       ...(serviceModel?.attributes?.map((a) => a.name) || []),
@@ -275,20 +283,19 @@ export const updateServiceOrderItems = (
       ...(serviceModel?.inter_service_relations?.map((r) => r.name) || []),
     ]
   );
-
-  const clonedAttrs = rawAttrs ? JSON.parse(JSON.stringify(rawAttrs)) : rawAttrs;
-  const filteredAttrs = clonedAttrs
-    ? Object.fromEntries(
-      Object.entries(clonedAttrs).filter(([key]) => allowedAttributeKeys.has(key))
-    )
-    : clonedAttrs;
+  const filteredAttrs =
+    clonedAttrs && typeof clonedAttrs === "object" && !Array.isArray(clonedAttrs)
+      ? Object.fromEntries(
+        Object.entries(clonedAttrs).filter(([key]) => allowedAttributeKeys.has(key))
+      )
+      : clonedAttrs;
 
   const newInstance: ComposerServiceOrderItem = {
     instance_id: cell.id,
     service_entity: cell.getName(),
     config: {},
     action: null,
-    // Deep-cloned and filtered to allowed keys
+    // Deep-cloned and filtered attributes
     attributes: filteredAttrs,
     edits: null,
     embeddedTo: cell.get("embeddedTo"),
