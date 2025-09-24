@@ -69,13 +69,26 @@ export function addDefaultEntities(
         const embedded_entities: ServiceEntityBlock[] = [];
 
         for (let i = 0; i < embedded_entity.lower_limit; i++) {
-          embedded_entities.push(addSingleEntity(graph, embedded_entity, attributes, service.name));
+          // Pass a deep clone to avoid sharing the same attributes object instance
+          embedded_entities.push(
+            addSingleEntity(
+              graph,
+              embedded_entity,
+              JSON.parse(JSON.stringify(attributes)),
+              service.name
+            )
+          );
         }
 
         return embedded_entities;
       }
 
-      return addSingleEntity(graph, embedded_entity, attributes, service.name);
+      return addSingleEntity(
+        graph,
+        embedded_entity,
+        JSON.parse(JSON.stringify(attributes)),
+        service.name
+      );
     });
 
   return embedded_entities;

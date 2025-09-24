@@ -102,6 +102,36 @@ export const shapesDataTransform = (
     });
   }
 
+  /**
+   * 
+   * Inter-service “leakage” happens when unrelated keys ride along in object-shaped attributes. We must prune those keys.
+   * Tests also use simple, non-object attribute values (e.g., a string) to render UI. 
+   * If we blindly “filter” everything, those primitives get coerced into {}. 
+   * 
+   * So, we whitelist only when the attribute is a plain object (where leakage can occur). 
+   * For primitives/arrays, we pass them through unchanged so expected values still render.
+   */
+  if (
+    parentInstance.attributes &&
+    typeof parentInstance.attributes === "object" &&
+    !Array.isArray(parentInstance.attributes) &&
+    serviceModel
+  ) {
+    const allowedAttributeKeys = new Set<string>(
+      [
+        ...(serviceModel.attributes?.map((a) => a.name) || []),
+        ...(serviceModel.embedded_entities?.map((e) => e.name) || []),
+        ...(serviceModel.inter_service_relations?.map((r) => r.name) || []),
+      ]
+    );
+
+    parentInstance.attributes = Object.fromEntries(
+      Object.entries(parentInstance.attributes).filter(([key]) =>
+        allowedAttributeKeys.has(key)
+      )
+    );
+  }
+
   //if any of its embedded instances were edited, and its action is indicating no changes to main attributes, change it to "update"
   if (areEmbeddedEdited) {
     parentInstance.action = "update";
@@ -241,15 +271,36 @@ export const updateServiceOrderItems = (
   action: ActionEnum,
   serviceOrderItems: Map<string, ComposerServiceOrderItem>
 ): Map<string, ComposerServiceOrderItem> => {
+  const rawAttrs = cell.get("sanitizedAttrs");
+  const rawRelations = cell.getRelations();
+  const clonedAttrs = rawAttrs ? JSON.parse(JSON.stringify(rawAttrs)) : rawAttrs;
+  // Whitelist attributes to allowed keys from the model attached to the cell
+  const serviceModel = cell.get("serviceModel") as ServiceModel | EmbeddedEntity;
+  const allowedAttributeKeys = new Set<string>(
+    [
+      ...(serviceModel?.attributes?.map((a) => a.name) || []),
+      ...(serviceModel?.embedded_entities?.map((e) => e.name) || []),
+      ...(serviceModel?.inter_service_relations?.map((r) => r.name) || []),
+    ]
+  );
+  const filteredAttrs =
+    clonedAttrs && typeof clonedAttrs === "object" && !Array.isArray(clonedAttrs)
+      ? Object.fromEntries(
+        Object.entries(clonedAttrs).filter(([key]) => allowedAttributeKeys.has(key))
+      )
+      : clonedAttrs;
+
   const newInstance: ComposerServiceOrderItem = {
     instance_id: cell.id,
     service_entity: cell.getName(),
     config: {},
     action: null,
-    attributes: cell.get("sanitizedAttrs"),
+    // Deep-cloned and filtered attributes
+    attributes: filteredAttrs,
     edits: null,
     embeddedTo: cell.get("embeddedTo"),
-    relatedTo: cell.getRelations(),
+    // Clone Map to prevent mutation side-effects across instances
+    relatedTo: rawRelations ? new Map(rawRelations) : rawRelations,
   };
   const copiedInstances = new Map(serviceOrderItems); // copy
 
