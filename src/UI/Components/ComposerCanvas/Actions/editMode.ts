@@ -29,7 +29,7 @@ export interface AppendInstanceParams {
 }
 
 /**
- * This function converts Instance attributes to display them on the Smart Service Composer canvas.
+ * This function converts Instance attributes to display them on the Service Composer canvas.
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
  *
  * @param {AppendInstanceParams} params - The parameters for appending the instance.

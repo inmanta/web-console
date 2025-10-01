@@ -8,7 +8,6 @@ import {
   ComposerServiceOrderItem,
   DictDialogData,
   StencilState,
-  RelationCounterForCell,
 } from "../interfaces";
 
 /**
@@ -59,11 +58,6 @@ interface CanvasProviderInterface {
   serviceOrderItems: Map<string, ComposerServiceOrderItem>;
   setServiceOrderItems: React.Dispatch<React.SetStateAction<Map<string, ComposerServiceOrderItem>>>;
 
-  interServiceRelationsOnCanvas: Map<string, RelationCounterForCell>;
-  setInterServiceRelationsOnCanvas: React.Dispatch<
-    React.SetStateAction<Map<string, RelationCounterForCell>>
-  >;
-
   stencilState: StencilState | null;
   setStencilState: React.Dispatch<React.SetStateAction<StencilState | null>>;
 
@@ -75,23 +69,21 @@ interface CanvasProviderInterface {
  */
 export const defaultCanvasContext: CanvasProviderInterface = {
   diagramHandlers: null,
-  setDiagramHandlers: () => {},
+  setDiagramHandlers: () => { },
   dictToDisplay: null,
-  setDictToDisplay: () => {},
+  setDictToDisplay: () => { },
   formState: {},
-  setFormState: () => {},
+  setFormState: () => { },
   fields: [],
-  setFields: () => {},
+  setFields: () => { },
   cellToEdit: null,
-  setCellToEdit: () => {},
+  setCellToEdit: () => { },
   looseElements: new Set(),
-  setLooseElements: () => {},
+  setLooseElements: () => { },
   serviceOrderItems: new Map(),
-  setServiceOrderItems: () => {},
-  interServiceRelationsOnCanvas: new Map(),
-  setInterServiceRelationsOnCanvas: () => {},
+  setServiceOrderItems: () => { },
   stencilState: {},
-  setStencilState: () => {},
+  setStencilState: () => { },
   isDirty: false,
 };
 

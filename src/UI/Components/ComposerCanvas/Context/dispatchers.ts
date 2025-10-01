@@ -1,31 +1,6 @@
 import { dia } from "@inmanta/rappid";
 import { ServiceEntityBlock } from "../Shapes";
-import { ActionEnum, EventActionEnum, InterServiceRelationOnCanvasWithMin } from "../interfaces";
-
-/**
- * Dispatches an event to update inter-service relations.
- *
- * @param {EventActionEnum} action - The action to perform.
- * @param {string} name - The name of the inter-service relation.
- * @param {string | dia.Cell.ID} id - The ID of the inter-service relation.
- *
- * @returns {void}
- */
-export const dispatchUpdateInterServiceRelations = (
-  action: EventActionEnum,
-  name: string,
-  id: string | dia.Cell.ID
-): void => {
-  document.dispatchEvent(
-    new CustomEvent("updateInterServiceRelations", {
-      detail: {
-        action,
-        name,
-        id,
-      },
-    })
-  );
-};
+import { ActionEnum, EventActionEnum } from "../interfaces";
 
 /**
  * Dispatches an event to update service order items.
@@ -42,48 +17,6 @@ export const dispatchUpdateServiceOrderItems = (
   document.dispatchEvent(
     new CustomEvent("updateServiceOrderItems", {
       detail: { cell, action },
-    })
-  );
-};
-
-/**
- * Dispatches an event to add an inter-service relation to the tracker.
- *
- * @param {string | dia.Cell.ID} id - The ID of the inter-service relation.
- * @param {string} name - The name of the inter-service relation.
- * @param {InterServiceRelationOnCanvasWithMin[]} relations - The relations to add.
- *
- * @returns {void}
- */
-export const dispatchAddInterServiceRelationToTracker = (
-  id: string | dia.Cell.ID,
-  name: string,
-  relations: InterServiceRelationOnCanvasWithMin[]
-): void => {
-  document.dispatchEvent(
-    new CustomEvent("addInterServiceRelationToTracker", {
-      detail: {
-        id,
-        name,
-        relations,
-      },
-    })
-  );
-};
-
-/**
- * Dispatches an event to remove an inter-service relation from the tracker.
- *
- * @param {string | dia.Cell.ID} id - The ID of the inter-service relation.
- *
- * @returns {void}
- */
-export const dispatchRemoveInterServiceRelationFromTracker = (id: string | dia.Cell.ID): void => {
-  document.dispatchEvent(
-    new CustomEvent("removeInterServiceRelationFromTracker", {
-      detail: {
-        id,
-      },
     })
   );
 };

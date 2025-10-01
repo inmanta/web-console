@@ -13,10 +13,8 @@ import {
   FieldCreator,
   createFormState,
 } from "@/UI/Components/ServiceInstanceForm";
-import { dispatchAddInterServiceRelationToTracker } from "../Context/dispatchers";
 import { getKeyAttributesNames } from "../Helpers";
 import { ColumnData, EntityType, HeaderColor, ComposerEntityOptions } from "../interfaces";
-import { InterServiceRelationOnCanvasWithMin } from "../interfaces";
 
 /**
  * https://resources.jointjs.com/tutorial/custom-elements
@@ -414,11 +412,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       this.set("isBlockedFromEditing", true);
     }
 
-    // Handle inter-service relations
-    if (serviceModel.inter_service_relations.length > 0 && !isFromInventoryStencil) {
-      this._addInterServiceRelationsToTracker(serviceModel);
-    }
-
     // Handle attributes
     if (attributes) {
       const keyAttributes = getKeyAttributesNames(serviceModel);
@@ -436,29 +429,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       this.set("instanceAttributes", defaultAttributes);
       this.set("sanitizedAttrs", defaultAttributes);
     }
-  }
-
-  /**
-   * Adds inter-service relations to the tracker.
-   *
-   * @param {ServiceModel | EmbeddedEntity} serviceModel - ServiceModel or EmbeddedEntity object
-   * @private
-   */
-  private _addInterServiceRelationsToTracker(serviceModel: ServiceModel | EmbeddedEntity): void {
-    this.set("relatedTo", new Map());
-    const relations: InterServiceRelationOnCanvasWithMin[] = [];
-
-    serviceModel.inter_service_relations.forEach((relation) => {
-      if (relation.lower_limit > 0) {
-        relations.push({
-          name: relation.entity_type,
-          min: relation.lower_limit,
-          currentAmount: 0,
-        });
-      }
-    });
-
-    dispatchAddInterServiceRelationToTracker(this.id, serviceModel.name, relations);
   }
 
   /**

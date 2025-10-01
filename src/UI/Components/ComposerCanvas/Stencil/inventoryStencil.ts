@@ -83,6 +83,7 @@ export class InventoryStencilTab {
         "standard.Path": ["description"],
       },
       dragStartClone: (cell: dia.Cell) => {
+        console.log("Composer: dragStartClone", cell);
         const entity = new ServiceEntityBlock({
           serviceModel: cell.get("serviceModel"),
           isCore: false,
@@ -106,6 +107,7 @@ export class InventoryStencilTab {
         cloned.set("isFromInventoryStencil", el.get("isFromInventoryStencil"));
         cloned.set("isBlockedFromEditing", el.get("isBlockedFromEditing"));
         cloned.set("stencilName", el.get("stencilName"));
+        console.log("Composer: dragEndClone", cloned);
         return cloned;
       },
       layout: {

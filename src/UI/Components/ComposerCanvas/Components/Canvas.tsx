@@ -11,7 +11,7 @@ import { ZoomHandlerService } from "../ZoomHandler";
 import { diagramInit } from "../init";
 import { ActionEnum } from "../interfaces";
 import { CanvasWrapper } from "../styles";
-import { RightSidebar, ErrorsContainer } from ".";
+import { RightSidebar } from ".";
 
 /**
  * Properties for the Canvas component.
@@ -124,7 +124,6 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     } else {
       const cells = diagramHandlers.addInstance(serviceModels, instance);
 
-
       cells.forEach((cell) => {
         const attrs = cell.get("instanceAttributes");
         const relations = cell.get("relatedTo");
@@ -183,7 +182,6 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
         <RightSidebar editable={editable} />
         <ZoomHandlerContainer className="zoom-handler" ref={ZoomHandler} />
       </CanvasWrapper>
-      {editable && <ErrorsContainer />}
     </EventWrapper>
   );
 };

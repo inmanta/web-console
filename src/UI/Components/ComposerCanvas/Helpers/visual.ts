@@ -8,7 +8,6 @@ import {
 } from "@/UI/Components/ComposerCanvas/interfaces";
 import {
   dispatchLooseElement,
-  dispatchUpdateInterServiceRelations,
   dispatchUpdateServiceOrderItems,
 } from "../Context/dispatchers";
 import { ServiceEntityBlock } from "../Shapes";
@@ -237,12 +236,6 @@ const removeConnectionData = (
     if (interServiceRelations.length === 1) {
       toggleLooseElement(paper.findViewByModel(cellToDisconnect), EventActionEnum.ADD);
     }
-
-    dispatchUpdateInterServiceRelations(
-      EventActionEnum.REMOVE,
-      cellToDisconnect.get("entityName"),
-      elementCell.id
-    );
 
     dispatchUpdateServiceOrderItems(elementCell, ActionEnum.UPDATE);
   }

@@ -1,14 +1,114 @@
 import { dia, highlighters, ui } from "@inmanta/rappid";
 import { t_global_border_radius_small } from "@patternfly/react-tokens";
-import {
-  dispatchRemoveInterServiceRelationFromTracker,
-  dispatchUpdateInterServiceRelations,
-  dispatchUpdateServiceOrderItems,
-} from "./Context/dispatchers";
+import { dispatchUpdateServiceOrderItems } from "./Context/dispatchers";
 import { checkIfConnectionIsAllowed } from "./Helpers";
 import { toggleLooseElement } from "./Helpers";
 import { ServiceEntityBlock } from "./Shapes";
 import { ActionEnum, ConnectionRules, EventActionEnum } from "./interfaces";
+
+/**
+ * Handles the cleanup of embedded entities when their parent is deleted.
+ */
+const handleEmbeddedEntityCleanup = (
+  element: dia.Element,
+  deletedCellId: string,
+  paper: dia.Paper
+): boolean => {
+  const isEmbeddedEntity = element.get("isEmbeddedEntity");
+  const isEmbeddedToDeletedCell = element.get("embeddedTo") === deletedCellId;
+
+  if (isEmbeddedEntity && isEmbeddedToDeletedCell) {
+    element.set("embeddedTo", undefined);
+    toggleLooseElement(paper.findViewByModel(element), EventActionEnum.ADD);
+    return true;
+  }
+
+  return false;
+};
+
+/**
+ * Handles the cleanup of inter-service relations when a cell is deleted.
+ */
+const handleRelationCleanup = (
+  element: ServiceEntityBlock,
+  deletedCellId: string
+): boolean => {
+  const relations = element.getRelations();
+  if (!relations) {
+    return false;
+  }
+
+  return element.removeRelation(deletedCellId);
+};
+
+/**
+ * Updates connected elements after a cell deletion.
+ */
+const updateConnectedElements = (
+  connectedElements: dia.Element[],
+  deletedCell: dia.Cell,
+  paper: dia.Paper
+): void => {
+  const deletedCellId = deletedCell.id as string;
+  const embeddedToId = deletedCell.get("embeddedTo");
+
+  connectedElements.forEach((element) => {
+    const elementAsService = element as ServiceEntityBlock;
+    let hasChanged = false;
+
+    // Clean up embedded entities
+    const embeddedEntityChanged = handleEmbeddedEntityCleanup(
+      element,
+      deletedCellId,
+      paper
+    );
+    hasChanged = hasChanged || embeddedEntityChanged;
+
+    // Check if this element was the parent of the deleted cell
+    if (element.id === embeddedToId) {
+      hasChanged = true;
+    }
+
+    // Clean up inter-service relations
+    const relationChanged = handleRelationCleanup(elementAsService, deletedCellId);
+    hasChanged = hasChanged || relationChanged;
+
+    // Dispatch update if anything changed
+    if (hasChanged) {
+      dispatchUpdateServiceOrderItems(elementAsService, ActionEnum.UPDATE);
+    }
+  });
+};
+
+/**
+ * Removes a cell and cleans up all its connections and relations.
+ */
+const deleteCell = (
+  graph: dia.Graph,
+  paper: dia.Paper,
+  cellView: dia.CellView,
+  halo: ui.Halo
+): void => {
+  const connectedElements = graph.getNeighbors(cellView.model as dia.Element);
+
+  // Mark as loose element (for tracking purposes)
+  toggleLooseElement(cellView, EventActionEnum.REMOVE);
+
+  // Update all connected elements
+  updateConnectedElements(connectedElements, cellView.model, paper);
+
+  // Delete the cell itself
+  dispatchUpdateServiceOrderItems(cellView.model, ActionEnum.DELETE);
+
+  // Remove from graph
+  graph.removeLinks(cellView.model);
+  cellView.remove();
+  halo.remove();
+  graph.removeCells([cellView.model]);
+
+  // Clear right sidebar
+  paper.trigger("blank:pointerdown");
+};
 
 /**
  * Creates a halo around a cell view in a graph.
@@ -46,63 +146,7 @@ const createHalo = (
   });
 
   halo.listenTo(cellView, "action:delete", function () {
-    //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
-    const connectedElements = graph.getNeighbors(cellView.model as dia.Element);
-
-    toggleLooseElement(cellView, EventActionEnum.REMOVE);
-
-    connectedElements.forEach((element) => {
-      const elementAsService = element as ServiceEntityBlock;
-      const isEmbeddedEntity = element.get("isEmbeddedEntity");
-      const isEmbeddedToThisCell = element.get("embeddedTo") === cellView.model.id;
-
-      let didElementChange = false;
-
-      //if one of those were embedded into other then update connectedElement as it's got indirectly edited
-      if (isEmbeddedEntity && isEmbeddedToThisCell) {
-        element.set("embeddedTo", undefined);
-        toggleLooseElement(paper.findViewByModel(element), EventActionEnum.ADD);
-        didElementChange = true;
-      }
-
-      if (element.id === cellView.model.get("embeddedTo")) {
-        didElementChange = true;
-      }
-
-      const relations = elementAsService.getRelations();
-
-      if (relations) {
-        const wasThereRelationToRemove = elementAsService.removeRelation(
-          cellView.model.id as string
-        );
-
-        if (wasThereRelationToRemove) {
-          dispatchUpdateInterServiceRelations(
-            EventActionEnum.REMOVE,
-            cellView.model.get("entityName"),
-            elementAsService.id
-          );
-        }
-
-        didElementChange = didElementChange || wasThereRelationToRemove;
-      }
-
-      if (didElementChange) {
-        dispatchUpdateServiceOrderItems(elementAsService, ActionEnum.UPDATE);
-      }
-    });
-    dispatchUpdateServiceOrderItems(cellView.model, ActionEnum.DELETE);
-
-    if (cellView.model.get("relatedTo")) {
-      dispatchRemoveInterServiceRelationFromTracker(cellView.model.id);
-    }
-
-    graph.removeLinks(cellView.model);
-    cellView.remove();
-    halo.remove();
-    graph.removeCells([cellView.model]);
-    //trigger click on blank canvas to clear right sidebar
-    paper.trigger("blank:pointerdown");
+    deleteCell(graph, paper, cellView, halo);
   });
 
   halo.on("action:link:pointerdown", function () {
@@ -114,9 +158,8 @@ const createHalo = (
 
     elements.forEach((element) => {
       element.getBBox();
-      const isAllowed = checkIfConnectionIsAllowed(graph, cellView, element, connectionRules);
 
-      if (!isAllowed) {
+      if (!checkIfConnectionIsAllowed(graph, cellView, element, connectionRules)) {
         return;
       }
 

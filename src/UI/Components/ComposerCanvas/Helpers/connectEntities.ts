@@ -6,7 +6,7 @@ import { Link, ServiceEntityBlock } from "../Shapes";
  *
  * @param {dia.Graph} graph JointJS graph object
  * @param {ServiceEntityBlock} source JointJS shape object
- * @param {ServiceEntityBlock[]} target JointJS shape objects
+ * @param {ServiceEntityBlock[]} targets JointJS shape objects
  * @param {boolean} isBlocked parameter determining whether we are showing tools for linkView
  * @returns {void}
  */

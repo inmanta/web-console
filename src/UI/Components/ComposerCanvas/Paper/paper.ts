@@ -1,7 +1,6 @@
 import { dia, shapes } from "@inmanta/rappid";
 import {
   dispatchSendCellToSidebar,
-  dispatchUpdateInterServiceRelations,
   dispatchUpdateServiceOrderItems,
 } from "../Context/dispatchers";
 import { checkIfConnectionIsAllowed, showLinkTools, toggleLooseElement } from "../Helpers";
@@ -213,11 +212,6 @@ export class ComposerPaper {
             elementCell.addRelation(connectingCell.id, cellConnectionRule.attributeName);
             model.set("isRelationshipConnection", true);
 
-            dispatchUpdateInterServiceRelations(
-              EventActionEnum.ADD,
-              cellConnectionRule.name,
-              elementCell.id
-            );
             dispatchUpdateServiceOrderItems(targetCell, ActionEnum.UPDATE);
 
             toggleLooseElement(this.paper.findViewByModel(connectingCell), EventActionEnum.REMOVE);
