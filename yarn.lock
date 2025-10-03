@@ -1293,7 +1293,7 @@ __metadata:
     react-dropzone: "npm:^14.3.8"
     react-icons: "npm:^5.5.0"
     react-is: "npm:^19.1.0"
-    react-router: "npm:^7.8.0"
+    react-router: "npm:^7.9.3"
     regenerator-runtime: "npm:^0.14.1"
     rimraf: "npm:^6.0.1"
     styled-components: "npm:^6.1.19"
@@ -10386,9 +10386,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router@npm:^7.8.0":
-  version: 7.8.0
-  resolution: "react-router@npm:7.8.0"
+"react-router@npm:^7.9.3":
+  version: 7.9.3
+  resolution: "react-router@npm:7.9.3"
   dependencies:
     cookie: "npm:^1.0.1"
     set-cookie-parser: "npm:^2.6.0"
@@ -10398,7 +10398,7 @@ __metadata:
   peerDependenciesMeta:
     react-dom:
       optional: true
-  checksum: 10/bb46458bd15f73749a82d8ba0818d9ea98088378d569fd500aa4477cd08c1e359241b97de579f29e8bc78f8b81c76f660255b27a6249c305e4c66399f073e4df
+  checksum: 10/62066f09214c5b026b0d400af946aa0b16ef5be7f5120a4400e1b1fc487249220c2d735d9f6a2afa505a136bc8ef4cd7657b1ff8126871068cbf7ec773febce3
   languageName: node
   linkType: hard
 
