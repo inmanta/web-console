@@ -17,7 +17,7 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   const { data, isSuccess, isError, error } = useGetPartialNotifications({
     envID,
     cleared: false,
-    orderBy: "desc",
+    orderBy: [{ key: "created", order: "desc" }],
   }).useContinuous();
 
   const [errorMessage, setErrorMessage] = useState("");
