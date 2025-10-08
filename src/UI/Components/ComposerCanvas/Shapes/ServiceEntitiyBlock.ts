@@ -270,10 +270,10 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @param {string} relationName - The name of the relation.
    */
   addRelation(id: dia.Cell.ID, relationName: string): void {
-    const currentRelation = this.getRelations();
+    const currentRelations = this.getRelations();
 
-    if (currentRelation) {
-      this.set("relatedTo", currentRelation.set(id, relationName));
+    if (currentRelations) {
+      this.set("relatedTo", currentRelations.set(id, relationName));
     } else {
       const relationMap = new Map();
 
@@ -288,12 +288,12 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
    * @returns {boolean} True if the relation was removed, false otherwise.
    */
   removeRelation(id: string): boolean {
-    const currentRelation = this.getRelations();
+    const currentRelations = this.getRelations();
     let wasThereRelationToRemove = false;
 
-    if (currentRelation) {
-      wasThereRelationToRemove = currentRelation.delete(id);
-      this.set("relatedTo", currentRelation);
+    if (currentRelations) {
+      wasThereRelationToRemove = currentRelations.delete(id);
+      this.set("relatedTo", currentRelations);
     }
 
     return wasThereRelationToRemove;

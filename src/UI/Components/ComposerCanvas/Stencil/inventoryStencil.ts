@@ -4,6 +4,7 @@ import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Queries";
 import { ServiceEntityBlock } from "../Shapes";
 import { toggleDisabledStencil, createStencilElement } from "./helpers";
+import { findFullInterServiceRelations } from "../Helpers/relations";
 
 const GRID_SIZE = 8;
 const PADDING_S = GRID_SIZE;
@@ -83,7 +84,6 @@ export class InventoryStencilTab {
         "standard.Path": ["description"],
       },
       dragStartClone: (cell: dia.Cell) => {
-        console.log("Composer: dragStartClone", cell);
         const entity = new ServiceEntityBlock({
           serviceModel: cell.get("serviceModel"),
           isCore: false,
@@ -107,7 +107,7 @@ export class InventoryStencilTab {
         cloned.set("isFromInventoryStencil", el.get("isFromInventoryStencil"));
         cloned.set("isBlockedFromEditing", el.get("isBlockedFromEditing"));
         cloned.set("stencilName", el.get("stencilName"));
-        console.log("Composer: dragEndClone", cloned);
+
         return cloned;
       },
       layout: {

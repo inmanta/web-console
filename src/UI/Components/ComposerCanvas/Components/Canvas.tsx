@@ -62,6 +62,7 @@ export const Canvas: React.FC<Props> = ({ editable }) => {
     }
 
     const connectionRules = createConnectionRules(serviceModels, {});
+
     const actions = diagramInit(
       Canvas,
       (newScroller) => {
