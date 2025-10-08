@@ -1,0 +1,5 @@
+change-type: patch
+description: Update the orderBy parameter to be an array of objects in the GetPartialNotifications hook
+destination-branches:
+- master
+sections: {}
