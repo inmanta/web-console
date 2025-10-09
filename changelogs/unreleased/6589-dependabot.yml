@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump react-router from 7.9.3 to 7.9.4
+destination-branches:
+- master
+sections: {}
