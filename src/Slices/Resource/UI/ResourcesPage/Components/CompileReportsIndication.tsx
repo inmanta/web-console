@@ -8,13 +8,12 @@ const pendingAnimation = keyframes`
 `;
 
 export const CompileReportsIndication = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 10px;
   height: 10px;
-  margin-left: 10px;
-  position: relative;
   &::before {
-    position: absolute;
-    top: 1px;
     content: "";
     background-color: var(--pf-t--global--color--nonstatus--blue--default);
     width: 8px;
