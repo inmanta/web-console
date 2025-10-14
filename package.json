@@ -106,7 +106,7 @@
     "regenerator-runtime": "^0.14.1",
     "rimraf": "^6.0.1",
     "ts-prune": "^0.10.3",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.44.1",
     "vite": "^7.1.9",
     "vite-plugin-mkcert": "^1.17.8",
