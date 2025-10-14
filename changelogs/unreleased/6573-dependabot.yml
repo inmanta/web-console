@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump eslint-plugin-testing-library from 7.6.6 to 7.8.1
+destination-branches:
+- master
+sections: {}

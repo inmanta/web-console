@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump mocha from 11.7.2 to 11.7.4
+destination-branches:
+- master
+sections: {}
