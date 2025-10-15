@@ -1272,7 +1272,7 @@ __metadata:
     file-saver: "npm:^2.0.5"
     globals: "npm:^16.3.0"
     graphql: "npm:^16.11.0"
-    graphql-request: "npm:^7.2.0"
+    graphql-request: "npm:^7.3.0"
     jest-axe: "npm:^10.0.0"
     jsdom: "npm:^26.1.0"
     keycloak-js: "npm:^26.2.0"
@@ -7254,14 +7254,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-request@npm:^7.2.0":
-  version: 7.2.0
-  resolution: "graphql-request@npm:7.2.0"
+"graphql-request@npm:^7.3.0":
+  version: 7.3.0
+  resolution: "graphql-request@npm:7.3.0"
   dependencies:
     "@graphql-typed-document-node/core": "npm:^3.2.0"
   peerDependencies:
     graphql: 14 - 16
-  checksum: 10/532e3e094cac2ce7cc4e104e92c33dd53e9ef77a1c6ee6977545f0f8aca1098a28ce0873c7fe50c2e9a5460ace351060603a98021ef96107512b458a13e42994
+  checksum: 10/ca35078ef3e10fdd6b7b05981c9c9ed26ca6cab2292dfc51e97bab2460e962d7ee8d7d60d5b723b6f396ccb6352f721c398f576803d6e56dd29f8561da0e289b
   languageName: node
   linkType: hard
 
