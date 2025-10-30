@@ -1,7 +1,7 @@
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { createContext } from "react";
 import { ServiceEntityShape } from "../UI";
-import { Inventories, InstanceWithRelations } from "@/Data/Queries";
+import { Inventories } from "@/Data/Queries";
 import { CanvasHandlers, RelationsDictionary } from ".";
 import { dia, ui } from "@inmanta/rappid";
 
@@ -28,6 +28,7 @@ interface ComposerContextInterface {
     scroller: ui.PaperScroller | null;
     paper: dia.Paper | null;
     graph: dia.Graph | null;
+    editable: boolean;
 }
 
 export const composerContext: ComposerContextInterface = {
@@ -52,6 +53,7 @@ export const composerContext: ComposerContextInterface = {
     scroller: null,
     paper: null,
     graph: null,
+    editable: false,
 }
 
 export const ComposerContext = createContext(composerContext)

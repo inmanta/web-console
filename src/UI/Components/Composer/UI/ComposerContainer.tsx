@@ -18,6 +18,16 @@ border: 1px solid var(--pf-t--global--border--color--default);
 .joint-toolbar.joint-theme-default {
   background-color: var(--pf-t--global--background--color--primary--default);
 }
+
+#tabs-toolbar.joint-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 52px;
+  z-index: 2;
+  border: 0;
+}
 .joint-paper-scroller.joint-theme-default {
   background-color: var(--pf-t--global--background--color--secondary--default);
 }
@@ -35,7 +45,11 @@ button.joint-widget.joint-theme-default {
 }
 
 .joint-stencil {
+  position: absolute;
   top: 52px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border: 0;
   background-color: var(--pf-t--global--background--color--primary--default);
 

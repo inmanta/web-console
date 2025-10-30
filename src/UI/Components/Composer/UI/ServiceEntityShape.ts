@@ -13,18 +13,20 @@ import {
 import { EmbeddedEntity, InstanceAttributeModel, InterServiceRelation, ServiceModel } from "@/Core";
 import { RelationsDictionary } from "../Data";
 
-
-interface ServiceEntityOptions {
-    type: EntityType;
+export interface ServiceEntityBase {
+    entityType: EntityType;
     serviceModel: ServiceModel | EmbeddedEntity;
-    attributes: InstanceAttributeModel;
+    instanceAttributes: InstanceAttributeModel;
+    readonly: boolean;
+    isNew: boolean;
     rootEntities: Record<string, string[]>;
     interServiceRelations: Record<string, string[]>;
     embeddedEntities: Record<string, string[]>;
-    readonly: boolean;
-    isNew: boolean;
-    lockedOnCanvas: boolean;
     id: string;
+}
+
+export interface ServiceEntityOptions extends ServiceEntityBase {
+    lockedOnCanvas: boolean;
     relationsDictionary: RelationsDictionary;
 }
 
@@ -33,9 +35,9 @@ interface ColumnData {
     [key: string]: unknown;
 }
 
-type EntityType = "core" | "embedded" | "relation";
+export type EntityType = "core" | "embedded" | "relation";
 
-const HeaderColors: Record<EntityType, string> = {
+export const HeaderColors: Record<EntityType, string> = {
     core: t_chart_color_yellow_300.var,
     embedded: t_chart_color_blue_400.var,
     relation: t_chart_color_purple_300.var,
@@ -46,7 +48,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     connections: Map<string, string[]>;
     serviceModel: ServiceModel | EmbeddedEntity;
     relationsDictionary: RelationsDictionary;
-    attributes: InstanceAttributeModel;
+    instanceAttributes: InstanceAttributeModel;
     sanitizedAttrs: InstanceAttributeModel;
     readonly: boolean;
     isNew: boolean;
@@ -59,8 +61,8 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         this.connections = new Map<string, string[]>();
         this.serviceModel = initOptions.serviceModel;
         this.relationsDictionary = initOptions.relationsDictionary;
-        this.attributes = initOptions.attributes;
-        this.sanitizedAttrs = JSON.parse(JSON.stringify(initOptions.attributes));
+        this.instanceAttributes = initOptions.instanceAttributes;
+        this.sanitizedAttrs = JSON.parse(JSON.stringify(initOptions.instanceAttributes));
         this.readonly = initOptions.readonly;
         this.isNew = initOptions.isNew;
         this.lockedOnCanvas = initOptions.lockedOnCanvas;
@@ -76,7 +78,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         // See https://resources.jointjs.com/tutorial/ts-shape for more details.
         return util.defaultsDeep(
             {
-                type: "app.ServiceEntityBlock",
+                type: "app.ServiceEntityShape",
                 columns: [],
                 padding: { top: 40, bottom: 10, left: 10, right: 10 },
                 size: { width: 264 },
@@ -248,7 +250,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     }
 
     private _initializeFromOptions(initOptions: ServiceEntityOptions) {
-        const { type, interServiceRelations, embeddedEntities, rootEntities } = initOptions;
+        const { entityType: type, interServiceRelations, embeddedEntities, rootEntities } = initOptions;
         this.attr(["header", "fill"], HeaderColors[type]);
         this.setDisplayName();
 

@@ -1,8 +1,7 @@
 import { dia, shapes } from "@inmanta/rappid";
 import { LinkShape } from "./LinkShape";
-import { checkIfConnectionIsAllowed, getEntitiesFromCanvas } from "../Data/Helpers";
+import { getEntitiesFromCanvas } from "../Data/Helpers";
 import { routerNamespace, anchorNamespace } from ".";
-import { RelationsDictionary } from "../Data/Helpers";
 import { ServiceEntityShape } from "./ServiceEntityShape";
 
 export class ComposerPaper {

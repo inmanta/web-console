@@ -36,10 +36,10 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
         }
     }, [serviceCatalogQuery.isSuccess]);
 
-    const graph = new dia.Graph({}, { cellNamespace: shapes });
-    const paper = new ComposerPaper(graph, editable).paper;
-
-    const scroller = new ui.PaperScroller({
+    // Create graph, paper, and scroller only once using useMemo to prevent recreation on every render
+    const graph = useMemo(() => new dia.Graph({}, { cellNamespace: shapes }), []);
+    const paper = useMemo(() => new ComposerPaper(graph, editable).paper, [graph, editable]);
+    const scroller = useMemo(() => new ui.PaperScroller({
         paper,
         cursor: "grab",
         baseWidth: 1000,
@@ -54,7 +54,7 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
                 allowNegativeBottomRight: true,
             };
         },
-    });
+    }), [paper]);
 
     return (
         <ComposerContext.Provider value={{
@@ -67,6 +67,7 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
             graph: graph,
             scroller: scroller,
             relationsDictionary: relationsDictionary,
+            editable: editable,
         }}>
             <ComposerContainer>
                 <LeftSidebar />
