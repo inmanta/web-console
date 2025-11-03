@@ -52,7 +52,7 @@ pipeline {
                             dir('web-console') {
                                 sh '''yarn run build;
                                 sudo systemctl restart docker && sudo docker network prune -f;
-                                yarn run install:orchestrator:ci;
+                                yarn run install:orchestrator:ci release='8-dev';
                                 yarn run cypress-test:iso;'''
                             }
                         }
@@ -72,7 +72,7 @@ pipeline {
                         sh '''npx junit-merge -d cypress/reports/junit -o cypress/reports/cypress-report.xml'''
                     }
                     junit 'web-console/junit.xml'
-                    cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
+                    recordCoverage(tools: [[parser: 'COBERTURA']], sourceCodeRetention: 'NEVER')
                     archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**', allowEmptyArchive: true, onlyIfSuccessful: false
                     deleteDir()
                 }
