@@ -25,6 +25,7 @@ export const ToastAlertMessage: React.FC<Props> = ({ message, id, setMessage, va
         variant={variant}
         title={message}
         data-testid={`${id}-message`}
+        timeout={5000}
         actionClose={
           <AlertActionCloseButton
             data-testid={`${id}-close-message`}

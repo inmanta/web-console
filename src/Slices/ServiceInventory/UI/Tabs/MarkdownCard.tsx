@@ -16,7 +16,7 @@ interface Props {
  *  @prop {string} web_title - The title of the web page.
  * @returns {React.FC} The rendered MarkdownCard component.
  */
-export const MarkdownCard = ({ attributeValue, web_title }: Props) => {
+export const MarkdownCard: React.FC<Props> = ({ attributeValue, web_title }) => {
   const data = typeof attributeValue === "string" ? attributeValue : JSON.stringify(attributeValue);
 
   return (

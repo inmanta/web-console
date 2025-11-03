@@ -25,6 +25,7 @@ export const ErrorView: React.FC<Props> = ({
     <Delayed delay={delay}>
       <EmptyState
         headingLevel="h2"
+        data-testid="ErrorView"
         icon={ExclamationTriangleIcon}
         titleText={<>{title || words("error")}</>}
         {...props}

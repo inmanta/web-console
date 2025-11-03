@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump eslint-plugin-prettier from 5.5.1 to 5.5.4
+destination-branches:
+- master
+sections: {}

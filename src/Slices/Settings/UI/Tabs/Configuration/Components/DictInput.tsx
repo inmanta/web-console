@@ -39,6 +39,7 @@ export const DictInputWithRow: React.FC<Props> = ({ info }) => {
             newEntry={newEntry}
             setNewEntry={setNewEntry}
             isDeleteEntryAllowed={isDeleteEntryAllowed}
+            isDisabled={info.protected}
           />
         </FlexItem>
 

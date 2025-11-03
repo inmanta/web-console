@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump globals from 15.15.0 to 16.3.0
+destination-branches:
+- master
+sections: {}

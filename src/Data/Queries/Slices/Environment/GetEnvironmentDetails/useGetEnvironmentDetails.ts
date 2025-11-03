@@ -34,7 +34,7 @@ export const useGetEnvironmentDetails = (): GetEnvironmentDetails => {
         queryFn: () => get(`/api/v2/environment/${id}?details=true`),
         retry: false,
         select: (data) => data.data,
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
       }),
   };
 };

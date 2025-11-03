@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useState } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 import {
   Dropdown,
   DropdownItem,
@@ -28,12 +28,12 @@ import { Item, OnUpdate } from "./Item";
  *
  * @property {(event?: MouseEvent) => void} onClose - Function to handle drawer closing
  * @property {boolean} isDrawerOpen - Whether the drawer is currently open
- * @property {MutableRefObject<HTMLDivElement | undefined>} drawerRef - Ref to the drawer DOM element
+ * @property {RefObject<HTMLDivElement | null>} drawerRef - Ref to the drawer DOM element
  */
 interface Props {
   onClose(event?: MouseEvent): void;
   isDrawerOpen: boolean;
-  drawerRef: MutableRefObject<HTMLDivElement | undefined>;
+  drawerRef: RefObject<HTMLDivElement | null>;
 }
 
 /**
@@ -55,18 +55,26 @@ export const Drawer: React.FC<Props> = ({ onClose, isDrawerOpen, drawerRef }) =>
   });
 
   useEffect(() => {
-    const close = (event) => {
+    if (!isDrawerOpen) {
+      return;
+    }
+
+    const close = (event: MouseEvent) => {
       const target = event.target as Node;
       const wasTargetOutsideSidebar = !drawerRef.current?.contains(target);
 
-      if (isDrawerOpen && wasTargetOutsideSidebar) {
+      if (wasTargetOutsideSidebar) {
         onClose();
       }
     };
 
-    document.addEventListener("click", close);
+    // Defer event listener attachment to prevent race condition with opening click
+    const timeoutId = setTimeout(() => {
+      document.addEventListener("click", close);
+    }, 0);
 
     return () => {
+      clearTimeout(timeoutId);
       document.removeEventListener("click", close);
     };
   }, [drawerRef, isDrawerOpen, onClose]);

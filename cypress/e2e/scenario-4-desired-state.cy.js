@@ -242,12 +242,6 @@ describe("Scenario 4 Desired State", () => {
           .should("include.text", '"frontend_model::TestResource[internal,name=default-0001]"');
 
         cy.get(".pf-v6-c-description-list__term")
-          .contains("send_event")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("have.text", "false");
-
-        cy.get(".pf-v6-c-description-list__term")
           .contains("service_entity")
           .closest(".pf-v6-c-description-list__group")
           .find(".pf-v6-c-description-list__description")

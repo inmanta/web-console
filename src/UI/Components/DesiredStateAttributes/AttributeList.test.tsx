@@ -3,7 +3,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
-import { AttributeList, getHeightEditor } from "./AttributeList";
+import { AttributeList, getDefaultHeightEditor } from "./AttributeList";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 import { attributes, classified } from "./Data";
 
@@ -120,7 +120,7 @@ test("Given the getHeightEditor function When called with different attribute ty
   ];
 
   testCases.forEach(({ attribute, expected }) => {
-    const height = getHeightEditor(attribute as ClassifiedAttribute);
+    const height = getDefaultHeightEditor(attribute as ClassifiedAttribute);
     expect(height).toBe(expected);
   });
 });

@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump msw from 2.3.2 to 2.10.5
+destination-branches:
+- master
+sections: {}

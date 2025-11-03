@@ -21,8 +21,11 @@ const dict = {
   submit: "Submit",
   confirm: "Confirm",
   cancel: "Cancel",
+  collapse: "Collapse",
   deploy: "Deploy",
+  expand: "Expand",
   save: "Save",
+  reset: "Reset",
   yes: "Yes",
   no: "No",
   null: "null",
@@ -48,11 +51,14 @@ const dict = {
   "copy.clipboard": "Copy to clipboard",
   noData: "There is no data available to display.",
   success: "Success",
+  "success.title": "Success",
+  "info.title": "Info",
 
   /**
    * Error related text
    */
   error: "Something went wrong",
+  "error.title": "Error",
   "error.unknown": "Unknown error",
   "error.general": (message: string) => `The following error occured: ${message}`,
   "error.environment.missing": "Environment is missing",
@@ -232,6 +238,8 @@ const dict = {
   "instanceComposer.zoomHandler.fullscreen.exit": "Exit full screen",
   "instanceComposer.zoomHandler.zoomToFit": "Fit to screen",
   "instanceComposer.zoomHandler.zoom": "Slide to zoom",
+  "instanceComposer.stencil.new": "New",
+  "instanceComposer.stencil.inventory": "Inventory",
 
   /**
    * Service Instance Details text
@@ -264,7 +272,7 @@ const dict = {
   "instanceDetails.tabs.disabled.resources-tooltip":
     "This tab is only available for the latest version.",
   "instanceDetails.documentation.noAttributeForVersion": (attributeName) =>
-    `This version doesn't contain documentation for ${attributeName} yet.`,
+    `There is no documentation for ${attributeName} in this version.`,
   "instanceDetails.documentation.openPreviewer": "Open in Previewer",
   active_attributes: "Active",
   candidate_attributes: "Candidate",
@@ -286,9 +294,10 @@ const dict = {
   You are performing an update on the ${selectedSet} in expert mode, are you certain you want to proceed?
   `,
   "instanceDetails.expert.confirm.warning": "DANGER: This is an irreversible action!",
-  "instanceDetails.expert.confirm.state.message": (instance, state) => `
-   Are you certain you want to FORCE update the state to : ${state} for ${instance}?
-  `,
+  "instanceDetails.expert.confirm.state.message": (instance, state) =>
+    `\n   Are you certain you want to FORCE update the state to : ${state} for ${instance}?\n  `,
+  "instanceDetails.expert.forceUpdate": "Force Update",
+  "instanceDetails.expert.editModal.success": "Attributes updated successfully",
   "instanceDetails.API.message.update": (username) =>
     username ? `Triggered from the console by ${username}` : "Triggered from the console",
   "instanceDetails.state.noOperation": "no operation",
@@ -508,6 +517,8 @@ const dict = {
   "resources.empty.message": "No resources found",
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
+  "discoveredResourceDetails.title": "Discovered Resource Details",
+  "discoveredResourceDetails.empty": "No discovered resource details found",
   "resources.column.type": "Type",
   "resources.column.agent": "Agent",
   "resources.column.value": "Value",
@@ -560,8 +571,12 @@ const dict = {
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",
+  "discovered.column.agent": "Agent",
+  "discovered.column.value": "Value",
+  "discovered.column.type": "Type",
   "discovered.column.managed_resource": "Managed resource",
   "discovered.column.discovery_resource": "Discovery resource",
+  "discovered.column.show_details": "Show Details",
   "discovered_resources.title": "Discovered Resources",
   "discovered_resources.values": "values",
   "discovered_resources.show_resource.managed": "Show managed resource",
@@ -630,6 +645,8 @@ const dict = {
     <>
       This action cannot be undone. This will permanently remove everything from the{" "}
       <b>{environment}</b> environment and reset it to its initial state.
+      <br />
+      Only the <b>configuration options</b> will be preserved in their current state.
     </>
   ),
   "home.environment.promptInput": (environment: string) => (
@@ -678,6 +695,9 @@ const dict = {
   "settings.tabs.token.generate": "Generate",
   "settings.update": "Setting Changed",
   "settings.warning.update": "Changed value has not been saved",
+  "settings.protected.message": (protected_by: string) =>
+    `This setting is protected by ${protected_by}, and cannot be changed.`,
+  "settings.protected.message.default": "This setting is protected, and cannot be changed.",
 
   /**
    * Status
@@ -851,6 +871,13 @@ const dict = {
   "userManagement.deleteUserMessage": (username: string) =>
     `Are you sure you want to delete user ${username}?`,
   "userManagement.empty.message": "No users found",
+  "userManagement.roles": "Roles",
+  "userManagement.roles.placeholder": "Select roles...",
+  "userManagement.roles.none": "None",
+  "userManagement.roles.unavailable": "No roles available",
+  "userManagement.roles.edit": "Edit roles",
+  "userManagement.environment": "Environment",
+  "userManagement.role": "Role",
 
   /**
    * Markdown Previewer related text

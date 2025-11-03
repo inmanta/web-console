@@ -1,0 +1,5 @@
+change-type: patch
+description: Items in the sidebar are now disabled when already present in the canvas on initial load.
+destination-branches:
+- master
+sections: {}

@@ -1,11 +1,11 @@
-import React, { act } from "react";
+import { act } from "react";
 import { TextInputTypes } from "@patternfly/react-core";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { TextListFormInput } from "./TextListFormInput";
 
 describe("TextListInputField", () => {
-  const handleClick = jest.fn();
+  const handleClick = vi.fn();
 
   it("Should render an inputfield with chips when values are preset.", () => {
     render(

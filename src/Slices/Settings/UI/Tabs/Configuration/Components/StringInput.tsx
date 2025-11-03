@@ -16,6 +16,7 @@ export const StringInput: React.FC<Props> = ({ info }) => {
           onChange={(_event, value) => info.set(value)}
           aria-label="string input"
           type="text"
+          isDisabled={info.protected}
         />
       </FlexItem>
 

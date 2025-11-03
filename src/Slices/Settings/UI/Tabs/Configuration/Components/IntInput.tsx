@@ -27,6 +27,7 @@ export const IntInput: React.FC<Props> = ({ info }) => {
           minusBtnAriaLabel="minus"
           plusBtnAriaLabel="plus"
           widthChars={10}
+          isDisabled={info.protected}
         />
       </FlexItem>
 

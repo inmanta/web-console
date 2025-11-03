@@ -97,7 +97,7 @@ export const useGetInstanceEvents = (params: GetInstanceEventParams): GetInstanc
       useQuery({
         queryKey: getInstanceEventsKey.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),

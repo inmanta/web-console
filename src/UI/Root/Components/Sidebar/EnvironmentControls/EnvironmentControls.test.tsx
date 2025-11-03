@@ -1,8 +1,8 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { QueryControlProvider } from "@/Data/Queries";
@@ -11,8 +11,6 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ModalProvider } from "../../ModalProvider";
 import { EnvironmentControls } from "./EnvironmentControls";
-
-expect.extend(toHaveNoViolations);
 
 function setup() {
   const component = (
@@ -65,7 +63,8 @@ describe("EnvironmentControls", () => {
         return HttpResponse.json();
       })
     );
-    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+    const haltEventSpy = vi.fn();
+    document.addEventListener("halt-event", haltEventSpy);
 
     const { component } = setup();
 
@@ -79,15 +78,18 @@ describe("EnvironmentControls", () => {
 
     await userEvent.click(await screen.findByText("Yes"));
 
-    expect(dispatchEventSpy).toHaveBeenCalledTimes(3);
+    expect(haltEventSpy).toHaveBeenCalledTimes(1);
   });
 
-  test("EnvironmentControls don\\t trigger backend call when dialog is not confirmed", async () => {
+  test("EnvironmentControls should not trigger backend call when dialog is not confirmed", async () => {
+    const requestSpy = vi.fn();
+
     server.use(
       http.get("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", () => {
         return HttpResponse.json({ data: EnvironmentDetails.a });
       }),
       http.post("/api/v2/actions/environment/halt", () => {
+        requestSpy();
         return HttpResponse.json();
       })
     );
@@ -102,7 +104,7 @@ describe("EnvironmentControls", () => {
 
     await userEvent.click(await screen.findByText("No"));
 
-    expect(fetchMock.mock.calls).toHaveLength(0);
+    expect(requestSpy).not.toHaveBeenCalled();
   });
 
   test("EnvironmentControls resume the environment when clicked and the environment is halted", async () => {
@@ -114,7 +116,10 @@ describe("EnvironmentControls", () => {
         return HttpResponse.json();
       })
     );
-    const dispatchEventSpy = jest.spyOn(document, "dispatchEvent");
+    const haltEventSpy = vi.fn();
+    const resumeEventSpy = vi.fn();
+    document.addEventListener("halt-event", haltEventSpy);
+    document.addEventListener("resume-event", resumeEventSpy);
 
     const { component } = setup();
 
@@ -130,6 +135,64 @@ describe("EnvironmentControls", () => {
 
     await userEvent.click(await screen.findByText("Yes"));
 
-    expect(dispatchEventSpy).toHaveBeenCalledTimes(3);
+    expect(haltEventSpy).toHaveBeenCalledTimes(0);
+    expect(resumeEventSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test("EnvironmentControls should show error message when halt fails", async () => {
+    server.use(
+      http.get("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", () => {
+        return HttpResponse.json({ data: EnvironmentDetails.a });
+      }),
+      http.post("/api/v2/actions/environment/halt", () => {
+        return HttpResponse.error();
+      })
+    );
+    const haltEventSpy = vi.fn();
+    document.addEventListener("halt-event", haltEventSpy);
+
+    const { component } = setup();
+
+    render(component);
+
+    const stopButton = await screen.findByText("STOP");
+
+    expect(stopButton).toBeVisible();
+
+    await userEvent.click(stopButton);
+
+    await userEvent.click(await screen.findByText("Yes"));
+
+    expect(haltEventSpy).toHaveBeenCalledTimes(1);
+    expect(await screen.findByText("Error")).toBeVisible();
+  });
+
+  test("EnvironmentControls should show error message when resume fails", async () => {
+    server.use(
+      http.get("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", () => {
+        return HttpResponse.json({ data: { ...EnvironmentDetails.a, halted: true } });
+      }),
+      http.post("/api/v2/actions/environment/resume", () => {
+        return HttpResponse.error();
+      })
+    );
+
+    const resumeEventSpy = vi.fn();
+    document.addEventListener("resume-event", resumeEventSpy);
+
+    const { component } = setup();
+
+    render(component);
+
+    const startButton = await screen.findByText("Resume");
+
+    expect(startButton).toBeVisible();
+
+    await userEvent.click(startButton);
+
+    await userEvent.click(await screen.findByText("Yes"));
+
+    expect(resumeEventSpy).toHaveBeenCalledTimes(1);
+    expect(await screen.findByText("Error")).toBeVisible();
   });
 });

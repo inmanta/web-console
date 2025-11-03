@@ -6,4 +6,10 @@
 };
  */
 
+// local auth
+// window.auth = {
+//   method: "database",
+//   provider: "policy-engine",
+// };
+
 export const features = [];

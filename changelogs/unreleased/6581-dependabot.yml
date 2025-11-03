@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump @types/node from 24.5.2 to 24.6.1
+destination-branches:
+- master
+sections: {}

@@ -1,0 +1,5 @@
+change-type: patch
+description: Improve clear environment message to warn the user about the consequences.
+destination-branches:
+- master
+sections: {}

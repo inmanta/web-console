@@ -127,6 +127,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
     },
     onError: (error) => {
       setErrorMessage(error.message);
+      closeCallback();
     },
   });
 

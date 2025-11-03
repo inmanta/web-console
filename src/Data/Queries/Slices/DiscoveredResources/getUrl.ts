@@ -17,7 +17,9 @@ export const getUrl = (params: GetDiscoveredResourcesParams): string => {
       ? `&${qs.stringify(
           {
             filter: {
-              discovered_resource_id: filter.discovered_resource_id,
+              agent: filter.agent,
+              resource_type: filter.type,
+              resource_id_value: filter.value,
             },
           },
           { allowDots: true, arrayFormat: "repeat" }

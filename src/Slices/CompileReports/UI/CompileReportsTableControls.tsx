@@ -22,7 +22,7 @@ export const CompileReportsTableControls: React.FC<Props> = ({
       <ToolbarContent>
         <CompileReportsFilterWidget filter={filter} setFilter={setFilter} />
         <ToolbarItem variant="separator" />
-        <CompileWidget afterTrigger={afterRecompile} isToastVisible />
+        <CompileWidget afterTrigger={afterRecompile} />
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>
     </Toolbar>

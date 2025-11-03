@@ -1,5 +1,4 @@
 import assert from "assert";
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ServiceInventoryContext } from "@/Slices/ServiceInventory/UI/ServiceInventory";
@@ -29,7 +28,7 @@ test("SummaryChart renders with no instances", () => {
 });
 
 test("SummaryChart displays only labels summary of the categories that can exist", async () => {
-  const testFn = jest.fn();
+  const testFn = vi.fn();
 
   render(
     <ServiceInventoryContext.Provider
@@ -57,7 +56,7 @@ test("SummaryChart displays only labels summary of the categories that can exist
 });
 
 test("SummaryChart labels displayed are being clickable with callback passing labels array for the filtering", async () => {
-  const testFn = jest.fn();
+  const testFn = vi.fn();
 
   render(
     <ServiceInventoryContext.Provider

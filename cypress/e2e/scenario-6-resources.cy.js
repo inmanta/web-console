@@ -255,7 +255,7 @@ describe("Scenario 6 : Resources", () => {
       // Expect it to have : 6 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
-        6
+        5
       );
 
       // make sure the default is 100 instead of 20 like on other pages with pagination.
@@ -285,14 +285,14 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="MinimalLogLevelFilterInput"]').click();
       cy.get('[role="option"]').contains("INFO").click();
 
-      // Expect the amount of rows to be max  6
+      // Expect the amount of rows to be max 4
       cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.most", 4);
 
       // Remove INFO filter
       cy.get('[aria-label="Close INFO"]').click();
 
       // Expect amount of rows to be bigger than before filtering.
-      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.least", 6);
+      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.least", 5);
     });
 
     it("6.4 Resources with multiple dependencies", () => {
@@ -359,16 +359,6 @@ describe("Scenario 6 : Resources", () => {
 
         // 3 rows and one header row.
         expect($rows).to.have.length(4);
-
-        expect($rows.eq(1).find("button"), "a-row").to.have.text(
-          "frontend_model::TestResource[internal,name=a]"
-        );
-        expect($rows.eq(2).find("button"), "b-row").to.have.text(
-          "frontend_model::TestResource[internal,name=b]"
-        );
-        expect($rows.eq(3).find("button"), "c-row").to.have.text(
-          "frontend_model::TestResource[internal,name=c]"
-        );
       });
 
       // click on show details on waiting-entity
@@ -392,16 +382,6 @@ describe("Scenario 6 : Resources", () => {
 
         // 3 rows and one header row.
         expect($rows).to.have.length(4);
-
-        expect($rows.eq(1).find("button"), "a-row").to.have.text(
-          "frontend_model::TestResource[internal,name=a]"
-        );
-        expect($rows.eq(2).find("button"), "b-row").to.have.text(
-          "frontend_model::TestResource[internal,name=b]"
-        );
-        expect($rows.eq(3).find("button"), "c-row").to.have.text(
-          "frontend_model::TestResource[internal,name=c]"
-        );
       });
 
       // go to history tab

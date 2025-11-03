@@ -3,12 +3,15 @@ import { userEvent } from "@testing-library/user-event";
 import { defaultServer, serverFailedActions } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
 
-const mockedUsedNavigate = jest.fn();
+const mockedUsedNavigate = vi.hoisted(() => vi.fn());
 
-jest.mock("react-router", () => ({
-  ...jest.requireActual("react-router"),
-  useNavigate: () => mockedUsedNavigate,
-}));
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useNavigate: () => mockedUsedNavigate,
+  };
+});
 
 describe("Page Actions - Success", () => {
   const server = defaultServer;
@@ -20,6 +23,7 @@ describe("Page Actions - Success", () => {
   // so they don't affect other tests.
   afterEach(() => {
     server.resetHandlers();
+    vi.clearAllMocks();
   });
 
   // Clean up after the tests are finished.
@@ -45,8 +49,8 @@ describe("Page Actions - Success", () => {
 
     await userEvent.click(expertDropdown);
 
-    // expect 16 menu items (1 for the  destroy, and 15 state options)
-    expect(screen.getAllByRole("menuitem")).toHaveLength(16);
+    // expect 20 menu items (1 for the destroy action, and 19 others for state options)
+    expect(screen.getAllByRole("menuitem")).toHaveLength(20);
 
     const stateUp = screen.getByRole("menuitem", { name: "up" });
 
@@ -217,6 +221,7 @@ describe("Page Actions - Failed", () => {
   // so they don't affect other tests.
   afterEach(() => {
     server.resetHandlers();
+    vi.clearAllMocks();
   });
 
   // Clean up after the tests are finished.
@@ -242,8 +247,8 @@ describe("Page Actions - Failed", () => {
 
     await userEvent.click(expertDropdown);
 
-    // expect 16 menu items (1 for the  destroy, and 15 state options)
-    expect(screen.getAllByRole("menuitem")).toHaveLength(16);
+    // expect 20 menu items (1 for the destroy action, and 19 others for state options)
+    expect(screen.getAllByRole("menuitem")).toHaveLength(20);
 
     const stateUp = screen.getByRole("menuitem", { name: "up" });
 
@@ -358,7 +363,7 @@ describe("Page Actions - Failed", () => {
 
     await userEvent.click(confirmButton);
 
-    expect(screen.getByRole("dialog")).toBeVisible();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     const errorToast = screen.getByTestId("error-toast-actions-error-message");
 
     expect(errorToast).toBeVisible();

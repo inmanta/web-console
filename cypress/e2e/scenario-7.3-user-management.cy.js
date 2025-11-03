@@ -1,4 +1,120 @@
 if (Cypress.env("local-auth")) {
+  it("should display the roles for a user, and allow them to be added and removed", () => {
+    cy.visit("/console/");
+
+    cy.get('[id="pf-login-username-id"]').type("admin");
+    cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
+
+    cy.get("h1").contains("Home").should("be.visible");
+
+    cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
+    cy.get("[id=toggle-button]").click();
+
+    cy.get('[role="menuitem"]').contains("User Management").click();
+
+    // For Admin Assert "None" in Roles column and expand
+    cy.get('tr[aria-label="row-admin"]').within(() => {
+      // Check that the first cell contains an SVG icon before the username
+      cy.get("td")
+        .first()
+        .within(() => {
+          cy.get("svg").should("exist");
+          cy.contains("admin");
+        });
+      // Assert the Roles column contains a button with text "None"
+      cy.get('td[data-label="Roles"] button').should("contain", "None");
+      // Click the "None" button
+      cy.get('td[data-label="Roles"] button').click();
+    });
+
+    cy.get('tr[aria-label="expanded-row-admin"]')
+      .should("be.visible")
+      .within(() => {
+        // Assert the nested table exists
+        cy.get('table[aria-label="Nested-Roles-Table"]')
+          .should("exist")
+          .within(() => {
+            // Assert there is exactly one environment row (tbody > tr)
+            cy.get("tbody tr").should("have.length", 1);
+            // Assert the first cell contains "env"
+            cy.get("tbody tr").first().find("td").first().should("contain", "env");
+            // Assert the select button exists and is clickable
+            cy.get('button[aria-label="role-selector"]')
+              .should("exist")
+              .and("contain", "Edit roles")
+              .click();
+          });
+      });
+
+    cy.get("div#role-selector")
+      .should("be.visible")
+      .within(() => {
+        cy.get('ul[role="listbox"]').within(() => {
+          cy.contains("li", "environment-admin").should("exist");
+          cy.contains("li", "environment-expert-admin").should("exist");
+          cy.contains("li", "noc").should("exist");
+          cy.contains("li", "operator").should("exist");
+          cy.contains("li", "read-only").should("exist");
+          // Click the first three roles
+          cy.contains("li", "environment-admin")
+            .find('input[type="checkbox"]')
+            .click({ force: true });
+          cy.contains("li", "environment-expert-admin")
+            .find('input[type="checkbox"]')
+            .click({ force: true });
+          cy.contains("li", "noc").find('input[type="checkbox"]').click({ force: true });
+        });
+      });
+
+    // Click outside to close the dropdown
+    cy.get("body").click(0, 0);
+
+    // Assert the labels are present in the row
+    cy.get(
+      'tr[aria-label="expanded-row-admin"] table[aria-label="Nested-Roles-Table"] tbody tr'
+    ).within(() => {
+      cy.get('[data-testid="role-label-environment-admin"]')
+        .should("exist")
+        .and("contain", "environment-admin");
+      cy.get('[data-testid="role-label-environment-expert-admin"]')
+        .should("exist")
+        .and("contain", "environment-expert-admin");
+      cy.get('[data-testid="role-label-noc"]').should("exist").and("contain", "noc");
+    });
+
+    // Open the dropdown again to remove a role
+    cy.get(
+      'tr[aria-label="expanded-row-admin"] table[aria-label="Nested-Roles-Table"] tbody tr'
+    ).within(() => {
+      cy.get('button[aria-label="role-selector"]').click();
+    });
+    cy.get("div#role-selector")
+      .should("be.visible")
+      .within(() => {
+        cy.get('ul[role="listbox"]').within(() => {
+          cy.contains("li", "environment-expert-admin")
+            .find('input[type="checkbox"]')
+            .click({ force: true });
+        });
+      });
+    // Assert the label for 'environment-expert-admin' is removed, others remain
+    cy.get(
+      'tr[aria-label="expanded-row-admin"] table[aria-label="Nested-Roles-Table"] tbody tr'
+    ).within(() => {
+      cy.get('[data-testid="role-label-environment-admin"]')
+        .should("exist")
+        .and("contain", "environment-admin");
+      cy.get('[data-testid="role-label-noc"]').should("exist").and("contain", "noc");
+      cy.get('[data-testid="role-label-environment-expert-admin"]').should("not.exist");
+    });
+
+    // Assert the Roles column for admin now displays '2 roles' instead of 'None'
+    cy.get('tr[aria-label="row-admin"]').within(() => {
+      cy.get('td[data-label="Roles"] button').should("contain", "environment-admin, noc");
+      cy.get('td[data-label="Roles"] button').should("not.contain", "None");
+    });
+  });
+
   it("should be able to add user", () => {
     cy.visit("/console/");
 
@@ -58,6 +174,7 @@ if (Cypress.env("local-auth")) {
 
     cy.get('[data-testid="user-row"]', { timeout: 20000 }).should("have.length", 6);
   });
+
   it("should be able to change user password", () => {
     cy.visit("/console/");
 

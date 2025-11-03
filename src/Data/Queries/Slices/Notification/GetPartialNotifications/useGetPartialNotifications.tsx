@@ -7,7 +7,7 @@ import { Notification } from "@/Slices/Notification/Core/Domain";
 interface Props {
   envID: string;
   cleared: boolean;
-  orderBy: string;
+  orderBy: Array<{ key: string; order: string }>;
 }
 
 /**
@@ -49,6 +49,22 @@ interface GetNotifications {
 export type PartialNotification = Pick<Notification, "title" | "severity" | "read">;
 
 /**
+ * Converts an orderBy array to GraphQL syntax.
+ * This is a temporary workaround to support the orderBy array in the query.
+ * TODO: Remove this once the backend supports graphql variables.
+ * https://github.com/inmanta/web-console/issues/6587
+ *
+ * @param {Array<{ key: string; order: string }>} orderBy - Array of order by objects
+ * @returns {string} GraphQL formatted orderBy string
+ */
+const formatOrderBy = (orderBy: Array<{ key: string; order: string }>): string => {
+  const formatted = orderBy
+    .map((item) => `{key: "${item.key}", order: "${item.order}"}`)
+    .join(", ");
+  return `[${formatted}]`;
+};
+
+/**
  * React Query hook for fetching notifications using GraphQL.
  *
  * @param {Props} props - The props object containing environment ID, cleared status, and order by.
@@ -59,11 +75,13 @@ export const useGetPartialNotifications = ({
   cleared,
   orderBy,
 }: Props): GetNotifications => {
+  const orderByString = formatOrderBy(orderBy);
+
   const query = gql`
     query {
       notifications(
         filter: { cleared: ${cleared}, environment: "${envID}" }
-        orderBy: { created: "${orderBy}" }
+        orderBy: ${orderByString}
       ) {
         edges {
           node {
@@ -83,7 +101,7 @@ export const useGetPartialNotifications = ({
       useQuery({
         queryKey: GetPartialNotificationsKey.list([envID]),
         queryFn,
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         select: (data) => {
           const notifications = data.data.notifications.edges.map((edge) => edge.node);
           return {

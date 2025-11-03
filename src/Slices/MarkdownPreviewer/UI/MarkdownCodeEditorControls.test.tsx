@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import copy from "copy-to-clipboard";
 import { words } from "@/UI/words";
@@ -6,7 +5,7 @@ import { MarkdownCodeEditorControls, escapeNewlines } from "./MarkdownCodeEditor
 
 // Mock the PatternFly CodeEditorControl component since all we want to test is the onClick event.
 // The original component relies on the Monaco Editor which is not available in the test environment.
-jest.mock("@patternfly/react-code-editor", () => ({
+vi.mock("@patternfly/react-code-editor", () => ({
   CodeEditorControl: ({ onClick, icon, "aria-label": ariaLabel }) => (
     <button onClick={onClick} aria-label={ariaLabel} data-testid={`control-${ariaLabel}`}>
       {icon}
@@ -15,10 +14,12 @@ jest.mock("@patternfly/react-code-editor", () => ({
 }));
 
 // Mock copy-to-clipboard
-jest.mock("copy-to-clipboard", () => jest.fn());
+vi.mock("copy-to-clipboard", () => ({
+  default: vi.fn(),
+}));
 
 afterEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe("CodeEditorControls", () => {
@@ -44,7 +45,7 @@ describe("CodeEditorControls", () => {
     const copyButton = screen.getByTestId("control-Copy");
     fireEvent.click(copyButton);
 
-    expect(copy).toHaveBeenCalledWith(defaultProps.code);
+    expect(vi.mocked(copy)).toHaveBeenCalledWith(defaultProps.code);
   });
 
   it("should copy raw markdown content with escaped newlines when raw copy button is clicked", () => {
@@ -53,7 +54,7 @@ describe("CodeEditorControls", () => {
     const rawCopyButton = screen.getByTestId("control-Copy raw");
     fireEvent.click(rawCopyButton);
 
-    expect(copy).toHaveBeenCalledWith("# Test Markdown\\n\\nThis is a test");
+    expect(vi.mocked(copy)).toHaveBeenCalledWith("# Test Markdown\\n\\nThis is a test");
   });
 });
 

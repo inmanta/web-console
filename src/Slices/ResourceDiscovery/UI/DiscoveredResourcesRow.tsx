@@ -1,96 +1,74 @@
-import React from "react";
-import { CodeEditor, Language } from "@patternfly/react-code-editor";
-import {
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-} from "@patternfly/react-core";
+import React, { useContext } from "react";
+import { Link } from "react-router";
+import { Button } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
-import styled from "styled-components";
 import { DiscoveredResource } from "@/Data/Queries";
-import { Toggle } from "@/UI/Components";
-import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
-import { getThemePreference } from "@/UI/Components/DarkmodeOption";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { DiscoveredResourceLink } from "./Components";
+import { ActionsDropdown } from "./Components";
 
 interface Props {
   row: DiscoveredResource;
-  isExpanded: boolean;
-  onToggle: () => void;
-  numberOfColumns: number;
 }
 
-export const DiscoveredResourceRow: React.FC<Props> = ({
-  row,
-  isExpanded,
-  onToggle,
-  numberOfColumns,
-}) => {
+export const DiscoveredResourceRow: React.FC<Props> = ({ row }) => {
+  const { routeManager } = useContext(DependencyContext);
+
+  const agent = row.agent;
+  const value = row.resource_id_value;
+  const type = row.resource_type;
+
   return (
     <Tbody>
       <Tr aria-label="DiscoveredResourceRow">
-        <Td>
-          <Toggle
-            expanded={isExpanded}
-            onToggle={onToggle}
-            aria-label={`Toggle-${row.discovered_resource_id}`}
-          />
-        </Td>
         <Td
-          dataLabel={words("discovered.column.resource_id")}
-          data-testid={words("discovered.column.resource_id")}
+          dataLabel={words("discovered.column.type")}
+          data-testid={words("discovered.column.type")}
           modifier="truncate"
         >
-          {row.discovered_resource_id}
+          {type}
+        </Td>
+        <Td
+          dataLabel={words("discovered.column.agent")}
+          data-testid={words("discovered.column.agent")}
+          modifier="truncate"
+        >
+          {agent}
+        </Td>
+        <Td
+          dataLabel={words("discovered.column.value")}
+          data-testid={words("discovered.column.value")}
+          modifier="truncate"
+        >
+          {value}
         </Td>
         <Td
           dataLabel={words("discovered.column.managed_resource")}
           data-testid={words("discovered.column.managed_resource")}
           width={15}
-        >
-          <DiscoveredResourceLink resourceUri={row.managed_resource_uri} type="managed" />
-        </Td>
+        ></Td>
         <Td
           dataLabel={words("discovered.column.discovery_resource")}
           data-testid={words("discovered.column.discovery_resource")}
           width={20}
+          isActionCell
         >
-          <DiscoveredResourceLink resourceUri={row.discovery_resource_uri} type="discovery" />
+          <Link
+            to={{
+              pathname: routeManager.getUrl("DiscoveredResourceDetails", {
+                resourceId: row.discovered_resource_id,
+              }),
+              search: location.search,
+            }}
+          >
+            <Button variant="link">{words("discovered.column.show_details")}</Button>
+          </Link>
+          <ActionsDropdown
+            managedResourceUri={row.managed_resource_uri}
+            discoveryResourceUri={row.discovery_resource_uri}
+          />
         </Td>
       </Tr>
-      {isExpanded && (
-        <>
-          <Tr aria-label="Expanded-Discovered-Row" isExpanded={isExpanded}>
-            <Td colSpan={numberOfColumns}>
-              <PaddedDescriptionList isHorizontal>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>{words("discovered_resources.values")}</DescriptionListTerm>
-                  <DescriptionListDescription>
-                    <CodeEditor
-                      code={JSON.stringify(row.values, null, 2)}
-                      isDarkTheme={getThemePreference() === "dark"}
-                      language={Language.json}
-                      isDownloadEnabled
-                      customControls={
-                        <CodeEditorCopyControl code={JSON.stringify(row.values, null, 2)} />
-                      }
-                      isReadOnly
-                      height="400px"
-                    />
-                  </DescriptionListDescription>
-                </DescriptionListGroup>
-              </PaddedDescriptionList>
-            </Td>
-          </Tr>
-        </>
-      )}
     </Tbody>
   );
 };
-
-const PaddedDescriptionList = styled(DescriptionList)`
-  padding-bottom: 1em;
-  padding-top: 1em;
-`;

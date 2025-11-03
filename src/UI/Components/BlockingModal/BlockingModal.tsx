@@ -16,11 +16,16 @@ export const BlockingModal = () => {
       setIsBlockerOpen((state) => !state);
       setMessage(words("environment.resume.process"));
     };
+    const closeModal = () => {
+      setIsBlockerOpen(false);
+    };
 
+    document.addEventListener("close-blocking-modal", closeModal);
     document.addEventListener("halt-event", toggleModalHalt);
     document.addEventListener("resume-event", toggleModalResume);
 
     return () => {
+      document.removeEventListener("close-blocking-modal", closeModal);
       document.removeEventListener("halt-event", toggleModalHalt);
       document.removeEventListener("resume-event", toggleModalResume);
     };
@@ -38,6 +43,7 @@ export const BlockingModal = () => {
         direction={{ default: "column" }}
         justifyContent={{ default: "justifyContentCenter" }}
         alignItems={{ default: "alignItemsCenter" }}
+        style={{ height: "140px" }}
       >
         <FlexItem>
           <Content component="h2">{message}</Content>

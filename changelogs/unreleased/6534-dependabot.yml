@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump @types/loadable__component from 5.13.9 to 5.13.10
+destination-branches:
+- master
+sections: {}

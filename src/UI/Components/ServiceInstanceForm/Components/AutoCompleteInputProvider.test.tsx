@@ -1,18 +1,23 @@
-import React, { act, useState } from "react";
+import { act, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import * as queryModule from "@/Data/Queries/Helpers/useQueries";
 import { MockedDependencyProvider, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
 const server = setupServer(
-  http.get("/lsm/v1/service_inventory/test_entity", () => {
+  http.get("/lsm/v1/service_inventory/test_entity", ({ request }) => {
+    const url = new URL(request.url);
+    const filter = url.searchParams.get("id_or_service_identity");
+    let data = [ServiceInstance.a];
+    if (filter === "ab") {
+      data = [];
+    }
     return HttpResponse.json({
-      data: [ServiceInstance.a],
+      data,
       metadata: {
         total: 0,
         before: 0,
@@ -22,6 +27,7 @@ const server = setupServer(
     });
   })
 );
+
 const TestWrapper = () => {
   const [value, setValue] = useState("");
 
@@ -48,14 +54,6 @@ const TestWrapper = () => {
 
 test("Given the AutoCompleteInputProvider When typing an instance name or id Then the correct request is fired", async () => {
   server.listen();
-  const mockFn = jest.fn();
-
-  jest.spyOn(queryModule, "useGet").mockReturnValue(async (path) => {
-    mockFn(path);
-    const response = await fetch(path);
-
-    return response.json();
-  });
 
   render(<TestWrapper />);
 
@@ -63,38 +61,28 @@ test("Given the AutoCompleteInputProvider When typing an instance name or id The
     "Select an instance of test_entity"
   );
 
-  expect(mockFn.mock.calls[0]).toStrictEqual([
-    "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&",
-  ]);
+  expect(relationInputField).toBeInTheDocument();
 
-  expect(mockFn.mock.calls[1]).toStrictEqual([
-    "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=",
-  ]);
-
-  //fireEvents in that scenario triggers update in the components which then triggers "act warning"
+  // Type 'a' and check input value and option
   await act(async () => {
     fireEvent.change(relationInputField, { target: { value: "a" } });
   });
+  expect(relationInputField).toHaveValue("a");
+  expect(await screen.findByText("service_name_a")).toBeInTheDocument();
 
-  expect(mockFn.mock.calls[2]).toStrictEqual([
-    "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=a",
-  ]);
-
+  // Type 'ab' and check input value and option
   await act(async () => {
     fireEvent.change(relationInputField, { target: { value: "ab" } });
   });
+  expect(relationInputField).toHaveValue("ab");
+  expect(screen.queryByText("service_name_a")).not.toBeInTheDocument();
 
-  expect(mockFn.mock.calls[3]).toStrictEqual([
-    "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=ab",
-  ]);
-
+  // Clear input and check value and option
   await act(async () => {
     fireEvent.change(relationInputField, { target: { value: "" } });
   });
-
-  expect(mockFn.mock.calls[4]).toStrictEqual([
-    "/lsm/v1/service_inventory/test_entity?include_deployment_progress=True&limit=250&filter.id_or_service_identity=",
-  ]);
+  expect(relationInputField).toHaveValue("");
+  expect(await screen.findByText("service_name_a")).toBeInTheDocument();
 
   server.close();
 });

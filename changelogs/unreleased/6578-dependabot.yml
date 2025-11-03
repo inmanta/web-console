@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump typescript-eslint from 8.35.1 to 8.44.1
+destination-branches:
+- master
+sections: {}

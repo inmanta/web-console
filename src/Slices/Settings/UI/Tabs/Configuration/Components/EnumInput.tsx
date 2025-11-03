@@ -18,6 +18,7 @@ export const EnumInput: React.FC<Props> = ({ info }) => {
     <Flex direction={{ default: "row" }}>
       <FlexItem grow={{ default: "grow" }}>
         <SingleTextSelect
+          isDisabled={info.protected}
           selected={info.value}
           setSelected={setSelected}
           options={options}
