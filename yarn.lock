@@ -1274,7 +1274,7 @@ __metadata:
     react-dom: "npm:^19.1.0"
     react-dropzone: "npm:^14.3.8"
     react-icons: "npm:^5.5.0"
-    react-is: "npm:^19.1.0"
+    react-is: "npm:^19.2.0"
     react-router: "npm:^7.9.4"
     regenerator-runtime: "npm:^0.14.1"
     rimraf: "npm:^6.0.1"
@@ -10349,10 +10349,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^19.1.0":
-  version: 19.1.0
-  resolution: "react-is@npm:19.1.0"
-  checksum: 10/4aceca94492032a19411138bf68c6ca7dce4abee7ae6c7f23db9291d2dff14d6a643717b176ef9a151e8cdf6a2b71fdbc59fd998328e086a6f752512304a252b
+"react-is@npm:^19.2.0":
+  version: 19.2.0
+  resolution: "react-is@npm:19.2.0"
+  checksum: 10/5cf0230571da0b446c64c0ff7b0e6992b7a8b12b39542db4003de1611e3f108e26f30b93a85ded5cd89c5bcce97f57639524ae40e57bb2f4f1ebd0935b624abf
   languageName: node
   linkType: hard
 
