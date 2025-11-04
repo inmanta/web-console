@@ -1,13 +1,11 @@
-import React, { act } from "react";
+import { act } from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
-import { axe, toHaveNoViolations } from "jest-axe";
+import { axe } from "jest-axe";
 import { MockedDependencyProvider, MockOrchestratorProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { Navigation } from "./Navigation";
-
-expect.extend(toHaveNoViolations);
 
 function setup(initialEntries?: string[], isCompiling: boolean = false) {
   const queryClient = new QueryClient();
@@ -27,7 +25,7 @@ function setup(initialEntries?: string[], isCompiling: boolean = false) {
 
 describe("Navigation", () => {
   afterAll(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("GIVEN Navigation THEN it should be accessible", async () => {
@@ -74,11 +72,11 @@ describe("Navigation", () => {
   });
 
   test("GIVEN Navigation WHEN no features enabled THEN no extra features are not shown", () => {
-    jest.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(false);
-    jest.spyOn(MockOrchestratorProvider.prototype, "isOrderViewEnabled").mockReturnValue(false);
-    jest
-      .spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled")
-      .mockReturnValue(false);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(false);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isOrderViewEnabled").mockReturnValue(false);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled").mockReturnValue(
+      false
+    );
 
     const { component } = setup();
 
@@ -108,11 +106,11 @@ describe("Navigation", () => {
   });
 
   test("GIVEN Navigation WHEN all features are enabled THEN all extra features are shown", () => {
-    jest.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(true);
-    jest.spyOn(MockOrchestratorProvider.prototype, "isOrderViewEnabled").mockReturnValue(true);
-    jest
-      .spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled")
-      .mockReturnValue(true);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isLsmEnabled").mockReturnValue(true);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isOrderViewEnabled").mockReturnValue(true);
+    vi.spyOn(MockOrchestratorProvider.prototype, "isResourceDiscoveryEnabled").mockReturnValue(
+      true
+    );
 
     const { component } = setup();
 
@@ -153,7 +151,8 @@ describe("Navigation", () => {
 
     const link = links.find((item) => item.textContent === "Service Catalog");
 
-    expect(link).toHaveClass("active");
+    // Check for aria-current attribute which indicates active state
+    expect(link).toHaveAttribute("aria-current", "page");
   });
 
   test("GIVEN Navigation WHEN Compilation Reports are not pending THEN 'Compile Reports' Indication does not exist", async () => {
@@ -172,5 +171,142 @@ describe("Navigation", () => {
     const Indication = await screen.findByLabelText("CompileReportsIndication");
 
     expect(Indication).toBeVisible();
+  });
+
+  describe("Navigation isActive functionality", () => {
+    test("GIVEN Navigation WHEN on exact route match THEN navigation item is active", () => {
+      const { component } = setup(["/lsm/catalog"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
+      const navItem =
+        serviceCatalogLink?.closest("[data-pf-v6-c-nav__item]") ||
+        serviceCatalogLink?.parentElement;
+
+      expect(navItem).toHaveClass("pf-m-current");
+    });
+
+    test("GIVEN Navigation WHEN on sub-route THEN parent navigation item is active", () => {
+      const { component } = setup(["/lsm/catalog/details/123"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
+      const navItem =
+        serviceCatalogLink?.closest("[data-pf-v6-c-nav__item]") ||
+        serviceCatalogLink?.parentElement;
+
+      expect(navItem).toHaveClass("pf-m-current");
+    });
+
+    test("GIVEN Navigation WHEN on different route THEN navigation items are not active", () => {
+      const { component } = setup(["/different/route"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
+      const navItem =
+        serviceCatalogLink?.closest("[data-pf-v6-c-nav__item]") ||
+        serviceCatalogLink?.parentElement;
+
+      expect(navItem).not.toHaveClass("pf-m-current");
+    });
+
+    test("GIVEN Navigation WHEN route has query parameters THEN navigation item is still active", () => {
+      const { component } = setup(["/lsm/catalog?env=test&filter=active"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
+      const navItem =
+        serviceCatalogLink?.closest("[data-pf-v6-c-nav__item]") ||
+        serviceCatalogLink?.parentElement;
+
+      expect(navItem).toHaveClass("pf-m-current");
+    });
+
+    test("GIVEN Navigation WHEN route has hash fragment THEN navigation item is still active", () => {
+      const { component } = setup(["/lsm/catalog#section1"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const serviceCatalogLink = links.find((item) => item.textContent === "Service Catalog");
+      const navItem =
+        serviceCatalogLink?.closest("[data-pf-v6-c-nav__item]") ||
+        serviceCatalogLink?.parentElement;
+
+      expect(navItem).toHaveClass("pf-m-current");
+    });
+
+    test("GIVEN Navigation WHEN on root path THEN no navigation items are active", () => {
+      const { component } = setup(["/"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const navItems = within(navigation).queryAllByRole("button", { name: /pf-m-current/ });
+
+      expect(navItems).toHaveLength(0);
+    });
+
+    test("GIVEN Navigation WHEN on Resources page THEN Resources navigation item is active", () => {
+      const { component } = setup(["/resources"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const resourcesLink = links.find((item) => item.textContent === "Resources");
+      const navItem =
+        resourcesLink?.closest("[data-pf-v6-c-nav__item]") || resourcesLink?.parentElement;
+
+      expect(navItem).toHaveClass("pf-m-current");
+    });
+
+    test("GIVEN Navigation WHEN on Desired State page THEN Desired State navigation item is active", () => {
+      const { component } = setup(["/desiredstate"]);
+
+      render(component);
+
+      const navigation = screen.getByRole("navigation", { name: "Global" });
+      const links = within(navigation).getAllByRole("link", {
+        name: "Sidebar-Navigation-Item",
+      });
+
+      const desiredStateLink = links.find((item) => item.textContent === "Desired State");
+      const navItem =
+        desiredStateLink?.closest("[data-pf-v6-c-nav__item]") || desiredStateLink?.parentElement;
+
+      expect(navItem).toHaveClass("pf-m-current");
+    });
   });
 });

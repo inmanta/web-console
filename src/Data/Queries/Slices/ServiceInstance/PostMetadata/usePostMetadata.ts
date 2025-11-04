@@ -22,13 +22,13 @@ interface PostMetadataInfo {
 export const usePostMetadata = (): UseMutationResult<void, Error, PostMetadataInfo, unknown> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const post = usePost(env)<PostMetadataInfo>;
+  const post = usePost(env)<PostMetadataInfo["body"]>;
 
   return useMutation({
     mutationFn: (info) =>
       post(
         `/lsm/v1/service_inventory/${info.service_entity}/${info.service_id}/metadata/${encodeURIComponent(info.key)}`,
-        info
+        info.body
       ),
     mutationKey: ["post_metadata", env],
   });

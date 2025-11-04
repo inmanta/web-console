@@ -1,10 +1,10 @@
-import React, { act } from "react";
+import { act } from "react";
 import { Page } from "@patternfly/react-core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { axe, toHaveNoViolations } from "jest-axe";
-import { HttpResponse, http } from "msw";
+import { axe } from "jest-axe";
+import { DefaultBodyType, HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { UserInfo } from "@/Data/Queries";
 import { MockedDependencyProvider } from "@/Test";
@@ -12,8 +12,6 @@ import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { UserManagementPage } from "./Page";
-
-expect.extend(toHaveNoViolations);
 
 const setup = () => {
   const queryClient = new QueryClient({
@@ -164,8 +162,8 @@ describe("UserManagementPage", () => {
 
   it("should sent request to add user to the list", async () => {
     const data: UserInfo[] = [
-      { username: "test_user", auth_method: "database" },
-      { username: "test_user2", auth_method: "oidc" },
+      { username: "test_user", auth_method: "database", is_admin: false, roles: {} },
+      { username: "test_user2", auth_method: "oidc", is_admin: false, roles: {} },
     ];
     const server = setupServer(
       http.get("/api/v2/user", async () => {
@@ -173,7 +171,7 @@ describe("UserManagementPage", () => {
           data,
         });
       }),
-      http.post("/api/v2/user", async ({ request }): Promise<HttpResponse> => {
+      http.post("/api/v2/user", async ({ request }): Promise<HttpResponse<DefaultBodyType>> => {
         const reqBody = await request.json();
 
         if (typeof reqBody !== "object") {
@@ -198,14 +196,19 @@ describe("UserManagementPage", () => {
           );
         }
 
-        data.push({ username: reqBody?.username, auth_method: "database" });
+        data.push({
+          username: reqBody?.username,
+          auth_method: "database",
+          is_admin: false,
+          roles: {},
+        });
 
         return HttpResponse.json({
           username: "new_user",
           auth_method: "database",
         });
       }),
-      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
+      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse<DefaultBodyType>> => {
         data.splice(0, 1);
 
         return HttpResponse.json({ status: 204 });
@@ -333,16 +336,16 @@ describe("UserManagementPage", () => {
 
   it("should sent request to remove user from the list", async () => {
     const data: UserInfo[] = [
-      { username: "test_user", auth_method: "database" },
-      { username: "test_user2", auth_method: "oidc" },
+      { username: "test_user", auth_method: "database", is_admin: false, roles: {} },
+      { username: "test_user2", auth_method: "oidc", is_admin: false, roles: {} },
     ];
     const server = setupServer(
-      http.get("/api/v2/user", async (): Promise<HttpResponse> => {
+      http.get("/api/v2/user", async (): Promise<HttpResponse<DefaultBodyType>> => {
         return HttpResponse.json({
           data,
         });
       }),
-      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse> => {
+      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse<DefaultBodyType>> => {
         data.splice(0, 1);
 
         return HttpResponse.json({ status: 204 });
@@ -379,6 +382,55 @@ describe("UserManagementPage", () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    server.close();
+  });
+
+  it("should show error message when remove user fails", async () => {
+    const data: UserInfo[] = [
+      { username: "test_user", auth_method: "database", is_admin: false, roles: {} },
+      { username: "test_user2", auth_method: "oidc", is_admin: false, roles: {} },
+    ];
+    const server = setupServer(
+      http.get("/api/v2/user", async (): Promise<HttpResponse<DefaultBodyType>> => {
+        return HttpResponse.json({
+          data,
+        });
+      }),
+      http.delete("/api/v2/user/test_user", async (): Promise<HttpResponse<DefaultBodyType>> => {
+        return HttpResponse.error();
+      })
+    );
+
+    server.listen();
+    const component = setup();
+
+    render(component);
+
+    const loadingView = await screen.findByLabelText("UserManagement-Loading");
+
+    expect(loadingView).toBeInTheDocument();
+
+    const successView = await screen.findByLabelText("users-table");
+
+    expect(successView).toBeInTheDocument();
+
+    const userRows = screen.getAllByTestId("user-row");
+
+    expect(userRows).toHaveLength(2);
+
+    await userEvent.click(screen.getAllByText("Delete")[0]);
+
+    await userEvent.click(screen.getByText("Yes"));
+
+    const updatedRows = await screen.findAllByTestId("user-row");
+
+    expect(updatedRows).toHaveLength(2);
+
+    const errorMessage = await screen.findByTestId("ToastAlert");
+
+    expect(errorMessage).toBeVisible();
+    expect(errorMessage).toHaveTextContent("Error");
 
     server.close();
   });

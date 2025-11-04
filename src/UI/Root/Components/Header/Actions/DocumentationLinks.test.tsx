@@ -1,4 +1,3 @@
-import React from "react";
 import { MemoryRouter } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { UrlManager } from "@/Core";
@@ -52,7 +51,7 @@ describe("DocumentationLinks", () => {
   });
 
   it("renders links with token when authenticated", () => {
-    jest.spyOn(defaultAuthContext, "getToken").mockReturnValue("my-token");
+    vi.spyOn(defaultAuthContext, "getToken").mockReturnValue("my-token");
     render(
       <MemoryRouter>
         <DependencyProvider dependencies={{ urlManager: mockUrlManager }}>

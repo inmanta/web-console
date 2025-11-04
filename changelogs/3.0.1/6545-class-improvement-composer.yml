@@ -1,0 +1,4 @@
+description: Improve the use of Classes in the Composer, Remove unused functionalities.
+issue-nr: "6545"
+change-type: patch
+destination-branches: [master]

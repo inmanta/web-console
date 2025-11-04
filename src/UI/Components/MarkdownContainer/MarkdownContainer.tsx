@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import markdownit from "markdown-it";
 import { full } from "markdown-it-emoji";
-import mermaidPlugin from "./MermaidPlugin";
+import { getThemePreference } from "../DarkmodeOption";
+import mermaidPlugin, { processMermaidContainers } from "./MermaidPlugin";
 import "./styles.css";
 
 /**
@@ -23,18 +24,26 @@ interface Props {
  *
  * @returns A React component that renders a container for displaying Markdown content.
  */
-export const MarkdownContainer = ({ text, web_title }: Props) => {
+export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
+  const theme = getThemePreference() || "default";
   const containerRef = useRef<HTMLDivElement>(null);
+  const lastProcessedText = useRef<string>("");
 
-  const md = new markdownit({
-    html: false,
-    breaks: true,
-    linkify: true,
-    typographer: true,
-  });
+  // Memoize the markdown-it instance to prevent it from changing on every render
+  // This prevents the useEffect dependency array from changing unnecessarily
+  const md = useMemo(() => {
+    const markdownInstance = new markdownit({
+      html: false,
+      breaks: true,
+      linkify: true,
+      typographer: true,
+    });
 
-  md.use(full);
-  md.use((md) => mermaidPlugin(md, web_title, {}));
+    markdownInstance.use(full);
+    markdownInstance.use((md) => mermaidPlugin(md, web_title, { theme }));
+
+    return markdownInstance;
+  }, [web_title, theme]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -122,13 +131,41 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
     };
   }, [text]);
 
-  const result = md.render(text);
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-  return (
-    <div
-      ref={containerRef}
-      className="markdown-body"
-      dangerouslySetInnerHTML={{ __html: result }}
-    />
-  );
+    // Render markdown to HTML string (includes Mermaid placeholder divs)
+    const result = md.render(text);
+
+    // Only update if the text has actually changed to prevent unnecessary re-processing
+    // This is crucial to avoid reverting processed Mermaid diagrams back to placeholder divs
+    // when the component re-renders due to external factors (e.g., window focus, parent updates)
+    if (text !== lastProcessedText.current) {
+      lastProcessedText.current = text;
+
+      // Process Mermaid containers directly in the DOM to avoid React's virtual DOM conflicts
+      // We use direct DOM manipulation instead of dangerouslySetInnerHTML to ensure that
+      // processed Mermaid diagrams (converted from placeholder divs to img elements)
+      // persist across component re-renders
+      const processAndSetHTML = async () => {
+        // Step 1: Set the raw HTML (with Mermaid placeholder divs) directly to the container
+        // This bypasses React's virtual DOM to prevent overwrites of processed content
+        container.innerHTML = result;
+
+        // Step 2: Wait for DOM to update before processing Mermaid containers
+        // This ensures the placeholder divs are in the DOM before we try to process them
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        // Step 3: Convert Mermaid placeholder divs to actual rendered diagram images
+        // This async function finds all mermaid-container divs and replaces them with
+        // img elements containing the rendered SVG diagrams
+        await processMermaidContainers();
+      };
+
+      processAndSetHTML();
+    }
+  }, [text, web_title, md]);
+
+  return <div ref={containerRef} className="markdown-body" />;
 };

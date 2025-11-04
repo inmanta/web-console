@@ -1,0 +1,5 @@
+change-type: patch
+description: Transitive dependency form-data 2.3.3 is introduced via Cypress, adding a resolution to form-data 2.5.5 to fix the security issue
+destination-branches:
+- master
+sections: {}

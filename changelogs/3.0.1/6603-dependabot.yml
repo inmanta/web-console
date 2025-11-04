@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump validator from 13.12.0 to 13.15.20
+destination-branches:
+- master
+sections: {}

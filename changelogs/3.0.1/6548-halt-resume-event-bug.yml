@@ -1,0 +1,5 @@
+change-type: patch
+description: Fix halt and resume event bug by adding a close blocking modal event.
+destination-branches:
+- master
+sections: {}

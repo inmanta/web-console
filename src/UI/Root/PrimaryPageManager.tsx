@@ -7,6 +7,7 @@ import { MarkdownPreviewerPage } from "@/Slices/MarkdownPreviewer/UI";
 import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
 import { OrdersPage } from "@/Slices/Orders/UI";
 import { DiscoveredResourcesPage } from "@/Slices/ResourceDiscovery/UI";
+import { DiscoveredResourceDetailsPage } from "@/Slices/ResourceDiscoveryDetails/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { ServiceInstanceDetailsPage } from "@/Slices/ServiceInstanceDetails/UI";
 import { UserManagementPage } from "@/Slices/UserManagement/UI/Page";
@@ -130,6 +131,10 @@ export class PrimaryPageManager implements PageManager {
       DiscoveredResources: {
         ...this.routeDictionary.DiscoveredResources,
         element: <DiscoveredResourcesPage />,
+      },
+      DiscoveredResourceDetails: {
+        ...this.routeDictionary.DiscoveredResourceDetails,
+        element: <DiscoveredResourceDetailsPage />,
       },
       Facts: { ...this.routeDictionary.Facts, element: <FactsPage /> },
       ResourceDetails: {

@@ -9,6 +9,7 @@ import {
   HelperText,
   HelperTextItem,
   TextInput,
+  AlertVariant,
 } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { useChangeUserPassword } from "@/Data/Queries";
@@ -17,7 +18,7 @@ import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
 interface Props {
   user: string;
-  setAlertMessage: (message: string) => void;
+  setAlertMessage: (message: string, variant: AlertVariant) => void;
 }
 
 /**
@@ -33,7 +34,7 @@ export const ChangePasswordForm: React.FC<Props> = ({ user, setAlertMessage }) =
 
   const { mutate, isPending, isError, error } = useChangeUserPassword(user, {
     onSuccess: () => {
-      setAlertMessage(words("userManagement.changePassword.success"));
+      setAlertMessage(words("userManagement.changePassword.success"), AlertVariant.success);
       closeModal();
     },
   });

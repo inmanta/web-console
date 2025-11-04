@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
-import { Button, Tooltip } from "@patternfly/react-core";
+import React, { useContext, useState } from "react";
+import { Alert, AlertGroup, Button, Tooltip } from "@patternfly/react-core";
 import { StopIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
+import { uniqueId } from "lodash";
 import { useHaltEnvironment } from "@/Data/Queries";
 import { useQueryControl } from "@/Data/Queries";
 import { words } from "@/UI/words";
@@ -16,11 +17,22 @@ export const HaltButton: React.FC = () => {
   const client = useQueryClient();
   const { disableQueries, enableQueries } = useQueryControl();
   const { triggerModal, closeModal } = useContext(ModalContext);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const closeModalAndEnableQueries = () => {
+    closeModal();
+    enableQueries();
+    document.dispatchEvent(new CustomEvent("close-blocking-modal"));
+  };
+
   const { mutate } = useHaltEnvironment({
     onSuccess: () => {
       client.refetchQueries();
-      enableQueries();
-      document.dispatchEvent(new CustomEvent("halt-event"));
+      closeModalAndEnableQueries();
+    },
+    onError: (error) => {
+      setErrorMessage(error.message);
+      closeModalAndEnableQueries();
     },
   });
 
@@ -44,14 +56,20 @@ export const HaltButton: React.FC = () => {
           variant="primary"
           onClick={() => {
             disableQueries();
-            mutate();
-            closeModal();
             document.dispatchEvent(new CustomEvent("halt-event"));
+            mutate();
           }}
         >
           {words("yes")}
         </Button>,
-        <Button key="cancel" variant="link" onClick={closeModal}>
+        <Button
+          key="cancel"
+          variant="link"
+          onClick={() => {
+            closeModal();
+            setErrorMessage(null);
+          }}
+        >
           {words("no")}
         </Button>,
       ],
@@ -59,10 +77,30 @@ export const HaltButton: React.FC = () => {
   };
 
   return (
-    <Tooltip content={<div>{words("environment.halt.button.tooltip")}</div>} position="right">
-      <Button variant="stateful" state="attention" icon={<StopIcon />} onClick={handleModalToggle}>
-        {words("environment.halt.button")}
-      </Button>
-    </Tooltip>
+    <>
+      <Tooltip content={<div>{words("environment.halt.button.tooltip")}</div>} position="right">
+        <Button
+          variant="stateful"
+          state="attention"
+          icon={<StopIcon />}
+          onClick={handleModalToggle}
+        >
+          {words("environment.halt.button")}
+        </Button>
+      </Tooltip>
+      {errorMessage && (
+        <AlertGroup aria-live="polite" isToast>
+          <Alert
+            variant="danger"
+            title={words("error.title")}
+            key={"error-" + uniqueId()}
+            timeout={5000}
+            aria-label="error-message"
+          >
+            {errorMessage}
+          </Alert>
+        </AlertGroup>
+      )}
+    </>
   );
 };

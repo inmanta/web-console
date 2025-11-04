@@ -1,0 +1,6 @@
+description: Add filtering to the discovered resources page.
+issue-nr: "6565"
+change-type: patch
+destination-branches: [master]
+sections:
+  minor-improvement: "{{description}}"

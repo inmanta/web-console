@@ -1,4 +1,3 @@
-import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { DarkmodeOption } from "./DarkmodeOption";
 
@@ -16,11 +15,11 @@ describe("DarkmodeOption", () => {
   });
 
   it("should render the correct initial theme based on system preference", () => {
-    window.matchMedia = jest.fn().mockImplementation((query) => {
+    window.matchMedia = vi.fn().mockImplementation((query) => {
       return {
         matches: query === "(prefers-color-scheme: dark)",
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
       };
     });
 

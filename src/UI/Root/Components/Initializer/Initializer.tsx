@@ -16,7 +16,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
   const [isEnvironmentPreviewInitialized, setIsEnvironmentPreviewInitialized] = useState(false);
   const { environmentHandler, orchestratorProvider } = useContext(DependencyContext);
   const serverStatus = useGetServerStatus().useOneTime();
-  const EnvironmentPreview = useGetEnvironmentPreview().useOneTime();
+  const EnvironmentPreview = useGetEnvironmentPreview().useContinuous();
 
   useEffect(() => {
     if (serverStatus.data) {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -57,7 +57,25 @@ export const DocumentationTabContent: React.FC<Props> = ({
   const navigateTo = useNavigateTo();
 
   const isLatest = selectedVersion === String(instance.version);
-  let selectedSet: InstanceAttributeModel | void;
+
+  const selectedSet = useMemo(() => {
+    if (!isLatest) {
+      if (logsQuery.isLoading || !logsQuery.data) {
+        return undefined;
+      }
+      return getSelectedAttributeSet(logsQuery.data, selectedVersion);
+    } else {
+      return getSelectedAttributeSetFromInstance(instance);
+    }
+  }, [isLatest, logsQuery.data, logsQuery.isLoading, selectedVersion, instance]);
+
+  // Memoize sections calculation
+  const sections = useMemo(() => {
+    return selectedSet ? getDocumentationSections(docAttributeDescriptors, selectedSet) : [];
+  }, [docAttributeDescriptors, selectedSet]);
+
+  // Check expert mode for the MarkdownPreviewer button
+  const isExpertModeEnabled = environmentHandler.useIsExpertModeEnabled();
 
   if (!isLatest) {
     if (logsQuery.isLoading) {
@@ -75,15 +93,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
         </TabContentWrapper>
       );
     }
-
-    selectedSet = getSelectedAttributeSet(logsQuery.data, selectedVersion);
-  } else {
-    selectedSet = getSelectedAttributeSetFromInstance(instance);
   }
-
-  const sections = selectedSet
-    ? getDocumentationSections(docAttributeDescriptors, selectedSet)
-    : [];
 
   const onToggle = (index: number) => {
     if (index === expanded) {
@@ -94,7 +104,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
   };
 
   const MarkdownPreviewerButton = () => {
-    if (!environmentHandler.useIsExpertModeEnabled()) {
+    if (!isExpertModeEnabled) {
       return null;
     }
 

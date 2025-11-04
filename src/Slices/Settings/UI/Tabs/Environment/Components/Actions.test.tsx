@@ -1,4 +1,3 @@
-import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -41,7 +40,7 @@ describe("Environment Actions", () => {
   afterEach(() => server.resetHandlers());
   afterAll(() => {
     server.close();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN delete disabled", async () => {

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Drawer } from "./Drawer";
 
 type UseDrawer = (env: boolean) => {
-  notificationDrawer: JSX.Element | undefined;
+  notificationDrawer: React.ReactNode | undefined;
   onNotificationDrawerExpand: (() => void) | undefined;
   isNotificationDrawerExpanded: boolean;
   onNotificationsToggle: (() => void) | (() => undefined);
@@ -10,7 +10,7 @@ type UseDrawer = (env: boolean) => {
 
 export const useDrawer: UseDrawer = (env) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const drawerRef = useRef<HTMLDivElement>();
+  const drawerRef = useRef<HTMLDivElement>(null);
   const onDrawerClose = () => setIsDrawerOpen(false);
 
   const onDrawerOpen = () => {
