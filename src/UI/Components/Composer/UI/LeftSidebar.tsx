@@ -1,32 +1,31 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { ui } from "@inmanta/rappid";
+import React, { useContext, useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
+import { dia, ui } from "@inmanta/rappid";
 import { Inventories } from "@/Data/Queries";
 import { ServiceModel } from "@/Core";
 import { ComposerContext } from "../Data/Context";
 import styled from "styled-components";
-import { InstanceTabElement, InventoryTabElement } from "./JointJsShapes";
+import { InstanceTabElement, InventoryTabElement, ServiceEntityShape } from "./JointJsShapes";
 import { words } from "@/UI/words";
 
 
 
 export const LeftSidebar: React.FC = () => {
-  const { scroller, serviceInventories, mainService, editable, serviceCatalog } = useContext(ComposerContext);
+  const { scroller, serviceInventories, mainService, editable, serviceCatalog, canvasState, setCanvasState, graph } = useContext(ComposerContext);
   const [sidebar, setSidebar] = useState<LeftSidebarElement | null>(null);
   const LeftSidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!LeftSidebarRef.current || !scroller || !serviceInventories || !mainService) {
+    if (!LeftSidebarRef.current || !scroller || !serviceInventories || !mainService || !graph) {
       return;
     }
 
-    const sidebar = new LeftSidebarElement(LeftSidebarRef.current, scroller, serviceInventories, serviceCatalog, mainService);
+    const sidebar = new LeftSidebarElement(LeftSidebarRef.current, scroller, serviceInventories, serviceCatalog, mainService, setCanvasState, graph);
     setSidebar(sidebar);
 
     return () => {
       sidebar.remove();
     };
   }, [scroller, serviceInventories, mainService, serviceCatalog]);
-
 
   return <LeftSidebarStyling
     className={`left_sidebar ${!editable && "view_mode"}`}
@@ -44,7 +43,9 @@ class LeftSidebarElement {
     scroller: ui.PaperScroller,
     serviceInventories: Inventories,
     serviceModels: ServiceModel[],
-    service: ServiceModel
+    service: ServiceModel,
+    setCanvasState: Dispatch<SetStateAction<Map<string, ServiceEntityShape>>>,
+    graph: dia.Graph
   ) {
     // Create the tabs toolbar first and prepend it
     this.tabsToolbar = new ui.Toolbar({
@@ -90,7 +91,7 @@ class LeftSidebarElement {
     this.tabsToolbar.render();
 
     // Now create the stencil tabs after the toolbar
-    this.instanceTab = new InstanceTabElement(htmlRef, scroller, service);
+    this.instanceTab = new InstanceTabElement(htmlRef, scroller, service, setCanvasState, graph);
     this.inventoryTab = new InventoryTabElement(htmlRef, scroller, serviceInventories, serviceModels);
   }
 
@@ -116,7 +117,7 @@ class LeftSidebarElement {
 
     tabs.forEach((tab) => tab.classList.toggle("pf-m-current", tab.id === newTabId));
   };
-  
+
   /**
   * Toggles the visibility of the tabs by freezing and unfreezing the old and new tabs
   * and adding and removing the joint-hidden class.

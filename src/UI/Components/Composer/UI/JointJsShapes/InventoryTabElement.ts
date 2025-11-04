@@ -14,7 +14,6 @@ export class InventoryTabElement {
         serviceModels: ServiceModel[]
     ) {
         const groups = {};
-        console.log("serviceInventories", serviceInventories);
 
         this.stencil = new ui.Stencil({
             id: "inventory-stencil",

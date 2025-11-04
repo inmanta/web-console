@@ -1,4 +1,4 @@
-import { ServiceEntityShape } from "../../UI/ServiceEntityShape";
+import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import { dia } from "@inmanta/rappid";
 
 /**

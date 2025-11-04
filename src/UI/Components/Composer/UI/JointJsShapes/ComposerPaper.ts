@@ -1,7 +1,7 @@
 import { dia, shapes } from "@inmanta/rappid";
 import { LinkShape } from "./LinkShape";
-import { getEntitiesFromCanvas } from "../Data/Helpers";
-import { routerNamespace, anchorNamespace } from ".";
+import { getEntitiesFromCanvas } from "../../Data/Helpers";
+import { routerNamespace, anchorNamespace } from "..";
 import { ServiceEntityShape } from "./ServiceEntityShape";
 
 export class ComposerPaper {

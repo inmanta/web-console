@@ -1,5 +1,5 @@
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { createContext } from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 import { ServiceEntityShape } from "../UI";
 import { Inventories } from "@/Data/Queries";
 import { CanvasHandlers, RelationsDictionary } from ".";
@@ -18,7 +18,7 @@ interface ComposerContextInterface {
     relationsDictionary: RelationsDictionary;
     setRelationsDictionary: (value: RelationsDictionary) => void;
     canvasState: Map<string, ServiceEntityShape>;
-    setCanvasState: (value: Map<string, ServiceEntityShape>) => void;
+    setCanvasState: Dispatch<SetStateAction<Map<string, ServiceEntityShape>>>;
     activeCell: ServiceEntityShape | null;
     setActiveCell: (value: ServiceEntityShape | null) => void;
     mainService: ServiceModel | null;
@@ -33,19 +33,19 @@ interface ComposerContextInterface {
 
 export const composerContext: ComposerContextInterface = {
     canvasHandlers: null,
-    setCanvasHandlers: () => {},
+    setCanvasHandlers: () => { },
     formState: {},
-    setFormState: () => {},
+    setFormState: () => { },
     fields: [],
-    setFields: () => {},
+    setFields: () => { },
     isDirty: false,
-    setIsDirty: () => {},
+    setIsDirty: () => { },
     relationsDictionary: {},
-    setRelationsDictionary: () => {},
+    setRelationsDictionary: () => { },
     canvasState: new Map(),
-    setCanvasState: () => {},
+    setCanvasState: () => { },
     activeCell: null,
-    setActiveCell: () => {},
+    setActiveCell: () => { },
     mainService: null,
     serviceCatalog: [],
     serviceInventories: null,

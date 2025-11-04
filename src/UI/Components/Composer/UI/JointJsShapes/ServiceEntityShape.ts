@@ -11,7 +11,7 @@ import {
     t_global_font_size_body_lg,
 } from "@patternfly/react-tokens";
 import { EmbeddedEntity, InstanceAttributeModel, InterServiceRelation, ServiceModel } from "@/Core";
-import { RelationsDictionary } from "../Data";
+import { RelationsDictionary } from "../../Data";
 
 export interface ServiceEntityBase {
     entityType: EntityType;

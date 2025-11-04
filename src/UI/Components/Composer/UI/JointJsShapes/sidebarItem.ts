@@ -1,5 +1,5 @@
 import { shapes } from "@inmanta/rappid";
-import { HeaderColors, ServiceEntityBase } from "../ServiceEntityShape";
+import { HeaderColors, ServiceEntityBase } from "./ServiceEntityShape";
 import { t_global_background_color_primary_default, t_global_border_color_200, t_global_font_size_body_default, t_global_text_color_regular } from "@patternfly/react-tokens";
 import { v4 as uuidv4 } from 'uuid';
 

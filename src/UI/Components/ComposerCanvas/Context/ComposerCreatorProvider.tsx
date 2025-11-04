@@ -8,6 +8,7 @@ import { ComposerActions } from "../Components";
 import { findInterServiceRelations } from "../Helpers";
 import { CanvasProvider } from "./CanvasProvider";
 import { InstanceComposerContext } from "./Context";
+import { Composer } from "../../Composer/Composer";
 
 /**
  * Props interface for the ComposerCreatorProvider component
@@ -98,6 +99,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
             }
           >
             <Canvas editable />
+            <Composer editable serviceName={serviceName} />
           </PageContainer>
         </CanvasProvider>
       </InstanceComposerContext.Provider>

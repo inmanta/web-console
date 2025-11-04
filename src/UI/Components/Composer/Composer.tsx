@@ -1,10 +1,19 @@
-import { useGetInventoryList, useGetServiceModels } from "@/Data/Queries";
+import { useGetInventoryList, useGetServiceModels, useGetInstanceWithRelations } from "@/Data/Queries";
 import React, { useEffect, useMemo, useState } from "react";
 import { ComposerContext, composerContext } from "./Data/Context";
 import { ComposerContainer, Canvas, LeftSidebar, RightSidebar } from "./UI";
 import { dia, shapes, ui } from "@inmanta/rappid";
-import { ComposerPaper } from "./UI/ComposerPaper";
-import { createRelationsDictionary, RelationsDictionary } from "./Data/Helpers";
+import { ComposerPaper } from "./UI/JointJsShapes/ComposerPaper";
+import {
+    createRelationsDictionary,
+    RelationsDictionary,
+    initializeCanvasFromInstance,
+    createPlaceholderInstance,
+    applyCoordinatesFromMetadata,
+    applyAutoLayout,
+    fixCollidingCells
+} from "./Data/Helpers";
+import { ServiceEntityShape } from "./UI";
 
 interface Props {
     editable: boolean;
@@ -14,6 +23,7 @@ interface Props {
 
 export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName }) => {
     const [catalogEntries, setCatalogEntries] = useState<string[]>([]);
+    const [canvasState, setCanvasState] = useState<Map<string, ServiceEntityShape>>(new Map());
     const serviceCatalogQuery = useGetServiceModels().useContinuous();
     const relationsDictionary: RelationsDictionary = useMemo(() => createRelationsDictionary(serviceCatalogQuery.data || []), [serviceCatalogQuery.data]);
 
@@ -29,12 +39,6 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
     }, [serviceCatalogQuery.data, serviceName]);
 
     const inventoriesQuery = useGetInventoryList(catalogEntries).useContinuous();
-
-    useEffect(() => {
-        if (serviceCatalogQuery.isSuccess) {
-            setCatalogEntries(serviceCatalogQuery.data.map((service) => service.name));
-        }
-    }, [serviceCatalogQuery.isSuccess]);
 
     // Create graph, paper, and scroller only once using useMemo to prevent recreation on every render
     const graph = useMemo(() => new dia.Graph({}, { cellNamespace: shapes }), []);
@@ -56,6 +60,83 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
         },
     }), [paper]);
 
+    // Fetch instance data if instanceId is provided
+    // The query will only run if instanceId and mainService are present (enabled check in the hook)
+    const instanceWithRelationsQuery = useGetInstanceWithRelations(
+        instanceId || "",
+        false,
+        mainService
+    ).useOneTime();
+
+    useEffect(() => {
+        if (serviceCatalogQuery.isSuccess) {
+            setCatalogEntries(serviceCatalogQuery.data.map((service) => service.name));
+        }
+    }, [serviceCatalogQuery.isSuccess]);
+
+    // Initialize canvas from instance data or create placeholder for new instance
+    useEffect(() => {
+        if (!serviceCatalogQuery.data || !mainService || !graph || !paper || !scroller) {
+            return;
+        }
+
+        let instanceData;
+
+        if (instanceId) {
+            // Case 1: Editing existing instance - wait for data to be fetched
+            if (!instanceWithRelationsQuery.isSuccess || !instanceWithRelationsQuery.data) {
+                return;
+            }
+            instanceData = instanceWithRelationsQuery.data;
+        } else {
+            // Case 2: Creating new instance - use placeholder
+            instanceData = createPlaceholderInstance(mainService);
+        }
+
+        // Add all entities to the graph
+        const initializedEntities = initializeCanvasFromInstance(
+            instanceData,
+            serviceCatalogQuery.data,
+            relationsDictionary,
+            graph
+        );
+        setCanvasState(initializedEntities);
+
+        // Check if instance has saved coordinates in metadata
+        const hasMetadataCoordinates =
+            instanceData.instance.metadata?.coordinates;
+
+        if (hasMetadataCoordinates) {
+            try {
+                const parsedMetadata = JSON.parse(instanceData.instance.metadata.coordinates);
+                if (parsedMetadata.version === "v2" && parsedMetadata.data) {
+                    // Apply saved coordinates from metadata (overrides manual positioning)
+                    applyCoordinatesFromMetadata(graph, parsedMetadata.data);
+                }
+            } catch (error) {
+                console.warn("Failed to parse coordinates from metadata:", error);
+            }
+        }
+
+        // Unfreeze paper if it's frozen
+        if (paper.isFrozen()) {
+            paper.unfreeze();
+        }
+
+        // Center and zoom to fit content
+        scroller.centerContent();
+    }, [
+        instanceId,
+        instanceWithRelationsQuery.isSuccess,
+        instanceWithRelationsQuery.data,
+        serviceCatalogQuery.data,
+        mainService,
+        relationsDictionary,
+        graph,
+        paper,
+        scroller,
+    ]);
+
     return (
         <ComposerContext.Provider value={{
             ...composerContext,
@@ -68,6 +149,8 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
             scroller: scroller,
             relationsDictionary: relationsDictionary,
             editable: editable,
+            canvasState: canvasState,
+            setCanvasState: setCanvasState,
         }}>
             <ComposerContainer>
                 <LeftSidebar />
