@@ -26,7 +26,7 @@ module.exports = {
       package: "./package.json",
       template: "./version.ejs",
       data: {
-        buildDate: new Date(),
+        buildDate: new Date().toISOString(),
         commitHash: JSON.stringify(gitRevisionPlugin.commithash()),
       },
     }),

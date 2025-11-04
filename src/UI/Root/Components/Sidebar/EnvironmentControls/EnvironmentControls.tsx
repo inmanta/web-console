@@ -23,10 +23,10 @@ export const EnvironmentControls: React.FC = () => {
     if (isSuccess) {
       document.dispatchEvent(new CustomEvent("status-up"));
     }
-    if (isError) {
+    if (isError && id) {
       document.dispatchEvent(new CustomEvent("status-down"));
     }
-  }, [isError, isSuccess]);
+  }, [isError, isSuccess, id]);
 
   if (isSuccess) {
     return (

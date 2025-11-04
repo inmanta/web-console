@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import {
   DescriptionList,
@@ -9,7 +9,7 @@ import {
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
-import { CodeEditorCopyControl } from "../CodeEditorControls";
+import { CodeEditorCopyControl, CodeEditorHeightToggleControl } from "../CodeEditorControls";
 import { getThemePreference } from "../DarkmodeOption";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 import { FileBlock } from "./FileBlock";
@@ -45,6 +45,12 @@ const AttributeValue: React.FC<{
   attribute: ClassifiedAttribute;
   variant?: AttributeTextVariant;
 }> = ({ attribute, variant }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const getEditorHeight = (attribute: ClassifiedAttribute) => {
+    return isExpanded ? "calc(100vh - 300px)" : getDefaultHeightEditor(attribute);
+  };
+
   switch (attribute.kind) {
     case "Undefined":
       return (
@@ -76,52 +82,92 @@ const AttributeValue: React.FC<{
     case "Json":
       return (
         <CodeEditor
+          key={`json-${isExpanded}`}
           isReadOnly
           isDarkTheme={getThemePreference() === "dark"}
           code={attribute.value}
           isLanguageLabelVisible
           language={Language.json}
           isDownloadEnabled
-          customControls={<CodeEditorCopyControl code={attribute.value} />}
-          height={getHeightEditor(attribute)}
+          customControls={
+            <>
+              <CodeEditorCopyControl code={attribute.value} />
+              <CodeEditorHeightToggleControl
+                code={attribute.value}
+                isExpanded={isExpanded}
+                onToggle={() => setIsExpanded(!isExpanded)}
+              />
+            </>
+          }
+          height={getEditorHeight(attribute)}
         />
       );
 
     case "Xml":
       return (
         <CodeEditor
+          key={`xml-${isExpanded}`}
           isReadOnly
           isDarkTheme={getThemePreference() === "dark"}
           code={attribute.value}
           isLanguageLabelVisible
           language={Language.xml}
           isDownloadEnabled
-          customControls={<CodeEditorCopyControl code={attribute.value} />}
-          height={getHeightEditor(attribute)}
+          customControls={
+            <>
+              <CodeEditorCopyControl code={attribute.value} />
+              <CodeEditorHeightToggleControl
+                code={attribute.value}
+                isExpanded={isExpanded}
+                onToggle={() => setIsExpanded(!isExpanded)}
+              />
+            </>
+          }
+          height={getEditorHeight(attribute)}
         />
       );
     case "Python":
       return (
         <CodeEditor
+          key={`python-${isExpanded}`}
           isReadOnly
           isDarkTheme={getThemePreference() === "dark"}
           code={attribute.value}
           isLanguageLabelVisible
           language={Language.python}
           isDownloadEnabled
-          customControls={<CodeEditorCopyControl code={attribute.value} />}
-          height={getHeightEditor(attribute)}
+          customControls={
+            <>
+              <CodeEditorCopyControl code={attribute.value} />
+              <CodeEditorHeightToggleControl
+                code={attribute.value}
+                isExpanded={isExpanded}
+                onToggle={() => setIsExpanded(!isExpanded)}
+              />
+            </>
+          }
+          height={getEditorHeight(attribute)}
         />
       );
     case "Code":
       return (
         <CodeEditor
+          key={`code-${isExpanded}`}
           isReadOnly
           isDarkTheme={getThemePreference() === "dark"}
           code={attribute.value}
           isDownloadEnabled
-          customControls={<CodeEditorCopyControl code={attribute.value} />}
-          height={getHeightEditor(attribute)}
+          customControls={
+            <>
+              <CodeEditorCopyControl code={attribute.value} />
+              <CodeEditorHeightToggleControl
+                code={attribute.value}
+                isExpanded={isExpanded}
+                onToggle={() => setIsExpanded(!isExpanded)}
+              />
+            </>
+          }
+          height={getEditorHeight(attribute)}
         />
       );
   }
@@ -145,7 +191,7 @@ const TextContainer = styled.span<{ $variant?: AttributeTextVariant }>`
  * @param attribute The attribute to determine height for
  * @returns "300px" if lines > 15, otherwise "sizeToFit"
  */
-export const getHeightEditor = (attribute: ClassifiedAttribute): string => {
+export const getDefaultHeightEditor = (attribute: ClassifiedAttribute): string => {
   if (
     attribute.kind === "Json" ||
     attribute.kind === "Xml" ||
