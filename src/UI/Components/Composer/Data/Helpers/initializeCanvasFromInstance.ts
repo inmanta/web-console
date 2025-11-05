@@ -157,7 +157,7 @@ export const initializeCanvasFromInstance = (
         // Extract inter-service relations, embedded entities, and root entities
         // These will be populated based on the service model and instance attributes
         const interServiceRelations: Record<string, string[]> = {};
-        const rootEntities: Record<string, string[]> = {};
+        const rootEntities: Record<string, string[]> = {}; // TODO: need to check this.
 
         // Extract inter-service relation IDs from attributes
         serviceModel.inter_service_relations.forEach((relation) => {

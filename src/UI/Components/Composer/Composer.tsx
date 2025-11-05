@@ -10,8 +10,6 @@ import {
     initializeCanvasFromInstance,
     createPlaceholderInstance,
     applyCoordinatesFromMetadata,
-    applyAutoLayout,
-    fixCollidingCells
 } from "./Data/Helpers";
 import { ServiceEntityShape } from "./UI";
 
