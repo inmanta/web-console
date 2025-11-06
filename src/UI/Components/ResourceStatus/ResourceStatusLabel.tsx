@@ -31,7 +31,7 @@ export const ResourceStatusLabel: React.FC<Props> = ({ status, label }) => {
   }
 
   return (
-    <Label color={status} data-testid={`Status-${label}`}>
+    <Label variant="outline" color={status} data-testid={`Status-${label}`}>
       {label}
     </Label>
   );

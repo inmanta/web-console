@@ -1,8 +1,8 @@
 import { KeycloakConfig } from "keycloak-js";
 
-export interface KeycloakAuthConfig extends KeycloakConfig {
+export type KeycloakAuthConfig = KeycloakConfig & {
   method: "oidc";
-}
+};
 
 export interface LocalConfig {
   method: "database" | "jwt";

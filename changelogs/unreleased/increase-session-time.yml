@@ -1,0 +1,6 @@
+change-type: patch
+description: Increase session time to 12 hours
+destination-branches:
+- master
+- iso8
+sections: {}

@@ -88,5 +88,15 @@ export const GlobalStyles = createGlobalStyle`
     text-transform: capitalize;
   }
 
+  /** 
+   * We are overriding the blue label color to be darker than the default blue used for labels. 
+   * The default blue is not contrasting enough with the teal label color that is used for the skipped status.
+   * in PF 5 we'd use the info status label for "deploying", but moving to PF 6, they changed their info color to purple.
+   * And that was a change we didn't want for our UI.
+  */
+  .pf-v6-c-label.pf-m-outline.pf-m-blue {
+     --pf-v6-c-label--BorderColor: var(--pf-t--color--blue--50);
+  }
+
   ${MarkdownStyles}
 `;

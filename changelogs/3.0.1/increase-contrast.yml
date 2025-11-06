@@ -1,0 +1,8 @@
+change-type: patch
+description: | 
+  Increase the contrast of the blue label color to be darker than the default blue used for labels.
+  Adjust the teal color in the progress bar to contrast better with the success color.
+  Update the order of the stream outputs displayed in the compile reports page.
+  Align the position of the loading dot in the repair and deploy buttons.
+destination-branches: [master, iso8]
+sections: {}

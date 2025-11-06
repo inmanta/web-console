@@ -15,7 +15,7 @@ interface Props {
 export const CompileStageReportTable: React.FC<Props> = ({ reports }) => {
   const logs: LogViewerData[] = reports.map((report) => {
     return {
-      data: [report.command, report.errstream, report.outstream],
+      data: [report.command, report.outstream, report.errstream],
       name: report.name,
       id: report.id,
       duration: getDuration(report.started, report.completed),

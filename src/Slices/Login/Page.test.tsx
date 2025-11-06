@@ -94,7 +94,7 @@ describe("Login", () => {
     await userEvent.click(logInButton);
 
     await waitFor(() =>
-      expect(spiedCreateCookie).toHaveBeenCalledWith("inmanta_user", "test-token", 1)
+      expect(spiedCreateCookie).toHaveBeenCalledWith("inmanta_user", "test-token", 12)
     );
 
     await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith("/console"));

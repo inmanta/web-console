@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Tooltip } from "@patternfly/react-core";
+import { Button, Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import { DeployAgentsAction, useDeployAgents } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -62,8 +62,14 @@ export const ResourcePageActionButton: React.FC<Props> = ({ method, tooltip, tex
   ) : (
     <Tooltip content={tooltip} entryDelay={400}>
       <Button variant="secondary" isDisabled={showSpinner} onClick={() => handleClick()}>
-        {textContent}
-        {showSpinner && <CompileReportsIndication data-testid="dot-indication" />}
+        <Flex>
+          <FlexItem>{textContent}</FlexItem>
+          {showSpinner && (
+            <FlexItem>
+              <CompileReportsIndication data-testid="dot-indication" />
+            </FlexItem>
+          )}
+        </Flex>
       </Button>
     </Tooltip>
   );
