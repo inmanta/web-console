@@ -15,6 +15,10 @@ import { ServiceEntityBlock } from "../Shapes";
  * Instance composer state is being split into multiple objects that could be embedded into other available, so we need to recursively
  * go through all of them to group, and sort them
  *
+ * This function ensures that all attributes (including embedded entity attributes) are filtered to only include
+ * fields that are defined in the service model. This prevents extra fields (like 'id') from the backend
+ * from leaking into the service order items.
+ *
  * @param {ComposerServiceOrderItem} parentInstance Instance that is the main object and to which other instance are eventually connected
  * @param {ComposerServiceOrderItem[]} instances all of the instances that were created/edited in the instance, not including parentInstance
  * @param {ServiceModel | EmbeddedEntity} serviceModel - ServiceModel or EmbeddedEntity that is the model for the current iteration to build upon
@@ -67,7 +71,28 @@ export const shapesDataTransform = (
           }
 
           if (updatedInstance.action !== "delete" && updatedInstance.attributes) {
-            updated.push(updatedInstance.attributes);
+            // Filter embedded entity attributes to only include fields defined in the model
+            // This ensures no extra fields (like id) leak into the service order items
+            if (
+              typeof updatedInstance.attributes === "object" &&
+              !Array.isArray(updatedInstance.attributes)
+            ) {
+              const allowedEmbeddedKeys = new Set<string>([
+                ...(embeddedModel.attributes?.map((a) => a.name) || []),
+                ...(embeddedModel.embedded_entities?.map((e) => e.name) || []),
+                ...(embeddedModel.inter_service_relations?.map((r) => r.name) || []),
+              ]);
+
+              const filteredAttributes = Object.fromEntries(
+                Object.entries(updatedInstance.attributes).filter(([key]) =>
+                  allowedEmbeddedKeys.has(key)
+                )
+              );
+
+              updated.push(filteredAttributes);
+            } else {
+              updated.push(updatedInstance.attributes);
+            }
           }
         }
       });
