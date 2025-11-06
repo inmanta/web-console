@@ -218,7 +218,8 @@ export class ComposerPaper {
               cellConnectionRule.name,
               elementCell.id
             );
-            dispatchUpdateServiceOrderItems(targetCell, ActionEnum.UPDATE);
+            // Update the elementCell since that's the one that received the relation
+            dispatchUpdateServiceOrderItems(elementCell, ActionEnum.UPDATE);
 
             toggleLooseElement(this.paper.findViewByModel(connectingCell), EventActionEnum.REMOVE);
           }
