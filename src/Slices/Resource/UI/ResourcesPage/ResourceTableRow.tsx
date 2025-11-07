@@ -28,10 +28,10 @@ export const ResourceTableRow: React.FC<Props> = ({
         expand={
           row.numberOfDependencies > 0
             ? {
-                rowIndex: index,
-                isExpanded: isExpanded,
-                onToggle: onToggle,
-              }
+              rowIndex: index,
+              isExpanded: isExpanded,
+              onToggle: onToggle,
+            }
             : undefined
         }
       ></Td>
@@ -43,9 +43,6 @@ export const ResourceTableRow: React.FC<Props> = ({
       </Td>
       <Td dataLabel={words("resources.column.value")} modifier="breakWord">
         {row.value}
-      </Td>
-      <Td dataLabel={words("resources.column.requires")}>
-        {row.numberOfDependencies as React.ReactNode}
       </Td>
       <Td dataLabel={words("resources.column.deployState")}>
         <ResourceStatusLabel status={labelColorConfig[row.deployState]} label={row.deployState} />

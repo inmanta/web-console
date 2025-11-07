@@ -25,6 +25,11 @@ import {
     InputGroup,
     InputGroupItem,
     FormGroup,
+    Card,
+    CardBody,
+    CardTitle,
+    EmptyState,
+    EmptyStateBody
 } from "@patternfly/react-core";
 import { CheckCircleIcon, CheckIcon, SearchIcon, TimesCircleIcon, TimesIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
@@ -65,16 +70,16 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
     onInclude,
     onExclude,
 }) => (
-    <Tr key={state} style={{ borderBottom: 0 }}>
+    <Tr key={state}>
         <Td>
-            <span style={{ whiteSpace: "nowrap" }}>{state}</span>
+            <span className="pf-u-text-nowrap">{state}</span>
         </Td>
         <Td>
             <Button
                 variant="plain"
                 onClick={onInclude}
                 aria-label={`${state}-include-toggle`}
-                style={{ padding: 0, minWidth: "auto" }}
+                isInline
             >
                 <span aria-label={includeActive ? `${state}-include-active` : `${state}-include-inactive`}>
                     {includeActive ? (
@@ -96,7 +101,7 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
                 variant="plain"
                 onClick={onExclude}
                 aria-label={`${state}-exclude-toggle`}
-                style={{ padding: 0, minWidth: "auto" }}
+                isInline
             >
                 <span aria-label={excludeActive ? `${state}-exclude-active` : `${state}-exclude-inactive`}>
                     {excludeActive ? (
@@ -114,6 +119,107 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
             </Button>
         </Td>
     </Tr>
+);
+
+interface ActiveFilterGroupProps {
+    title: string;
+    values?: string[];
+    onRemove: (value: string) => void;
+}
+
+const ActiveFilterGroup: React.FC<ActiveFilterGroupProps> = ({ title, values, onRemove }) => {
+    if (!values || values.length === 0) {
+        return null;
+    }
+
+    return (
+        <Card isCompact>
+            <CardTitle>{title}</CardTitle>
+            <CardBody>
+                <LabelGroup isCompact className="pf-u-mt-sm">
+                    {values.map((value) => (
+                        <Label
+                            key={value}
+                            color={value.startsWith("!") ? "red" : "grey"}
+                            onClose={() => onRemove(value)}
+                        >
+                            {value}
+                        </Label>
+                    ))}
+                </LabelGroup>
+            </CardBody>
+        </Card>
+    );
+};
+
+interface ActiveFiltersSectionProps {
+    filter: Resource.Filter;
+    onClearAll: () => void;
+    hasActiveFilters: boolean;
+    removeTypeChip: (id: string) => void;
+    removeAgentChip: (id: string) => void;
+    removeValueChip: (id: string) => void;
+    removeStatusChip: (id: string) => void;
+}
+
+const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
+    filter,
+    onClearAll,
+    hasActiveFilters,
+    removeTypeChip,
+    removeAgentChip,
+    removeValueChip,
+    removeStatusChip,
+}) => (
+    <StackItem>
+        <Flex justifyContent={{ default: "justifyContentSpaceBetween" }} alignItems={{ default: "alignItemsCenter" }}>
+            <FlexItem>
+                <Title headingLevel="h3" size="md">
+                    Active filters
+                </Title>
+            </FlexItem>
+            {hasActiveFilters && (
+                <FlexItem>
+                    <Button variant="link" isInline onClick={onClearAll}>
+                        Clear all
+                    </Button>
+                </FlexItem>
+            )}
+        </Flex>
+        {hasActiveFilters ? (
+            <Stack hasGutter>
+                {filter.type && filter.type.length > 0 && (
+                    <StackItem>
+                        <ActiveFilterGroup title="Type" values={filter.type} onRemove={removeTypeChip} />
+                    </StackItem>
+                )}
+                {filter.agent && filter.agent.length > 0 && (
+                    <StackItem>
+                        <ActiveFilterGroup title="Agent" values={filter.agent} onRemove={removeAgentChip} />
+                    </StackItem>
+                )}
+                {filter.value && filter.value.length > 0 && (
+                    <StackItem>
+                        <ActiveFilterGroup title="Value" values={filter.value} onRemove={removeValueChip} />
+                    </StackItem>
+                )}
+                {filter.status && filter.status.length > 0 && (
+                    <StackItem>
+                        <ActiveFilterGroup title="Status" values={filter.status} onRemove={removeStatusChip} />
+                    </StackItem>
+                )}
+            </Stack>
+        ) : (
+            <EmptyState variant="xs">
+                <Title headingLevel="h4" size="md">
+                    No filters applied
+                </Title>
+                <EmptyStateBody>
+                    Select filters from the tabs above to refine your results.
+                </EmptyStateBody>
+            </EmptyState>
+        )}
+    </StackItem>
 );
 
 export const FilterWidgetComponent: React.FC<Props> = ({ onClose, filter, setFilter }) => {
@@ -212,16 +318,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ onClose, filter, setFil
         (filter.status && filter.status.length > 0);
 
     return (
-        <DrawerPanelContent
-            style={{
-                position: "sticky",
-                top: 0,
-                maxHeight: "100vh",
-                overflowY: "auto",
-                display: "flex",
-                flexDirection: "column",
-            }}
-        >
+        <DrawerPanelContent>
             <DrawerHead>
                 <Title headingLevel="h2" size="xl">
                     Filters
@@ -230,96 +327,100 @@ export const FilterWidgetComponent: React.FC<Props> = ({ onClose, filter, setFil
                     <DrawerCloseButton onClick={onClose} />
                 </DrawerActions>
             </DrawerHead>
-            <DrawerPanelBody style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-                <StackItem isFilled style={{ overflow: "auto", paddingBottom: "var(--pf-t--global--spacer--md)" }}>
-                    <Tabs
-                        activeKey={activeTabKey}
-                        onSelect={(_, tabIndex) => setActiveTabKey(tabIndex)}
-                    >
-                        <Tab eventKey={0} title={<TabTitleText>Resource</TabTitleText>}>
-                            <StackItem style={{ paddingTop: "var(--pf-t--global--spacer--md)" }}>
+            <DrawerPanelBody className="pf-u-flex-grow-1 pf-u-display-flex pf-u-flex-direction-column">
+                <Stack hasGutter>
+                    <StackItem isFilled className="pf-u-overflow-auto pf-u-pb-md">
+                        <Tabs
+                            activeKey={activeTabKey}
+                            onSelect={(_, tabIndex) => setActiveTabKey(tabIndex)}
+                        >
+                            <Tab eventKey={0} title={<TabTitleText>Resource</TabTitleText>}>
+                                <StackItem className="pf-u-pt-md">
+                                    <Stack hasGutter>
+                                        {/* Resource Id Section */}
+                                        <StackItem>
+                                            <Title headingLevel="h4" size="md">Resource Id</Title>
+                                        </StackItem>
+                                        <StackItem>
+                                            <FormGroup label="Type">
+                                                <InputGroup>
+                                                    <InputGroupItem isFill>
+                                                        <TextInput
+                                                            type="text"
+                                                            placeholder="Resource type..."
+                                                            value={typeInput}
+                                                            onChange={(_, value) => setTypeInput(value)}
+                                                            onKeyPress={(e) => {
+                                                                if (e.key === "Enter") {
+                                                                    e.preventDefault();
+                                                                    addTypeFilter();
+                                                                }
+                                                            }}
+                                                        />
+                                                    </InputGroupItem>
+                                                    <InputGroupItem>
+                                                        <Button variant="control" onClick={addTypeFilter}>+</Button>
+                                                    </InputGroupItem>
+                                                </InputGroup>
+                                            </FormGroup>
+                                        </StackItem>
+                                        <StackItem>
+                                            <FormGroup label="Value">
+                                                <InputGroup>
+                                                    <InputGroupItem isFill>
+                                                        <TextInput
+                                                            type="text"
+                                                            placeholder="Value..."
+                                                            value={valueInput}
+                                                            onChange={(_, value) => setValueInput(value)}
+                                                            onKeyPress={(e) => {
+                                                                if (e.key === "Enter") {
+                                                                    e.preventDefault();
+                                                                    addValueFilter();
+                                                                }
+                                                            }}
+                                                        />
+                                                    </InputGroupItem>
+                                                    <InputGroupItem>
+                                                        <Button variant="control" onClick={addValueFilter}>+</Button>
+                                                    </InputGroupItem>
+                                                </InputGroup>
+                                            </FormGroup>
+                                        </StackItem>
+
+                                        {/* Agent(s) Section */}
+                                        <StackItem className="pf-u-pt-md">
+                                            <FormGroup label="Agent(s)">
+                                                <InputGroup>
+                                                    <InputGroupItem isFill>
+                                                        <TextInput
+                                                            type="text"
+                                                            placeholder="Agent..."
+                                                            value={agentInput}
+                                                            onChange={(_, value) => setAgentInput(value)}
+                                                            onKeyPress={(e) => {
+                                                                if (e.key === "Enter") {
+                                                                    e.preventDefault();
+                                                                    addAgentFilter();
+                                                                }
+                                                            }}
+                                                        />
+                                                    </InputGroupItem>
+                                                    <InputGroupItem>
+                                                        <Button variant="control" onClick={addAgentFilter}>+</Button>
+                                                    </InputGroupItem>
+                                                </InputGroup>
+                                            </FormGroup>
+                                        </StackItem>
+                                    </Stack>
+                                </StackItem>
+                            </Tab>
+                            <Tab eventKey={1} title={<TabTitleText>Status</TabTitleText>}>
                                 <Stack hasGutter>
-                                    {/* Resource Id Section */}
                                     <StackItem>
-                                        <Title headingLevel="h4" size="md">Resource Id</Title>
-                                    </StackItem>
-                                    <StackItem>
-                                        <FormGroup label="Type">
-                                            <InputGroup>
-                                                <InputGroupItem isFill>
-                                                    <TextInput
-                                                        type="text"
-                                                        placeholder="Resource type..."
-                                                        value={typeInput}
-                                                        onChange={(_, value) => setTypeInput(value)}
-                                                        onKeyPress={(e) => {
-                                                            if (e.key === "Enter") {
-                                                                e.preventDefault();
-                                                                addTypeFilter();
-                                                            }
-                                                        }}
-                                                    />
-                                                </InputGroupItem>
-                                                <InputGroupItem>
-                                                    <Button variant="control" onClick={addTypeFilter}>+</Button>
-                                                </InputGroupItem>
-                                            </InputGroup>
-                                        </FormGroup>
-                                    </StackItem>
-                                    <StackItem>
-                                        <FormGroup label="Value">
-                                            <InputGroup>
-                                                <InputGroupItem isFill>
-                                                    <TextInput
-                                                        type="text"
-                                                        placeholder="Value..."
-                                                        value={valueInput}
-                                                        onChange={(_, value) => setValueInput(value)}
-                                                        onKeyPress={(e) => {
-                                                            if (e.key === "Enter") {
-                                                                e.preventDefault();
-                                                                addValueFilter();
-                                                            }
-                                                        }}
-                                                    />
-                                                </InputGroupItem>
-                                                <InputGroupItem>
-                                                    <Button variant="control" onClick={addValueFilter}>+</Button>
-                                                </InputGroupItem>
-                                            </InputGroup>
-                                        </FormGroup>
+                                        <Title headingLevel="h4" size="md">Deploy State</Title>
                                     </StackItem>
 
-                                    {/* Agent(s) Section */}
-                                    <StackItem style={{ paddingTop: "var(--pf-t--global--spacer--md)" }}>
-                                        <FormGroup label="Agent(s)">
-                                            <InputGroup>
-                                                <InputGroupItem isFill>
-                                                    <TextInput
-                                                        type="text"
-                                                        placeholder="Agent..."
-                                                        value={agentInput}
-                                                        onChange={(_, value) => setAgentInput(value)}
-                                                        onKeyPress={(e) => {
-                                                            if (e.key === "Enter") {
-                                                                e.preventDefault();
-                                                                addAgentFilter();
-                                                            }
-                                                        }}
-                                                    />
-                                                </InputGroupItem>
-                                                <InputGroupItem>
-                                                    <Button variant="control" onClick={addAgentFilter}>+</Button>
-                                                </InputGroupItem>
-                                            </InputGroup>
-                                        </FormGroup>
-                                    </StackItem>
-                                </Stack>
-                            </StackItem>
-                        </Tab>
-                        <Tab eventKey={1} title={<TabTitleText>Status</TabTitleText>}>
-                            <StackItem style={{ paddingTop: "var(--pf-t--global--spacer--md)" }}>
-                                <div style={{ width: "100%" }}>
                                     <Select
                                         toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
                                             <MenuToggle
@@ -328,7 +429,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ onClose, filter, setFil
                                                 onClick={() => setIsStatusFilterOpen(!isStatusFilterOpen)}
                                                 isExpanded={isStatusFilterOpen}
                                                 icon={<SearchIcon />}
-                                                style={{ width: "100%" }}
+                                                isFullWidth
                                             >
                                                 {words("resources.filters.status.placeholder")}
                                             </MenuToggle>
@@ -362,134 +463,21 @@ export const FilterWidgetComponent: React.FC<Props> = ({ onClose, filter, setFil
                                             </Tbody>
                                         </Table>
                                     </Select>
-                                </div>
-                            </StackItem>
-                        </Tab>
-                    </Tabs>
-                </StackItem>
-                <Divider />
-                <StackItem style={{ padding: "var(--pf-t--global--spacer--md)", minHeight: "200px" }}>
-                    <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
-                        <FlexItem>
-                            <Title headingLevel="h3" size="md">
-                                Active filters
-                            </Title>
-                        </FlexItem>
-                        {hasActiveFilters && (
-                            <FlexItem>
-                                <Button variant="link" isInline onClick={clearAllFilters}>
-                                    Clear all
-                                </Button>
-                            </FlexItem>
-                        )}
-                    </Flex>
-                    {hasActiveFilters ? (
-                        <Stack hasGutter style={{ marginTop: "var(--pf-t--global--spacer--md)" }}>
-                            {filter.type && filter.type.length > 0 && (
-                                <StackItem>
-                                    <div
-                                        style={{
-                                            border: "1px solid var(--pf-t--global--border--color--default)",
-                                            borderRadius: "var(--pf-t--global--border--radius--medium)",
-                                            padding: "var(--pf-t--global--spacer--sm)",
-                                        }}
-                                    >
-                                        <strong>Type</strong>
-                                        <LabelGroup style={{ marginTop: "var(--pf-t--global--spacer--sm)" }}>
-                                            {filter.type.map((typeValue) => (
-                                                <Label
-                                                    key={typeValue}
-                                                    color={typeValue.startsWith("!") ? "red" : "grey"}
-                                                    onClose={() => removeTypeChip(typeValue)}
-                                                >
-                                                    {typeValue}
-                                                </Label>
-                                            ))}
-                                        </LabelGroup>
-                                    </div>
-                                </StackItem>
-                            )}
-                            {filter.agent && filter.agent.length > 0 && (
-                                <StackItem>
-                                    <div
-                                        style={{
-                                            border: "1px solid var(--pf-t--global--border--color--default)",
-                                            borderRadius: "var(--pf-t--global--border--radius--medium)",
-                                            padding: "var(--pf-t--global--spacer--sm)",
-                                        }}
-                                    >
-                                        <strong>Agent</strong>
-                                        <LabelGroup style={{ marginTop: "var(--pf-t--global--spacer--sm)" }}>
-                                            {filter.agent.map((agentValue) => (
-                                                <Label
-                                                    key={agentValue}
-                                                    color={agentValue.startsWith("!") ? "red" : "grey"}
-                                                    onClose={() => removeAgentChip(agentValue)}
-                                                >
-                                                    {agentValue}
-                                                </Label>
-                                            ))}
-                                        </LabelGroup>
-                                    </div>
-                                </StackItem>
-                            )}
-                            {filter.value && filter.value.length > 0 && (
-                                <StackItem>
-                                    <div
-                                        style={{
-                                            border: "1px solid var(--pf-t--global--border--color--default)",
-                                            borderRadius: "var(--pf-t--global--border--radius--medium)",
-                                            padding: "var(--pf-t--global--spacer--sm)",
-                                        }}
-                                    >
-                                        <strong>Value</strong>
-                                        <LabelGroup style={{ marginTop: "var(--pf-t--global--spacer--sm)" }}>
-                                            {filter.value.map((valueValue) => (
-                                                <Label
-                                                    key={valueValue}
-                                                    color={valueValue.startsWith("!") ? "red" : "grey"}
-                                                    onClose={() => removeValueChip(valueValue)}
-                                                >
-                                                    {valueValue}
-                                                </Label>
-                                            ))}
-                                        </LabelGroup>
-                                    </div>
-                                </StackItem>
-                            )}
-                            {filter.status && filter.status.length > 0 && (
-                                <StackItem>
-                                    <div
-                                        style={{
-                                            border: "1px solid var(--pf-t--global--border--color--default)",
-                                            borderRadius: "var(--pf-t--global--border--radius--medium)",
-                                            padding: "var(--pf-t--global--spacer--sm)",
-                                        }}
-                                    >
-                                        <strong>Status</strong>
-                                        <LabelGroup style={{ marginTop: "var(--pf-t--global--spacer--sm)" }}>
-                                            {filter.status.map((statusValue) => (
-                                                <Label
-                                                    key={statusValue}
-                                                    color={statusValue.startsWith("!") ? "red" : "grey"}
-                                                    onClose={() => removeStatusChip(statusValue)}
-                                                >
-                                                    {statusValue}
-                                                </Label>
-                                            ))}
-                                        </LabelGroup>
-                                    </div>
-                                </StackItem>
-                            )}
-                        </Stack>
-                    ) : (
-                        <StackItem style={{ paddingTop: "var(--pf-t--global--spacer--md)" }}>
-                            <Content component="p" style={{ color: "var(--pf-t--global--text--color--subtle)" }}>
-                                No filters applied. Select filters from the tabs above to refine your results.
-                            </Content>
-                        </StackItem>
-                    )}
-                </StackItem>
+                                </Stack>
+                            </Tab>
+                        </Tabs>
+                    </StackItem>
+                    <Divider />
+                    <ActiveFiltersSection
+                        filter={filter}
+                        onClearAll={clearAllFilters}
+                        hasActiveFilters={hasActiveFilters ?? false}
+                        removeTypeChip={removeTypeChip}
+                        removeAgentChip={removeAgentChip}
+                        removeValueChip={removeValueChip}
+                        removeStatusChip={removeStatusChip}
+                    />
+                </Stack>
             </DrawerPanelBody>
         </DrawerPanelContent>
     );

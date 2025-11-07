@@ -5,7 +5,6 @@ import {
   Drawer,
   DrawerContent,
   DrawerContentBody,
-  Button,
   Content,
   PageSection,
 } from "@patternfly/react-core";
@@ -26,6 +25,7 @@ import { Summary } from "./Summary";
 
 export const Page: React.FC = () => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
+  const [activeFilterCount, setActiveFilterCount] = useState(0);
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "Resources",
   });
@@ -43,6 +43,23 @@ export const Page: React.FC = () => {
 
   const filterWithDefaults =
     !filter.disregardDefault && !filter.status ? { ...filter, status: ["!orphaned"] } : filter;
+
+  useEffect(() => {
+    const { disregardDefault, ...filterValues } = filterWithDefaults;
+    const count = Object.values(filterValues).reduce((acc, value) => {
+      if (!value) {
+        return acc;
+      }
+
+      if (Array.isArray(value)) {
+        return acc + value.length;
+      }
+
+      return acc + 1;
+    }, 0);
+
+    setActiveFilterCount(count);
+  }, [filterWithDefaults]);
 
   const { data, isSuccess, isError, refetch, error } = useGetResources({
     pageSize,
@@ -87,12 +104,7 @@ export const Page: React.FC = () => {
                 paddingBottom: "var(--pf-t--global--spacer--md)",
               }}
             >
-              <Content>
-                <Content component="h1">{words("inventory.tabs.resources")}</Content>
-              </Content>
-              <Button onClick={() => setIsDrawerExpanded(!isDrawerExpanded)} style={{ marginTop: "1rem" }}>
-                {isDrawerExpanded ? "Hide Filters" : "Show Filters"}
-              </Button>
+              <Content component="h1">{words("inventory.tabs.resources")}</Content>
               <ResourceTableControls
                 summaryWidget={<Summary data={data} updateFilter={updateFilter} />}
                 paginationWidget={
@@ -103,8 +115,9 @@ export const Page: React.FC = () => {
                     setCurrentPage={setCurrentPage}
                   />
                 }
-                filter={filterWithDefaults}
-                setFilter={setFilter}
+                onToggleFilters={() => setIsDrawerExpanded(!isDrawerExpanded)}
+                isDrawerExpanded={isDrawerExpanded}
+                activeFilterCount={activeFilterCount}
               />
             </PageSection>
             <PageSection hasBodyWrapper={false} isFilled padding={{ default: "padding" }}>

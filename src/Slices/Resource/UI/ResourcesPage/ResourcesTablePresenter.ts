@@ -18,10 +18,6 @@ export class ResourcesTablePresenter implements TablePresenter<Resource.Resource
         apiName: "resource_id_value",
       },
       {
-        displayName: words("resources.column.requires"),
-        apiName: "requires",
-      },
-      {
         displayName: words("resources.column.deployState"),
         apiName: "status",
       },

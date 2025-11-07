@@ -1,38 +1,53 @@
 import React from "react";
-import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { Resource } from "@/Core";
-import { FilterForm } from "@/UI/Components";
-import { DeployStateFilter } from "./DeployStateFilter";
+import {
+  Badge,
+  Button,
+  Flex,
+  FlexItem,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+} from "@patternfly/react-core";
+import { FilterIcon } from "@patternfly/react-icons";
 
 interface Props {
   summaryWidget: React.ReactNode;
   paginationWidget: React.ReactNode;
-  filter: Resource.FilterWithDefaultHandling;
-  setFilter: (filter: Resource.FilterWithDefaultHandling) => void;
+  onToggleFilters: () => void;
+  isDrawerExpanded: boolean;
+  activeFilterCount: number;
 }
 
 export const ResourceTableControls: React.FC<Props> = ({
   summaryWidget,
   paginationWidget,
-  filter,
-  setFilter,
+  onToggleFilters,
+  isDrawerExpanded,
+  activeFilterCount,
 }) => (
   <>
     <Toolbar
-      clearAllFilters={() => {
-        setFilter({ disregardDefault: true });
-      }}
       aria-label="Resources-toolbar"
     >
       <ToolbarContent>
         {summaryWidget}
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
-      </ToolbarContent>
-      <ToolbarContent>
         <ToolbarItem>
-          <DeployStateFilter filter={filter} setFilter={setFilter} />
+          <Button
+            onClick={onToggleFilters}
+            variant="link"
+            icon={<FilterIcon />}
+            iconPosition="end"
+            aria-pressed={isDrawerExpanded}
+          >
+            <Flex alignItems={{ default: "alignItemsCenter" }} spaceItems={{ default: "spaceItemsSm" }}>
+              <FlexItem>
+                <Badge>{activeFilterCount}</Badge>
+              </FlexItem>
+              <FlexItem>Filters</FlexItem>
+            </Flex>
+          </Button>
         </ToolbarItem>
-        <FilterForm filter={filter} setFilter={setFilter} />
       </ToolbarContent>
     </Toolbar>
   </>
