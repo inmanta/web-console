@@ -119,7 +119,7 @@
   },
   "dependencies": {
     "@inmanta/rappid": "^4.0.0",
-    "@joint/layout-directed-graph": "^4.0.1",
+    "@joint/layout-directed-graph": "^4.2.0",
     "@loadable/component": "^5.16.7",
     "@monaco-editor/react": "^4.7.0",
     "@patternfly/react-charts": "^8.3.1",

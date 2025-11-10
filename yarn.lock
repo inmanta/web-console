@@ -644,19 +644,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dagrejs/dagre@npm:~1.0.4":
-  version: 1.0.4
-  resolution: "@dagrejs/dagre@npm:1.0.4"
+"@dagrejs/dagre@npm:~1.1.4":
+  version: 1.1.8
+  resolution: "@dagrejs/dagre@npm:1.1.8"
   dependencies:
-    "@dagrejs/graphlib": "npm:2.1.13"
-  checksum: 10/12be892151efa2d47f2cd72a49bea0566c2d6d2446f9798f743aa5aac5dec1f62c408f594f64aa3dec436045d7dcbef64a9ef164c97a1a437a8fcc84dc79ded4
+    "@dagrejs/graphlib": "npm:2.2.4"
+  checksum: 10/648f60b8d6c05ec3367d1c7a4f2da32b7c26273e40234ce37bace606cd1e4f882ef7947452a0f0df4b34f1bbbc9f3cbae29f0f6af19fbffb8bc9f5e9b97fc3e8
   languageName: node
   linkType: hard
 
-"@dagrejs/graphlib@npm:2.1.13, @dagrejs/graphlib@npm:~2.1.13":
-  version: 2.1.13
-  resolution: "@dagrejs/graphlib@npm:2.1.13"
-  checksum: 10/92b49b6f57007593174d53f8f90228d7f3e9f2e7869348424057fd2bcca2b0ca393c74181ec9e1c7f02b30a925de2a59ec4cdfcd0fe75f873c2f85fa3cfd4da0
+"@dagrejs/graphlib@npm:2.2.4, @dagrejs/graphlib@npm:~2.2.4":
+  version: 2.2.4
+  resolution: "@dagrejs/graphlib@npm:2.2.4"
+  checksum: 10/1fc5393525a3d666284ca740867d082768bc87ff61f5f181eb5c1a73c1a6e328ad23581f7415c81df2614171b8a4b4a8e6a417eefd7f9fca74a4a625ec3aa848
   languageName: node
   linkType: hard
 
@@ -1193,7 +1193,7 @@ __metadata:
     "@eslint/eslintrc": "npm:^3.3.1"
     "@eslint/js": "npm:^9.37.0"
     "@inmanta/rappid": "npm:^4.0.0"
-    "@joint/layout-directed-graph": "npm:^4.0.1"
+    "@joint/layout-directed-graph": "npm:^4.2.0"
     "@loadable/component": "npm:^5.16.7"
     "@monaco-editor/react": "npm:^4.7.0"
     "@patternfly/react-charts": "npm:^8.3.1"
@@ -1435,21 +1435,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joint/core@npm:~4.0.1, @joint/core@npm:~4.0.2":
+"@joint/core@npm:~4.0.1":
   version: 4.0.3
   resolution: "@joint/core@npm:4.0.3"
   checksum: 10/a41e020c7c24d18a689a920a7a2f738217636893bf7f1b6ef2914b1eebfe70c8b90902b5d04ca5fbfdb3ef01aed1e1c7ecb9385e04cefa1d3510877346fca612
   languageName: node
   linkType: hard
 
-"@joint/layout-directed-graph@npm:^4.0.1":
-  version: 4.0.3
-  resolution: "@joint/layout-directed-graph@npm:4.0.3"
+"@joint/core@npm:~4.2.0":
+  version: 4.2.0
+  resolution: "@joint/core@npm:4.2.0"
+  checksum: 10/abe9808012808878cd6d76f98ff6167edf3657b9f0ea019fb97be8ca272afda0d99e6260b62b4eb4a1facadd4958a4f218be880c3b508bd88ab7cf0567fd2d67
+  languageName: node
+  linkType: hard
+
+"@joint/layout-directed-graph@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "@joint/layout-directed-graph@npm:4.2.0"
   dependencies:
-    "@dagrejs/dagre": "npm:~1.0.4"
-    "@dagrejs/graphlib": "npm:~2.1.13"
-    "@joint/core": "npm:~4.0.2"
-  checksum: 10/dd878173a0214bab70a43ad4d91182b978e14247ec4b20e56c7d5ef09450283d03bcc8f33c47116128ffe80ca17a23d14317fe4fdd4d461f271eb986ea7993e8
+    "@dagrejs/dagre": "npm:~1.1.4"
+    "@dagrejs/graphlib": "npm:~2.2.4"
+    "@joint/core": "npm:~4.2.0"
+  checksum: 10/321600cd8324fb2d7051f708e3f1141bb488369dac3c2306645b4375286e137b6dfb8428047f7fd6e4926eaa12d74d128257482032561c6cd743ef6cd741238d
   languageName: node
   linkType: hard
 
