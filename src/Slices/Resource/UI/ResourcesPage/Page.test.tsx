@@ -43,6 +43,24 @@ function setup(entries?: string[], halted: boolean = false) {
   };
 }
 
+async function openFiltersDrawer() {
+  const filtersButton = await screen.findByRole("button", { name: /Filters/ });
+
+  if (filtersButton.getAttribute("aria-pressed") !== "true") {
+    await userEvent.click(filtersButton);
+  }
+}
+
+async function openStatusFiltersTab() {
+  await openFiltersDrawer();
+
+  const statusTab = await screen.findByRole("tab", {
+    name: words("resources.filters.tabs.status"),
+  });
+
+  await userEvent.click(statusTab);
+}
+
 describe("ResourcesPage", () => {
   const server = setupServer();
 
@@ -261,7 +279,7 @@ describe("ResourcesPage", () => {
     const rows = await screen.findAllByLabelText("Resource Table Row");
 
     expect(rows[0]).toHaveTextContent("/tmp/file4");
-    expect(rows[5]).toHaveTextContent("std::Directoryagent2/tmp/dir50skippedShow Details");
+    expect(rows[5]).toHaveTextContent("std::Directoryagent2/tmp/dir5skippedShow Details");
 
     const stateButton = await screen.findByRole("button", { name: "Agent" });
 
@@ -271,7 +289,7 @@ describe("ResourcesPage", () => {
 
     const updatedRows = await screen.findAllByLabelText("Resource Table Row");
 
-    expect(updatedRows[0]).toHaveTextContent("std::Directoryagent2/tmp/dir50skippedShow Details");
+    expect(updatedRows[0]).toHaveTextContent("std::Directoryagent2/tmp/dir5skippedShow Details");
     expect(updatedRows[5]).toHaveTextContent("/tmp/file4");
 
     await act(async () => {
@@ -324,9 +342,9 @@ describe("ResourcesPage", () => {
 
   it.each`
     filterType  | filterValue | placeholderText                                 | filterUrlName
-    ${"search"} | ${"agent2"} | ${words("resources.filters.agent.placeholder")} | ${"agent"}
-    ${"search"} | ${"File"}   | ${words("resources.filters.type.placeholder")}  | ${"resource_type"}
-    ${"search"} | ${"tmp"}    | ${words("resources.filters.value.placeholder")} | ${"resource_id_value"}
+    ${"search"} | ${"agent2"} | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}
+    ${"search"} | ${"File"}   | ${words("resources.filters.resource.type.placeholder")}  | ${"resource_type"}
+    ${"search"} | ${"tmp"}    | ${words("resources.filters.resource.value.placeholder")} | ${"resource_id_value"}
   `(
     "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the resources with that $filterUrlName should be fetched and shown",
     async ({ filterType, filterValue, placeholderText, filterUrlName }) => {
@@ -352,6 +370,8 @@ describe("ResourcesPage", () => {
       });
 
       expect(initialRows).toHaveLength(6);
+
+      await openFiltersDrawer();
 
       const input = await screen.findByPlaceholderText(placeholderText);
 
@@ -381,9 +401,9 @@ describe("ResourcesPage", () => {
 
   it.each`
     filterValueOne | placeholderTextOne                              | filterUrlNameOne       | filterValueTwo | placeholderTextTwo                              | filterUrlNameTwo
-    ${"agent2"}    | ${words("resources.filters.agent.placeholder")} | ${"agent"}             | ${"file3"}     | ${words("resources.filters.value.placeholder")} | ${"resource_id_value"}
-    ${"Directory"} | ${words("resources.filters.type.placeholder")}  | ${"resource_type"}     | ${"agent2"}    | ${words("resources.filters.agent.placeholder")} | ${"agent"}
-    ${"tmp"}       | ${words("resources.filters.value.placeholder")} | ${"resource_id_value"} | ${"File"}      | ${words("resources.filters.type.placeholder")}  | ${"resource_type"}
+    ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")}  | ${"agent"}             | ${"file3"}     | ${words("resources.filters.resource.value.placeholder")} | ${"resource_id_value"}
+    ${"Directory"} | ${words("resources.filters.resource.type.placeholder")}   | ${"resource_type"}     | ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}
+    ${"tmp"}       | ${words("resources.filters.resource.value.placeholder")}  | ${"resource_id_value"} | ${"File"}      | ${words("resources.filters.resource.type.placeholder")}  | ${"resource_type"}
   `(
     "when using the search filters of type $filterType with value $filterValueOne and text $placeholderTextOne combined with $filterType with value $filterValueTwo and text $placeholderText then the resources with that $filterUrlNameOne and $filterUrlNameTwo should be fetched and shown",
     async ({
@@ -420,9 +440,11 @@ describe("ResourcesPage", () => {
 
       expect(initialRows).toHaveLength(6);
 
+      await openFiltersDrawer();
+
       const inputOne = await screen.findByPlaceholderText(placeholderTextOne);
 
-      await userEvent.type(inputOne, `${filterValueOne}`);
+      await userEvent.type(inputOne, `${filterValueOne}{enter}`);
 
       const inputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
 
@@ -476,20 +498,22 @@ describe("ResourcesPage", () => {
 
     expect(initialRows).toHaveLength(6);
 
+    await openFiltersDrawer();
+
     const inputOne = await screen.findByPlaceholderText(
-      words("resources.filters.agent.placeholder")
+      words("resources.filters.resource.agent.placeholder")
     );
 
-    await userEvent.type(inputOne, `${filterValueOne}`);
+    await userEvent.type(inputOne, `${filterValueOne}{enter}`);
 
     const inputTwo = await screen.findByPlaceholderText(
-      words("resources.filters.type.placeholder")
+      words("resources.filters.resource.type.placeholder")
     );
 
-    await userEvent.type(inputTwo, `${filterValueTwo}`);
+    await userEvent.type(inputTwo, `${filterValueTwo}{enter}`);
 
     const inputThree = await screen.findByPlaceholderText(
-      words("resources.filters.value.placeholder")
+      words("resources.filters.resource.value.placeholder")
     );
 
     await userEvent.type(inputThree, `${filterValueThree}{enter}`);
@@ -539,17 +563,15 @@ describe("ResourcesPage", () => {
 
       expect(initialRows).toHaveLength(6);
 
-      const toolbar = await screen.findByRole("generic", {
-        name: "Resources-toolbar",
+      await openStatusFiltersTab();
+
+      const statusToggle = await screen.findByRole("button", {
+        name: "status-toggle",
       });
 
-      const input = await within(toolbar).findByRole("button", {
-        name: "Deploy State-toggle",
-      });
+      await userEvent.click(statusToggle);
 
-      await userEvent.click(input);
-
-      const toggle = await screen.findByRole("generic", {
+      const toggle = await screen.findByRole("button", {
         name: `${filterValue}-${option}-toggle`,
       });
 
@@ -593,12 +615,15 @@ describe("ResourcesPage", () => {
 
     expect(initialRows).toHaveLength(6);
 
-    const clearButtons = await screen.findAllByText("Clear all filters");
-    const visibleClearButton = clearButtons[clearButtons.length - 1];
+    await openFiltersDrawer();
 
-    expect(visibleClearButton).toBeVisible();
+    const clearAllButton = await screen.findByRole("button", {
+      name: words("resources.filters.active.clearAll"),
+    });
 
-    await userEvent.click(visibleClearButton);
+    expect(clearAllButton).toBeVisible();
+
+    await userEvent.click(clearAllButton);
 
     const initialRowsAfterClear = await screen.findAllByRole("row", {
       name: "Resource Table Row",
@@ -606,7 +631,15 @@ describe("ResourcesPage", () => {
 
     expect(initialRowsAfterClear).toHaveLength(2);
 
-    await userEvent.click(await screen.findByRole("button", { name: "Reset-filters" }));
+    await openStatusFiltersTab();
+
+    const statusToggle = await screen.findByRole("button", { name: "status-toggle" });
+
+    await userEvent.click(statusToggle);
+
+    await userEvent.click(
+      await screen.findByRole("button", { name: "orphaned-exclude-toggle" })
+    );
 
     const initialRowsAfterReset = await screen.findAllByRole("row", {
       name: "Resource Table Row",

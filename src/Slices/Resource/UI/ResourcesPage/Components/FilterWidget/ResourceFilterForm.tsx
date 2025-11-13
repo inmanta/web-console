@@ -29,7 +29,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
 }) => (
     <Stack hasGutter style={{ padding: "1rem 0" }}>
         <StackItem>
-            <Title headingLevel="h4" size="md">
+            <Title headingLevel="h3" size="md">
                 {words("resources.filters.resource.sectionTitle")}
             </Title>
         </StackItem>

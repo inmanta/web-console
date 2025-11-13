@@ -21,12 +21,8 @@ export class ResourcesTablePresenter implements TablePresenter<Resource.Resource
         displayName: words("resources.column.deployState"),
         apiName: "status",
       },
-      {
-        displayName: "",
-        apiName: "details",
-      },
     ];
-    this.numberOfColumns = this.columnHeads.length + 1;
+    this.numberOfColumns = this.columnHeads.length + 2;
   }
 
   createRows(sourceData: Resource.Resource[]): Resource.Row[] {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import { Button, FormGroup, InputGroup, InputGroupItem, TextInput } from "@patternfly/react-core";
 
 /**
@@ -29,6 +29,7 @@ export const AddableTextInput: React.FC<AddableTextInputProps> = ({
     buttonLabel = "+",
 }) => {
     const [value, setValue] = useState("");
+    const inputId = useId();
 
     const handleAdd = () => {
         const trimmedValue = value.trim();
@@ -47,15 +48,17 @@ export const AddableTextInput: React.FC<AddableTextInputProps> = ({
     };
 
     return (
-        <FormGroup label={label}>
+        <FormGroup label={label} fieldId={inputId}>
             <InputGroup>
                 <InputGroupItem isFill>
                     <TextInput
+                        id={inputId}
                         type="text"
                         placeholder={placeholder}
                         value={value}
                         onChange={(_, nextValue) => setValue(nextValue)}
                         onKeyPress={handleKeyPress}
+                        aria-label={label}
                     />
                 </InputGroupItem>
                 <InputGroupItem>

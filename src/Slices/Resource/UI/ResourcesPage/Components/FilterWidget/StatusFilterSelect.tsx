@@ -39,7 +39,7 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({ selected
     return (
         <Stack hasGutter style={{ padding: "1rem 0" }}>
             <StackItem>
-                <Title headingLevel="h4" size="md">
+                <Title headingLevel="h3" size="md">
                     Deploy State
                 </Title>
             </StackItem>
