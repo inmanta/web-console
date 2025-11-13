@@ -56,7 +56,7 @@ export const ResourcesTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact} isStickyHeader>
       <Thead>
         <Tr>
-          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")} />
+          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")}></Th>
           {heads}
         </Tr>
       </Thead>

@@ -7,6 +7,8 @@ import {
   DrawerContentBody,
   Content,
   PageSection,
+  Stack,
+  StackItem,
 } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
@@ -83,71 +85,93 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     return (
-      <Drawer isExpanded={isDrawerExpanded} isInline>
-        <DrawerContent
-          panelContent={
-            <FilterWidgetComponent
-              onClose={() => setIsDrawerExpanded(false)}
-              filter={filterWithDefaults}
-              setFilter={setFilter}
-            />
-          }
+      <>
+        <PageSection
+          hasBodyWrapper={false}
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 400,
+            backgroundColor: "var(--pf-t--global--background--color--primary--default)",
+            paddingBottom: "var(--pf-t--global--spacer--md)",
+          }}
         >
-          <DrawerContentBody>
-            <PageSection
-              hasBodyWrapper={false}
-              style={{
-                position: "sticky",
-                top: 0,
-                zIndex: 400,
-                backgroundColor: "var(--pf-t--global--background--color--primary--default)",
-                paddingBottom: "var(--pf-t--global--spacer--md)",
-              }}
-            >
-              <Content component="h1">{words("inventory.tabs.resources")}</Content>
-              <ResourceTableControls
-                summaryWidget={<Summary data={data} updateFilter={updateFilter} />}
-                paginationWidget={
-                  <PaginationWidget
-                    data={data}
-                    pageSize={pageSize}
-                    setPageSize={setPageSize}
-                    setCurrentPage={setCurrentPage}
-                  />
-                }
-                onToggleFilters={() => setIsDrawerExpanded(!isDrawerExpanded)}
-                isDrawerExpanded={isDrawerExpanded}
-                activeFilterCount={activeFilterCount}
+          <Content component="h1">{words("inventory.tabs.resources")}</Content>
+          <ResourceTableControls
+            summaryWidget={<Summary data={data} updateFilter={updateFilter} />}
+            paginationWidget={
+              <PaginationWidget
+                data={data}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                setCurrentPage={setCurrentPage}
               />
-            </PageSection>
-            <PageSection hasBodyWrapper={false} isFilled padding={{ default: "padding" }}>
-              {data.data.length <= 0 ? (
-                <EmptyView message={words("resources.empty.message")} aria-label="ResourcesPage-Empty" />
-              ) : (
-                <>
-                  <ResourcesTableProvider
-                    sort={sort}
-                    setSort={setSort}
-                    resources={data.data}
-                    aria-label="ResourcesPage-Success"
-                  />
-                  <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
-                    <FlexItem>
-                      <PaginationWidget
-                        data={data}
-                        pageSize={pageSize}
-                        setPageSize={setPageSize}
-                        setCurrentPage={setCurrentPage}
-                        variant="bottom"
+            }
+            onToggleFilters={() => setIsDrawerExpanded(!isDrawerExpanded)}
+            isDrawerExpanded={isDrawerExpanded}
+            activeFilterCount={activeFilterCount}
+          />
+        </PageSection>
+        <PageSection
+          hasBodyWrapper={false}
+          isFilled
+          padding={{ default: "padding" }}
+          style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+        >
+          <Drawer
+            isExpanded={isDrawerExpanded}
+            isInline
+            style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+          >
+            <DrawerContent
+              panelContent={
+                <FilterWidgetComponent
+                  onClose={() => setIsDrawerExpanded(false)}
+                  filter={filterWithDefaults}
+                  setFilter={setFilter}
+                />
+              }
+            >
+              <DrawerContentBody
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flex: "1 1 auto",
+                  minHeight: 0,
+                }}
+              >
+                {data.data.length <= 0 ? (
+                  <EmptyView message={words("resources.empty.message")} aria-label="ResourcesPage-Empty" />
+                ) : (
+                  <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+                    <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                      <ResourcesTableProvider
+                        sort={sort}
+                        setSort={setSort}
+                        resources={data.data}
+                        aria-label="ResourcesPage-Success"
                       />
-                    </FlexItem>
-                  </Flex>
-                </>
-              )}
-            </PageSection>
-          </DrawerContentBody>
-        </DrawerContent>
-      </Drawer>
+                    </StackItem>
+                    <StackItem>
+                      <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+                        <FlexItem>
+                          <PaginationWidget
+                            data={data}
+                            pageSize={pageSize}
+                            setPageSize={setPageSize}
+                            setCurrentPage={setCurrentPage}
+                            variant="bottom"
+                          />
+                        </FlexItem>
+                      </Flex>
+                    </StackItem>
+                  </Stack>
+                )}
+              </DrawerContentBody>
+            </DrawerContent>
+          </Drawer>
+        </PageSection>
+      </>
     );
   }
 

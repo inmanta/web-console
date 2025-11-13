@@ -9,6 +9,7 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { FilterIcon } from "@patternfly/react-icons";
+import { words } from "@/UI";
 
 interface Props {
   summaryWidget: React.ReactNode;
@@ -44,7 +45,7 @@ export const ResourceTableControls: React.FC<Props> = ({
               <FlexItem>
                 <Badge>{activeFilterCount}</Badge>
               </FlexItem>
-              <FlexItem>Filters</FlexItem>
+              <FlexItem>{words("resources.filters")}</FlexItem>
             </Flex>
           </Button>
         </ToolbarItem>
