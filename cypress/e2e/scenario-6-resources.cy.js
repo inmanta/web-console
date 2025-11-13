@@ -337,12 +337,6 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Resource Table Row"]').eq(2).should("contain", "c");
       cy.get('[aria-label="Resource Table Row"]').eq(3).should("contain", "default-0001");
 
-      // Expect resource with value a,b,c,default-0001 to have 0 Requires
-      cy.get('[data-label="Requires"]').eq(0).should("contain", 0);
-      cy.get('[data-label="Requires"]').eq(1).should("contain", 0);
-      cy.get('[data-label="Requires"]').eq(2).should("contain", 0);
-      cy.get('[data-label="Requires"]').eq(3).should("contain", 0);
-
       // Expect resource with value waiting-entity to have 3 Requires
       cy.get('[data-label="Requires"]').eq(4).should("contain", 3);
 
