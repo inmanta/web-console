@@ -11,10 +11,10 @@ import { words } from "@/UI/words";
  * @property {() => void} [onRemoveGroup] - Callback executed when the entire label group is closed.
  */
 export interface ActiveFilterGroupProps {
-    title: string;
-    values?: string[];
-    onRemove: (value: string) => void;
-    onRemoveGroup?: () => void;
+  title: string;
+  values?: string[];
+  onRemove: (value: string) => void;
+  onRemoveGroup?: () => void;
 }
 
 /**
@@ -23,30 +23,36 @@ export interface ActiveFilterGroupProps {
  * @param {ActiveFilterGroupProps} props - Component props.
  * @returns {React.ReactElement | null} The rendered label group or null if no values are present.
  */
-export const ActiveFilterGroup: React.FC<ActiveFilterGroupProps> = ({ title, values, onRemove, onRemoveGroup }) => {
-    if (!values || values.length === 0) {
-        return null;
-    }
+export const ActiveFilterGroup: React.FC<ActiveFilterGroupProps> = ({
+  title,
+  values,
+  onRemove,
+  onRemoveGroup,
+}) => {
+  if (!values || values.length === 0) {
+    return null;
+  }
 
-    return (
-        <LabelGroup
-            categoryName={title}
-            isCompact
-            isClosable={Boolean(onRemoveGroup)}
-            onClick={onRemoveGroup}
-            isEditable
-            closeBtnAriaLabel={onRemoveGroup ? words("resources.filters.active.group.close")(title) : undefined}
+  return (
+    <LabelGroup
+      categoryName={title}
+      isCompact
+      isClosable={Boolean(onRemoveGroup)}
+      onClick={onRemoveGroup}
+      isEditable
+      closeBtnAriaLabel={
+        onRemoveGroup ? words("resources.filters.active.group.close")(title) : undefined
+      }
+    >
+      {values.map((value) => (
+        <Label
+          key={value}
+          color={value.startsWith("!") ? "red" : "grey"}
+          onClose={() => onRemove(value)}
         >
-            {values.map((value) => (
-                <Label
-                    key={value}
-                    color={value.startsWith("!") ? "red" : "grey"}
-                    onClose={() => onRemove(value)}
-                >
-                    {value}
-                </Label>
-            ))}
-        </LabelGroup>
-    );
+          {value}
+        </Label>
+      ))}
+    </LabelGroup>
+  );
 };
-

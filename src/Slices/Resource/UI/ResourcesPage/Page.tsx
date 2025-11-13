@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Flex,
   FlexItem,
@@ -14,12 +14,7 @@ import { Resource } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGetResources } from "@/Data/Queries";
-import {
-  EmptyView,
-  PaginationWidget,
-  ErrorView,
-  LoadingView,
-} from "@/UI/Components";
+import { EmptyView, PaginationWidget, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { ResourceTableControls, FilterWidgetComponent } from "./Components";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
@@ -43,11 +38,14 @@ export const Page: React.FC = () => {
     route: "Resources",
   });
 
-  const filterWithDefaults =
-    !filter.disregardDefault && !filter.status ? { ...filter, status: ["!orphaned"] } : filter;
+  const filterWithDefaults = useMemo(() => {
+    return !filter.disregardDefault && !filter.status
+      ? { ...filter, status: ["!orphaned"] }
+      : filter;
+  }, [filter]);
 
   useEffect(() => {
-    const { disregardDefault, ...filterValues } = filterWithDefaults;
+    const { disregardDefault: _disregardDefault, ...filterValues } = filterWithDefaults;
     const count = Object.values(filterValues).reduce((acc, value) => {
       if (!value) {
         return acc;
@@ -141,7 +139,10 @@ export const Page: React.FC = () => {
                 }}
               >
                 {data.data.length <= 0 ? (
-                  <EmptyView message={words("resources.empty.message")} aria-label="ResourcesPage-Empty" />
+                  <EmptyView
+                    message={words("resources.empty.message")}
+                    aria-label="ResourcesPage-Empty"
+                  />
                 ) : (
                   <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
                     <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>

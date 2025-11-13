@@ -542,7 +542,8 @@ const dict = {
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.clearAll": "Clear all",
   "resources.filters.active.empty.title": "No filters applied",
-  "resources.filters.active.empty.body": "Select filters from the tabs above to refine your results.",
+  "resources.filters.active.empty.body":
+    "Select filters from the tabs above to refine your results.",
   "resources.filters.active.group.close": (group: string) => `Remove ${group} filters`,
   "resources.deploySummary.title": "Deployment state summary",
   "resources.deploySummary.deploy": "Deploy",
@@ -583,6 +584,7 @@ const dict = {
   "resources.file.get": "Get file",
   "resources.file.error": "Error fetching file content",
   "resources.filters": "Filters",
+
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",
   "discovered.column.agent": "Agent",

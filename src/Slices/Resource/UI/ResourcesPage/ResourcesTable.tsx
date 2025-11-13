@@ -32,15 +32,15 @@ export const ResourcesTable: React.FC<Props> = ({
     const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
     const sortParams = hasSort
       ? {
-        sort: {
-          sortBy: {
-            index: activeSortIndex,
-            direction: sort.order,
+          sort: {
+            sortBy: {
+              index: activeSortIndex,
+              direction: sort.order,
+            },
+            onSort,
+            columnIndex,
           },
-          onSort,
-          columnIndex,
-        },
-      }
+        }
       : {};
 
     const widthModifier = smallHeaders.includes(apiName) ? "fitContent" : "nowrap";
@@ -56,9 +56,13 @@ export const ResourcesTable: React.FC<Props> = ({
     <Table {...props} variant={TableVariant.compact} isStickyHeader>
       <Thead>
         <Tr>
-          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")}/>
+          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")} />
           {heads}
-          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")} aria-label="Details"/>
+          <Th
+            modifier="fitContent"
+            screenReaderText={words("common.emptyColumnHeader")}
+            aria-label="Details"
+          />
         </Tr>
       </Thead>
       {rows.map((row, index) => (

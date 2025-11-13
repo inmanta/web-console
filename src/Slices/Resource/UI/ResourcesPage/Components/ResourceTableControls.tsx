@@ -27,9 +27,7 @@ export const ResourceTableControls: React.FC<Props> = ({
   activeFilterCount,
 }) => (
   <>
-    <Toolbar
-      aria-label="Resources-toolbar"
-    >
+    <Toolbar aria-label="Resources-toolbar">
       <ToolbarContent>
         {summaryWidget}
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
@@ -41,7 +39,10 @@ export const ResourceTableControls: React.FC<Props> = ({
             iconPosition="end"
             aria-pressed={isDrawerExpanded}
           >
-            <Flex alignItems={{ default: "alignItemsCenter" }} spaceItems={{ default: "spaceItemsSm" }}>
+            <Flex
+              alignItems={{ default: "alignItemsCenter" }}
+              spaceItems={{ default: "spaceItemsSm" }}
+            >
               <FlexItem>
                 <Badge>{activeFilterCount}</Badge>
               </FlexItem>

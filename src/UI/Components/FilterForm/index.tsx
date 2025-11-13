@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { ToolbarGroup, ToolbarItem, Stack, StackItem, Toolbar, ToolbarContent } from "@patternfly/react-core";
+import {
+  ToolbarGroup,
+  ToolbarItem,
+  Stack,
+  StackItem,
+  Toolbar,
+  ToolbarContent,
+} from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { words } from "@/UI/words";
 import { FreeTextFilter } from "./FreeTextFilter";

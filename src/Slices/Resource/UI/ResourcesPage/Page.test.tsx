@@ -341,7 +341,7 @@ describe("ResourcesPage", () => {
   });
 
   it.each`
-    filterType  | filterValue | placeholderText                                 | filterUrlName
+    filterType  | filterValue | placeholderText                                          | filterUrlName
     ${"search"} | ${"agent2"} | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}
     ${"search"} | ${"File"}   | ${words("resources.filters.resource.type.placeholder")}  | ${"resource_type"}
     ${"search"} | ${"tmp"}    | ${words("resources.filters.resource.value.placeholder")} | ${"resource_id_value"}
@@ -400,10 +400,10 @@ describe("ResourcesPage", () => {
   );
 
   it.each`
-    filterValueOne | placeholderTextOne                              | filterUrlNameOne       | filterValueTwo | placeholderTextTwo                              | filterUrlNameTwo
-    ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")}  | ${"agent"}             | ${"file3"}     | ${words("resources.filters.resource.value.placeholder")} | ${"resource_id_value"}
-    ${"Directory"} | ${words("resources.filters.resource.type.placeholder")}   | ${"resource_type"}     | ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}
-    ${"tmp"}       | ${words("resources.filters.resource.value.placeholder")}  | ${"resource_id_value"} | ${"File"}      | ${words("resources.filters.resource.type.placeholder")}  | ${"resource_type"}
+    filterValueOne | placeholderTextOne                                       | filterUrlNameOne       | filterValueTwo | placeholderTextTwo                                       | filterUrlNameTwo
+    ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}             | ${"file3"}     | ${words("resources.filters.resource.value.placeholder")} | ${"resource_id_value"}
+    ${"Directory"} | ${words("resources.filters.resource.type.placeholder")}  | ${"resource_type"}     | ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}
+    ${"tmp"}       | ${words("resources.filters.resource.value.placeholder")} | ${"resource_id_value"} | ${"File"}      | ${words("resources.filters.resource.type.placeholder")}  | ${"resource_type"}
   `(
     "when using the search filters of type $filterType with value $filterValueOne and text $placeholderTextOne combined with $filterType with value $filterValueTwo and text $placeholderText then the resources with that $filterUrlNameOne and $filterUrlNameTwo should be fetched and shown",
     async ({
@@ -637,9 +637,7 @@ describe("ResourcesPage", () => {
 
     await userEvent.click(statusToggle);
 
-    await userEvent.click(
-      await screen.findByRole("button", { name: "orphaned-exclude-toggle" })
-    );
+    await userEvent.click(await screen.findByRole("button", { name: "orphaned-exclude-toggle" }));
 
     const initialRowsAfterReset = await screen.findAllByRole("row", {
       name: "Resource Table Row",

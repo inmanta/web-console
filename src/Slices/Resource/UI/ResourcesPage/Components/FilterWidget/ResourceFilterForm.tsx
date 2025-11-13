@@ -11,9 +11,9 @@ import { AddableTextInput } from "./AddableTextInput";
  * @property {(agent: string) => void} onAddAgent - Callback when an agent value is added.
  */
 export interface ResourceFilterFormProps {
-    onAddType: (type: string) => void;
-    onAddValue: (value: string) => void;
-    onAddAgent: (agent: string) => void;
+  onAddType: (type: string) => void;
+  onAddValue: (value: string) => void;
+  onAddAgent: (agent: string) => void;
 }
 
 /**
@@ -23,37 +23,36 @@ export interface ResourceFilterFormProps {
  * @returns {React.ReactElement} The rendered resource filter form.
  */
 export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
-    onAddType,
-    onAddValue,
-    onAddAgent,
+  onAddType,
+  onAddValue,
+  onAddAgent,
 }) => (
-    <Stack hasGutter style={{ padding: "1rem 0" }}>
-        <StackItem>
-            <Title headingLevel="h3" size="md">
-                {words("resources.filters.resource.sectionTitle")}
-            </Title>
-        </StackItem>
-        <StackItem>
-            <AddableTextInput
-                label={words("resources.filters.resource.type.label")}
-                placeholder={words("resources.filters.resource.type.placeholder")}
-                onAdd={onAddType}
-            />
-        </StackItem>
-        <StackItem>
-            <AddableTextInput
-                label={words("resources.filters.resource.value.label")}
-                placeholder={words("resources.filters.resource.value.placeholder")}
-                onAdd={onAddValue}
-            />
-        </StackItem>
-        <StackItem className="pf-u-pt-md">
-            <AddableTextInput
-                label={words("resources.filters.resource.agent.label")}
-                placeholder={words("resources.filters.resource.agent.placeholder")}
-                onAdd={onAddAgent}
-            />
-        </StackItem>
-    </Stack>
+  <Stack hasGutter style={{ padding: "1rem 0" }}>
+    <StackItem>
+      <Title headingLevel="h3" size="md">
+        {words("resources.filters.resource.sectionTitle")}
+      </Title>
+    </StackItem>
+    <StackItem>
+      <AddableTextInput
+        label={words("resources.filters.resource.type.label")}
+        placeholder={words("resources.filters.resource.type.placeholder")}
+        onAdd={onAddType}
+      />
+    </StackItem>
+    <StackItem className="pf-u-pt-md">
+      <AddableTextInput
+        label={words("resources.filters.resource.agent.label")}
+        placeholder={words("resources.filters.resource.agent.placeholder")}
+        onAdd={onAddAgent}
+      />
+    </StackItem>
+    <StackItem>
+      <AddableTextInput
+        label={words("resources.filters.resource.value.label")}
+        placeholder={words("resources.filters.resource.value.placeholder")}
+        onAdd={onAddValue}
+      />
+    </StackItem>
+  </Stack>
 );
-
