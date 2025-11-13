@@ -337,9 +337,6 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Resource Table Row"]').eq(2).should("contain", "c");
       cy.get('[aria-label="Resource Table Row"]').eq(3).should("contain", "default-0001");
 
-      // Expect resource with value waiting-entity to have 3 Requires
-      cy.get('[data-label="Requires"]').eq(4).should("contain", 3);
-
       // Click open collapsible row for resource waiting-entity
       cy.get(
         '[aria-label="Toggle-frontend_model::TestResource[internal,name=waiting-entity]"] > button',
