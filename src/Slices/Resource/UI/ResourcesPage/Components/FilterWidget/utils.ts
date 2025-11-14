@@ -4,8 +4,7 @@ import { toggleValueInList } from "@/Core";
  * invertFilter.
  *
  * Returns the opposite representation of a status filter entry by toggling the leading `!`.
- *
- * @desc Returns the opposite representation of a status filter entry by toggling the leading `!`.
+ * 
  * @param {string} selection - The current status filter toggle value.
  * @returns {string} The inverted selection.
  */
