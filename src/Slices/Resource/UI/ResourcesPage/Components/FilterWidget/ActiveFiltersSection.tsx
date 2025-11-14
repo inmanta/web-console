@@ -13,20 +13,6 @@ import { Resource } from "@/Core";
 import { words } from "@/UI/words";
 import { ActiveFilterGroup } from "./ActiveFilterGroup";
 
-/**
- * @interface ActiveFiltersSectionProps
- * @desc Props for ActiveFiltersSection.
- * @property {Resource.Filter} filter - Current filter state used to determine the active chips.
- * @property {() => void} onClearAll - Clears all filters in one action.
- * @property {(id: string) => void} removeTypeChip - Removes a single type chip.
- * @property {(id: string) => void} removeAgentChip - Removes a single agent chip.
- * @property {(id: string) => void} removeValueChip - Removes a single value chip.
- * @property {(id: string) => void} removeStatusChip - Removes a single status chip.
- * @property {() => void} clearTypeFilters - Clears the entire set of type filters.
- * @property {() => void} clearAgentFilters - Clears the entire set of agent filters.
- * @property {() => void} clearValueFilters - Clears the entire set of value filters.
- * @property {() => void} clearStatusFilters - Clears the entire set of status filters.
- */
 export interface ActiveFiltersSectionProps {
   filter: Resource.Filter;
   onClearAll: () => void;
@@ -41,9 +27,23 @@ export interface ActiveFiltersSectionProps {
 }
 
 /**
- * @component ActiveFiltersSection
- * @desc Displays the currently applied filters and allows removal of individual chips or whole categories.
- * @param {ActiveFiltersSectionProps} props - Component props.
+ * The ActiveFiltersSection component.
+ *
+ * This component is responsible of displaying the currently applied filters
+ * and allows removal of individual chips or whole categories.
+ *
+ * @Props {ActiveFiltersSectionProps} - Component props.
+ *  @prop {Resource.Filter} filter - Current filter state used to determine the active chips.
+ *  @prop {() => void} onClearAll - Clears all filters in one action.
+ *  @prop {(id: string) => void} removeTypeChip - Removes a single type chip.
+ *  @prop {(id: string) => void} removeAgentChip - Removes a single agent chip.
+ *  @prop {(id: string) => void} removeValueChip - Removes a single value chip.
+ *  @prop {(id: string) => void} removeStatusChip - Removes a single status chip.
+ *  @prop {() => void} clearTypeFilters - Clears the entire set of type filters.
+ *  @prop {() => void} clearAgentFilters - Clears the entire set of agent filters.
+ *  @prop {() => void} clearValueFilters - Clears the entire set of value filters.
+ *  @prop {() => void} clearStatusFilters - Clears the entire set of status filters.
+ *
  * @returns {React.ReactElement} The rendered active filters panel.
  */
 export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({

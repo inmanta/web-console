@@ -3,13 +3,6 @@ import { Stack, StackItem, Title } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { AddableTextInput } from "./AddableTextInput";
 
-/**
- * @interface ResourceFilterFormProps
- * @desc Props for ResourceFilterForm.
- * @property {(type: string) => void} onAddType - Callback when a type value is added.
- * @property {(value: string) => void} onAddValue - Callback when a resource value is added.
- * @property {(agent: string) => void} onAddAgent - Callback when an agent value is added.
- */
 export interface ResourceFilterFormProps {
   onAddType: (type: string) => void;
   onAddValue: (value: string) => void;
@@ -17,9 +10,15 @@ export interface ResourceFilterFormProps {
 }
 
 /**
- * @component ResourceFilterForm
- * @desc Collects free-form resource identifiers (type, value, agent) and forwards them to the filter state.
- * @param {ResourceFilterFormProps} props - Component props.
+ * The ResourceFilterForm component.
+ *
+ * Collects free-form resource identifiers (type, value, agent) and forwards them to the filter state.
+ *
+ * @Props {ResourceFilterFormProps} - Component props.
+ *  @prop {(type: string) => void} onAddType - Callback when a type value is added.
+ *  @prop {(value: string) => void} onAddValue - Callback when a resource value is added.
+ *  @prop {(agent: string) => void} onAddAgent - Callback when an agent value is added.
+ *
  * @returns {React.ReactElement} The rendered resource filter form.
  */
 export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({

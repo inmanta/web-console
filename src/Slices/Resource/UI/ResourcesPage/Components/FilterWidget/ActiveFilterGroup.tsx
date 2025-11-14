@@ -2,14 +2,6 @@ import React from "react";
 import { Label, LabelGroup } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 
-/**
- * @interface ActiveFilterGroupProps
- * @desc Props for ActiveFilterGroup.
- * @property {string} title - Display name for the category heading.
- * @property {string[]} [values] - Current chip values that belong to the category.
- * @property {(value: string) => void} onRemove - Callback executed when an individual chip is dismissed.
- * @property {() => void} [onRemoveGroup] - Callback executed when the entire label group is closed.
- */
 export interface ActiveFilterGroupProps {
   title: string;
   values?: string[];
@@ -18,9 +10,16 @@ export interface ActiveFilterGroupProps {
 }
 
 /**
- * @component ActiveFilterGroup
- * @desc Renders the active values of a single filter category as a dismissible label group.
- * @param {ActiveFilterGroupProps} props - Component props.
+ * The ActiveFilterGroup component.
+ *
+ * This component is responsible of rendering the active values of a single filter category as a dismissible label group.
+ *
+ * @Props {ActiveFilterGroupProps} - Component props.
+ *  @prop {string} title - Display name for the category heading.
+ *  @prop {string[]} [values] - Current chip values that belong to the category.
+ *  @prop {(value: string) => void} onRemove - Callback executed when an individual chip is dismissed.
+ *  @prop {() => void} [onRemoveGroup] - Callback executed when the entire label group is closed.
+ *
  * @returns {React.ReactElement | null} The rendered label group or null if no values are present.
  */
 export const ActiveFilterGroup: React.FC<ActiveFilterGroupProps> = ({

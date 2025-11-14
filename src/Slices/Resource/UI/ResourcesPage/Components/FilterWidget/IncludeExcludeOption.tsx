@@ -3,15 +3,6 @@ import { Button } from "@patternfly/react-core";
 import { CheckCircleIcon, CheckIcon, TimesCircleIcon, TimesIcon } from "@patternfly/react-icons";
 import { Td, Tr } from "@patternfly/react-table";
 
-/**
- * @interface IncludeExcludeOptionProps
- * @desc Props for IncludeExcludeOption.
- * @property {string} state - The status value rendered in the row.
- * @property {boolean} includeActive - Indicates whether the include toggle is active.
- * @property {boolean} excludeActive - Indicates whether the exclude toggle is active.
- * @property {() => void} onInclude - Handler for activating the include toggle.
- * @property {() => void} onExclude - Handler for activating the exclude toggle.
- */
 export interface IncludeExcludeOptionProps {
   state: string;
   includeActive: boolean;
@@ -21,9 +12,17 @@ export interface IncludeExcludeOptionProps {
 }
 
 /**
- * @component IncludeExcludeOption
- * @desc Renders a compact table row with toggle controls to include or exclude a single status value.
- * @param {IncludeExcludeOptionProps} props - Component props.
+ * The IncludeExcludeOption component.
+ *
+ * Renders a compact table row with toggle controls to include or exclude a single status value.
+ *
+ * @Props {IncludeExcludeOptionProps} - Component props.
+ *  @prop {string} state - The status value rendered in the row.
+ *  @prop {boolean} includeActive - Indicates whether the include toggle is active.
+ *  @prop {boolean} excludeActive - Indicates whether the exclude toggle is active.
+ *  @prop {() => void} onInclude - Handler for activating the include toggle.
+ *  @prop {() => void} onExclude - Handler for activating the exclude toggle.
+ *
  * @returns {React.ReactElement} A table row representing the include/exclude toggles.
  */
 export const IncludeExcludeOption: React.FC<IncludeExcludeOptionProps> = ({

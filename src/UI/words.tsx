@@ -539,6 +539,7 @@ const dict = {
   "resources.filters.resource.value.placeholder": "Value...",
   "resources.filters.resource.agent.label": "Agent(s)",
   "resources.filters.resource.agent.placeholder": "Agent...",
+  "resources.filters.status.section.title": "Deploy State",
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.clearAll": "Clear all",
   "resources.filters.active.empty.title": "No filters applied",

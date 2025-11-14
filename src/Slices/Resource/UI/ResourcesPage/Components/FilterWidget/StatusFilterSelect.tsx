@@ -15,22 +15,19 @@ import { words } from "@/UI/words";
 import { IncludeExcludeOption } from "./IncludeExcludeOption";
 import { removeInvertedSelection, invertFilter } from "./utils";
 
-/**
- * @interface StatusFilterSelectProps
- * @desc Props for StatusFilterSelect.
- * @property {string[]} [selectedStatuses] - Currently selected status values (including negated ones).
- * @property {(statuses: string[]) => void} onChange - Callback invoked with the updated list of statuses.
- */
 export interface StatusFilterSelectProps {
   selectedStatuses?: string[];
   onChange: (statuses: string[]) => void;
 }
 
 /**
- * @component StatusFilterSelect
- * @desc Presents resource status values in an include/exclude selector backed by a PatternFly Select.
- * @param {StatusFilterSelectProps} props - Component props.
- * @returns {React.ReactElement} The rendered status filter selector.
+ * The StatusFilterSelect component.
+ *
+ * Presents resource status values in an include/exclude selector backed by a PatternFly Select.
+ *
+ * @Props {StatusFilterSelectProps} - Component props.
+ *  @prop {string[]} [selectedStatuses] - Currently selected status values (including negated ones).
+ *  @prop {(statuses: string[]) => void} onChange - Callback invoked with the updated list of statuses.
  */
 export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
   selectedStatuses,
@@ -50,7 +47,7 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
     <Stack hasGutter style={{ padding: "1rem 0" }}>
       <StackItem>
         <Title headingLevel="h3" size="md">
-          Deploy State
+          {words("resources.filters.status.section.title")}
         </Title>
       </StackItem>
       <Select

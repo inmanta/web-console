@@ -19,6 +19,18 @@ interface Props {
   activeFilterCount: number;
 }
 
+/**
+ * The ResourceTableControls component.
+ *
+ * This component is responsible of displaying the table controls.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {React.ReactNode} summaryWidget - The summary widget
+ *  @prop {React.ReactNode} paginationWidget - The pagination widget
+ *  @prop {() => void} onToggleFilters - The function to toggle the filters
+ *  @prop {boolean} isDrawerExpanded - Whether the drawer is expanded
+ *  @prop {number} activeFilterCount - The number of active filters
+ */
 export const ResourceTableControls: React.FC<Props> = ({
   summaryWidget,
   paginationWidget,

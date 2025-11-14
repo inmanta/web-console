@@ -19,13 +19,6 @@ import { ActiveFiltersSection } from "./ActiveFiltersSection";
 import { ResourceFilterForm } from "./ResourceFilterForm";
 import { StatusFilterSelect } from "./StatusFilterSelect";
 
-/**
- * @interface FilterWidgetComponentProps
- * @desc Props for FilterWidgetComponent.
- * @property {() => void} onClose - Callback executed when the filter drawer should be closed.
- * @property {Resource.Filter} filter - Current filter state supplied by the parent.
- * @property {(filter: Resource.FilterWithDefaultHandling) => void} setFilter - Setter to persist filter changes upstream.
- */
 interface FilterWidgetComponentProps {
   onClose: () => void;
   filter: Resource.Filter;
@@ -33,9 +26,15 @@ interface FilterWidgetComponentProps {
 }
 
 /**
- * @component FilterWidgetComponent
- * @desc Main filter drawer content combining resource, status and active filter management.
- * @param {FilterWidgetComponentProps} props - Component props.
+ * The FilterWidgetComponent component.
+ *
+ * Main filter drawer content combining resource, status and active filter management.
+ *
+ * @Props {FilterWidgetComponentProps} - Component props.
+ *  @prop {() => void} onClose - Callback executed when the filter drawer should be closed.
+ *  @prop {Resource.Filter} filter - Current filter state supplied by the parent.
+ *  @prop {(filter: Resource.FilterWithDefaultHandling) => void} setFilter - Setter to persist filter changes upstream.
+ *
  * @returns {React.ReactElement} The rendered filter widget.
  */
 export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({

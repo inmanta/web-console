@@ -1,14 +1,6 @@
 import React, { useId, useState } from "react";
 import { Button, FormGroup, InputGroup, InputGroupItem, TextInput } from "@patternfly/react-core";
 
-/**
- * @interface AddableTextInputProps
- * @desc Props for AddableTextInput.
- * @property {string} label - Label shown above the input field.
- * @property {string} placeholder - Placeholder text displayed within the input.
- * @property {(value: string) => void} onAdd - Callback executed with the trimmed value when the add action is triggered.
- * @property {string} [buttonLabel] - Optional custom text for the add button (defaults to "+").
- */
 export interface AddableTextInputProps {
   label: string;
   placeholder: string;
@@ -17,9 +9,16 @@ export interface AddableTextInputProps {
 }
 
 /**
- * @component AddableTextInput
- * @desc Provides a text input paired with a control button to append values to a filter category.
- * @param {AddableTextInputProps} props - Component props.
+ * The AddableTextInput component.
+ *
+ * Provides a text input paired with a control button to append values to a filter category.
+ *
+ * @Props {AddableTextInputProps} - Component props.
+ *  @prop {string} label - Label shown above the input field.
+ *  @prop {string} placeholder - Placeholder text displayed within the input.
+ *  @prop {(value: string) => void} onAdd - Callback executed with the trimmed value when the add action is triggered.
+ *  @prop {string} [buttonLabel] - Optional custom text for the add button (defaults to "+").
+ *
  * @returns {React.ReactElement} The rendered addable text input.
  */
 export const AddableTextInput: React.FC<AddableTextInputProps> = ({
