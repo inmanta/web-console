@@ -18,6 +18,20 @@ interface Props {
   setFilter: (filter: Resource.Filter) => void;
   isVertical?: boolean;
 }
+
+/**
+ * The FilterForm component.
+ *
+ * This component is responsible of displaying the filter form.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {Resource.Filter} filter - The filter to display
+ *  @prop {(filter: Resource.Filter) => void} setFilter - The function to set the filter
+ *  @prop {boolean} isVertical - Whether the filter form is vertical 
+ * (This component is used in horizontal mode on the Desired State Page still.)
+ * 
+ * @returns {React.ReactElement} The rendered filter form.
+ */
 export const FilterForm: React.FC<Props> = ({ filter, setFilter, isVertical = false }) => {
   const [typeTextInput, setTypeTextInput] = useState("");
   const [agentTextInput, setAgentTextInput] = useState("");
