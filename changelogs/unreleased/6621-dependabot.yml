@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump @eslint/js from 9.37.0 to 9.39.1
+destination-branches:
+- master
+sections: {}
