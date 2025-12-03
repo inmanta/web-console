@@ -1,26 +1,50 @@
 import { ServiceModel, EmbeddedEntity, InterServiceRelation } from "@/Core/Domain/ServiceModel";
-
+import { ParsedNumber } from "@/Core/Language";
 
 export type Rules = {
     lower_limit: number;
-    upper_limit: number;
+    upper_limit: number | null;
+};
+
+type NumericInput = ParsedNumber | number | string | null | undefined;
+
+const toNumber = (value: NumericInput, fallback = 0): number => {
+    if (value === null || value === undefined || value === "") {
+        return fallback;
+    }
+    if (typeof value === "bigint") {
+        return Number(value);
+    }
+    return Number(value);
+};
+
+const toNumberOrNull = (value: NumericInput): number | null => {
+    if (value === null || value === undefined || value === "") {
+        return null;
+    }
+    if (typeof value === "bigint") {
+        return Number(value);
+    }
+    return Number(value);
 };
 
 export type RelationsDictionary = Record<string, Record<string, Rules>>;
 
 /**
  * Ensure we write a bidirectional relation with limits into the dictionary
+ * Allows providing different rules for the reverse direction when required
  */
 const connect = (
     dict: RelationsDictionary,
     a: string,
     b: string,
-    rules: Rules
+    rules: Rules,
+    reverseRules?: Rules
 ) => {
     if (!dict[a]) dict[a] = {};
     dict[a][b] = rules;
     if (!dict[b]) dict[b] = {};
-    dict[b][a] = rules;
+    dict[b][a] = reverseRules ?? rules;
 };
 
 /**
@@ -32,27 +56,41 @@ const connect = (
  */
 const addEmbeddedRelations = (
     dict: RelationsDictionary,
-    rootServiceName: string,
+    parentName: string,
     embeddedEntities: EmbeddedEntity[]
 ) => {
     embeddedEntities.forEach((entity) => {
-        // Root service <-> embedded entity
-        connect(dict, rootServiceName, entity.name, {
-            lower_limit: Number(entity.lower_limit),
-            upper_limit: Number(entity.upper_limit),
-        });
+        if (entity.modifier === "r") {
+            return;
+        }
+        const entityKey = entity.type || entity.name;
+        // Parent service/entity <-> embedded entity
+        const parentToChildRules = {
+            lower_limit: toNumber(entity.lower_limit),
+            upper_limit: toNumberOrNull(entity.upper_limit),
+        };
+        const childToParentRules: Rules = {
+            // Embedded entities should always connect back to exactly one parent instance
+            lower_limit: parentToChildRules.lower_limit > 0 ? 1 : 0,
+            upper_limit: 1,
+        };
+        connect(dict, parentName, entityKey, parentToChildRules, childToParentRules);
 
-        // Root service <-> inter-service relations from this embedded entity
+        // Parent service/entity <-> inter-service relations from this embedded entity
         entity.inter_service_relations.forEach((relation: InterServiceRelation) => {
-            connect(dict, rootServiceName, relation.name, {
-                lower_limit: Number(relation.lower_limit),
-                upper_limit: Number(relation.upper_limit),
+            if (relation.modifier === "r") {
+                return;
+            }
+            const relationKey = relation.entity_type || relation.name;
+            connect(dict, entityKey, relationKey, {
+                lower_limit: toNumber(relation.lower_limit),
+                upper_limit: toNumberOrNull(relation.upper_limit),
             });
         });
 
         // Recurse into nested
         if (entity.embedded_entities && entity.embedded_entities.length > 0) {
-            addEmbeddedRelations(dict, rootServiceName, entity.embedded_entities);
+            addEmbeddedRelations(dict, entityKey, entity.embedded_entities);
         }
     });
 };
@@ -68,9 +106,13 @@ export const createRelationsDictionary = (catalog: ServiceModel[]): RelationsDic
     catalog.forEach((service) => {
         // Direct inter-service relations
         service.inter_service_relations.forEach((relation) => {
-            connect(relationDictionary, service.name, relation.name, {
-                lower_limit: Number(relation.lower_limit),
-                upper_limit: Number(relation.upper_limit),
+            if (relation.modifier === "r") {
+                return;
+            }
+            const relationKey = relation.entity_type || relation.name;
+            connect(relationDictionary, service.name, relationKey, {
+                lower_limit: toNumber(relation.lower_limit),
+                upper_limit: toNumberOrNull(relation.upper_limit),
             });
         });
 

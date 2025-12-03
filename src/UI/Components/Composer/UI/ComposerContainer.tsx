@@ -187,6 +187,10 @@ button.joint-widget.joint-theme-default {
   stroke: var(--pf-t--global--border--color--status--success--default);
   fill: var(--pf-t--global--color--status--success--default);
 }
+.halo-highlight-missing {
+  stroke: var(--pf-t--global--border--color--status--danger--default);
+  fill: var(--pf-t--global--color--status--danger--default);
+}
 .joint-loose_element-highlight {
   stroke: var(--pf-t--global--border--color--status--danger--default);
   fill: var(--pf-t--global--color--status--danger--default);

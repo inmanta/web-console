@@ -128,7 +128,7 @@ export class ComposerPaper {
             },
             text: {
               text: sourceCell.getName(),
-              autoOrient: "target",
+              "auto-orient": "target",
               class: "joint-label-text",
             },
           },
@@ -146,7 +146,7 @@ export class ComposerPaper {
             },
             text: {
               text: targetCell.getName(),
-              autoOrient: "source",
+              "auto-orient": "source",
               class: "joint-label-text",
             },
           },

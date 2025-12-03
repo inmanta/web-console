@@ -92,7 +92,7 @@ describe("updateLabelPosition", () => {
         },
         text: {
           text: sourceService.getName(),
-          autoOrient: "target",
+          "auto-orient": "target",
           class: "joint-label-text",
         },
       },
@@ -107,7 +107,7 @@ describe("updateLabelPosition", () => {
         },
         text: {
           text: targetService.getName(),
-          autoOrient: "source",
+          "auto-orient": "source",
           class: "joint-label-text",
         },
       },

@@ -20,6 +20,7 @@ export interface Inventories {
 interface GetInventoryList {
   useOneTime: () => UseQueryResult<Inventories, CustomError>;
   useContinuous: () => UseQueryResult<Inventories, CustomError>;
+  useContinuousNoRefetch: () => UseQueryResult<Inventories, CustomError>;
 }
 
 /**
@@ -66,6 +67,13 @@ export const useGetInventoryList = (serviceNames: string[]): GetInventoryList =>
         queryKey: getInventoryListKey.list([...serviceNames, env]),
         queryFn: fetchAllServices,
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
+      }),
+    useContinuousNoRefetch: (): UseQueryResult<Inventories, CustomError> =>
+      useQuery({
+        queryKey: getInventoryListKey.list([...serviceNames, env]),
+        queryFn: fetchAllServices,
+        refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
+        refetchOnWindowFocus: false,
       }),
   };
 };

@@ -6,12 +6,15 @@ import { v4 as uuidv4 } from 'uuid';
 export interface SidebarItemOptions extends ServiceEntityBase {
   isDisabled: boolean;
   index: number;
+  label?: string;
 }
 
 export const createSidebarItem = (options: SidebarItemOptions) => {
-  const name = ('type' in options.serviceModel && options.serviceModel.type)
+  const defaultName = ('type' in options.serviceModel && options.serviceModel.type)
     ? options.serviceModel.type
     : options.serviceModel.name;
+
+  const name = options.label || defaultName;
 
   const id = options.id || uuidv4();
 
@@ -20,40 +23,49 @@ export const createSidebarItem = (options: SidebarItemOptions) => {
     size: { width: 240, height: 40 },
     name: name,
     serviceModel: options.serviceModel,
-    attributes: options.instanceAttributes,
+    instanceAttributes: options.instanceAttributes,
     embeddedEntities: options.embeddedEntities,
     interServiceRelations: options.interServiceRelations,
     rootEntities: options.rootEntities,
+    entityType: options.entityType,
+    readonly: options.readonly,
+    isNew: options.isNew,
     disabled: options.isDisabled,
     id: id,
     attrs: {
       // This is the colored line preceding the menu-item.
       body: {
-        "aria-labelledby": "body_" + name,
+        "aria-labelledby": "body_" + id,
         width: 7,
         height: 40,
-        fill: HeaderColors[options.entityType],
+        fill: options.isDisabled
+          ? "var(--pf-t--global--text--color--disabled)"
+          : HeaderColors[options.entityType],
         stroke: "none",
         className: options.isDisabled ? "stencil_accent-disabled" : "",
       },
       bodyTwo: {
-        "aria-labelledby": "bodyTwo_" + name,
+        "aria-labelledby": "bodyTwo_" + id,
         width: 240,
         height: 40,
         x: 10,
-        fill: t_global_background_color_primary_default.var,
+        fill: options.isDisabled
+          ? "var(--pf-t--global--background--color--disabled--default)"
+          : t_global_background_color_primary_default.var,
         stroke: "none",
         className: options.isDisabled ? "stencil_body-disabled" : "",
       },
       label: {
-        "aria-labelledby": "text_" + name,
+        "aria-labelledby": "text_" + id,
         refX: undefined, // reset the default
         x: 15,
         textAnchor: "start",
         fontFamily: "sans-serif",
         fontSize: t_global_font_size_body_default.var,
         text: name,
-        fill: t_global_text_color_regular.var,
+        fill: options.isDisabled
+          ? "var(--pf-t--global--text--color--disabled)"
+          : t_global_text_color_regular.var,
         className: options.isDisabled ? "stencil_text-disabled" : "",
       },
       borderBottom: {

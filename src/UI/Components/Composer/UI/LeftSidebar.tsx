@@ -5,27 +5,36 @@ import { ServiceModel } from "@/Core";
 import { ComposerContext } from "../Data/Context";
 import styled from "styled-components";
 import { InstanceTabElement, InventoryTabElement, ServiceEntityShape } from "./JointJsShapes";
+import { RelationsDictionary } from "../Data";
 import { words } from "@/UI/words";
 
 
 
 export const LeftSidebar: React.FC = () => {
-  const { scroller, serviceInventories, mainService, editable, serviceCatalog, canvasState, setCanvasState, graph } = useContext(ComposerContext);
+  const { scroller, serviceInventories, mainService, editable, serviceCatalog, canvasState, setCanvasState, graph, relationsDictionary } = useContext(ComposerContext);
   const [sidebar, setSidebar] = useState<LeftSidebarElement | null>(null);
   const LeftSidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!LeftSidebarRef.current || !scroller || !serviceInventories || !mainService || !graph) {
+    if (!LeftSidebarRef.current || !scroller || !mainService || !graph) {
       return;
     }
 
-    const sidebar = new LeftSidebarElement(LeftSidebarRef.current, scroller, serviceInventories, serviceCatalog, mainService, setCanvasState, graph);
+    // Wait for serviceInventories to have actual data (not just an empty object)
+    const hasInventoryData = serviceInventories && Object.keys(serviceInventories).length > 0;
+    if (!hasInventoryData && serviceInventories !== null) {
+      // serviceInventories exists but is empty - wait for data to load
+      return;
+    }
+
+    const sidebar = new LeftSidebarElement(LeftSidebarRef.current, scroller, serviceInventories || {}, serviceCatalog, mainService, setCanvasState, graph, relationsDictionary, canvasState);
     setSidebar(sidebar);
 
     return () => {
       sidebar.remove();
     };
-  }, [scroller, serviceInventories, mainService, serviceCatalog]);
+  }, [scroller, serviceInventories, mainService, serviceCatalog, relationsDictionary]);
+
 
   return <LeftSidebarStyling
     className={`left_sidebar ${!editable && "view_mode"}`}
@@ -45,7 +54,9 @@ class LeftSidebarElement {
     serviceModels: ServiceModel[],
     service: ServiceModel,
     setCanvasState: Dispatch<SetStateAction<Map<string, ServiceEntityShape>>>,
-    graph: dia.Graph
+    graph: dia.Graph,
+    relationsDictionary: RelationsDictionary,
+    initialCanvasState: Map<string, ServiceEntityShape>
   ) {
     // Create the tabs toolbar first and prepend it
     this.tabsToolbar = new ui.Toolbar({
@@ -91,8 +102,8 @@ class LeftSidebarElement {
     this.tabsToolbar.render();
 
     // Now create the stencil tabs after the toolbar
-    this.instanceTab = new InstanceTabElement(htmlRef, scroller, service, setCanvasState, graph);
-    this.inventoryTab = new InventoryTabElement(htmlRef, scroller, serviceInventories, serviceModels);
+    this.instanceTab = new InstanceTabElement(htmlRef, scroller, service, setCanvasState, graph, relationsDictionary);
+    this.inventoryTab = new InventoryTabElement(htmlRef, scroller, serviceInventories, serviceModels, setCanvasState, graph, relationsDictionary, initialCanvasState);
   }
 
   /**
@@ -141,6 +152,7 @@ class LeftSidebarElement {
     this.inventoryTab.stencil.remove();
     this.tabsToolbar.remove();
   }
+
 }
 
 const LeftSidebarStyling = styled.div`
@@ -178,6 +190,21 @@ const LeftSidebarStyling = styled.div`
 
     &.joint-hidden {
       visibility: hidden;
+    }
+
+    .stencil_body-disabled {
+      pointer-events: none;
+      fill: var(--pf-t--global--background--color--disabled--default);
+    }
+
+    .stencil_text-disabled {
+      pointer-events: none;
+      fill: var(--pf-t--global--text--color--disabled);
+    }
+
+    .stencil_accent-disabled {
+      pointer-events: none;
+      fill: var(--pf-t--global--text--color--disabled);
     }
 
     .content {

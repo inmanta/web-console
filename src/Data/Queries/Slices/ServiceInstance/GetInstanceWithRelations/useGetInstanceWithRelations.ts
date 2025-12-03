@@ -20,6 +20,7 @@ export interface InstanceWithRelations {
 interface GetInstanceWithRelationsHook {
   useOneTime: () => UseQueryResult<InstanceWithRelations, CustomError>;
   useContinuous: () => UseQueryResult<InstanceWithRelations, CustomError>;
+  useOneTimeNoRefetch: () => UseQueryResult<InstanceWithRelations, CustomError>;
 }
 
 /**
@@ -183,6 +184,15 @@ export const useGetInstanceWithRelations = (
 
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         enabled: serviceModel !== undefined && instanceId !== "" && instanceId !== undefined,
+      }),
+    useOneTimeNoRefetch: (): UseQueryResult<InstanceWithRelations, CustomError> =>
+      useQuery({
+        queryKey: getInstanceWithRelationsKey.single(instanceId, [env]),
+        queryFn: () => fetchInstanceWithRelations(instanceId),
+
+        enabled: serviceModel !== undefined && instanceId !== "" && instanceId !== undefined,
+        gcTime: 0,
+        refetchOnWindowFocus: false,
       }),
   };
 };

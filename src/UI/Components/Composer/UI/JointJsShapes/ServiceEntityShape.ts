@@ -54,6 +54,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     isNew: boolean;
     lockedOnCanvas: boolean;
     id: string;
+    entityType: EntityType;
 
     constructor(initOptions: ServiceEntityOptions) {
         super();
@@ -67,6 +68,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         this.isNew = initOptions.isNew;
         this.lockedOnCanvas = initOptions.lockedOnCanvas;
         this.id = initOptions.id;
+        this.entityType = initOptions.entityType;
 
         this._initializeFromOptions(initOptions);
     }
@@ -137,7 +139,11 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         );
     }
 
-    protected _setColumns(data: Array<ColumnData> = []) {
+    /**
+     * Internal method to set column items without removing links.
+     * Used when updating columns after links have been created.
+     */
+    protected _setColumnItems(data: Array<ColumnData> = []) {
         const names: Array<{
             id: string;
             label: string;
@@ -214,6 +220,15 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
 
             values.push(value);
         });
+
+        this.set("items", [names, values]);
+        return this;
+    }
+
+    protected _setColumns(data: Array<ColumnData> = []) {
+        this._setColumnItems(data);
+        this.removeInvalidLinks();
+        return this;
     }
 
     onColumnsChange() {
@@ -246,7 +261,10 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
 
     initialize(...args) {
         super.initialize(...args);
-        this._setColumns(this.get("columns"));
+        const columns = this.get("columns") || [];
+        if (columns.length > 0) {
+            this._setColumns(columns);
+        }
     }
 
     private _initializeFromOptions(initOptions: ServiceEntityOptions) {
@@ -265,12 +283,27 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
             this.connections.set(entityType, entityId);
         });
 
+        // Prepare columns for display (will be rendered in initialize method)
+        const keyAttributes = this.getKeyAttributes();
+        if (keyAttributes.length > 0) {
+            const displayAttributes = keyAttributes.map((key) => ({
+                name: key,
+                value: this.instanceAttributes[key] !== undefined && this.instanceAttributes[key] !== null
+                    ? String(this.instanceAttributes[key])
+                    : "",
+            }));
+            // Set columns - initialize will handle rendering via _setColumns
+            this.set("columns", displayAttributes);
+        } else {
+            this.set("columns", []);
+        }
     }
 
     /**
      * Converts the entity to a JSON representation.
      *
      * @returns {dia.Cell.JSON<any, dia.Element.Attributes>} The JSON representation of the entity.
+     * Note: The `any` type here is part of JointJS's type definition and is required by the library's API.
      */
     toJSON(): dia.Cell.JSON<any, dia.Element.Attributes> {
         const json = super.toJSON();
@@ -325,41 +358,30 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     }
 
     addConnection(relationId: string, relationType: string) {
-        this.connections.set(relationType, [...this.connections.get(relationType) || [], relationId]);
+        const existing = this.connections.get(relationType) || [];
+        if (existing.includes(relationId)) {
+            return;
+        }
+        this.connections.set(relationType, [...existing, relationId]);
     }
 
     removeConnection(relationId: string, relationType: string) {
-        this.connections.set(relationType, this.connections.get(relationType)?.filter((c) => c !== relationId) || []);
+        const existing = this.connections.get(relationType);
+        if (!existing) {
+            return;
+        }
+
+        const updated = existing.filter((c) => c !== relationId);
+
+        if (updated.length === 0) {
+            this.connections.delete(relationType);
+        } else {
+            this.connections.set(relationType, updated);
+        }
     }
 
     getConnections(): Map<string, string[]> {
         return this.connections;
-    }
-
-    getMissingConnections(): string[] {
-        // go through the relations dictionary and return the relation types that are not connected, 
-        // and that have a lower limit
-        const currentEntityName = this.serviceModel.name;
-        const missingConnections: string[] = [];
-
-        // Get all allowed relations for this entity
-        const allowedRelations = this.relationsDictionary[currentEntityName];
-
-        if (!allowedRelations) {
-            return missingConnections;
-        }
-
-        // Check each relation type to see if it meets the lower limit
-        Object.entries(allowedRelations).forEach(([relationType, rules]) => {
-            const existingConnections = this.connections.get(relationType) || [];
-
-            // If the number of existing connections is less than the lower limit, add to missing
-            if (existingConnections.length < rules.lower_limit) {
-                missingConnections.push(relationType);
-            }
-        });
-
-        return missingConnections;
     }
 
     validateConnection(targetEntity: ServiceEntityShape): boolean {
@@ -373,15 +395,100 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
 
         const rules = allowedRelations[relationType];
 
+        if (!rules) {
+            return false;
+        }
+
         const existingConnections = this.connections.get(relationType) || [];
 
         // Check if adding this connection would exceed the upper limit
-        if (existingConnections.length >= rules.upper_limit) {
-            return false;
+        if (rules.upper_limit !== undefined && rules.upper_limit !== null) {
+            if (existingConnections.length >= rules.upper_limit) {
+                return false;
+            }
         }
 
         return true;
     }
+
+    /**
+     * Checks if this shape is missing required connections (lower_limit not met)
+     * Uses the shape's serviceModel to determine required connections instead of the relationsDictionary
+     * @returns true if the shape is missing required connections, false otherwise
+     */
+    /**
+     * Helper method to check if a required connection type has enough connections
+     */
+    private checkRequiredConnections(
+        lowerLimit: bigint | number | null | undefined,
+        connectionKey: string,
+        skipReadOnly: boolean
+    ): boolean {
+        // Skip read-only for existing entities
+        if (skipReadOnly && !this.isNew) {
+            return false;
+        }
+
+        const limit = typeof lowerLimit === 'bigint'
+            ? Number(lowerLimit)
+            : (lowerLimit ?? 0);
+
+        // If lower_limit is 0 or undefined, no connection is required
+        if (limit === 0) {
+            return false;
+        }
+
+        const connectionsForType = this.connections.get(connectionKey) || [];
+        const connectedCount = connectionsForType.length;
+
+        // If we have fewer connections than required, the shape is missing connections
+        return connectedCount < limit;
+    }
+
+    isMissingConnections(): boolean {
+        // Embedded entities can never be standalone - they must always have at least one connection
+        if (this.entityType === "embedded") {
+            const totalConnections = Array.from(this.connections.values()).reduce((sum, arr) => sum + arr.length, 0);
+            if (totalConnections === 0) {
+                return true;
+            }
+        }
+
+        // Check embedded entities
+        if ('embedded_entities' in this.serviceModel) {
+            for (const embeddedEntity of this.serviceModel.embedded_entities) {
+                // Use the same key logic as when storing: entity.type || entity.name
+                const entityKey = embeddedEntity.type || embeddedEntity.name;
+
+                if (this.checkRequiredConnections(
+                    embeddedEntity.lower_limit,
+                    entityKey,
+                    embeddedEntity.modifier === "r"
+                )) {
+                    return true;
+                }
+            }
+        }
+
+        // Check inter-service relations
+        if ('inter_service_relations' in this.serviceModel) {
+            for (const relation of this.serviceModel.inter_service_relations) {
+                // Use the same key logic as when storing: relation.entity_type || relation.name
+                const relationKey = relation.entity_type || relation.name;
+
+                if (this.checkRequiredConnections(
+                    relation.lower_limit,
+                    relationKey,
+                    relation.modifier === "r"
+                )) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 
     getAttributes(): InstanceAttributeModel {
         return this.attributes;
@@ -392,7 +499,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     }
 
     updateAttributes(attributes: InstanceAttributeModel) {
-        this.attributes = attributes;
+        this.instanceAttributes = attributes;
         this.sanitizedAttrs = JSON.parse(JSON.stringify(attributes));
 
         const keyAttributes = this.getKeyAttributes();
@@ -403,8 +510,78 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
                 value: attributes[key] !== undefined && attributes[key] !== null ? String(attributes[key]) : "",
             }));
 
-            this._setColumns(displayAttributes);
+            // Safely update columns - use requestAnimationFrame to ensure shape is ready
+            // Use _setColumnItems instead of set("columns") to avoid triggering removeInvalidLinks
+            // which might cause issues if the shape isn't fully rendered
+            requestAnimationFrame(() => {
+                try {
+                    // Check if shape is in a graph and has a size (indicating it's rendered)
+                    const graph = this.graph;
+                    const size = this.get("size");
+                    if (graph && size && size.width && size.height) {
+                        // Use _setColumnItems to avoid removing links during updates
+                        // This is safer than set("columns") which triggers removeInvalidLinks
+                        this._setColumnItems(displayAttributes);
+                    } else {
+                        // If shape not ready, store columns for later initialization
+                        // This will be picked up by the initialize method
+                        this.set("columns", displayAttributes);
+                    }
+                } catch (e) {
+                    // Shape not ready yet, store columns for later initialization
+                    // This will be picked up by the initialize method
+                    this.set("columns", displayAttributes);
+                }
+            });
+        } else {
+            // Clear columns if no key attributes
+            requestAnimationFrame(() => {
+                try {
+                    const graph = this.graph;
+                    if (graph) {
+                        this.set("columns", []);
+                    }
+                } catch (e) {
+                    // Ignore if shape not ready
+                }
+            });
         }
+    }
+
+    /**
+     * Safely updates the columns display after the shape is added to the graph.
+     * Uses requestAnimationFrame to ensure the shape is fully rendered.
+     * Does NOT call removeInvalidLinks() to avoid removing links that were just created.
+     */
+    updateColumnsDisplay() {
+        const columns = this.get("columns") || [];
+        if (columns.length === 0) {
+            return;
+        }
+
+        // Use requestAnimationFrame to ensure the shape is fully rendered
+        requestAnimationFrame(() => {
+            try {
+                const size = this.get("size");
+                if (size && size.width && size.height) {
+                    // Use _setColumnItems instead of _setColumns to avoid removing links
+                    this._setColumnItems(columns);
+                }
+            } catch (e) {
+                // Shape not ready yet, try again on next frame
+                requestAnimationFrame(() => {
+                    try {
+                        const size = this.get("size");
+                        if (size && size.width && size.height) {
+                            // Use _setColumnItems instead of _setColumns to avoid removing links
+                            this._setColumnItems(columns);
+                        }
+                    } catch (e2) {
+                        // Ignore if still not ready
+                    }
+                });
+            }
+        });
     }
 
     getKeyAttributes(): string[] {

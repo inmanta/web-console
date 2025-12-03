@@ -1,4 +1,4 @@
-import { dia, shapes } from "@inmanta/rappid";
+import { dia, linkTools, shapes } from "@inmanta/rappid";
 import { LinkShape } from "./LinkShape";
 import { getEntitiesFromCanvas } from "../../Data/Helpers";
 import { routerNamespace, anchorNamespace } from "..";
@@ -60,25 +60,101 @@ export class ComposerPaper {
             },
         });
 
-        // Event Triggered when the user clicks on a blank space of the canvas.
-        this.paper.on("blank:pointerdown", () => {
-
-        });
-
-        // Event Triggered when the user clicks on a cell of the canvas.
-        this.paper.on("cell:pointerup", (cellView: dia.CellView) => {
-        });
+        // Event handlers for blank:pointerdown and cell:pointerup are set up in Composer.tsx
+        // to have access to React state setters
 
         // Event Triggered when the user hovers over a link.
         this.paper.on("link:mouseenter", (linkView: dia.LinkView) => {
+            const source = linkView.model.source();
+            const target = linkView.model.target();
+
+            if (!source.id || !target.id) {
+                return;
+            }
+
+            const sourceCell = graph.getCell(source.id) as ServiceEntityShape | undefined;
+            const targetCell = graph.getCell(target.id) as ServiceEntityShape | undefined;
+
+            if (!sourceCell || !targetCell) {
+                return;
+            }
+
+            const appendLabel = (
+                cell: ServiceEntityShape,
+                orientSide: "target" | "source",
+                distance: number
+            ) => {
+                const labelText = cell.getEntityName();
+
+                if (!labelText || labelText.startsWith("_")) {
+                    return;
+                }
+
+                linkView.model.appendLabel({
+                    attrs: {
+                        rect: {
+                            fill: "none",
+                        },
+                        text: {
+                            text: labelText,
+                            "auto-orient": orientSide,
+                            class: "joint-label-text",
+                        },
+                    },
+                    position: {
+                        distance,
+                    },
+                });
+            };
+
+            linkView.model.labels([]);
+            appendLabel(sourceCell, "target", 1);
+            appendLabel(targetCell, "source", 0);
+
+            if (!editable || sourceCell.readonly || targetCell.readonly) {
+                return;
+            }
+
+            const removeTool = new linkTools.Remove({
+                distance: "50%",
+                markup: [
+                    {
+                        tagName: "circle",
+                        selector: "button",
+                        attributes: {
+                            r: 7,
+                            class: "joint-link_remove-circle",
+                            "stroke-width": 2,
+                            cursor: "pointer",
+                        },
+                    },
+                    {
+                        tagName: "path",
+                        selector: "icon",
+                        attributes: {
+                            d: "M -3 -3 3 3 M -3 3 3 -3",
+                            class: "joint-link_remove-path",
+                            "stroke-width": 2,
+                            "pointer-events": "none",
+                        },
+                    },
+                ],
+                action: (_evt, view, toolView) => {
+                    view.model.remove({ ui: true, tool: toolView.cid });
+                },
+            });
+
+            const tools = new dia.ToolsView({
+                tools: [removeTool],
+            });
+
+            linkView.addTools(tools);
         });
 
         // Event Triggered when the user leaves a link.
         this.paper.on("link:mouseleave", (linkView: dia.LinkView) => {
-        });
-
-        // Event Triggered when the user connects two cells.
-        this.paper.on("link:connect", (linkView: dia.LinkView) => {
+            linkView.removeTools();
+            linkView.model.labels([]);
         });
     }
 }

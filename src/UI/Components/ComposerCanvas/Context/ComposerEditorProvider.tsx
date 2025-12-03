@@ -7,8 +7,7 @@ import {
 } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
-import { Canvas } from "@/UI/Components/ComposerCanvas/Components";
-import { ComposerActions } from "../Components";
+import { Canvas, ComposerActions } from "../Components";
 import { findInterServiceRelations } from "../Helpers";
 import { CanvasProvider } from "./CanvasProvider";
 import { InstanceComposerContext } from "./Context";
@@ -132,7 +131,6 @@ export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance,
               </Flex>
             }
           >
-            {/* <Canvas editable={editable} /> */}
             <Composer editable={editable} instanceId={instance} serviceName={serviceName} />
           </PageContainer>
         </CanvasProvider>

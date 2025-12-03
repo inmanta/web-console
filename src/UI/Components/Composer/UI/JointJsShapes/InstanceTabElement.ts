@@ -6,6 +6,7 @@ import { t_global_background_color_primary_default } from "@patternfly/react-tok
 import { createSidebarItem } from "./sidebarItem";
 import { Dispatch, SetStateAction } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { RelationsDictionary } from "../../Data";
 
 export class InstanceTabElement {
     stencil: ui.Stencil;
@@ -17,7 +18,8 @@ export class InstanceTabElement {
         scroller: ui.PaperScroller,
         service: ServiceModel,
         setCanvasState: Dispatch<SetStateAction<Map<string, ServiceEntityShape>>>,
-        graph: dia.Graph
+        graph: dia.Graph,
+        relationsDictionary: RelationsDictionary
     ) {
         this.setCanvasState = setCanvasState;
         this.graph = graph;
@@ -50,7 +52,7 @@ export class InstanceTabElement {
                     isNew: true,
                     lockedOnCanvas: false,
                     id: uuidv4(),
-                    relationsDictionary: {},
+                    relationsDictionary,
                     serviceModel,
                     instanceAttributes: createFormState(fields),
                     rootEntities: {},
@@ -87,15 +89,24 @@ export class InstanceTabElement {
             const model: ServiceEntityShape = elementView.model;
             const modelId = model.id;
 
-            // Use functional form to always get the latest state
-            this.setCanvasState((prevCanvasState) => {
-                const newCanvasState = new Map(prevCanvasState);
-                newCanvasState.set(modelId, model);
-                return newCanvasState;
-            });
+            // Ensure the model has a valid ID set before adding to graph
+            model.set("id", modelId);
 
             // Add the model to the canvas graph
             model.addTo(this.graph);
+
+            // Update the model ID in case JointJS changed it
+            const actualId = String(model.id);
+
+            // Update columns display after shape is added to graph
+            model.updateColumnsDisplay();
+
+            // Use functional form to always get the latest state
+            this.setCanvasState((prevCanvasState) => {
+                const newCanvasState = new Map(prevCanvasState);
+                newCanvasState.set(actualId, model);
+                return newCanvasState;
+            });
         });
 
     }

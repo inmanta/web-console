@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     Content,
     EmptyState,
@@ -12,9 +12,25 @@ import { CubesIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { words } from "@/UI/words";
 import { ComposerContext } from "../Data/Context";
+import { EntityForm } from "./EntityForm";
 
 export const RightSidebar: React.FC = () => {
     const { mainService, activeCell, editable } = useContext(ComposerContext);
+    const [description, setDescription] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!activeCell) {
+            setDescription(mainService?.description || null);
+            return;
+        }
+
+        const serviceModel = activeCell.serviceModel;
+        if (serviceModel) {
+            setDescription(serviceModel.description || null);
+        } else {
+            setDescription(null);
+        }
+    }, [activeCell, mainService]);
 
     return (
         <Wrapper
@@ -25,11 +41,14 @@ export const RightSidebar: React.FC = () => {
             <FlexItem alignSelf={{ default: "alignSelfCenter" }}>
                 <Title headingLevel="h1">{words("details")}</Title>
             </FlexItem>
-            {mainService?.description && (
-                <Content aria-label="service-description">{mainService.description}</Content>
+            {description && (
+                <Content aria-label="service-description">{description}</Content>
             )}
             {activeCell && editable ? (
-                <Content>Form will be implemented here</Content>
+                <EntityForm
+                    activeCell={activeCell}
+                    isDisabled={activeCell.entityType === "relation" && !activeCell.isNew}
+                />
             ) : (
                 <Flex flex={{ default: "flex_1" }} alignItems={{ default: "alignItemsCenter" }}>
                     <EmptyState
