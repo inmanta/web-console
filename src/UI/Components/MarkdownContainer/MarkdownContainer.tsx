@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import markdownit from "markdown-it";
 import { full } from "markdown-it-emoji";
 import mermaidPlugin from "./MermaidPlugin";
@@ -26,15 +26,61 @@ interface Props {
 export const MarkdownContainer = ({ text, web_title }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const md = new markdownit({
-    html: false,
-    breaks: true,
-    linkify: true,
-    typographer: true,
-  });
+  // Memoize the markdown-it instance to prevent it from changing on every render
+  // This prevents the useEffect dependency array from changing unnecessarily
+  const md = useMemo(() => {
+    const markdownInstance = new markdownit({
+      html: true,
+      breaks: true,
+      linkify: true,
+      typographer: true,
+    });
 
-  md.use(full);
-  md.use((md) => mermaidPlugin(md, web_title, {}));
+    // Enable GitHub-style diff fences (```diff) with basic line coloring
+    // without pulling in an additional highlighting library.
+    markdownInstance.renderer.rules.fence = (tokens, idx, options, env, self) => {
+      const token = tokens[idx];
+      const info = token.info ? token.info.trim() : "";
+      const langName = info.split(/\s+/g)[0];
+
+      if (langName === "diff" || langName === "patch") {
+        const lines = token.content.split("\n");
+        const highlighted = lines
+          .map((line) => {
+            if (!line) return "";
+
+            // Removed line
+            if (line.startsWith("-")) {
+              return `<span class="pl-md">${markdownInstance.utils.escapeHtml(line)}</span>`;
+            }
+
+            // Added line
+            if (line.startsWith("+")) {
+              return `<span class="pl-mi1">${markdownInstance.utils.escapeHtml(line)}</span>`;
+            }
+
+            // Meta / hunk header
+            if (line.startsWith("@@") || line.startsWith("diff ") || line.startsWith("index ")) {
+              return `<span class="pl-mh">${markdownInstance.utils.escapeHtml(line)}</span>`;
+            }
+
+            return markdownInstance.utils.escapeHtml(line);
+          })
+          .join("\n");
+
+        const code = `<pre><code class="language-diff">${highlighted}</code></pre>`;
+        return code;
+      }
+
+      // Fallback to default fence renderer for all other languages
+      return self.renderToken(tokens, idx, options);
+    };
+
+    markdownInstance.use(full);
+    markdownInstance.use((mdInstance) => mermaidPlugin(mdInstance, web_title, {}));
+
+    return markdownInstance;
+  }, [web_title]);
 
   useEffect(() => {
     const container = containerRef.current;

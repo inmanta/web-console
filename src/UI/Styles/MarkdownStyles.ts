@@ -209,8 +209,58 @@ export const MarkdownStyles = `
   padding: 0;
 }
 
+.markdown-body details {
+  margin: 16px 0;
+  border: 1px solid var(--pf-t--global--border--color--default);
+  border-radius: var(--pf-t--global--border--radius--small);
+  background-color: var(--pf-t--global--background--color--secondary--default);
+}
+
 .markdown-body details summary {
+  display: flex;
+  align-items: center;
   cursor: pointer;
+  padding: var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md);
+  list-style: none;
+  font-weight: var(--pf-t--global--font--weight--body);
+  color: var(--pf-t--global--text--color--regular);
+}
+
+.markdown-body details summary::before {
+  content: "";
+  display: inline-block;
+  flex-shrink: 0;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: var(--pf-t--global--spacer--sm);
+  margin-top: 0;
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  border-color: var(--pf-t--global--icon--color--regular);
+  transform-origin: center;
+  /* 45deg gives a chevron similar to fa-angle-right instead of a 90deg L-shape.
+     A slight vertical translation keeps it visually centered with the text line. */
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform var(--pf-t--global--motion-duration--fast) ease-in-out;
+}
+
+.markdown-body details[open] summary::before {
+  /* Rotate further to point down when expanded, preserving vertical alignment */
+  transform: translateY(1px) rotate(135deg);
+}
+
+.markdown-body details summary::-webkit-details-marker,
+.markdown-body details summary::marker {
+  display: none;
+}
+
+.markdown-body details[open] summary {
+  border-bottom: 1px solid var(--pf-t--global--border--color--default);
+}
+
+.markdown-body details>*:not(summary) {
+  padding: var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md)
+    var(--pf-t--global--spacer--md);
 }
 
 .markdown-body details:not([open])>*:not(summary) {
@@ -746,11 +796,12 @@ export const MarkdownStyles = `
 .markdown-body .highlight pre,
 .markdown-body pre {
   padding: 16px;
+  margin: var(--pf-t--global--spacer--sm);
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;
   color: var(--pf-t--global--text--color--regular);
-  background-color: var(--pf-t--global--background--color--secondary--default);
+  background-color: var(--pf-t--global--background--color--primary--default);
   border-radius: var(--pf-t--global--border--radius--small);
 }
 
@@ -758,7 +809,7 @@ export const MarkdownStyles = `
 .markdown-body pre tt {
   display: inline;
   max-width: auto;
-  padding: 0;
+  padding: 0 var(--pf-t--global--spacer--xs);
   margin: 0;
   overflow: visible;
   line-height: inherit;
@@ -925,17 +976,17 @@ export const MarkdownStyles = `
 }
 
 .markdown-body .pl-md {
-  color: var(--pf-t--global--text--color--status--danger--default);
+  color: var(--pf-t--color--red--60);
   background-color: var(--pf-t--global--color--nonstatus--red--default);
 }
 
 .markdown-body .pl-mi1 {
-  color: var(--pf-t--global--text--color--status--success--default);
+  color: var(--pf-t--color--green--60);
   background-color: var(--pf-t--global--color--nonstatus--green--default);
 }
 
 .markdown-body .pl-mc {
-  color: var(--pf-t--global--text--color--status--danger--default);
+  color: var(--pf-t--color--red--60);
   background-color: var(--pf-t--global--color--nonstatus--red--default);
 }
 
