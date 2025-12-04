@@ -1,0 +1,7 @@
+change-type: patch
+description: The markdown preview now supports diff fenced code blocks.
+issue-nr: "6628"
+destination-branches:
+- iso8
+sections: 
+  minor-improvement: "{{description}}"
