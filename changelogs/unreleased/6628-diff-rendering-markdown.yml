@@ -4,4 +4,5 @@ issue-nr: "6628"
 destination-branches:
 - master
 - iso8
-sections: "{{description}}"
+sections: 
+  minor-improvement: "{{description}}"
