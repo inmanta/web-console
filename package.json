@@ -166,6 +166,7 @@
   "resolutions": {
     "cookie": "^0.7.0",
     "follow-redirects": "^1.15.4",
+    "glob": "^10.5.0",
     "glob-parent": "^5.1.2",
     "json-schema": "^0.4.0",
     "json5": "^2.2.2",
