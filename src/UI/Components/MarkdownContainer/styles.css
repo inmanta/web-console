@@ -37,14 +37,8 @@
   /* Position relative to the main content area */
   left: calc(var(--pf-c-page__sidebar--Width, 300px) + var(--left-margin));
   top: calc(var(--pf-c-page__header--MinHeight, 76px) + var(--diagram-margin));
-  width: calc(
-    100vw - var(--pf-c-page__sidebar--Width, 300px) - var(--left-margin) - var(--diagram-margin) -
-      (var(--page-padding) * 2) - var(--extra-space)
-  );
-  height: calc(
-    100vh - var(--pf-c-page__header--MinHeight, 76px) - (var(--diagram-margin) * 2) -
-      var(--page-padding) - var(--extra-space)
-  );
+  width: calc(100vw - var(--pf-c-page__sidebar--Width, 300px) - var(--left-margin) - var(--diagram-margin) - (var(--page-padding) * 2) - var(--extra-space));
+  height: calc(100vh - var(--pf-c-page__header--MinHeight, 76px) - (var(--diagram-margin) * 2) - var(--page-padding) - var(--extra-space));
   transform: none !important;
   cursor: zoom-out;
   background: var(--pf-global--BackgroundColor--100, white);
@@ -56,19 +50,13 @@
 }
 
 /* When sidebar is collapsed */
-.pf-m-collapsed ~ * .mermaid-diagram.zoomed {
+.pf-m-collapsed~* .mermaid-diagram.zoomed {
   left: calc(var(--pf-c-page__sidebar--Width--collapsed, 75px) + var(--left-margin));
-  width: calc(
-    100vw - var(--pf-c-page__sidebar--Width--collapsed, 75px) - var(--left-margin) -
-      var(--diagram-margin) - (var(--page-padding) * 2) - var(--extra-space)
-  );
+  width: calc(100vw - var(--pf-c-page__sidebar--Width--collapsed, 75px) - var(--left-margin) - var(--diagram-margin) - (var(--page-padding) * 2) - var(--extra-space));
 }
 
 /* When sidebar is hidden */
-.pf-m-hidden ~ * .mermaid-diagram.zoomed {
+.pf-m-hidden~* .mermaid-diagram.zoomed {
   left: var(--left-margin);
-  width: calc(
-    100vw - var(--left-margin) - var(--diagram-margin) - (var(--page-padding) * 2) -
-      var(--extra-space)
-  );
+  width: calc(100vw - var(--left-margin) - var(--diagram-margin) - (var(--page-padding) * 2) - var(--extra-space));
 }

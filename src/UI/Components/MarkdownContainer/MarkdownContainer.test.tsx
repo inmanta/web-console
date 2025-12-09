@@ -47,6 +47,28 @@ describe("MarkdownContainer", () => {
     expect(addedLine).toHaveTextContent("+ new line");
   });
 
+  it("renders code blocks without language specified correctly", () => {
+    const markdownContent =
+      "```\nsome code here\nmore code\n```\n\nThis is normal text after the code block.";
+    const webTitle = "Container_id";
+
+    render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
+
+    const container = document.querySelector(".markdown-body");
+    expect(container).not.toBeNull();
+
+    // Verify the code block is rendered
+    const codeBlock = container!.querySelector("pre > code");
+    expect(codeBlock).not.toBeNull();
+    // Check that the code block contains both lines (whitespace may be normalized in textContent)
+    const codeText = codeBlock!.textContent || "";
+    expect(codeText).toContain("some code here");
+    expect(codeText).toContain("more code");
+
+    // Verify that text after the code block is rendered normally (not as part of the code block)
+    expect(screen.getByText("This is normal text after the code block.")).toBeInTheDocument();
+  });
+
   it("renders the Markdown content with Mermaid diagrams correctly", async () => {
     const markdownContent = "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```";
     const webTitle = "Container_id";
