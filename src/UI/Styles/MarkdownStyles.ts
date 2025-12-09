@@ -796,13 +796,17 @@ export const MarkdownStyles = `
 .markdown-body .highlight pre,
 .markdown-body pre {
   padding: 16px;
-  margin: var(--pf-t--global--spacer--sm);
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;
   color: var(--pf-t--global--text--color--regular);
   background-color: var(--pf-t--global--background--color--primary--default);
+  border: var(--pf-t--global--border--width--regular) solid var(--pf-t--global--border--color--nonstatus--gray--default);
   border-radius: var(--pf-t--global--border--radius--small);
+}
+
+.markdown-body details pre {
+  margin: var(--pf-t--global--spacer--sm);
 }
 
 .markdown-body pre code,

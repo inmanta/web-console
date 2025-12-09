@@ -38,6 +38,9 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
 
     // Enable GitHub-style diff fences (```diff) with basic line coloring
     // without pulling in an additional highlighting library.
+    // Store reference to the original fence renderer before replacing it
+    const defaultFenceRenderer = markdownInstance.renderer.rules.fence;
+
     markdownInstance.renderer.rules.fence = (tokens, idx, options, env, self) => {
       const token = tokens[idx];
       const info = token.info ? token.info.trim() : "";
@@ -72,8 +75,15 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
         return code;
       }
 
-      // Fallback to default fence renderer for all other languages
-      return self.renderToken(tokens, idx, options);
+      // Fallback to default fence renderer for all other languages (including empty language)
+      if (defaultFenceRenderer) {
+        return defaultFenceRenderer(tokens, idx, options, env, self);
+      }
+
+      // If no default renderer exists, use markdown-it's built-in fence rendering
+      const content = markdownInstance.utils.escapeHtml(token.content);
+      const langClass = langName ? ` class="language-${langName}"` : "";
+      return `<pre><code${langClass}>${content}</code></pre>`;
     };
 
     markdownInstance.use(full);
