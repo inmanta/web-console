@@ -127,8 +127,8 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
             const diagram = node.matches('.mermaid-diagram[data-zoomable="true"]')
               ? node
               : (node.querySelector(
-                '.mermaid-diagram[data-zoomable="true"]'
-              ) as HTMLElement | null);
+                  '.mermaid-diagram[data-zoomable="true"]'
+                ) as HTMLElement | null);
 
             if (diagram) {
               diagram.addEventListener("click", handleImageClick);
