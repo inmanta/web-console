@@ -799,7 +799,6 @@ export const MarkdownStyles = `
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;
-  color: var(--pf-t--global--text--color--regular);
   background-color: var(--pf-t--global--background--color--primary--default);
   border: var(--pf-t--global--border--width--regular) solid var(--pf-t--global--border--color--nonstatus--gray--default);
   border-radius: var(--pf-t--global--border--radius--small);

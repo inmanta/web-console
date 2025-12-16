@@ -1,0 +1,5 @@
+description: Fixed code block font color in markdown preview.
+change-type: patch
+destination-branches:
+- iso8
+sections: {}
