@@ -1588,6 +1588,7 @@ __metadata:
     file-saver: "npm:^2.0.5"
     git-revision-webpack-plugin: "npm:^5.0.0"
     globals: "npm:^15.9.0"
+    highlight.js: "npm:^11.11.1"
     html-webpack-plugin: "npm:^5.6.3"
     jest: "npm:^29.7.0"
     jest-axe: "npm:^9.0.0"
@@ -9599,6 +9600,13 @@ __metadata:
   version: 4.0.2
   resolution: "headers-polyfill@npm:4.0.2"
   checksum: 10/70b53abf48a1d50760150624d6c7ca974a0d286ba102e411538f6dad6687ce51ce7cc60197e326df96f844548d6ff77d900e28c3cdbc0ba1fe09a05eae47156a
+  languageName: node
+  linkType: hard
+
+"highlight.js@npm:^11.11.1":
+  version: 11.11.1
+  resolution: "highlight.js@npm:11.11.1"
+  checksum: 10/205272f12f2c8ab1760452a75c58b043b11129cf3a5d2a9c0c90d43993580d0f5c385a73a4b8aba197eef20c0ec37d64000e6b35c4ed5991324f4c2dc78f4e43
   languageName: node
   linkType: hard
 

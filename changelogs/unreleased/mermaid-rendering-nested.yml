@@ -1,0 +1,5 @@
+description: Nested mermaid diagrams are now rendered correctly. Code block font color is now also fixed.
+change-type: patch
+destination-branches:
+- iso8
+sections: {}

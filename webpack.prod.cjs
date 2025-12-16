@@ -88,6 +88,8 @@ module.exports = merge(common, {
             __dirname,
             "node_modules/@patternfly/react-log-viewer/dist/esm/LogViewer/css"
           ),
+          // Allow importing highlight.js themes such as github.css
+          path.resolve(__dirname, "node_modules/highlight.js/styles"),
         ],
         use: [MiniCssExtractPlugin.loader, "css-loader"],
       },

@@ -754,7 +754,6 @@ export const MarkdownStyles = `
   font-size: 85%;
   white-space: break-spaces;
   background-color: var(--pf-t--global--background--color--secondary--default);
-  color: var(--pf-t--global--text--color--regular);
   border: var(--pf-t--global--border--width--regular) solid var(--pf-t--global--border--color--nonstatus--gray--default);
 }
 
