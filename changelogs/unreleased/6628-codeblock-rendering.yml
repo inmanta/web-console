@@ -1,5 +1,0 @@
-description: Fixed code block rendering in markdown preview.
-change-type: patch
-destination-branches:
-- iso8
-sections: {}
