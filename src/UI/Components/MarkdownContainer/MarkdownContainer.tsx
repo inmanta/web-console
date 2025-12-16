@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useMemo } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useMemo, useRef } from "react";
 import hljs from "highlight.js";
 import markdownit from "markdown-it";
 import { full } from "markdown-it-emoji";
+import Mermaid from "mermaid";
 import { getThemePreference } from "../DarkmodeOption";
-import mermaidPlugin, { processMermaidContainers } from "./MermaidPlugin";
+import mermaidPlugin from "./MermaidPlugin";
 import "./styles.css";
 
 /**
@@ -38,8 +40,7 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
       breaks: true,
       linkify: true,
       typographer: true,
-      // Apply syntax highlighting to fenced code blocks using highlight.js,
-      // following the markdown-it documentation example.
+      // Enable syntax highlighting for fenced code blocks using highlight.js.
       // See: https://github.com/markdown-it/markdown-it#syntax-highlighting
       highlight: (str, lang) => {
         if (lang && hljs.getLanguage(lang)) {
@@ -66,35 +67,65 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
 
     if (!container) return;
 
-    const handleImageClick = (event: Event) => {
-      const img = event.target as HTMLImageElement;
+    // Render markdown to HTML string (includes <pre class="mermaid"> blocks)
+    const result = md.render(text);
 
-      if (!img.matches('.mermaid-diagram[data-zoomable="true"]')) return;
+    // Only update if the text has actually changed to prevent unnecessary re-processing
+    if (text !== lastProcessedText.current) {
+      lastProcessedText.current = text;
+      container.innerHTML = result;
+    }
+
+    const handleImageClick = (event: Event) => {
+      const target = event.target as HTMLElement;
+      const diagram = target.closest(
+        '.mermaid-diagram[data-zoomable="true"]'
+      ) as HTMLElement | null;
+
+      if (!diagram) return;
 
       event.stopPropagation();
 
-      const isZoomed = img.classList.contains("zoomed");
+      const isZoomed = diagram.classList.contains("zoomed");
 
       // Remove zoomed class from all other images
-      container.querySelectorAll(".mermaid-diagram.zoomed").forEach((el) => {
-        if (el !== img) {
+      container.querySelectorAll<HTMLElement>(".mermaid-diagram.zoomed").forEach((el) => {
+        if (el !== diagram) {
           el.classList.remove("zoomed");
+          const svg = el.querySelector("svg");
+          if (svg) {
+            svg.removeAttribute("preserveAspectRatio");
+          }
         }
       });
 
       if (isZoomed) {
-        img.classList.remove("zoomed");
+        diagram.classList.remove("zoomed");
         document.body.style.overflow = "";
+        // Reset SVG preserveAspectRatio when unzooming
+        const svg = diagram.querySelector("svg");
+        if (svg) {
+          svg.removeAttribute("preserveAspectRatio");
+        }
       } else {
-        img.classList.add("zoomed");
+        diagram.classList.add("zoomed");
         document.body.style.overflow = "hidden";
+        // Set preserveAspectRatio on SVG to maintain aspect ratio while scaling
+        const svg = diagram.querySelector("svg");
+        if (svg) {
+          svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+        }
       }
     };
 
     const handleDocumentClick = (event: Event) => {
       if (!container.contains(event.target as Node)) {
-        container.querySelectorAll(".mermaid-diagram.zoomed").forEach((img) => {
-          img.classList.remove("zoomed");
+        container.querySelectorAll<HTMLElement>(".mermaid-diagram.zoomed").forEach((diagram) => {
+          diagram.classList.remove("zoomed");
+          const svg = diagram.querySelector("svg");
+          if (svg) {
+            svg.removeAttribute("preserveAspectRatio");
+          }
         });
         document.body.style.overflow = "";
       }
@@ -102,8 +133,12 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        container.querySelectorAll(".mermaid-diagram.zoomed").forEach((img) => {
-          img.classList.remove("zoomed");
+        container.querySelectorAll<HTMLElement>(".mermaid-diagram.zoomed").forEach((diagram) => {
+          diagram.classList.remove("zoomed");
+          const svg = diagram.querySelector("svg");
+          if (svg) {
+            svg.removeAttribute("preserveAspectRatio");
+          }
         });
         document.body.style.overflow = "";
       }
@@ -112,11 +147,16 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         mutation.addedNodes.forEach((node) => {
-          if (
-            node instanceof HTMLImageElement &&
-            node.matches('.mermaid-diagram[data-zoomable="true"]')
-          ) {
-            node.addEventListener("click", handleImageClick);
+          if (node instanceof HTMLElement) {
+            const diagram = node.matches('.mermaid-diagram[data-zoomable="true"]')
+              ? node
+              : (node.querySelector(
+                  '.mermaid-diagram[data-zoomable="true"]'
+                ) as HTMLElement | null);
+
+            if (diagram) {
+              diagram.addEventListener("click", handleImageClick);
+            }
           }
         });
       });
@@ -129,59 +169,116 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
     });
 
     // Add initial event listeners
-    container.querySelectorAll('.mermaid-diagram[data-zoomable="true"]').forEach((img) => {
-      img.addEventListener("click", handleImageClick);
-    });
+    container
+      .querySelectorAll<HTMLElement>('.mermaid-diagram[data-zoomable="true"]')
+      .forEach((diagram) => {
+        diagram.addEventListener("click", handleImageClick);
+      });
 
     document.addEventListener("click", handleDocumentClick);
     document.addEventListener("keydown", handleKeyDown);
 
+    // Render Mermaid diagrams after the markdown HTML is in the DOM.
+    // Use a timeout to ensure the innerHTML has been applied.
+    const renderTimeout = setTimeout(() => {
+      const mermaidBlocks = container.querySelectorAll<HTMLElement>("pre.mermaid");
+      if (mermaidBlocks.length > 0) {
+        const isDarkTheme = document.documentElement.classList.contains("pf-v6-theme-dark");
+
+        (Mermaid as any).initialize({
+          startOnLoad: false,
+          securityLevel: "loose",
+          // Switch Mermaid theme based on the current PatternFly theme.
+          // This keeps diagrams readable in both light and dark modes.
+          theme: isDarkTheme ? "dark" : "default",
+        });
+
+        // Helper function to display Mermaid parse errors
+        const showMermaidError = (block: HTMLElement, error: any) => {
+          block.classList.add("mermaid-error");
+          block.classList.remove("mermaid-diagram");
+          block.removeAttribute("data-zoomable");
+
+          // Clear existing content and add error message
+          block.innerHTML = "";
+
+          // Create error message element
+          const errorDiv = document.createElement("div");
+          errorDiv.className = "mermaid-error-message";
+          errorDiv.style.cssText =
+            "padding: 1rem; margin: 1rem 0; background-color: var(--pf-t--global--color--nonstatus--red--default, #c9190b); color: var(--pf-t--global--text--color--status--danger--default, #fff); border-radius: var(--pf-t--global--border--radius--small, 4px); font-family: var(--pf-t--global--font--family--mono, monospace); font-size: 0.875rem;";
+          const errorMessage =
+            (error && typeof error === "object" && "message" in error
+              ? String((error as { message: unknown }).message)
+              : String(error)) || "Unknown error";
+          errorDiv.innerHTML = `
+            <strong>Error rendering Mermaid diagram:</strong><br/>
+            <code>${errorMessage}</code>
+          `;
+
+          block.appendChild(errorDiv);
+        };
+
+        // Process each mermaid block individually to handle errors gracefully
+        mermaidBlocks.forEach((block) => {
+          // Clear any previous error state
+          block.classList.remove("mermaid-error");
+          const existingError = block.querySelector(".mermaid-error-message");
+          if (existingError) {
+            existingError.remove();
+          }
+
+          // Remove data-processed to allow re-rendering during live editing
+          block.removeAttribute("data-processed");
+
+          try {
+            // In Mermaid 11+, run() is the preferred API to process specific nodes.
+            if (typeof (Mermaid as any).run === "function") {
+              const runPromise = (Mermaid as any).run({ nodes: [block] as any });
+              // Handle async errors from run()
+              if (runPromise && typeof runPromise.catch === "function") {
+                runPromise.catch((error: any) => {
+                  showMermaidError(block, error);
+                });
+              }
+            } else if (typeof (Mermaid as any).init === "function") {
+              // Fallback for older versions
+              try {
+                (Mermaid as any).init(undefined, [block] as any);
+              } catch (error) {
+                showMermaidError(block, error);
+              }
+            }
+
+            // Mark as zoomable diagram after successful rendering
+            // Use a small delay to ensure Mermaid has processed it
+            setTimeout(() => {
+              if (!block.classList.contains("mermaid-error")) {
+                block.classList.add("mermaid-diagram");
+                block.setAttribute("data-zoomable", "true");
+                block.addEventListener("click", handleImageClick);
+              }
+            }, 100);
+          } catch (error) {
+            showMermaidError(block, error);
+          }
+        });
+      }
+    }, 0);
+
     return () => {
+      clearTimeout(renderTimeout);
       observer.disconnect();
       document.removeEventListener("click", handleDocumentClick);
       document.removeEventListener("keydown", handleKeyDown);
-      container.querySelectorAll('.mermaid-diagram[data-zoomable="true"]').forEach((img) => {
-        img.removeEventListener("click", handleImageClick);
-      });
+      container
+        .querySelectorAll<HTMLElement>('.mermaid-diagram[data-zoomable="true"]')
+        .forEach((diagram) => {
+          diagram.removeEventListener("click", handleImageClick);
+        });
       document.body.style.overflow = "";
     };
-  }, [text]);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    // Render markdown to HTML string (includes Mermaid placeholder divs)
-    const result = md.render(text);
-
-    // Only update if the text has actually changed to prevent unnecessary re-processing
-    // This is crucial to avoid reverting processed Mermaid diagrams back to placeholder divs
-    // when the component re-renders due to external factors (e.g., window focus, parent updates)
-    if (text !== lastProcessedText.current) {
-      lastProcessedText.current = text;
-
-      // Process Mermaid containers directly in the DOM to avoid React's virtual DOM conflicts
-      // We use direct DOM manipulation instead of dangerouslySetInnerHTML to ensure that
-      // processed Mermaid diagrams (converted from placeholder divs to img elements)
-      // persist across component re-renders
-      const processAndSetHTML = async () => {
-        // Step 1: Set the raw HTML (with Mermaid placeholder divs) directly to the container
-        // This bypasses React's virtual DOM to prevent overwrites of processed content
-        container.innerHTML = result;
-
-        // Step 2: Wait for DOM to update before processing Mermaid containers
-        // This ensures the placeholder divs are in the DOM before we try to process them
-        await new Promise((resolve) => setTimeout(resolve, 0));
-
-        // Step 3: Convert Mermaid placeholder divs to actual rendered diagram images
-        // This async function finds all mermaid-container divs and replaces them with
-        // img elements containing the rendered SVG diagrams
-        await processMermaidContainers();
-      };
-
-      processAndSetHTML();
-    }
-  }, [text, web_title, md]);
+  }, [text, md]);
 
   return <div ref={containerRef} className="markdown-body" />;
 };
