@@ -25,28 +25,6 @@ describe("MarkdownContainer", () => {
     expect(screen.queryByRole("script")).not.toBeInTheDocument();
   });
 
-  it("renders diff fenced code blocks with diff-specific styling", () => {
-    const markdownContent = "```diff\n- old line\n+ new line\n context line\n```";
-    const webTitle = "Container_id";
-
-    render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
-
-    const container = document.querySelector(".markdown-body");
-    expect(container).not.toBeNull();
-
-    const diffCode = container!.querySelector("pre > code.language-diff");
-    expect(diffCode).not.toBeNull();
-
-    const removedLine = diffCode!.querySelector(".pl-md");
-    const addedLine = diffCode!.querySelector(".pl-mi1");
-
-    expect(removedLine).not.toBeNull();
-    expect(removedLine).toHaveTextContent("- old line");
-
-    expect(addedLine).not.toBeNull();
-    expect(addedLine).toHaveTextContent("+ new line");
-  });
-
   it("renders code blocks without language specified correctly", () => {
     const markdownContent =
       "```\nsome code here\nmore code\n```\n\nThis is normal text after the code block.";

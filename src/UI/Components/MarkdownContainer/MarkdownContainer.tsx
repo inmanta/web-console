@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useMemo } from "react";
+import hljs from "highlight.js";
 import markdownit from "markdown-it";
 import { full } from "markdown-it-emoji";
 import { getThemePreference } from "../DarkmodeOption";
@@ -37,57 +38,22 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
       breaks: true,
       linkify: true,
       typographer: true,
+      // Apply syntax highlighting to fenced code blocks using highlight.js,
+      // following the markdown-it documentation example.
+      // See: https://github.com/markdown-it/markdown-it#syntax-highlighting
+      highlight: (str, lang) => {
+        if (lang && hljs.getLanguage(lang)) {
+          try {
+            return hljs.highlight(str, { language: lang, ignoreIllegals: true }).value;
+          } catch {
+            // fall through to default escaping
+          }
+        }
+
+        // Use external default escaping
+        return "";
+      },
     });
-
-    // Enable GitHub-style diff fences (```diff) with basic line coloring
-    // without pulling in an additional highlighting library.
-    // Store reference to the original fence renderer before replacing it
-    const defaultFenceRenderer = markdownInstance.renderer.rules.fence;
-
-    markdownInstance.renderer.rules.fence = (tokens, idx, options, env, self) => {
-      const token = tokens[idx];
-      const info = token.info ? token.info.trim() : "";
-      const langName = info.split(/\s+/g)[0];
-
-      if (langName === "diff" || langName === "patch") {
-        const lines = token.content.split("\n");
-        const highlighted = lines
-          .map((line) => {
-            if (!line) return "";
-
-            // Removed line
-            if (line.startsWith("-")) {
-              return `<span class="pl-md">${markdownInstance.utils.escapeHtml(line)}</span>`;
-            }
-
-            // Added line
-            if (line.startsWith("+")) {
-              return `<span class="pl-mi1">${markdownInstance.utils.escapeHtml(line)}</span>`;
-            }
-
-            // Meta / hunk header
-            if (line.startsWith("@@") || line.startsWith("diff ") || line.startsWith("index ")) {
-              return `<span class="pl-mh">${markdownInstance.utils.escapeHtml(line)}</span>`;
-            }
-
-            return markdownInstance.utils.escapeHtml(line);
-          })
-          .join("\n");
-
-        const code = `<pre><code class="language-diff">${highlighted}</code></pre>`;
-        return code;
-      }
-
-      // Fallback to default fence renderer for all other languages (including empty language)
-      if (defaultFenceRenderer) {
-        return defaultFenceRenderer(tokens, idx, options, env, self);
-      }
-
-      // If no default renderer exists, use markdown-it's built-in fence rendering
-      const content = markdownInstance.utils.escapeHtml(token.content);
-      const langClass = langName ? ` class="language-${langName}"` : "";
-      return `<pre><code${langClass}>${content}</code></pre>`;
-    };
 
     markdownInstance.use(full);
     markdownInstance.use((md) => mermaidPlugin(md, web_title, { theme }));
