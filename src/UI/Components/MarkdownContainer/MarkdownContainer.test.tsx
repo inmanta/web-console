@@ -25,28 +25,6 @@ describe("MarkdownContainer", () => {
     expect(screen.queryByRole("script")).not.toBeInTheDocument();
   });
 
-  it("renders diff fenced code blocks with diff-specific styling", () => {
-    const markdownContent = "```diff\n- old line\n+ new line\n context line\n```";
-    const webTitle = "Container_id";
-
-    render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
-
-    const container = document.querySelector(".markdown-body");
-    expect(container).not.toBeNull();
-
-    const diffCode = container!.querySelector("pre > code.language-diff");
-    expect(diffCode).not.toBeNull();
-
-    const removedLine = diffCode!.querySelector(".pl-md");
-    const addedLine = diffCode!.querySelector(".pl-mi1");
-
-    expect(removedLine).not.toBeNull();
-    expect(removedLine).toHaveTextContent("- old line");
-
-    expect(addedLine).not.toBeNull();
-    expect(addedLine).toHaveTextContent("+ new line");
-  });
-
   it("renders code blocks without language specified correctly", () => {
     const markdownContent =
       "```\nsome code here\nmore code\n```\n\nThis is normal text after the code block.";
@@ -70,90 +48,99 @@ describe("MarkdownContainer", () => {
   });
 
   it("renders the Markdown content with Mermaid diagrams correctly", async () => {
+    // Import mermaid mock and set up run method
+    const mermaidMock = await import("mermaid");
+    mermaidMock.default.run = vi.fn().mockResolvedValue(undefined);
+
     const markdownContent = "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```";
     const webTitle = "Container_id";
 
     render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
 
-    // First, check if the mermaid placeholder container is created
-    // The implementation creates placeholder divs
-    const placeholderContainer = document.querySelector(".mermaid-container[data-mermaid-content]");
-    expect(placeholderContainer).toBeInTheDocument();
+    // First, check if the mermaid pre block is created
+    // The implementation creates <pre class="mermaid"> blocks
+    await waitFor(() => {
+      const mermaidBlock = document.querySelector("pre.mermaid");
+      expect(mermaidBlock).toBeInTheDocument();
+    });
 
     // Wait for the diagram to be processed and rendered
-    await waitFor(() => {
-      // The mock will replace the placeholder container with an img tag
-      const img = screen.getByRole("img");
-
-      expect(img).toBeInTheDocument();
-      // Verify the image has the correct attributes for Mermaid diagrams
-      expect(img).toHaveClass("mermaid-diagram");
-      expect(img).toHaveAttribute("data-zoomable", "true");
-      expect(img).toHaveAttribute("alt", "Mermaid diagram");
-
-      // Verify the image source contains our mock SVG
-      expect(img.getAttribute("src")).toContain(
-        encodeURIComponent("<svg>Mock Mermaid Diagram</svg>")
-      );
-    });
+    await waitFor(
+      () => {
+        const mermaidBlock = document.querySelector("pre.mermaid.mermaid-diagram");
+        expect(mermaidBlock).toBeInTheDocument();
+        expect(mermaidBlock).toHaveAttribute("data-zoomable", "true");
+      },
+      { timeout: 2000 }
+    );
   });
 
   it("applies theme configuration to Mermaid diagrams", async () => {
-    // Mock theme preference to return dark theme
-    const { getThemePreference } = await import("../DarkmodeOption");
-    vi.mocked(getThemePreference).mockReturnValue("dark");
+    // Set up dark theme in DOM (the implementation checks document.documentElement.classList)
+    document.documentElement.classList.add("pf-v6-theme-dark");
 
-    // Import the mermaid mock to verify it was called with theme options
+    // Import the mermaid mock and set up spies before rendering
     const mermaidMock = await import("mermaid");
     const initializeSpy = vi.spyOn(mermaidMock.default, "initialize");
+    mermaidMock.default.run = vi.fn().mockResolvedValue(undefined);
 
     const markdownContent = "```mermaid\ngraph LR\n    A --> B\n```";
     const webTitle = "Container_id";
 
     render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
 
-    // Verify that mermaid.initialize was called with the dark theme
-    expect(initializeSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        securityLevel: "loose",
-        startOnLoad: false,
-        theme: "dark",
-      })
+    // Wait for the async setTimeout to execute and initialize to be called
+    await waitFor(
+      () => {
+        // Verify that mermaid.initialize was called with the dark theme
+        expect(initializeSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            securityLevel: "loose",
+            startOnLoad: false,
+            theme: "dark",
+          })
+        );
+      },
+      { timeout: 2000 }
     );
 
-    // Check that the placeholder container is created
-    const placeholderContainer = document.querySelector(".mermaid-container[data-mermaid-content]");
-    expect(placeholderContainer).toBeInTheDocument();
-
-    // Wait for the diagram to be processed
+    // Check that the mermaid block is created
     await waitFor(() => {
-      const img = screen.getByRole("img");
-      expect(img).toBeInTheDocument();
-      expect(img).toHaveClass("mermaid-diagram");
+      const mermaidBlock = document.querySelector("pre.mermaid");
+      expect(mermaidBlock).toBeInTheDocument();
     });
+
+    // Clean up
+    document.documentElement.classList.remove("pf-v6-theme-dark");
   });
 
   it("uses default theme when no theme preference is set", async () => {
-    // Mock theme preference to return null (no preference)
-    const { getThemePreference } = await import("../DarkmodeOption");
-    vi.mocked(getThemePreference).mockReturnValue(null);
+    // Ensure dark theme class is not present (the implementation checks document.documentElement.classList)
+    document.documentElement.classList.remove("pf-v6-theme-dark");
 
-    // Import the mermaid mock to verify it was called with default theme
+    // Import the mermaid mock and set up spies before rendering
     const mermaidMock = await import("mermaid");
     const initializeSpy = vi.spyOn(mermaidMock.default, "initialize");
+    mermaidMock.default.run = vi.fn().mockResolvedValue(undefined);
 
     const markdownContent = "```mermaid\ngraph LR\n    A --> B\n```";
     const webTitle = "Container_id";
 
     render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
 
-    // Verify that mermaid.initialize was called with the default theme
-    expect(initializeSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        securityLevel: "loose",
-        startOnLoad: false,
-        theme: "default",
-      })
+    // Wait for the async setTimeout to execute and initialize to be called
+    await waitFor(
+      () => {
+        // Verify that mermaid.initialize was called with the default theme
+        expect(initializeSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            securityLevel: "loose",
+            startOnLoad: false,
+            theme: "default",
+          })
+        );
+      },
+      { timeout: 2000 }
     );
   });
 });

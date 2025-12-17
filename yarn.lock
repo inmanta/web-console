@@ -1328,6 +1328,7 @@ __metadata:
     globals: "npm:^16.3.0"
     graphql: "npm:^16.12.0"
     graphql-request: "npm:^7.3.0"
+    highlight.js: "npm:^11.11.1"
     jest-axe: "npm:^10.0.0"
     jsdom: "npm:^27.3.0"
     keycloak-js: "npm:^26.2.1"
@@ -7474,6 +7475,13 @@ __metadata:
   dependencies:
     hermes-estree: "npm:0.25.1"
   checksum: 10/805efc05691420f236654349872c70731121791fa54de521c7ee51059eae34f84dd19f22ee846741dcb60372f8fb5335719b96b4ecb010d2aed7d872f2eff9cc
+  languageName: node
+  linkType: hard
+
+"highlight.js@npm:^11.11.1":
+  version: 11.11.1
+  resolution: "highlight.js@npm:11.11.1"
+  checksum: 10/205272f12f2c8ab1760452a75c58b043b11129cf3a5d2a9c0c90d43993580d0f5c385a73a4b8aba197eef20c0ec37d64000e6b35c4ed5991324f4c2dc78f4e43
   languageName: node
   linkType: hard
 

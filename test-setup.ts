@@ -176,5 +176,7 @@ vi.mock("mermaid", () => ({
   default: {
     initialize: vi.fn(),
     render: vi.fn().mockResolvedValue({ svg: "<svg>Mock Mermaid Diagram</svg>" }),
+    run: vi.fn().mockResolvedValue(undefined),
+    init: vi.fn(),
   },
 }));
