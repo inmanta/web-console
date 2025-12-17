@@ -28,21 +28,16 @@ describe("MarkdownContainer", () => {
     const markdownContent = "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```";
     const webTitle = "Container_id";
 
-    render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
+    const { container } = render(<MarkdownContainer text={markdownContent} web_title={webTitle} />);
 
-    // First, check if the loading placeholder is shown
-    expect(screen.getByText("Loading diagram...")).toBeInTheDocument();
-
-    // Wait for the diagram to be rendered
+    // Wait for Mermaid to process the block and for our zoom attributes to be applied
     await waitFor(() => {
-      // The mock will replace the loading placeholder with an img tag
-      const img = screen.getByRole("img");
+      const diagram = container.querySelector(
+        "pre.mermaid-diagram[data-zoomable='true']"
+      ) as HTMLElement | null;
 
-      expect(img).toBeInTheDocument();
-      // Verify the image source contains our mock SVG
-      expect(img.getAttribute("src")).toContain(
-        encodeURIComponent("<svg>Mock Mermaid Diagram</svg>")
-      );
+      expect(diagram).not.toBeNull();
+      expect(diagram).toHaveClass("mermaid", "mermaid-diagram");
     });
   });
 });

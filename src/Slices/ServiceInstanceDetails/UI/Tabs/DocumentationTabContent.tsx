@@ -134,6 +134,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
 
   return (
     <TabContentWrapper id="documentation">
+      <MarkdownPreviewerButton />
       <Accordion asDefinitionList togglePosition="start">
         {sections.map((section, index) => (
           <AccordionItem isExpanded={expanded === index} key={section.title}>
