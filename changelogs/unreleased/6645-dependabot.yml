@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump mermaid from 11.12.1 to 11.12.2
+destination-branches:
+- master
+sections: {}
