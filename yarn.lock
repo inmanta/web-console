@@ -1338,7 +1338,7 @@ __metadata:
     madge: "npm:^6.1.0"
     markdown-it: "npm:^14.1.0"
     markdown-it-emoji: "npm:^3.0.0"
-    mermaid: "npm:^11.12.1"
+    mermaid: "npm:^11.12.2"
     mocha: "npm:^11.7.5"
     mocha-junit-reporter: "npm:^2.2.1"
     mochawesome: "npm:^7.1.4"
@@ -8985,9 +8985,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mermaid@npm:^11.12.1":
-  version: 11.12.1
-  resolution: "mermaid@npm:11.12.1"
+"mermaid@npm:^11.12.2":
+  version: 11.12.2
+  resolution: "mermaid@npm:11.12.2"
   dependencies:
     "@braintree/sanitize-url": "npm:^7.1.1"
     "@iconify/utils": "npm:^3.0.1"
@@ -9009,7 +9009,7 @@ __metadata:
     stylis: "npm:^4.3.6"
     ts-dedent: "npm:^2.2.0"
     uuid: "npm:^11.1.0"
-  checksum: 10/afb9cce454b4c0da0826087a3c84b529c17d3cd9cc98b29097096060abe752f056bfb61d7ea9d6373f46c72b998f6453990ec19bf3263c3f022f024db401eb0f
+  checksum: 10/3c07c1be97a830904c7802933664abd132d626921c3aa82db8d0fbaad35832907cbaa2250747f17e110de5d6f4bdd1fcb9f0416b42c8e59a73653e809333d3da
   languageName: node
   linkType: hard
 
