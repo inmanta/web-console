@@ -1300,7 +1300,7 @@ __metadata:
     eslint-plugin-prettier: "npm:5.5.4"
     eslint-plugin-react: "npm:^7.37.5"
     eslint-plugin-react-hooks: "npm:^7.0.1"
-    eslint-plugin-testing-library: "npm:^7.13.5"
+    eslint-plugin-testing-library: "npm:^7.15.2"
     file-saver: "npm:^2.0.5"
     globals: "npm:^16.3.0"
     graphql: "npm:^16.12.0"
@@ -6433,15 +6433,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-testing-library@npm:^7.13.5":
-  version: 7.13.5
-  resolution: "eslint-plugin-testing-library@npm:7.13.5"
+"eslint-plugin-testing-library@npm:^7.15.2":
+  version: 7.15.2
+  resolution: "eslint-plugin-testing-library@npm:7.15.2"
   dependencies:
     "@typescript-eslint/scope-manager": "npm:^8.15.0"
     "@typescript-eslint/utils": "npm:^8.15.0"
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0
-  checksum: 10/4fe92a8859eaf05ea8525d0dea9eddbafd330b6d50d14ae4f3971944350364f43d330375fb859ffac0957103a90ea8000dee562cc16f39f141fc25f8fbd4f401
+  checksum: 10/883ebb2f5c5bbb5023234dd2c6cea5db201a201f5df1dad594256f2580b15d515d47977c5377e5aa54e1560425cfe4a8161d8244d9c86ac3762e3b5e60f8df80
   languageName: node
   linkType: hard
 
