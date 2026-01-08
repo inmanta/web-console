@@ -29,7 +29,7 @@ interface Props {
  * @returns {React.FC<Props>} The EntityForm component.
  */
 export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
-    const { formState: contextFormState, setFormState: setContextFormState, editable } = useContext(ComposerContext);
+    const { editable } = useContext(ComposerContext);
     const [formState, setFormState] = useState<InstanceAttributeModel>({});
     const [fields, setFields] = useState<Field[] | null>(null);
     const [originalState, setOriginalState] = useState<InstanceAttributeModel>({});
@@ -95,6 +95,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
         const serviceModel = activeCell.serviceModel;
         // Always get fresh data from the activeCell to ensure we have the correct attributes for this specific cell
         const instanceAttributes = activeCell.getSanitizedAttributes() || {};
+        console.log(activeCell)
 
         // When editing existing instances, set edit mode to true so that fields with modifier "rw"
         // become read-only (only "rw+" fields stay editable). Brand-new shapes remain editable.
@@ -105,11 +106,10 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
         setFields(selectedFields.map((field) => ({ ...field, id: uuidv4() })));
         // Always update formState with the new cell's attributes
         setFormState(instanceAttributes);
-        setContextFormState(instanceAttributes);
         setOriginalState(instanceAttributes);
         setIsDirty(false);
         setCurrentCellId(activeCell.id);
-    }, [activeCell, setContextFormState]);
+    }, [activeCell]);
 
     /**
      * Handles the save action for the form.

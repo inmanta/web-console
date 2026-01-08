@@ -98,7 +98,7 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
               </Flex>
             }
           >
-            <Canvas editable />
+
             <Composer editable serviceName={serviceName} />
           </PageContainer>
         </CanvasProvider>

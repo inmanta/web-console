@@ -46,7 +46,8 @@ type FailureType =
   | "INVALID_ORDER_ITEM"
   | "VALIDATION_COMPILE_FAILED"
   | "EXECUTION_FAILED"
-  | "EXECUTION_SKIPPED";
+  | "EXECUTION_SKIPPED"
+  | "INCONCLUSIVE";
 export type ServiceOrderItemAction = "delete" | "create" | "update";
 
 export type SortKey = "created_at";

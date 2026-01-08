@@ -1,7 +1,7 @@
 import { useGetInventoryList, useGetServiceModels, useGetInstanceWithRelations } from "@/Data/Queries";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ComposerContext, composerContext } from "./Data/Context";
-import { ComposerContainer, Canvas, LeftSidebar, RightSidebar } from "./UI";
+import { ComposerContainer, Canvas, LeftSidebar, RightSidebar, ZoomControls } from "./UI";
 import { dia, shapes, ui } from "@inmanta/rappid";
 import { ComposerPaper } from "./UI/JointJsShapes/ComposerPaper";
 import { LinkShape } from "./UI/JointJsShapes/LinkShape";
@@ -164,18 +164,26 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
         scroller,
     ]);
 
-    // Wire up click events on paper
+    // Wire up click events on paper and enable panning
     useEffect(() => {
-        if (!paper || !graph) {
+        if (!paper || !graph || !scroller) {
             return;
         }
 
         // Handle clicks on empty canvas space - clear the form and halo
+        // This fires on pointerup, so it only clears if user clicked (not dragged)
         const handleBlankClick = () => {
             haloRef.current?.remove();
             haloRef.current = null;
             setActiveCell(null);
             setFormState({});
+        };
+
+        // Start panning when user clicks and drags on blank canvas
+        const handleBlankPointerDown = (event: dia.Event) => {
+            if (event) {
+                scroller.startPanning(event);
+            }
         };
 
         // Handle clicks on shapes - load sanitizedAttrs into form and show halo
@@ -206,14 +214,16 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
             }
         };
 
-        paper.on("blank:pointerdown", handleBlankClick);
+        paper.on("blank:pointerdown", handleBlankPointerDown);
+        paper.on("blank:pointerup", handleBlankClick);
         paper.on("cell:pointerup", handleCellClick);
 
         return () => {
-            paper.off("blank:pointerdown", handleBlankClick);
+            paper.off("blank:pointerdown", handleBlankPointerDown);
+            paper.off("blank:pointerup", handleBlankClick);
             paper.off("cell:pointerup", handleCellClick);
         };
-    }, [paper, graph, editable, relationsDictionary]);
+    }, [paper, graph, scroller, editable, relationsDictionary]);
 
 
     useEffect(() => {
@@ -410,10 +420,11 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
             formState: formState,
             setFormState: setFormState,
         }}>
-            <ComposerContainer>
+            <ComposerContainer id="canvas-wrapper">
                 <LeftSidebar />
                 <Canvas />
                 <RightSidebar />
+                <ZoomControls />
             </ComposerContainer>
         </ComposerContext.Provider>
     )

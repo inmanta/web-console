@@ -331,6 +331,17 @@ export const initializeCanvasFromInstance = (
         const instanceAttributes = instance.candidate_attributes || instance.active_attributes || {};
         const entityType = index === 0 ? "core" : "relation";
 
+        /**
+         * Mark shapes as "new" when they come from a placeholder instance.
+         * Placeholder instances created via createPlaceholderInstance() use:
+         *   - state: "creating"
+         *   - no active_attributes
+         *
+         * This ensures EntityForm treats the main instance as editable (isNew === true),
+         * while existing instances loaded from the backend remain non-new.
+         */
+        const isNewEntity = instance.state === "creating" && !instance.active_attributes;
+
         const interServiceRelations: Record<string, string[]> = {};
         const rootEntities: Record<string, string[]> = {};
 
@@ -352,7 +363,7 @@ export const initializeCanvasFromInstance = (
         const shapeOptions: ServiceEntityOptions = {
             entityType,
             readonly: false,
-            isNew: false,
+            isNew: isNewEntity,
             lockedOnCanvas: false,
             id: instance.id,
             relationsDictionary,
