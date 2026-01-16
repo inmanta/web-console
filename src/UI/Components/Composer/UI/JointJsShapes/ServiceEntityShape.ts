@@ -768,7 +768,17 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         const attributesWithEmbedded = this.processEmbeddedEntities(embeddedShape, attributes, canvasState, isCreating);
 
         // Filter to only include allowed keys from the embedded entity's service model (excludes system fields like "id")
-        return this.filterAllowedAttributes(embeddedShape.serviceModel, attributesWithEmbedded);
+        const filteredAttributes = this.filterAllowedAttributes(embeddedShape.serviceModel, attributesWithEmbedded);
+
+        // Sanitize attributes to convert empty strings to null (same as normal form page)
+        const isInEditMode = !isCreating;
+        const fieldCreator = new FieldCreator(new CreateModifierHandler(), isInEditMode);
+        const fields = fieldCreator.create({
+            attributes: embeddedShape.serviceModel.attributes || [],
+            embedded_entities: embeddedShape.serviceModel.embedded_entities || [],
+            inter_service_relations: embeddedShape.serviceModel.inter_service_relations || [],
+        });
+        return sanitizeAttributes(fields, filteredAttributes);
     }
 
     /**
@@ -802,6 +812,16 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         // Filter to only include allowed keys from the service model (excludes system fields like "id")
         const filteredAttributes = this.filterAllowedAttributes(this.serviceModel, attributesWithEmbedded);
 
+        // Sanitize attributes to convert empty strings to null (same as normal form page)
+        const isInEditMode = !isCreating;
+        const fieldCreator = new FieldCreator(new CreateModifierHandler(), isInEditMode);
+        const fields = fieldCreator.create({
+            attributes: this.serviceModel.attributes || [],
+            embedded_entities: this.serviceModel.embedded_entities || [],
+            inter_service_relations: this.serviceModel.inter_service_relations || [],
+        });
+        const sanitizedAttributes = sanitizeAttributes(fields, filteredAttributes);
+
         const action: ServiceOrderItemAction | null = this.isNew ? "create" : "update";
 
         this.orderItem = {
@@ -809,7 +829,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
             service_entity: this.getEntityName(),
             config: {},
             action: action,
-            attributes: Object.keys(filteredAttributes).length > 0 ? filteredAttributes : null,
+            attributes: Object.keys(sanitizedAttributes).length > 0 ? sanitizedAttributes : null,
             edits: null,
         };
     }
