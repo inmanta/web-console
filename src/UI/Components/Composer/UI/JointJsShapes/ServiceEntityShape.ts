@@ -10,8 +10,19 @@ import {
     t_global_font_size_body_default,
     t_global_font_size_body_lg,
 } from "@patternfly/react-tokens";
-import { EmbeddedEntity, InstanceAttributeModel, InterServiceRelation, ServiceModel } from "@/Core";
+import { EmbeddedEntity, Field, InstanceAttributeModel, InterServiceRelation, ServiceModel } from "@/Core";
 import { RelationsDictionary } from "../../Data";
+import { ComposerServiceOrderItem } from "../../Data/Helpers/deploymentHelpers";
+import { ServiceOrderItemAction } from "@/Slices/Orders/Core/Types";
+import { sanitizeAttributes } from "@/Data";
+import { CreateModifierHandler, FieldCreator } from "@/UI/Components/ServiceInstanceForm";
+import { getEmbeddedEntityKey, getInterServiceRelationKey } from "../../Data/Helpers/shapeUtils";
+import {
+    checkEmbeddedEntityConnections,
+    checkInterServiceRelationConnections,
+    getEmbeddedEntityMissingConnections,
+    getInterServiceRelationMissingConnections,
+} from "../../Data/Helpers/connectionValidationUtils";
 
 export interface ServiceEntityBase {
     entityType: EntityType;
@@ -55,22 +66,26 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     lockedOnCanvas: boolean;
     id: string;
     entityType: EntityType;
+    orderItem: ComposerServiceOrderItem | null;
+    hasAttributeValidationErrors: boolean;
 
-    constructor(initOptions: ServiceEntityOptions) {
+    constructor(initializationOptions: ServiceEntityOptions) {
         super();
 
         this.connections = new Map<string, string[]>();
-        this.serviceModel = initOptions.serviceModel;
-        this.relationsDictionary = initOptions.relationsDictionary;
-        this.instanceAttributes = initOptions.instanceAttributes;
-        this.sanitizedAttrs = JSON.parse(JSON.stringify(initOptions.instanceAttributes));
-        this.readonly = initOptions.readonly;
-        this.isNew = initOptions.isNew;
-        this.lockedOnCanvas = initOptions.lockedOnCanvas;
-        this.id = initOptions.id;
-        this.entityType = initOptions.entityType;
+        this.serviceModel = initializationOptions.serviceModel;
+        this.relationsDictionary = initializationOptions.relationsDictionary;
+        this.instanceAttributes = initializationOptions.instanceAttributes;
+        this.sanitizedAttrs = JSON.parse(JSON.stringify(initializationOptions.instanceAttributes));
+        this.readonly = initializationOptions.readonly;
+        this.isNew = initializationOptions.isNew;
+        this.lockedOnCanvas = initializationOptions.lockedOnCanvas;
+        this.id = initializationOptions.id;
+        this.entityType = initializationOptions.entityType;
+        this.orderItem = null;
+        this.hasAttributeValidationErrors = false;
 
-        this._initializeFromOptions(initOptions);
+        this._initializeFromOptions(initializationOptions);
     }
     defaults() {
         // Recursively assigns default properties. That means if a property already exists on the child,
@@ -139,10 +154,6 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         );
     }
 
-    /**
-     * Internal method to set column items without removing links.
-     * Used when updating columns after links have been created.
-     */
     protected _setColumnItems(data: Array<ColumnData> = []) {
         const names: Array<{
             id: string;
@@ -227,14 +238,12 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
 
     protected _setColumns(data: Array<ColumnData> = []) {
         this._setColumnItems(data);
-        this.removeInvalidLinks();
         return this;
     }
 
-    onColumnsChange() {
-        if (this.hasChanged("columns")) {
-            this._setColumns(this.get("columns"));
-        }
+    setColumns(data: Array<ColumnData>): this {
+        this._setColumns(data);
+        return this;
     }
 
     preinitialize(): void {
@@ -259,16 +268,16 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         ];
     }
 
-    initialize(...args) {
-        super.initialize(...args);
+    initialize(...initializeArguments) {
+        super.initialize(...initializeArguments);
         const columns = this.get("columns") || [];
         if (columns.length > 0) {
             this._setColumns(columns);
         }
     }
 
-    private _initializeFromOptions(initOptions: ServiceEntityOptions) {
-        const { entityType: type, interServiceRelations, embeddedEntities, rootEntities } = initOptions;
+    private _initializeFromOptions(initializationOptions: ServiceEntityOptions) {
+        const { entityType: type, interServiceRelations, embeddedEntities, rootEntities } = initializationOptions;
         this.attr(["header", "fill"], HeaderColors[type]);
         this.setDisplayName();
 
@@ -363,6 +372,8 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
             return;
         }
         this.connections.set(relationType, [...existing, relationId]);
+        // Invalidate cached orderItem to trigger recomputation
+        this.orderItem = null;
     }
 
     removeConnection(relationId: string, relationType: string) {
@@ -371,13 +382,15 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
             return;
         }
 
-        const updated = existing.filter((c) => c !== relationId);
+        const updated = existing.filter((connection) => connection !== relationId);
 
         if (updated.length === 0) {
             this.connections.delete(relationType);
         } else {
             this.connections.set(relationType, updated);
         }
+        // Invalidate cached orderItem - will be recomputed when needed
+        this.orderItem = null;
     }
 
     getConnections(): Map<string, string[]> {
@@ -419,36 +432,11 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     /**
      * Helper method to check if a required connection type has enough connections
      */
-    private checkRequiredConnections(
-        lowerLimit: bigint | number | null | undefined,
-        connectionKey: string,
-        skipReadOnly: boolean
-    ): boolean {
-        // Skip read-only for existing entities
-        if (skipReadOnly && !this.isNew) {
-            return false;
-        }
-
-        const limit = typeof lowerLimit === 'bigint'
-            ? Number(lowerLimit)
-            : (lowerLimit ?? 0);
-
-        // If lower_limit is 0 or undefined, no connection is required
-        if (limit === 0) {
-            return false;
-        }
-
-        const connectionsForType = this.connections.get(connectionKey) || [];
-        const connectedCount = connectionsForType.length;
-
-        // If we have fewer connections than required, the shape is missing connections
-        return connectedCount < limit;
-    }
 
     isMissingConnections(): boolean {
         // Embedded entities can never be standalone - they must always have at least one connection
         if (this.entityType === "embedded") {
-            const totalConnections = Array.from(this.connections.values()).reduce((sum, arr) => sum + arr.length, 0);
+            const totalConnections = Array.from(this.connections.values()).reduce((sum, array) => sum + array.length, 0);
             if (totalConnections === 0) {
                 return true;
             }
@@ -457,14 +445,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         // Check embedded entities
         if ('embedded_entities' in this.serviceModel) {
             for (const embeddedEntity of this.serviceModel.embedded_entities) {
-                // Use the same key logic as when storing: entity.type || entity.name
-                const entityKey = embeddedEntity.type || embeddedEntity.name;
-
-                if (this.checkRequiredConnections(
-                    embeddedEntity.lower_limit,
-                    entityKey,
-                    embeddedEntity.modifier === "r"
-                )) {
+                if (checkEmbeddedEntityConnections(this, embeddedEntity)) {
                     return true;
                 }
             }
@@ -473,20 +454,71 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         // Check inter-service relations
         if ('inter_service_relations' in this.serviceModel) {
             for (const relation of this.serviceModel.inter_service_relations) {
-                // Use the same key logic as when storing: relation.entity_type || relation.name
-                const relationKey = relation.entity_type || relation.name;
-
-                if (this.checkRequiredConnections(
-                    relation.lower_limit,
-                    relationKey,
-                    relation.modifier === "r"
-                )) {
+                if (checkInterServiceRelationConnections(this, relation)) {
                     return true;
                 }
             }
         }
 
         return false;
+    }
+
+    /**
+     * Gets a list of missing connections for this shape.
+     * Returns an array of objects containing the connection name and how many are missing.
+     * @returns Array of { name: string, missing: number, required: number } objects
+     */
+    getMissingConnections(): Array<{ name: string; missing: number; required: number }> {
+        const missing: Array<{ name: string; missing: number; required: number }> = [];
+
+        // Embedded entities can never be standalone - they must always have at least one connection.
+        // When an embedded entity is standalone, we want to show which parent entities (core, embedded,
+        // or inter-service relations) it is allowed to belong to.
+        if (this.entityType === "embedded") {
+            const totalConnections = Array.from(this.connections.values()).reduce(
+                (sum, array) => sum + array.length,
+                0
+            );
+            if (totalConnections === 0) {
+                // Use the relationsDictionary to find all valid parents for this embedded entity.
+                // In createRelationsDictionary, embedded entities are keyed by `entity.type || entity.name`,
+                // which matches getEntityName() for embedded shapes.
+                const entityKey = this.getEntityName();
+                const relationsForEmbedded = this.relationsDictionary[entityKey];
+
+                if (relationsForEmbedded) {
+                    Object.keys(relationsForEmbedded).forEach((parentName) => {
+                        missing.push({
+                            name: parentName,
+                            missing: 1,
+                            required: 1,
+                        });
+                    });
+                }
+            }
+        }
+
+        // Check embedded entities
+        if ('embedded_entities' in this.serviceModel) {
+            for (const embeddedEntity of this.serviceModel.embedded_entities) {
+                const missingConnection = getEmbeddedEntityMissingConnections(this, embeddedEntity);
+                if (missingConnection) {
+                    missing.push(missingConnection);
+                }
+            }
+        }
+
+        // Check inter-service relations
+        if ('inter_service_relations' in this.serviceModel) {
+            for (const relation of this.serviceModel.inter_service_relations) {
+                const missingConnection = getInterServiceRelationMissingConnections(this, relation);
+                if (missingConnection) {
+                    missing.push(missingConnection);
+                }
+            }
+        }
+
+        return missing;
     }
 
 
@@ -498,85 +530,119 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         return this.sanitizedAttrs;
     }
 
-    updateAttributes(attributes: InstanceAttributeModel) {
-        this.instanceAttributes = attributes;
-        this.sanitizedAttrs = JSON.parse(JSON.stringify(attributes));
+    /**
+     * Validates the current attributes of this shape against its service model definition.
+     * Uses the same field/attribute pipeline as the EntityForm, but without rendering the form.
+     *
+     * This method is intentionally lightweight: it focuses on type correctness and basic shape,
+     * deferring any deeper semantic validation to the backend (as with the regular instance forms).
+     */
+    validateAttributes(): void {
+        // Some shapes (e.g. relation-only) might not have attributes to validate
+        if (!("attributes" in this.serviceModel) || !this.serviceModel.attributes) {
+            this.hasAttributeValidationErrors = false;
+            return;
+        }
 
-        const keyAttributes = this.getKeyAttributes();
+        try {
+            const isInEditMode = !this.isNew;
+            const fieldCreator = new FieldCreator(new CreateModifierHandler(), isInEditMode);
+            const fields: Field[] = fieldCreator.attributesToFields(this.serviceModel.attributes);
 
-        if (keyAttributes.length > 0) {
-            const displayAttributes = keyAttributes.map((key) => ({
-                name: key,
-                value: attributes[key] !== undefined && attributes[key] !== null ? String(attributes[key]) : "",
-            }));
+            // Run through the sanitizer to ensure the current attributes are structurally sound
+            // We always validate against the sanitized attributes, as those are what the form works with
+            const sanitized = sanitizeAttributes(fields, this.sanitizedAttrs ?? this.instanceAttributes ?? {});
 
-            // Safely update columns - use requestAnimationFrame to ensure shape is ready
-            // Use _setColumnItems instead of set("columns") to avoid triggering removeInvalidLinks
-            // which might cause issues if the shape isn't fully rendered
-            requestAnimationFrame(() => {
-                try {
-                    // Check if shape is in a graph and has a size (indicating it's rendered)
-                    const graph = this.graph;
-                    const size = this.get("size");
-                    if (graph && size && size.width && size.height) {
-                        // Use _setColumnItems to avoid removing links during updates
-                        // This is safer than set("columns") which triggers removeInvalidLinks
-                        this._setColumnItems(displayAttributes);
-                    } else {
-                        // If shape not ready, store columns for later initialization
-                        // This will be picked up by the initialize method
-                        this.set("columns", displayAttributes);
-                    }
-                } catch (e) {
-                    // Shape not ready yet, store columns for later initialization
-                    // This will be picked up by the initialize method
-                    this.set("columns", displayAttributes);
+            // Helper: determine if a value should be considered "empty" for validation purposes
+            const isEmptyValue = (value: unknown): boolean => {
+                if (value === null || value === undefined) {
+                    return true;
+                }
+                if (typeof value === "string") {
+                    return value.trim() === "";
+                }
+                if (Array.isArray(value)) {
+                    return value.length === 0;
+                }
+                if (typeof value === "object") {
+                    return Object.keys(value as Record<string, unknown>).length === 0;
+                }
+                return false;
+            };
+
+            // Only check top-level required fields; nested/dict-list details are handled by the full form
+            const hasMissingRequiredValues = fields.some((field) => {
+                if (field.isOptional) {
+                    return false;
+                }
+
+                const value = sanitized[field.name as keyof InstanceAttributeModel];
+
+                switch (field.kind) {
+                    case "Boolean":
+                    case "Enum":
+                    case "Text":
+                    case "Textarea":
+                    case "TextList":
+                        return isEmptyValue(value);
+                    default:
+                        return false;
                 }
             });
-        } else {
-            // Clear columns if no key attributes
-            requestAnimationFrame(() => {
-                try {
-                    const graph = this.graph;
-                    if (graph) {
-                        this.set("columns", []);
-                    }
-                } catch (e) {
-                    // Ignore if shape not ready
-                }
-            });
+
+            this.hasAttributeValidationErrors = hasMissingRequiredValues;
+        } catch {
+            // If anything goes wrong while building fields or sanitizing, mark the shape as invalid.
+            // Detailed error handling / messaging can be added later if needed.
+            this.hasAttributeValidationErrors = true;
         }
     }
 
-    /**
-     * Safely updates the columns display after the shape is added to the graph.
-     * Uses requestAnimationFrame to ensure the shape is fully rendered.
-     * Does NOT call removeInvalidLinks() to avoid removing links that were just created.
-     */
+    updateAttributes(attributes: InstanceAttributeModel) {
+        // Create a new object to ensure we're not sharing references
+        this.instanceAttributes = { ...attributes };
+        this.sanitizedAttrs = JSON.parse(JSON.stringify(attributes));
+        // Invalidate cached orderItem - will be recomputed when needed
+        this.orderItem = null;
+
+        // Re-run attribute validation whenever attributes change
+        this.validateAttributes();
+
+        const keyAttributes = this.getKeyAttributes();
+        const displayAttributes =
+            keyAttributes.length > 0
+                ? keyAttributes.map((key) => ({
+                    name: key,
+                    value:
+                        attributes[key] !== undefined && attributes[key] !== null
+                            ? String(attributes[key])
+                            : "",
+                }))
+                : [];
+
+        this.setColumns(displayAttributes);
+    }
+
     updateColumnsDisplay() {
         const columns = this.get("columns") || [];
         if (columns.length === 0) {
             return;
         }
 
-        // Use requestAnimationFrame to ensure the shape is fully rendered
         requestAnimationFrame(() => {
             try {
                 const size = this.get("size");
                 if (size && size.width && size.height) {
-                    // Use _setColumnItems instead of _setColumns to avoid removing links
                     this._setColumnItems(columns);
                 }
-            } catch (e) {
-                // Shape not ready yet, try again on next frame
+            } catch {
                 requestAnimationFrame(() => {
                     try {
                         const size = this.get("size");
                         if (size && size.width && size.height) {
-                            // Use _setColumnItems instead of _setColumns to avoid removing links
                             this._setColumnItems(columns);
                         }
-                    } catch (e2) {
+                    } catch {
                         // Ignore if still not ready
                     }
                 });
@@ -592,6 +658,174 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         }
 
         return keyAttributes;
+    }
+
+    /**
+     * Filters attributes to only include keys that are defined in the service model.
+     * Excludes system fields like "id" that are not part of the service model definition.
+     */
+    private filterAllowedAttributes(
+        serviceModel: ServiceModel | EmbeddedEntity,
+        attributes: InstanceAttributeModel
+    ): InstanceAttributeModel {
+        const allowedAttributeKeys = new Set<string>([
+            ...(serviceModel.attributes?.map((attribute) => attribute.name) || []),
+            ...(serviceModel.embedded_entities?.map((entity) => entity.name) || []),
+            ...(serviceModel.inter_service_relations?.map((relation) => relation.name) || []),
+        ]);
+
+        return Object.fromEntries(
+            Object.entries(attributes).filter(([key]) => allowedAttributeKeys.has(key))
+        );
+    }
+
+    /**
+     * Processes embedded entities for a given shape and returns a new attributes object with embedded entities added.
+     * Handles filtering based on isCreating flag and transforms nested embedded entities recursively.
+     */
+    private processEmbeddedEntities(
+        shape: ServiceEntityShape,
+        attributes: InstanceAttributeModel,
+        canvasState: Map<string, ServiceEntityShape>,
+        isCreating: boolean
+    ): InstanceAttributeModel {
+        const embeddedEntities = isCreating
+            ? shape.serviceModel.embedded_entities?.filter((entity) => entity.modifier !== "r") || []
+            : shape.serviceModel.embedded_entities || [];
+
+        const processedAttributes = { ...attributes };
+
+        embeddedEntities.forEach((embeddedEntity) => {
+            const entityKey = getEmbeddedEntityKey(embeddedEntity);
+            const connectedIds = shape.connections.get(entityKey) || [];
+
+            const embeddedItems = connectedIds
+                .map((connectedId) => canvasState.get(connectedId))
+                .filter((connectedShape): connectedShape is ServiceEntityShape => connectedShape?.entityType === "embedded")
+                .map((connectedShape) => this.transformEmbeddedEntityAttributes(connectedShape, canvasState, isCreating));
+
+            if (embeddedItems.length > 0) {
+                processedAttributes[embeddedEntity.name] = embeddedEntity.upper_limit === 1 ? embeddedItems[0] : embeddedItems;
+            }
+        });
+
+        return processedAttributes;
+    }
+
+    /**
+     * Processes inter-service relations for a given shape and returns a new attributes object with relations added.
+     * Handles filtering based on isCreating flag.
+     */
+    private processInterServiceRelations(
+        shape: ServiceEntityShape,
+        attributes: InstanceAttributeModel,
+        canvasState: Map<string, ServiceEntityShape>,
+        isCreating: boolean
+    ): InstanceAttributeModel {
+        const interServiceRelations = isCreating
+            ? shape.serviceModel.inter_service_relations?.filter((relation) => relation.modifier !== "r") || []
+            : shape.serviceModel.inter_service_relations || [];
+
+        const processedAttributes = { ...attributes };
+
+        interServiceRelations.forEach((relation) => {
+            const relationIds: string[] = [];
+            shape.connections.forEach((connectedIds) => {
+                connectedIds.forEach((connectedId) => {
+                    const connectedShape = canvasState.get(connectedId);
+                    if (connectedShape?.getEntityName() === relation.entity_type && !relationIds.includes(connectedId)) {
+                        relationIds.push(connectedId);
+                    }
+                });
+            });
+
+            if (relationIds.length > 0) {
+                processedAttributes[relation.name] = relation.upper_limit === 1 ? relationIds[0] : relationIds;
+            }
+        });
+
+        return processedAttributes;
+    }
+
+    /**
+     * Recursively transforms an embedded entity shape into its attributes representation
+     * Excludes read-only attributes (modifier "r") only when creating (not updating)
+     */
+    private transformEmbeddedEntityAttributes(
+        embeddedShape: ServiceEntityShape,
+        canvasState: Map<string, ServiceEntityShape>,
+        isCreating: boolean
+    ): InstanceAttributeModel {
+        let attributes = embeddedShape.instanceAttributes || {};
+        if (isCreating) {
+            const readOnlyKeys = new Set(
+                embeddedShape.serviceModel.attributes?.filter((attribute) => attribute.modifier === "r").map((attribute) => attribute.name) || []
+            );
+            attributes = Object.fromEntries(Object.entries(attributes).filter(([key]) => !readOnlyKeys.has(key)));
+        }
+
+        // Process nested embedded entities
+        const attributesWithEmbedded = this.processEmbeddedEntities(embeddedShape, attributes, canvasState, isCreating);
+
+        // Filter to only include allowed keys from the embedded entity's service model (excludes system fields like "id")
+        return this.filterAllowedAttributes(embeddedShape.serviceModel, attributesWithEmbedded);
+    }
+
+    /**
+     * Updates the cached orderItem based on current state.
+     * Should be called when canvasState changes or when this shape's connections/attributes change.
+     * 
+     * @param canvasState - The full canvas state map to resolve connected shapes
+     */
+    updateOrderItem(canvasState: Map<string, ServiceEntityShape>): void {
+        // Only include Core and Relation types (embedded entities are nested in their parent's attributes)
+        if (this.entityType !== "core" && this.entityType !== "relation") {
+            this.orderItem = null;
+            return;
+        }
+
+        const isCreating = this.isNew;
+        let attributes = this.instanceAttributes || {};
+        if (isCreating) {
+            const readOnlyKeys = new Set(
+                this.serviceModel.attributes?.filter((attribute) => attribute.modifier === "r").map((attribute) => attribute.name) || []
+            );
+            attributes = Object.fromEntries(Object.entries(attributes).filter(([key]) => !readOnlyKeys.has(key)));
+        }
+
+        // Process inter_service_relations
+        const attributesWithRelations = this.processInterServiceRelations(this, attributes, canvasState, isCreating);
+
+        // Process embedded entities
+        const attributesWithEmbedded = this.processEmbeddedEntities(this, attributesWithRelations, canvasState, isCreating);
+
+        // Filter to only include allowed keys from the service model (excludes system fields like "id")
+        const filteredAttributes = this.filterAllowedAttributes(this.serviceModel, attributesWithEmbedded);
+
+        const action: ServiceOrderItemAction | null = this.isNew ? "create" : "update";
+
+        this.orderItem = {
+            instance_id: this.id,
+            service_entity: this.getEntityName(),
+            config: {},
+            action: action,
+            attributes: Object.keys(filteredAttributes).length > 0 ? filteredAttributes : null,
+            edits: null,
+        };
+    }
+
+    /**
+     * Gets the cached orderItem, computing it if necessary.
+     * Returns null for embedded entities (they should be nested in their parent's attributes).
+     * 
+     * @param canvasState - The full canvas state map to resolve connected shapes
+     * @returns ComposerServiceOrderItem or null for embedded entities
+     */
+    toServiceOrderItem(canvasState: Map<string, ServiceEntityShape>): ComposerServiceOrderItem | null {
+        if (this.orderItem === null) {
+            this.updateOrderItem(canvasState);
+        }
+        return this.orderItem;
     }
 
 }

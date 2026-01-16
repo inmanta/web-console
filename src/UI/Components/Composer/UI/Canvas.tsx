@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { ui } from "@inmanta/rappid";
 import { ComposerContext } from "../Data/Context";
 
 export const Canvas: React.FC = () => {
     const { scroller, editable } = useContext(ComposerContext);
     const canvasRef = useRef<HTMLDivElement>(null);
+    const tooltipRef = useRef<ui.Tooltip | null>(null);
 
     useEffect(() => {
         if (!canvasRef.current || !scroller) {
@@ -13,6 +15,23 @@ export const Canvas: React.FC = () => {
 
         canvasRef.current.appendChild(scroller.el);
         scroller.render().center();
+
+        // Initialize tooltip system for elements with data-tooltip attribute
+        if (!tooltipRef.current) {
+            tooltipRef.current = new ui.Tooltip({
+                rootTarget: ".canvas",
+                target: "[data-tooltip]",
+                padding: 20,
+            });
+        }
+
+        return () => {
+            // Cleanup tooltip on unmount
+            if (tooltipRef.current) {
+                tooltipRef.current.remove();
+                tooltipRef.current = null;
+            }
+        };
     }, [scroller]);
 
     return (
@@ -42,4 +61,5 @@ const CanvasContainer = styled.div`
         fill: var(--pf-t--global--text--color--regular);
         stroke-width: 1;
     }
+
 `;

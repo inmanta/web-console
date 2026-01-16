@@ -4,6 +4,7 @@ import { ServiceEntityShape } from "../UI";
 import { Inventories } from "@/Data/Queries";
 import { CanvasHandlers, RelationsDictionary } from ".";
 import { dia, ui } from "@inmanta/rappid";
+import { ComposerServiceOrderItem } from "./Helpers/deploymentHelpers";
 
 
 interface ComposerContextInterface {
@@ -29,6 +30,9 @@ interface ComposerContextInterface {
     paper: dia.Paper | null;
     graph: dia.Graph | null;
     editable: boolean;
+    serviceOrderItems: Map<string, ComposerServiceOrderItem>;
+    setServiceOrderItems: Dispatch<SetStateAction<Map<string, ComposerServiceOrderItem>>>;
+    hasValidationErrors: boolean;
 }
 
 export const composerContext: ComposerContextInterface = {
@@ -54,6 +58,9 @@ export const composerContext: ComposerContextInterface = {
     paper: null,
     graph: null,
     editable: false,
+    serviceOrderItems: new Map(),
+    setServiceOrderItems: () => { },
+    hasValidationErrors: false,
 }
 
 export const ComposerContext = createContext(composerContext)

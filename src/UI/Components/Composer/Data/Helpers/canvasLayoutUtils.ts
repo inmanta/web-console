@@ -1,5 +1,8 @@
 import { dia } from "@inmanta/rappid";
 import { DirectedGraph } from "@joint/layout-directed-graph";
+import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
+import { PositionTracker } from "./positionTracker";
+import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT, getShapeDimensions, getEmbeddedEntityKey } from "./shapeUtils";
 
 /**
  * Interface for saved coordinates from metadata
@@ -11,6 +14,7 @@ export interface SavedCoordinates {
 
 /**
  * Applies saved coordinates from metadata to cells in the graph
+ * Skips embedded entities (they will be positioned via autolayout)
  * 
  * @param graph - The JointJS graph
  * @param coordinates - Array of saved coordinates from metadata
@@ -22,8 +26,12 @@ export const applyCoordinatesFromMetadata = (
     const cells = graph.getCells();
 
     coordinates.forEach((savedCoord) => {
-        const cell = cells.find((c) => c.id === savedCoord.id);
-        if (cell) {
+        const cell = cells.find((c) => String(c.id) === String(savedCoord.id));
+        if (cell && cell instanceof ServiceEntityShape) {
+            // Skip embedded entities - they will be positioned via autolayout
+            if (cell.entityType === "embedded") {
+                return;
+            }
             cell.set("position", {
                 x: savedCoord.coordinates.x,
                 y: savedCoord.coordinates.y,
@@ -82,6 +90,112 @@ export const applyAutoLayout = (graph: dia.Graph): void => {
         }
     }
 };
+
+/**
+ * Layout constants for spacing shapes on the canvas
+ */
+export const HORIZONTAL_SPACING = 420;
+export const VERTICAL_SPACING = 200;
+export const NESTED_HORIZONTAL_OFFSET = 360;
+
+/**
+ * Positions embedded entities to the right of their parent entities
+ * Uses the same positioning logic as createEmbeddedEntityShapes
+ * 
+ * @param graph - The JointJS graph
+ */
+export const applyAutoLayoutToEmbeddedEntities = (graph: dia.Graph): void => {
+    const elements = graph.getElements();
+    const embeddedEntities: ServiceEntityShape[] = [];
+    const parentMap = new Map<string, ServiceEntityShape>(); // parentId -> parent shape
+    const embeddedByParent = new Map<string, ServiceEntityShape[]>(); // parentId -> embedded entities
+
+    // Find all embedded entities and their parents
+    elements.forEach((element) => {
+        if (element instanceof ServiceEntityShape) {
+            if (element.entityType === "embedded") {
+                embeddedEntities.push(element);
+            } else {
+                // Store non-embedded entities as potential parents
+                parentMap.set(String(element.id), element);
+            }
+        }
+    });
+
+    // If there are no embedded entities, nothing to do
+    if (embeddedEntities.length === 0) {
+        return;
+    }
+
+    // Create a position tracker and populate it with all existing element positions
+    const positionTracker = new PositionTracker(VERTICAL_SPACING, SHAPE_WIDTH, SHAPE_MIN_HEIGHT);
+    elements.forEach((element) => {
+        if (element instanceof ServiceEntityShape && element.entityType !== "embedded") {
+            const pos = element.position();
+            const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(element);
+            positionTracker.reserve(String(element.id), pos.x, pos.y, bboxWidth, bboxHeight);
+        }
+    });
+
+    // Find parent for each embedded entity by looking at incoming links
+    embeddedEntities.forEach((embeddedEntity) => {
+        const links = graph.getLinks();
+        let parentId: string | null = null;
+
+        // Find links where this embedded entity is the target
+        for (const link of links) {
+            const sourceElement = link.getSourceElement();
+            const targetElement = link.getTargetElement();
+
+            if (targetElement && String(targetElement.id) === String(embeddedEntity.id)) {
+                if (sourceElement && sourceElement instanceof ServiceEntityShape) {
+                    // Found a parent - embedded entities should only have one parent
+                    parentId = String(sourceElement.id);
+                    break;
+                }
+            }
+        }
+
+        if (parentId && parentMap.has(parentId)) {
+            if (!embeddedByParent.has(parentId)) {
+                embeddedByParent.set(parentId, []);
+            }
+            embeddedByParent.get(parentId)!.push(embeddedEntity);
+        }
+    });
+
+    // Position embedded entities relative to their parents using the same logic as createEmbeddedEntityShapes
+    embeddedByParent.forEach((embeddedList, parentId) => {
+        const parent = parentMap.get(parentId);
+        if (!parent) return;
+
+        const parentPos = parent.position();
+        const offsetX = parentPos.x + HORIZONTAL_SPACING;
+
+        // Sort embedded entities by their current Y position to maintain relative order
+        embeddedList.sort((a, b) => {
+            const aPos = a.position();
+            const bPos = b.position();
+            return aPos.y - bPos.y;
+        });
+
+        // Position each embedded entity, stacking them vertically
+        embeddedList.forEach((embeddedEntity, index) => {
+            const startY = parentPos.y + index * VERTICAL_SPACING;
+            const finalY = positionTracker.findNextYPosition(offsetX, SHAPE_WIDTH, SHAPE_MIN_HEIGHT, startY);
+
+            embeddedEntity.set("position", {
+                x: offsetX,
+                y: finalY,
+            });
+
+            // Get the actual bounding box to reserve the correct space
+            const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(embeddedEntity);
+            positionTracker.reserve(String(embeddedEntity.id), offsetX, finalY, bboxWidth, bboxHeight);
+        });
+    });
+};
+
 
 /**
  * Grid layout constants

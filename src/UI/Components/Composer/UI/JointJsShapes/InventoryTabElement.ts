@@ -11,10 +11,11 @@ import { PositionTracker } from "../../Data/Helpers/positionTracker";
 import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
 import { toggleDisabledSidebarItem } from "../../Data/Helpers/disableSidebarItem";
 import { updateAllMissingConnectionsHighlights } from "./createHalo";
+import { getShapeDimensions, getEmbeddedEntityKey } from "../../Data/Helpers/shapeUtils";
+import { HORIZONTAL_SPACING } from "../../Data/Helpers/canvasLayoutUtils";
 
 const GRID_SIZE = 8;
 const PADDING_S = GRID_SIZE;
-const HORIZONTAL_SPACING = 420;
 
 export class InventoryTabElement {
     stencil: ui.Stencil;
@@ -166,17 +167,7 @@ export class InventoryTabElement {
             model.updateColumnsDisplay();
 
             // Reserve position for main shape
-            let bboxWidth = 264;
-            let bboxHeight = 50;
-            try {
-                const bbox = model.getBBox();
-                if (bbox && bbox.width > 0 && bbox.height > 0) {
-                    bboxWidth = bbox.width;
-                    bboxHeight = bbox.height;
-                }
-            } catch (e) {
-                // Fallback to default dimensions
-            }
+            const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(model);
             this.positionTracker.reserve(modelId, dropX, dropY, bboxWidth, bboxHeight);
 
             // Process embedded entities using the same helper as initializeCanvasFromInstance
@@ -202,7 +193,7 @@ export class InventoryTabElement {
                     );
 
                     if (embeddedIds.length > 0) {
-                        const entityKey = embeddedEntity.type || embeddedEntity.name;
+                        const entityKey = getEmbeddedEntityKey(embeddedEntity);
                         model.connections.set(entityKey, embeddedIds);
                     }
                 }

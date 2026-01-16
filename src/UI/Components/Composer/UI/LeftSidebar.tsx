@@ -102,7 +102,7 @@ class LeftSidebarElement {
     this.tabsToolbar.render();
 
     // Now create the stencil tabs after the toolbar
-    this.instanceTab = new InstanceTabElement(htmlRef, scroller, service, setCanvasState, graph, relationsDictionary);
+    this.instanceTab = new InstanceTabElement(htmlRef, scroller, service, serviceModels, setCanvasState, graph, relationsDictionary);
     this.inventoryTab = new InventoryTabElement(htmlRef, scroller, serviceInventories, serviceModels, setCanvasState, graph, relationsDictionary, initialCanvasState);
   }
 

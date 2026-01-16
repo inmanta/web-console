@@ -9,6 +9,7 @@ import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
 import { words } from "@/UI/words";
 import { ComposerContext } from "../Data/Context";
 import { ServiceEntityShape } from "./JointJsShapes/ServiceEntityShape";
+import { updateAllMissingConnectionsHighlights } from "./JointJsShapes/createHalo";
 
 interface Props {
     activeCell: ServiceEntityShape;
@@ -29,7 +30,7 @@ interface Props {
  * @returns {React.FC<Props>} The EntityForm component.
  */
 export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
-    const { editable } = useContext(ComposerContext);
+    const { editable, paper, setCanvasState } = useContext(ComposerContext);
     const [formState, setFormState] = useState<InstanceAttributeModel>({});
     const [fields, setFields] = useState<Field[] | null>(null);
     const [originalState, setOriginalState] = useState<InstanceAttributeModel>({});
@@ -95,7 +96,6 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
         const serviceModel = activeCell.serviceModel;
         // Always get fresh data from the activeCell to ensure we have the correct attributes for this specific cell
         const instanceAttributes = activeCell.getSanitizedAttributes() || {};
-        console.log(activeCell)
 
         // When editing existing instances, set edit mode to true so that fields with modifier "rw"
         // become read-only (only "rw+" fields stay editable). Brand-new shapes remain editable.
@@ -114,6 +114,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
     /**
      * Handles the save action for the form.
      * Updates the shape's attributes and sanitizedAttrs.
+     * Also triggers validation and highlight updates.
      *
      * @param {InstanceAttributeModel} updatedFormState - The updated form state to save.
      * @returns {void}
@@ -123,14 +124,34 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
             if (fields) {
                 const sanitizedAttrs = sanitizeAttributes(fields, updatedFormState);
 
-                // Update the shape's attributes
+                // Update the shape's attributes (this also triggers validateAttributes internally)
                 activeCell.updateAttributes(updatedFormState);
 
                 // Update sanitizedAttrs on the shape
                 activeCell.sanitizedAttrs = sanitizedAttrs;
+
+                // Force view update - JointJS might not detect items changes automatically
+                if (paper) {
+                    const cellView = paper.findViewByModel(activeCell);
+                    if (cellView) {
+                        cellView.update();
+                    }
+                }
+
+                // Update canvas state to trigger validation checks in Composer.tsx
+                setCanvasState((prev) => {
+                    const updated = new Map(prev);
+                    updated.set(activeCell.id, activeCell);
+                    return updated;
+                });
+
+                // Trigger highlight updates to reflect validation state changes
+                if (paper) {
+                    updateAllMissingConnectionsHighlights(paper);
+                }
             }
         },
-        [activeCell, fields]
+        [activeCell, fields, setCanvasState, paper]
     );
 
     // Re-initialize when activeCell changes (detected by ID change)

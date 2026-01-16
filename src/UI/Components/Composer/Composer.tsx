@@ -11,40 +11,48 @@ import {
     initializeCanvasFromInstance,
     createPlaceholderInstance,
     applyCoordinatesFromMetadata,
+    applyAutoLayoutToEmbeddedEntities,
     createLinksFromCanvasState,
     isServiceEntityShapeCell,
+    canvasStateToServiceOrderItems,
+    createLinkShape,
+    addConnectionsBetweenShapes,
+    removeConnectionsBetweenShapes,
 } from "./Data/Helpers";
+import { toggleDisabledSidebarItem } from "./Data/Helpers/disableSidebarItem";
 import { ServiceEntityShape } from "./UI";
 import { createHalo, updateAllMissingConnectionsHighlights } from "./UI/JointJsShapes/createHalo";
 import { InstanceAttributeModel } from "@/Core";
+import { createCanvasHandlers } from "./Data/CanvasHandlers";
+import { ComposerServiceOrderItem } from "./Data/Helpers/deploymentHelpers";
 
 interface Props {
     editable: boolean;
     instanceId?: string;
     serviceName: string;
+    children?: React.ReactNode;
 }
 
-export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName }) => {
+export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, children }) => {
     const [catalogEntries, setCatalogEntries] = useState<string[]>([]);
     const [canvasState, setCanvasState] = useState<Map<string, ServiceEntityShape>>(new Map());
     const [activeCell, setActiveCell] = useState<ServiceEntityShape | null>(null);
     const [formState, setFormState] = useState<InstanceAttributeModel>({});
+    const [serviceOrderItems, setServiceOrderItems] = useState<Map<string, ComposerServiceOrderItem>>(new Map());
     const haloRef = useRef<ui.Halo | null>(null);
+    const contextMenuRef = useRef<HTMLElement | null>(null);
     const skipLinkRemovalRef = useRef(false);
     const initializationKeyRef = useRef<string | null>(null);
+    const initialShapeInfoRef = useRef<Map<string, { service_entity: string }>>(new Map()); // Track initial shape info for delete detection
     const serviceCatalogQuery = useGetServiceModels().useContinuousNoRefetch();
     const relationsDictionary: RelationsDictionary = useMemo(() => createRelationsDictionary(serviceCatalogQuery.data || []), [serviceCatalogQuery.data]);
 
     // We could fetch the main service individually, 
     // but since we already have the full catalog, we save a call by filtering it out.
-    const mainService = useMemo(() => {
-        const data = serviceCatalogQuery.data;
-        if (data) {
-            return data.find((service) => service.name === serviceName);
-        } else {
-            return undefined;
-        }
-    }, [serviceCatalogQuery.data, serviceName]);
+    const mainService = useMemo(() =>
+        serviceCatalogQuery.data?.find((service) => service.name === serviceName),
+        [serviceCatalogQuery.data, serviceName]
+    );
 
     const inventoriesQuery = useGetInventoryList(catalogEntries).useContinuousNoRefetch();
 
@@ -67,6 +75,9 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
             };
         },
     }), [paper]);
+
+    // Create canvas handlers
+    const canvasHandlers = useMemo(() => createCanvasHandlers(graph), [graph]);
 
     // Fetch instance data if instanceId is provided
     // The query will only run if instanceId and mainService are present (enabled check in the hook)
@@ -123,29 +134,45 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
         setCanvasState(initializedEntities);
         initializationKeyRef.current = initializationKey;
 
-        // Check if instance has saved coordinates in metadata
-        const hasMetadataCoordinates =
-            instanceData.instance.metadata?.coordinates;
+        // Track initial shape info for delete detection (only for existing instances, not new ones)
+        if (instanceId) {
+            const initialShapeInfo = new Map<string, { service_entity: string }>();
+            initializedEntities.forEach((shape, id) => {
+                initialShapeInfo.set(id, { service_entity: shape.getEntityName() });
+            });
+            initialShapeInfoRef.current = initialShapeInfo;
+        } else {
+            initialShapeInfoRef.current = new Map();
+        }
 
-        if (hasMetadataCoordinates) {
+        // Apply coordinates from metadata if available, otherwise use default layout
+        const metadataCoordinates = instanceData.instance.metadata?.coordinates;
+        if (metadataCoordinates) {
             try {
-                const parsedMetadata = JSON.parse(instanceData.instance.metadata.coordinates);
+                const parsedMetadata = JSON.parse(metadataCoordinates);
                 if (parsedMetadata.version === "v2" && parsedMetadata.data) {
                     // Apply saved coordinates from metadata (overrides manual positioning)
+                    // This only applies to core and relation entities, not embedded entities
                     applyCoordinatesFromMetadata(graph, parsedMetadata.data);
                 }
             } catch (error) {
                 console.warn("Failed to parse coordinates from metadata:", error);
             }
         }
+        // Always apply autolayout to embedded entities to position them near their parents
+        // Embedded entities can't be targetted by ids since they don't have any persistent ids.
+        applyAutoLayoutToEmbeddedEntities(graph);
 
         // Unfreeze paper if it's frozen
         if (paper.isFrozen()) {
             paper.unfreeze();
         }
 
-        // Center and zoom to fit content
-        scroller.centerContent();
+        // Fit content to screen by default
+        // Use requestAnimationFrame to ensure paper is fully rendered before fitting
+        requestAnimationFrame(() => {
+            scroller.zoomToFit({ useModelGeometry: true, padding: 20 });
+        });
 
         // Update missing connections highlights after canvas is initialized
         // Use setTimeout to ensure paper is fully rendered
@@ -214,14 +241,134 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
             }
         };
 
+        // Handle right-click context menu on entity shapes
+        const handleCellContextMenu = (cellView: dia.CellView, event: dia.Event) => {
+            const cell = cellView.model;
+            // Only handle ServiceEntityShape, not links
+            if (cell instanceof dia.Link) {
+                return;
+            }
+
+            if (!isServiceEntityShapeCell(cell)) {
+                return;
+            }
+
+            // Prevent default browser context menu
+            const originalEvent = event.originalEvent as MouseEvent;
+            if (originalEvent) {
+                originalEvent.preventDefault();
+                originalEvent.stopPropagation();
+            }
+
+            // Remove any existing context menu
+            if (contextMenuRef.current) {
+                contextMenuRef.current.remove();
+                contextMenuRef.current = null;
+            }
+
+            // Create context menu element
+            const menu = document.createElement("div");
+            menu.className = "entity-context-menu";
+
+            // Close menu and cleanup
+            const closeMenuAndCleanup = () => {
+                menu.remove();
+                contextMenuRef.current = null;
+            };
+
+            // Clear active cell if it matches the clicked cell
+            const clearActiveCellIfMatch = () => {
+                if (haloRef.current && activeCell?.id === cell.id) {
+                    handleBlankClick();
+                }
+            };
+
+            // Create remove menu item (always available)
+            const removeMenuItem = document.createElement("div");
+            removeMenuItem.className = "entity-context-menu-item";
+            removeMenuItem.textContent = "Remove";
+            removeMenuItem.onclick = () => {
+                clearActiveCellIfMatch();
+
+                // We only want to remove the shape from the canvas,
+                // not send a delete API request for it.
+                // canvasStateToServiceOrderItems uses initialShapeInfoRef to determine
+                // which shapes should be turned into delete order items.
+                // By removing this id from initialShapeInfoRef, we prevent a delete
+                // order item from being generated for this shape.
+                initialShapeInfoRef.current.delete(cell.id as string);
+
+                // Removing the cell will also remove all connected links.
+                // The graph `remove` handler takes care of cleaning up connections
+                // and updating canvasState for all affected shapes.
+                cell.remove();
+
+                closeMenuAndCleanup();
+            };
+            menu.appendChild(removeMenuItem);
+
+            // Only core and relation entities can be permanently deleted
+            if (cell.entityType === "core" || cell.entityType === "relation") {
+                const deletePermanentlyMenuItem = document.createElement("div");
+                deletePermanentlyMenuItem.className = "entity-context-menu-item";
+                deletePermanentlyMenuItem.textContent = "Delete permanently";
+                deletePermanentlyMenuItem.onclick = () => {
+                    clearActiveCellIfMatch();
+
+                    // Delete permanently: remove the shape from the canvas and mark it for deletion.
+                    // By keeping this id in initialShapeInfoRef (not deleting it), 
+                    // canvasStateToServiceOrderItems will generate a delete order item
+                    // which will send a delete API request for this shape.
+                    // Note: If the shape wasn't in initialShapeInfoRef, it means it was newly added,
+                    // so there's nothing to delete on the server - just removing it is sufficient.
+
+                    // Removing the cell will also remove all connected links.
+                    // The graph `remove` handler takes care of cleaning up connections
+                    // and updating canvasState for all affected shapes.
+                    cell.remove();
+
+                    closeMenuAndCleanup();
+                };
+                menu.appendChild(deletePermanentlyMenuItem);
+            }
+
+            // Position menu at click location
+            if (originalEvent && scroller) {
+                const scrollerEl = scroller.el;
+                const rect = scrollerEl.getBoundingClientRect();
+                menu.style.left = `${originalEvent.clientX - rect.left + scrollerEl.scrollLeft}px`;
+                menu.style.top = `${originalEvent.clientY - rect.top + scrollerEl.scrollTop}px`;
+                scrollerEl.appendChild(menu);
+                contextMenuRef.current = menu;
+            }
+
+            // Close menu when clicking outside
+            const closeMenu = (e: MouseEvent) => {
+                if (menu && !menu.contains(e.target as Node)) {
+                    menu.remove();
+                    contextMenuRef.current = null;
+                    document.removeEventListener("mousedown", closeMenu);
+                }
+            };
+            setTimeout(() => {
+                document.addEventListener("mousedown", closeMenu);
+            }, 0);
+        };
+
         paper.on("blank:pointerdown", handleBlankPointerDown);
         paper.on("blank:pointerup", handleBlankClick);
         paper.on("cell:pointerup", handleCellClick);
+        paper.on("cell:contextmenu", handleCellContextMenu);
 
         return () => {
             paper.off("blank:pointerdown", handleBlankPointerDown);
             paper.off("blank:pointerup", handleBlankClick);
             paper.off("cell:pointerup", handleCellClick);
+            paper.off("cell:contextmenu", handleCellContextMenu);
+            if (contextMenuRef.current) {
+                contextMenuRef.current.remove();
+                contextMenuRef.current = null;
+            }
         };
     }, [paper, graph, scroller, editable, relationsDictionary]);
 
@@ -230,23 +377,6 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
         if (!paper || !graph) {
             return;
         }
-
-        // Helper function to validate source cell exists
-        const validateSourceCell = (linkView: dia.LinkView): ServiceEntityShape | null => {
-            const source = linkView.model.source();
-            if (!source.id) {
-                linkView.remove();
-                return null;
-            }
-
-            const sourceCell = graph.getCell(source.id);
-            if (!sourceCell || !isServiceEntityShapeCell(sourceCell)) {
-                linkView.remove();
-                return null;
-            }
-
-            return sourceCell;
-        };
 
         // Helper function to get and validate both shapes from a link
         const getShapesFromLink = (link: dia.Link): { sourceShape: ServiceEntityShape; targetShape: ServiceEntityShape } | null => {
@@ -267,6 +397,23 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
             return { sourceShape: sourceCell, targetShape: targetCell };
         };
 
+        // Helper function to validate source cell exists
+        const validateSourceCell = (linkView: dia.LinkView): ServiceEntityShape | null => {
+            const source = linkView.model.source();
+            if (!source.id) {
+                linkView.remove();
+                return null;
+            }
+
+            const sourceCell = graph.getCell(source.id);
+            if (!sourceCell || !isServiceEntityShapeCell(sourceCell)) {
+                linkView.remove();
+                return null;
+            }
+
+            return sourceCell;
+        };
+
         // Helper function to update canvas state with two shapes
         const updateCanvasStateWithShapes = (sourceShape: ServiceEntityShape, targetShape: ServiceEntityShape) => {
             setCanvasState((prev) => {
@@ -277,30 +424,6 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
             });
         };
 
-        // Helper function to create a LinkShape with default router/connector/anchor from paper options
-        const createLinkShape = (sourceShape: ServiceEntityShape, targetShape: ServiceEntityShape, sourceRelationKey: string): dia.Link => {
-            const link = new LinkShape();
-
-            // Get options from paper (where they're actually set)
-            const paperOptions = paper.options;
-            const defaultRouter = paperOptions?.defaultRouter;
-            const defaultConnector = paperOptions?.defaultConnector;
-            const defaultAnchor = paperOptions?.defaultAnchor;
-
-            if (defaultRouter) {
-                link.router(defaultRouter);
-            }
-            if (defaultConnector) {
-                link.connector(defaultConnector);
-            }
-            if (defaultAnchor) {
-                link.set("defaultAnchor", defaultAnchor);
-            }
-
-            link.source({ id: sourceShape.id, port: sourceRelationKey });
-            link.target({ id: targetShape.id });
-            return link;
-        };
 
         // Intercept link creation to validate source cell exists
         const handleLinkPointerDown = (linkView: dia.LinkView) => {
@@ -323,18 +446,14 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
                 return;
             }
 
-            const sourceRelationKey = targetShape.getEntityName();
-            const targetRelationKey = sourceShape.getEntityName();
-
             // Add connections to both shapes
-            sourceShape.addConnection(targetShape.id, sourceRelationKey);
-            targetShape.addConnection(sourceShape.id, targetRelationKey);
+            addConnectionsBetweenShapes(sourceShape, targetShape);
 
             // Replace temporary link with a persistent LinkShape so routing/magnets behave the same
             skipLinkRemovalRef.current = true;
             linkView.model.remove();
 
-            const link = createLinkShape(sourceShape, targetShape, sourceRelationKey);
+            const link = createLinkShape(sourceShape, targetShape, paper);
             link.addTo(graph);
 
             // Update canvas state and highlights
@@ -347,7 +466,7 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
             validateSourceCell(linkView);
         };
 
-        // Handle link removal (fires when a link is removed from the graph, e.g., via the remove tool button)
+        // Handle cell removal (fires when a cell is removed from the graph, e.g., via delete action)
         // Note: We use graph.remove instead of paper.link:remove because it's more reliable and fires at the model level
         const handleGraphRemove = (cell: dia.Cell) => {
             if (cell instanceof dia.Link) {
@@ -363,15 +482,37 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
                 }
 
                 const { sourceShape, targetShape } = shapes;
-                const sourceRelationKey = targetShape.getEntityName();
-                const targetRelationKey = sourceShape.getEntityName();
 
                 // Remove connections from both shapes
-                sourceShape.removeConnection(targetShape.id, sourceRelationKey);
-                targetShape.removeConnection(sourceShape.id, targetRelationKey);
+                removeConnectionsBetweenShapes(sourceShape, targetShape);
 
                 // Update canvas state and highlights
                 updateCanvasStateWithShapes(sourceShape, targetShape);
+                updateAllMissingConnectionsHighlights(paper);
+            } else if (isServiceEntityShapeCell(cell)) {
+                // Shape was removed from canvas - update canvasState
+                setCanvasState((prev) => {
+                    const newState = new Map(prev);
+                    newState.delete(cell.id as string);
+                    return newState;
+                });
+
+                // If an inter-service relation instance was removed from the canvas (but not deleted permanently),
+                // re-enable its corresponding sidebar item so it can be added again.
+                //
+                // We distinguish "remove from canvas" from "delete permanently" using initialShapeInfoRef:
+                // - For a simple remove, the context menu handler deletes the id from initialShapeInfoRef
+                //   before calling cell.remove(), so `has(id)` will be false here.
+                // - For "Delete permanently", the id is kept in initialShapeInfoRef, so `has(id)` will be true
+                //   and the sidebar item remains disabled.
+                if (
+                    cell.entityType === "relation" &&
+                    !initialShapeInfoRef.current.has(cell.id as string)
+                ) {
+                    toggleDisabledSidebarItem(cell.id as string, false);
+                }
+
+                // Update highlights after shape removal
                 updateAllMissingConnectionsHighlights(paper);
             }
         };
@@ -401,31 +542,93 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName })
         });
     }, [canvasState, graph, paper]);
 
+    // Update serviceOrderItems when canvasState changes
+    useEffect(() => {
+        if (canvasState.size > 0 || initialShapeInfoRef.current.size > 0) {
+            const orderItems = canvasStateToServiceOrderItems(
+                canvasState,
+                initialShapeInfoRef.current,
+                serviceCatalogQuery.data || []
+            );
+            setServiceOrderItems(orderItems);
+        } else {
+            setServiceOrderItems(new Map());
+        }
+    }, [canvasState, serviceCatalogQuery.data]);
+
+    // Check for validation errors (missing required connections or attributes on any shape)
+    const hasValidationErrors = useMemo(() => {
+        if (canvasState.size === 0) {
+            return false;
+        }
+
+        // Check if any shape has missing connections or attribute validation errors
+        for (const shape of canvasState.values()) {
+            // Ensure attribute validation state is up to date
+            shape.validateAttributes();
+
+            if (shape.isMissingConnections() || shape.hasAttributeValidationErrors) {
+                return true;
+            }
+        }
+
+        return false;
+    }, [canvasState]);
+
+    const contextValue = useMemo(() => ({
+        ...composerContext,
+        mainService: mainService || null,
+        serviceCatalog: serviceCatalogQuery.data || [],
+        serviceInventories: inventoriesQuery.data || null,
+        serviceInstanceId: instanceId || null,
+        paper: paper,
+        graph: graph,
+        scroller: scroller,
+        relationsDictionary: relationsDictionary,
+        editable: editable,
+        canvasState: canvasState,
+        setCanvasState: setCanvasState,
+        activeCell: activeCell,
+        setActiveCell: setActiveCell,
+        formState: formState,
+        setFormState: setFormState,
+        canvasHandlers: canvasHandlers,
+        setCanvasHandlers: () => { },
+        serviceOrderItems: serviceOrderItems,
+        setServiceOrderItems: setServiceOrderItems,
+        hasValidationErrors: hasValidationErrors,
+    }), [
+        mainService,
+        serviceCatalogQuery.data,
+        inventoriesQuery.data,
+        instanceId,
+        paper,
+        graph,
+        scroller,
+        relationsDictionary,
+        editable,
+        canvasState,
+        setCanvasState,
+        activeCell,
+        setActiveCell,
+        formState,
+        setFormState,
+        canvasHandlers,
+        serviceOrderItems,
+        setServiceOrderItems,
+        hasValidationErrors,
+    ]);
+
     return (
-        <ComposerContext.Provider value={{
-            ...composerContext,
-            mainService: mainService || null,
-            serviceCatalog: serviceCatalogQuery.data || [],
-            serviceInventories: inventoriesQuery.data || null,
-            serviceInstanceId: instanceId || null,
-            paper: paper,
-            graph: graph,
-            scroller: scroller,
-            relationsDictionary: relationsDictionary,
-            editable: editable,
-            canvasState: canvasState,
-            setCanvasState: setCanvasState,
-            activeCell: activeCell,
-            setActiveCell: setActiveCell,
-            formState: formState,
-            setFormState: setFormState,
-        }}>
-            <ComposerContainer id="canvas-wrapper">
-                <LeftSidebar />
-                <Canvas />
-                <RightSidebar />
-                <ZoomControls />
-            </ComposerContainer>
+        <ComposerContext.Provider value={contextValue}>
+            {children || (
+                <ComposerContainer id="canvas-wrapper">
+                    <LeftSidebar />
+                    <Canvas />
+                    <RightSidebar />
+                    <ZoomControls />
+                </ComposerContainer>
+            )}
         </ComposerContext.Provider>
     )
 }

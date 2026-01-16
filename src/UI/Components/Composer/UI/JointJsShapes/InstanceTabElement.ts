@@ -1,5 +1,5 @@
 import { EmbeddedEntity, ServiceModel } from "@/Core";
-import { dia, shapes, ui } from "@inmanta/rappid";
+import { dia, shapes, ui, mvc } from "@inmanta/rappid";
 import { createFormState, CreateModifierHandler, FieldCreator } from "../../../ServiceInstanceForm";
 import { ServiceEntityOptions, ServiceEntityShape } from "./ServiceEntityShape";
 import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
@@ -17,12 +17,15 @@ export class InstanceTabElement {
         htmlRef: HTMLElement,
         scroller: ui.PaperScroller,
         service: ServiceModel,
+        serviceModels: ServiceModel[],
         setCanvasState: Dispatch<SetStateAction<Map<string, ServiceEntityShape>>>,
         graph: dia.Graph,
         relationsDictionary: RelationsDictionary
     ) {
         this.setCanvasState = setCanvasState;
         this.graph = graph;
+        const groups = buildGroups(serviceModels);
+
         this.stencil = new ui.Stencil({
             id: "instance-tab-element",
             paper: scroller,
@@ -34,6 +37,7 @@ export class InstanceTabElement {
                 sorting: dia.Paper.sorting.NONE,
                 cellViewNamespace: shapes,
             },
+            groups: groups as unknown as { [key: string]: ui.Stencil.Group },
             canDrag: (cellView) => {
                 return !cellView.model.get("disabled");
             },
@@ -42,12 +46,13 @@ export class InstanceTabElement {
             },
             dragEndClone: (cell: dia.Cell) => {
                 const serviceModel = cell.get("serviceModel");
+                const entityType = cell.get("entityType") || "embedded";
 
                 const fieldCreator = new FieldCreator(new CreateModifierHandler());
                 const fields = fieldCreator.attributesToFields(serviceModel.attributes);
 
                 const shapeOptions: ServiceEntityOptions = {
-                    entityType: "embedded",
+                    entityType: entityType,
                     readonly: false,
                     isNew: true,
                     lockedOnCanvas: false,
@@ -67,22 +72,25 @@ export class InstanceTabElement {
             layout: {
                 columns: 1,
                 rowHeight: "compact",
-                horizontalAlign: "left",
                 marginY: 10,
+                horizontalAlign: "left",
                 // reset defaults
                 resizeToFit: false,
                 centre: false,
                 dx: 0,
-                dy: 0,
+                dy: 10,
                 background: t_global_background_color_primary_default.var,
             },
         });
 
         htmlRef.appendChild(this.stencil.el);
         this.stencil.render();
-        const sidebarItems = transformEmbeddedToSidebarItems(service);
 
-        this.stencil.load(sidebarItems);
+        const groupKeys = Object.keys(groups);
+
+        if (groupKeys.length > 0) {
+            this.stencil.load(groups);
+        }
 
 
         this.stencil.on("element:drop", (elementView) => {
@@ -111,6 +119,57 @@ export class InstanceTabElement {
 
     }
 }
+
+/**
+ * Type for stencil groups that matches what stencil.load() accepts.
+ * JointJS runtime accepts arrays of cells, even though the constructor types expect Group objects.
+ */
+type StencilGroups = { [groupName: string]: Array<dia.Cell | mvc.ObjectHash> };
+
+/**
+ * Builds groups for the stencil, returning a type that matches what stencil.load() accepts.
+ * Each group represents a serviceModel from the catalog, containing:
+ * - The core service itself
+ * - All embedded_entities available for that service
+ */
+const buildGroups = (serviceModels: ServiceModel[]): StencilGroups => {
+    const groups: StencilGroups = {};
+
+    serviceModels.forEach((serviceModel) => {
+        const groupItems: shapes.standard.Path[] = [];
+
+        // Add the core service itself as the first item in the group
+        const coreServiceItem = createSidebarItem({
+            index: 0,
+            entityType: "core",
+            serviceModel: serviceModel,
+            instanceAttributes: {},
+            embeddedEntities: {},
+            interServiceRelations: {},
+            rootEntities: {},
+            isDisabled: false,
+            id: "",
+            readonly: false,
+            isNew: true,
+        });
+        groupItems.push(coreServiceItem);
+
+        // Add all embedded_entities from this service
+        const embeddedItems = transformEmbeddedToSidebarItems(serviceModel);
+        embeddedItems.forEach((item, index) => {
+            // Update the index to account for the core service item
+            item.set("index", index + 1);
+        });
+        groupItems.push(...embeddedItems);
+
+        // Only create a group if it has items
+        if (groupItems.length > 0) {
+            groups[serviceModel.name] = groupItems;
+        }
+    });
+
+    return groups;
+};
 
 const transformEmbeddedToSidebarItems = (
     service: ServiceModel | EmbeddedEntity

@@ -227,4 +227,32 @@ button.joint-widget.joint-theme-default {
   fill: var(--pf-t--global--text--color--regular);
   transform: none;
 }
+
+.entity-context-menu {
+  position: absolute;
+  z-index: 1000;
+  background-color: var(--pf-t--global--background--color--primary--default);
+  border: 1px solid var(--pf-t--global--border--color--default);
+  border-radius: var(--pf-t--global--border--radius--small);
+  box-shadow: 0 0.25rem 0.5rem 0 rgba(3, 3, 3, 0.12), 0 0 0.25rem 0 rgba(3, 3, 3, 0.06);
+  min-width: 150px;
+  padding: 0.25rem 0;
+}
+
+.entity-context-menu-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: var(--pf-t--global--text--color--regular);
+  font-family: var(--pf-t--global--font--family--mono);
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: var(--pf-t--global--background--color--secondary--default);
+  }
+
+  &:focus {
+    outline: none;
+    background-color: var(--pf-t--global--background--color--secondary--default);
+  }
+}
 `;

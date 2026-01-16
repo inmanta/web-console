@@ -15,8 +15,10 @@ const customAnchor = function (
   ref: g.Point | SVGElement
 ) {
   const { model } = view;
-  const bbox = view.getNodeUnrotatedBBox(magnet);
-  const center = model.getBBox().center();
+  const magnetBbox = view.getNodeUnrotatedBBox(magnet);
+  const magnetCenterY = magnetBbox.center().y;
+  const shapeBbox = model.getBBox();
+  const shapeCenter = shapeBbox.center();
   const angle = model.angle();
   let refPoint: g.Point;
 
@@ -27,10 +29,17 @@ const customAnchor = function (
     refPoint = ref;
   }
 
-  refPoint.rotate(center, angle);
-  const anchor = refPoint.x <= bbox.x + bbox.width ? bbox.leftMiddle() : bbox.rightMiddle();
+  // Rotate reference point to shape's coordinate system
+  refPoint.rotate(shapeCenter, angle);
 
-  return anchor.rotate(center, -angle);
+  // Determine which side of the shape to use based on reference point position
+  // Use the magnet's Y position (port position) but the shape's left or right edge
+  const useLeft = refPoint.x <= shapeCenter.x;
+  const anchorX = useLeft ? shapeBbox.x : shapeBbox.x + shapeBbox.width;
+  const anchor = new g.Point(anchorX, magnetCenterY);
+
+  // Rotate back to global coordinate system
+  return anchor.rotate(shapeCenter, -angle);
 };
 
 Object.assign(anchorNamespace, {

@@ -6,14 +6,8 @@ import { RelationsDictionary } from "./createRelationsDictionary";
 import { InstanceWithRelations } from "@/Data/Queries";
 import { v4 as uuidv4 } from "uuid";
 import { PositionTracker } from "./positionTracker";
-import { applyGridLayout } from "./canvasLayoutUtils";
-
-// Constants for layout spacing
-const SHAPE_WIDTH = 264;
-const SHAPE_MIN_HEIGHT = 50;
-const HORIZONTAL_SPACING = 420;
-const VERTICAL_SPACING = 200;
-const NESTED_HORIZONTAL_OFFSET = 360;
+import { applyGridLayout, HORIZONTAL_SPACING, VERTICAL_SPACING, NESTED_HORIZONTAL_OFFSET } from "./canvasLayoutUtils";
+import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT, getShapeDimensions, getEmbeddedEntityKey, getInterServiceRelationKey } from "./shapeUtils";
 
 const addRelationId = (collection: Record<string, string[]>, key: string, value: string) => {
     if (!collection[key]) {
@@ -108,17 +102,7 @@ export const createEmbeddedEntityShapes = (
                             parentPos.y + index * VERTICAL_SPACING
                         );
                         cachedShape.position(offsetX, newY);
-                        let bboxWidth = SHAPE_WIDTH;
-                        let bboxHeight = SHAPE_MIN_HEIGHT;
-                        try {
-                            const bbox = cachedShape.getBBox();
-                            if (bbox && bbox.width > 0 && bbox.height > 0) {
-                                bboxWidth = bbox.width;
-                                bboxHeight = bbox.height;
-                            }
-                        } catch (e) {
-                            // Fallback to default dimensions
-                        }
+                        const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(cachedShape);
                         positionTracker.reserve(cachedId, offsetX, newY, bboxWidth, bboxHeight);
                     }
                 }
@@ -132,7 +116,7 @@ export const createEmbeddedEntityShapes = (
         const interServiceRelations: Record<string, string[]> = {};
         embeddedEntity.inter_service_relations.forEach((relation) => {
             const relationValue = embeddedAttributes[relation.name];
-            const relationKey = relation.entity_type || relation.name;
+            const relationKey = getInterServiceRelationKey(relation);
 
             if (relationValue) {
                 if (Array.isArray(relationValue)) {
@@ -164,7 +148,7 @@ export const createEmbeddedEntityShapes = (
                 );
 
                 if (nestedIds.length > 0) {
-                    const entityKey = nestedEntity.type || nestedEntity.name;
+                    const entityKey = getEmbeddedEntityKey(nestedEntity);
                     nestedEmbeddedEntities[entityKey] = nestedIds;
                 }
             }
@@ -206,18 +190,7 @@ export const createEmbeddedEntityShapes = (
         shape.updateColumnsDisplay();
 
         // Get the actual bounding box to reserve the correct space
-        // If bbox is not available yet, use default dimensions
-        let bboxWidth = SHAPE_WIDTH;
-        let bboxHeight = SHAPE_MIN_HEIGHT;
-        try {
-            const bbox = shape.getBBox();
-            if (bbox && bbox.width > 0 && bbox.height > 0) {
-                bboxWidth = bbox.width;
-                bboxHeight = bbox.height;
-            }
-        } catch (e) {
-            // Fallback to default dimensions if bbox is not available
-        }
+        const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(shape);
         positionTracker.reserve(embeddedId, offsetX, finalY, bboxWidth, bboxHeight);
 
         canvasState.set(embeddedId, shape);
@@ -347,7 +320,7 @@ export const initializeCanvasFromInstance = (
 
         serviceModel.inter_service_relations.forEach((relation) => {
             const relationValue = instanceAttributes[relation.name];
-            const relationKey = relation.entity_type || relation.name;
+            const relationKey = getInterServiceRelationKey(relation);
 
             if (relationValue) {
                 if (Array.isArray(relationValue)) {
@@ -399,17 +372,7 @@ export const initializeCanvasFromInstance = (
         shape.updateColumnsDisplay();
 
         // Reserve the position for the main instance
-        let bboxWidth = SHAPE_WIDTH;
-        let bboxHeight = SHAPE_MIN_HEIGHT;
-        try {
-            const bbox = shape.getBBox();
-            if (bbox && bbox.width > 0 && bbox.height > 0) {
-                bboxWidth = bbox.width;
-                bboxHeight = bbox.height;
-            }
-        } catch (e) {
-            // Fallback to default dimensions
-        }
+        const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(shape);
         positionTracker.reserve(instance.id, shapeX, finalY, bboxWidth, bboxHeight);
 
         canvasState.set(instance.id, shape);
@@ -437,7 +400,7 @@ export const initializeCanvasFromInstance = (
                 );
 
                 if (embeddedIds.length > 0) {
-                    const entityKey = embeddedEntity.type || embeddedEntity.name;
+                    const entityKey = getEmbeddedEntityKey(embeddedEntity);
                     shape.connections.set(entityKey, embeddedIds);
                 }
             }

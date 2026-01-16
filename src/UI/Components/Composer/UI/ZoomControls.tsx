@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Button } from "@patternfly/react-core";
+import { PlusIcon, MinusIcon } from "@patternfly/react-icons";
 import { ComposerContext } from "../Data/Context";
 import { ZoomControlsContainer } from "./ZoomControls.styles";
 import { words } from "@/UI/words";
@@ -189,6 +190,59 @@ export const ZoomControls: React.FC = () => {
         }
     };
 
+    const handleZoomIncrement = (increment: number) => {
+        if (!scroller || !paper) {
+            return;
+        }
+
+        const currentZoom = scroller.zoom();
+        const targetZoom = currentZoom + increment;
+        const clampedZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, targetZoom));
+
+        // If already at limit, don't do anything
+        if (clampedZoom === currentZoom) {
+            return;
+        }
+
+        // Set flag to prevent event listener from updating state
+        isManualZoomRef.current = true;
+
+        // Get viewport center
+        const scrollerRect = scroller.el.getBoundingClientRect();
+        const viewportCenterX = scrollerRect.width / 2;
+        const viewportCenterY = scrollerRect.height / 2;
+
+        // Get the model point at the viewport center (before zoom)
+        const modelPoint = scroller.clientToLocalPoint(
+            scrollerRect.left + viewportCenterX,
+            scrollerRect.top + viewportCenterY
+        );
+
+        // Get current scroll position
+        const currentScrollLeft = scroller.el.scrollLeft;
+        const currentScrollTop = scroller.el.scrollTop;
+
+        // Apply new zoom
+        paper.scale(clampedZoom, clampedZoom);
+
+        // Adjust scroll to keep viewport center in place
+        const scrollDeltaX = modelPoint.x * (currentZoom - clampedZoom);
+        const scrollDeltaY = modelPoint.y * (currentZoom - clampedZoom);
+
+        requestAnimationFrame(() => {
+            scroller.el.scrollLeft = currentScrollLeft + scrollDeltaX;
+            scroller.el.scrollTop = currentScrollTop + scrollDeltaY;
+        });
+
+        // Update state
+        updateZoomState(clampedZoom);
+
+        // Reset flag
+        setTimeout(() => {
+            isManualZoomRef.current = false;
+        }, 50);
+    };
+
     const zoomPercentage = Math.round(zoom * 100);
     const sliderValue = Math.max(MIN_ZOOM * 100, Math.min(MAX_ZOOM * 100, zoomPercentage));
 
@@ -218,6 +272,15 @@ export const ZoomControls: React.FC = () => {
                     style={{ width: "16px", height: "16px" }}
                 />
             </Button>
+            <Button
+                variant="control"
+                onClick={() => handleZoomIncrement(-0.1)}
+                aria-label={words("instanceComposer.zoomHandler.zoomOut")}
+                data-testid="zoom-out"
+                isDisabled={zoom <= MIN_ZOOM}
+            >
+                <MinusIcon />
+            </Button>
             <div className="zoom-slider-container">
                 <input
                     ref={sliderRef}
@@ -233,6 +296,15 @@ export const ZoomControls: React.FC = () => {
                 />
                 <output data-testid="slider-output">{zoomPercentage}%</output>
             </div>
+            <Button
+                variant="control"
+                onClick={() => handleZoomIncrement(0.1)}
+                aria-label={words("instanceComposer.zoomHandler.zoomIn")}
+                data-testid="zoom-in"
+                isDisabled={zoom >= MAX_ZOOM}
+            >
+                <PlusIcon />
+            </Button>
         </ZoomControlsContainer>
     );
 };

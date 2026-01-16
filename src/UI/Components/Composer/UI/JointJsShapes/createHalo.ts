@@ -33,19 +33,22 @@ const updateMissingConnectionsHighlight = (
         existingHighlight.remove();
     }
 
-    // Check if shape is missing connections
-    // Use the shape from the view to ensure we're checking the same instance
     const shapeToCheck = shapeView.model as ServiceEntityShape;
-    const isMissingConnections = shapeToCheck.isMissingConnections();
 
-    if (isMissingConnections) {
-        // Add red highlight for missing connections
+    // Refresh attribute validation state to reflect the latest attributes
+    shapeToCheck.validateAttributes();
+
+    const hasConnectionErrors = shapeToCheck.isMissingConnections();
+    const hasAttributeErrors = shapeToCheck.hasAttributeValidationErrors;
+
+    if (hasConnectionErrors || hasAttributeErrors) {
+        // Add single red highlight for any validation issue (connections or attributes)
         highlighters.mask.add(shapeView, "body", MISSING_CONNECTIONS_HIGHLIGHT_NAME, {
             padding: 0,
             className: "halo-highlight-missing",
             attrs: {
                 "stroke-opacity": 0.8,
-                "stroke-width": 10,
+                "stroke-width": 5,
                 "stroke": "var(--pf-t--global--border--color--status--danger--default)",
                 rx: t_global_border_radius_small.value,
                 filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
@@ -73,7 +76,7 @@ export const updateAllMissingConnectionsHighlights = (
         shapes.forEach((shapeView) => {
             if (isServiceEntityShapeCell(shapeView.model)) {
                 // Use the shape from the view model to ensure we're checking the correct instance
-                updateMissingConnectionsHighlight(paper, shapeView.model);
+                updateMissingConnectionsHighlight(paper, shapeView.model as ServiceEntityShape);
             }
         });
     } catch (e) {
@@ -102,8 +105,8 @@ export const createHalo = (
 
     const cellModel = cellView.model;
     if (isServiceEntityShapeCell(cellModel)) {
-        // Check and show red halo if connections are missing when halo is created
-        updateMissingConnectionsHighlight(paper, cellModel);
+        // Check and show red halo if any validation issues (connections or attributes) are present
+        updateMissingConnectionsHighlight(paper, cellModel as ServiceEntityShape);
     }
 
     const highlightAvailableTargets = () => {
