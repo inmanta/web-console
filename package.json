@@ -10,7 +10,7 @@
     "build": "vite build",
     "start": "vite",
     "start:https": "HTTPS=true vite",
-    "proxy": "lcp --proxyUrl http://localhost:8888",
+    "proxy": "lcp --proxyUrl http://127.0.0.1:8888/",
     "proxy:https": "lcp --proxyUrl https://connect.demo.inmanta.com/",
     "test": "vitest --run",
     "test:ci": "CI=true vitest --silent",

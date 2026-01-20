@@ -286,7 +286,7 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
             // Create remove menu item (always available)
             const removeMenuItem = document.createElement("div");
             removeMenuItem.className = "entity-context-menu-item";
-            removeMenuItem.textContent = "Remove";
+            removeMenuItem.textContent = "Remove from canvas";
             removeMenuItem.onclick = () => {
                 clearActiveCellIfMatch();
 
@@ -466,8 +466,7 @@ export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, c
             validateSourceCell(linkView);
         };
 
-        // Handle cell removal (fires when a cell is removed from the graph, e.g., via delete action)
-        // Note: We use graph.remove instead of paper.link:remove because it's more reliable and fires at the model level
+        // Handle cell removal (fires when a cell is removed from the graph)
         const handleGraphRemove = (cell: dia.Cell) => {
             if (cell instanceof dia.Link) {
                 // Skip if this is a temporary link being removed during connection creation

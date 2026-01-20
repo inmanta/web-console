@@ -739,8 +739,12 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
                 });
             });
 
+            // Always set the relation attribute if there are valid connections, otherwise remove it to clear stale connections
             if (relationIds.length > 0) {
                 processedAttributes[relation.name] = relation.upper_limit === 1 ? relationIds[0] : relationIds;
+            } else {
+                // Remove the relation if there are no valid connections
+                delete processedAttributes[relation.name];
             }
         });
 

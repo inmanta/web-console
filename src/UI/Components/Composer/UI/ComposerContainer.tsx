@@ -241,9 +241,10 @@ button.joint-widget.joint-theme-default {
 
 .entity-context-menu-item {
   padding: 0.5rem 1rem;
+  width: 180px;
   cursor: pointer;
   color: var(--pf-t--global--text--color--regular);
-  font-family: var(--pf-t--global--font--family--mono);
+  font-family: var(--pf-t--global--font--family--body);
   transition: background-color 0.15s ease;
 
   &:hover {
