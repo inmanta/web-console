@@ -1,7 +1,7 @@
 import { InstanceAttributeModel } from "@/Core";
 import { CreateModifierHandler, FieldCreator, createFormState } from "../../ServiceInstanceForm";
 import { childModel, containerModel, mockedInstanceWithRelations, parentModel } from "../Mocks";
-import { defineObjectsForJointJS } from "../testSetup";
+import { defineObjectsForJointJS } from "../Composer/testSetup";
 import { ServiceEntityBlock } from ".";
 
 beforeAll(() => {

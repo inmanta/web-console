@@ -12,7 +12,7 @@ import {
   TypeEnum,
 } from "@/UI/Components/ComposerCanvas/interfaces";
 import { Link, ServiceEntityBlock } from "../Shapes";
-import { defineObjectsForJointJS } from "../testSetup";
+import { defineObjectsForJointJS } from "../Composer/testSetup";
 import {
   createConnectionRules,
   checkWhetherConnectionRulesAreExhausted,

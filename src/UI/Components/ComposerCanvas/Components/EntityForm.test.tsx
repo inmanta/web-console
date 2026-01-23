@@ -10,7 +10,7 @@ import { getCellsCoordinates } from "../Helpers";
 import { parentModel } from "../Mocks";
 import { ComposerPaper } from "../Paper";
 import { ServiceEntityBlock } from "../Shapes";
-import { defineObjectsForJointJS } from "../testSetup";
+import { defineObjectsForJointJS } from "../Composer/testSetup";
 import { EntityForm } from "./EntityForm";
 
 describe("EntityForm.", () => {

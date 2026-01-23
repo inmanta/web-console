@@ -4,9 +4,9 @@ import { PlusIcon, MinusIcon } from "@patternfly/react-icons";
 import { ComposerContext } from "../Data/Context";
 import { ZoomControlsContainer } from "./ZoomControls.styles";
 import { words } from "@/UI/words";
-import fitToScreenIcon from "@/UI/Components/ComposerCanvas/icons/fit-to-screen.svg";
-import requestFullscreenIcon from "@/UI/Components/ComposerCanvas/icons/request-fullscreen.svg";
-import exitFullscreenIcon from "@/UI/Components/ComposerCanvas/icons/exit-fullscreen.svg";
+import fitToScreenIcon from "./icons/fit-to-screen.svg";
+import requestFullscreenIcon from "./icons/request-fullscreen.svg";
+import exitFullscreenIcon from "./icons/exit-fullscreen.svg";
 
 const MIN_ZOOM = 0.2;
 const MAX_ZOOM = 5;

@@ -1,7 +1,7 @@
 import { dia } from "@inmanta/rappid";
 import { containerModel, parentModel } from "../Mocks";
 import { ServiceEntityBlock } from "../Shapes";
-import { defineObjectsForJointJS } from "../testSetup";
+import { defineObjectsForJointJS } from "../Composer/testSetup";
 import { addDefaultEntities, populateGraphWithDefault } from "./createMode";
 
 beforeAll(() => {

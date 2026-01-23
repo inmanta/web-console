@@ -1,4 +1,4 @@
-import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import { createContext, Dispatch, SetStateAction } from "react";
 import { ServiceEntityShape } from "../UI";
 import { Inventories } from "@/Data/Queries";
@@ -9,19 +9,10 @@ import { ComposerServiceOrderItem } from "./Helpers/deploymentHelpers";
 
 interface ComposerContextInterface {
     canvasHandlers: CanvasHandlers | null;
-    setCanvasHandlers: (value: CanvasHandlers) => void;
-    formState: InstanceAttributeModel;
-    setFormState: (value: InstanceAttributeModel) => void;
-    fields: Field[];
-    setFields: (value: Field[]) => void;
-    isDirty: boolean;
-    setIsDirty: (value: boolean) => void;
     relationsDictionary: RelationsDictionary;
-    setRelationsDictionary: (value: RelationsDictionary) => void;
     canvasState: Map<string, ServiceEntityShape>;
     setCanvasState: Dispatch<SetStateAction<Map<string, ServiceEntityShape>>>;
     activeCell: ServiceEntityShape | null;
-    setActiveCell: (value: ServiceEntityShape | null) => void;
     mainService: ServiceModel | null;
     serviceCatalog: ServiceModel[];
     serviceInventories: Inventories | null;
@@ -31,25 +22,15 @@ interface ComposerContextInterface {
     graph: dia.Graph | null;
     editable: boolean;
     serviceOrderItems: Map<string, ComposerServiceOrderItem>;
-    setServiceOrderItems: Dispatch<SetStateAction<Map<string, ComposerServiceOrderItem>>>;
     hasValidationErrors: boolean;
 }
 
 export const composerContext: ComposerContextInterface = {
     canvasHandlers: null,
-    setCanvasHandlers: () => { },
-    formState: {},
-    setFormState: () => { },
-    fields: [],
-    setFields: () => { },
-    isDirty: false,
-    setIsDirty: () => { },
     relationsDictionary: {},
-    setRelationsDictionary: () => { },
     canvasState: new Map(),
     setCanvasState: () => { },
     activeCell: null,
-    setActiveCell: () => { },
     mainService: null,
     serviceCatalog: [],
     serviceInventories: null,
@@ -59,7 +40,6 @@ export const composerContext: ComposerContextInterface = {
     graph: null,
     editable: false,
     serviceOrderItems: new Map(),
-    setServiceOrderItems: () => { },
     hasValidationErrors: false,
 }
 

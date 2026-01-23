@@ -651,7 +651,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     }
 
     getKeyAttributes(): string[] {
-        const keyAttributes = this.serviceModel.key_attributes || [];
+        const keyAttributes = this.serviceModel.key_attributes ? [...this.serviceModel.key_attributes] : [];
         // We also want to add the service_identity if it exists (Embedded Entities don't have it)
         if ("service_identity" in this.serviceModel && this.serviceModel.service_identity) {
             keyAttributes.push(this.serviceModel.service_identity);

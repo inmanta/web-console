@@ -9,3 +9,4 @@ export * from "./deploymentHelpers";
 export * from "./shapeUtils";
 export * from "./linkUtils";
 export * from "./connectionValidationUtils";
+export * from "./relationsHelpers";

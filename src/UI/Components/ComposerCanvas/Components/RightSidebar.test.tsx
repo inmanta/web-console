@@ -11,7 +11,7 @@ import { CanvasContext, InstanceComposerContext, defaultCanvasContext } from "..
 import { containerModel } from "../Mocks";
 import { ComposerPaper } from "../Paper";
 import { StencilState } from "../interfaces";
-import { defineObjectsForJointJS } from "../testSetup";
+import { defineObjectsForJointJS } from "../Composer/testSetup";
 import { RightSidebar } from "./RightSidebar";
 
 describe("RightSidebar.", () => {

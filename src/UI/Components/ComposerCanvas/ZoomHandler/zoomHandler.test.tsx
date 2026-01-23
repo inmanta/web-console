@@ -1,7 +1,7 @@
 import { dia, ui } from "@inmanta/rappid";
 import { fireEvent, screen } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
-import { defineObjectsForJointJS } from "../testSetup";
+import { defineObjectsForJointJS } from "../Composer/testSetup";
 import { ZoomHandlerService } from "./zoomHandler";
 
 // parts of the ZoomHandlerService that aren't covered are related to the getElementById() which isn't supported by jest, this part is covered by the E2E tests scenario 8.1

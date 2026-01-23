@@ -1,14 +1,16 @@
 import { dia, linkTools, shapes } from "@inmanta/rappid";
 import { LinkShape } from "./LinkShape";
-import { getEntitiesFromCanvas, isServiceEntityShapeCell, removeConnectionsBetweenShapes } from "../../Data/Helpers";
+import { getEntitiesFromCanvas, isServiceEntityShapeCell, removeConnectionsBetweenShapes, canRemoveLink } from "../../Data/Helpers";
 import { routerNamespace, anchorNamespace } from "..";
 import { ServiceEntityShape } from "./ServiceEntityShape";
 import { words } from "@/UI/words";
+import { RelationsDictionary } from "../../Data/Helpers/createRelationsDictionary";
+import { ServiceModel } from "@/Core";
 
 export class ComposerPaper {
     paper: dia.Paper;
 
-    constructor(graph: dia.Graph, editable: boolean) {
+    constructor(graph: dia.Graph, editable: boolean, relationsDictionary: RelationsDictionary, serviceCatalog: ServiceModel[]) {
         this.paper = new dia.Paper({
             model: graph,
             width: 1000,
@@ -53,8 +55,10 @@ export class ComposerPaper {
                 const targetEntityBlock: ServiceEntityShape | undefined = serviceEntityShapes.find((entity) => entity.cid === targetView.model.cid);
 
                 if (sourceEntityBlock && targetEntityBlock) {
-                    const isAllowed = sourceEntityBlock.validateConnection(targetEntityBlock);
-                    return isAllowed && baseValidators;
+                    // Check both directions to ensure the connection is valid from both sides
+                    const sourceToTargetAllowed = sourceEntityBlock.validateConnection(targetEntityBlock);
+                    const targetToSourceAllowed = targetEntityBlock.validateConnection(sourceEntityBlock);
+                    return sourceToTargetAllowed && targetToSourceAllowed && baseValidators;
                 }
 
                 return false;
@@ -64,7 +68,10 @@ export class ComposerPaper {
         // Event handlers for blank:pointerdown and cell:pointerup are set up in Composer.tsx
         // to have access to React state setters
 
-        // Event Triggered when the user hovers over a link.
+        /**
+         * Event handler for when the user hovers over a link.
+         * Shows entity labels and conditionally displays the remove tool based on validation.
+         */
         this.paper.on("link:mouseenter", (linkView: dia.LinkView) => {
             const source = linkView.model.source();
             const target = linkView.model.target();
@@ -112,8 +119,14 @@ export class ComposerPaper {
             appendLabel(sourceCell, "target", 1);
             appendLabel(targetCell, "source", 0);
 
-            // Only show remove tool if composer is editable
+            // Only show remove tool if composer is editable and removal is allowed
             if (!editable) {
+                return;
+            }
+
+            // Check if removal is allowed - only show remove tool if it is
+            const canRemove = canRemoveLink(sourceCell, targetCell, graph, relationsDictionary, serviceCatalog);
+            if (!canRemove) {
                 return;
             }
 
@@ -146,15 +159,24 @@ export class ComposerPaper {
                     const source = model.source();
                     const target = model.target();
 
-                    if (source.id && target.id) {
-                        const sourceShape = graph.getCell(source.id) as ServiceEntityShape | undefined;
-                        const targetShape = graph.getCell(target.id) as ServiceEntityShape | undefined;
-
-                        // Remove connections from both shapes before removing the link
-                        if (sourceShape && targetShape) {
-                            removeConnectionsBetweenShapes(sourceShape, targetShape);
-                        }
+                    if (!source.id || !target.id) {
+                        return;
                     }
+
+                    const sourceShape = graph.getCell(source.id) as ServiceEntityShape | undefined;
+                    const targetShape = graph.getCell(target.id) as ServiceEntityShape | undefined;
+
+                    if (!sourceShape || !targetShape) {
+                        return;
+                    }
+
+                    // Validate removal before proceeding (safety check, even though tool is only shown if allowed)
+                    if (!canRemoveLink(sourceShape, targetShape, graph, relationsDictionary, serviceCatalog)) {
+                        return;
+                    }
+
+                    // Remove connections from both shapes before removing the link
+                    removeConnectionsBetweenShapes(sourceShape, targetShape);
 
                     // Remove the link from the graph
                     model.remove({ ui: true, tool: toolView.cid });
@@ -168,7 +190,10 @@ export class ComposerPaper {
             linkView.addTools(tools);
         });
 
-        // Event Triggered when the user leaves a link.
+        /**
+         * Event handler for when the user leaves a link.
+         * Cleans up tools and labels.
+         */
         this.paper.on("link:mouseleave", (linkView: dia.LinkView) => {
             linkView.removeTools();
             linkView.model.labels([]);

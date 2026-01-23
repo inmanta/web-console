@@ -4,7 +4,7 @@ import { useGetServiceModels, useGetInventoryList } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { ComposerActions } from "../Components/ComposerActions";
-import { findInterServiceRelations } from "@/UI/Components/ComposerCanvas/Helpers";
+import { findInterServiceRelations } from "../Data/Helpers";
 import { Composer } from "../Composer";
 import { ComposerContainer, Canvas, LeftSidebar, RightSidebar, ZoomControls } from "../UI";
 

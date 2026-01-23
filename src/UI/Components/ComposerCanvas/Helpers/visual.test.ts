@@ -8,7 +8,7 @@ import { EventActionEnum, LabelLinkView } from "@/UI/Components/ComposerCanvas/i
 import { childModel, parentModel } from "../Mocks";
 import { ComposerPaper } from "../Paper";
 import { ServiceEntityBlock, Link } from "../Shapes";
-import { defineObjectsForJointJS } from "../testSetup";
+import { defineObjectsForJointJS } from "../Composer/testSetup";
 import { createConnectionRules } from "./connections";
 import {
   updateLabelPosition,

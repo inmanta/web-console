@@ -13,7 +13,7 @@ import { CanvasProvider } from "../Context/CanvasProvider";
 import { InstanceComposerContext } from "../Context/Context";
 import { mockedInstanceTwo, mockedInstanceTwoServiceModel, serviceModels } from "../Mocks";
 
-import { defineObjectsForJointJS } from "../testSetup";
+import { defineObjectsForJointJS } from "../Composer/testSetup";
 
 const allQueries = {
   ...queries,

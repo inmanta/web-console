@@ -4,7 +4,7 @@ import { InstanceWithRelations } from "@/Data/Queries";
 import { containerModel, mockedInstanceWithRelations, serviceModels } from "../Mocks";
 import { ComposerPaper } from "../Paper";
 import { ServiceEntityBlock } from "../Shapes";
-import { defineObjectsForJointJS } from "../testSetup";
+import { defineObjectsForJointJS } from "../Composer/testSetup";
 import { appendEmbeddedEntity, appendInstance, addInfoIcon } from "./editMode";
 
 beforeAll(() => {

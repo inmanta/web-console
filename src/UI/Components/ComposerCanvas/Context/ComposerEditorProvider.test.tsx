@@ -9,7 +9,7 @@ import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { childModel, containerModel, mockedInstanceWithRelations, parentModel } from "../Mocks";
-import { defineObjectsForJointJS } from "../testSetup";
+import { defineObjectsForJointJS } from "../Composer/testSetup";
 import { ComposerEditorProvider } from "./ComposerEditorProvider";
 
 const setup = (instanceId: string, editable: boolean = true) => {

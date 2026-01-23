@@ -5,7 +5,7 @@ import { render, renderHook } from "@testing-library/react";
 import { ComposerPaper } from "../Paper";
 import { ServiceEntityBlock } from "../Shapes";
 import { ActionEnum, EventActionEnum } from "../interfaces";
-import { defineObjectsForJointJS } from "../testSetup";
+import { defineObjectsForJointJS } from "../Composer/testSetup";
 import { CanvasProvider } from "./CanvasProvider";
 import { CanvasContext } from "./Context";
 import { EventWrapper } from "./EventWrapper";

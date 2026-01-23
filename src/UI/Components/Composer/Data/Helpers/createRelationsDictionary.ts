@@ -71,8 +71,9 @@ const addEmbeddedRelations = (
         };
         const childToParentRules: Rules = {
             // Embedded entities should always connect back to exactly one parent instance
+            // Unless the parent-to-child relation has null upper_limit (unlimited), preserve null
             lower_limit: parentToChildRules.lower_limit > 0 ? 1 : 0,
-            upper_limit: 1,
+            upper_limit: parentToChildRules.upper_limit === null ? null : 1,
         };
         connect(dict, parentName, entityKey, parentToChildRules, childToParentRules);
 

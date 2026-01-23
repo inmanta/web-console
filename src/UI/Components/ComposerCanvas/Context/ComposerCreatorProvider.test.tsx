@@ -9,7 +9,7 @@ import "@testing-library/jest-dom";
 import { MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { childModel, containerModel, parentModel } from "../Mocks";
-import { defineObjectsForJointJS } from "../testSetup";
+import { defineObjectsForJointJS } from "../Composer/testSetup";
 import { ComposerCreatorProvider } from "./ComposerCreatorProvider";
 
 const setup = () => {

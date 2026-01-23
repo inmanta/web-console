@@ -229,6 +229,7 @@ const dict = {
   "instanceComposer.dictModal": (valueName: string) => `Values of ${valueName}`,
   "instanceComposer.missingRelations": (name: string, amount: number, relations: string) =>
     `Expected at least ${amount} ${relations} inter-service relation(s) for ${name}`,
+  "instanceComposer.contextMenu.cannotRemove": "Cannot remove: required by relation constraints",
   "instanceComposer.tooltip.missingConnectionSingle": (name: string) => `Missing relation: ${name}`,
   "instanceComposer.tooltip.missingConnectionMultiple": (
     name: string,
