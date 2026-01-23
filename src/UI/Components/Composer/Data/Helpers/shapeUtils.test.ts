@@ -91,6 +91,7 @@ describe("shapeUtils", () => {
     it("should return name when type is not available", () => {
       const entity: EmbeddedEntity = {
         name: "endpoint",
+        type: "Endpoint",
         lower_limit: 1,
         upper_limit: 1,
         modifier: "rw",
@@ -134,6 +135,7 @@ describe("shapeUtils", () => {
     it("should return name when entity_type is not available", () => {
       const relation: InterServiceRelation = {
         name: "ServiceB",
+        entity_type: "UserNetworkInterface",
         lower_limit: 1,
         upper_limit: 1,
         modifier: "rw",

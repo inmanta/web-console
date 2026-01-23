@@ -103,7 +103,6 @@ export function defineObjectsForJointJS() {
       setTranslate: vi.fn(),
     })),
   });
-  // @ts-expect-error SVGPathElement is not defined in jsdom
   window.SVGPathElement = vi.fn();
 
   Object.defineProperty(global.SVGElement.prototype, "getComputedTextLength", {

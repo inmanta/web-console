@@ -1,10 +1,10 @@
-import { ServiceModel } from "@/Core";
+import { AttributeModel, ServiceModel } from "@/Core";
 import { createPlaceholderInstance } from "./createPlaceholderInstance";
 
 describe("createPlaceholderInstance", () => {
   const createMockServiceModel = (
     name: string,
-    attributes: Array<{ name: string }> = []
+    attributes: AttributeModel[] = []
   ): ServiceModel => ({
     name,
     environment: "test",
@@ -23,8 +23,24 @@ describe("createPlaceholderInstance", () => {
 
   it("should create a placeholder instance with generated UUID", () => {
     const serviceModel = createMockServiceModel("TestService", [
-      { name: "name" },
-      { name: "description" },
+      {
+        name: "name",
+        type: "string",
+        modifier: "rw",
+        default_value: null,
+        default_value_set: false,
+        validation_type: "pydantic.constr",
+        validation_parameters: {},
+      },
+      {
+        name: "description",
+        type: "string",
+        modifier: "rw",
+        default_value: null,
+        default_value_set: false,
+        validation_type: "pydantic.constr",
+        validation_parameters: {},
+      },
     ]);
 
     const result = createPlaceholderInstance(serviceModel);
@@ -52,9 +68,33 @@ describe("createPlaceholderInstance", () => {
 
   it("should initialize all attributes with null", () => {
     const serviceModel = createMockServiceModel("TestService", [
-      { name: "name" },
-      { name: "description" },
-      { name: "port" },
+      {
+        name: "name",
+        type: "string",
+        modifier: "rw",
+        default_value: null,
+        default_value_set: false,
+        validation_type: "pydantic.constr",
+        validation_parameters: {},
+      },
+      {
+        name: "description",
+        type: "string",
+        modifier: "rw",
+        default_value: null,
+        default_value_set: false,
+        validation_type: "pydantic.constr",
+        validation_parameters: {},
+      },
+      {
+        name: "port",
+        type: "int",
+        modifier: "rw",
+        default_value: null,
+        default_value_set: false,
+        validation_type: "pydantic.conint",
+        validation_parameters: { ge: 0, lt: 4096 },
+      },
     ]);
 
     const result = createPlaceholderInstance(serviceModel);
