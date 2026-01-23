@@ -100,7 +100,7 @@ describe("shapeUtils", () => {
         inter_service_relations: [],
       };
 
-      expect(getEmbeddedEntityKey(entity)).toBe("endpoint");
+      expect(getEmbeddedEntityKey(entity)).toBe("Endpoint");
     });
 
     it("should prefer type over name", () => {
@@ -141,7 +141,7 @@ describe("shapeUtils", () => {
         modifier: "rw",
       };
 
-      expect(getInterServiceRelationKey(relation)).toBe("ServiceB");
+      expect(getInterServiceRelationKey(relation)).toBe("UserNetworkInterface");
     });
 
     it("should prefer entity_type over name", () => {
