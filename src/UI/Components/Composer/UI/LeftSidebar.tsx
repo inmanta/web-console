@@ -1,18 +1,25 @@
-import React, { useContext, useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
+import React, { useContext, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import { dia, ui } from "@inmanta/rappid";
-import { Inventories } from "@/Data/Queries";
-import { ServiceModel } from "@/Core";
-import { ComposerContext } from "../Data/Context";
 import styled from "styled-components";
-import { InstanceTabElement, InventoryTabElement, ServiceEntityShape } from "./JointJsShapes";
-import { RelationsDictionary } from "../Data";
+import { ServiceModel } from "@/Core";
+import { Inventories } from "@/Data/Queries";
 import { words } from "@/UI/words";
-
-
+import { RelationsDictionary } from "../Data";
+import { ComposerContext } from "../Data/Context";
+import { InstanceTabElement, InventoryTabElement, ServiceEntityShape } from "./JointJsShapes";
 
 export const LeftSidebar: React.FC = () => {
-  const { scroller, serviceInventories, mainService, editable, serviceCatalog, canvasState, setCanvasState, graph, relationsDictionary } = useContext(ComposerContext);
-  const [sidebar, setSidebar] = useState<LeftSidebarElement | null>(null);
+  const {
+    scroller,
+    serviceInventories,
+    mainService,
+    editable,
+    serviceCatalog,
+    canvasState,
+    setCanvasState,
+    graph,
+    relationsDictionary,
+  } = useContext(ComposerContext);
   const LeftSidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,20 +34,40 @@ export const LeftSidebar: React.FC = () => {
       return;
     }
 
-    const sidebar = new LeftSidebarElement(LeftSidebarRef.current, scroller, serviceInventories || {}, serviceCatalog, mainService, setCanvasState, graph, relationsDictionary, canvasState);
-    setSidebar(sidebar);
+    const sidebar = new LeftSidebarElement(
+      LeftSidebarRef.current,
+      scroller,
+      serviceInventories || {},
+      serviceCatalog,
+      mainService,
+      setCanvasState,
+      graph,
+      relationsDictionary,
+      canvasState
+    );
 
     return () => {
       sidebar.remove();
     };
-  }, [scroller, serviceInventories, mainService, serviceCatalog, relationsDictionary]);
+  }, [
+    scroller,
+    serviceInventories,
+    mainService,
+    serviceCatalog,
+    relationsDictionary,
+    setCanvasState,
+    canvasState,
+    graph,
+  ]);
 
-
-  return <LeftSidebarStyling
-    className={`left_sidebar ${!editable && "view_mode"}`}
-    data-testid="left_sidebar"
-    ref={LeftSidebarRef} />;
-}
+  return (
+    <LeftSidebarStyling
+      className={`left_sidebar ${!editable && "view_mode"}`}
+      data-testid="left_sidebar"
+      ref={LeftSidebarRef}
+    />
+  );
+};
 
 class LeftSidebarElement {
   instanceTab: InstanceTabElement;
@@ -102,8 +129,25 @@ class LeftSidebarElement {
     this.tabsToolbar.render();
 
     // Now create the stencil tabs after the toolbar
-    this.instanceTab = new InstanceTabElement(htmlRef, scroller, service, serviceModels, setCanvasState, graph, relationsDictionary);
-    this.inventoryTab = new InventoryTabElement(htmlRef, scroller, serviceInventories, serviceModels, setCanvasState, graph, relationsDictionary, initialCanvasState);
+    this.instanceTab = new InstanceTabElement(
+      htmlRef,
+      scroller,
+      service,
+      serviceModels,
+      setCanvasState,
+      graph,
+      relationsDictionary
+    );
+    this.inventoryTab = new InventoryTabElement(
+      htmlRef,
+      scroller,
+      serviceInventories,
+      serviceModels,
+      setCanvasState,
+      graph,
+      relationsDictionary,
+      initialCanvasState
+    );
   }
 
   /**
@@ -130,12 +174,12 @@ class LeftSidebarElement {
   };
 
   /**
-  * Toggles the visibility of the tabs by freezing and unfreezing the old and new tabs
-  * and adding and removing the joint-hidden class.
-  *
-  * @public
-  * @param clickedElement - The clicked element.
-  */
+   * Toggles the visibility of the tabs by freezing and unfreezing the old and new tabs
+   * and adding and removing the joint-hidden class.
+   *
+   * @public
+   * @param clickedElement - The clicked element.
+   */
   public toggleTab = (clickedElement: EventTarget) => {
     if (clickedElement instanceof HTMLElement) {
       // The clickedElement can also be the entire tabContainer, which we don't want to react on.
@@ -152,7 +196,6 @@ class LeftSidebarElement {
     this.inventoryTab.stencil.remove();
     this.tabsToolbar.remove();
   }
-
 }
 
 const LeftSidebarStyling = styled.div`

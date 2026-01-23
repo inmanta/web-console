@@ -9,27 +9,27 @@
  * @returns {void}
  */
 export const toggleDisabledSidebarItem = (sidebarItemId: string, isDisabled?: boolean): void => {
-    //disable Inventory Stencil for inter-service relation instance
-    const elements = [
-      {
-        selector: `[aria-labelledby="body_${sidebarItemId}"]`,
-        className: "stencil_accent-disabled",
-      },
-      {
-        selector: `[aria-labelledby="bodyTwo_${sidebarItemId}"]`,
-        className: "stencil_body-disabled",
-      },
-      {
-        selector: `[aria-labelledby="text_${sidebarItemId}"]`,
-        className: "stencil_text-disabled",
-      },
-    ];
-  
-    elements.forEach(({ selector, className }) => {
-      const element = document.querySelector(selector);
-  
-      if (element) {
-        element.classList.toggle(className, isDisabled);
-      }
-    });
-  };
+  //disable Inventory Stencil for inter-service relation instance
+  const elements = [
+    {
+      selector: `[aria-labelledby="body_${sidebarItemId}"]`,
+      className: "stencil_accent-disabled",
+    },
+    {
+      selector: `[aria-labelledby="bodyTwo_${sidebarItemId}"]`,
+      className: "stencil_body-disabled",
+    },
+    {
+      selector: `[aria-labelledby="text_${sidebarItemId}"]`,
+      className: "stencil_text-disabled",
+    },
+  ];
+
+  elements.forEach(({ selector, className }) => {
+    const element = document.querySelector(selector);
+
+    if (element) {
+      element.classList.toggle(className, isDisabled);
+    }
+  });
+};

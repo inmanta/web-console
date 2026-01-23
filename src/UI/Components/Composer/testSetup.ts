@@ -129,4 +129,3 @@ export function defineObjectsForJointJS() {
     value: vi.fn().mockReturnValue(null),
   });
 }
-

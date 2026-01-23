@@ -1,7 +1,7 @@
-import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@/Core";
 import { dia } from "@inmanta/rappid";
-import { RelationsDictionary, Rules } from "./createRelationsDictionary";
+import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@/Core";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
+import { RelationsDictionary, Rules } from "./createRelationsDictionary";
 
 /**
  * Finds the inter-service relations entity types for the given service model or embedded entity.
@@ -16,7 +16,8 @@ import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 export const findInterServiceRelations = (
   serviceModel: ServiceModel | EmbeddedEntity
 ): string[] => {
-  const result = serviceModel.inter_service_relations?.map((relation) => relation.entity_type) || [];
+  const result =
+    serviceModel.inter_service_relations?.map((relation) => relation.entity_type) || [];
 
   const embeddedEntitiesResult = (serviceModel.embedded_entities || []).flatMap((embedded_entity) =>
     findInterServiceRelations(embedded_entity)
@@ -151,10 +152,7 @@ const findRelationInServiceModel = (
  * @param {number | bigint} lowerLimit - The required lower limit
  * @returns {boolean} True if removal would violate the limit, false otherwise
  */
-const wouldViolateLowerLimit = (
-  currentCount: number,
-  lowerLimit: number | bigint
-): boolean => {
+const wouldViolateLowerLimit = (currentCount: number, lowerLimit: number | bigint): boolean => {
   // Convert bigint to number if needed
   const limit = typeof lowerLimit === "bigint" ? Number(lowerLimit) : lowerLimit;
 
@@ -182,7 +180,10 @@ const isRwModifierBlockingRemoval = (modifier: string | undefined, isNew: boolea
  * @param {dia.Graph} graph - The JointJS graph
  * @returns {Set<ServiceEntityShape>} Set of connected shapes
  */
-const getConnectedShapes = (shape: ServiceEntityShape, graph: dia.Graph): Set<ServiceEntityShape> => {
+const getConnectedShapes = (
+  shape: ServiceEntityShape,
+  graph: dia.Graph
+): Set<ServiceEntityShape> => {
   const connectedShapes = new Set<ServiceEntityShape>();
   const links = graph.getLinks();
   const shapeId = String(shape.id);
@@ -302,7 +303,13 @@ export const canRemoveShape = (
   // For each connected shape, check if removing this shape would violate its lower_limit
   for (const connectedShape of connectedShapes) {
     // Get relation info from connected shape to this shape
-    const relationInfo = getRelationInfo(connectedShape, shape, relationsDictionary, graph, serviceCatalog);
+    const relationInfo = getRelationInfo(
+      connectedShape,
+      shape,
+      relationsDictionary,
+      graph,
+      serviceCatalog
+    );
     if (relationInfo) {
       // Check if relation is "rw" and connected shape is not new
       if (isRwModifierBlockingRemoval(relationInfo.modifier, connectedShape.isNew)) {
@@ -347,7 +354,13 @@ export const canRemoveLink = (
   const sourceEntityType = sourceShape.getEntityName();
 
   // Check source shape -> target shape relation
-  const sourceRelationInfo = getRelationInfo(sourceShape, targetShape, relationsDictionary, graph, serviceCatalog);
+  const sourceRelationInfo = getRelationInfo(
+    sourceShape,
+    targetShape,
+    relationsDictionary,
+    graph,
+    serviceCatalog
+  );
   if (sourceRelationInfo) {
     if (isRwModifierBlockingRemoval(sourceRelationInfo.modifier, sourceShape.isNew)) {
       return false;
@@ -361,7 +374,13 @@ export const canRemoveLink = (
   }
 
   // Check target shape -> source shape relation
-  const targetRelationInfo = getRelationInfo(targetShape, sourceShape, relationsDictionary, graph, serviceCatalog);
+  const targetRelationInfo = getRelationInfo(
+    targetShape,
+    sourceShape,
+    relationsDictionary,
+    graph,
+    serviceCatalog
+  );
   if (targetRelationInfo) {
     if (isRwModifierBlockingRemoval(targetRelationInfo.modifier, targetShape.isNew)) {
       return false;

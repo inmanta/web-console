@@ -1,88 +1,93 @@
-import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config/shapeConfig";
 import { VERTICAL_SPACING } from "../../config/layoutConfig";
+import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config/shapeConfig";
 
 const DEFAULT_WIDTH = SHAPE_WIDTH;
 const DEFAULT_HEIGHT = SHAPE_MIN_HEIGHT;
 const DEFAULT_VERTICAL_SPACING = VERTICAL_SPACING;
 
 interface BoundingBox {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 export class PositionTracker {
-    private occupied: Map<string, BoundingBox> = new Map();
+  private occupied: Map<string, BoundingBox> = new Map();
 
-    constructor(
-        private readonly defaultSpacing: number = DEFAULT_VERTICAL_SPACING,
-        private readonly defaultWidth: number = DEFAULT_WIDTH,
-        private readonly defaultHeight: number = DEFAULT_HEIGHT
-    ) { }
+  constructor(
+    private readonly defaultSpacing: number = DEFAULT_VERTICAL_SPACING,
+    private readonly defaultWidth: number = DEFAULT_WIDTH,
+    private readonly defaultHeight: number = DEFAULT_HEIGHT
+  ) {}
 
-    private overlaps(x: number, y: number, width: number, height: number, excludeId?: string): boolean {
-        for (const [id, rect] of this.occupied.entries()) {
-            if (excludeId && id === excludeId) {
-                continue;
-            }
-            if (
-                x < rect.x + rect.width &&
-                x + width > rect.x &&
-                y < rect.y + rect.height &&
-                y + height > rect.y
-            ) {
-                return true;
-            }
-        }
-        return false;
+  private overlaps(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    excludeId?: string
+  ): boolean {
+    for (const [id, rect] of this.occupied.entries()) {
+      if (excludeId && id === excludeId) {
+        continue;
+      }
+      if (
+        x < rect.x + rect.width &&
+        x + width > rect.x &&
+        y < rect.y + rect.height &&
+        y + height > rect.y
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  findNextYPosition(
+    x: number,
+    width: number = this.defaultWidth,
+    height: number = this.defaultHeight,
+    startY: number = 0,
+    excludeId?: string
+  ): number {
+    let y = startY;
+    const maxAttempts = 1000;
+    let attempts = 0;
+
+    while (this.overlaps(x, y, width, height, excludeId) && attempts < maxAttempts) {
+      y += this.defaultSpacing;
+      attempts++;
     }
 
-    findNextYPosition(
-        x: number,
-        width: number = this.defaultWidth,
-        height: number = this.defaultHeight,
-        startY: number = 0,
-        excludeId?: string
-    ): number {
-        let y = startY;
-        const maxAttempts = 1000;
-        let attempts = 0;
+    return y;
+  }
 
-        while (this.overlaps(x, y, width, height, excludeId) && attempts < maxAttempts) {
-            y += this.defaultSpacing;
-            attempts++;
-        }
+  reserve(
+    id: string,
+    x: number,
+    y: number,
+    width: number = this.defaultWidth,
+    height: number = this.defaultHeight
+  ): void {
+    this.occupied.set(id, { x, y, width, height });
+  }
 
-        return y;
-    }
+  getPosition(id: string): BoundingBox | undefined {
+    return this.occupied.get(id);
+  }
 
-    reserve(
-        id: string,
-        x: number,
-        y: number,
-        width: number = this.defaultWidth,
-        height: number = this.defaultHeight
-    ): void {
-        this.occupied.set(id, { x, y, width, height });
-    }
+  updatePosition(
+    id: string,
+    x: number,
+    y: number,
+    width: number = this.defaultWidth,
+    height: number = this.defaultHeight
+  ): void {
+    this.reserve(id, x, y, width, height);
+  }
 
-    getPosition(id: string): BoundingBox | undefined {
-        return this.occupied.get(id);
-    }
-
-    updatePosition(
-        id: string,
-        x: number,
-        y: number,
-        width: number = this.defaultWidth,
-        height: number = this.defaultHeight
-    ): void {
-        this.reserve(id, x, y, width, height);
-    }
-
-    clear(): void {
-        this.occupied.clear();
-    }
+  clear(): void {
+    this.occupied.clear();
+  }
 }
-

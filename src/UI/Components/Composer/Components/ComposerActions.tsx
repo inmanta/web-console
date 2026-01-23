@@ -3,13 +3,13 @@ import "@rappidcss";
 import { useLocation, useNavigate } from "react-router";
 import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { usePostOrder, usePostMetadata } from "@/Data/Queries";
+import { useGetInstanceWithRelations } from "@/Data/Queries";
 import { ServiceOrder } from "@/Slices/Orders/Core/Types";
+import { ToastAlert } from "@/UI/Components/ToastAlert/ToastAlert";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { ToastAlert } from "@/UI/Components/ToastAlert/ToastAlert";
 import { ComposerContext } from "../Data/Context";
 import { getServiceOrderItemsArray, SavedCoordinates } from "../Data/Helpers";
-import { useGetInstanceWithRelations } from "@/Data/Queries";
 
 /**
  * Properties for the ComposerActions component.
@@ -37,14 +37,8 @@ interface Props {
  * @returns {React.FC} The ComposerActions component.
  */
 export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
-  const {
-    serviceCatalog,
-    mainService,
-    serviceInstanceId,
-    serviceOrderItems,
-    canvasHandlers,
-    hasValidationErrors,
-  } = useContext(ComposerContext);
+  const { mainService, serviceInstanceId, serviceOrderItems, canvasHandlers, hasValidationErrors } =
+    useContext(ComposerContext);
   const { routeManager } = useContext(DependencyContext);
 
   const isDisabled = serviceOrderItems.size < 1 || hasValidationErrors;
@@ -95,16 +89,15 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
       coordinates = canvasHandlers.getCoordinates();
     }
 
-    const orderItems = getServiceOrderItemsArray(serviceOrderItems)
-      .map((instance) => ({
-        ...instance,
-        metadata: {
-          coordinates: JSON.stringify({
-            version: "v2",
-            data: coordinates,
-          }),
-        },
-      }));
+    const orderItems = getServiceOrderItemsArray(serviceOrderItems).map((instance) => ({
+      ...instance,
+      metadata: {
+        coordinates: JSON.stringify({
+          version: "v2",
+          data: coordinates,
+        }),
+      },
+    }));
 
     // Temporary workaround to update coordinates in metadata, as currently order endpoint don't handle metadata in the updates.
     if (serviceInstanceId && instanceWithRelationsQuery.data) {
@@ -166,4 +159,3 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
     </Flex>
   );
 };
-

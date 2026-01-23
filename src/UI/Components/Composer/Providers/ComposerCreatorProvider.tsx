@@ -4,8 +4,8 @@ import { useGetServiceModels, useGetInventoryList } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { ComposerActions } from "../Components/ComposerActions";
-import { findInterServiceRelations } from "../Data/Helpers";
 import { Composer } from "../Composer";
+import { findInterServiceRelations } from "../Data/Helpers";
 import { ComposerContainer, Canvas, LeftSidebar, RightSidebar, ZoomControls } from "../UI";
 
 /**
@@ -26,7 +26,7 @@ interface Props {
  * This component is responsible for providing the service model related data to the Composer component.
  * It fetches the service models for the entire catalog, and the inventories for all the Inter-service relations that can be connected to the created instance.
  * It also handles the state and effects related to these data.
- * 
+ *
  * @props {Props} props - The properties that define the behavior and display of the component.
  * @prop {string} serviceName - The name of the service for which inter-service related services and inventories are being fetched.
  *
@@ -101,4 +101,3 @@ export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
 
   return <LoadingView ariaLabel="ComposerCreatorProvider-Loading" />;
 };
-

@@ -8,8 +8,8 @@ import {
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { ComposerActions } from "../Components/ComposerActions";
-import { findInterServiceRelations } from "../Data/Helpers";
 import { Composer } from "../Composer";
+import { findInterServiceRelations } from "../Data/Helpers";
 import { ComposerContainer, Canvas, LeftSidebar, RightSidebar, ZoomControls } from "../UI";
 
 /**
@@ -134,4 +134,3 @@ export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance,
 
   return <LoadingView ariaLabel="ComposerEditorProvider-Loading" />;
 };
-
