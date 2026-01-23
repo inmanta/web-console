@@ -11,6 +11,7 @@ import {
 import { ServiceEntityShape } from "../../UI";
 import { updateAllMissingConnectionsHighlights } from "../../UI/JointJsShapes/createHalo";
 import { ServiceModel } from "@/Core";
+import { ZOOM_TO_FIT_PADDING_EXISTING_INSTANCE, ZOOM_TO_FIT_PADDING_NEW_INSTANCE } from "../../config";
 
 interface UseComposerGraphParams {
     editable: boolean;
@@ -148,8 +149,10 @@ export const useComposerGraph = ({
 
         // Fit content to screen by default
         // Use requestAnimationFrame to ensure paper is fully rendered before fitting
+        // Use a larger padding for new instances so a single item doesn't appear too large
         requestAnimationFrame(() => {
-            scroller.zoomToFit({ useModelGeometry: true, padding: 20 });
+            const padding = instanceId ? ZOOM_TO_FIT_PADDING_EXISTING_INSTANCE : ZOOM_TO_FIT_PADDING_NEW_INSTANCE;
+            scroller.zoomToFit({ useModelGeometry: true, padding });
         });
 
         // Update missing connections highlights after canvas is initialized

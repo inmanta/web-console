@@ -1,6 +1,9 @@
-const DEFAULT_WIDTH = 264;
-const DEFAULT_HEIGHT = 50;
-const DEFAULT_VERTICAL_SPACING = 200;
+import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config/shapeConfig";
+import { VERTICAL_SPACING } from "../../config/layoutConfig";
+
+const DEFAULT_WIDTH = SHAPE_WIDTH;
+const DEFAULT_HEIGHT = SHAPE_MIN_HEIGHT;
+const DEFAULT_VERTICAL_SPACING = VERTICAL_SPACING;
 
 interface BoundingBox {
     x: number;

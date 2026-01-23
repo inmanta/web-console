@@ -13,9 +13,7 @@ import { toggleDisabledSidebarItem } from "../../Data/Helpers/disableSidebarItem
 import { updateAllMissingConnectionsHighlights } from "./createHalo";
 import { getShapeDimensions, getEmbeddedEntityKey } from "../../Data/Helpers/shapeUtils";
 import { HORIZONTAL_SPACING } from "../../Data/Helpers/canvasLayoutUtils";
-
-const GRID_SIZE = 8;
-const PADDING_S = GRID_SIZE;
+import { GRID_SIZE, PADDING_S } from "../../config";
 
 export class InventoryTabElement {
     stencil: ui.Stencil;

@@ -7,11 +7,7 @@ import { words } from "@/UI/words";
 import fitToScreenIcon from "./icons/fit-to-screen.svg";
 import requestFullscreenIcon from "./icons/request-fullscreen.svg";
 import exitFullscreenIcon from "./icons/exit-fullscreen.svg";
-
-const MIN_ZOOM = 0.2;
-const MAX_ZOOM = 5;
-const SLIDER_MIN = MIN_ZOOM * 100;
-const SLIDER_MAX = MAX_ZOOM * 100;
+import { MIN_ZOOM, MAX_ZOOM, SLIDER_MIN, SLIDER_MAX, ZOOM_TO_FIT_PADDING_BUTTON } from "../config";
 
 export const ZoomControls: React.FC = () => {
     const { scroller, paper } = useContext(ComposerContext);
@@ -172,7 +168,7 @@ export const ZoomControls: React.FC = () => {
         // Set flag to prevent event listener from interfering
         isManualZoomRef.current = true;
 
-        scroller.zoomToFit({ useModelGeometry: true, padding: 20 });
+        scroller.zoomToFit({ useModelGeometry: true, padding: ZOOM_TO_FIT_PADDING_BUTTON });
 
         // Update zoom state after zoomToFit completes
         setTimeout(() => {

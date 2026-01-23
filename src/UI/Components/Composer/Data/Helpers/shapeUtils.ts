@@ -1,12 +1,13 @@
 import { dia } from "@inmanta/rappid";
 import { EmbeddedEntity, InterServiceRelation } from "@/Core";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
+import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config/shapeConfig";
 
 /**
  * Default shape dimensions used throughout the composer
+ * Re-exported from config for backward compatibility
  */
-export const SHAPE_WIDTH = 264;
-export const SHAPE_MIN_HEIGHT = 50;
+export { SHAPE_WIDTH, SHAPE_MIN_HEIGHT };
 
 /**
  * Gets the bounding box of a shape with fallback to default dimensions.

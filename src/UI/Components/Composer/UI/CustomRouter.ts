@@ -2,6 +2,7 @@
 //It's a JointJS file that is hard to test with Jest due to the fact that JointJS base itself on native browser functions that aren't supported by Jest environement
 
 import { dia, g, routers } from "@inmanta/rappid";
+import { DEFAULT_PADDING } from "../config";
 
 /**
  * Interface representing options for a router.
@@ -11,8 +12,6 @@ interface RouterOptions {
     sourcePadding?: number;
     targetPadding?: number;
 }
-
-const DEFAULT_PADDING = 30;
 
 export const routerNamespace = { ...routers };
 

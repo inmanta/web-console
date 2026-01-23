@@ -2,7 +2,8 @@ import { dia } from "@inmanta/rappid";
 import { DirectedGraph } from "@joint/layout-directed-graph";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import { PositionTracker } from "./positionTracker";
-import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT, getShapeDimensions, getEmbeddedEntityKey } from "./shapeUtils";
+import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT, getShapeDimensions } from "./shapeUtils";
+import { HORIZONTAL_SPACING, VERTICAL_SPACING, NESTED_HORIZONTAL_OFFSET, GRID_COLUMN_WIDTH, GRID_ROW_HEIGHT, GRID_START_X, GRID_START_Y } from "../../config/layoutConfig";
 
 /**
  * Interface for saved coordinates from metadata
@@ -14,7 +15,7 @@ export interface SavedCoordinates {
 
 /**
  * Applies saved coordinates from metadata to cells in the graph
- * Skips embedded entities (they will be positioned via autolayout)
+ * Skips embedded entities (they will be positioned via autolayout. They don't have persistent ids.)
  * 
  * @param graph - The JointJS graph
  * @param coordinates - Array of saved coordinates from metadata
@@ -28,7 +29,6 @@ export const applyCoordinatesFromMetadata = (
     coordinates.forEach((savedCoord) => {
         const cell = cells.find((c) => String(c.id) === String(savedCoord.id));
         if (cell && cell instanceof ServiceEntityShape) {
-            // Skip embedded entities - they will be positioned via autolayout
             if (cell.entityType === "embedded") {
                 return;
             }
@@ -93,10 +93,9 @@ export const applyAutoLayout = (graph: dia.Graph): void => {
 
 /**
  * Layout constants for spacing shapes on the canvas
+ * Re-exported from config for backward compatibility
  */
-export const HORIZONTAL_SPACING = 420;
-export const VERTICAL_SPACING = 200;
-export const NESTED_HORIZONTAL_OFFSET = 360;
+export { HORIZONTAL_SPACING, VERTICAL_SPACING, NESTED_HORIZONTAL_OFFSET };
 
 /**
  * Positions embedded entities to the right of their parent entities
@@ -199,11 +198,8 @@ export const applyAutoLayoutToEmbeddedEntities = (graph: dia.Graph): void => {
 
 /**
  * Grid layout constants
+ * Imported from config
  */
-const GRID_COLUMN_WIDTH = 420;
-const GRID_ROW_HEIGHT = 200;
-const GRID_START_X = 100;
-const GRID_START_Y = 100;
 
 /**
  * Applies a grid-based layout to the graph
