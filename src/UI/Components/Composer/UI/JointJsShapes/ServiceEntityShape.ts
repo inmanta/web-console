@@ -218,7 +218,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         value.label = String(item.value);
 
         if (item.value !== undefined && item.value !== null) {
-          //reproduce internal formatting of the text base on actual dimensions, if text includes elipsis add Tooltip
+          // reproduce internal formatting of the text base on actual dimensions, if text includes ellipsis add Tooltip
           const reproducedDisplayText = util.breakText(
             item.value.toString().replace(/\s+/g, " "),
             { width: 90, height: 22 },

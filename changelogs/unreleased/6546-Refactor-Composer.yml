@@ -4,3 +4,4 @@ change-type: patch
 destination-branches: [master]
 sections:
   minor-improvement: "{{description}}"
+  known-issue: "The order API cannot unlink an inter-service relation and delete the target instance of that relation in the same order. A workaround would be to perform this operation using the normal API to modify service instances."
