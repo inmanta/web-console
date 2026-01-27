@@ -47,7 +47,7 @@ export const MarkdownPreviewer: React.FC<Props> = ({ service, instance, instance
           <HintBody>{words("markdownPreviewer.hint.body")}</HintBody>
         </Hint>
       )}
-      <Flex>
+      <Flex direction={{ default: "column" }}>
         <FlexItem flex={{ default: "flex_1" }}>
           <CodeEditor
             isDarkTheme={getThemePreference() === "dark"}

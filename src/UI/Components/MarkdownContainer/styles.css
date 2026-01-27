@@ -13,17 +13,13 @@
   position: relative;
 }
 
-/* Overlay */
-.mermaid-diagram.zoomed::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 999;
-  pointer-events: none;
+/* Ensure inline SVGs scale with the container */
+.mermaid-diagram svg {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
 }
 
 /* Use PatternFly's main content area for positioning */
@@ -37,38 +33,37 @@
   /* Position relative to the main content area */
   left: calc(var(--pf-c-page__sidebar--Width, 300px) + var(--left-margin));
   top: calc(var(--pf-c-page__header--MinHeight, 76px) + var(--diagram-margin));
-  width: calc(
-    100vw - var(--pf-c-page__sidebar--Width, 300px) - var(--left-margin) - var(--diagram-margin) -
-      (var(--page-padding) * 2) - var(--extra-space)
-  );
-  height: calc(
-    100vh - var(--pf-c-page__header--MinHeight, 76px) - (var(--diagram-margin) * 2) -
-      var(--page-padding) - var(--extra-space)
-  );
+  width: calc(100vw - var(--pf-c-page__sidebar--Width, 300px) - var(--left-margin) - var(--diagram-margin) - (var(--page-padding) * 2) - var(--extra-space));
+  height: calc(100vh - var(--pf-c-page__header--MinHeight, 76px) - (var(--diagram-margin) * 2) - var(--page-padding) - var(--extra-space));
   transform: none !important;
   cursor: zoom-out;
   background: var(--pf-global--BackgroundColor--100, white);
   padding: 1.5rem;
   border-radius: var(--pf-global--BorderRadius--lg, 8px);
-  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   will-change: transform;
   box-shadow: var(--pf-global--BoxShadow--lg, 0 0 30px rgba(0, 0, 0, 0.5));
+  overflow: hidden;
+}
+
+/* When zoomed, force the SVG to fill the zoom container while preserving aspect ratio */
+.mermaid-diagram.zoomed svg {
+  width: calc(100% - 3rem) !important;
+  height: calc(100% - 3rem) !important;
+  max-width: calc(100% - 3rem) !important;
+  max-height: calc(100% - 3rem) !important;
 }
 
 /* When sidebar is collapsed */
-.pf-m-collapsed ~ * .mermaid-diagram.zoomed {
+.pf-m-collapsed~* .mermaid-diagram.zoomed {
   left: calc(var(--pf-c-page__sidebar--Width--collapsed, 75px) + var(--left-margin));
-  width: calc(
-    100vw - var(--pf-c-page__sidebar--Width--collapsed, 75px) - var(--left-margin) -
-      var(--diagram-margin) - (var(--page-padding) * 2) - var(--extra-space)
-  );
+  width: calc(100vw - var(--pf-c-page__sidebar--Width--collapsed, 75px) - var(--left-margin) - var(--diagram-margin) - (var(--page-padding) * 2) - var(--extra-space));
 }
 
 /* When sidebar is hidden */
-.pf-m-hidden ~ * .mermaid-diagram.zoomed {
+.pf-m-hidden~* .mermaid-diagram.zoomed {
   left: var(--left-margin);
-  width: calc(
-    100vw - var(--left-margin) - var(--diagram-margin) - (var(--page-padding) * 2) -
-      var(--extra-space)
-  );
+  width: calc(100vw - var(--left-margin) - var(--diagram-margin) - (var(--page-padding) * 2) - var(--extra-space));
 }

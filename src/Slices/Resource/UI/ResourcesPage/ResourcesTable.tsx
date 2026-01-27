@@ -27,7 +27,7 @@ export const ResourcesTable: React.FC<Props> = ({
     });
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
-  const smallHeaders = ["requires", "status"];
+  const smallHeaders = ["status"];
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
     const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
     const sortParams = hasSort
@@ -53,11 +53,16 @@ export const ResourcesTable: React.FC<Props> = ({
   });
 
   return (
-    <Table {...props} variant={TableVariant.compact}>
+    <Table {...props} variant={TableVariant.compact} isStickyHeader>
       <Thead>
         <Tr>
           <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")} />
           {heads}
+          <Th
+            modifier="fitContent"
+            screenReaderText={words("common.emptyColumnHeader")}
+            aria-label="Details"
+          />
         </Tr>
       </Thead>
       {rows.map((row, index) => (
