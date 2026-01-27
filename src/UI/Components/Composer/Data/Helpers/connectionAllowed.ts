@@ -2,6 +2,15 @@ import { dia } from "@inmanta/rappid";
 import { isServiceEntityShapeCell } from "./getEntitiesFromCanvas";
 import { RelationsDictionary } from ".";
 
+/**
+ * Checks whether a new link between two shapes is allowed on the canvas.
+ *
+ * @param graph - JointJS graph containing all shapes and links.
+ * @param targetView - Cell/element view that is the potential link target; if undefined, connection is not allowed.
+ * @param sourceView - Cell/element view that is the link source.
+ * @param relationsDictionary - Dictionary describing allowed relations between service entities.
+ * @returns `true` if the connection is valid and not already present, otherwise `false`.
+ */
 export const checkIfConnectionIsAllowed = (
   graph: dia.Graph,
   targetView: dia.CellView | dia.ElementView | undefined,

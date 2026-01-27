@@ -1,9 +1,4 @@
-import { VERTICAL_SPACING } from "../../config/layoutConfig";
-import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config/shapeConfig";
-
-const DEFAULT_WIDTH = SHAPE_WIDTH;
-const DEFAULT_HEIGHT = SHAPE_MIN_HEIGHT;
-const DEFAULT_VERTICAL_SPACING = VERTICAL_SPACING;
+import { VERTICAL_SPACING, SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config";
 
 interface BoundingBox {
   x: number;
@@ -12,13 +7,16 @@ interface BoundingBox {
   height: number;
 }
 
+/**
+ * Tracks the positions of shapes on the canvas and ensures they don't overlap.
+ */
 export class PositionTracker {
   private occupied: Map<string, BoundingBox> = new Map();
 
   constructor(
-    private readonly defaultSpacing: number = DEFAULT_VERTICAL_SPACING,
-    private readonly defaultWidth: number = DEFAULT_WIDTH,
-    private readonly defaultHeight: number = DEFAULT_HEIGHT
+    private readonly defaultSpacing: number = VERTICAL_SPACING,
+    private readonly defaultWidth: number = SHAPE_WIDTH,
+    private readonly defaultHeight: number = SHAPE_MIN_HEIGHT
   ) {}
 
   private overlaps(

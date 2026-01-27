@@ -1,13 +1,12 @@
 import { dia } from "@inmanta/rappid";
 import { EmbeddedEntity, InterServiceRelation } from "@/Core";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
+import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config";
 import {
   getShapeDimensions,
   getEmbeddedEntityKey,
   getInterServiceRelationKey,
   convertLowerLimitToNumber,
-  SHAPE_WIDTH,
-  SHAPE_MIN_HEIGHT,
 } from "./shapeUtils";
 
 describe("shapeUtils", () => {

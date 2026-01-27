@@ -3,10 +3,16 @@ import { FlexItem, Flex } from "@patternfly/react-core";
 import { useGetServiceModels, useGetInventoryList } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
-import { ComposerActions } from "../Components/ComposerActions";
 import { Composer } from "../Composer";
 import { findInterServiceRelations } from "../Data/Helpers";
-import { ComposerContainer, Canvas, LeftSidebar, RightSidebar, ZoomControls } from "../UI";
+import {
+  ComposerContainer,
+  ComposerActions,
+  Canvas,
+  LeftSidebar,
+  RightSidebar,
+  ZoomControls,
+} from "../UI";
 
 /**
  * Props interface for the ComposerCreatorProvider component

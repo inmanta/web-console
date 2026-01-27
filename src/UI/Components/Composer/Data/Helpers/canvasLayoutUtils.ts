@@ -1,17 +1,17 @@
 import { dia } from "@inmanta/rappid";
 import { DirectedGraph } from "@joint/layout-directed-graph";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
+import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config";
 import {
   HORIZONTAL_SPACING,
   VERTICAL_SPACING,
-  NESTED_HORIZONTAL_OFFSET,
   GRID_COLUMN_WIDTH,
   GRID_ROW_HEIGHT,
   GRID_START_X,
   GRID_START_Y,
 } from "../../config/layoutConfig";
 import { PositionTracker } from "./positionTracker";
-import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT, getShapeDimensions } from "./shapeUtils";
+import { getShapeDimensions } from "./shapeUtils";
 
 /**
  * Interface for saved coordinates from metadata
@@ -98,12 +98,6 @@ export const applyAutoLayout = (graph: dia.Graph): void => {
     }
   }
 };
-
-/**
- * Layout constants for spacing shapes on the canvas
- * Re-exported from config for backward compatibility
- */
-export { HORIZONTAL_SPACING, VERTICAL_SPACING, NESTED_HORIZONTAL_OFFSET };
 
 /**
  * Positions embedded entities to the right of their parent entities
@@ -207,11 +201,6 @@ export const applyAutoLayoutToEmbeddedEntities = (graph: dia.Graph): void => {
     });
   });
 };
-
-/**
- * Grid layout constants
- * Imported from config
- */
 
 /**
  * Applies a grid-based layout to the graph

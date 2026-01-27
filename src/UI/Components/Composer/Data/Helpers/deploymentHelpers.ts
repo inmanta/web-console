@@ -6,9 +6,7 @@ import { ServiceEntityShape } from "../../UI";
 import { SavedCoordinates } from "./canvasLayoutUtils";
 
 /**
- * Simplified service order item interface for the new Composer
- * Only includes Core and Relation entities with their instanceAttributes
- * Compatible with the ComposerCanvas ComposerServiceOrderItem interface
+ * Interface for a service order item created with the composer.
  */
 export interface ComposerServiceOrderItem {
   instance_id: string;

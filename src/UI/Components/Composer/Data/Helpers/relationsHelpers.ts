@@ -129,20 +129,34 @@ const getServiceModelForShape = (
   return serviceCatalog.find((service) => service.name === entityType) || null;
 };
 
-/**
- * Finds a relation in a service model by entity type or name.
- *
- * @param {ServiceModel | EmbeddedEntity | null} serviceModel - The service model to search in
- * @param {string} targetEntityType - The target entity type to find the relation for
- * @returns {InterServiceRelation | undefined} The found relation or undefined
- */
 const findRelationInServiceModel = (
   serviceModel: ServiceModel | EmbeddedEntity | null,
   targetEntityType: string
-): InterServiceRelation | undefined => {
-  return serviceModel?.inter_service_relations?.find(
+): { modifier: string | undefined } | null => {
+  if (!serviceModel) {
+    return null;
+  }
+
+  // First, try to find a matching inter-service relation declared on this
+  // service/embedded entity.
+  const interServiceRelation = serviceModel.inter_service_relations?.find(
     (rel) => rel.entity_type === targetEntityType || rel.name === targetEntityType
   );
+
+  if (interServiceRelation) {
+    return { modifier: interServiceRelation.modifier };
+  }
+
+  // If not found, look for a matching embedded entity relation. This allows us
+  // to treat relations declared via embedded_entities as dependencies when
+  // deciding if a shape can be removed (e.g. parent -> embedded child).
+  const embeddedEntity = findEmbeddedEntityRecursive(serviceModel, targetEntityType);
+
+  if (embeddedEntity) {
+    return { modifier: embeddedEntity.modifier };
+  }
+
+  return null;
 };
 
 /**
@@ -239,12 +253,17 @@ export const getRelationInfo = (
   // For embedded entities, we need to find the parent and look in the parent's embedded_entities
   const serviceModel = getServiceModelForShape(sourceShape, graph, serviceCatalog);
 
-  // Find the relation in the service model (or embedded entity)
+  // Find the relation in the service model (or embedded entity). If it's not
+  // actually declared on the source's service model, we treat it as
+  // not blocking for the removal logic.
   const relation = findRelationInServiceModel(serviceModel, targetEntityType);
+  if (!relation) {
+    return null;
+  }
 
   return {
     rules,
-    modifier: relation?.modifier,
+    modifier: relation.modifier,
   };
 };
 
@@ -273,29 +292,6 @@ export const canRemoveShape = (
   }
 
   const shapeEntityType = shape.getEntityName();
-
-  // Check if the shape itself has any "rw" relations that aren't new
-  // Iterate through all connections this shape has
-  for (const [targetEntityType, connectionIds] of shape.connections.entries()) {
-    if (connectionIds.length === 0) {
-      continue;
-    }
-
-    // Get relation info from this shape to the target entity type
-    const shapeRelations = relationsDictionary[shapeEntityType];
-    const rules = shapeRelations?.[targetEntityType];
-
-    if (rules) {
-      // Find the modifier from the service model
-      const serviceModel = getServiceModelForShape(shape, graph, serviceCatalog);
-      const relation = findRelationInServiceModel(serviceModel, targetEntityType);
-
-      // Check if relation is "rw" and shape is not new
-      if (isRwModifierBlockingRemoval(relation?.modifier, shape.isNew)) {
-        return false;
-      }
-    }
-  }
 
   // Check all connected shapes - removing this shape shouldn't cause them to violate lower_limit
   const connectedShapes = getConnectedShapes(shape, graph);

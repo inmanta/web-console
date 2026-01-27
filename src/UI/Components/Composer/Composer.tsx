@@ -14,8 +14,14 @@ import {
   useLinkInteractions,
   useServiceOrderItems,
 } from "./Data/Hooks";
-import { ServiceEntityShape } from "./UI";
-import { ComposerContainer, Canvas, LeftSidebar, RightSidebar, ZoomControls } from "./UI";
+import {
+  ComposerContainer,
+  ServiceEntityShape,
+  Canvas,
+  LeftSidebar,
+  RightSidebar,
+  ZoomControls,
+} from "./UI";
 
 /**
  * Props for the top-level Composer component.

@@ -6,3 +6,4 @@ export * from "./ComposerContainer";
 export * from "./ZoomControls";
 export * from "./CustomRouter";
 export * from "./CustomAnchor";
+export * from "./ComposerActions";

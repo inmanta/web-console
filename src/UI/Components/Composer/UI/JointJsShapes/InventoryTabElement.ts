@@ -1,16 +1,18 @@
 import { Dispatch, SetStateAction } from "react";
-import { dia, ui, mvc } from "@inmanta/rappid";
+import { dia, mvc, ui } from "@inmanta/rappid";
 import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Queries";
 import { RelationsDictionary } from "../../Data";
-import { HORIZONTAL_SPACING } from "../../Data/Helpers/canvasLayoutUtils";
-import { toggleDisabledSidebarItem } from "../../Data/Helpers/disableSidebarItem";
-import { createEmbeddedEntityShapes } from "../../Data/Helpers/initializeCanvasFromInstance";
-import { PositionTracker } from "../../Data/Helpers/positionTracker";
-import { getShapeDimensions, getEmbeddedEntityKey } from "../../Data/Helpers/shapeUtils";
-import { PADDING_S } from "../../config";
-import { ServiceEntityShape, ServiceEntityOptions } from "./ServiceEntityShape";
+import {
+  toggleDisabledSidebarItem,
+  createEmbeddedEntityShapes,
+  PositionTracker,
+  getEmbeddedEntityKey,
+  getShapeDimensions,
+} from "../../Data/Helpers";
+import { PADDING_S, HORIZONTAL_SPACING } from "../../config";
+import { ServiceEntityOptions, ServiceEntityShape } from "./ServiceEntityShape";
 import { updateAllMissingConnectionsHighlights } from "./createHalo";
 import { createSidebarItem } from "./sidebarItem";
 

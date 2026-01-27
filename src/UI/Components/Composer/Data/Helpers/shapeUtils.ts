@@ -4,12 +4,6 @@ import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config/shapeConfig";
 
 /**
- * Default shape dimensions used throughout the composer
- * Re-exported from config for backward compatibility
- */
-export { SHAPE_WIDTH, SHAPE_MIN_HEIGHT };
-
-/**
  * Gets the bounding box of a shape with fallback to default dimensions.
  * This pattern is used in multiple places to safely get shape dimensions.
  *

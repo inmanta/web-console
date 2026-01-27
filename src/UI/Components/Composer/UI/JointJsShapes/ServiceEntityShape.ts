@@ -426,6 +426,35 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
       return false;
     }
 
+    /**
+     * Do not allow users to create new connections for relations marked as "rw" and not new.
+     */
+    let modifier: string | undefined;
+
+    if ("inter_service_relations" in this.serviceModel) {
+      const relation = this.serviceModel.inter_service_relations?.find(
+        (rel) => rel.entity_type === relationType || rel.name === relationType
+      );
+      if (relation) {
+        modifier = relation.modifier;
+      }
+    }
+
+    if (!modifier && "embedded_entities" in this.serviceModel) {
+      const embedded = this.serviceModel.embedded_entities?.find(
+        (entity) => (entity.type || entity.name) === relationType
+      );
+      if (embedded) {
+        modifier = embedded.modifier;
+      }
+    }
+
+    // For "rw" relations, only block creating new connections on existing shapes.
+    // New shapes are allowed to satisfy their own rw requirements.
+    if (modifier === "rw" && !this.isNew) {
+      return false;
+    }
+
     const existingConnections = this.connections.get(relationType) || [];
 
     // Check if adding this connection would exceed the upper limit

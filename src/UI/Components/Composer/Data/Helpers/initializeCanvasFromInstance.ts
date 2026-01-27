@@ -7,21 +7,16 @@ import {
   ServiceEntityShape,
   ServiceEntityOptions,
 } from "../../UI/JointJsShapes/ServiceEntityShape";
+import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config";
 import {
-  applyGridLayout,
   HORIZONTAL_SPACING,
   VERTICAL_SPACING,
   NESTED_HORIZONTAL_OFFSET,
-} from "./canvasLayoutUtils";
+} from "../../config/layoutConfig";
+import { applyGridLayout } from "./canvasLayoutUtils";
 import { RelationsDictionary } from "./createRelationsDictionary";
 import { PositionTracker } from "./positionTracker";
-import {
-  SHAPE_WIDTH,
-  SHAPE_MIN_HEIGHT,
-  getShapeDimensions,
-  getEmbeddedEntityKey,
-  getInterServiceRelationKey,
-} from "./shapeUtils";
+import { getShapeDimensions, getEmbeddedEntityKey, getInterServiceRelationKey } from "./shapeUtils";
 
 /**
  * Adds a relation id to the given collection map, avoiding duplicates.

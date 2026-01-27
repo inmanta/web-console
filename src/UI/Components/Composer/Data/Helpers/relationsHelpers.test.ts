@@ -345,7 +345,7 @@ describe("relationsHelpers", () => {
       expect(result).toBe(false);
     });
 
-    it("should return false when shape has rw modifier and is not new", () => {
+    it("should allow removal even when shape has rw modifier (only other instances' requirements block it)", () => {
       const serviceModelA = createMockServiceModel("ServiceA", {
         inter_service_relations: [createMockInterServiceRelation("rel1", "ServiceB", "rw")],
       });
@@ -371,6 +371,60 @@ describe("relationsHelpers", () => {
       const serviceCatalog: ServiceModel[] = [serviceModelA];
 
       const result = canRemoveShape(shape, graph, relationsDictionary, serviceCatalog);
+
+      expect(result).toBe(true);
+    });
+
+    it("should prevent removing an embedded entity when its parent requires it", () => {
+      const embeddedEntity = createMockEmbeddedEntity("Embedded1", "EmbeddedType", {
+        lower_limit: 1,
+        upper_limit: 1,
+        modifier: "rw",
+      });
+
+      const serviceModelA = createMockServiceModel("ServiceA", {
+        embedded_entities: [embeddedEntity],
+      });
+
+      const parentShape = createMockShape(
+        "parent-1",
+        "ServiceA",
+        "core",
+        false,
+        new Map([["EmbeddedType", ["embedded-1"]]]),
+        serviceModelA
+      );
+
+      const embeddedShape = createMockShape(
+        "embedded-1",
+        "EmbeddedType",
+        "embedded",
+        false,
+        new Map(),
+        embeddedEntity
+      );
+
+      const link = {
+        getSourceElement: vi.fn().mockReturnValue(parentShape),
+        getTargetElement: vi.fn().mockReturnValue(embeddedShape),
+      } as unknown as dia.Link;
+
+      const graph = {
+        getLinks: vi.fn().mockReturnValue([link]),
+      } as unknown as dia.Graph;
+
+      const relationsDictionary: RelationsDictionary = {
+        ServiceA: {
+          EmbeddedType: { lower_limit: 1, upper_limit: 1 },
+        },
+        EmbeddedType: {
+          ServiceA: { lower_limit: 1, upper_limit: 1 },
+        },
+      };
+
+      const serviceCatalog: ServiceModel[] = [serviceModelA];
+
+      const result = canRemoveShape(embeddedShape, graph, relationsDictionary, serviceCatalog);
 
       expect(result).toBe(false);
     });
