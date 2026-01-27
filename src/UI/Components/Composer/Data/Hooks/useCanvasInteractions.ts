@@ -138,8 +138,9 @@ export const useCanvasInteractions = ({
         ? canRemoveShape(cell, graph, relationsDictionary, serviceCatalog)
         : true;
 
-      // Create remove menu item (only show if removal is allowed)
-      if (canRemove) {
+      // Create remove menu item
+      // Only allow "Remove from canvas" for new shapes to prevent unwanted side-effects
+      if (canRemove && cell.isNew) {
         const removeMenuItem = document.createElement("div");
         removeMenuItem.className = "entity-context-menu-item";
         removeMenuItem.textContent = "Remove from canvas";
