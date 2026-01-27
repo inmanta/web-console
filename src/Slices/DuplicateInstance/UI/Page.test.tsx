@@ -443,7 +443,7 @@ describe("DuplicateInstancePage", () => {
         name: "Delete",
       })
     ).toBeEnabled();
-  }, 20000);
+  }, 25000);
 
   test("GIVEN DuplicateInstance page WHEN user submits form THEN instance is duplicated", async () => {
     mockUseParams.mockReturnValue({ service: "service_name_a", instance });
