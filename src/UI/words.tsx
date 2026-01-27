@@ -229,6 +229,15 @@ const dict = {
   "instanceComposer.dictModal": (valueName: string) => `Values of ${valueName}`,
   "instanceComposer.missingRelations": (name: string, amount: number, relations: string) =>
     `Expected at least ${amount} ${relations} inter-service relation(s) for ${name}`,
+  "instanceComposer.contextMenu.cannotRemove": "Cannot remove: required by relation constraints",
+  "instanceComposer.tooltip.missingConnectionSingle": (name: string) => `Missing relation: ${name}`,
+  "instanceComposer.tooltip.missingConnectionMultiple": (
+    name: string,
+    missing: number,
+    required: number
+  ) => `Missing relations: ${name} (${missing}/${required})`,
+  "instanceComposer.tooltip.missingRequiredAttributes":
+    "This entity has missing required attributes",
   "instanceComposer.disabled":
     "Your license doesn't give you access to the Instance Composer, please contact support for more details.",
   "instanceComposer.title": "Instance Composer",
@@ -238,6 +247,8 @@ const dict = {
   "instanceComposer.zoomHandler.fullscreen.exit": "Exit full screen",
   "instanceComposer.zoomHandler.zoomToFit": "Fit to screen",
   "instanceComposer.zoomHandler.zoom": "Slide to zoom",
+  "instanceComposer.zoomHandler.zoomIn": "Zoom in",
+  "instanceComposer.zoomHandler.zoomOut": "Zoom out",
   "instanceComposer.stencil.new": "New",
   "instanceComposer.stencil.inventory": "Inventory",
 
