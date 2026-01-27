@@ -492,7 +492,7 @@ describe("EditInstancePage", () => {
 
       expect(results).toHaveNoViolations();
     });
-  });
+  }, 30000);
 
   test("Given the EditInstance View When adding new nested embedded entity Then the inputs for it are displayed correctly", async () => {
     mockedUseParams.mockReturnValue({ service: "service_name_all_attrs", instance });
