@@ -6,6 +6,9 @@ import { ServiceEntityShape } from "../UI";
 import { ComposerServiceOrderItem } from "./Helpers/deploymentHelpers";
 import { CanvasHandlers, RelationsDictionary } from ".";
 
+/**
+ * Shape of the shared Composer React context.
+ */
 interface ComposerContextInterface {
   canvasHandlers: CanvasHandlers | null;
   relationsDictionary: RelationsDictionary;
@@ -24,6 +27,9 @@ interface ComposerContextInterface {
   hasValidationErrors: boolean;
 }
 
+/**
+ * Default Composer context value used when no provider is present.
+ */
 export const composerContext: ComposerContextInterface = {
   canvasHandlers: null,
   relationsDictionary: {},

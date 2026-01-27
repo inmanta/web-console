@@ -1,0 +1,6 @@
+description: The Composer now supports creating new instances of multiple services at once.
+issue-nr: 6546
+change-type: patch
+destination-branches: [master]
+sections:
+  minor-improvement: "{{description}}"

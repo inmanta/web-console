@@ -17,6 +17,9 @@ import {
   applyAutoLayoutToEmbeddedEntities,
 } from "../Helpers";
 
+/**
+ * Parameters for the `useComposerGraph` hook.
+ */
 interface UseComposerGraphParams {
   editable: boolean;
   serviceName: string;
@@ -30,6 +33,9 @@ interface UseComposerGraphParams {
   onInitialShapeInfoTracked: (shapeInfo: Map<string, { service_entity: string }>) => void;
 }
 
+/**
+ * Return value of the `useComposerGraph` hook.
+ */
 interface UseComposerGraphReturn {
   graph: dia.Graph;
   paper: dia.Paper;

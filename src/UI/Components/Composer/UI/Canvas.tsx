@@ -3,6 +3,10 @@ import { ui } from "@inmanta/rappid";
 import styled from "styled-components";
 import { ComposerContext } from "../Data/Context";
 
+/**
+ * Main JointJS canvas host.
+ * Mounts the paper scroller element and sets up tooltips for shapes with `data-tooltip`.
+ */
 export const Canvas: React.FC = () => {
   const { scroller, editable } = useContext(ComposerContext);
   const canvasRef = useRef<HTMLDivElement>(null);

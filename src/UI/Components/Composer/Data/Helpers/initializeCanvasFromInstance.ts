@@ -23,6 +23,9 @@ import {
   getInterServiceRelationKey,
 } from "./shapeUtils";
 
+/**
+ * Adds a relation id to the given collection map, avoiding duplicates.
+ */
 const addRelationId = (collection: Record<string, string[]>, key: string, value: string) => {
   if (!collection[key]) {
     collection[key] = [];
@@ -35,6 +38,9 @@ const addRelationId = (collection: Record<string, string[]>, key: string, value:
 
 const candidateKeyFields = ["identifier", "id", "name"];
 
+/**
+ * Builds a cache key for an embedded entity instance based on key attributes.
+ */
 const getEmbeddedEntityCacheKey = (
   rootEntityId: string,
   embeddedEntity: EmbeddedEntity,
@@ -65,6 +71,10 @@ const getEmbeddedEntityCacheKey = (
   return `${rootEntityId}:${embeddedEntity.name}:${keyValues.join("|")}`;
 };
 
+/**
+ * Creates (or reuses) shapes for an embedded entity and its nested embedded entities.
+ * Returns the ids of all created or reused shapes.
+ */
 export const createEmbeddedEntityShapes = (
   embeddedEntity: EmbeddedEntity,
   embeddedData: unknown,
@@ -304,6 +314,10 @@ export const createLinksFromCanvasState = (
   });
 };
 
+/**
+ * Initializes the canvas state from an instance-with-relations payload.
+ * Creates shapes, embedded entities, and links, applies layout, and returns the canvas state map.
+ */
 export const initializeCanvasFromInstance = (
   instanceData: InstanceWithRelations,
   serviceCatalog: ServiceModel[],

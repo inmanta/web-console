@@ -17,6 +17,9 @@ import {
 import { ServiceEntityShape } from "./UI";
 import { ComposerContainer, Canvas, LeftSidebar, RightSidebar, ZoomControls } from "./UI";
 
+/**
+ * Props for the top-level Composer component.
+ */
 interface Props {
   editable: boolean;
   instanceId?: string;
@@ -24,6 +27,10 @@ interface Props {
   children?: React.ReactNode;
 }
 
+/**
+ * Top-level component for the instance composer.
+ * Sets up data fetching, JointJS graph/paper, and provides composer context to child UI.
+ */
 export const Composer: React.FC<Props> = ({ editable, instanceId, serviceName, children }) => {
   const [catalogEntries, setCatalogEntries] = useState<string[]>([]);
   const [canvasState, setCanvasState] = useState<Map<string, ServiceEntityShape>>(new Map());

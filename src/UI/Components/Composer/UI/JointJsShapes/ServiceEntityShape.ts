@@ -24,6 +24,9 @@ import {
 import { ComposerServiceOrderItem } from "../../Data/Helpers/deploymentHelpers";
 import { getEmbeddedEntityKey } from "../../Data/Helpers/shapeUtils";
 
+/**
+ * Base configuration for a service entity rendered on the composer canvas.
+ */
 export interface ServiceEntityBase {
   entityType: EntityType;
   serviceModel: ServiceModel | EmbeddedEntity;
@@ -36,6 +39,9 @@ export interface ServiceEntityBase {
   id: string;
 }
 
+/**
+ * Full configuration used to construct a `ServiceEntityShape`.
+ */
 export interface ServiceEntityOptions extends ServiceEntityBase {
   lockedOnCanvas: boolean;
   relationsDictionary: RelationsDictionary;
@@ -54,6 +60,10 @@ export const HeaderColors: Record<EntityType, string> = {
   relation: t_chart_color_purple_300.var,
 };
 
+/**
+ * JointJS shape that represents a service, embedded entity, or inter-service relation on the canvas.
+ * Tracks connections, attributes, and provides helpers for validation and order-item generation.
+ */
 export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   connections: Map<string, string[]>;
   serviceModel: ServiceModel | EmbeddedEntity;

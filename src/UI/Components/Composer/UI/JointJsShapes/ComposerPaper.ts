@@ -12,6 +12,10 @@ import { RelationsDictionary } from "../../Data/Helpers/createRelationsDictionar
 import { LinkShape } from "./LinkShape";
 import { ServiceEntityShape } from "./ServiceEntityShape";
 
+/**
+ * Wrapper around JointJS `dia.Paper` used by the composer.
+ * Configures routing, anchors, validation, and UI tooling for links and shapes.
+ */
 export class ComposerPaper {
   paper: dia.Paper;
 
