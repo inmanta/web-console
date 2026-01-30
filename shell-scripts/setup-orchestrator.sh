@@ -33,6 +33,7 @@ VERSION=${version:-iso}
 RELEASE=${release:-9-dev}
 DOCKER_FLAG=${flag:-}
 BRANCH=${branch:-master}
+PROJECT_REPO=${project:-default}
 
 if [[ "$VERSION" == "oss" ]]
 then
@@ -63,7 +64,7 @@ do
 done && [[ $i == 30 ]] && exit 1
 
 echo "install $INSTALL_VERSION"
-yarn install:orchestrator version=$INSTALL_VERSION flag=${DOCKER_FLAG} branch=${BRANCH}
+yarn install:orchestrator version=$INSTALL_VERSION flag=${DOCKER_FLAG} branch=${BRANCH} repo=${PROJECT_REPO}
 
 # exit temp/local-setup to be back on root level
 cd ../..

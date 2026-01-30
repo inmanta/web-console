@@ -1,0 +1,6 @@
+change-type: patch
+description: The Resources Page now uses a side panel to set the various filters.
+issue-nr: "6502"
+destination-branches:
+- master
+sections: {}

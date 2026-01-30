@@ -16,15 +16,27 @@ export const getThemePreference = () => {
   }
 };
 
+const loadHighlightTheme = (theme: string) => {
+  // Dynamically import the appropriate highlight.js theme.
+  // We intentionally don't await these imports: they load CSS side effects.
+  if (theme === "dark") {
+    void import("highlight.js/styles/github-dark-dimmed.css");
+  } else {
+    void import("highlight.js/styles/github.css");
+  }
+};
+
 /**
- * Sets the user's theme preference in localStorage and updates the document's theme class.
+ * Sets the user's theme preference in localStorage and updates the document's theme class,
+ * and loads the matching highlight.js theme CSS.
  * @param {string} theme - The theme to set, either 'dark' or 'light'.
  */
 export const setThemePreference = (theme: string) => {
   localStorage.setItem(storageKey, theme);
-  // Target the html tag and update the theme class "pf-v6-theme-dark" "pf-v6-theme-light" depending on the theme.
+  // Target the html tag and update the theme class "pf-v6-theme-dark" / "pf-v6-theme-light" depending on the theme.
   document.documentElement.classList.remove("pf-v6-theme-dark", "pf-v6-theme-light");
   document.documentElement.classList.add(`pf-v6-theme-${theme}`);
+  loadHighlightTheme(theme);
 };
 
 /**

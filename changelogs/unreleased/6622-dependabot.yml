@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump eslint-plugin-react-hooks from 5.2.0 to 7.0.1
+destination-branches:
+- master
+sections: {}

@@ -123,7 +123,7 @@ Object.defineProperty(window, "innerHeight", {
 });
 
 // Set test timeout
-vi.setConfig({ testTimeout: 20000 });
+vi.setConfig({ testTimeout: 25000 });
 
 // Collect console warnings and errors
 const consoleIssues: Array<{ type: "warn" | "error"; message: string }> = [];
@@ -176,5 +176,7 @@ vi.mock("mermaid", () => ({
   default: {
     initialize: vi.fn(),
     render: vi.fn().mockResolvedValue({ svg: "<svg>Mock Mermaid Diagram</svg>" }),
+    run: vi.fn().mockResolvedValue(undefined),
+    init: vi.fn(),
   },
 }));

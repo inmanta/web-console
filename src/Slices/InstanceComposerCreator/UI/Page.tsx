@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { DependencyContext, words } from "@/UI";
 import { EmptyView } from "@/UI/Components";
-import { ComposerCreatorProvider } from "@/UI/Components/ComposerCanvas/Context/ComposerCreatorProvider";
+import { ComposerCreatorProvider } from "@/UI/Components/Composer/Providers";
 import { useRouteParams } from "@/UI/Routing";
 
 /**
@@ -16,10 +16,12 @@ export const Page: React.FC = () => {
   const { orchestratorProvider } = useContext(DependencyContext);
 
   if (!orchestratorProvider.isComposerEnabled()) {
-    <EmptyView
-      message={words("instanceComposer.disabled")}
-      aria-label="ComposerCreateView-Empty"
-    />;
+    return (
+      <EmptyView
+        message={words("instanceComposer.disabled")}
+        aria-label="ComposerCreateView-Empty"
+      />
+    );
   }
 
   return <ComposerCreatorProvider serviceName={serviceName} />;
