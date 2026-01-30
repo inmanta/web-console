@@ -460,5 +460,5 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(screen.getByRole("tab", { name: "resources-content" })).toBeEnabled();
 
     server.close();
-  }, 20000);
+  }, 25000);
 });

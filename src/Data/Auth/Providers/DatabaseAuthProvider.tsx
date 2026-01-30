@@ -42,7 +42,9 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({ childr
   const updateUser = (username: string, token: string) => {
     setUser(username);
     localStorage.setItem("inmanta_user", username);
-    createCookie("inmanta_user", token, 1);
+
+    const hoursToExpire = 12;
+    createCookie("inmanta_user", token, hoursToExpire);
   };
 
   const isDisabled = () => !getToken();

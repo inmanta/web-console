@@ -229,6 +229,15 @@ const dict = {
   "instanceComposer.dictModal": (valueName: string) => `Values of ${valueName}`,
   "instanceComposer.missingRelations": (name: string, amount: number, relations: string) =>
     `Expected at least ${amount} ${relations} inter-service relation(s) for ${name}`,
+  "instanceComposer.contextMenu.cannotRemove": "Cannot remove: required by relation constraints",
+  "instanceComposer.tooltip.missingConnectionSingle": (name: string) => `Missing relation: ${name}`,
+  "instanceComposer.tooltip.missingConnectionMultiple": (
+    name: string,
+    missing: number,
+    required: number
+  ) => `Missing relations: ${name} (${missing}/${required})`,
+  "instanceComposer.tooltip.missingRequiredAttributes":
+    "This entity has missing required attributes",
   "instanceComposer.disabled":
     "Your license doesn't give you access to the Instance Composer, please contact support for more details.",
   "instanceComposer.title": "Instance Composer",
@@ -238,6 +247,8 @@ const dict = {
   "instanceComposer.zoomHandler.fullscreen.exit": "Exit full screen",
   "instanceComposer.zoomHandler.zoomToFit": "Fit to screen",
   "instanceComposer.zoomHandler.zoom": "Slide to zoom",
+  "instanceComposer.zoomHandler.zoomIn": "Zoom in",
+  "instanceComposer.zoomHandler.zoomOut": "Zoom out",
   "instanceComposer.stencil.new": "New",
   "instanceComposer.stencil.inventory": "Inventory",
 
@@ -530,6 +541,22 @@ const dict = {
   "resources.filters.type.placeholder": "Type...",
   "resources.filters.reset": "Reset filters",
   "resources.filters.filter": "Add filter",
+  "resources.filters.tabs.resource": "Resource",
+  "resources.filters.tabs.status": "Status",
+  "resources.filters.resource.sectionTitle": "Resource Id",
+  "resources.filters.resource.type.label": "Type",
+  "resources.filters.resource.type.placeholder": "Resource type...",
+  "resources.filters.resource.value.label": "Value",
+  "resources.filters.resource.value.placeholder": "Value...",
+  "resources.filters.resource.agent.label": "Agent(s)",
+  "resources.filters.resource.agent.placeholder": "Agent...",
+  "resources.filters.status.section.title": "Deploy State",
+  "resources.filters.active.title": "Active filters",
+  "resources.filters.active.clearAll": "Clear all",
+  "resources.filters.active.empty.title": "No filters applied",
+  "resources.filters.active.empty.body":
+    "Select filters from the tabs above to refine your results.",
+  "resources.filters.active.group.close": (group: string) => `Remove ${group} filters`,
   "resources.deploySummary.title": "Deployment state summary",
   "resources.deploySummary.deploy": "Deploy",
   "resources.deploySummary.repair": "Repair",
@@ -568,6 +595,7 @@ const dict = {
     "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
   "resources.file.get": "Get file",
   "resources.file.error": "Error fetching file content",
+  "resources.filters": "Filters",
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",

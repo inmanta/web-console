@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump cypress from 15.4.0 to 15.7.1
+destination-branches:
+- master
+sections: {}

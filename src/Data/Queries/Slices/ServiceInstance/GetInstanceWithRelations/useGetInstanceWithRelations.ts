@@ -20,6 +20,7 @@ export interface InstanceWithRelations {
 interface GetInstanceWithRelationsHook {
   useOneTime: () => UseQueryResult<InstanceWithRelations, CustomError>;
   useContinuous: () => UseQueryResult<InstanceWithRelations, CustomError>;
+  useOneTimeNoRefetch: () => UseQueryResult<InstanceWithRelations, CustomError>;
 }
 
 /**
@@ -173,7 +174,7 @@ export const useGetInstanceWithRelations = (
         queryKey: getInstanceWithRelationsKey.single(instanceId, [env]),
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
-        enabled: serviceModel !== undefined,
+        enabled: serviceModel !== undefined && instanceId !== "" && instanceId !== undefined,
         gcTime: 0,
       }),
     useContinuous: (): UseQueryResult<InstanceWithRelations, CustomError> =>
@@ -182,7 +183,16 @@ export const useGetInstanceWithRelations = (
         queryFn: () => fetchInstanceWithRelations(instanceId),
 
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
-        enabled: serviceModel !== undefined,
+        enabled: serviceModel !== undefined && instanceId !== "" && instanceId !== undefined,
+      }),
+    useOneTimeNoRefetch: (): UseQueryResult<InstanceWithRelations, CustomError> =>
+      useQuery({
+        queryKey: getInstanceWithRelationsKey.single(instanceId, [env]),
+        queryFn: () => fetchInstanceWithRelations(instanceId),
+
+        enabled: serviceModel !== undefined && instanceId !== "" && instanceId !== undefined,
+        gcTime: 0,
+        refetchOnWindowFocus: false,
       }),
   };
 };

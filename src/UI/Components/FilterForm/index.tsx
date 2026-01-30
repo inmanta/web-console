@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { ToolbarGroup, ToolbarItem } from "@patternfly/react-core";
+import {
+  ToolbarGroup,
+  ToolbarItem,
+  Stack,
+  StackItem,
+  Toolbar,
+  ToolbarContent,
+} from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { words } from "@/UI/words";
 import { FreeTextFilter } from "./FreeTextFilter";
@@ -9,8 +16,23 @@ type Properties = "type" | "agent" | "value";
 interface Props {
   filter: Resource.Filter;
   setFilter: (filter: Resource.Filter) => void;
+  isVertical?: boolean;
 }
-export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
+
+/**
+ * The FilterForm component.
+ *
+ * This component is responsible of displaying the filter form.
+ *
+ * @Props {Props} - The props of the component
+ *  @prop {Resource.Filter} filter - The filter to display
+ *  @prop {(filter: Resource.Filter) => void} setFilter - The function to set the filter
+ *  @prop {boolean} isVertical - Whether the filter form is vertical
+ * (This component is used in horizontal mode on the Desired State Page still.)
+ *
+ * @returns {React.ReactElement} The rendered filter form.
+ */
+export const FilterForm: React.FC<Props> = ({ filter, setFilter, isVertical = false }) => {
   const [typeTextInput, setTypeTextInput] = useState("");
   const [agentTextInput, setAgentTextInput] = useState("");
   const [valueTextInput, setValueTextInput] = useState("");
@@ -61,6 +83,50 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
     setAgentTextInput("");
     setValueTextInput("");
   };
+
+  if (isVertical) {
+    return (
+      <Toolbar style={{ width: "100%" }}>
+        <ToolbarContent style={{ flexDirection: "column", alignItems: "stretch", padding: 0 }}>
+          <form onSubmit={onTextInput} style={{ width: "100%" }}>
+            <Stack hasGutter>
+              <StackItem>
+                <FreeTextFilter
+                  searchEntries={filter.type}
+                  filterPropertyName={Resource.FilterKind.Type}
+                  placeholder={words("resources.filters.type.placeholder")}
+                  removeChip={(cat, id) => removeChip(id, "type")}
+                  value={typeTextInput}
+                  setValue={setTypeTextInput}
+                />
+              </StackItem>
+              <StackItem>
+                <FreeTextFilter
+                  searchEntries={filter.agent}
+                  filterPropertyName={Resource.FilterKind.Agent}
+                  placeholder={words("resources.filters.agent.placeholder")}
+                  removeChip={(cat, id) => removeChip(id, "agent")}
+                  value={agentTextInput}
+                  setValue={setAgentTextInput}
+                />
+              </StackItem>
+              <StackItem>
+                <FreeTextFilter
+                  searchEntries={filter.value}
+                  filterPropertyName={Resource.FilterKind.Value}
+                  placeholder={words("resources.filters.value.placeholder")}
+                  removeChip={(cat, id) => removeChip(id, "value")}
+                  value={valueTextInput}
+                  setValue={setValueTextInput}
+                  isSubmitVisible
+                />
+              </StackItem>
+            </Stack>
+          </form>
+        </ToolbarContent>
+      </Toolbar>
+    );
+  }
 
   return (
     <ToolbarItem>
