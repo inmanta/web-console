@@ -1,6 +1,6 @@
 import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
@@ -141,6 +141,7 @@ describe("DesiredStateDetails", () => {
   });
 
   test("GIVEN DesiredStateDetails page WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+    const user = userEvent.setup({ delay: null });
     server.use(
       http.get("/api/v2/desiredstate/123", ({ request }) => {
         if (request.url.includes("&end=fake-first-param")) {
@@ -169,18 +170,20 @@ describe("DesiredStateDetails", () => {
 
     render(component);
     await screen.findByRole("grid", { name: "VersionResourcesTable-Success" });
-    expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(6);
+    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(6);
 
     //go to next page
-    await userEvent.click(screen.getByLabelText("Go to next page"));
+    await user.click(screen.getByLabelText("Go to next page"));
 
-    await screen.findByRole("grid", { name: "VersionResourcesTable-Success" });
-    expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(4);
+    await waitFor(() => {
+      expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(4);
+    });
 
     //sort on the second page
-    await userEvent.click(screen.getByRole("button", { name: "Type" }));
+    await user.click(screen.getByRole("button", { name: "Type" }));
 
-    await screen.findByRole("grid", { name: "VersionResourcesTable-Success" });
-    expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(6);
+    await waitFor(() => {
+      expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(6);
+    });
   });
 });
