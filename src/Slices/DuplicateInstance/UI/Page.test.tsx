@@ -306,31 +306,23 @@ describe("DuplicateInstancePage", () => {
     );
 
     await userEvent.click(screen.getByRole("button", { name: "embedded_base" }));
-
-    await userEvent.click(screen.getByRole("button", { name: "editableEmbedded_base" }));
-
-    await userEvent.click(screen.getByRole("button", { name: "optionalEmbedded_base" }));
-
-    await userEvent.click(screen.getByRole("button", { name: "editableOptionalEmbedded_base" }));
-
     expect(within(embedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
     expect(within(embedded_base).queryByRole("button", { name: "Delete" })).toBeDisabled();
 
+    await userEvent.click(screen.getByRole("button", { name: "editableEmbedded_base" }));
     expect(within(editableEmbedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
     expect(within(editableEmbedded_base).queryByRole("button", { name: "Delete" })).toBeDisabled();
 
+    await userEvent.click(screen.getByRole("button", { name: "optionalEmbedded_base" }));
     expect(within(optionalEmbedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
     expect(within(optionalEmbedded_base).queryByRole("button", { name: "Delete" })).toBeEnabled();
 
+    await userEvent.click(screen.getByRole("button", { name: "editableOptionalEmbedded_base" }));
     expect(
-      within(editableOptionalEmbedded_base).queryByRole("button", {
-        name: "Add",
-      })
+      within(editableOptionalEmbedded_base).queryByRole("button", { name: "Add" })
     ).toBeEnabled();
     expect(
-      within(editableOptionalEmbedded_base).queryByRole("button", {
-        name: "Delete",
-      })
+      within(editableOptionalEmbedded_base).queryByRole("button", { name: "Delete" })
     ).toBeEnabled();
 
     //check if direct attributes for embedded entities are correctly displayed
@@ -390,60 +382,36 @@ describe("DuplicateInstancePage", () => {
 
     await userEvent.click(within(embedded_base).getByRole("button", { name: "embedded" }));
 
-    await userEvent.click(
-      within(embedded_base).getByRole("button", {
-        name: "editableEmbedded",
-      })
-    );
+    await userEvent.click(within(embedded_base).getByRole("button", { name: "editableEmbedded" }));
 
-    await userEvent.click(
-      within(embedded_base).getByRole("button", {
-        name: "embedded?",
-      })
-    );
+    await userEvent.click(within(embedded_base).getByRole("button", { name: "embedded?" }));
 
-    await userEvent.click(
-      within(embedded_base).getByRole("button", {
-        name: "editableEmbedded?",
-      })
-    );
+    await userEvent.click(within(embedded_base).getByRole("button", { name: "editableEmbedded?" }));
 
     expect(within(nested_embedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
     expect(within(nested_embedded_base).queryByRole("button", { name: "Delete" })).toBeDisabled();
 
     expect(
-      within(nested_editableEmbedded_base).queryByRole("button", {
-        name: "Add",
-      })
+      within(nested_editableEmbedded_base).queryByRole("button", { name: "Add" })
     ).toBeEnabled();
     expect(
-      within(nested_editableEmbedded_base).queryByRole("button", {
-        name: "Delete",
-      })
+      within(nested_editableEmbedded_base).queryByRole("button", { name: "Delete" })
     ).toBeDisabled();
 
     expect(
-      within(nested_optionalEmbedded_base).queryByRole("button", {
-        name: "Add",
-      })
+      within(nested_optionalEmbedded_base).queryByRole("button", { name: "Add" })
     ).toBeEnabled();
     expect(
-      within(nested_optionalEmbedded_base).queryByRole("button", {
-        name: "Delete",
-      })
+      within(nested_optionalEmbedded_base).queryByRole("button", { name: "Delete" })
     ).toBeEnabled();
 
     expect(
-      within(nested_editableOptionalEmbedded_base).queryByRole("button", {
-        name: "Add",
-      })
+      within(nested_editableOptionalEmbedded_base).queryByRole("button", { name: "Add" })
     ).toBeEnabled();
     expect(
-      within(nested_editableOptionalEmbedded_base).queryByRole("button", {
-        name: "Delete",
-      })
+      within(nested_editableOptionalEmbedded_base).queryByRole("button", { name: "Delete" })
     ).toBeEnabled();
-  }, 30000);
+  });
 
   test("GIVEN DuplicateInstance page WHEN user submits form THEN instance is duplicated", async () => {
     mockUseParams.mockReturnValue({ service: "service_name_a", instance });

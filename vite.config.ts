@@ -257,6 +257,7 @@ export default defineConfig({
       ],
       exclude: ["node_modules/", "**/*.d.ts", "**/*.config.*", "**/__mocks__/**"],
       include: ["src/**/*"],
+      maxThreads: process.env.CI ? 2 : 0,
     },
     deps: {
       optimizer: {
@@ -290,11 +291,7 @@ export default defineConfig({
         classNameStrategy: "non-scoped",
       },
     },
-    maxWorkers: process.env.VITEST_MAX_WORKERS
-      ? Number(process.env.VITEST_MAX_WORKERS)
-      : process.env.CI
-        ? 6
-        : undefined,
+    maxWorkers: process.env.CI ? 6 : undefined,
     cache: true,
   },
   optimizeDeps: {
