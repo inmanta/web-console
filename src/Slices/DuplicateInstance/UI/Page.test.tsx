@@ -267,6 +267,7 @@ describe("DuplicateInstancePage", () => {
   });
 
   test("Given the DuplicateInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
+    const user = userEvent.setup({ delay: null });
     mockUseParams.mockReturnValue({ service: "service_name_all_attrs", instance });
 
     server.use(
@@ -305,19 +306,19 @@ describe("DuplicateInstancePage", () => {
       "DictListFieldInput-editableOptionalEmbedded_base"
     );
 
-    await userEvent.click(screen.getByRole("button", { name: "embedded_base" }));
+    await user.click(screen.getByRole("button", { name: "embedded_base" }));
     expect(within(embedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
     expect(within(embedded_base).queryByRole("button", { name: "Delete" })).toBeDisabled();
 
-    await userEvent.click(screen.getByRole("button", { name: "editableEmbedded_base" }));
+    await user.click(screen.getByRole("button", { name: "editableEmbedded_base" }));
     expect(within(editableEmbedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
     expect(within(editableEmbedded_base).queryByRole("button", { name: "Delete" })).toBeDisabled();
 
-    await userEvent.click(screen.getByRole("button", { name: "optionalEmbedded_base" }));
+    await user.click(screen.getByRole("button", { name: "optionalEmbedded_base" }));
     expect(within(optionalEmbedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
     expect(within(optionalEmbedded_base).queryByRole("button", { name: "Delete" })).toBeEnabled();
 
-    await userEvent.click(screen.getByRole("button", { name: "editableOptionalEmbedded_base" }));
+    await user.click(screen.getByRole("button", { name: "editableOptionalEmbedded_base" }));
     expect(
       within(editableOptionalEmbedded_base).queryByRole("button", { name: "Add" })
     ).toBeEnabled();
@@ -326,7 +327,7 @@ describe("DuplicateInstancePage", () => {
     ).toBeEnabled();
 
     //check if direct attributes for embedded entities are correctly displayed
-    await userEvent.click(within(embedded_base).getByRole("button", { name: "0" }));
+    await user.click(within(embedded_base).getByRole("button", { name: "0" }));
 
     expect(within(embedded_base).queryByDisplayValue("string")).toBeEnabled();
     expect(within(embedded_base).queryByDisplayValue("editableString")).toBeEnabled();
@@ -380,13 +381,13 @@ describe("DuplicateInstancePage", () => {
       "DictListFieldInput-embedded_base.0.editableEmbedded?"
     );
 
-    await userEvent.click(within(embedded_base).getByRole("button", { name: "embedded" }));
+    await user.click(within(embedded_base).getByRole("button", { name: "embedded" }));
 
-    await userEvent.click(within(embedded_base).getByRole("button", { name: "editableEmbedded" }));
+    await user.click(within(embedded_base).getByRole("button", { name: "editableEmbedded" }));
 
-    await userEvent.click(within(embedded_base).getByRole("button", { name: "embedded?" }));
+    await user.click(within(embedded_base).getByRole("button", { name: "embedded?" }));
 
-    await userEvent.click(within(embedded_base).getByRole("button", { name: "editableEmbedded?" }));
+    await user.click(within(embedded_base).getByRole("button", { name: "editableEmbedded?" }));
 
     expect(within(nested_embedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
     expect(within(nested_embedded_base).queryByRole("button", { name: "Delete" })).toBeDisabled();

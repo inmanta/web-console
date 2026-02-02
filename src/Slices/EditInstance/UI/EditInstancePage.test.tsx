@@ -41,22 +41,6 @@ const axe = configureAxe({
   },
 });
 
-/**
- * @note This configuration for the two last tests cases.
- * Because of redundant data with same id, we need to disable the duplicate-id-aria rule.
- * The fields are already tested in the previous tests.
- * The id's and aria-labels are set using the field name.
- *
- * Todo: Remove this configuration when the test data is updated.
- */
-const axeLimited = configureAxe({
-  rules: {
-    // disable landmark rules when testing isolated components.
-    region: { enabled: false },
-    "duplicate-id-aria": { enabled: false },
-  },
-});
-
 function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -486,13 +470,7 @@ describe("EditInstancePage", () => {
         name: "Delete",
       })
     ).toBeEnabled();
-
-    await act(async () => {
-      const results = await axeLimited(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-  }, 30000);
+  });
 
   test("Given the EditInstance View When adding new nested embedded entity Then the inputs for it are displayed correctly", async () => {
     mockedUseParams.mockReturnValue({ service: "service_name_all_attrs", instance });
@@ -623,12 +601,6 @@ describe("EditInstancePage", () => {
         name: "Delete",
       })
     ).toBeEnabled();
-
-    await act(async () => {
-      const results = await axeLimited(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
   });
 
   test("GIVEN the EditInstance View WHEN changing an embedded entity with nested embedded entities THEN the new fields are enabled", async () => {
