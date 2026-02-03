@@ -267,6 +267,12 @@ describe("DuplicateInstancePage", () => {
   });
 
   test("Given the DuplicateInstance View When changing an embedded entity Then the inputs are displayed correctly", async () => {
+    const t0 = performance.now();
+    const mark = (label: string) => {
+      const elapsed = Math.round(performance.now() - t0);
+      console.log(`[DuplicateInstance timing] ${label}: ${elapsed}ms`);
+    };
+
     const user = userEvent.setup({ delay: null });
     mockUseParams.mockReturnValue({ service: "service_name_all_attrs", instance });
 
@@ -285,6 +291,7 @@ describe("DuplicateInstancePage", () => {
     expect(
       await screen.findByRole("generic", { name: "DuplicateInstance-Success" })
     ).toBeInTheDocument();
+    mark("1. findByRole Success");
 
     //check if direct attributes are correctly displayed
     expect(screen.queryByText("editableString")).toBeEnabled();
@@ -297,6 +304,7 @@ describe("DuplicateInstancePage", () => {
     expect(screen.queryByText("editableEnum?")).toBeEnabled();
     expect(screen.queryByText("editableDict")).toBeEnabled();
     expect(screen.queryByText("editableDict?")).toBeEnabled();
+    mark("2. direct attributes");
 
     //check if embedded entities buttons are correctly displayed
     const embedded_base = screen.getByLabelText("DictListFieldInput-embedded_base");
@@ -335,6 +343,9 @@ describe("DuplicateInstancePage", () => {
         within(editableOptionalEmbedded_base).queryByRole("button", { name: "Delete" })
       ).toBeEnabled();
     });
+    mark(
+      "3. expand embedded_base + editableEmbedded_base + optionalEmbedded_base + editableOptionalEmbedded_base"
+    );
 
     //check if direct attributes for embedded entities are correctly displayed
     await user.click(await within(embedded_base).findByRole("button", { name: "0" }));
@@ -369,6 +380,7 @@ describe("DuplicateInstancePage", () => {
       expect(within(embedded_base).queryByLabelText("TextInput-dict?")).toBeEnabled();
       expect(within(embedded_base).queryByLabelText("TextInput-editableDict?")).toBeEnabled();
     });
+    mark("4. waitFor direct attributes in embedded_base");
 
     //check controls of nested entities
 
@@ -384,6 +396,7 @@ describe("DuplicateInstancePage", () => {
     const nested_editableOptionalEmbedded_base = await screen.findByLabelText(
       "DictListFieldInput-embedded_base.0.editableEmbedded?"
     );
+    mark("5. findByLabelText nested containers");
 
     await user.click(await within(embedded_base).findByRole("button", { name: "embedded" }));
 
@@ -396,6 +409,7 @@ describe("DuplicateInstancePage", () => {
     await user.click(
       await within(embedded_base).findByRole("button", { name: "editableEmbedded?" })
     );
+    mark("6. expand nested sections (embedded, editableEmbedded, embedded?, editableEmbedded?)");
 
     await waitFor(() => {
       expect(within(nested_embedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
@@ -422,6 +436,7 @@ describe("DuplicateInstancePage", () => {
         within(nested_editableOptionalEmbedded_base).queryByRole("button", { name: "Delete" })
       ).toBeEnabled();
     });
+    mark("7. waitFor nested buttons (done)");
   });
 
   test("GIVEN DuplicateInstance page WHEN user submits form THEN instance is duplicated", async () => {
