@@ -9,7 +9,7 @@ vi.mock("react-router", async (importOriginal) => {
 
 import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
@@ -307,111 +307,121 @@ describe("DuplicateInstancePage", () => {
     );
 
     await user.click(screen.getByRole("button", { name: "embedded_base" }));
-    expect(within(embedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
-    expect(within(embedded_base).queryByRole("button", { name: "Delete" })).toBeDisabled();
+    await waitFor(() => {
+      expect(within(embedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
+      expect(within(embedded_base).queryByRole("button", { name: "Delete" })).toBeDisabled();
+    });
 
     await user.click(screen.getByRole("button", { name: "editableEmbedded_base" }));
-    expect(within(editableEmbedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
-    expect(within(editableEmbedded_base).queryByRole("button", { name: "Delete" })).toBeDisabled();
+    await waitFor(() => {
+      expect(within(editableEmbedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
+      expect(
+        within(editableEmbedded_base).queryByRole("button", { name: "Delete" })
+      ).toBeDisabled();
+    });
 
     await user.click(screen.getByRole("button", { name: "optionalEmbedded_base" }));
-    expect(within(optionalEmbedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
-    expect(within(optionalEmbedded_base).queryByRole("button", { name: "Delete" })).toBeEnabled();
+    await waitFor(() => {
+      expect(within(optionalEmbedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
+      expect(within(optionalEmbedded_base).queryByRole("button", { name: "Delete" })).toBeEnabled();
+    });
 
     await user.click(screen.getByRole("button", { name: "editableOptionalEmbedded_base" }));
-    expect(
-      within(editableOptionalEmbedded_base).queryByRole("button", { name: "Add" })
-    ).toBeEnabled();
-    expect(
-      within(editableOptionalEmbedded_base).queryByRole("button", { name: "Delete" })
-    ).toBeEnabled();
+    await waitFor(() => {
+      expect(
+        within(editableOptionalEmbedded_base).queryByRole("button", { name: "Add" })
+      ).toBeEnabled();
+      expect(
+        within(editableOptionalEmbedded_base).queryByRole("button", { name: "Delete" })
+      ).toBeEnabled();
+    });
 
     //check if direct attributes for embedded entities are correctly displayed
-    await user.click(within(embedded_base).getByRole("button", { name: "0" }));
+    await user.click(await within(embedded_base).findByRole("button", { name: "0" }));
 
-    expect(within(embedded_base).queryByDisplayValue("string")).toBeEnabled();
-    expect(within(embedded_base).queryByDisplayValue("editableString")).toBeEnabled();
-
-    expect(within(embedded_base).queryByDisplayValue("string?")).toBeEnabled();
-    expect(within(embedded_base).queryByDisplayValue("editableString?")).toBeEnabled();
-
-    expect(within(embedded_base).queryByLabelText("Toggle-bool")).toBeEnabled();
-    expect(within(embedded_base).queryByLabelText("Toggle-editableBool")).toBeEnabled();
-
-    expect(within(embedded_base).queryByTestId("bool?-true")).toBeEnabled();
-    expect(within(embedded_base).queryByTestId("bool?-false")).toBeEnabled();
-    expect(within(embedded_base).queryByTestId("bool?-none")).toBeEnabled();
-
-    expect(within(embedded_base).queryByTestId("editableBool?-true")).toBeEnabled();
-    expect(within(embedded_base).queryByTestId("editableBool?-false")).toBeEnabled();
-    expect(within(embedded_base).queryByTestId("editableBool?-none")).toBeEnabled();
-
-    expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]")).toBeEnabled();
-    expect(within(embedded_base).queryByLabelText("TextFieldInput-editableString[]")).toBeEnabled();
-
-    expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]?")).toBeEnabled();
-    expect(
-      within(embedded_base).queryByLabelText("TextFieldInput-editableString[]?")
-    ).toBeEnabled();
-
-    expect(within(embedded_base).queryByTestId("enum-select-toggle")).toBeEnabled();
-    expect(within(embedded_base).queryByTestId("editableEnum-select-toggle")).toBeEnabled();
-
-    expect(within(embedded_base).queryByTestId("enum?-select-toggle")).toBeEnabled();
-    expect(within(embedded_base).queryByTestId("editableEnum?-select-toggle")).toBeEnabled();
-
-    expect(within(embedded_base).queryByLabelText("TextInput-dict")).toBeEnabled();
-    expect(within(embedded_base).queryByLabelText("TextInput-editableDict")).toBeEnabled();
-
-    expect(within(embedded_base).queryByLabelText("TextInput-dict?")).toBeEnabled();
-    expect(within(embedded_base).queryByLabelText("TextInput-editableDict?")).toBeEnabled();
+    await waitFor(() => {
+      expect(within(embedded_base).queryByDisplayValue("string")).toBeEnabled();
+      expect(within(embedded_base).queryByDisplayValue("editableString")).toBeEnabled();
+      expect(within(embedded_base).queryByDisplayValue("string?")).toBeEnabled();
+      expect(within(embedded_base).queryByDisplayValue("editableString?")).toBeEnabled();
+      expect(within(embedded_base).queryByLabelText("Toggle-bool")).toBeEnabled();
+      expect(within(embedded_base).queryByLabelText("Toggle-editableBool")).toBeEnabled();
+      expect(within(embedded_base).queryByTestId("bool?-true")).toBeEnabled();
+      expect(within(embedded_base).queryByTestId("bool?-false")).toBeEnabled();
+      expect(within(embedded_base).queryByTestId("bool?-none")).toBeEnabled();
+      expect(within(embedded_base).queryByTestId("editableBool?-true")).toBeEnabled();
+      expect(within(embedded_base).queryByTestId("editableBool?-false")).toBeEnabled();
+      expect(within(embedded_base).queryByTestId("editableBool?-none")).toBeEnabled();
+      expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]")).toBeEnabled();
+      expect(
+        within(embedded_base).queryByLabelText("TextFieldInput-editableString[]")
+      ).toBeEnabled();
+      expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]?")).toBeEnabled();
+      expect(
+        within(embedded_base).queryByLabelText("TextFieldInput-editableString[]?")
+      ).toBeEnabled();
+      expect(within(embedded_base).queryByTestId("enum-select-toggle")).toBeEnabled();
+      expect(within(embedded_base).queryByTestId("editableEnum-select-toggle")).toBeEnabled();
+      expect(within(embedded_base).queryByTestId("enum?-select-toggle")).toBeEnabled();
+      expect(within(embedded_base).queryByTestId("editableEnum?-select-toggle")).toBeEnabled();
+      expect(within(embedded_base).queryByLabelText("TextInput-dict")).toBeEnabled();
+      expect(within(embedded_base).queryByLabelText("TextInput-editableDict")).toBeEnabled();
+      expect(within(embedded_base).queryByLabelText("TextInput-dict?")).toBeEnabled();
+      expect(within(embedded_base).queryByLabelText("TextInput-editableDict?")).toBeEnabled();
+    });
 
     //check controls of nested entities
 
-    const nested_embedded_base = within(embedded_base).getByLabelText(
+    const nested_embedded_base = await within(embedded_base).findByLabelText(
       "DictListFieldInput-embedded_base.0.embedded"
     );
-    const nested_editableEmbedded_base = within(embedded_base).getByLabelText(
+    const nested_editableEmbedded_base = await within(embedded_base).findByLabelText(
       "DictListFieldInput-embedded_base.0.editableEmbedded"
     );
-    const nested_optionalEmbedded_base = within(embedded_base).getByLabelText(
+    const nested_optionalEmbedded_base = await within(embedded_base).findByLabelText(
       "DictListFieldInput-embedded_base.0.embedded?"
     );
-    const nested_editableOptionalEmbedded_base = screen.getByLabelText(
+    const nested_editableOptionalEmbedded_base = await screen.findByLabelText(
       "DictListFieldInput-embedded_base.0.editableEmbedded?"
     );
 
-    await user.click(within(embedded_base).getByRole("button", { name: "embedded" }));
+    await user.click(await within(embedded_base).findByRole("button", { name: "embedded" }));
 
-    await user.click(within(embedded_base).getByRole("button", { name: "editableEmbedded" }));
+    await user.click(
+      await within(embedded_base).findByRole("button", { name: "editableEmbedded" })
+    );
 
-    await user.click(within(embedded_base).getByRole("button", { name: "embedded?" }));
+    await user.click(await within(embedded_base).findByRole("button", { name: "embedded?" }));
 
-    await user.click(within(embedded_base).getByRole("button", { name: "editableEmbedded?" }));
+    await user.click(
+      await within(embedded_base).findByRole("button", { name: "editableEmbedded?" })
+    );
 
-    expect(within(nested_embedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
-    expect(within(nested_embedded_base).queryByRole("button", { name: "Delete" })).toBeDisabled();
+    await waitFor(() => {
+      expect(within(nested_embedded_base).queryByRole("button", { name: "Add" })).toBeEnabled();
+      expect(within(nested_embedded_base).queryByRole("button", { name: "Delete" })).toBeDisabled();
 
-    expect(
-      within(nested_editableEmbedded_base).queryByRole("button", { name: "Add" })
-    ).toBeEnabled();
-    expect(
-      within(nested_editableEmbedded_base).queryByRole("button", { name: "Delete" })
-    ).toBeDisabled();
+      expect(
+        within(nested_editableEmbedded_base).queryByRole("button", { name: "Add" })
+      ).toBeEnabled();
+      expect(
+        within(nested_editableEmbedded_base).queryByRole("button", { name: "Delete" })
+      ).toBeDisabled();
 
-    expect(
-      within(nested_optionalEmbedded_base).queryByRole("button", { name: "Add" })
-    ).toBeEnabled();
-    expect(
-      within(nested_optionalEmbedded_base).queryByRole("button", { name: "Delete" })
-    ).toBeEnabled();
+      expect(
+        within(nested_optionalEmbedded_base).queryByRole("button", { name: "Add" })
+      ).toBeEnabled();
+      expect(
+        within(nested_optionalEmbedded_base).queryByRole("button", { name: "Delete" })
+      ).toBeEnabled();
 
-    expect(
-      within(nested_editableOptionalEmbedded_base).queryByRole("button", { name: "Add" })
-    ).toBeEnabled();
-    expect(
-      within(nested_editableOptionalEmbedded_base).queryByRole("button", { name: "Delete" })
-    ).toBeEnabled();
+      expect(
+        within(nested_editableOptionalEmbedded_base).queryByRole("button", { name: "Add" })
+      ).toBeEnabled();
+      expect(
+        within(nested_editableOptionalEmbedded_base).queryByRole("button", { name: "Delete" })
+      ).toBeEnabled();
+    });
   });
 
   test("GIVEN DuplicateInstance page WHEN user submits form THEN instance is duplicated", async () => {
