@@ -920,6 +920,17 @@ const dict = {
   "markdownPreviewer.download": "Download",
 
   /**
+   * Markdown Container State Transfer related text
+   */
+  "markdownContainer.setState.error.invalidConfigArray":
+    "⚠ Invalid configuration: expected object, got array",
+  "markdownContainer.setState.error.invalidConfig": "⚠ Invalid configuration: expected object",
+  "markdownContainer.setState.error.missingTargetState":
+    "⚠ Missing configuration: provide 'targetState'",
+  "markdownContainer.setState.error.cannotParseJson":
+    "⚠ Invalid configuration: Can't parse JSON object",
+
+  /**
    * LogViewer related text
    */
   "logViewer.selectLog": "Select log",

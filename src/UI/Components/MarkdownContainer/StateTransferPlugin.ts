@@ -1,5 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { ButtonProps } from "@patternfly/react-core";
 import MarkdownIt from "markdown-it";
+import { words } from "@/UI";
+
+type PfButtonVariant = NonNullable<ButtonProps["variant"]>;
+type PfStatusButtonVariant = Extract<PfButtonVariant, "danger" | "warning">;
+
+const VALID_BUTTON_TYPES: PfButtonVariant[] = ["primary", "secondary", "tertiary", "link"];
+const VALID_STATUS_VARIANTS: PfStatusButtonVariant[] = ["danger", "warning"];
 
 /**
  * Markdown-it plugin: replaces ```setState fences with a button element.
@@ -36,37 +44,57 @@ export default function stateTransferPlugin(md: MarkdownIt, _baseId: string, _op
 
     // Parse configuration from content
     const content = token.content.trim();
-    let displayText = "Set State";
-    let type = "primary";
-    let variant: string | undefined;
+    let displayText = "";
+    let type: PfButtonVariant = "primary";
+    let variant: PfStatusButtonVariant | undefined;
     let targetState: string | undefined;
     let isInline = false;
     let isSmall = false;
+    let hasConfigError = false;
 
     // Try to parse as JSON configuration
     try {
       const config = JSON.parse(content);
-      if (config.displayText) {
-        displayText = config.displayText;
-      }
-      if (config.type && ["primary", "secondary", "tertiary", "link"].includes(config.type)) {
-        type = config.type;
-      }
-      if (config.variant && ["danger", "warning"].includes(config.variant)) {
-        variant = config.variant;
-      }
-      if (config.targetState) {
-        targetState = config.targetState;
-      }
-      if (config.isInline === true || config.isInline === "true") {
-        isInline = true;
-      }
-      if (config.isSmall === true || config.isSmall === "true") {
-        isSmall = true;
+
+      // Check if config is an array (invalid format)
+      if (Array.isArray(config)) {
+        hasConfigError = true;
+        displayText = words("markdownContainer.setState.error.invalidConfigArray");
+      } else if (typeof config !== "object" || config === null) {
+        hasConfigError = true;
+        displayText = words("markdownContainer.setState.error.invalidConfig");
+      } else {
+        // Valid object config
+        if (config.targetState) {
+          targetState = config.targetState;
+        }
+        if (config.displayText) {
+          displayText = config.displayText;
+        } else if (targetState) {
+          // Use targetState as displayText if displayText is not provided
+          displayText = targetState;
+        }
+        if (config.type && (VALID_BUTTON_TYPES as string[]).includes(config.type)) {
+          type = config.type as PfButtonVariant; // we can safely cast because we checked the validity above
+        }
+        if (config.variant && (VALID_STATUS_VARIANTS as string[]).includes(config.variant)) {
+          variant = config.variant as PfStatusButtonVariant; // we can safely cast because we checked the validity above
+        }
+        if (config.isInline === true || config.isInline === "true") {
+          isInline = true;
+        }
+        if (config.isSmall === true || config.isSmall === "true") {
+          isSmall = true;
+        }
+        // Show warning if targetState is missing
+        if (!targetState) {
+          hasConfigError = true;
+          displayText = words("markdownContainer.setState.error.missingTargetState");
+        }
       }
     } catch {
       // If not JSON, treat the entire content as displayText (backward compatibility)
-      displayText = content || "Set State";
+      displayText = content || words("markdownContainer.setState.error.cannotParseJson");
     }
 
     const escapedText = md.utils.escapeHtml(displayText);
@@ -79,7 +107,11 @@ export default function stateTransferPlugin(md: MarkdownIt, _baseId: string, _op
     classes.push(`pf-m-${type}`);
 
     // Add variant modifier if present (danger, warning)
-    if (variant) {
+    // If there's a config error, use warning variant to indicate the issue
+    if (hasConfigError) {
+      variant = "warning";
+      classes.push("pf-m-warning");
+    } else if (variant) {
       classes.push(`pf-m-${variant}`);
     }
 
@@ -99,10 +131,14 @@ export default function stateTransferPlugin(md: MarkdownIt, _baseId: string, _op
     if (targetState) {
       dataAttributes.push(`data-setstate-target="${md.utils.escapeHtml(targetState)}"`);
     }
+    if (hasConfigError) {
+      dataAttributes.push('data-setstate-error="true"');
+    }
 
     // Create a button element with PatternFly 6 classes
     // The button will be styled via PatternFly CSS and can have click handlers attached in MarkdownContainer
-    return `<button class="${classes.join(" ")}" type="button" ${dataAttributes.join(" ")}>${escapedText}</button>`;
+    const disabledAttr = hasConfigError ? " disabled" : "";
+    return `<button class="${classes.join(" ")}" type="button"${disabledAttr} ${dataAttributes.join(" ")}>${escapedText}</button>`;
   }
 
   md.renderer.rules.fence = customFenceRenderer;

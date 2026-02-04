@@ -162,6 +162,12 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title, onSetState
 
       if (!button) return;
 
+      // Don't handle clicks on buttons with configuration errors
+      if (button.hasAttribute("data-setstate-error")) {
+        event.stopPropagation();
+        return;
+      }
+
       event.stopPropagation();
       const content = button.getAttribute("data-setstate-content") || "";
       const targetState = button.getAttribute("data-setstate-target") || "";

@@ -3,7 +3,7 @@ description: |
   The button can be configured using a JSON object in a fenced code block with language `setState`.
   
   Supported configuration options:
-  - `displayText` (string, default: "Set State") - The text displayed on the button
+  - `displayText` (string, default: "Set ${targetState}") - The text displayed on the button
   - `type` ("primary" | "secondary" | "tertiary" | "link", default: "primary") - The button type
   - `variant` ("danger" | "warning", optional) - The button variant
   - `targetState` (string, optional) - The target state to transfer to when clicked
