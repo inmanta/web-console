@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useMemo, useState, useCallback } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -15,8 +15,10 @@ import { words } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { DependencyContext } from "@/UI/Dependency";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider/ModalProvider";
 import { useNavigateTo } from "@/UI/Routing";
 import { InstanceDetailsContext } from "../../Core/Context";
+import { StateTransferModalContent } from "../Components/InstanceActions/Actions/StateTransferModalContent";
 import { TabContentWrapper } from ".";
 
 // Interface representing the needed properties to display the documentation sections.
@@ -53,7 +55,10 @@ export const DocumentationTabContent: React.FC<Props> = ({
 }) => {
   const { logsQuery, instance } = useContext(InstanceDetailsContext);
   const { environmentHandler } = useContext(DependencyContext);
+  const { triggerModal } = useContext(ModalContext);
   const [expanded, setExpanded] = useState(0);
+  const [, setInterfaceBlocked] = useState(false);
+  const [, setErrorMessage] = useState("");
   const navigateTo = useNavigateTo();
 
   const isLatest = selectedVersion === String(instance.version);
@@ -73,6 +78,36 @@ export const DocumentationTabContent: React.FC<Props> = ({
   const sections = useMemo(() => {
     return selectedSet ? getDocumentationSections(docAttributeDescriptors, selectedSet) : [];
   }, [docAttributeDescriptors, selectedSet]);
+
+  const handleStateTransferClick = useCallback(
+    ({ targetState }: { content: string; targetState: string }) => {
+      if (!targetState) return;
+
+      const instanceDisplayIdentity = instance.service_identity_attribute_value || instance.id;
+
+      triggerModal({
+        title: words("instanceDetails.stateTransfer.confirmTitle"),
+        content: (
+          <StateTransferModalContent
+            instance_id={instance.id}
+            service_entity={instance.service_entity}
+            targetState={targetState}
+            instance_display_identity={instanceDisplayIdentity}
+            version={instance.version}
+            setErrorMessage={setErrorMessage}
+            setInterfaceBlocked={setInterfaceBlocked}
+          />
+        ),
+        iconVariant: "danger",
+        cancelCb: () => {
+          setInterfaceBlocked(false);
+        },
+      });
+
+      setInterfaceBlocked(true);
+    },
+    [instance, triggerModal, setErrorMessage, setInterfaceBlocked]
+  );
 
   // Check expert mode for the MarkdownPreviewer button
   const isExpertModeEnabled = environmentHandler.useIsExpertModeEnabled();
@@ -137,7 +172,11 @@ export const DocumentationTabContent: React.FC<Props> = ({
     return (
       <TabContentWrapper id="documentation">
         <MarkdownPreviewerButton />
-        <MarkdownCard attributeValue={sections[0].value} web_title={sections[0].title} />
+        <MarkdownCard
+          attributeValue={sections[0].value}
+          web_title={sections[0].title}
+          onSetStateClick={handleStateTransferClick}
+        />
       </TabContentWrapper>
     );
   }
@@ -157,7 +196,11 @@ export const DocumentationTabContent: React.FC<Props> = ({
               <DynamicFAIcon icon={section.iconName} /> {section.title}
             </AccordionToggle>
             <AccordionContent id={`${section.title}-accordion-toggle`}>
-              <MarkdownCard attributeValue={section.value} web_title={section.title} />
+              <MarkdownCard
+                attributeValue={section.value}
+                web_title={section.title}
+                onSetStateClick={handleStateTransferClick}
+              />
             </AccordionContent>
           </AccordionItem>
         ))}

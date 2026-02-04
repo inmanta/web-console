@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MarkdownContainer } from "./MarkdownContainer";
 
 // Mock the theme function
@@ -142,5 +142,30 @@ describe("MarkdownContainer", () => {
       },
       { timeout: 2000 }
     );
+  });
+
+  it("invokes onSetStateClick when a state transfer button is clicked", async () => {
+    const markdownContent =
+      '```setState\n{"displayText":"Apply state","targetState":"desired-state"}\n```';
+    const webTitle = "Container_id";
+    const handleSetStateClick = vi.fn();
+
+    render(
+      <MarkdownContainer
+        text={markdownContent}
+        web_title={webTitle}
+        onSetStateClick={handleSetStateClick}
+      />
+    );
+
+    const button = await screen.findByRole("button", { name: "Apply state" });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(handleSetStateClick).toHaveBeenCalledWith({
+        content: '{"displayText":"Apply state","targetState":"desired-state"}',
+        targetState: "desired-state",
+      });
+    });
   });
 });

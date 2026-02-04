@@ -9,12 +9,22 @@ import mermaidPlugin from "./MermaidPlugin";
 import setStatePlugin from "./StateTransferPlugin";
 import "./styles.css";
 
+export interface SetStateClickDetail {
+  content: string;
+  targetState: string;
+}
+
 /**
  * Props for the MarkdownContainer component.
  */
 interface Props {
   text: string; // The Markdown content to be rendered.
   web_title: string; // The title of the web page to generate a unique Id for the mermaid elements.
+  /**
+   * Optional callback that is invoked when a `setState` button
+   * rendered by the StateTransfer plugin is clicked.
+   */
+  onSetStateClick?: (detail: SetStateClickDetail) => void;
 }
 
 /**
@@ -28,7 +38,7 @@ interface Props {
  *
  * @returns A React component that renders a container for displaying Markdown content.
  */
-export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
+export const MarkdownContainer: React.FC<Props> = ({ text, web_title, onSetStateClick }) => {
   const theme = getThemePreference() || "default";
   const containerRef = useRef<HTMLDivElement>(null);
   const lastProcessedText = useRef<string>("");
@@ -155,17 +165,18 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
       event.stopPropagation();
       const content = button.getAttribute("data-setstate-content") || "";
       const targetState = button.getAttribute("data-setstate-target") || "";
-      
-      // Dispatch a custom event that can be listened to by parent components
-      // or handle the state transfer logic here
+
+      // Notify React consumers via callback when provided.
+      if (onSetStateClick) {
+        onSetStateClick({ content, targetState });
+      }
+
+      // Dispatch a custom event that can be listened to by non-React code.
       const customEvent = new CustomEvent("setstate", {
         detail: { content, targetState },
         bubbles: true,
       });
       button.dispatchEvent(customEvent);
-      
-      // You can also add console.log or other handling here
-      console.log("Set state button clicked:", { content, targetState });
     };
 
     const observer = new MutationObserver((mutations) => {
@@ -184,7 +195,9 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
 
             const button = node.matches(".pf-v6-c-button[data-setstate-content]")
               ? node
-              : (node.querySelector(".pf-v6-c-button[data-setstate-content]") as HTMLElement | null);
+              : (node.querySelector(
+                  ".pf-v6-c-button[data-setstate-content]"
+                ) as HTMLElement | null);
 
             if (button) {
               button.addEventListener("click", handleStateTransferClick);
@@ -321,7 +334,7 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
         });
       document.body.style.overflow = "";
     };
-  }, [text, md]);
+  }, [text, md, onSetStateClick]);
 
   return <div ref={containerRef} className="markdown-body" />;
 };

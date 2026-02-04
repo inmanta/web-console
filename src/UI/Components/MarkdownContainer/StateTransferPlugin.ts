@@ -71,23 +71,23 @@ export default function stateTransferPlugin(md: MarkdownIt, _baseId: string, _op
 
     const escapedText = md.utils.escapeHtml(displayText);
     const escapedContent = md.utils.escapeHtml(content);
-    
+
     // Build PatternFly 6 classes
     const classes = ["pf-v6-c-button"];
-    
+
     // Add type modifier (primary, secondary, tertiary, link)
     classes.push(`pf-m-${type}`);
-    
+
     // Add variant modifier if present (danger, warning)
     if (variant) {
       classes.push(`pf-m-${variant}`);
     }
-    
+
     // Add inline modifier if requested
     if (isInline) {
       classes.push("pf-m-inline");
     }
-    
+
     // Add small modifier if requested
     if (isSmall) {
       classes.push("pf-m-small");
