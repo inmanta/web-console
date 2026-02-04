@@ -64,33 +64,22 @@ export default function stateTransferPlugin(md: MarkdownIt, _baseId: string, _op
         hasConfigError = true;
         displayText = words("markdownContainer.setState.error.invalidConfig");
       } else {
-        // Valid object config
-        if (config.targetState) {
-          targetState = config.targetState;
-        }
-        if (config.displayText) {
-          displayText = config.displayText;
-        } else if (targetState) {
-          // Use targetState as displayText if displayText is not provided
-          displayText = targetState;
-        }
-        if (config.type && (VALID_BUTTON_TYPES as string[]).includes(config.type)) {
-          type = config.type as PfButtonVariant; // we can safely cast because we checked the validity above
-        }
-        if (config.variant && (VALID_STATUS_VARIANTS as string[]).includes(config.variant)) {
-          variant = config.variant as PfStatusButtonVariant; // we can safely cast because we checked the validity above
-        }
-        if (config.isInline === true || config.isInline === "true") {
-          isInline = true;
-        }
-        if (config.isSmall === true || config.isSmall === "true") {
-          isSmall = true;
-        }
-        // Show warning if targetState is missing
-        if (!targetState) {
-          hasConfigError = true;
-          displayText = words("markdownContainer.setState.error.missingTargetState");
-        }
+        // Valid object config - extract values with defaults
+        targetState =
+          config.targetState || words("markdownContainer.setState.error.missingTargetState");
+
+        displayText = config.displayText || targetState || "";
+
+        type = (VALID_BUTTON_TYPES as string[]).includes(config.type)
+          ? (config.type as PfButtonVariant)
+          : type;
+
+        variant = (VALID_STATUS_VARIANTS as string[]).includes(config.variant)
+          ? (config.variant as PfStatusButtonVariant)
+          : variant;
+
+        isInline = config.isInline === true || config.isInline === "true";
+        isSmall = config.isSmall === true || config.isSmall === "true";
       }
     } catch {
       // If not JSON, treat the entire content as displayText (backward compatibility)

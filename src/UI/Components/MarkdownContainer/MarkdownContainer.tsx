@@ -169,7 +169,6 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title, onSetState
         return;
       }
 
-
       const content = button.getAttribute("data-setstate-content") || "";
       const targetState = button.getAttribute("data-setstate-target") || "";
 
