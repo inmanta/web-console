@@ -6,6 +6,7 @@ import { full } from "markdown-it-emoji";
 import Mermaid from "mermaid";
 import { getThemePreference } from "../DarkmodeOption";
 import mermaidPlugin from "./MermaidPlugin";
+import setStatePlugin from "./StateTransferPlugin";
 import "./styles.css";
 
 /**
@@ -58,6 +59,7 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
 
     markdownInstance.use(full);
     markdownInstance.use((md) => mermaidPlugin(md, web_title, { theme }));
+    markdownInstance.use((md) => setStatePlugin(md, web_title, {}));
 
     return markdownInstance;
   }, [web_title, theme]);
@@ -144,6 +146,28 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
       }
     };
 
+    const handleStateTransferClick = (event: Event) => {
+      const target = event.target as HTMLElement;
+      const button = target.closest(".pf-v6-c-button[data-setstate-content]") as HTMLElement | null;
+
+      if (!button) return;
+
+      event.stopPropagation();
+      const content = button.getAttribute("data-setstate-content") || "";
+      const targetState = button.getAttribute("data-setstate-target") || "";
+      
+      // Dispatch a custom event that can be listened to by parent components
+      // or handle the state transfer logic here
+      const customEvent = new CustomEvent("setstate", {
+        detail: { content, targetState },
+        bubbles: true,
+      });
+      button.dispatchEvent(customEvent);
+      
+      // You can also add console.log or other handling here
+      console.log("Set state button clicked:", { content, targetState });
+    };
+
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         mutation.addedNodes.forEach((node) => {
@@ -156,6 +180,14 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
 
             if (diagram) {
               diagram.addEventListener("click", handleImageClick);
+            }
+
+            const button = node.matches(".pf-v6-c-button[data-setstate-content]")
+              ? node
+              : (node.querySelector(".pf-v6-c-button[data-setstate-content]") as HTMLElement | null);
+
+            if (button) {
+              button.addEventListener("click", handleStateTransferClick);
             }
           }
         });
@@ -173,6 +205,12 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
       .querySelectorAll<HTMLElement>('.mermaid-diagram[data-zoomable="true"]')
       .forEach((diagram) => {
         diagram.addEventListener("click", handleImageClick);
+      });
+
+    container
+      .querySelectorAll<HTMLElement>(".pf-v6-c-button[data-setstate-content]")
+      .forEach((button) => {
+        button.addEventListener("click", handleStateTransferClick);
       });
 
     document.addEventListener("click", handleDocumentClick);
@@ -275,6 +313,11 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
         .querySelectorAll<HTMLElement>('.mermaid-diagram[data-zoomable="true"]')
         .forEach((diagram) => {
           diagram.removeEventListener("click", handleImageClick);
+        });
+      container
+        .querySelectorAll<HTMLElement>(".pf-v6-c-button[data-setstate-content]")
+        .forEach((button) => {
+          button.removeEventListener("click", handleStateTransferClick);
         });
       document.body.style.overflow = "";
     };
