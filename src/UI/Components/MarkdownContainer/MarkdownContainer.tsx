@@ -170,13 +170,6 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title, onSetState
       if (onSetStateClick) {
         onSetStateClick({ content, targetState });
       }
-
-      // Dispatch a custom event that can be listened to by non-React code.
-      const customEvent = new CustomEvent("setstate", {
-        detail: { content, targetState },
-        bubbles: true,
-      });
-      button.dispatchEvent(customEvent);
     };
 
     const observer = new MutationObserver((mutations) => {

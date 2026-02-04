@@ -1,0 +1,21 @@
+description: |
+  Added support for a setState button to markdown documentation. 
+  The button can be configured using a JSON object in a fenced code block with language `setState`.
+  
+  Supported configuration options:
+  - `displayText` (string, default: "Set State") - The text displayed on the button
+  - `type` ("primary" | "secondary" | "tertiary" | "link", default: "primary") - The button type
+  - `variant` ("danger" | "warning", optional) - The button variant
+  - `targetState` (string, optional) - The target state to transfer to when clicked
+  - `isInline` (boolean | "true", default: false) - Whether the button should be inline
+  - `isSmall` (boolean | "true", default: false) - Whether the button should be small
+  
+  Example:
+  ````setState
+  {"displayText":"Apply Changes","type":"secondary","variant":"danger","targetState":"desired-state","isInline":true}
+  ```` 
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
+  note: "The setState button can't execute the transfer from the Markdown Previewer page. It requires the context of the Instance Details page."
