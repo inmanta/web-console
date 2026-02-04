@@ -31,11 +31,13 @@ export function defineObjectsForJointJS() {
   }
   Object.defineProperty(window, "ResizeObserver", {
     writable: true,
-    value: vi.fn().mockImplementation(() => ({
-      disconnect: vi.fn(),
-      observe: vi.fn(),
-      unobserve: vi.fn(),
-    })),
+    value: vi.fn().mockImplementation(function () {
+      return {
+        disconnect: vi.fn(),
+        observe: vi.fn(),
+        unobserve: vi.fn(),
+      };
+    }),
   });
   Object.defineProperty(global.SVGSVGElement.prototype, "createSVGMatrix", {
     writable: true,

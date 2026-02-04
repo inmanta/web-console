@@ -245,6 +245,8 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./test-setup.ts"],
+    restoreMocks: true,
+    dir: "./src",
     coverage: {
       provider: "v8",
       enabled: process.env.CI ? true : false,
@@ -252,14 +254,7 @@ export default defineConfig({
         ["text", { summary: false }],
         ["cobertura", { file: "cobertura-coverage.xml" }],
       ],
-      exclude: [
-        "node_modules/",
-        "dist/",
-        "**/*.d.ts",
-        "**/*.config.*",
-        "**/__mocks__/**",
-        "cypress/**",
-      ],
+      exclude: ["node_modules/", "**/*.d.ts", "**/*.config.*", "**/__mocks__/**"],
       include: ["src/**/*"],
       maxThreads: process.env.CI ? 2 : 0,
     },
@@ -295,7 +290,7 @@ export default defineConfig({
         classNameStrategy: "non-scoped",
       },
     },
-    maxThreads: process.env.CI ? 2 : undefined,
+    maxWorkers: process.env.CI ? 3 : undefined,
     cache: true,
   },
   optimizeDeps: {

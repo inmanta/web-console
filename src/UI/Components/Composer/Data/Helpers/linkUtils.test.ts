@@ -8,17 +8,6 @@ import {
   removeConnectionsBetweenShapes,
 } from "./linkUtils";
 
-// Mock LinkShape
-vi.mock("../../UI/JointJsShapes/LinkShape", () => ({
-  LinkShape: vi.fn().mockImplementation(() => ({
-    source: vi.fn().mockReturnThis(),
-    target: vi.fn().mockReturnThis(),
-    router: vi.fn().mockReturnThis(),
-    connector: vi.fn().mockReturnThis(),
-    set: vi.fn().mockReturnThis(),
-  })),
-}));
-
 describe("linkUtils", () => {
   beforeAll(() => {
     defineObjectsForJointJS();

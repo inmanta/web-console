@@ -8,18 +8,18 @@ import * as Helpers from "../Helpers";
 import { RelationsDictionary } from "../Helpers/createRelationsDictionary";
 import { useComposerGraph } from "./useComposerGraph";
 
-// Mock ComposerPaper
+// Mock ComposerPaper - must use function (not arrow) for Vitest 4 constructor compatibility.
+// Kept here because it needs dia.Paper and the JointJS env from defineObjectsForJointJS (runs in beforeAll).
 vi.mock("../../UI/JointJsShapes/ComposerPaper", () => ({
-  ComposerPaper: vi
-    .fn()
-    .mockImplementation((graph, _editable, _relationsDictionary, _serviceCatalog) => {
-      const paper = new dia.Paper({
-        model: graph,
-        width: 800,
-        height: 600,
-      });
-      return { paper };
-    }),
+  ComposerPaper: vi.fn().mockImplementation(function (
+    graph: dia.Graph,
+    _editable: boolean,
+    _relationsDictionary: RelationsDictionary,
+    _serviceCatalog: ServiceModel[]
+  ) {
+    const paper = new dia.Paper({ model: graph, width: 800, height: 600 });
+    return { paper };
+  }),
 }));
 
 // Mock requestAnimationFrame to prevent async issues
