@@ -247,7 +247,6 @@ export default defineConfig({
     setupFiles: ["./test-setup.ts"],
     restoreMocks: true,
     dir: "./src",
-    pool: "threads",
     coverage: {
       provider: "v8",
       enabled: process.env.CI ? true : false,
@@ -291,7 +290,7 @@ export default defineConfig({
         classNameStrategy: "non-scoped",
       },
     },
-    maxWorkers: process.env.CI ? 6 : undefined,
+    maxWorkers: process.env.CI ? 3 : undefined,
     cache: true,
   },
   optimizeDeps: {
