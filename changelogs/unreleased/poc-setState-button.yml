@@ -18,4 +18,4 @@ change-type: patch
 destination-branches: [master, iso9]
 sections:
   minor-improvement: "{{description}}"
-  note: "The setState button can't execute the transfer from the Markdown Previewer page. It requires the context of the Instance Details page."
+  other-note: "The setState button can't execute the transfer from the Markdown Previewer page. It requires the context of the Instance Details page."
