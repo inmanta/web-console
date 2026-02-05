@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @tanstack/react-query-devtools from 5.90.2 to 5.91.3
+destination-branches:
+- master
+- iso9
+sections: {}
