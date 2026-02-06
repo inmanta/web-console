@@ -6,7 +6,13 @@ import { full } from "markdown-it-emoji";
 import Mermaid from "mermaid";
 import { getThemePreference } from "../DarkmodeOption";
 import mermaidPlugin from "./MermaidPlugin";
+import setStatePlugin from "./StateTransferPlugin";
 import "./styles.css";
+
+export interface SetStateClickDetail {
+  content: string;
+  targetState: string;
+}
 
 /**
  * Props for the MarkdownContainer component.
@@ -14,6 +20,11 @@ import "./styles.css";
 interface Props {
   text: string; // The Markdown content to be rendered.
   web_title: string; // The title of the web page to generate a unique Id for the mermaid elements.
+  /**
+   * Optional callback that is invoked when a `setState` button
+   * rendered by the StateTransfer plugin is clicked.
+   */
+  onSetStateClick?: (detail: SetStateClickDetail) => void;
 }
 
 /**
@@ -27,7 +38,7 @@ interface Props {
  *
  * @returns A React component that renders a container for displaying Markdown content.
  */
-export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
+export const MarkdownContainer: React.FC<Props> = ({ text, web_title, onSetStateClick }) => {
   const theme = getThemePreference() || "default";
   const containerRef = useRef<HTMLDivElement>(null);
   const lastProcessedText = useRef<string>("");
@@ -58,6 +69,7 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
 
     markdownInstance.use(full);
     markdownInstance.use((md) => mermaidPlugin(md, web_title, { theme }));
+    markdownInstance.use((md) => setStatePlugin(md, web_title, {}));
 
     return markdownInstance;
   }, [web_title, theme]);
@@ -144,6 +156,28 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
       }
     };
 
+    const handleStateTransferClick = (event: Event) => {
+      const target = event.target as HTMLElement;
+      const button = target.closest(".pf-v6-c-button[data-setstate-content]") as HTMLElement | null;
+
+      if (!button) return;
+
+      event.stopPropagation();
+
+      // Don't handle clicks on buttons with configuration errors
+      if (button.hasAttribute("data-setstate-error")) {
+        return;
+      }
+
+      const content = button.getAttribute("data-setstate-content") || "";
+      const targetState = button.getAttribute("data-setstate-target") || "";
+
+      // Notify React consumers via callback when provided.
+      if (onSetStateClick) {
+        onSetStateClick({ content, targetState });
+      }
+    };
+
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         mutation.addedNodes.forEach((node) => {
@@ -156,6 +190,16 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
 
             if (diagram) {
               diagram.addEventListener("click", handleImageClick);
+            }
+
+            const button = node.matches(".pf-v6-c-button[data-setstate-content]")
+              ? node
+              : (node.querySelector(
+                  ".pf-v6-c-button[data-setstate-content]"
+                ) as HTMLElement | null);
+
+            if (button) {
+              button.addEventListener("click", handleStateTransferClick);
             }
           }
         });
@@ -173,6 +217,12 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
       .querySelectorAll<HTMLElement>('.mermaid-diagram[data-zoomable="true"]')
       .forEach((diagram) => {
         diagram.addEventListener("click", handleImageClick);
+      });
+
+    container
+      .querySelectorAll<HTMLElement>(".pf-v6-c-button[data-setstate-content]")
+      .forEach((button) => {
+        button.addEventListener("click", handleStateTransferClick);
       });
 
     document.addEventListener("click", handleDocumentClick);
@@ -276,9 +326,14 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title }) => {
         .forEach((diagram) => {
           diagram.removeEventListener("click", handleImageClick);
         });
+      container
+        .querySelectorAll<HTMLElement>(".pf-v6-c-button[data-setstate-content]")
+        .forEach((button) => {
+          button.removeEventListener("click", handleStateTransferClick);
+        });
       document.body.style.overflow = "";
     };
-  }, [text, md]);
+  }, [text, md, onSetStateClick]);
 
   return <div ref={containerRef} className="markdown-body" />;
 };

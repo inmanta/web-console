@@ -1322,7 +1322,8 @@ export const serviceModelWithConfig: ServiceModel = {
 export const instanceDataWithDocumentation: ServiceInstanceModel = {
   ...instanceData,
   candidate_attributes: {
-    topography: "# Getting started\n\nThis is some markdown\n",
+    topography:
+      '# Getting started\n\nThis is some markdown\n\n```setState\n{\n  "displayText": "Transfer State",\n  "type": "default"\n}\n```\n',
   },
 };
 
@@ -1340,7 +1341,8 @@ export const serviceModelWithDocumentation: ServiceModel = {
         web_presentation: "documentation",
       },
       type: "string",
-      default_value: "# Getting started\n\nThis is some markdown\n",
+      default_value:
+        '# Getting started\n\nThis is some markdown\n\n```setState\n{\n  "displayText": "Transfer State",\n  "type": "default"\n}\n```\n',
       default_value_set: true,
       validation_type: null,
       validation_parameters: null,
