@@ -74,7 +74,7 @@
     "@types/markdown-it-emoji": "^3.0.1",
     "@types/node": "^24.10.1",
     "@types/qs": "^6.14.0",
-    "@types/react": "^19.2.10",
+    "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
     "@types/styled-components": "^5.1.34",
     "@types/uuid": "^10.0.0",
