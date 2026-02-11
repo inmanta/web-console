@@ -16,8 +16,8 @@ import {
   Flex,
 } from "@patternfly/react-core";
 import { t_global_font_size_200 } from "@patternfly/react-tokens";
-import { DetailTuple } from "./StatusList";
 import { v4 as uuidv4 } from "uuid";
+import { DetailTuple } from "./StatusList";
 
 interface Props {
   name: string;
