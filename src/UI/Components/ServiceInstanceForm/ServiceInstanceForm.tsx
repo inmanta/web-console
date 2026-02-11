@@ -8,7 +8,6 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@patternfly/react-core";
-import { set } from "lodash-es";
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
@@ -121,13 +120,17 @@ export const ServiceInstanceForm: React.FC<Props> = ({
             selection.push(value as string);
           }
 
-          return set(clone, path, selection);
+          setAtPath(clone, path, selection);
+
+          return clone;
         });
       } else {
         setFormState((prev) => {
           const clone = { ...prev };
 
-          return set(clone, path, value);
+          setAtPath(clone, path, value);
+
+          return clone;
         });
       }
     },
@@ -255,3 +258,27 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 const StyledForm = styled(Form)`
   min-height: 0;
 `;
+
+const setAtPath = (obj: Record<string, unknown>, path: string, value: unknown): void => {
+  const segments = path.split(".");
+  let current: Record<string, unknown> | unknown[] = obj;
+
+  segments.forEach((segment, index) => {
+    const isLast = index === segments.length - 1;
+
+    if (isLast) {
+      (current as Record<string, unknown>)[segment] = value;
+      return;
+    }
+
+    const nextSegment = segments[index + 1]!;
+    const shouldBeArray = /^\d+$/.test(nextSegment);
+    const currentTyped = current as Record<string, unknown>;
+
+    if (currentTyped[segment] === undefined) {
+      currentTyped[segment] = shouldBeArray ? [] : {};
+    }
+
+    current = currentTyped[segment] as Record<string, unknown> | unknown[];
+  });
+};

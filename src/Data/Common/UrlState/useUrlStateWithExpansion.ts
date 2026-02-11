@@ -1,5 +1,5 @@
-import { isEqual, identity } from "lodash-es";
 import { toggleValueInList } from "@/Core";
+import { identity, isEqual } from "@/Core/Language/collection";
 import { provide, Location, Replace, StateConfig, Update } from "./helpers";
 import { handleUrlState } from "./useUrlState";
 

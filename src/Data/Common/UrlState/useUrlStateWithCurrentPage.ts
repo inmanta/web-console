@@ -1,4 +1,4 @@
-import { isEqual, isArray } from "lodash";
+import { isEqual } from "@/Core/Language/collection";
 import { provide, Location, Replace, StateConfig, Update } from "./helpers";
 import { handleUrlState } from "./useUrlState";
 
@@ -13,7 +13,7 @@ export const useUrlStateWithCurrentPage = provide(handleUrlStateWithCurrentPage)
  * @returns boolean
  */
 const valueIsValid = (value: unknown): value is string[] => {
-  return isArray(value) && value.every((param) => typeof param === "string");
+  return Array.isArray(value) && value.every((param) => typeof param === "string");
 };
 
 const from = (value: string[]): CurrentPage => {

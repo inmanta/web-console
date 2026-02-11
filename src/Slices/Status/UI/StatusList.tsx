@@ -7,7 +7,6 @@ import {
   ModuleIcon,
   TagIcon,
 } from "@patternfly/react-icons";
-import { omit } from "lodash-es";
 import { ServerStatus } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { StatusItem } from "./StatusItem";
@@ -34,7 +33,9 @@ export const StatusList: React.FC<Props> = ({ status, apiUrl, className, ...prop
     <DataList {...props} className={className} aria-label="StatusList" isCompact>
       <StatusItem
         name={status.product}
-        details={toDetails(omit(status, ["product", "extensions", "slices", "features"]))}
+        details={toDetails(
+          omitKeys(status, ["product", "extensions", "slices", "features"] as const)
+        )}
         icon={
           <Icon size="lg">
             <TagIcon
@@ -67,7 +68,7 @@ export const StatusList: React.FC<Props> = ({ status, apiUrl, className, ...prop
         <StatusItem
           key={`extension-${extension.name}`}
           name={extension.name}
-          details={toDetails(omit(extension, "name"))}
+          details={toDetails(omitKeys(extension, ["name"] as const))}
           icon={
             <Icon size="lg">
               <IntegrationIcon
@@ -138,4 +139,17 @@ const stringifyRecordAttributes = (obj: Record<string, unknown>): Record<string,
  */
 const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+};
+
+const omitKeys = <T extends Record<string, unknown>, const K extends keyof T>(
+  obj: T,
+  keys: readonly K[]
+): Omit<T, K> => {
+  const result: Record<string, unknown> = { ...obj };
+
+  keys.forEach((key) => {
+    delete result[key as string];
+  });
+
+  return result as Omit<T, K>;
 };

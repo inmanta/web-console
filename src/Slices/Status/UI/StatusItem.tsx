@@ -16,7 +16,6 @@ import {
   Flex,
 } from "@patternfly/react-core";
 import { t_global_font_size_200 } from "@patternfly/react-tokens";
-import { uniqueId } from "lodash";
 import { DetailTuple } from "./StatusList";
 
 interface Props {
@@ -41,7 +40,7 @@ export const StatusItem: React.FC<Props> = ({ name, details, icon, category }) =
     <DataListItemRow key={`${category}-${name}-title`}>
       <DataListItemCells
         dataListCells={[
-          <DataListCell key={uniqueId()}>
+          <DataListCell key={`${category ?? "status"}-${name}-title`}>
             <Flex alignItems={{ default: "alignItemsCenter" }}>
               <FlexItem>
                 <Title headingLevel="h2">
@@ -61,7 +60,7 @@ export const StatusItem: React.FC<Props> = ({ name, details, icon, category }) =
     <DataListItemRow key={`${category}-${name}-content`}>
       <DataListItemCells
         dataListCells={[
-          <DataListCell key={uniqueId()}>
+          <DataListCell key={`${category ?? "status"}-${name}-content`}>
             {details.length > 0 && (
               <List isPlain>
                 {details.map(([key, value]) => {

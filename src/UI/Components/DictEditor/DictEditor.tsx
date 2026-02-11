@@ -2,7 +2,6 @@ import React from "react";
 import { Button, TextInput } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, Tr } from "@patternfly/react-table";
-import { omit } from "lodash-es";
 import styled from "styled-components";
 import { ParsedNumber } from "@/Core";
 
@@ -29,8 +28,11 @@ export const DictEditor: React.FC<Props> = ({
   const updateEntry =
     (key: string) =>
     ([k, v]: Entry) =>
-      setValue({ ...omit(value, key), [k]: v });
-  const clearEntry = (key) => setValue(omit(value, key));
+      setValue(({ [key]: _omitted, ...rest }) => ({ ...rest, [k]: v }));
+  const clearEntry = (key) => {
+    const { [key]: _omitted, ...rest } = value;
+    setValue(rest);
+  };
   const clearNewEntry = () => {
     setNewEntry(["", ""]);
   };

@@ -1,4 +1,4 @@
-import { identity } from "lodash-es";
+import { identity } from "@/Core/Language/collection";
 import { provide, Location, Replace, StateConfig, Update } from "./helpers";
 import { handleUrlState } from "./useUrlState";
 

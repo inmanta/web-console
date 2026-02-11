@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, ToolbarFilter, ToolbarItem, Flex, FlexItem } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
-import { reject } from "lodash-es";
 import { DateRange, RangeOperator } from "@/Core";
 import { DatePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
@@ -36,10 +35,9 @@ export const TimestampFilter: React.FC<Props> = ({
     const raw = prettyToRaw(value);
 
     update(
-      reject(
-        timestampFilters,
+      timestampFilters.filter(
         (element) =>
-          element.date.getTime() === raw.date.getTime() && element.operator == raw.operator
+          !(element.date.getTime() === raw.date.getTime() && element.operator === raw.operator)
       )
     );
   };
@@ -124,7 +122,9 @@ function insertNewTimestamp(
   operator: RangeOperator.Operator
 ): DateRange.Type[] {
   if (date) {
-    return [...reject(timestampFilters, (ts) => ts.operator === operator), { date, operator }];
+    const withoutOperator = timestampFilters.filter((ts) => ts.operator !== operator);
+
+    return [...withoutOperator, { date, operator }];
   }
 
   return timestampFilters;

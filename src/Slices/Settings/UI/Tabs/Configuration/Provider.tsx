@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import _ from "lodash";
 import { EnvironmentSettings } from "@/Core";
+import { merge } from "@/Core/Language/collection";
 import {
   useResetEnvironmentSetting,
   useUpdateEnvironmentSetting,
@@ -44,8 +44,13 @@ function reducer(
         delete copy[state.resetedValueName];
       }
 
+      const mergedSettings = merge(
+        {},
+        merge(JSON.parse(JSON.stringify(payload)) as EnvironmentSettings.ValuesMap, copy)
+      );
+
       return {
-        settings: _.merge({}, JSON.parse(JSON.stringify(payload)), copy),
+        settings: mergedSettings,
         resetedValueName: "",
       };
     case "set":

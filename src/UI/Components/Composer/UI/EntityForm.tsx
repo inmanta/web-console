@@ -1,6 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Alert, FlexItem, Form } from "@patternfly/react-core";
-import { set } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
@@ -55,8 +54,6 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
     }
 
     //if multi is true, it means the field is a multi-select field and we need to update the array of values
-    let updatedValue = {};
-
     if (multi) {
       setFormState((prev) => {
         const clone = { ...prev };
@@ -69,17 +66,17 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
           selection.push(value as string);
         }
 
-        updatedValue = set(clone, path, selection);
+        setAtPath(clone, path, selection);
 
-        return updatedValue;
+        return clone;
       });
     } else {
       setFormState((prev) => {
         const clone = { ...prev };
 
-        updatedValue = set(clone, path, value);
+        setAtPath(clone, path, value);
 
-        return updatedValue;
+        return clone;
       });
     }
   };
@@ -201,4 +198,28 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
       </FlexItem>
     </>
   );
+};
+
+const setAtPath = (obj: Record<string, unknown>, path: string, value: unknown): void => {
+  const segments = path.split(".");
+  let current: Record<string, unknown> | unknown[] = obj;
+
+  segments.forEach((segment, index) => {
+    const isLast = index === segments.length - 1;
+
+    if (isLast) {
+      (current as Record<string, unknown>)[segment] = value;
+      return;
+    }
+
+    const nextSegment = segments[index + 1]!;
+    const shouldBeArray = /^\d+$/.test(nextSegment);
+    const currentTyped = current as Record<string, unknown>;
+
+    if (currentTyped[segment] === undefined) {
+      currentTyped[segment] = shouldBeArray ? [] : {};
+    }
+
+    current = currentTyped[segment] as Record<string, unknown> | unknown[];
+  });
 };

@@ -135,6 +135,12 @@ export default defineConfig({
     COMMITHASH: JSON.stringify(getGitCommitHash()),
     APP_VERSION: JSON.stringify(packageJson.version),
     global: "globalThis",
+    ...(process.env.VITEST
+      ? {
+          // API base URL should be empty when running tests with Vitest
+          "import.meta.env.VITE_API_BASEURL": JSON.stringify(""),
+        }
+      : {}),
   },
   resolve: {
     alias: {
@@ -142,8 +148,6 @@ export default defineConfig({
       "@S": resolve(__dirname, "./src/Slices"),
       "@assets": resolve(__dirname, "./node_modules/@patternfly/react-core/dist/styles/assets"),
       "@images": resolve(__dirname, "./public/images"),
-      // Handle lodash-es to use CommonJS version
-      "lodash-es": "lodash",
       // Force rappid to use ESM version
       "@inmanta/rappid": resolve(__dirname, "./node_modules/@inmanta/rappid/joint-plus.mjs"),
       // Force uuid to use CJS entry point
@@ -233,7 +237,7 @@ export default defineConfig({
           ],
           monaco: ["@monaco-editor/react", "monaco-editor"],
           rappid: ["@inmanta/rappid"],
-          utils: ["lodash", "lodash-es", "uuid", "moment", "moment-timezone", "bignumber.js"],
+          utils: ["uuid", "moment", "moment-timezone", "bignumber.js"],
           graphql: ["graphql", "graphql-request"],
           routing: ["react-router", "@remix-run/router"],
           state: ["easy-peasy", "@tanstack/react-query"],

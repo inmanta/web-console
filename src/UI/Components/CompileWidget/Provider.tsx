@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Alert, AlertGroup } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
-import { uniqueId } from "lodash";
+import { v4 as uuidv4 } from "uuid";
 import { GetEnvironmentPreviewKey, useTriggerCompile } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -46,7 +46,7 @@ export const Provider: React.FC<Props> = ({ afterTrigger }) => {
           <Alert
             variant="info"
             title={words("info.title")}
-            key={"info-" + uniqueId()}
+            key={`info-${uuidv4()}`}
             timeout={5000}
             aria-label="info-message"
             data-testid="info-message"
@@ -58,7 +58,7 @@ export const Provider: React.FC<Props> = ({ afterTrigger }) => {
           <Alert
             variant="danger"
             title={words("error.title")}
-            key={"error-" + uniqueId()}
+            key={`error-${uuidv4()}`}
             timeout={5000}
             aria-label="error-message"
             data-testid="error-message"

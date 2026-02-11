@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { EnvironmentSettings } from "@/Core";
 import {
   BooleanDefinition,
@@ -9,6 +8,7 @@ import {
   StrDefinition,
   UnknownDefinition,
 } from "@/Core/Domain/EnvironmentSettings";
+import { groupBy, isEqual } from "@/Core/Language/collection";
 
 type Update = (id: string, value: EnvironmentSettings.Value) => void;
 
@@ -44,7 +44,7 @@ export class InputInfoCreator {
       )
       .sort(this.compare);
 
-    const groupedBySection = _.groupBy(inputInfos, "section");
+    const groupedBySection = groupBy(inputInfos, "section");
 
     // Return an object with sections sorted alphabetically
     return Object.keys(groupedBySection)
@@ -82,7 +82,7 @@ export class InputInfoCreator {
         return false;
       }
 
-      return !_.isEqual(info.value, info.initial);
+      return !isEqual(info.value, info.initial);
     };
 
     switch (definition.type) {
