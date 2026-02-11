@@ -10,6 +10,7 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
+import { set as setAtPath } from "@/Core/Language/collection";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
@@ -258,35 +259,3 @@ export const ServiceInstanceForm: React.FC<Props> = ({
 const StyledForm = styled(Form)`
   min-height: 0;
 `;
-
-const setAtPath = (obj: Record<string, unknown>, path: string, value: unknown): void => {
-  const segments = path.split(".");
-  let current: Record<string, unknown> | unknown[] = obj;
-
-  segments.forEach((segment, index) => {
-    const isLast = index === segments.length - 1;
-
-    if (isLast) {
-      (current as Record<string, unknown>)[segment] = value;
-      return;
-    }
-
-    const nextSegment = segments[index + 1]!;
-    const shouldBeArray = /^\d+$/.test(nextSegment);
-    const currentTyped = current as Record<string, unknown>;
-    const existing = currentTyped[segment];
-
-    // If there is no container yet, or the existing value is not an object/array,
-    // create a new one so we can safely descend into it. This mirrors lodash.set
-    // behaviour and avoids errors when intermediate values are null or primitives.
-    const isObjectLike =
-      typeof existing === "object" && existing !== null && !Array.isArray(existing);
-    const isArrayLike = Array.isArray(existing);
-
-    if (existing === undefined || existing === null || (!isObjectLike && !isArrayLike)) {
-      currentTyped[segment] = shouldBeArray ? [] : {};
-    }
-
-    current = currentTyped[segment] as Record<string, unknown> | unknown[];
-  });
-};

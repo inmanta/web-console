@@ -17,6 +17,7 @@ import {
 } from "@patternfly/react-core";
 import { t_global_font_size_200 } from "@patternfly/react-tokens";
 import { DetailTuple } from "./StatusList";
+import { v4 as uuidv4 } from "uuid";
 
 interface Props {
   name: string;
@@ -37,10 +38,10 @@ interface Props {
  */
 export const StatusItem: React.FC<Props> = ({ name, details, icon, category }) => (
   <DataListItem aria-label={`StatusItem-${name}`}>
-    <DataListItemRow key={`${category}-${name}-title`}>
+    <DataListItemRow key={`${category ?? "status"}-${name}-title-${uuidv4()}`}>
       <DataListItemCells
         dataListCells={[
-          <DataListCell key={`${category ?? "status"}-${name}-title`}>
+          <DataListCell key={`${category ?? "status"}-${name}-title-${uuidv4()}`}>
             <Flex alignItems={{ default: "alignItemsCenter" }}>
               <FlexItem>
                 <Title headingLevel="h2">
@@ -65,10 +66,12 @@ export const StatusItem: React.FC<Props> = ({ name, details, icon, category }) =
               <List isPlain>
                 {details.map(([key, value]) => {
                   if (typeof value === "object") {
-                    return <NestedListItem key={`${key}-${value}`} name={key} properties={value} />;
+                    return (
+                      <NestedListItem key={`${uuidv4()}-${value}`} name={key} properties={value} />
+                    );
                   } else {
                     return (
-                      <ListItem key={`${key}-${value}`}>
+                      <ListItem key={`${uuidv4()}-${key}-${value}`}>
                         <DescriptionList
                           isHorizontal
                           horizontalTermWidthModifier={{

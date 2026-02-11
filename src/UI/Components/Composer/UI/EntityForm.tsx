@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Alert, FlexItem, Form } from "@patternfly/react-core";
 import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel } from "@/Core";
+import { set } from "@/Core/Language/collection";
 import { sanitizeAttributes } from "@/Data";
 import { CreateModifierHandler, FieldCreator } from "@/UI/Components/ServiceInstanceForm";
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
@@ -66,7 +67,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
           selection.push(value as string);
         }
 
-        setAtPath(clone, path, selection);
+        set(clone, path, selection);
 
         return clone;
       });
@@ -74,7 +75,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
       setFormState((prev) => {
         const clone = { ...prev };
 
-        setAtPath(clone, path, value);
+        set(clone, path, value);
 
         return clone;
       });
@@ -198,28 +199,4 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
       </FlexItem>
     </>
   );
-};
-
-const setAtPath = (obj: Record<string, unknown>, path: string, value: unknown): void => {
-  const segments = path.split(".");
-  let current: Record<string, unknown> | unknown[] = obj;
-
-  segments.forEach((segment, index) => {
-    const isLast = index === segments.length - 1;
-
-    if (isLast) {
-      (current as Record<string, unknown>)[segment] = value;
-      return;
-    }
-
-    const nextSegment = segments[index + 1]!;
-    const shouldBeArray = /^\d+$/.test(nextSegment);
-    const currentTyped = current as Record<string, unknown>;
-
-    if (currentTyped[segment] === undefined) {
-      currentTyped[segment] = shouldBeArray ? [] : {};
-    }
-
-    current = currentTyped[segment] as Record<string, unknown> | unknown[];
-  });
 };

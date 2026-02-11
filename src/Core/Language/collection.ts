@@ -221,6 +221,10 @@ export const pickBy = <T extends Record<string, unknown>>(
  * the path do not exist they will be created as objects or arrays based on the
  * next segment.
  *
+ * This mirrors the behaviour of `lodash/set`, including recreating intermediate
+ * containers when they are null or non-object values, so callers can safely
+ * update deeply nested paths without checking intermediates.
+ *
  * Lightweight replacement for `lodash/set` to avoid bundling lodash.
  */
 export const set = (obj: unknown, path: string, value: unknown): unknown => {
@@ -245,8 +249,13 @@ export const set = (obj: unknown, path: string, value: unknown): unknown => {
     const shouldBeArray = /^\d+$/.test(nextSegment);
 
     const currentTyped = current as Record<string, unknown>;
+    const existing = currentTyped[segment];
 
-    if (currentTyped[segment] === undefined) {
+    const isObjectLike =
+      typeof existing === "object" && existing !== null && !Array.isArray(existing);
+    const isArrayLike = Array.isArray(existing);
+
+    if (existing === undefined || existing === null || (!isObjectLike && !isArrayLike)) {
       currentTyped[segment] = shouldBeArray ? [] : {};
     }
 
