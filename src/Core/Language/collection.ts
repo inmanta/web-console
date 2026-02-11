@@ -1,12 +1,37 @@
+/**
+ * Identity function that returns the provided value unchanged.
+ *
+ * Lightweight replacement for `lodash/identity` to avoid bundling lodash.
+ */
 export const identity = <T>(value: T): T => value;
 
+/**
+ * Returns a new array containing only the unique values from the input array.
+ *
+ * Lightweight replacement for `lodash/uniq` to avoid bundling lodash.
+ */
 export const uniq = <T>(array: T[]): T[] => Array.from(new Set(array));
 
+/**
+ * Returns a new array excluding all elements that strictly equal the given value.
+ *
+ * Lightweight replacement for `lodash/without` to avoid bundling lodash.
+ */
 export const without = <T>(array: T[], value: T): T[] => array.filter((item) => item !== value);
 
+/**
+ * Filters out items for which the predicate returns true.
+ *
+ * Lightweight replacement for `lodash/reject` to avoid bundling lodash.
+ */
 export const reject = <T>(array: T[], predicate: (item: T) => boolean): T[] =>
   array.filter((item) => !predicate(item));
 
+/**
+ * Invokes the iteratee function `n` times and returns an array of the results.
+ *
+ * Lightweight replacement for `lodash/times` to avoid bundling lodash.
+ */
 export const times = <T>(n: number, iteratee: (index: number) => T): T[] => {
   const result: T[] = [];
 
@@ -20,6 +45,12 @@ export const times = <T>(n: number, iteratee: (index: number) => T): T[] => {
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
+/**
+ * Deeply clones a value using `structuredClone` when available, with a JSON-based
+ * fallback for JSON-compatible data structures.
+ *
+ * Lightweight replacement for `lodash/cloneDeep` to avoid bundling lodash.
+ */
 export const cloneDeep = <T>(value: T): T => {
   const globalStructuredClone = (globalThis as { structuredClone?: <U>(v: U) => U })
     .structuredClone;
@@ -36,6 +67,12 @@ export const cloneDeep = <T>(value: T): T => {
   return JSON.parse(JSON.stringify(value));
 };
 
+/**
+ * Performs a deep equality check between two values, supporting primitives,
+ * arrays, plain objects, and Date instances.
+ *
+ * Lightweight replacement for `lodash/isEqual` to avoid bundling lodash.
+ */
 export const isEqual = (a: unknown, b: unknown): boolean => {
   if (a === b) return true;
 
@@ -89,6 +126,13 @@ export const isEqual = (a: unknown, b: unknown): boolean => {
   return true;
 };
 
+/**
+ * Deeply merges the source object into the target object, mutating the target
+ * and returning it. Arrays are merged by index in a way that resembles
+ * `lodash/merge`.
+ *
+ * Lightweight replacement for `lodash/merge` to avoid bundling lodash.
+ */
 export const merge = <T extends Record<string, unknown>, S extends Record<string, unknown>>(
   target: T,
   source: S
@@ -130,7 +174,12 @@ export const merge = <T extends Record<string, unknown>, S extends Record<string
   return target as T & S;
 };
 
-export const groupBy = <TItem extends Record<string, unknown>, K extends keyof TItem & string>(
+/**
+ * Groups an array of items by the stringified value of the given key.
+ *
+ * Lightweight replacement for `lodash/groupBy` to avoid bundling lodash.
+ */
+export const groupBy = <TItem, K extends keyof TItem & string>(
   items: TItem[],
   key: K
 ): Record<string, TItem[]> =>
@@ -146,6 +195,12 @@ export const groupBy = <TItem extends Record<string, unknown>, K extends keyof T
     return accumulator;
   }, {});
 
+/**
+ * Creates a shallow copy of the object composed of the properties for which
+ * the predicate returns true.
+ *
+ * Lightweight replacement for `lodash/pickBy` to avoid bundling lodash.
+ */
 export const pickBy = <T extends Record<string, unknown>>(
   obj: T,
   predicate: (value: T[keyof T], key: keyof T) => boolean
@@ -161,6 +216,13 @@ export const pickBy = <T extends Record<string, unknown>>(
     return accumulator;
   }, {});
 
+/**
+ * Sets a nested property on an object using a dot-separated path. If parts of
+ * the path do not exist they will be created as objects or arrays based on the
+ * next segment.
+ *
+ * Lightweight replacement for `lodash/set` to avoid bundling lodash.
+ */
 export const set = (obj: unknown, path: string, value: unknown): unknown => {
   if (obj === null || obj === undefined) {
     return obj;

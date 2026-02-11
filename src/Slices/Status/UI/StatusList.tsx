@@ -141,14 +141,14 @@ const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 };
 
-const omitKeys = <T extends Record<string, unknown>, const K extends keyof T>(
+const omitKeys = <T extends object, const K extends keyof T>(
   obj: T,
   keys: readonly K[]
 ): Omit<T, K> => {
-  const result: Record<string, unknown> = { ...obj };
+  const result = { ...obj } as T;
 
   keys.forEach((key) => {
-    delete result[key as string];
+    delete (result as Record<string, unknown>)[key as string];
   });
 
   return result as Omit<T, K>;

@@ -28,7 +28,12 @@ export const DictEditor: React.FC<Props> = ({
   const updateEntry =
     (key: string) =>
     ([k, v]: Entry) =>
-      setValue(({ [key]: _omitted, ...rest }) => ({ ...rest, [k]: v }));
+      setValue(
+        (() => {
+          const { [key]: _omitted, ...rest } = value;
+          return { ...rest, [k]: v };
+        })()
+      );
   const clearEntry = (key) => {
     const { [key]: _omitted, ...rest } = value;
     setValue(rest);

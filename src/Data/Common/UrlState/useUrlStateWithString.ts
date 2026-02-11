@@ -1,4 +1,3 @@
-import { identity } from "@/Core/Language/collection";
 import { provide, Location, Replace, StateConfig, Update } from "./helpers";
 import { handleUrlState } from "./useUrlState";
 
@@ -14,8 +13,8 @@ export function handleUrlStateWithString<Data extends string>(
       default: config.default,
       key: config.key,
       route: config.route,
-      serialize: identity,
-      parse: identity,
+      serialize: (data) => data,
+      parse: (value) => value as Data | undefined,
       equals: (a: Data, b: Data) => a === b,
     },
     location,

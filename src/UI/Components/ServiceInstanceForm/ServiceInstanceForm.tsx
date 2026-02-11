@@ -274,8 +274,16 @@ const setAtPath = (obj: Record<string, unknown>, path: string, value: unknown): 
     const nextSegment = segments[index + 1]!;
     const shouldBeArray = /^\d+$/.test(nextSegment);
     const currentTyped = current as Record<string, unknown>;
+    const existing = currentTyped[segment];
 
-    if (currentTyped[segment] === undefined) {
+    // If there is no container yet, or the existing value is not an object/array,
+    // create a new one so we can safely descend into it. This mirrors lodash.set
+    // behaviour and avoids errors when intermediate values are null or primitives.
+    const isObjectLike =
+      typeof existing === "object" && existing !== null && !Array.isArray(existing);
+    const isArrayLike = Array.isArray(existing);
+
+    if (existing === undefined || existing === null || (!isObjectLike && !isArrayLike)) {
       currentTyped[segment] = shouldBeArray ? [] : {};
     }
 
