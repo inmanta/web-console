@@ -1,7 +1,6 @@
 import {
   cloneDeep,
   groupBy,
-  identity,
   isEqual,
   merge,
   pickBy,
@@ -12,13 +11,6 @@ import {
 } from "./collection";
 
 describe("collection utils", () => {
-  it("identity returns the same value", () => {
-    const value = { a: 1 };
-
-    expect(identity(value)).toBe(value);
-    expect(identity("test")).toBe("test");
-  });
-
   it("uniq removes duplicate values", () => {
     expect(uniq([1, 1, 2, 3, 3])).toEqual([1, 2, 3]);
     expect(uniq(["a", "a", "b"])).toEqual(["a", "b"]);

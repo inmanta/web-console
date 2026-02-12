@@ -1,11 +1,4 @@
 /**
- * Identity function that returns the provided value unchanged.
- *
- * Lightweight replacement for `lodash/identity` to avoid bundling lodash.
- */
-export const identity = <T>(value: T): T => value;
-
-/**
  * Returns a new array containing only the unique values from the input array.
  *
  * Lightweight replacement for `lodash/uniq` to avoid bundling lodash.
@@ -215,6 +208,42 @@ export const pickBy = <T extends Record<string, unknown>>(
 
     return accumulator;
   }, {});
+
+/**
+ * Gets a nested property from an object using a dot-separated path or array of segments.
+ * Returns the value at the path, or the default value if the path doesn't exist or
+ * any intermediate value is null/undefined/non-object.
+ *
+ * Lightweight replacement for `lodash/get` to avoid bundling lodash.
+ */
+function get<T>(obj: unknown, path: string | (string | number)[], defaultValue: T): T;
+function get<T = unknown>(
+  obj: unknown,
+  path: string | (string | number)[],
+  defaultValue?: T
+): T | undefined;
+function get<T>(obj: unknown, path: string | (string | number)[], defaultValue?: T): T | undefined {
+  if (obj === null || obj === undefined) {
+    return defaultValue;
+  }
+
+  const segments =
+    typeof path === "string" ? path.split(".") : path.map((segment) => String(segment));
+
+  let current: unknown = obj;
+
+  for (const segment of segments) {
+    if (current === null || typeof current !== "object") {
+      return defaultValue;
+    }
+
+    current = (current as Record<string, unknown>)[segment];
+  }
+
+  return (current === undefined ? defaultValue : (current as T | undefined)) ?? defaultValue;
+}
+
+export { get };
 
 /**
  * Sets a nested property on an object using a dot-separated path. If parts of

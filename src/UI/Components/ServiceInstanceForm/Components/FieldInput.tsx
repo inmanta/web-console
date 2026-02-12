@@ -3,6 +3,7 @@ import { Button, FormFieldGroupExpandable, FormFieldGroupHeader } from "@pattern
 import { PlusIcon } from "@patternfly/react-icons";
 import { v4 as uuidv4 } from "uuid";
 import { InstanceAttributeModel, DictListField, Field, NestedField, FormSuggestion } from "@/Core";
+import { get } from "@/Core/Language/collection";
 import { toOptionalBoolean } from "@/Data";
 import { useSuggestedValues } from "@/Data/Queries";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
@@ -119,7 +120,7 @@ export const FieldInput: React.FC<Props> = ({
           aria-label={`BooleanFieldInput-${field.name}`}
           attributeName={field.name}
           isOptional={field.isOptional}
-          isChecked={getValue<boolean | null>(formState, makePath(path, field.name), null)}
+          isChecked={get<boolean | null>(formState, makePath(path, field.name), null)}
           handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
@@ -127,7 +128,7 @@ export const FieldInput: React.FC<Props> = ({
           key={field.id || field.name}
           shouldBeDisabled={
             field.isDisabled &&
-            getValue(originalState, makePath(path, field.name)) !== undefined &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
             !isNew
           }
         />
@@ -135,7 +136,7 @@ export const FieldInput: React.FC<Props> = ({
         <BooleanToggleInput
           aria-label={`BooleanToggleInput-${field.name}`}
           attributeName={field.name}
-          isChecked={getValue<boolean | undefined>(formState, makePath(path, field.name))}
+          isChecked={get<boolean | undefined>(formState, makePath(path, field.name))}
           handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
@@ -143,7 +144,7 @@ export const FieldInput: React.FC<Props> = ({
           key={field.id || field.name}
           shouldBeDisabled={
             field.isDisabled &&
-            getValue(originalState, makePath(path, field.name)) !== undefined &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
             !isNew
           }
         />
@@ -153,12 +154,12 @@ export const FieldInput: React.FC<Props> = ({
         <TextListFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={getValue<string[]>(formState, makePath(path, field.name), [])}
+          attributeValue={get<string[]>(formState, makePath(path, field.name), [])}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
             field.isDisabled &&
-            getValue(originalState, makePath(path, field.name).split(".")) !== undefined &&
+            get(originalState, makePath(path, field.name).split(".")) !== undefined &&
             !isNew
           }
           type={field.inputType}
@@ -174,12 +175,12 @@ export const FieldInput: React.FC<Props> = ({
         <TextFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={getValue<string>(formState, makePath(path, field.name), "")}
+          attributeValue={get<string>(formState, makePath(path, field.name), "")}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
             field.isDisabled &&
-            getValue(originalState, makePath(path, field.name)) !== undefined &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
             !isNew
           }
           type={field.inputType}
@@ -197,12 +198,12 @@ export const FieldInput: React.FC<Props> = ({
         <TextFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={getControlledValue(getValue(formState, makePath(path, field.name)))}
+          attributeValue={getControlledValue(get(formState, makePath(path, field.name)))}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
             field.isDisabled &&
-            getValue(originalState, makePath(path, field.name)) !== undefined &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
             !isNew
           }
           type={field.inputType}
@@ -222,12 +223,12 @@ export const FieldInput: React.FC<Props> = ({
     case "InterServiceRelation":
       return (
         <RelatedServiceProvider
-          alreadySelected={getValue<string[]>(formState, makePath(path, field.name), [])}
+          alreadySelected={get<string[]>(formState, makePath(path, field.name), [])}
           key={makePath(path, field.name)}
           serviceName={field.serviceEntity}
           attributeName={field.name}
           description={field.description}
-          attributeValue={getValue<string | null>(formState, makePath(path, field.name), null)}
+          attributeValue={get<string | null>(formState, makePath(path, field.name), null)}
           isOptional={field.isOptional}
           isDisabled={!isNew && field.isDisabled}
           handleInputChange={(value) => getUpdate(makePath(path, field.name), value)}
@@ -239,14 +240,14 @@ export const FieldInput: React.FC<Props> = ({
           aria-label={`EnumFieldInput-${field.name}`}
           options={field.options}
           attributeName={field.name}
-          attributeValue={getValue<string>(formState, makePath(path, field.name), "")}
+          attributeValue={get<string>(formState, makePath(path, field.name), "")}
           description={field.description}
           isOptional={field.isOptional}
           handleInputChange={getEnumUpdate}
           key={field.id || field.name}
           shouldBeDisabled={
             field.isDisabled &&
-            getValue(originalState, makePath(path, field.name)) !== undefined &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
             !isNew
           }
         />
@@ -276,12 +277,12 @@ export const FieldInput: React.FC<Props> = ({
     case "RelationList":
       return (
         <RelatedServiceProvider
-          alreadySelected={getValue<string[]>(formState, makePath(path, field.name), [])}
+          alreadySelected={get<string[]>(formState, makePath(path, field.name), [])}
           key={makePath(path, field.name)}
           serviceName={field.serviceEntity}
           attributeName={field.name}
           description={field.description !== null ? field.description : ""}
-          attributeValue={getValue<string[]>(formState, makePath(path, field.name), [])}
+          attributeValue={get<string[]>(formState, makePath(path, field.name), [])}
           isOptional={field.isOptional}
           isDisabled={!isNew && field.isDisabled}
           handleInputChange={(value) => {
@@ -358,7 +359,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   isNew = false,
 }) => {
   const [showList, setShowList] = useState(
-    !field.isOptional || getValue(formState, makePath(path, field.name)) !== null
+    !field.isOptional || get(formState, makePath(path, field.name)) !== null
   );
 
   const onAdd = () => {
@@ -395,7 +396,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
                   isDisabled={
                     (!isNew &&
                       field.isDisabled &&
-                      getValue(originalState, makePath(path, field.name)) !== undefined) ||
+                      get(originalState, makePath(path, field.name)) !== undefined) ||
                     showList
                   }
                 >
@@ -460,7 +461,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   isNew = false,
 }) => {
   const list = useMemo(
-    () => getValue<Array<unknown>>(formState, makePath(path, field.name), []),
+    () => get<Array<unknown>>(formState, makePath(path, field.name), []),
     [formState, path, field.name]
   );
 
@@ -486,7 +487,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
       return;
     }
 
-    getValue(originalState, makePath(path, field.name));
+    get(originalState, makePath(path, field.name));
     setAddedItemPaths([...addedItemsPaths, `${makePath(path, field.name)}.${list.length}`]);
 
     setItemIds([...itemIds, uuidv4()]);
@@ -550,7 +551,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               onClick={onAdd}
               isDisabled={
                 (field.isDisabled &&
-                  getValue(originalState, makePath(path, field.name)) !== undefined) ||
+                  get(originalState, makePath(path, field.name)) !== undefined) ||
                 (!!field.max && list.length >= field.max)
               }
             >
@@ -577,7 +578,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                   isDisabled={
                     (!isNew &&
                       field.isDisabled &&
-                      getValue(originalState, makePath(path, field.name)) !== undefined) ||
+                      get(originalState, makePath(path, field.name)) !== undefined) ||
                     list.length <= field.min
                   }
                 >
@@ -604,37 +605,6 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     </FormFieldGroupExpandable>
   );
 };
-
-function getValue<T>(obj: unknown, path: string | (string | number)[], defaultValue: T): T;
-function getValue<T = unknown>(
-  obj: unknown,
-  path: string | (string | number)[],
-  defaultValue?: T
-): T | undefined;
-function getValue<T>(
-  obj: unknown,
-  path: string | (string | number)[],
-  defaultValue?: T
-): T | undefined {
-  if (obj === null || obj === undefined) {
-    return defaultValue;
-  }
-
-  const segments =
-    typeof path === "string" ? path.split(".") : path.map((segment) => String(segment));
-
-  let current: unknown = obj;
-
-  for (const segment of segments) {
-    if (current === null || typeof current !== "object") {
-      return defaultValue;
-    }
-
-    current = (current as Record<string, unknown>)[segment];
-  }
-
-  return (current === undefined ? defaultValue : (current as T | undefined)) ?? defaultValue;
-}
 
 /**
  * Attempts to parse a value as JSON, returning the original value if parsing fails.
