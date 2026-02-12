@@ -238,6 +238,13 @@ export const set = (obj: unknown, path: string, value: unknown): unknown => {
 
   for (let index = 0; index < segments.length; index += 1) {
     const segment = segments[index]!;
+
+    // Guard against prototype pollution: never allow writes to special keys
+    // that would mutate Object.prototype or Function.prototype.
+    if (segment === "__proto__" || segment === "constructor" || segment === "prototype") {
+      return result;
+    }
+
     const isLast = index === segments.length - 1;
 
     if (isLast) {
