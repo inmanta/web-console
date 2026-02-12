@@ -13,7 +13,6 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { uniqueId } from "lodash";
 import { ParsedNumber } from "@/Core";
 import { usePostExpertStateTransfer } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
@@ -96,7 +95,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
     <>
       <DropdownGroup label={words("instanceDetails.forceState.label")}>
         {targets.map((target) => (
-          <DropdownItem isDanger onClick={() => onStateSelect(target)} key={uniqueId(target)}>
+          <DropdownItem isDanger onClick={() => onStateSelect(target)} key={target}>
             {target}
           </DropdownItem>
         ))}

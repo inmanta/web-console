@@ -8,8 +8,8 @@ import {
   InputGroupItem,
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
-import { uniq } from "lodash-es";
 import { toggleValueInList } from "@/Core";
+import { uniq } from "@/Core/Language/collection";
 
 interface Props {
   versions: string[];

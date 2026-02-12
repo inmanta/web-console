@@ -1,7 +1,6 @@
 import React from "react";
 import { Skeleton } from "@patternfly/react-core";
 import { Tr, Td } from "@patternfly/react-table";
-import { range } from "lodash-es";
 import styled from "styled-components";
 import { RequiresTableWrapper } from "./RequiresTableWrapper";
 
@@ -11,7 +10,7 @@ interface Props {
 
 export const LoadingRequiresTable: React.FC<Props> = ({ numberOfRows, ...props }) => (
   <RequiresTableWrapper {...props}>
-    {range(numberOfRows).map((num) => (
+    {Array.from({ length: numberOfRows }, (_value, index) => index).map((num) => (
       <Tr key={num}>
         <Td>
           <StyledSkeleton />

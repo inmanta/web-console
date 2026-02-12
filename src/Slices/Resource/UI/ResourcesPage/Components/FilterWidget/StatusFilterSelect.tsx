@@ -9,8 +9,8 @@ import {
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 import { Table, Tbody } from "@patternfly/react-table";
-import { uniq } from "lodash-es";
 import { toggleValueInList, Resource } from "@/Core";
+import { uniq } from "@/Core/Language/collection";
 import { words } from "@/UI/words";
 import { IncludeExcludeOption } from "./IncludeExcludeOption";
 import { removeInvertedSelection, invertFilter } from "./utils";

@@ -8,9 +8,9 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@patternfly/react-core";
-import { set } from "lodash-es";
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
+import { set as setAtPath } from "@/Core/Language/collection";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
@@ -121,13 +121,17 @@ export const ServiceInstanceForm: React.FC<Props> = ({
             selection.push(value as string);
           }
 
-          return set(clone, path, selection);
+          setAtPath(clone, path, selection);
+
+          return clone;
         });
       } else {
         setFormState((prev) => {
           const clone = { ...prev };
 
-          return set(clone, path, value);
+          setAtPath(clone, path, value);
+
+          return clone;
         });
       }
     },
