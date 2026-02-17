@@ -71,6 +71,7 @@ export interface TransferModel {
  */
 export interface LifecycleModel {
   initial_state: string;
+  alternative_initial_states?: string[]; // Those are only meant for creation of new instances.
   name?: string;
   states: StateModel[];
   transfers: TransferModel[];

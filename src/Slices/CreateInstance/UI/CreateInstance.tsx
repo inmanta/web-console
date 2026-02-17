@@ -60,11 +60,12 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
 
   const onSubmit = async (
     attributes: InstanceAttributeModel,
-    setIsDirty: (values: boolean) => void
+    setIsDirty: (values: boolean) => void,
+    initialState?: string
   ) => {
     //as setState used in setIsDirty doesn't change immediately we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
     setIsDirty(false);
-    mutate({ fields, attributes });
+    mutate({ fields, attributes, initial_state: initialState });
   };
 
   return (
@@ -88,6 +89,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
         isSubmitDisabled={isHalted}
         isDirty={isDirty}
         setIsDirty={setIsDirty}
+        initialStates={serviceEntity.lifecycle.alternative_initial_states}
       />
     </>
   );

@@ -60,6 +60,7 @@ describe("DuplicateInstancePage", () => {
 
   beforeEach(() => {
     mockPostFn.mockClear();
+    testClient.clear();
   });
 
   beforeAll(() => {
@@ -129,48 +130,50 @@ describe("DuplicateInstancePage", () => {
 
     await userEvent.click(screen.getByText(words("confirm")));
 
-    expect(mockPostFn).toHaveBeenCalledWith({
-      fields: expect.any(Array),
-      attributes: {
-        bandwidth: "3",
-        circuits: [
-          {
-            csp_endpoint: {
-              attributes: { owner_account_id: "666023226898" },
-              cloud_service_provider: "AWS",
-              ipx_access: [1000010782, 1000013639],
-              region: "us-east-1",
+    expect(mockPostFn).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fields: expect.any(Array),
+        attributes: {
+          bandwidth: "3",
+          circuits: [
+            {
+              csp_endpoint: {
+                attributes: { owner_account_id: "666023226898" },
+                cloud_service_provider: "AWS",
+                ipx_access: [1000010782, 1000013639],
+                region: "us-east-1",
+              },
+              customer_endpoint: {
+                encapsulation: "qinq",
+                inner_vlan: 567,
+                ipx_access: 1000312922,
+                outer_vlan: 1234,
+              },
+              service_id: 9489784960,
             },
-            customer_endpoint: {
-              encapsulation: "qinq",
-              inner_vlan: 567,
-              ipx_access: 1000312922,
-              outer_vlan: 1234,
+            {
+              csp_endpoint: {
+                attributes: { owner_account_id: "666023226898" },
+                cloud_service_provider: "AWS",
+                ipx_access: [1000010782, 1000013639],
+                region: "us-east-1",
+              },
+              customer_endpoint: {
+                encapsulation: "qinq",
+                inner_vlan: 567,
+                ipx_access: 1000312923,
+                outer_vlan: 1234,
+              },
+              service_id: 5527919402,
             },
-            service_id: 9489784960,
-          },
-          {
-            csp_endpoint: {
-              attributes: { owner_account_id: "666023226898" },
-              cloud_service_provider: "AWS",
-              ipx_access: [1000010782, 1000013639],
-              region: "us-east-1",
-            },
-            customer_endpoint: {
-              encapsulation: "qinq",
-              inner_vlan: 567,
-              ipx_access: 1000312923,
-              outer_vlan: 1234,
-            },
-            service_id: 5527919402,
-          },
-        ],
-        customer_locations: "",
-        iso_release: "",
-        network: "local",
-        order_id: 9764848531585,
-      },
-    });
+          ],
+          customer_locations: "",
+          iso_release: "",
+          network: "local",
+          order_id: 9764848531585,
+        },
+      })
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -222,48 +225,50 @@ describe("DuplicateInstancePage", () => {
     await userEvent.type(bandwidthField, "22");
 
     await userEvent.click(screen.getByText(words("confirm")));
-    expect(mockPostFn).toHaveBeenCalledWith({
-      fields: expect.any(Array),
-      attributes: {
-        bandwidth: "22",
-        circuits: [
-          {
-            csp_endpoint: {
-              attributes: { owner_account_id: "666023226898" },
-              cloud_service_provider: "AWS",
-              ipx_access: [1000010782, 1000013639],
-              region: "us-east-1",
+    expect(mockPostFn).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fields: expect.any(Array),
+        attributes: {
+          bandwidth: "22",
+          circuits: [
+            {
+              csp_endpoint: {
+                attributes: { owner_account_id: "666023226898" },
+                cloud_service_provider: "AWS",
+                ipx_access: [1000010782, 1000013639],
+                region: "us-east-1",
+              },
+              customer_endpoint: {
+                encapsulation: "qinq",
+                inner_vlan: 567,
+                ipx_access: 1000312922,
+                outer_vlan: 1234,
+              },
+              service_id: 9489784960,
             },
-            customer_endpoint: {
-              encapsulation: "qinq",
-              inner_vlan: 567,
-              ipx_access: 1000312922,
-              outer_vlan: 1234,
+            {
+              csp_endpoint: {
+                attributes: { owner_account_id: "666023226898" },
+                cloud_service_provider: "AWS2",
+                ipx_access: [1000010782, 1000013639],
+                region: "us-east-1",
+              },
+              customer_endpoint: {
+                encapsulation: "qinq",
+                inner_vlan: 567,
+                ipx_access: 1000312923,
+                outer_vlan: 1234,
+              },
+              service_id: 5527919402,
             },
-            service_id: 9489784960,
-          },
-          {
-            csp_endpoint: {
-              attributes: { owner_account_id: "666023226898" },
-              cloud_service_provider: "AWS2",
-              ipx_access: [1000010782, 1000013639],
-              region: "us-east-1",
-            },
-            customer_endpoint: {
-              encapsulation: "qinq",
-              inner_vlan: 567,
-              ipx_access: 1000312923,
-              outer_vlan: 1234,
-            },
-            service_id: 5527919402,
-          },
-        ],
-        customer_locations: "",
-        iso_release: "",
-        network: "local",
-        order_id: 9764848531585,
-      },
-    });
+          ],
+          customer_locations: "",
+          iso_release: "",
+          network: "local",
+          order_id: 9764848531585,
+        },
+      })
+    );
   });
 
   test("GIVEN DuplicateInstance page WHEN user submits form THEN instance is duplicated", async () => {
@@ -293,6 +298,92 @@ describe("DuplicateInstancePage", () => {
     });
 
     await userEvent.click(screen.getByText(words("confirm")));
+
+    expect(mockPostFn).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fields: expect.any(Array),
+        attributes: {
+          bandwidth: "",
+          circuits: [
+            {
+              csp_endpoint: {
+                attributes: { owner_account_id: "666023226898" },
+                cloud_service_provider: "AWS",
+                ipx_access: [1000010782, 1000013639],
+                region: "us-east-1",
+              },
+              customer_endpoint: {
+                encapsulation: "qinq",
+                inner_vlan: 567,
+                ipx_access: 1000312922,
+                outer_vlan: 1234,
+              },
+              service_id: 9489784960,
+            },
+            {
+              csp_endpoint: {
+                attributes: { owner_account_id: "666023226898" },
+                cloud_service_provider: "AWS",
+                ipx_access: [1000010782, 1000013639],
+                region: "us-east-1",
+              },
+              customer_endpoint: {
+                encapsulation: "qinq",
+                inner_vlan: 567,
+                ipx_access: 1000312923,
+                outer_vlan: 1234,
+              },
+              service_id: 5527919402,
+            },
+          ],
+          customer_locations: "",
+          iso_release: "",
+          network: "local",
+          order_id: 9764848531585,
+        },
+      })
+    );
+  });
+
+  test("GIVEN DuplicateInstance page with alternative initial states WHEN user selects initial state THEN instance is duplicated with initial_state", async () => {
+    mockUseParams.mockReturnValue({ service: "service_name_a", instance });
+
+    const serviceWithInitialStates = {
+      ...Service.a,
+      lifecycle: {
+        ...Service.a.lifecycle,
+        alternative_initial_states: ["state1", "state2"],
+      },
+    };
+
+    server.use(
+      http.get("/lsm/v1/service_catalog/service_name_a", () => {
+        return HttpResponse.json({ data: serviceWithInitialStates });
+      }),
+      http.get(
+        "/lsm/v1/service_inventory/service_name_a/4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+        () => {
+          return HttpResponse.json({ data: ServiceInstance.a });
+        }
+      )
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    expect(
+      await screen.findByRole("generic", { name: "DuplicateInstance-Success" })
+    ).toBeInTheDocument();
+
+    // Should show dropdown instead of regular button
+    const dropdownToggle = screen.getByLabelText("SubmitDropdownToggle");
+    expect(dropdownToggle).toBeVisible();
+
+    // Click on an initial state option
+    await userEvent.click(dropdownToggle);
+    const stateOption = screen.getByLabelText("Initial-State-Option-state1");
+    await userEvent.click(stateOption);
 
     expect(mockPostFn).toHaveBeenCalledWith({
       fields: expect.any(Array),
@@ -335,6 +426,7 @@ describe("DuplicateInstancePage", () => {
         network: "local",
         order_id: 9764848531585,
       },
+      initial_state: "state1",
     });
   });
 });
