@@ -12,7 +12,7 @@ import {
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Tbody, Tr, Td, Thead, Th } from "@patternfly/react-table";
 import { useQueryClient } from "@tanstack/react-query";
-import { uniqueId } from "lodash";
+import { v4 as uuidv4 } from "uuid";
 import { Environment } from "@/Core/Domain/ProjectModel";
 import {
   UserInfo,
@@ -156,7 +156,7 @@ const RoleSelector: React.FC<{
             <Alert
               variant="danger"
               title={words("error.title")}
-              key={"error-" + uniqueId()}
+              key={`error-${uuidv4()}`}
               timeout={5000}
               aria-label="error-message"
             >

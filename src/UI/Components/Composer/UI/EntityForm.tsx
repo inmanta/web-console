@@ -1,8 +1,8 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Alert, FlexItem, Form } from "@patternfly/react-core";
-import { set } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel } from "@/Core";
+import { set } from "@/Core/Language/collection";
 import { sanitizeAttributes } from "@/Data";
 import { CreateModifierHandler, FieldCreator } from "@/UI/Components/ServiceInstanceForm";
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
@@ -55,8 +55,6 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
     }
 
     //if multi is true, it means the field is a multi-select field and we need to update the array of values
-    let updatedValue = {};
-
     if (multi) {
       setFormState((prev) => {
         const clone = { ...prev };
@@ -69,17 +67,17 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
           selection.push(value as string);
         }
 
-        updatedValue = set(clone, path, selection);
+        set(clone, path, selection);
 
-        return updatedValue;
+        return clone;
       });
     } else {
       setFormState((prev) => {
         const clone = { ...prev };
 
-        updatedValue = set(clone, path, value);
+        set(clone, path, value);
 
-        return updatedValue;
+        return clone;
       });
     }
   };

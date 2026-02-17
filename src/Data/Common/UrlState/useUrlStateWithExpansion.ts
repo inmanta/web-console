@@ -1,5 +1,5 @@
-import { isEqual, identity } from "lodash-es";
 import { toggleValueInList } from "@/Core";
+import { isEqual } from "@/Core/Language/collection";
 import { provide, Location, Replace, StateConfig, Update } from "./helpers";
 import { handleUrlState } from "./useUrlState";
 
@@ -21,8 +21,8 @@ export function handleUrlStateWithExpansion(
       default: [],
       key: config.key || "expansion",
       route: config.route,
-      serialize: identity,
-      parse: identity,
+      serialize: (data) => data,
+      parse: (value) => value as string[] | undefined,
       equals: isEqual,
     },
     location,

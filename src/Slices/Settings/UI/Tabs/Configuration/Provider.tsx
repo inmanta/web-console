@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import _ from "lodash";
 import { EnvironmentSettings } from "@/Core";
+import { merge } from "@/Core/Language/collection";
 import {
   useResetEnvironmentSetting,
   useUpdateEnvironmentSetting,
@@ -44,8 +44,21 @@ function reducer(
         delete copy[state.resetedValueName];
       }
 
+      // We deliberately use a double merge here:
+      // - The inner merge deep-merges the current settings (minus any reset key)
+      //   into a deep-cloned payload, so neither the original payload nor state
+      //   objects are mutated.
+      // - The outer merge copies that merged result into a fresh empty object,
+      //   ensuring the reducer returns a brand‑new, standalone state object
+      //   without shared references, while still reusing our lodash-like
+      //   `merge` helper that mutates its target.
+      const mergedSettings = merge(
+        {},
+        merge(JSON.parse(JSON.stringify(payload)) as EnvironmentSettings.ValuesMap, copy)
+      );
+
       return {
-        settings: _.merge({}, JSON.parse(JSON.stringify(payload)), copy),
+        settings: mergedSettings,
         resetedValueName: "",
       };
     case "set":

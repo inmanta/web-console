@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Alert, AlertGroup, Button, Icon, Tooltip } from "@patternfly/react-core";
 import { PlayIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { uniqueId } from "lodash";
+import { v4 as uuidv4 } from "uuid";
 import { useResumeEnvironment } from "@/Data/Queries";
 import { useQueryControl } from "@/Data/Queries";
 import { words } from "@/UI/words";
@@ -95,7 +95,7 @@ export const ResumeButton: React.FC = () => {
           <Alert
             variant="danger"
             title={words("error.title")}
-            key={"error-" + uniqueId()}
+            key={`error-${uuidv4()}`}
             timeout={5000}
             aria-label="error-message"
           >

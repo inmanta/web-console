@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Button, FormFieldGroupExpandable, FormFieldGroupHeader } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
-import { get } from "lodash-es";
 import { v4 as uuidv4 } from "uuid";
 import { InstanceAttributeModel, DictListField, Field, NestedField, FormSuggestion } from "@/Core";
+import { get } from "@/Core/Language/collection";
 import { toOptionalBoolean } from "@/Data";
 import { useSuggestedValues } from "@/Data/Queries";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
@@ -120,7 +120,7 @@ export const FieldInput: React.FC<Props> = ({
           aria-label={`BooleanFieldInput-${field.name}`}
           attributeName={field.name}
           isOptional={field.isOptional}
-          isChecked={get(formState, makePath(path, field.name)) as boolean}
+          isChecked={get<boolean | null>(formState, makePath(path, field.name), null)}
           handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
@@ -136,7 +136,7 @@ export const FieldInput: React.FC<Props> = ({
         <BooleanToggleInput
           aria-label={`BooleanToggleInput-${field.name}`}
           attributeName={field.name}
-          isChecked={get(formState, makePath(path, field.name)) as boolean}
+          isChecked={get<boolean | undefined>(formState, makePath(path, field.name))}
           handleInputChange={(value, _event) =>
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
@@ -154,7 +154,7 @@ export const FieldInput: React.FC<Props> = ({
         <TextListFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={get(formState, makePath(path, field.name).split("."))}
+          attributeValue={get<string[]>(formState, makePath(path, field.name), [])}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
@@ -175,7 +175,7 @@ export const FieldInput: React.FC<Props> = ({
         <TextFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={get(formState, makePath(path, field.name)) as string}
+          attributeValue={get<string>(formState, makePath(path, field.name), "")}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
@@ -223,15 +223,15 @@ export const FieldInput: React.FC<Props> = ({
     case "InterServiceRelation":
       return (
         <RelatedServiceProvider
-          alreadySelected={get(formState, makePath(path, field.name), []) as string[]}
+          alreadySelected={get<string[]>(formState, makePath(path, field.name), [])}
           key={makePath(path, field.name)}
           serviceName={field.serviceEntity}
           attributeName={field.name}
           description={field.description}
-          attributeValue={get(formState, makePath(path, field.name) as string) as string}
+          attributeValue={get<string | null>(formState, makePath(path, field.name), null)}
           isOptional={field.isOptional}
           isDisabled={!isNew && field.isDisabled}
-          handleInputChange={(value) => getUpdate(makePath(path, field.name) as string, value)}
+          handleInputChange={(value) => getUpdate(makePath(path, field.name), value)}
         />
       );
     case "Enum":
@@ -240,7 +240,7 @@ export const FieldInput: React.FC<Props> = ({
           aria-label={`EnumFieldInput-${field.name}`}
           options={field.options}
           attributeName={field.name}
-          attributeValue={get(formState, makePath(path, field.name)) as string}
+          attributeValue={get<string>(formState, makePath(path, field.name), "")}
           description={field.description}
           isOptional={field.isOptional}
           handleInputChange={getEnumUpdate}
@@ -277,12 +277,12 @@ export const FieldInput: React.FC<Props> = ({
     case "RelationList":
       return (
         <RelatedServiceProvider
-          alreadySelected={get(formState, makePath(path, field.name), []) as string[]}
+          alreadySelected={get<string[]>(formState, makePath(path, field.name), [])}
           key={makePath(path, field.name)}
           serviceName={field.serviceEntity}
           attributeName={field.name}
           description={field.description !== null ? field.description : ""}
-          attributeValue={get(formState, makePath(path, field.name), []) as string[]}
+          attributeValue={get<string[]>(formState, makePath(path, field.name), [])}
           isOptional={field.isOptional}
           isDisabled={!isNew && field.isDisabled}
           handleInputChange={(value) => {
@@ -461,7 +461,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   isNew = false,
 }) => {
   const list = useMemo(
-    () => (get(formState, makePath(path, field.name)) as Array<unknown>) || [],
+    () => get<Array<unknown>>(formState, makePath(path, field.name), []),
     [formState, path, field.name]
   );
 

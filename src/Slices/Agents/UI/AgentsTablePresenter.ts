@@ -1,4 +1,3 @@
-import { omit } from "lodash-es";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 import { Agent, AgentRow } from "@S/Agents/Core/Domain";
@@ -25,7 +24,11 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
   }
 
   createRows(sourceData: Agent[]): AgentRow[] {
-    return sourceData.map((agent) => omit(agent, ["environment"]));
+    return sourceData.map((agent) => {
+      const { environment: _environment, ...rest } = agent;
+
+      return rest;
+    });
   }
 
   getColumnHeadDisplayNames(): string[] {

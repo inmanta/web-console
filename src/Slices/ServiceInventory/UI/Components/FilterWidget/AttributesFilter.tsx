@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ToolbarFilter, ToolbarItem } from "@patternfly/react-core";
-import { without } from "lodash-es";
 import { ServiceInstanceParams } from "@/Core";
+import { without } from "@/Core/Language/collection";
 import { AttributeRulePicker, AttributeRule } from "./AttributeRulePicker";
 import { AttributeSetPicker } from "./AttributeSetPicker";
 
