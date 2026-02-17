@@ -1426,7 +1426,7 @@ __metadata:
     "@loadable/component": "npm:^5.16.7"
     "@monaco-editor/react": "npm:^4.7.0"
     "@patternfly/react-charts": "npm:^8.3.1"
-    "@patternfly/react-code-editor": "npm:^6.4.0"
+    "@patternfly/react-code-editor": "npm:^6.4.1"
     "@patternfly/react-core": "npm:^6.2.2"
     "@patternfly/react-icons": "npm:^6.4.0"
     "@patternfly/react-log-viewer": "npm:^6.3.0"
@@ -1996,12 +1996,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-code-editor@npm:^6.4.0":
-  version: 6.4.0
-  resolution: "@patternfly/react-code-editor@npm:6.4.0"
+"@patternfly/react-code-editor@npm:^6.4.1":
+  version: 6.4.1
+  resolution: "@patternfly/react-code-editor@npm:6.4.1"
   dependencies:
     "@monaco-editor/react": "npm:^4.6.0"
-    "@patternfly/react-core": "npm:^6.4.0"
+    "@patternfly/react-core": "npm:^6.4.1"
     "@patternfly/react-icons": "npm:^6.4.0"
     "@patternfly/react-styles": "npm:^6.4.0"
     react-dropzone: "npm:14.3.5"
@@ -2009,7 +2009,7 @@ __metadata:
   peerDependencies:
     react: ^17 || ^18 || ^19
     react-dom: ^17 || ^18 || ^19
-  checksum: 10/5673ebc383230456016d0cb8642a4dab3816696fb10ec887c30cab1f426c29a79153a05f924359b37b6bfcb1b3a4eb6e4bc2c6e51525cd1b6c22a7b933e37131
+  checksum: 10/1416fe9ac7f5335aad05bd0bcb43d974f7c0b78f150f42cf5c4100561e88cebf11f7cccb1535af054090e2fe2d9e0ba7f8861458fce48ead46a6e59761b64eda
   languageName: node
   linkType: hard
 
@@ -2047,9 +2047,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-core@npm:^6.4.0":
-  version: 6.4.0
-  resolution: "@patternfly/react-core@npm:6.4.0"
+"@patternfly/react-core@npm:^6.4.1":
+  version: 6.4.1
+  resolution: "@patternfly/react-core@npm:6.4.1"
   dependencies:
     "@patternfly/react-icons": "npm:^6.4.0"
     "@patternfly/react-styles": "npm:^6.4.0"
@@ -2060,7 +2060,7 @@ __metadata:
   peerDependencies:
     react: ^17 || ^18 || ^19
     react-dom: ^17 || ^18 || ^19
-  checksum: 10/e35bf937e6c1f4d8dc8d95d4aaf02815a151332e298d7fdedd9fd6a644c023c7eb28e79636607b7043d8da5613db79a2704ef2356cbab5131e4662c37e81e0fb
+  checksum: 10/389c11623666ee560d37c7625b07564c33e8bd65987a07809b76e5ac7353248e3bd06d9b692111b9ee536fcdeaf56349722e5cee00191252e9ba7e9a657d1b39
   languageName: node
   linkType: hard
 
