@@ -32,7 +32,8 @@ const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
   func: undefined | ReturnType<typeof vi.fn> = undefined,
   isEdit = false,
-  originalAttributes: InstanceAttributeModel | undefined = undefined
+  originalAttributes: InstanceAttributeModel | undefined = undefined,
+  initialStates: string[] = []
 ) => {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -51,6 +52,7 @@ const setup = (
                   service_entity="service_entity"
                   isDirty={false}
                   setIsDirty={vi.fn()}
+                  initialStates={initialStates}
                 />
               }
             />

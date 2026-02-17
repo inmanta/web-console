@@ -296,4 +296,58 @@ describe("CreateInstance", () => {
       '{"default":"value"}'
     );
   });
+
+  test("Given the CreateInstance View When creating an instance with alternative initial states Then dropdown is shown and initial_state is passed", async () => {
+    const serviceWithInitialStates = {
+      ...Service.a,
+      lifecycle: {
+        ...Service.a.lifecycle,
+        alternative_initial_states: ["state1", "state2", "state3"],
+      },
+    };
+
+    const { component } = setup(serviceWithInitialStates);
+
+    render(component);
+
+    const bandwidthField = screen.getByText("bandwidth");
+    await userEvent.type(bandwidthField, "2");
+
+    // Should show dropdown instead of regular button
+    const dropdownToggle = screen.getByLabelText("SubmitDropdownToggle");
+    expect(dropdownToggle).toBeVisible();
+
+    // Click on an initial state option
+    await userEvent.click(dropdownToggle);
+    const stateOption = screen.getByLabelText("Initial-State-Option-state2");
+    await userEvent.click(stateOption);
+
+    expect(postMock).toHaveBeenCalledWith(`/lsm/v1/service_inventory/${Service.a.name}`, {
+      attributes: {
+        bandwidth: "2",
+        circuits: [
+          {
+            csp_endpoint: {
+              attributes: null,
+              cloud_service_provider: "",
+              ipx_access: null,
+              region: "",
+            },
+            customer_endpoint: {
+              encapsulation: "",
+              inner_vlan: null,
+              ipx_access: null,
+              outer_vlan: null,
+            },
+            service_id: null,
+          },
+        ],
+        customer_locations: "",
+        iso_release: "",
+        network: "local",
+        order_id: "1234",
+      },
+      initial_state: "state2",
+    });
+  });
 });

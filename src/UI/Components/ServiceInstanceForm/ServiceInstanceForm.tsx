@@ -4,9 +4,16 @@ import {
   ActionListItem,
   Alert,
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownGroup,
+  DropdownList,
   Form,
+  MenuToggle,
+  MenuToggleAction,
   ToggleGroup,
   ToggleGroupItem,
+  MenuToggleElement,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
@@ -21,7 +28,11 @@ import { createDuplicateFormState, createEditFormState, createFormState } from "
 interface Props {
   service_entity: string;
   fields: Field[];
-  onSubmit(formState: InstanceAttributeModel, callback: (value: boolean) => void): void;
+  onSubmit(
+    formState: InstanceAttributeModel,
+    callback: (value: boolean) => void,
+    initialState?: string
+  ): void;
   onCancel(): void;
   originalAttributes?: InstanceAttributeModel;
   isSubmitDisabled?: boolean;
@@ -29,6 +40,7 @@ interface Props {
   isEdit?: boolean;
   isDirty: boolean;
   setIsDirty: React.Dispatch<React.SetStateAction<boolean>>;
+  initialStates?: string[];
 }
 
 /**
@@ -81,6 +93,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   isEdit = false,
   isDirty,
   setIsDirty,
+  initialStates = [],
 }) => {
   const [formState, setFormState] = useState(
     getFormState(fields, apiVersion, originalAttributes, isEdit)
@@ -91,6 +104,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   const [shouldPerformCancel, setShouldCancel] = useState(false);
   const [isForm, setIsForm] = useState(true);
   const [isEditorValid, setIsEditorValid] = useState(true);
+  const [isSubmitDropdownOpen, setIsSubmitDropdownOpen] = useState(false);
 
   usePrompt(words("notification.instanceForm.prompt"), isDirty);
 
@@ -148,6 +162,10 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     event.preventDefault();
   };
 
+  const onConfirmDropdownToggle = (value: boolean) => {
+    setIsSubmitDropdownOpen(value);
+  };
+
   // The try catch is there to make certain the provided string is parsable to JSON before setting the formstate.
   const onEditorChange = useCallback(
     (value: string, isValid: boolean) => {
@@ -169,6 +187,9 @@ export const ServiceInstanceForm: React.FC<Props> = ({
    * @returns {void}
    */
   const onConfirm = () => onSubmit(formState, (value: boolean) => setIsDirty(value));
+
+  const onInitialStateConfirm = (initialState: string) =>
+    onSubmit(formState, (value: boolean) => setIsDirty(value), initialState);
 
   useEffect(() => {
     if (shouldPerformCancel) {
@@ -226,15 +247,57 @@ export const ServiceInstanceForm: React.FC<Props> = ({
             testingId={words("confirm")}
             tooltipContent={words("environment.halt.tooltip")}
           >
-            <Button
-              variant="primary"
-              onClick={onConfirm}
-              isDisabled={isSubmitDisabled || !isEditorValid}
-              aria-disabled={isSubmitDisabled || !isEditorValid}
-              aria-label="submit"
-            >
-              {words("confirm")}
-            </Button>
+            {initialStates.length > 0 ? (
+              <Dropdown
+                aria-label="SubmitDropdown"
+                onOpenChange={(value) => onConfirmDropdownToggle(value)}
+                isOpen={isSubmitDropdownOpen}
+                toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                  <MenuToggle
+                    aria-label="SubmitDropdownToggle"
+                    ref={toggleRef}
+                    variant="primary"
+                    onClick={(value) => onConfirmDropdownToggle(value)}
+                    isExpanded={isSubmitDropdownOpen}
+                    splitButtonItems={[
+                      <MenuToggleAction
+                        key="action"
+                        onClick={onConfirm}
+                        aria-label="submit"
+                        isDisabled={isSubmitDisabled || !isEditorValid}
+                      >
+                        {words("confirm")}
+                      </MenuToggleAction>,
+                    ]}
+                  ></MenuToggle>
+                )}
+              >
+                <DropdownList>
+                  <DropdownGroup label={words("inventory.form.withInitialState")}>
+                    {initialStates.map((state) => (
+                      <DropdownItem
+                        aria-label={`Initial-State-Option-${state}`}
+                        key={state}
+                        component="button"
+                        onClick={() => onInitialStateConfirm(state)}
+                      >
+                        {state}
+                      </DropdownItem>
+                    ))}
+                  </DropdownGroup>
+                </DropdownList>
+              </Dropdown>
+            ) : (
+              <Button
+                variant="primary"
+                onClick={onConfirm}
+                isDisabled={isSubmitDisabled || !isEditorValid}
+                aria-disabled={isSubmitDisabled || !isEditorValid}
+                aria-label="submit"
+              >
+                {words("confirm")}
+              </Button>
+            )}
           </ActionDisabledTooltip>
         </ActionListItem>
         <ActionListItem>
