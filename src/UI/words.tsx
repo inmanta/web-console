@@ -152,6 +152,7 @@ const dict = {
   "inventory.createInstance.title": "Create instance",
   "inventory.createInstance.items": (amount: number) =>
     amount === 1 ? "1 item" : `${amount} items`,
+  "inventory.form.withInitialState": "With initial state",
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
   "inventory.duplicateInstance.button": "Duplicate",

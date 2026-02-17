@@ -6,6 +6,7 @@ import {
   Button,
   Dropdown,
   DropdownItem,
+  DropdownGroup,
   DropdownList,
   Form,
   MenuToggle,
@@ -268,16 +269,18 @@ export const ServiceInstanceForm: React.FC<Props> = ({
                 )}
               >
                 <DropdownList>
-                  {initialStates.map((state) => (
-                    <DropdownItem
-                      aria-label={`Initial-State-Option-${state}`}
-                      key={state}
-                      component="button"
-                      onClick={() => onInitialStateConfirm(state)}
-                    >
-                      {state}
-                    </DropdownItem>
-                  ))}
+                  <DropdownGroup label={words("inventory.form.withInitialState")}>
+                    {initialStates.map((state) => (
+                      <DropdownItem
+                        aria-label={`Initial-State-Option-${state}`}
+                        key={state}
+                        component="button"
+                        onClick={() => onInitialStateConfirm(state)}
+                      >
+                        {state}
+                      </DropdownItem>
+                    ))}
+                  </DropdownGroup>
                 </DropdownList>
               </Dropdown>
             ) : (
