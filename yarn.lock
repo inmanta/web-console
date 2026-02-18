@@ -1447,7 +1447,7 @@ __metadata:
     "@types/json-bigint": "npm:^1.0.4"
     "@types/loadable__component": "npm:^5.13.10"
     "@types/markdown-it-emoji": "npm:^3.0.1"
-    "@types/node": "npm:^24.10.1"
+    "@types/node": "npm:^25.2.3"
     "@types/qs": "npm:^6.14.0"
     "@types/react": "npm:^19.2.13"
     "@types/react-dom": "npm:^19.2.3"
@@ -3029,12 +3029,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^24.10.1":
-  version: 24.10.1
-  resolution: "@types/node@npm:24.10.1"
+"@types/node@npm:^25.2.3":
+  version: 25.2.3
+  resolution: "@types/node@npm:25.2.3"
   dependencies:
     undici-types: "npm:~7.16.0"
-  checksum: 10/ddac8c97be5f7401e31ea0e9316c6e864993c6cd06689b7f9874ecfb576ef8349f2d14298248a08b94a6dd029570a46a285cddc4d50e524817f1a3730b29a86e
+  checksum: 10/46962e3c1c0205da5b637c2e924f4eb03ce16f384af686b69afeb5fd4f8274d9a570375f8a24de2750633b69cb7ac33f0e458d9c3f20a66e12eb3a569499062d
   languageName: node
   linkType: hard
 
