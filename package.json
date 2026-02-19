@@ -142,7 +142,7 @@
     "highlight.js": "^11.11.1",
     "keycloak-js": "^26.2.1",
     "markdown-it": "^14.1.1",
-    "mermaid": "^11.12.2",
+    "mermaid": "^11.12.3",
     "moment": "^2.30.1",
     "moment-timezone": "^0.6.0",
     "monaco-editor": "^0.52.2",
