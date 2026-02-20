@@ -41,6 +41,12 @@ export function sanitizeAttributes(
         sanitized[field.name] = formState[field.name];
         return;
       }
+      case "InterServiceRelation": {
+        const value = formState[field.name];
+
+        sanitized[field.name] = value === "" ? null : value;
+        return;
+      }
 
       case "DictList": {
         const list = formState[field.name];
