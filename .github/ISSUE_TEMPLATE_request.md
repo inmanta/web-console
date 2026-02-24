@@ -23,7 +23,7 @@ Explain what you’d like to see changed or added in the UI.
 
 ### Impact
 
-Describe who this change will impact (e.g. specific roles, workflows, environments) and how.
+Is there an impact expected on existing features/workflows/user-groups?
 
 ### Additional Context
 
