@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump react-dropzone from 14.3.8 to 15.0.0
+destination-branches:
+- master
+- iso9
+sections: {}
