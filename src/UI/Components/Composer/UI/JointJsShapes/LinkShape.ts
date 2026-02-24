@@ -1,4 +1,4 @@
-import { dia, shapes, g } from "@inmanta/rappid";
+import { dia, shapes, g } from "@joint/plus";
 
 interface LinkAttributeContext {
   model: dia.Link;

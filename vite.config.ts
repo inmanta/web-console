@@ -148,11 +148,13 @@ export default defineConfig({
       "@S": resolve(__dirname, "./src/Slices"),
       "@assets": resolve(__dirname, "./node_modules/@patternfly/react-core/dist/styles/assets"),
       "@images": resolve(__dirname, "./public/images"),
-      // Force rappid to use ESM version
-      "@inmanta/rappid": resolve(__dirname, "./node_modules/@inmanta/rappid/joint-plus.mjs"),
+      // Force @joint/plus to use ESM entry (avoids dist/joint-plus.js)
+      "@joint/plus": resolve(__dirname, "./node_modules/@joint/plus/joint-plus.mjs"),
+      // Force @joint/core to use ESM entry (avoids dist/joint.js)
+      "@joint/core": resolve(__dirname, "./node_modules/@joint/core/joint.mjs"),
       // Force uuid to use CJS entry point
       uuid: "uuid",
-      "@rappidcss": resolve(__dirname, "node_modules/@inmanta/rappid/joint-plus.css"),
+      "@rappidcss": resolve(__dirname, "node_modules/@joint/plus/joint-plus.css"),
       // Only mock monaco-editor in test environment
       ...(process.env.NODE_ENV === "test"
         ? {
@@ -236,7 +238,7 @@ export default defineConfig({
             "@patternfly/react-tokens",
           ],
           monaco: ["@monaco-editor/react", "monaco-editor"],
-          rappid: ["@inmanta/rappid"],
+          jointjs: ["@joint/plus"],
           utils: ["uuid", "moment", "moment-timezone", "bignumber.js"],
           graphql: ["graphql", "graphql-request"],
           routing: ["react-router", "@remix-run/router"],
@@ -266,7 +268,7 @@ export default defineConfig({
       optimizer: {
         web: {
           include: [
-            "@inmanta/rappid",
+            "@joint/plus",
             "mermaid",
             "monaco-editor",
             "@monaco-editor/react",
@@ -305,7 +307,7 @@ export default defineConfig({
       "monaco-editor",
       "@monaco-editor/react",
       "mermaid",
-      "@inmanta/rappid",
+      "@joint/plus",
       "graphql-request",
       "@patternfly/react-styles",
     ],
@@ -313,7 +315,7 @@ export default defineConfig({
     force: true,
   },
   ssr: {
-    noExternal: ["monaco-editor", "@monaco-editor/react", "mermaid", "@inmanta/rappid"],
+    noExternal: ["monaco-editor", "@monaco-editor/react", "mermaid", "@joint/plus"],
   },
   worker: {
     format: "es",

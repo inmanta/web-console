@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { ServiceEntityShape } from "../UI/JointJsShapes/ServiceEntityShape";
 import { isServiceEntityShapeCell } from "./Helpers";
 import { SavedCoordinates } from "./Helpers/canvasLayoutUtils";

@@ -1,4 +1,4 @@
-import { dia, shapes, util } from "@inmanta/rappid";
+import { dia, shapes, util } from "@joint/plus";
 import {
   t_chart_color_yellow_300,
   t_chart_color_blue_400,

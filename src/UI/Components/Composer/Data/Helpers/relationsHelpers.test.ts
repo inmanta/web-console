@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { ServiceModel, EmbeddedEntity, InterServiceRelation } from "@/Core";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import { defineObjectsForJointJS } from "../../testSetup";

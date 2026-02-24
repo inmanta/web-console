@@ -1,4 +1,4 @@
-import { dia, shapes, ui } from "@inmanta/rappid";
+import { dia, shapes, ui } from "@joint/plus";
 import { renderHook, waitFor } from "@testing-library/react";
 import { ServiceModel, ServiceInstanceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Queries";

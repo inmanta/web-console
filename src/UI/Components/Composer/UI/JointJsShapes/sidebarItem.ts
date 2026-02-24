@@ -1,4 +1,4 @@
-import { shapes } from "@inmanta/rappid";
+import { shapes } from "@joint/plus";
 import {
   t_global_background_color_primary_default,
   t_global_border_color_200,

@@ -67,7 +67,6 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/file-saver": "^2.0.7",
     "@types/jest-axe": "^3.5.9",
-    "@types/json-bigint": "^1.0.4",
     "@types/loadable__component": "^5.13.10",
     "@types/markdown-it-emoji": "^3.0.1",
     "@types/node": "^25.2.3",
@@ -117,8 +116,8 @@
     "crypto": false
   },
   "dependencies": {
-    "@inmanta/rappid": "^4.0.0",
-    "@joint/layout-directed-graph": "^4.0.1",
+    "@joint/layout-directed-graph": "^4.2.3",
+    "@joint/plus": "^4.2.3",
     "@loadable/component": "^5.16.7",
     "@monaco-editor/react": "^4.7.0",
     "@patternfly/react-charts": "^8.3.1",

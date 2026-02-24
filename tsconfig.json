@@ -45,7 +45,7 @@
         "public/images/*"
       ],
       "@rappidcss": [
-        "node_modules/@inmanta/rappid/joint-plus.css"
+        "node_modules/@joint/plus/joint-plus.css"
       ]
     }
   },

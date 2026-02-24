@@ -12,18 +12,12 @@ updates:
     registries:
       - cloudsmith-registry
     ignore:
-      - dependency-name: "@types/react"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "madge"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "styled-components"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@types/styled-components"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "json-bigint"
-
-registries:
-  cloudsmith-registry:
-    type: npm-registry
-    url: https://npm.cloudsmith.io/inmanta/frontend-composer/
-    token: ${{secrets.CLOUDSMITH_TOKEN}}
+    groups:
+      jointjs:
+        patterns:
+          - "@joint/**"
+      patternfly:
+        patterns:
+          - "@patternfly/**"

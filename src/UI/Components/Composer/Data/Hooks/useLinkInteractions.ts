@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { ServiceModel } from "@/Core";
 import { ServiceEntityShape } from "../../UI";
 import { updateAllMissingConnectionsHighlights } from "../../UI/JointJsShapes/createHalo";

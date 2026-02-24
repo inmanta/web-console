@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { isServiceEntityShapeCell } from "./getEntitiesFromCanvas";
 import { RelationsDictionary } from ".";
 

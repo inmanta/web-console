@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { v4 as uuidv4 } from "uuid";
 import { InstanceAttributeModel } from "@/Core";
 import { ServiceOrderItemAction } from "@/Slices/Orders/Core/Types";
