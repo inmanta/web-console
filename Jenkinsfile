@@ -13,7 +13,6 @@ pipeline {
     }
     environment {
         GITLAB_TOKEN = credentials('jenkins_on_gitlab')
-        CLOUDSMITH_TOKEN = credentials('cloudsmith-token')
         JOINTJS_NPM_TOKEN = credentials('jointjs-npm-token')
     }
 
