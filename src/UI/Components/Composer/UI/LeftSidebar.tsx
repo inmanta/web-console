@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, Dispatch, SetStateAction } from "react";
-import { dia, ui } from "@inmanta/rappid";
+import { dia, ui } from "@joint/plus";
 import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Queries";

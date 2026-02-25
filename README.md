@@ -7,7 +7,7 @@
 This project is the current frontend for the Inmanta service orchestrator.  
 The eventual goal is to replace the current dashboard entirely.  
 The console is developed in TypeScript using React and React Query.  
-Testing is performed using Cypress and Jest.
+Testing is performed using Cypress and Vitest.
 
 ## UX Guideliness
 
@@ -21,54 +21,59 @@ The frontend uses (Patternfly)[https://www.patternfly.org/] for its UI component
 | Command                         | Description                                                                                                                                                                                                           |
 | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `prebuild`                      | runs `yarn clean`                                                                                                                                                                                                     |
-| `build`                         | builds the project with webpack in prod mode                                                                                                                                                                          |
-| `start`                         | runs the project with webpack in dev mode and live reload                                                                                                                                                             |
-| `start:https`                   | runs the project with webpack in dev mode and live reload, over https                                                                                                                                                 |
-| `test`                          | tests the project with Jest                                                                                                                                                                                           |
-| `test:ci`                       | test command for the CI pipeline                                                                                                                                                                                      |
-| `format`                        | runs prettier and formats the code                                                                                                                                                                                    |
-| `format:check`                  | runs prettier without formatting the code                                                                                                                                                                             |
-| `lint`                          | runs the linter and generates a report in the command line                                                                                                                                                            |
-| `lint:fix`                      | runs the linter and fixes possible warnings/errors                                                                                                                                                                    |
-| `build:bundle-profile`          | runs `webpack --config webpack.prod.cjs --profile --json > stats.json`                                                                                                                                                |
-| `bundle-profile:analyze`        | runs `yarn build:bundle-profile && webpack-bundle-analyzer ./stats.json`                                                                                                                                              |
+| `build`                         | builds the project with Vite in production mode                                                                                                                                                                       |
+| `start`                         | starts the development server with Vite over HTTP                                                                                                                                                                     |
+| `start:https`                   | starts the development server with Vite over HTTPS (`HTTPS=true`)                                                                                                                                                     |
+| `proxy`                         | starts a local CORS proxy to `http://127.0.0.1:8888/` using `local-cors-proxy`                                                                                                                                        |
+| `proxy:https`                   | starts a local CORS proxy to `https://127.0.0.1:8888/` using `local-cors-proxy`                                                                                                                                       |
+| `test`                          | runs the test suite with Vitest                                                                                                                                                                                       |
+| `test:ci`                       | runs the test suite with Vitest in CI mode (`CI=true`, `--silent`)                                                                                                                                                    |
+| `test:ui`                       | runs Vitest in UI mode                                                                                                                                                                                                |
+| `format`                        | runs Prettier and formats the code                                                                                                                                                                                    |
+| `format:check`                  | runs Prettier in check mode without writing changes                                                                                                                                                                   |
+| `lint`                          | runs ESLint and generates a report in the command line, failing on any warnings (`--max-warnings=0`)                                                                                                                  |
+| `lint:fix`                      | runs ESLint and attempts to automatically fix possible warnings/errors                                                                                                                                                |
+| `build:bundle-profile`          | builds the project with Vite in analyze mode (`vite build --mode analyze`)                                                                                                                                            |
+| `bundle-profile:analyze`        | runs `yarn build:bundle-profile` to generate a bundle profile                                                                                                                                                         |
 | `clean`                         | runs `rimraf dist`                                                                                                                                                                                                    |
-| `delete:reports`                | deletes the Cypress reports                                                                                                                                                                                           |
-| `precypress-test`               | runs `yarn run delete:reports`                                                                                                                                                                                        |
+| `delete:reports`                | deletes the Cypress reports in `cypress/reports`                                                                                                                                                                      |
+| `precypress-test`               | runs `yarn run delete:reports` before Cypress tests                                                                                                                                                                   |
 | `cypress-test:oss`              | runs the Cypress tests headless for OSS (requires `install:orchestrator:oss`)                                                                                                                                         |
 | `cypress-test:iso`              | runs the Cypress tests headless for ISO (requires `install:orchestrator:iso`)                                                                                                                                         |
-| `cypress-test:keycloak`         | runs the Cypress tests headless for OSS+Keycloak (requires `install:orchestrator:keycloak`)                                                                                                                           |
+| `cypress-test:keycloak`         | runs the Cypress tests headless for OSS + Keycloak (requires `install:orchestrator:keycloak`)                                                                                                                         |
+| `cypress-test:local-auth`       | runs the Cypress tests headless for OSS with local authentication (requires `install:orchestrator:local-auth`)                                                                                                        |
 | `package-cleanup`               | runs `node clean_up_packages`                                                                                                                                                                                         |
 | `check-circular-deps`           | runs `madge --circular ./src/index.tsx`                                                                                                                                                                               |
-| `install:orchestrator:keycloak` | creates a docker container with an OSS orchestrator with Keycloak                                                                                                                                                     |
-| `install:orchestrator`          | Base command to install more specific versions of the orchestrator. The different arguments are: `version` `release` `branch`. For more details, see (local-setup repo)[https://code.inmanta.com/inmanta/local-setup] |
-| `install:orchestrator:iso`      | creates a docker container with the latest ISO orchestrator                                                                                                                                                           |
-| `install:orchestrator:oss`      | creates a docker container with the latest dev OSS orchestrator                                                                                                                                                       |
+| `install:orchestrator:keycloak` | creates a Docker container with an OSS orchestrator configured with Keycloak                                                                                                                                          |
+| `install:orchestrator`          | base command to install more specific versions of the orchestrator. The different arguments are: `version` `release` `branch`. For more details, see (local-setup repo)[https://code.inmanta.com/inmanta/local-setup] |
+| `install:orchestrator:iso`      | creates a Docker container with the latest ISO orchestrator                                                                                                                                                           |
+| `install:orchestrator:pxsdc`    | creates a Docker container with an orchestrator for the `pxsdc` project                                                                                                                                               |
+| `install:orchestrator:oss`      | creates a Docker container with the latest dev OSS orchestrator                                                                                                                                                       |
 | `install:orchestrator:ci`       | CI command to setup the orchestrator on Jenkins. Requires different arguments depending on the needed test suite. See `install:orchestrator`                                                                          |
 | `kill-server`                   | removes the temp-folder and kills the containers                                                                                                                                                                      |
-| `update:dist`                   | manual update of the dist-folder in the container. Requires a container to run.                                                                                                                                       |
+| `update:dist`                   | manual update of the `dist` folder in the container. Requires a container to run.                                                                                                                                     |
 
-### PAT
+### ENV Tokens and PAT
 
 You will need to create a file `env.sh` in `shell-scripts` folder containing the variable GITLAB_TOKEN. It should look like so:
 `export GITLAB_TOKEN=xxxxxxxxxxxxxxxxx`
 (xxxx equals your PAT token, of course.)
 
+If you want to run the ISO version of the application, you will need to add a npm access token to the JointJS Plus library in your env file.
+`JOINTJS_NPM_TOKEN=jjs-xxxxxxxxxxxxxx`
+
 ## Authentication
 
 To enable authentication with keycloak, you can use environment variables, e.g. add the following variable to a dotenv (`.env` in the root of the project) file (further information on <https://github.com/motdotla/dotenv>)
 
-    SHOULD_USE_AUTH=true
+    VITE_SHOULD_USE_AUTH=true
 
-You can also specify the url of the keycloak server in the same file:
 
-    KEYCLOAK_URL=<Your keycloak server url>
-
-Alternatively, the keycloak parameters can also be specified in an external file in the production environment, called config.js, following the example src/config.js file.
+The keycloak parameters need to be specified in an external file in the production environment, called config.js, following the example src/config.js file.
 
 The base url of the backend services can also be specified here, e.g.:
 
-    API_BASEURL=http://localhost:8888
+    VITE_API_BASEURL=http://localhost:8888
 
 ### Testing the Web-console with Cypress
 

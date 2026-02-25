@@ -1,4 +1,4 @@
-import { dia, linkTools, shapes } from "@inmanta/rappid";
+import { dia, linkTools, shapes } from "@joint/plus";
 import { ServiceModel } from "@/Core";
 import { words } from "@/UI/words";
 import { routerNamespace, anchorNamespace } from "..";

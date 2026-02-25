@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { v4 as uuidv4 } from "uuid";
 import { ServiceModel, ServiceInstanceModel, EmbeddedEntity } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Queries";

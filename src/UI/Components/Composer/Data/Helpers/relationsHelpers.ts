@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@/Core";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import { RelationsDictionary, Rules } from "./createRelationsDictionary";

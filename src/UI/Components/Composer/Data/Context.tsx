@@ -1,5 +1,5 @@
 import { createContext, Dispatch, SetStateAction } from "react";
-import { dia, ui } from "@inmanta/rappid";
+import { dia, ui } from "@joint/plus";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Queries";
 import { ServiceEntityShape } from "../UI";

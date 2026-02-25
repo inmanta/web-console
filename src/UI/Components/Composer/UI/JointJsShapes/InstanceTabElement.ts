@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { dia, shapes, ui, mvc } from "@inmanta/rappid";
+import { dia, shapes, ui, mvc } from "@joint/plus";
 import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
 import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, ServiceModel } from "@/Core";

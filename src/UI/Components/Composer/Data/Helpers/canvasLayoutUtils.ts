@@ -1,5 +1,5 @@
-import { dia } from "@inmanta/rappid";
 import { DirectedGraph } from "@joint/layout-directed-graph";
+import { dia } from "@joint/plus";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import { SHAPE_WIDTH, SHAPE_MIN_HEIGHT } from "../../config";
 import {
