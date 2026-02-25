@@ -1,38 +1,40 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
-
+name: "Frontend Bug Report"
+about: "Report a bug in the web console UI"
+title: "[BUG]"
+labels:
+  - bug
+assignees: ""
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+### Summary
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+Provide a clear and concise description of the bug, and update the title of the ticket.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+- **Area of the app**: (e.g. Composer, Inventory, Settings)
+- **Browser**: (e.g. Chrome 120, Firefox 122)
+- **ISO version** : (e.g. ISO-7, OSS, etc)
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+### Steps to Reproduce
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+1. Go to `...`
+2. Click on `...`
+3. Scroll down to `...`
+4. See error `...`
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+### Expected Behavior
 
-**Additional context**
-Add any other context about the problem here.
+Describe what you expected to happen instead.
+
+### Actual Behavior
+
+Describe what actually happened, including any error messages.
+
+### Screenshots / Recordings
+
+If applicable, add screenshots or screen recordings to help explain your problem.
+
+### Additional Context
+
+Add any other context, logs, or implementation notes that might be helpful for the frontend team.
+
