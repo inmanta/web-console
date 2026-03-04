@@ -1,3 +1,3 @@
 description: Fix LineChart performance by moving createContainer call to module scope to prevent child remounting on every render
 change-type: patch
-destination-branches: [master, iso7, iso8, iso9]
+destination-branches: [master, iso9]
