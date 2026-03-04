@@ -73,13 +73,14 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   readonly: boolean;
   isNew: boolean;
   lockedOnCanvas: boolean;
-  id: string;
   entityType: EntityType;
   orderItem: ComposerServiceOrderItem | null;
   hasAttributeValidationErrors: boolean;
 
   constructor(initializationOptions: ServiceEntityOptions) {
-    super();
+    // In JointJS 4, the model id should be provided at construction time
+    // so that the graph and paper index the cell under the correct id.
+    super({ id: initializationOptions.id });
 
     this.connections = new Map<string, string[]>();
     this.serviceModel = initializationOptions.serviceModel;
@@ -89,7 +90,6 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     this.readonly = initializationOptions.readonly;
     this.isNew = initializationOptions.isNew;
     this.lockedOnCanvas = initializationOptions.lockedOnCanvas;
-    this.id = initializationOptions.id;
     this.entityType = initializationOptions.entityType;
     this.orderItem = null;
     this.hasAttributeValidationErrors = false;
@@ -920,7 +920,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     const action: ServiceOrderItemAction | null = this.isNew ? "create" : "update";
 
     this.orderItem = {
-      instance_id: this.id,
+      instance_id: String(this.id),
       service_entity: this.getEntityName(),
       config: {},
       action: action,

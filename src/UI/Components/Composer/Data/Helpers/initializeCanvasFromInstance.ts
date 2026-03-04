@@ -203,8 +203,6 @@ export const createEmbeddedEntityShapes = (
 
     const shape = new ServiceEntityShape(shapeOptions);
 
-    shape.set("id", embeddedId);
-
     // Find a non-overlapping position for this shape
     const parentPos = parentShape.position();
     const startY = parentPos.y + index * VERTICAL_SPACING;
@@ -253,9 +251,9 @@ export const createLinksFromCanvasState = (
       return;
     }
 
-    let neighbors: dia.Cell[];
+    let neighbors: dia.Cell[]; // Neighbors are all the cells that are connected to the source shape
     try {
-      neighbors = graph.getNeighbors(sourceShape as dia.Element);
+      neighbors = graph.getNeighbors(sourceShape);
     } catch (error) {
       console.error(`Failed to get neighbors for ${sourceShape.id}:`, error);
       return;
@@ -274,7 +272,7 @@ export const createLinksFromCanvasState = (
         }
 
         // Verify target is in graph
-        if (!graph.getCell(targetShape.id)) {
+        if (!graph.getCell(targetId)) {
           return;
         }
 
@@ -297,7 +295,7 @@ export const createLinksFromCanvasState = (
         try {
           const link = new LinkShape();
           link.source({ id: sourceShape.id, port: relationName });
-          link.target({ id: targetShape.id });
+          link.target({ id: targetId });
           link.addTo(graph);
 
           existingNeighbors.add(String(targetId));
@@ -382,7 +380,6 @@ export const initializeCanvasFromInstance = (
     };
 
     const shape = new ServiceEntityShape(shapeOptions);
-    shape.set("id", instance.id);
 
     let shapeX: number;
     let shapeY: number;
