@@ -72,7 +72,7 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
   });
 };
 
-if (Cypress.env("edition") === "iso") {
+if (cy.env("edition") === "iso") {
   describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     before(() => {
       clearEnvironment();

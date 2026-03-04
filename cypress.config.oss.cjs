@@ -2,9 +2,8 @@ const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
   env: {
-    edition: "iso",
+    edition: "oss",
     gitlabToken: process.env.GITLAB_TOKEN,
-    baseUrl: "http://127.0.0.1:8888",
   },
   video: false,
   reporter: "junit",

@@ -72,7 +72,7 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
   });
 };
 
-if (Cypress.env("edition") === "iso") {
+if (cy.env("edition") === "iso") {
   describe("Scenario 2.4 Service Catalog - basic-service", () => {
     before(() => {
       clearEnvironment();

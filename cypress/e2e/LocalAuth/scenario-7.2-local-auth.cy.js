@@ -1,4 +1,4 @@
-if (Cypress.env("local-auth")) {
+if (cy.env("local-auth")) {
   it("should be able to login and logout", () => {
     cy.visit("/console/");
 

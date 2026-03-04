@@ -2,9 +2,9 @@ const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
   env: {
-    edition: "iso",
+    edition: "oss",
     gitlabToken: process.env.GITLAB_TOKEN,
-    baseUrl: "http://127.0.0.1:8888",
+    localAuth: true,
   },
   video: false,
   reporter: "junit",
@@ -14,9 +14,10 @@ module.exports = defineConfig({
     mochaFile: "cypress/reports/junit/test-report-[hash].xml",
   },
   e2e: {
-    baseUrl: "http://127.0.0.1:8888",
+    baseUrl: "https://127.0.0.1:8888",
     supportFile: "cypress/support/e2e.js",
     defaultCommandTimeout: 10000,
     requestTimeout: 10000,
+    specPattern: "cypress/e2e/LocalAuth/**",
   },
 });

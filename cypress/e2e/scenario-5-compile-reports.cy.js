@@ -72,7 +72,7 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
   });
 };
 
-const isIso = Cypress.env("edition") === "iso";
+const isIso = cy.env("edition") === "iso";
 
 describe("5 Compile reports", () => {
   if (isIso) {

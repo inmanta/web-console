@@ -72,7 +72,7 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
   });
 };
 
-if (Cypress.env("edition") === "iso") {
+if (cy.env("edition") === "iso") {
   describe("Scenario 2.3 Service Catalog - embedded-entity", () => {
     before(() => {
       clearEnvironment();
