@@ -1,7 +1,6 @@
-const {
-  clearEnvironment,
-  forceUpdateEnvironment,
-} = require("../support/environmentHelpers");
+import environmentHelpers from "../support/environmentHelpers";
+
+const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
 beforeEach(() => {
   localStorage.setItem("theme-preference", "light");

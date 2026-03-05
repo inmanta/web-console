@@ -1,8 +1,6 @@
-const {
-  clearEnvironment,
-  checkStatusCompile,
-  forceUpdateEnvironment,
-} = require("../support/environmentHelpers");
+import environmentHelpers from "../support/environmentHelpers";
+
+const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
 const isIso = cy.env("edition") === "iso";
 

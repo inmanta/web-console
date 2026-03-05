@@ -58,8 +58,8 @@ export const addConnectionsBetweenShapes = (
   const sourceRelationKey = targetShape.getEntityName();
   const targetRelationKey = sourceShape.getEntityName();
 
-  sourceShape.addConnection(targetShape.id, sourceRelationKey);
-  targetShape.addConnection(sourceShape.id, targetRelationKey);
+  sourceShape.addConnection(String(targetShape.id), sourceRelationKey);
+  targetShape.addConnection(String(sourceShape.id), targetRelationKey);
 };
 
 /**
@@ -76,6 +76,6 @@ export const removeConnectionsBetweenShapes = (
   const sourceRelationKey = targetShape.getEntityName();
   const targetRelationKey = sourceShape.getEntityName();
 
-  sourceShape.removeConnection(targetShape.id, sourceRelationKey);
-  targetShape.removeConnection(sourceShape.id, targetRelationKey);
+  sourceShape.removeConnection(String(targetShape.id), sourceRelationKey);
+  targetShape.removeConnection(String(sourceShape.id), targetRelationKey);
 };

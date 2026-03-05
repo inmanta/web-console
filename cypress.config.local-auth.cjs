@@ -1,9 +1,10 @@
 const { defineConfig } = require("cypress");
+require("dotenv").config();
 
 module.exports = defineConfig({
   env: {
     edition: "oss",
-    gitlabToken: process.env.GITLAB_TOKEN,
+    GITLAB_TOKEN: process.env.GITLAB_TOKEN,
     localAuth: true,
   },
   video: false,
