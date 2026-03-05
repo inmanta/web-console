@@ -292,15 +292,16 @@ export const AttributesTable: React.FC<Props> = ({
 
     return [
       <TreeRowWrapper key={node.id} row={{ props: treeRow.props }}>
-        <Td
+        <StyledTd
           dataLabel="name"
-          {...(hasChildren ? { treeRow } : {})}
+          treeRow={treeRow}
           onClick={hasChildren ? handleToggle : undefined}
+          data-expandable={hasChildren}
           data-testid="attribute-key"
           aria-label={node.id + "_attribute"}
         >
           <TableText>{node.name}</TableText>
-        </Td>
+        </StyledTd>
         <Td
           dataLabel="value"
           width={60}
@@ -407,4 +408,10 @@ export const AttributesTable: React.FC<Props> = ({
 
 const StyledSelect = styled(FormSelect)`
   width: 180px;
+`;
+const StyledTd = styled(Td)`
+  &[data-expandable="false"],
+  &[data-expandable="false"] * {
+    cursor: auto !important;
+  }
 `;
