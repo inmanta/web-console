@@ -255,14 +255,17 @@ export const AttributesTable: React.FC<Props> = ({
 
     // isDetailsExpanded is used only on the responsive view.
     const isDetailsExpanded = expandedDetailsNodeIds.includes(node.id);
+    const hasChildren = node.children && node.children.length > 0;
+
+    const handleToggle = () => {
+      setExpandedNodeIds((prev) => {
+        const other = prev.filter((id) => id !== node.id);
+        return isExpanded ? other : [...other, node.id];
+      });
+    };
 
     const treeRow: TdProps["treeRow"] = {
-      onCollapse: () =>
-        setExpandedNodeIds((prevExpanded) => {
-          const otherExpandedNodeNames = prevExpanded.filter((id) => id !== node.id);
-
-          return isExpanded ? otherExpandedNodeNames : [...otherExpandedNodeNames, node.id];
-        }),
+      onCollapse: handleToggle,
       onToggleRowDetails: () =>
         setExpandedDetailsNodeIds((prevDetailsExpanded) => {
           const otherDetailsExpandedNodeNames = prevDetailsExpanded.filter((id) => id !== node.id);
@@ -288,10 +291,11 @@ export const AttributesTable: React.FC<Props> = ({
         : [];
 
     return [
-      <TreeRowWrapper key={rowIndex} row={{ props: treeRow.props }}>
+      <TreeRowWrapper key={node.id} row={{ props: treeRow.props }}>
         <Td
           dataLabel="name"
-          treeRow={treeRow}
+          {...(hasChildren ? { treeRow } : {})}
+          onClick={hasChildren ? handleToggle : undefined}
           data-testid="attribute-key"
           aria-label={node.id + "_attribute"}
         >
