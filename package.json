@@ -24,7 +24,7 @@
     "clean": "rimraf dist",
     "delete:reports": "rm -r cypress/reports/* || true",
     "precypress-test": "yarn run delete:reports",
-    "cypress-test:oss": "yarn cypress run --env edition=oss",
+    "cypress-test:oss": "yarn cypress run --config-file cypress.config.oss.cjs",
     "cypress-test:iso": "yarn cypress run",
     "cypress-test:keycloak": "yarn cypress run --config-file cypress.config.keycloak.cjs",
     "cypress-test:local-auth": "yarn cypress run --config-file cypress.config.local-auth.cjs",
