@@ -1,4 +1,4 @@
-if (cy.env("keycloak")) {
+if (Cypress.env("keycloak")) {
   it("should be able to login and logout", () => {
     cy.visit("/console/");
 
