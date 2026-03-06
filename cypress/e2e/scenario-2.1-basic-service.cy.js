@@ -6,7 +6,7 @@ beforeEach(() => {
   localStorage.setItem("theme-preference", "light");
 });
 
-if (cy.env("edition") === "iso") {
+if (Cypress.env("edition") === "iso") {
   describe("Scenario 2.1 Service Catalog - basic-service", () => {
     before(() => {
       clearEnvironment();

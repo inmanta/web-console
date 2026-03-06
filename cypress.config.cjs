@@ -1,5 +1,7 @@
 const { defineConfig } = require("cypress");
-require("dotenv").config();
+const { config } = require("dotenv");
+
+config();
 
 module.exports = defineConfig({
   env: {
@@ -19,5 +21,6 @@ module.exports = defineConfig({
     supportFile: "cypress/support/e2e.js",
     defaultCommandTimeout: 10000,
     requestTimeout: 10000,
+    excludeSpecPattern: ["cypress/e2e/Keycloak/**", "cypress/e2e/LocalAuth/**"],
   },
 });

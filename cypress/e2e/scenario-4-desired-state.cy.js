@@ -2,7 +2,7 @@ import environmentHelpers from "../support/environmentHelpers";
 
 const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
-const isIso = cy.env("edition") === "iso";
+const isIso = Cypress.env("edition") === "iso";
 
 describe("Scenario 4 Desired State", () => {
   if (isIso) {
