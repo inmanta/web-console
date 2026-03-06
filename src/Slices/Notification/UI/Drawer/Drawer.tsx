@@ -45,6 +45,9 @@ export const Drawer: React.FC<Props> = ({ onClose, isDrawerOpen, drawerRef }) =>
     pageSize: PageSize.from("50"),
     origin: "drawer",
     currentPage: { kind: "CurrentPage", value: "" },
+    filter: {
+      cleared: false,
+    },
   }).useContinuous();
 
   const { mutate } = useUpdateNotification({
