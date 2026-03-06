@@ -1,7 +1,7 @@
 ---
-name: "Frontend Request"
+name: "Feature Request"
 about: "Request a new frontend feature or UX improvement in the web console UI"
-title: "[REQUEST] "
+title: "[REQUEST]"
 assignees: ""
 ---
 

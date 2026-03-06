@@ -75,11 +75,13 @@ describe("DesiredStateDetails", () => {
 
     render(component);
 
-    expect(
-      await screen.findByRole("generic", {
-        name: "VersionResourcesTable-Empty",
-      })
-    ).toBeVisible();
+    await waitFor(() => {
+      expect(
+        screen.getByRole("generic", {
+          name: "VersionResourcesTable-Empty",
+        })
+      ).toBeVisible();
+    });
 
     await act(async () => {
       const results = await axe(document.body);

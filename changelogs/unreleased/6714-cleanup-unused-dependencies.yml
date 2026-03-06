@@ -1,0 +1,3 @@
+description: Remove unused dependencies (easy-peasy, victory) and move dev-only packages (msw, react-query-devtools, @remix-run/router) to devDependencies
+change-type: patch
+destination-branches: [master, iso9]

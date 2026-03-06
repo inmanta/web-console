@@ -255,14 +255,17 @@ export const AttributesTable: React.FC<Props> = ({
 
     // isDetailsExpanded is used only on the responsive view.
     const isDetailsExpanded = expandedDetailsNodeIds.includes(node.id);
+    const hasChildren = node.children && node.children.length > 0;
+
+    const handleToggle = () => {
+      setExpandedNodeIds((prev) => {
+        const other = prev.filter((id) => id !== node.id);
+        return isExpanded ? other : [...other, node.id];
+      });
+    };
 
     const treeRow: TdProps["treeRow"] = {
-      onCollapse: () =>
-        setExpandedNodeIds((prevExpanded) => {
-          const otherExpandedNodeNames = prevExpanded.filter((id) => id !== node.id);
-
-          return isExpanded ? otherExpandedNodeNames : [...otherExpandedNodeNames, node.id];
-        }),
+      onCollapse: handleToggle,
       onToggleRowDetails: () =>
         setExpandedDetailsNodeIds((prevDetailsExpanded) => {
           const otherDetailsExpandedNodeNames = prevDetailsExpanded.filter((id) => id !== node.id);
@@ -288,15 +291,17 @@ export const AttributesTable: React.FC<Props> = ({
         : [];
 
     return [
-      <TreeRowWrapper key={rowIndex} row={{ props: treeRow.props }}>
-        <Td
+      <TreeRowWrapper key={node.id} row={{ props: treeRow.props }}>
+        <StyledTd
           dataLabel="name"
           treeRow={treeRow}
+          onClick={hasChildren ? handleToggle : undefined}
+          data-expandable={hasChildren}
           data-testid="attribute-key"
           aria-label={node.id + "_attribute"}
         >
           <TableText>{node.name}</TableText>
-        </Td>
+        </StyledTd>
         <Td
           dataLabel="value"
           width={60}
@@ -403,4 +408,10 @@ export const AttributesTable: React.FC<Props> = ({
 
 const StyledSelect = styled(FormSelect)`
   width: 180px;
+`;
+const StyledTd = styled(Td)`
+  &[data-expandable="false"],
+  &[data-expandable="false"] * {
+    cursor: auto !important;
+  }
 `;
