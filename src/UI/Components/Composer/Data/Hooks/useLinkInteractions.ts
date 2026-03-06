@@ -155,7 +155,7 @@ export const useLinkInteractions = ({
       } else if (isServiceEntityShapeCell(cell)) {
         const removedShape = cell as ServiceEntityShape;
         const removedShapeId = removedShape.id as string;
-        const removedEntityType = removedShape.getEntityName();
+        const removedEntityType = removedShape.getEntityType();
 
         // Find all connected shapes using the removed shape's connections map
         // (This is more reliable than using graph.getLinks() since links may already be removed)

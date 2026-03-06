@@ -62,7 +62,7 @@ describe("createRelationsDictionary", () => {
     const result = createRelationsDictionary(catalog);
 
     expect(result["ServiceA"]["ServiceB"]).toEqual({ lower_limit: 1, upper_limit: 1 });
-    expect(result["ServiceB"]["ServiceA"]).toEqual({ lower_limit: 1, upper_limit: 1 });
+    expect(result["ServiceB"]["ServiceA"]).toEqual({ lower_limit: 0, upper_limit: null });
   });
 
   it("should use entity_type as the dictionary key when it differs from relation name", () => {
@@ -76,8 +76,34 @@ describe("createRelationsDictionary", () => {
     const result = createRelationsDictionary(catalog);
 
     expect(result["ServiceA"]["UserNetworkInterface"]).toEqual({ lower_limit: 1, upper_limit: 1 });
-    expect(result["UserNetworkInterface"]["ServiceA"]).toEqual({ lower_limit: 1, upper_limit: 1 });
+    expect(result["UserNetworkInterface"]["ServiceA"]).toEqual({
+      lower_limit: 0,
+      upper_limit: null,
+    });
     expect(result["ServiceA"].uni).toBeUndefined();
+  });
+
+  it("should preserve asymmetric cardinality when both sides declare the relation", () => {
+    const catalog: ServiceModel[] = [
+      createServiceModel("ServiceA", {
+        inter_service_relations: [
+          createInterServiceRelation("ServiceB", "ServiceB", { upper_limit: 1 }),
+        ],
+      }),
+      createServiceModel("ServiceB", {
+        inter_service_relations: [
+          createInterServiceRelation("ServiceA", "ServiceA", {
+            lower_limit: 0,
+            upper_limit: 5,
+          }),
+        ],
+      }),
+    ];
+
+    const result = createRelationsDictionary(catalog);
+
+    expect(result["ServiceA"]["ServiceB"]).toEqual({ lower_limit: 1, upper_limit: 1 });
+    expect(result["ServiceB"]["ServiceA"]).toEqual({ lower_limit: 0, upper_limit: 5 });
   });
 
   it("should handle services with no relations", () => {
@@ -130,7 +156,7 @@ describe("createRelationsDictionary", () => {
 
     expect(result["ServiceA"]["EntityType1"]).toEqual({ lower_limit: 1, upper_limit: 1 });
     expect(result["EntityType1"]["ServiceB"]).toEqual({ lower_limit: 1, upper_limit: 1 });
-    expect(result["ServiceB"]["EntityType1"]).toEqual({ lower_limit: 1, upper_limit: 1 });
+    expect(result["ServiceB"]["EntityType1"]).toEqual({ lower_limit: 0, upper_limit: null });
   });
 
   it("should handle deep nested embedded entities recursively", () => {
@@ -166,12 +192,12 @@ describe("createRelationsDictionary", () => {
     expect(result["Level2Type"]["Level3Type"]).toEqual({ lower_limit: 1, upper_limit: 1 });
     expect(result["Level3Type"]["ServiceB"]).toEqual({ lower_limit: 1, upper_limit: 1 });
 
-    expect(result["ServiceD"]["ServiceA"]).toEqual({ lower_limit: 1, upper_limit: 1 });
+    expect(result["ServiceD"]["ServiceA"]).toEqual({ lower_limit: 0, upper_limit: null });
     expect(result["Level1Type"]["ServiceA"]).toEqual({ lower_limit: 1, upper_limit: 1 });
-    expect(result["ServiceC"]["Level1Type"]).toEqual({ lower_limit: 1, upper_limit: 1 });
+    expect(result["ServiceC"]["Level1Type"]).toEqual({ lower_limit: 0, upper_limit: null });
     expect(result["Level2Type"]["Level1Type"]).toEqual({ lower_limit: 1, upper_limit: 1 });
     expect(result["Level3Type"]["Level2Type"]).toEqual({ lower_limit: 1, upper_limit: 1 });
-    expect(result["ServiceB"]["Level3Type"]).toEqual({ lower_limit: 1, upper_limit: 1 });
+    expect(result["ServiceB"]["Level3Type"]).toEqual({ lower_limit: 0, upper_limit: null });
   });
 
   it("should handle multiple embedded entities at the same level", () => {
@@ -208,7 +234,7 @@ describe("createRelationsDictionary", () => {
     const result = createRelationsDictionary(catalog);
 
     expect(result["ServiceA"]["ServiceB"]).toEqual({ lower_limit: 1, upper_limit: 1 });
-    expect(result["ServiceB"]["ServiceA"]).toEqual({ lower_limit: 1, upper_limit: 1 });
+    expect(result["ServiceB"]["ServiceA"]).toEqual({ lower_limit: 0, upper_limit: null });
   });
 
   it("should handle complex mixed scenarios", () => {
@@ -241,11 +267,11 @@ describe("createRelationsDictionary", () => {
     expect(result["Database"]["DatabaseService"]).toEqual({ lower_limit: 1, upper_limit: 1 });
     expect(result["Auth"]["AuthService"]).toEqual({ lower_limit: 1, upper_limit: 1 });
 
-    expect(result["GatewayService"]["MainService"]).toEqual({ lower_limit: 1, upper_limit: 1 });
+    expect(result["GatewayService"]["MainService"]).toEqual({ lower_limit: 0, upper_limit: null });
     expect(result["Config"]["MainService"]).toEqual({ lower_limit: 1, upper_limit: 1 });
     expect(result["Database"]["Config"]).toEqual({ lower_limit: 1, upper_limit: 1 });
-    expect(result["DatabaseService"]["Database"]).toEqual({ lower_limit: 1, upper_limit: 1 });
-    expect(result["AuthService"]["Auth"]).toEqual({ lower_limit: 1, upper_limit: 1 });
+    expect(result["DatabaseService"]["Database"]).toEqual({ lower_limit: 0, upper_limit: null });
+    expect(result["AuthService"]["Auth"]).toEqual({ lower_limit: 0, upper_limit: null });
   });
 
   it("should skip read-only embedded entities and their relations", () => {
@@ -303,5 +329,21 @@ describe("createRelationsDictionary", () => {
 
     expect(result["ServiceA"]["Unlimited"]).toEqual({ lower_limit: 1, upper_limit: null });
     expect(result["Unlimited"]["ServiceA"]).toEqual({ lower_limit: 1, upper_limit: null });
+  });
+
+  it("should aggregate parent limits when multiple embedded entities share the same type", () => {
+    const catalog: ServiceModel[] = [
+      createServiceModel("ServiceA", {
+        embedded_entities: [
+          createEmbeddedEntity("from", "End", { lower_limit: 1, upper_limit: 1 }),
+          createEmbeddedEntity("to", "End", { lower_limit: 1, upper_limit: 1 }),
+        ],
+      }),
+    ];
+
+    const result = createRelationsDictionary(catalog);
+
+    expect(result["ServiceA"]["End"]).toEqual({ lower_limit: 2, upper_limit: 2 });
+    expect(result["End"]["ServiceA"]).toEqual({ lower_limit: 1, upper_limit: 1 });
   });
 });

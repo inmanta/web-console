@@ -319,6 +319,7 @@ describe("useComposerGraph", () => {
         "entity-1",
         {
           id: "entity-1",
+          getEntityType: () => "Entity1Type",
           getEntityName: () => "Entity1",
         },
       ],

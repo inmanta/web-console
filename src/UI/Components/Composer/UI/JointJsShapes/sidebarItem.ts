@@ -15,10 +15,14 @@ export interface SidebarItemOptions extends ServiceEntityBase {
 }
 
 export const createSidebarItem = (options: SidebarItemOptions) => {
-  const defaultName =
+  const typeName =
     "type" in options.serviceModel && options.serviceModel.type
       ? options.serviceModel.type
-      : options.serviceModel.name;
+      : undefined;
+  const serviceName = options.serviceModel.name;
+
+  const defaultName =
+    typeName && serviceName ? `${typeName} - ${serviceName}` : typeName || serviceName;
 
   const name = options.label || defaultName;
 

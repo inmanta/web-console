@@ -130,7 +130,7 @@ export const useComposerGraph = ({
     if (instanceId) {
       const initialShapeInfo = new Map<string, { service_entity: string }>();
       initializedEntities.forEach((shape, id) => {
-        initialShapeInfo.set(id, { service_entity: shape.getEntityName() });
+        initialShapeInfo.set(id, { service_entity: shape.getEntityType() });
       });
       onInitialShapeInfoTracked(initialShapeInfo);
     } else {
