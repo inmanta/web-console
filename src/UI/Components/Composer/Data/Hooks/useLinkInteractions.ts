@@ -55,8 +55,8 @@ export const useLinkInteractions = ({
     ) => {
       setCanvasState((prev) => {
         const updated = new Map(prev);
-        updated.set(sourceShape.id, sourceShape);
-        updated.set(targetShape.id, targetShape);
+        updated.set(String(sourceShape.id), sourceShape);
+        updated.set(String(targetShape.id), targetShape);
         return updated;
       });
     };
@@ -184,7 +184,7 @@ export const useLinkInteractions = ({
 
           // Update all connected shapes in canvas state
           for (const connectedShape of connectedShapes) {
-            newState.set(connectedShape.id, connectedShape);
+            newState.set(String(connectedShape.id), connectedShape);
           }
 
           return newState;

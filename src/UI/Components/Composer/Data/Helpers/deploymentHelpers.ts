@@ -68,7 +68,7 @@ export const canvasStateToServiceOrderItems = (
   // Collect orderItems from current shapes
   canvasState.forEach((shape) => {
     if (shape.orderItem) {
-      serviceOrderItems.set(shape.id, shape.orderItem);
+      serviceOrderItems.set(String(shape.id), shape.orderItem);
     }
   });
 

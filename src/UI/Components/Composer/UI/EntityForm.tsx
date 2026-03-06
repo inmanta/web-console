@@ -106,7 +106,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
     setFormState(instanceAttributes);
     setOriginalState(instanceAttributes);
     setIsDirty(false);
-    setCurrentCellId(activeCell.id);
+    setCurrentCellId(String(activeCell.id));
   }, [activeCell]);
 
   /**
@@ -139,7 +139,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
         // Update canvas state to trigger validation checks in Composer.tsx
         setCanvasState((prev) => {
           const updated = new Map(prev);
-          updated.set(activeCell.id, activeCell);
+          updated.set(String(activeCell.id), activeCell);
           return updated;
         });
 
@@ -154,7 +154,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
 
   // Re-initialize when activeCell changes (detected by ID change)
   useEffect(() => {
-    if (activeCell.id !== currentCellId) {
+    if (String(activeCell.id) !== currentCellId) {
       createFieldsAndState();
     }
   }, [activeCell.id, currentCellId, createFieldsAndState]);
