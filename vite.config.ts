@@ -135,9 +135,9 @@ export default defineConfig({
     COMMITHASH: JSON.stringify(getGitCommitHash()),
     APP_VERSION: JSON.stringify(packageJson.version),
     global: "globalThis",
-    ...(process.env.VITEST
+    ...(process.env.VITEST || process.env.NODE_ENV === "production"
       ? {
-          // API base URL should be empty when running tests with Vitest
+          // Ensure API base URL is empty in tests and production builds
           "import.meta.env.VITE_API_BASEURL": JSON.stringify(""),
         }
       : {}),

@@ -1,0 +1,6 @@
+description: Added support to run compile from a clean slate, it is now possible to run a cleanup and recompile
+issue-nr: 6655
+change-type: feat
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"
