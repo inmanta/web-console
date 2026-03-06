@@ -6,7 +6,6 @@ config();
 module.exports = defineConfig({
   env: {
     edition: "iso",
-    baseUrl: "http://127.0.0.1:8888",
     GITLAB_TOKEN: process.env.GITLAB_TOKEN,
   },
   video: false,
