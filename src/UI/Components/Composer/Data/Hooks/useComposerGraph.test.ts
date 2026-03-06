@@ -155,7 +155,7 @@ describe("useComposerGraph", () => {
     expect(result.current.scroller).toBeInstanceOf(ui.PaperScroller);
 
     // Mock zoomToFit to prevent DOM errors in subsequent tests
-    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => {});
+    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => { });
   });
 
   it("should not initialize when serviceCatalog is missing", () => {
@@ -213,7 +213,7 @@ describe("useComposerGraph", () => {
     );
 
     // Mock zoomToFit to prevent DOM errors
-    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => {});
+    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => { });
 
     await waitFor(() => {
       expect(Helpers.createPlaceholderInstance).toHaveBeenCalledWith(mainService);
@@ -269,7 +269,7 @@ describe("useComposerGraph", () => {
     );
 
     // Mock zoomToFit to prevent DOM errors
-    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => {});
+    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => { });
 
     await waitFor(() => {
       expect(Helpers.initializeCanvasFromInstance).toHaveBeenCalledWith(
@@ -304,7 +304,7 @@ describe("useComposerGraph", () => {
     );
 
     // Mock zoomToFit to prevent DOM errors
-    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => {});
+    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => { });
 
     await waitFor(() => {
       expect(onCanvasStateInitialized).toHaveBeenCalledWith(mockEntities);
@@ -319,6 +319,7 @@ describe("useComposerGraph", () => {
         "entity-1",
         {
           id: "entity-1",
+          getEntityType: () => "Entity1Type",
           getEntityName: () => "Entity1",
         },
       ],
@@ -341,7 +342,7 @@ describe("useComposerGraph", () => {
     );
 
     // Mock zoomToFit to prevent DOM errors
-    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => {});
+    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => { });
 
     await waitFor(() => {
       expect(onInitialShapeInfoTracked).toHaveBeenCalled();
@@ -369,7 +370,7 @@ describe("useComposerGraph", () => {
     );
 
     // Mock zoomToFit to prevent DOM errors
-    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => {});
+    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => { });
 
     await waitFor(() => {
       expect(onInitialShapeInfoTracked).toHaveBeenCalledWith(new Map());
@@ -403,7 +404,7 @@ describe("useComposerGraph", () => {
     );
 
     // Mock zoomToFit to prevent DOM errors
-    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => {});
+    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => { });
 
     await waitFor(() => {
       expect(Helpers.applyCoordinatesFromMetadata).toHaveBeenCalled();
@@ -427,7 +428,7 @@ describe("useComposerGraph", () => {
     );
 
     // Mock zoomToFit to prevent DOM errors
-    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => {});
+    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => { });
 
     await waitFor(() => {
       expect(Helpers.applyAutoLayoutToEmbeddedEntities).toHaveBeenCalled();
@@ -472,7 +473,7 @@ describe("useComposerGraph", () => {
     );
 
     // Mock zoomToFit to prevent DOM errors
-    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => {});
+    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => { });
 
     await waitFor(() => {
       expect(Helpers.initializeCanvasFromInstance).toHaveBeenCalled();
@@ -529,7 +530,7 @@ describe("useComposerGraph", () => {
     );
 
     // Mock zoomToFit to prevent DOM errors
-    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => {});
+    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => { });
 
     await waitFor(() => {
       expect(Helpers.initializeCanvasFromInstance).toHaveBeenCalled();
@@ -560,7 +561,7 @@ describe("useComposerGraph", () => {
     });
     const mockInstanceData = createMockInstanceWithRelations(mockInstance);
 
-    const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => { });
 
     const { result } = renderHook(() =>
       useComposerGraph({
@@ -578,7 +579,7 @@ describe("useComposerGraph", () => {
     );
 
     // Mock zoomToFit to prevent DOM errors
-    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => {});
+    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(() => { });
 
     await waitFor(() => {
       expect(consoleWarnSpy).toHaveBeenCalled();

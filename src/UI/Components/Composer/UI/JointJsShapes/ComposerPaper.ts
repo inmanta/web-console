@@ -239,12 +239,20 @@ export class ComposerPaper {
       // Missing connections message(s)
       if (shape.isMissingConnections()) {
         const missingConnections = shape.getMissingConnections();
+        console.info(
+          "[Composer] Missing relations:",
+          missingConnections.map(({ entityType, name }) => ({ entityType, name }))
+        );
         const connectionLines = missingConnections.map((conn) => {
+          const displayName =
+            conn.entityType && conn.entityType !== conn.name
+              ? `${conn.name} (${conn.entityType})`
+              : conn.name;
           const line =
             conn.required === 1
-              ? words("instanceComposer.tooltip.missingConnectionSingle")(conn.name)
+              ? words("instanceComposer.tooltip.missingConnectionSingle")(displayName)
               : words("instanceComposer.tooltip.missingConnectionMultiple")(
-                  conn.name,
+                  displayName,
                   conn.missing,
                   conn.required
                 );

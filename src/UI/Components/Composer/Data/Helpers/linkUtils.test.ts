@@ -16,6 +16,7 @@ describe("linkUtils", () => {
   const createMockShape = (id: string, entityName: string): ServiceEntityShape => {
     return {
       id,
+      getEntityType: vi.fn().mockReturnValue(entityName),
       getEntityName: vi.fn().mockReturnValue(entityName),
       addConnection: vi.fn(),
       removeConnection: vi.fn(),
@@ -50,7 +51,7 @@ describe("linkUtils", () => {
 
       createLinkShape(sourceShape, targetShape);
 
-      expect(targetShape.getEntityName).toHaveBeenCalled();
+      expect(targetShape.getEntityType).toHaveBeenCalled();
     });
 
     it("should apply paper options when provided", () => {

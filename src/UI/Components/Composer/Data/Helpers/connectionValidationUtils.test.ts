@@ -166,6 +166,7 @@ describe("connectionValidationUtils", () => {
       const result = getEmbeddedEntityMissingConnections(shape, entity);
 
       expect(result).toEqual({
+        entityType: "EntityType",
         name: "EntityType",
         missing: 2,
         required: 2,
@@ -197,6 +198,7 @@ describe("connectionValidationUtils", () => {
       const result = getEmbeddedEntityMissingConnections(shape, entity);
 
       expect(result).toEqual({
+        entityType: "EntityType",
         name: "EntityType",
         missing: 2,
         required: 3,
@@ -221,6 +223,7 @@ describe("connectionValidationUtils", () => {
       const result = getInterServiceRelationMissingConnections(shape, relation);
 
       expect(result).toEqual({
+        entityType: "ServiceB",
         name: "rel",
         missing: 2,
         required: 2,
@@ -234,6 +237,7 @@ describe("connectionValidationUtils", () => {
       const result = getInterServiceRelationMissingConnections(shape, relation);
 
       expect(result).toEqual({
+        entityType: "ServiceB",
         name: "MyRelation",
         missing: 1,
         required: 1,

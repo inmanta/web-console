@@ -62,7 +62,7 @@ const checkConnectionRequirement = (
 const getMissingConnectionDetails = (
   shape: ServiceEntityShape,
   configuration: ConnectionCheckConfig
-): { name: string; missing: number; required: number } | null => {
+): { entityType: string; name: string; missing: number; required: number } | null => {
   // Skip read-only for existing entities
   if (configuration.skipReadOnly) {
     return null;
@@ -78,6 +78,7 @@ const getMissingConnectionDetails = (
 
   if (connectedCount < configuration.lowerLimit) {
     return {
+      entityType: configuration.connectionKey,
       name: configuration.displayName,
       missing: configuration.lowerLimit - connectedCount,
       required: configuration.lowerLimit,
@@ -125,7 +126,7 @@ export const checkInterServiceRelationConnections = (
 export const getEmbeddedEntityMissingConnections = (
   shape: ServiceEntityShape,
   embeddedEntity: EmbeddedEntity
-): { name: string; missing: number; required: number } | null => {
+): { entityType: string; name: string; missing: number; required: number } | null => {
   const configuration = buildConnectionCheckConfig(
     shape,
     embeddedEntity,
@@ -141,7 +142,7 @@ export const getEmbeddedEntityMissingConnections = (
 export const getInterServiceRelationMissingConnections = (
   shape: ServiceEntityShape,
   relation: InterServiceRelation
-): { name: string; missing: number; required: number } | null => {
+): { entityType: string; name: string; missing: number; required: number } | null => {
   const configuration = buildConnectionCheckConfig(
     shape,
     relation,
