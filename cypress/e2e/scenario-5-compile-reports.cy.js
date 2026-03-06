@@ -54,6 +54,26 @@ describe("5 Compile reports", () => {
       expect($rows.eq(0), "top-row-status").to.contain("success");
     });
 
+    // open dropdown of compile widget
+    cy.get('[aria-label="Toggle"]').click();
+
+    // click cleanup and recompile
+    cy.get('[aria-label="CleanupAndRecompileButton"]').click();
+
+    // expect new compile to appear
+    cy.get("tbody").should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows.eq(0), "top-row-message").to.contain("Compile triggered from the console");
+    });
+
+    // wait for compile to finish
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows.eq(0), "top-row-status").to.contain("success");
+    });
+
     // click on show details
     cy.get("button").contains("Show Details").eq(0).click();
 

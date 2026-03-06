@@ -7,11 +7,13 @@ interface Body {
     type: string;
     message: string;
   };
+  reinstall: boolean;
 }
 
 interface Params {
   env: string;
   update: boolean;
+  reinstall: boolean;
 }
 
 /**
@@ -26,13 +28,14 @@ export const useTriggerCompile = (
   const post = usePostWithoutEnv()<Body>;
 
   return useMutation({
-    mutationFn: ({ env, update }) =>
+    mutationFn: ({ env, update, reinstall }) =>
       post(`/api/v1/notify/${env}`, {
         update,
         metadata: {
           type: "console",
           message: "Compile triggered from the console",
         },
+        reinstall,
       }),
     mutationKey: ["trigger_compile"],
     ...options,

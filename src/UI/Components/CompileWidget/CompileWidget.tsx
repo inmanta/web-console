@@ -13,6 +13,7 @@ import { words } from "@/UI/words";
 interface Props {
   onRecompile(): void;
   onUpdateAndRecompile(): void;
+  onCleanupAndRecompile(): void;
   isDisabled?: boolean;
   hint?: string;
 }
@@ -20,6 +21,7 @@ interface Props {
 export const CompileWidget: React.FC<Props> = ({
   onRecompile,
   onUpdateAndRecompile,
+  onCleanupAndRecompile,
   isDisabled,
   hint,
 }) => {
@@ -32,6 +34,7 @@ export const CompileWidget: React.FC<Props> = ({
       onToggle={(open: boolean) => setIsOpen(open)}
       onRecompile={onRecompile}
       onUpdateAndRecompile={onUpdateAndRecompile}
+      onCleanupAndRecompile={onCleanupAndRecompile}
     />
   );
 
@@ -45,6 +48,7 @@ interface WidgetProps {
   onToggle(open: boolean): void;
   onRecompile(): void;
   onUpdateAndRecompile(): void;
+  onCleanupAndRecompile(): void;
 }
 
 const Widget: React.FC<WidgetProps> = ({
@@ -54,6 +58,7 @@ const Widget: React.FC<WidgetProps> = ({
   onToggle,
   onRecompile,
   onUpdateAndRecompile,
+  onCleanupAndRecompile,
 }) => (
   <Dropdown
     aria-label="CompileWidget"
@@ -83,12 +88,21 @@ const Widget: React.FC<WidgetProps> = ({
     <DropdownList>
       <DropdownItem
         aria-label="UpdateAndRecompileButton"
-        key="action"
+        key="action-update"
         component="button"
         onClick={onUpdateAndRecompile}
         isDisabled={isDisabled}
       >
         {words("common.compileWidget.updateAndRecompile")}
+      </DropdownItem>
+      <DropdownItem
+        aria-label="CleanupAndRecompileButton"
+        key="action-cleanup"
+        component="button"
+        onClick={onCleanupAndRecompile}
+        isDisabled={isDisabled}
+      >
+        {words("common.compileWidget.cleanupAndRecompile")}
       </DropdownItem>
     </DropdownList>
   </Dropdown>

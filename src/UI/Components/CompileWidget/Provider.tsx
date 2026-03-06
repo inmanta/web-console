@@ -20,8 +20,8 @@ export const Provider: React.FC<Props> = ({ afterTrigger }) => {
   const client = useQueryClient();
 
   const { mutate } = useTriggerCompile({
-    onMutate: ({ update }) => {
-      setToastMessage(words("common.compileWidget.toast")(update));
+    onMutate: ({ update, reinstall }) => {
+      setToastMessage(words("common.compileWidget.toast")(update, reinstall));
       setTimeout(() => {
         setToastMessage("");
       }, 2000);
@@ -35,8 +35,8 @@ export const Provider: React.FC<Props> = ({ afterTrigger }) => {
     },
   });
 
-  const onRecompile = (update: boolean) => () => {
-    mutate({ env, update });
+  const onRecompile = (update: boolean, reinstall: boolean) => () => {
+    mutate({ env, update, reinstall });
   };
 
   return (
@@ -68,8 +68,9 @@ export const Provider: React.FC<Props> = ({ afterTrigger }) => {
         )}
       </AlertGroup>
       <CompileWidget
-        onRecompile={onRecompile(false)}
-        onUpdateAndRecompile={onRecompile(true)}
+        onRecompile={onRecompile(false, false)}
+        onUpdateAndRecompile={onRecompile(true, false)}
+        onCleanupAndRecompile={onRecompile(false, true)}
         isDisabled={!isServerCompileEnabled}
         hint={
           isServerCompileEnabled

@@ -866,10 +866,11 @@ const dict = {
     `Select instances of ${serviceEntity}`,
   "common.environment.select": "Select an environment",
   "common.compileWidget.recompile": "Recompile",
-  "common.compileWidget.toast": (update: boolean) =>
-    `${update ? "Update and " : ""}Recompile triggered`,
+  "common.compileWidget.toast": (update: boolean, reinstall) =>
+    `${update ? "Update and " : reinstall ? "Cleanup and " : ""}Recompile triggered`,
   "common.compileWidget.toastTitle": "Recompile Info",
   "common.compileWidget.updateAndRecompile": "Update project & recompile",
+  "common.compileWidget.cleanupAndRecompile": "Cleanup project & recompile",
   "common.compileWidget.compiling": "Compiling",
   "common.compileWidget.compilationDisabled.hint":
     "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",
