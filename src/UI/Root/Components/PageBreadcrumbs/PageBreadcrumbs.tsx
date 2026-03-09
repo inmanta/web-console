@@ -4,6 +4,22 @@ import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchSanitizer } from "@/UI/Routing";
 
+const decodeUrlLabel = (label: string) => {
+  try {
+    let decoded = label;
+    let prev;
+
+    do {
+      prev = decoded;
+      decoded = decodeURIComponent(decoded);
+    } while (decoded !== prev);
+
+    return decoded;
+  } catch {
+    return label;
+  }
+};
+
 export const PageBreadcrumbs: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
   const { pathname, search } = useLocation();
@@ -15,7 +31,7 @@ export const PageBreadcrumbs: React.FC = () => {
       {crumbs.map((crumb) => (
         <BreadcrumbItem key={crumb.kind} isActive={crumb.active} aria-label={"BreadcrumbItem"}>
           {crumb.active ? (
-            crumb.label
+            decodeUrlLabel(crumb.label)
           ) : (
             <NavLink
               to={{
@@ -23,7 +39,7 @@ export const PageBreadcrumbs: React.FC = () => {
                 search: sanitizer.sanitize(crumb.kind, search),
               }}
             >
-              {crumb.label}
+              {decodeUrlLabel(crumb.label)}
             </NavLink>
           )}
         </BreadcrumbItem>
