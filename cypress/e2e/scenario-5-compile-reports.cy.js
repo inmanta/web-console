@@ -205,7 +205,7 @@ describe("5 Compile reports", () => {
       // Go to compiled Reports page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
-      // Expect all compiles to be succesful
+      // Expect all compiles to be visible in the table, and the top 3 compiles to be about recompilation because of state transition.
       cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
@@ -222,7 +222,7 @@ describe("5 Compile reports", () => {
         );
       });
 
-      // Separate .should() so Cypress keeps retrying until all rows show success
+      // Expect all compiles to be successful
       cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
