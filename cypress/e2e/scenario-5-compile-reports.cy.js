@@ -209,9 +209,8 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(6);
+        expect($rows).to.have.length(7);
 
-        // Expect latest row to be having the message: Recompile model because of state transition from creating to up
         expect($rows.eq(0), "top-row-message").to.contain(
           "Recompile model because of state transition from creating to up"
         );
@@ -221,6 +220,12 @@ describe("5 Compile reports", () => {
         expect($rows.eq(2), "third-row-message").to.contain(
           "Recompile model to validate state transition from start to creating"
         );
+      });
+
+      // Separate .should() so Cypress keeps retrying until all rows show success
+      cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
+        const $rows = $tableBody.find("tr");
+
         expect($rows.eq(0), "top-row-status").to.contain("success");
         expect($rows.eq(1), "second-row-status").to.contain("success");
         expect($rows.eq(2), "third-row-status").to.contain("success");
@@ -285,7 +290,7 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(7);
+        expect($rows).to.have.length(8);
 
         // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
@@ -335,7 +340,7 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(7);
+        expect($rows).to.have.length(8);
 
         // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
@@ -351,7 +356,7 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(8);
+        expect($rows).to.have.length(9);
 
         // Expect one row to be having the message: Recompile model because state transition (validate)
         expect($rows.eq(0), "top-row-message").to.contain("Compile triggered from the console");
@@ -395,7 +400,7 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(8);
+        expect($rows).to.have.length(9);
       });
     });
   }
