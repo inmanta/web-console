@@ -1,6 +1,6 @@
-description: Added support to run compile from a clean slate, it is now possible to run a cleanup and recompile
+description: Added support to run compile from a clean slate, it is now possible to run a cleanup and recompile. It will reinstall the Inmanta project and its compiler venv.
 issue-nr: 6655
-change-type: feat
+change-type: patch
 destination-branches: [master, iso9]
 sections:
   feature: "{{description}}"

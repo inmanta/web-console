@@ -1,5 +1,6 @@
 import { UseBaseMutationResult, useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { usePostWithoutEnv } from "@/Data/Queries";
+import { words } from "@/UI";
 
 interface Body {
   update: boolean;
@@ -33,7 +34,7 @@ export const useTriggerCompile = (
         update,
         metadata: {
           type: "console",
-          message: "Compile triggered from the console",
+          message: words("compileReports.columns.messageValue")(update, reinstall),
         },
         reinstall,
       }),

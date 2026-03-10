@@ -127,22 +127,31 @@ describe("5 Compile reports", () => {
     // open dropdown of compile widget
     cy.get('[aria-label="Toggle"]').click();
 
-    // click cleanup and recompile
-    cy.get('[aria-label="CleanupAndRecompileButton"]').click();
+    // Get the current row count before triggering the compile
+    cy.get("tbody tr")
+      .its("length")
+      .then((initialRowCount) => {
+        console.log("initialRowCount", initialRowCount);
+        // click cleanup and recompile
+        cy.get('[aria-label="CleanupAndRecompileButton"]').click();
 
-    // expect new compile to appear
-    cy.get("tbody").should(($tableBody) => {
-      const $rows = $tableBody.find("tr");
+        // First assert the table has grown by 1, ensuring the new row is present
+        cy.get("tbody tr").should("have.length", initialRowCount + 1);
 
-      expect($rows.eq(0), "top-row-message").to.contain("Compile triggered from the console");
-    });
+        // Assert the new top row content
+        cy.get("tbody").should(($tableBody) => {
+          const $rows = $tableBody.find("tr");
+          expect($rows.eq(0), "top-row-message").to.contain(
+            "Compile triggered from the console with the project and environment reinstalled"
+          );
+        });
 
-    // wait for compile to finish
-    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-      const $rows = $tableBody.find("tr");
-
-      expect($rows.eq(0), "top-row-status").to.contain("success");
-    });
+        // wait for compile to finish
+        cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
+          const $rows = $tableBody.find("tr");
+          expect($rows.eq(0), "top-row-status").to.contain("success");
+        });
+      });
 
     // click on show details
     cy.get("button").contains("Show Details").eq(0).click();
@@ -153,7 +162,10 @@ describe("5 Compile reports", () => {
     // Expect message to be : Compile triggered from the console
     cy.get(".pf-v6-c-description-list__group")
       .eq(2)
-      .should("contain", "Compile triggered from the console");
+      .should(
+        "contain",
+        "Compile triggered from the console with the project and environment reinstalled"
+      );
 
     // Expect to have no environment variables
     cy.get(".pf-v6-c-code-block__content").should("have.text", "{}");

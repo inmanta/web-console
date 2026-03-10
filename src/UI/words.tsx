@@ -621,6 +621,12 @@ const dict = {
   "compileReports.columns.compileTime": "Compile Time",
   "compileReports.columns.actions": "Actions",
   "compileReports.columns.inProgress": "In Progress",
+  "compileReports.columns.messageValue": (update: boolean, reinstall: boolean) =>
+    update
+      ? "Compile triggered from the console with an update to the project configuration"
+      : reinstall
+        ? "Compile triggered from the console with the project and environment reinstalled"
+        : "Compile triggered from the console",
   "compileReports.links.details": "Show Details",
   "compileReports.filters.status.placeholder": "Select compile status...",
   "compileReports.filters.result.placeholder": "Select result...",
