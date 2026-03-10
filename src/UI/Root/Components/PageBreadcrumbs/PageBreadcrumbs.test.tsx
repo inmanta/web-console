@@ -118,7 +118,7 @@ test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb li
 });
 
 test("GIVEN Breadcrumbs WHEN service name is encoded THEN decoded label is shown", () => {
-  const url = "/lsm/catalog/basic%2520service/inventory";
+  const url = "/lsm/catalog/basic%20service/inventory";
   const { component } = setup([url]);
   render(component);
 
