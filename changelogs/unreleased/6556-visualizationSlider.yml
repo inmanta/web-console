@@ -1,4 +1,4 @@
-description: Improved the visualization of the look back slider by tweaking some responsiveness and removing the ticks. Also removed redundant state.
+description: Improved the visualization of the version-slider on the Diagnose page.
 issue-nr: 6556
 change-type: patch
 destination-branches: [master, iso9]
