@@ -625,7 +625,7 @@ const dict = {
     update
       ? "Compile triggered from the console with an update to the project configuration"
       : reinstall
-        ? "Compile triggered from the console with the project and environment reinstalled"
+        ? "Compile triggered from the console with a cleanup and reinstall of the project and python virtual environments"
         : "Compile triggered from the console",
   "compileReports.links.details": "Show Details",
   "compileReports.filters.status.placeholder": "Select compile status...",
