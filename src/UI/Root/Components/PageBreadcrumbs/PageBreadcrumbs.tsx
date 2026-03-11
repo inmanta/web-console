@@ -15,7 +15,7 @@ export const PageBreadcrumbs: React.FC = () => {
       {crumbs.map((crumb) => (
         <BreadcrumbItem key={crumb.kind} isActive={crumb.active} aria-label={"BreadcrumbItem"}>
           {crumb.active ? (
-            crumb.label
+            decodeURIComponent(crumb.label)
           ) : (
             <NavLink
               to={{
@@ -23,7 +23,7 @@ export const PageBreadcrumbs: React.FC = () => {
                 search: sanitizer.sanitize(crumb.kind, search),
               }}
             >
-              {crumb.label}
+              {decodeURIComponent(crumb.label)}
             </NavLink>
           )}
         </BreadcrumbItem>
