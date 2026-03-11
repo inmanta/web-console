@@ -621,6 +621,12 @@ const dict = {
   "compileReports.columns.compileTime": "Compile Time",
   "compileReports.columns.actions": "Actions",
   "compileReports.columns.inProgress": "In Progress",
+  "compileReports.columns.messageValue": (update: boolean, reinstall: boolean) =>
+    update
+      ? "Compile triggered from the console with an update to the project configuration"
+      : reinstall
+        ? "Compile triggered from the console with a cleanup and reinstall of the project and python virtual environments"
+        : "Compile triggered from the console",
   "compileReports.links.details": "Show Details",
   "compileReports.filters.status.placeholder": "Select compile status...",
   "compileReports.filters.result.placeholder": "Select result...",
@@ -866,10 +872,11 @@ const dict = {
     `Select instances of ${serviceEntity}`,
   "common.environment.select": "Select an environment",
   "common.compileWidget.recompile": "Recompile",
-  "common.compileWidget.toast": (update: boolean) =>
-    `${update ? "Update and " : ""}Recompile triggered`,
+  "common.compileWidget.toast": (update: boolean, reinstall) =>
+    `${update ? "Update and " : reinstall ? "Cleanup and " : ""}Recompile triggered`,
   "common.compileWidget.toastTitle": "Recompile Info",
   "common.compileWidget.updateAndRecompile": "Update project & recompile",
+  "common.compileWidget.cleanupAndRecompile": "Cleanup project & recompile",
   "common.compileWidget.compiling": "Compiling",
   "common.compileWidget.compilationDisabled.hint":
     "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",

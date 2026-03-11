@@ -54,16 +54,46 @@ describe("5 Compile reports", () => {
       expect($rows.eq(0), "top-row-status").to.contain("success");
     });
 
+    // open dropdown of compile widget
+    cy.get('[aria-label="Toggle"]').click();
+
+    // Get the current row count before triggering the compile
+    cy.get("tbody tr").its("length").as("initialRowCount");
+
+    // click cleanup and recompile
+    cy.get('[aria-label="CleanupAndRecompileButton"]').click();
+
+    // First assert the table has grown by 1, ensuring the new row is present
+    cy.get("@initialRowCount").then((initialRowCount) => {
+      cy.get("tbody tr").should("have.length", initialRowCount + 1);
+    });
+
+    // Assert the new top row content
+    cy.get("tbody tr")
+      .eq(0)
+      .should(
+        "contain",
+        "Compile triggered from the console with a cleanup and reinstall of the project and python virtual environments"
+      );
+
+    // wait for compile to finish
+    cy.get("tbody tr", { timeout: 60000 }).should(($rows) => {
+      expect($rows.eq(0)).to.contain("success");
+    });
+
     // click on show details
     cy.get("button").contains("Show Details").eq(0).click();
 
     // Expect to be redirected to compile details page
     cy.get("h1").contains("Compile Details").should("to.exist");
 
-    // Expect message to be : Compile triggered from the console
+    // Expect message to be : Compile triggered from the console with a cleanup and reinstall of the project and python virtual environments
     cy.get(".pf-v6-c-description-list__group")
       .eq(2)
-      .should("contain", "Compile triggered from the console");
+      .should(
+        "contain",
+        "Compile triggered from the console with a cleanup and reinstall of the project and python virtual environments"
+      );
 
     // Expect to have no environment variables
     cy.get(".pf-v6-c-code-block__content").should("have.text", "{}");
@@ -115,13 +145,12 @@ describe("5 Compile reports", () => {
       // Go to compiled Reports page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
-      // Expect all compiles to be succesful
+      // Expect all compiles to be visible in the table, and the top 3 compiles to be about recompilation because of state transition.
       cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(6);
+        expect($rows).to.have.length(7);
 
-        // Expect latest row to be having the message: Recompile model because of state transition from creating to up
         expect($rows.eq(0), "top-row-message").to.contain(
           "Recompile model because of state transition from creating to up"
         );
@@ -131,6 +160,12 @@ describe("5 Compile reports", () => {
         expect($rows.eq(2), "third-row-message").to.contain(
           "Recompile model to validate state transition from start to creating"
         );
+      });
+
+      // Expect all compiles to be successful
+      cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
+        const $rows = $tableBody.find("tr");
+
         expect($rows.eq(0), "top-row-status").to.contain("success");
         expect($rows.eq(1), "second-row-status").to.contain("success");
         expect($rows.eq(2), "third-row-status").to.contain("success");
@@ -195,7 +230,7 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(7);
+        expect($rows).to.have.length(8);
 
         // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
@@ -245,7 +280,7 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(7);
+        expect($rows).to.have.length(8);
 
         // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
@@ -261,7 +296,7 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(8);
+        expect($rows).to.have.length(9);
 
         // Expect one row to be having the message: Recompile model because state transition (validate)
         expect($rows.eq(0), "top-row-message").to.contain("Compile triggered from the console");
@@ -305,7 +340,7 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(8);
+        expect($rows).to.have.length(9);
       });
     });
   }
