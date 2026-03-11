@@ -1,0 +1,5 @@
+description: Added support for generic OIDC authentication providers (e.g. MS Entra ID, Okta, Auth0) alongside the existing Keycloak integration.
+change-type: minor
+destination-branches: [master]
+sections:
+  feature: "{{description}}"
