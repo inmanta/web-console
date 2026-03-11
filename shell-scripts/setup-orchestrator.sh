@@ -52,6 +52,16 @@ cd local-setup
 echo "Pulling $VERSION - $RELEASE"
 yarn run pull $VERSION $RELEASE
 
+# Add platform override for Apple Silicon (arm64)
+if [[ "$(uname -m)" == "arm64" ]]; then
+    echo "Apple Silicon detected, adding platform override to docker-compose.yml..."
+    if sed --version 2>/dev/null | grep -q GNU; then
+        sed -i 's/container_name: inmanta_orchestrator/container_name: inmanta_orchestrator\n        platform: linux\/amd64/' docker-compose.yml
+    else
+        sed -i '' 's/container_name: inmanta_orchestrator/container_name: inmanta_orchestrator\'$'\n        platform: linux\/amd64/' docker-compose.yml
+    fi
+fi
+
 sleep 2
 echo "Starting container..."
 yarn start
