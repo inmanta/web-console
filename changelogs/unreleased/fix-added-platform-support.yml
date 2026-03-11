@@ -1,0 +1,3 @@
+description: Added macOS support for the web console. Adjusted the setup-orchestrator and setup-auth so that the docker emulates the orchestrator image as amd64 via Rosetta emulation.
+change-type: patch
+destination-branches: [master, iso9]
