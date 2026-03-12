@@ -5,9 +5,11 @@ config();
 
 module.exports = defineConfig({
   env: {
-    edition: "oss",
     GITLAB_TOKEN: process.env.GITLAB_TOKEN,
-    keycloak: true,
+  },
+  expose: {
+    edition: "oss",
+    keycloack: true,
   },
   video: false,
   reporter: "junit",

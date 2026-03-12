@@ -9,7 +9,9 @@ import environmentHelpers from "../support/environmentHelpers";
 
 const { checkStatusCompile } = environmentHelpers;
 
-if (Cypress.env("edition") === "iso") {
+const isIso = Cypress.expose("edition") === "iso";
+
+if (isIso) {
   describe("Scenario 8 Composer", () => {
     before(() => {
       // Setup: Ensure a clean test state for this scenario.

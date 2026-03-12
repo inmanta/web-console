@@ -84,6 +84,8 @@ const openSettings = (envName) => {
   cy.get('[data-testid="Name-value"]').should("contain", envName);
 };
 
+const isIso = Cypress.expose("edition") === "iso";
+
 describe("Environment", () => {
   it("1.1 cancel creation of an environment", function () {
     cy.visit("/console/");
@@ -115,7 +117,7 @@ describe("Environment", () => {
     cy.wait(1000);
 
     // test to check redirection to right page. OSS it should be the Desired state page instead of the service catalog.
-    if (Cypress.env("edition") === "iso") {
+    if (isIso) {
       cy.get("h1").contains("Service Catalog").should("to.be.visible");
     } else {
       cy.get("h1").contains("Desired State").should("to.be.visible");
@@ -143,7 +145,7 @@ describe("Environment", () => {
     cy.get("button").contains("Submit").click();
 
     // ISO specific assertion
-    if (Cypress.env("edition") === "iso") {
+    if (isIso) {
       cy.url().should("contain", "/console/lsm/catalog?env=", {
         timeout: 10000,
       });
@@ -200,7 +202,7 @@ describe("Environment", () => {
   });
 
   // specific to ISO
-  if (Cypress.env("edition") === "iso") {
+  if (isIso) {
     it("1.5 Clear environment", function () {
       // Fill The form and submit
       cy.visit("/console/");
@@ -257,7 +259,7 @@ describe("Environment", () => {
     cy.get("button").contains("Submit").trigger("click");
 
     // specific to ISO
-    if (Cypress.env("edition") === "iso") {
+    if (isIso) {
       cy.url().should("contain", "/console/lsm/catalog?env=", {
         timeout: 10000,
       });
@@ -328,7 +330,7 @@ describe("Environment", () => {
       .should("have.value", "110");
 
     // specific to ISO
-    if (Cypress.env("edition") === "iso") {
+    if (isIso) {
       // Change enable_batched_partial_compiles
       cy.get('[aria-label="Row-enable_batched_partial_compiles"]').find(".pf-v6-c-switch").click();
 

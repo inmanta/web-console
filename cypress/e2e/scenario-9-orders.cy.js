@@ -2,7 +2,9 @@ import environmentHelpers from "../support/environmentHelpers";
 
 const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
-if (Cypress.env("edition") === "iso") {
+const isIso = Cypress.expose("edition") === "iso";
+
+if (isIso) {
   describe("Scenario 9 : Order Overview", () => {
     before(() => {
       clearEnvironment();

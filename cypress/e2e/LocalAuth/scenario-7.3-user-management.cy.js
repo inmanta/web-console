@@ -1,4 +1,6 @@
-if (Cypress.env("local-auth")) {
+const localAuth = Cypress.expose("localAuth");
+
+if (localAuth) {
   it("should display the roles for a user, and allow them to be added and removed", () => {
     cy.visit("/console/");
 
