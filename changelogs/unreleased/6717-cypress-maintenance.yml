@@ -1,4 +1,4 @@
-description: Cypress.env() is deprecated and is now replace with cypress.expose() or cyp.env().
+description: Cypress.env() is deprecated and is now replace with cypress.expose() or cy.env().
 issue-nr: 6717
 change-type: patch
 destination-branches: [master, iso9]
