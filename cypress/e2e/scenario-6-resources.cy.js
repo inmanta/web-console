@@ -647,7 +647,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle').click();
       cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist");
 
-      // Expect last log message to contain "Successfully stored version 5"
+      // Expect last log message to contain "Successfully stored version 6"
       cy.get('[aria-label="ResourceLogRow"]')
         .eq(0)
         .should("contain", "Successfully stored version 6");
