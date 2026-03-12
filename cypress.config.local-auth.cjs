@@ -5,8 +5,10 @@ config();
 
 module.exports = defineConfig({
   env: {
-    edition: "oss",
     GITLAB_TOKEN: process.env.GITLAB_TOKEN,
+  },
+  expose: {
+    edition: "oss",
     localAuth: true,
   },
   video: false,

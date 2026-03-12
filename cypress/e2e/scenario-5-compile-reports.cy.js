@@ -2,7 +2,7 @@ import environmentHelpers from "../support/environmentHelpers";
 
 const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
-const isIso = Cypress.env("edition") === "iso";
+const isIso = Cypress.expose("edition") === "iso";
 
 describe("5 Compile reports", () => {
   if (isIso) {
