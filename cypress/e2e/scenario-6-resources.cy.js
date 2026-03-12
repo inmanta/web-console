@@ -650,13 +650,13 @@ describe("Scenario 6 : Resources", () => {
       // Expect last log message to contain "Successfully stored version 5"
       cy.get('[aria-label="ResourceLogRow"]')
         .eq(0)
-        .should("contain", "Successfully stored version 5");
+        .should("contain", "Successfully stored version 6");
 
       // Click top message open
       cy.get('[aria-label="Details"]').eq(0).click();
 
-      // Expect to find "Successfully stored version 5" displayed in expansion.
-      cy.get(".pf-v6-c-description-list__text").should("contain", "Successfully stored version 5");
+      // Expect to find "Successfully stored version 6" displayed in expansion.
+      cy.get(".pf-v6-c-description-list__text").should("contain", "Successfully stored version 6");
     });
   }
 });
