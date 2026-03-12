@@ -1,0 +1,4 @@
+description: Update OSS resources e2e test. The addition of an extra compile caused them to break.
+issue-nr: 6655
+change-type: patch
+destination-branches: [master, iso9]
