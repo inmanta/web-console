@@ -11,6 +11,7 @@ interface Props {
   isDisabled?: boolean;
   className?: string;
   variant?: ButtonProps["variant"];
+  style?: React.CSSProperties;
 }
 
 export const ClipboardCopyButton: React.FC<Props> = ({
@@ -43,7 +44,7 @@ export const ClipboardCopyButton: React.FC<Props> = ({
         onClick={onClick}
         isDisabled={isDisabled}
         size="sm"
-      ></Button>
+      />
     </WidthLimitedTooltip>
   );
 };
