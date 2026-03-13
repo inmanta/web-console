@@ -1,23 +1,45 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useContext } from "react";
 import { Content, Flex, FlexItem, Spinner } from "@patternfly/react-core";
-import { Modal } from "@patternfly/react-core/deprecated";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 
+const SpinnerContent = ({ message }: { message: string }) => (
+  <Flex
+    direction={{ default: "column" }}
+    justifyContent={{ default: "justifyContentCenter" }}
+    alignItems={{ default: "alignItemsCenter" }}
+    style={{ height: "140px" }}
+  >
+    <FlexItem>
+      <Content component="h2" data-testid="blocking-modal-message">
+        {message}
+      </Content>
+    </FlexItem>
+    <FlexItem>
+      <Spinner size="lg" />
+    </FlexItem>
+  </Flex>
+);
+
 export const BlockingModal = () => {
-  const [isBlockerOpen, setIsBlockerOpen] = useState(false);
-  const [message, setMessage] = useState("");
+  const { triggerModal, closeModal } = useContext(ModalContext);
 
   useEffect(() => {
     const toggleModalHalt = () => {
-      setIsBlockerOpen((state) => !state);
-      setMessage(words("environment.halt.process"));
+      triggerModal({
+        title: "",
+        content: <SpinnerContent message={words("environment.halt.process")} />,
+        showClose: false,
+      });
     };
+
     const toggleModalResume = () => {
-      setIsBlockerOpen((state) => !state);
-      setMessage(words("environment.resume.process"));
-    };
-    const closeModal = () => {
-      setIsBlockerOpen(false);
+      triggerModal({
+        title: "",
+        content: <SpinnerContent message={words("environment.resume.process")} />,
+        showClose: false,
+      });
     };
 
     document.addEventListener("close-blocking-modal", closeModal);
@@ -29,29 +51,7 @@ export const BlockingModal = () => {
       document.removeEventListener("halt-event", toggleModalHalt);
       document.removeEventListener("resume-event", toggleModalResume);
     };
-  }, []);
+  }, [triggerModal, closeModal]);
 
-  return (
-    <Modal
-      aria-label="halting-blocker"
-      isOpen={isBlockerOpen}
-      disableFocusTrap
-      variant="small"
-      showClose={false}
-    >
-      <Flex
-        direction={{ default: "column" }}
-        justifyContent={{ default: "justifyContentCenter" }}
-        alignItems={{ default: "alignItemsCenter" }}
-        style={{ height: "140px" }}
-      >
-        <FlexItem>
-          <Content component="h2">{message}</Content>
-        </FlexItem>
-        <FlexItem>
-          <Spinner size="lg" />
-        </FlexItem>
-      </Flex>
-    </Modal>
-  );
+  return null;
 };
