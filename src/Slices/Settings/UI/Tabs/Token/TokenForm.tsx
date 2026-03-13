@@ -86,6 +86,7 @@ export const TokenForm: React.FC<Props> = ({
         isDisabled={token === null}
         variant="control"
         aria-label="CopyTokenToClipboard"
+        style={{ alignItems: "center" }}
       />
     </StyledInputGroup>
     {error && (
