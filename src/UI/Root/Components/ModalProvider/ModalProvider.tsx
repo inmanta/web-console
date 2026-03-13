@@ -24,6 +24,7 @@ interface Params {
   variant?: ModalVariant;
   iconVariant?: IconVariant;
   cancelCb?: () => void;
+  showClose?: boolean;
 }
 
 /**
@@ -77,6 +78,7 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [variant, setVariant] = useState<ModalVariant>(ModalVariant.small);
   const [iconVariant, setIconVariant] = useState<IconVariant | undefined>("info");
   const [cancelCb, setCancelCb] = useState<(() => void) | null>(null);
+  const [showClose, setShowClose] = useState(true);
 
   /**
    * Triggers the modal with the provided properties.
@@ -107,6 +109,7 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
       variant = ModalVariant.small,
       iconVariant,
       cancelCb = null,
+      showClose = true,
     } = params;
 
     setCancelCb(cancelCb);
@@ -119,6 +122,7 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
     setAction(actions);
     setVariant(variant);
     setIconVariant(iconVariant);
+    setShowClose(showClose);
   };
 
   const closeModal = () => {
@@ -145,6 +149,7 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
         isOpen={isOpen}
         onClose={closeModal}
         actions={actions}
+        showClose={showClose}
         ouiaId="GlobalModal"
         titleIconVariant={iconVariant}
       >
