@@ -142,15 +142,17 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
     >
       <Modal
         data-testid={dataTestId}
-        aria-labelledby={ariaLabel}
+        aria-label={ariaLabel}
         isOpen={isOpen}
         onClose={showClose ? closeModal : undefined}
         variant={variant}
         ouiaId="GlobalModal"
         disableFocusTrap
       >
-        <ModalHeader title={title} description={description} titleIconVariant={iconVariant} />
-        <ModalBody>{content}</ModalBody>
+        {title && (
+          <ModalHeader title={title} description={description} titleIconVariant={iconVariant} />
+        )}
+        {content && <ModalBody>{content}</ModalBody>}
         {actions && <ModalFooter>{actions}</ModalFooter>}
       </Modal>
       {children}
