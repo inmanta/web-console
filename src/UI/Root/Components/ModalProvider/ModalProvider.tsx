@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, createContext, useState } from "react";
-import { Modal, ModalVariant } from "@patternfly/react-core/deprecated";
+import { Modal, ModalVariant, ModalBody, ModalFooter, ModalHeader } from "@patternfly/react-core";
 
 type IconVariant = "success" | "danger" | "warning" | "info" | "custom";
 
@@ -14,7 +14,8 @@ type IconVariant = "success" | "danger" | "warning" | "info" | "custom";
  * @param {ModalVariant} [variant] - The variant of the modal.
  * @param {IconVariant} [iconVariant] - The variant of the icon in the modal title.
  */
-interface Params {
+
+export interface Params {
   title: string;
   ariaLabel?: string;
   dataTestId?: string;
@@ -142,18 +143,15 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
       <Modal
         data-testid={dataTestId}
         aria-labelledby={ariaLabel}
-        disableFocusTrap
-        description={description}
-        variant={variant}
-        title={title}
         isOpen={isOpen}
-        onClose={closeModal}
-        actions={actions}
-        showClose={showClose}
+        onClose={showClose ? closeModal : undefined}
+        variant={variant}
         ouiaId="GlobalModal"
-        titleIconVariant={iconVariant}
+        disableFocusTrap
       >
-        {content}
+        <ModalHeader title={title} description={description} titleIconVariant={iconVariant} />
+        <ModalBody>{content}</ModalBody>
+        {actions && <ModalFooter>{actions}</ModalFooter>}
       </Modal>
       {children}
     </ModalContext.Provider>
