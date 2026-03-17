@@ -120,6 +120,7 @@
     "crypto": false
   },
   "dependencies": {
+    "@graphiql/react": "^0.37.3",
     "@joint/layout-directed-graph": "^4.2.3",
     "@joint/plus": "^4.2.3",
     "@loadable/component": "^5.16.7",
@@ -137,6 +138,7 @@
     "bignumber.js": "^9.3.1",
     "copy-to-clipboard": "^3.3.3",
     "file-saver": "^2.0.5",
+    "graphiql": "^5.2.2",
     "graphql": "^16.13.0",
     "graphql-request": "^7.3.0",
     "highlight.js": "^11.11.1",

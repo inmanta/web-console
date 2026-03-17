@@ -1,5 +1,6 @@
 export * from "./Slices/Agents";
 export * from "./Slices/Auth";
+export * from "./Slices/GraphiQL";
 export * from "./Slices/Callback";
 export * from "./Slices/Compilation";
 export * from "./Slices/Dashboard";
