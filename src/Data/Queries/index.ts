@@ -1,6 +1,5 @@
 export * from "./Slices/Agents";
 export * from "./Slices/Auth";
-export * from "./Slices/GraphiQL";
 export * from "./Slices/Callback";
 export * from "./Slices/Compilation";
 export * from "./Slices/Dashboard";
@@ -9,6 +8,7 @@ export * from "./Slices/DiscoveredResources";
 export * from "./Slices/DryRun";
 export * from "./Slices/Environment";
 export * from "./Slices/Facts";
+export * from "./Slices/GraphiQL";
 export * from "./Slices/Notification";
 export * from "./Slices/Order";
 export * from "./Slices/Parameters";
