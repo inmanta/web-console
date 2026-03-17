@@ -11,12 +11,12 @@ export const jsonWorkerPath = JsonWorkerUrl;
 export const graphqlWorkerPath = GraphQLWorkerUrl;
 
 export const createMonacoWorker = (label: string) => {
-  switch (label) {
-    case "json":
-      return new JsonWorker();
-    case "graphql":
-      return new GraphQLWorker();
-    default:
-      return new EditorWorker();
-  }
+    switch (label) {
+        case "json":
+            return new JsonWorker();
+        case "graphql":
+            return new GraphQLWorker();
+        default:
+            return new EditorWorker();
+    }
 };
