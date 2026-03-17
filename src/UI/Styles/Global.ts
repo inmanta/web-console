@@ -1,5 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 import { MarkdownStyles } from "./MarkdownStyles";
+import "highlight.js/styles/github.css";
 
 export const GlobalStyles = createGlobalStyle`
   html {
