@@ -95,7 +95,6 @@ export class KeyFactory {
 export enum SliceKeys {
   agents = "agents",
   auth = "auth",
-  graphiql = "graphiql",
   callback = "callback",
   compilation = "compilation",
   dashboard = "dashboard",
@@ -104,6 +103,7 @@ export enum SliceKeys {
   dryRun = "dry_run",
   environment = "environment",
   facts = "facts",
+  graphiql = "graphiql",
   notification = "notification",
   order = "order",
   parameters = "parameters",
