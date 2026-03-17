@@ -97,7 +97,7 @@ export const Page: React.FC = () => {
       <EditorContainer onClick={handleRefetchSchema}>
         <GraphiQL
           fetcher={fetcher}
-          schema={isSchemaPending ? null : schema}
+          schema={isSchemaPending ? null : (schema ?? null)}
           forcedTheme={theme}
           defaultEditorToolsVisibility="headers"
           isHeadersEditorEnabled
