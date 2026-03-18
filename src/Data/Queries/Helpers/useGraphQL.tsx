@@ -6,33 +6,35 @@ import { useFetchHelpers } from "./useFetchHelpers";
  * Hook that provides GraphQL request functionality.
  *
  * This hook creates a GraphQL request with proper headers and base URL configuration.
- * At the time of implementation, our GraphQL endpoint does not support variables in requests,
- * so queries need to be modified at creation time.
  *
  * @param {string} query - The GraphQL query string to be executed
+ * @param {Record<string, unknown>} [variables] - Optional GraphQL variables
  * @returns {Promise<any>} A promise that resolves to the GraphQL response data
  *
  * @example
  * const query = gql`
- *   query {
- *     notifications {
+ *   query GetResources($filter: ResourceFilter!, $first: Int) {
+ *     resources(filter: $filter, first: $first) {
  *       edges {
  *         node {
- *           title
+ *           resourceId
  *         }
  *       }
  *     }
  *   }
  * `;
  *
- * const queryFn = useGraphQLRequest(query);
+ * const queryFn = useGraphQLRequest(query, { filter: { environment: envId }, first: 20 });
  *
  * const { data, isLoading, error } = useQuery({
  *   queryKey: ["key"],
  *   queryFn,
  * });
  */
-export function useGraphQLRequest<Type>(query: string): () => Promise<Type> {
+export function useGraphQLRequest<Type>(
+  query: string,
+  variables?: Record<string, unknown>
+): () => Promise<Type> {
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
     globalThis.location.pathname
@@ -40,9 +42,6 @@ export function useGraphQLRequest<Type>(query: string): () => Promise<Type> {
   const baseUrl = baseUrlManager.getBaseUrl(import.meta.env.VITE_API_BASEURL);
   const { createHeaders } = useFetchHelpers();
   const headers = createHeaders();
-  headers.set("Content-Type", "application/graphql");
-
-  const variables = undefined; //currently variables are not supported on our backend and we need to modify query on the creation
 
   return () => request(baseUrl + "/api/v2/graphql", query, variables, headers);
 }

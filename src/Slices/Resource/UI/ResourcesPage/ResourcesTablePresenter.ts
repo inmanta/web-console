@@ -31,7 +31,7 @@ export class ResourcesTablePresenter implements TablePresenter<Resource.Resource
       value: resource.id_details.resource_id_value,
       agent: resource.id_details.agent,
       deployState: resource.status,
-      numberOfDependencies: resource.requires.length,
+      numberOfDependencies: resource.requiresLength ?? resource.requires.length,
       id: resource.resource_id,
     }));
   }

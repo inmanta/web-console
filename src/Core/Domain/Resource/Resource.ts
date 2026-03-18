@@ -7,6 +7,7 @@ import { Sort } from "../Sort";
 export interface Resource {
   resource_id: string;
   requires: string[];
+  requiresLength?: number;
   status: Status;
   id_details: IdDetails;
 }
