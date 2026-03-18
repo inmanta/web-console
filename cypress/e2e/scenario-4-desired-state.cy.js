@@ -3,7 +3,6 @@ import environmentHelpers from "../support/environmentHelpers";
 const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
-console.log("Running tests for edition:", isIso ? "ISO" : "OSS");
 
 describe("Scenario 4 Desired State", () => {
   if (isIso) {
@@ -284,33 +283,25 @@ describe("Scenario 4 Desired State", () => {
 
     cy.get('[aria-label="DiffItemList"]', { timeout: 20000 }).should("be.visible");
 
-    // make sure all the rows are in the view before toggling them open.
-    cy.get('[aria-label="Details"]', { timeout: 20000 }).should("have.length", isIso ? 2 : 5);
-    cy.get('[aria-label="DiffItemList"]').within(() => {
-      if (isIso) {
-        cy.get('[aria-label="Details"]').eq(0).click();
-        cy.get('[aria-label="Details"]').eq(1).click();
-      } else {
-        cy.get('[aria-label="Details"]').eq(0).click();
-        cy.get('[aria-label="Details"]').eq(1).click();
-        cy.get('[aria-label="Details"]').eq(2).click();
-        cy.get('[aria-label="Details"]').eq(3).click();
-        cy.get('[aria-label="Details"]').eq(4).click();
-      }
-    });
+    // dynamically click all details rows
+    cy.get('[aria-label="Details"]', { timeout: 20000 })
+      .should("have.length", isIso ? 2 : 5)
+      .then(($details) => {
+        const detailsCount = $details.length;
 
-    // expect diff module to say No changes have been found
-    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(($expandableRow) => {
-      expect($expandableRow).to.have.length(isIso ? 2 : 5);
+        $details.each((_i, el) => {
+          cy.wrap(el).click();
+        });
 
-      expect($expandableRow.eq(0), "first-row").to.have.text(
-        "This resource has not been modified."
-      );
+        // dynamically assert expandable content matches number of details
+        cy.get(".pf-v6-c-card__expandable-content").should(($rows) => {
+          expect($rows.length).to.equal(detailsCount);
 
-      expect($expandableRow.eq(1), "second-row").to.have.text(
-        "This resource has not been modified."
-      );
-    });
+          $rows.each((_i, row) => {
+            expect(row).to.have.text("This resource has not been modified.");
+          });
+        });
+      });
 
     // go back to desired state page
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Desired State").click();
@@ -336,28 +327,18 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[role="option"]').contains("unmodified").click();
     cy.get('[aria-label="StatusFilter"]').click();
 
-    // make sure all the rows are in the view before toggling them open.
-    cy.get('[aria-label="Details"]', { timeout: 20000 }).should("have.length", isIso ? 2 : 5);
-    cy.get('[aria-label="DiffItemList"]').within(() => {
-      if (isIso) {
-        cy.get('[aria-label="Details"]').eq(0).click();
-        cy.get('[aria-label="Details"]').eq(1).click();
-      } else {
-        cy.get('[aria-label="Details"]').eq(0).click();
-        cy.get('[aria-label="Details"]').eq(1).click();
-        cy.get('[aria-label="Details"]').eq(2).click();
-        cy.get('[aria-label="Details"]').eq(3).click();
-        cy.get('[aria-label="Details"]').eq(4).click();
-      }
-    });
+    // dynamically expand all detail rows again
+    cy.get('[aria-label="Details"]', { timeout: 20000 })
+      .should("have.length", isIso ? 2 : 5)
+      .then(($details) => {
+        const detailsCount = $details.length;
+        $details.each((_i, el) => cy.wrap(el).click());
 
-    // await the end of the dry-run and expect to find two rows with expandable content.
-    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(($expandableRow) => {
-      expect($expandableRow).to.have.length(isIso ? 2 : 5);
-      expect($expandableRow.eq(0), "first-row").to.have.text(
-        "This resource has not been modified."
-      );
-    });
+        cy.get(".pf-v6-c-card__expandable-content").should(($rows) => {
+          expect($rows.length).to.equal(detailsCount);
+          $rows.each((_i, row) => expect(row).to.have.text("This resource has not been modified."));
+        });
+      });
 
     // click on filter by status dropdown
     cy.get('[aria-label="StatusFilter"]').click();
@@ -379,22 +360,24 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[role="option"]').contains("unmodified").click();
     cy.get('[aria-label="StatusFilter"]').click();
 
-    cy.get('[aria-label="DiffItemList"]').within(() => {
-      cy.get('[aria-label="Details"]').eq(0).click();
-      cy.get('[aria-label="Details"]').eq(1).click();
+    // dynamically expand all details inside DiffItemList
+    cy.get('[aria-label="DiffItemList"]', { timeout: 20000 }).within(() => {
+      cy.get('[aria-label="Details"]')
+        .should("have.length", isIso ? 2 : 5)
+        .then(($details) => {
+          const detailsCount = $details.length;
 
-      if (!isIso) {
-        cy.get('[aria-label="Details"]').eq(2).click();
-        cy.get('[aria-label="Details"]').eq(3).click();
-        cy.get('[aria-label="Details"]').eq(4).click();
-      }
-    });
-    // expect the view to still contain the diff of the last dry-run comparison
-    cy.get(".pf-v6-c-card__expandable-content", { timeout: 20000 }).should(($expandableRow) => {
-      expect($expandableRow).to.have.length(isIso ? 2 : 5);
-      expect($expandableRow.eq(0), "first-row").to.have.text(
-        "This resource has not been modified."
-      );
+          // click every Details row
+          $details.each((_i, el) => cy.wrap(el).click());
+
+          // dynamically assert expandable content matches number of details
+          cy.get(".pf-v6-c-card__expandable-content").should(($rows) => {
+            expect($rows.length).to.equal(detailsCount);
+            $rows.each((_i, row) => {
+              expect(row).to.have.text("This resource has not been modified.");
+            });
+          });
+        });
     });
 
     // click on Perform dry run

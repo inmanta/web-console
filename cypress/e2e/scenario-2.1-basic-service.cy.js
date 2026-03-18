@@ -188,6 +188,9 @@ if (isIso) {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
+      // Record the current number of instances before duplicating
+      cy.get('[aria-label="InstanceRow-Intro"]').its("length").as("previousCount");
+
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
       cy.get('[role="menuitem"]').contains("Duplicate").click();
 
@@ -197,8 +200,11 @@ if (isIso) {
       // expect the JSON to be valid
       cy.get('[data-testid="Error-container"]').should("not.exist");
 
+      // platform specific command to select all and delete the content of the editor
+      const deleteShortcut =
+        Cypress.platform === "darwin" ? "{meta+a}{backspace}" : "{ctrl+a}{backspace}";
       // delete the JSON entirely
-      cy.get(".monaco-editor").click().focused().type("{ctrl+a}{backspace}");
+      cy.get(".monaco-editor").click().focused().type(deleteShortcut);
 
       // expect the JSON to be invalid
       cy.get('[data-testid="Error-container"]').should("contain", "Errors found");
@@ -209,8 +215,10 @@ if (isIso) {
       // expect Form button to be disabled
       cy.get("#formButton").should("be.disabled");
 
+      // platform specific undo command to restore the JSON
+      const undoShortcut = Cypress.platform === "darwin" ? "{meta+z}" : "{ctrl+z}";
       // ctrl+z to undo the deletion
-      cy.get(".monaco-editor").click().focused().type("{ctrl+z}");
+      cy.get(".monaco-editor").click().focused().type(undoShortcut);
 
       // expect the JSON to be valid
       cy.get('[data-testid="Error-container"]').should("not.exist");
@@ -241,8 +249,10 @@ if (isIso) {
       // bo back to editor
       cy.get("#editorButton").click();
 
+      // platform specific command to find the service_id field in the editor
+      const searchToolShortcut = Cypress.platform === "darwin" ? "{meta+f}" : "{ctrl+f}";
       // change the service id to make instance unique
-      cy.get(".monaco-editor").click().focused().type("{ctrl+f}"); // open search tool
+      cy.get(".monaco-editor").click().focused().type(searchToolShortcut);
 
       cy.wait(1000); // let the editor settle to avoid typing text to fail
 
@@ -263,8 +273,10 @@ if (isIso) {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
-      // expect two rows in inventory now
-      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
+      // expect one more row in inventory than before the duplication
+      cy.get("@previousCount").then((previousCount) => {
+        cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", previousCount + 1);
+      });
     });
 
     it("2.1.5 JSON editor invalid should disable buttons", () => {
@@ -283,6 +295,9 @@ if (isIso) {
       // make sure the call to get inventory has been executed
       cy.wait("@GetServiceInventory");
 
+      // Record the current number of instances before attempting to add
+      cy.get('[aria-label="InstanceRow-Intro"]').its("length").as("previousCount");
+
       // Add an instance and fill form
       cy.get("#add-instance-button").click();
       cy.get("#editorButton").click();
@@ -297,8 +312,10 @@ if (isIso) {
       // make sure the call to get inventory has been executed
       cy.wait("@GetServiceInventory");
 
-      // expect two rows to be in the inventory still
-      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
+      // expect the number of rows to be unchanged after cancelling
+      cy.get("@previousCount").then((previousCount) => {
+        cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", previousCount);
+      });
     });
 
     it("2.1.6 Instance Details page", () => {

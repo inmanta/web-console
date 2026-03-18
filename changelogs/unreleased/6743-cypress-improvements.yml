@@ -1,0 +1,4 @@
+description: Improved length assertions in Cypress tests wherever it made sense to enhance test reliability and maintainability. Also made some adjustments to the tests wherever possible to support macOS or just where it could have been improved a little. 
+issue-nr: 6743
+change-type: patch
+destination-branches: [master, iso9]
