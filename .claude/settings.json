@@ -1,0 +1,15 @@
+{
+	"hooks": {
+		"UserPromptSubmit": [
+			{
+				"hooks": [
+					{
+						"type": "command",
+						"command": "node .claude/hooks/inject-index.js",
+						"timeout": 10
+					}
+				]
+			}
+		]
+	}
+}
