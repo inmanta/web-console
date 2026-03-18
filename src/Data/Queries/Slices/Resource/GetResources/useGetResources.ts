@@ -103,9 +103,7 @@ const GET_RESOURCES_QUERY = gql`
  * Supports orphaned/!orphaned mapping. Other status values are not
  * supported by the GraphQL ResourceFilter and are silently ignored.
  */
-function mapStatusToGraphQLFilter(
-  status: string[] | undefined
-): { isOrphan?: boolean } {
+function mapStatusToGraphQLFilter(status: string[] | undefined): { isOrphan?: boolean } {
   if (!status || status.length === 0) return {};
 
   for (const s of status) {
@@ -214,53 +212,34 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   const filterArray = filter ? Object.values(filter) : [];
   const sortArray = sort ? [sort] : [];
 
-  const queryFn = useGraphQLRequest<ResourcesGraphQLResponse>(
-    GET_RESOURCES_QUERY,
-    variables
-  );
+  const queryFn = useGraphQLRequest<ResourcesGraphQLResponse>(GET_RESOURCES_QUERY, variables);
 
   return {
     useContinuous: (): UseQueryResult<GetResourcesResponse, Error> =>
       useQuery({
-        queryKey: getResourcesKey.list([
-          pageSize,
-          ...filterArray,
-          ...sortArray,
-          currentPage,
-          env,
-        ]),
+        queryKey: getResourcesKey.list([pageSize, ...filterArray, ...sortArray, currentPage, env]),
         queryFn,
         select: (data): GetResourcesResponse => {
           const { resources } = data;
           const pageSize_ = Number(pageSize.value);
           const totalCount = resources.totalCount;
 
-          const mappedResources: Resource.Resource[] = resources.edges.map(
-            ({ node }) => ({
-              resource_id: node.resourceId,
-              requires: [],
-              requiresLength: node.requiresLength,
-              status: (node.state?.lastNonDeployingStatus ??
-                "undefined") as Resource.Status,
-              id_details: {
-                resource_type: node.resourceType,
-                agent: node.agent,
-                attribute: "",
-                resource_id_value: node.resourceIdValue,
-              },
-            })
-          );
+          const mappedResources: Resource.Resource[] = resources.edges.map(({ node }) => ({
+            resource_id: node.resourceId,
+            requires: [],
+            requiresLength: node.requiresLength,
+            status: (node.state?.lastNonDeployingStatus ?? "undefined") as Resource.Status,
+            id_details: {
+              resource_type: node.resourceType,
+              agent: node.agent,
+              attribute: "",
+              resource_id_value: node.resourceIdValue,
+            },
+          }));
 
-          const handlers = buildHandlers(
-            resources.pageInfo,
-            currentBefore,
-            pageSize_
-          );
+          const handlers = buildHandlers(resources.pageInfo, currentBefore, pageSize_);
 
-          const afterCount = Math.max(
-            0,
-            totalCount - currentBefore - mappedResources.length
-          );
+          const afterCount = Math.max(0, totalCount - currentBefore - mappedResources.length);
 
           const metadata: Resource.Metadata = {
             total: totalCount,
