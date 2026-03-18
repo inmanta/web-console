@@ -115,7 +115,7 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
 
   await userEvent.click(deleteButton);
 
-  expect(screen.getByRole("dialog", { name: "Delete Callback" })).toBeVisible();
+  expect(screen.getByRole("dialog", { name: "GlobalModal" })).toBeVisible();
 
   const yesButton = screen.getByRole("button", { name: "Yes" });
 
