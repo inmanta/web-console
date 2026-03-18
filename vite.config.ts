@@ -179,9 +179,7 @@ const stripBrokenSourcemapsPlugin = () => ({
   transform(code: string, id: string) {
     if (
       id.includes("node_modules") &&
-      (id.includes("marked") ||
-        id.includes("graphiql") ||
-        id.includes("@graphiql")) &&
+      (id.includes("marked") || id.includes("graphiql") || id.includes("@graphiql")) &&
       code.includes("sourceMappingURL")
     ) {
       return {

@@ -23,9 +23,9 @@ export const usePostGraphQL = (env?: string): UseMutationResult<unknown, Error, 
     () =>
       new PrimaryBaseUrlManager(
         globalThis.location.origin,
-        globalThis.location.pathname,
+        globalThis.location.pathname
       ).getBaseUrl(import.meta.env.VITE_API_BASEURL),
-    [],
+    []
   );
 
   return useMutation({
