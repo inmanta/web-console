@@ -119,8 +119,81 @@ function copyConfigPlugin() {
   };
 }
 
+// In Vite's loadAndTransform, `logger` is destructured from the Environment
+// object — not from config.logger — so customLogger doesn't intercept it.
+// configureServer patches each environment's logger directly after the server
+// (and its environments) are fully initialised.
+//
+// The load hook is kept as a first-line defence: when it returns non-null Vite
+// skips extractSourcemapFromFile entirely, so the ENOENT never occurs.
+// The transform hook handles build-time sourcemap stripping.
+const stripBrokenSourcemapsPlugin = () => ({
+  name: "strip-broken-sourcemaps",
+  enforce: "pre" as const,
+
+  // Patch the per-environment loggers that loadAndTransform actually uses.
+  // "Failed to load source map" uses logger.warn; "points to missing source files"
+  // uses logger.warnOnce — both need to be suppressed.
+  configureServer(server: any) {
+    const shouldSuppress = (msg: string) =>
+      msg.includes("Failed to load source map") || msg.includes("points to missing source files");
+
+    for (const env of Object.values(server.environments) as any[]) {
+      if (typeof env?.logger?.warn !== "function") continue;
+      const origWarn = env.logger.warn.bind(env.logger);
+      env.logger.warn = (msg: string, options?: unknown) => {
+        if (shouldSuppress(msg)) return;
+        origWarn(msg, options);
+      };
+      const origWarnOnce = env.logger.warnOnce?.bind(env.logger);
+      if (origWarnOnce) {
+        env.logger.warnOnce = (msg: string, options?: unknown) => {
+          if (shouldSuppress(msg)) return;
+          origWarnOnce(msg, options);
+        };
+      }
+    }
+  },
+
+  // When the load hook returns non-null, Vite's loadAndTransform takes the
+  // else-branch and never calls extractSourcemapFromFile, preventing ENOENT.
+  load(id: string) {
+    if (id.includes("\x00") || id.includes("?")) return null;
+    if (!id.includes("node_modules")) return null;
+    // Only intercept files known to reference missing .map files.
+    if (!id.endsWith("marked.js")) return null;
+    try {
+      const code = readFileSync(id, "utf-8");
+      if (code.includes("sourceMappingURL")) {
+        return { code: code.replace(/\/\/# sourceMappingURL=\S+/g, ""), map: null };
+      }
+    } catch {
+      // unreadable — fall through to Vite's default handler
+    }
+    return null;
+  },
+
+  // Only strip sourcemaps from the known offenders (marked, graphiql and its
+  // sub-packages). Stripping all node_modules sourcemaps would make debugging
+  // unrelated dependencies harder in DevTools.
+  transform(code: string, id: string) {
+    if (
+      id.includes("node_modules") &&
+      (id.includes("marked") || id.includes("graphiql") || id.includes("@graphiql")) &&
+      code.includes("sourceMappingURL")
+    ) {
+      return {
+        code: code.replace(/\/\/# sourceMappingURL=\S+/g, ""),
+        map: null,
+      };
+    }
+    return null;
+  },
+});
+
 const plugins = [
   react(),
+  stripBrokenSourcemapsPlugin(),
   versionPlugin(),
   moveAssetsToRootPlugin(),
   copyConfigPlugin(),
@@ -143,25 +216,61 @@ export default defineConfig({
       : {}),
   },
   resolve: {
-    alias: {
-      "@": resolve(__dirname, "./src"),
-      "@S": resolve(__dirname, "./src/Slices"),
-      "@assets": resolve(__dirname, "./node_modules/@patternfly/react-core/dist/styles/assets"),
-      "@images": resolve(__dirname, "./public/images"),
+    alias: [
+      { find: "@", replacement: resolve(__dirname, "./src") },
+      { find: "@S", replacement: resolve(__dirname, "./src/Slices") },
+      {
+        find: "@assets",
+        replacement: resolve(__dirname, "./node_modules/@patternfly/react-core/dist/styles/assets"),
+      },
+      { find: "@images", replacement: resolve(__dirname, "./public/images") },
       // Force @joint/plus to use ESM entry (avoids dist/joint-plus.js)
-      "@joint/plus": resolve(__dirname, "./node_modules/@joint/plus/joint-plus.mjs"),
+      {
+        find: "@joint/plus",
+        replacement: resolve(__dirname, "./node_modules/@joint/plus/joint-plus.mjs"),
+      },
       // Force @joint/core to use ESM entry (avoids dist/joint.js)
-      "@joint/core": resolve(__dirname, "./node_modules/@joint/core/joint.mjs"),
+      {
+        find: "@joint/core",
+        replacement: resolve(__dirname, "./node_modules/@joint/core/joint.mjs"),
+      },
       // Force uuid to use CJS entry point
-      uuid: "uuid",
-      "@rappidcss": resolve(__dirname, "node_modules/@joint/plus/joint-plus.css"),
-      // Only mock monaco-editor in test environment
+      { find: "uuid", replacement: "uuid" },
+      {
+        find: "@rappidcss",
+        replacement: resolve(__dirname, "node_modules/@joint/plus/joint-plus.css"),
+      },
+      // Resolve monaco-graphql to the instance nested inside @graphiql/react to
+      // ensure only one copy of the library is loaded. Without this alias, both
+      // the root-level monaco-graphql and the one bundled with @graphiql/react
+      // register a "graphql" Monaco language, producing a console error
+      // ("Language graphql is already registered") and breaking autocompletion.
+      //
+      // NOTE: This path depends on Yarn NOT hoisting monaco-graphql to the root.
+      // If the lockfile changes and Yarn hoists it, this path will no longer exist
+      // and the build will silently fall back to two separate copies. Verify after
+      // a lockfile update that node_modules/@graphiql/react/node_modules/monaco-graphql
+      // still exists.
+      {
+        find: "monaco-graphql",
+        replacement: resolve(
+          __dirname,
+          "./node_modules/@graphiql/react/node_modules/monaco-graphql"
+        ),
+      },
+      // In tests, redirect ALL monaco-editor imports (including deep ESM subpaths like
+      // monaco-editor/esm/vs/base/common/uri.js) to the mock. A regex find is required
+      // because a string alias does a prefix replacement, turning subpath imports into
+      // non-existent paths like "__mocks__/monaco-editor.mjs/esm/vs/...".
       ...(process.env.NODE_ENV === "test"
-        ? {
-            "monaco-editor": resolve(__dirname, "__mocks__/monaco-editor.mjs"),
-          }
-        : {}),
-    },
+        ? [
+            {
+              find: /^monaco-editor(\/.*)?$/,
+              replacement: resolve(__dirname, "__mocks__/monaco-editor.mjs"),
+            },
+          ]
+        : []),
+    ],
   },
   server: {
     port: 9000,
@@ -221,7 +330,7 @@ export default defineConfig({
           // Try to get extension from the last element, or fallback to splitting baseName
           const ext = baseName.includes(".") ? baseName.split(".").pop() : "";
           // Handle CSS, images, and other assets
-          if (/(\.css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/.test(baseName)) {
+          if (/(\.(css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))$/.test(baseName)) {
             return `${baseName}`;
           }
           return `${baseName}${ext ? "." + ext : ""}`;
@@ -274,22 +383,29 @@ export default defineConfig({
             "@monaco-editor/react",
             "graphql-request",
             "@patternfly/react-styles",
+            "graphiql",
+            "@graphiql/react",
           ],
         },
       },
     },
     resolve: {
-      alias: {
-        "@patternfly/react-log-viewer": resolve(
-          __dirname,
-          "__mocks__/@patternfly/react-log-viewer/index.js"
-        ),
-        "@patternfly/react-code-editor": resolve(
-          __dirname,
-          "__mocks__/@patternfly/react-code-editor.js"
-        ),
-        "monaco-editor": resolve(__dirname, "__mocks__/monaco-editor.mjs"),
-      },
+      alias: [
+        {
+          find: "@patternfly/react-log-viewer",
+          replacement: resolve(__dirname, "__mocks__/@patternfly/react-log-viewer/index.js"),
+        },
+        {
+          find: "@patternfly/react-code-editor",
+          replacement: resolve(__dirname, "__mocks__/@patternfly/react-code-editor.js"),
+        },
+        // Regex ensures ALL monaco-editor subpath imports (e.g. monaco-editor/esm/vs/...)
+        // resolve to the mock instead of being rewritten as broken paths.
+        {
+          find: /^monaco-editor(\/.*)?$/,
+          replacement: resolve(__dirname, "__mocks__/monaco-editor.mjs"),
+        },
+      ],
     },
     css: {
       modules: {
@@ -310,8 +426,10 @@ export default defineConfig({
       "@joint/plus",
       "graphql-request",
       "@patternfly/react-styles",
+      "nullthrows",
+      "picomatch-browser",
     ],
-    exclude: ["@joint/core"],
+    exclude: ["@joint/core", "monaco-graphql"],
     force: true,
   },
   ssr: {
@@ -327,5 +445,3 @@ export default defineConfig({
     target: "es2020",
   },
 } as UserConfig);
-
-/**eslint-disable */

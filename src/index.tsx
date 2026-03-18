@@ -12,15 +12,13 @@ import { QueryControlProvider } from "./Data/Queries";
 import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
-import { editorWorkerPath, jsonWorkerPath } from "./monaco-workers";
+import { createMonacoWorker } from "./monaco-workers";
 
-// Monaco worker configuration telling where to find the workers.
+// Monaco worker configuration. Uses getWorker (returns a Worker instance) rather than
+// getWorkerUrl so that Vite's worker bundling sets the correct module type automatically.
 self.MonacoEnvironment = {
-  getWorkerUrl(_moduleId, label) {
-    if (label === "json") {
-      return jsonWorkerPath;
-    }
-    return editorWorkerPath;
+  getWorker(_workerId, label) {
+    return createMonacoWorker(label);
   },
 };
 
