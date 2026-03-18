@@ -79,6 +79,9 @@ export const Page: React.FC = () => {
   // GraphiQL's internal introspect() is a no-op when a schema prop is provided
   // (shouldIntrospect is set to false). Intercept the sidebar button click via
   // event delegation and invalidate the React Query cache instead.
+  // NOTE: The aria-label selector below is an internal implementation detail of
+  // graphiql@5.x. If a future upgrade silently breaks the Re-fetch button,
+  // verify that GraphiQL's ToolbarButton aria-label hasn't changed.
   const handleRefetchSchema = useCallback(
     (e: React.MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -126,5 +129,6 @@ const GraphiQLGlobalStyle = createGlobalStyle`
 `;
 
 const EditorContainer = styled.div`
+  /* Offset accounts for the app top navigation bar, page title bar, and surrounding padding. */
   height: calc(100vh - 240px);
 `;

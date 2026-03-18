@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { FetcherParams } from "@graphiql/toolkit";
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
 import { useFetchHelpers } from "@/Data/Queries/Helpers/useFetchHelpers";
@@ -14,10 +15,18 @@ import { PrimaryBaseUrlManager } from "@/UI";
  */
 export const usePostGraphQL = (env?: string): UseMutationResult<unknown, Error, FetcherParams> => {
   const { createHeaders, handleErrors } = useFetchHelpers();
-  const baseUrl = new PrimaryBaseUrlManager(
-    globalThis.location.origin,
-    globalThis.location.pathname
-  ).getBaseUrl(import.meta.env.VITE_API_BASEURL);
+
+  // origin and pathname are stable for the lifetime of an SPA session, and
+  // VITE_API_BASEURL is a build-time constant — memoize to avoid re-creating
+  // a PrimaryBaseUrlManager instance on every render.
+  const baseUrl = useMemo(
+    () =>
+      new PrimaryBaseUrlManager(
+        globalThis.location.origin,
+        globalThis.location.pathname,
+      ).getBaseUrl(import.meta.env.VITE_API_BASEURL),
+    [],
+  );
 
   return useMutation({
     mutationKey: ["post_graphql", env],

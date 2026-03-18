@@ -173,8 +173,17 @@ const stripBrokenSourcemapsPlugin = () => ({
     return null;
   },
 
+  // Only strip sourcemaps from the known offenders (marked, graphiql and its
+  // sub-packages). Stripping all node_modules sourcemaps would make debugging
+  // unrelated dependencies harder in DevTools.
   transform(code: string, id: string) {
-    if (id.includes("node_modules") && code.includes("sourceMappingURL")) {
+    if (
+      id.includes("node_modules") &&
+      (id.includes("marked") ||
+        id.includes("graphiql") ||
+        id.includes("@graphiql")) &&
+      code.includes("sourceMappingURL")
+    ) {
       return {
         code: code.replace(/\/\/# sourceMappingURL=\S+/g, ""),
         map: null,
@@ -233,8 +242,17 @@ export default defineConfig({
         find: "@rappidcss",
         replacement: resolve(__dirname, "node_modules/@joint/plus/joint-plus.css"),
       },
-      // Resolve monaco-graphql to the single instance nested under @graphiql/react
-      // to avoid duplicate Monaco language registrations.
+      // Resolve monaco-graphql to the instance nested inside @graphiql/react to
+      // ensure only one copy of the library is loaded. Without this alias, both
+      // the root-level monaco-graphql and the one bundled with @graphiql/react
+      // register a "graphql" Monaco language, producing a console error
+      // ("Language graphql is already registered") and breaking autocompletion.
+      //
+      // NOTE: This path depends on Yarn NOT hoisting monaco-graphql to the root.
+      // If the lockfile changes and Yarn hoists it, this path will no longer exist
+      // and the build will silently fall back to two separate copies. Verify after
+      // a lockfile update that node_modules/@graphiql/react/node_modules/monaco-graphql
+      // still exists.
       {
         find: "monaco-graphql",
         replacement: resolve(
@@ -314,7 +332,7 @@ export default defineConfig({
           // Try to get extension from the last element, or fallback to splitting baseName
           const ext = baseName.includes(".") ? baseName.split(".").pop() : "";
           // Handle CSS, images, and other assets
-          if (/(\.css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/.test(baseName)) {
+          if (/(\.(css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))$/.test(baseName)) {
             return `${baseName}`;
           }
           return `${baseName}${ext ? "." + ext : ""}`;
@@ -429,5 +447,3 @@ export default defineConfig({
     target: "es2020",
   },
 } as UserConfig);
-
-/**eslint-disable */
