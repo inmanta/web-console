@@ -8,11 +8,15 @@ type IconVariant = "success" | "danger" | "warning" | "info" | "custom";
  *
  * @interface
  * @param {string} title - The title of the modal.
+ * @param {string} [ariaLabel] - The aria-label of the modal.
+ * @param {string} [dataTestId] - The data-testid attribute of the modal.
  * @param {React.ReactNode} [description] - The description of the modal.
  * @param {React.ReactNode} content - The content of the modal.
- * @param {React.ReactNode | null} [actions] - The actions of the modal.
+ * @param {React.ReactNode | undefined} [actions] - The actions of the modal.
  * @param {ModalVariant} [variant] - The variant of the modal.
  * @param {IconVariant} [iconVariant] - The variant of the icon in the modal title.
+ * @param {() => void} [cancelCb] - Optional callback invoked when the modal is closed.
+ * @param {boolean} [showClose] - Whether to show the close button in the modal header.
  */
 
 export interface Params {
@@ -32,7 +36,7 @@ export interface Params {
  * `ModalContextInterface` is an interface for the context provided by the `ModalProvider`.
  *
  * @interface
- * @property {(props: Props) => void} triggerModal - The function to trigger a modal.
+ * @property {(params: Params) => void} triggerModal - The function to trigger a modal.
  * @property {() => void} closeModal - The function to close the modal.
  */
 interface ModalContextInterface {
@@ -60,9 +64,10 @@ export const ModalContext = createContext<ModalContextInterface>(defaultModalCon
  *
  * This component maintains its own state for the modal's properties and provides the `triggerModal` and `closeModal` functions through the `ModalContext`.
  * The `triggerModal` function updates the modal's properties and opens the modal.
- * The `closeModal` function closes the modal.
+ * The `closeModal` function closes the modal and invokes `cancelCb` if one was provided.
  *
- * the provider use the Modal component from the patternfly-react library, to gain more information about the Modal component and attributes used in this component, please visit the following link: https://www.patternfly.org/components/modal/
+ * The provider uses the Modal component from the patternfly-react library. For more information
+ * about the Modal component and its attributes, visit: https://www.patternfly.org/components/modal/
  *
  * @prop {Object} props - The properties passed to the component.
  * @prop {React.ReactNode} children - The children to be rendered within the `ModalContext.Provider`.
@@ -86,18 +91,23 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
    *
    * This function updates the modal's properties and opens the modal.
    * The properties include the title, description, content, actions, variant, and icon variant.
-   * The description and actions default to `null` and an empty array, respectively, if they are not provided.
-   * The variant defaults to `ModalVariant.small` if it is not provided.
+   * The description defaults to `null` and actions default to `undefined` if not provided.
+   * The variant defaults to `ModalVariant.small` if not provided.
    *
-   *  trigger pass the properties that are used by the Modal component from the patternfly-react library, to gain more information about the Modal component and its attributes used in this component, please visit the following link: https://www.patternfly.org/components/modal/
+   * For more information about the Modal component and its attributes, visit:
+   * https://www.patternfly.org/components/modal/
    *
    * @param {Params} params - The params to set for the modal.
    * @param {string} params.title - The title of the modal.
-   * @param {React.ReactNode} params.description - *optional* The description of the modal.
+   * @param {string} [params.ariaLabel] - *optional* The aria-label of the modal.
+   * @param {string} [params.dataTestId] - *optional* The data-testid attribute of the modal.
+   * @param {React.ReactNode} [params.description] - *optional* The description of the modal.
    * @param {React.ReactNode} params.content - The content of the modal.
-   * @param {React.ReactNode | null} params.actions - *optional*  The actions of the modal.
-   * @param {ModalVariant} params.variant - *optional*  The variant of the modal.
-   * @param {IconVariant} params.iconVariant - *optional* The variant of the icon in the modal title.
+   * @param {React.ReactNode | undefined} [params.actions] - *optional* The actions of the modal.
+   * @param {ModalVariant} [params.variant] - *optional* The variant of the modal.
+   * @param {IconVariant} [params.iconVariant] - *optional* The variant of the icon in the modal title.
+   * @param {() => void} [params.cancelCb] - *optional* Callback invoked when the modal is closed.
+   * @param {boolean} [params.showClose] - *optional* Whether to show the close button in the modal header.
    */
   const triggerModal = (params: Params) => {
     const {
