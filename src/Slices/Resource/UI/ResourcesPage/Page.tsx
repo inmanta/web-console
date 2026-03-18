@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Flex,
   FlexItem,
@@ -16,13 +16,12 @@ import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWi
 import { useGetResources } from "@/Data/Queries";
 import { EmptyView, PaginationWidget, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { ResourceTableControls, FilterWidgetComponent } from "./Components";
+import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { Summary } from "./Summary";
 
 export const Page: React.FC = () => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
-  const [activeFilterCount, setActiveFilterCount] = useState(0);
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "Resources",
   });
@@ -44,9 +43,10 @@ export const Page: React.FC = () => {
       : filter;
   }, [filter]);
 
-  useEffect(() => {
+  const activeFilterCount = useMemo(() => {
     const { disregardDefault: _disregardDefault, ...filterValues } = filterWithDefaults;
-    const count = Object.values(filterValues).reduce((acc, value) => {
+
+    return Object.values(filterValues).reduce((acc, value) => {
       if (!value) {
         return acc;
       }
@@ -57,9 +57,9 @@ export const Page: React.FC = () => {
 
       return acc + 1;
     }, 0);
-
-    setActiveFilterCount(count);
   }, [filterWithDefaults]);
+
+  const onCloseFilterWidget = useCallback(() => setIsDrawerExpanded(false), []);
 
   const { data, isSuccess, isError, refetch, error } = useGetResources({
     pageSize,
@@ -105,7 +105,7 @@ export const Page: React.FC = () => {
                 setCurrentPage={setCurrentPage}
               />
             }
-            onToggleFilters={() => setIsDrawerExpanded(!isDrawerExpanded)}
+            onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
             isDrawerExpanded={isDrawerExpanded}
             activeFilterCount={activeFilterCount}
           />
@@ -121,15 +121,7 @@ export const Page: React.FC = () => {
             isInline
             style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
           >
-            <DrawerContent
-              panelContent={
-                <FilterWidgetComponent
-                  onClose={() => setIsDrawerExpanded(false)}
-                  filter={filterWithDefaults}
-                  setFilter={setFilter}
-                />
-              }
-            >
+            <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
               <DrawerContentBody
                 style={{
                   display: "flex",
