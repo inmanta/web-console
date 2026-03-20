@@ -1,0 +1,9 @@
+description: | 
+  A GraphiQL editor has been implemented for testing GraphQL queries against the Console's GraphQL API. 
+  The editor is accessible via the "Developer Tools" icon-menu in the header, 
+  and provides features such as syntax highlighting, autocompletion, and query history.
+issue-nr: 6711
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

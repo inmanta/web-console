@@ -17,6 +17,7 @@ import { BarsIcon } from "@patternfly/react-icons";
 import { Badge } from "@/Slices/Notification/UI/Badge";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { APIActionsButton } from "./Actions/APIActionsButton";
 import { DocumentationLinks } from "./Actions/DocumentationLinks";
 import { StatusButton } from "./Actions/StatusButton";
 import { EnvSelectorWithProvider } from "./EnvSelector";
@@ -91,6 +92,7 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
                 )}
                 <StatusButton />
                 <DocumentationLinks />
+                <APIActionsButton />
               </ToolbarGroup>
               <ToolbarItem>
                 <EnvSelectorWithProvider />

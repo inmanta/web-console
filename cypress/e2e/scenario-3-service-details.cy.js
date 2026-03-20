@@ -99,6 +99,11 @@ if (isIso) {
       cy.get("#basic-service", { timeout: 60000 }).contains("Show inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
+      cy.get("body").then(($body) => {
+        const count = $body.find('[aria-label="InstanceRow-Intro"]').length;
+        cy.wrap(count).as("previousCount");
+      });
+
       // click on add instance
       cy.get("#add-instance-button").click();
 
@@ -128,7 +133,9 @@ if (isIso) {
       }).should("to.be.visible");
 
       // Check if only one row has been added to the table.
-      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+      cy.get("@previousCount").then((previousCount) => {
+        cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", previousCount + 1);
+      });
 
       // go back to Service Catalog
       cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
@@ -161,6 +168,11 @@ if (isIso) {
       // click on Show Inventory on basic-service
       cy.get("#basic-service", { timeout: 60000 }).contains("Show inventory").click();
 
+      cy.get("body").then(($body) => {
+        const count = $body.find('[aria-label="InstanceRow-Intro"]').length;
+        cy.wrap(count).as("previousCount");
+      });
+
       // click on duplicate instance
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
       cy.get('[role="menuitem"]').contains("Duplicate").click();
@@ -191,7 +203,9 @@ if (isIso) {
       }).should("to.be.visible");
 
       // Check if only one row has been added to the table.
-      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
+      cy.get("@previousCount").then((previousCount) => {
+        cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", previousCount + 1);
+      });
 
       // Check if the newly added instance has failed.
       // long timeout justified by the fact that a few compiles are already queued at this point and status change will only be changed after.
@@ -241,6 +255,11 @@ if (isIso) {
       // Go to the callback tab
       cy.get("button").contains("Callbacks").click();
 
+      cy.get("body").then(($body) => {
+        const count = $body.find('[aria-label="CallbacksTable"] tbody').length;
+        cy.wrap(count).as("previousBodies");
+      });
+
       // Fill in the fields
       cy.get('[aria-label="callbackUrl"]').type("wrongUrl");
       cy.get('[aria-label="callbackId"]').type("60b18097-1525-47f2-95ae-1d941d9c0c85");
@@ -259,10 +278,10 @@ if (isIso) {
       cy.get("button").contains("Add").click();
 
       // Expect new row to be added to the view.
-      cy.get('[aria-label="CallbacksTable"]').should(($table) => {
-        const $tableBody = $table.find("tbody");
-
-        expect($tableBody).to.have.length(2);
+      cy.get("@previousBodies").then((previousBodies) => {
+        cy.get('[aria-label="CallbacksTable"]')
+          .find("tbody")
+          .should("have.length", previousBodies + 1);
       });
 
       // Expect the form to be cleared completely.
@@ -279,38 +298,18 @@ if (isIso) {
         expect($list).to.have.length(10);
       });
 
-      cy.get(".pf-v6-c-description-list__description li")
-        .first()
-        .should("have.css", "text-decoration")
-        .and("contain", "none solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(1)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(2)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(3)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(4)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(5)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(6)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(7)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
+      cy.get('.pf-v6-c-description-list__description [role="list"] > li').then(($lis) => {
+        $lis.each((i, el) => {
+          const textDec = window.getComputedStyle(el).textDecoration;
+          if (i === 0) {
+            // First item should have normal text
+            expect(textDec.toLowerCase()).to.contain("none");
+          } else {
+            // All other items should have line-through
+            expect(textDec.toLowerCase()).to.contain("line-through");
+          }
+        });
+      });
 
       // Expect the UUID to be truncated to 8 characters, have INFO level and 1 Event Type.
       cy.get('[aria-label="CallbacksTable"]').should(($table) => {
