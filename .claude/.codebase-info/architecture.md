@@ -4,6 +4,7 @@
 
 ## Executive Summary
 
+
 Inmanta Web Console is a feature-rich React/TypeScript SPA that serves as the management UI for the Inmanta Orchestrator platform. It communicates with a backend orchestrator API (running on port 8888 by default) via REST and GraphQL, and supports multiple authentication modes (no-auth, Keycloak, local-auth).
 
 The codebase is organized into three main layers — Core (domain contracts), Data (API/state management), and UI (presentation) — plus 40+ feature slices (Slices/) that each own their domain's components, queries, and logic. Dependencies are wired at startup through a centralized dependency injection system in `src/Injector.tsx`.
