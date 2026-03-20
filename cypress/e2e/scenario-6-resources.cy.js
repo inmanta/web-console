@@ -474,6 +474,7 @@ describe("Scenario 6 : Resources", () => {
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "1 - 20");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
       //Go to next page
       cy.get('[aria-label="Go to next page"]').first().should("not.be.disabled").click();
