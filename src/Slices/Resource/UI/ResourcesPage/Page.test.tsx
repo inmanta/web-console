@@ -162,8 +162,8 @@ describe("ResourcesPage", () => {
 
   test("ResourcesPage shows failed table", async () => {
     server.use(
-      queryLink.query("GetResources", () => {
-        return HttpResponse.json({ message: "error" }, { status: 500 });
+      http.post("/api/v2/graphql", () => {
+        return new HttpResponse(null, { status: 500 });
       })
     );
 
