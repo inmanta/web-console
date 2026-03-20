@@ -70,13 +70,19 @@ function toGqlResponse(
 const gqlFull = toGqlResponse(Resource.response.data, Number(Resource.response.metadata.total));
 
 // Response with only 3 resources
-const gqlFirst3 = toGqlResponse(Resource.response.data.slice(0, 3), Number(Resource.response.metadata.total));
+const gqlFirst3 = toGqlResponse(
+  Resource.response.data.slice(0, 3),
+  Number(Resource.response.metadata.total)
+);
 
 // Response with 2 "available" resources (change index 2 from "processing_events" to "available")
 const dataWithTwoAvailable = Resource.response.data.map((r, i) =>
   i === 2 ? { ...r, status: "available" } : r
 );
-const gqlTwoAvailable = toGqlResponse(dataWithTwoAvailable, Number(Resource.response.metadata.total));
+const gqlTwoAvailable = toGqlResponse(
+  dataWithTwoAvailable,
+  Number(Resource.response.metadata.total)
+);
 
 // ---------------------------------------------------------------------------
 
@@ -143,7 +149,9 @@ describe("ResourcesPage", () => {
 
     expect(screen.getByRole("region", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
 
-    expect(await screen.findByRole("generic", { name: "ResourcesPage-Empty" }, { timeout: 5000 })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("generic", { name: "ResourcesPage-Empty" }, { timeout: 5000 })
+    ).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -199,7 +207,8 @@ describe("ResourcesPage", () => {
   test("GIVEN ResourcesPage WHEN user clicks on requires toggle THEN list of requires is shown", async () => {
     server.use(
       queryLink.query("GetResources", () => {
-        return HttpResponse.json({ data: toGqlResponse(
+        return HttpResponse.json({
+          data: toGqlResponse(
             [
               {
                 ...Resource.response.data[0],
@@ -207,7 +216,8 @@ describe("ResourcesPage", () => {
               },
             ],
             1
-          ) });
+          ),
+        });
       }),
       http.get("/api/v2/resource/abc", () => {
         return HttpResponse.json(ResourceDetails.response);
@@ -242,15 +252,20 @@ describe("ResourcesPage", () => {
   test("ResourcesPage shows next page of resources", async () => {
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-
         if (variables.after === "fake-cursor") {
           return HttpResponse.json({ data: gqlFull });
         }
 
-        return HttpResponse.json({ data: toGqlResponse(Resource.response.data.slice(0, 3), Number(Resource.response.metadata.total), {
-            hasNextPage: true,
-            endCursor: "fake-cursor",
-          }) });
+        return HttpResponse.json({
+          data: toGqlResponse(
+            Resource.response.data.slice(0, 3),
+            Number(Resource.response.metadata.total),
+            {
+              hasNextPage: true,
+              endCursor: "fake-cursor",
+            }
+          ),
+        });
       })
     );
 
@@ -310,9 +325,13 @@ describe("ResourcesPage", () => {
   test("ResourcesPage sets sorting parameters correctly on click", async () => {
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-
         if (variables.orderBy?.[0]?.key === "agent" && variables.orderBy?.[0]?.order === "asc") {
-          return HttpResponse.json({ data: toGqlResponse([...Resource.response.data].reverse(), Number(Resource.response.metadata.total)) });
+          return HttpResponse.json({
+            data: toGqlResponse(
+              [...Resource.response.data].reverse(),
+              Number(Resource.response.metadata.total)
+            ),
+          });
         }
 
         return HttpResponse.json({ data: gqlFull });
@@ -349,15 +368,20 @@ describe("ResourcesPage", () => {
   test("GIVEN ResourcesPage WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-
         if (variables.after === "fake-cursor") {
           return HttpResponse.json({ data: gqlFull });
         }
 
-        return HttpResponse.json({ data: toGqlResponse(Resource.response.data.slice(0, 3), Number(Resource.response.metadata.total), {
-            hasNextPage: true,
-            endCursor: "fake-cursor",
-          }) });
+        return HttpResponse.json({
+          data: toGqlResponse(
+            Resource.response.data.slice(0, 3),
+            Number(Resource.response.metadata.total),
+            {
+              hasNextPage: true,
+              endCursor: "fake-cursor",
+            }
+          ),
+        });
       })
     );
     const { component } = setup();
@@ -385,18 +409,24 @@ describe("ResourcesPage", () => {
   });
 
   it.each`
-    filterType  | filterValue | placeholderText                                          | filterVariableKey  | filterVariableValue
-    ${"search"} | ${"agent2"} | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}         | ${"agent2"}
-    ${"search"} | ${"File"}   | ${words("resources.filters.resource.type.placeholder")}  | ${"resourceType"}  | ${"File"}
+    filterType  | filterValue | placeholderText                                          | filterVariableKey    | filterVariableValue
+    ${"search"} | ${"agent2"} | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}           | ${"agent2"}
+    ${"search"} | ${"File"}   | ${words("resources.filters.resource.type.placeholder")}  | ${"resourceType"}    | ${"File"}
     ${"search"} | ${"tmp"}    | ${words("resources.filters.resource.value.placeholder")} | ${"resourceIdValue"} | ${"tmp"}
   `(
     "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the resources with that $filterVariableKey should be fetched and shown",
-    async ({ filterType, filterValue, placeholderText, filterVariableKey, filterVariableValue }) => {
+    async ({
+      filterType,
+      filterValue,
+      placeholderText,
+      filterVariableKey,
+      filterVariableValue,
+    }) => {
       server.use(
         queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-          const filterField = variables.filter?.[filterVariableKey as keyof typeof variables.filter] as
-            | { eq?: string[]; contains?: string[] }
-            | undefined;
+          const filterField = variables.filter?.[
+            filterVariableKey as keyof typeof variables.filter
+          ] as { eq?: string[]; contains?: string[] } | undefined;
           const values = filterField?.eq ?? filterField?.contains ?? [];
 
           if (values.includes(filterVariableValue)) {
@@ -445,10 +475,10 @@ describe("ResourcesPage", () => {
   );
 
   it.each`
-    filterValueOne | placeholderTextOne                                       | filterKeyOne       | filterValueTwo | placeholderTextTwo                                       | filterKeyTwo
-    ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}         | ${"file3"}     | ${words("resources.filters.resource.value.placeholder")} | ${"resourceIdValue"}
-    ${"Directory"} | ${words("resources.filters.resource.type.placeholder")}  | ${"resourceType"}  | ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}
-    ${"tmp"}       | ${words("resources.filters.resource.value.placeholder")} | ${"resourceIdValue"} | ${"File"}    | ${words("resources.filters.resource.type.placeholder")}  | ${"resourceType"}
+    filterValueOne | placeholderTextOne                                       | filterKeyOne         | filterValueTwo | placeholderTextTwo                                       | filterKeyTwo
+    ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}           | ${"file3"}     | ${words("resources.filters.resource.value.placeholder")} | ${"resourceIdValue"}
+    ${"Directory"} | ${words("resources.filters.resource.type.placeholder")}  | ${"resourceType"}    | ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}
+    ${"tmp"}       | ${words("resources.filters.resource.value.placeholder")} | ${"resourceIdValue"} | ${"File"}      | ${words("resources.filters.resource.type.placeholder")}  | ${"resourceType"}
   `(
     "when using the search filters of type $filterType with value $filterValueOne and text $placeholderTextOne combined with $filterType with value $filterValueTwo and text $placeholderText then the resources with that $filterKeyOne and $filterKeyTwo should be fetched and shown",
     async ({
@@ -461,7 +491,6 @@ describe("ResourcesPage", () => {
     }) => {
       server.use(
         queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-
           const fieldOne = variables.filter?.[filterKeyOne as keyof typeof variables.filter] as
             | { eq?: string[]; contains?: string[] }
             | undefined;
@@ -520,7 +549,6 @@ describe("ResourcesPage", () => {
 
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-
         const agentValues = variables.filter?.agent?.eq ?? [];
         const typeValues = variables.filter?.resourceType?.eq ?? [];
         const idValues = variables.filter?.resourceIdValue?.contains ?? [];
@@ -635,7 +663,6 @@ describe("ResourcesPage", () => {
   test("When clicking the clear and reset filters then the state filter is updated correctly", async () => {
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-
         // Default filter: isOrphan: false (excludes orphaned) → return 6 rows
         // No isOrphan filter (clear all) → return 2 rows
         if (variables.filter?.isOrphan === false) {
@@ -720,17 +747,18 @@ describe("ResourcesPage", () => {
   test("GIVEN ResourcesPage WHEN data is loading for next page THEN shows toolbar", async () => {
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-
         delay(100);
 
         if (variables.after === "fake-param") {
           return HttpResponse.json({ data: gqlTwoAvailable });
         }
 
-        return HttpResponse.json({ data: toGqlResponse(Resource.response.data, Number(Resource.response.metadata.total), {
+        return HttpResponse.json({
+          data: toGqlResponse(Resource.response.data, Number(Resource.response.metadata.total), {
             hasNextPage: true,
             endCursor: "fake-param",
-          }) });
+          }),
+        });
       })
     );
     const { component } = setup(["/resources?pageSize=20"]);
@@ -802,10 +830,12 @@ describe("ResourcesPage", () => {
           return HttpResponse.json({ data: gqlTwoAvailable });
         }
 
-        return HttpResponse.json({ data: toGqlResponse(Resource.response.data, Number(Resource.response.metadata.total), {
+        return HttpResponse.json({
+          data: toGqlResponse(Resource.response.data, Number(Resource.response.metadata.total), {
             hasNextPage: true,
             endCursor: "fake-cursor",
-          }) });
+          }),
+        });
       })
     );
     const { component } = setup();
