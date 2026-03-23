@@ -189,7 +189,9 @@ if (isIso) {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Record the current number of instances before duplicating
-      cy.get('[aria-label="InstanceRow-Intro"]').its("length").as("previousCount");
+      cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 30000 })
+        .its("length")
+        .as("previousCount");
 
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
       cy.get('[role="menuitem"]').contains("Duplicate").click();
