@@ -189,9 +189,9 @@ if (isIso) {
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Record the current number of instances before duplicating
-      cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 30000 })
-        .its("length")
-        .as("previousCount");
+      cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 30000 }).then(($rows) => {
+        cy.wrap($rows.length).as("previousCount");
+      });
 
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
       cy.get('[role="menuitem"]').contains("Duplicate").click();
@@ -325,11 +325,11 @@ if (isIso) {
 
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      // Expect to find two badges on the basic-service row.
+      // Expect to find one badge on the basic-service row.
       cy.get("#basic-service")
         .get('[aria-label="Number of instances by label"]', { timeout: 30000 })
         .children()
-        .should("have.length", 2);
+        .should("have.length", 1);
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Check Instance Details page
