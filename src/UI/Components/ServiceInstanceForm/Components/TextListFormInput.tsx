@@ -109,7 +109,7 @@ export const TextListFormInput: React.FC<Props> = ({
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if ((event.key === "Enter" || event.key === "Tab") && inputValue.trim()) {
+    if (event.key === "Enter" || event.key === "Tab") {
       event.preventDefault();
       addChip();
     }
