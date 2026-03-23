@@ -25,7 +25,7 @@
     "delete:reports": "rm -r cypress/reports/* || true",
     "precypress-test": "yarn run delete:reports",
     "cypress-test:oss": "yarn cypress run --config-file cypress.config.oss.cjs",
-    "cypress-test:iso": "yarn cypress run --spec cypress/e2e/scenario-2.1-basic-service.cy.js",
+    "cypress-test:iso": "yarn cypress run",
     "cypress-test:keycloak": "yarn cypress run --config-file cypress.config.keycloak.cjs",
     "cypress-test:local-auth": "yarn cypress run --config-file cypress.config.local-auth.cjs",
     "package-cleanup": "node clean_up_packages",
