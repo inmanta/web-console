@@ -3,6 +3,7 @@ import { Content, Button, Spinner, Flex, FlexItem } from "@patternfly/react-core
 import { ParsedNumber } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
 export interface StateTransferModalContentProps {
@@ -11,7 +12,6 @@ export interface StateTransferModalContentProps {
   targetState: string;
   instance_display_identity: string;
   version: ParsedNumber;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -24,12 +24,11 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
   targetState,
   instance_display_identity,
   version,
-  setErrorMessage,
   setInterfaceBlocked,
 }) => {
   const { authHelper } = useContext(DependencyContext);
   const username = authHelper.getUser();
-
+  const { notifyError } = useAppAlert();
   const { closeModal } = useContext(ModalContext);
 
   const { mutate, isPending } = usePostStateTransfer(instance_id, service_entity, {
@@ -37,7 +36,7 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
       closeCallback();
     },
     onError: (error) => {
-      setErrorMessage(error.message);
+      notifyError(error.message, "", "error-toast-actions-error-message");
     },
   });
 

@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGetAgents } from "@/Data/Queries";
 import { Filter } from "@/Slices/Agents/Core/Types";
 import {
   EmptyView,
-  ToastAlert,
   PageContainer,
   PaginationWidget,
   LoadingView,
@@ -25,8 +24,6 @@ import { TableProvider } from "./TableProvider";
  * @returns {React.FC} The rendered Agents page.
  */
 export const Page: React.FC = () => {
-  const [errorMessage, setErrorMessage] = useState("");
-
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
     route: "Agents",
   });
@@ -77,13 +74,7 @@ export const Page: React.FC = () => {
             />
           }
         />
-        <GetAgentsContext.Provider value={{ filter, sort, pageSize, currentPage, setErrorMessage }}>
-          <ToastAlert
-            data-testid="ToastAlert"
-            title={words("agents.actions.failed")}
-            message={errorMessage}
-            setMessage={setErrorMessage}
-          />
+        <GetAgentsContext.Provider value={{ filter, sort, pageSize, currentPage }}>
           {data.data.length <= 0 ? (
             <EmptyView message={words("agents.empty.message")} aria-label="AgentsView-Empty" />
           ) : (

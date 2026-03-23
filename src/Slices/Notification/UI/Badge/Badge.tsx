@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { NotificationBadge, NotificationBadgeVariant } from "@patternfly/react-core";
 import { useGetPartialNotifications, PartialNotification } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { ToastAlert } from "@/UI/Components";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
 
 /**
@@ -13,6 +13,7 @@ import { words } from "@/UI/words";
  */
 export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   const { environmentHandler } = useContext(DependencyContext);
+  const { notifyError } = useAppAlert();
   const envID = environmentHandler.useId();
   const { data, isSuccess, isError, error } = useGetPartialNotifications({
     envID,
@@ -20,27 +21,20 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
     orderBy: [{ key: "created", order: "desc" }],
   }).useContinuous();
 
-  const [errorMessage, setErrorMessage] = useState("");
-
   useEffect(() => {
-    // We add the check for envID to prevent blocking the UI when an environment id is not valid or missing.
-    if (isError && envID) {
-      setErrorMessage(error.message);
-    }
-    if (isSuccess && data.errors && data.errors.length > 0 && envID) {
-      setErrorMessage(data.errors.join(", "));
-    }
-  }, [data, isError, isSuccess, error, envID]);
+    if (!envID) return;
 
-  if (errorMessage) {
+    if (isError && error) notifyError(words("error"), error.message, "ToastAlert");
+
+    if (isSuccess && (data?.errors?.length || 0) > 0)
+      notifyError(words("error"), (data?.errors ?? []).join(", "), "ToastAlert");
+  }, [isError, error, isSuccess, data, envID, notifyError]);
+
+  const hasErrors = !!envID && (isError || (isSuccess && (data?.errors?.length ?? 0) > 0));
+
+  if (hasErrors) {
     return (
       <>
-        <ToastAlert
-          data-testid="ToastAlert"
-          message={errorMessage}
-          title={words("error")}
-          setMessage={setErrorMessage}
-        />
         <NotificationBadge
           aria-label="Badge-Error"
           variant={NotificationBadgeVariant.read}

@@ -4,8 +4,8 @@ import { ParsedNumber } from "@/Core";
 import { usePromoteDesiredStateVersion } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
-import { GetDesiredStatesContext } from "@S/DesiredState/UI/GetDesiredStatesContext";
 
 interface Props {
   version: ParsedNumber;
@@ -24,9 +24,9 @@ interface Props {
  */
 export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { environmentHandler } = useContext(DependencyContext);
-  const { setErrorMessage } = useContext(GetDesiredStatesContext);
+  const { notifyError } = useAppAlert();
   const { mutate } = usePromoteDesiredStateVersion({
-    onError: (error) => setErrorMessage(error.message),
+    onError: (error) => notifyError(words("desiredState.actions.promote.failed"), error?.message),
   });
   const isHalted = environmentHandler.useIsHalted();
 

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FormGroup } from "@patternfly/react-core";
 import { UseMutationResult } from "@tanstack/react-query";
 import { CreateProjectParams, CreateProjectResponse } from "@/Data/Queries";
+import { AppAlert } from "../AppAlert";
 import { SingleTextSelect } from "../SingleTextSelect";
-import { InlinePlainAlert } from "./InlinePlainAlert";
 
 interface Props {
   label: string;
@@ -54,11 +54,14 @@ export const CreatableSelectInput: React.FC<Props> = ({
   }, [onCreate.isError, onCreate.isSuccess, onCreate.data, onCreate.error, onSelect]);
 
   const errorView = submitError && (
-    <InlinePlainAlert
-      aria-label={`${label}-error-message`}
-      errorMessage={submitError}
-      closeButtonAriaLabel={`${label}-close-error`}
-      onCloseAlert={onCloseAlert}
+    <AppAlert
+      closeTestId={`${label}-close-error`}
+      data-testid={`${label}-error-message`}
+      isInline
+      isPlain
+      isLimitedWidth
+      title={submitError}
+      onClose={onCloseAlert}
     />
   );
 

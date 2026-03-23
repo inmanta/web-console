@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, ToolbarGroup } from "@patternfly/react-core";
 import { useTriggerDryRun } from "@/Data/Queries";
-import { ToastAlert } from "@/UI/Components";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -20,10 +20,10 @@ interface Props {
  * @returns {React.FC<Props>} The TriggerDryRunAction component
  */
 export const TriggerDryRunAction: React.FC<Props> = ({ version }) => {
-  const [errorMessage, setErrorMessage] = useState("");
+  const { notifyError } = useAppAlert();
   const { mutate } = useTriggerDryRun({
     onError: (error) => {
-      setErrorMessage(error.message);
+      notifyError(words("desiredState.complianceCheck.action.dryRun.failed"), error.message);
     },
   });
 
@@ -33,11 +33,6 @@ export const TriggerDryRunAction: React.FC<Props> = ({ version }) => {
 
   return (
     <ToolbarGroup align={{ default: "alignEnd" }}>
-      <ToastAlert
-        title={words("desiredState.complianceCheck.action.dryRun.failed")}
-        message={errorMessage}
-        setMessage={setErrorMessage}
-      />
       <Button variant="secondary" onClick={onTrigger}>
         {words("desiredState.complianceCheck.action.dryRun")}
       </Button>

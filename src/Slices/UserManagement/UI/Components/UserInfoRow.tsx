@@ -1,17 +1,17 @@
 import React, { useContext, useState } from "react";
-import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
+import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { UserShieldIcon } from "@patternfly/react-icons";
 import { Td, Tr } from "@patternfly/react-table";
 import { useRemoveUser, UserInfo } from "@/Data/Queries";
 import { words } from "@/UI";
 import { ConfirmUserActionForm } from "@/UI/Components";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { ChangePasswordForm } from "./ChangePasswordForm";
 import { NestedUserRoleTable } from "./NestedUserRoleTable";
 
 interface Props {
   user: UserInfo;
-  setAlertMessage: (message: string, variant: AlertVariant) => void;
 }
 
 /**
@@ -21,15 +21,15 @@ interface Props {
  *
  * @returns {React.FC<Props>} The rendered user info row with button to be able to delete the user.
  */
-export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
+export const UserInfoRow: React.FC<Props> = ({ user }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const authConfig = globalThis && globalThis.auth;
   const showRoles = authConfig?.provider === "policy-engine" && authConfig?.method === "database";
   const [isExpanded, setIsExpanded] = useState(false);
-
+  const { notifyError } = useAppAlert();
   const { mutate } = useRemoveUser({
     onError: (error) => {
-      setAlertMessage(error.message, AlertVariant.danger);
+      notifyError(words("error.title"), error.message);
     },
   });
 
@@ -70,7 +70,7 @@ export const UserInfoRow: React.FC<Props> = ({ user, setAlertMessage }) => {
             <p>{words("userManagement.changePassword.message")(user.username)}</p>
           </FlexItem>
           <FlexItem>
-            <ChangePasswordForm user={user.username} setAlertMessage={setAlertMessage} />
+            <ChangePasswordForm user={user.username} />
           </FlexItem>
         </Flex>
       ),

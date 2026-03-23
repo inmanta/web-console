@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AlertVariant, Button, Content, Flex, FlexItem, Tooltip } from "@patternfly/react-core";
+import React, { useContext } from "react";
+import { Button, Content, Flex, FlexItem, Tooltip } from "@patternfly/react-core";
 import { FileCodeIcon } from "@patternfly/react-icons";
 import { useExportCatalog } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { ConfirmUserActionForm } from "../ConfirmUserActionForm";
-import { ToastAlert } from "../ToastAlert";
 
 /**
  * This component will trigger an update of the Service Catalog.
@@ -22,12 +22,15 @@ import { ToastAlert } from "../ToastAlert";
 export const CatalogActions: React.FC = () => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { urlManager, environmentHandler, authHelper } = useContext(DependencyContext);
-  const { mutate, isError, error, isSuccess } = useExportCatalog();
-
-  const [message, setMessage] = useState("");
-  const [toastTitle, setToastTitle] = useState("");
-  const [toastType, setToastType] = useState(AlertVariant.custom);
-
+  const { notifyError, notifySuccess } = useAppAlert();
+  const { mutate } = useExportCatalog({
+    onSuccess: () => {
+      notifySuccess(words("catalog.update.success"), words("catalog.update.success.message"));
+    },
+    onError: (error) => {
+      notifyError(words("catalog.update.failed"), error.message);
+    },
+  });
   const lsmApiLink = urlManager.getLSMAPILink(environmentHandler.useId());
 
   // If the user is authenticated, we need to add the token to the documentation link to allow access to the page.
@@ -80,27 +83,8 @@ export const CatalogActions: React.FC = () => {
     });
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      setToastTitle(words("catalog.update.success"));
-      setMessage(words("catalog.update.success.message"));
-      setToastType(AlertVariant.success);
-    } else if (isError) {
-      setToastTitle(words("catalog.update.failed"));
-      setMessage(error.message);
-      setToastType(AlertVariant.danger);
-    }
-  }, [isError, error, isSuccess]);
-
   return (
     <>
-      <ToastAlert
-        data-testid="ToastAlert"
-        title={toastTitle}
-        message={message}
-        setMessage={setMessage}
-        type={toastType}
-      />
       <Flex
         direction={{ default: "row" }}
         fullWidth={{ default: "fullWidth" }}

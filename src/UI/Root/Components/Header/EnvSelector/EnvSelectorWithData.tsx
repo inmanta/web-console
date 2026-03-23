@@ -1,8 +1,9 @@
 import React from "react";
-import { Alert, Dropdown, Spinner, MenuToggle } from "@patternfly/react-core";
+import { Dropdown, Spinner, MenuToggle } from "@patternfly/react-core";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Environment, FlatEnvironment, ProjectModel } from "@/Core";
 import { EnvironmentPreview } from "@/Data/Queries";
+import { AppAlert } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { EnvironmentSelectorItem, EnvSelectorWrapper } from "./EnvSelectorWrapper";
 
@@ -37,10 +38,13 @@ export const EnvSelectorWithData: React.FC<Props> = ({
         <Dropdown
           aria-label="EnvSelector-Failed"
           toggle={() => <MenuToggle>{words("error")}</MenuToggle>}
-        ></Dropdown>
-        <Alert variant="danger" title={words("error")} data-testid="AlertError">
-          <p>{environments.error.message}</p>
-        </Alert>
+        />
+        <AppAlert
+          title={words("error")}
+          data-testid="AlertError"
+          isInline
+          message={environments.error?.message}
+        />
       </>
     );
   }
@@ -51,10 +55,13 @@ export const EnvSelectorWithData: React.FC<Props> = ({
         <Dropdown
           aria-label="EnvSelector-Failed"
           toggle={() => <MenuToggle>{words("error")}</MenuToggle>}
-        ></Dropdown>
-        <Alert variant="danger" title={words("error")} data-testid="AlertError">
-          <p>{projects.error.message}</p>
-        </Alert>
+        />
+        <AppAlert
+          title={words("error")}
+          data-testid="AlertError"
+          isInline
+          message={projects.error.message}
+        />
       </>
     );
   }

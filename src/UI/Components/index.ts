@@ -1,4 +1,5 @@
 export * as DiffWizard from "./DiffWizard";
+export * from "./AppAlert";
 export * from "./ActionDisabledTooltip";
 export * from "./AttributesTable";
 export * from "./BlockingModal";
@@ -42,6 +43,5 @@ export * from "./SingleTextSelect";
 export * from "./SummaryChart";
 export * from "./TextWithCopy";
 export * from "./DateWithTimeDiffTooltip";
-export * from "./ToastAlert";
 export * from "./Toggle";
 export * from "./TreeTable";

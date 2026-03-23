@@ -1,7 +1,5 @@
 import { useState } from "react";
 import {
-  Alert,
-  AlertGroup,
   Label,
   MenuToggle,
   MenuToggleElement,
@@ -12,7 +10,6 @@ import {
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Tbody, Tr, Td, Thead, Th } from "@patternfly/react-table";
 import { useQueryClient } from "@tanstack/react-query";
-import { v4 as uuidv4 } from "uuid";
 import { Environment } from "@/Core/Domain/ProjectModel";
 import {
   UserInfo,
@@ -23,6 +20,7 @@ import {
   getUserKey,
 } from "@/Data/Queries";
 import { words } from "@/UI";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 
 /**
  * A table that displays the roles of a user, for all environments.
@@ -99,8 +97,7 @@ const RoleSelector: React.FC<{
   const client = useQueryClient();
   const { data: availableRoles, isLoading: isLoadingAvailableRoles } =
     useGetRoles(environmentId).useOneTime();
-  const [errors, setErrors] = useState<string[]>([]);
-
+  const { notifyError } = useAppAlert();
   const [isOpen, setIsOpen] = useState(false);
 
   const { mutate: addRole } = useAddRole(username, {
@@ -108,7 +105,7 @@ const RoleSelector: React.FC<{
       client.invalidateQueries({ queryKey: getUserKey.list() });
     },
     onError: (error) => {
-      setErrors((prev) => [...prev, error.message]);
+      notifyError(words("error.title"), error.message, "error-message");
     },
   });
   const { mutate: deleteRole } = useDeleteRole(username, {
@@ -116,7 +113,7 @@ const RoleSelector: React.FC<{
       client.invalidateQueries({ queryKey: getUserKey.list() });
     },
     onError: (error) => {
-      setErrors((prev) => [...prev, error.message]);
+      notifyError(words("error.title"), error.message, "error-message");
     },
   });
 
@@ -150,21 +147,6 @@ const RoleSelector: React.FC<{
 
   return (
     <>
-      {errors.length > 0 && (
-        <AlertGroup isLiveRegion aria-live="polite" isToast>
-          {errors.map((error) => (
-            <Alert
-              variant="danger"
-              title={words("error.title")}
-              key={`error-${uuidv4()}`}
-              timeout={5000}
-              aria-label="error-message"
-            >
-              {error}
-            </Alert>
-          ))}
-        </AlertGroup>
-      )}
       <Select
         id="role-selector"
         isOpen={isOpen}

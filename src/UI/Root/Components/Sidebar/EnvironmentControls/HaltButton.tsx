@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react";
-import { Alert, AlertGroup, Button, Tooltip } from "@patternfly/react-core";
+import React, { useContext } from "react";
+import { Button, Tooltip } from "@patternfly/react-core";
 import { StopIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { v4 as uuidv4 } from "uuid";
 import { useHaltEnvironment } from "@/Data/Queries";
 import { useQueryControl } from "@/Data/Queries";
 import { words } from "@/UI/words";
+import { useAppAlert } from "../../AppAlertProvider";
 import { ModalContext } from "../../ModalProvider";
 
 /**
@@ -17,7 +17,7 @@ export const HaltButton: React.FC = () => {
   const client = useQueryClient();
   const { disableQueries, enableQueries } = useQueryControl();
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { notifyError } = useAppAlert();
 
   const closeModalAndEnableQueries = () => {
     closeModal();
@@ -31,7 +31,7 @@ export const HaltButton: React.FC = () => {
       closeModalAndEnableQueries();
     },
     onError: (error) => {
-      setErrorMessage(error.message);
+      notifyError(words("error.title"), error.message);
       closeModalAndEnableQueries();
     },
   });
@@ -67,7 +67,6 @@ export const HaltButton: React.FC = () => {
           variant="link"
           onClick={() => {
             closeModal();
-            setErrorMessage(null);
           }}
         >
           {words("no")}
@@ -88,19 +87,6 @@ export const HaltButton: React.FC = () => {
           {words("environment.halt.button")}
         </Button>
       </Tooltip>
-      {errorMessage && (
-        <AlertGroup aria-live="polite" isToast>
-          <Alert
-            variant="danger"
-            title={words("error.title")}
-            key={`error-${uuidv4()}`}
-            timeout={5000}
-            aria-label="error-message"
-          >
-            {errorMessage}
-          </Alert>
-        </AlertGroup>
-      )}
     </>
   );
 };

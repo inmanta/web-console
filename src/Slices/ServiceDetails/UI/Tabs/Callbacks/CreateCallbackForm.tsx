@@ -1,17 +1,11 @@
 import React, { useState } from "react";
-import {
-  TextInput,
-  Button,
-  Alert,
-  AlertActionCloseButton,
-  SelectOptionProps,
-} from "@patternfly/react-core";
+import { TextInput, Button, SelectOptionProps } from "@patternfly/react-core";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import { LogLevelsList, EventTypesList, LogLevelString, EventType } from "@/Core";
 import { useCreateCallback, getCallbackKey } from "@/Data/Queries";
-import { MultiTextSelect, SingleTextSelect } from "@/UI/Components";
+import { AppAlert, MultiTextSelect, SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -135,15 +129,13 @@ export const CreateCallbackForm: React.FC<Props> = ({ service_entity, numberOfCo
         <Tr isExpanded={!!error}>
           <Td colSpan={numberOfColumns}>
             <ExpandableRowContent>
-              <Alert
-                data-testid="Alert Danger"
+              <AppAlert
+                title={words("error")}
                 isInline
-                variant="danger"
-                title="Something went wrong"
-                actionClose={<AlertActionCloseButton onClose={() => setError("")} />}
-              >
-                <p>{error}</p>
-              </Alert>
+                message={error}
+                onClose={() => setError("")}
+                data-testid="Alert Danger"
+              />
             </ExpandableRowContent>
           </Td>
         </Tr>

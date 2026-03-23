@@ -1,8 +1,9 @@
 import React from "react";
-import { Alert, AlertActionCloseButton, Stack, Title } from "@patternfly/react-core";
+import { AlertVariant, Stack, Title } from "@patternfly/react-core";
 import { Tbody, Table, Td, Tr } from "@patternfly/react-table";
 import { EnvironmentSettings } from "@/Core";
 import { words } from "@/UI";
+import { AppAlert } from "@/UI/Components";
 import { InputRow } from "./Components";
 
 interface Props {
@@ -24,22 +25,13 @@ export const Container: React.FC<Props> = ({
 }) => {
   return (
     <Stack hasGutter style={{ maxWidth: "1000px" }} className={className}>
-      {errorMessage && (
-        <Alert
-          variant="danger"
-          title={errorMessage}
-          aria-live="polite"
-          actionClose={<AlertActionCloseButton onClose={onErrorClose} />}
-          isInline
-        />
-      )}
+      {errorMessage && <AppAlert title={errorMessage} onClose={onErrorClose} isInline />}
       {showUpdateBanner && (
-        <Alert
-          variant="success"
+        <AppAlert
           title={words("settings.update")}
-          aria-live="polite"
-          actionClose={<AlertActionCloseButton onClose={() => setShowUpdateBanner(false)} />}
+          onClose={() => setShowUpdateBanner(false)}
           isInline
+          variant={AlertVariant.success}
         />
       )}
       <Table variant="compact" borders={false}>

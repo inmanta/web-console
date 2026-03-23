@@ -1,11 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { MenuItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
 import { useDeleteInstance, getInstanceKey } from "@/Data/Queries";
-import { ToastAlert, ActionDisabledTooltip, ConfirmUserActionForm } from "@/UI/Components";
+import { ActionDisabledTooltip, ConfirmUserActionForm } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 
@@ -23,12 +24,12 @@ export const DeleteAction: React.FC<Props> = ({
 }) => {
   const client = useQueryClient();
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const [errorMessage, setErrorMessage] = useState("");
   const { environmentHandler } = useContext(DependencyContext);
+  const { notifyError } = useAppAlert();
 
   const { mutate, isPending } = useDeleteInstance(id, service_entity, version, {
     onError: (error) => {
-      setErrorMessage(error.message);
+      notifyError(words("inventory.deleteInstance.failed"), error.message);
       closeModal();
     },
     onSuccess: () => {
@@ -70,12 +71,6 @@ export const DeleteAction: React.FC<Props> = ({
 
   return (
     <>
-      <ToastAlert
-        data-testid="ToastAlert"
-        title={words("inventory.deleteInstance.failed")}
-        message={errorMessage}
-        setMessage={setErrorMessage}
-      />
       <ActionDisabledTooltip
         isDisabled={isDisabled || isHalted}
         testingId={words("inventory.deleteInstance.button")}

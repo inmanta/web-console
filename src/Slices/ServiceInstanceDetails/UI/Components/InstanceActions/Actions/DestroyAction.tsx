@@ -5,6 +5,7 @@ import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
 import { useDestroyInstance } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
 interface Props {
@@ -14,7 +15,6 @@ interface Props {
   version: ParsedNumber;
   onClose: () => void;
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 /**
@@ -37,7 +37,6 @@ export const DestroyAction: React.FC<Props> = ({
   version,
   onClose,
   setInterfaceBlocked,
-  setErrorMessage,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
 
@@ -54,7 +53,6 @@ export const DestroyAction: React.FC<Props> = ({
           service_entity={service_entity}
           instance_display_identity={instance_display_identity}
           version={version}
-          setErrorMessage={setErrorMessage}
           closeModalCallback={closeModalCallback}
         />
       ),
@@ -90,7 +88,6 @@ interface ModalContentProps {
   service_entity: string;
   instance_display_identity: string;
   version: ParsedNumber;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   closeModalCallback: () => void;
 }
 
@@ -102,7 +99,6 @@ interface ModalContentProps {
  *  @prop {string} service_entity - the service entity type of the instance
  *  @prop {string} instance_display_identity - the display value of the instance Id
  *  @prop {ParsedNumber} version - the current version of the instance
- *  @prop {function} setErrorMessage - callback method to set the error message
  *  @prop {function} closeModalCallback - callback method to close the modal
  *
  * @returns {React.FC<ModalContentProps>} A React Component displaying the Modal Content
@@ -112,10 +108,10 @@ const ModalContent: React.FC<ModalContentProps> = ({
   service_entity,
   instance_display_identity,
   version,
-  setErrorMessage,
   closeModalCallback,
 }) => {
   const navigate = useNavigate();
+  const { notifyError } = useAppAlert();
 
   const { environmentHandler, authHelper } = useContext(DependencyContext);
 
@@ -129,7 +125,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
       navigate(`/console/lsm/catalog/${service_entity}/inventory?env=${environment}`);
     },
     onError: (error) => {
-      setErrorMessage(error.message);
+      notifyError(error.message, "", "error-toast-actions-error-message");
     },
   });
 

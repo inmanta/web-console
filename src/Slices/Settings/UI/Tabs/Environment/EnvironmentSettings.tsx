@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Alert, AlertActionCloseButton, DescriptionList } from "@patternfly/react-core";
+import { DescriptionList } from "@patternfly/react-core";
 import { FlatEnvironment, Maybe, ProjectModel } from "@/Core";
 import { useModifyEnvironment, useCreateProject } from "@/Data/Queries";
 import {
@@ -8,6 +8,7 @@ import {
   EditableSelectField,
   EditableImageField,
   EditableTextAreaField,
+  AppAlert,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -74,17 +75,11 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
   return (
     <DescriptionList>
       {error && (
-        <Alert
+        <AppAlert
           data-testid="environment-settings-error"
-          variant="danger"
+          closeTestId="environment-settings-error-close"
           title={error}
-          aria-live="polite"
-          actionClose={
-            <AlertActionCloseButton
-              aria-label="environment-settings-error-close"
-              onClose={onErrorClose}
-            />
-          }
+          onClose={onErrorClose}
           isInline
         />
       )}

@@ -318,11 +318,9 @@ describe("CreateEnvironmentForm", () => {
 
     await userEvent.click(screen.getByText('Create "new-project2"'));
 
-    expect(
-      await screen.findByRole("generic", { name: "Project Name-error-message" })
-    ).toBeVisible();
+    expect(await screen.findByTestId("Project Name-error-message")).toBeVisible();
 
-    await userEvent.click(screen.getByRole("button", { name: "Project Name-close-error" }));
+    await userEvent.click(screen.getByTestId("Project Name-close-error"));
 
     expect(
       screen.queryByRole("generic", { name: "Project Name-error-message" })
@@ -363,11 +361,11 @@ describe("CreateEnvironmentForm", () => {
     await userEvent.click(await screen.findByRole("button", { name: "submit" }));
 
     // Alert is visible and can be closed
-    expect(await screen.findByRole("generic", { name: "submit-error-message" })).toBeVisible();
+    expect(await screen.findByTestId("submit-error-message")).toBeVisible();
 
-    await userEvent.click(screen.getByRole("button", { name: "submit-close-error" }));
+    await userEvent.click(screen.getByTestId("submit-close-error"));
 
-    expect(screen.queryByRole("generic", { name: "submit-error-message" })).not.toBeInTheDocument();
+    expect(screen.queryByTestId("submit-error-message")).not.toBeInTheDocument();
   });
 
   test("Given CreateEnvironmentForm When an existing project, a valid environment and description are set and submit is clicked Then sends the correct requests", async () => {

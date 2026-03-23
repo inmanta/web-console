@@ -1,13 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Button, Divider, DrilldownMenu, MenuItem, Content } from "@patternfly/react-core";
 import { WarningTriangleIcon } from "@patternfly/react-icons";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
 import { usePostExpertStateTransfer } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
-import { ToastAlertMessage } from "../../ToastAlertMessage";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
@@ -34,7 +34,14 @@ export const ForceStateAction: React.FC<Props> = ({
   availableStates,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
+  const { authHelper, environmentHandler } = useContext(DependencyContext);
+  const isHalted = environmentHandler.useIsHalted();
+  const { notifyError } = useAppAlert();
+  const { mutate } = usePostExpertStateTransfer(id, service_entity, {
+    onError: (error) => {
+      notifyError(error.message, "", `${id}-error-message`);
+    },
+  });
 
   const menuItems = availableStates.sort().map((target) => (
     <MenuItem
@@ -46,16 +53,6 @@ export const ForceStateAction: React.FC<Props> = ({
       {target}
     </MenuItem>
   ));
-
-  const { authHelper, environmentHandler } = useContext(DependencyContext);
-
-  const { mutate } = usePostExpertStateTransfer(id, service_entity, {
-    onError: (error) => {
-      setStateErrorMessage(error.message);
-    },
-  });
-
-  const isHalted = environmentHandler.useIsHalted();
 
   /**
    * Opens a modal with confirmation buttons.
@@ -129,13 +126,6 @@ export const ForceStateAction: React.FC<Props> = ({
 
   return (
     <>
-      {stateErrorMessage && (
-        <ToastAlertMessage
-          stateErrorMessage={stateErrorMessage}
-          id={id}
-          setStateErrorMessage={setStateErrorMessage}
-        />
-      )}
       <ActionDisabledTooltip
         testingId={words("inventory.statustab.forceState")}
         tooltipContent={

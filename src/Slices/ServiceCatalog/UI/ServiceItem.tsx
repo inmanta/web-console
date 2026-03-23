@@ -19,8 +19,9 @@ import {
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import { ServiceModel } from "@/Core";
 import { useDeleteService } from "@/Data/Queries";
-import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
+import { ConfirmUserActionForm } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { SummaryIcons } from "./SummaryIcons";
@@ -41,10 +42,10 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
+  const { notifyError } = useAppAlert();
   const { mutate } = useDeleteService(service.name, {
-    onError: (error) => setErrorMessage(error.message),
+    onError: (error) => notifyError(words("catalog.delete.failed"), error.message),
   });
-  const [errorMessage, setErrorMessage] = useState("");
   const serviceKey = service.name + "-item";
 
   /**
@@ -86,12 +87,6 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
 
   return (
     <DataListItem id={service.name} aria-labelledby={serviceKey} data-testid={serviceKey}>
-      <ToastAlert
-        data-testid="ToastAlert"
-        title={words("catalog.delete.failed")}
-        message={errorMessage}
-        setMessage={setErrorMessage}
-      />
       <DataListItemRow>
         <DataListItemCells
           dataListCells={[

@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import {
   ActionGroup,
-  Alert,
   Button,
   Flex,
   FlexItem,
@@ -14,6 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import { FlatEnvironment } from "@/Core";
 import { useClearEnvironment, useDeleteEnvironment, getEnvironmentsKey } from "@/Data/Queries";
+import { AppAlert } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -105,9 +105,12 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
     >
       {errorMessage && (
         <FormAlert>
-          <Alert data-testid="ErrorAlert" variant="danger" title={words("error")} isInline>
-            {errorMessage}
-          </Alert>
+          <AppAlert
+            data-testid="ErrorAlert"
+            title={words("error")}
+            message={errorMessage}
+            isInline
+          />
         </FormAlert>
       )}
       <FormGroup
