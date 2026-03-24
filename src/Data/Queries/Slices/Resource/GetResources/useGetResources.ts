@@ -48,29 +48,31 @@ export interface GetResourcesParams {
  * GraphQL response type for the resources query
  */
 interface ResourcesGraphQLResponse {
-  resources: {
-    totalCount: number;
-    pageInfo: {
-      hasNextPage: boolean;
-      endCursor: string | null;
-    };
-    edges: Array<{
-      node: {
-        resourceId: string;
-        resourceType: string;
-        agent: string;
-        resourceIdValue: string;
-        requiresLength: number;
-        state: {
-          lastNonDeployingStatus: string;
-        } | null;
+  data: {
+    resources: {
+      totalCount: number;
+      pageInfo: {
+        hasNextPage: boolean;
+        endCursor: string | null;
       };
-    }>;
+      edges: Array<{
+        node: {
+          resourceId: string;
+          resourceType: string;
+          agent: string;
+          resourceIdValue: string;
+          requiresLength: number;
+          state: {
+            lastNonDeployingStatus: string;
+          } | null;
+        };
+      }>;
+    };
   };
 }
 
 const GET_RESOURCES_QUERY = gql`
-  query GetResources(
+  query (
     $filter: ResourceFilter!
     $first: Int
     $after: String
@@ -220,7 +222,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
         queryKey: getResourcesKey.list([pageSize, ...filterArray, ...sortArray, currentPage, env]),
         queryFn,
         select: (data): GetResourcesResponse => {
-          const { resources } = data;
+          const { resources } = data.data;
           const pageSize_ = Number(pageSize.value);
           const totalCount = resources.totalCount;
 
