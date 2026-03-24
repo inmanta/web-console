@@ -61,7 +61,7 @@ export const Page: React.FC = () => {
 
   const onCloseFilterWidget = useCallback(() => setIsDrawerExpanded(false), []);
 
-  const { data, isSuccess, isError, refetch, error } = useGetResources({
+  const { data, isSuccess, isFetching, isError, refetch, error } = useGetResources({
     pageSize,
     filter: filterWithDefaults,
     sort,
@@ -103,6 +103,7 @@ export const Page: React.FC = () => {
                 pageSize={pageSize}
                 setPageSize={setPageSize}
                 setCurrentPage={setCurrentPage}
+                isDisabled={isFetching}
               />
             }
             onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
@@ -153,6 +154,7 @@ export const Page: React.FC = () => {
                             pageSize={pageSize}
                             setPageSize={setPageSize}
                             setCurrentPage={setCurrentPage}
+                            isDisabled={isFetching}
                             variant="bottom"
                           />
                         </FlexItem>
