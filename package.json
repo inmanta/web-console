@@ -8,6 +8,7 @@
   "scripts": {
     "prebuild": "yarn clean",
     "build": "webpack --config webpack.prod.cjs",
+    "build:ci": "NODE_OPTIONS=--max-old-space-size=4096 webpack --config webpack.prod.cjs",
     "start": "webpack serve --hot --color --progress --config webpack.dev.cjs",
     "start:https": "webpack serve --hot --color --progress --server-type https --config webpack.dev.cjs",
     "test": "jest --coverage=true --maxWorkers=50% --detectOpenHandles",
