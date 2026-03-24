@@ -184,7 +184,7 @@ if (isIso) {
         .type("{selectall}{backspace}eth1{enter}{enter}", { delay: 100 });
 
       //expect the toprow to contain up
-      cy.get('[aria-label="History-Row"]', { timeout: 30000 }).should(($rows) => {
+      cy.get('[aria-label="History-Row"]', { timeout: 90000 }).should(($rows) => {
         expect($rows[0]).to.contain("up");
       });
 

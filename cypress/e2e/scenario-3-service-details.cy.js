@@ -255,9 +255,8 @@ if (isIso) {
       // Go to the callback tab
       cy.get("button").contains("Callbacks").click();
 
-      cy.get("body").then(($body) => {
-        const count = $body.find('[aria-label="CallbacksTable"] tbody').length;
-        cy.wrap(count).as("previousBodies");
+      cy.get('[aria-label="CallbacksTable"] tbody', { timeout: 30000 }).then(($rows) => {
+        cy.wrap($rows.length).as("previousBodies");
       });
 
       // Fill in the fields
