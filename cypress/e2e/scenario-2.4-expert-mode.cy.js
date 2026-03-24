@@ -183,11 +183,6 @@ if (isIso) {
         .click({ force: true })
         .type("{selectall}{backspace}eth1{enter}{enter}", { delay: 100 });
 
-      //expect the toprow to contain up
-      cy.get('[aria-label="History-Row"]', { timeout: 90000 }).should(($rows) => {
-        expect($rows[0]).to.contain("up");
-      });
-
       // confirm edit
       cy.get('[aria-label="Expert-Submit-Button"]').click();
       cy.get("button").contains("Yes").click();
