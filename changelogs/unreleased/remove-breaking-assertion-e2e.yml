@@ -1,0 +1,3 @@
+description: An assertion that wasn't meant to be there was causing the test to fail. Removing it.
+change-type: patch
+destination-branches: [master, iso9]
