@@ -110,4 +110,12 @@ describe("Root", () => {
 
     expect(await screen.findByRole("button", { name: "documentation link" })).toBeVisible();
   });
+
+  test("GIVEN the app THEN the API actions button should be visible", async () => {
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByRole("button", { name: "Developer Tools" })).toBeVisible();
+  });
 });

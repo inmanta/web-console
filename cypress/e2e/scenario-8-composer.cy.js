@@ -70,7 +70,7 @@ if (isIso) {
         const location = new URL(url);
         const id = location.searchParams.get("env");
 
-        checkStatusCompile(id);
+        return checkStatusCompile(id);
       });
 
       cy.get('[aria-label="ServiceCatalog-Success"]', {

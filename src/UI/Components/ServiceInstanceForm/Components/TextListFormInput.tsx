@@ -100,17 +100,21 @@ export const TextListFormInput: React.FC<Props> = ({
    * @returns {void}
    */
   const addChip = () => {
-    if (inputValue) {
-      currentChips.push(inputValue);
-      setCurrentChips(currentChips);
-      handleInputChange(currentChips, null);
+    if (inputValue.trim()) {
+      const newChips = [...currentChips, inputValue.trim()];
+      setCurrentChips(newChips);
+      handleInputChange(newChips, null);
       setInputValue("");
     }
   };
 
-  /**
-   * Callback for clearing all selected chips and the text input.
-   */
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" || event.key === "Tab") {
+      event.preventDefault();
+      addChip();
+    }
+  };
+
   const clearChipsAndInput = () => {
     setCurrentChips([]);
     handleInputChange([], null);
@@ -170,6 +174,7 @@ export const TextListFormInput: React.FC<Props> = ({
           placeholder={placeholder}
           onChange={handleChangeInput}
           onFocus={() => setIsOpen(true)}
+          onKeyDown={handleKeyDown}
         >
           <LabelGroup>
             {currentChips.map((currentChip) => (

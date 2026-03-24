@@ -31,6 +31,7 @@ import { Diagnose } from "@S/Diagnose";
 import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
+import { GraphiQL } from "@S/GraphiQL";
 import { Home } from "@S/Home";
 import { Notification } from "@S/Notification";
 import { OrderDetails } from "@S/OrderDetails";
@@ -54,6 +55,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
      */
     CreateEnvironment: CreateEnvironment.route(baseUrl),
     Home: Home.route(baseUrl),
+    GraphiQL: GraphiQL.route(baseUrl),
     NotificationCenter: Notification.route(baseUrl),
     Settings: Settings.route(baseUrl),
     Status: Status.route(baseUrl),

@@ -4,6 +4,7 @@ export const kinds = [
    */
   "CreateEnvironment",
   "Home",
+  "GraphiQL",
   "NotificationCenter",
   "Settings",
   "Status",
