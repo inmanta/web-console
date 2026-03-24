@@ -41,7 +41,7 @@ pipeline {
                             yarn format:check;
                             yarn tsc;
                             yarn check-circular-deps;
-                            yarn build;
+                            yarn build:ci;
                             yarn test:ci'''
                         }
                     }
@@ -50,7 +50,7 @@ pipeline {
                     steps {
                         timeout(time: 20, unit: 'MINUTES') {
                             dir('web-console') {
-                                sh '''yarn run build;
+                                sh '''yarn run build:ci;
                                 sudo systemctl restart docker && sudo docker network prune -f;
                                 yarn run install:orchestrator:ci release='8-dev';
                                 yarn run cypress-test:iso;'''
