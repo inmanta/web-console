@@ -256,9 +256,8 @@ if (isIso) {
       // change the service id to make instance unique
       cy.get(".monaco-editor").click().focused().type(searchToolShortcut);
 
-      cy.wait(1000); // let the editor settle to avoid typing text to fail
-
-      cy.get('[aria-label="Find"]').type("0001");
+      // wait until the find input is visible and focused
+      cy.get('[aria-label="Find"]').should("be.visible").should("have.focus").type("0001");
 
       // toggle replace option
       cy.get('[aria-label="Toggle Replace"]').click();
@@ -326,10 +325,12 @@ if (isIso) {
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       // Expect to find one badges on the basic-service row.
-      cy.get("#basic-service")
-        .get('[aria-label="Number of instances by label"]', { timeout: 60000 })
-        .children()
-        .should("have.length", 1);
+      cy.get("#basic-service", { timeout: 40000 }).should(($parent) => {
+        const target = $parent.find('[aria-label="Number of instances by label"]');
+        const children = target.children();
+        expect(children).to.have.length(1);
+      });
+
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Check Instance Details page
