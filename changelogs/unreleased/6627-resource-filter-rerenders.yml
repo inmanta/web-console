@@ -1,0 +1,4 @@
+description: Resource filters no longer close the status dropdown on each selection and no longer re-render the entire page on filter changes.
+issue-nr: 6627
+change-type: patch
+destination-branches: [master, iso9]

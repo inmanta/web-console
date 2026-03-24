@@ -39,7 +39,6 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
     const currentStatuses = selectedStatuses ?? [];
     const safeSelectedStates = removeInvertedSelection(selection, currentStatuses);
     const updatedSelection = uniq(toggleValueInList(selection, safeSelectedStates));
-    setIsOpen(false);
     onChange(updatedSelection);
   };
 
