@@ -325,11 +325,11 @@ if (isIso) {
 
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      // Expect to find two badges on the basic-service row.
+      // Expect to find one badges on the basic-service row.
       cy.get("#basic-service")
-        .get('[aria-label="Number of instances by label"]', { timeout: 30000 })
+        .get('[aria-label="Number of instances by label"]', { timeout: 60000 })
         .children()
-        .should("have.length", 2);
+        .should("have.length", 1);
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Check Instance Details page

@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { useCreateSupportArchive } from "@/Data/Queries";
+import { words } from "@/UI";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { DownloadButton } from "./Components";
@@ -22,15 +23,15 @@ export const SupportArchive: React.FC = () => {
         archiveHelper.triggerDownload(data);
       } catch (err) {
         notifyError(
-          "Something went wrong with downloading the support archive",
-          err instanceof Error ? err.message : "Failed to download support archive"
+          words("status.supportArchive.action.downloading.error"),
+          err instanceof Error ? err.message : words("status.supportArchive.action.download.error")
         );
       }
     },
     onError: (error) => {
       notifyError(
-        "Something went wrong with downloading the support archive",
-        error.message || "Failed to download support archive"
+        words("status.supportArchive.action.downloading.error"),
+        error.message || words("status.supportArchive.action.download.error")
       );
     },
   });

@@ -10,9 +10,10 @@ import { DependencyContext } from "@/UI";
 import { getServiceModelKey } from "../GetServiceModel";
 
 /**
- * React Query hook for updating environment catalog.
+ * React Query hook for exporting the environment catalog.
  *
- * @returns {UseMutationResult<void, Error, void, unknown>}- The mutation object from `useMutation` hook.
+ * @param options - Optional React Query mutation options.
+ * @returns {UseMutationResult<void, Error, void, unknown>} The mutation object from `useMutation`.
  */
 export const useExportCatalog = (
   options?: UseMutationOptions<void, Error, void, unknown>
