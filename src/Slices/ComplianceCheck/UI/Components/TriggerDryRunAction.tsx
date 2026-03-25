@@ -23,7 +23,10 @@ export const TriggerDryRunAction: React.FC<Props> = ({ version }) => {
   const { notifyError } = useAppAlert();
   const { mutate } = useTriggerDryRun({
     onError: (error) => {
-      notifyError(words("desiredState.complianceCheck.action.dryRun.failed"), error.message);
+      notifyError({
+        title: words("desiredState.complianceCheck.action.dryRun.failed"),
+        message: error.message,
+      });
     },
   });
 

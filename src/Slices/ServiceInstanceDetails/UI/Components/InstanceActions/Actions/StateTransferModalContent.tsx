@@ -36,7 +36,10 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
       closeCallback();
     },
     onError: (error) => {
-      notifyError(error.message, "", "error-toast-actions-error-message");
+      notifyError({
+        title: error.message,
+        testId: "error-toast-actions-error-message",
+      });
     },
   });
 

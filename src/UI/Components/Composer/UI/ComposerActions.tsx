@@ -60,7 +60,10 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
       navigate(`${newUrl}${location.search}`);
     },
     onError: (response: Error) => {
-      notifyError(words("instanceComposer.failed.title"), response.message);
+      notifyError({
+        title: words("instanceComposer.failed.title"),
+        message: response.message,
+      });
     },
   });
 
@@ -78,10 +81,10 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
     let coordinates: SavedCoordinates[] = [];
 
     if (!canvasHandlers) {
-      notifyError(
-        words("instanceComposer.failed.title"),
-        words("instanceComposer.errorMessage.coordinatesRequest")
-      );
+      notifyError({
+        title: words("instanceComposer.failed.title"),
+        message: words("instanceComposer.errorMessage.coordinatesRequest"),
+      });
     } else {
       coordinates = canvasHandlers.getCoordinates();
     }

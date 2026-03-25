@@ -52,7 +52,11 @@ export const View: React.FC<Props> = ({ version }) => {
   const { notifyError } = useAppAlert();
 
   useEffect(() => {
-    if (isError) notifyError(words("desiredState.complianceCheck.failed"), error?.message || "");
+    if (isError)
+      notifyError({
+        title: words("desiredState.complianceCheck.failed"),
+        message: error?.message,
+      });
   }, [isError, error?.message, notifyError]);
 
   /**

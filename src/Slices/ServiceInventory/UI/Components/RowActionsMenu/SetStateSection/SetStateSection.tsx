@@ -40,7 +40,10 @@ export const SetStateSection: React.FC<Props> = ({
   const isHalted = environmentHandler.useIsHalted();
   const { mutate } = usePostStateTransfer(id, service_entity, {
     onError: (error) => {
-      notifyError(error.message, "", `${id}-error-message`);
+      notifyError({
+        title: error.message,
+        testId: `${id}-error-message`,
+      });
     },
   });
   const onSelect = (value: string) => {

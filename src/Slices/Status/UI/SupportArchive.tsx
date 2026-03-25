@@ -22,17 +22,20 @@ export const SupportArchive: React.FC = () => {
       try {
         archiveHelper.triggerDownload(data);
       } catch (err) {
-        notifyError(
-          words("status.supportArchive.action.downloading.error"),
-          err instanceof Error ? err.message : words("status.supportArchive.action.download.error")
-        );
+        notifyError({
+          title: words("status.supportArchive.action.downloading.error"),
+          message:
+            err instanceof Error
+              ? err.message
+              : words("status.supportArchive.action.download.error"),
+        });
       }
     },
     onError: (error) => {
-      notifyError(
-        words("status.supportArchive.action.downloading.error"),
-        error.message || words("status.supportArchive.action.download.error")
-      );
+      notifyError({
+        title: words("status.supportArchive.action.downloading.error"),
+        message: error.message || words("status.supportArchive.action.download.error"),
+      });
     },
   });
 

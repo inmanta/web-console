@@ -18,7 +18,10 @@ export const ExpertBanner: React.FC = () => {
   const { notifyError } = useAppAlert();
   const { mutate } = useUpdateEnvironmentSetting({
     onError: (error) => {
-      notifyError(words("error"), error.message);
+      notifyError({
+        title: words("error"),
+        message: error.message,
+      });
       setIsLoading(false);
     },
   });

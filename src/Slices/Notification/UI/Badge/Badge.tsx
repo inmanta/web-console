@@ -24,10 +24,17 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   useEffect(() => {
     if (!envID) return;
 
-    if (isError && error) notifyError(words("error"), error.message, "ToastAlert");
+    if (isError && error)
+      notifyError({
+        title: words("error"),
+        message: error.message,
+      });
 
     if (isSuccess && (data?.errors?.length || 0) > 0)
-      notifyError(words("error"), (data?.errors ?? []).join(", "), "ToastAlert");
+      notifyError({
+        title: words("error"),
+        message: (data?.errors ?? []).join(", "),
+      });
   }, [isError, error, isSuccess, data, envID, notifyError]);
 
   const hasErrors = !!envID && (isError || (isSuccess && (data?.errors?.length ?? 0) > 0));

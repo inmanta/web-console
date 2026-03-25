@@ -40,7 +40,10 @@ export const DestroyAction: React.FC<Props> = ({
 
   const { mutate } = useDestroyInstance(id, service_entity, version, message, {
     onError: (error) => {
-      notifyError(words("inventory.destroyInstance.failed"), error.message);
+      notifyError({
+        title: words("inventory.destroyInstance.failed"),
+        message: error.message,
+      });
     },
     onSuccess: () => {
       client.refetchQueries({

@@ -19,18 +19,22 @@ export const Provider: React.FC<Props> = ({ afterTrigger }) => {
 
   const { mutate } = useTriggerCompile({
     onMutate: ({ update, reinstall }) => {
-      notifyInfo(
-        words("info.title"),
-        words("common.compileWidget.toast")(update, reinstall),
-        "info-message"
-      );
+      notifyInfo({
+        title: words("info.title"),
+        message: words("common.compileWidget.toast")(update, reinstall),
+        testId: "info-message",
+      });
     },
     onSuccess: () => {
       client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
       afterTrigger && afterTrigger();
     },
     onError: (error) => {
-      notifyError(words("error.title"), error.message, "error-message");
+      notifyError({
+        title: words("error.title"),
+        message: error.message,
+        testId: "error-message",
+      });
     },
   });
 

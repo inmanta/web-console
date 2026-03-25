@@ -26,7 +26,11 @@ export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const { notifyError } = useAppAlert();
   const { mutate } = usePromoteDesiredStateVersion({
-    onError: (error) => notifyError(words("desiredState.actions.promote.failed"), error?.message),
+    onError: (error) =>
+      notifyError({
+        title: words("desiredState.actions.promote.failed"),
+        message: error.message,
+      }),
   });
   const isHalted = environmentHandler.useIsHalted();
 

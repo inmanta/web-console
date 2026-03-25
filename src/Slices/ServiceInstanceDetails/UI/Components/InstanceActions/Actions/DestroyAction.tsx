@@ -125,7 +125,10 @@ const ModalContent: React.FC<ModalContentProps> = ({
       navigate(`/console/lsm/catalog/${service_entity}/inventory?env=${environment}`);
     },
     onError: (error) => {
-      notifyError(error.message, "", "error-toast-actions-error-message");
+      notifyError({
+        title: error.message,
+        testId: "error-toast-actions-error-message",
+      });
     },
   });
 

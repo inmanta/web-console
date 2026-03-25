@@ -29,7 +29,10 @@ export const UserInfoRow: React.FC<Props> = ({ user }) => {
   const { notifyError } = useAppAlert();
   const { mutate } = useRemoveUser({
     onError: (error) => {
-      notifyError(words("error.title"), error.message);
+      notifyError({
+        title: words("error.title"),
+        message: error.message,
+      });
     },
   });
 

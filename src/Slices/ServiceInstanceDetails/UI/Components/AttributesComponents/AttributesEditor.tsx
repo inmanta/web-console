@@ -173,9 +173,14 @@ const ModalContent: React.FC<ModalContentProps> = ({ instance, selectedSet, edit
 
   const { closeModal } = useContext(ModalContext);
   const { mutate, isPending } = usePatchAttributesExpert(instance.id, instance.service_entity, {
-    onError: (error) => notifyError(error.message),
+    onError: (error) =>
+      notifyError({
+        title: error.message,
+      }),
     onSuccess: () => {
-      notifySuccess(words("instanceDetails.expert.editModal.success"));
+      notifySuccess({
+        title: words("instanceDetails.expert.editModal.success"),
+      });
       closeModal();
     },
   });

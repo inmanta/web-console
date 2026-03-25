@@ -24,7 +24,10 @@ export const DeleteButton: React.FC<Props> = ({ callback, ...props }) => {
   const { notifyError } = useAppAlert();
   const { mutate } = useDeleteCallback({
     onError: (error) => {
-      notifyError(words("catalog.callbacks.delete.failed"), error.message);
+      notifyError({
+        title: words("catalog.callbacks.delete.failed"),
+        message: error.message,
+      });
     },
   });
 

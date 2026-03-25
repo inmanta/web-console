@@ -29,7 +29,10 @@ export const DeleteAction: React.FC<Props> = ({
 
   const { mutate, isPending } = useDeleteInstance(id, service_entity, version, {
     onError: (error) => {
-      notifyError(words("inventory.deleteInstance.failed"), error.message);
+      notifyError({
+        title: words("inventory.deleteInstance.failed"),
+        message: error.message,
+      });
       closeModal();
     },
     onSuccess: () => {

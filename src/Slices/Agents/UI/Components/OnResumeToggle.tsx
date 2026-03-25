@@ -24,7 +24,10 @@ export const OnResumeToggle: React.FC<Props> = ({ name, unpauseOnResume }) => {
   const { notifyError } = useAppAlert();
   const { mutate } = usePauseAgent({
     onError: (error) => {
-      notifyError(words("agents.actions.failed"), error.message);
+      notifyError({
+        title: words("agents.actions.failed"),
+        message: error.message,
+      });
     },
   });
 

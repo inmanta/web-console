@@ -33,7 +33,10 @@ export const ChangePasswordForm: React.FC<Props> = ({ user }) => {
   const { notifySuccess } = useAppAlert();
   const { mutate, isPending, isError, error } = useChangeUserPassword(user, {
     onSuccess: () => {
-      notifySuccess(words("success.title"), words("userManagement.changePassword.success"));
+      notifySuccess({
+        title: words("success.title"),
+        message: words("userManagement.changePassword.success"),
+      });
       closeModal();
     },
   });

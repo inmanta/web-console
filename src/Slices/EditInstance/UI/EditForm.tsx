@@ -54,7 +54,10 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
     {
       onError: (error) => {
         setIsDirty(true);
-        notifyError(words("inventory.editInstance.failed"), error.message);
+        notifyError({
+          title: words("inventory.editInstance.failed"),
+          message: error.message,
+        });
       },
       onSuccess: () => {
         handleRedirect();

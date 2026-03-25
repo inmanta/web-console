@@ -27,18 +27,27 @@ export interface AppAlertItem {
   "data-testid"?: string;
 }
 
+interface NotifyOptions {
+  /** Alert title */
+  title: string;
+
+  /** Alert message */
+  message?: string;
+
+  /** Optional data-testid for testing */
+  testId?: string;
+
+  /** Optional AlertVariant (default: info) */
+  variant?: AlertVariant;
+}
+
+type NotifyShorthandOptions = Omit<NotifyOptions, "variant">;
+
 interface AppAlertContextProps {
-  /**
-   * Show a toast alert
-   * @param title - The alert title
-   * @param message - The alert message
-   * @param testId - Optional data-testid for the alert
-   * @param variant - Optional AlertVariant (default info)
-   */
-  notify: (title: string, message?: string, testId?: string, variant?: AlertVariant) => void;
-  notifySuccess: (title: string, message?: string, testId?: string) => void;
-  notifyError: (title: string, message?: string, testId?: string) => void;
-  notifyInfo: (title: string, message?: string, testId?: string) => void;
+  notify: (options: NotifyOptions) => void;
+  notifySuccess: (options: NotifyShorthandOptions) => void;
+  notifyError: (options: NotifyShorthandOptions) => void;
+  notifyInfo: (options: NotifyShorthandOptions) => void;
 }
 
 const defaultContext: AppAlertContextProps = {
@@ -86,12 +95,7 @@ export const AppAlertProvider: React.FC<AppAlertProviderProps> = ({ children }) 
   }, []);
 
   const notify = useCallback(
-    (
-      title: string,
-      message?: string,
-      testId?: string,
-      variant: AlertVariant = AlertVariant.info
-    ) => {
+    ({ title, message, testId, variant = AlertVariant.info }: NotifyOptions) => {
       const id = ++idCounter;
       setAlerts((prev) => [
         { id, title, message, "data-testid": testId ?? "ToastAlert", variant },
@@ -105,20 +109,17 @@ export const AppAlertProvider: React.FC<AppAlertProviderProps> = ({ children }) 
   );
 
   const notifySuccess = useCallback(
-    (title: string, message?: string, testId?: string) =>
-      notify(title, message, testId, AlertVariant.success),
+    (options: NotifyShorthandOptions) => notify({ ...options, variant: AlertVariant.success }),
     [notify]
   );
 
   const notifyError = useCallback(
-    (title: string, message?: string, testId?: string) =>
-      notify(title, message, testId, AlertVariant.danger),
+    (options: NotifyShorthandOptions) => notify({ ...options, variant: AlertVariant.danger }),
     [notify]
   );
 
   const notifyInfo = useCallback(
-    (title: string, message?: string, testId?: string) =>
-      notify(title, message, testId, AlertVariant.info),
+    (options: NotifyShorthandOptions) => notify({ ...options, variant: AlertVariant.info }),
     [notify]
   );
 

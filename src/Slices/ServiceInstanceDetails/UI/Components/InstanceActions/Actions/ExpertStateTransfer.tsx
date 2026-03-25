@@ -174,7 +174,11 @@ const ModalContent: React.FC<ModalContentProps> = ({
   };
 
   useEffect(() => {
-    if (isError) notifyError(error.message, "", "error-toast-actions-error-message");
+    if (isError)
+      notifyError({
+        title: error.message,
+        testId: "error-toast-actions-error-message",
+      });
 
     if (isSuccess) {
       closeModalCallback();

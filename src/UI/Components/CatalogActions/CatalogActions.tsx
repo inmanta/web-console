@@ -25,10 +25,16 @@ export const CatalogActions: React.FC = () => {
   const { notifyError, notifySuccess } = useAppAlert();
   const { mutate } = useExportCatalog({
     onSuccess: () => {
-      notifySuccess(words("catalog.update.success"), words("catalog.update.success.message"));
+      notifySuccess({
+        title: words("catalog.update.success"),
+        message: words("catalog.update.success.message"),
+      });
     },
     onError: (error) => {
-      notifyError(words("catalog.update.failed"), error.message);
+      notifyError({
+        title: words("catalog.update.failed"),
+        message: error.message,
+      });
     },
   });
   const lsmApiLink = urlManager.getLSMAPILink(environmentHandler.useId());

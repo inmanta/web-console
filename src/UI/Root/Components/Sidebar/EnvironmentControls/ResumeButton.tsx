@@ -31,7 +31,10 @@ export const ResumeButton: React.FC = () => {
       closeModalAndEnableQueries();
     },
     onError: (error) => {
-      notifyError(words("error.title"), error.message);
+      notifyError({
+        title: words("error.title"),
+        message: error.message,
+      });
       closeModalAndEnableQueries();
     },
   });

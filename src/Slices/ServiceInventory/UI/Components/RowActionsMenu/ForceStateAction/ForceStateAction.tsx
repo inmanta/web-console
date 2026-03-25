@@ -39,7 +39,10 @@ export const ForceStateAction: React.FC<Props> = ({
   const { notifyError } = useAppAlert();
   const { mutate } = usePostExpertStateTransfer(id, service_entity, {
     onError: (error) => {
-      notifyError(error.message, "", `${id}-error-message`);
+      notifyError({
+        title: error.message,
+        testId: `${id}-error-message`,
+      });
     },
   });
 

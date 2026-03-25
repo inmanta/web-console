@@ -85,7 +85,10 @@ export const Page: React.FC = () => {
 
   useEffect(() => {
     if (deleteVersion.isError)
-      notifyError(words("desiredState.actions.promote.failed"), deleteVersion.error.message);
+      notifyError({
+        title: words("desiredState.actions.promote.failed"),
+        message: deleteVersion.error.message,
+      });
   }, [deleteVersion.isError, deleteVersion?.error?.message, notifyError]);
 
   if (isError) {

@@ -44,7 +44,11 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { notifyError } = useAppAlert();
   const { mutate } = useDeleteService(service.name, {
-    onError: (error) => notifyError(words("catalog.delete.failed"), error.message),
+    onError: (error) =>
+      notifyError({
+        title: words("catalog.delete.failed"),
+        message: error.message,
+      }),
   });
   const serviceKey = service.name + "-item";
 

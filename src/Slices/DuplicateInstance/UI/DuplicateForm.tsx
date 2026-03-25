@@ -45,7 +45,10 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const { mutate } = usePostInstance(serviceEntity.name, {
     onError: (error) => {
       setIsDirty(true);
-      notifyError(words("inventory.addInstance.failed"), error.message);
+      notifyError({
+        title: words("inventory.addInstance.failed"),
+        message: error.message,
+      });
     },
     onSuccess: ({ data }) => {
       const newUrl = routeManager.getUrl("InstanceDetails", {

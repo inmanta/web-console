@@ -7,14 +7,48 @@ const MockedAppAlertUser = () => {
 
   return (
     <div>
-      <button onClick={() => notify("Test title", "Test message", "ToastAlert")}>Show Alert</button>
-      <button onClick={() => notifySuccess("Success title", "Success message", "SuccessToast")}>
+      <button
+        onClick={() =>
+          notify({
+            title: "Test title",
+            message: "Test message",
+            testId: "ToastAlert",
+          })
+        }
+      >
+        Show Alert
+      </button>
+      <button
+        onClick={() =>
+          notifySuccess({
+            title: "Success title",
+            message: "Success message",
+            testId: "SuccessToast",
+          })
+        }
+      >
         Show Success
       </button>
-      <button onClick={() => notifyError("Error title", "Error message", "ErrorToast")}>
+      <button
+        onClick={() =>
+          notifyError({
+            title: "Error title",
+            message: "Error message",
+            testId: "ErrorToast",
+          })
+        }
+      >
         Show Error
       </button>
-      <button onClick={() => notifyInfo("Info title", "Info message", "InfoToast")}>
+      <button
+        onClick={() =>
+          notifyInfo({
+            title: "Info title",
+            message: "Info messafe",
+            testId: "InfoToast",
+          })
+        }
+      >
         Show Info
       </button>
     </div>
@@ -111,7 +145,17 @@ describe("AppAlertProvider", () => {
   it("does not throw when notify is called without testId, message or variant", async () => {
     const Wrapper = () => {
       const { notify } = useAppAlert();
-      return <button onClick={() => notify("No testid")}>No TestId</button>;
+      return (
+        <button
+          onClick={() =>
+            notify({
+              title: "No testid",
+            })
+          }
+        >
+          No TestId
+        </button>
+      );
     };
 
     render(
