@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { toggleValueInList } from "@/Core";
-import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { usePaginatedTable } from "@/Data";
 import { useGetResourceLogs } from "@/Data/Queries";
 import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -24,20 +23,12 @@ interface Props {
  * @returns {React.FC<Props>} A React Component displaying the logs of a resource
  */
 export const View: React.FC<Props> = ({ resourceId }) => {
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "ResourceDetails",
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "ResourceDetails",
-  });
-  const [sort, setSort] = useUrlStateWithSort<string>({
-    default: { name: "timestamp", order: "desc" },
-    route: "ResourceDetails",
-  });
-  const [filter, setFilter] = useUrlStateWithFilter<ResourceLogFilter>({
-    route: "ResourceDetails",
-    keys: { timestamp: "DateRange" },
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
+    usePaginatedTable<ResourceLogFilter, string>({
+      route: "ResourceDetails",
+      defaultSort: { name: "timestamp", order: "desc" },
+      filterKeys: { timestamp: "DateRange" },
+    });
 
   const { data, isSuccess, isError, error, refetch } = useGetResourceLogs({
     id: resourceId,
@@ -55,12 +46,6 @@ export const View: React.FC<Props> = ({ resourceId }) => {
       action: list.length <= 0 ? undefined : list,
     });
   };
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   if (isError) {
     return <ErrorView message={error.message} ariaLabel="ResourceLogs-Error" retry={refetch} />;

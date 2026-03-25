@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { ServiceModel } from "@/Core";
-import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { usePaginatedTable } from "@/Data";
 import { useGetInstanceEvents } from "@/Data/Queries";
 import { Filter } from "@/Slices/Events/Core/Types";
 import {
@@ -33,18 +32,12 @@ interface Props {
  */
 
 export const Events: React.FC<Props> = ({ service, instanceId }) => {
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "Events",
-  });
-  const [sort, setSort] = useUrlStateWithSort<string>({
-    default: { name: "timestamp", order: "desc" },
-    route: "Events",
-  });
-  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
-    route: "Events",
-    keys: { timestamp: "DateRange" },
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({ route: "Events" });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
+    usePaginatedTable<Filter, string>({
+      route: "Events",
+      filterKeys: { timestamp: "DateRange" },
+      defaultSort: { name: "timestamp", order: "desc" },
+    });
 
   const { data, isSuccess, isError, error, refetch } = useGetInstanceEvents({
     id: instanceId,
@@ -57,12 +50,6 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
 
   const tablePresenter = new EventsTablePresenter();
   const states = service.lifecycle.states.map((state) => state.name).sort();
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   if (isError) {
     return <ErrorView message={error.message} ariaLabel="EventTable-Error" retry={refetch} />;

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Divider,
   Stack,
@@ -8,8 +8,7 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { Details } from "@/Core/Domain/Resource/Resource";
-import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { usePaginatedTable } from "@/Data";
 import { useGetResourceHistory } from "@/Data/Queries";
 import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
 import { MomentDatePresenter } from "@/UI/Utils";
@@ -24,28 +23,20 @@ interface Props {
 }
 
 export const ResourceHistoryView: React.FC<Props> = ({ resourceId, details }) => {
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
+  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort } = usePaginatedTable<
+    undefined,
+    string
+  >({
     route: "ResourceDetails",
+    defaultSort: { name: "date", order: "desc" },
   });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "ResourceDetails",
-  });
-  const [sort, setSort] = useUrlStateWithSort<string>({
-    default: { name: "date", order: "desc" },
-    route: "ResourceDetails",
-  });
+
   const { data, isSuccess, isError, error, refetch } = useGetResourceHistory({
     id: resourceId,
     sort,
     pageSize,
     currentPage,
   }).useOneTime();
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   if (isError) {
     return <ErrorView message={error.message} retry={refetch} ariaLabel="ResourceHistory-Error" />;

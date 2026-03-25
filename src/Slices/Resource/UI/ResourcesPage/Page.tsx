@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Flex,
   FlexItem,
@@ -11,8 +11,7 @@ import {
   StackItem,
 } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { usePaginatedTable } from "@/Data";
 import { useGetResources } from "@/Data/Queries";
 import { EmptyView, PaginationWidget, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -22,20 +21,12 @@ import { Summary } from "./Summary";
 
 export const Page: React.FC = () => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "Resources",
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "Resources",
-  });
-  const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterWithDefaultHandling>({
-    route: "Resources",
-    keys: { disregardDefault: "Boolean" },
-  });
-  const [sort, setSort] = useUrlStateWithSort<Resource.SortKey>({
-    default: { name: "resource_type", order: "asc" },
-    route: "Resources",
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
+    usePaginatedTable<Resource.FilterWithDefaultHandling, Resource.SortKey>({
+      route: "Resources",
+      defaultSort: { name: "resource_type", order: "asc" },
+      filterKeys: { disregardDefault: "Boolean" },
+    });
 
   const filterWithDefaults = useMemo(() => {
     return !filter.disregardDefault && !filter.status
@@ -67,12 +58,6 @@ export const Page: React.FC = () => {
     sort,
     currentPage,
   }).useContinuous();
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   const updateFilter = (updater: (filter: Resource.Filter) => Resource.Filter): void =>
     setFilter(updater(filterWithDefaults));
