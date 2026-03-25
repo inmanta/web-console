@@ -1,44 +1,22 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useCallback,
-  useRef,
-  useEffect,
-} from "react";
-import { AlertGroup, AlertVariant } from "@patternfly/react-core";
+import React, { createContext, useContext, useState, useCallback, PropsWithChildren } from "react";
+import { AlertGroup, AlertVariant, AlertProps } from "@patternfly/react-core";
+import { v4 as uuidv4 } from "uuid";
 import { AppAlert as AppAlertComponent } from "@/UI/Components";
 
-export interface AppAlertItem {
-  /** Unique ID for the alert */
-  id: number;
-
-  /** Alert title */
-  title: string;
-
+export interface AppAlertItem extends AlertProps {
   /** Alert message */
   message?: string;
-
-  /** Optional alert variant */
-  variant?: AlertVariant;
 
   /** Optional data-testid for testing */
   "data-testid"?: string;
 }
 
-interface NotifyOptions {
-  /** Alert title */
-  title: string;
-
+interface NotifyOptions extends AlertProps {
   /** Alert message */
   message?: string;
 
   /** Optional data-testid for testing */
   testId?: string;
-
-  /** Optional AlertVariant (default: info) */
-  variant?: AlertVariant;
 }
 
 type NotifyShorthandOptions = Omit<NotifyOptions, "variant">;
@@ -74,38 +52,21 @@ export const useAppAlert = (): AppAlertContextProps => {
   return useContext(AppAlertContext);
 };
 
-let idCounter = 0;
-
-interface AppAlertProviderProps {
-  children: ReactNode;
-}
-
-export const AppAlertProvider: React.FC<AppAlertProviderProps> = ({ children }) => {
+export const AppAlertProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [alerts, setAlerts] = useState<AppAlertItem[]>([]);
-  const timersRef = useRef<Map<number, NodeJS.Timeout>>(new Map());
 
-  const remove = useCallback((id: number) => {
+  const remove = useCallback((id: string) => {
     setAlerts((prev) => prev.filter((a) => a.id !== id));
-
-    const timer = timersRef.current.get(id);
-    if (timer) {
-      clearTimeout(timer);
-      timersRef.current.delete(id);
-    }
   }, []);
 
   const notify = useCallback(
     ({ title, message, testId, variant = AlertVariant.info }: NotifyOptions) => {
-      const id = ++idCounter;
       setAlerts((prev) => [
-        { id, title, message, "data-testid": testId ?? "ToastAlert", variant },
+        { id: uuidv4(), title, message, "data-testid": testId ?? "ToastAlert", variant },
         ...prev,
       ]);
-
-      const timer = setTimeout(() => remove(id), 8000);
-      timersRef.current.set(id, timer);
     },
-    [remove]
+    []
   );
 
   const notifySuccess = useCallback(
@@ -123,33 +84,25 @@ export const AppAlertProvider: React.FC<AppAlertProviderProps> = ({ children }) 
     [notify]
   );
 
-  useEffect(() => {
-    const currentTimers = timersRef.current;
-    return () => {
-      currentTimers.forEach((timer) => clearTimeout(timer));
-      currentTimers.clear();
-    };
-  }, []);
-
   return (
     <AppAlertContext.Provider value={{ notify, notifySuccess, notifyError, notifyInfo }}>
       {children}
 
-      {alerts.length > 0 && (
-        <AlertGroup isToast aria-live="polite" isLiveRegion>
-          {alerts.map(({ id, title, message, "data-testid": testId, variant }) => (
-            <AppAlertComponent
-              key={id}
-              title={title}
-              message={message}
-              variant={variant}
-              data-testid={testId}
-              onClose={() => remove(id)}
-              isInline={false}
-            />
-          ))}
-        </AlertGroup>
-      )}
+      <AlertGroup isToast isLiveRegion>
+        {alerts?.map(({ id, title, message, "data-testid": testId, variant }) => (
+          <AppAlertComponent
+            key={id}
+            title={title}
+            message={message}
+            variant={variant}
+            data-testid={testId}
+            onClose={() => remove(id || "")}
+            timeout={8000}
+            onTimeout={() => remove(id || "")}
+            isInline={false}
+          />
+        ))}
+      </AlertGroup>
     </AppAlertContext.Provider>
   );
 };

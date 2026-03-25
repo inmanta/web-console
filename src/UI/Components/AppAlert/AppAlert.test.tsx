@@ -28,7 +28,7 @@ describe("AppAlert", () => {
       (content) => content.includes("line1") && content.includes("line2")
     );
     expect(message).toBeVisible();
-    expect(message).toHaveStyle("white-space: pre-wrap");
+    expect(message).toHaveStyle("white-space: pre-line");
   });
 
   it("calls onClose callback when close button is clicked", async () => {
