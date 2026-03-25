@@ -172,12 +172,16 @@ if (isIso) {
       cy.wait(1000); // let the editor settle to avoid typing text to fail
 
       // search for eth0
-      cy.get('[aria-label="Find"]').type("eth0");
+      cy.get('[aria-label="Find"]')
+        .click({ force: true })
+        .type("{selectall}{backspace}eth0", { delay: 100 });
 
       // toggle replace option
       cy.get('[aria-label="Toggle Replace"]').click();
       // go to the replace field
-      cy.get('[aria-label="Replace"]').type("eth1{enter}{enter}");
+      cy.get('[aria-label="Replace"]')
+        .click({ force: true })
+        .type("{selectall}{backspace}eth1{enter}{enter}", { delay: 100 });
 
       // confirm edit
       cy.get('[aria-label="Expert-Submit-Button"]').click();

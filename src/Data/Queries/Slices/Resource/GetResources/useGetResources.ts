@@ -1,6 +1,5 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import { gql } from "graphql-request";
+import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { PageSize, Resource, Sort } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
@@ -258,6 +257,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
           };
         },
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
+        placeholderData: keepPreviousData,
       }),
   };
 };

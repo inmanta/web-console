@@ -1,4 +1,5 @@
 export * from "./FilterWidgetComponent";
+export * from "./ConnectedFilterWidget";
 export * from "./ActiveFiltersSection";
 export * from "./ActiveFilterGroup";
 export * from "./StatusFilterSelect";
