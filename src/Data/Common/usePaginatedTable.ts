@@ -7,13 +7,18 @@ import {
   useUrlStateWithSort,
 } from "./";
 
-interface UsePaginatedTableOptions<_TFilter, SortKey extends string> {
+interface UsePaginatedTableOptions<TFilter, SortKey extends string> {
   route: RouteKind;
   defaultSort?: Sort.Type<SortKey>;
-  defaultFilter?: _TFilter;
+  defaultFilter?: TFilter;
   filterKeys?: Record<string, "IntRange" | "DateRange" | "Boolean">;
 }
 
+/**
+ * Note: sort and filter URL state is purely reactive — no params are written
+ * to the URL unless setSort/setFilter are explicitly called by the consumer.
+ * Unused return values have no side effects.
+ */
 export function usePaginatedTable<TFilter, TSort extends string>({
   route,
   defaultSort,
@@ -36,7 +41,7 @@ export function usePaginatedTable<TFilter, TSort extends string>({
   useEffect(() => {
     setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
+  }, [sort.order, sort.name]);
 
   return {
     currentPage,
