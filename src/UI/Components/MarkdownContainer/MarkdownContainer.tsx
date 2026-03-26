@@ -25,6 +25,7 @@ interface Props {
    * rendered by the StateTransfer plugin is clicked.
    */
   onSetStateClick?: (detail: SetStateClickDetail) => void;
+  isVisible?: boolean;
 }
 
 /**
@@ -35,10 +36,15 @@ interface Props {
  * @param props - The properties of the component.
  *  @prop text - The Markdown content to be rendered.
  *  @prop web_title - The title of the tab. This is used to generate the unique Id's for the mermaid elements.
- *
+ *  @prop {boolean} isVisible - Optional prop which is needed to work with accordions/collapsibles to show mermaid renders correctly
  * @returns A React component that renders a container for displaying Markdown content.
  */
-export const MarkdownContainer: React.FC<Props> = ({ text, web_title, onSetStateClick }) => {
+export const MarkdownContainer: React.FC<Props> = ({
+  text,
+  web_title,
+  onSetStateClick,
+  isVisible = true,
+}) => {
   const theme = getThemePreference() || "default";
   const containerRef = useRef<HTMLDivElement>(null);
   const lastProcessedText = useRef<string>("");
@@ -75,6 +81,8 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title, onSetState
   }, [web_title, theme]);
 
   useEffect(() => {
+    if (!isVisible) return;
+
     const container = containerRef.current;
 
     if (!container) return;
@@ -271,6 +279,9 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title, onSetState
 
         // Process each mermaid block individually to handle errors gracefully
         mermaidBlocks.forEach((block) => {
+          // Only run Mermaid if the block contains actual diagram text, not an SVG
+          if (block.querySelector("svg")) return;
+
           // Clear any previous error state
           block.classList.remove("mermaid-error");
           const existingError = block.querySelector(".mermaid-error-message");
@@ -333,7 +344,7 @@ export const MarkdownContainer: React.FC<Props> = ({ text, web_title, onSetState
         });
       document.body.style.overflow = "";
     };
-  }, [text, md, onSetStateClick]);
+  }, [text, md, onSetStateClick, isVisible]);
 
   return <div ref={containerRef} className="markdown-body" />;
 };

@@ -200,6 +200,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
                 attributeValue={section.value}
                 web_title={section.title}
                 onSetStateClick={handleStateTransferClick}
+                isExpanded={expanded === index}
               />
             </AccordionContent>
           </AccordionItem>
