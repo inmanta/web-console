@@ -76,8 +76,7 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
     <DescriptionList>
       {error && (
         <AppAlert
-          data-testid="environment-settings-error"
-          closeTestId="environment-settings-error-close"
+          testId="environment-settings-error"
           title={error}
           onClose={onErrorClose}
           isInline

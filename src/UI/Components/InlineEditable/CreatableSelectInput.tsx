@@ -55,8 +55,7 @@ export const CreatableSelectInput: React.FC<Props> = ({
 
   const errorView = submitError && (
     <AppAlert
-      closeTestId={`${label}-close-error`}
-      data-testid={`${label}-error-message`}
+      testId={`${label}-error-message`}
       isInline
       isPlain
       isLimitedWidth

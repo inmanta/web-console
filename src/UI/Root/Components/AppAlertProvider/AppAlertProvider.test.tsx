@@ -120,7 +120,7 @@ describe("AppAlertProvider", () => {
     await userEvent.click(screen.getByText("Show Alert"));
     expect(screen.getByTestId("ToastAlert")).toBeVisible();
 
-    const closeButton = screen.getByTestId("alertClose");
+    const closeButton = screen.getByTestId("ToastAlert-close");
     await userEvent.click(closeButton);
 
     await waitFor(() => {

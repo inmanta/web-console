@@ -105,12 +105,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
     >
       {errorMessage && (
         <FormAlert>
-          <AppAlert
-            data-testid="ErrorAlert"
-            title={words("error")}
-            message={errorMessage}
-            isInline
-          />
+          <AppAlert testId="ErrorAlert" title={words("error")} message={errorMessage} isInline />
         </FormAlert>
       )}
       <FormGroup

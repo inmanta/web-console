@@ -89,7 +89,7 @@ export const TokenForm: React.FC<Props> = ({
     </StyledInputGroup>
     {error && (
       <AppAlert
-        data-testid="ToastError"
+        testId="ToastError"
         title={words("error")}
         onClose={onErrorClose}
         message={error}

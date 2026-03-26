@@ -148,8 +148,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
     <Form isWidthLimited aria-label={props["aria-label"]}>
       {errorMessage && (
         <AppAlert
-          closeTestId="submit-close-error"
-          data-testid="submit-error-message"
+          testId="submit-error-message"
           isInline
           isPlain
           isLimitedWidth

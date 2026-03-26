@@ -134,7 +134,7 @@ export const CreateCallbackForm: React.FC<Props> = ({ service_entity, numberOfCo
                 isInline
                 message={error}
                 onClose={() => setError("")}
-                data-testid="Alert Danger"
+                testId="Alert Danger"
               />
             </ExpandableRowContent>
           </Td>

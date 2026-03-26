@@ -10,10 +10,7 @@ export interface AppAlertProps extends AlertProps {
   onClose?: () => void;
 
   /** Optional data-testid for alert component */
-  "data-testid"?: string;
-
-  /** Optional data-testid for alert close*/
-  closeTestId?: string;
+  testId?: string;
 
   /* Optional flag to limit the width of the alert to it's content */
   isLimitedWidth?: boolean;
@@ -26,31 +23,22 @@ export interface AppAlertProps extends AlertProps {
  */
 
 export const AppAlert: React.FC<AppAlertProps> = ({
-  title,
   message,
   variant = AlertVariant.danger,
   isInline = false,
-  onClose,
-  "data-testid": testId,
-  closeTestId = "alertClose",
-  customIcon,
-  children,
-  isExpandable = false,
-  isPlain = false,
+  testId = "ToastAlert",
   isLimitedWidth = false,
+  children,
+  onClose,
   ...rest
 }) => {
   return (
     <Alert
       data-testid={testId}
       variant={variant}
-      title={title}
       isInline={isInline}
-      isExpandable={isExpandable}
-      isPlain={isPlain}
-      customIcon={customIcon}
       actionClose={
-        onClose && <AlertActionCloseButton onClose={onClose} data-testid={closeTestId} />
+        onClose && <AlertActionCloseButton onClose={onClose} data-testid={`${testId}-close`} />
       }
       style={{
         width: isLimitedWidth ? "fit-content" : undefined,
@@ -60,7 +48,7 @@ export const AppAlert: React.FC<AppAlertProps> = ({
       {...rest}
     >
       {!!message && <StyledToastMessage>{message}</StyledToastMessage>}
-      {!!children && children}
+      {children}
     </Alert>
   );
 };

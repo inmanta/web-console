@@ -35,7 +35,7 @@ describe("AppAlert", () => {
     const onClose = vi.fn();
     render(<AppAlert title="Closable" message="Close this" onClose={onClose} />);
 
-    const closeButton = screen.getByTestId("alertClose");
+    const closeButton = screen.getByTestId("ToastAlert-close");
     await userEvent.click(closeButton);
 
     expect(onClose).toHaveBeenCalledTimes(1);
@@ -44,11 +44,11 @@ describe("AppAlert", () => {
   it("does not render close button when onClose is not provided", () => {
     render(<AppAlert title="NoClose" message="not closable" />);
 
-    expect(screen.queryByTestId("alertClose")).toBeNull();
+    expect(screen.queryByTestId("ToastAlert-close")).toBeNull();
   });
 
   it("passes data-testid through to the root Alert", () => {
-    render(<AppAlert title="TestId" message="message" data-testid="app-alert-test" />);
+    render(<AppAlert title="TestId" message="message" testId="app-alert-test" />);
 
     expect(screen.getByTestId("app-alert-test")).toBeVisible();
   });

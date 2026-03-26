@@ -320,7 +320,7 @@ describe("CreateEnvironmentForm", () => {
 
     expect(await screen.findByTestId("Project Name-error-message")).toBeVisible();
 
-    await userEvent.click(screen.getByTestId("Project Name-close-error"));
+    await userEvent.click(screen.getByTestId("Project Name-error-message-close"));
 
     expect(
       screen.queryByRole("generic", { name: "Project Name-error-message" })
@@ -363,7 +363,7 @@ describe("CreateEnvironmentForm", () => {
     // Alert is visible and can be closed
     expect(await screen.findByTestId("submit-error-message")).toBeVisible();
 
-    await userEvent.click(screen.getByTestId("submit-close-error"));
+    await userEvent.click(screen.getByTestId("submit-error-message-close"));
 
     expect(screen.queryByTestId("submit-error-message")).not.toBeInTheDocument();
   });

@@ -41,7 +41,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
         />
         <AppAlert
           title={words("error")}
-          data-testid="AlertError"
+          testId="AlertError"
           isInline
           message={environments.error?.message}
         />
@@ -58,7 +58,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
         />
         <AppAlert
           title={words("error")}
-          data-testid="AlertError"
+          testId="AlertError"
           isInline
           message={projects.error.message}
         />

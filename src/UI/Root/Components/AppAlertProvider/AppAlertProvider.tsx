@@ -8,7 +8,7 @@ export interface AppAlertItem extends AlertProps {
   message?: string;
 
   /** Optional data-testid for testing */
-  "data-testid"?: string;
+  testId?: string;
 }
 
 interface NotifyOptions extends AlertProps {
@@ -59,15 +59,9 @@ export const AppAlertProvider: React.FC<PropsWithChildren> = ({ children }) => {
     setAlerts((prev) => prev.filter((a) => a.id !== id));
   }, []);
 
-  const notify = useCallback(
-    ({ title, message, testId, variant = AlertVariant.info }: NotifyOptions) => {
-      setAlerts((prev) => [
-        { id: uuidv4(), title, message, "data-testid": testId ?? "ToastAlert", variant },
-        ...prev,
-      ]);
-    },
-    []
-  );
+  const notify = useCallback(({ ...rest }: NotifyOptions) => {
+    setAlerts((prev) => [{ id: uuidv4(), ...rest }, ...prev]);
+  }, []);
 
   const notifySuccess = useCallback(
     (options: NotifyShorthandOptions) => notify({ ...options, variant: AlertVariant.success }),
@@ -89,17 +83,14 @@ export const AppAlertProvider: React.FC<PropsWithChildren> = ({ children }) => {
       {children}
 
       <AlertGroup isToast isLiveRegion>
-        {alerts?.map(({ id, title, message, "data-testid": testId, variant }) => (
+        {alerts?.map(({ id, ...rest }) => (
           <AppAlertComponent
             key={id}
-            title={title}
-            message={message}
-            variant={variant}
-            data-testid={testId}
-            onClose={() => remove(id || "")}
+            //custom but can be overwritten
             timeout={8000}
+            onClose={() => remove(id || "")}
             onTimeout={() => remove(id || "")}
-            isInline={false}
+            {...rest}
           />
         ))}
       </AlertGroup>
