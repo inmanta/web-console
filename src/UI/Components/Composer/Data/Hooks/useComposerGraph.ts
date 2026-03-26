@@ -60,13 +60,24 @@ export const useComposerGraph = ({
   onInitialShapeInfoTracked,
 }: UseComposerGraphParams): UseComposerGraphReturn => {
   const initializationKeyRef = useRef<string | null>(null);
+  const composerPaperRef = useRef<ComposerPaper | null>(null);
 
   // Create graph, paper, and scroller only once using useMemo to prevent recreation on every render
   const graph = useMemo(() => new dia.Graph({}, { cellNamespace: shapes }), []);
-  const paper = useMemo(
-    () => new ComposerPaper(graph, editable, relationsDictionary, serviceCatalog || []).paper,
-    [graph, editable, relationsDictionary, serviceCatalog]
-  );
+  const paper = useMemo(() => {
+    const cp = new ComposerPaper(graph, editable, relationsDictionary, serviceCatalog || []);
+    composerPaperRef.current = cp;
+    return cp.paper;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [graph, editable]);
+
+  // Keep catalog data fresh in the paper without recreating it.
+  // Recreating the paper while it's mounted tears down the stencil mid-interaction
+  // and causes SVGMatrix errors when JointJS tries to resolve screen coordinates.
+  useEffect(() => {
+    composerPaperRef.current?.updateData(relationsDictionary, serviceCatalog || []);
+  }, [serviceCatalog, relationsDictionary]);
+
   const scroller = useMemo(
     () =>
       new ui.PaperScroller({
@@ -167,7 +178,7 @@ export const useComposerGraph = ({
       const padding = instanceId
         ? ZOOM_TO_FIT_PADDING_EXISTING_INSTANCE
         : ZOOM_TO_FIT_PADDING_NEW_INSTANCE;
-      scroller.zoomToFit({ useModelGeometry: true, padding });
+     // scroller.zoomToFit({ useModelGeometry: true, padding });
     });
 
     // Update missing connections highlights after canvas is initialized

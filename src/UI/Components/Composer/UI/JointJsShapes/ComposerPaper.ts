@@ -18,6 +18,8 @@ import { ServiceEntityShape } from "./ServiceEntityShape";
  */
 export class ComposerPaper {
   paper: dia.Paper;
+  private _relationsDictionary: RelationsDictionary;
+  private _serviceCatalog: ServiceModel[];
 
   constructor(
     graph: dia.Graph,
@@ -25,6 +27,9 @@ export class ComposerPaper {
     relationsDictionary: RelationsDictionary,
     serviceCatalog: ServiceModel[]
   ) {
+    this._relationsDictionary = relationsDictionary;
+    this._serviceCatalog = serviceCatalog;
+
     this.paper = new dia.Paper({
       model: graph,
       width: 1000,
@@ -147,8 +152,8 @@ export class ComposerPaper {
         sourceCell,
         targetCell,
         graph,
-        relationsDictionary,
-        serviceCatalog
+        this._relationsDictionary,
+        this._serviceCatalog
       );
       if (!canRemove) {
         return;
@@ -196,7 +201,7 @@ export class ComposerPaper {
 
           // Validate removal before proceeding (safety check, even though tool is only shown if allowed)
           if (
-            !canRemoveLink(sourceShape, targetShape, graph, relationsDictionary, serviceCatalog)
+            !canRemoveLink(sourceShape, targetShape, graph, this._relationsDictionary, this._serviceCatalog)
           ) {
             return;
           }
@@ -299,5 +304,14 @@ export class ComposerPaper {
         rootEl.removeAttribute("data-tooltip-position");
       }
     });
+  }
+
+  /**
+   * Updates the relations dictionary and service catalog used by event handler closures.
+   * Call this when catalog data changes instead of recreating the paper.
+   */
+  updateData(relationsDictionary: RelationsDictionary, serviceCatalog: ServiceModel[]): void {
+    this._relationsDictionary = relationsDictionary;
+    this._serviceCatalog = serviceCatalog;
   }
 }
