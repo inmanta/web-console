@@ -147,7 +147,11 @@ export const DocumentationTabContent: React.FC<Props> = ({
               <DynamicFAIcon icon={section.iconName} /> {section.title}
             </AccordionToggle>
             <AccordionContent id={`${section.title}-accordion-toggle`}>
-              <MarkdownCard attributeValue={section.value} web_title={section.title} />
+              <MarkdownCard
+                attributeValue={section.value}
+                web_title={section.title}
+                isExpanded={expanded === index}
+              />
             </AccordionContent>
           </AccordionItem>
         ))}
