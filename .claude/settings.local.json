@@ -3,7 +3,8 @@
     "allow": [
       "mcp__github__get_file_contents",
       "mcp__github__add_comment_to_pending_review",
-      "mcp__github__pull_request_review_write"
+      "mcp__github__pull_request_review_write",
+      "mcp__github__issue_write"
     ]
   }
 }
