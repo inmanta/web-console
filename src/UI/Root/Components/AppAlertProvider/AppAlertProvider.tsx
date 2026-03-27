@@ -3,14 +3,6 @@ import { AlertGroup, AlertVariant, AlertProps } from "@patternfly/react-core";
 import { v4 as uuidv4 } from "uuid";
 import { AppAlert as AppAlertComponent } from "@/UI/Components";
 
-export interface AppAlertItem extends AlertProps {
-  /** Alert message */
-  message?: string;
-
-  /** Optional data-testid for testing */
-  testId?: string;
-}
-
 interface NotifyOptions extends AlertProps {
   /** Alert message */
   message?: string;
@@ -53,9 +45,9 @@ export const useAppAlert = (): AppAlertContextProps => {
 };
 
 export const AppAlertProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [alerts, setAlerts] = useState<AppAlertItem[]>([]);
+  const [alerts, setAlerts] = useState<NotifyOptions[]>([]);
 
-  const remove = useCallback((id: string) => {
+  const remove = useCallback((id?: string) => {
     setAlerts((prev) => prev.filter((a) => a.id !== id));
   }, []);
 
@@ -88,8 +80,8 @@ export const AppAlertProvider: React.FC<PropsWithChildren> = ({ children }) => {
             key={id}
             //custom but can be overwritten
             timeout={8000}
-            onClose={() => remove(id || "")}
-            onTimeout={() => remove(id || "")}
+            onClose={() => remove(id)}
+            onTimeout={() => remove(id)}
             {...rest}
           />
         ))}

@@ -1,4 +1,4 @@
-import { render, screen, waitFor, act, cleanup, fireEvent } from "@testing-library/react";
+import { render, screen, cleanup, waitFor, act, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AppAlertProvider, useAppAlert } from "./AppAlertProvider";
 
@@ -9,11 +9,7 @@ const MockedAppAlertUser = () => {
     <div>
       <button
         onClick={() =>
-          notify({
-            title: "Test title",
-            message: "Test message",
-            testId: "ToastAlert",
-          })
+          notify({ title: "Test title", message: "Test message", testId: "ToastAlert" })
         }
       >
         Show Alert
@@ -31,22 +27,14 @@ const MockedAppAlertUser = () => {
       </button>
       <button
         onClick={() =>
-          notifyError({
-            title: "Error title",
-            message: "Error message",
-            testId: "ErrorToast",
-          })
+          notifyError({ title: "Error title", message: "Error message", testId: "ErrorToast" })
         }
       >
         Show Error
       </button>
       <button
         onClick={() =>
-          notifyInfo({
-            title: "Info title",
-            message: "Info messafe",
-            testId: "InfoToast",
-          })
+          notifyInfo({ title: "Info title", message: "Info message", testId: "InfoToast" })
         }
       >
         Show Info
@@ -64,18 +52,8 @@ const setup = () =>
 
 describe("AppAlertProvider", () => {
   afterEach(() => {
-    // Remove rendered DOM between tests to avoid leaking elements into the next test.
     cleanup();
-
-    // If fake timers are active, flush any queued timer callbacks and restore real timers.
-    // This prevents timer state from leaking into later tests.
-    if (vi.isFakeTimers()) {
-      vi.runOnlyPendingTimers();
-      vi.useRealTimers();
-    }
-
-    // Ensure no timers remain references at the end of the test run.
-    vi.clearAllTimers();
+    vi.useRealTimers();
   });
 
   it("renders children correctly", () => {
@@ -90,7 +68,6 @@ describe("AppAlertProvider", () => {
 
   it("shows an alert when notify is called", async () => {
     setup();
-
     await userEvent.click(screen.getByText("Show Alert"));
 
     expect(screen.getByTestId("ToastAlert")).toBeVisible();
@@ -116,7 +93,6 @@ describe("AppAlertProvider", () => {
 
   it("closes the alert when the close button is clicked", async () => {
     setup();
-
     await userEvent.click(screen.getByText("Show Alert"));
     expect(screen.getByTestId("ToastAlert")).toBeVisible();
 
@@ -145,17 +121,7 @@ describe("AppAlertProvider", () => {
   it("does not throw when notify is called without testId, message or variant", async () => {
     const Wrapper = () => {
       const { notify } = useAppAlert();
-      return (
-        <button
-          onClick={() =>
-            notify({
-              title: "No testid",
-            })
-          }
-        >
-          No TestId
-        </button>
-      );
+      return <button onClick={() => notify({ title: "No testid" })}>No TestId</button>;
     };
 
     render(
