@@ -46,7 +46,7 @@ export const ServiceInventory: React.FunctionComponent<{
   intro?: ReactElement | null;
 }> = ({ serviceName, service, intro }) => {
   const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
-    usePaginatedTable<ServiceInstanceParams.Filter, string>({
+    usePaginatedTable<ServiceInstanceParams.Filter>({
       route: "Inventory",
       defaultSort: { name: "created_at", order: "desc" },
     });

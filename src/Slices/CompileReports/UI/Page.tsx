@@ -15,7 +15,7 @@ import { TableProvider } from "./TableProvider";
 
 export const Page: React.FC = () => {
   const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
-    usePaginatedTable<Filter, string>({
+    usePaginatedTable<Filter>({
       route: "CompileReports",
       defaultSort: { name: "requested", order: "desc" },
       filterKeys: { requested: "DateRange", success: "Boolean" },

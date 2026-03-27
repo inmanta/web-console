@@ -13,7 +13,7 @@ import { Controls } from "./Controls";
 import { List } from "./List";
 export const Page: React.FC = () => {
   const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter } =
-    usePaginatedTable<NotificationFilter, string>({
+    usePaginatedTable<NotificationFilter>({
       route: "NotificationCenter",
       filterKeys: { read: "Boolean" },
     });

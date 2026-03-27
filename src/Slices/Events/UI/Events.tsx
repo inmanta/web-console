@@ -33,7 +33,7 @@ interface Props {
 
 export const Events: React.FC<Props> = ({ service, instanceId }) => {
   const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
-    usePaginatedTable<Filter, string>({
+    usePaginatedTable<Filter>({
       route: "Events",
       filterKeys: { timestamp: "DateRange" },
       defaultSort: { name: "timestamp", order: "desc" },

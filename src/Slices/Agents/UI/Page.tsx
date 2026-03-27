@@ -27,7 +27,7 @@ export const Page: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
-    usePaginatedTable<Filter, string>({
+    usePaginatedTable<Filter>({
       route: "Agents",
       defaultSort: { name: "name", order: "asc" },
     });

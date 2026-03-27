@@ -24,7 +24,7 @@ interface Props {
  */
 export const View: React.FC<Props> = ({ resourceId }) => {
   const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
-    usePaginatedTable<ResourceLogFilter, string>({
+    usePaginatedTable<ResourceLogFilter>({
       route: "ResourceDetails",
       defaultSort: { name: "timestamp", order: "desc" },
       filterKeys: { timestamp: "DateRange" },

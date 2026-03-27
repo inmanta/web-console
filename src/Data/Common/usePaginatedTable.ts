@@ -7,9 +7,9 @@ import {
   useUrlStateWithSort,
 } from "./";
 
-interface UsePaginatedTableOptions<TFilter, SortKey extends string> {
+interface UsePaginatedTableOptions<TFilter = undefined, TSort extends string = string> {
   route: RouteKind;
-  defaultSort?: Sort.Type<SortKey>;
+  defaultSort?: Sort.Type<TSort>;
   defaultFilter?: TFilter;
   filterKeys?: Record<string, "IntRange" | "DateRange" | "Boolean">;
 }
@@ -19,7 +19,7 @@ interface UsePaginatedTableOptions<TFilter, SortKey extends string> {
  * to the URL unless setSort/setFilter are explicitly called by the consumer.
  * Unused return values have no side effects.
  */
-export function usePaginatedTable<TFilter, TSort extends string>({
+export function usePaginatedTable<TFilter = undefined, TSort extends string = string>({
   route,
   defaultSort,
   defaultFilter,

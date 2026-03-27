@@ -23,13 +23,11 @@ interface Props {
 }
 
 export const ResourceHistoryView: React.FC<Props> = ({ resourceId, details }) => {
-  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort } = usePaginatedTable<
-    undefined,
-    string
-  >({
-    route: "ResourceDetails",
-    defaultSort: { name: "date", order: "desc" },
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort } =
+    usePaginatedTable<undefined>({
+      route: "ResourceDetails",
+      defaultSort: { name: "date", order: "desc" },
+    });
 
   const { data, isSuccess, isError, error, refetch } = useGetResourceHistory({
     id: resourceId,

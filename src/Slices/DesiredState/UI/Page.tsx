@@ -32,7 +32,7 @@ export const Page: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter } =
-    usePaginatedTable<Filter, string>({
+    usePaginatedTable<Filter>({
       route: "DesiredState",
       defaultFilter: {
         status: [
