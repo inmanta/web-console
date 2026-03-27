@@ -209,6 +209,7 @@ describe("StatusPage", () => {
 
     await act(async () => {
       const results = await axe(document.body, {
+        // See ticket #6785
         rules: {
           "heading-order": { enabled: false },
         },
