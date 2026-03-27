@@ -13,7 +13,6 @@ interface Props {
   version: ParsedNumber;
   onClose: () => void;
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 /**
@@ -38,7 +37,6 @@ export const StateAction: React.FC<Props> = ({
   version,
   onClose,
   setInterfaceBlocked,
-  setErrorMessage,
 }) => {
   const { triggerModal } = useContext(ModalContext);
 
@@ -58,7 +56,6 @@ export const StateAction: React.FC<Props> = ({
           targetState={value}
           instance_display_identity={instance_display_identity}
           version={version}
-          setErrorMessage={setErrorMessage}
           setInterfaceBlocked={setInterfaceBlocked}
         />
       ),

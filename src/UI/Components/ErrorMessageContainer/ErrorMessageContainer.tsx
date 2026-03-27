@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from "react";
-import { Alert, Panel } from "@patternfly/react-core";
+import { Panel } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
+import { AppAlert } from "../AppAlert";
 
 interface Props {
   title: string;
@@ -16,9 +17,9 @@ interface Props {
 export const ErrorMessageContainer: React.FC<PropsWithChildren<Props>> = ({ children, title }) => {
   return (
     <Panel data-testid="Error-container">
-      <Alert isInline customIcon={<InfoAltIcon />} isExpandable variant="danger" title={title}>
+      <AppAlert isInline customIcon={<InfoAltIcon />} isExpandable title={title}>
         {children}
-      </Alert>
+      </AppAlert>
     </Panel>
   );
 };

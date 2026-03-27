@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import {
   ActionList,
   ActionListItem,
-  Alert,
   Button,
   Dropdown,
   DropdownItem,
@@ -14,6 +13,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
   MenuToggleElement,
+  AlertVariant,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
@@ -21,6 +21,7 @@ import { set as setAtPath } from "@/Core/Language/collection";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
+import { AppAlert } from "../AppAlert";
 import { JSONEditor } from "../JSONEditor";
 import { FieldInput } from "./Components";
 import { createDuplicateFormState, createEditFormState, createFormState } from "./Helpers";
@@ -237,7 +238,11 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         ))
       )}
       {fields.length <= 0 && (
-        <Alert variant="info" isInline title={words("inventory.editInstance.noAttributes")} />
+        <AppAlert
+          title={words("inventory.editInstance.noAttributes")}
+          variant={AlertVariant.info}
+          isInline
+        />
       )}
 
       <ActionList>

@@ -3,13 +3,9 @@ import { useNavigate } from "react-router";
 import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
 import { usePatchAttributes } from "@/Data/Queries";
-import {
-  FieldCreator,
-  ServiceInstanceForm,
-  EditModifierHandler,
-  ToastAlert,
-} from "@/UI/Components";
+import { FieldCreator, ServiceInstanceForm, EditModifierHandler } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -30,13 +26,11 @@ interface Props {
 export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const { environmentHandler, routeManager } = useContext(DependencyContext);
   const [isDirty, setIsDirty] = useState(false);
-
+  const { notifyError } = useAppAlert();
   const isDisabled = true;
   const fieldCreator = new FieldCreator(new EditModifierHandler(), isDisabled);
   const fields = fieldCreator.create(serviceEntity);
-
   const isHalted = environmentHandler.useIsHalted();
-  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const url = routeManager.useUrl("InstanceDetails", {
@@ -60,7 +54,10 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
     {
       onError: (error) => {
         setIsDirty(true);
-        setErrorMessage(error.message);
+        notifyError({
+          title: words("inventory.editInstance.failed"),
+          message: error.message,
+        });
       },
       onSuccess: () => {
         handleRedirect();
@@ -79,14 +76,6 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
 
   return (
     <>
-      {errorMessage && (
-        <ToastAlert
-          data-testid="ToastAlert"
-          title={words("inventory.editInstance.failed")}
-          message={errorMessage}
-          setMessage={setErrorMessage}
-        />
-      )}
       <ServiceInstanceForm
         service_entity={serviceEntity.name}
         isEdit={true}
