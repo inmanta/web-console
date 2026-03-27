@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ParsedNumber } from "@/Core";
-import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { usePaginatedTable } from "@/Data";
 import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Queries";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
 import {
@@ -31,23 +30,18 @@ export const Page: React.FC = () => {
   const deleteVersion = useDeleteDesiredStateVersion();
   const { notifyError } = useAppAlert();
 
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "DesiredState",
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "DesiredState",
-  });
-  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
-    default: {
-      status: [
-        DesiredStateVersionStatus.active,
-        DesiredStateVersionStatus.candidate,
-        DesiredStateVersionStatus.retired,
-      ],
-    },
-    route: "DesiredState",
-    keys: { date: "DateRange", version: "IntRange" },
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter } =
+    usePaginatedTable<Filter>({
+      route: "DesiredState",
+      defaultFilter: {
+        status: [
+          DesiredStateVersionStatus.active,
+          DesiredStateVersionStatus.candidate,
+          DesiredStateVersionStatus.retired,
+        ],
+      },
+      filterKeys: { date: "DateRange", version: "IntRange" },
+    });
 
   const [compareSelection, setCompareSelection] = useState<CompareSelection>({
     kind: "None",

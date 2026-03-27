@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Flex,
   FlexItem,
@@ -11,32 +11,22 @@ import {
   StackItem,
 } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { usePaginatedTable } from "@/Data";
 import { useGetResources } from "@/Data/Queries";
 import { EmptyView, PaginationWidget, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { ResourceTableControls, FilterWidgetComponent } from "./Components";
+import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { Summary } from "./Summary";
 
 export const Page: React.FC = () => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
-  const [activeFilterCount, setActiveFilterCount] = useState(0);
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "Resources",
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "Resources",
-  });
-  const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterWithDefaultHandling>({
-    route: "Resources",
-    keys: { disregardDefault: "Boolean" },
-  });
-  const [sort, setSort] = useUrlStateWithSort<Resource.SortKey>({
-    default: { name: "resource_type", order: "asc" },
-    route: "Resources",
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
+    usePaginatedTable<Resource.FilterWithDefaultHandling, Resource.SortKey>({
+      route: "Resources",
+      defaultSort: { name: "resource_type", order: "asc" },
+      filterKeys: { disregardDefault: "Boolean" },
+    });
 
   const filterWithDefaults = useMemo(() => {
     return !filter.disregardDefault && !filter.status
@@ -44,9 +34,10 @@ export const Page: React.FC = () => {
       : filter;
   }, [filter]);
 
-  useEffect(() => {
+  const activeFilterCount = useMemo(() => {
     const { disregardDefault: _disregardDefault, ...filterValues } = filterWithDefaults;
-    const count = Object.values(filterValues).reduce((acc, value) => {
+
+    return Object.values(filterValues).reduce((acc, value) => {
       if (!value) {
         return acc;
       }
@@ -57,22 +48,16 @@ export const Page: React.FC = () => {
 
       return acc + 1;
     }, 0);
-
-    setActiveFilterCount(count);
   }, [filterWithDefaults]);
 
-  const { data, isSuccess, isError, refetch, error } = useGetResources({
+  const onCloseFilterWidget = useCallback(() => setIsDrawerExpanded(false), []);
+
+  const { data, isSuccess, isFetching, isError, refetch, error } = useGetResources({
     pageSize,
     filter: filterWithDefaults,
     sort,
     currentPage,
   }).useContinuous();
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   const updateFilter = (updater: (filter: Resource.Filter) => Resource.Filter): void =>
     setFilter(updater(filterWithDefaults));
@@ -103,9 +88,10 @@ export const Page: React.FC = () => {
                 pageSize={pageSize}
                 setPageSize={setPageSize}
                 setCurrentPage={setCurrentPage}
+                isDisabled={isFetching}
               />
             }
-            onToggleFilters={() => setIsDrawerExpanded(!isDrawerExpanded)}
+            onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
             isDrawerExpanded={isDrawerExpanded}
             activeFilterCount={activeFilterCount}
           />
@@ -121,15 +107,7 @@ export const Page: React.FC = () => {
             isInline
             style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
           >
-            <DrawerContent
-              panelContent={
-                <FilterWidgetComponent
-                  onClose={() => setIsDrawerExpanded(false)}
-                  filter={filterWithDefaults}
-                  setFilter={setFilter}
-                />
-              }
-            >
+            <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
               <DrawerContentBody
                 style={{
                   display: "flex",
@@ -161,6 +139,7 @@ export const Page: React.FC = () => {
                             pageSize={pageSize}
                             setPageSize={setPageSize}
                             setCurrentPage={setCurrentPage}
+                            isDisabled={isFetching}
                             variant="bottom"
                           />
                         </FlexItem>

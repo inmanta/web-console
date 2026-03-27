@@ -14,6 +14,7 @@ interface Props {
   pageSize: PageSize.Type;
   setPageSize: (size: PageSize.Type) => void;
   setCurrentPage: (currentPage: CurrentPage) => void;
+  isDisabled?: boolean;
   variant?: "top" | "bottom";
 }
 
@@ -27,6 +28,7 @@ export const Provider: React.FC<Props> = ({
   pageSize,
   setPageSize,
   setCurrentPage,
+  isDisabled = false,
   variant = "top",
 }) => {
   const { handlers, metadata } = data;
@@ -39,6 +41,7 @@ export const Provider: React.FC<Props> = ({
         perPageSuffix: "",
         paginationAriaLabel: `${variant}-Pagination`,
       }}
+      isDisabled={isDisabled}
       page={Math.floor(Number(metadata.before) / Number(metadata.page_size)) + 1}
       onNextClick={() =>
         setCurrentPage({

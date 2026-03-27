@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import React from "react";
+import { usePaginatedTable } from "@/Data";
 import { useGetParameters } from "@/Data/Queries";
 import { Filter, SortKey } from "@/Slices/Parameters/Core/Types";
 import {
@@ -21,20 +20,12 @@ import { TableControls } from "./TableControls";
  * @returns {React.FC} A React component that displays a list of parameters
  */
 export const Page: React.FC = () => {
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "Parameters",
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "Parameters",
-  });
-  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
-    route: "Parameters",
-    keys: { updated: "DateRange" },
-  });
-  const [sort, setSort] = useUrlStateWithSort<SortKey>({
-    default: { name: "name", order: "asc" },
-    route: "Parameters",
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
+    usePaginatedTable<Filter, SortKey>({
+      route: "Parameters",
+      defaultSort: { name: "name", order: "asc" },
+      filterKeys: { updated: "DateRange" },
+    });
 
   const { data, isError, error, isSuccess, refetch } = useGetParameters({
     filter,
@@ -42,12 +33,6 @@ export const Page: React.FC = () => {
     sort,
     currentPage,
   }).useContinuous();
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   if (isError) {
     return (

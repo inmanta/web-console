@@ -32,14 +32,12 @@ describe("StatusFilterSelect", () => {
       })
     ).toBeVisible();
 
-    // Include skipped.
+    // Include skipped - dropdown stays open after selection.
     await userEvent.click(
       screen.getByRole("button", {
         name: `${Resource.Status.skipped}-include-toggle`,
       })
     );
-
-    await userEvent.click(toggle);
 
     expect(
       await screen.findByRole("generic", {
@@ -59,8 +57,6 @@ describe("StatusFilterSelect", () => {
       })
     );
 
-    await userEvent.click(toggle);
-
     expect(
       await screen.findByRole("generic", {
         name: `${Resource.Status.skipped}-include-inactive`,
@@ -72,14 +68,12 @@ describe("StatusFilterSelect", () => {
       })
     ).toBeVisible();
 
-    // Combine include for another status.
+    // Combine include for another status without reopening the dropdown.
     await userEvent.click(
       screen.getByRole("button", {
         name: `${Resource.Status.deployed}-include-toggle`,
       })
     );
-
-    await userEvent.click(toggle);
 
     expect(
       await screen.findByRole("generic", {
@@ -99,8 +93,6 @@ describe("StatusFilterSelect", () => {
       })
     );
 
-    await userEvent.click(toggle);
-
     expect(
       await screen.findByRole("generic", {
         name: `${Resource.Status.deployed}-include-inactive`,
@@ -108,7 +100,7 @@ describe("StatusFilterSelect", () => {
     ).toBeVisible();
   });
 
-  it("closes the select when an option is chosen", async () => {
+  it("keeps the select open when an option is chosen to allow multiple selections", async () => {
     render(<StatusFilterHarness />);
 
     const toggle = screen.getByRole("button", { name: "status-toggle" });
@@ -121,14 +113,7 @@ describe("StatusFilterSelect", () => {
 
     await userEvent.click(includeButton);
 
-    expect(
-      screen.queryByRole("generic", {
-        name: `${Resource.Status.failed}-include-active`,
-      })
-    ).not.toBeInTheDocument();
-
-    await userEvent.click(toggle);
-
+    // The dropdown should remain open after selection (active state immediately visible).
     expect(
       await screen.findByRole("generic", {
         name: `${Resource.Status.failed}-include-active`,

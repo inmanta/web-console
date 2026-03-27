@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Resource } from "@/Core";
-import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { usePaginatedTable } from "@/Data";
 import { useGetVersionResources } from "@/Data/Queries";
 import {
   EmptyView,
@@ -23,19 +22,11 @@ export const Provider: React.FC = () => {
 };
 
 export const Page: React.FC<{ version: string }> = ({ version }) => {
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "DesiredStateDetails",
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "DesiredStateDetails",
-  });
-  const [sort, setSort] = useUrlStateWithSort<Resource.SortKeyFromVersion>({
-    default: { name: "resource_type", order: "asc" },
-    route: "DesiredStateDetails",
-  });
-  const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterFromVersion>({
-    route: "DesiredStateDetails",
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
+    usePaginatedTable<Resource.FilterFromVersion, Resource.SortKeyFromVersion>({
+      route: "DesiredStateDetails",
+      defaultSort: { name: "resource_type", order: "asc" },
+    });
 
   const { data, isSuccess, isError, error, refetch } = useGetVersionResources({
     version,
@@ -46,12 +37,6 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
   }).useContinuous();
 
   const presenter = new VersionResourceTablePresenter();
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   if (isError) {
     return (
