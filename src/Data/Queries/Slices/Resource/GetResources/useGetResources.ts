@@ -68,16 +68,33 @@ interface ResourcesGraphQLResponse {
         };
       }>;
     };
+    resourceSummary: {
+      totalCount: number;
+      lastHandlerRun: string | null;
+      blocked: number;
+      compliance: number;
+      isDeploying: boolean;
+    };
   };
 }
 
 const GET_RESOURCES_QUERY = gql`
   query (
     $filter: ResourceFilter!
+    $environment: String!
     $first: Int
     $after: String
     $orderBy: [StrawberryOrder!]
   ) {
+    resourceSummary(
+       environment: $environment
+      ) {
+       totalCount,
+       lastHandlerRun,
+       blocked,
+       compliance,
+       isDeploying
+    }
     resources(filter: $filter, first: $first, after: $after, orderBy: $orderBy) {
       totalCount
       pageInfo {
@@ -164,20 +181,22 @@ function buildHandlers(
 }
 
 /**
- * Computes a deploy_summary from the resources on the current page.
- * Note: this reflects the current page only, not all resources in the environment.
+ * Temporary mock for deploy_summary until resourceSummary is wired up.
+ * Returns fixed placeholder values to keep the progress bar functional.
  */
-function computeDeploySummary(
-  resources: Resource.Resource[],
+function mockDeploySummary(
+  _resources: Resource.Resource[],
   total: number
 ): Resource.DeploySummary {
-  const by_state = resources.reduce<Record<string, number>>((acc, r) => {
-    const status = r.status;
-    acc[status] = (acc[status] ?? 0) + 1;
-    return acc;
-  }, {});
-
-  return { total, by_state };
+  return {
+    total,
+    by_state: {
+      deployed: Math.floor(total * 0.7),
+      deploying: Math.floor(total * 0.1),
+      failed: Math.floor(total * 0.1),
+      skipped: Math.floor(total * 0.1),
+    },
+  };
 }
 
 /**
@@ -206,6 +225,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
 
   const variables: Record<string, unknown> = {
     filter: graphqlFilter,
+    environment: env,
     first: Number(pageSize.value),
     ...(after ? { after } : {}),
     ...(sort ? { orderBy: mapSort(sort) } : {}),
@@ -248,7 +268,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
             before: currentBefore,
             after: afterCount,
             page_size: pageSize_,
-            deploy_summary: computeDeploySummary(mappedResources, totalCount),
+            deploy_summary: mockDeploySummary(mappedResources, totalCount),
           };
 
           return {

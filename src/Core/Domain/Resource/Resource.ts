@@ -7,7 +7,7 @@ import { Sort } from "../Sort";
 export interface Resource {
   resource_id: string;
   requires: string[];
-  requiresLength?: number;
+  requiresLength?: number; // this is now added in the gql response.
   status: Status;
   id_details: IdDetails;
 }
