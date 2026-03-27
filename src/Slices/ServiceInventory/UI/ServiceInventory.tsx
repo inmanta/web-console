@@ -1,7 +1,6 @@
-import React, { ReactElement, createContext, useEffect } from "react";
+import React, { ReactElement, createContext } from "react";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
-import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { usePaginatedTable } from "@/Data";
 import { useGetInstances } from "@/Data/Queries";
 import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -46,22 +45,11 @@ export const ServiceInventory: React.FunctionComponent<{
   service: ServiceModel;
   intro?: ReactElement | null;
 }> = ({ serviceName, service, intro }) => {
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "Inventory",
-  });
-
-  const [sort, setSort] = useUrlStateWithSort<string>({
-    default: { name: "created_at", order: "desc" },
-    route: "Inventory",
-  });
-
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "Inventory",
-  });
-
-  const [filter, setFilter] = useUrlStateWithFilter<ServiceInstanceParams.Filter>({
-    route: "Inventory",
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
+    usePaginatedTable<ServiceInstanceParams.Filter>({
+      route: "Inventory",
+      defaultSort: { name: "created_at", order: "desc" },
+    });
 
   const { data, isError, error, isSuccess, refetch } = useGetInstances(serviceName, {
     sort,
@@ -80,12 +68,6 @@ export const ServiceInventory: React.FunctionComponent<{
       .filter((state) => state.label === label)
       .map((state) => state.name);
   };
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   if (isError) {
     return (

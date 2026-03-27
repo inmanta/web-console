@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import React, { useState } from "react";
+import { usePaginatedTable } from "@/Data";
 import { useGetAgents } from "@/Data/Queries";
 import { Filter } from "@/Slices/Agents/Core/Types";
 import {
@@ -27,19 +26,11 @@ import { TableProvider } from "./TableProvider";
 export const Page: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "Agents",
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "Agents",
-  });
-  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
-    route: "Agents",
-  });
-  const [sort, setSort] = useUrlStateWithSort<string>({
-    default: { name: "name", order: "asc" },
-    route: "Agents",
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
+    usePaginatedTable<Filter>({
+      route: "Agents",
+      defaultSort: { name: "name", order: "asc" },
+    });
 
   const { data, isSuccess, isError, error, refetch } = useGetAgents().useContinuous({
     filter,
@@ -47,12 +38,6 @@ export const Page: React.FC = () => {
     pageSize,
     currentPage,
   });
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   if (isError) {
     return (
