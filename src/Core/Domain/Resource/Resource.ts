@@ -7,7 +7,7 @@ import { Sort } from "../Sort";
 export interface Resource {
   resource_id: string;
   requires: string[];
-  requiresLength?: number; // this is now added in the gql response.
+  requiresLength?: number;
   status: Status;
   id_details: IdDetails;
 }
@@ -22,6 +22,40 @@ export interface IdDetails {
   attribute: string;
   resource_id_value: string;
 }
+
+export enum CompoundStatus {
+  // Blocked
+  blocked = "blocked",
+  not_blocked = "not_blocked",
+  temporarily_blocked = "temporarily_blocked",
+  // Compliance
+  compliant = "compliant",
+  has_update = "has_update",
+  non_compliant = "non_compliant",
+  undefined = "undefined",
+  // Last Handler Run
+  failed = "failed",
+  new = "new",
+  skipped = "skipped",
+  successful = "successful",
+}
+
+export type BlockedStatus =
+  | CompoundStatus.blocked
+  | CompoundStatus.not_blocked
+  | CompoundStatus.temporarily_blocked;
+
+export type ComplianceStatus =
+  | CompoundStatus.compliant
+  | CompoundStatus.has_update
+  | CompoundStatus.non_compliant
+  | CompoundStatus.undefined;
+
+export type LastHandlerRunStatus =
+  | CompoundStatus.failed
+  | CompoundStatus.new
+  | CompoundStatus.skipped
+  | CompoundStatus.successful;
 
 export enum Status {
   unavailable = "unavailable",
