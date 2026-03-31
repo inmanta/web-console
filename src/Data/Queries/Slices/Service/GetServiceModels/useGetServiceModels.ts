@@ -9,6 +9,7 @@ import { getServiceModelKey } from "../GetServiceModel";
  * Return Signature of the useGetServiceModel React Query
  */
 interface GetServiceModels {
+  useOneTime: () => UseQueryResult<ServiceModel[], CustomError>;
   useContinuous: () => UseQueryResult<ServiceModel[], CustomError>;
   useContinuousNoRefetch: () => UseQueryResult<ServiceModel[], CustomError>;
 }
@@ -27,6 +28,13 @@ export const useGetServiceModels = (): GetServiceModels => {
   const get = useGet(env)<{ data: ServiceModel[] }>;
 
   return {
+    useOneTime: (): UseQueryResult<ServiceModel[], CustomError> =>
+      useQuery({
+        queryKey: getServiceModelKey.list([env]),
+        queryFn: () => get("/lsm/v1/service_catalog?instance_summary=True"),
+        refetchOnWindowFocus: false,
+        select: (data) => data.data,
+      }),
     useContinuous: (): UseQueryResult<ServiceModel[], CustomError> =>
       useQuery({
         queryKey: getServiceModelKey.list([env]),

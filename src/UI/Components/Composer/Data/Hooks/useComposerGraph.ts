@@ -56,16 +56,13 @@ export const useComposerGraph = ({
   onInitialShapeInfoTracked,
 }: UseComposerGraphParams): UseComposerGraphReturn => {
   const initializationKeyRef = useRef<string | null>(null);
-  const composerPaperRef = useRef<ComposerPaper | null>(null);
 
   // Create graph, paper, and scroller only once using useMemo to prevent recreation on every render
   const graph = useMemo(() => new dia.Graph({}, { cellNamespace: shapes }), []);
-  const paper = useMemo(() => {
-    const cp = new ComposerPaper(graph, editable, relationsDictionary, serviceCatalog || []);
-    composerPaperRef.current = cp;
-    return cp.paper;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [graph, editable]);
+  const paper = useMemo(
+    () => new ComposerPaper(graph, editable, relationsDictionary, serviceCatalog || []).paper,
+    [graph, editable, relationsDictionary, serviceCatalog]
+  );
 
   const scroller = useMemo(
     () =>
