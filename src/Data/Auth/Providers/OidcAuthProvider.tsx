@@ -1,6 +1,7 @@
 import React from "react";
 import { AuthProvider as OidcContextProvider, useAuth } from "react-oidc-context";
 import { Bullseye, Spinner } from "@patternfly/react-core";
+import { words } from "@/UI";
 import { AuthContext } from "../AuthContext";
 import { OidcAuthConfig } from "../types";
 
@@ -19,11 +20,7 @@ const OidcInnerProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   }
 
   if (auth.error) {
-    return (
-      <Bullseye>
-        <div>Authentication error: {auth.error.message}</div>
-      </Bullseye>
-    );
+    return <Bullseye>{words("error.authentication")(auth.error.message || "")}</Bullseye>;
   }
 
   if (!auth.isAuthenticated) {

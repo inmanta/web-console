@@ -64,6 +64,7 @@ const dict = {
   "error.environment.missing": "Environment is missing",
   "error.server.intro": (errorMessage: string) =>
     `The following error occured while communicating with the server: ${errorMessage}`,
+  "error.authentication": (message: string) => `Authentication error: ${message}`,
   "error.authorizationFailed": "Authorization failed, please log in",
   "error.fetch": (error: string) => `There was an error retrieving data: ${error}`,
   "error.image.title": "Invalid image",

@@ -1,4 +1,4 @@
-if (Cypress.env("oidc")) {
+if (Cypress.expose("oidc")) {
   it("should be able to login and logout", () => {
     cy.visit("/console/");
 
