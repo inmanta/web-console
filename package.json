@@ -28,6 +28,7 @@
     "cypress-test:iso": "yarn cypress run",
     "cypress-test:keycloak": "yarn cypress run --config-file cypress.config.keycloak.cjs",
     "cypress-test:local-auth": "yarn cypress run --config-file cypress.config.local-auth.cjs",
+    "cypress-test:oidc": "yarn cypress run --config-file cypress.config.oidc.cjs",
     "package-cleanup": "node clean_up_packages",
     "check-circular-deps": "madge --circular ./src/index.tsx",
     "install:orchestrator:keycloak": "sh ./shell-scripts/setup-auth.sh version='oss' release='dev' branch='oss_case_1'",
