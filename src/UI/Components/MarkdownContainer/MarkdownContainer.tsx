@@ -13,6 +13,7 @@ import "./styles.css";
 interface Props {
   text: string; // The Markdown content to be rendered.
   web_title: string; // The title of the web page to generate a unique Id for the mermaid elements.
+  isVisible?: boolean;
 }
 
 /**
@@ -23,10 +24,10 @@ interface Props {
  * @param props - The properties of the component.
  *  @prop text - The Markdown content to be rendered.
  *  @prop web_title - The title of the tab. This is used to generate the unique Id's for the mermaid elements.
- *
+ *  @prop {boolean} isVisible - Optional prop which is needed to work with accordions/collapsibles to show mermaid renders correctly
  * @returns A React component that renders a container for displaying Markdown content.
  */
-export const MarkdownContainer = ({ text, web_title }: Props) => {
+export const MarkdownContainer: React.FC<Props> = ({ text, web_title, isVisible = true }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Memoize the markdown-it instance to prevent it from changing on every render
@@ -60,6 +61,8 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
   }, [web_title]);
 
   useEffect(() => {
+    if (!isVisible) return;
+
     const container = containerRef.current;
 
     if (!container) return;
@@ -164,6 +167,9 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
 
         // Process each mermaid block individually to handle errors gracefully
         mermaidBlocks.forEach((block) => {
+          // Only run Mermaid if the block contains actual diagram text, not an SVG
+          if (block.querySelector("svg")) return;
+
           // Clear any previous error state
           block.classList.remove("mermaid-error");
           const existingError = block.querySelector(".mermaid-error-message");
@@ -241,7 +247,7 @@ export const MarkdownContainer = ({ text, web_title }: Props) => {
         });
       document.body.style.overflow = "";
     };
-  }, [text]);
+  }, [text, isVisible]);
 
   const result = md.render(text);
 
