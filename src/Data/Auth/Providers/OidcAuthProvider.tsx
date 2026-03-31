@@ -101,8 +101,7 @@ export const OidcAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
     authority: config.authority,
     client_id: config.clientId,
     redirect_uri: config.redirectUri || window.location.origin,
-    post_logout_redirect_uri:
-      config.postLogoutRedirectUri || window.location.origin,
+    post_logout_redirect_uri: config.postLogoutRedirectUri || window.location.origin,
     scope: config.scope || "openid profile email",
     response_type: "code",
     automaticSilentRenew: true,

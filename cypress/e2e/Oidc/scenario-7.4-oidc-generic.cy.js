@@ -9,10 +9,7 @@ if (Cypress.env("oidc")) {
 
     cy.get("h1").contains("Home").should("be.visible");
 
-    cy.get("[id=toggle-button]", { timeout: 20000 }).should(
-      "contain",
-      "admin",
-    );
+    cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
 
     cy.get('[role="menuitem"]').contains("Logout").click();
