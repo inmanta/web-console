@@ -70,10 +70,10 @@ interface ResourcesGraphQLResponse {
     };
     resourceSummary: {
       totalCount: number;
-      lastHandlerRun: string | null;
-      blocked: number;
-      compliance: number;
-      isDeploying: boolean;
+      lastHandlerRun: Record<Resource.LastHandlerRunStatus, number>;
+      blocked: Record<Resource.BlockedStatus, number>;
+      compliance: Record<Resource.ComplianceStatus, number>;
+      isDeploying: { true: number; false: number };
     };
   };
 }
@@ -86,15 +86,6 @@ const GET_RESOURCES_QUERY = gql`
     $after: String
     $orderBy: [StrawberryOrder!]
   ) {
-    resourceSummary(
-       environment: $environment
-      ) {
-       totalCount,
-       lastHandlerRun,
-       blocked,
-       compliance,
-       isDeploying
-    }
     resources(filter: $filter, first: $first, after: $after, orderBy: $orderBy) {
       totalCount
       pageInfo {
@@ -113,6 +104,13 @@ const GET_RESOURCES_QUERY = gql`
           }
         }
       }
+    }
+    resourceSummary(environment: $environment) {
+      totalCount
+      lastHandlerRun
+      blocked
+      compliance
+      isDeploying
     }
   }
 `;
@@ -184,10 +182,7 @@ function buildHandlers(
  * Temporary mock for deploy_summary until resourceSummary is wired up.
  * Returns fixed placeholder values to keep the progress bar functional.
  */
-function mockDeploySummary(
-  _resources: Resource.Resource[],
-  total: number
-): Resource.DeploySummary {
+function mockDeploySummary(_resources: Resource.Resource[], total: number): Resource.DeploySummary {
   return {
     total,
     by_state: {
