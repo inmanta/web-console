@@ -1,8 +1,45 @@
+// Generate dates 4 years ago from now to ensure consistent "4 years ago" display in test data
+const now = new Date();
+const fourYearsAgo1 = new Date(
+  Date.UTC(
+    now.getUTCFullYear() - 4,
+    6, // July (0-indexed)
+    7, // 7th
+    12, // 12:00
+    0,
+    0,
+    0
+  )
+);
+
+const fourYearsAgo2 = new Date(
+  Date.UTC(
+    now.getUTCFullYear() - 4,
+    6, // July (0-indexed)
+    7, // 7th
+    10, // 10:00
+    0,
+    0,
+    0
+  )
+);
+
+// Format as ISO string without timezone (matching the format we expect from the API)
+const formatDate = (date: Date): string => {
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000000`;
+};
+
 export const response = {
   data: [
     {
       resource_id: "std::File[internal,path=/tmp/dir1/file2]",
-      date: "2021-07-07T12:00:00.000000",
+      date: formatDate(fourYearsAgo1),
       attributes: {
         key3: "val3updated",
         path: "/tmp/dir1/file2",
@@ -16,7 +53,7 @@ export const response = {
     },
     {
       resource_id: "std::File[internal,path=/tmp/dir1/file2]",
-      date: "2021-07-07T10:00:00.000000",
+      date: formatDate(fourYearsAgo2),
       attributes: {
         key3: "val3",
         path: "/tmp/dir1/file2",
