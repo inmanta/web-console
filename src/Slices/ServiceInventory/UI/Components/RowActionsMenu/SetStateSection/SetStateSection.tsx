@@ -1,12 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Button, MenuItem, Content } from "@patternfly/react-core";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
-import { ToastAlertMessage } from "../../ToastAlertMessage";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   targets: string[] | null;
@@ -34,20 +34,21 @@ export const SetStateSection: React.FC<Props> = ({
   targets,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
-  const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
-
+  const { notifyError } = useAppAlert();
+  const isDisabled = !targets || targets.length === 0;
+  const { authHelper, environmentHandler } = useContext(DependencyContext);
+  const isHalted = environmentHandler.useIsHalted();
+  const { mutate } = usePostStateTransfer(id, service_entity, {
+    onError: (error) => {
+      notifyError({
+        title: error.message,
+        testId: `${id}-error-message`,
+      });
+    },
+  });
   const onSelect = (value: string) => {
     openModal(value);
   };
-
-  const isDisabled = !targets || targets.length === 0;
-  const { authHelper, environmentHandler } = useContext(DependencyContext);
-  const { mutate } = usePostStateTransfer(id, service_entity, {
-    onError: (error) => {
-      setStateErrorMessage(error.message);
-    },
-  });
-  const isHalted = environmentHandler.useIsHalted();
 
   /**
    * Opens a modal with a confirmation buttons.
@@ -106,13 +107,6 @@ export const SetStateSection: React.FC<Props> = ({
 
   return (
     <>
-      {stateErrorMessage && (
-        <ToastAlertMessage
-          stateErrorMessage={stateErrorMessage}
-          id={id}
-          setStateErrorMessage={setStateErrorMessage}
-        />
-      )}
       {targets?.map((target) => (
         <MenuItem
           key={target}

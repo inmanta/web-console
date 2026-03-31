@@ -157,7 +157,9 @@ describe("EnvironmentSettings", () => {
       expect(screen.queryByRole("textbox", { name: "Name-input" })).not.toBeInTheDocument();
 
       // Closing the alert
-      await userEvent.click(screen.getByRole("button", { name: elementName }));
+      await userEvent.click(
+        screen.queryByRole("button", { name: elementName }) ?? screen.getByTestId(elementName)
+      );
 
       expect(screen.queryByTestId("environment-settings-error")).not.toBeInTheDocument();
 
@@ -310,7 +312,9 @@ describe("EnvironmentSettings", () => {
       expect(screen.queryByRole("textbox", { name: "repo_branch-input" })).not.toBeInTheDocument();
 
       // Closing the alert
-      await userEvent.click(screen.getByRole("button", { name: elementName }));
+      await userEvent.click(
+        screen.queryByRole("button", { name: elementName }) ?? screen.getByTestId(elementName)
+      );
 
       expect(screen.queryByTestId("environment-settings-error")).not.toBeInTheDocument();
 
@@ -451,7 +455,9 @@ describe("EnvironmentSettings", () => {
       ).not.toBeInTheDocument();
 
       // Closing the alert
-      await userEvent.click(screen.getByRole("button", { name: elementName }));
+      await userEvent.click(
+        screen.queryByRole("button", { name: elementName }) ?? screen.getByTestId(elementName)
+      );
 
       expect(screen.queryByTestId("environment-settings-error")).not.toBeInTheDocument();
 

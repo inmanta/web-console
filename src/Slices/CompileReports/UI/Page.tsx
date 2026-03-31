@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import React from "react";
+import { usePaginatedTable } from "@/Data";
 import { useGetCompileReports } from "@/Data/Queries";
 import { Filter } from "@/Slices/CompileReports/Core/Types";
 import {
@@ -15,32 +14,19 @@ import { CompileReportsTableControls } from "./CompileReportsTableControls";
 import { TableProvider } from "./TableProvider";
 
 export const Page: React.FC = () => {
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "CompileReports",
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "CompileReports",
-  });
-  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
-    route: "CompileReports",
-    keys: { requested: "DateRange", success: "Boolean" },
-  });
-  const [sort, setSort] = useUrlStateWithSort<string>({
-    default: { name: "requested", order: "desc" },
-    route: "CompileReports",
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
+    usePaginatedTable<Filter>({
+      route: "CompileReports",
+      defaultSort: { name: "requested", order: "desc" },
+      filterKeys: { requested: "DateRange", success: "Boolean" },
+    });
+
   const { data, refetch, isSuccess, isError, error } = useGetCompileReports({
     filter,
     sort,
     pageSize,
     currentPage,
   }).useContinuous();
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   if (isError) {
     return (

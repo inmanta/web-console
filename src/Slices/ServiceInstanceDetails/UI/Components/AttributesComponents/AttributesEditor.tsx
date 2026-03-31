@@ -16,9 +16,8 @@ import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Con
 import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
 import { JSONEditor } from "@/UI/Components/JSONEditor";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
-import { ToastAlertMessage } from "../ToastAlert";
-
 interface Props {
   dropdownOptions: string[];
   attributeSets: Partial<Record<AttributeSets, InstanceAttributeModel>>;
@@ -52,9 +51,6 @@ export const AttributesEditor: React.FC<Props> = ({
   const { environmentHandler } = useContext(DependencyContext);
   const [isEditorValid, setIsEditorValid] = useState<boolean>(true);
   const [editorState, setEditorState] = useState<string>(editorDataOriginal);
-
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [successMessage, setSuccessMessage] = useState<string>("");
 
   /**
    * Handles the change of the selected attribute Set.
@@ -134,10 +130,6 @@ export const AttributesEditor: React.FC<Props> = ({
                       instance={instance}
                       selectedSet={selectedSet}
                       editorState={editorState}
-                      setErrorMessage={setErrorMessage}
-                      onSuccess={() =>
-                        setSuccessMessage(words("instanceDetails.expert.editModal.success"))
-                      }
                     />
                   ),
                 })
@@ -154,22 +146,6 @@ export const AttributesEditor: React.FC<Props> = ({
         onChange={onEditorUpdate}
         readOnly={!environmentHandler.useIsExpertModeEnabled()}
       />
-      {errorMessage && (
-        <ToastAlertMessage
-          message={errorMessage}
-          id="error-toast-expert-destroy"
-          setMessage={setErrorMessage}
-          variant="danger"
-        />
-      )}
-      {successMessage && (
-        <ToastAlertMessage
-          message={successMessage}
-          id="success-toast-expert-update"
-          setMessage={setSuccessMessage}
-          variant="success"
-        />
-      )}
     </>
   );
 };
@@ -182,8 +158,6 @@ interface ModalContentProps {
   instance: ServiceInstanceModel;
   selectedSet: string;
   editorState: string;
-  setErrorMessage: (error: string) => void;
-  onSuccess: () => void;
 }
 
 /**
@@ -191,22 +165,22 @@ interface ModalContentProps {
  *
  * @returns {React.FC} A React Component displaying the Modal Content
  */
-const ModalContent: React.FC<ModalContentProps> = ({
-  instance,
-  selectedSet,
-  editorState,
-  setErrorMessage,
-  onSuccess,
-}) => {
+const ModalContent: React.FC<ModalContentProps> = ({ instance, selectedSet, editorState }) => {
   const { authHelper } = useContext(DependencyContext);
+  const { notifyError, notifySuccess } = useAppAlert();
 
   const username = authHelper.getUser();
 
   const { closeModal } = useContext(ModalContext);
   const { mutate, isPending } = usePatchAttributesExpert(instance.id, instance.service_entity, {
-    onError: (error) => setErrorMessage(error.message),
+    onError: (error) =>
+      notifyError({
+        title: error.message,
+      }),
     onSuccess: () => {
-      onSuccess();
+      notifySuccess({
+        title: words("instanceDetails.expert.editModal.success"),
+      });
       closeModal();
     },
   });
