@@ -1,11 +1,11 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext } from "react";
 import "@rappidcss";
 import { useLocation, useNavigate } from "react-router";
-import { AlertVariant, Button, Flex, FlexItem } from "@patternfly/react-core";
+import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { usePostOrder, usePostMetadata, useGetInstanceWithRelations } from "@/Data/Queries";
 import { ServiceOrder } from "@/Slices/Orders/Core/Types";
-import { ToastAlert } from "@/UI/Components/ToastAlert/ToastAlert";
 import { DependencyContext } from "@/UI/Dependency";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
 import { ComposerContext } from "../Data/Context";
 import { getServiceOrderItemsArray, SavedCoordinates } from "../Data/Helpers";
@@ -39,11 +39,8 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
   const { mainService, serviceInstanceId, serviceOrderItems, canvasHandlers, hasValidationErrors } =
     useContext(ComposerContext);
   const { routeManager } = useContext(DependencyContext);
-
+  const { notifyError } = useAppAlert();
   const isDisabled = serviceOrderItems.size < 1 || hasValidationErrors;
-
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertType, setAlertType] = useState(AlertVariant.danger);
   const location = useLocation();
 
   // Fetch instance data if we're editing
@@ -63,8 +60,10 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
       navigate(`${newUrl}${location.search}`);
     },
     onError: (response: Error) => {
-      setAlertType(AlertVariant.danger);
-      setAlertMessage(response.message);
+      notifyError({
+        title: words("instanceComposer.failed.title"),
+        message: response.message,
+      });
     },
   });
 
@@ -82,8 +81,10 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
     let coordinates: SavedCoordinates[] = [];
 
     if (!canvasHandlers) {
-      setAlertType(AlertVariant.danger);
-      setAlertMessage(words("instanceComposer.errorMessage.coordinatesRequest"));
+      notifyError({
+        title: words("instanceComposer.failed.title"),
+        message: words("instanceComposer.errorMessage.coordinatesRequest"),
+      });
     } else {
       coordinates = canvasHandlers.getCoordinates();
     }
@@ -124,19 +125,6 @@ export const ComposerActions: React.FC<Props> = ({ serviceName, editable }) => {
       }}
       alignItems={{ default: "alignItemsFlexEnd" }}
     >
-      {alertMessage && (
-        <ToastAlert
-          data-testid="ToastAlert"
-          title={
-            alertType === AlertVariant.success
-              ? words("instanceComposer.success.title")
-              : words("instanceComposer.failed.title")
-          }
-          message={alertMessage}
-          setMessage={setAlertMessage}
-          type={alertType}
-        />
-      )}
       <FlexItem>
         <Flex spacer={{ default: "spacerMd" }} alignItems={{ default: "alignItemsCenter" }}>
           <Button variant="tertiary" width={200} onClick={handleRedirect}>

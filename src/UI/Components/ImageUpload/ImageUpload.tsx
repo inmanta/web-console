@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { DropEvent, FileRejection } from "react-dropzone";
-import { Alert, AlertActionCloseButton, FileUpload, FileUploadProps } from "@patternfly/react-core";
+import { FileUpload, FileUploadProps } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
 import { ImageHelper } from "@/Data";
 import { words } from "@/UI/words";
+import { AppAlert } from "../AppAlert";
 import { ImagePreview } from "./ImagePreview";
 
 interface Props {
@@ -119,14 +120,12 @@ export const ImageUpload: React.FC<Props> = ({
       >
         <ImagePreview {...props} dataUrl={dataUrl} />
         {error && (
-          <Alert
+          <AppAlert
             isInline
-            variant="danger"
             title={words("error.image.title")}
-            actionClose={<AlertActionCloseButton onClose={() => setError(null)} />}
-          >
-            <p>{error}</p>
-          </Alert>
+            onClose={() => setError(null)}
+            message={error}
+          />
         )}
       </FileUpload>
     </>

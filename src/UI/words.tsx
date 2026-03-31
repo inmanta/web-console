@@ -746,7 +746,11 @@ const dict = {
   "status.description":
     "The status of the orchestration server, loaded extensions and active components.",
   "status.supportArchive.action.download": "Download support archive",
+  "status.supportArchive.action.download.error": "Failed to download support archive",
+
   "status.supportArchive.action.downloading": "Fetching support data",
+  "status.supportArchive.action.downloading.error":
+    "Something went wrong with downloading the support archive",
 
   /** Agents */
   "agents.title": "Agents",

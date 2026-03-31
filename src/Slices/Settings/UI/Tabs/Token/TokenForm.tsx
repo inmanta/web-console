@@ -1,7 +1,5 @@
 import React from "react";
 import {
-  Alert,
-  AlertActionCloseButton,
   Button,
   Flex,
   FlexItem,
@@ -13,7 +11,7 @@ import {
 import { ClusterIcon, ProcessAutomationIcon, UserIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { ClientType } from "@/Core";
-import { ClipboardCopyButton, Description } from "@/UI/Components";
+import { AppAlert, ClipboardCopyButton, Description } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -90,15 +88,13 @@ export const TokenForm: React.FC<Props> = ({
       />
     </StyledInputGroup>
     {error && (
-      <Alert
-        data-testid="ToastError"
+      <AppAlert
+        testId="ToastError"
+        title={words("error")}
+        onClose={onErrorClose}
+        message={error}
         isInline
-        variant="danger"
-        title="Something went wrong"
-        actionClose={<AlertActionCloseButton onClose={onErrorClose} />}
-      >
-        <p>{error}</p>
-      </Alert>
+      />
     )}
   </Container>
 );

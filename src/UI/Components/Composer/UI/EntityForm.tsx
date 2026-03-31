@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Alert, FlexItem, Form } from "@patternfly/react-core";
+import { AlertVariant, FlexItem, Form } from "@patternfly/react-core";
 import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel } from "@/Core";
 import { set } from "@/Core/Language/collection";
@@ -7,6 +7,7 @@ import { sanitizeAttributes } from "@/Data";
 import { CreateModifierHandler, FieldCreator } from "@/UI/Components/ServiceInstanceForm";
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
 import { words } from "@/UI/words";
+import { AppAlert } from "../../AppAlert";
 import { ComposerContext } from "../Data/Context";
 import { ServiceEntityShape } from "./JointJsShapes/ServiceEntityShape";
 import { updateAllMissingConnectionsHighlights } from "./JointJsShapes/createHalo";
@@ -169,9 +170,11 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
   return (
     <>
       {fields && fields.length <= 0 && (
-        <FlexItem>
-          <Alert variant="info" isInline title={words("instanceComposer.formModal.noAttributes")} />
-        </FlexItem>
+        <AppAlert
+          title={words("instanceComposer.formModal.noAttributes")}
+          variant={AlertVariant.info}
+          isInline
+        />
       )}
       <FlexItem flex={{ default: "flex_1" }}>
         <Form

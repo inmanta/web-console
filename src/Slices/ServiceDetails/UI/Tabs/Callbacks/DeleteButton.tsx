@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
 import { useDeleteCallback } from "@/Data/Queries";
-import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
+import { ConfirmUserActionForm } from "@/UI/Components";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { Callback } from "@S/ServiceDetails/Core/Callback";
@@ -20,13 +21,15 @@ interface Props {
  */
 export const DeleteButton: React.FC<Props> = ({ callback, ...props }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
+  const { notifyError } = useAppAlert();
   const { mutate } = useDeleteCallback({
     onError: (error) => {
-      setErrorMessage(error.message);
+      notifyError({
+        title: words("catalog.callbacks.delete.failed"),
+        message: error.message,
+      });
     },
   });
-
-  const [errorMessage, setErrorMessage] = useState("");
 
   /**
    * submit function that will close a modal and trigger the delete action
@@ -41,12 +44,6 @@ export const DeleteButton: React.FC<Props> = ({ callback, ...props }) => {
 
   return (
     <>
-      <ToastAlert
-        data-testid="ToastAlert"
-        title={words("catalog.callbacks.delete.failed")}
-        message={errorMessage}
-        setMessage={setErrorMessage}
-      />
       <Button
         variant="secondary"
         isDanger

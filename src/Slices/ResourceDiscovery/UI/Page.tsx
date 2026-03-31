@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import React, { useContext } from "react";
+import { usePaginatedTable } from "@/Data";
 import { Filter, SortKey, useGetDiscoveredResources } from "@/Data/Queries";
 import {
   EmptyView,
@@ -24,21 +23,12 @@ import { TableControls } from "./TableControls";
  */
 export const Page: React.FC = () => {
   const { orchestratorProvider } = useContext(DependencyContext);
+  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
+    usePaginatedTable<Filter, SortKey>({
+      route: "DiscoveredResources",
+      defaultSort: { name: "discovered_resource_id", order: "asc" },
+    });
 
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "DiscoveredResources",
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "DiscoveredResources",
-  });
-
-  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
-    route: "DiscoveredResources",
-  });
-  const [sort, setSort] = useUrlStateWithSort<SortKey>({
-    default: { name: "discovered_resource_id", order: "asc" },
-    route: "DiscoveredResources",
-  });
   const { data, isError, isSuccess, refetch, error } = useGetDiscoveredResources({
     sort,
     filter,
@@ -47,12 +37,6 @@ export const Page: React.FC = () => {
   }).useContinuous();
 
   const disabledDiscoveredResourcesView = !orchestratorProvider.isResourceDiscoveryEnabled();
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   if (isError) {
     return (

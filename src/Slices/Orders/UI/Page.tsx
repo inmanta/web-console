@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import React, { useContext } from "react";
+import { usePaginatedTable } from "@/Data";
 import { useGetOrders } from "@/Data/Queries";
 import {
   EmptyView,
@@ -18,18 +17,14 @@ import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
   const { orchestratorProvider } = useContext(DependencyContext);
+  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort } = usePaginatedTable<
+    undefined,
+    SortKey
+  >({
+    route: "Orders",
+    defaultSort: { name: "created_at", order: "desc" },
+  });
 
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "Orders",
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "Orders",
-  });
-
-  const [sort, setSort] = useUrlStateWithSort<SortKey>({
-    default: { name: "created_at", order: "desc" },
-    route: "Orders",
-  });
   const { data, isSuccess, isError, error, refetch } = useGetOrders().useContinuous({
     sort,
     pageSize,
@@ -37,12 +32,6 @@ export const Page: React.FC = () => {
   });
 
   const disabledOrderView = !orchestratorProvider.isOrderViewEnabled();
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   if (isError) {
     return (
