@@ -6,10 +6,6 @@ import { ServiceEntityShape } from "../../UI";
 import { ComposerPaper } from "../../UI/JointJsShapes/ComposerPaper";
 import { updateAllMissingConnectionsHighlights } from "../../UI/JointJsShapes/createHalo";
 import {
-  ZOOM_TO_FIT_PADDING_EXISTING_INSTANCE,
-  ZOOM_TO_FIT_PADDING_NEW_INSTANCE,
-} from "../../config";
-import {
   RelationsDictionary,
   initializeCanvasFromInstance,
   createPlaceholderInstance,
@@ -70,13 +66,6 @@ export const useComposerGraph = ({
     return cp.paper;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graph, editable]);
-
-  // Keep catalog data fresh in the paper without recreating it.
-  // Recreating the paper while it's mounted tears down the stencil mid-interaction
-  // and causes SVGMatrix errors when JointJS tries to resolve screen coordinates.
-  useEffect(() => {
-    composerPaperRef.current?.updateData(relationsDictionary, serviceCatalog || []);
-  }, [serviceCatalog, relationsDictionary]);
 
   const scroller = useMemo(
     () =>
@@ -171,19 +160,10 @@ export const useComposerGraph = ({
       paper.unfreeze();
     }
 
-    // Fit content to screen by default
-    // Use requestAnimationFrame to ensure paper is fully rendered before fitting
-    // Use a larger padding for new instances so a single item doesn't appear too large
-    requestAnimationFrame(() => {
-      const padding = instanceId
-        ? ZOOM_TO_FIT_PADDING_EXISTING_INSTANCE
-        : ZOOM_TO_FIT_PADDING_NEW_INSTANCE;
-     // scroller.zoomToFit({ useModelGeometry: true, padding });
-    });
-
     // Update missing connections highlights after canvas is initialized
     // Use setTimeout to ensure paper is fully rendered
     setTimeout(() => {
+      scroller.centerContent();
       updateAllMissingConnectionsHighlights(paper);
     }, 100);
   }, [

@@ -18,7 +18,7 @@ export const Canvas: React.FC = () => {
     }
 
     canvasRef.current.appendChild(scroller.el);
-    scroller.render().center();
+    scroller.render();
 
     // Initialize tooltip system for elements with data-tooltip attribute
     if (!tooltipRef.current) {

@@ -201,7 +201,13 @@ export class ComposerPaper {
 
           // Validate removal before proceeding (safety check, even though tool is only shown if allowed)
           if (
-            !canRemoveLink(sourceShape, targetShape, graph, this._relationsDictionary, this._serviceCatalog)
+            !canRemoveLink(
+              sourceShape,
+              targetShape,
+              graph,
+              this._relationsDictionary,
+              this._serviceCatalog
+            )
           ) {
             return;
           }
