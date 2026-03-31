@@ -173,7 +173,7 @@ export default defineConfig({
        * If we do not proxy both endpoints; we face cors issues.
        */
       "/api": {
-        target: process.env.VITE_API_BASEURL || "https://localhost:8888",
+        target: process.env.VITE_API_BASEURL || process.env.PROXY_TARGET || "https://localhost:8888",
         changeOrigin: true,
         secure: false,
         protocolRewrite: PROTOCOL_REWRITE,
@@ -190,7 +190,7 @@ export default defineConfig({
         },
       },
       "/lsm": {
-        target: process.env.VITE_API_BASEURL || "https://localhost:8888",
+        target: process.env.VITE_API_BASEURL || process.env.PROXY_TARGET || "https://localhost:8888",
         changeOrigin: true,
         secure: false,
         protocolRewrite: PROTOCOL_REWRITE,
