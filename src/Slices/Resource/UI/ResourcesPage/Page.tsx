@@ -71,9 +71,12 @@ export const Page: React.FC = () => {
   const updateFilter = (updater: (filter: Resource.Filter) => Resource.Filter): void =>
     setFilter(updater(filterWithDefaults));
 
-  if (isError)
+  if (isError) {
     return <ErrorView message={error.message} ariaLabel="ResourcesPage-Error" retry={refetch} />;
-  if (!isSuccess) return <LoadingView ariaLabel="ResourcesPage-Loading" />;
+  }
+  if (!isSuccess) {
+    return <LoadingView ariaLabel="ResourcesPage-Loading" />;
+  }
 
   return (
     <>

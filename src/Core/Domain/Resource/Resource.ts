@@ -23,39 +23,27 @@ export interface IdDetails {
   resource_id_value: string;
 }
 
-export enum CompoundStatus {
-  // Blocked
+export enum BlockedStatus {
   blocked = "blocked",
   not_blocked = "not_blocked",
   temporarily_blocked = "temporarily_blocked",
-  // Compliance
+}
+
+export enum ComplianceStatus {
   compliant = "compliant",
   has_update = "has_update",
   non_compliant = "non_compliant",
   undefined = "undefined",
-  // Last Handler Run
+}
+
+export enum LastHandlerRunStatus {
   failed = "failed",
   new = "new",
   skipped = "skipped",
   successful = "successful",
 }
 
-export type BlockedStatus =
-  | CompoundStatus.blocked
-  | CompoundStatus.not_blocked
-  | CompoundStatus.temporarily_blocked;
-
-export type ComplianceStatus =
-  | CompoundStatus.compliant
-  | CompoundStatus.has_update
-  | CompoundStatus.non_compliant
-  | CompoundStatus.undefined;
-
-export type LastHandlerRunStatus =
-  | CompoundStatus.failed
-  | CompoundStatus.new
-  | CompoundStatus.skipped
-  | CompoundStatus.successful;
+export type CompoundStatus = BlockedStatus | ComplianceStatus | LastHandlerRunStatus;
 
 export enum Status {
   unavailable = "unavailable",
