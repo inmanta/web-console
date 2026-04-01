@@ -159,6 +159,7 @@ export const useComposerGraph = ({
 
     // Update missing connections highlights after canvas is initialized
     // Use setTimeout to ensure paper is fully rendered
+    // that's also when we want to recenter the view on the content.
     setTimeout(() => {
       scroller.centerContent();
       updateAllMissingConnectionsHighlights(paper);

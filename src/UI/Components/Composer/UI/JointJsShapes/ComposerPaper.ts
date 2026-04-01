@@ -311,13 +311,4 @@ export class ComposerPaper {
       }
     });
   }
-
-  /**
-   * Updates the relations dictionary and service catalog used by event handler closures.
-   * Call this when catalog data changes instead of recreating the paper.
-   */
-  updateData(relationsDictionary: RelationsDictionary, serviceCatalog: ServiceModel[]): void {
-    this._relationsDictionary = relationsDictionary;
-    this._serviceCatalog = serviceCatalog;
-  }
 }
