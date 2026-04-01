@@ -32,6 +32,7 @@
     "package-cleanup": "node clean_up_packages",
     "check-circular-deps": "madge --circular ./src/index.tsx",
     "install:orchestrator:keycloak": "sh ./shell-scripts/setup-auth.sh version='oss' release='dev' branch='oss_case_1'",
+    "install:orchestrator:oidc": "sh ./shell-scripts/setup-auth.sh version='oss' release='dev' branch='oss_case_1' auth='oidc'",
     "install:orchestrator:local-auth": "sh ./shell-scripts/setup-auth.sh version='oss' release='dev' branch='oss_case_1' auth='localauth'",
     "install:orchestrator": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
     "install:orchestrator:iso": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
