@@ -1628,6 +1628,7 @@ __metadata:
     moment-timezone: "npm:^0.6.0"
     monaco-editor: "npm:^0.52.2"
     msw: "npm:^2.11.5"
+    oidc-client-ts: "npm:^3.4.1"
     prettier: "npm:^3.6.2"
     process: "npm:^0.11.10"
     qs: "npm:^6.14.2"
@@ -1637,6 +1638,7 @@ __metadata:
     react-dropzone: "npm:^15.0.0"
     react-icons: "npm:^5.5.0"
     react-is: "npm:^19.2.4"
+    react-oidc-context: "npm:^3.3.0"
     react-router: "npm:^7.12.0"
     regenerator-runtime: "npm:^0.14.1"
     rimraf: "npm:^6.1.2"
@@ -9487,6 +9489,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jwt-decode@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "jwt-decode@npm:4.0.0"
+  checksum: 10/87b569e4a9a0067fb0d592bcf3b2ac3e638e49beee28620eeb07bef1b4470f4077dea68c15d191dd68e076846c3af8394be3bcaecffedc6e97433b221fdbbcf3
+  languageName: node
+  linkType: hard
+
 "katex@npm:^0.16.22":
   version: 0.16.22
   resolution: "katex@npm:0.16.22"
@@ -10695,6 +10704,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"oidc-client-ts@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "oidc-client-ts@npm:3.4.1"
+  dependencies:
+    jwt-decode: "npm:^4.0.0"
+  checksum: 10/9b02efa7eee9160741d38a7f31a7640a9b9843519abe2e1ee74f44cd7a6ac76c745428af73e32838b52c4780901ffd6223abdea9f130b38472ec310f91a82d0b
+  languageName: node
+  linkType: hard
+
 "once@npm:^1.3.1, once@npm:^1.4.0":
   version: 1.4.0
   resolution: "once@npm:1.4.0"
@@ -11523,6 +11541,16 @@ __metadata:
   version: 19.2.4
   resolution: "react-is@npm:19.2.4"
   checksum: 10/3360fc50a38c23299c5003a709949f2439b2901e77962eea78d892f526f710d05a7777b600b302f853583d1861979b00d7a0a071c89c6562eac5740ac29b9665
+  languageName: node
+  linkType: hard
+
+"react-oidc-context@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "react-oidc-context@npm:3.3.0"
+  peerDependencies:
+    oidc-client-ts: ^3.1.0
+    react: ">=16.14.0"
+  checksum: 10/85b53d3f5ab13793a2597e8221017293978e7caa04c51c4a09b91a50869cbef86cd78784ce38609700980d888b088d80fc600bf3a6fccf88231d032e55221e65
   languageName: node
   linkType: hard
 
