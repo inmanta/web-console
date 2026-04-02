@@ -52,7 +52,7 @@ interface Props {
 export const ComposerEditorProvider: React.FC<Props> = ({ serviceName, instance, editable }) => {
   const [interServiceRelationNames, setInterServiceRelationNames] = useState<string[]>([]);
 
-  const serviceModelsQuery = useGetServiceModels().useContinuous();
+  const serviceModelsQuery = useGetServiceModels().useOneTime();
 
   const mainService = useMemo(() => {
     const data = serviceModelsQuery.data;

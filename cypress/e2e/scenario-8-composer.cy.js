@@ -385,7 +385,9 @@ if (isIso) {
         .find('rect[joint-selector="bodyTwo"]')
         .should(($rect) => {
           const value = $rect.attr("class") || $rect.attr("class-name") || "";
-          expect(value).to.not.contain("stencil_body-disabled");
+          expect(value).to.contain("stencil_body-disabled");
+          // the instance is not present on the canvas, but is set te be deleted, so it shouldn't be available in the sidebar.
+          // we could improve this ux-wise, graying out a shape on the canvas instead of deleting it.
         });
 
       // Step 4: Deploy and validate resulting order details.
