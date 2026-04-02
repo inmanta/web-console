@@ -7,7 +7,7 @@ import { Sort } from "../Sort";
 export interface Resource {
   resource_id: string;
   requires: string[];
-  requiresLength?: number; // this is now added in the gql response.
+  requiresLength?: number;
   status: Status;
   id_details: IdDetails;
 }
@@ -23,6 +23,43 @@ export interface IdDetails {
   resource_id_value: string;
 }
 
+/** Possible blocked states for a resource. */
+export enum BlockedState {
+  blocked = "blocked",
+  not_blocked = "not_blocked",
+  temporarily_blocked = "temporarily_blocked",
+}
+
+/** Possible compliance states for a resource. */
+export enum ComplianceState {
+  compliant = "compliant",
+  has_update = "has_update",
+  non_compliant = "non_compliant",
+  undefined = "undefined",
+}
+
+/** Possible last handler run states for a resource. */
+export enum LastHandlerRunState {
+  failed = "failed",
+  new = "new",
+  skipped = "skipped",
+  successful = "successful",
+}
+
+/** Union of all compound state types. */
+export type CompoundStateType = BlockedState | ComplianceState | LastHandlerRunState;
+
+/** Flat record of all compound state types mapped to counts. */
+export type StateRecord = Record<CompoundStateType, number>;
+
+/** Status counts grouped by state. */
+export interface CompoundState {
+  blocked: Record<BlockedState, number>;
+  compliance: Record<ComplianceState, number>;
+  lastHandlerRun: Record<LastHandlerRunState, number>;
+}
+
+/** @deprecated Use Resource.CompoundState instead */
 export enum Status {
   unavailable = "unavailable",
   skipped = "skipped",

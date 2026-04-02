@@ -11,21 +11,22 @@ interface Props {
 }
 
 /**
- *
  * @param {string} props.label displayed when there are no items.
+ * @param {Total} props.total displayed when there are no items.
+ * @param {ItemProps[]} props.items Items that render a legend item.
  */
+
 export const LegendBar: React.FC<Props> = ({ items, total, label, ...props }) => {
   const totalValue = items.map((item) => item.value).reduce((acc, cur) => acc + cur, 0);
 
   return (
     <Container {...props}>
-      <Bar>
+      <Bar data-testid="legend-bar-items">
         {items.length <= 0 ? (
           <LoneItem key="none" label={label || ""} />
         ) : (
-          items.map((item) => <Item key={item.id} {...item} />)
+          items.map((item) => <Item key={item.id} {...item} height="20px" />)
         )}
-        {}
       </Bar>
       {total && <Total total={total} value={totalValue} />}
     </Container>

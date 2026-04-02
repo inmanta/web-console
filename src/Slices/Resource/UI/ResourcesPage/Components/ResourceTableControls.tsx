@@ -41,27 +41,29 @@ export const ResourceTableControls: React.FC<Props> = ({
   <>
     <Toolbar aria-label="Resources-toolbar">
       <ToolbarContent>
-        {summaryWidget}
-        <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
-        <ToolbarItem>
-          <Button
-            onClick={onToggleFilters}
-            variant="link"
-            icon={<FilterIcon />}
-            iconPosition="end"
-            aria-pressed={isDrawerExpanded}
-          >
-            <Flex
-              alignItems={{ default: "alignItemsCenter" }}
-              spaceItems={{ default: "spaceItemsSm" }}
+        <Flex style={{ width: "100%" }} alignItems={{ default: "alignItemsFlexEnd" }}>
+          {summaryWidget}
+          <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
+          <ToolbarItem>
+            <Button
+              onClick={onToggleFilters}
+              variant="link"
+              icon={<FilterIcon />}
+              iconPosition="end"
+              aria-pressed={isDrawerExpanded}
             >
-              <FlexItem>
-                <Badge>{activeFilterCount}</Badge>
-              </FlexItem>
-              <FlexItem>{words("resources.filters")}</FlexItem>
-            </Flex>
-          </Button>
-        </ToolbarItem>
+              <Flex
+                alignItems={{ default: "alignItemsCenter" }}
+                spaceItems={{ default: "spaceItemsSm" }}
+              >
+                <FlexItem>
+                  <Badge>{activeFilterCount}</Badge>
+                </FlexItem>
+                <FlexItem>{words("resources.filters")}</FlexItem>
+              </Flex>
+            </Button>
+          </ToolbarItem>
+        </Flex>
       </ToolbarContent>
     </Toolbar>
   </>

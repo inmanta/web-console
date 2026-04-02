@@ -63,6 +63,32 @@ function toGqlResponse(
       pageInfo,
       edges: data.map((r) => ({ node: toGqlNode(r) })),
     },
+
+    //Todo: implement this later
+    /* resourceSummary: {
+      totalCount: data.length,
+      lastHandlerRun: {
+        successful: data.length,
+        new: 0,
+        failed: 0,
+        skipped: 0,
+      },
+      blocked: {
+        not_blocked: data.length,
+        blocked: 0,
+        temporarily_blocked: 0,
+      },
+      compliance: {
+        compliant: data.length,
+        has_update: 0,
+        non_compliant: 0,
+        undefined: 0,
+      },
+      isDeploying: {
+        false: data.length,
+        true: 0,
+      },
+    }, */
   };
 }
 
@@ -137,6 +163,17 @@ describe("ResourcesPage", () => {
   afterAll(() => server.close());
 
   test("shows empty table", async () => {
+    // TODO: Waiting on update of Joao to see if we adjust all the test but rather work with
+    // the operationNames so it can be what it is now => otherwise adjust all to comment
+    /* server.use(
+      queryBase.operation(() => {
+        return HttpResponse.json<{ data: { data: ReturnType<typeof toGqlResponse> } }>({
+          data: {
+            data: toGqlResponse([], 0),
+          },
+        });
+      })
+    ); */
     server.use(
       queryLink.query("GetResources", () => {
         return HttpResponse.json({ data: toGqlResponse([], 0) });
