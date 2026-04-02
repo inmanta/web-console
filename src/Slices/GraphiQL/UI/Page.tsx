@@ -9,7 +9,11 @@ import { PageContainer } from "@/UI/Components";
 import { getThemePreference } from "@/UI/Components/DarkmodeOption";
 import { words } from "@/UI/words";
 
-import "graphiql/style.css";
+// ?inline tells Vite to give us the CSS as a plain string instead of injecting
+// it as a global stylesheet. We inject it ourselves (wrapped in @layer so its
+// bundled copy of Monaco CSS has lower cascade priority than the app's own
+// Monaco styles) and remove it on unmount so it never bleeds into other routes.
+import graphiqlCSS from "graphiql/style.css?inline";
 
 const DEFAULT_QUERY = `{
   environments {
@@ -51,6 +55,17 @@ export const Page: React.FC = () => {
   const [theme, setTheme] = useState<"dark" | "light">(
     () => (getThemePreference() ?? "light") as "dark" | "light"
   );
+
+  // Inject graphiql's CSS (including its bundled Monaco copy) inside a
+  // @layer so it has lower cascade priority than the app's own Monaco styles.
+  // Removing it on unmount prevents it from bleeding into other routes.
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.setAttribute("data-graphiql-styles", "");
+    style.textContent = `@layer graphiql-vendor {\n${graphiqlCSS}\n}`;
+    document.head.appendChild(style);
+    return () => style.remove();
+  }, []);
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
