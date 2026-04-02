@@ -1,5 +1,9 @@
+import { ReactNode } from "react";
+import { CubeIcon, ShieldAltIcon, TrafficLightIcon } from "@patternfly/react-icons";
+import { t_global_icon_size_font_xl } from "@patternfly/react-tokens";
 import { Resource } from "@/Core";
 
+/** Color config which maps onto every specific compound status record. */
 export const colorConfig: Record<Resource.CompoundStatus, string> = {
   [Resource.BlockedStatus.blocked]: "var(--pf-t--color--red--60)",
   [Resource.ComplianceStatus.non_compliant]: "var(--pf-t--color--red--60)",
@@ -18,26 +22,33 @@ export const colorConfig: Record<Resource.CompoundStatus, string> = {
   [Resource.LastHandlerRunStatus.new]: "var(--pf-t--color--blue--50)",
 };
 
+/** Maps each compound resource status to a numeric priority value. */
 export const statusPriority: Record<Resource.CompoundStatus, number> = {
-  // Success = 0 (first)
-  [Resource.LastHandlerRunStatus.successful]: 0,
-  [Resource.ComplianceStatus.compliant]: 0,
+  // --- BlockedStatus ---
   [Resource.BlockedStatus.not_blocked]: 0,
-  // Danger = 1 (second)
-  [Resource.LastHandlerRunStatus.failed]: 1,
-  [Resource.ComplianceStatus.non_compliant]: 1,
   [Resource.BlockedStatus.blocked]: 1,
-  // Update/new/temp_blocked = 2 (thirth)
-  [Resource.ComplianceStatus.has_update]: 2,
   [Resource.BlockedStatus.temporarily_blocked]: 2,
-  [Resource.LastHandlerRunStatus.new]: 2,
-  // Undefined, skipped comes last
-  [Resource.LastHandlerRunStatus.skipped]: 3,
+  // --- ComplianceStatus ---
+  [Resource.ComplianceStatus.compliant]: 0,
+  [Resource.ComplianceStatus.has_update]: 2,
+  [Resource.ComplianceStatus.non_compliant]: 1,
   [Resource.ComplianceStatus.undefined]: 3,
+  // --- LastHandlerRunStatus ---
+  [Resource.LastHandlerRunStatus.successful]: 0,
+  [Resource.LastHandlerRunStatus.failed]: 1,
+  [Resource.LastHandlerRunStatus.new]: 2,
+  [Resource.LastHandlerRunStatus.skipped]: 3,
 };
 
 export const iconStyle = {
-  width: "1.25rem",
-  height: "1.25rem",
+  width: t_global_icon_size_font_xl.value,
+  height: t_global_icon_size_font_xl.value,
   color: "var(--pf-t--color--gray--50)",
+};
+
+/** Icons for every category of compound status. */
+export const statusGroupIcons: Record<"blocked" | "compliance" | "lastHandlerRun", ReactNode> = {
+  blocked: <TrafficLightIcon style={iconStyle} />,
+  compliance: <ShieldAltIcon style={iconStyle} />,
+  lastHandlerRun: <CubeIcon style={iconStyle} />,
 };

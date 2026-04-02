@@ -184,22 +184,39 @@ export const encodedId =
   "kubernetes_calico%3A%3Aresources%3A%3AIPPool%5Bdc-3%2Cidentifier%3D%2Fcluster%2Fdc-3%2Fcalicoctl%2Fkc3-calicoctl%2Fippool%2Fbb1-ip-pool-3%5D";
 
 export const mockCompoundResourceData = {
-  blocked: {
-    not_blocked: 2,
-    blocked: 1,
-    temporarily_blocked: 1,
-  },
-  compliance: {
-    compliant: 2,
-    has_update: 1,
-    non_compliant: 1,
-    undefined: 1,
-  },
-  lastHandlerRun: {
-    successful: 2,
-    new: 1,
-    failed: 1,
-    skipped: 1,
+  compoundState: {
+    blocked: {
+      not_blocked: 2,
+      blocked: 1,
+      temporarily_blocked: 1,
+    },
+    compliance: {
+      compliant: 2,
+      has_update: 1,
+      non_compliant: 1,
+      undefined: 1,
+    },
+    lastHandlerRun: {
+      successful: 2,
+      new: 1,
+      failed: 1,
+      skipped: 1,
+    },
   },
   totalCount: 5,
+};
+
+export const allZeroCompoundState = {
+  compliance: {
+    compliant: 0,
+    has_update: 0,
+    non_compliant: 0,
+    undefined: 0,
+  },
+  lastHandlerRun: {
+    successful: 0,
+    new: 0,
+    failed: 0,
+    skipped: 0,
+  },
 };

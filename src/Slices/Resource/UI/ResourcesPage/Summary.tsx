@@ -11,11 +11,5 @@ interface Props {
 
 export const Summary: React.FC<Props> = ({ updateFilter }) => (
   //TODO: Replace later on with real data
-  <CompoundResourceStatus
-    blocked={mockCompoundResourceData.blocked}
-    compliance={mockCompoundResourceData.compliance}
-    lastHandlerRun={mockCompoundResourceData.lastHandlerRun}
-    totalCount={mockCompoundResourceData.totalCount}
-    updateFilter={updateFilter}
-  />
+  <CompoundResourceStatus {...mockCompoundResourceData} updateFilter={updateFilter} />
 );

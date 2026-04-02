@@ -45,6 +45,16 @@ export enum LastHandlerRunStatus {
 
 export type CompoundStatus = BlockedStatus | ComplianceStatus | LastHandlerRunStatus;
 
+/** Represents all of the possible compound status records */
+export type StatusRecord = Record<CompoundStatus, number>;
+
+/** Represents the compound status categories */
+export interface StatusCategory {
+  blocked: Record<BlockedStatus, number>;
+  compliance: Record<ComplianceStatus, number>;
+  lastHandlerRun: Record<LastHandlerRunStatus, number>;
+}
+
 export enum Status {
   unavailable = "unavailable",
   skipped = "skipped",
