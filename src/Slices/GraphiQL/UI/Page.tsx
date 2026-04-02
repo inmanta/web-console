@@ -3,6 +3,7 @@ import { useLocation } from "react-router";
 import { Fetcher } from "@graphiql/toolkit";
 import { useQueryClient } from "@tanstack/react-query";
 import { GraphiQL } from "graphiql";
+import graphiqlCSS from "graphiql/style.css?inline";
 import styled, { createGlobalStyle } from "styled-components";
 import { useGetGraphQLSchema, usePostGraphQL, graphQLSchemaKey } from "@/Data/Queries";
 import { PageContainer } from "@/UI/Components";
@@ -13,7 +14,6 @@ import { words } from "@/UI/words";
 // it as a global stylesheet. We inject it ourselves (wrapped in @layer so its
 // bundled copy of Monaco CSS has lower cascade priority than the app's own
 // Monaco styles) and remove it on unmount so it never bleeds into other routes.
-import graphiqlCSS from "graphiql/style.css?inline";
 
 const DEFAULT_QUERY = `{
   environments {
