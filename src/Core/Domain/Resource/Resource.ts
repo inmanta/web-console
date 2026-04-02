@@ -23,38 +23,43 @@ export interface IdDetails {
   resource_id_value: string;
 }
 
-export enum BlockedStatus {
+/** Possible blocked states for a resource. */
+export enum BlockedState {
   blocked = "blocked",
   not_blocked = "not_blocked",
   temporarily_blocked = "temporarily_blocked",
 }
 
-export enum ComplianceStatus {
+/** Possible compliance states for a resource. */
+export enum ComplianceState {
   compliant = "compliant",
   has_update = "has_update",
   non_compliant = "non_compliant",
   undefined = "undefined",
 }
 
-export enum LastHandlerRunStatus {
+/** Possible last handler run states for a resource. */
+export enum LastHandlerRunState {
   failed = "failed",
   new = "new",
   skipped = "skipped",
   successful = "successful",
 }
 
-export type CompoundStatus = BlockedStatus | ComplianceStatus | LastHandlerRunStatus;
+/** Union of all compound state types. */
+export type CompoundStateType = BlockedState | ComplianceState | LastHandlerRunState;
 
-/** Represents all of the possible compound status records */
-export type StatusRecord = Record<CompoundStatus, number>;
+/** Flat record of all compound state types mapped to counts. */
+export type StateRecord = Record<CompoundStateType, number>;
 
-/** Represents the compound status categories */
-export interface StatusCategory {
-  blocked: Record<BlockedStatus, number>;
-  compliance: Record<ComplianceStatus, number>;
-  lastHandlerRun: Record<LastHandlerRunStatus, number>;
+/** Status counts grouped by state. */
+export interface CompoundState {
+  blocked: Record<BlockedState, number>;
+  compliance: Record<ComplianceState, number>;
+  lastHandlerRun: Record<LastHandlerRunState, number>;
 }
 
+/** @deprecated Use Resource.CompoundState instead */
 export enum Status {
   unavailable = "unavailable",
   skipped = "skipped",

@@ -43,9 +43,7 @@ export const ResourceTableControls: React.FC<Props> = ({
       <ToolbarContent>
         <Flex style={{ width: "100%" }} alignItems={{ default: "alignItemsFlexEnd" }}>
           {summaryWidget}
-
           <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
-
           <ToolbarItem>
             <Button
               onClick={onToggleFilters}

@@ -205,18 +205,3 @@ export const mockCompoundResourceData = {
   },
   totalCount: 5,
 };
-
-export const allZeroCompoundState = {
-  compliance: {
-    compliant: 0,
-    has_update: 0,
-    non_compliant: 0,
-    undefined: 0,
-  },
-  lastHandlerRun: {
-    successful: 0,
-    new: 0,
-    failed: 0,
-    skipped: 0,
-  },
-};

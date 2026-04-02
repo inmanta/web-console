@@ -70,9 +70,9 @@ interface ResourcesGraphQLResponse {
     };
     resourceSummary: {
       totalCount: number;
-      lastHandlerRun: Record<Resource.LastHandlerRunStatus, number>;
-      blocked: Record<Resource.BlockedStatus, number>;
-      compliance: Record<Resource.ComplianceStatus, number>;
+      lastHandlerRun: Resource.CompoundState["lastHandlerRun"];
+      blocked: Resource.CompoundState["blocked"];
+      compliance: Resource.CompoundState["compliance"];
       isDeploying: { true: number; false: number };
     };
   };

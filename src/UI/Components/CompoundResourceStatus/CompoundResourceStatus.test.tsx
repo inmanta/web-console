@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { mockCompoundResourceData, allZeroCompoundState } from "@/Test/Data/Resource";
+import { mockCompoundResourceData } from "@/Test/Data/Resource";
 import { CompoundResourceProps, CompoundResourceStatus } from "./CompoundResourceStatus";
 
 const defaultProps: CompoundResourceProps = {
@@ -30,8 +30,8 @@ describe("CompoundResourceStatus", () => {
       <CompoundResourceStatus
         {...defaultProps}
         compoundState={{
+          ...defaultProps.compoundState,
           blocked: { blocked: 1, not_blocked: 0, temporarily_blocked: 0 },
-          ...allZeroCompoundState,
         }}
       />
     );
@@ -61,8 +61,8 @@ describe("CompoundResourceStatus", () => {
       <CompoundResourceStatus
         {...defaultProps}
         compoundState={{
+          ...defaultProps.compoundState,
           blocked: { blocked: 1, not_blocked: 1, temporarily_blocked: 0 },
-          ...allZeroCompoundState,
         }}
       />
     );

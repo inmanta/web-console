@@ -3,41 +3,41 @@ import { CubeIcon, ShieldAltIcon, TrafficLightIcon } from "@patternfly/react-ico
 import { t_global_icon_size_font_xl } from "@patternfly/react-tokens";
 import { Resource } from "@/Core";
 
-/** Color config which maps onto every specific compound status record. */
-export const colorConfig: Record<Resource.CompoundStatus, string> = {
-  [Resource.BlockedStatus.blocked]: "var(--pf-t--color--red--60)",
-  [Resource.ComplianceStatus.non_compliant]: "var(--pf-t--color--red--60)",
-  [Resource.LastHandlerRunStatus.failed]: "var(--pf-t--color--red--60)",
+/** Color config which maps every compound state type to a color. */
+export const colorConfig: Record<Resource.CompoundStateType, string> = {
+  [Resource.BlockedState.blocked]: "var(--pf-t--color--red--60)",
+  [Resource.ComplianceState.non_compliant]: "var(--pf-t--color--red--60)",
+  [Resource.LastHandlerRunState.failed]: "var(--pf-t--color--red--60)",
 
-  [Resource.BlockedStatus.not_blocked]: "var(--pf-t--color--green--50)",
-  [Resource.ComplianceStatus.compliant]: "var(--pf-t--color--green--50)",
-  [Resource.LastHandlerRunStatus.successful]: "var(--pf-t--color--green--50)",
+  [Resource.BlockedState.not_blocked]: "var(--pf-t--color--green--50)",
+  [Resource.ComplianceState.compliant]: "var(--pf-t--color--green--50)",
+  [Resource.LastHandlerRunState.successful]: "var(--pf-t--color--green--50)",
 
-  [Resource.BlockedStatus.temporarily_blocked]: "var(--pf-t--color--orange--40)",
-  [Resource.ComplianceStatus.has_update]: "var(--pf-t--color--orange--40)",
+  [Resource.BlockedState.temporarily_blocked]: "var(--pf-t--color--orange--40)",
+  [Resource.ComplianceState.has_update]: "var(--pf-t--color--orange--40)",
 
-  [Resource.ComplianceStatus.undefined]: "var(--pf-t--color--gray--40)",
-  [Resource.LastHandlerRunStatus.skipped]: "var(--pf-t--color--gray--40)",
+  [Resource.ComplianceState.undefined]: "var(--pf-t--color--gray--40)",
+  [Resource.LastHandlerRunState.skipped]: "var(--pf-t--color--gray--40)",
 
-  [Resource.LastHandlerRunStatus.new]: "var(--pf-t--color--blue--50)",
+  [Resource.LastHandlerRunState.new]: "var(--pf-t--color--blue--50)",
 };
 
-/** Maps each compound resource status to a numeric priority value. */
-export const statusPriority: Record<Resource.CompoundStatus, number> = {
+/** Maps each compound state type to a numeric priority value. */
+export const statusPriority: Record<Resource.CompoundStateType, number> = {
   // --- BlockedStatus ---
-  [Resource.BlockedStatus.not_blocked]: 0,
-  [Resource.BlockedStatus.blocked]: 1,
-  [Resource.BlockedStatus.temporarily_blocked]: 2,
+  [Resource.BlockedState.not_blocked]: 0,
+  [Resource.BlockedState.blocked]: 1,
+  [Resource.BlockedState.temporarily_blocked]: 2,
   // --- ComplianceStatus ---
-  [Resource.ComplianceStatus.compliant]: 0,
-  [Resource.ComplianceStatus.has_update]: 2,
-  [Resource.ComplianceStatus.non_compliant]: 1,
-  [Resource.ComplianceStatus.undefined]: 3,
+  [Resource.ComplianceState.compliant]: 0,
+  [Resource.ComplianceState.has_update]: 2,
+  [Resource.ComplianceState.non_compliant]: 1,
+  [Resource.ComplianceState.undefined]: 3,
   // --- LastHandlerRunStatus ---
-  [Resource.LastHandlerRunStatus.successful]: 0,
-  [Resource.LastHandlerRunStatus.failed]: 1,
-  [Resource.LastHandlerRunStatus.new]: 2,
-  [Resource.LastHandlerRunStatus.skipped]: 3,
+  [Resource.LastHandlerRunState.successful]: 0,
+  [Resource.LastHandlerRunState.failed]: 1,
+  [Resource.LastHandlerRunState.new]: 2,
+  [Resource.LastHandlerRunState.skipped]: 3,
 };
 
 export const iconStyle = {
@@ -46,7 +46,7 @@ export const iconStyle = {
   color: "var(--pf-t--color--gray--50)",
 };
 
-/** Icons for every category of compound status. */
+/** Icons for every compound state. */
 export const statusGroupIcons: Record<"blocked" | "compliance" | "lastHandlerRun", ReactNode> = {
   blocked: <TrafficLightIcon style={iconStyle} />,
   compliance: <ShieldAltIcon style={iconStyle} />,

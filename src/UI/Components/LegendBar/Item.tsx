@@ -8,7 +8,7 @@ import styled from "styled-components";
 export interface Props {
   id: string;
   value: number;
-  label?: string;
+  label: string;
   backgroundColor: string;
   color?: string;
   onClick?(id: string): void;
@@ -39,26 +39,20 @@ export const Item: React.FC<Props> = ({
   height = "36px",
   isEmpty = false,
 }) => {
-  const container = (
-    <Container
-      value={value}
-      data-value={value}
-      $backgroundColor={backgroundColor}
-      $color={color}
-      $height={height}
-      $isEmpty={isEmpty}
-      onClick={onClick ? () => onClick(id) : undefined}
-      aria-label={`LegendItem-${id}`}
-    >
-      {value}
-    </Container>
-  );
-
-  if (!label) return container;
-
   return (
     <Tooltip content={label} position="top" distance={4} enableFlip>
-      {container}
+      <Container
+        value={value}
+        data-value={value}
+        $backgroundColor={backgroundColor}
+        $color={color}
+        $height={height}
+        $isEmpty={isEmpty}
+        onClick={onClick ? () => onClick(id) : undefined}
+        aria-label={`LegendItem-${id}`}
+      >
+        {value}
+      </Container>
     </Tooltip>
   );
 };
