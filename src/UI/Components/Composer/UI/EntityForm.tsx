@@ -160,12 +160,14 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
     }
   }, [activeCell.id, currentCellId, createFieldsAndState]);
 
-  // Auto-save when formState changes (similar to old implementation)
+  // Auto-save when formState changes, but only when the active cell matches the
+  // initialized cell. This guards against a race where onSave already captures
+  // the new activeCell while formState/isDirty still hold the previous cell's values.
   useEffect(() => {
-    if (isDirty && formState) {
+    if (isDirty && formState && currentCellId === String(activeCell.id)) {
       onSave(formState);
     }
-  }, [formState, isDirty, onSave]);
+  }, [formState, isDirty, onSave, currentCellId, activeCell.id]);
 
   return (
     <>
@@ -187,7 +189,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
             fields.map((field) => (
               <FieldInput
                 originalState={originalState}
-                key={field.name}
+                key={field.id}
                 field={{
                   ...field,
                   isDisabled: isDisabled || field.isDisabled,
