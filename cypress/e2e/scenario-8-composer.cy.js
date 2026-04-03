@@ -590,5 +590,267 @@ if (isIso) {
           cy.get(".pf-v6-c-label__text", { timeout: 120000 }).should("contain", "completed");
         });
     });
+
+    it("Should not leak data between forms when clicking through multiple instances", () => {
+      // Step 1: Open project inventory and enter edit composer.
+      cy.visit("/console/");
+      cy.get('[aria-label="Select-environment-PXSDC Test Env"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+      cy.get("#project").contains("Show inventory").click();
+
+      cy.get('[aria-label="ServiceInventory-Success"]').should("be.visible");
+      cy.get('[aria-label="InstanceRow-Intro"]').first().should("contain", "pxs-project");
+
+      // Step 2: Click kebab menu on the first row and select "Edit in Composer".
+      cy.get('[aria-label="InstanceRow-Intro"]')
+        .first()
+        .closest("tr")
+        .find('[aria-label="row actions toggle"]')
+        .click();
+
+      cy.contains('[role="menuitem"]', "Edit in Composer").click();
+
+      // Assert: Existing project node is present on the canvas.
+      cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "project", {
+        timeout: 20000,
+      }).should("be.visible");
+
+      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-project"])').as(
+        "existingProjectEntity"
+      );
+
+      // Step 3: Zoom out to create more room on the canvas. ( to 60%)
+      cy.get('[data-testid="zoom-out"]').click().click().click().click();
+
+      // Alias stencil items.
+      cy.contains('g[data-type="standard.Path"] tspan', "project")
+        .closest('g[data-type="standard.Path"]')
+        .as("projectPath");
+
+      cy.contains('g[data-type="standard.Path"] tspan', "ProjectNaming")
+        .closest('g[data-type="standard.Path"]')
+        .as("projectNamingPath");
+
+      // Step 4: Duo 1 - The existing project already has a ProjectNaming loaded from the instance.
+      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid*="ProjectNaming"])', {
+        timeout: 10000,
+      })
+        .should("have.length", 1)
+        .eq(0)
+        .as("firstProjectNamingEntity");
+
+      // Step 5: Duo 2 - Drag a second project above the existing one, then its ProjectNaming to the right, then connect.
+      cy.get("@existingProjectEntity").then(($existingProject) => {
+        const rect = $existingProject[0].getBoundingClientRect();
+        const dropX = rect.left + rect.width / 2;
+        const dropY = rect.top - 120;
+
+        cy.get("@projectPath").trigger("mousedown", { button: 0, which: 1, force: true });
+        cy.get("body").trigger("mousemove", {
+          button: 0,
+          which: 1,
+          clientX: dropX,
+          clientY: dropY,
+          force: true,
+        });
+        cy.get('[data-testid="canvas"]').trigger("mouseup", {
+          button: 0,
+          which: 1,
+          clientX: dropX,
+          clientY: dropY,
+          force: true,
+        });
+      });
+
+      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-project"])', {
+        timeout: 10000,
+      })
+        .should("have.length", 2)
+        .eq(1)
+        .as("secondProjectEntity");
+
+      cy.get("@secondProjectEntity").then(($secondProject) => {
+        const rect = $secondProject[0].getBoundingClientRect();
+        const dropX = rect.right + 120;
+        const dropY = rect.top + rect.height / 2;
+
+        cy.get("@projectNamingPath").trigger("mousedown", { button: 0, which: 1, force: true });
+        cy.get("body").trigger("mousemove", {
+          button: 0,
+          which: 1,
+          clientX: dropX,
+          clientY: dropY,
+          force: true,
+        });
+        cy.get('[data-testid="canvas"]').trigger("mouseup", {
+          button: 0,
+          which: 1,
+          clientX: dropX,
+          clientY: dropY,
+          force: true,
+        });
+      });
+
+      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid*="ProjectNaming"])', {
+        timeout: 10000,
+      })
+        .should("have.length", 2)
+        .eq(1)
+        .as("secondProjectNamingEntity");
+
+      cy.get("@secondProjectNamingEntity").click({ force: true });
+
+      cy.get("@secondProjectEntity").then(($target) => {
+        const targetRect = $target[0].getBoundingClientRect();
+        const targetX = targetRect.left + targetRect.width / 2;
+        const targetY = targetRect.top + targetRect.height / 2;
+
+        cy.get('div.handle.link.e[data-action="link"]', { timeout: 10000 })
+          .should("be.visible")
+          .trigger("mousedown", { button: 0, which: 1, force: true });
+        cy.get("body").trigger("mousemove", {
+          button: 0,
+          which: 1,
+          clientX: targetX,
+          clientY: targetY,
+          force: true,
+        });
+        cy.get("@secondProjectEntity").trigger("mouseup", {
+          button: 0,
+          which: 1,
+          clientX: targetX,
+          clientY: targetY,
+          force: true,
+        });
+      });
+
+      // Fill second project form fields.
+      cy.get("@secondProjectEntity").click({ force: true });
+      cy.get("#name").clear().type("pxs-project-2");
+      cy.get("#environment").click({ force: true });
+      cy.contains('[role="menuitem"], [role="option"]', /lab/i).click();
+
+      // Step 6: Duo 3 - Drag a third project below the existing one, then its ProjectNaming to the right, then connect.
+      cy.get("@existingProjectEntity").then(($existingProject) => {
+        const rect = $existingProject[0].getBoundingClientRect();
+        const dropX = rect.left + rect.width / 2;
+        const dropY = rect.bottom + 120;
+
+        cy.get("@projectPath").trigger("mousedown", { button: 0, which: 1, force: true });
+        cy.get("body").trigger("mousemove", {
+          button: 0,
+          which: 1,
+          clientX: dropX,
+          clientY: dropY,
+          force: true,
+        });
+        cy.get('[data-testid="canvas"]').trigger("mouseup", {
+          button: 0,
+          which: 1,
+          clientX: dropX,
+          clientY: dropY,
+          force: true,
+        });
+      });
+
+      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-project"])', {
+        timeout: 10000,
+      })
+        .should("have.length", 3)
+        .eq(2)
+        .as("thirdProjectEntity");
+
+      cy.get("@thirdProjectEntity").then(($thirdProject) => {
+        const rect = $thirdProject[0].getBoundingClientRect();
+        const dropX = rect.right + 120;
+        const dropY = rect.top + rect.height / 2;
+
+        cy.get("@projectNamingPath").trigger("mousedown", { button: 0, which: 1, force: true });
+        cy.get("body").trigger("mousemove", {
+          button: 0,
+          which: 1,
+          clientX: dropX,
+          clientY: dropY,
+          force: true,
+        });
+        cy.get('[data-testid="canvas"]').trigger("mouseup", {
+          button: 0,
+          which: 1,
+          clientX: dropX,
+          clientY: dropY,
+          force: true,
+        });
+      });
+
+      cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid*="ProjectNaming"])', {
+        timeout: 10000,
+      })
+        .should("have.length", 3)
+        .eq(2)
+        .as("thirdProjectNamingEntity");
+
+      cy.get("@thirdProjectNamingEntity").click({ force: true });
+
+      cy.get("@thirdProjectEntity").then(($target) => {
+        const targetRect = $target[0].getBoundingClientRect();
+        const targetX = targetRect.left + targetRect.width / 2;
+        const targetY = targetRect.top + targetRect.height / 2;
+
+        cy.get('div.handle.link.e[data-action="link"]', { timeout: 10000 })
+          .should("be.visible")
+          .trigger("mousedown", { button: 0, which: 1, force: true });
+        cy.get("body").trigger("mousemove", {
+          button: 0,
+          which: 1,
+          clientX: targetX,
+          clientY: targetY,
+          force: true,
+        });
+        cy.get("@thirdProjectEntity").trigger("mouseup", {
+          button: 0,
+          which: 1,
+          clientX: targetX,
+          clientY: targetY,
+          force: true,
+        });
+      });
+
+      // Fill third project form fields.
+      cy.get("@thirdProjectEntity").click({ force: true });
+      cy.get("#name").clear().type("pxs-project-3");
+      cy.get("#environment").click({ force: true });
+      cy.contains('[role="menuitem"], [role="option"]', /lab/i).click();
+
+      // Step 7: Click back and forth between the two new projects and assert form values don't bleed.
+      cy.get("@secondProjectEntity").click({ force: true });
+      cy.get("#name").should("have.value", "pxs-project-2");
+
+      cy.get("@thirdProjectEntity").click({ force: true });
+      cy.get("#name").should("have.value", "pxs-project-3");
+
+      cy.get("@secondProjectEntity").click({ force: true });
+      cy.get("#name").should("have.value", "pxs-project-2");
+
+      cy.get("@thirdProjectEntity").click({ force: true });
+      cy.get("#name").should("have.value", "pxs-project-3");
+
+      // Step 8: Deploy and validate resulting order details.
+      cy.get('[data-testid="deploy-button"]').should("be.enabled").click();
+
+      cy.get('[aria-label="OrderDetailsView-Success"]', { timeout: 60000 }).should("be.visible");
+
+      cy.get('[aria-label="OrderDetails-Heading"]').within(() => {
+        cy.get('[aria-label="OrderDescription"]').contains("Requested with Instance Composer");
+        cy.get('[aria-label="OrderState"] .pf-v6-c-label__text', { timeout: 120000 }).should(
+          "contain",
+          "success"
+        );
+      });
+
+      cy.get('[aria-label="OrderDetails-Heading-Progress"]', { timeout: 120000 }).within(() => {
+        cy.get('[aria-label="LegendItem-completed"]').should("have.text", "3");
+        cy.contains("3 / 3").should("be.visible");
+      });
+    });
   });
 }
