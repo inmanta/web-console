@@ -1,0 +1,3 @@
+description: Prevent data leak between shapes in composer when clicking through the same shape-type multiple times.
+change-type: patch
+destination-branches: [master, iso9]

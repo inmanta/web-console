@@ -15,15 +15,9 @@ export const createPlaceholderInstance = (
 ): InstanceWithRelations => {
   const id = instanceId || uuidv4();
 
-  // Create empty attributes based on the service model
+  // Use empty attributes so initializeCanvasFromInstance can populate defaults
+  // from createFormState when building the shape for this placeholder.
   const instanceAttributes: InstanceAttributeModel = {};
-
-  // Initialize all attributes with empty/default values
-  serviceModel.attributes.forEach((attr) => {
-    // Don't set any default values yet - let the form handle defaults
-    // This ensures we start with a clean slate
-    instanceAttributes[attr.name] = null;
-  });
 
   return {
     instance: {
