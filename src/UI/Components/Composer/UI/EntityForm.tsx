@@ -4,7 +4,11 @@ import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel } from "@/Core";
 import { set } from "@/Core/Language/collection";
 import { sanitizeAttributes } from "@/Data";
-import { CreateModifierHandler, FieldCreator } from "@/UI/Components/ServiceInstanceForm";
+import {
+  createFormState,
+  CreateModifierHandler,
+  FieldCreator,
+} from "@/UI/Components/ServiceInstanceForm";
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
 import { words } from "@/UI/words";
 import { AppAlert } from "../../AppAlert";
@@ -103,9 +107,11 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
     const selectedFields = fieldCreator.attributesToFields(serviceModel.attributes || []);
 
     setFields(selectedFields.map((field) => ({ ...field, id: uuidv4() })));
-    // Always update formState with the new cell's attributes
-    setFormState(instanceAttributes);
-    setOriginalState(instanceAttributes);
+    // Merge defaults under actual attributes so fields missing from the shape
+    // (e.g. placeholder/newly-loaded instances) still show their default values.
+    const mergedAttributes = { ...createFormState(selectedFields), ...instanceAttributes };
+    setFormState(mergedAttributes);
+    setOriginalState(mergedAttributes);
     setIsDirty(false);
     setCurrentCellId(String(activeCell.id));
   }, [activeCell]);
