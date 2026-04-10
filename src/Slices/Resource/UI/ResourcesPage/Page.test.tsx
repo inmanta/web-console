@@ -348,7 +348,7 @@ describe("ResourcesPage", () => {
     expect(within(table).getByRole("button", { name: "Value" })).toBeVisible();
     expect(
       within(table).getByRole("button", {
-        name: words("resources.column.deployState"),
+        name: words("resources.column.status"),
       })
     ).toBeVisible();
 

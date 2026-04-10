@@ -81,21 +81,6 @@ export const response = {
     before: 0,
     after: 2,
     page_size: 100,
-    deploy_summary: {
-      total: 20,
-      by_state: {
-        deployed: 10,
-        skipped: 1,
-        skipped_for_undefined: 0,
-        cancelled: 1,
-        failed: 1,
-        unavailable: 2,
-        undefined: 2,
-        deploying: 2,
-        available: 1,
-        processing_events: 2,
-      },
-    },
   },
 };
 

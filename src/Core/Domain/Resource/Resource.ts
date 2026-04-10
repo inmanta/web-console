@@ -5,22 +5,24 @@ import { PageSize } from "../PageSize";
 import { Sort } from "../Sort";
 
 export interface Resource {
-  resource_id: string;
-  requires: string[];
-  requiresLength?: number;
-  status: Status;
-  id_details: IdDetails;
+  node: {
+    resourceId: string;
+    resourceType: string;
+    agent: string;
+    resourceIdValue: string;
+    requiresLength: number;
+    state: {
+      isDeploying: boolean;
+      isOrphan: boolean;
+      lastHandlerRunAt?: string;
+    } & CompoundStateUpper;
+  };
 }
+export type FlatResource = Resource["node"];
 
-export interface FromVersion extends Omit<Resource, "status"> {
-  resource_version_id: string;
-}
-
-export interface IdDetails {
-  resource_type: string;
-  agent: string;
-  attribute: string;
-  resource_id_value: string;
+export interface ResourceSummary extends CompoundState {
+  totalCount: number;
+  isDeploying: { true: number; false: number };
 }
 
 /** Possible blocked states for a resource. */
@@ -59,6 +61,14 @@ export interface CompoundState {
   lastHandlerRun: Record<LastHandlerRunState, number>;
 }
 
+/** Possible uppercased values grouped by state. */
+export type CompoundStateUpper = {
+  [K in keyof CompoundState]: Uppercase<Extract<keyof CompoundState[K], string>>;
+};
+
+/** Union of all uppercased state values. */
+export type CompoundStateUpperType = Uppercase<CompoundStateType>;
+
 /** @deprecated Use Resource.CompoundState instead */
 export enum Status {
   unavailable = "unavailable",
@@ -78,12 +88,18 @@ export interface Row {
   type: string;
   agent: string;
   value: string;
-  numberOfDependencies: ParsedNumber;
-  deployState: Status;
+  status: {
+    isDeploying: boolean;
+    isOrphan: boolean;
+    lastHandlerRunAt?: string;
+  } & CompoundStateUpper;
+  requiresLength: number;
   id: string;
 }
 
-export type RowFromVersion = Omit<Row, "deployState">;
+export type RowFromVersion = Omit<Row, "status" | "requiresLength"> & {
+  numberOfDependencies: ParsedNumber;
+};
 
 interface BaseDetails {
   resource_id: string;
@@ -113,15 +129,6 @@ export interface RawDetails extends ReleasedDetails {
 export interface VersionedDetails extends BaseDetails {
   version: ParsedNumber;
   resource_version_id: string;
-}
-
-export interface DeploySummary {
-  total: ParsedNumber;
-  by_state: Record<string, ParsedNumber>;
-}
-
-export interface Metadata extends Pagination.Metadata {
-  deploy_summary: DeploySummary;
 }
 
 export const TRANSIENT_STATES = ["available", "deploying", "processing_events"];
@@ -156,8 +163,24 @@ export type SortKey = "agent" | "status" | "resource_type" | "resource_id_value"
 export type FilterFromVersion = Omit<Filter, "status">;
 export type SortKeyFromVersion = Exclude<SortKey, "status">;
 
+export interface IdDetails {
+  resource_type: string;
+  agent: string;
+  attribute: string;
+  resource_id_value: string;
+}
+
+/** Resource data structure used for desired state page */
+export interface FromVersionResource {
+  resource_id: string;
+  requires: string[];
+  requiresLength?: number;
+  id_details: IdDetails;
+  resource_version_id: string;
+}
+
 export interface ResponseFromVersion {
-  data: FromVersion[];
+  data: FromVersionResource[];
   links: Pagination.Links;
   metadata: Pagination.Metadata;
 }

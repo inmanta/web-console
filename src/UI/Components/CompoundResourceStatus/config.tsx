@@ -43,12 +43,31 @@ export const statusPriority: Record<Resource.CompoundStateType, number> = {
 export const iconStyle = {
   width: t_global_icon_size_font_xl.value,
   height: t_global_icon_size_font_xl.value,
-  color: "var(--pf-t--color--gray--50)",
 };
 
+/** We normalize the state toLowerCase since the resourceSummary has lowerCase
+ * and the resources themselves return upperCase states.
+ */
+const resolveColor = (
+  state?: Resource.CompoundStateType | Resource.CompoundStateUpperType,
+  overrideColor?: string
+): string | undefined => overrideColor ?? (state ? colorConfig[state.toLowerCase()] : undefined);
+
 /** Icons for every compound state. */
-export const statusGroupIcons: Record<"blocked" | "compliance" | "lastHandlerRun", ReactNode> = {
-  blocked: <TrafficLightIcon style={iconStyle} />,
-  compliance: <ShieldAltIcon style={iconStyle} />,
-  lastHandlerRun: <CubeIcon style={iconStyle} />,
+export const statusGroupIcons: Record<
+  keyof Resource.CompoundState,
+  (options?: {
+    state?: Resource.CompoundStateType | Resource.CompoundStateUpperType;
+    overrideColor?: string;
+  }) => ReactNode
+> = {
+  blocked: ({ state, overrideColor } = {}) => (
+    <TrafficLightIcon style={{ ...iconStyle, color: resolveColor(state, overrideColor) }} />
+  ),
+  compliance: ({ state, overrideColor } = {}) => (
+    <ShieldAltIcon style={{ ...iconStyle, color: resolveColor(state, overrideColor) }} />
+  ),
+  lastHandlerRun: ({ state, overrideColor } = {}) => (
+    <CubeIcon style={{ ...iconStyle, color: resolveColor(state, overrideColor) }} />
+  ),
 };

@@ -1,5 +1,6 @@
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { Resource } from "@/Core";
+import { STATE_FIELD_MAP } from "@/Data/Queries";
 import { words } from "@/UI";
 import { LegendBar } from "../LegendBar";
 import { colorConfig, statusGroupIcons, statusPriority } from "./config";
@@ -13,17 +14,16 @@ const isCompoundStatusEntry = (
 };
 
 export interface CompoundResourceProps {
-  compoundState: Resource.CompoundState;
-  totalCount: number;
+  resourceSummary: Resource.ResourceSummary;
   updateFilter: (updater: (filter: Resource.Filter) => Resource.Filter) => void;
 }
 
 /**
- * Displays a color-coded legend bar for each resource status category.
+ * Displays a color-coded legend bar for each resource compound state.
  * Clicking a segment filters resources by that status. Shows a gray bar when empty.
  *
  * @props {CompoundResourceProps} props - The props of the component.
- *  @prop {Resource.CompoundState} compoundState - Status counts grouped by status category.
+ *  @prop {Resource.CompoundState} compoundState - Status counts grouped by state.
  *  @prop {number} totalCount - Total resource count; triggers empty state when zero.
  *  @prop {Function} updateFilter - Updates the active resource filter.
  *
@@ -31,12 +31,26 @@ export interface CompoundResourceProps {
  */
 
 export const CompoundResourceStatus = ({
-  compoundState,
-  totalCount,
+  resourceSummary: { totalCount, blocked, compliance, lastHandlerRun },
   updateFilter,
 }: CompoundResourceProps) => {
+  const compoundState: Resource.CompoundState = { blocked, compliance, lastHandlerRun };
+
   const onClick = (id: Resource.CompoundStateType) => {
-    return updateFilter((filter) => ({ ...filter, status: [id] }));
+    // This makes sure we can only filter 1 stateType for every compound state
+    // It also filters out the stateType whenever u click on it again
+    return updateFilter((filter) => {
+      const group = STATE_FIELD_MAP[id];
+      const isActive = filter.status?.includes(id);
+      const withoutGroup = (filter.status ?? []).filter(
+        (s) => STATE_FIELD_MAP[s as Resource.CompoundStateType] !== group
+      );
+
+      return {
+        ...filter,
+        status: isActive ? withoutGroup : [...withoutGroup, id],
+      };
+    });
   };
 
   /** Converts a status record into an array of items consumable by LegendBar. */
@@ -62,6 +76,7 @@ export const CompoundResourceStatus = ({
         value,
         backgroundColor: colorConfig[status],
         label: status,
+        height: "20px",
         onClick,
       }));
     return items;
@@ -71,7 +86,9 @@ export const CompoundResourceStatus = ({
     <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }} flex={{ default: "flex_1" }}>
       {Object.entries(compoundState).map(([key, record]) => (
         <Flex key={key} flex={{ default: "flex_1" }} alignItems={{ default: "alignItemsCenter" }}>
-          <FlexItem>{statusGroupIcons[key]}</FlexItem>
+          <FlexItem style={{ display: "inline-flex" }}>
+            {statusGroupIcons[key]({ overrideColor: "var(--pf-t--color--gray--50)" })}
+          </FlexItem>
           <FlexItem flex={{ default: "flex_1" }}>
             <LegendBar
               data-testid={`legend-bar-${key}`}
