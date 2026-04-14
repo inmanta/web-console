@@ -1,0 +1,3 @@
+description: Add npmrc file to handle authentication for jointjs package registry.
+change-type: patch
+destination-branches: [master, iso9]
