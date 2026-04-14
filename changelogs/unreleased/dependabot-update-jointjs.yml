@@ -1,0 +1,3 @@
+description: Update yarnrc to also work for dependabot.
+change-type: patch
+destination-branches: [master, iso9]
