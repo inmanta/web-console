@@ -1,1 +1,1 @@
-export * from "./ConnectedFilterWidget";
+export * from "./DiscoveredResourcesFilterWidget";

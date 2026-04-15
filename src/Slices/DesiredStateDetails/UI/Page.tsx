@@ -9,7 +9,13 @@ import {
 import { Resource } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetVersionResources } from "@/Data/Queries";
-import { EmptyView, ErrorView, LoadingView, PaginationWidget, countActiveFilters } from "@/UI/Components";
+import {
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  PaginationWidget,
+  countActiveFilters,
+} from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Controls, DesiredStateDetailsFilterWidget } from "./Controls";
@@ -89,7 +95,9 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
             isInline
             style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
           >
-            <DrawerContent panelContent={<DesiredStateDetailsFilterWidget onClose={onCloseFilterWidget} />}>
+            <DrawerContent
+              panelContent={<DesiredStateDetailsFilterWidget onClose={onCloseFilterWidget} />}
+            >
               <DrawerContentBody
                 style={{
                   display: "flex",

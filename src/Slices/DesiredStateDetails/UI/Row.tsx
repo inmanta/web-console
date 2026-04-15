@@ -17,9 +17,15 @@ export const Row: React.FC<Props> = ({ row, version }) => {
   return (
     <Tbody>
       <Tr aria-label="Resource Table Row">
-        <Td dataLabel={words("resources.column.type")}>{row.type}</Td>
-        <Td dataLabel={words("resources.column.agent")}>{row.agent}</Td>
-        <Td dataLabel={words("resources.column.value")}>{row.value}</Td>
+        <Td modifier="truncate" dataLabel={words("resources.column.type")}>
+          {row.type}
+        </Td>
+        <Td modifier="truncate" dataLabel={words("resources.column.agent")}>
+          {row.agent}
+        </Td>
+        <Td modifier="truncate" dataLabel={words("resources.column.value")}>
+          {row.value}
+        </Td>
         <Td dataLabel={words("resources.column.requires")}>
           {row.numberOfDependencies as React.ReactNode}
         </Td>

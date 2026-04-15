@@ -5,10 +5,18 @@ import {
   DrawerContent,
   DrawerContentBody,
   PageSection,
+  Stack,
+  StackItem,
 } from "@patternfly/react-core";
 import { usePaginatedTable } from "@/Data";
 import { Filter, SortKey, useGetDiscoveredResources } from "@/Data/Queries";
-import { EmptyView, PaginationWidget, LoadingView, ErrorView, countActiveFilters } from "@/UI/Components";
+import {
+  EmptyView,
+  PaginationWidget,
+  LoadingView,
+  ErrorView,
+  countActiveFilters,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { DiscoveredResourcesFilterWidget } from "./Components";
@@ -94,7 +102,9 @@ export const Page: React.FC = () => {
             isInline
             style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
           >
-            <DrawerContent panelContent={<DiscoveredResourcesFilterWidget onClose={onCloseFilterWidget} />}>
+            <DrawerContent
+              panelContent={<DiscoveredResourcesFilterWidget onClose={onCloseFilterWidget} />}
+            >
               <DrawerContentBody
                 style={{
                   display: "flex",
@@ -113,13 +123,17 @@ export const Page: React.FC = () => {
                     aria-label="DiscoveredResourcesView-Empty"
                   />
                 ) : (
-                  <DiscoveredResourcesTable
-                    rows={data.data}
-                    aria-label="DiscoveredResourcesView-Success"
-                    tablePresenter={new DiscoveredResourcesTablePresenter()}
-                    sort={sort}
-                    setSort={setSort}
-                  />
+                  <Stack style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+                    <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                      <DiscoveredResourcesTable
+                        rows={data.data}
+                        aria-label="DiscoveredResourcesView-Success"
+                        tablePresenter={new DiscoveredResourcesTablePresenter()}
+                        sort={sort}
+                        setSort={setSort}
+                      />
+                    </StackItem>
+                  </Stack>
                 )}
               </DrawerContentBody>
             </DrawerContent>

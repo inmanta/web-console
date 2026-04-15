@@ -1,10 +1,10 @@
 import React, { memo } from "react";
-import { Resource } from "@/Core";
 import { useUrlStateWithFilter } from "@/Data";
+import { Filter } from "@/Data/Queries";
 import { FilterField, FilterWidgetComponent, GenericFilter } from "@/UI/Components";
 import { words } from "@/UI/words";
 
-interface DesiredStateDetailsFilterWidgetProps {
+interface DiscoveredResourcesFilterWidgetProps {
   onClose: () => void;
 }
 
@@ -27,22 +27,22 @@ const FIELDS: FilterField[] = [
 ];
 
 /**
- * The DesiredStateDetailsFilterWidget component.
+ * The DiscoveredResourcesFilterWidget component.
  *
- * A memoized wrapper around FilterWidgetComponent that owns the desired state details
+ * A memoized wrapper around FilterWidgetComponent that owns the discovered resources
  * filter state via URL state management. By managing the filter state internally,
  * this component avoids re-rendering when the parent page re-renders due to other
  * state changes.
  *
- * @Props {DesiredStateDetailsFilterWidgetProps} - Component props.
+ * @Props {DiscoveredResourcesFilterWidgetProps} - Component props.
  *  @prop {() => void} onClose - Callback executed when the filter drawer should be closed.
  *
  * @returns {React.ReactElement} The rendered filter widget.
  */
-export const DesiredStateDetailsFilterWidget: React.FC<DesiredStateDetailsFilterWidgetProps> = memo(
+export const DiscoveredResourcesFilterWidget: React.FC<DiscoveredResourcesFilterWidgetProps> = memo(
   ({ onClose }) => {
-    const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterFromVersion>({
-      route: "DesiredStateDetails",
+    const [filter, setFilter] = useUrlStateWithFilter<Filter>({
+      route: "DiscoveredResources",
     });
 
     return (
@@ -50,7 +50,7 @@ export const DesiredStateDetailsFilterWidget: React.FC<DesiredStateDetailsFilter
         onClose={onClose}
         fields={FIELDS}
         filter={filter as GenericFilter}
-        setFilter={(updated) => setFilter(updated as Resource.FilterFromVersion)}
+        setFilter={(updated) => setFilter(updated as Filter)}
         sectionTitle={words("resources.filters.resource.sectionTitle")}
       />
     );

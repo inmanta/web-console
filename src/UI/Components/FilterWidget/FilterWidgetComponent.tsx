@@ -21,107 +21,78 @@ import {
 } from "@/Slices/Resource/UI/ResourcesPage/Components/FilterWidget";
 import { words } from "@/UI/words";
 
-export interface TypeAgentValueFilter {
-  type?: string[];
-  agent?: string[];
-  value?: string[];
+export interface FilterField {
+  label: string;
+  placeholder: string;
+  filterKey: string;
 }
+
+export type GenericFilter = Record<string, string[] | undefined>;
 
 interface FilterWidgetComponentProps {
   onClose: () => void;
-  filter: TypeAgentValueFilter;
-  setFilter: (filter: TypeAgentValueFilter) => void;
+  fields: FilterField[];
+  filter: GenericFilter;
+  setFilter: (filter: GenericFilter) => void;
+  sectionTitle: string;
 }
 
 /**
  * The FilterWidgetComponent component.
  *
- * Shared drawer panel content displaying type, agent and value filters,
+ * Shared drawer panel content displaying configurable string-array filters,
  * used on pages that have no status filter (no tabs needed).
  *
  * @Props {FilterWidgetComponentProps} - Component props.
  *  @prop {() => void} onClose - Callback executed when the filter drawer should be closed.
- *  @prop {TypeAgentValueFilter} filter - Current filter state.
- *  @prop {(filter: TypeAgentValueFilter) => void} setFilter - Setter to persist filter changes upstream.
+ *  @prop {FilterField[]} fields - Configuration for each filter field (label, placeholder, filterKey).
+ *  @prop {GenericFilter} filter - Current filter state keyed by filterKey.
+ *  @prop {(filter: GenericFilter) => void} setFilter - Setter to persist filter changes upstream.
+ *  @prop {string} sectionTitle - Title displayed above the input fields section.
  *
  * @returns {React.ReactElement} The rendered filter widget.
  */
 export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
   onClose,
+  fields,
   filter,
   setFilter,
+  sectionTitle,
 }) => {
-  const handleAddType = (type: string) => {
+  const handleAdd = (key: string, value: string) => {
+    const current = filter[key];
     setFilter({
       ...filter,
-      type: filter.type ? [...filter.type, type] : [type],
+      [key]: current ? [...current, value] : [value],
     });
   };
 
-  const handleAddAgent = (agent: string) => {
+  const handleRemoveChip = (key: string, id: string) => {
     setFilter({
       ...filter,
-      agent: filter.agent ? [...filter.agent, agent] : [agent],
+      [key]: filter[key]?.filter((v) => v !== id),
     });
   };
 
-  const handleAddValue = (value: string) => {
+  const handleClearGroup = (key: string) => {
     setFilter({
       ...filter,
-      value: filter.value ? [...filter.value, value] : [value],
-    });
-  };
-
-  const removeTypeChip = (id: string) => {
-    setFilter({
-      ...filter,
-      type: filter.type?.filter((v) => v !== id),
-    });
-  };
-
-  const removeAgentChip = (id: string) => {
-    setFilter({
-      ...filter,
-      agent: filter.agent?.filter((v) => v !== id),
-    });
-  };
-
-  const removeValueChip = (id: string) => {
-    setFilter({
-      ...filter,
-      value: filter.value?.filter((v) => v !== id),
-    });
-  };
-
-  const clearTypeFilters = () => {
-    setFilter({
-      ...filter,
-      type: undefined,
-    });
-  };
-
-  const clearAgentFilters = () => {
-    setFilter({
-      ...filter,
-      agent: undefined,
-    });
-  };
-
-  const clearValueFilters = () => {
-    setFilter({
-      ...filter,
-      value: undefined,
+      [key]: undefined,
     });
   };
 
   const clearAllFilters = () => {
-    setFilter({ ...filter, type: undefined, agent: undefined, value: undefined });
+    const cleared: GenericFilter = { ...filter };
+    fields.forEach(({ filterKey }) => {
+      cleared[filterKey] = undefined;
+    });
+    setFilter(cleared);
   };
 
-  const hasActiveFilters =
-    (filter.type && filter.type.length > 0) ||
-    (filter.agent && filter.agent.length > 0) ||
-    (filter.value && filter.value.length > 0);
+  const hasActiveFilters = fields.some(({ filterKey }) => {
+    const values = filter[filterKey];
+    return values && values.length > 0;
+  });
 
   return (
     <DrawerPanelContent isResizable minSize="300px">
@@ -139,30 +110,18 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
             <Stack hasGutter style={{ padding: "1rem 0" }}>
               <StackItem>
                 <Title headingLevel="h3" size="md">
-                  {words("resources.filters.resource.sectionTitle")}
+                  {sectionTitle}
                 </Title>
               </StackItem>
-              <StackItem>
-                <AddableTextInput
-                  label={words("resources.filters.resource.type.label")}
-                  placeholder={words("resources.filters.resource.type.placeholder")}
-                  onAdd={handleAddType}
-                />
-              </StackItem>
-              <StackItem>
-                <AddableTextInput
-                  label={words("resources.filters.resource.agent.label")}
-                  placeholder={words("resources.filters.resource.agent.placeholder")}
-                  onAdd={handleAddAgent}
-                />
-              </StackItem>
-              <StackItem>
-                <AddableTextInput
-                  label={words("resources.filters.resource.value.label")}
-                  placeholder={words("resources.filters.resource.value.placeholder")}
-                  onAdd={handleAddValue}
-                />
-              </StackItem>
+              {fields.map(({ label, placeholder, filterKey }) => (
+                <StackItem key={filterKey}>
+                  <AddableTextInput
+                    label={label}
+                    placeholder={placeholder}
+                    onAdd={(value) => handleAdd(filterKey, value)}
+                  />
+                </StackItem>
+              ))}
             </Stack>
           </StackItem>
           <Divider />
@@ -186,30 +145,16 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
             </Flex>
             {hasActiveFilters ? (
               <Stack hasGutter style={{ padding: "1rem 0" }}>
-                <StackItem>
-                  <ActiveFilterGroup
-                    title={words("resources.filters.resource.type.label")}
-                    values={filter.type}
-                    onRemove={removeTypeChip}
-                    onRemoveGroup={clearTypeFilters}
-                  />
-                </StackItem>
-                <StackItem>
-                  <ActiveFilterGroup
-                    title={words("resources.filters.resource.agent.label")}
-                    values={filter.agent}
-                    onRemove={removeAgentChip}
-                    onRemoveGroup={clearAgentFilters}
-                  />
-                </StackItem>
-                <StackItem>
-                  <ActiveFilterGroup
-                    title={words("resources.filters.resource.value.label")}
-                    values={filter.value}
-                    onRemove={removeValueChip}
-                    onRemoveGroup={clearValueFilters}
-                  />
-                </StackItem>
+                {fields.map(({ label, filterKey }) => (
+                  <StackItem key={filterKey}>
+                    <ActiveFilterGroup
+                      title={label}
+                      values={filter[filterKey]}
+                      onRemove={(id) => handleRemoveChip(filterKey, id)}
+                      onRemoveGroup={() => handleClearGroup(filterKey)}
+                    />
+                  </StackItem>
+                ))}
               </Stack>
             ) : (
               <EmptyState variant="xs">

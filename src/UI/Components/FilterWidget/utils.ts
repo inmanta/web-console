@@ -4,7 +4,7 @@
  * Counts the number of active filter values in a filter object.
  * Array values contribute their length; any other truthy value counts as one.
  *
- * @param {Record<string, unknown>} filter - The filter object to count active values in.
+ * @param {T} filter - The filter object to count active values in.
  * @returns {number} The total number of active filter values.
  */
 export const countActiveFilters = <T extends object>(filter: T): number => {

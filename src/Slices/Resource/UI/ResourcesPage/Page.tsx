@@ -13,7 +13,13 @@ import {
 import { Resource } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetResources } from "@/Data/Queries";
-import { EmptyView, PaginationWidget, ErrorView, LoadingView, countActiveFilters } from "@/UI/Components";
+import {
+  EmptyView,
+  PaginationWidget,
+  ErrorView,
+  LoadingView,
+  countActiveFilters,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
 import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
