@@ -12,7 +12,7 @@ import { useGetVersionResources } from "@/Data/Queries";
 import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import { Controls, ConnectedFilterWidget } from "./Controls";
+import { Controls, DesiredStateDetailsFilterWidget } from "./Controls";
 import { VersionResourceTable } from "./VersionResourceTable";
 import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 
@@ -98,7 +98,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
             isInline
             style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
           >
-            <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
+            <DrawerContent panelContent={<DesiredStateDetailsFilterWidget onClose={onCloseFilterWidget} />}>
               <DrawerContentBody
                 style={{
                   display: "flex",

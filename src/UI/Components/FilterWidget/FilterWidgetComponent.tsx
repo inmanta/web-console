@@ -15,56 +15,108 @@ import {
   StackItem,
   Title,
 } from "@patternfly/react-core";
-import { Filter } from "@/Data/Queries";
 import {
   AddableTextInput,
   ActiveFilterGroup,
 } from "@/Slices/Resource/UI/ResourcesPage/Components/FilterWidget";
 import { words } from "@/UI/words";
 
-interface FilterWidgetComponentProps {
+export interface TypeAgentValueFilter {
+  type?: string[];
+  agent?: string[];
+  value?: string[];
+}
+
+interface FilterWidgetComponentProps<T extends TypeAgentValueFilter> {
   onClose: () => void;
-  filter: Filter;
-  setFilter: (filter: Filter) => void;
+  filter: T;
+  setFilter: (filter: T) => void;
 }
 
 /**
  * The FilterWidgetComponent component.
  *
- * Drawer panel content displaying the discovered resources filter form
- * using the same layout pattern as the Resources page filter widget.
+ * Shared drawer panel content displaying type, agent and value filters,
+ * used on pages that have no status filter (no tabs needed).
  *
  * @Props {FilterWidgetComponentProps} - Component props.
  *  @prop {() => void} onClose - Callback executed when the filter drawer should be closed.
- *  @prop {Filter} filter - Current filter state.
- *  @prop {(filter: Filter) => void} setFilter - Setter to persist filter changes upstream.
+ *  @prop {T} filter - Current filter state.
+ *  @prop {(filter: T) => void} setFilter - Setter to persist filter changes upstream.
  *
  * @returns {React.ReactElement} The rendered filter widget.
  */
-export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
+export const FilterWidgetComponent = <T extends TypeAgentValueFilter>({
   onClose,
   filter,
   setFilter,
-}) => {
-  const handleAddType = (type: string) =>
-    setFilter({ ...filter, type: filter.type ? [...filter.type, type] : [type] });
+}: FilterWidgetComponentProps<T>): React.ReactElement => {
+  const handleAddType = (type: string) => {
+    setFilter({
+      ...filter,
+      type: filter.type ? [...filter.type, type] : [type],
+    } as T);
+  };
 
-  const handleAddAgent = (agent: string) =>
-    setFilter({ ...filter, agent: filter.agent ? [...filter.agent, agent] : [agent] });
+  const handleAddAgent = (agent: string) => {
+    setFilter({
+      ...filter,
+      agent: filter.agent ? [...filter.agent, agent] : [agent],
+    } as T);
+  };
 
-  const handleAddValue = (value: string) =>
-    setFilter({ ...filter, value: filter.value ? [...filter.value, value] : [value] });
+  const handleAddValue = (value: string) => {
+    setFilter({
+      ...filter,
+      value: filter.value ? [...filter.value, value] : [value],
+    } as T);
+  };
 
-  const removeTypeChip = (id: string) =>
-    setFilter({ ...filter, type: filter.type?.filter((v) => v !== id) });
+  const removeTypeChip = (id: string) => {
+    setFilter({
+      ...filter,
+      type: filter.type?.filter((v) => v !== id),
+    } as T);
+  };
 
-  const removeAgentChip = (id: string) =>
-    setFilter({ ...filter, agent: filter.agent?.filter((v) => v !== id) });
+  const removeAgentChip = (id: string) => {
+    setFilter({
+      ...filter,
+      agent: filter.agent?.filter((v) => v !== id),
+    } as T);
+  };
 
-  const removeValueChip = (id: string) =>
-    setFilter({ ...filter, value: filter.value?.filter((v) => v !== id) });
+  const removeValueChip = (id: string) => {
+    setFilter({
+      ...filter,
+      value: filter.value?.filter((v) => v !== id),
+    } as T);
+  };
 
-  const clearAllFilters = () => setFilter({});
+  const clearTypeFilters = () => {
+    setFilter({
+      ...filter,
+      type: undefined,
+    } as T);
+  };
+
+  const clearAgentFilters = () => {
+    setFilter({
+      ...filter,
+      agent: undefined,
+    } as T);
+  };
+
+  const clearValueFilters = () => {
+    setFilter({
+      ...filter,
+      value: undefined,
+    } as T);
+  };
+
+  const clearAllFilters = () => {
+    setFilter({ ...filter, type: undefined, agent: undefined, value: undefined } as T);
+  };
 
   const hasActiveFilters =
     (filter.type && filter.type.length > 0) ||
@@ -139,7 +191,7 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
                     title={words("resources.filters.resource.type.label")}
                     values={filter.type}
                     onRemove={removeTypeChip}
-                    onRemoveGroup={() => setFilter({ ...filter, type: undefined })}
+                    onRemoveGroup={clearTypeFilters}
                   />
                 </StackItem>
                 <StackItem>
@@ -147,7 +199,7 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
                     title={words("resources.filters.resource.agent.label")}
                     values={filter.agent}
                     onRemove={removeAgentChip}
-                    onRemoveGroup={() => setFilter({ ...filter, agent: undefined })}
+                    onRemoveGroup={clearAgentFilters}
                   />
                 </StackItem>
                 <StackItem>
@@ -155,7 +207,7 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
                     title={words("resources.filters.resource.value.label")}
                     values={filter.value}
                     onRemove={removeValueChip}
-                    onRemoveGroup={() => setFilter({ ...filter, value: undefined })}
+                    onRemoveGroup={clearValueFilters}
                   />
                 </StackItem>
               </Stack>

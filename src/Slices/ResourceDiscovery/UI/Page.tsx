@@ -11,7 +11,7 @@ import { Filter, SortKey, useGetDiscoveredResources } from "@/Data/Queries";
 import { EmptyView, PaginationWidget, LoadingView, ErrorView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { ConnectedFilterWidget } from "./Components";
+import { DiscoveredResourcesFilterWidget } from "./Components";
 import { DiscoveredResourcesTable } from "./DiscoveredResourcesTable";
 import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
 import { TableControls } from "./TableControls";
@@ -103,7 +103,7 @@ export const Page: React.FC = () => {
             isInline
             style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
           >
-            <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
+            <DrawerContent panelContent={<DiscoveredResourcesFilterWidget onClose={onCloseFilterWidget} />}>
               <DrawerContentBody
                 style={{
                   display: "flex",
