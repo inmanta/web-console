@@ -192,14 +192,30 @@ export const SingleTextSelect: React.FC<Props> = ({
     switch (event.key) {
       // Select the first available option
       case "Enter":
-        if (isOpen && focusedItem.value !== "no results") {
+        if (!isOpen) break;
+
+        const hasExplicitFocus = focusedItemIndex !== null && focusedItem.value !== "no results";
+        const exactMatch = options.find(
+          (option) => option.children?.toLocaleString().toLowerCase() === filterValue.toLowerCase()
+        );
+
+        if (hasExplicitFocus && focusedItem.value === "create") {
+          onCreate(inputValue);
+          setSelected(inputValue);
+          setFilterValue(inputValue);
+        } else if (hasExplicitFocus) {
           setInputValue(String(focusedItem.children));
           setFilterValue("");
-          setSelected(String(focusedItem.children));
-        }
-
-        if (checkIfOptionMatchInput(options, filterValue)) {
-          setSelected(String(filterValue));
+          setSelected(String(focusedItem.value));
+        } else if (exactMatch) {
+          setInputValue(String(exactMatch.children));
+          setFilterValue("");
+          setSelected(String(exactMatch.value));
+        } else if (hasCreation && filterValue.trim()) {
+          onCreate(filterValue);
+          setSelected(filterValue);
+          setFilterValue(filterValue);
+          setInputValue(filterValue);
         }
 
         setIsOpen((prevIsOpen) => !prevIsOpen);
@@ -297,5 +313,7 @@ export const SingleTextSelect: React.FC<Props> = ({
 };
 
 export const checkIfOptionMatchInput = (options: SelectOptionProps[], input: string) => {
-  return options.some((option) => option.children?.toLocaleString() === input.toLocaleLowerCase());
+  return options.some(
+    (option) => option.children?.toLocaleString().toLowerCase() === input.toLowerCase()
+  );
 };

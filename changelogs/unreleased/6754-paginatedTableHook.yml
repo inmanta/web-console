@@ -1,0 +1,4 @@
+description: Made a refactor where the same hook setup concerning URL state on pages are extracted to a custom hook.
+issue-nr: 6754
+change-type: patch
+destination-branches: [master, iso9]

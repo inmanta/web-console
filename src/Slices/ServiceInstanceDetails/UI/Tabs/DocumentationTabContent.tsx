@@ -58,7 +58,6 @@ export const DocumentationTabContent: React.FC<Props> = ({
   const { triggerModal } = useContext(ModalContext);
   const [expanded, setExpanded] = useState(0);
   const [, setInterfaceBlocked] = useState(false);
-  const [, setErrorMessage] = useState("");
   const navigateTo = useNavigateTo();
 
   const isLatest = selectedVersion === String(instance.version);
@@ -94,7 +93,6 @@ export const DocumentationTabContent: React.FC<Props> = ({
             targetState={targetState}
             instance_display_identity={instanceDisplayIdentity}
             version={instance.version}
-            setErrorMessage={setErrorMessage}
             setInterfaceBlocked={setInterfaceBlocked}
           />
         ),
@@ -106,7 +104,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
 
       setInterfaceBlocked(true);
     },
-    [instance, triggerModal, setErrorMessage, setInterfaceBlocked]
+    [instance, triggerModal, setInterfaceBlocked]
   );
 
   // Check expert mode for the MarkdownPreviewer button
@@ -200,6 +198,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
                 attributeValue={section.value}
                 web_title={section.title}
                 onSetStateClick={handleStateTransferClick}
+                isExpanded={expanded === index}
               />
             </AccordionContent>
           </AccordionItem>

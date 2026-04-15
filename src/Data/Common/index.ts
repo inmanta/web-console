@@ -7,3 +7,4 @@ export * from "./JsonFormatter";
 export * from "./UrlState";
 export * from "./useExpansion";
 export * from "./XmlFormatter";
+export * from "./usePaginatedTable";

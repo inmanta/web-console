@@ -34,6 +34,12 @@ describe("Scenario 6 : Resources", () => {
 
       cy.get('[aria-label="Select-environment-test"]').click();
 
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get("body").then(($body) => {
+        const initialRowCount = $body.find('[aria-label="Resource Table Row"]').length;
+        cy.wrap(initialRowCount).as("initialRowCount");
+      });
+
       // Go to Service Catalog
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
@@ -64,7 +70,12 @@ describe("Scenario 6 : Resources", () => {
       // Expect two rows to be added to the table
       // lsm::LifecycleTransfer
       // frontend_model::TestResource
-      cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should("have.length", 2);
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should(
+          "have.length",
+          initialRowCount + 2
+        );
+      });
       cy.get('[aria-label="Resource Table Row"]')
         .eq(0)
         .should("contain", "frontend_model::TestResource");
@@ -182,7 +193,7 @@ describe("Scenario 6 : Resources", () => {
       // Go to logs tab
       cy.get("button").contains("Logs").click();
 
-      // Expect it to have : 6 log messages
+      // Expect it to have : 5 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
         5
@@ -211,24 +222,43 @@ describe("Scenario 6 : Resources", () => {
       // Go to logs tab
       cy.get("button").contains("Logs").click();
 
+      // Get initial amount of log messages
+      cy.get('[aria-label="ResourceLogRow"]').then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
+
       // Filter on "INFO" for Minimal Log Level
       cy.get('[aria-label="MinimalLogLevelFilterInput"]').click();
       cy.get('[role="option"]').contains("INFO").click();
 
-      // Expect the amount of rows to be max 4
-      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.most", 4);
+      // Compare filtered count with initial count
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get('[aria-label="ResourceLogRow"]').should(($rows) => {
+          expect($rows.length).to.be.lessThan(initialRowCount);
+        });
+      });
 
       // Remove INFO filter
       cy.get('[aria-label="Close INFO"]').click();
 
-      // Expect amount of rows to be bigger than before filtering.
-      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.least", 5);
+      // Expect amount of rows to return to the original count
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get('[aria-label="ResourceLogRow"]').should(($rows) => {
+          expect($rows.length).to.equal(initialRowCount);
+        });
+      });
     });
 
     it("6.4 Resources with multiple dependencies", () => {
       // Select Test environment
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
+
+      // Go to Resources page and get initial count of rows in the table
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
 
       // Go to Service Catalog page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
@@ -259,8 +289,15 @@ describe("Scenario 6 : Resources", () => {
       // Go to Resource page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
-      // Expect to find 7 rows now in the resource table.
-      cy.get('[aria-label="Resource Table Row"]', { timeout: 60000 }).should("have.length", 7);
+      // Expect to find 5 rows added to the table: the resource waiting-entity with 3 dependencies a,b,c
+      // and the lifecycle transfer for this resource
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get('[aria-label="Resource Table Row"]', { timeout: 60000 }).should(
+          "have.length",
+          initialRowCount + 5
+        );
+      });
+
       // Expect to find a resource with value: a, b, c
       cy.get('[aria-label="Resource Table Row"]').eq(0).should("contain", "a");
       cy.get('[aria-label="Resource Table Row"]').eq(1).should("contain", "b");
@@ -474,34 +511,35 @@ describe("Scenario 6 : Resources", () => {
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "1 - 20");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
       //Go to next page
-      cy.get('[aria-label="Go to next page"]').first().click();
+      cy.get('[aria-label="Go to next page"]').first().should("not.be.disabled").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
-      cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
-      ).should("have.text", "21 - 40");
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "21 - 40");
 
       //Go to last page
-      cy.get('[aria-label="Go to next page"]').first().click();
+      cy.get('[aria-label="Go to next page"]').first().should("not.be.disabled").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
-      cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
-      ).should("have.text", "41 - 49");
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "41 - 49");
 
       //Go to previous page
-      cy.get('[aria-label="Go to previous page"]').first().click();
+      cy.get('[aria-label="Go to previous page"]').first().should("not.be.disabled").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
-      cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
-      ).should("have.text", "21 - 40");
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "21 - 40");
 
       // Change sorting and expect to be redirected to the first page of the table
       cy.get("button").contains("Type").click();
-      cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
-      ).should("have.text", "1 - 20");
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "1 - 20");
     });
   } else {
     it("6.6 Resources for OSS", () => {
@@ -637,7 +675,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Go to logs tab
       cy.get("button").contains("Logs").click();
-      // Expect it to have : 8 log messages
+      // Expect it to have : 5 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
         5

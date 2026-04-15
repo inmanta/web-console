@@ -64,6 +64,7 @@ const dict = {
   "error.environment.missing": "Environment is missing",
   "error.server.intro": (errorMessage: string) =>
     `The following error occured while communicating with the server: ${errorMessage}`,
+  "error.authentication": (message: string) => `Authentication error: ${message}`,
   "error.authorizationFailed": "Authorization failed, please log in",
   "error.fetch": (error: string) => `There was an error retrieving data: ${error}`,
   "error.image.title": "Invalid image",
@@ -498,6 +499,11 @@ const dict = {
   "dashboard.logout": "Logout",
   "dashboard.documentation.tooltip": "Documentation",
   "dashboard.API.tooltip": "REST API",
+  "dashboard.graphiql.tooltip": "GraphiQL",
+  "graphiql.title": "GraphiQL",
+  "dashboard.apiActions.tooltip": "Developer Tools",
+  "dashboard.apiActions.graphiql": "GraphiQL",
+  "dashboard.apiActions.restApi": "REST API / Swagger",
   "dashboard.setting.tooltip": "Settings",
   "dashboard.status_page.tooltip": "Status page",
   "dashboard.notifications.tooltip": "Show notifications",
@@ -741,7 +747,11 @@ const dict = {
   "status.description":
     "The status of the orchestration server, loaded extensions and active components.",
   "status.supportArchive.action.download": "Download support archive",
+  "status.supportArchive.action.download.error": "Failed to download support archive",
+
   "status.supportArchive.action.downloading": "Fetching support data",
+  "status.supportArchive.action.downloading.error":
+    "Something went wrong with downloading the support archive",
 
   /** Agents */
   "agents.title": "Agents",

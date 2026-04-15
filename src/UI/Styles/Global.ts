@@ -73,7 +73,7 @@ export const GlobalStyles = createGlobalStyle`
 
   .pf-v6-c-code-editor__main,
   .pf-v6-c-code-editor__main .monaco-editor,
-  .monaco-editor .margin {
+  .pf-v6-c-code-editor__main .monaco-editor .margin {
     --vscode-editor-background: var(--pf-t--global--background--color--primary--default) !important;
     background-color: var(--pf-t--global--background--color--primary--default) !important;
   }

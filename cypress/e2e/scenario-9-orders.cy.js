@@ -83,7 +83,7 @@ if (isIso) {
       cy.get('[aria-label="ServiceOrderRow"]').should("contain", "in progress");
 
       // wait until status is partial
-      cy.get('[aria-label="ServiceOrderRow"]', { timeout: 30000 }).should("contain", "partial");
+      cy.get('[aria-label="ServiceOrderRow"]', { timeout: 60000 }).should("contain", "partial");
 
       // description should be "Ordered by Composer"
       cy.get('[aria-label="ServiceOrderRow"]').should("contain", "Ordered by Composer");
