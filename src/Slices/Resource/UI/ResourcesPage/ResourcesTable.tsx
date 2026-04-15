@@ -55,7 +55,7 @@ export const ResourcesTable: React.FC<Props> = ({ rows, sort, setSort, ...props 
 
   return (
     <Table {...props} isStickyHeader>
-      <Thead className="resources-table-head">
+      <Thead>
         <Tr>
           {heads}
           <Th
@@ -65,8 +65,8 @@ export const ResourcesTable: React.FC<Props> = ({ rows, sort, setSort, ...props 
           />
         </Tr>
       </Thead>
-      {rows.map((row, i) => (
-        <ResourceTableRow row={row} key={row.id} isLastRow={i === rows.length - 1} />
+      {rows.map((row) => (
+        <ResourceTableRow row={row} key={row.id} />
       ))}
     </Table>
   );

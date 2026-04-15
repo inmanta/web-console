@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Flex,
   FlexItem,
@@ -11,7 +11,6 @@ import {
   StackItem,
   ToolbarItem,
   Label,
-  PageContext,
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
@@ -36,7 +35,6 @@ import { createRows } from "./ResourcesTablePresenter";
 
 export const Page: React.FC = () => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
-  const { onSidebarToggle, isSidebarOpen } = useContext(PageContext);
   const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
     usePaginatedTable<Resource.FilterWithDefaultHandling, Resource.SortKey>({
       route: "Resources",
@@ -67,9 +65,8 @@ export const Page: React.FC = () => {
   }, [filterWithDefaults]);
 
   const onCloseFilterWidget = useCallback(() => {
-    if (!isSidebarOpen) onSidebarToggle();
     setIsDrawerExpanded(false);
-  }, [isSidebarOpen, onSidebarToggle]);
+  }, []);
 
   const { data, isSuccess, isFetching, isError, refetch, error } = useGetResources({
     pageSize,
@@ -110,7 +107,6 @@ export const Page: React.FC = () => {
               {words("inventory.tabs.resources")}
             </Content>
             <Label icon={<CubesIcon />} variant="outline" color="blue">
-              {/* TODO: ask lucas if this should be metadata total or resourceSummary total */}
               {resourceSummary?.totalCount ?? 0}
             </Label>
           </Flex>
@@ -137,12 +133,7 @@ export const Page: React.FC = () => {
               isDisabled={isFetching}
             />
           }
-          onToggleFilters={() => {
-            const opening = !isDrawerExpanded;
-            if (opening && isSidebarOpen) onSidebarToggle();
-            if (!opening && !isSidebarOpen) onSidebarToggle();
-            setIsDrawerExpanded(opening);
-          }}
+          onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
           isDrawerExpanded={isDrawerExpanded}
           activeFilterCount={activeFilterCount}
           noResourcesFound={resources.length === 0}

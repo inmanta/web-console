@@ -48,15 +48,10 @@ export const ResourceTableControls: React.FC<Props> = ({
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
         <ToolbarItem>
           <Button
+            {...(noResourcesFound && { isDanger: true })}
             onClick={onToggleFilters}
             variant="link"
-            icon={
-              <FilterIcon
-                {...(noResourcesFound && {
-                  style: { color: "var(--pf-t--color--red--60)" },
-                })}
-              />
-            }
+            icon={<FilterIcon />}
             iconPosition="end"
             aria-pressed={isDrawerExpanded}
           >
@@ -73,13 +68,7 @@ export const ResourceTableControls: React.FC<Props> = ({
                   {activeFilterCount}
                 </Badge>
               </FlexItem>
-              <FlexItem
-                {...(noResourcesFound && {
-                  style: { color: "var(--pf-t--color--red--60)" },
-                })}
-              >
-                {words("resources.filters")}
-              </FlexItem>
+              <FlexItem>{words("resources.filters")}</FlexItem>
             </Flex>
           </Button>
         </ToolbarItem>

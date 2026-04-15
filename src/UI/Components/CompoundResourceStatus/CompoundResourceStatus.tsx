@@ -1,6 +1,5 @@
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { STATE_FIELD_MAP } from "@/Data/Queries";
 import { words } from "@/UI";
 import { LegendBar } from "../LegendBar";
 import { colorConfig, statusGroupIcons, statusPriority } from "./config";
@@ -9,11 +8,11 @@ import { colorConfig, statusGroupIcons, statusPriority } from "./config";
  * Narrows [string, unknown] to [Resource.CompoundStateType, number]. */
 const isCompoundStatusEntry = (
   entry: [string, unknown]
-): entry is [Resource.CompoundStateType, number] => {
+): entry is [Resource.CompoundStateKey, number] => {
   return entry[0] in colorConfig && typeof entry[1] === "number";
 };
 
-export interface CompoundResourceProps {
+interface CompoundResourceProps {
   resourceSummary: Resource.ResourceSummary;
   updateFilter: (updater: (filter: Resource.Filter) => Resource.Filter) => void;
 }
@@ -23,8 +22,7 @@ export interface CompoundResourceProps {
  * Clicking a segment filters resources by that status. Shows a gray bar when empty.
  *
  * @props {CompoundResourceProps} props - The props of the component.
- *  @prop {Resource.CompoundState} compoundState - Status counts grouped by state.
- *  @prop {number} totalCount - Total resource count; triggers empty state when zero.
+ *  @prop {Resource.resourceSummary} resourceSummary - Status counts grouped by state.
  *  @prop {Function} updateFilter - Updates the active resource filter.
  *
  * @returns {React.FC<CompoundResourceProps>} A legend bar for each compound state.
@@ -34,27 +32,25 @@ export const CompoundResourceStatus = ({
   resourceSummary: { totalCount, blocked, compliance, lastHandlerRun },
   updateFilter,
 }: CompoundResourceProps) => {
-  const compoundState: Resource.CompoundState = { blocked, compliance, lastHandlerRun };
+  const compoundState: Resource.CompoundStateSummary = { blocked, compliance, lastHandlerRun };
 
-  const onClick = (id: Resource.CompoundStateType) => {
-    // This makes sure we can only filter 1 stateType for every compound state
-    // It also filters out the stateType whenever u click on it again
-    return updateFilter((filter) => {
-      const group = STATE_FIELD_MAP[id];
-      const isActive = filter.status?.includes(id);
-      const withoutGroup = (filter.status ?? []).filter(
-        (s) => STATE_FIELD_MAP[s as Resource.CompoundStateType] !== group
-      );
+  const onClick = (state: Resource.CompoundStateKey) => {
+    updateFilter((filter) => {
+      const current = filter.status ?? [];
+
+      if (current.includes(state)) {
+        return filter;
+      }
 
       return {
         ...filter,
-        status: isActive ? withoutGroup : [...withoutGroup, id],
+        status: [...current, state],
       };
     });
   };
 
   /** Converts a status record into an array of items consumable by LegendBar. */
-  const toLegendBarItems = (record: Resource.StateRecord) => {
+  const toLegendBarItems = (record: Partial<Record<Resource.CompoundStateKey, number>>) => {
     if (!totalCount) {
       return [
         {
@@ -87,7 +83,7 @@ export const CompoundResourceStatus = ({
       {Object.entries(compoundState).map(([key, record]) => (
         <Flex key={key} flex={{ default: "flex_1" }} alignItems={{ default: "alignItemsCenter" }}>
           <FlexItem style={{ display: "inline-flex" }}>
-            {statusGroupIcons[key]({ overrideColor: "var(--pf-t--color--gray--50)" })}
+            {statusGroupIcons[key]({ variant: "default" })}
           </FlexItem>
           <FlexItem flex={{ default: "flex_1" }}>
             <LegendBar

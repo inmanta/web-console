@@ -2,46 +2,96 @@ import { Resource, Sort } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common";
 
-/** All compound state enums */
-const COMPOUND_STATE_ENUMS: {
-  [K in keyof Resource.CompoundState]: { [key: string]: Resource.CompoundStateType };
-} = {
-  blocked: Resource.BlockedState,
-  compliance: Resource.ComplianceState,
-  lastHandlerRun: Resource.LastHandlerRunState,
-};
+const STATUS_FIELD_MAP = {
+  failed: { field: "lastHandlerRun", value: "FAILED" },
+  skipped: { field: "lastHandlerRun", value: "SKIPPED" },
+  successful: { field: "lastHandlerRun", value: "SUCCESSFUL" },
+  new: { field: "lastHandlerRun", value: "NEW" },
 
-/** Mapping of CompoundStateType values to their corresponding fields in CompoundState.
- * This is used to determine which field to update when a status filter is toggled.
- */
-export const STATE_FIELD_MAP: Record<Resource.CompoundStateType, keyof Resource.CompoundState> =
-  Object.fromEntries(
-    Object.entries(COMPOUND_STATE_ENUMS).flatMap(([field, enumObj]) =>
-      Object.values(enumObj).map((v) => [v, field])
-    )
-  ) as Record<Resource.CompoundStateType, keyof Resource.CompoundState>;
+  compliant: { field: "compliance", value: "COMPLIANT" },
+  non_compliant: { field: "compliance", value: "NON_COMPLIANT" },
+  has_update: { field: "compliance", value: "HAS_UPDATE" },
+  undefined: { field: "compliance", value: "UNDEFINED" },
+
+  blocked: { field: "blocked", value: "BLOCKED" },
+  not_blocked: { field: "blocked", value: "NOT_BLOCKED" },
+  temporarily_blocked: { field: "blocked", value: "TEMPORARILY_BLOCKED" },
+} satisfies Record<
+  Resource.CompoundStateKey,
+  {
+    field: keyof Resource.CompoundStateSummary;
+    value: Resource.CompoundState;
+  }
+>;
+
+type GraphQLStateFilter = Partial<{
+  isOrphan: boolean;
+  lastHandlerRun: { eq: Resource.LastHandlerRun[] };
+  compliance: { eq: Resource.Compliance[] };
+  blocked: { eq: Resource.Blocked[] };
+}>;
+
+function isCompoundStateKey(value: string): value is Resource.CompoundStateKey {
+  return value in STATUS_FIELD_MAP;
+}
 
 /**
  * Maps a filter.status array to GraphQL ResourceFilter fields.
  * Supports orphaned/!orphaned mapping and compound states.
  * For compound states, it maps status values to their corresponding field with an eq operator.
  */
-export function mapStatusToGraphQLFilter(
-  status: string[] | undefined
-): { isOrphan?: boolean } & Partial<
-  Record<keyof Resource.CompoundState, { eq: Resource.CompoundStateUpperType }>
-> {
-  if (!status || status.length === 0) return {};
+export function mapStatusToGraphQLFilter(status?: string[]): GraphQLStateFilter {
+  if (!status?.length) return {};
 
-  return status.reduce((filter, s) => {
-    if (s === "!orphaned") return { ...filter, isOrphan: false };
-    if (s === "orphaned") return { ...filter, isOrphan: true };
+  const filter: GraphQLStateFilter = {};
 
-    const field = STATE_FIELD_MAP[s];
-    if (field) return { ...filter, [field]: { eq: s.toUpperCase() } };
+  const lastHandlerRun: Resource.LastHandlerRun[] = [];
+  const compliance: Resource.Compliance[] = [];
+  const blocked: Resource.Blocked[] = [];
 
-    return filter;
-  }, {});
+  for (const s of status) {
+    if (s === "orphaned") {
+      filter.isOrphan = true;
+      continue;
+    }
+
+    if (s === "!orphaned") {
+      filter.isOrphan = false;
+      continue;
+    }
+
+    if (!isCompoundStateKey(s)) continue;
+
+    const { field, value } = STATUS_FIELD_MAP[s];
+
+    switch (field) {
+      case "lastHandlerRun":
+        lastHandlerRun.push(value);
+        break;
+
+      case "compliance":
+        compliance.push(value);
+        break;
+
+      case "blocked":
+        blocked.push(value);
+        break;
+    }
+  }
+
+  if (lastHandlerRun.length) {
+    filter.lastHandlerRun = { eq: lastHandlerRun };
+  }
+
+  if (compliance.length) {
+    filter.compliance = { eq: compliance };
+  }
+
+  if (blocked.length) {
+    filter.blocked = { eq: blocked };
+  }
+
+  return filter;
 }
 
 /**

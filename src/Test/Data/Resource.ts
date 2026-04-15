@@ -168,8 +168,10 @@ export const id =
 export const encodedId =
   "kubernetes_calico%3A%3Aresources%3A%3AIPPool%5Bdc-3%2Cidentifier%3D%2Fcluster%2Fdc-3%2Fcalicoctl%2Fkc3-calicoctl%2Fippool%2Fbb1-ip-pool-3%5D";
 
-export const mockCompoundResourceData = {
-  compoundState: {
+type Overrides = Partial<Resource.ResourceSummary>;
+
+export const createMockResourceSummary = (overrides?: Overrides): Resource.ResourceSummary => {
+  return {
     blocked: {
       not_blocked: 2,
       blocked: 1,
@@ -187,6 +189,12 @@ export const mockCompoundResourceData = {
       failed: 1,
       skipped: 1,
     },
-  },
-  totalCount: 5,
+    isDeploying: {
+      true: 0,
+      false: 5,
+    },
+    totalCount: 5,
+
+    ...overrides,
+  };
 };

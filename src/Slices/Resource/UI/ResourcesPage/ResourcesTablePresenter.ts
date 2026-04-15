@@ -1,7 +1,9 @@
-import moment from "moment";
 import { Resource } from "@/Core";
 import { ColumnHead } from "@/UI/Presenters";
 import { words } from "@/UI/words";
+
+// TODO: Check if this presenter will suffice after the implementation of:
+// https://github.com/inmanta/web-console/issues/6809
 
 export const columnHeads: ColumnHead[] = [
   { displayName: words("resources.column.type"), apiName: "resource_type" },
@@ -21,9 +23,7 @@ export function createRows(resources: Resource.FlatResource[]): Resource.Row[] {
       blocked: resource.state?.blocked,
       compliance: resource.state?.compliance,
       lastHandlerRun: resource.state?.lastHandlerRun,
-      lastHandlerRunAt: resource.state?.lastHandlerRunAt
-        ? moment.utc(resource.state.lastHandlerRunAt).format("DD MMMM YYYY, HH:mm")
-        : undefined,
+      lastHandlerRunAt: resource.state?.lastHandlerRunAt,
       isDeploying: resource.state?.isDeploying,
       isOrphan: resource.state?.isOrphan,
     },

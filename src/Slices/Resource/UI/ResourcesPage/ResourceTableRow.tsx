@@ -1,92 +1,105 @@
 import { useRef } from "react";
-import { Content, Flex, FlexItem, Popover, capitalize } from "@patternfly/react-core";
-import { ClockIcon, CubesIcon } from "@patternfly/react-icons";
+import { Content, Flex, FlexItem, Popover, Icon } from "@patternfly/react-core";
+import { ClockIcon, CubesIcon, UnlinkIcon } from "@patternfly/react-icons";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { t_global_icon_size_font_xl } from "@patternfly/react-tokens";
 import styled from "styled-components";
 import { Resource } from "@/Core";
-import { DeployingDot, ResourceLink, statusGroupIcons } from "@/UI/Components";
+import { DateWithTooltip, ResourceLink, statusGroupIcons, statusMapping } from "@/UI/Components";
 import { words } from "@/UI/words";
+import { CompileReportsIndication } from "./Components";
+
+const PopoverRow: React.FC<{
+  icon: React.ReactNode;
+  text: React.ReactNode;
+}> = ({ icon, text }) => (
+  <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
+    <FlexItem style={{ display: "inline-flex" }}>{icon}</FlexItem>
+    <Content component="p">{text}</Content>
+  </Flex>
+);
 
 /** Orphans are not actively a part of the latest intent anymore so limited information is displayed for them. */
 const PopoverContent = ({ row }: { row: Resource.Row }) => {
   if (row.status.isOrphan) {
     return (
-      <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
-        <FlexItem style={{ display: "inline-flex" }}>
-          <ClockIcon
-            style={{
-              width: t_global_icon_size_font_xl.value,
-              height: t_global_icon_size_font_xl.value,
-            }}
-          />
-        </FlexItem>
-        <Content component="p">
-          {words("resources.popover.lastDeployed")(row.status.lastHandlerRunAt)}
-        </Content>
+      <Flex direction={{ default: "column" }}>
+        <PopoverRow
+          icon={
+            <Icon size="heading_2xl">
+              <UnlinkIcon />
+            </Icon>
+          }
+          text={words("resources.popover.orphan")}
+        />
+
+        <PopoverRow
+          icon={
+            <Icon size="heading_2xl">
+              <ClockIcon />
+            </Icon>
+          }
+          text={
+            <>
+              {words("resources.popover.lastDeployed")}
+              <DateWithTooltip timestamp={row.status.lastHandlerRunAt || ""} isFull />
+            </>
+          }
+        />
       </Flex>
     );
   }
 
   return (
     <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
-      <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
-        <FlexItem style={{ display: "inline-flex" }}>
-          {statusGroupIcons["blocked"]({ state: row.status.blocked })}
-        </FlexItem>
-        <Content component="p">
-          {capitalize(row.status.blocked.toLowerCase().replace(/_/g, " "))}
-        </Content>
-      </Flex>
-      <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
-        <FlexItem style={{ display: "inline-flex" }}>
-          {statusGroupIcons["compliance"]({ state: row.status.compliance })}
-        </FlexItem>
-        <Content component="p">
-          {capitalize(row.status.compliance.toLowerCase().replace(/_/g, " "))}
-        </Content>
-      </Flex>
-      <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
-        <FlexItem style={{ display: "inline-flex" }}>
-          {statusGroupIcons["lastHandlerRun"]({ state: row.status.lastHandlerRun })}
-        </FlexItem>
-        <Content component="p">
-          {capitalize(row.status.lastHandlerRun.toLowerCase().replace(/_/g, " "))}
-        </Content>
-      </Flex>
-      <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
-        <FlexItem style={{ display: "inline-flex" }}>
-          <ClockIcon
-            style={{
-              width: t_global_icon_size_font_xl.value,
-              height: t_global_icon_size_font_xl.value,
-            }}
-          />
-        </FlexItem>
-        <Content component="p">
-          {words("resources.popover.lastDeployed")(row.status.lastHandlerRunAt)}
-        </Content>
-      </Flex>
-      <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
-        <FlexItem style={{ display: "inline-flex" }}>
-          <CubesIcon
-            style={{
-              width: t_global_icon_size_font_xl.value,
-              height: t_global_icon_size_font_xl.value,
-            }}
-          />
-        </FlexItem>
-        <Content component="p">
-          {row.requiresLength}{" "}
-          {row.requiresLength === 1
-            ? words("resources.popover.requirement")
-            : words("resources.popover.requirements")}
-        </Content>
-      </Flex>
+      <PopoverRow
+        icon={statusGroupIcons["blocked"]({ state: row.status.blocked })}
+        text={statusMapping[row.status.blocked]}
+      />
+
+      <PopoverRow
+        icon={statusGroupIcons["compliance"]({ state: row.status.compliance })}
+        text={statusMapping[row.status.compliance]}
+      />
+
+      <PopoverRow
+        icon={statusGroupIcons["lastHandlerRun"]({ state: row.status.lastHandlerRun })}
+        text={statusMapping[row.status.lastHandlerRun]}
+      />
+
+      <PopoverRow
+        icon={
+          <Icon size="heading_2xl">
+            <ClockIcon />
+          </Icon>
+        }
+        text={
+          <>
+            {words("resources.popover.lastDeployed")}
+            <DateWithTooltip timestamp={row.status.lastHandlerRunAt || ""} isFull />
+          </>
+        }
+      />
+
+      <PopoverRow
+        icon={
+          <Icon size="heading_2xl">
+            <CubesIcon />
+          </Icon>
+        }
+        text={
+          <>
+            {row.requiresLength}{" "}
+            {row.requiresLength === 1
+              ? words("resources.popover.requirement")
+              : words("resources.popover.requirements")}
+          </>
+        }
+      />
+
       {row.status.isDeploying && (
         <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
-          <FlexItem style={{ paddingLeft: "5px", width: "15px", height: "15px" }}>
-            <DeployingDot />
+          <FlexItem style={{ margin: "0px 5px", display: "inline-flex" }}>
+            <CompileReportsIndication $size={10} />
           </FlexItem>
           <Content component="p">{words("resources.popover.deploying")}</Content>
         </Flex>
@@ -97,12 +110,11 @@ const PopoverContent = ({ row }: { row: Resource.Row }) => {
 
 export const ResourceTableRow: React.FC<{
   row: Resource.Row;
-  isLastRow: boolean;
-}> = ({ row, isLastRow }) => {
-  const flexRef = useRef<HTMLDivElement>(null);
+}> = ({ row }) => {
+  const iconsWrapperRef = useRef<HTMLDivElement>(null);
   return (
     <Tbody>
-      <Tr aria-label="Resource Table Row" {...(isLastRow && { style: { borderBottom: "none" } })}>
+      <Tr aria-label="Resource Table Row" isStriped={row.status.isOrphan}>
         <Td dataLabel={words("resources.column.type")} modifier="breakWord">
           {row.type}
         </Td>
@@ -113,54 +125,63 @@ export const ResourceTableRow: React.FC<{
           {row.value}
         </Td>
         <StyledTD dataLabel={words("resources.column.status")}>
-          <StyledFlex
-            ref={flexRef}
-            gap={{ default: "gapMd" }}
+          <Flex
+            gap={{ default: "gapNone" }}
             flexWrap={{ default: "nowrap" }}
             alignItems={{ default: "alignItemsCenter" }}
+            style={{
+              height: "100%",
+              justifySelf: "flex-end",
+            }}
           >
-            {/* Don't show deploying dot whenever resource is orphan */}
-            {row.status.isDeploying && !row.status.isOrphan && (
-              <FlexItem
-                style={{
-                  display: "flex",
-                  width: "20px",
-                  height: "20px",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <DeployingDot />
+            <FlexItem
+              style={{
+                display: "flex",
+                width: "20px",
+                height: "20px",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {/* Don't show deploying dot whenever resource is orphan */}
+              {row.status.isDeploying && <CompileReportsIndication $size={10} />}
+            </FlexItem>
+            <IconsWrapper
+              ref={iconsWrapperRef}
+              gap={{ default: "gapMd" }}
+              flexWrap={{ default: "nowrap" }}
+              alignItems={{ default: "alignItemsCenter" }}
+              $isOrphan={row.status.isOrphan}
+            >
+              <FlexItem style={{ display: "inline-flex" }}>
+                {statusGroupIcons["blocked"]({
+                  state: row.status.blocked,
+                  variant: row.status.isOrphan ? "disabled" : undefined,
+                })}
               </FlexItem>
-            )}
-            <FlexItem style={{ display: "inline-flex" }}>
-              {statusGroupIcons["blocked"]({
-                state: row.status.blocked,
-                // We override color because whenever orphan we just show gray icons
-                overrideColor: row.status.isOrphan ? "var(--pf-t--color--gray--60)" : undefined,
-              })}
-            </FlexItem>
-            <FlexItem style={{ display: "inline-flex" }}>
-              {statusGroupIcons["compliance"]({
-                state: row.status.compliance,
-                overrideColor: row.status.isOrphan ? "var(--pf-t--color--gray--60)" : undefined,
-              })}
-            </FlexItem>
-            <FlexItem style={{ display: "inline-flex" }}>
-              {statusGroupIcons["lastHandlerRun"]({
-                state: row.status.lastHandlerRun,
-                overrideColor: row.status.isOrphan ? "var(--pf-t--color--gray--60)" : undefined,
-              })}
-            </FlexItem>
-            <Popover
-              triggerRef={flexRef}
-              triggerAction="click"
-              aria-label="Hoverable popover"
-              position="left"
-              headerContent={words("resources.popover.title")}
-              bodyContent={<PopoverContent row={row} />}
-            />
-          </StyledFlex>
+              <FlexItem style={{ display: "inline-flex" }}>
+                {statusGroupIcons["compliance"]({
+                  state: row.status.compliance,
+                  variant: row.status.isOrphan ? "disabled" : undefined,
+                })}
+              </FlexItem>
+              <FlexItem style={{ display: "inline-flex" }}>
+                {statusGroupIcons["lastHandlerRun"]({
+                  state: row.status.lastHandlerRun,
+                  variant: row.status.isOrphan ? "disabled" : undefined,
+                })}
+              </FlexItem>
+              <Popover
+                triggerRef={iconsWrapperRef}
+                triggerAction="click"
+                aria-label="Clickable popover"
+                position="left"
+                headerContent={words("resources.popover.title")}
+                bodyContent={<PopoverContent row={row} />}
+                distance={row.status.isDeploying ? 30 : 20}
+              />
+            </IconsWrapper>
+          </Flex>
         </StyledTD>
         <Td isActionCell width={10}>
           <ResourceLink resourceId={row.id} linkText={words("resources.link.details")} />
@@ -178,15 +199,20 @@ const StyledTD = styled(Td)`
   height: 1px;
 `;
 
-const StyledFlex = styled(Flex)`
+const IconsWrapper = styled(Flex)<{ $isOrphan?: boolean }>`
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s ease;
   height: 100%;
   padding-inline: var(--pf-t--global--spacer--md);
   padding-block: var(--pf-t--global--spacer--md);
-  cursor: pointer;
-  justify-self: flex-end;
-  border-radius: 4px;
-  transition: background 0.3s ease;
-  &:hover {
-    background: var(--pf-t--global--background--color--primary--hover);
-  }
+
+  /* Only non-orphan resources need the hover here */
+  ${({ $isOrphan }) =>
+    !$isOrphan &&
+    `
+    &:hover {
+      background: var(--pf-t--global--background--color--primary--hover);
+    };
+  `}
 `;

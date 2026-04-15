@@ -545,8 +545,8 @@ const dict = {
   "resources.column.status": "Status",
   "resources.popover.title": "Resource State Summary",
   "resources.popover.deploying": "Deploying",
-  "resources.popover.lastDeployed": (date?: string) =>
-    `Last deployed: ${date || "Not yet deployed"}`,
+  "resources.popover.lastDeployed": "Last deployed: ",
+  "resources.popover.orphan": "Orphan",
   "resources.popover.requirement": "Requirement",
   "resources.popover.requirements": "Requirements",
   "resources.filters.status.placeholder": "Deploy State...",
