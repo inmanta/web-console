@@ -1,15 +1,17 @@
-import React, { useContext } from "react";
+import React, { useCallback, useMemo, useState } from "react";
+import {
+  Content,
+  Drawer,
+  DrawerContent,
+  DrawerContentBody,
+  PageSection,
+} from "@patternfly/react-core";
 import { usePaginatedTable } from "@/Data";
 import { Filter, SortKey, useGetDiscoveredResources } from "@/Data/Queries";
-import {
-  EmptyView,
-  PageContainer,
-  PaginationWidget,
-  LoadingView,
-  ErrorView,
-} from "@/UI/Components";
+import { EmptyView, PaginationWidget, LoadingView, ErrorView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { ConnectedFilterWidget } from "./Components";
 import { DiscoveredResourcesTable } from "./DiscoveredResourcesTable";
 import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
 import { TableControls } from "./TableControls";
@@ -22,12 +24,26 @@ import { TableControls } from "./TableControls";
  * @returns {React.FC} A React Component displaying the discovered resources
  */
 export const Page: React.FC = () => {
-  const { orchestratorProvider } = useContext(DependencyContext);
-  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
+  const { orchestratorProvider } = React.useContext(DependencyContext);
+  const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
+  const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter } =
     usePaginatedTable<Filter, SortKey>({
       route: "DiscoveredResources",
       defaultSort: { name: "discovered_resource_id", order: "asc" },
     });
+
+  const activeFilterCount = useMemo(
+    () =>
+      Object.values(filter).reduce((acc, value) => {
+        if (!value) return acc;
+        if (Array.isArray(value)) return acc + value.length;
+
+        return acc + 1;
+      }, 0),
+    [filter]
+  );
+
+  const onCloseFilterWidget = useCallback(() => setIsDrawerExpanded(false), []);
 
   const { data, isError, isSuccess, refetch, error } = useGetDiscoveredResources({
     sort,
@@ -50,39 +66,75 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     return (
-      <PageContainer pageTitle={words("discovered_resources.title")}>
-        <TableControls
-          paginationWidget={
-            <PaginationWidget
-              data={data}
-              pageSize={pageSize}
-              setPageSize={setPageSize}
-              setCurrentPage={setCurrentPage}
-            />
-          }
-          filter={filter}
-          setFilter={setFilter}
-        />
-
-        {disabledDiscoveredResourcesView || data.data.length <= 0 ? (
-          <EmptyView
-            message={
-              disabledDiscoveredResourcesView
-                ? words("resources.discovery.disabled")
-                : words("resources.empty.message")
+      <>
+        <PageSection
+          hasBodyWrapper={false}
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 400,
+            backgroundColor: "var(--pf-t--global--background--color--primary--default)",
+            paddingBottom: "var(--pf-t--global--spacer--md)",
+          }}
+        >
+          <Content component="h1">{words("discovered_resources.title")}</Content>
+          <TableControls
+            paginationWidget={
+              <PaginationWidget
+                data={data}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                setCurrentPage={setCurrentPage}
+              />
             }
-            aria-label="DiscoveredResourcesView-Empty"
+            onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
+            isDrawerExpanded={isDrawerExpanded}
+            activeFilterCount={activeFilterCount}
           />
-        ) : (
-          <DiscoveredResourcesTable
-            rows={data.data}
-            aria-label="DiscoveredResourcesView-Success"
-            tablePresenter={new DiscoveredResourcesTablePresenter()}
-            sort={sort}
-            setSort={setSort}
-          />
-        )}
-      </PageContainer>
+        </PageSection>
+        <PageSection
+          hasBodyWrapper={false}
+          isFilled
+          padding={{ default: "padding" }}
+          style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+        >
+          <Drawer
+            isExpanded={isDrawerExpanded}
+            isInline
+            style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+          >
+            <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
+              <DrawerContentBody
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flex: "1 1 auto",
+                  minHeight: 0,
+                }}
+              >
+                {disabledDiscoveredResourcesView || data.data.length <= 0 ? (
+                  <EmptyView
+                    message={
+                      disabledDiscoveredResourcesView
+                        ? words("resources.discovery.disabled")
+                        : words("resources.empty.message")
+                    }
+                    aria-label="DiscoveredResourcesView-Empty"
+                  />
+                ) : (
+                  <DiscoveredResourcesTable
+                    rows={data.data}
+                    aria-label="DiscoveredResourcesView-Success"
+                    tablePresenter={new DiscoveredResourcesTablePresenter()}
+                    sort={sort}
+                    setSort={setSort}
+                  />
+                )}
+              </DrawerContentBody>
+            </DrawerContent>
+          </Drawer>
+        </PageSection>
+      </>
     );
   }
 
