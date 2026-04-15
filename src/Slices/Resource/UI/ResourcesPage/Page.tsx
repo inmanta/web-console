@@ -13,7 +13,7 @@ import {
 import { Resource } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetResources } from "@/Data/Queries";
-import { EmptyView, PaginationWidget, ErrorView, LoadingView } from "@/UI/Components";
+import { EmptyView, PaginationWidget, ErrorView, LoadingView, countActiveFilters } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
@@ -37,17 +37,7 @@ export const Page: React.FC = () => {
   const activeFilterCount = useMemo(() => {
     const { disregardDefault: _disregardDefault, ...filterValues } = filterWithDefaults;
 
-    return Object.values(filterValues).reduce((acc, value) => {
-      if (!value) {
-        return acc;
-      }
-
-      if (Array.isArray(value)) {
-        return acc + value.length;
-      }
-
-      return acc + 1;
-    }, 0);
+    return countActiveFilters(filterValues);
   }, [filterWithDefaults]);
 
   const onCloseFilterWidget = useCallback(() => setIsDrawerExpanded(false), []);

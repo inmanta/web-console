@@ -8,7 +8,7 @@ import {
 } from "@patternfly/react-core";
 import { usePaginatedTable } from "@/Data";
 import { Filter, SortKey, useGetDiscoveredResources } from "@/Data/Queries";
-import { EmptyView, PaginationWidget, LoadingView, ErrorView } from "@/UI/Components";
+import { EmptyView, PaginationWidget, LoadingView, ErrorView, countActiveFilters } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { DiscoveredResourcesFilterWidget } from "./Components";
@@ -32,16 +32,7 @@ export const Page: React.FC = () => {
       defaultSort: { name: "discovered_resource_id", order: "asc" },
     });
 
-  const activeFilterCount = useMemo(
-    () =>
-      Object.values(filter).reduce((acc, value) => {
-        if (!value) return acc;
-        if (Array.isArray(value)) return acc + value.length;
-
-        return acc + 1;
-      }, 0),
-    [filter]
-  );
+  const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
 
   const onCloseFilterWidget = useCallback(() => setIsDrawerExpanded(false), []);
 

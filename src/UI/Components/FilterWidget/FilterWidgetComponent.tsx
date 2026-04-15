@@ -27,10 +27,10 @@ export interface TypeAgentValueFilter {
   value?: string[];
 }
 
-interface FilterWidgetComponentProps<T extends TypeAgentValueFilter> {
+interface FilterWidgetComponentProps {
   onClose: () => void;
-  filter: T;
-  setFilter: (filter: T) => void;
+  filter: TypeAgentValueFilter;
+  setFilter: (filter: TypeAgentValueFilter) => void;
 }
 
 /**
@@ -41,81 +41,81 @@ interface FilterWidgetComponentProps<T extends TypeAgentValueFilter> {
  *
  * @Props {FilterWidgetComponentProps} - Component props.
  *  @prop {() => void} onClose - Callback executed when the filter drawer should be closed.
- *  @prop {T} filter - Current filter state.
- *  @prop {(filter: T) => void} setFilter - Setter to persist filter changes upstream.
+ *  @prop {TypeAgentValueFilter} filter - Current filter state.
+ *  @prop {(filter: TypeAgentValueFilter) => void} setFilter - Setter to persist filter changes upstream.
  *
  * @returns {React.ReactElement} The rendered filter widget.
  */
-export const FilterWidgetComponent = <T extends TypeAgentValueFilter>({
+export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
   onClose,
   filter,
   setFilter,
-}: FilterWidgetComponentProps<T>): React.ReactElement => {
+}) => {
   const handleAddType = (type: string) => {
     setFilter({
       ...filter,
       type: filter.type ? [...filter.type, type] : [type],
-    } as T);
+    });
   };
 
   const handleAddAgent = (agent: string) => {
     setFilter({
       ...filter,
       agent: filter.agent ? [...filter.agent, agent] : [agent],
-    } as T);
+    });
   };
 
   const handleAddValue = (value: string) => {
     setFilter({
       ...filter,
       value: filter.value ? [...filter.value, value] : [value],
-    } as T);
+    });
   };
 
   const removeTypeChip = (id: string) => {
     setFilter({
       ...filter,
       type: filter.type?.filter((v) => v !== id),
-    } as T);
+    });
   };
 
   const removeAgentChip = (id: string) => {
     setFilter({
       ...filter,
       agent: filter.agent?.filter((v) => v !== id),
-    } as T);
+    });
   };
 
   const removeValueChip = (id: string) => {
     setFilter({
       ...filter,
       value: filter.value?.filter((v) => v !== id),
-    } as T);
+    });
   };
 
   const clearTypeFilters = () => {
     setFilter({
       ...filter,
       type: undefined,
-    } as T);
+    });
   };
 
   const clearAgentFilters = () => {
     setFilter({
       ...filter,
       agent: undefined,
-    } as T);
+    });
   };
 
   const clearValueFilters = () => {
     setFilter({
       ...filter,
       value: undefined,
-    } as T);
+    });
   };
 
   const clearAllFilters = () => {
-    setFilter({ ...filter, type: undefined, agent: undefined, value: undefined } as T);
+    setFilter({ ...filter, type: undefined, agent: undefined, value: undefined });
   };
 
   const hasActiveFilters =

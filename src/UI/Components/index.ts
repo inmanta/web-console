@@ -20,6 +20,7 @@ export * from "./EventIcon";
 export * from "./EventsTable";
 export * from "./FilterForm";
 export * from "./FilterWidget/FilterWidgetComponent";
+export * from "./FilterWidget/utils";
 export * from "./FilterPicker";
 export * from "./Filters";
 export * from "./IconTabs";

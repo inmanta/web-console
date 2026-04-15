@@ -9,7 +9,7 @@ import {
 import { Resource } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetVersionResources } from "@/Data/Queries";
-import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
+import { EmptyView, ErrorView, LoadingView, PaginationWidget, countActiveFilters } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Controls, DesiredStateDetailsFilterWidget } from "./Controls";
@@ -30,16 +30,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
       defaultSort: { name: "resource_type", order: "asc" },
     });
 
-  const activeFilterCount = useMemo(
-    () =>
-      Object.values(filter).reduce((acc, value) => {
-        if (!value) return acc;
-        if (Array.isArray(value)) return acc + value.length;
-
-        return acc + 1;
-      }, 0),
-    [filter]
-  );
+  const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
 
   const onCloseFilterWidget = useCallback(() => setIsDrawerExpanded(false), []);
 
