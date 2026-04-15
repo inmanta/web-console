@@ -2,17 +2,19 @@ import { Resource, Sort } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common";
 
+/** This is used to map the statusses of all compound states correctly */
 const STATUS_FIELD_MAP = {
+  // --- LastHandlerRun ---
   failed: { field: "lastHandlerRun", value: "FAILED" },
   skipped: { field: "lastHandlerRun", value: "SKIPPED" },
   successful: { field: "lastHandlerRun", value: "SUCCESSFUL" },
   new: { field: "lastHandlerRun", value: "NEW" },
-
+  // --- Compliance ---
   compliant: { field: "compliance", value: "COMPLIANT" },
   non_compliant: { field: "compliance", value: "NON_COMPLIANT" },
   has_update: { field: "compliance", value: "HAS_UPDATE" },
   undefined: { field: "compliance", value: "UNDEFINED" },
-
+  // --- Blocked---
   blocked: { field: "blocked", value: "BLOCKED" },
   not_blocked: { field: "blocked", value: "NOT_BLOCKED" },
   temporarily_blocked: { field: "blocked", value: "TEMPORARILY_BLOCKED" },

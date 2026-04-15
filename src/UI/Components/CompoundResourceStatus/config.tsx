@@ -3,6 +3,9 @@ import { Icon } from "@patternfly/react-core";
 import { CubeIcon, ShieldAltIcon, TrafficLightIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
 
+/** Status config which maps the compound state types to a displayed string output.
+ * Used in the ResourceTableRow.
+ */
 export const statusMapping: Record<Resource.CompoundState, string> = {
   // --- Blocked --
   BLOCKED: "Blocked",
@@ -56,8 +59,9 @@ export const statusPriority: Record<Resource.CompoundStateKey, number> = {
   skipped: 3,
 };
 
-/** default is for the legendbar icons and orphan is for the
- * orphaned icons in the resources table */
+/** default is for the legendbar icons and disabled is for the orphaned resources.
+ * both implementations can be found on the resource page.
+ */
 type IconVariant = "default" | "disabled";
 
 /** Resolves the correct colors for every compound state Icon. */
