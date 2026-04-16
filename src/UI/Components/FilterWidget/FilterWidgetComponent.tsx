@@ -52,7 +52,7 @@ interface FilterWidgetComponentProps<GenericFilter> {
  *
  * @returns {React.ReactElement} The rendered filter widget.
  */
-export const FilterWidgetComponent = <T extends GenericFilter>({
+export const FilterWidgetComponent = ({
   onClose,
   fields,
   filter,
