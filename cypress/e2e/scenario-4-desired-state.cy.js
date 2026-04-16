@@ -96,8 +96,9 @@ describe("Scenario 4 Desired State", () => {
       cy.get("tbody").eq(1).should("contain", "lsm::LifecycleTransfer").and("contain", "1");
     }
 
-    // filter on value : default to have same table on iso and oss
-    cy.get('[aria-label="ValueFilter"]').type("default{enter}");
+    // Open filter drawer and filter on value : default to have same table on iso and oss
+    cy.contains("button", "Filters").click();
+    cy.get('[aria-label="Value"]').type("default{enter}");
 
     // go to details of first resource
     cy.get("tbody").eq(0).contains("Show Details").click();
@@ -115,15 +116,16 @@ describe("Scenario 4 Desired State", () => {
     // Go back and open details of second resource
     cy.get('[aria-label="BreadcrumbItem"]').contains("Details").click();
 
-    // Clear the filter
-    cy.get("button", { timeout: 30000 }).contains("Clear all filters").click({ force: true });
+    // Open filter drawer and clear the filter
+    cy.contains("button", "Filters", { timeout: 30000 }).click();
+    cy.contains("button", "Clear all").click();
 
     cy.wait("@FILTER_UPDATE");
 
     // Update the filter to retrieve the right resource for lsm
     if (isIso) {
-      // filter on value : default to have same table on iso and oss
-      cy.get('[aria-label="TypeFilter"]').type("lsm{enter}");
+      // filter on type : lsm to have same table on iso and oss
+      cy.get('[aria-label="Type"]').type("lsm{enter}");
 
       cy.get("tbody").eq(0).contains("Show Details").click();
 

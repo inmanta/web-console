@@ -7,16 +7,6 @@ import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
 
-/**
- * Interface for filtering discovered resources
- */
-export interface DiscoveredResourceFilter {
-  type?: string;
-  name?: string;
-  state?: string;
-  environment?: string;
-}
-
 export interface DiscoveredResource {
   discovered_resource_id: string;
   managed_resource_uri: string | null;

@@ -1,8 +1,8 @@
 version: 2
 registries:
-  jointjs-registry:
+  jointjs:
     type: npm-registry
-    url: https://npm.jointjs.com
+    url: https://jointjs.com
     token: ${{secrets.JOINTJS_NPM_TOKEN}}
 updates:
   - package-ecosystem: "npm"

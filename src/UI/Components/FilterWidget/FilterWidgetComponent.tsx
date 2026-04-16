@@ -29,7 +29,7 @@ export interface FilterField {
 
 export type GenericFilter = Record<string, string[] | undefined>;
 
-interface FilterWidgetComponentProps {
+interface FilterWidgetComponentProps<GenericFilter> {
   onClose: () => void;
   fields: FilterField[];
   filter: GenericFilter;
@@ -52,33 +52,24 @@ interface FilterWidgetComponentProps {
  *
  * @returns {React.ReactElement} The rendered filter widget.
  */
-export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
+export const FilterWidgetComponent = <T extends GenericFilter>({
   onClose,
   fields,
   filter,
   setFilter,
   sectionTitle,
-}) => {
+}: FilterWidgetComponentProps<GenericFilter>): React.ReactElement => {
   const handleAdd = (key: string, value: string) => {
     const current = filter[key];
-    setFilter({
-      ...filter,
-      [key]: current ? [...current, value] : [value],
-    });
+    setFilter({ ...filter, [key]: current ? [...current, value] : [value] });
   };
 
   const handleRemoveChip = (key: string, id: string) => {
-    setFilter({
-      ...filter,
-      [key]: filter[key]?.filter((v) => v !== id),
-    });
+    setFilter({ ...filter, [key]: filter[key]?.filter((v) => v !== id) });
   };
 
   const handleClearGroup = (key: string) => {
-    setFilter({
-      ...filter,
-      [key]: undefined,
-    });
+    setFilter({ ...filter, [key]: undefined });
   };
 
   const clearAllFilters = () => {

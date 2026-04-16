@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { useUrlStateWithFilter } from "@/Data";
 import { Filter } from "@/Data/Queries";
-import { FilterField, FilterWidgetComponent, GenericFilter } from "@/UI/Components";
+import { FilterField, FilterWidgetComponent } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface DiscoveredResourcesFilterWidgetProps {
@@ -26,6 +26,8 @@ const FIELDS: FilterField[] = [
   },
 ];
 
+type DiscoveredResourcesFilter = Omit<Filter, "name" | "discovered_resource_id">;
+
 /**
  * The DiscoveredResourcesFilterWidget component.
  *
@@ -41,7 +43,7 @@ const FIELDS: FilterField[] = [
  */
 export const DiscoveredResourcesFilterWidget: React.FC<DiscoveredResourcesFilterWidgetProps> = memo(
   ({ onClose }) => {
-    const [filter, setFilter] = useUrlStateWithFilter<Filter>({
+    const [filter, setFilter] = useUrlStateWithFilter<DiscoveredResourcesFilter>({
       route: "DiscoveredResources",
     });
 
@@ -49,8 +51,8 @@ export const DiscoveredResourcesFilterWidget: React.FC<DiscoveredResourcesFilter
       <FilterWidgetComponent
         onClose={onClose}
         fields={FIELDS}
-        filter={filter as GenericFilter}
-        setFilter={(updated) => setFilter(updated as Filter)}
+        filter={filter}
+        setFilter={setFilter}
         sectionTitle={words("resources.filters.resource.sectionTitle")}
       />
     );

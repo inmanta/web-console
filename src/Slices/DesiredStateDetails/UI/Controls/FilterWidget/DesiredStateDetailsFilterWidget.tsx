@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { Resource } from "@/Core";
 import { useUrlStateWithFilter } from "@/Data";
-import { FilterField, FilterWidgetComponent, GenericFilter } from "@/UI/Components";
+import { FilterField, FilterWidgetComponent } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface DesiredStateDetailsFilterWidgetProps {
@@ -49,8 +49,8 @@ export const DesiredStateDetailsFilterWidget: React.FC<DesiredStateDetailsFilter
       <FilterWidgetComponent
         onClose={onClose}
         fields={FIELDS}
-        filter={filter as GenericFilter}
-        setFilter={(updated) => setFilter(updated as Resource.FilterFromVersion)}
+        filter={filter}
+        setFilter={setFilter}
         sectionTitle={words("resources.filters.resource.sectionTitle")}
       />
     );
