@@ -127,7 +127,7 @@ describe("Scenario 4 Desired State", () => {
       // filter on type : lsm to have same table on iso and oss
       cy.get('[aria-label="Type"]').type("lsm{enter}");
 
-      cy.wait("@FILTER_UPDATE");
+      cy.get('[aria-label="VersionResourcesTable-Success"]').find("tbody").should("have.length", 1);
 
       cy.get("tbody").eq(0).contains("Show Details").click();
 
