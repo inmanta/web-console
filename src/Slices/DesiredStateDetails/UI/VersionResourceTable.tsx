@@ -27,6 +27,7 @@ export const VersionResourceTable: React.FC<Props> = ({
     });
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
+  const smallHeaders = ["requires"];
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
     const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
     const sortParams = hasSort
@@ -41,16 +42,17 @@ export const VersionResourceTable: React.FC<Props> = ({
           },
         }
       : {};
+    const widthModifier = smallHeaders.includes(apiName) ? "fitContent" : "nowrap";
 
     return (
-      <Th key={displayName} {...sortParams} modifier="fitContent">
+      <Th key={displayName} {...sortParams} modifier={widthModifier}>
         {displayName}
       </Th>
     );
   });
 
   return (
-    <Table {...props} variant={TableVariant.compact}>
+    <Table {...props} variant={TableVariant.compact} isStickyHeader>
       <Thead>
         <Tr>{heads}</Tr>
       </Thead>
