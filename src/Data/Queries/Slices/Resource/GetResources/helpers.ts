@@ -3,7 +3,7 @@ import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common";
 import { PageInfo } from "./useGetResources";
 
-//TODO: mapping should still be re-evaluated again
+//TODO: mapping should still be re-evaluated again => https://github.com/inmanta/web-console/issues/6814
 /** This is used to map the statusses of all compound states correctly */
 const STATUS_FIELD_MAP = {
   // --- LastHandlerRun ---
