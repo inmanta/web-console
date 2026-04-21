@@ -1,4 +1,3 @@
-import type { Mock } from "vitest";
 import { dia, shapes, ui } from "@joint/plus";
 import { renderHook, waitFor } from "@testing-library/react";
 import { ServiceModel, ServiceInstanceModel } from "@/Core";
@@ -8,6 +7,7 @@ import { defineObjectsForJointJS } from "../../testSetup";
 import * as Helpers from "../Helpers";
 import { RelationsDictionary } from "../Helpers/createRelationsDictionary";
 import { useComposerGraph } from "./useComposerGraph";
+import type { Mock } from "vitest";
 
 // Mock ComposerPaper - must use function (not arrow) for Vitest 4 constructor compatibility.
 // Kept here because it needs dia.Paper and the JointJS env from defineObjectsForJointJS (runs in beforeAll).

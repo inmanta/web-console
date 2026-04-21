@@ -6,7 +6,6 @@
  * Only the loading and hook are tested here.
  */
 
-import type { Mock } from "vitest";
 import { act } from "react";
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router";
@@ -28,6 +27,7 @@ import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
+import type { Mock } from "vitest";
 
 const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],

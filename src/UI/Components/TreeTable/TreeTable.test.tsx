@@ -1,4 +1,3 @@
-import type { Mock } from "vitest";
 import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -12,6 +11,7 @@ import { PathHelper, TreeExpansionManager } from "./Helpers";
 import { InventoryAttributeHelper } from "./Inventory";
 import { InventoryTreeTableHelper } from "./Inventory/TreeTableHelper";
 import { TreeTable } from "./TreeTable";
+import type { Mock } from "vitest";
 
 function inventorySetup(attributes: Attributes, service?: ServiceModel, setTab?: Mock) {
   const component = (

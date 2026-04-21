@@ -1,7 +1,7 @@
-import type { Mock } from "vitest";
 import { PathHelper, TreeExpansionManager } from "@/UI/Components/TreeTable/Helpers";
 import { CatalogAttributeHelper } from "./AttributeHelper";
 import { CatalogTreeTableHelper } from "./TreeTableHelper";
+import type { Mock } from "vitest";
 
 vi.mock("@/Data/Queries/Slices/ServiceInstance");
 

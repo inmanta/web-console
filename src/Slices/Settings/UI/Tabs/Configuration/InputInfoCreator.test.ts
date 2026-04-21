@@ -1,6 +1,6 @@
-import type { Mock } from "vitest";
 import { EnvironmentSettings } from "@/Core";
 import { InputInfoCreator } from "./InputInfoCreator";
+import type { Mock } from "vitest";
 
 describe("InputInfoCreator", () => {
   let mockSetValues: Mock;

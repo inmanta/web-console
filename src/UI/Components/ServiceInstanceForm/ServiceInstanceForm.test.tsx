@@ -1,4 +1,3 @@
-import type { Mock } from "vitest";
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -21,6 +20,7 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
+import type { Mock } from "vitest";
 
 const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],

@@ -1,7 +1,7 @@
-import type { Mock } from "vitest";
 import { PathHelper, TreeExpansionManager } from "@/UI/Components/TreeTable/Helpers";
 import { InventoryAttributeHelper } from "./AttributeHelper";
 import { InventoryTreeTableHelper } from "./TreeTableHelper";
+import type { Mock } from "vitest";
 //mock is to avoid TypeError - Temporary workaround - to be removed - https://github.com/inmanta/web-console/issues/6194
 vi.mock("@/Data/Queries/Slices/ServiceInstance");
 
