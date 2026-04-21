@@ -9,6 +9,13 @@ import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { buildHandlers, mapSort, mapStatusToGraphQLFilter, parseCurrentPage } from "./helpers";
 
+export interface PageInfo {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  endCursor: string | null;
+  startCursor: string | null;
+}
+
 /**
  * GraphQL response type for the resources query
  */
@@ -16,11 +23,8 @@ interface ResourcesGraphQLResponse {
   data: {
     resources: {
       totalCount: number;
-      pageInfo: {
-        hasNextPage: boolean;
-        endCursor: string | null;
-      };
-      edges: Resource.Resource[];
+      pageInfo: PageInfo;
+      edges: Resource.RawResource[];
     };
     resourceSummary: Resource.ResourceSummary;
   };
@@ -31,7 +35,7 @@ interface ResourcesGraphQLResponse {
  * with pagination metadata and navigation handlers.
  */
 export interface GetResourcesResponse {
-  resources: Resource.FlatResource[];
+  resources: Resource.Resource[];
   resourceSummary: Resource.ResourceSummary;
   metadata: Pagination.Metadata;
   handlers: Handlers;
@@ -62,18 +66,29 @@ interface GetResourcesParams {
 }
 
 const GET_RESOURCES_QUERY = gql`
-  query (
+  query GetResources(
     $filter: ResourceFilter!
     $environment: String!
     $first: Int
     $after: String
+    $last: Int
+    $before: String
     $orderBy: [StrawberryOrder!]
   ) {
-    resources(filter: $filter, first: $first, after: $after, orderBy: $orderBy) {
+    resources(
+      filter: $filter
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+      orderBy: $orderBy
+    ) {
       totalCount
       pageInfo {
         hasNextPage
+        hasPreviousPage
         endCursor
+        startCursor
       }
       edges {
         node {
@@ -113,7 +128,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
 
-  const { after, before: currentBefore } = parseCurrentPage(
+  const { after, before, beforeCount } = parseCurrentPage(
     currentPage || { kind: "CurrentPage", value: "" }
   );
 
@@ -127,11 +142,15 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
     ...statusFilter,
   };
 
+  const pageSizeNum = Number(pageSize.value);
+  const paginationVariables: Record<string, unknown> = before
+    ? { last: pageSizeNum, before }
+    : { first: pageSizeNum, ...(after ? { after } : {}) };
+
   const variables: Record<string, unknown> = {
     filter: graphqlFilter,
     environment: env,
-    first: Number(pageSize.value),
-    ...(after ? { after } : {}),
+    ...paginationVariables,
     ...(sort ? { orderBy: mapSort(sort) } : {}),
   };
 
@@ -147,20 +166,20 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
         queryFn,
         select: (data) => {
           const { resources, resourceSummary } = data.data;
-          const pageSize_ = Number(pageSize.value);
           const totalCount = resources.totalCount;
-          const handlers = buildHandlers(resources.pageInfo, currentBefore, pageSize_);
-          const afterCount = Math.max(0, totalCount - currentBefore - resources.edges.length);
+          const handlers = buildHandlers(resources.pageInfo, beforeCount, pageSizeNum);
+          const edges = resources?.edges || [];
+          const afterCount = Math.max(0, totalCount - beforeCount - edges.length);
 
           const metadata: Pagination.Metadata = {
             total: totalCount,
-            before: currentBefore,
+            before: beforeCount,
             after: afterCount,
-            page_size: pageSize_,
+            page_size: pageSizeNum,
           };
 
           return {
-            resources: resources?.edges?.map((edge) => edge.node) || [],
+            resources: edges.map((edge) => edge.node),
             resourceSummary,
             metadata,
             handlers,

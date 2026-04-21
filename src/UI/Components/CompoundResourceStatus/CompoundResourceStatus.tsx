@@ -82,9 +82,7 @@ export const CompoundResourceStatus = ({
     <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }} flex={{ default: "flex_1" }}>
       {Object.entries(compoundState).map(([key, record]) => (
         <Flex key={key} flex={{ default: "flex_1" }} alignItems={{ default: "alignItemsCenter" }}>
-          <FlexItem style={{ display: "inline-flex" }}>
-            {statusGroupIcons[key]({ variant: "default" })}
-          </FlexItem>
+          <FlexItem style={{ display: "inline-flex" }}>{statusGroupIcons[key]()}</FlexItem>
           <FlexItem flex={{ default: "flex_1" }}>
             <LegendBar
               data-testid={`legend-bar-${key}`}

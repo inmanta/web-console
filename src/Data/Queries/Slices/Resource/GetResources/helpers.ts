@@ -1,7 +1,9 @@
 import { Resource, Sort } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common";
+import { PageInfo } from "./useGetResources";
 
+//TODO: mapping should still be re-evaluated again
 /** This is used to map the statusses of all compound states correctly */
 const STATUS_FIELD_MAP = {
   // --- LastHandlerRun ---
@@ -33,7 +35,7 @@ type GraphQLStateFilter = Partial<{
   blocked: { eq: Resource.Blocked[] };
 }>;
 
-function isCompoundStateKey(value: string): value is Resource.CompoundStateKey {
+export function isCompoundStateKey(value: string): value is Resource.CompoundStateKey {
   return value in STATUS_FIELD_MAP;
 }
 
@@ -108,37 +110,47 @@ export function mapSort(
 }
 
 /**
- * Parses the currentPage URL state value into a GraphQL after-cursor and before-offset.
- * Format: "" (first page) or "after=<cursor>&before=<N>"
+ * Parses the currentPage URL state value.
+ * Format: "after=<cursor>&beforeCount=<N>" (forward)
+ *      or "before=<cursor>&beforeCount=<N>" (backward)
+ *
+ * "beforeCount" is purely for metadata offset calculation.
  */
 export function parseCurrentPage(currentPage: CurrentPage): {
-  after: string | undefined;
-  before: number;
+  after: string | undefined; // GraphQL forward cursor
+  before: string | undefined; // GraphQL backward cursor
+  beforeCount: number; // metadata offset (how many items precede current page)
 } {
   if (!currentPage.value) {
-    return { after: undefined, before: 0 };
+    return { after: undefined, before: undefined, beforeCount: 0 };
   }
 
   const params = new URLSearchParams(currentPage.value);
   const after = params.get("after") ?? undefined;
-  const before = parseInt(params.get("before") ?? "0", 10);
+  const before = params.get("before") ?? undefined;
+  const beforeCount = parseInt(params.get("beforeCount") ?? "0", 10);
 
-  return { after, before };
+  return { after, before, beforeCount };
 }
 
 /**
- * Builds pagination handlers from GraphQL pageInfo.
+ * Builds next/prev pagination handlers from GraphQL pageInfo.
  */
 export function buildHandlers(
-  pageInfo: { hasNextPage: boolean; endCursor: string | null },
-  currentBefore: number,
+  pageInfo: PageInfo,
+  currentBeforeCount: number,
   pageSize: number
 ): Handlers {
-  const nextBefore = currentBefore + pageSize;
   const next =
     pageInfo.hasNextPage && pageInfo.endCursor
-      ? `after=${pageInfo.endCursor}&before=${nextBefore}`
+      ? `after=${pageInfo.endCursor}&beforeCount=${currentBeforeCount + pageSize}`
       : undefined;
 
-  return { next };
+  const prevBeforeCount = Math.max(0, currentBeforeCount - pageSize);
+  const prev =
+    pageInfo.hasPreviousPage && pageInfo.startCursor
+      ? `before=${pageInfo.startCursor}&beforeCount=${prevBeforeCount}`
+      : undefined;
+
+  return { next, prev };
 }

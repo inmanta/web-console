@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Icon } from "@patternfly/react-core";
 import { CubeIcon, ShieldAltIcon, TrafficLightIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
+import { isCompoundStateKey } from "@/Data/Queries";
 
 /** Status config which maps the compound state types to a displayed string output.
  * Used in the ResourceTableRow.
@@ -59,46 +60,42 @@ export const statusPriority: Record<Resource.CompoundStateKey, number> = {
   skipped: 3,
 };
 
-/** default is for the legendbar icons and disabled is for the orphaned resources.
- * both implementations can be found on the resource page.
- */
-type IconVariant = "default" | "disabled";
+/** default is the neutral icons color and state is whenever the colorConfig should be used for the icons. */
+type ColorVariant = "default" | "state";
+
+const DEFAULT_COLOR = "var(--pf-t--global--icon--color--severity--minor--default)";
 
 /** Resolves the correct colors for every compound state Icon. */
-const resolveColor = (
-  state?: Resource.CompoundState,
-  variant?: IconVariant
-): string | undefined => {
-  if (variant === "default") {
-    return "var(--pf-t--color--gray--50)";
-  }
-  if (variant === "disabled") {
-    return "var(--pf-t--color--gray--60)";
-  }
+const resolveColor = (variant: ColorVariant = "state", state?: Resource.CompoundState): string => {
+  if (variant === "default") return DEFAULT_COLOR;
 
-  return state ? colorConfig[state.toLowerCase() as Resource.CompoundStateKey] : undefined;
+  if (!state) return DEFAULT_COLOR;
+
+  const key = state.toLowerCase();
+  if (!isCompoundStateKey(key)) return DEFAULT_COLOR;
+  return colorConfig[key];
 };
 
 /** Icons for every compound state. */
 export const statusGroupIcons: Record<
   keyof Resource.CompoundStateSummary,
-  (options?: { state?: Resource.CompoundState; variant?: IconVariant }) => ReactNode
+  (options?: { state?: Resource.CompoundState; variant?: ColorVariant }) => ReactNode
 > = {
   blocked: ({ state, variant } = {}) => (
     <Icon size="heading_2xl">
-      <TrafficLightIcon style={{ color: resolveColor(state, variant) }} />
+      <TrafficLightIcon style={{ color: resolveColor(variant, state) }} />
     </Icon>
   ),
 
   compliance: ({ state, variant } = {}) => (
     <Icon size="heading_2xl">
-      <ShieldAltIcon style={{ color: resolveColor(state, variant) }} />
+      <ShieldAltIcon style={{ color: resolveColor(variant, state) }} />
     </Icon>
   ),
 
   lastHandlerRun: ({ state, variant } = {}) => (
     <Icon size="heading_2xl">
-      <CubeIcon style={{ color: resolveColor(state, variant) }} />
+      <CubeIcon style={{ color: resolveColor(variant, state) }} />
     </Icon>
   ),
 };

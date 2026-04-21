@@ -7,7 +7,7 @@ const pendingAnimation = keyframes`
  100% { opacity: .2}
 `;
 
-export const CompileReportsIndication = styled.span<{
+export const BlinkingDot = styled.span<{
   $size?: number;
 }>`
   display: inline-flex;

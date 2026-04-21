@@ -29,6 +29,7 @@ import {
   ConnectedFilterWidget,
   DeployButton,
   RepairButton,
+  BlinkingDot,
 } from "./Components";
 import { ResourcesTable } from "./ResourcesTable";
 import { createRows } from "./ResourcesTablePresenter";
@@ -85,8 +86,9 @@ export const Page: React.FC = () => {
     return <LoadingView ariaLabel="ResourcesPage-Loading" />;
   }
 
-  const resources = data?.resources;
-  const resourceSummary = data?.resourceSummary;
+  const resources = data.resources;
+  const resourceSummary = data.resourceSummary;
+  const deployingCount = resourceSummary.isDeploying["true"];
   const rows = createRows(resources);
 
   return (
@@ -94,6 +96,7 @@ export const Page: React.FC = () => {
       <PageSection
         hasBodyWrapper={false}
         style={{
+          position: "sticky",
           paddingBlockEnd: 0,
         }}
       >
@@ -106,8 +109,22 @@ export const Page: React.FC = () => {
             <Content component="h1" style={{ marginBottom: 0 }}>
               {words("inventory.tabs.resources")}
             </Content>
-            <Label icon={<CubesIcon />} variant="outline" color="blue">
-              {resourceSummary?.totalCount ?? 0}
+            <Label
+              icon={<CubesIcon />}
+              variant="outline"
+              color="blue"
+              data-testid="deploying-label"
+            >
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
+                {deployingCount > 0 && (
+                  <>
+                    {deployingCount}
+                    <BlinkingDot />
+                    <span>/</span>
+                  </>
+                )}
+                {resourceSummary.totalCount}
+              </span>
             </Label>
           </Flex>
           <Flex>

@@ -543,6 +543,7 @@ const dict = {
   "resources.column.value": "Value",
   "resources.column.requires": "Requires",
   "resources.column.status": "Status",
+  "resources.button.statusDetails": "Show status details",
   "resources.popover.title": "Resource State Summary",
   "resources.popover.deploying": "Deploying",
   "resources.popover.lastDeployed": "Last deployed: ",

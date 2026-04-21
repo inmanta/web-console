@@ -37,11 +37,11 @@ export function usePaginatedTable<TFilter = undefined, TSort extends string = st
     route,
   });
 
-  //when sorting is triggered, reset the current page
+  //when sorting or filtering is triggered, reset the current page
   useEffect(() => {
     setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order, sort.name]);
+  }, [sort.name, sort.order, JSON.stringify(filter)]);
 
   return {
     currentPage,

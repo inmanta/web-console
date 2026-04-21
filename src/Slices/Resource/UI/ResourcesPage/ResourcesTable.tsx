@@ -2,7 +2,7 @@ import React from "react";
 import { OnSort, Table, Th, Thead, Tr } from "@patternfly/react-table";
 import { Resource, Sort } from "@/Core";
 import { words } from "@/UI";
-import { ResourceTableRow } from "./ResourceTableRow";
+import { ResourceTableRow, ResourceRow } from "./ResourceTableRow";
 import {
   columnHeads,
   getColumnNameForIndex,
@@ -11,10 +11,11 @@ import {
 } from "./ResourcesTablePresenter";
 
 interface Props {
-  rows: Resource.Row[];
+  rows: ResourceRow[];
   sort: Sort.Type<Resource.SortKey>;
   setSort: (sort: Sort.Type<Resource.SortKey>) => void;
 }
+
 export const ResourcesTable: React.FC<Props> = ({ rows, sort, setSort, ...props }) => {
   const onSort: OnSort = (_event, index, order) => {
     setSort({

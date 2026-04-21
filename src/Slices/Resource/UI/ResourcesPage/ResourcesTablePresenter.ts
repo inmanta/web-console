@@ -1,6 +1,7 @@
 import { Resource } from "@/Core";
 import { ColumnHead } from "@/UI/Presenters";
 import { words } from "@/UI/words";
+import { ResourceRow } from "./ResourceTableRow";
 
 // TODO: Check if this presenter will suffice after the implementation of:
 // https://github.com/inmanta/web-console/issues/6809
@@ -14,7 +15,7 @@ export const columnHeads: ColumnHead[] = [
 
 export const sortableColumns = ["resource_type", "agent", "resource_id_value"];
 
-export function createRows(resources: Resource.FlatResource[]): Resource.Row[] {
+export function createRows(resources: Resource.Resource[]): ResourceRow[] {
   return resources.map((resource) => ({
     type: resource.resourceType,
     value: resource.resourceIdValue,

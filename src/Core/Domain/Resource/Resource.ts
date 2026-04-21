@@ -5,12 +5,58 @@ import { PageSize } from "../PageSize";
 import { Sort } from "../Sort";
 
 /**
- * Type values for the three compound states.
- * These match the uppercase values returned by the resource state API.
+ * --- General explanation of compound state ---
+ * Old status field for resources had 1 big flaw which was that it hid information:
+ * - Did it deploy succesfully in the past?
+ * - Is the intent correctly enforced?
+ * In short, more information should be available about a resource now in comparison to before.
+ * See {@link ResourceState} for details about resource state fields.
+ * See {@link CompoundState} for details about the compound state values.
+ */
+
+/**
+ * Result of the last handler execution for a resource. More of a health check because it is not supposed to fail.
+ *
+ * Possible values:
+ * - `"FAILED"` — Something went wrong in the handler execution. This could be a communication error with a device or an uncaught exception in the handler code.
+ * - `"SKIPPED"` — Handler decided that the resource is not ready to be processed by it. Most common reason for handler deciding to skip is that one of
+ * it's dependencies is in a failed state. Imagine a resource wanting to write it's intent on a virtual machine but the virtual machine itself doesn't exist.
+ * It can only write that intent on that machine once it exist, so it will decide to skip the processing of that resource.
+ * - `"SUCCESSFUL"` — Handler finishes it's run successfully, handler succeeded to enfore the resource's intent in the real world.
+ * - `"NEW"` — Handler has never finished run for this resource yet. Perhaps because it's waiting in queue, perhaps it is running at this very moment but it takes a while.
+ *
+ * These values match the uppercase values returned by the resource state API.
  */
 export type LastHandlerRun = "FAILED" | "SKIPPED" | "SUCCESSFUL" | "NEW";
+
+/**
+ * Indicates whether the real-world state matches the intended configuration. Is about intent being reflected in the real world.
+ *
+ * Possible values:
+ * - `"COMPLIANT"` — Derived from a successful handler result. May be overwritten when the intent is updated.
+ * - `"NON_COMPLIANT"` — Derived from a handler failure with 1 exception.
+ * Report only resources will get this state assigned to it as well because they are not allowed to enfore their intent (even if lastHandlerRun is successful).
+ * - `"HAS_UPDATE"` — The intent for this resource has received an update since the last handler run.
+ * Special form of non-compliance, the real world doesn't match the resource's intent but only because we haven't yet tried.
+ * A Resource with lastHandlerRun NEW would always have HAS_UPDATE as the compliance value.
+ * - `"UNDEFINED"` — Special form of HAS_UPDATE. Intent of the resource is unknown, these won't be send to the handler. Results in resource being BLOCKED.
+ */
 export type Compliance = "COMPLIANT" | "NON_COMPLIANT" | "HAS_UPDATE" | "UNDEFINED";
+
+/**
+ * Indicates whether execution of the resource handler is blocked. Heavily tied to UNDEFINED.
+ *
+ * Possible values:
+ * - `"BLOCKED"` — The resource cannot currently be processed.
+ * - `"NOT_BLOCKED"` — The resource can be processed normally.
+ * - `"TEMPORARILY_BLOCKED"` — The resource is blocked but may become unblocked automatically.
+ */
 export type Blocked = "BLOCKED" | "NOT_BLOCKED" | "TEMPORARILY_BLOCKED";
+
+/**
+ * Union of all compound state values.
+ * Combines {@link LastHandlerRun}, {@link Compliance}, and {@link Blocked}.
+ */
 export type CompoundState = LastHandlerRun | Compliance | Blocked;
 
 /**
@@ -74,7 +120,7 @@ export interface ResourceState {
 
 /**
  * A resource as returned by the API, wrapped in a GraphQL-style node structure.
- * Use {@link FlatResource} when the node wrapper has already been unwrapped.
+ * Use {@link Resource} when the node wrapper has already been unwrapped.
  *
  * @prop {string} resourceId - Unique identifier for the resource.
  * @prop {string} resourceType - The type of the resource (e.g. "frontend_model::resource_states::ResourceStateResource").
@@ -83,7 +129,7 @@ export interface ResourceState {
  * @prop {number} requiresLength - Number of other resources this resource depends on.
  * @prop {ResourceState} state - State fields of a resource. See {@link ResourceState}.
  */
-export interface Resource {
+export interface RawResource {
   node: {
     resourceId: string;
     resourceType: string;
@@ -95,26 +141,7 @@ export interface Resource {
 }
 
 /** Unwrapped resource node — convenience alias for use after unwrapping the API response. */
-export type FlatResource = Resource["node"];
-
-/** Table row shape used for the resource view. */
-export interface Row {
-  id: string;
-  type: string;
-  agent: string;
-  value: string;
-  requiresLength: number;
-  status: ResourceState;
-}
-
-/** Table row shape used for the desired state resource view. */
-export type RowFromVersion = {
-  id: string;
-  type: string;
-  agent: string;
-  value: string;
-  numberOfDependencies: ParsedNumber;
-};
+export type Resource = RawResource["node"];
 
 /** @deprecated Use Resource.CompoundState instead */
 export enum Status {
