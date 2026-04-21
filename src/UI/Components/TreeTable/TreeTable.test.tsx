@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, fireEvent } from "@testing-library/react";
@@ -12,11 +13,7 @@ import { InventoryAttributeHelper } from "./Inventory";
 import { InventoryTreeTableHelper } from "./Inventory/TreeTableHelper";
 import { TreeTable } from "./TreeTable";
 
-function inventorySetup(
-  attributes: Attributes,
-  service?: ServiceModel,
-  setTab?: ReturnType<typeof vi.fn>
-) {
+function inventorySetup(attributes: Attributes, service?: ServiceModel, setTab?: Mock) {
   const component = (
     <QueryClientProvider client={testClient}>
       <MockedDependencyProvider>
@@ -89,7 +86,7 @@ test("TreeTable with 1st level of attributes containing annotations should not r
   };
 
   // mock the setTab function
-  const setTab = vi.fn();
+  const setTab = vi.fn() as Mock;
 
   render(
     inventorySetup(

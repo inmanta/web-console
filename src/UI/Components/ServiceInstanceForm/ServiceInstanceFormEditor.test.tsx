@@ -6,6 +6,7 @@
  * Only the loading and hook are tested here.
  */
 
+import type { Mock } from "vitest";
 import { act } from "react";
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router";
@@ -30,7 +31,7 @@ import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
-  func: undefined | ReturnType<typeof vi.fn> = undefined,
+  func: undefined | Mock = undefined,
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined,
   initialStates: string[] = []
@@ -46,7 +47,7 @@ const setup = (
                 <ServiceInstanceForm
                   fields={fields}
                   onCancel={vi.fn()}
-                  onSubmit={func ? func : vi.fn()}
+                  onSubmit={func ?? (vi.fn() as Mock)}
                   isEdit={isEdit}
                   originalAttributes={originalAttributes}
                   service_entity="service_entity"

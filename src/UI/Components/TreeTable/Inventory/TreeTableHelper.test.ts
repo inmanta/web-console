@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import { PathHelper, TreeExpansionManager } from "@/UI/Components/TreeTable/Helpers";
 import { InventoryAttributeHelper } from "./AttributeHelper";
 import { InventoryTreeTableHelper } from "./TreeTableHelper";
@@ -92,7 +93,7 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
     }
   );
   // Act
-  const cb = vi.fn;
+  const cb = vi.fn() as Mock;
   const { rows } = treeTableHelper.createRows({ deallocation_ctx: false }, cb);
   // Assert
   const expectedRows = [

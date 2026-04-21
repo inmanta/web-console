@@ -1,3 +1,4 @@
+import type { Mock } from "vitest";
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -23,7 +24,7 @@ import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
-  func: undefined | ReturnType<typeof vi.fn> = undefined,
+  func: undefined | Mock = undefined,
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined,
   initialStates: string[] = []
@@ -39,7 +40,7 @@ const setup = (
                 <ServiceInstanceForm
                   fields={fields}
                   onCancel={vi.fn()}
-                  onSubmit={func ? func : vi.fn()}
+                  onSubmit={func ?? (vi.fn() as Mock)}
                   isEdit={isEdit}
                   originalAttributes={originalAttributes}
                   service_entity="service_entity"
