@@ -1,97 +1,94 @@
-import { Flex, FlexItem, Content, Icon } from "@patternfly/react-core";
+import { Flex, FlexItem, Content, Icon, ListItem, List } from "@patternfly/react-core";
 import { UnlinkIcon, ClockIcon, CubesIcon } from "@patternfly/react-icons";
 import { words } from "@/UI";
 import { DateWithTooltip, statusGroupIcons, statusMapping } from "@/UI/Components";
 import { BlinkingDot } from "./Components";
 import { ResourceRow } from "./ResourceTableRow";
 
-const RowComponent: React.FC<{
-  icon: React.ReactNode;
-  text: React.ReactNode;
-}> = ({ icon, text }) => (
-  <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
-    <FlexItem style={{ display: "inline-flex" }}>{icon}</FlexItem>
-    <Content>{text}</Content>
-  </Flex>
-);
-
 /** Orphans are not actively a part of the latest intent anymore so limited information is displayed for them. */
 export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
   if (row.status.isOrphan) {
     return (
-      <Flex direction={{ default: "column" }}>
-        <RowComponent
+      <List isPlain>
+        <ListItem
           icon={
             <Icon size="heading_2xl">
               <UnlinkIcon />
             </Icon>
           }
-          text={words("resources.popover.orphan")}
-        />
-
-        <RowComponent
+          style={{ alignItems: "center" }}
+        >
+          <Content>{words("resources.popover.orphan")}</Content>
+        </ListItem>
+        <ListItem
           icon={
             <Icon size="heading_2xl">
               <ClockIcon />
             </Icon>
           }
-          text={
-            <>
-              {words("resources.popover.lastDeployed")}
-              <DateWithTooltip timestamp={row.status.lastHandlerRunAt || ""} isFull />
-            </>
-          }
-        />
-      </Flex>
+          style={{ alignItems: "center" }}
+        >
+          <Content>
+            {words("resources.popover.lastDeployed")}
+            <DateWithTooltip timestamp={row.status.lastHandlerRunAt || ""} isFull />
+          </Content>
+        </ListItem>
+      </List>
     );
   }
 
   return (
-    <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
-      <RowComponent
+    <List isPlain>
+      <ListItem
         icon={statusGroupIcons["blocked"]({ state: row.status.blocked })}
-        text={statusMapping[row.status.blocked]}
-      />
+        style={{ alignItems: "center" }}
+      >
+        <Content>{statusMapping[row.status.blocked]}</Content>
+      </ListItem>
 
-      <RowComponent
+      <ListItem
         icon={statusGroupIcons["compliance"]({ state: row.status.compliance })}
-        text={statusMapping[row.status.compliance]}
-      />
+        style={{ alignItems: "center" }}
+      >
+        <Content>{statusMapping[row.status.compliance]}</Content>
+      </ListItem>
 
-      <RowComponent
+      <ListItem
         icon={statusGroupIcons["lastHandlerRun"]({ state: row.status.lastHandlerRun })}
-        text={statusMapping[row.status.lastHandlerRun]}
-      />
+        style={{ alignItems: "center" }}
+      >
+        <Content>{statusMapping[row.status.lastHandlerRun]}</Content>
+      </ListItem>
 
-      <RowComponent
+      <ListItem
         icon={
           <Icon size="heading_2xl">
             <ClockIcon />
           </Icon>
         }
-        text={
-          <>
-            {words("resources.popover.lastDeployed")}
-            <DateWithTooltip timestamp={row.status.lastHandlerRunAt || ""} isFull />
-          </>
-        }
-      />
+        style={{ alignItems: "center" }}
+      >
+        <Content>
+          {words("resources.popover.lastDeployed")}
+          <DateWithTooltip timestamp={row.status.lastHandlerRunAt || ""} isFull />
+        </Content>
+      </ListItem>
 
-      <RowComponent
+      <ListItem
         icon={
           <Icon size="heading_2xl">
             <CubesIcon />
           </Icon>
         }
-        text={
-          <>
-            {row.requiresLength}{" "}
-            {row.requiresLength === 1
-              ? words("resources.popover.requirement")
-              : words("resources.popover.requirements")}
-          </>
-        }
-      />
+        style={{ alignItems: "center" }}
+      >
+        <Content>
+          {row.requiresLength}{" "}
+          {row.requiresLength === 1
+            ? words("resources.popover.requirement")
+            : words("resources.popover.requirements")}
+        </Content>
+      </ListItem>
 
       {row.status.isDeploying && (
         <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
@@ -101,6 +98,6 @@ export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
           <Content component="p">{words("resources.popover.deploying")}</Content>
         </Flex>
       )}
-    </Flex>
+    </List>
   );
 };

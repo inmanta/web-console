@@ -165,7 +165,10 @@ describe("ResourcesPage", () => {
       await screen.findByRole("generic", { name: "ResourcesPage-Empty" }, { timeout: 5000 })
     ).toBeInTheDocument();
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test("shows error view when the request fails", async () => {
@@ -178,7 +181,10 @@ describe("ResourcesPage", () => {
     expect(screen.getByRole("region", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
     expect(await screen.findByRole("region", { name: "ResourcesPage-Error" })).toBeInTheDocument();
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test("shows success table", async () => {
@@ -190,7 +196,10 @@ describe("ResourcesPage", () => {
 
     expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   // --- Pagination ---
@@ -214,7 +223,10 @@ describe("ResourcesPage", () => {
 
     expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(6);
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   // --- Sorting ---
@@ -241,7 +253,10 @@ describe("ResourcesPage", () => {
       within(table).getByRole("columnheader", { name: words("resources.column.status") })
     ).toBeVisible();
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test("sets sorting parameters correctly on click", async () => {
@@ -276,7 +291,10 @@ describe("ResourcesPage", () => {
     expect(updatedRows[0]).toHaveTextContent("std::Directoryagent2/tmp/dir5Show Details");
     expect(updatedRows[5]).toHaveTextContent("std::Fileagent2/tmp/file4Show Details");
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test("resets to the first page when sorting changes", async () => {
@@ -378,7 +396,10 @@ describe("ResourcesPage", () => {
 
       expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(3);
 
-      await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+      await act(async () => {
+        const results = await axe(document.body);
+        expect(results).toHaveNoViolations();
+      });
     }
   );
 
@@ -432,7 +453,10 @@ describe("ResourcesPage", () => {
 
       expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(3);
 
-      await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+      await act(async () => {
+        const results = await axe(document.body);
+        expect(results).toHaveNoViolations();
+      });
     }
   );
 
@@ -478,7 +502,10 @@ describe("ResourcesPage", () => {
 
     expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(3);
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test.each`
@@ -503,7 +530,10 @@ describe("ResourcesPage", () => {
 
     expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(3);
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test("clear all filters removes default orphan filter", async () => {
@@ -545,7 +575,10 @@ describe("ResourcesPage", () => {
 
     expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(6);
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test("active filter count badge increments when filters are applied", async () => {
@@ -593,7 +626,10 @@ describe("ResourcesPage", () => {
         .length
     ).toBeGreaterThan(0);
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test("shows deploying count label when resources are deploying", async () => {
@@ -666,7 +702,10 @@ describe("ResourcesPage", () => {
       "4"
     );
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test("toolbar updates when data is auto-refreshed", async () => {
@@ -702,7 +741,10 @@ describe("ResourcesPage", () => {
       })
     ).toHaveAttribute("data-value", "4");
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   // --- Deploy / Repair buttons ---
@@ -733,7 +775,10 @@ describe("ResourcesPage", () => {
     expect(screen.getByTestId("dot-indication")).toBeInTheDocument();
     expect(body).toEqual({ agent_trigger_method: "push_incremental_deploy" });
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test("repair button fires correct request", async () => {
@@ -761,7 +806,10 @@ describe("ResourcesPage", () => {
     ).toBeDisabled();
     expect(body).toEqual({ agent_trigger_method: "push_full_deploy" });
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 
   test("deploy and repair buttons are disabled when environment is halted", async () => {
@@ -780,6 +828,9 @@ describe("ResourcesPage", () => {
       await screen.findByRole("button", { name: words("resources.deploySummary.deploy") })
     ).toBeDisabled();
 
-    await act(async () => expect(await axe(document.body)).toHaveNoViolations());
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
   });
 });

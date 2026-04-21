@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Button, Flex, FlexItem, Popover } from "@patternfly/react-core";
+import { Bullseye, Button, Flex, FlexItem, Popover } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import { Resource } from "@/Core";
 import { ResourceLink, statusGroupIcons } from "@/UI/Components";
@@ -43,18 +43,10 @@ export const ResourceTableRow: React.FC<{
               justifySelf: "flex-end",
             }}
           >
-            <FlexItem
-              style={{
-                display: "flex",
-                width: "20px",
-                height: "20px",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {/* Don't show deploying dot whenever resource is orphan */}
+            <Bullseye style={{ width: "20px" }}>
               {row.status.isDeploying && <BlinkingDot $size={10} />}
-            </FlexItem>
+            </Bullseye>
+
             <Button
               ref={buttonWrapperRef}
               variant="plain"

@@ -35,7 +35,7 @@ type GraphQLStateFilter = Partial<{
   blocked: { eq: Resource.Blocked[] };
 }>;
 
-export function isCompoundStateKey(value: string): value is Resource.CompoundStateKey {
+function isCompoundStateKey(value: string): value is Resource.CompoundStateKey {
   return value in STATUS_FIELD_MAP;
 }
 

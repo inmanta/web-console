@@ -143,7 +143,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   };
 
   const pageSizeNum = Number(pageSize.value);
-  const paginationVariables: Record<string, unknown> = before
+  const paginationVariables = before
     ? { last: pageSizeNum, before }
     : { first: pageSizeNum, ...(after ? { after } : {}) };
 

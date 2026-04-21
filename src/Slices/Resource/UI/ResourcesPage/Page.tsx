@@ -11,6 +11,7 @@ import {
   StackItem,
   ToolbarItem,
   Label,
+  Spinner,
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
@@ -29,7 +30,6 @@ import {
   ConnectedFilterWidget,
   DeployButton,
   RepairButton,
-  BlinkingDot,
 } from "./Components";
 import { ResourcesTable } from "./ResourcesTable";
 import { createRows } from "./ResourcesTablePresenter";
@@ -96,7 +96,6 @@ export const Page: React.FC = () => {
       <PageSection
         hasBodyWrapper={false}
         style={{
-          position: "sticky",
           paddingBlockEnd: 0,
         }}
       >
@@ -119,7 +118,7 @@ export const Page: React.FC = () => {
                 {deployingCount > 0 && (
                   <>
                     {deployingCount}
-                    <BlinkingDot />
+                    <Spinner size="sm" isInline />
                     <span>/</span>
                   </>
                 )}

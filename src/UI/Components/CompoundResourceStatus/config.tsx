@@ -2,7 +2,6 @@ import { ReactNode } from "react";
 import { Icon } from "@patternfly/react-core";
 import { CubeIcon, ShieldAltIcon, TrafficLightIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
-import { isCompoundStateKey } from "@/Data/Queries";
 
 /** Status config which maps the compound state types to a displayed string output.
  * Used in the ResourceTableRow.
@@ -69,11 +68,8 @@ const DEFAULT_COLOR = "var(--pf-t--global--icon--color--severity--minor--default
 const resolveColor = (variant: ColorVariant = "state", state?: Resource.CompoundState): string => {
   if (variant === "default") return DEFAULT_COLOR;
 
-  if (!state) return DEFAULT_COLOR;
-
-  const key = state.toLowerCase();
-  if (!isCompoundStateKey(key)) return DEFAULT_COLOR;
-  return colorConfig[key];
+  const key = state?.toLowerCase() as Resource.CompoundStateKey | undefined;
+  return key !== undefined && key in colorConfig ? colorConfig[key] : DEFAULT_COLOR;
 };
 
 /** Icons for every compound state. */

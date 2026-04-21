@@ -140,7 +140,7 @@ export interface RawResource {
   };
 }
 
-/** Unwrapped resource node — convenience alias for use after unwrapping the API response. */
+/** Unwrapped resource node — default for use after unwrapping the API response. */
 export type Resource = RawResource["node"];
 
 /** @deprecated Use Resource.CompoundState instead */
