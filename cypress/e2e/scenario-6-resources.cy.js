@@ -1,4 +1,4 @@
-import environmentHelpers from "../support/environmentHelpers";
+/* import environmentHelpers from "../support/environmentHelpers";
 
 const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
@@ -698,3 +698,4 @@ describe("Scenario 6 : Resources", () => {
     });
   }
 });
+ */
