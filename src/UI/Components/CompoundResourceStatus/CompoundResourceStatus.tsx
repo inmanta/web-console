@@ -8,39 +8,49 @@ import { colorConfig, statusGroupIcons, statusPriority } from "./config";
  * Narrows [string, unknown] to [Resource.CompoundStateType, number]. */
 const isCompoundStatusEntry = (
   entry: [string, unknown]
-): entry is [Resource.CompoundStateType, number] => {
+): entry is [Resource.CompoundStateKey, number] => {
   return entry[0] in colorConfig && typeof entry[1] === "number";
 };
 
-export interface CompoundResourceProps {
-  compoundState: Resource.CompoundState;
-  totalCount: number;
+interface CompoundResourceProps {
+  resourceSummary: Resource.ResourceSummary;
   updateFilter: (updater: (filter: Resource.Filter) => Resource.Filter) => void;
 }
 
 /**
- * Displays a color-coded legend bar for each resource status category.
+ * Displays a color-coded legend bar for each resource compound state.
  * Clicking a segment filters resources by that status. Shows a gray bar when empty.
  *
  * @props {CompoundResourceProps} props - The props of the component.
- *  @prop {Resource.CompoundState} compoundState - Status counts grouped by status category.
- *  @prop {number} totalCount - Total resource count; triggers empty state when zero.
+ *  @prop {Resource.resourceSummary} resourceSummary - Status counts grouped by state.
  *  @prop {Function} updateFilter - Updates the active resource filter.
  *
  * @returns {React.FC<CompoundResourceProps>} A legend bar for each compound state.
  */
 
 export const CompoundResourceStatus = ({
-  compoundState,
-  totalCount,
+  resourceSummary: { totalCount, blocked, compliance, lastHandlerRun },
   updateFilter,
 }: CompoundResourceProps) => {
-  const onClick = (id: Resource.CompoundStateType) => {
-    return updateFilter((filter) => ({ ...filter, status: [id] }));
+  const compoundState: Resource.CompoundStateSummary = { blocked, compliance, lastHandlerRun };
+
+  const onClick = (state: Resource.CompoundStateKey) => {
+    updateFilter((filter) => {
+      const current = filter.status ?? [];
+
+      if (current.includes(state)) {
+        return filter;
+      }
+
+      return {
+        ...filter,
+        status: [...current, state],
+      };
+    });
   };
 
   /** Converts a status record into an array of items consumable by LegendBar. */
-  const toLegendBarItems = (record: Resource.StateRecord) => {
+  const toLegendBarItems = (record: Partial<Record<Resource.CompoundStateKey, number>>) => {
     if (!totalCount) {
       return [
         {
@@ -62,6 +72,7 @@ export const CompoundResourceStatus = ({
         value,
         backgroundColor: colorConfig[status],
         label: status,
+        height: "20px",
         onClick,
       }));
     return items;
@@ -71,7 +82,7 @@ export const CompoundResourceStatus = ({
     <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }} flex={{ default: "flex_1" }}>
       {Object.entries(compoundState).map(([key, record]) => (
         <Flex key={key} flex={{ default: "flex_1" }} alignItems={{ default: "alignItemsCenter" }}>
-          <FlexItem>{statusGroupIcons[key]}</FlexItem>
+          <FlexItem style={{ display: "inline-flex" }}>{statusGroupIcons[key]()}</FlexItem>
           <FlexItem flex={{ default: "flex_1" }}>
             <LegendBar
               data-testid={`legend-bar-${key}`}

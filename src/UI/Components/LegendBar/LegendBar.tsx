@@ -25,7 +25,7 @@ export const LegendBar: React.FC<Props> = ({ items, total, label, ...props }) =>
         {items.length <= 0 ? (
           <LoneItem key="none" label={label || ""} />
         ) : (
-          items.map((item) => <Item key={item.id} {...item} height="20px" />)
+          items.map((item) => <Item key={item.id} {...item} />)
         )}
       </Bar>
       {total && <Total total={total} value={totalValue} />}

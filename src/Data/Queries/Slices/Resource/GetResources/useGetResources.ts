@@ -1,12 +1,52 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { PageSize, Resource, Sort } from "@/Core/Domain";
+import { PageSize, Pagination, Resource, Sort } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGraphQLRequest, REFETCH_INTERVAL } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
+import { buildHandlers, mapSort, mapStatusToGraphQLFilter, parseCurrentPage } from "./helpers";
+
+export interface PageInfo {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  endCursor: string | null;
+  startCursor: string | null;
+}
+
+/**
+ * GraphQL response type for the resources query
+ */
+interface ResourcesGraphQLResponse {
+  data: {
+    resources: {
+      totalCount: number;
+      pageInfo: PageInfo;
+      edges: Resource.RawResource[];
+    };
+    resourceSummary: Resource.ResourceSummary;
+  };
+}
+
+/**
+ * Flattened response from the useGetResources hook,
+ * with pagination metadata and navigation handlers.
+ */
+export interface GetResourcesResponse {
+  resources: Resource.Resource[];
+  resourceSummary: Resource.ResourceSummary;
+  metadata: Pagination.Metadata;
+  handlers: Handlers;
+}
+
+/**
+ * Return signature of the useGetResources React Query hook
+ */
+interface GetResources {
+  useContinuous: () => UseQueryResult<GetResourcesResponse, Error>;
+}
 
 /**
  * Interface for filtering resources
@@ -18,79 +58,37 @@ interface Filter {
   value?: string[];
 }
 
-/**
- * Result interface for the resources API response
- */
-interface Result {
-  data: Resource.Resource[];
-  metadata: Resource.Metadata;
-}
-
-export interface GetResourcesResponse extends Result {
-  handlers: Handlers;
-}
-
-/**
- * Return signature of the useGetResources React Query hook
- */
-interface GetResources {
-  useContinuous: () => UseQueryResult<GetResourcesResponse, Error>;
-}
-
-export interface GetResourcesParams {
+interface GetResourcesParams {
   pageSize: PageSize.PageSize;
   filter: Filter;
   sort?: Sort.Type<Resource.SortKey>;
   currentPage: CurrentPage;
 }
 
-/**
- * GraphQL response type for the resources query
- */
-interface ResourcesGraphQLResponse {
-  data: {
-    resources: {
-      totalCount: number;
-      pageInfo: {
-        hasNextPage: boolean;
-        endCursor: string | null;
-      };
-      edges: Array<{
-        node: {
-          resourceId: string;
-          resourceType: string;
-          agent: string;
-          resourceIdValue: string;
-          requiresLength: number;
-          state: {
-            lastNonDeployingStatus: string;
-          } | null;
-        };
-      }>;
-    };
-    resourceSummary: {
-      totalCount: number;
-      lastHandlerRun: Resource.CompoundState["lastHandlerRun"];
-      blocked: Resource.CompoundState["blocked"];
-      compliance: Resource.CompoundState["compliance"];
-      isDeploying: { true: number; false: number };
-    };
-  };
-}
-
 const GET_RESOURCES_QUERY = gql`
-  query (
+  query GetResources(
     $filter: ResourceFilter!
     $environment: String!
     $first: Int
     $after: String
+    $last: Int
+    $before: String
     $orderBy: [StrawberryOrder!]
   ) {
-    resources(filter: $filter, first: $first, after: $after, orderBy: $orderBy) {
+    resources(
+      filter: $filter
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+      orderBy: $orderBy
+    ) {
       totalCount
       pageInfo {
         hasNextPage
+        hasPreviousPage
         endCursor
+        startCursor
       }
       edges {
         node {
@@ -100,99 +98,25 @@ const GET_RESOURCES_QUERY = gql`
           resourceIdValue
           requiresLength
           state {
-            lastNonDeployingStatus
+            isDeploying
+            lastHandlerRun
+            compliance
+            blocked
+            lastHandlerRunAt
+            isOrphan
           }
         }
       }
     }
     resourceSummary(environment: $environment) {
-      totalCount
       lastHandlerRun
       blocked
       compliance
       isDeploying
+      totalCount
     }
   }
 `;
-
-/**
- * Maps a filter.status array to GraphQL ResourceFilter fields.
- * Supports orphaned/!orphaned mapping. Other status values are not
- * supported by the GraphQL ResourceFilter and are silently ignored.
- */
-function mapStatusToGraphQLFilter(status: string[] | undefined): { isOrphan?: boolean } {
-  if (!status || status.length === 0) return {};
-
-  for (const s of status) {
-    if (s === "!orphaned") return { isOrphan: false };
-    if (s === "orphaned") return { isOrphan: true };
-  }
-
-  return {};
-}
-
-/**
- * Maps sort parameters to the GraphQL orderBy format.
- */
-function mapSort(
-  sort: Sort.Type<Resource.SortKey> | undefined
-): Array<{ key: string; order: string }> | undefined {
-  if (!sort) return undefined;
-
-  return [{ key: sort.name, order: sort.order }];
-}
-
-/**
- * Parses the currentPage URL state value into a GraphQL after-cursor and before-offset.
- * Format: "" (first page) or "after=<cursor>&before=<N>"
- */
-function parseCurrentPage(currentPage: CurrentPage): {
-  after: string | undefined;
-  before: number;
-} {
-  if (!currentPage.value) {
-    return { after: undefined, before: 0 };
-  }
-
-  const params = new URLSearchParams(currentPage.value);
-  const after = params.get("after") ?? undefined;
-  const before = parseInt(params.get("before") ?? "0", 10);
-
-  return { after, before };
-}
-
-/**
- * Builds pagination handlers from GraphQL pageInfo.
- */
-function buildHandlers(
-  pageInfo: { hasNextPage: boolean; endCursor: string | null },
-  currentBefore: number,
-  pageSize: number
-): Handlers {
-  const nextBefore = currentBefore + pageSize;
-  const next =
-    pageInfo.hasNextPage && pageInfo.endCursor
-      ? `after=${pageInfo.endCursor}&before=${nextBefore}`
-      : undefined;
-
-  return { next };
-}
-
-/**
- * Temporary mock for deploy_summary until resourceSummary is wired up.
- * Returns fixed placeholder values to keep the progress bar functional.
- */
-function mockDeploySummary(_resources: Resource.Resource[], total: number): Resource.DeploySummary {
-  return {
-    total,
-    by_state: {
-      deployed: Math.floor(total * 0.7),
-      deploying: Math.floor(total * 0.1),
-      failed: Math.floor(total * 0.1),
-      skipped: Math.floor(total * 0.1),
-    },
-  };
-}
 
 /**
  * React Query hook to fetch resources via GraphQL
@@ -204,7 +128,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
 
-  const { after, before: currentBefore } = parseCurrentPage(
+  const { after, before, beforeCount } = parseCurrentPage(
     currentPage || { kind: "CurrentPage", value: "" }
   );
 
@@ -218,11 +142,15 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
     ...statusFilter,
   };
 
+  const pageSizeNum = Number(pageSize.value);
+  const paginationVariables = before
+    ? { last: pageSizeNum, before }
+    : { first: pageSizeNum, ...(after ? { after } : {}) };
+
   const variables: Record<string, unknown> = {
     filter: graphqlFilter,
     environment: env,
-    first: Number(pageSize.value),
-    ...(after ? { after } : {}),
+    ...paginationVariables,
     ...(sort ? { orderBy: mapSort(sort) } : {}),
   };
 
@@ -236,42 +164,28 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
       useQuery({
         queryKey: getResourcesKey.list([pageSize, ...filterArray, ...sortArray, currentPage, env]),
         queryFn,
-        select: (data): GetResourcesResponse => {
-          const { resources } = data.data;
-          const pageSize_ = Number(pageSize.value);
+        select: (data) => {
+          const { resources, resourceSummary } = data.data;
           const totalCount = resources.totalCount;
+          const handlers = buildHandlers(resources.pageInfo, beforeCount, pageSizeNum);
+          const edges = resources?.edges || [];
+          const afterCount = Math.max(0, totalCount - beforeCount - edges.length);
 
-          const mappedResources: Resource.Resource[] = resources.edges.map(({ node }) => ({
-            resource_id: node.resourceId,
-            requires: [],
-            requiresLength: node.requiresLength,
-            status: (node.state?.lastNonDeployingStatus ?? "undefined") as Resource.Status,
-            id_details: {
-              resource_type: node.resourceType,
-              agent: node.agent,
-              attribute: "",
-              resource_id_value: node.resourceIdValue,
-            },
-          }));
-
-          const handlers = buildHandlers(resources.pageInfo, currentBefore, pageSize_);
-
-          const afterCount = Math.max(0, totalCount - currentBefore - mappedResources.length);
-
-          const metadata: Resource.Metadata = {
+          const metadata: Pagination.Metadata = {
             total: totalCount,
-            before: currentBefore,
+            before: beforeCount,
             after: afterCount,
-            page_size: pageSize_,
-            deploy_summary: mockDeploySummary(mappedResources, totalCount),
+            page_size: pageSizeNum,
           };
 
           return {
-            data: mappedResources,
+            resources: edges.map((edge) => edge.node),
+            resourceSummary,
             metadata,
             handlers,
           };
         },
+
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         placeholderData: keepPreviousData,
       }),

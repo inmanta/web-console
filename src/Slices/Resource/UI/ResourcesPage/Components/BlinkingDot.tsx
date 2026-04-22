@@ -7,17 +7,19 @@ const pendingAnimation = keyframes`
  100% { opacity: .2}
 `;
 
-export const CompileReportsIndication = styled.span`
+export const BlinkingDot = styled.span<{
+  $size?: number;
+}>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 10px;
-  height: 10px;
+  width: ${({ $size = 8 }) => $size}px;
+  height: ${({ $size = 8 }) => $size}px;
   &::before {
     content: "";
     background-color: var(--pf-t--global--color--nonstatus--blue--default);
-    width: 8px;
-    height: 8px;
+    width: ${({ $size = 8 }) => $size - 2}px;
+    height: ${({ $size = 8 }) => $size - 2}px;
     border-radius: 50%;
     border: 1px solid var(--pf-t--global--border--color--nonstatus--blue--default);
     animation: ${pendingAnimation} 2s infinite;

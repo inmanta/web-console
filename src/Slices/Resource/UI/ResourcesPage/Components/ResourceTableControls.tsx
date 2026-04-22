@@ -17,6 +17,7 @@ interface Props {
   onToggleFilters: () => void;
   isDrawerExpanded: boolean;
   activeFilterCount: number;
+  noResourcesFound: boolean;
 }
 
 /**
@@ -30,6 +31,7 @@ interface Props {
  *  @prop {() => void} onToggleFilters - The function to toggle the filters
  *  @prop {boolean} isDrawerExpanded - Whether the drawer is expanded
  *  @prop {number} activeFilterCount - The number of active filters
+ *  @props {boolean} noResourcesFound - Whether there are no resources found with the current filters
  */
 export const ResourceTableControls: React.FC<Props> = ({
   summaryWidget,
@@ -37,34 +39,40 @@ export const ResourceTableControls: React.FC<Props> = ({
   onToggleFilters,
   isDrawerExpanded,
   activeFilterCount,
+  noResourcesFound,
 }) => (
-  <>
-    <Toolbar aria-label="Resources-toolbar">
-      <ToolbarContent>
-        <Flex style={{ width: "100%" }} alignItems={{ default: "alignItemsFlexEnd" }}>
-          {summaryWidget}
-          <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
-          <ToolbarItem>
-            <Button
-              onClick={onToggleFilters}
-              variant="link"
-              icon={<FilterIcon />}
-              iconPosition="end"
-              aria-pressed={isDrawerExpanded}
+  <Toolbar aria-label="Resources-toolbar" style={{ paddingBlockEnd: 0 }}>
+    <ToolbarContent>
+      <Flex style={{ width: "100%" }} alignItems={{ default: "alignItemsFlexEnd" }}>
+        {summaryWidget}
+        <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
+        <ToolbarItem>
+          <Button
+            {...(noResourcesFound && { isDanger: true })}
+            onClick={onToggleFilters}
+            variant="link"
+            icon={<FilterIcon />}
+            iconPosition="end"
+            aria-pressed={isDrawerExpanded}
+          >
+            <Flex
+              alignItems={{ default: "alignItemsCenter" }}
+              spaceItems={{ default: "spaceItemsSm" }}
             >
-              <Flex
-                alignItems={{ default: "alignItemsCenter" }}
-                spaceItems={{ default: "spaceItemsSm" }}
-              >
-                <FlexItem>
-                  <Badge>{activeFilterCount}</Badge>
-                </FlexItem>
-                <FlexItem>{words("resources.filters")}</FlexItem>
-              </Flex>
-            </Button>
-          </ToolbarItem>
-        </Flex>
-      </ToolbarContent>
-    </Toolbar>
-  </>
+              <FlexItem>
+                <Badge
+                  {...(noResourcesFound && {
+                    style: { backgroundColor: "var(--pf-t--color--red--60)" },
+                  })}
+                >
+                  {activeFilterCount}
+                </Badge>
+              </FlexItem>
+              <FlexItem>{words("resources.filters")}</FlexItem>
+            </Flex>
+          </Button>
+        </ToolbarItem>
+      </Flex>
+    </ToolbarContent>
+  </Toolbar>
 );

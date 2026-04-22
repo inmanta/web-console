@@ -19,9 +19,20 @@ interface Props {
 }
 
 /**
- * Wrapper for Pagination as we are basing ourselfs on links served by backend
+ * Pagination wrapper around PatternFly Pagination.
  *
- * Note: Parameters responsible for pagination on endpoint doesn't allow to pass numerical range for displayed results, or any other way to navigate through pages other than previous/next page
+ * Uses backend-driven pagination with cursor-based navigation (next/previous handlers)
+ * instead of numeric page indexing.
+ *
+ * @props {Props} props - The props of the component.
+ *  @prop {Data} data - Backend pagination data containing metadata and navigation handlers.
+ *  @prop {Pagination.Handlers} data.handlers - Cursor-based navigation links (next/prev).
+ *  @prop {Pagination.Metadata} data.metadata - Pagination metadata (total, page size, offsets).
+ *  @prop {PageSize.Type} pageSize - Current page size configuration.
+ *  @prop {(size: PageSize.Type) => void} setPageSize - Updates the number of items per page.
+ *  @prop {(currentPage: CurrentPage) => void} setCurrentPage - Updates pagination cursor/page.
+ *  @prop {boolean} [isDisabled] - Disables pagination interactions during loading states.
+ *  @prop {"top" | "bottom"} [variant] - Visual placement variant of the pagination component.
  */
 export const Provider: React.FC<Props> = ({
   data,
@@ -35,13 +46,13 @@ export const Provider: React.FC<Props> = ({
 
   return (
     <PaginationComponent
+      style={{ pointerEvents: isDisabled ? "none" : "auto" }}
       itemCount={Number(metadata.total)}
       perPage={Number(pageSize.value)}
       titles={{
         perPageSuffix: "",
         paginationAriaLabel: `${variant}-Pagination`,
       }}
-      isDisabled={isDisabled}
       page={Math.floor(Number(metadata.before) / Number(metadata.page_size)) + 1}
       onNextClick={() =>
         setCurrentPage({

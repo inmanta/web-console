@@ -4,7 +4,7 @@ import { DeployAgentsAction, useDeployAgents } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { CompileReportsIndication } from "./CompileReportsIndication";
+import { BlinkingDot } from "./BlinkingDot";
 
 interface Props {
   method: DeployAgentsAction;
@@ -66,7 +66,7 @@ export const ResourcePageActionButton: React.FC<Props> = ({ method, tooltip, tex
           <FlexItem>{textContent}</FlexItem>
           {showSpinner && (
             <FlexItem>
-              <CompileReportsIndication data-testid="dot-indication" />
+              <BlinkingDot data-testid="dot-indication" />
             </FlexItem>
           )}
         </Flex>

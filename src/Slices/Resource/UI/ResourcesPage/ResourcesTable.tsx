@@ -1,35 +1,32 @@
 import React from "react";
-import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
+import { OnSort, Table, Th, Thead, Tr } from "@patternfly/react-table";
 import { Resource, Sort } from "@/Core";
-import { useExpansion } from "@/Data";
 import { words } from "@/UI";
-import { ResourceTableRow } from "./ResourceTableRow";
-import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
+import { ResourceTableRow, ResourceRow } from "./ResourceTableRow";
+import {
+  columnHeads,
+  getColumnNameForIndex,
+  getIndexForColumnName,
+  sortableColumns,
+} from "./ResourcesTablePresenter";
 
 interface Props {
-  rows: Resource.Row[];
-  tablePresenter: ResourcesTablePresenter;
+  rows: ResourceRow[];
   sort: Sort.Type<Resource.SortKey>;
   setSort: (sort: Sort.Type<Resource.SortKey>) => void;
 }
-export const ResourcesTable: React.FC<Props> = ({
-  rows,
-  tablePresenter,
-  sort,
-  setSort,
-  ...props
-}) => {
-  const [isExpanded, onExpansion] = useExpansion();
+
+export const ResourcesTable: React.FC<Props> = ({ rows, sort, setSort, ...props }) => {
   const onSort: OnSort = (_event, index, order) => {
     setSort({
-      name: tablePresenter.getColumnNameForIndex(index) as Resource.SortKey,
+      name: getColumnNameForIndex(index) as Resource.SortKey,
       order,
     });
   };
-  const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
+  const activeSortIndex = getIndexForColumnName(sort.name);
   const smallHeaders = ["status"];
-  const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
-    const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
+  const heads = columnHeads.map(({ apiName, displayName }, columnIndex) => {
+    const hasSort = sortableColumns.includes(apiName);
     const sortParams = hasSort
       ? {
           sort: {
@@ -46,17 +43,21 @@ export const ResourcesTable: React.FC<Props> = ({
     const widthModifier = smallHeaders.includes(apiName) ? "fitContent" : "nowrap";
 
     return (
-      <Th key={displayName} {...sortParams} modifier={widthModifier}>
+      <Th
+        key={displayName}
+        {...sortParams}
+        modifier={widthModifier}
+        textCenter={apiName === "status"}
+      >
         {displayName}
       </Th>
     );
   });
 
   return (
-    <Table {...props} variant={TableVariant.compact} isStickyHeader>
+    <Table {...props} isStickyHeader>
       <Thead>
         <Tr>
-          <Th modifier="fitContent" screenReaderText={words("common.emptyColumnHeader")} />
           {heads}
           <Th
             modifier="fitContent"
@@ -65,15 +66,8 @@ export const ResourcesTable: React.FC<Props> = ({
           />
         </Tr>
       </Thead>
-      {rows.map((row, index) => (
-        <ResourceTableRow
-          row={row}
-          key={row.id}
-          index={index}
-          isExpanded={isExpanded(row.id)}
-          onToggle={onExpansion(row.id)}
-          numberOfColumns={tablePresenter.getNumberOfColumns()}
-        />
+      {rows.map((row) => (
+        <ResourceTableRow row={row} key={row.id} />
       ))}
     </Table>
   );

@@ -62,7 +62,7 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
             {words("resources.filters.status.placeholder")}
           </MenuToggle>
         )}
-        aria-label={words("resources.column.deployState")}
+        aria-label={words("resources.column.status")}
         selected={selectedStatuses ?? []}
         isOpen={isOpen}
         onOpenChange={(openState: boolean) => setIsOpen(openState)}

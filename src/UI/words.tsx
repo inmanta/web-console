@@ -532,6 +532,8 @@ const dict = {
    * Latest released resource view
    */
   "resources.empty.message": "No resources found",
+  "resources.empty.filterMessage":
+    "The given combination of filters didn't match any existing resources, please edit your filter values.",
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "discoveredResourceDetails.title": "Discovered Resource Details",
@@ -540,7 +542,14 @@ const dict = {
   "resources.column.agent": "Agent",
   "resources.column.value": "Value",
   "resources.column.requires": "Requires",
-  "resources.column.deployState": "Deploy State",
+  "resources.column.status": "Status",
+  "resources.button.statusDetails": "Show status details",
+  "resources.popover.title": "Resource State Summary",
+  "resources.popover.deploying": "Deploying",
+  "resources.popover.lastDeployed": "Last deployed: ",
+  "resources.popover.orphan": "Orphan",
+  "resources.popover.requirement": "Requirement",
+  "resources.popover.requirements": "Requirements",
   "resources.filters.status.placeholder": "Deploy State...",
   "resources.filters.agent.placeholder": "Agent...",
   "resources.filters.value.placeholder": "Value...",
@@ -563,6 +572,7 @@ const dict = {
   "resources.filters.active.empty.body":
     "Select filters from the tabs above to refine your results.",
   "resources.filters.active.group.close": (group: string) => `Remove ${group} filters`,
+  "resources.filters": "Filters",
   "resources.deploySummary.title": "Deployment state summary",
   "resources.deploySummary.deploy": "Deploy",
   "resources.deploySummary.repair": "Repair",
@@ -601,7 +611,6 @@ const dict = {
     "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
   "resources.file.get": "Get file",
   "resources.file.error": "Error fetching file content",
-  "resources.filters": "Filters",
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",

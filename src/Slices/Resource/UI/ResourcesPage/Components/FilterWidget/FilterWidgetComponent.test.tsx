@@ -119,7 +119,7 @@ describe("FilterWidgetComponent", () => {
       value: undefined,
     });
 
-    await userEvent.click(screen.getByLabelText("Remove Deploy State filters"));
+    await userEvent.click(screen.getByLabelText("Remove Status filters"));
     expect(setFilter).toHaveBeenNthCalledWith(8, {
       ...filter,
       status: undefined,

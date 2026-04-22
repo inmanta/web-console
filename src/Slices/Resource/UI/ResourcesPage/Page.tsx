@@ -11,13 +11,19 @@ import {
   StackItem,
   ToolbarItem,
   Label,
+  Spinner,
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetResources } from "@/Data/Queries";
-import { mockCompoundResourceData } from "@/Test/Data/Resource";
-import { EmptyView, PaginationWidget, ErrorView, LoadingView } from "@/UI/Components";
+import {
+  EmptyView,
+  PaginationWidget,
+  ErrorView,
+  LoadingView,
+  CompoundResourceStatus,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
 import {
   ResourceTableControls,
@@ -25,8 +31,8 @@ import {
   DeployButton,
   RepairButton,
 } from "./Components";
-import { ResourcesTableProvider } from "./ResourcesTableProvider";
-import { Summary } from "./Summary";
+import { ResourcesTable } from "./ResourcesTable";
+import { createRows } from "./ResourcesTablePresenter";
 
 export const Page: React.FC = () => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
@@ -59,7 +65,9 @@ export const Page: React.FC = () => {
     }, 0);
   }, [filterWithDefaults]);
 
-  const onCloseFilterWidget = useCallback(() => setIsDrawerExpanded(false), []);
+  const onCloseFilterWidget = useCallback(() => {
+    setIsDrawerExpanded(false);
+  }, []);
 
   const { data, isSuccess, isFetching, isError, refetch, error } = useGetResources({
     pageSize,
@@ -78,16 +86,17 @@ export const Page: React.FC = () => {
     return <LoadingView ariaLabel="ResourcesPage-Loading" />;
   }
 
+  const resources = data.resources;
+  const resourceSummary = data.resourceSummary;
+  const deployingCount = resourceSummary.isDeploying["true"];
+  const rows = createRows(resources);
+
   return (
     <>
       <PageSection
         hasBodyWrapper={false}
         style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 400,
-          backgroundColor: "var(--pf-t--global--background--color--primary--default)",
-          paddingBottom: "var(--pf-t--global--spacer--md)",
+          paddingBlockEnd: 0,
         }}
       >
         <Flex
@@ -99,9 +108,22 @@ export const Page: React.FC = () => {
             <Content component="h1" style={{ marginBottom: 0 }}>
               {words("inventory.tabs.resources")}
             </Content>
-            <Label icon={<CubesIcon />} variant="outline" color="blue">
-              {/* TODO: Replace later on with real data */}
-              {mockCompoundResourceData.totalCount}
+            <Label
+              icon={<CubesIcon />}
+              variant="outline"
+              color="blue"
+              data-testid="deploying-label"
+            >
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
+                {deployingCount > 0 && (
+                  <>
+                    {deployingCount}
+                    <Spinner size="sm" isInline />
+                    <span>/</span>
+                  </>
+                )}
+                {resourceSummary.totalCount}
+              </span>
             </Label>
           </Flex>
           <Flex>
@@ -115,7 +137,9 @@ export const Page: React.FC = () => {
         </Flex>
 
         <ResourceTableControls
-          summaryWidget={<Summary data={data} updateFilter={updateFilter} />}
+          summaryWidget={
+            <CompoundResourceStatus updateFilter={updateFilter} resourceSummary={resourceSummary} />
+          }
           paginationWidget={
             <PaginationWidget
               data={data}
@@ -128,6 +152,7 @@ export const Page: React.FC = () => {
           onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
           isDrawerExpanded={isDrawerExpanded}
           activeFilterCount={activeFilterCount}
+          noResourcesFound={resources.length === 0}
         />
       </PageSection>
       <PageSection
@@ -150,19 +175,19 @@ export const Page: React.FC = () => {
                 minHeight: 0,
               }}
             >
-              {data.data.length <= 0 ? (
+              {resources.length <= 0 ? (
                 <EmptyView
-                  message={words("resources.empty.message")}
+                  message={words("resources.empty.filterMessage")}
                   aria-label="ResourcesPage-Empty"
                 />
               ) : (
                 <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
                   <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
-                    <ResourcesTableProvider
+                    <ResourcesTable
+                      aria-label="ResourcesPage-Success"
+                      rows={rows}
                       sort={sort}
                       setSort={setSort}
-                      resources={data.data}
-                      aria-label="ResourcesPage-Success"
                     />
                   </StackItem>
                   <StackItem>

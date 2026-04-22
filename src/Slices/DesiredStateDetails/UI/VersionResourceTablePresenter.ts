@@ -1,9 +1,10 @@
 import { Resource } from "@/Core";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
+import { RowFromVersion } from "./Row";
 
 export class VersionResourceTablePresenter
-  implements TablePresenter<Resource.FromVersion, Resource.RowFromVersion>
+  implements TablePresenter<Resource.FromVersionResource, RowFromVersion>
 {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
@@ -27,7 +28,7 @@ export class VersionResourceTablePresenter
     this.numberOfColumns = this.columnHeads.length + 2;
   }
 
-  createRows(sourceData: Resource.FromVersion[]): Resource.RowFromVersion[] {
+  createRows(sourceData: Resource.FromVersionResource[]): RowFromVersion[] {
     return sourceData.map((resource) => ({
       type: resource.id_details.resource_type,
       value: resource.id_details.resource_id_value,

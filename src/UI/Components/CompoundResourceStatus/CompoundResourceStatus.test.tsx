@@ -1,24 +1,28 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { mockCompoundResourceData } from "@/Test/Data/Resource";
-import { CompoundResourceProps, CompoundResourceStatus } from "./CompoundResourceStatus";
-
-const defaultProps: CompoundResourceProps = {
-  ...mockCompoundResourceData,
-  updateFilter: vi.fn(),
-};
+import { createMockResourceSummary } from "@/Test/Data/Resource";
+import { CompoundResourceStatus } from "./CompoundResourceStatus";
 
 describe("CompoundResourceStatus", () => {
   it("renders an empty legend item for each status category when totalCount is 0", () => {
-    const { getAllByLabelText } = render(
-      <CompoundResourceStatus {...defaultProps} totalCount={0} />
+    render(
+      <CompoundResourceStatus
+        resourceSummary={createMockResourceSummary({ totalCount: 0 })}
+        updateFilter={vi.fn()}
+      />
     );
-    const emptyItems = getAllByLabelText("LegendItem-empty");
-    expect(emptyItems).toHaveLength(Object.keys(defaultProps.compoundState).length);
+
+    const emptyItems = screen.getAllByLabelText("LegendItem-empty");
+    expect(emptyItems).toHaveLength(3); // blocked, compliance, lastHandlerRun
   });
 
   it("renders all 3 legend bars when totalCount > 0", () => {
-    render(<CompoundResourceStatus {...defaultProps} />);
+    render(
+      <CompoundResourceStatus
+        resourceSummary={createMockResourceSummary()}
+        updateFilter={vi.fn()}
+      />
+    );
 
     expect(screen.getByTestId("legend-bar-blocked")).toBeInTheDocument();
     expect(screen.getByTestId("legend-bar-compliance")).toBeInTheDocument();
@@ -28,20 +32,31 @@ describe("CompoundResourceStatus", () => {
   it("filters out items with value 0 from the bar", () => {
     render(
       <CompoundResourceStatus
-        {...defaultProps}
-        compoundState={{
-          ...defaultProps.compoundState,
-          blocked: { blocked: 1, not_blocked: 0, temporarily_blocked: 0 },
-        }}
+        resourceSummary={createMockResourceSummary({
+          blocked: {
+            blocked: 1,
+            not_blocked: 0,
+            temporarily_blocked: 0,
+          },
+        })}
+        updateFilter={vi.fn()}
       />
     );
+
     const bar = screen.getByTestId("legend-bar-blocked");
+
     expect(bar.querySelector("[data-testid='legend-bar-items']")?.children).toHaveLength(1);
   });
 
   it("calls updateFilter with correct status on item click", async () => {
     const updateFilter = vi.fn();
-    render(<CompoundResourceStatus {...defaultProps} updateFilter={updateFilter} />);
+
+    render(
+      <CompoundResourceStatus
+        resourceSummary={createMockResourceSummary()}
+        updateFilter={updateFilter}
+      />
+    );
 
     const bar = screen.getByTestId("legend-bar-blocked");
     const firstSegment = bar.querySelector("[aria-label^='LegendItem-']") as HTMLElement;
@@ -59,11 +74,14 @@ describe("CompoundResourceStatus", () => {
   it("renders success statuses before danger statuses", () => {
     render(
       <CompoundResourceStatus
-        {...defaultProps}
-        compoundState={{
-          ...defaultProps.compoundState,
-          blocked: { blocked: 1, not_blocked: 1, temporarily_blocked: 0 },
-        }}
+        resourceSummary={createMockResourceSummary({
+          blocked: {
+            blocked: 1,
+            not_blocked: 1,
+            temporarily_blocked: 0,
+          },
+        })}
+        updateFilter={vi.fn()}
       />
     );
     const bar = screen.getByTestId("legend-bar-blocked");
