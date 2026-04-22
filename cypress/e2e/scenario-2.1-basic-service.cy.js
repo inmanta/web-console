@@ -183,6 +183,7 @@ if (isIso) {
     });
 
     it("2.1.4 Duplicate instance with Editor", () => {
+      cy.startMonacoCDNCheck();
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
@@ -278,6 +279,8 @@ if (isIso) {
       cy.get("@previousCount").then((previousCount) => {
         cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", previousCount + 1);
       });
+
+      cy.assertNoCDNDownloads();
     });
 
     it("2.1.5 JSON editor invalid should disable buttons", () => {

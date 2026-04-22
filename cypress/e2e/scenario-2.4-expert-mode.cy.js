@@ -90,6 +90,7 @@ if (isIso) {
     });
 
     it("2.4.2 Verify markdown preview in documentation tab", () => {
+      cy.startMonacoCDNCheck();
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
@@ -125,9 +126,12 @@ if (isIso) {
         .should("contain", "Test Heading")
         .and("contain", "This is a test paragraph")
         .and("contain", "bold");
+
+      cy.assertNoCDNDownloads();
     });
 
     it("2.4.3 Edit instance attributes", () => {
+      cy.startMonacoCDNCheck();
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
@@ -193,6 +197,8 @@ if (isIso) {
 
       // expect the value of the interface_r1_name to be updated
       cy.get('[aria-label="interface_r1_name_value"]').should("have.text", "eth1");
+
+      cy.assertNoCDNDownloads();
     });
 
     it("2.4.4 Destroy previously created instance", () => {
