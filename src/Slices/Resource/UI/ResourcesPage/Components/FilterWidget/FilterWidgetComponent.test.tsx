@@ -3,8 +3,20 @@ import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Resource } from "@/Core";
-
+import { words } from "@/UI";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
+
+vi.mock("@/Data/Queries", () => ({
+  useGetAgents: () => ({
+    useInfiniteScroll: () => ({
+      data: { pages: [] },
+      hasNextPage: false,
+      isFetchingNextPage: false,
+      isLoading: false,
+      fetchNextPage: vi.fn(),
+    }),
+  }),
+}));
 
 const renderWithDrawer = (ui: React.ReactElement) =>
   render(
@@ -26,20 +38,32 @@ describe("FilterWidgetComponent", () => {
       <FilterWidgetComponent filter={filter} onClose={vi.fn()} setFilter={setFilter} />
     );
 
-    await userEvent.type(screen.getByPlaceholderText("Resource type..."), "new-type{enter}");
+    const typeInput = screen.getByPlaceholderText(
+      words("resources.filters.resource.type.placeholder")
+    );
+    await userEvent.type(typeInput, "new-type{enter}");
+
     expect(setFilter).toHaveBeenNthCalledWith(1, {
       ...filter,
       type: ["existing", "new-type"],
     });
 
-    await userEvent.type(screen.getByPlaceholderText("Value..."), "new-value{enter}");
+    const valueInput = screen.getByPlaceholderText(
+      words("resources.filters.resource.value.placeholder")
+    );
+    await userEvent.type(valueInput, "new-value{enter}");
+
     expect(setFilter).toHaveBeenNthCalledWith(2, {
       ...filter,
       type: ["existing"],
       value: ["new-value"],
     });
 
-    await userEvent.type(screen.getByPlaceholderText("Agent..."), "new-agent{enter}");
+    const agentInput = screen.getByPlaceholderText(
+      words("resources.filters.resource.agent.placeholder")
+    );
+    await userEvent.type(agentInput, "new-agent{enter}");
+
     expect(setFilter).toHaveBeenNthCalledWith(3, {
       ...filter,
       type: ["existing"],

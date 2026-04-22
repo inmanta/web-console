@@ -5,3 +5,5 @@ export * from "./ScrollRowIntoView";
 export * from "./ResourceId";
 export * from "./useTicker";
 export * from "./displayValueConverter";
+export * from "./useClickOutside";
+export * from "./useDebounce";

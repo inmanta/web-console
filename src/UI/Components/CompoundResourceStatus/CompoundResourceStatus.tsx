@@ -1,4 +1,4 @@
-import { Flex, FlexItem } from "@patternfly/react-core";
+import { Content, Flex, FlexItem, Popover } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { words } from "@/UI";
 import { LegendBar } from "../LegendBar";
@@ -82,7 +82,15 @@ export const CompoundResourceStatus = ({
     <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }} flex={{ default: "flex_1" }}>
       {Object.entries(compoundState).map(([key, record]) => (
         <Flex key={key} flex={{ default: "flex_1" }} alignItems={{ default: "alignItemsCenter" }}>
-          <FlexItem style={{ display: "inline-flex" }}>{statusGroupIcons[key]()}</FlexItem>
+          <FlexItem style={{ display: "inline-flex" }}>
+            <Popover
+              bodyContent={<Content component="p">{key}</Content>}
+              triggerAction="hover"
+              position="left"
+            >
+              {statusGroupIcons[key]()}
+            </Popover>
+          </FlexItem>
           <FlexItem flex={{ default: "flex_1" }}>
             <LegendBar
               data-testid={`legend-bar-${key}`}

@@ -29,6 +29,7 @@ const STATUS_FIELD_MAP = {
 >;
 
 type GraphQLStateFilter = Partial<{
+  purged: boolean;
   isOrphan: boolean;
   lastHandlerRun: { eq: Resource.LastHandlerRun[] };
   compliance: { eq: Resource.Compliance[] };
@@ -41,7 +42,7 @@ function isCompoundStateKey(value: string): value is Resource.CompoundStateKey {
 
 /**
  * Maps a filter.status array to GraphQL ResourceFilter fields.
- * Supports orphaned/!orphaned mapping and compound states.
+ * Supports orphaned/!orphaned, purged mapping and compound states.
  * For compound states, it maps status values to their corresponding field with an eq operator.
  */
 export function mapStatusToGraphQLFilter(status?: string[]): GraphQLStateFilter {
@@ -61,6 +62,11 @@ export function mapStatusToGraphQLFilter(status?: string[]): GraphQLStateFilter 
 
     if (s === "!orphaned") {
       filter.isOrphan = false;
+      continue;
+    }
+
+    if (s === "purged") {
+      filter.purged = true;
       continue;
     }
 

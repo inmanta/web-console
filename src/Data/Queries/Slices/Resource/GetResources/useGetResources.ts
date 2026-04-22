@@ -48,19 +48,9 @@ interface GetResources {
   useContinuous: () => UseQueryResult<GetResourcesResponse, Error>;
 }
 
-/**
- * Interface for filtering resources
- */
-interface Filter {
-  agent?: string[];
-  status?: string[];
-  type?: string[];
-  value?: string[];
-}
-
 interface GetResourcesParams {
   pageSize: PageSize.PageSize;
-  filter: Filter;
+  filter: Resource.Filter;
   sort?: Sort.Type<Resource.SortKey>;
   currentPage: CurrentPage;
 }

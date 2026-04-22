@@ -1,11 +1,23 @@
 import React, { useId, useState } from "react";
-import { Button, FormGroup, InputGroup, InputGroupItem, TextInput } from "@patternfly/react-core";
+import {
+  Button,
+  Content,
+  FormGroup,
+  FormGroupLabelHelp,
+  InputGroup,
+  InputGroupItem,
+  Popover,
+  TextInput,
+} from "@patternfly/react-core";
+import { PlusIcon } from "@patternfly/react-icons";
+import { words } from "@/UI";
 
 export interface AddableTextInputProps {
   label: string;
   placeholder: string;
   onAdd: (value: string) => void;
-  buttonLabel?: string;
+  hint: string;
+  onToggleInputMode?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 /**
@@ -17,15 +29,18 @@ export interface AddableTextInputProps {
  *  @prop {string} label - Label shown above the input field.
  *  @prop {string} placeholder - Placeholder text displayed within the input.
  *  @prop {(value: string) => void} onAdd - Callback executed with the trimmed value when the add action is triggered.
- *  @prop {string} [buttonLabel] - Optional custom text for the add button (defaults to "+").
- *
+ *  @prop {string} hint - Hint displayed on hover of the help label.
+ *  @prop {(event) => React.MouseEvent<HTMLButtonElement>} onToggleInputMode
+ *  - Callback executed whenever we press on the labelInfo of the FormGroup
  * @returns {React.ReactElement} The rendered addable text input.
  */
+
 export const AddableTextInput: React.FC<AddableTextInputProps> = ({
   label,
   placeholder,
   onAdd,
-  buttonLabel = "+",
+  hint,
+  onToggleInputMode,
 }) => {
   const [value, setValue] = useState("");
   const inputId = useId();
@@ -47,7 +62,28 @@ export const AddableTextInput: React.FC<AddableTextInputProps> = ({
   };
 
   return (
-    <FormGroup label={label} fieldId={inputId}>
+    <FormGroup
+      label={
+        <span style={{ fontWeight: "var(--pf-t--global--font--weight--body--bold)" }}>{label}</span>
+      }
+      fieldId={inputId}
+      labelHelp={
+        <Popover
+          bodyContent={<Content component="p">{hint}</Content>}
+          triggerAction="hover"
+          position="right"
+        >
+          <FormGroupLabelHelp aria-label="help" />
+        </Popover>
+      }
+      labelInfo={
+        onToggleInputMode && (
+          <Button variant="link" isInline onClick={onToggleInputMode}>
+            {words("resources.filters.resource.agent.textInfoLabel")}
+          </Button>
+        )
+      }
+    >
       <InputGroup>
         <InputGroupItem isFill>
           <TextInput
@@ -61,8 +97,13 @@ export const AddableTextInput: React.FC<AddableTextInputProps> = ({
           />
         </InputGroupItem>
         <InputGroupItem>
-          <Button variant="control" onClick={handleAdd}>
-            {buttonLabel}
+          <Button
+            variant="control"
+            onClick={handleAdd}
+            data-testid="add-button"
+            aria-label={words("resources.filters.filter")}
+          >
+            <PlusIcon />
           </Button>
         </InputGroupItem>
       </InputGroup>

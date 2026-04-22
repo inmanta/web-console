@@ -6,6 +6,7 @@ import { configureAxe } from "jest-axe";
 import { graphql, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { PageInfo } from "@/Data/Queries";
+import { response } from "@/Slices/Agents";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
 import { createMockResourceSummary } from "@/Test/Data/Resource";
 import { words } from "@/UI";
@@ -100,6 +101,8 @@ function gqlFirstPage(endCursor = "fake-cursor") {
   );
 }
 
+const agentsMock = http.get("/api/v2/agents", () => HttpResponse.json(response));
+
 // ---------------------------------------------------------------------------
 // Test setup
 // ---------------------------------------------------------------------------
@@ -153,6 +156,10 @@ describe("ResourcesPage", () => {
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
+
+  beforeEach(() => {
+    server.use(agentsMock);
+  });
 
   // --- Loading states ---
 
@@ -638,6 +645,26 @@ describe("ResourcesPage", () => {
     await userEvent.type(typeInput, "std::File{enter}");
 
     expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("3");
+  });
+
+  test("agent filter dropdown shows options fetched from the API", async () => {
+    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })));
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
+
+    await openFiltersDrawer();
+
+    const agentInput = await screen.findByPlaceholderText(
+      words("resources.filters.resource.agent.placeholder")
+    );
+    await userEvent.click(agentInput);
+
+    expect(await screen.getByRole("menuitem", { name: "aws" })).toBeInTheDocument();
+    expect(screen.getByRole("menuitem", { name: "bru-23-r321" })).toBeInTheDocument();
   });
 
   // --- Summary bar & toolbar ---
