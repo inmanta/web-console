@@ -134,9 +134,11 @@ async function openFiltersDrawer() {
 
 async function openStatusFiltersTab() {
   await openFiltersDrawer();
-  await userEvent.click(
-    await screen.findByRole("tab", { name: words("resources.filters.tabs.status") })
-  );
+
+  const statusTab = await screen.findByRole("tab", {
+    name: words("resources.filters.tabs.status"),
+  });
+  await userEvent.click(statusTab);
 }
 
 // ---------------------------------------------------------------------------
@@ -219,7 +221,8 @@ describe("ResourcesPage", () => {
 
     expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
 
-    await userEvent.click(screen.getAllByRole("button", { name: "Go to next page" })[0]);
+    const nextPageButton = screen.getAllByRole("button", { name: "Go to next page" })[0];
+    await userEvent.click(nextPageButton);
 
     expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(6);
 
@@ -312,7 +315,8 @@ describe("ResourcesPage", () => {
 
     expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
 
-    await userEvent.click(screen.getAllByLabelText("Go to next page")[0]);
+    const nextPageButtonTop = screen.getAllByLabelText("Go to next page")[0];
+    await userEvent.click(nextPageButtonTop);
 
     expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(6);
 
@@ -344,16 +348,17 @@ describe("ResourcesPage", () => {
 
     expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
 
-    await userEvent.click(screen.getAllByLabelText("Go to next page")[0]);
+    const nextPageButton = screen.getAllByLabelText("Go to next page")[0];
+    await userEvent.click(nextPageButton);
 
     expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(6);
 
     await openFiltersDrawer();
 
-    await userEvent.type(
-      await screen.findByPlaceholderText(words("resources.filters.resource.agent.placeholder")),
-      "agent2{enter}"
+    const agentInput = await screen.findByPlaceholderText(
+      words("resources.filters.resource.agent.placeholder")
     );
+    await userEvent.type(agentInput, "agent2{enter}");
 
     expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
   });
@@ -389,10 +394,8 @@ describe("ResourcesPage", () => {
 
       await openFiltersDrawer();
 
-      await userEvent.type(
-        await screen.findByPlaceholderText(placeholderText),
-        `${filterValue}{enter}`
-      );
+      const filterInput = await screen.findByPlaceholderText(placeholderText);
+      await userEvent.type(filterInput, `${filterValue}{enter}`);
 
       expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(3);
 
@@ -442,14 +445,10 @@ describe("ResourcesPage", () => {
 
       await openFiltersDrawer();
 
-      await userEvent.type(
-        await screen.findByPlaceholderText(placeholderTextOne),
-        `${filterValueOne}{enter}`
-      );
-      await userEvent.type(
-        await screen.findByPlaceholderText(placeholderTextTwo),
-        `${filterValueTwo}{enter}`
-      );
+      const filterInputOne = await screen.findByPlaceholderText(placeholderTextOne);
+      await userEvent.type(filterInputOne, `${filterValueOne}{enter}`);
+      const filterInputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
+      await userEvent.type(filterInputTwo, `${filterValueTwo}{enter}`);
 
       expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(3);
 
@@ -483,14 +482,14 @@ describe("ResourcesPage", () => {
 
     await openFiltersDrawer();
 
-    await userEvent.type(
-      await screen.findByPlaceholderText(words("resources.filters.resource.agent.placeholder")),
-      `${agentValue}{enter}`
+    const agentInput = await screen.findByPlaceholderText(
+      words("resources.filters.resource.agent.placeholder")
     );
-    await userEvent.type(
-      await screen.findByPlaceholderText(words("resources.filters.resource.type.placeholder")),
-      `${typeValue}{enter}`
+    await userEvent.type(agentInput, `${agentValue}{enter}`);
+    const typeInput = await screen.findByPlaceholderText(
+      words("resources.filters.resource.type.placeholder")
     );
+    await userEvent.type(typeInput, `${typeValue}{enter}`);
 
     const idInput = await screen.findByPlaceholderText(
       words("resources.filters.resource.value.placeholder")
@@ -523,10 +522,13 @@ describe("ResourcesPage", () => {
 
     await openStatusFiltersTab();
 
-    await userEvent.click(await screen.findByRole("button", { name: "status-toggle" }));
-    await userEvent.click(
-      await screen.findByRole("button", { name: `${filterValue}-${option}-toggle` })
-    );
+    const statusToggle = await screen.findByRole("button", { name: "status-toggle" });
+    await userEvent.click(statusToggle);
+
+    const filterToggle = await screen.findByRole("button", {
+      name: `${filterValue}-${option}-toggle`,
+    });
+    await userEvent.click(filterToggle);
 
     expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(3);
 
@@ -562,16 +564,22 @@ describe("ResourcesPage", () => {
 
     await openFiltersDrawer();
 
-    await userEvent.click(
-      await screen.findByRole("button", { name: words("resources.filters.active.clearAll") })
-    );
+    const clearAllButton = await screen.findByRole("button", {
+      name: words("resources.filters.active.clearAll"),
+    });
+    await userEvent.click(clearAllButton);
 
     expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(2);
 
     await openStatusFiltersTab();
 
-    await userEvent.click(await screen.findByRole("button", { name: "status-toggle" }));
-    await userEvent.click(await screen.findByRole("button", { name: "orphaned-exclude-toggle" }));
+    const statusToggle = await screen.findByRole("button", { name: "status-toggle" });
+    await userEvent.click(statusToggle);
+
+    const orphanExcludeToggle = await screen.findByRole("button", {
+      name: "orphaned-exclude-toggle",
+    });
+    await userEvent.click(orphanExcludeToggle);
 
     expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(6);
 
@@ -595,17 +603,17 @@ describe("ResourcesPage", () => {
     // Default filter (orphaned excluded) counts as 1
     expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("1");
 
-    await userEvent.type(
-      await screen.findByPlaceholderText(words("resources.filters.resource.agent.placeholder")),
-      "agent2{enter}"
+    const agentInput = await screen.findByPlaceholderText(
+      words("resources.filters.resource.agent.placeholder")
     );
+    await userEvent.type(agentInput, "agent2{enter}");
 
     expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("2");
 
-    await userEvent.type(
-      await screen.findByPlaceholderText(words("resources.filters.resource.type.placeholder")),
-      "std::File{enter}"
+    const typeInput = await screen.findByPlaceholderText(
+      words("resources.filters.resource.type.placeholder")
     );
+    await userEvent.type(typeInput, "std::File{enter}");
 
     expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("3");
   });
@@ -684,23 +692,29 @@ describe("ResourcesPage", () => {
       "3"
     );
 
-    await userEvent.click(screen.getAllByRole("button", { name: "Go to next page" })[0]);
+    const nextPageButton = screen.getAllByRole("button", { name: "Go to next page" })[0];
+    await userEvent.click(nextPageButton);
 
-    expect(
-      (await screen.findAllByRole("generic", { name: words("resources.deploySummary.title") }))[0]
-    ).toBeVisible();
-    expect(
-      screen.getByRole("button", { name: words("resources.deploySummary.repair") })
-    ).toBeVisible();
-    expect(
-      screen.getByRole("button", { name: words("resources.deploySummary.deploy") })
-    ).toBeVisible();
+    const deploySummaryBars = await screen.findAllByRole("generic", {
+      name: words("resources.deploySummary.title"),
+    });
+    expect(deploySummaryBars[0]).toBeVisible();
+
+    const repairButton = screen.getByRole("button", {
+      name: words("resources.deploySummary.repair"),
+    });
+    expect(repairButton).toBeVisible();
+
+    const deployButton = screen.getByRole("button", {
+      name: words("resources.deploySummary.deploy"),
+    });
+    expect(deployButton).toBeVisible();
+
     expect(screen.getByRole("navigation", { name: "top-Pagination" })).toBeVisible();
     expect(screen.getByRole("navigation", { name: "bottom-Pagination" })).toBeInTheDocument();
-    expect(await screen.findByRole("generic", { name: "LegendItem-compliant" })).toHaveAttribute(
-      "data-value",
-      "4"
-    );
+
+    const compliantItem = await screen.findByRole("generic", { name: "LegendItem-compliant" });
+    expect(compliantItem).toHaveAttribute("data-value", "4");
 
     await act(async () => {
       const results = await axe(document.body);
@@ -725,21 +739,17 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    expect(
-      within(screen.getByTestId("legend-bar-compliance")).getByRole("generic", {
-        name: "LegendItem-compliant",
-      })
-    ).toHaveAttribute("data-value", "3");
+    const legendBar = screen.getByTestId("legend-bar-compliance");
+    const compliantItem = within(legendBar).getByRole("generic", {
+      name: "LegendItem-compliant",
+    });
+    expect(compliantItem).toHaveAttribute("data-value", "3");
 
     await act(async () => {
       await delay(5000);
     });
 
-    expect(
-      within(screen.getByTestId("legend-bar-compliance")).getByRole("generic", {
-        name: "LegendItem-compliant",
-      })
-    ).toHaveAttribute("data-value", "4");
+    expect(compliantItem).toHaveAttribute("data-value", "4");
 
     await act(async () => {
       const results = await axe(document.body);
@@ -765,9 +775,10 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    await userEvent.click(
-      await screen.findByRole("button", { name: words("resources.deploySummary.deploy") })
-    );
+    const deployButton = await screen.findByRole("button", {
+      name: words("resources.deploySummary.deploy"),
+    });
+    await userEvent.click(deployButton);
 
     expect(
       await screen.findByRole("button", { name: words("resources.deploySummary.deploy") })
@@ -797,9 +808,10 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    await userEvent.click(
-      await screen.findByRole("button", { name: words("resources.deploySummary.repair") })
-    );
+    const repairButton = await screen.findByRole("button", {
+      name: words("resources.deploySummary.repair"),
+    });
+    await userEvent.click(repairButton);
 
     expect(
       await screen.findByRole("button", { name: words("resources.deploySummary.repair") })
