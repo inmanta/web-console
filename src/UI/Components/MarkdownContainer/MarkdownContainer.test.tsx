@@ -1,7 +1,7 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import type { Mock } from "vitest";
 import { words } from "@/UI/words";
 import { MarkdownContainer } from "./MarkdownContainer";
+import type { Mock } from "vitest";
 
 // Mock the theme function
 vi.mock("../DarkmodeOption", () => ({
