@@ -257,17 +257,6 @@ export default defineConfig({
         find: "@rappidcss",
         replacement: resolve(__dirname, "node_modules/@joint/plus/joint-plus.css"),
       },
-      // Resolve monaco-graphql to the instance nested inside @graphiql/react to
-      // ensure only one copy of the library is loaded. Without this alias, both
-      // our worker setup and @graphiql/react would resolve to different copies,
-      // registering the "graphql" Monaco language twice and breaking autocompletion.
-      {
-        find: "monaco-graphql",
-        replacement: resolve(
-          __dirname,
-          "./node_modules/@graphiql/react/node_modules/monaco-graphql"
-        ),
-      },
       // In tests, redirect ALL monaco-editor imports (including deep ESM subpaths like
       // monaco-editor/esm/vs/base/common/uri.js) to the mock. A regex find is required
       // because a string alias does a prefix replacement, turning subpath imports into
