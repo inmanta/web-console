@@ -1,21 +1,11 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGet, REFETCH_INTERVAL, getPaginationHandlers } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "./getUrl";
-
-/**
- * Interface for filtering discovered resources
- */
-export interface DiscoveredResourceFilter {
-  type?: string;
-  name?: string;
-  state?: string;
-  environment?: string;
-}
 
 export interface DiscoveredResource {
   discovered_resource_id: string;
@@ -106,6 +96,7 @@ export const useGetDiscoveredResources = (
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
+        placeholderData: keepPreviousData,
       }),
   };
 };

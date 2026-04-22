@@ -23,6 +23,7 @@ import {
   ErrorView,
   LoadingView,
   CompoundResourceStatus,
+  countActiveFilters,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import {
@@ -52,17 +53,7 @@ export const Page: React.FC = () => {
   const activeFilterCount = useMemo(() => {
     const { disregardDefault: _disregardDefault, ...filterValues } = filterWithDefaults;
 
-    return Object.values(filterValues).reduce((acc, value) => {
-      if (!value) {
-        return acc;
-      }
-
-      if (Array.isArray(value)) {
-        return acc + value.length;
-      }
-
-      return acc + 1;
-    }, 0);
+    return countActiveFilters(filterValues);
   }, [filterWithDefaults]);
 
   const onCloseFilterWidget = useCallback(() => {

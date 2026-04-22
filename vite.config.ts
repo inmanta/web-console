@@ -240,24 +240,9 @@ export default defineConfig({
         find: "@rappidcss",
         replacement: resolve(__dirname, "node_modules/@joint/plus/joint-plus.css"),
       },
-      // Resolve monaco-graphql to the instance nested inside @graphiql/react to
-      // ensure only one copy of the library is loaded. Without this alias, both
-      // the root-level monaco-graphql and the one bundled with @graphiql/react
-      // register a "graphql" Monaco language, producing a console error
-      // ("Language graphql is already registered") and breaking autocompletion.
-      //
-      // NOTE: This path depends on Yarn NOT hoisting monaco-graphql to the root.
-      // If the lockfile changes and Yarn hoists it, this path will no longer exist
-      // and the build will silently fall back to two separate copies. Verify after
-      // a lockfile update that node_modules/@graphiql/react/node_modules/monaco-graphql
-      // still exists.
-      {
-        find: "monaco-graphql",
-        replacement: resolve(
-          __dirname,
-          "./node_modules/@graphiql/react/node_modules/monaco-graphql"
-        ),
-      },
+      // monaco-graphql is hoisted to the root by Yarn, so no alias is needed.
+      // @graphiql/react and direct imports both resolve to the same root copy,
+      // preventing duplicate "graphql" Monaco language registration.
       // In tests, redirect ALL monaco-editor imports (including deep ESM subpaths like
       // monaco-editor/esm/vs/base/common/uri.js) to the mock. A regex find is required
       // because a string alias does a prefix replacement, turning subpath imports into
@@ -282,7 +267,8 @@ export default defineConfig({
        * If we do not proxy both endpoints; we face cors issues.
        */
       "/api": {
-        target: process.env.VITE_API_BASEURL || "https://localhost:8888",
+        target:
+          process.env.VITE_API_BASEURL || process.env.PROXY_TARGET || "https://localhost:8888",
         changeOrigin: true,
         secure: false,
         protocolRewrite: PROTOCOL_REWRITE,
@@ -299,7 +285,8 @@ export default defineConfig({
         },
       },
       "/lsm": {
-        target: process.env.VITE_API_BASEURL || "https://localhost:8888",
+        target:
+          process.env.VITE_API_BASEURL || process.env.PROXY_TARGET || "https://localhost:8888",
         changeOrigin: true,
         secure: false,
         protocolRewrite: PROTOCOL_REWRITE,

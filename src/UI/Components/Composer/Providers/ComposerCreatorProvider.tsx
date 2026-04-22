@@ -41,7 +41,7 @@ interface Props {
 export const ComposerCreatorProvider: React.FC<Props> = ({ serviceName }) => {
   const [interServiceRelationNames, setInterServiceRelationNames] = useState<string[]>([]);
 
-  const serviceModels = useGetServiceModels().useContinuous();
+  const serviceModels = useGetServiceModels().useOneTime();
 
   const relatedInventoriesQuery = useGetInventoryList(interServiceRelationNames).useContinuous();
 
