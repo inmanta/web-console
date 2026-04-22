@@ -237,12 +237,14 @@ export const MarkdownContainer: React.FC<Props> = ({
 
     // Render Mermaid diagrams after the markdown HTML is in the DOM.
     // Use a timeout to ensure the innerHTML has been applied.
+    let cleanupMermaid: (() => void) | undefined;
     const renderTimeout = setTimeout(() => {
-      renderMermaidBlocks(container, handleImageClick);
+      cleanupMermaid = renderMermaidBlocks(container, handleImageClick);
     }, 0);
 
     return () => {
       clearTimeout(renderTimeout);
+      cleanupMermaid?.();
       observer.disconnect();
       document.removeEventListener("click", handleDocumentClick);
       document.removeEventListener("keydown", handleKeyDown);

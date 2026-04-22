@@ -61,13 +61,11 @@ export function downloadAsPng(block: HTMLElement): void {
   ctx.scale(scale, scale);
 
   const serialized = new XMLSerializer().serializeToString(svg);
-  const blob = new Blob([serialized], { type: "image/svg+xml" });
-  const url = URL.createObjectURL(blob);
+  const url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(serialized)}`;
   const img = new Image();
 
   img.onload = () => {
     ctx.drawImage(img, 0, 0, svgWidth, svgHeight);
-    URL.revokeObjectURL(url);
     const pngUrl = canvas.toDataURL("image/png");
     const a = document.createElement("a");
     a.href = pngUrl;
@@ -161,11 +159,11 @@ export function showMermaidError(block: HTMLElement, error: unknown): void {
 export function renderMermaidBlocks(
   container: HTMLElement,
   handleImageClick: (event: Event) => void
-): void {
+): () => void {
   const mermaidBlocks = container.querySelectorAll<HTMLElement>("pre.mermaid");
 
   if (mermaidBlocks.length === 0) {
-    return;
+    return () => {};
   }
 
   const isDarkTheme = document.documentElement.classList.contains("pf-v6-theme-dark");
@@ -177,6 +175,8 @@ export function renderMermaidBlocks(
     // This keeps diagrams readable in both light and dark modes.
     theme: isDarkTheme ? "dark" : "default",
   });
+
+  const observers: MutationObserver[] = [];
 
   mermaidBlocks.forEach((block) => {
     // Only run Mermaid if the block contains actual diagram text, not an SVG
@@ -193,6 +193,31 @@ export function renderMermaidBlocks(
 
     // Remove data-processed to allow re-rendering during live editing
     block.removeAttribute("data-processed");
+
+    // Watch for Mermaid to inject the SVG into this block. Fires whenever the
+    // SVG appears — immediately for visible blocks, or later for off-screen ones
+    // if Mermaid defers them — rather than relying on a fixed timeout.
+    const blockObserver = new MutationObserver((_mutations, obs) => {
+      if (block.classList.contains("mermaid-error")) {
+        obs.disconnect();
+        return;
+      }
+      if (block.querySelector("svg")) {
+        obs.disconnect();
+        block.classList.add("mermaid-diagram");
+        block.setAttribute("data-zoomable", "true");
+        block.addEventListener("click", handleImageClick);
+        addDownloadToolbar(block);
+      }
+    });
+
+    observers.push(blockObserver);
+    blockObserver.observe(block, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["class"],
+    });
 
     try {
       // In Mermaid 11+, run() is the preferred API to process specific nodes.
@@ -212,19 +237,12 @@ export function renderMermaidBlocks(
           showMermaidError(block, error);
         }
       }
-
-      // Mark as zoomable diagram after successful rendering.
-      // Small delay to ensure Mermaid has finished injecting the SVG.
-      setTimeout(() => {
-        if (!block.classList.contains("mermaid-error")) {
-          block.classList.add("mermaid-diagram");
-          block.setAttribute("data-zoomable", "true");
-          block.addEventListener("click", handleImageClick);
-          addDownloadToolbar(block);
-        }
-      }, 100);
     } catch (error) {
       showMermaidError(block, error);
     }
   });
+
+  return () => {
+    observers.forEach((obs) => obs.disconnect());
+  };
 }

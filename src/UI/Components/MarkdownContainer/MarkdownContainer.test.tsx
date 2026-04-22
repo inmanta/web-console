@@ -1,4 +1,5 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import type { Mock } from "vitest";
 import { words } from "@/UI/words";
 import { MarkdownContainer } from "./MarkdownContainer";
 
@@ -274,8 +275,8 @@ describe("MarkdownContainer", () => {
           return Promise.resolve();
         });
 
-      const mockCtx = { scale: vi.fn(), drawImage: vi.fn() };
-      vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(mockCtx);
+      const mockCtx = { scale: vi.fn() as Mock, drawImage: vi.fn() as Mock };
+      (vi.spyOn(HTMLCanvasElement.prototype, "getContext") as Mock).mockReturnValue(mockCtx);
       vi.spyOn(HTMLCanvasElement.prototype, "toDataURL").mockReturnValue(
         "data:image/png;base64,mock"
       );
@@ -299,7 +300,8 @@ describe("MarkdownContainer", () => {
       fireEvent.click(pngDownloadButton);
 
       // The PNG pipeline is gated on the Image load event; fire it manually.
-      expect(mockImage.src).toBe("blob:mock-url");
+      // src is now a data: URL (not a blob: URL) to avoid canvas taint errors.
+      expect(mockImage.src).toMatch(/^data:image\/svg\+xml/);
       mockImage.onload?.(new Event("load"));
 
       expect(mockCtx.drawImage).toHaveBeenCalled();
