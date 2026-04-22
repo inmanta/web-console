@@ -16,7 +16,7 @@ export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
               <UnlinkIcon />
             </Icon>
           }
-          style={{ alignItems: "center" }}
+          style={{ alignItems: "flex-end" }}
         >
           <Content>{words("resources.popover.orphan")}</Content>
         </ListItem>
@@ -26,7 +26,7 @@ export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
               <ClockIcon />
             </Icon>
           }
-          style={{ alignItems: "center" }}
+          style={{ alignItems: "flex-end" }}
         >
           <Content>
             {words("resources.popover.lastDeployed")}
@@ -41,21 +41,21 @@ export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
     <List isPlain>
       <ListItem
         icon={statusGroupIcons["blocked"]({ state: row.status.blocked })}
-        style={{ alignItems: "center" }}
+        style={{ alignItems: "flex-end" }}
       >
         <Content>{statusMapping[row.status.blocked]}</Content>
       </ListItem>
 
       <ListItem
         icon={statusGroupIcons["compliance"]({ state: row.status.compliance })}
-        style={{ alignItems: "center" }}
+        style={{ alignItems: "flex-end" }}
       >
         <Content>{statusMapping[row.status.compliance]}</Content>
       </ListItem>
 
       <ListItem
         icon={statusGroupIcons["lastHandlerRun"]({ state: row.status.lastHandlerRun })}
-        style={{ alignItems: "center" }}
+        style={{ alignItems: "flex-end" }}
       >
         <Content>{statusMapping[row.status.lastHandlerRun]}</Content>
       </ListItem>
@@ -66,7 +66,7 @@ export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
             <ClockIcon />
           </Icon>
         }
-        style={{ alignItems: "center" }}
+        style={{ alignItems: "flex-end" }}
       >
         <Content>
           {words("resources.popover.lastDeployed")}
@@ -80,7 +80,7 @@ export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
             <CubesIcon />
           </Icon>
         }
-        style={{ alignItems: "center" }}
+        style={{ alignItems: "flex-end" }}
       >
         <Content>
           {row.requiresLength}{" "}
