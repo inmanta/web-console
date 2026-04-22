@@ -39,7 +39,7 @@ export function useGraphQLRequest<Type>(
     globalThis.location.origin,
     globalThis.location.pathname
   );
-  const baseUrl = baseUrlManager.getBaseUrl(import.meta.env.VITE_API_BASEURL);
+  const baseUrl = baseUrlManager.getBaseUrl();
   const { createHeaders } = useFetchHelpers();
   const headers = createHeaders();
 

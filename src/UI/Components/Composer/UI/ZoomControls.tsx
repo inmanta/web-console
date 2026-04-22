@@ -106,63 +106,18 @@ export const ZoomControls: React.FC = () => {
     };
   }, []);
 
-  const handleZoomChange = (
+  const handleZoomSliderChange = (
     event: React.ChangeEvent<HTMLInputElement> | React.FormEvent<HTMLInputElement>
   ) => {
-    if (!scroller || !paper) {
+    if (!scroller) {
       return;
     }
 
-    const sliderValue = parseFloat((event.target as HTMLInputElement).value);
-    // Convert slider value (20-500) to zoom multiplier (0.2-5.0)
-    const targetZoom = sliderValue / 100;
+    const targetZoom = parseFloat((event.target as HTMLInputElement).value) / 100;
+    const delta = targetZoom - scroller.zoom();
 
-    // Clamp zoom to valid range
-    const clampedZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, targetZoom));
-
-    // Set flag to prevent event listener from updating state
-    isManualZoomRef.current = true;
-
-    // Get current zoom and viewport center
-    const currentZoom = scroller.zoom();
-    const scrollerRect = scroller.el.getBoundingClientRect();
-    const viewportCenterX = scrollerRect.width / 2;
-    const viewportCenterY = scrollerRect.height / 2;
-
-    // Get the model point at the viewport center (before zoom)
-    // Use the scroller's coordinate system
-    const modelPoint = scroller.clientToLocalPoint(
-      scrollerRect.left + viewportCenterX,
-      scrollerRect.top + viewportCenterY
-    );
-
-    // Get current scroll position
-    const currentScrollLeft = scroller.el.scrollLeft;
-    const currentScrollTop = scroller.el.scrollTop;
-
-    // Apply new zoom
-    paper.scale(clampedZoom, clampedZoom);
-
-    // After zoom, the model point will appear at a different screen position
-    // We need to adjust the scroll to keep it at the viewport center
-    // The scroll adjustment is: modelPoint * (oldZoom - newZoom)
-    const scrollDeltaX = modelPoint.x * (currentZoom - clampedZoom);
-    const scrollDeltaY = modelPoint.y * (currentZoom - clampedZoom);
-
-    // Apply scroll adjustment immediately after zoom
-    // Use requestAnimationFrame to ensure smooth update
-    requestAnimationFrame(() => {
-      scroller.el.scrollLeft = currentScrollLeft + scrollDeltaX;
-      scroller.el.scrollTop = currentScrollTop + scrollDeltaY;
-    });
-
-    // Update state
-    updateZoomState(clampedZoom);
-
-    // Reset flag
-    setTimeout(() => {
-      isManualZoomRef.current = false;
-    }, 50);
+    scroller.zoom(delta, { min: MIN_ZOOM, max: MAX_ZOOM });
+    updateZoomState(scroller.zoom());
   };
 
   const handleFitToScreen = () => {
@@ -191,57 +146,16 @@ export const ZoomControls: React.FC = () => {
     }
   };
 
-  const handleZoomIncrement = (increment: number) => {
+  const handleZoom = (increment: number) => {
     if (!scroller || !paper) {
       return;
     }
 
-    const currentZoom = scroller.zoom();
-    const targetZoom = currentZoom + increment;
-    const clampedZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, targetZoom));
+    scroller.zoom(increment, { max: MAX_ZOOM, min: MIN_ZOOM });
 
-    // If already at limit, don't do anything
-    if (clampedZoom === currentZoom) {
-      return;
-    }
-
-    // Set flag to prevent event listener from updating state
-    isManualZoomRef.current = true;
-
-    // Get viewport center
-    const scrollerRect = scroller.el.getBoundingClientRect();
-    const viewportCenterX = scrollerRect.width / 2;
-    const viewportCenterY = scrollerRect.height / 2;
-
-    // Get the model point at the viewport center (before zoom)
-    const modelPoint = scroller.clientToLocalPoint(
-      scrollerRect.left + viewportCenterX,
-      scrollerRect.top + viewportCenterY
-    );
-
-    // Get current scroll position
-    const currentScrollLeft = scroller.el.scrollLeft;
-    const currentScrollTop = scroller.el.scrollTop;
-
-    // Apply new zoom
-    paper.scale(clampedZoom, clampedZoom);
-
-    // Adjust scroll to keep viewport center in place
-    const scrollDeltaX = modelPoint.x * (currentZoom - clampedZoom);
-    const scrollDeltaY = modelPoint.y * (currentZoom - clampedZoom);
-
-    requestAnimationFrame(() => {
-      scroller.el.scrollLeft = currentScrollLeft + scrollDeltaX;
-      scroller.el.scrollTop = currentScrollTop + scrollDeltaY;
-    });
-
-    // Update state
-    updateZoomState(clampedZoom);
-
-    // Reset flag
-    setTimeout(() => {
-      isManualZoomRef.current = false;
-    }, 50);
+    // update slider state
+    const newZoom = scroller.zoom();
+    updateZoomState(newZoom);
   };
 
   const zoomPercentage = Math.round(zoom * 100);
@@ -283,7 +197,7 @@ export const ZoomControls: React.FC = () => {
       </Button>
       <Button
         variant="control"
-        onClick={() => handleZoomIncrement(-0.1)}
+        onClick={() => handleZoom(-0.1)}
         aria-label={words("instanceComposer.zoomHandler.zoomOut")}
         data-testid="zoom-out"
         isDisabled={zoom <= MIN_ZOOM}
@@ -298,8 +212,8 @@ export const ZoomControls: React.FC = () => {
           max={SLIDER_MAX}
           step="1"
           value={sliderValue}
-          onChange={handleZoomChange}
-          onInput={handleZoomChange}
+          onChange={handleZoomSliderChange}
+          onInput={handleZoomSliderChange}
           aria-label={words("instanceComposer.zoomHandler.zoom")}
           data-testid="slider-input"
         />
@@ -307,7 +221,7 @@ export const ZoomControls: React.FC = () => {
       </div>
       <Button
         variant="control"
-        onClick={() => handleZoomIncrement(0.1)}
+        onClick={() => handleZoom(0.1)}
         aria-label={words("instanceComposer.zoomHandler.zoomIn")}
         data-testid="zoom-in"
         isDisabled={zoom >= MAX_ZOOM}

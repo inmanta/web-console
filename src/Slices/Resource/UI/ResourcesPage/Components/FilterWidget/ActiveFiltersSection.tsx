@@ -65,7 +65,7 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
     (filter.status && filter.status.length > 0);
 
   return (
-    <StackItem style={{ minHeight: "300px" }}>
+    <StackItem>
       <Flex
         justifyContent={{ default: "justifyContentSpaceBetween" }}
         alignItems={{ default: "alignItemsCenter" }}

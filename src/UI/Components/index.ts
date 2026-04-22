@@ -19,6 +19,7 @@ export * from "./ErrorView";
 export * from "./EventIcon";
 export * from "./EventsTable";
 export * from "./FilterForm";
+export * from "./FilterWidget";
 export * from "./FilterPicker";
 export * from "./Filters";
 export * from "./IconTabs";

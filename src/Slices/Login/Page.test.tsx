@@ -15,7 +15,7 @@ import { Login } from "./Page";
 const mockedUsedNavigate = vi.hoisted(() => vi.fn());
 
 vi.mock("react-router", async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal<typeof import("react-router")>();
   return {
     ...actual,
     useNavigate: () => mockedUsedNavigate,
