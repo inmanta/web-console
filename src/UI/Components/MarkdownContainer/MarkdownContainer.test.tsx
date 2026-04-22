@@ -201,7 +201,9 @@ describe("MarkdownContainer", () => {
 
       render(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
 
-      await waitFor(() => expect(document.querySelector(".mermaid-toolbar")).toBeInTheDocument(), {
+      const toolbar = document.querySelector(".mermaid-toolbar");
+
+      await waitFor(() => expect(toolbar).toBeInTheDocument(), {
         timeout: 2000,
       });
 
@@ -221,7 +223,9 @@ describe("MarkdownContainer", () => {
 
       const { rerender } = render(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
 
-      await waitFor(() => expect(document.querySelector(".mermaid-toolbar")).toBeInTheDocument(), {
+      const toolbar = document.querySelector(".mermaid-toolbar");
+
+      await waitFor(() => expect(toolbar).toBeInTheDocument(), {
         timeout: 2000,
       });
 
@@ -246,19 +250,17 @@ describe("MarkdownContainer", () => {
       const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
 
       render(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
-      await waitFor(
-        () =>
-          expect(
-            screen.getByTitle(words("markdownContainer.download.svg.title"))
-          ).toBeInTheDocument(),
-        { timeout: 2000 }
-      );
 
-      fireEvent.click(screen.getByTitle(words("markdownContainer.download.svg.title")));
+      const svgDownloadButton = screen.getByTitle(words("markdownContainer.download.svg.title"));
+
+      await waitFor(() => expect(svgDownloadButton).toBeInTheDocument(), { timeout: 2000 });
+
+      fireEvent.click(svgDownloadButton);
 
       expect(URL.createObjectURL).toHaveBeenCalledWith(
         expect.objectContaining({ type: "image/svg+xml" })
       );
+
       expect(clickSpy).toHaveBeenCalled();
     });
 
@@ -289,15 +291,12 @@ describe("MarkdownContainer", () => {
       });
 
       render(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
-      await waitFor(
-        () =>
-          expect(
-            screen.getByTitle(words("markdownContainer.download.png.title"))
-          ).toBeInTheDocument(),
-        { timeout: 2000 }
-      );
 
-      fireEvent.click(screen.getByTitle(words("markdownContainer.download.png.title")));
+      const pngDownloadButton = screen.getByTitle(words("markdownContainer.download.png.title"));
+
+      await waitFor(() => expect(pngDownloadButton).toBeInTheDocument(), { timeout: 2000 });
+
+      fireEvent.click(pngDownloadButton);
 
       // The PNG pipeline is gated on the Image load event; fire it manually.
       expect(mockImage.src).toBe("blob:mock-url");

@@ -11,16 +11,20 @@ import { words } from "@/UI/words";
  */
 export function downloadAsSvg(block: HTMLElement): void {
   const svg = block.querySelector("svg");
+
   if (!svg) {
     return;
   }
+
   const serialized = new XMLSerializer().serializeToString(svg);
   const blob = new Blob([serialized], { type: "image/svg+xml" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
+
   a.href = url;
   a.download = "mermaid-diagram.svg";
   a.click();
+
   URL.revokeObjectURL(url);
 }
 
@@ -43,9 +47,11 @@ export function downloadAsPng(block: HTMLElement): void {
   const svgWidth = svg.viewBox?.baseVal?.width || svg.getBoundingClientRect().width || 800;
   const svgHeight = svg.viewBox?.baseVal?.height || svg.getBoundingClientRect().height || 600;
   const scale = 2;
+
   const canvas = document.createElement("canvas");
   canvas.width = svgWidth * scale;
   canvas.height = svgHeight * scale;
+
   const ctx = canvas.getContext("2d");
 
   if (!ctx) {
@@ -53,10 +59,12 @@ export function downloadAsPng(block: HTMLElement): void {
   }
 
   ctx.scale(scale, scale);
+
   const serialized = new XMLSerializer().serializeToString(svg);
   const blob = new Blob([serialized], { type: "image/svg+xml" });
   const url = URL.createObjectURL(blob);
   const img = new Image();
+
   img.onload = () => {
     ctx.drawImage(img, 0, 0, svgWidth, svgHeight);
     URL.revokeObjectURL(url);
@@ -66,6 +74,7 @@ export function downloadAsPng(block: HTMLElement): void {
     a.download = "mermaid-diagram.png";
     a.click();
   };
+
   img.src = url;
 }
 
