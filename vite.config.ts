@@ -242,15 +242,8 @@ export default defineConfig({
       },
       // Resolve monaco-graphql to the instance nested inside @graphiql/react to
       // ensure only one copy of the library is loaded. Without this alias, both
-      // the root-level monaco-graphql and the one bundled with @graphiql/react
-      // register a "graphql" Monaco language, producing a console error
-      // ("Language graphql is already registered") and breaking autocompletion.
-      //
-      // NOTE: This path depends on Yarn NOT hoisting monaco-graphql to the root.
-      // If the lockfile changes and Yarn hoists it, this path will no longer exist
-      // and the build will silently fall back to two separate copies. Verify after
-      // a lockfile update that node_modules/@graphiql/react/node_modules/monaco-graphql
-      // still exists.
+      // our worker setup and @graphiql/react would resolve to different copies,
+      // registering the "graphql" Monaco language twice and breaking autocompletion.
       {
         find: "monaco-graphql",
         replacement: resolve(
@@ -271,6 +264,9 @@ export default defineConfig({
           ]
         : []),
     ],
+    // Ensure only one copy of monaco-editor is loaded — it registers global state
+    // (themes, languages) so a second instance would corrupt editor behaviour.
+    dedupe: ["monaco-editor"],
   },
   server: {
     port: 9000,

@@ -1,0 +1,3 @@
+description: Make certain monaco is not loaded from a CDN.
+change-type: patch
+destination-branches: [master, iso9]
