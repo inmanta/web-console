@@ -12,7 +12,6 @@ describe("AddableTextInput", () => {
         label="Type"
         placeholder={words("resources.filters.resource.type.placeholder")}
         onAdd={handleAdd}
-        hint="This is a hint"
       />
     );
 
@@ -36,7 +35,6 @@ describe("AddableTextInput", () => {
         label="Agent"
         placeholder={words("resources.filters.resource.agent.placeholder")}
         onAdd={handleAdd}
-        hint="This is a hint"
       />
     );
 
@@ -60,7 +58,6 @@ describe("AddableTextInput", () => {
         label="Value"
         placeholder={words("resources.filters.resource.value.placeholder")}
         onAdd={handleAdd}
-        hint="This is a hint"
       />
     );
 

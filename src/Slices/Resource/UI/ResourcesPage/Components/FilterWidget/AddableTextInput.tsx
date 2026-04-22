@@ -16,7 +16,7 @@ export interface AddableTextInputProps {
   label: string;
   placeholder: string;
   onAdd: (value: string) => void;
-  hint: string;
+  hint?: string;
   onToggleInputMode?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -68,13 +68,15 @@ export const AddableTextInput: React.FC<AddableTextInputProps> = ({
       }
       fieldId={inputId}
       labelHelp={
-        <Popover
-          bodyContent={<Content component="p">{hint}</Content>}
-          triggerAction="hover"
-          position="right"
-        >
-          <FormGroupLabelHelp aria-label="help" />
-        </Popover>
+        hint ? (
+          <Popover
+            bodyContent={<Content component="p">{hint}</Content>}
+            triggerAction="hover"
+            position="right"
+          >
+            <FormGroupLabelHelp aria-label="help" />
+          </Popover>
+        ) : undefined
       }
       labelInfo={
         onToggleInputMode && (
