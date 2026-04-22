@@ -1,10 +1,11 @@
 import { EnvironmentSettings } from "@/Core";
 import { InputInfoCreator } from "./InputInfoCreator";
+import type { Mock } from "vitest";
 
 describe("InputInfoCreator", () => {
-  let mockSetValues: ReturnType<typeof vi.fn>;
-  let mockUpdate: ReturnType<typeof vi.fn>;
-  let mockReset: ReturnType<typeof vi.fn>;
+  let mockSetValues: Mock;
+  let mockUpdate: Mock;
+  let mockReset: Mock;
   let inputInfoCreator: InputInfoCreator;
 
   // Helper function to create common definition structure
@@ -26,9 +27,9 @@ describe("InputInfoCreator", () => {
     }) as EnvironmentSettings.Definition;
 
   beforeEach(() => {
-    mockSetValues = vi.fn();
-    mockUpdate = vi.fn();
-    mockReset = vi.fn();
+    mockSetValues = vi.fn() as Mock;
+    mockUpdate = vi.fn() as Mock;
+    mockReset = vi.fn() as Mock;
     inputInfoCreator = new InputInfoCreator(mockSetValues, mockUpdate, mockReset);
   });
 

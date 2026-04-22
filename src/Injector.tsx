@@ -29,7 +29,7 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
     globalThis.location.pathname
   );
   const basePathname = baseUrlManager.getBasePathname();
-  const baseUrl = baseUrlManager.getBaseUrl(import.meta.env.VITE_API_BASEURL);
+  const baseUrl = baseUrlManager.getBaseUrl();
   const routeManager = PrimaryRouteManager(basePathname);
   const orchestratorProvider = OrchestratorProvider(
     getJsonParserId(globalThis),

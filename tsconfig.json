@@ -19,7 +19,6 @@
     "strict": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
     "rootDir": ".",
     "outDir": "dist",
     "types": [
@@ -33,19 +32,19 @@
     ],
     "paths": {
       "@assets/*": [
-        "node_modules/@patternfly/react-core/dist/styles/assets/*"
+        "./node_modules/@patternfly/react-core/dist/styles/assets/*"
       ],
       "@/*": [
-        "src/*"
+        "./src/*"
       ],
       "@S/*": [
-        "src/Slices/*"
+        "./src/Slices/*"
       ],
       "@images/*": [
-        "public/images/*"
+        "./public/images/*"
       ],
       "@rappidcss": [
-        "node_modules/@joint/plus/joint-plus.css"
+        "./node_modules/@joint/plus/joint-plus.css"
       ]
     }
   },
