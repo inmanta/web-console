@@ -1,9 +1,9 @@
 import { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { delay, graphql, http, HttpResponse } from "msw";
+import { graphql, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { PageInfo } from "@/Data/Queries";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
@@ -108,6 +108,7 @@ function setup(entries?: string[], halted = false) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
   return {
+    client,
     component: (
       <QueryClientProvider client={client}>
         <TestMemoryRouter initialEntries={entries}>
@@ -219,12 +220,14 @@ describe("ResourcesPage", () => {
 
     render(component);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows).toHaveLength(3);
 
     const nextPageButton = screen.getAllByRole("button", { name: "Go to next page" })[0];
     await userEvent.click(nextPageButton);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(6);
+    const rowsAfterNextPage = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterNextPage).toHaveLength(6);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -287,7 +290,8 @@ describe("ResourcesPage", () => {
     expect(rows[0]).toHaveTextContent("std::Fileagent2/tmp/file4Show Details");
     expect(rows[5]).toHaveTextContent("std::Directoryagent2/tmp/dir5Show Details");
 
-    await userEvent.click(await screen.findByRole("button", { name: "Agent" }));
+    const agentButton = await screen.findByRole("button", { name: "Agent" });
+    await userEvent.click(agentButton);
 
     const updatedRows = await screen.findAllByLabelText("Resource Table Row");
 
@@ -313,16 +317,20 @@ describe("ResourcesPage", () => {
 
     render(component);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows).toHaveLength(3);
 
-    const nextPageButtonTop = screen.getAllByLabelText("Go to next page")[0];
-    await userEvent.click(nextPageButtonTop);
+    const nextPageButton = screen.getAllByLabelText("Go to next page")[0];
+    await userEvent.click(nextPageButton);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(6);
+    const rowsAfterNextPage = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterNextPage).toHaveLength(6);
 
-    await userEvent.click(screen.getByRole("button", { name: "Type" }));
+    const typeButton = screen.getByRole("button", { name: "Type" });
+    await userEvent.click(typeButton);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
+    const rowsAfterTypeSorting = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterTypeSorting).toHaveLength(3);
   });
 
   test("resets to the first page when a filter changes", async () => {
@@ -346,12 +354,14 @@ describe("ResourcesPage", () => {
 
     render(component);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows).toHaveLength(3);
 
     const nextPageButton = screen.getAllByLabelText("Go to next page")[0];
     await userEvent.click(nextPageButton);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(6);
+    const rowsAfterNextPage = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterNextPage).toHaveLength(6);
 
     await openFiltersDrawer();
 
@@ -360,7 +370,8 @@ describe("ResourcesPage", () => {
     );
     await userEvent.type(agentInput, "agent2{enter}");
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
+    const rowsAfterAgentFilter = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterAgentFilter).toHaveLength(3);
   });
 
   // --- Filters ---
@@ -390,14 +401,16 @@ describe("ResourcesPage", () => {
 
       render(component);
 
-      expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(6);
+      const rows = await screen.findAllByLabelText("Resource Table Row");
+      expect(rows).toHaveLength(6);
 
       await openFiltersDrawer();
 
       const filterInput = await screen.findByPlaceholderText(placeholderText);
       await userEvent.type(filterInput, `${filterValue}{enter}`);
 
-      expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(3);
+      const rowsAfterFilter = await screen.findAllByLabelText("Resource Table Row");
+      expect(rowsAfterFilter).toHaveLength(3);
 
       await act(async () => {
         const results = await axe(document.body);
@@ -441,7 +454,8 @@ describe("ResourcesPage", () => {
 
       render(component);
 
-      expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(6);
+      const rows = await screen.findAllByLabelText("Resource Table Row");
+      expect(rows).toHaveLength(6);
 
       await openFiltersDrawer();
 
@@ -450,7 +464,8 @@ describe("ResourcesPage", () => {
       const filterInputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
       await userEvent.type(filterInputTwo, `${filterValueTwo}{enter}`);
 
-      expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(3);
+      const rowsAfterFiltering = await screen.findAllByLabelText("Resource Table Row");
+      expect(rowsAfterFiltering).toHaveLength(3);
 
       await act(async () => {
         const results = await axe(document.body);
@@ -478,7 +493,8 @@ describe("ResourcesPage", () => {
 
     render(component);
 
-    expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(6);
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows).toHaveLength(6);
 
     await openFiltersDrawer();
 
@@ -499,7 +515,8 @@ describe("ResourcesPage", () => {
     await userEvent.paste(idValue);
     await userEvent.keyboard("{enter}");
 
-    expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(3);
+    const rowsAfterFiltering = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterFiltering).toHaveLength(3);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -518,7 +535,8 @@ describe("ResourcesPage", () => {
 
     render(component);
 
-    expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(3);
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows).toHaveLength(3);
 
     await openStatusFiltersTab();
 
@@ -530,7 +548,8 @@ describe("ResourcesPage", () => {
     });
     await userEvent.click(filterToggle);
 
-    expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(3);
+    const rowsAfterTogglingStatus = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterTogglingStatus).toHaveLength(3);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -560,7 +579,8 @@ describe("ResourcesPage", () => {
 
     render(component);
 
-    expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(6);
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows).toHaveLength(6);
 
     await openFiltersDrawer();
 
@@ -569,7 +589,8 @@ describe("ResourcesPage", () => {
     });
     await userEvent.click(clearAllButton);
 
-    expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(2);
+    const rowsAfterClearingFilters = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterClearingFilters).toHaveLength(2);
 
     await openStatusFiltersTab();
 
@@ -581,7 +602,8 @@ describe("ResourcesPage", () => {
     });
     await userEvent.click(orphanExcludeToggle);
 
-    expect(await screen.findAllByRole("row", { name: "Resource Table Row" })).toHaveLength(6);
+    const rowsAfterExcludingOrphans = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterExcludingOrphans).toHaveLength(6);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -629,10 +651,10 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    expect(
-      (await screen.findAllByRole("generic", { name: words("resources.deploySummary.title") }))
-        .length
-    ).toBeGreaterThan(0);
+    const legendBars = await screen.findAllByRole("generic", {
+      name: words("resources.deploySummary.title"),
+    });
+    expect(legendBars.length).toBeGreaterThan(0);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -687,18 +709,16 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    expect(screen.getByRole("generic", { name: "LegendItem-compliant" })).toHaveAttribute(
-      "data-value",
-      "3"
-    );
+    const compliantLegendItem = screen.getByRole("generic", { name: "LegendItem-compliant" });
+    expect(compliantLegendItem).toHaveAttribute("data-value", "3");
 
     const nextPageButton = screen.getAllByRole("button", { name: "Go to next page" })[0];
     await userEvent.click(nextPageButton);
 
-    const deploySummaryBars = await screen.findAllByRole("generic", {
+    const legendBars = await screen.findAllByRole("generic", {
       name: words("resources.deploySummary.title"),
     });
-    expect(deploySummaryBars[0]).toBeVisible();
+    expect(legendBars[0]).toBeVisible();
 
     const repairButton = screen.getByRole("button", {
       name: words("resources.deploySummary.repair"),
@@ -713,8 +733,10 @@ describe("ResourcesPage", () => {
     expect(screen.getByRole("navigation", { name: "top-Pagination" })).toBeVisible();
     expect(screen.getByRole("navigation", { name: "bottom-Pagination" })).toBeInTheDocument();
 
-    const compliantItem = await screen.findByRole("generic", { name: "LegendItem-compliant" });
-    expect(compliantItem).toHaveAttribute("data-value", "4");
+    const compliantLegendItemAfterActions = await screen.findByRole("generic", {
+      name: "LegendItem-compliant",
+    });
+    expect(compliantLegendItemAfterActions).toHaveAttribute("data-value", "4");
 
     await act(async () => {
       const results = await axe(document.body);
@@ -733,23 +755,27 @@ describe("ResourcesPage", () => {
       })
     );
 
-    const { component } = setup();
+    const { component, client } = setup();
 
     render(component);
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    const legendBar = screen.getByTestId("legend-bar-compliance");
-    const compliantItem = within(legendBar).getByRole("generic", {
+    const complianceLegendBar = screen.getByTestId("legend-bar-compliance");
+    const compliantLegendItem = within(complianceLegendBar).getByRole("generic", {
       name: "LegendItem-compliant",
     });
-    expect(compliantItem).toHaveAttribute("data-value", "3");
+    expect(compliantLegendItem).toHaveAttribute("data-value", "3");
 
+    // Refetch the query
     await act(async () => {
-      await delay(5000);
+      await client.refetchQueries();
     });
 
-    expect(compliantItem).toHaveAttribute("data-value", "4");
+    // Wait for the DOM to reflect the updated value
+    await waitFor(() => {
+      expect(compliantLegendItem).toHaveAttribute("data-value", "4");
+    });
 
     await act(async () => {
       const results = await axe(document.body);
@@ -780,9 +806,7 @@ describe("ResourcesPage", () => {
     });
     await userEvent.click(deployButton);
 
-    expect(
-      await screen.findByRole("button", { name: words("resources.deploySummary.deploy") })
-    ).toBeDisabled();
+    expect(deployButton).toBeDisabled();
     expect(screen.getByTestId("dot-indication")).toBeInTheDocument();
     expect(body).toEqual({ agent_trigger_method: "push_incremental_deploy" });
 
@@ -813,9 +837,7 @@ describe("ResourcesPage", () => {
     });
     await userEvent.click(repairButton);
 
-    expect(
-      await screen.findByRole("button", { name: words("resources.deploySummary.repair") })
-    ).toBeDisabled();
+    expect(repairButton).toBeDisabled();
     expect(body).toEqual({ agent_trigger_method: "push_full_deploy" });
 
     await act(async () => {
@@ -833,12 +855,15 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    expect(
-      await screen.findByRole("button", { name: words("resources.deploySummary.repair") })
-    ).toBeDisabled();
-    expect(
-      await screen.findByRole("button", { name: words("resources.deploySummary.deploy") })
-    ).toBeDisabled();
+    const repairButton = screen.getByRole("button", {
+      name: words("resources.deploySummary.repair"),
+    });
+    expect(repairButton).toBeDisabled();
+
+    const deployButton = await screen.findByRole("button", {
+      name: words("resources.deploySummary.deploy"),
+    });
+    expect(deployButton).toBeDisabled();
 
     await act(async () => {
       const results = await axe(document.body);
