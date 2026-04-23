@@ -105,6 +105,7 @@ export function addDownloadToolbar(block: HTMLElement): void {
   pngBtn.className = "mermaid-download-btn";
   pngBtn.title = words("markdownContainer.download.png.title");
   pngBtn.textContent = words("markdownContainer.download.png");
+
   pngBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     downloadAsPng(block);
@@ -159,11 +160,11 @@ export function showMermaidError(block: HTMLElement, error: unknown): void {
 export function renderMermaidBlocks(
   container: HTMLElement,
   handleImageClick: (event: Event) => void
-): () => void {
+): void {
   const mermaidBlocks = container.querySelectorAll<HTMLElement>("pre.mermaid");
 
   if (mermaidBlocks.length === 0) {
-    return () => {};
+    return;
   }
 
   const isDarkTheme = document.documentElement.classList.contains("pf-v6-theme-dark");
@@ -175,9 +176,6 @@ export function renderMermaidBlocks(
     // This keeps diagrams readable in both light and dark modes.
     theme: isDarkTheme ? "dark" : "default",
   });
-
-  const observers: MutationObserver[] = [];
-  const timeouts: ReturnType<typeof setTimeout>[] = [];
 
   mermaidBlocks.forEach((block) => {
     // Only run Mermaid if the block contains actual diagram text, not an SVG
@@ -195,21 +193,14 @@ export function renderMermaidBlocks(
     // Remove data-processed to allow re-rendering during live editing
     block.removeAttribute("data-processed");
 
-    // Idempotent activation: adds the diagram class, zoom attribute, click
-    // handler, and download toolbar. Safe to call from both the observer and
-    // the fallback timeout — whichever fires first wins; the second call is a
-    // no-op because of the mermaid-diagram class check.
-    const activateBlock = () => {
-      if (block.classList.contains("mermaid-diagram")) return;
-      if (block.classList.contains("mermaid-error")) return;
-      block.classList.add("mermaid-diagram");
-      block.setAttribute("data-zoomable", "true");
-      block.addEventListener("click", handleImageClick);
-      addDownloadToolbar(block);
-    };
-
-    // Observer: fires when Mermaid injects the SVG — handles blocks that are
-    // off-screen or take longer than the fallback timeout to render.
+    // Watch for the SVG being injected into this block. Handles blocks that
+    // Mermaid renders after the 100 ms fallback fires (e.g. off-screen blocks
+    // that come into view later). Self-disconnects once its job is done.
+    // Fires whenever Mermaid injects the SVG into this block. Stays active
+    // after the 100 ms fallback so it can re-add the toolbar if Mermaid
+    // overwrites block.innerHTML (and thereby removes the toolbar) after the
+    // fallback has already run. addDownloadToolbar's own guard prevents
+    // double-injection when Mermaid finishes before the fallback.
     const blockObserver = new MutationObserver((_mutations, obs) => {
       if (block.classList.contains("mermaid-error")) {
         obs.disconnect();
@@ -217,11 +208,13 @@ export function renderMermaidBlocks(
       }
       if (block.querySelector("svg")) {
         obs.disconnect();
-        activateBlock();
+        block.classList.add("mermaid-diagram");
+        block.setAttribute("data-zoomable", "true");
+        block.addEventListener("click", handleImageClick);
+        addDownloadToolbar(block);
       }
     });
 
-    observers.push(blockObserver);
     blockObserver.observe(block, {
       childList: true,
       subtree: true,
@@ -247,22 +240,21 @@ export function renderMermaidBlocks(
           showMermaidError(block, error);
         }
       }
+
+      // Fallback: activate the block after 100 ms regardless of whether the
+      // SVG has arrived yet. If Mermaid finishes later it will overwrite
+      // block.innerHTML, but the observer above stays alive and re-adds the
+      // toolbar once the SVG appears.
+      setTimeout(() => {
+        if (!block.classList.contains("mermaid-error")) {
+          block.classList.add("mermaid-diagram");
+          block.setAttribute("data-zoomable", "true");
+          block.addEventListener("click", handleImageClick);
+          addDownloadToolbar(block);
+        }
+      }, 100);
     } catch (error) {
       showMermaidError(block, error);
     }
-
-    // Fallback timeout: activates the block after a short delay for cases
-    // where Mermaid renders synchronously or the observer doesn't fire.
-    const t = setTimeout(() => {
-      blockObserver.disconnect();
-      activateBlock();
-    }, 100);
-
-    timeouts.push(t);
   });
-
-  return () => {
-    observers.forEach((obs) => obs.disconnect());
-    timeouts.forEach(clearTimeout);
-  };
 }

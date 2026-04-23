@@ -202,9 +202,7 @@ describe("MarkdownContainer", () => {
 
       render(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
 
-      const toolbar = document.querySelector(".mermaid-toolbar");
-
-      await waitFor(() => expect(toolbar).toBeInTheDocument(), {
+      await waitFor(() => expect(document.querySelector(".mermaid-toolbar")).toBeInTheDocument(), {
         timeout: 2000,
       });
 
@@ -224,9 +222,7 @@ describe("MarkdownContainer", () => {
 
       const { rerender } = render(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
 
-      const toolbar = document.querySelector(".mermaid-toolbar");
-
-      await waitFor(() => expect(toolbar).toBeInTheDocument(), {
+      await waitFor(() => expect(document.querySelector(".mermaid-toolbar")).toBeInTheDocument(), {
         timeout: 2000,
       });
 
@@ -252,9 +248,11 @@ describe("MarkdownContainer", () => {
 
       render(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
 
-      const svgDownloadButton = screen.getByTitle(words("markdownContainer.download.svg.title"));
-
-      await waitFor(() => expect(svgDownloadButton).toBeInTheDocument(), { timeout: 2000 });
+      const svgDownloadButton = await screen.findByTitle(
+        words("markdownContainer.download.svg.title"),
+        {},
+        { timeout: 2000 }
+      );
 
       fireEvent.click(svgDownloadButton);
 
@@ -293,9 +291,11 @@ describe("MarkdownContainer", () => {
 
       render(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
 
-      const pngDownloadButton = screen.getByTitle(words("markdownContainer.download.png.title"));
-
-      await waitFor(() => expect(pngDownloadButton).toBeInTheDocument(), { timeout: 2000 });
+      const pngDownloadButton = await screen.findByTitle(
+        words("markdownContainer.download.png.title"),
+        {},
+        { timeout: 2000 }
+      );
 
       fireEvent.click(pngDownloadButton);
 
