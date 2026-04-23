@@ -51,7 +51,9 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
     });
 
   const agentOptions = useMemo<SelectOption[]>(() => {
-    if (!data?.pages) return [];
+    if (!data?.pages) {
+      return [];
+    }
 
     return data.pages.flatMap((page) =>
       page.data.map((agent) => ({
@@ -61,7 +63,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
     );
   }, [data]);
 
-  const handlePurgedChange = (_e: unknown, hasChanged: boolean) => {
+  const handlePurgedChange = (hasChanged: boolean) => {
     const current = filter.status ?? [];
 
     const updated = hasChanged ? [...current, "purged"] : current.filter((s) => s !== "purged");
@@ -69,7 +71,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
     onChangeStatus(updated);
   };
 
-  const handleReportOnlyChange = (_e: unknown, hasChanged: boolean) => {
+  const handleReportOnlyChange = (hasChanged: boolean) => {
     const current = filter.status ?? [];
 
     const updated = hasChanged
@@ -150,7 +152,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               <Content component="p">{words("resources.filters.desiredState.purged")}</Content>
             }
             isChecked={filter.status?.includes("purged") ?? false}
-            onChange={handlePurgedChange}
+            onChange={(_event, hasChanged) => handlePurgedChange(hasChanged)}
             isReversed
           />
         </StackItem>
@@ -162,7 +164,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               <Content component="p">{words("resources.filters.desiredState.reportOnly")}</Content>
             }
             isChecked={REPORT_ONLY_STATUSES.every((s) => filter.status?.includes(s)) ?? false}
-            onChange={handleReportOnlyChange}
+            onChange={(_event, hasChanged) => handleReportOnlyChange(hasChanged)}
             isReversed
           />
         </StackItem>
