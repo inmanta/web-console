@@ -6,6 +6,7 @@ import { configureAxe } from "jest-axe";
 import { graphql, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { PageInfo } from "@/Data/Queries";
+import { response } from "@/Slices/Agents";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
 import { createMockResourceSummary } from "@/Test/Data/Resource";
 import { words } from "@/UI";
@@ -25,8 +26,8 @@ const axe = configureAxe({
 interface GqlVariables {
   filter?: {
     environment?: string;
-    resourceType?: { eq?: string[] };
-    agent?: { eq?: string[] };
+    resourceType?: { contains?: string[] };
+    agent?: { contains?: string[] };
     resourceIdValue?: { contains?: string[] };
     isOrphan?: boolean;
   };
@@ -100,6 +101,8 @@ function gqlFirstPage(endCursor = "fake-cursor") {
   );
 }
 
+const agentsMock = http.get("/api/v2/agents", () => HttpResponse.json(response));
+
 // ---------------------------------------------------------------------------
 // Test setup
 // ---------------------------------------------------------------------------
@@ -153,6 +156,10 @@ describe("ResourcesPage", () => {
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
+
+  beforeEach(() => {
+    server.use(agentsMock);
+  });
 
   // --- Loading states ---
 
@@ -336,7 +343,7 @@ describe("ResourcesPage", () => {
   test("resets to the first page when a filter changes", async () => {
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-        const hasAgent = (variables.filter?.agent?.eq ?? []).includes("agent2");
+        const hasAgent = (variables.filter?.agent?.contains ?? []).includes("agent2");
 
         if (variables.after === "fake-cursor" && !hasAgent) {
           return HttpResponse.json({ data: gqlFull });
@@ -481,8 +488,8 @@ describe("ResourcesPage", () => {
 
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-        const hasAgent = (variables.filter?.agent?.eq ?? []).includes(agentValue);
-        const hasType = (variables.filter?.resourceType?.eq ?? []).includes(typeValue);
+        const hasAgent = (variables.filter?.agent?.contains ?? []).includes(agentValue);
+        const hasType = (variables.filter?.resourceType?.contains ?? []).includes(typeValue);
         const hasId = (variables.filter?.resourceIdValue?.contains ?? []).includes(idValue);
 
         return HttpResponse.json({ data: hasAgent && hasType && hasId ? gqlFirst3 : gqlFull });
@@ -638,6 +645,26 @@ describe("ResourcesPage", () => {
     await userEvent.type(typeInput, "std::File{enter}");
 
     expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("3");
+  });
+
+  test("agent filter dropdown shows options fetched from the API", async () => {
+    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })));
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
+
+    await openFiltersDrawer();
+
+    const agentInput = await screen.findByPlaceholderText(
+      words("resources.filters.resource.agent.placeholder")
+    );
+    await userEvent.click(agentInput);
+
+    expect(screen.getByRole("option", { name: "aws" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "bru-23-r321" })).toBeInTheDocument();
   });
 
   // --- Summary bar & toolbar ---

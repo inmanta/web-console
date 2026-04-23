@@ -1,12 +1,46 @@
-import { Flex, FlexItem, Content, Icon, ListItem, List } from "@patternfly/react-core";
+import { Flex, FlexItem, Content, Icon, ListItem, List, Popover } from "@patternfly/react-core";
 import { UnlinkIcon, ClockIcon, CubesIcon } from "@patternfly/react-icons";
+import { Resource } from "@/Core";
 import { words } from "@/UI";
 import { DateWithTooltip, statusGroupIcons, statusMapping } from "@/UI/Components";
 import { BlinkingDot } from "./Components";
 import { ResourceRow } from "./ResourceTableRow";
 
-/** Orphans are not actively a part of the latest intent anymore so limited information is displayed for them. */
+const COMPOUND_STATE_KEYS: (keyof Resource.CompoundStateSummary)[] = [
+  "blocked",
+  "compliance",
+  "lastHandlerRun",
+];
+
+const StatusListItem = ({
+  compoundStateKey,
+  row,
+}: {
+  compoundStateKey: keyof Resource.CompoundStateSummary;
+  row: ResourceRow;
+}) => {
+  const state = row.status[compoundStateKey];
+
+  return (
+    <ListItem
+      icon={
+        <Popover
+          bodyContent={<Content component="p">{compoundStateKey}</Content>}
+          triggerAction="hover"
+          position="left"
+        >
+          <>{statusGroupIcons[compoundStateKey]({ state })}</>
+        </Popover>
+      }
+      style={{ alignItems: "flex-end" }}
+    >
+      <Content>{statusMapping[state]}</Content>
+    </ListItem>
+  );
+};
+
 export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
+  /** Orphans are not actively a part of the latest intent anymore so limited information is displayed for them. */
   if (row.status.isOrphan) {
     return (
       <List isPlain>
@@ -39,26 +73,9 @@ export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
 
   return (
     <List isPlain>
-      <ListItem
-        icon={statusGroupIcons["blocked"]({ state: row.status.blocked })}
-        style={{ alignItems: "flex-end" }}
-      >
-        <Content>{statusMapping[row.status.blocked]}</Content>
-      </ListItem>
-
-      <ListItem
-        icon={statusGroupIcons["compliance"]({ state: row.status.compliance })}
-        style={{ alignItems: "flex-end" }}
-      >
-        <Content>{statusMapping[row.status.compliance]}</Content>
-      </ListItem>
-
-      <ListItem
-        icon={statusGroupIcons["lastHandlerRun"]({ state: row.status.lastHandlerRun })}
-        style={{ alignItems: "flex-end" }}
-      >
-        <Content>{statusMapping[row.status.lastHandlerRun]}</Content>
-      </ListItem>
+      {COMPOUND_STATE_KEYS.map((compoundStateKey) => (
+        <StatusListItem key={compoundStateKey} compoundStateKey={compoundStateKey} row={row} />
+      ))}
 
       <ListItem
         icon={

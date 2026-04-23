@@ -197,6 +197,9 @@ export interface ResourceParams {
   currentPage: CurrentPage;
 }
 
+/**
+ * Interface for filtering resources
+ */
 export interface Filter {
   type?: string[];
   agent?: string[];

@@ -6,4 +6,5 @@ export * from "./StatusFilterSelect";
 export * from "./ResourceFilterForm";
 export * from "./IncludeExcludeOption";
 export * from "./AddableTextInput";
+export * from "./AddableSelectInput";
 export * from "./utils";
