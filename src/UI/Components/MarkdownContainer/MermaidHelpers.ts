@@ -193,14 +193,23 @@ export function renderMermaidBlocks(
     // Remove data-processed to allow re-rendering during live editing
     block.removeAttribute("data-processed");
 
-    // Watch for the SVG being injected into this block. Handles blocks that
-    // Mermaid renders after the 100 ms fallback fires (e.g. off-screen blocks
-    // that come into view later). Self-disconnects once its job is done.
-    // Fires whenever Mermaid injects the SVG into this block. Stays active
-    // after the 100 ms fallback so it can re-add the toolbar if Mermaid
-    // overwrites block.innerHTML (and thereby removes the toolbar) after the
-    // fallback has already run. addDownloadToolbar's own guard prevents
-    // double-injection when Mermaid finishes before the fallback.
+    // Activates a successfully rendered block: adds zoom/download affordances.
+    // Called from both the observer (SVG detected) and the run() promise
+    // (.then fires). addDownloadToolbar's own guard prevents double-injection
+    // when both paths fire for the same block.
+    const activateBlock = () => {
+      if (block.classList.contains("mermaid-error")) return;
+      block.classList.add("mermaid-diagram");
+      block.setAttribute("data-zoomable", "true");
+      block.addEventListener("click", handleImageClick);
+      addDownloadToolbar(block);
+    };
+
+    // Observer fires when Mermaid injects the SVG. This is the primary
+    // activation path; the run() .then() below acts as a second path in
+    // case the SVG is already present when the promise resolves.
+    // Never fires before the SVG arrives, so the toolbar is never added
+    // prematurely (which would let Mermaid's innerHTML replacement wipe it).
     const blockObserver = new MutationObserver((_mutations, obs) => {
       if (block.classList.contains("mermaid-error")) {
         obs.disconnect();
@@ -208,52 +217,48 @@ export function renderMermaidBlocks(
       }
       if (block.querySelector("svg")) {
         obs.disconnect();
-        block.classList.add("mermaid-diagram");
-        block.setAttribute("data-zoomable", "true");
-        block.addEventListener("click", handleImageClick);
-        addDownloadToolbar(block);
+        activateBlock();
       }
     });
 
-    blockObserver.observe(block, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ["class"],
-    });
+    blockObserver.observe(block, { childList: true, subtree: true });
 
     try {
       // In Mermaid 11+, run() is the preferred API to process specific nodes.
       if (typeof (Mermaid as any).run === "function") {
         const runPromise = (Mermaid as any).run({ nodes: [block] as any });
-        // Handle async errors from run()
-        if (runPromise && typeof runPromise.catch === "function") {
-          runPromise.catch((error: any) => {
-            showMermaidError(block, error);
-          });
+        if (runPromise && typeof runPromise.then === "function") {
+          runPromise
+            .then(() => {
+              // Promise resolved — SVG should be in the DOM now. Disconnect
+              // the observer and activate. If the observer already fired first,
+              // addDownloadToolbar's guard prevents double-injection.
+              // Guard against the unlikely case where the promise resolves
+              // before Mermaid has written the SVG: keep the observer alive
+              // so it can catch the SVG when it arrives.
+              if (block.querySelector("svg")) {
+                blockObserver.disconnect();
+                activateBlock();
+              }
+            })
+            .catch((error: any) => {
+              blockObserver.disconnect();
+              showMermaidError(block, error);
+            });
         }
       } else if (typeof (Mermaid as any).init === "function") {
-        // Fallback for older versions
+        // Fallback for older versions (init is synchronous)
         try {
           (Mermaid as any).init(undefined, [block] as any);
+          blockObserver.disconnect();
+          activateBlock();
         } catch (error) {
+          blockObserver.disconnect();
           showMermaidError(block, error);
         }
       }
-
-      // Fallback: activate the block after 100 ms regardless of whether the
-      // SVG has arrived yet. If Mermaid finishes later it will overwrite
-      // block.innerHTML, but the observer above stays alive and re-adds the
-      // toolbar once the SVG appears.
-      setTimeout(() => {
-        if (!block.classList.contains("mermaid-error")) {
-          block.classList.add("mermaid-diagram");
-          block.setAttribute("data-zoomable", "true");
-          block.addEventListener("click", handleImageClick);
-          addDownloadToolbar(block);
-        }
-      }, 100);
     } catch (error) {
+      blockObserver.disconnect();
       showMermaidError(block, error);
     }
   });

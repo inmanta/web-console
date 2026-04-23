@@ -51,9 +51,11 @@ describe("MarkdownContainer", () => {
   });
 
   it("renders the Markdown content with Mermaid diagrams correctly", async () => {
-    // Import mermaid mock and set up run method
     const mermaidMock = await import("mermaid");
-    mermaidMock.default.run = vi.fn().mockResolvedValue(undefined);
+    mermaidMock.default.run = vi.fn().mockImplementation(({ nodes }: { nodes: HTMLElement[] }) => {
+      nodes[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg"></svg>';
+      return Promise.resolve();
+    });
 
     const markdownContent = "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```";
     const webTitle = "Container_id";
