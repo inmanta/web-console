@@ -126,9 +126,10 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
 
   const graphqlFilter: Record<string, unknown> = {
     environment: env,
-    ...(filter?.type?.length ? { resourceType: { eq: filter.type } } : {}),
-    ...(filter?.agent?.length ? { agent: { eq: filter.agent } } : {}),
-    ...(filter?.value?.length ? { resourceIdValue: { contains: filter.value } } : {}),
+    //TODO: https://github.com/inmanta/web-console/issues/6823 => same as in ResourceFilterForm.tsx
+    ...(filter?.type?.length ? { resourceType: { contains: `%${filter.type}%` } } : {}),
+    ...(filter?.agent?.length ? { agent: { contains: `%${filter.agent}%` } } : {}),
+    ...(filter?.value?.length ? { resourceIdValue: { contains: `%${filter.value}%` } } : {}),
     ...statusFilter,
   };
 
