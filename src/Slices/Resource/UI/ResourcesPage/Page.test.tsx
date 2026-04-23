@@ -26,8 +26,8 @@ const axe = configureAxe({
 interface GqlVariables {
   filter?: {
     environment?: string;
-    resourceType?: { eq?: string[] };
-    agent?: { eq?: string[] };
+    resourceType?: { contains?: string[] };
+    agent?: { contains?: string[] };
     resourceIdValue?: { contains?: string[] };
     isOrphan?: boolean;
   };
@@ -343,7 +343,7 @@ describe("ResourcesPage", () => {
   test("resets to the first page when a filter changes", async () => {
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-        const hasAgent = (variables.filter?.agent?.eq ?? []).includes("agent2");
+        const hasAgent = (variables.filter?.agent?.contains ?? []).includes("agent2");
 
         if (variables.after === "fake-cursor" && !hasAgent) {
           return HttpResponse.json({ data: gqlFull });
@@ -488,8 +488,8 @@ describe("ResourcesPage", () => {
 
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-        const hasAgent = (variables.filter?.agent?.eq ?? []).includes(agentValue);
-        const hasType = (variables.filter?.resourceType?.eq ?? []).includes(typeValue);
+        const hasAgent = (variables.filter?.agent?.contains ?? []).includes(agentValue);
+        const hasType = (variables.filter?.resourceType?.contains ?? []).includes(typeValue);
         const hasId = (variables.filter?.resourceIdValue?.contains ?? []).includes(idValue);
 
         return HttpResponse.json({ data: hasAgent && hasType && hasId ? gqlFirst3 : gqlFull });
