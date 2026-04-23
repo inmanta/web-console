@@ -177,6 +177,7 @@ export function renderMermaidBlocks(
   });
 
   const observers: MutationObserver[] = [];
+  const timeouts: ReturnType<typeof setTimeout>[] = [];
 
   mermaidBlocks.forEach((block) => {
     // Only run Mermaid if the block contains actual diagram text, not an SVG
@@ -194,9 +195,21 @@ export function renderMermaidBlocks(
     // Remove data-processed to allow re-rendering during live editing
     block.removeAttribute("data-processed");
 
-    // Watch for Mermaid to inject the SVG into this block. Fires whenever the
-    // SVG appears — immediately for visible blocks, or later for off-screen ones
-    // if Mermaid defers them — rather than relying on a fixed timeout.
+    // Idempotent activation: adds the diagram class, zoom attribute, click
+    // handler, and download toolbar. Safe to call from both the observer and
+    // the fallback timeout — whichever fires first wins; the second call is a
+    // no-op because of the mermaid-diagram class check.
+    const activateBlock = () => {
+      if (block.classList.contains("mermaid-diagram")) return;
+      if (block.classList.contains("mermaid-error")) return;
+      block.classList.add("mermaid-diagram");
+      block.setAttribute("data-zoomable", "true");
+      block.addEventListener("click", handleImageClick);
+      addDownloadToolbar(block);
+    };
+
+    // Observer: fires when Mermaid injects the SVG — handles blocks that are
+    // off-screen or take longer than the fallback timeout to render.
     const blockObserver = new MutationObserver((_mutations, obs) => {
       if (block.classList.contains("mermaid-error")) {
         obs.disconnect();
@@ -204,10 +217,7 @@ export function renderMermaidBlocks(
       }
       if (block.querySelector("svg")) {
         obs.disconnect();
-        block.classList.add("mermaid-diagram");
-        block.setAttribute("data-zoomable", "true");
-        block.addEventListener("click", handleImageClick);
-        addDownloadToolbar(block);
+        activateBlock();
       }
     });
 
@@ -240,9 +250,19 @@ export function renderMermaidBlocks(
     } catch (error) {
       showMermaidError(block, error);
     }
+
+    // Fallback timeout: activates the block after a short delay for cases
+    // where Mermaid renders synchronously or the observer doesn't fire.
+    const t = setTimeout(() => {
+      blockObserver.disconnect();
+      activateBlock();
+    }, 100);
+
+    timeouts.push(t);
   });
 
   return () => {
     observers.forEach((obs) => obs.disconnect());
+    timeouts.forEach(clearTimeout);
   };
 }
