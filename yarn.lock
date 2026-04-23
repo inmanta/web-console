@@ -1277,8 +1277,8 @@ __metadata:
     "@types/styled-components": "npm:^5.1.36"
     "@types/uuid": "npm:^11.0.0"
     "@vitejs/plugin-react": "npm:^5.2.0"
-    "@vitest/coverage-v8": "npm:^4.1.4"
-    "@vitest/ui": "npm:^4.1.4"
+    "@vitest/coverage-v8": "npm:^4.1.5"
+    "@vitest/ui": "npm:^4.1.5"
     bignumber.js: "npm:^9.3.1"
     copy-to-clipboard: "npm:^3.3.3"
     cypress: "npm:^15.14.0"
@@ -1340,7 +1340,7 @@ __metadata:
     vite: "npm:^7.3.2"
     vite-plugin-mkcert: "npm:^1.17.12"
     vite-plugin-monaco-editor-esm: "npm:^2.0.2"
-    vitest: "npm:^4.1.4"
+    vitest: "npm:^4.1.5"
     vitest-axe: "npm:^0.1.0"
     xml-formatter: "npm:^3.7.0"
   languageName: unknown
@@ -4123,7 +4123,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/coverage-v8@npm:^4.1.4":
+"@vitest/coverage-v8@npm:^4.1.5":
   version: 4.1.5
   resolution: "@vitest/coverage-v8@npm:4.1.5"
   dependencies:
@@ -4218,7 +4218,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/ui@npm:^4.1.4":
+"@vitest/ui@npm:^4.1.5":
   version: 4.1.5
   resolution: "@vitest/ui@npm:4.1.5"
   dependencies:
@@ -13722,7 +13722,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:^4.1.4":
+"vitest@npm:^4.1.5":
   version: 4.1.5
   resolution: "vitest@npm:4.1.5"
   dependencies:
