@@ -50,13 +50,37 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
       filter: debouncedSearch ? { name: [debouncedSearch] } : undefined,
     });
 
-  const agentOptions = useMemo<SelectOption[]>(
-    () =>
-      data?.pages.flatMap((page) =>
-        page.data.map((agent) => ({ value: agent.name, label: agent.name }))
-      ) ?? [],
-    [data]
-  );
+  const agentOptions = useMemo<SelectOption[]>(() => {
+    if (!data?.pages) return [];
+
+    return data.pages.flatMap((page) =>
+      page.data.map((agent) => ({
+        value: agent.name,
+        label: agent.name,
+      }))
+    );
+  }, [data]);
+
+  const handlePurgedChange = (_e: unknown, hasChanged: boolean) => {
+    const current = filter.status ?? [];
+
+    const updated = hasChanged ? [...current, "purged"] : current.filter((s) => s !== "purged");
+
+    onChangeStatus(updated);
+  };
+
+  const handleReportOnlyChange = (_e: unknown, hasChanged: boolean) => {
+    const current = filter.status ?? [];
+
+    const updated = hasChanged
+      ? [...new Set([...current, ...REPORT_ONLY_STATUSES])]
+      : current.filter(
+          (s) =>
+            !REPORT_ONLY_STATUSES.includes(s as Resource.ComplianceKey | Resource.LastHandlerRunKey)
+        );
+
+    onChangeStatus(updated);
+  };
 
   return (
     <>
@@ -71,7 +95,10 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
             label={words("resources.filters.resource.type.label")}
             placeholder={words("resources.filters.resource.type.placeholder")}
             onAdd={onAddType}
-            hint={words("resources.filters.resource.type.hint")}
+
+            //TODO: decide what to do with the hints for these inputs, releated to:
+            // https://github.com/inmanta/web-console/issues/6823
+            /* hint={words("resources.filters.resource.type.hint")} */
           />
         </StackItem>
         <StackItem>
@@ -79,7 +106,8 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
             label={words("resources.filters.resource.value.label")}
             placeholder={words("resources.filters.resource.value.placeholder")}
             onAdd={onAddValue}
-            hint={words("resources.filters.resource.value.hint")}
+
+            /* hint={words("resources.filters.resource.value.hint")} */
           />
         </StackItem>
         <StackItem>
@@ -101,8 +129,9 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               label={words("resources.filters.resource.agent.label")}
               placeholder={words("resources.filters.resource.agent.placeholder")}
               onAdd={onAddAgent}
-              hint={words("resources.filters.resource.agent.hint")}
               onToggleInputMode={() => setInputMode("select")}
+
+              /* hint={words("resources.filters.resource.agent.hint")} */
             />
           )}
         </StackItem>
@@ -121,11 +150,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               <Content component="p">{words("resources.filters.desiredState.purged")}</Content>
             }
             isChecked={filter.status?.includes("purged") ?? false}
-            onChange={(_e, bool) => {
-              const current = filter.status ?? [];
-              const updated = bool ? [...current, "purged"] : current.filter((s) => s !== "purged");
-              onChangeStatus(updated);
-            }}
+            onChange={handlePurgedChange}
             isReversed
           />
         </StackItem>
@@ -137,18 +162,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               <Content component="p">{words("resources.filters.desiredState.reportOnly")}</Content>
             }
             isChecked={REPORT_ONLY_STATUSES.every((s) => filter.status?.includes(s)) ?? false}
-            onChange={(_e, bool) => {
-              const current = filter.status ?? [];
-              const updated = bool
-                ? [...new Set([...current, ...REPORT_ONLY_STATUSES])]
-                : current.filter(
-                    (s) =>
-                      !REPORT_ONLY_STATUSES.includes(
-                        s as Resource.ComplianceKey | Resource.LastHandlerRunKey
-                      )
-                  );
-              onChangeStatus(updated);
-            }}
+            onChange={handleReportOnlyChange}
             isReversed
           />
         </StackItem>

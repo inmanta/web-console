@@ -663,8 +663,8 @@ describe("ResourcesPage", () => {
     );
     await userEvent.click(agentInput);
 
-    expect(await screen.getByRole("menuitem", { name: "aws" })).toBeInTheDocument();
-    expect(screen.getByRole("menuitem", { name: "bru-23-r321" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "aws" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "bru-23-r321" })).toBeInTheDocument();
   });
 
   // --- Summary bar & toolbar ---

@@ -40,6 +40,7 @@ const StatusListItem = ({
 };
 
 export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
+  /** Orphans are not actively a part of the latest intent anymore so limited information is displayed for them. */
   if (row.status.isOrphan) {
     return (
       <List isPlain>

@@ -149,13 +149,13 @@ export function buildHandlers(
 ): Handlers {
   const next =
     pageInfo.hasNextPage && pageInfo.endCursor
-      ? `after=${pageInfo.endCursor}&beforeCount=${currentBeforeCount + pageSize}`
+      ? `after=${encodeURIComponent(pageInfo.endCursor)}&beforeCount=${currentBeforeCount + pageSize}`
       : undefined;
 
   const prevBeforeCount = Math.max(0, currentBeforeCount - pageSize);
   const prev =
     pageInfo.hasPreviousPage && pageInfo.startCursor
-      ? `before=${pageInfo.startCursor}&beforeCount=${prevBeforeCount}`
+      ? `before=${encodeURIComponent(pageInfo.startCursor)}&beforeCount=${prevBeforeCount}`
       : undefined;
 
   return { next, prev };

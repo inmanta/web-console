@@ -63,9 +63,7 @@ export const AddableTextInput: React.FC<AddableTextInputProps> = ({
 
   return (
     <FormGroup
-      label={
-        <span style={{ fontWeight: "var(--pf-t--global--font--weight--body--bold)" }}>{label}</span>
-      }
+      label={label}
       fieldId={inputId}
       labelHelp={
         hint ? (
