@@ -144,7 +144,7 @@
     "graphql": "^16.13.2",
     "graphql-request": "^7.4.0",
     "highlight.js": "^11.11.1",
-    "keycloak-js": "^26.2.3",
+    "keycloak-js": "^26.2.4",
     "markdown-it": "^14.1.1",
     "mermaid": "^11.14.0",
     "moment": "^2.30.1",
