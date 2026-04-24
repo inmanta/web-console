@@ -532,10 +532,14 @@ describe("ResourcesPage", () => {
   });
 
   test.each`
-    filterValue      | option
-    ${"deployed"}    | ${"include"}
-    ${"unavailable"} | ${"exclude"}
-  `("status filter: $filterValue / $option", async ({ filterValue, option }) => {
+    filterValue        | option       | toggleLabel
+    ${"successful"}    | ${"include"} | ${words("resources.filters.status.lastHandlerRun.label")}
+    ${"failed"}        | ${"exclude"} | ${words("resources.filters.status.lastHandlerRun.label")}
+    ${"compliant"}     | ${"include"} | ${words("resources.filters.status.compliance.label")}
+    ${"non_compliant"} | ${"exclude"} | ${words("resources.filters.status.compliance.label")}
+    ${"blocked"}       | ${"include"} | ${words("resources.filters.status.blocked.label")}
+    ${"not_blocked"}   | ${"exclude"} | ${words("resources.filters.status.blocked.label")}
+  `("status filter: '$filterValue' / '$option'", async ({ filterValue, option, toggleLabel }) => {
     server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFirst3 })));
 
     const { component } = setup();
@@ -547,8 +551,10 @@ describe("ResourcesPage", () => {
 
     await openStatusFiltersTab();
 
-    const statusToggle = await screen.findByRole("button", { name: "status-toggle" });
-    await userEvent.click(statusToggle);
+    const dropdownToggle = screen.getByRole("button", {
+      name: `${toggleLabel}-toggle`,
+    });
+    await userEvent.click(dropdownToggle);
 
     const filterToggle = await screen.findByRole("button", {
       name: `${filterValue}-${option}-toggle`,
@@ -563,21 +569,11 @@ describe("ResourcesPage", () => {
       expect(results).toHaveNoViolations();
     });
   });
-
   test("clear all filters removes default orphan filter", async () => {
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) =>
         HttpResponse.json({
-          data:
-            variables.filter?.isOrphan === false
-              ? gqlFull
-              : toGqlResponse(
-                  {
-                    ...BASE_DATA,
-                    resources: { ...BASE_DATA.resources, edges: ALL_EDGES.slice(4) },
-                  },
-                  2
-                ),
+          data: variables.filter?.isOrphan === false ? gqlFirst3 : gqlFull,
         })
       )
     );
@@ -587,7 +583,7 @@ describe("ResourcesPage", () => {
     render(component);
 
     const rows = await screen.findAllByLabelText("Resource Table Row");
-    expect(rows).toHaveLength(6);
+    expect(rows).toHaveLength(3);
 
     await openFiltersDrawer();
 
@@ -597,20 +593,7 @@ describe("ResourcesPage", () => {
     await userEvent.click(clearAllButton);
 
     const rowsAfterClearingFilters = await screen.findAllByLabelText("Resource Table Row");
-    expect(rowsAfterClearingFilters).toHaveLength(2);
-
-    await openStatusFiltersTab();
-
-    const statusToggle = await screen.findByRole("button", { name: "status-toggle" });
-    await userEvent.click(statusToggle);
-
-    const orphanExcludeToggle = await screen.findByRole("button", {
-      name: "orphaned-exclude-toggle",
-    });
-    await userEvent.click(orphanExcludeToggle);
-
-    const rowsAfterExcludingOrphans = await screen.findAllByLabelText("Resource Table Row");
-    expect(rowsAfterExcludingOrphans).toHaveLength(6);
+    expect(rowsAfterClearingFilters).toHaveLength(6);
 
     await act(async () => {
       const results = await axe(document.body);

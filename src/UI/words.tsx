@@ -535,6 +535,8 @@ const dict = {
   "resources.empty.message": "No resources found",
   "resources.empty.filterMessage":
     "The given combination of filters didn't match any existing resources, please edit your filter values.",
+  "resources.deploying.popover": (count: number) =>
+    `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying`,
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "discoveredResourceDetails.title": "Discovered Resource Details",
@@ -551,7 +553,13 @@ const dict = {
   "resources.popover.orphan": "Orphan",
   "resources.popover.requirement": "Requirement",
   "resources.popover.requirements": "Requirements",
-  "resources.filters.status.placeholder": "Deploy State...",
+  "resources.filters.status.isDeploying": "Is Deploying",
+  "resources.filters.status.blocked.label": "Blocked state(s)",
+  "resources.filters.status.blocked.placeholder": "Filter by blocked state",
+  "resources.filters.status.compliance.label": "Compliance state(s)",
+  "resources.filters.status.compliance.placeholder": "Filter by compliance state",
+  "resources.filters.status.lastHandlerRun.label": "Handler run state(s)",
+  "resources.filters.status.lastHandlerRun.placeholder": "Filter by handler run state",
   "resources.filters.agent.placeholder": "Agent...",
   "resources.filters.value.placeholder": "Value...",
   "resources.filters.type.placeholder": "Type...",
@@ -572,7 +580,6 @@ const dict = {
   "resources.filters.desiredState.sectionTitle": "Desired State",
   "resources.filters.desiredState.purged": "Purged",
   "resources.filters.desiredState.reportOnly": "Report Only",
-  "resources.filters.status.section.title": "Deploy State",
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.clearAll": "Clear all",
   "resources.filters.active.empty.title": "No filters applied",

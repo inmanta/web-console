@@ -12,6 +12,7 @@ import {
   ToolbarItem,
   Label,
   Spinner,
+  Popover,
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
@@ -107,11 +108,17 @@ export const Page: React.FC = () => {
             >
               <span style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
                 {deployingCount > 0 && (
-                  <>
-                    {deployingCount}
-                    <Spinner size="sm" isInline />
-                    <span>/</span>
-                  </>
+                  <Popover
+                    triggerAction="hover"
+                    bodyContent={words("resources.deploying.popover")(deployingCount)}
+                    aria-label={words("resources.deploying.popover")(deployingCount)}
+                  >
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
+                      {deployingCount}
+                      <Spinner size="sm" isInline />
+                      <span>/</span>
+                    </span>
+                  </Popover>
                 )}
                 {resourceSummary.totalCount}
               </span>

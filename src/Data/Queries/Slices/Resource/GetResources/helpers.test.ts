@@ -91,6 +91,70 @@ describe("mapStatusToGraphQLFilter", () => {
       blocked: { eq: ["BLOCKED"] },
     });
   });
+
+  it("maps 'isDeploying' to isDeploying: true", () => {
+    const result = mapStatusToGraphQLFilter(["isDeploying"]);
+
+    expect(result).toEqual({ isDeploying: true });
+  });
+
+  it("maps '!isDeploying' to isDeploying: false", () => {
+    const result = mapStatusToGraphQLFilter(["!isDeploying"]);
+
+    expect(result).toEqual({ isDeploying: false });
+  });
+
+  it("maps negated lastHandlerRun statuses to neq", () => {
+    const result = mapStatusToGraphQLFilter(["!failed", "!skipped"]);
+
+    expect(result).toEqual({
+      lastHandlerRun: { neq: ["FAILED", "SKIPPED"] },
+    });
+  });
+
+  it("maps mixed eq and neq for the same field", () => {
+    const result = mapStatusToGraphQLFilter(["failed", "!skipped"]);
+
+    expect(result).toEqual({
+      lastHandlerRun: { eq: ["FAILED"], neq: ["SKIPPED"] },
+    });
+  });
+
+  it("maps negated compliance statuses to neq", () => {
+    const result = mapStatusToGraphQLFilter(["!compliant", "!non_compliant"]);
+
+    expect(result).toEqual({
+      compliance: { neq: ["COMPLIANT", "NON_COMPLIANT"] },
+    });
+  });
+
+  it("maps negated blocked statuses to neq", () => {
+    const result = mapStatusToGraphQLFilter(["!blocked"]);
+
+    expect(result).toEqual({
+      blocked: { neq: ["BLOCKED"] },
+    });
+  });
+
+  it("handles all negated and non-negated statuses together", () => {
+    const result = mapStatusToGraphQLFilter([
+      "isDeploying",
+      "!orphaned",
+      "!purged",
+      "failed",
+      "!compliant",
+      "!blocked",
+    ]);
+
+    expect(result).toEqual({
+      isDeploying: true,
+      isOrphan: false,
+      purged: false,
+      lastHandlerRun: { eq: ["FAILED"] },
+      compliance: { neq: ["COMPLIANT"] },
+      blocked: { neq: ["BLOCKED"] },
+    });
+  });
 });
 
 // ─── mapSort ────────────────────────────────────────────────────────────────

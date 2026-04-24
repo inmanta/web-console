@@ -31,9 +31,10 @@ const STATUS_FIELD_MAP = {
 type GraphQLStateFilter = Partial<{
   purged: boolean;
   isOrphan: boolean;
-  lastHandlerRun: { eq: Resource.LastHandlerRun[] };
-  compliance: { eq: Resource.Compliance[] };
-  blocked: { eq: Resource.Blocked[] };
+  isDeploying: boolean;
+  lastHandlerRun: { eq?: Resource.LastHandlerRun[]; neq?: Resource.LastHandlerRun[] };
+  compliance: { eq?: Resource.Compliance[]; neq?: Resource.Compliance[] };
+  blocked: { eq?: Resource.Blocked[]; neq?: Resource.Blocked[] };
 }>;
 
 function isCompoundStateKey(value: string): value is Resource.CompoundStateKey {
@@ -45,60 +46,74 @@ function isCompoundStateKey(value: string): value is Resource.CompoundStateKey {
  * Supports orphaned/!orphaned, purged mapping and compound states.
  * For compound states, it maps status values to their corresponding field with an eq operator.
  */
-export function mapStatusToGraphQLFilter(status?: string[]): GraphQLStateFilter {
-  if (!status?.length) return {};
+export function mapStatusToGraphQLFilter(statusses?: string[]): GraphQLStateFilter {
+  if (!statusses?.length) return {};
 
   const filter: GraphQLStateFilter = {};
 
-  const lastHandlerRun: Resource.LastHandlerRun[] = [];
-  const compliance: Resource.Compliance[] = [];
-  const blocked: Resource.Blocked[] = [];
+  const lastHandlerRun: { eq: Resource.LastHandlerRun[]; neq: Resource.LastHandlerRun[] } = {
+    eq: [],
+    neq: [],
+  };
+  const compliance: { eq: Resource.Compliance[]; neq: Resource.Compliance[] } = { eq: [], neq: [] };
+  const blocked: { eq: Resource.Blocked[]; neq: Resource.Blocked[] } = { eq: [], neq: [] };
 
-  for (const s of status) {
-    if (s === "orphaned") {
-      filter.isOrphan = true;
+  for (const status of statusses) {
+    const isNegated = status.startsWith("!");
+    const key = isNegated ? status.slice(1) : status;
+    const operator = isNegated ? "neq" : "eq";
+
+    if (key === "isDeploying") {
+      filter.isDeploying = !isNegated;
       continue;
     }
 
-    if (s === "!orphaned") {
-      filter.isOrphan = false;
+    if (key === "orphaned") {
+      filter.isOrphan = !isNegated;
       continue;
     }
 
-    if (s === "purged") {
-      filter.purged = true;
+    if (key === "purged") {
+      filter.purged = !isNegated;
       continue;
     }
 
-    if (!isCompoundStateKey(s)) continue;
+    if (!isCompoundStateKey(key)) continue;
 
-    const { field, value } = STATUS_FIELD_MAP[s];
+    const { field, value } = STATUS_FIELD_MAP[key];
 
     switch (field) {
       case "lastHandlerRun":
-        lastHandlerRun.push(value);
+        lastHandlerRun[operator].push(value);
         break;
-
       case "compliance":
-        compliance.push(value);
+        compliance[operator].push(value);
         break;
-
       case "blocked":
-        blocked.push(value);
+        blocked[operator].push(value);
         break;
     }
   }
 
-  if (lastHandlerRun.length) {
-    filter.lastHandlerRun = { eq: lastHandlerRun };
+  if (lastHandlerRun.eq.length || lastHandlerRun.neq.length) {
+    filter.lastHandlerRun = {
+      ...(lastHandlerRun.eq.length && { eq: lastHandlerRun.eq }),
+      ...(lastHandlerRun.neq.length && { neq: lastHandlerRun.neq }),
+    };
   }
 
-  if (compliance.length) {
-    filter.compliance = { eq: compliance };
+  if (compliance.eq.length || compliance.neq.length) {
+    filter.compliance = {
+      ...(compliance.eq.length && { eq: compliance.eq }),
+      ...(compliance.neq.length && { neq: compliance.neq }),
+    };
   }
 
-  if (blocked.length) {
-    filter.blocked = { eq: blocked };
+  if (blocked.eq.length || blocked.neq.length) {
+    filter.blocked = {
+      ...(blocked.eq.length && { eq: blocked.eq }),
+      ...(blocked.neq.length && { neq: blocked.neq }),
+    };
   }
 
   return filter;
