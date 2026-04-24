@@ -123,13 +123,18 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   );
 
   const statusFilter = mapStatusToGraphQLFilter(filter?.status);
-
   const graphqlFilter: Record<string, unknown> = {
     environment: env,
     //TODO: https://github.com/inmanta/web-console/issues/6823 => same as in ResourceFilterForm.tsx
-    ...(filter?.type?.length ? { resourceType: { contains: `%${filter.type}%` } } : {}),
-    ...(filter?.agent?.length ? { agent: { contains: `%${filter.agent}%` } } : {}),
-    ...(filter?.value?.length ? { resourceIdValue: { contains: `%${filter.value}%` } } : {}),
+    ...(filter?.type?.length
+      ? { resourceType: { contains: filter.type.map((type) => `%${type}%`) } }
+      : {}),
+    ...(filter?.agent?.length
+      ? { agent: { contains: filter.agent.map((agent) => `%${agent}%`) } }
+      : {}),
+    ...(filter?.value?.length
+      ? { resourceIdValue: { contains: filter.value.map((value) => `%${value}%`) } }
+      : {}),
     ...statusFilter,
   };
 

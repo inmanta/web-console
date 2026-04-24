@@ -579,7 +579,6 @@ const dict = {
   "resources.filters.resource.agent.loading": "Loading agents...",
   "resources.filters.desiredState.sectionTitle": "Desired State",
   "resources.filters.desiredState.purged": "Purged",
-  "resources.filters.desiredState.reportOnly": "Report Only",
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.clearAll": "Clear all",
   "resources.filters.active.empty.title": "No filters applied",

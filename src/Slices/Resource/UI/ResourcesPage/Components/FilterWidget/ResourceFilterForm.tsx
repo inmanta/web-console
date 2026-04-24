@@ -15,12 +15,6 @@ export interface ResourceFilterFormProps {
   filter: Resource.Filter;
 }
 
-/** These are the statuses which filter out the report only resources. */
-const REPORT_ONLY_STATUSES: (Resource.ComplianceKey | Resource.LastHandlerRunKey)[] = [
-  "non_compliant",
-  "successful",
-] as const;
-
 /**
  * The ResourceFilterForm component.
  *
@@ -67,19 +61,6 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
     const current = filter.status ?? [];
 
     const updated = hasChanged ? [...current, "purged"] : current.filter((s) => s !== "purged");
-
-    onChangeStatus(updated);
-  };
-
-  const handleReportOnlyChange = (hasChanged: boolean) => {
-    const current = filter.status ?? [];
-
-    const updated = hasChanged
-      ? [...new Set([...current, ...REPORT_ONLY_STATUSES])]
-      : current.filter(
-          (s) =>
-            !REPORT_ONLY_STATUSES.includes(s as Resource.ComplianceKey | Resource.LastHandlerRunKey)
-        );
 
     onChangeStatus(updated);
   };
@@ -151,16 +132,6 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
             label={words("resources.filters.desiredState.purged")}
             isChecked={filter.status?.includes("purged") ?? false}
             onChange={(_event, hasChanged) => handlePurgedChange(hasChanged)}
-            isReversed
-          />
-        </StackItem>
-        <StackItem>
-          <Switch
-            id={words("resources.filters.desiredState.reportOnly")}
-            aria-label={words("resources.filters.desiredState.reportOnly")}
-            label={words("resources.filters.desiredState.reportOnly")}
-            isChecked={REPORT_ONLY_STATUSES.every((s) => filter.status?.includes(s)) ?? false}
-            onChange={(_event, hasChanged) => handleReportOnlyChange(hasChanged)}
             isReversed
           />
         </StackItem>

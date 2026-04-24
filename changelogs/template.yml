@@ -1,6 +1,6 @@
 description: Added unicode support to templates
 issue-nr: >"fill in"
-change-type: >"fill in"
+change-type: >"fill in" #patch, minor, major
 destination-branches: [master, iso7]
 sections:
   feature: "{{description}}"

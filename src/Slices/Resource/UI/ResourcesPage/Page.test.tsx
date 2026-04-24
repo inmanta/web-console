@@ -396,7 +396,11 @@ describe("ResourcesPage", () => {
           const field = variables.filter?.[filterVariableKey as keyof typeof variables.filter] as
             | { eq?: string[]; contains?: string[] }
             | undefined;
-          const values = field?.eq ?? field?.contains ?? [];
+
+          //This is for now until we rework the filtering part where we don't have to manually pass %
+          const values = (field?.eq ?? field?.contains ?? []).map((v: string) =>
+            v.replace(/%/g, "")
+          );
 
           return HttpResponse.json({
             data: values.includes(filterVariableValue) ? gqlFirst3 : gqlFull,
@@ -450,8 +454,13 @@ describe("ResourcesPage", () => {
             | { eq?: string[]; contains?: string[] }
             | undefined;
 
-          const hasOne = (fieldOne?.eq ?? fieldOne?.contains ?? []).includes(filterValueOne);
-          const hasTwo = (fieldTwo?.eq ?? fieldTwo?.contains ?? []).includes(filterValueTwo);
+          //This is for now until we rework the filtering part where we don't have to manually pass %
+          const hasOne = (fieldOne?.eq ?? fieldOne?.contains ?? []).some(
+            (v: string) => v.replace(/%/g, "") === filterValueOne
+          );
+          const hasTwo = (fieldTwo?.eq ?? fieldTwo?.contains ?? []).some(
+            (v: string) => v.replace(/%/g, "") === filterValueTwo
+          );
 
           return HttpResponse.json({ data: hasOne && hasTwo ? gqlFirst3 : gqlFull });
         })
@@ -488,9 +497,16 @@ describe("ResourcesPage", () => {
 
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
-        const hasAgent = (variables.filter?.agent?.contains ?? []).includes(agentValue);
-        const hasType = (variables.filter?.resourceType?.contains ?? []).includes(typeValue);
-        const hasId = (variables.filter?.resourceIdValue?.contains ?? []).includes(idValue);
+        //This is for now until we rework the filtering part where we don't have to manually pass %
+        const hasAgent = (variables.filter?.agent?.contains ?? []).some(
+          (v) => v.replace(/%/g, "") === agentValue
+        );
+        const hasType = (variables.filter?.resourceType?.contains ?? []).some(
+          (v) => v.replace(/%/g, "") === typeValue
+        );
+        const hasId = (variables.filter?.resourceIdValue?.contains ?? []).some(
+          (v) => v.replace(/%/g, "") === idValue
+        );
 
         return HttpResponse.json({ data: hasAgent && hasType && hasId ? gqlFirst3 : gqlFull });
       })

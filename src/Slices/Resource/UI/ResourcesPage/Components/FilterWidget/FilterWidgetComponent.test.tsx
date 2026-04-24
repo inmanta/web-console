@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -160,5 +160,32 @@ describe("FilterWidgetComponent", () => {
     expect(setFilter).toHaveBeenNthCalledWith(9, {
       disregardDefault: true,
     });
+  });
+
+  it("toggles the purged status via the switch in the resource tab", async () => {
+    const Wrapper = () => {
+      const [filter, setFilter] = useState<Resource.Filter>({});
+      return (
+        <FilterWidgetComponent
+          filter={filter}
+          onClose={vi.fn()}
+          setFilter={(update) => setFilter(update)}
+        />
+      );
+    };
+
+    renderWithDrawer(<Wrapper />);
+
+    const purgedSwitch = screen.getByRole("switch", {
+      name: words("resources.filters.desiredState.purged"),
+    });
+
+    expect(purgedSwitch).not.toBeChecked();
+
+    await userEvent.click(purgedSwitch);
+    expect(purgedSwitch).toBeChecked();
+
+    await userEvent.click(purgedSwitch);
+    expect(purgedSwitch).not.toBeChecked();
   });
 });

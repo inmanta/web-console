@@ -1,5 +1,5 @@
 import React from "react";
-import { OnSort, Table, Th, Thead, Tr } from "@patternfly/react-table";
+import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Resource, Sort } from "@/Core";
 import { words } from "@/UI";
 import { ResourceTableRow, ResourceRow } from "./ResourceTableRow";
@@ -55,7 +55,7 @@ export const ResourcesTable: React.FC<Props> = ({ rows, sort, setSort, ...props 
   });
 
   return (
-    <Table {...props} isStickyHeader>
+    <Table {...props} isStickyHeader variant={TableVariant.compact}>
       <Thead>
         <Tr>
           {heads}
