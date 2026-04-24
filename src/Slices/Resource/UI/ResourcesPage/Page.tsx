@@ -12,6 +12,7 @@ import {
   ToolbarItem,
   Label,
   Spinner,
+  Tooltip,
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
@@ -99,23 +100,29 @@ export const Page: React.FC = () => {
             <Content component="h1" style={{ marginBottom: 0 }}>
               {words("inventory.tabs.resources")}
             </Content>
-            <Label
-              icon={<CubesIcon />}
-              variant="outline"
-              color="blue"
-              data-testid="deploying-label"
+            <Tooltip
+              content={words("resources.deploying.popover")(deployingCount)}
+              aria-label={words("resources.deploying.popover")(deployingCount)}
+              isVisible={deployingCount > 0 ? undefined : false}
             >
-              <span style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
-                {deployingCount > 0 && (
-                  <>
-                    {deployingCount}
-                    <Spinner size="sm" isInline />
-                    <span>/</span>
-                  </>
-                )}
-                {resourceSummary.totalCount}
-              </span>
-            </Label>
+              <Label
+                icon={<CubesIcon />}
+                variant="outline"
+                color="blue"
+                data-testid="deploying-label"
+              >
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
+                  {deployingCount > 0 && (
+                    <>
+                      {deployingCount}
+                      <Spinner size="sm" isInline />
+                      <span>/</span>
+                    </>
+                  )}
+                  {resourceSummary.totalCount}
+                </span>
+              </Label>
+            </Tooltip>
           </Flex>
           <Flex>
             <ToolbarItem>

@@ -78,8 +78,14 @@ describe("FilterWidgetComponent", () => {
     renderWithDrawer(<FilterWidgetComponent filter={{}} onClose={vi.fn()} setFilter={setFilter} />);
 
     await userEvent.click(screen.getByRole("tab", { name: "Status" }));
-    await userEvent.click(screen.getByRole("button", { name: "status-toggle" }));
-    await userEvent.click(screen.getByRole("button", { name: "failed-include-toggle" }));
+
+    const handlerRunToggle = screen.getByRole("button", {
+      name: `${words("resources.filters.status.lastHandlerRun.label")}-toggle`,
+    });
+    await userEvent.click(handlerRunToggle);
+
+    const failedIncludeToggle = screen.getByRole("button", { name: "failed-include-toggle" });
+    await userEvent.click(failedIncludeToggle);
 
     expect(setFilter).toHaveBeenNthCalledWith(1, {
       status: ["failed"],

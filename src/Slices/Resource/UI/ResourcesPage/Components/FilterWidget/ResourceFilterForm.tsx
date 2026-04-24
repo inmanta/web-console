@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Content, Stack, StackItem, Switch, Title } from "@patternfly/react-core";
+import { Stack, StackItem, Switch, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { useGetAgents } from "@/Data/Queries";
 import { useDebounce } from "@/UI";
@@ -148,9 +148,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
           <Switch
             id={words("resources.filters.desiredState.purged")}
             aria-label={words("resources.filters.desiredState.purged")}
-            label={
-              <Content component="p">{words("resources.filters.desiredState.purged")}</Content>
-            }
+            label={words("resources.filters.desiredState.purged")}
             isChecked={filter.status?.includes("purged") ?? false}
             onChange={(_event, hasChanged) => handlePurgedChange(hasChanged)}
             isReversed
@@ -160,9 +158,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
           <Switch
             id={words("resources.filters.desiredState.reportOnly")}
             aria-label={words("resources.filters.desiredState.reportOnly")}
-            label={
-              <Content component="p">{words("resources.filters.desiredState.reportOnly")}</Content>
-            }
+            label={words("resources.filters.desiredState.reportOnly")}
             isChecked={REPORT_ONLY_STATUSES.every((s) => filter.status?.includes(s)) ?? false}
             onChange={(_event, hasChanged) => handleReportOnlyChange(hasChanged)}
             isReversed
