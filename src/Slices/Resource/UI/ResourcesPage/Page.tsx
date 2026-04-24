@@ -100,29 +100,30 @@ export const Page: React.FC = () => {
             <Content component="h1" style={{ marginBottom: 0 }}>
               {words("inventory.tabs.resources")}
             </Content>
-            <Label
-              icon={<CubesIcon />}
-              variant="outline"
-              color="blue"
-              data-testid="deploying-label"
+            <Popover
+              triggerAction="hover"
+              bodyContent={words("resources.deploying.popover")(deployingCount)}
+              aria-label={words("resources.deploying.popover")(deployingCount)}
+              isVisible={deployingCount > 0 ? undefined : false}
             >
-              <span style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
-                {deployingCount > 0 && (
-                  <Popover
-                    triggerAction="hover"
-                    bodyContent={words("resources.deploying.popover")(deployingCount)}
-                    aria-label={words("resources.deploying.popover")(deployingCount)}
-                  >
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
+              <Label
+                icon={<CubesIcon />}
+                variant="outline"
+                color="blue"
+                data-testid="deploying-label"
+              >
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
+                  {deployingCount > 0 && (
+                    <>
                       {deployingCount}
                       <Spinner size="sm" isInline />
                       <span>/</span>
-                    </span>
-                  </Popover>
-                )}
-                {resourceSummary.totalCount}
-              </span>
-            </Label>
+                    </>
+                  )}
+                  {resourceSummary.totalCount}
+                </span>
+              </Label>
+            </Popover>
           </Flex>
           <Flex>
             <ToolbarItem>
