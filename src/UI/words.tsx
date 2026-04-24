@@ -940,7 +940,7 @@ const dict = {
   "markdownPreviewer.download": "Download",
 
   /**
-   * Markdown Container State Transfer related text
+   * Markdown Container related text
    */
   "markdownContainer.setState.error.invalidConfigArray":
     "⚠ Invalid configuration: expected object, got array",
@@ -949,6 +949,11 @@ const dict = {
     "⚠ Missing configuration: provide 'targetState'",
   "markdownContainer.setState.error.cannotParseJson":
     "⚠ Invalid configuration: Can't parse JSON object",
+  "markdownContainer.download.svg": "↓ SVG",
+  "markdownContainer.download.svg.title": "Download as SVG",
+  "markdownContainer.download.png": "↓ PNG",
+  "markdownContainer.download.png.title": "Download as PNG",
+  "markdownContainer.error.mermaid.title": "Error rendering Mermaid diagram:",
 
   /**
    * LogViewer related text
