@@ -44,11 +44,13 @@ export function getUrl(params: GetAgentsParams | GetAgentsInfiniteParams, cursor
         )}`
       : "";
   const sortParam = sort ? `&sort=${Sort.serialize(sort)}` : "";
-  const cursorParam = cursor
-    ? `&start=${cursor}`
-    : "currentPage" in params && params.currentPage.value
-      ? `&${params.currentPage.value}`
-      : "";
+
+  let cursorParam = "";
+  if (cursor) {
+    cursorParam = `&start=${cursor}`;
+  } else if ("currentPage" in params && params.currentPage.value) {
+    cursorParam = `&${params.currentPage.value}`;
+  }
 
   return `/api/v2/agents?limit=${pageSize.value}${filterParam}${sortParam}${cursorParam}`;
 }

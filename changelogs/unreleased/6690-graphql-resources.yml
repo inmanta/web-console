@@ -1,4 +1,6 @@
-description: Replace the REST /api/v2/resource call with the GraphQL endpoint for fetching the resource list.
+description: Resources view has been reworked. Compound states have now been added to better reflect the resources intent. In the past this would have been represented by 1 field. By splitting this into multiple (3) states, more information about that resource becomes available at any time.
 issue-nr: 6690
-change-type: patch
+change-type: minor
 destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"
