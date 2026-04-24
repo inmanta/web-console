@@ -163,7 +163,7 @@
     "react-oidc-context": "^3.3.1",
     "react-router": "^7.14.1",
     "styled-components": "^6.4.0",
-    "uuid": "^13.0.0",
+    "uuid": "^14.0.0",
     "victory": "^37.3.6",
     "xml-formatter": "^3.7.0"
   },
