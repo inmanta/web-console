@@ -191,9 +191,26 @@ const stripBrokenSourcemapsPlugin = () => ({
   },
 });
 
+// Physically remove Monaco CDN URL strings from the production bundle so they
+// can never be used even if a loader instance slips through deduplication or
+// loader.config() is called too late. The URLs only exist as dead string
+// literals in @monaco-editor/loader's default config; removing them has no
+// runtime side-effect beyond making CDN loading impossible.
+const blockMonacoCDNPlugin = () => ({
+  name: "block-monaco-cdn",
+  renderChunk(code: string) {
+    const cleaned = code.replace(
+      /https:\/\/cdn\.jsdelivr\.net\/npm\/monaco-editor@[^/'"]+\/min\/vs/g,
+      ""
+    );
+    return cleaned !== code ? { code: cleaned, map: null } : null;
+  },
+});
+
 const plugins = [
   react(),
   stripBrokenSourcemapsPlugin(),
+  blockMonacoCDNPlugin(),
   versionPlugin(),
   moveAssetsToRootPlugin(),
   copyConfigPlugin(),
@@ -240,9 +257,6 @@ export default defineConfig({
         find: "@rappidcss",
         replacement: resolve(__dirname, "node_modules/@joint/plus/joint-plus.css"),
       },
-      // monaco-graphql is hoisted to the root by Yarn, so no alias is needed.
-      // @graphiql/react and direct imports both resolve to the same root copy,
-      // preventing duplicate "graphql" Monaco language registration.
       // In tests, redirect ALL monaco-editor imports (including deep ESM subpaths like
       // monaco-editor/esm/vs/base/common/uri.js) to the mock. A regex find is required
       // because a string alias does a prefix replacement, turning subpath imports into
@@ -256,6 +270,13 @@ export default defineConfig({
           ]
         : []),
     ],
+    // Ensure only one copy of each monaco package is loaded.
+    // @patternfly/react-code-editor nests its own @monaco-editor/loader@1.4.0
+    // (CDN default: monaco-editor@0.43.0). Without deduplication that loader gets
+    // its own module-level state, ignores our loader.config() call in index.tsx,
+    // and hits cdn.jsdelivr.net at runtime. Deduplicating forces all consumers to
+    // share the root instance so our config applies universally.
+    dedupe: ["monaco-editor", "@monaco-editor/loader", "@monaco-editor/react"],
   },
   server: {
     port: 9000,

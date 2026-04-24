@@ -67,3 +67,36 @@
   left: var(--left-margin);
   width: calc(100vw - var(--left-margin) - var(--diagram-margin) - (var(--page-padding) * 2) - var(--extra-space));
 }
+
+.mermaid-toolbar {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1001;
+}
+
+.mermaid-diagram:hover .mermaid-toolbar,
+.mermaid-diagram.zoomed .mermaid-toolbar {
+  opacity: 1;
+}
+
+.mermaid-download-btn {
+  background: var(--pf-t--global--background--color--primary--default, #fff);
+  border: 1px solid var(--pf-t--global--border--color--default, #d2d2d2);
+  border-radius: 3px;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+  color: var(--pf-t--global--text--color--regular, #151515);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.mermaid-download-btn:hover {
+  background: var(--pf-t--global--background--color--secondary--default, #f5f5f5);
+  border-color: var(--pf-t--global--border--color--hover, #b8bbbe);
+}
