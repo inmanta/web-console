@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Resource } from "@/Core";
-
+import { words } from "@/UI";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
+
+vi.mock("@/Data/Queries", () => ({
+  useGetAgents: () => ({
+    useInfiniteScroll: () => ({
+      data: { pages: [] },
+      hasNextPage: false,
+      isFetchingNextPage: false,
+      isLoading: false,
+      fetchNextPage: vi.fn(),
+    }),
+  }),
+}));
 
 const renderWithDrawer = (ui: React.ReactElement) =>
   render(
@@ -26,20 +38,32 @@ describe("FilterWidgetComponent", () => {
       <FilterWidgetComponent filter={filter} onClose={vi.fn()} setFilter={setFilter} />
     );
 
-    await userEvent.type(screen.getByPlaceholderText("Resource type..."), "new-type{enter}");
+    const typeInput = screen.getByPlaceholderText(
+      words("resources.filters.resource.type.placeholder")
+    );
+    await userEvent.type(typeInput, "new-type{enter}");
+
     expect(setFilter).toHaveBeenNthCalledWith(1, {
       ...filter,
       type: ["existing", "new-type"],
     });
 
-    await userEvent.type(screen.getByPlaceholderText("Value..."), "new-value{enter}");
+    const valueInput = screen.getByPlaceholderText(
+      words("resources.filters.resource.value.placeholder")
+    );
+    await userEvent.type(valueInput, "new-value{enter}");
+
     expect(setFilter).toHaveBeenNthCalledWith(2, {
       ...filter,
       type: ["existing"],
       value: ["new-value"],
     });
 
-    await userEvent.type(screen.getByPlaceholderText("Agent..."), "new-agent{enter}");
+    const agentInput = screen.getByPlaceholderText(
+      words("resources.filters.resource.agent.placeholder")
+    );
+    await userEvent.type(agentInput, "new-agent{enter}");
+
     expect(setFilter).toHaveBeenNthCalledWith(3, {
       ...filter,
       type: ["existing"],
@@ -54,8 +78,14 @@ describe("FilterWidgetComponent", () => {
     renderWithDrawer(<FilterWidgetComponent filter={{}} onClose={vi.fn()} setFilter={setFilter} />);
 
     await userEvent.click(screen.getByRole("tab", { name: "Status" }));
-    await userEvent.click(screen.getByRole("button", { name: "status-toggle" }));
-    await userEvent.click(screen.getByRole("button", { name: "failed-include-toggle" }));
+
+    const handlerRunToggle = screen.getByRole("button", {
+      name: `${words("resources.filters.status.lastHandlerRun.label")}-toggle`,
+    });
+    await userEvent.click(handlerRunToggle);
+
+    const failedIncludeToggle = screen.getByRole("button", { name: "failed-include-toggle" });
+    await userEvent.click(failedIncludeToggle);
 
     expect(setFilter).toHaveBeenNthCalledWith(1, {
       status: ["failed"],
@@ -119,7 +149,7 @@ describe("FilterWidgetComponent", () => {
       value: undefined,
     });
 
-    await userEvent.click(screen.getByLabelText("Remove Deploy State filters"));
+    await userEvent.click(screen.getByLabelText("Remove Status filters"));
     expect(setFilter).toHaveBeenNthCalledWith(8, {
       ...filter,
       status: undefined,
@@ -130,5 +160,32 @@ describe("FilterWidgetComponent", () => {
     expect(setFilter).toHaveBeenNthCalledWith(9, {
       disregardDefault: true,
     });
+  });
+
+  it("toggles the purged status via the switch in the resource tab", async () => {
+    const Wrapper = () => {
+      const [filter, setFilter] = useState<Resource.Filter>({});
+      return (
+        <FilterWidgetComponent
+          filter={filter}
+          onClose={vi.fn()}
+          setFilter={(update) => setFilter(update)}
+        />
+      );
+    };
+
+    renderWithDrawer(<Wrapper />);
+
+    const purgedSwitch = screen.getByRole("switch", {
+      name: words("resources.filters.desiredState.purged"),
+    });
+
+    expect(purgedSwitch).not.toBeChecked();
+
+    await userEvent.click(purgedSwitch);
+    expect(purgedSwitch).toBeChecked();
+
+    await userEvent.click(purgedSwitch);
+    expect(purgedSwitch).not.toBeChecked();
   });
 });

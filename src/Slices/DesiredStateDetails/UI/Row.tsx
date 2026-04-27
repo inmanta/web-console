@@ -1,13 +1,21 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { Resource } from "@/Core";
+import { ParsedNumber } from "@/Core";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
+export type RowFromVersion = {
+  id: string;
+  type: string;
+  agent: string;
+  value: string;
+  numberOfDependencies: ParsedNumber;
+};
+
 interface Props {
-  row: Resource.RowFromVersion;
+  row: RowFromVersion;
   version: string;
 }
 

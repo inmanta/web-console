@@ -46,3 +46,4 @@ export * from "./TextWithCopy";
 export * from "./DateWithTimeDiffTooltip";
 export * from "./Toggle";
 export * from "./TreeTable";
+export * from "./CompoundResourceStatus";

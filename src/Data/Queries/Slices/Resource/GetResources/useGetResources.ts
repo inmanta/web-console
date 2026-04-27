@@ -1,32 +1,43 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
-import { PageSize, Resource, Sort } from "@/Core/Domain";
-import { Handlers, Links } from "@/Core/Domain/Pagination/Pagination";
+import { gql } from "graphql-request";
+import { PageSize, Pagination, Resource, Sort } from "@/Core/Domain";
+import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { getPaginationHandlers, useGet, REFETCH_INTERVAL } from "@/Data/Queries";
+import { useGraphQLRequest, REFETCH_INTERVAL } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
-import { getUrl } from "./getUrl";
+import { buildHandlers, mapSort, mapStatusToGraphQLFilter, parseCurrentPage } from "./helpers";
 
-/**
- * Interface for filtering resources
- */
-interface Filter {
-  agent?: string[];
-  status?: string[];
-  type?: string[];
-  value?: string[];
+export interface PageInfo {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  endCursor: string | null;
+  startCursor: string | null;
 }
 
 /**
- * Result interface for the resources API response
+ * GraphQL response type for the resources query
  */
-interface Result {
-  data: Resource.Resource[];
-  links: Links;
-  metadata: Resource.Metadata;
+interface ResourcesGraphQLResponse {
+  data: {
+    resources: {
+      totalCount: number;
+      pageInfo: PageInfo;
+      edges: Resource.RawResource[];
+    };
+    resourceSummary: Resource.ResourceSummary;
+  };
 }
-export interface GetResourcesResponse extends Result {
+
+/**
+ * Flattened response from the useGetResources hook,
+ * with pagination metadata and navigation handlers.
+ */
+export interface GetResourcesResponse {
+  resources: Resource.Resource[];
+  resourceSummary: Resource.ResourceSummary;
+  metadata: Pagination.Metadata;
   handlers: Handlers;
 }
 
@@ -37,42 +48,140 @@ interface GetResources {
   useContinuous: () => UseQueryResult<GetResourcesResponse, Error>;
 }
 
-export interface GetResourcesParams {
+interface GetResourcesParams {
   pageSize: PageSize.PageSize;
-  filter: Filter;
+  filter: Resource.Filter;
   sort?: Sort.Type<Resource.SortKey>;
   currentPage: CurrentPage;
 }
 
+const GET_RESOURCES_QUERY = gql`
+  query GetResources(
+    $filter: ResourceFilter!
+    $environment: String!
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+    $orderBy: [StrawberryOrder!]
+  ) {
+    resources(
+      filter: $filter
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+      orderBy: $orderBy
+    ) {
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        endCursor
+        startCursor
+      }
+      edges {
+        node {
+          resourceId
+          resourceType
+          agent
+          resourceIdValue
+          requiresLength
+          state {
+            isDeploying
+            lastHandlerRun
+            compliance
+            blocked
+            lastHandlerRunAt
+            isOrphan
+          }
+        }
+      }
+    }
+    resourceSummary(environment: $environment) {
+      lastHandlerRun
+      blocked
+      compliance
+      isDeploying
+      totalCount
+    }
+  }
+`;
+
 /**
- * React Query hook to fetch resources
+ * React Query hook to fetch resources via GraphQL
  *
  * @returns {GetResources} An object containing the available queries
- * @returns {UseQueryResult<QueryResponse, Error>} returns.useContinuous - Fetch the resources with a recurrent query with an interval of 5s
  */
 export const useGetResources = (params: GetResourcesParams): GetResources => {
   const { pageSize, filter, sort, currentPage } = params;
-  const url = getUrl({
-    pageSize,
-    filter,
-    sort,
-    currentPage: currentPage || { kind: "CurrentPage", value: "" },
-  });
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const get = useGet(env)<Result>;
+
+  const { after, before, beforeCount } = parseCurrentPage(
+    currentPage || { kind: "CurrentPage", value: "" }
+  );
+
+  const statusFilter = mapStatusToGraphQLFilter(filter?.status);
+  const graphqlFilter: Record<string, unknown> = {
+    environment: env,
+    //TODO: https://github.com/inmanta/web-console/issues/6823 => same as in ResourceFilterForm.tsx
+    ...(filter?.type?.length
+      ? { resourceType: { contains: filter.type.map((type) => `%${type}%`) } }
+      : {}),
+    ...(filter?.agent?.length
+      ? { agent: { contains: filter.agent.map((agent) => `%${agent}%`) } }
+      : {}),
+    ...(filter?.value?.length
+      ? { resourceIdValue: { contains: filter.value.map((value) => `%${value}%`) } }
+      : {}),
+    ...statusFilter,
+  };
+
+  const pageSizeNum = Number(pageSize.value);
+  const paginationVariables = before
+    ? { last: pageSizeNum, before }
+    : { first: pageSizeNum, ...(after ? { after } : {}) };
+
+  const variables: Record<string, unknown> = {
+    filter: graphqlFilter,
+    environment: env,
+    ...paginationVariables,
+    ...(sort ? { orderBy: mapSort(sort) } : {}),
+  };
+
   const filterArray = filter ? Object.values(filter) : [];
   const sortArray = sort ? [sort] : [];
+
+  const queryFn = useGraphQLRequest<ResourcesGraphQLResponse>(GET_RESOURCES_QUERY, variables);
 
   return {
     useContinuous: (): UseQueryResult<GetResourcesResponse, Error> =>
       useQuery({
         queryKey: getResourcesKey.list([pageSize, ...filterArray, ...sortArray, currentPage, env]),
-        queryFn: () => get(url),
-        select: (data) => ({
-          ...data,
-          handlers: getPaginationHandlers(data.links, data.metadata),
-        }),
+        queryFn,
+        select: (data) => {
+          const { resources, resourceSummary } = data.data;
+          const totalCount = resources.totalCount;
+          const handlers = buildHandlers(resources.pageInfo, beforeCount, pageSizeNum);
+          const edges = resources?.edges || [];
+          const afterCount = Math.max(0, totalCount - beforeCount - edges.length);
+
+          const metadata: Pagination.Metadata = {
+            total: totalCount,
+            before: beforeCount,
+            after: afterCount,
+            page_size: pageSizeNum,
+          };
+
+          return {
+            resources: edges.map((edge) => edge.node),
+            resourceSummary,
+            metadata,
+            handlers,
+          };
+        },
+
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         placeholderData: keepPreviousData,
       }),
