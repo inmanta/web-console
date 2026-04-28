@@ -17,7 +17,7 @@ export const RepairButton: React.FC = () => {
     <ResourcePageActionButton
       method={DeployAgentsAction.repair}
       tooltip={words("resources.repair.tooltip")}
-      textContent={words("resources.deploySummary.repair")}
+      textContent={words("resources.compoundStateSummary.repair")}
     />
   );
 };

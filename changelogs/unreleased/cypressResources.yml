@@ -1,0 +1,3 @@
+description: Cypress has been updated for the Resources view to now work with the reworked view.
+change-type: patch
+destination-branches: [master, iso9]

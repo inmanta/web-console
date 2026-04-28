@@ -51,7 +51,7 @@ export const View: React.FC<Props> = ({ id }) => {
         aria-label="ResourceDetails-Success"
       >
         <Flex>
-          <FlexItem>
+          <FlexItem aria-label={`resourceName-${id}`}>
             <Description>{id}</Description>
           </FlexItem>
           <FlexItem>

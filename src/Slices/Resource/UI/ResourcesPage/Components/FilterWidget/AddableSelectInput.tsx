@@ -156,7 +156,7 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
       isExpanded={isOpen}
       isFullWidth
       onClick={() => setIsOpen((prev) => !prev)}
-      aria-label={label}
+      aria-label={`${label}-menuToggle`}
     >
       <TextInputGroup isPlain>
         <TextInputGroupMain
@@ -170,7 +170,7 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
           role="combobox"
           isExpanded={isOpen}
           aria-controls={`${selectId}-listbox`}
-          aria-label={label}
+          aria-label={`${label}-input`}
           id={selectId}
           data-testid="search-input"
         />
@@ -264,7 +264,7 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
             onClick={handleAdd}
             isDisabled={!filterValue}
             data-testid="add-button"
-            aria-label={words("resources.filters.filter")}
+            aria-label={`${words("resources.filters.filter")}-${label}`}
           >
             <PlusIcon />
           </Button>
