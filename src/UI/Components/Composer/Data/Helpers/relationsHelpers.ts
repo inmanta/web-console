@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { EmbeddedEntity, InterServiceRelation, ServiceModel } from "@/Core";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import { RelationsDictionary, Rules } from "./createRelationsDictionary";
@@ -114,7 +114,7 @@ const getServiceModelForShape = (
   graph: dia.Graph,
   serviceCatalog: ServiceModel[]
 ): ServiceModel | EmbeddedEntity | null => {
-  const entityType = shape.getEntityName();
+  const entityType = shape.getEntityType();
 
   if (shape.entityType === "embedded") {
     const parentShape = findParentShapeForEmbedded(shape, graph);
@@ -238,8 +238,8 @@ export const getRelationInfo = (
   graph: dia.Graph,
   serviceCatalog: ServiceModel[]
 ): { rules: Rules; modifier: string | undefined } | null => {
-  const sourceEntityType = sourceShape.getEntityName();
-  const targetEntityType = targetShape.getEntityName();
+  const sourceEntityType = sourceShape.getEntityType();
+  const targetEntityType = targetShape.getEntityType();
 
   // Get rules from relationsDictionary
   const sourceRelations = relationsDictionary[sourceEntityType];
@@ -291,7 +291,7 @@ export const canRemoveShape = (
     return true;
   }
 
-  const shapeEntityType = shape.getEntityName();
+  const shapeEntityType = shape.getEntityType();
 
   // Check all connected shapes - removing this shape shouldn't cause them to violate lower_limit
   const connectedShapes = getConnectedShapes(shape, graph);
@@ -346,8 +346,8 @@ export const canRemoveLink = (
   relationsDictionary: RelationsDictionary,
   serviceCatalog: ServiceModel[]
 ): boolean => {
-  const targetEntityType = targetShape.getEntityName();
-  const sourceEntityType = sourceShape.getEntityName();
+  const targetEntityType = targetShape.getEntityType();
+  const sourceEntityType = sourceShape.getEntityType();
 
   // Check source shape -> target shape relation
   const sourceRelationInfo = getRelationInfo(

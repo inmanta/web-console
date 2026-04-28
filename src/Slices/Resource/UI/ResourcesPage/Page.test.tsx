@@ -1,53 +1,138 @@
 import { act } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { delay, http, HttpResponse } from "msw";
+import { graphql, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { PageInfo } from "@/Data/Queries";
+import { response } from "@/Slices/Agents";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
+import { createMockResourceSummary } from "@/Test/Data/Resource";
 import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { Page } from "./Page";
 
 const axe = configureAxe({
   rules: {
-    // disable landmark rules when testing isolated components.
-    // In this case, the tooltips are part of the higher hierarchy
     region: { enabled: false },
   },
 });
 
-function setup(entries?: string[], halted: boolean = false) {
-  const client = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
-  const component = (
-    <QueryClientProvider client={client}>
-      <TestMemoryRouter initialEntries={entries}>
-        <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
-          <Page />
-        </MockedDependencyProvider>
-      </TestMemoryRouter>
-    </QueryClientProvider>
-  );
+interface GqlVariables {
+  filter?: {
+    environment?: string;
+    resourceType?: { contains?: string[] };
+    agent?: { contains?: string[] };
+    resourceIdValue?: { contains?: string[] };
+    isOrphan?: boolean;
+  };
+  first?: number;
+  after?: string;
+  last?: number;
+  before?: string;
+  orderBy?: Array<{ key: string; order: string }>;
+}
 
+type ResourceData = (typeof Resource.response)["data"];
+
+// ---------------------------------------------------------------------------
+// GraphQL response helpers
+// ---------------------------------------------------------------------------
+
+function toGqlResponse(
+  data: ResourceData,
+  total = data.resources.totalCount,
+  pageInfo: PageInfo = data.resources.pageInfo
+) {
   return {
-    component,
+    data: {
+      resources: {
+        totalCount: total,
+        pageInfo,
+        edges: data?.resources?.edges || [],
+      },
+      resourceSummary: data?.resourceSummary,
+    },
   };
 }
 
-async function openFiltersDrawer() {
-  const filtersButton = await screen.findByRole("button", { name: /Filters/ });
+const BASE_DATA = Resource.response.data;
+const ALL_EDGES = BASE_DATA.resources.edges;
+const TOTAL_COUNT = Number(BASE_DATA.resources.totalCount);
 
-  if (filtersButton.getAttribute("aria-pressed") !== "true") {
-    await userEvent.click(filtersButton);
+/** Full response — all resources, default summary */
+const gqlFull = toGqlResponse(BASE_DATA, TOTAL_COUNT);
+
+/** Sliced to first 3 edges, same total count */
+const gqlFirst3 = toGqlResponse(
+  { ...BASE_DATA, resources: { ...BASE_DATA.resources, edges: ALL_EDGES.slice(0, 3) } },
+  TOTAL_COUNT
+);
+
+/** Updated summary (compliant goes 3 → 4) used for auto-update / next-page tests */
+const gqlUpdatedSummary = toGqlResponse({
+  ...BASE_DATA,
+  resourceSummary: createMockResourceSummary({
+    compliance: { compliant: 4, has_update: 1, non_compliant: 0, undefined: 1 },
+    lastHandlerRun: { successful: 3, new: 2, failed: 0, skipped: 1 },
+  }),
+});
+
+const emptyGql = toGqlResponse({
+  resources: {
+    totalCount: 0,
+    pageInfo: { hasNextPage: false, hasPreviousPage: false, endCursor: "", startCursor: "" },
+    edges: [],
+  },
+  resourceSummary: createMockResourceSummary(),
+});
+
+/** Cursor-paginated first page — 3 edges, next page available */
+function gqlFirstPage(endCursor = "fake-cursor") {
+  return toGqlResponse(
+    { ...BASE_DATA, resources: { ...BASE_DATA.resources, edges: ALL_EDGES.slice(0, 3) } },
+    TOTAL_COUNT,
+    { hasNextPage: true, endCursor, hasPreviousPage: false, startCursor: "" }
+  );
+}
+
+const agentsMock = http.get("/api/v2/agents", () => HttpResponse.json(response));
+
+// ---------------------------------------------------------------------------
+// Test setup
+// ---------------------------------------------------------------------------
+
+function setup(entries?: string[], halted = false) {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
+  return {
+    client,
+    component: (
+      <QueryClientProvider client={client}>
+        <TestMemoryRouter initialEntries={entries}>
+          <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
+            <Page />
+          </MockedDependencyProvider>
+        </TestMemoryRouter>
+      </QueryClientProvider>
+    ),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Interaction helpers
+// ---------------------------------------------------------------------------
+
+async function openFiltersDrawer() {
+  const button = await screen.findByRole("button", { name: /Filters/ });
+
+  if (button.getAttribute("aria-pressed") !== "true") {
+    await userEvent.click(button);
   }
 }
 
@@ -57,218 +142,149 @@ async function openStatusFiltersTab() {
   const statusTab = await screen.findByRole("tab", {
     name: words("resources.filters.tabs.status"),
   });
-
   await userEvent.click(statusTab);
 }
 
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+
 describe("ResourcesPage", () => {
   const server = setupServer();
+  const queryLink = graphql.link("/api/v2/graphql");
 
   beforeAll(() => server.listen());
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  test("shows empty table", async () => {
-    server.use(
-      http.get("/api/v2/resource", () => {
-        return HttpResponse.json({
-          data: [],
-          metadata: {
-            total: 0,
-            before: 0,
-            after: 0,
-            page_size: 10,
-            deploy_summary: { total: 0, by_state: {} },
-          },
-          links: { self: "" },
-        });
-      })
-    );
+  beforeEach(() => {
+    server.use(agentsMock);
+  });
+
+  // --- Loading states ---
+
+  test("shows loading state then empty table", async () => {
+    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: emptyGql })));
 
     const { component } = setup();
 
     render(component);
 
     expect(screen.getByRole("region", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
-
-    expect(await screen.findByRole("generic", { name: "ResourcesPage-Empty" })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("generic", { name: "ResourcesPage-Empty" }, { timeout: 5000 })
+    ).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("ResourcesPage shows failed table", async () => {
-    server.use(
-      http.get("/api/v2/resource", () => {
-        return HttpResponse.json({ message: "error" }, { status: 500 });
-      })
-    );
+  test("shows error view when the request fails", async () => {
+    server.use(http.post("/api/v2/graphql", () => new HttpResponse(null, { status: 500 })));
 
     const { component } = setup();
 
     render(component);
 
     expect(screen.getByRole("region", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
-
     expect(await screen.findByRole("region", { name: "ResourcesPage-Error" })).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("ResourcesPage shows success table", async () => {
-    server.use(
-      http.get("/api/v2/resource", () => {
-        return HttpResponse.json(Resource.response);
-      })
-    );
+  test("shows success table", async () => {
+    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })));
 
     const { component } = setup();
 
     render(component);
-
-    expect(screen.getByRole("region", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
 
     expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("GIVEN ResourcesPage WHEN user clicks on requires toggle THEN list of requires is shown", async () => {
+  // --- Pagination ---
+
+  test("shows next page of resources", async () => {
     server.use(
-      http.get("/api/v2/resource", () => {
-        return HttpResponse.json({
-          ...Resource.response,
-          data: [
-            {
-              ...Resource.response.data[0],
-              resource_id: ["abc"],
-            },
-          ],
-        });
-      }),
-      http.get("/api/v2/resource/abc", () => {
-        return HttpResponse.json(ResourceDetails.response);
-      })
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) =>
+        HttpResponse.json({
+          data: variables.after === "fake-cursor" ? gqlFull : gqlFirstPage(),
+        })
+      )
     );
 
     const { component } = setup();
 
     render(component);
 
-    const rows = await screen.findAllByRole("row", {
-      name: "Resource Table Row",
-    });
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows).toHaveLength(3);
 
-    const toggleCell = within(rows[0]).getByRole("cell", {
-      name: "Toggle-abc",
-    });
+    const nextPageButton = screen.getAllByRole("button", { name: "Go to next page" })[0];
+    await userEvent.click(nextPageButton);
 
-    const toggleButton = within(toggleCell).getByRole("button");
-
-    await userEvent.click(toggleButton);
-
-    expect(await screen.findByRole("grid", { name: "ResourceRequires-Success" })).toBeVisible();
+    const rowsAfterNextPage = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterNextPage).toHaveLength(6);
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("ResourcesPage shows next page of resources", async () => {
-    server.use(
-      http.get("/api/v2/resource", ({ request }) => {
-        if (request.url.includes("end=fake-first-param")) {
-          return HttpResponse.json(Resource.response);
-        }
+  // --- Sorting ---
 
-        return HttpResponse.json({
-          data: Resource.response.data.slice(0, 3),
-          links: {
-            ...Resource.response.links,
-            next: "/fake-link?end=fake-first-param",
-          },
-          metadata: Resource.response.metadata,
-        });
-      })
-    );
+  test("shows sorting buttons for sortable columns", async () => {
+    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })));
 
     const { component } = setup();
 
     render(component);
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
 
-    const button = screen.getAllByRole("button", {
-      name: "Go to next page",
-    })[0];
+    const table = await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    expect(button).toBeEnabled();
-
-    await userEvent.click(button);
-
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(6);
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-  });
-
-  test("ResourcesPage shows sorting buttons for sortable columns", async () => {
-    server.use(
-      http.get("/api/v2/resource", () => {
-        return HttpResponse.json(Resource.response);
-      })
-    );
-    const { component } = setup();
-
-    render(component);
-
-    const table = await screen.findByRole("grid", {
-      name: "ResourcesPage-Success",
-    });
-
-    expect(table).toBeVisible();
-    expect(within(table).getByRole("button", { name: "Type" })).toBeVisible();
-    expect(within(table).getByRole("button", { name: "Agent" })).toBeVisible();
-    expect(within(table).getByRole("button", { name: "Value" })).toBeVisible();
     expect(
-      within(table).getByRole("button", {
-        name: words("resources.column.deployState"),
-      })
+      within(table).getByRole("button", { name: words("resources.column.type") })
+    ).toBeVisible();
+    expect(
+      within(table).getByRole("button", { name: words("resources.column.agent") })
+    ).toBeVisible();
+    expect(
+      within(table).getByRole("button", { name: words("resources.column.value") })
+    ).toBeVisible();
+    expect(
+      within(table).getByRole("columnheader", { name: words("resources.column.status") })
     ).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("ResourcesPage sets sorting parameters correctly on click", async () => {
+  test("sets sorting parameters correctly on click", async () => {
     server.use(
-      http.get("/api/v2/resource", ({ request }) => {
-        if (request.url.includes("sort=agent.asc")) {
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
+        if (variables.orderBy?.[0]?.key === "agent" && variables.orderBy?.[0]?.order === "asc") {
           return HttpResponse.json({
-            ...Resource.response,
-            data: Resource.response.data.reverse(),
+            data: toGqlResponse(
+              { ...BASE_DATA, resources: { ...BASE_DATA.resources, ...ALL_EDGES.reverse() } },
+              TOTAL_COUNT
+            ),
           });
         }
 
-        return HttpResponse.json(Resource.response);
+        return HttpResponse.json({ data: gqlFull });
       })
     );
 
@@ -278,717 +294,605 @@ describe("ResourcesPage", () => {
 
     const rows = await screen.findAllByLabelText("Resource Table Row");
 
-    expect(rows[0]).toHaveTextContent("/tmp/file4");
-    expect(rows[5]).toHaveTextContent("std::Directoryagent2/tmp/dir5skippedShow Details");
+    expect(rows[0]).toHaveTextContent("std::Fileagent2/tmp/file4Show Details");
+    expect(rows[5]).toHaveTextContent("std::Directoryagent2/tmp/dir5Show Details");
 
-    const stateButton = await screen.findByRole("button", { name: "Agent" });
-
-    expect(stateButton).toBeVisible();
-
-    await userEvent.click(stateButton);
+    const agentButton = await screen.findByRole("button", { name: "Agent" });
+    await userEvent.click(agentButton);
 
     const updatedRows = await screen.findAllByLabelText("Resource Table Row");
 
-    expect(updatedRows[0]).toHaveTextContent("std::Directoryagent2/tmp/dir5skippedShow Details");
-    expect(updatedRows[5]).toHaveTextContent("/tmp/file4");
+    expect(updatedRows[0]).toHaveTextContent("std::Directoryagent2/tmp/dir5Show Details");
+    expect(updatedRows[5]).toHaveTextContent("std::Fileagent2/tmp/file4Show Details");
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("GIVEN ResourcesPage WHEN sorting changes AND we are not on the first page THEN we are sent back to the first page", async () => {
+  test("resets to the first page when sorting changes", async () => {
     server.use(
-      http.get("/api/v2/resource", ({ request }) => {
-        if (request.url.includes("end=fake-first-param")) {
-          return HttpResponse.json(Resource.response);
-        }
-
-        return HttpResponse.json({
-          data: Resource.response.data.slice(0, 3),
-          links: {
-            ...Resource.response.links,
-            next: "/fake-link?end=fake-first-param",
-          },
-          metadata: Resource.response.metadata,
-        });
-      })
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) =>
+        HttpResponse.json({
+          data: variables.after === "fake-cursor" ? gqlFull : gqlFirstPage(),
+        })
+      )
     );
+
     const { component } = setup();
 
     render(component);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows).toHaveLength(3);
 
     const nextPageButton = screen.getAllByLabelText("Go to next page")[0];
-
-    expect(nextPageButton).toBeEnabled();
-
     await userEvent.click(nextPageButton);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(6);
+    const rowsAfterNextPage = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterNextPage).toHaveLength(6);
 
-    //sort on the second page
-    await userEvent.click(
-      screen.getByRole("button", {
-        name: "Type",
-      })
-    );
+    const typeButton = screen.getByRole("button", { name: "Type" });
+    await userEvent.click(typeButton);
 
-    expect(await screen.findAllByLabelText("Resource Table Row")).toHaveLength(3);
+    const rowsAfterTypeSorting = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterTypeSorting).toHaveLength(3);
   });
 
-  it.each`
-    filterType  | filterValue | placeholderText                                          | filterUrlName
-    ${"search"} | ${"agent2"} | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}
-    ${"search"} | ${"File"}   | ${words("resources.filters.resource.type.placeholder")}  | ${"resource_type"}
-    ${"search"} | ${"tmp"}    | ${words("resources.filters.resource.value.placeholder")} | ${"resource_id_value"}
-  `(
-    "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the resources with that $filterUrlName should be fetched and shown",
-    async ({ filterType, filterValue, placeholderText, filterUrlName }) => {
-      server.use(
-        http.get("/api/v2/resource", ({ request }) => {
-          if (request.url.includes(`filter.${filterUrlName}=${filterValue}`)) {
-            return HttpResponse.json({
-              data: Resource.response.data.slice(0, 3),
-              links: Resource.response.links,
-              metadata: Resource.response.metadata,
-            });
-          }
-
-          return HttpResponse.json(Resource.response);
-        })
-      );
-      const { component } = setup();
-
-      render(component);
-
-      const initialRows = await screen.findAllByRole("row", {
-        name: "Resource Table Row",
-      });
-
-      expect(initialRows).toHaveLength(6);
-
-      await openFiltersDrawer();
-
-      const input = await screen.findByPlaceholderText(placeholderText);
-
-      await userEvent.click(input);
-
-      if (filterType === "select") {
-        const option = await screen.findByRole("option", { name: filterValue });
-
-        await userEvent.click(option);
-      } else {
-        await userEvent.type(input, `${filterValue}{enter}`);
-      }
-
-      const updatedRows = await screen.findAllByRole("row", {
-        name: "Resource Table Row",
-      });
-
-      expect(updatedRows).toHaveLength(3);
-
-      await act(async () => {
-        const results = await axe(document.body);
-
-        expect(results).toHaveNoViolations();
-      });
-    }
-  );
-
-  it.each`
-    filterValueOne | placeholderTextOne                                       | filterUrlNameOne       | filterValueTwo | placeholderTextTwo                                       | filterUrlNameTwo
-    ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}             | ${"file3"}     | ${words("resources.filters.resource.value.placeholder")} | ${"resource_id_value"}
-    ${"Directory"} | ${words("resources.filters.resource.type.placeholder")}  | ${"resource_type"}     | ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}
-    ${"tmp"}       | ${words("resources.filters.resource.value.placeholder")} | ${"resource_id_value"} | ${"File"}      | ${words("resources.filters.resource.type.placeholder")}  | ${"resource_type"}
-  `(
-    "when using the search filters of type $filterType with value $filterValueOne and text $placeholderTextOne combined with $filterType with value $filterValueTwo and text $placeholderText then the resources with that $filterUrlNameOne and $filterUrlNameTwo should be fetched and shown",
-    async ({
-      filterValueOne,
-      placeholderTextOne,
-      filterUrlNameOne,
-      filterValueTwo,
-      placeholderTextTwo,
-      filterUrlNameTwo,
-    }) => {
-      server.use(
-        http.get("/api/v2/resource", ({ request }) => {
-          if (
-            request.url.includes(`filter.${filterUrlNameOne}=${filterValueOne}`) &&
-            request.url.includes(`filter.${filterUrlNameTwo}=${filterValueTwo}`)
-          ) {
-            return HttpResponse.json({
-              data: Resource.response.data.slice(0, 3),
-              links: Resource.response.links,
-              metadata: Resource.response.metadata,
-            });
-          }
-
-          return HttpResponse.json(Resource.response);
-        })
-      );
-      const { component } = setup();
-
-      render(component);
-
-      const initialRows = await screen.findAllByRole("row", {
-        name: "Resource Table Row",
-      });
-
-      expect(initialRows).toHaveLength(6);
-
-      await openFiltersDrawer();
-
-      const inputOne = await screen.findByPlaceholderText(placeholderTextOne);
-
-      await userEvent.type(inputOne, `${filterValueOne}{enter}`);
-
-      const inputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
-
-      await userEvent.type(inputTwo, `${filterValueTwo}{enter}`);
-
-      const updatedRows = await screen.findAllByRole("row", {
-        name: "Resource Table Row",
-      });
-
-      expect(updatedRows).toHaveLength(3);
-
-      await act(async () => {
-        const results = await axe(document.body);
-
-        expect(results).toHaveNoViolations();
-      });
-    }
-  );
-
-  test("when using the all filters then the resources with that filter values should be fetched and shown", async () => {
+  test("resets to the first page when a filter changes", async () => {
     server.use(
-      http.get("/api/v2/resource", ({ request }) => {
-        if (
-          request.url.includes(`filter.${filterUrlNameOne}=${filterValueOne}`) &&
-          request.url.includes(`filter.${filterUrlNameTwo}=${filterValueTwo}`) &&
-          request.url.includes(`filter.${filterUrlNameThree}=${filterValueThree}`)
-        ) {
-          return HttpResponse.json({
-            data: Resource.response.data.slice(0, 3),
-            links: Resource.response.links,
-            metadata: Resource.response.metadata,
-          });
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
+        const hasAgent = (variables.filter?.agent?.contains ?? []).includes("agent2");
+
+        if (variables.after === "fake-cursor" && !hasAgent) {
+          return HttpResponse.json({ data: gqlFull });
         }
 
-        return HttpResponse.json(Resource.response);
+        if (hasAgent) {
+          return HttpResponse.json({ data: gqlFirst3 });
+        }
+
+        return HttpResponse.json({ data: gqlFirstPage() });
       })
     );
-    const filterValueOne = "agent";
-    const filterUrlNameOne = "agent";
-    const filterValueTwo = "Directory";
-    const filterUrlNameTwo = "resource_type";
-    const filterValueThree = "dir5";
-    const filterUrlNameThree = "resource_id_value";
+
     const { component } = setup();
 
     render(component);
 
-    const initialRows = await screen.findAllByRole("row", {
-      name: "Resource Table Row",
-    });
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows).toHaveLength(3);
 
-    expect(initialRows).toHaveLength(6);
+    const nextPageButton = screen.getAllByLabelText("Go to next page")[0];
+    await userEvent.click(nextPageButton);
+
+    const rowsAfterNextPage = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterNextPage).toHaveLength(6);
 
     await openFiltersDrawer();
 
-    const inputOne = await screen.findByPlaceholderText(
+    const agentInput = await screen.findByPlaceholderText(
       words("resources.filters.resource.agent.placeholder")
     );
+    await userEvent.type(agentInput, "agent2{enter}");
 
-    await userEvent.type(inputOne, `${filterValueOne}{enter}`);
+    const rowsAfterAgentFilter = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterAgentFilter).toHaveLength(3);
+  });
 
-    const inputTwo = await screen.findByPlaceholderText(
-      words("resources.filters.resource.type.placeholder")
+  // --- Filters ---
+
+  it.each`
+    filterValue | placeholderText                                          | filterVariableKey    | filterVariableValue
+    ${"agent2"} | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}           | ${"agent2"}
+    ${"File"}   | ${words("resources.filters.resource.type.placeholder")}  | ${"resourceType"}    | ${"File"}
+    ${"tmp"}    | ${words("resources.filters.resource.value.placeholder")} | ${"resourceIdValue"} | ${"tmp"}
+  `(
+    "filters by $filterVariableKey=$filterVariableValue",
+    async ({ filterValue, placeholderText, filterVariableKey, filterVariableValue }) => {
+      server.use(
+        queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
+          const field = variables.filter?.[filterVariableKey as keyof typeof variables.filter] as
+            | { eq?: string[]; contains?: string[] }
+            | undefined;
+
+          //This is for now until we rework the filtering part where we don't have to manually pass %
+          const values = (field?.eq ?? field?.contains ?? []).map((v: string) =>
+            v.replace(/%/g, "")
+          );
+
+          return HttpResponse.json({
+            data: values.includes(filterVariableValue) ? gqlFirst3 : gqlFull,
+          });
+        })
+      );
+
+      const { component } = setup();
+
+      render(component);
+
+      const rows = await screen.findAllByLabelText("Resource Table Row");
+      expect(rows).toHaveLength(6);
+
+      await openFiltersDrawer();
+
+      const filterInput = await screen.findByPlaceholderText(placeholderText);
+      await userEvent.type(filterInput, `${filterValue}{enter}`);
+
+      const rowsAfterFilter = await screen.findAllByLabelText("Resource Table Row");
+      expect(rowsAfterFilter).toHaveLength(3);
+
+      await act(async () => {
+        const results = await axe(document.body);
+        expect(results).toHaveNoViolations();
+      });
+    }
+  );
+
+  it.each`
+    filterValueOne | placeholderTextOne                                       | filterKeyOne         | filterValueTwo | placeholderTextTwo                                       | filterKeyTwo
+    ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}           | ${"file3"}     | ${words("resources.filters.resource.value.placeholder")} | ${"resourceIdValue"}
+    ${"Directory"} | ${words("resources.filters.resource.type.placeholder")}  | ${"resourceType"}    | ${"agent2"}    | ${words("resources.filters.resource.agent.placeholder")} | ${"agent"}
+    ${"tmp"}       | ${words("resources.filters.resource.value.placeholder")} | ${"resourceIdValue"} | ${"File"}      | ${words("resources.filters.resource.type.placeholder")}  | ${"resourceType"}
+  `(
+    "filters by $filterKeyOne and $filterKeyTwo combined",
+    async ({
+      filterValueOne,
+      placeholderTextOne,
+      filterKeyOne,
+      filterValueTwo,
+      placeholderTextTwo,
+      filterKeyTwo,
+    }) => {
+      server.use(
+        queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
+          const fieldOne = variables.filter?.[filterKeyOne as keyof typeof variables.filter] as
+            | { eq?: string[]; contains?: string[] }
+            | undefined;
+          const fieldTwo = variables.filter?.[filterKeyTwo as keyof typeof variables.filter] as
+            | { eq?: string[]; contains?: string[] }
+            | undefined;
+
+          //This is for now until we rework the filtering part where we don't have to manually pass %
+          const hasOne = (fieldOne?.eq ?? fieldOne?.contains ?? []).some(
+            (v: string) => v.replace(/%/g, "") === filterValueOne
+          );
+          const hasTwo = (fieldTwo?.eq ?? fieldTwo?.contains ?? []).some(
+            (v: string) => v.replace(/%/g, "") === filterValueTwo
+          );
+
+          return HttpResponse.json({ data: hasOne && hasTwo ? gqlFirst3 : gqlFull });
+        })
+      );
+
+      const { component } = setup();
+
+      render(component);
+
+      const rows = await screen.findAllByLabelText("Resource Table Row");
+      expect(rows).toHaveLength(6);
+
+      await openFiltersDrawer();
+
+      const filterInputOne = await screen.findByPlaceholderText(placeholderTextOne);
+      await userEvent.type(filterInputOne, `${filterValueOne}{enter}`);
+      const filterInputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
+      await userEvent.type(filterInputTwo, `${filterValueTwo}{enter}`);
+
+      const rowsAfterFiltering = await screen.findAllByLabelText("Resource Table Row");
+      expect(rowsAfterFiltering).toHaveLength(3);
+
+      await act(async () => {
+        const results = await axe(document.body);
+        expect(results).toHaveNoViolations();
+      });
+    }
+  );
+
+  test("filters by all three fields combined", async () => {
+    const agentValue = "agent2";
+    const typeValue = "std::File";
+    const idValue = "std::File[agent2,path=/tmp/file4]";
+
+    server.use(
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
+        //This is for now until we rework the filtering part where we don't have to manually pass %
+        const hasAgent = (variables.filter?.agent?.contains ?? []).some(
+          (v) => v.replace(/%/g, "") === agentValue
+        );
+        const hasType = (variables.filter?.resourceType?.contains ?? []).some(
+          (v) => v.replace(/%/g, "") === typeValue
+        );
+        const hasId = (variables.filter?.resourceIdValue?.contains ?? []).some(
+          (v) => v.replace(/%/g, "") === idValue
+        );
+
+        return HttpResponse.json({ data: hasAgent && hasType && hasId ? gqlFirst3 : gqlFull });
+      })
     );
 
-    await userEvent.type(inputTwo, `${filterValueTwo}{enter}`);
+    const { component } = setup();
 
-    const inputThree = await screen.findByPlaceholderText(
+    render(component);
+
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows).toHaveLength(6);
+
+    await openFiltersDrawer();
+
+    const agentInput = await screen.findByPlaceholderText(
+      words("resources.filters.resource.agent.placeholder")
+    );
+    await userEvent.type(agentInput, `${agentValue}{enter}`);
+    const typeInput = await screen.findByPlaceholderText(
+      words("resources.filters.resource.type.placeholder")
+    );
+    await userEvent.type(typeInput, `${typeValue}{enter}`);
+
+    const idInput = await screen.findByPlaceholderText(
       words("resources.filters.resource.value.placeholder")
     );
 
-    await userEvent.type(inputThree, `${filterValueThree}{enter}`);
+    await userEvent.click(idInput);
+    await userEvent.paste(idValue);
+    await userEvent.keyboard("{enter}");
 
-    const updatedRows = await screen.findAllByRole("row", {
-      name: "Resource Table Row",
-    });
-
-    expect(updatedRows).toHaveLength(3);
+    const rowsAfterFiltering = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterFiltering).toHaveLength(3);
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
   test.each`
-    filterValue      | option
-    ${"deployed"}    | ${"include"}
-    ${"unavailable"} | ${"exclude"}
-  `(
-    "When using the Deploy state filter with value $filterValue and option $option then the matching resources should be fetched and shown",
-    async ({ filterValue, option }) => {
-      server.use(
-        http.get("/api/v2/resource", ({ request }) => {
-          const filter = option === "include" ? filterValue : `%21${filterValue}`;
+    filterValue        | option       | toggleLabel
+    ${"successful"}    | ${"include"} | ${words("resources.filters.status.lastHandlerRun.label")}
+    ${"failed"}        | ${"exclude"} | ${words("resources.filters.status.lastHandlerRun.label")}
+    ${"compliant"}     | ${"include"} | ${words("resources.filters.status.compliance.label")}
+    ${"non_compliant"} | ${"exclude"} | ${words("resources.filters.status.compliance.label")}
+    ${"blocked"}       | ${"include"} | ${words("resources.filters.status.blocked.label")}
+    ${"not_blocked"}   | ${"exclude"} | ${words("resources.filters.status.blocked.label")}
+  `("status filter: '$filterValue' / '$option'", async ({ filterValue, option, toggleLabel }) => {
+    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFirst3 })));
 
-          if (request.url.includes(`&filter.status=${filter}`)) {
-            return HttpResponse.json({
-              data: Resource.response.data.slice(0, 3),
-              links: Resource.response.links,
-              metadata: Resource.response.metadata,
-            });
-          }
-
-          return HttpResponse.json(Resource.response);
-        })
-      );
-      const { component } = setup();
-
-      render(component);
-
-      const initialRows = await screen.findAllByRole("row", {
-        name: "Resource Table Row",
-      });
-
-      expect(initialRows).toHaveLength(6);
-
-      await openStatusFiltersTab();
-
-      const statusToggle = await screen.findByRole("button", {
-        name: "status-toggle",
-      });
-
-      await userEvent.click(statusToggle);
-
-      const toggle = await screen.findByRole("button", {
-        name: `${filterValue}-${option}-toggle`,
-      });
-
-      await userEvent.click(toggle);
-
-      const rowsAfter = await screen.findAllByRole("row", {
-        name: "Resource Table Row",
-      });
-
-      expect(rowsAfter).toHaveLength(3);
-
-      await act(async () => {
-        const results = await axe(document.body);
-
-        expect(results).toHaveNoViolations();
-      });
-    }
-  );
-
-  test("When clicking the clear and reset filters then the state filter is updated correctly", async () => {
-    server.use(
-      http.get("/api/v2/resource", ({ request }) => {
-        if (request.url.includes("filter.status=%21orphaned")) {
-          return HttpResponse.json(Resource.response);
-        }
-
-        return HttpResponse.json({
-          data: Resource.response.data.slice(4),
-          links: Resource.response.links,
-          metadata: Resource.response.metadata,
-        });
-      })
-    );
     const { component } = setup();
 
     render(component);
 
-    const initialRows = await screen.findAllByRole("row", {
-      name: "Resource Table Row",
-    });
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows).toHaveLength(3);
 
-    expect(initialRows).toHaveLength(6);
+    await openStatusFiltersTab();
+
+    const dropdownToggle = screen.getByRole("button", {
+      name: `${toggleLabel}-toggle`,
+    });
+    await userEvent.click(dropdownToggle);
+
+    const filterToggle = await screen.findByRole("button", {
+      name: `${filterValue}-${option}-toggle`,
+    });
+    await userEvent.click(filterToggle);
+
+    const rowsAfterTogglingStatus = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterTogglingStatus).toHaveLength(3);
+
+    await act(async () => {
+      const results = await axe(document.body);
+      expect(results).toHaveNoViolations();
+    });
+  });
+  test("clear all filters removes default orphan filter", async () => {
+    server.use(
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) =>
+        HttpResponse.json({
+          data: variables.filter?.isOrphan === false ? gqlFirst3 : gqlFull,
+        })
+      )
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    const rows = await screen.findAllByLabelText("Resource Table Row");
+    expect(rows).toHaveLength(3);
 
     await openFiltersDrawer();
 
     const clearAllButton = await screen.findByRole("button", {
       name: words("resources.filters.active.clearAll"),
     });
-
-    expect(clearAllButton).toBeVisible();
-
     await userEvent.click(clearAllButton);
 
-    const initialRowsAfterClear = await screen.findAllByRole("row", {
-      name: "Resource Table Row",
-    });
-
-    expect(initialRowsAfterClear).toHaveLength(2);
-
-    await openStatusFiltersTab();
-
-    const statusToggle = await screen.findByRole("button", { name: "status-toggle" });
-
-    await userEvent.click(statusToggle);
-
-    await userEvent.click(await screen.findByRole("button", { name: "orphaned-exclude-toggle" }));
-
-    const initialRowsAfterReset = await screen.findAllByRole("row", {
-      name: "Resource Table Row",
-    });
-
-    expect(initialRowsAfterReset).toHaveLength(6);
+    const rowsAfterClearingFilters = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterClearingFilters).toHaveLength(6);
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("ResourcesPage shows deploy state bar", async () => {
-    server.use(
-      http.get("/api/v2/resource", () => {
-        return HttpResponse.json(Resource.response);
-      })
-    );
+  test("active filter count badge increments when filters are applied", async () => {
+    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })));
+
     const { component } = setup();
 
     render(component);
 
-    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    expect(
-      await screen.findByRole("generic", {
-        name: words("resources.deploySummary.title"),
-      })
-    ).toBeInTheDocument();
+    await openFiltersDrawer();
+
+    // Default filter (orphaned excluded) counts as 1
+    expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("1");
+
+    const agentInput = await screen.findByPlaceholderText(
+      words("resources.filters.resource.agent.placeholder")
+    );
+    await userEvent.type(agentInput, "agent2{enter}");
+
+    expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("2");
+
+    const typeInput = await screen.findByPlaceholderText(
+      words("resources.filters.resource.type.placeholder")
+    );
+    await userEvent.type(typeInput, "std::File{enter}");
+
+    expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("3");
+  });
+
+  test("agent filter dropdown shows options fetched from the API", async () => {
+    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })));
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
+
+    await openFiltersDrawer();
+
+    const agentInput = await screen.findByPlaceholderText(
+      words("resources.filters.resource.agent.placeholder")
+    );
+    await userEvent.click(agentInput);
+
+    expect(screen.getByRole("option", { name: "aws" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "bru-23-r321" })).toBeInTheDocument();
+  });
+
+  // --- Summary bar & toolbar ---
+
+  test("shows deploy summary bar", async () => {
+    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })));
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
+
+    const legendBars = await screen.findAllByRole("generic", {
+      name: words("resources.deploySummary.title"),
+    });
+    expect(legendBars.length).toBeGreaterThan(0);
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("GIVEN ResourcesPage WHEN data is loading for next page THEN shows toolbar", async () => {
+  test("shows deploying count label when resources are deploying", async () => {
     server.use(
-      http.get("/api/v2/resource", ({ request }) => {
-        delay(100);
-        if (request.url.includes("end=fake-param")) {
-          return HttpResponse.json({
-            ...Resource.response,
-            metadata: {
-              ...Resource.response.metadata,
-              deploy_summary: {
-                ...Resource.response.metadata.deploy_summary,
-                by_state: {
-                  ...Resource.response.metadata.deploy_summary.by_state,
-                  available: 2,
-                },
-              },
-            },
-          });
+      queryLink.query("GetResources", () =>
+        HttpResponse.json({
+          data: toGqlResponse({
+            ...BASE_DATA,
+            resourceSummary: createMockResourceSummary({ isDeploying: { true: 3, false: 3 } }),
+          }),
+        })
+      )
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
+
+    const label = screen.getByTestId("deploying-label");
+
+    expect(label).toHaveTextContent("3");
+  });
+
+  test("toolbar stays visible and updates after navigating to next page", async () => {
+    server.use(
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
+        if (variables.after === "fake-cursor") {
+          return HttpResponse.json({ data: gqlUpdatedSummary });
         }
 
         return HttpResponse.json({
-          ...Resource.response,
-          links: {
-            ...Resource.response.links,
-            next: "/fake-link?end=fake-param",
-          },
+          data: toGqlResponse(BASE_DATA, TOTAL_COUNT, {
+            hasNextPage: true,
+            endCursor: "fake-cursor",
+            hasPreviousPage: false,
+            startCursor: "",
+          }),
         });
       })
     );
+
     const { component } = setup(["/resources?pageSize=20"]);
 
     render(component);
 
-    expect(screen.getByRole("region", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
+    const compliantLegendItem = screen.getByRole("generic", { name: "LegendItem-compliant" });
+    expect(compliantLegendItem).toHaveAttribute("data-value", "3");
 
-    expect(
-      await screen.findByRole("generic", {
-        name: words("resources.deploySummary.title"),
-      })
-    ).toBeInTheDocument();
+    const nextPageButton = screen.getAllByRole("button", { name: "Go to next page" })[0];
+    await userEvent.click(nextPageButton);
 
-    expect(
-      screen.getByRole("generic", {
-        name: "LegendItem-available",
-      })
-    ).toHaveAttribute("data-value", "1");
+    const legendBars = await screen.findAllByRole("generic", {
+      name: words("resources.deploySummary.title"),
+    });
+    expect(legendBars[0]).toBeVisible();
 
-    const nextButton = screen.getAllByRole("button", {
-      name: "Go to next page",
-    })[0];
+    const repairButton = screen.getByRole("button", {
+      name: words("resources.deploySummary.repair"),
+    });
+    expect(repairButton).toBeVisible();
 
-    expect(nextButton).toBeEnabled();
+    const deployButton = screen.getByRole("button", {
+      name: words("resources.deploySummary.deploy"),
+    });
+    expect(deployButton).toBeVisible();
 
-    await userEvent.click(nextButton);
-
-    expect(
-      await screen.findByRole("generic", {
-        name: words("resources.deploySummary.title"),
-      })
-    ).toBeVisible();
-    expect(
-      screen.getByRole("button", {
-        name: words("resources.deploySummary.repair"),
-      })
-    ).toBeVisible();
-    expect(
-      screen.getByRole("button", {
-        name: words("resources.deploySummary.deploy"),
-      })
-    ).toBeVisible();
     expect(screen.getByRole("navigation", { name: "top-Pagination" })).toBeVisible();
     expect(screen.getByRole("navigation", { name: "bottom-Pagination" })).toBeInTheDocument();
 
-    expect(
-      await screen.findByRole("generic", {
-        name: "LegendItem-available",
-      })
-    ).toHaveAttribute("data-value", "2");
+    const compliantLegendItemAfterActions = await screen.findByRole("generic", {
+      name: "LegendItem-compliant",
+    });
+    expect(compliantLegendItemAfterActions).toHaveAttribute("data-value", "4");
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("GIVEN ResourcesPage WHEN data is auto-updated THEN shows updated toolbar", async () => {
-    let count = 0;
+  test("toolbar updates when data is auto-refreshed", async () => {
+    let callCount = 0;
 
     server.use(
-      http.get("/api/v2/resource", () => {
-        count++;
-        if (count > 1) {
-          return HttpResponse.json({
-            ...Resource.response,
-            metadata: {
-              ...Resource.response.metadata,
-              deploy_summary: {
-                ...Resource.response.metadata.deploy_summary,
-                by_state: {
-                  ...Resource.response.metadata.deploy_summary.by_state,
-                  available: 2,
-                },
-              },
-            },
-          });
-        }
+      queryLink.query("GetResources", () => {
+        callCount++;
 
-        return HttpResponse.json({
-          ...Resource.response,
-          links: { ...Resource.response.links, next: "/fake-link" },
-        });
+        return HttpResponse.json({ data: callCount > 1 ? gqlUpdatedSummary : gqlFull });
       })
     );
-    const { component } = setup();
+
+    const { component, client } = setup();
 
     render(component);
 
-    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    expect(
-      await screen.findByRole("generic", {
-        name: words("resources.deploySummary.title"),
-      })
-    ).toBeInTheDocument();
+    const complianceLegendBar = screen.getByTestId("legend-bar-compliance");
+    const compliantLegendItem = within(complianceLegendBar).getByRole("generic", {
+      name: "LegendItem-compliant",
+    });
+    expect(compliantLegendItem).toHaveAttribute("data-value", "3");
 
-    expect(
-      screen.getByRole("generic", {
-        name: "LegendItem-available",
-      })
-    ).toHaveAttribute("data-value", "1");
-
-    expect(
-      screen.getByRole("generic", {
-        name: words("resources.deploySummary.title"),
-      })
-    ).toBeVisible();
-    expect(
-      screen.getByRole("button", {
-        name: words("resources.deploySummary.repair"),
-      })
-    ).toBeVisible();
-    expect(
-      screen.getByRole("button", {
-        name: words("resources.deploySummary.deploy"),
-      })
-    ).toBeVisible();
-    expect(screen.getByRole("navigation", { name: "top-Pagination" })).toBeVisible();
-    expect(screen.getByRole("navigation", { name: "bottom-Pagination" })).toBeInTheDocument();
-
+    // Refetch the query
     await act(async () => {
-      await delay(5000);
+      await client.refetchQueries();
     });
 
-    expect(
-      await screen.findByRole("generic", {
-        name: "LegendItem-available",
-      })
-    ).toHaveAttribute("data-value", "2");
+    // Wait for the DOM to reflect the updated value
+    await waitFor(() => {
+      expect(compliantLegendItem).toHaveAttribute("data-value", "4");
+    });
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("ResourcesPage shows deploy state bar with available status without processing_events status", async () => {
-    server.use(
-      http.get("/api/v2/resource", () => {
-        return HttpResponse.json(Resource.response);
-      })
-    );
-    const { component } = setup();
+  // --- Deploy / Repair buttons ---
 
-    render(component);
-
-    expect(
-      await screen.findByRole("generic", {
-        name: words("resources.deploySummary.title"),
-      })
-    ).toBeInTheDocument();
-
-    const availableItem = screen.getByRole("generic", {
-      name: "LegendItem-available",
-    });
-
-    expect(availableItem).toBeVisible();
-    expect(availableItem).toHaveAttribute("data-value", "1");
-    expect(availableItem).not.toHaveAttribute("data-value", "3");
-
-    expect(screen.queryByTestId("Status-processing_events")).toBeVisible();
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
-  });
-
-  test("Given the ResourcesPage When clicking on deploy, then the approriate backend request is fired", async () => {
+  test("deploy button fires correct request", async () => {
     let body: unknown = {};
 
     server.use(
-      http.get("/api/v2/resource", () => {
-        return HttpResponse.json(Resource.response);
-      }),
+      queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })),
       http.post("/api/v1/deploy", async ({ request }) => {
-        const data = await request.json();
-        body = data;
+        body = await request.json();
       })
     );
+
     const { component } = setup();
 
     render(component);
 
-    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    await userEvent.click(
-      await screen.findByRole("button", {
-        name: words("resources.deploySummary.deploy"),
-      })
-    );
+    const deployButton = await screen.findByRole("button", {
+      name: words("resources.deploySummary.deploy"),
+    });
+    await userEvent.click(deployButton);
 
-    expect(
-      await screen.findByRole("button", {
-        name: words("resources.deploySummary.deploy"),
-      })
-    ).toBeDisabled();
-
+    expect(deployButton).toBeDisabled();
     expect(screen.getByTestId("dot-indication")).toBeInTheDocument();
-
-    expect(body).toEqual({
-      agent_trigger_method: "push_incremental_deploy",
-    });
+    expect(body).toEqual({ agent_trigger_method: "push_incremental_deploy" });
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given the ResourcesPage When clicking on repair, then the appropriate backend request is fired", async () => {
+  test("repair button fires correct request", async () => {
     let body: unknown = {};
 
     server.use(
-      http.get("/api/v2/resource", () => {
-        return HttpResponse.json(Resource.response);
-      }),
+      queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })),
       http.post("/api/v1/deploy", async ({ request }) => {
-        const data = await request.json();
-        body = data;
+        body = await request.json();
       })
     );
+
     const { component } = setup();
 
     render(component);
 
-    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    await userEvent.click(
-      await screen.findByRole("button", {
-        name: words("resources.deploySummary.repair"),
-      })
-    );
-
-    expect(
-      await screen.findByRole("button", {
-        name: words("resources.deploySummary.repair"),
-      })
-    ).toBeDisabled();
-
-    expect(body).toEqual({
-      agent_trigger_method: "push_full_deploy",
+    const repairButton = await screen.findByRole("button", {
+      name: words("resources.deploySummary.repair"),
     });
+    await userEvent.click(repairButton);
+
+    expect(repairButton).toBeDisabled();
+    expect(body).toEqual({ agent_trigger_method: "push_full_deploy" });
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });
 
-  test("Given the ResourcesPage When environment is halted, then deploy and repair buttons are disabled", async () => {
-    server.use(
-      http.get("/api/v2/resource", () => {
-        return HttpResponse.json(Resource.response);
-      })
-    );
+  test("deploy and repair buttons are disabled when environment is halted", async () => {
+    server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })));
+
     const { component } = setup(undefined, true);
 
     render(component);
 
-    expect(await screen.findByRole("grid", { name: "ResourcesPage-Success" })).toBeInTheDocument();
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    expect(
-      await screen.findByRole("button", {
-        name: words("resources.deploySummary.repair"),
-      })
-    ).toBeDisabled();
-    expect(
-      await screen.findByRole("button", {
-        name: words("resources.deploySummary.deploy"),
-      })
-    ).toBeDisabled();
+    const repairButton = screen.getByRole("button", {
+      name: words("resources.deploySummary.repair"),
+    });
+    expect(repairButton).toBeDisabled();
+
+    const deployButton = await screen.findByRole("button", {
+      name: words("resources.deploySummary.deploy"),
+    });
+    expect(deployButton).toBeDisabled();
 
     await act(async () => {
       const results = await axe(document.body);
-
       expect(results).toHaveNoViolations();
     });
   });

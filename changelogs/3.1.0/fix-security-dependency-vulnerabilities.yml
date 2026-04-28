@@ -1,0 +1,6 @@
+description: Fix 10 security vulnerabilities via dependency resolutions
+change-type: patch
+destination-branches:
+- master
+- iso9
+sections: {}

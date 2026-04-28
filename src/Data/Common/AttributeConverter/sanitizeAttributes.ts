@@ -37,6 +37,13 @@ export function sanitizeAttributes(
 
         return;
       }
+      case "InterServiceRelation": {
+        const value = formState[field.name];
+
+        // Convert empty string to null for InterServiceRelation fields
+        sanitized[field.name] = value === "" ? null : value;
+        return;
+      }
       case "RelationList": {
         sanitized[field.name] = formState[field.name];
 

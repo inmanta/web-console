@@ -1,0 +1,13 @@
+description: | 
+ Resources view has been reworked. Split the resource state into its component status fields. 
+ The previous single-field state was overloaded because it tried to convey multiple different dimensions of information in a single field. 
+ The primary components in the new resource state are a resource's compliance status and its handler operation. 
+ Additionally, a resource may be marked as "currently deploying", or blocked as a result of undefined intent.
+ This splitting of the resource state into its component dimensions should present a clearer picture of a resource's or handler's health, especially in environments with high activity. 
+ E.g. when new intent is pushed for a resource, its previous handler result could still be an indicator of its health, or when a repair is triggered for a resource, one might assume that it is likely still compliant, even if is is currently deploying. 
+ Finally, this also ties into the report-only resources that were added recently, because a resource might be non-compliant even if its handler is healthy.
+issue-nr: 6690
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

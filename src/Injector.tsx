@@ -9,13 +9,14 @@ import {
   EnvironmentHandlerImpl,
   UrlManagerImpl,
 } from "@/UI";
-import { AuthContext } from "./Data/Auth/";
+import { AuthContext } from "./Data/Auth";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
+import { AppAlertProvider } from "./UI/Root/Components/AppAlertProvider";
 import { ModalProvider } from "./UI/Root/Components/ModalProvider";
 
 /**
  * This component creates instances of managers, helpers, and resolvers, and provides them through a `DependencyProvider`.
- * It also contains `ModalProvider` and an `UpdateBanner`.
+ * It also contains `ModalProvider`, `AppAlertProvider`, and an `UpdateBanner`.
  *
  * @props {Props} props - The properties passed to the component.
  * @prop {React.ReactNode} children - The children to be rendered within the Injector.
@@ -28,7 +29,7 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
     globalThis.location.pathname
   );
   const basePathname = baseUrlManager.getBasePathname();
-  const baseUrl = baseUrlManager.getBaseUrl(import.meta.env.VITE_API_BASEURL);
+  const baseUrl = baseUrlManager.getBaseUrl();
   const routeManager = PrimaryRouteManager(basePathname);
   const orchestratorProvider = OrchestratorProvider(
     getJsonParserId(globalThis),
@@ -51,10 +52,12 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
         authHelper,
       }}
     >
-      <ModalProvider>
-        <UpdateBanner />
-        {children}
-      </ModalProvider>
+      <AppAlertProvider>
+        <ModalProvider>
+          <UpdateBanner />
+          {children}
+        </ModalProvider>
+      </AppAlertProvider>
     </DependencyProvider>
   );
 };

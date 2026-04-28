@@ -61,7 +61,10 @@ export default [
     rules: {
       "react/display-name": "off",
       "import/no-named-as-default-member": "off",
-      "import/no-unresolved": "error",
+      // monaco-graphql is aliased via Vite to @graphiql/react/node_modules/monaco-graphql,
+      // which ESLint's TypeScript resolver cannot follow. Vite-specific ?worker query
+      // suffixes are also not resolvable by any ESLint resolver.
+      "import/no-unresolved": ["error", { ignore: ["^monaco-graphql"] }],
       "no-unused-vars": "off",
 
       "@typescript-eslint/no-unused-vars": [

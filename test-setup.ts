@@ -86,6 +86,20 @@ const codeEditorMock = vi.hoisted(() => ({
   },
 }));
 
+// Composer mocks - must use function (not arrow) for Vitest 4 constructor compatibility
+const linkShapeMock = vi.hoisted(() => ({
+  LinkShape: vi.fn().mockImplementation(function () {
+    return {
+      source: vi.fn().mockReturnThis(),
+      target: vi.fn().mockReturnThis(),
+      router: vi.fn().mockReturnThis(),
+      connector: vi.fn().mockReturnThis(),
+      set: vi.fn().mockReturnThis(),
+      addTo: vi.fn().mockReturnThis(),
+    };
+  }),
+}));
+
 // Set default timezone
 moment.tz.setDefault("Europe/Brussels");
 
@@ -170,6 +184,9 @@ vi.mock("@patternfly/react-log-viewer", () => logViewerMock);
 
 // Mock @patternfly/react-code-editor
 vi.mock("@patternfly/react-code-editor", () => codeEditorMock);
+
+// Mock Composer LinkShape (used by linkUtils, initializeCanvasFromInstance, and other Composer tests)
+vi.mock("@/UI/Components/Composer/UI/JointJsShapes/LinkShape", () => linkShapeMock);
 
 // Mock mermaid
 vi.mock("mermaid", () => ({

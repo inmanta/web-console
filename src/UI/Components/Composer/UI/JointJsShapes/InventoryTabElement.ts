@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { dia, mvc, ui } from "@inmanta/rappid";
+import { dia, mvc, ui } from "@joint/plus";
 import { t_global_background_color_primary_default } from "@patternfly/react-tokens";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Queries";

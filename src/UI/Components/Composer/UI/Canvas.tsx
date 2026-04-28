@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { ui } from "@inmanta/rappid";
+import { ui } from "@joint/plus";
 import styled from "styled-components";
 import { ComposerContext } from "../Data/Context";
 
@@ -18,7 +18,7 @@ export const Canvas: React.FC = () => {
     }
 
     canvasRef.current.appendChild(scroller.el);
-    scroller.render().center();
+    scroller.render();
 
     // Initialize tooltip system for elements with data-tooltip attribute
     if (!tooltipRef.current) {

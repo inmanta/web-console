@@ -12,15 +12,13 @@ import { QueryControlProvider } from "./Data/Queries";
 import { Injector } from "./Injector";
 import CustomRouter from "./UI/Routing/CustomRouter";
 import ErrorBoundary from "./UI/Utils/ErrorBoundary";
-import { editorWorkerPath, jsonWorkerPath } from "./monaco-workers";
+import { createMonacoWorker } from "./monaco-workers";
 
-// Monaco worker configuration telling where to find the workers.
+// Monaco worker configuration. Uses getWorker (returns a Worker instance) rather than
+// getWorkerUrl so that Vite's worker bundling sets the correct module type automatically.
 self.MonacoEnvironment = {
-  getWorkerUrl(_moduleId, label) {
-    if (label === "json") {
-      return jsonWorkerPath;
-    }
-    return editorWorkerPath;
+  getWorker(_workerId, label) {
+    return createMonacoWorker(label);
   },
 };
 
@@ -70,7 +68,11 @@ monaco.languages.setMonarchTokensProvider("python", {
 // Register plain text language
 monaco.languages.register({ id: "plaintext" });
 
-loader.config({ monaco });
+// Pass the locally-bundled monaco instance so the loader never fetches from the
+// default jsdelivr CDN. Override paths.vs as a belt-and-suspenders guard: if
+// state.monaco were somehow unset, the fallback script URL would be relative
+// (/loader.js) instead of the CDN URL.
+loader.config({ monaco, paths: { vs: "" } });
 loader.init();
 
 const container = document.getElementById("root") as HTMLElement;

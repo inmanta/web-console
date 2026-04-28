@@ -1,78 +1,10 @@
-/**
- * Shorthand method to clear the environment being passed.
- * By default, if no arguments are passed it will target the 'lsm-frontend' environment.
- *
- * @param {string} nameEnvironment
- */
-const clearEnvironment = (nameEnvironment = "test") => {
-  cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
+import environmentHelpers from "../support/environmentHelpers";
 
-    cy.request("DELETE", `/api/v1/decommission/${id}`);
-  });
-};
+const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
-/**
- * based on the environment id, it will recursively check if a compile is pending.
- * It will continue the recursion as long as the statusCode is equal to 200
- *
- * @param {string} id
- */
-const checkStatusCompile = (id) => {
-  let statusCodeCompile = 200;
+const isIso = Cypress.expose("edition") === "iso";
 
-  if (statusCodeCompile === 200) {
-    cy.intercept("/api/v2/graphql").as("IsCompiling");
-    // the timeout is necessary to avoid errors.
-    // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
-    cy.wait("@IsCompiling").then((req) => {
-      statusCodeCompile = req.response.statusCode;
-      const environments = req.response.body.data.data.environments;
-
-      if (environments) {
-        const edges = environments.edges;
-
-        if (edges && edges.length > 0) {
-          const environment = edges.find((env) => env.node.id === id);
-
-          if (environment && !environment.node.isCompiling) {
-            return;
-          }
-        }
-      }
-
-      checkStatusCompile(id);
-    });
-  }
-};
-
-/**
- * Will by default execute the force update on the 'lsm-frontend' environment if no argumenst are being passed.
- * This method can be executed standalone, but is part of the cleanup cycle that is needed before running a scenario.
- *
- * @param {string} nameEnvironment
- */
-const forceUpdateEnvironment = (nameEnvironment = "test") => {
-  cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
-
-    cy.request({
-      method: "POST",
-      url: "/lsm/v1/exporter/export_service_definition",
-      headers: { "X-Inmanta-Tid": id },
-      body: { force_update: true },
-    });
-    checkStatusCompile(id);
-  });
-};
-
-if (Cypress.env("edition") === "iso") {
+if (isIso) {
   describe("Scenario 3 - Service Details", () => {
     before(() => {
       clearEnvironment();
@@ -167,6 +99,11 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#basic-service", { timeout: 60000 }).contains("Show inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
+      cy.get("body").then(($body) => {
+        const count = $body.find('[aria-label="InstanceRow-Intro"]').length;
+        cy.wrap(count).as("previousCount");
+      });
+
       // click on add instance
       cy.get("#add-instance-button").click();
 
@@ -196,7 +133,9 @@ if (Cypress.env("edition") === "iso") {
       }).should("to.be.visible");
 
       // Check if only one row has been added to the table.
-      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+      cy.get("@previousCount").then((previousCount) => {
+        cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", previousCount + 1);
+      });
 
       // go back to Service Catalog
       cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
@@ -229,6 +168,11 @@ if (Cypress.env("edition") === "iso") {
       // click on Show Inventory on basic-service
       cy.get("#basic-service", { timeout: 60000 }).contains("Show inventory").click();
 
+      cy.get("body").then(($body) => {
+        const count = $body.find('[aria-label="InstanceRow-Intro"]').length;
+        cy.wrap(count).as("previousCount");
+      });
+
       // click on duplicate instance
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
       cy.get('[role="menuitem"]').contains("Duplicate").click();
@@ -259,7 +203,9 @@ if (Cypress.env("edition") === "iso") {
       }).should("to.be.visible");
 
       // Check if only one row has been added to the table.
-      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
+      cy.get("@previousCount").then((previousCount) => {
+        cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", previousCount + 1);
+      });
 
       // Check if the newly added instance has failed.
       // long timeout justified by the fact that a few compiles are already queued at this point and status change will only be changed after.
@@ -309,6 +255,10 @@ if (Cypress.env("edition") === "iso") {
       // Go to the callback tab
       cy.get("button").contains("Callbacks").click();
 
+      cy.get('[aria-label="CallbacksTable"] tbody', { timeout: 30000 }).then(($rows) => {
+        cy.wrap($rows.length).as("previousBodies");
+      });
+
       // Fill in the fields
       cy.get('[aria-label="callbackUrl"]').type("wrongUrl");
       cy.get('[aria-label="callbackId"]').type("60b18097-1525-47f2-95ae-1d941d9c0c85");
@@ -327,10 +277,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get("button").contains("Add").click();
 
       // Expect new row to be added to the view.
-      cy.get('[aria-label="CallbacksTable"]').should(($table) => {
-        const $tableBody = $table.find("tbody");
-
-        expect($tableBody).to.have.length(2);
+      cy.get("@previousBodies").then((previousBodies) => {
+        cy.get('[aria-label="CallbacksTable"]')
+          .find("tbody")
+          .should("have.length", previousBodies + 1);
       });
 
       // Expect the form to be cleared completely.
@@ -347,38 +297,18 @@ if (Cypress.env("edition") === "iso") {
         expect($list).to.have.length(10);
       });
 
-      cy.get(".pf-v6-c-description-list__description li")
-        .first()
-        .should("have.css", "text-decoration")
-        .and("contain", "none solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(1)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(2)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(3)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(4)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(5)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(6)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
-      cy.get(".pf-v6-c-description-list__description li")
-        .eq(7)
-        .should("have.css", "text-decoration")
-        .and("contain", "line-through solid");
+      cy.get('.pf-v6-c-description-list__description [role="list"] > li').then(($lis) => {
+        $lis.each((i, el) => {
+          const textDec = window.getComputedStyle(el).textDecoration;
+          if (i === 0) {
+            // First item should have normal text
+            expect(textDec.toLowerCase()).to.contain("none");
+          } else {
+            // All other items should have line-through
+            expect(textDec.toLowerCase()).to.contain("line-through");
+          }
+        });
+      });
 
       // Expect the UUID to be truncated to 8 characters, have INFO level and 1 Event Type.
       cy.get('[aria-label="CallbacksTable"]').should(($table) => {

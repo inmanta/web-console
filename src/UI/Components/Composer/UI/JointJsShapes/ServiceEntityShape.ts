@@ -1,4 +1,4 @@
-import { dia, shapes, util } from "@inmanta/rappid";
+import { dia, shapes, util } from "@joint/plus";
 import {
   t_chart_color_yellow_300,
   t_chart_color_blue_400,
@@ -28,7 +28,7 @@ import { getEmbeddedEntityKey } from "../../Data/Helpers/shapeUtils";
  * Base configuration for a service entity rendered on the composer canvas.
  */
 export interface ServiceEntityBase {
-  entityType: EntityType;
+  entityType: EntityShapeType;
   serviceModel: ServiceModel | EmbeddedEntity;
   instanceAttributes: InstanceAttributeModel;
   readonly: boolean;
@@ -52,9 +52,9 @@ interface ColumnData {
   [key: string]: unknown;
 }
 
-export type EntityType = "core" | "embedded" | "relation";
+export type EntityShapeType = "core" | "embedded" | "relation";
 
-export const HeaderColors: Record<EntityType, string> = {
+export const HeaderColors: Record<EntityShapeType, string> = {
   core: t_chart_color_yellow_300.var,
   embedded: t_chart_color_blue_400.var,
   relation: t_chart_color_purple_300.var,
@@ -73,13 +73,14 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   readonly: boolean;
   isNew: boolean;
   lockedOnCanvas: boolean;
-  id: string;
-  entityType: EntityType;
+  entityType: EntityShapeType;
   orderItem: ComposerServiceOrderItem | null;
   hasAttributeValidationErrors: boolean;
 
   constructor(initializationOptions: ServiceEntityOptions) {
-    super();
+    // In JointJS 4, the model id should be provided at construction time
+    // so that the graph and paper index the cell under the correct id.
+    super({ id: initializationOptions.id });
 
     this.connections = new Map<string, string[]>();
     this.serviceModel = initializationOptions.serviceModel;
@@ -89,7 +90,6 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     this.readonly = initializationOptions.readonly;
     this.isNew = initializationOptions.isNew;
     this.lockedOnCanvas = initializationOptions.lockedOnCanvas;
-    this.id = initializationOptions.id;
     this.entityType = initializationOptions.entityType;
     this.orderItem = null;
     this.hasAttributeValidationErrors = false;
@@ -347,12 +347,10 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
    * @returns {this} The current instance for method chaining.
    */
   setDisplayName(): this {
-    // For embedded entities, use the type if available, otherwise use name
-    // For service models, only name is available
-    const name =
-      "type" in this.serviceModel && this.serviceModel.type
-        ? this.serviceModel.type
-        : this.serviceModel.name;
+    const typeName =
+      "type" in this.serviceModel && this.serviceModel.type ? this.serviceModel.type : undefined;
+    const serviceName = this.serviceModel.name;
+    const name = typeName && serviceName ? `${typeName} - ${serviceName}` : typeName || serviceName;
     const shortenName = util.breakText(
       name,
       { width: 140, height: 30 },
@@ -374,10 +372,14 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     }
   }
 
-  getEntityName(): string {
+  getEntityType(): string {
     return "type" in this.serviceModel && this.serviceModel.type
       ? this.serviceModel.type
       : this.serviceModel.name;
+  }
+
+  getEntityName(): string {
+    return this.serviceModel.name;
   }
 
   addConnection(relationId: string, relationType: string) {
@@ -411,16 +413,44 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     return this.connections;
   }
 
+  private getAllowedRelations():
+    | Record<string, { lower_limit: number; upper_limit: number | null }>
+    | undefined {
+    const entityType = this.getEntityType();
+    const entityName = this.getEntityName();
+
+    if (this.relationsDictionary[entityType]) {
+      return this.relationsDictionary[entityType];
+    }
+
+    if (this.relationsDictionary[entityName]) {
+      return this.relationsDictionary[entityName];
+    }
+
+    const matchedKey = Object.keys(this.relationsDictionary).find(
+      (key) =>
+        key.toLowerCase() === entityType.toLowerCase() ||
+        key.toLowerCase() === entityName.toLowerCase()
+    );
+
+    return matchedKey ? this.relationsDictionary[matchedKey] : undefined;
+  }
+
   validateConnection(targetEntity: ServiceEntityShape): boolean {
-    const relationType = targetEntity.getEntityName();
-    const currentEntityName = this.getEntityName();
-    const allowedRelations = this.relationsDictionary[currentEntityName];
+    const relationType = targetEntity.getEntityType();
+    const allowedRelations = this.getAllowedRelations();
 
     if (!allowedRelations) {
       return false;
     }
 
-    const rules = allowedRelations[relationType];
+    const relationKey = allowedRelations[relationType]
+      ? relationType
+      : Object.keys(allowedRelations).find(
+          (key) => key.toLowerCase() === relationType.toLowerCase()
+        );
+
+    const rules = relationKey ? allowedRelations[relationKey] : undefined;
 
     if (!rules) {
       return false;
@@ -433,7 +463,9 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
 
     if ("inter_service_relations" in this.serviceModel) {
       const relation = this.serviceModel.inter_service_relations?.find(
-        (rel) => rel.entity_type === relationType || rel.name === relationType
+        (rel) =>
+          (rel.entity_type || rel.name).toLowerCase() === relationType.toLowerCase() ||
+          rel.name.toLowerCase() === relationType.toLowerCase()
       );
       if (relation) {
         modifier = relation.modifier;
@@ -442,7 +474,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
 
     if (!modifier && "embedded_entities" in this.serviceModel) {
       const embedded = this.serviceModel.embedded_entities?.find(
-        (entity) => (entity.type || entity.name) === relationType
+        (entity) => (entity.type || entity.name).toLowerCase() === relationType.toLowerCase()
       );
       if (embedded) {
         modifier = embedded.modifier;
@@ -455,7 +487,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
       return false;
     }
 
-    const existingConnections = this.connections.get(relationType) || [];
+    const existingConnections = this.connections.get(relationKey || relationType) || [];
 
     // Check if adding this connection would exceed the upper limit
     if (rules.upper_limit !== undefined && rules.upper_limit !== null) {
@@ -514,8 +546,20 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
    * Returns an array of objects containing the connection name and how many are missing.
    * @returns Array of { name: string, missing: number, required: number } objects
    */
-  getMissingConnections(): Array<{ name: string; missing: number; required: number }> {
-    const missing: Array<{ name: string; missing: number; required: number }> = [];
+  getMissingConnections(): Array<{
+    type: "embedded" | "relation" | "parent";
+    entityType: string;
+    name: string;
+    missing: number;
+    required: number;
+  }> {
+    const missing: Array<{
+      type: "embedded" | "relation" | "parent";
+      entityType: string;
+      name: string;
+      missing: number;
+      required: number;
+    }> = [];
 
     // Embedded entities can never be standalone - they must always have at least one connection.
     // When an embedded entity is standalone, we want to show which parent entities (core, embedded,
@@ -529,15 +573,31 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         // Use the relationsDictionary to find all valid parents for this embedded entity.
         // In createRelationsDictionary, embedded entities are keyed by `entity.type || entity.name`,
         // which matches getEntityName() for embedded shapes.
-        const entityKey = this.getEntityName();
-        const relationsForEmbedded = this.relationsDictionary[entityKey];
+        const relationsForEmbedded = this.getAllowedRelations();
+
+        const interServiceTargets = new Set(
+          "inter_service_relations" in this.serviceModel
+            ? this.serviceModel.inter_service_relations.map((relation) =>
+                (relation.entity_type || relation.name).toLowerCase()
+              )
+            : []
+        );
 
         if (relationsForEmbedded) {
-          Object.keys(relationsForEmbedded).forEach((parentName) => {
+          Object.entries(relationsForEmbedded).forEach(([parentName, parentRules]) => {
+            // Do not report declared inter-service targets as missing "parent" relations.
+            if (interServiceTargets.has(parentName.toLowerCase())) {
+              return;
+            }
+            if (parentRules.lower_limit <= 0) {
+              return;
+            }
             missing.push({
+              type: "parent",
+              entityType: parentName,
               name: parentName,
-              missing: 1,
-              required: 1,
+              missing: parentRules.lower_limit,
+              required: parentRules.lower_limit,
             });
           });
         }
@@ -549,7 +609,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
       for (const embeddedEntity of this.serviceModel.embedded_entities) {
         const missingConnection = getEmbeddedEntityMissingConnections(this, embeddedEntity);
         if (missingConnection) {
-          missing.push(missingConnection);
+          missing.push({ ...missingConnection, type: "embedded" });
         }
       }
     }
@@ -559,7 +619,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
       for (const relation of this.serviceModel.inter_service_relations) {
         const missingConnection = getInterServiceRelationMissingConnections(this, relation);
         if (missingConnection) {
-          missing.push(missingConnection);
+          missing.push({ ...missingConnection, type: "relation" });
         }
       }
     }
@@ -792,7 +852,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         connectedIds.forEach((connectedId) => {
           const connectedShape = canvasState.get(connectedId);
           if (
-            connectedShape?.getEntityName() === relation.entity_type &&
+            connectedShape?.getEntityType() === relation.entity_type &&
             !relationIds.includes(connectedId)
           ) {
             relationIds.push(connectedId);
@@ -834,10 +894,17 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
       );
     }
 
+    const attributesWithRelations = this.processInterServiceRelations(
+      embeddedShape,
+      attributes,
+      canvasState,
+      isCreating
+    );
+
     // Process nested embedded entities
     const attributesWithEmbedded = this.processEmbeddedEntities(
       embeddedShape,
-      attributes,
+      attributesWithRelations,
       canvasState,
       isCreating
     );
@@ -920,8 +987,8 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     const action: ServiceOrderItemAction | null = this.isNew ? "create" : "update";
 
     this.orderItem = {
-      instance_id: this.id,
-      service_entity: this.getEntityName(),
+      instance_id: String(this.id),
+      service_entity: this.getEntityType(),
       config: {},
       action: action,
       attributes: Object.keys(sanitizedAttributes).length > 0 ? sanitizedAttributes : null,

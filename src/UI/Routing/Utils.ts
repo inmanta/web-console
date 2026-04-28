@@ -1,6 +1,5 @@
 import { useContext, useEffect } from "react";
 import { useNavigate, useLocation, useParams, Params } from "react-router";
-import { mapValues } from "lodash-es";
 import { RouteKind, RouteParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 
@@ -56,10 +55,18 @@ export const useDocumentTitle = (title: string): void => {
   }, [title]);
 };
 
-const decodeParams = (params: Params): Params => {
-  return mapValues(params, (value) => (value === undefined ? value : decodeURIComponent(value)));
-};
+const decodeParams = (params: Params): Params =>
+  Object.fromEntries(
+    Object.entries(params).map(([key, value]) => [
+      key,
+      value === undefined ? value : decodeURIComponent(value),
+    ])
+  );
 
-export const encodeParams = (params: Params): Params => {
-  return mapValues(params, (value) => (value === undefined ? value : encodeURIComponent(value)));
-};
+export const encodeParams = (params: Params): Params =>
+  Object.fromEntries(
+    Object.entries(params).map(([key, value]) => [
+      key,
+      value === undefined ? value : encodeURIComponent(value),
+    ])
+  );

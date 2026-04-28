@@ -53,7 +53,7 @@ describe("CompileWidgetProvider", () => {
     const toast = await screen.findByTestId("info-message");
 
     expect(toast).toBeVisible();
-    expect(toast).toHaveTextContent(words("common.compileWidget.toast")(false));
+    expect(toast).toHaveTextContent(words("common.compileWidget.toast")(false, false));
     expect(afterTrigger).toHaveBeenCalled();
 
     expect(button).toBeEnabled();
@@ -85,7 +85,38 @@ describe("CompileWidgetProvider", () => {
     const toast = await screen.findByTestId("info-message");
 
     expect(toast).toBeVisible();
-    expect(toast).toHaveTextContent(words("common.compileWidget.toast")(true));
+    expect(toast).toHaveTextContent(words("common.compileWidget.toast")(true, false));
+
+    expect(afterTrigger).toHaveBeenCalled();
+  });
+
+  test("GIVEN CompileButton WHEN clicked on toggle and clicked on Cleanup & Recompile option THEN triggers recompile with reinstall", async () => {
+    const { component, afterTrigger } = setup();
+
+    render(component);
+
+    const widget = screen.getByRole("button", { name: "RecompileButton" });
+
+    expect(widget).toBeVisible();
+
+    const toggle = screen.getByRole("button", {
+      name: "Toggle",
+    });
+
+    expect(toggle).toBeEnabled();
+
+    await userEvent.click(toggle);
+
+    const button = screen.getByRole("menuitem", {
+      name: "CleanupAndRecompileButton",
+    });
+
+    await userEvent.click(button);
+
+    const toast = await screen.findByTestId("info-message");
+
+    expect(toast).toBeVisible();
+    expect(toast).toHaveTextContent(words("common.compileWidget.toast")(false, true));
 
     expect(afterTrigger).toHaveBeenCalled();
   });

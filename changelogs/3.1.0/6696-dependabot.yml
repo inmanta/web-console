@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump systeminformation from 5.30.7 to 5.31.1
+destination-branches:
+- master
+- iso9
+sections: {}

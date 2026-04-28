@@ -8,7 +8,6 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
-import { reject } from "lodash-es";
 import { IntRange, RangeOperator } from "@/Core";
 import { words } from "@/UI/words";
 
@@ -41,9 +40,8 @@ export const IntRangeFilter: React.FC<Props> = ({
     const raw = prettyToRaw(value);
 
     update(
-      reject(
-        intRangeFilters,
-        (element) => element.value === raw.value && element.operator == raw.operator
+      intRangeFilters.filter(
+        (element) => !(element.value === raw.value && element.operator === raw.operator)
       )
     );
   };
@@ -128,7 +126,9 @@ function insertNewValue(
   operator: RangeOperator.Operator
 ): IntRange.Type[] {
   if (value !== undefined) {
-    return [...reject(intRangeFilters, (ts) => ts.operator === operator), { value, operator }];
+    const withoutOperator = intRangeFilters.filter((ts) => ts.operator !== operator);
+
+    return [...withoutOperator, { value, operator }];
   }
 
   return intRangeFilters;

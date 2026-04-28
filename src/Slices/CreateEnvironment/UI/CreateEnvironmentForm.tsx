@@ -9,7 +9,7 @@ import {
   GetEnvironmentPreviewKey,
   EnvironmentPreviewResponse,
 } from "@/Data/Queries";
-import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
+import { AppAlert, CreatableSelectInput } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -147,11 +147,13 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
   return (
     <Form isWidthLimited aria-label={props["aria-label"]}>
       {errorMessage && (
-        <InlinePlainAlert
-          aria-label={"submit-error-message"}
-          errorMessage={errorMessage}
-          closeButtonAriaLabel={"submit-close-error"}
-          onCloseAlert={onCloseAlert}
+        <AppAlert
+          testId="submit-error-message"
+          isInline
+          isPlain
+          isLimitedWidth
+          title={errorMessage}
+          onClose={onCloseAlert}
         />
       )}
       <CreatableSelectInput

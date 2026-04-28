@@ -1,82 +1,14 @@
-/**
- * Shorthand method to clear the environment being passed.
- * By default, if no arguments are passed it will target the 'test' environment.
- *
- * @param {string} nameEnvironment
- */
-const clearEnvironment = (nameEnvironment = "test") => {
-  cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
+import environmentHelpers from "../support/environmentHelpers";
 
-    cy.request("DELETE", `/api/v1/decommission/${id}`);
-  });
-};
-
-/**
- * based on the environment id, it will recursively check if a compile is pending.
- * It will continue the recursion as long as the statusCode is equal to 200
- *
- * @param {string} id
- */
-const checkStatusCompile = (id) => {
-  let statusCodeCompile = 200;
-
-  if (statusCodeCompile === 200) {
-    cy.intercept("/api/v2/graphql").as("IsCompiling");
-    // the timeout is necessary to avoid errors.
-    // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
-    cy.wait("@IsCompiling").then((req) => {
-      statusCodeCompile = req.response.statusCode;
-      const environments = req.response.body.data.data.environments;
-
-      if (environments) {
-        const edges = environments.edges;
-
-        if (edges && edges.length > 0) {
-          const environment = edges.find((env) => env.node.id === id);
-
-          if (environment && !environment.node.isCompiling) {
-            return;
-          }
-        }
-      }
-
-      checkStatusCompile(id);
-    });
-  }
-};
-
-/**
- * Will by default execute the force update on the 'test' environment if no arguments are being passed.
- * This method can be executed standalone, but is part of the cleanup cycle that is needed before running a scenario.
- *
- * @param {string} nameEnvironment
- */
-const forceUpdateEnvironment = (nameEnvironment = "test") => {
-  cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
-
-    cy.request({
-      method: "POST",
-      url: "/lsm/v1/exporter/export_service_definition",
-      headers: { "X-Inmanta-Tid": id },
-      body: { force_update: true },
-    });
-    checkStatusCompile(id);
-  });
-};
+const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
 beforeEach(() => {
   localStorage.setItem("theme-preference", "light");
 });
 
-if (Cypress.env("edition") === "iso") {
+const isIso = Cypress.expose("edition") === "iso";
+
+if (isIso) {
   describe("Scenario 2.1 Service Catalog - basic-service", () => {
     before(() => {
       clearEnvironment();
@@ -251,10 +183,16 @@ if (Cypress.env("edition") === "iso") {
     });
 
     it("2.1.4 Duplicate instance with Editor", () => {
+      cy.startMonacoCDNCheck();
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
+
+      // Record the current number of instances before duplicating
+      cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 30000 }).then(($rows) => {
+        cy.wrap($rows.length).as("previousCount");
+      });
 
       cy.get('[aria-label="row actions toggle"]', { timeout: 60000 }).eq(0).click();
       cy.get('[role="menuitem"]').contains("Duplicate").click();
@@ -265,8 +203,11 @@ if (Cypress.env("edition") === "iso") {
       // expect the JSON to be valid
       cy.get('[data-testid="Error-container"]').should("not.exist");
 
+      // platform specific command to select all and delete the content of the editor
+      const deleteShortcut =
+        Cypress.platform === "darwin" ? "{meta+a}{backspace}" : "{ctrl+a}{backspace}";
       // delete the JSON entirely
-      cy.get(".monaco-editor").click().focused().type("{ctrl+a}{backspace}");
+      cy.get(".monaco-editor").click().focused().type(deleteShortcut);
 
       // expect the JSON to be invalid
       cy.get('[data-testid="Error-container"]').should("contain", "Errors found");
@@ -277,8 +218,10 @@ if (Cypress.env("edition") === "iso") {
       // expect Form button to be disabled
       cy.get("#formButton").should("be.disabled");
 
+      // platform specific undo command to restore the JSON
+      const undoShortcut = Cypress.platform === "darwin" ? "{meta+z}" : "{ctrl+z}";
       // ctrl+z to undo the deletion
-      cy.get(".monaco-editor").click().focused().type("{ctrl+z}");
+      cy.get(".monaco-editor").click().focused().type(undoShortcut);
 
       // expect the JSON to be valid
       cy.get('[data-testid="Error-container"]').should("not.exist");
@@ -309,12 +252,13 @@ if (Cypress.env("edition") === "iso") {
       // bo back to editor
       cy.get("#editorButton").click();
 
+      // platform specific command to find the service_id field in the editor
+      const searchToolShortcut = Cypress.platform === "darwin" ? "{meta+f}" : "{ctrl+f}";
       // change the service id to make instance unique
-      cy.get(".monaco-editor").click().focused().type("{ctrl+f}"); // open search tool
+      cy.get(".monaco-editor").click().focused().type(searchToolShortcut);
 
-      cy.wait(1000); // let the editor settle to avoid typing text to fail
-
-      cy.get('[aria-label="Find"]').type("0001");
+      // wait until the find input is visible and focused
+      cy.get('[aria-label="Find"]').should("be.visible").should("have.focus").type("0001");
 
       // toggle replace option
       cy.get('[aria-label="Toggle Replace"]').click();
@@ -331,8 +275,12 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
-      // expect two rows in inventory now
-      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
+      // expect one more row in inventory than before the duplication
+      cy.get("@previousCount").then((previousCount) => {
+        cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", previousCount + 1);
+      });
+
+      cy.assertNoCDNDownloads();
     });
 
     it("2.1.5 JSON editor invalid should disable buttons", () => {
@@ -351,6 +299,9 @@ if (Cypress.env("edition") === "iso") {
       // make sure the call to get inventory has been executed
       cy.wait("@GetServiceInventory");
 
+      // Record the current number of instances before attempting to add
+      cy.get('[aria-label="InstanceRow-Intro"]').its("length").as("previousCount");
+
       // Add an instance and fill form
       cy.get("#add-instance-button").click();
       cy.get("#editorButton").click();
@@ -365,8 +316,10 @@ if (Cypress.env("edition") === "iso") {
       // make sure the call to get inventory has been executed
       cy.wait("@GetServiceInventory");
 
-      // expect two rows to be in the inventory still
-      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
+      // expect the number of rows to be unchanged after cancelling
+      cy.get("@previousCount").then((previousCount) => {
+        cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", previousCount);
+      });
     });
 
     it("2.1.6 Instance Details page", () => {
@@ -374,11 +327,13 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      // Expect to find one badge on the basic-service row.
-      cy.get("#basic-service")
-        .get('[aria-label="Number of instances by label"]', { timeout: 30000 })
-        .children()
-        .should("have.length", 1);
+      // Expect to find one badges on the basic-service row.
+      cy.get("#basic-service", { timeout: 40000 }).should(($parent) => {
+        const target = $parent.find('[aria-label="Number of instances by label"]');
+        const children = target.children();
+        expect(children).to.have.length(1);
+      });
+
       cy.get("#basic-service").contains("Show inventory").click();
 
       // Check Instance Details page

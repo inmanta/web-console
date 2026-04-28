@@ -6,22 +6,19 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { DocumentationLinks } from "./DocumentationLinks";
 
 const DOC_LINK = "https://docs.example.com";
-const API_LINK = "https://api.example.com/docs";
-const LSM_API_LINK = "https://lsm.example.com/docs";
-const API_URL = "https://api.example.com";
 
 class MockUrlManager implements UrlManager {
   getDocumentationLink(): string {
     return DOC_LINK;
   }
   getGeneralAPILink(): string {
-    return API_LINK;
+    return "";
   }
   getLSMAPILink(): string {
-    return LSM_API_LINK;
+    return "";
   }
   getApiUrl(): string {
-    return API_URL;
+    return "";
   }
 }
 
@@ -43,11 +40,8 @@ describe("DocumentationLinks", () => {
     expect(docButton).toBeInTheDocument();
     const docLink = docButton.closest("a");
     expect(docLink).toHaveAttribute("href", DOC_LINK);
-    // API link
-    const apiButton = screen.getByLabelText("general API link");
-    expect(apiButton).toBeInTheDocument();
-    const apiLink = apiButton.closest("a");
-    expect(apiLink).toHaveAttribute("href", API_LINK);
+    // REST API link is no longer rendered by DocumentationLinks
+    expect(screen.queryByLabelText("general API link")).not.toBeInTheDocument();
   });
 
   it("renders links with token when authenticated", () => {
@@ -64,10 +58,7 @@ describe("DocumentationLinks", () => {
     expect(docButton).toBeInTheDocument();
     const docLink = docButton.closest("a");
     expect(docLink).toHaveAttribute("href", `${DOC_LINK}?token=my-token`);
-    // API link
-    const apiButton = screen.getByLabelText("general API link");
-    expect(apiButton).toBeInTheDocument();
-    const apiLink = apiButton.closest("a");
-    expect(apiLink).toHaveAttribute("href", `${API_LINK}?token=my-token`);
+    // REST API link is no longer rendered by DocumentationLinks
+    expect(screen.queryByLabelText("general API link")).not.toBeInTheDocument();
   });
 });

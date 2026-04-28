@@ -119,8 +119,98 @@ function copyConfigPlugin() {
   };
 }
 
+// In Vite's loadAndTransform, `logger` is destructured from the Environment
+// object — not from config.logger — so customLogger doesn't intercept it.
+// configureServer patches each environment's logger directly after the server
+// (and its environments) are fully initialised.
+//
+// The load hook is kept as a first-line defence: when it returns non-null Vite
+// skips extractSourcemapFromFile entirely, so the ENOENT never occurs.
+// The transform hook handles build-time sourcemap stripping.
+const stripBrokenSourcemapsPlugin = () => ({
+  name: "strip-broken-sourcemaps",
+  enforce: "pre" as const,
+
+  // Patch the per-environment loggers that loadAndTransform actually uses.
+  // "Failed to load source map" uses logger.warn; "points to missing source files"
+  // uses logger.warnOnce — both need to be suppressed.
+  configureServer(server: any) {
+    const shouldSuppress = (msg: string) =>
+      msg.includes("Failed to load source map") || msg.includes("points to missing source files");
+
+    for (const env of Object.values(server.environments) as any[]) {
+      if (typeof env?.logger?.warn !== "function") continue;
+      const origWarn = env.logger.warn.bind(env.logger);
+      env.logger.warn = (msg: string, options?: unknown) => {
+        if (shouldSuppress(msg)) return;
+        origWarn(msg, options);
+      };
+      const origWarnOnce = env.logger.warnOnce?.bind(env.logger);
+      if (origWarnOnce) {
+        env.logger.warnOnce = (msg: string, options?: unknown) => {
+          if (shouldSuppress(msg)) return;
+          origWarnOnce(msg, options);
+        };
+      }
+    }
+  },
+
+  // When the load hook returns non-null, Vite's loadAndTransform takes the
+  // else-branch and never calls extractSourcemapFromFile, preventing ENOENT.
+  load(id: string) {
+    if (id.includes("\x00") || id.includes("?")) return null;
+    if (!id.includes("node_modules")) return null;
+    // Only intercept files known to reference missing .map files.
+    if (!id.endsWith("marked.js")) return null;
+    try {
+      const code = readFileSync(id, "utf-8");
+      if (code.includes("sourceMappingURL")) {
+        return { code: code.replace(/\/\/# sourceMappingURL=\S+/g, ""), map: null };
+      }
+    } catch {
+      // unreadable — fall through to Vite's default handler
+    }
+    return null;
+  },
+
+  // Only strip sourcemaps from the known offenders (marked, graphiql and its
+  // sub-packages). Stripping all node_modules sourcemaps would make debugging
+  // unrelated dependencies harder in DevTools.
+  transform(code: string, id: string) {
+    if (
+      id.includes("node_modules") &&
+      (id.includes("marked") || id.includes("graphiql") || id.includes("@graphiql")) &&
+      code.includes("sourceMappingURL")
+    ) {
+      return {
+        code: code.replace(/\/\/# sourceMappingURL=\S+/g, ""),
+        map: null,
+      };
+    }
+    return null;
+  },
+});
+
+// Physically remove Monaco CDN URL strings from the production bundle so they
+// can never be used even if a loader instance slips through deduplication or
+// loader.config() is called too late. The URLs only exist as dead string
+// literals in @monaco-editor/loader's default config; removing them has no
+// runtime side-effect beyond making CDN loading impossible.
+const blockMonacoCDNPlugin = () => ({
+  name: "block-monaco-cdn",
+  renderChunk(code: string) {
+    const cleaned = code.replace(
+      /https:\/\/cdn\.jsdelivr\.net\/npm\/monaco-editor@[^/'"]+\/min\/vs/g,
+      ""
+    );
+    return cleaned !== code ? { code: cleaned, map: null } : null;
+  },
+});
+
 const plugins = [
   react(),
+  stripBrokenSourcemapsPlugin(),
+  blockMonacoCDNPlugin(),
   versionPlugin(),
   moveAssetsToRootPlugin(),
   copyConfigPlugin(),
@@ -135,27 +225,58 @@ export default defineConfig({
     COMMITHASH: JSON.stringify(getGitCommitHash()),
     APP_VERSION: JSON.stringify(packageJson.version),
     global: "globalThis",
+    ...(process.env.VITEST || process.env.NODE_ENV === "production"
+      ? {
+          // Ensure API base URL is empty in tests and production builds
+          "import.meta.env.VITE_API_BASEURL": JSON.stringify(""),
+        }
+      : {}),
   },
   resolve: {
-    alias: {
-      "@": resolve(__dirname, "./src"),
-      "@S": resolve(__dirname, "./src/Slices"),
-      "@assets": resolve(__dirname, "./node_modules/@patternfly/react-core/dist/styles/assets"),
-      "@images": resolve(__dirname, "./public/images"),
-      // Handle lodash-es to use CommonJS version
-      "lodash-es": "lodash",
-      // Force rappid to use ESM version
-      "@inmanta/rappid": resolve(__dirname, "./node_modules/@inmanta/rappid/joint-plus.mjs"),
+    alias: [
+      { find: "@", replacement: resolve(__dirname, "./src") },
+      { find: "@S", replacement: resolve(__dirname, "./src/Slices") },
+      {
+        find: "@assets",
+        replacement: resolve(__dirname, "./node_modules/@patternfly/react-core/dist/styles/assets"),
+      },
+      { find: "@images", replacement: resolve(__dirname, "./public/images") },
+      // Force @joint/plus to use ESM entry (avoids dist/joint-plus.js)
+      {
+        find: "@joint/plus",
+        replacement: resolve(__dirname, "./node_modules/@joint/plus/joint-plus.mjs"),
+      },
+      // Force @joint/core to use ESM entry (avoids dist/joint.js)
+      {
+        find: "@joint/core",
+        replacement: resolve(__dirname, "./node_modules/@joint/core/joint.mjs"),
+      },
       // Force uuid to use CJS entry point
-      uuid: "uuid",
-      "@rappidcss": resolve(__dirname, "node_modules/@inmanta/rappid/joint-plus.css"),
-      // Only mock monaco-editor in test environment
+      { find: "uuid", replacement: "uuid" },
+      {
+        find: "@rappidcss",
+        replacement: resolve(__dirname, "node_modules/@joint/plus/joint-plus.css"),
+      },
+      // In tests, redirect ALL monaco-editor imports (including deep ESM subpaths like
+      // monaco-editor/esm/vs/base/common/uri.js) to the mock. A regex find is required
+      // because a string alias does a prefix replacement, turning subpath imports into
+      // non-existent paths like "__mocks__/monaco-editor.mjs/esm/vs/...".
       ...(process.env.NODE_ENV === "test"
-        ? {
-            "monaco-editor": resolve(__dirname, "__mocks__/monaco-editor.mjs"),
-          }
-        : {}),
-    },
+        ? [
+            {
+              find: /^monaco-editor(\/.*)?$/,
+              replacement: resolve(__dirname, "__mocks__/monaco-editor.mjs"),
+            },
+          ]
+        : []),
+    ],
+    // Ensure only one copy of each monaco package is loaded.
+    // @patternfly/react-code-editor nests its own @monaco-editor/loader@1.4.0
+    // (CDN default: monaco-editor@0.43.0). Without deduplication that loader gets
+    // its own module-level state, ignores our loader.config() call in index.tsx,
+    // and hits cdn.jsdelivr.net at runtime. Deduplicating forces all consumers to
+    // share the root instance so our config applies universally.
+    dedupe: ["monaco-editor", "@monaco-editor/loader", "@monaco-editor/react"],
   },
   server: {
     port: 9000,
@@ -167,7 +288,8 @@ export default defineConfig({
        * If we do not proxy both endpoints; we face cors issues.
        */
       "/api": {
-        target: process.env.VITE_API_BASEURL || "https://localhost:8888",
+        target:
+          process.env.VITE_API_BASEURL || process.env.PROXY_TARGET || "https://localhost:8888",
         changeOrigin: true,
         secure: false,
         protocolRewrite: PROTOCOL_REWRITE,
@@ -184,7 +306,8 @@ export default defineConfig({
         },
       },
       "/lsm": {
-        target: process.env.VITE_API_BASEURL || "https://localhost:8888",
+        target:
+          process.env.VITE_API_BASEURL || process.env.PROXY_TARGET || "https://localhost:8888",
         changeOrigin: true,
         secure: false,
         protocolRewrite: PROTOCOL_REWRITE,
@@ -215,7 +338,7 @@ export default defineConfig({
           // Try to get extension from the last element, or fallback to splitting baseName
           const ext = baseName.includes(".") ? baseName.split(".").pop() : "";
           // Handle CSS, images, and other assets
-          if (/(\.css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$/.test(baseName)) {
+          if (/(\.(css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))$/.test(baseName)) {
             return `${baseName}`;
           }
           return `${baseName}${ext ? "." + ext : ""}`;
@@ -232,11 +355,11 @@ export default defineConfig({
             "@patternfly/react-tokens",
           ],
           monaco: ["@monaco-editor/react", "monaco-editor"],
-          rappid: ["@inmanta/rappid"],
-          utils: ["lodash", "lodash-es", "uuid", "moment", "moment-timezone", "bignumber.js"],
+          jointjs: ["@joint/plus"],
+          utils: ["uuid", "moment", "moment-timezone", "bignumber.js"],
           graphql: ["graphql", "graphql-request"],
-          routing: ["react-router", "@remix-run/router"],
-          state: ["easy-peasy", "@tanstack/react-query"],
+          routing: ["react-router"],
+          state: ["@tanstack/react-query"],
         },
       },
     },
@@ -245,6 +368,8 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: ["./test-setup.ts"],
+    restoreMocks: true,
+    dir: "./src",
     coverage: {
       provider: "v8",
       enabled: process.env.CI ? true : false,
@@ -252,14 +377,7 @@ export default defineConfig({
         ["text", { summary: false }],
         ["cobertura", { file: "cobertura-coverage.xml" }],
       ],
-      exclude: [
-        "node_modules/",
-        "dist/",
-        "**/*.d.ts",
-        "**/*.config.*",
-        "**/__mocks__/**",
-        "cypress/**",
-      ],
+      exclude: ["node_modules/", "**/*.d.ts", "**/*.config.*", "**/__mocks__/**"],
       include: ["src/**/*"],
       maxThreads: process.env.CI ? 2 : 0,
     },
@@ -267,35 +385,42 @@ export default defineConfig({
       optimizer: {
         web: {
           include: [
-            "@inmanta/rappid",
+            "@joint/plus",
             "mermaid",
             "monaco-editor",
             "@monaco-editor/react",
             "graphql-request",
             "@patternfly/react-styles",
+            "graphiql",
+            "@graphiql/react",
           ],
         },
       },
     },
     resolve: {
-      alias: {
-        "@patternfly/react-log-viewer": resolve(
-          __dirname,
-          "__mocks__/@patternfly/react-log-viewer/index.js"
-        ),
-        "@patternfly/react-code-editor": resolve(
-          __dirname,
-          "__mocks__/@patternfly/react-code-editor.js"
-        ),
-        "monaco-editor": resolve(__dirname, "__mocks__/monaco-editor.mjs"),
-      },
+      alias: [
+        {
+          find: "@patternfly/react-log-viewer",
+          replacement: resolve(__dirname, "__mocks__/@patternfly/react-log-viewer/index.js"),
+        },
+        {
+          find: "@patternfly/react-code-editor",
+          replacement: resolve(__dirname, "__mocks__/@patternfly/react-code-editor.js"),
+        },
+        // Regex ensures ALL monaco-editor subpath imports (e.g. monaco-editor/esm/vs/...)
+        // resolve to the mock instead of being rewritten as broken paths.
+        {
+          find: /^monaco-editor(\/.*)?$/,
+          replacement: resolve(__dirname, "__mocks__/monaco-editor.mjs"),
+        },
+      ],
     },
     css: {
       modules: {
         classNameStrategy: "non-scoped",
       },
     },
-    maxThreads: process.env.CI ? 2 : undefined,
+    maxWorkers: process.env.CI ? 3 : undefined,
     cache: true,
   },
   optimizeDeps: {
@@ -306,15 +431,17 @@ export default defineConfig({
       "monaco-editor",
       "@monaco-editor/react",
       "mermaid",
-      "@inmanta/rappid",
+      "@joint/plus",
       "graphql-request",
       "@patternfly/react-styles",
+      "nullthrows",
+      "picomatch-browser",
     ],
-    exclude: ["@joint/core"],
+    exclude: ["@joint/core", "monaco-graphql"],
     force: true,
   },
   ssr: {
-    noExternal: ["monaco-editor", "@monaco-editor/react", "mermaid", "@inmanta/rappid"],
+    noExternal: ["monaco-editor", "@monaco-editor/react", "mermaid", "@joint/plus"],
   },
   worker: {
     format: "es",
@@ -326,5 +453,3 @@ export default defineConfig({
     target: "es2020",
   },
 } as UserConfig);
-
-/**eslint-disable */

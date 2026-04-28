@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Switch, Tooltip } from "@patternfly/react-core";
 import { usePauseAgent } from "@/Data/Queries";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
-import { GetAgentsContext } from "@S/Agents/UI/GetAgentsContext";
 
 interface Props {
   name: string;
@@ -21,10 +21,13 @@ interface Props {
  * @returns {React.FC<Props>} A React element rendering a toggle switch with a tooltip.
  */
 export const OnResumeToggle: React.FC<Props> = ({ name, unpauseOnResume }) => {
-  const { setErrorMessage } = useContext(GetAgentsContext);
+  const { notifyError } = useAppAlert();
   const { mutate } = usePauseAgent({
     onError: (error) => {
-      setErrorMessage(error.message);
+      notifyError({
+        title: words("agents.actions.failed"),
+        message: error.message,
+      });
     },
   });
 

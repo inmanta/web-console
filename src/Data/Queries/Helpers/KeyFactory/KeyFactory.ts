@@ -103,6 +103,7 @@ export enum SliceKeys {
   dryRun = "dry_run",
   environment = "environment",
   facts = "facts",
+  graphiql = "graphiql",
   notification = "notification",
   order = "order",
   parameters = "parameters",

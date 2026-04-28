@@ -1,5 +1,5 @@
-import { times, cloneDeep } from "lodash-es";
 import { FieldLikeWithFormState, InstanceAttributeModel } from "@/Core";
+import { cloneDeep, times } from "@/Core/Language/collection";
 import { tryParseJSON } from "../Components";
 
 /**

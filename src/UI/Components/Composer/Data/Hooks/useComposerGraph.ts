@@ -1,14 +1,10 @@
 import { useEffect, useMemo, useRef } from "react";
-import { dia, shapes, ui } from "@inmanta/rappid";
+import { dia, shapes, ui } from "@joint/plus";
 import { ServiceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Queries/Slices/ServiceInstance/GetInstanceWithRelations";
 import { ServiceEntityShape } from "../../UI";
 import { ComposerPaper } from "../../UI/JointJsShapes/ComposerPaper";
 import { updateAllMissingConnectionsHighlights } from "../../UI/JointJsShapes/createHalo";
-import {
-  ZOOM_TO_FIT_PADDING_EXISTING_INSTANCE,
-  ZOOM_TO_FIT_PADDING_NEW_INSTANCE,
-} from "../../config";
 import {
   RelationsDictionary,
   initializeCanvasFromInstance,
@@ -67,6 +63,7 @@ export const useComposerGraph = ({
     () => new ComposerPaper(graph, editable, relationsDictionary, serviceCatalog || []).paper,
     [graph, editable, relationsDictionary, serviceCatalog]
   );
+
   const scroller = useMemo(
     () =>
       new ui.PaperScroller({
@@ -130,7 +127,7 @@ export const useComposerGraph = ({
     if (instanceId) {
       const initialShapeInfo = new Map<string, { service_entity: string }>();
       initializedEntities.forEach((shape, id) => {
-        initialShapeInfo.set(id, { service_entity: shape.getEntityName() });
+        initialShapeInfo.set(id, { service_entity: shape.getEntityType() });
       });
       onInitialShapeInfoTracked(initialShapeInfo);
     } else {
@@ -160,19 +157,11 @@ export const useComposerGraph = ({
       paper.unfreeze();
     }
 
-    // Fit content to screen by default
-    // Use requestAnimationFrame to ensure paper is fully rendered before fitting
-    // Use a larger padding for new instances so a single item doesn't appear too large
-    requestAnimationFrame(() => {
-      const padding = instanceId
-        ? ZOOM_TO_FIT_PADDING_EXISTING_INSTANCE
-        : ZOOM_TO_FIT_PADDING_NEW_INSTANCE;
-      scroller.zoomToFit({ useModelGeometry: true, padding });
-    });
-
     // Update missing connections highlights after canvas is initialized
     // Use setTimeout to ensure paper is fully rendered
+    // that's also when we want to recenter the view on the content.
     setTimeout(() => {
+      scroller.centerContent();
       updateAllMissingConnectionsHighlights(paper);
     }, 100);
   }, [

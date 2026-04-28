@@ -12,6 +12,8 @@ export interface Props {
   backgroundColor: string;
   color?: string;
   onClick?(id: string): void;
+  height?: string;
+  isEmpty?: boolean;
 }
 
 /**
@@ -22,21 +24,38 @@ export interface Props {
  * @prop {number} value - The value of the item.
  * @prop {string} label - The label of the item.
  * @prop {string} backgroundColor - The background color of the item.
+ * @prop {string} color - The color of the item.
+ * @prop {string} height - Height of the legendItem.
+ * @prop {boolean} isEmpty - Whether the item is a placeholder with no data.
+ * @prop {() => void} onClick - The function to call when the item is clicked.
  */
-export const Item: React.FC<Props> = ({ value, label, backgroundColor, color, onClick, id }) => (
-  <Tooltip content={label} position="top" distance={4} enableFlip>
-    <Container
-      value={value}
-      data-value={value}
-      $backgroundColor={backgroundColor}
-      $color={color}
-      onClick={onClick ? () => onClick(id) : undefined}
-      aria-label={`LegendItem-${id}`}
-    >
-      {value}
-    </Container>
-  </Tooltip>
-);
+export const Item: React.FC<Props> = ({
+  value,
+  label,
+  backgroundColor,
+  color,
+  onClick,
+  id,
+  height = "36px",
+  isEmpty = false,
+}) => {
+  return (
+    <Tooltip content={label} position="top" distance={4} enableFlip>
+      <Container
+        value={value}
+        data-value={value}
+        $backgroundColor={backgroundColor}
+        $color={color}
+        $height={height}
+        $isEmpty={isEmpty}
+        onClick={onClick ? () => onClick(id) : undefined}
+        aria-label={`LegendItem-${id}`}
+      >
+        {value}
+      </Container>
+    </Tooltip>
+  );
+};
 
 /**
  * Styled container for the legend item.
@@ -45,22 +64,26 @@ export const Item: React.FC<Props> = ({ value, label, backgroundColor, color, on
  * @prop {number} value - The value of the item.
  * @prop {string} $backgroundColor - The background color of the item.
  * @prop {string} $color - The color of the item.
+ * @prop {string} $height - Height of the legendItem.
+ * @prop {boolean} $isEmpty - Whether the item is a placeholder with no data.
  * @prop {() => void} onClick - The function to call when the item is clicked.
  */
 export const Container = styled.div<{
   value: number;
   $backgroundColor: string;
   $color?: string;
+  $height?: string;
+  $isEmpty?: boolean;
   onClick?: () => void;
 }>`
   background-color: ${(p) => p.$backgroundColor};
   color: ${(p) => p.$color || "white"};
   flex-basis: auto;
-  flex-grow: ${(p) => p.value};
-  flex-shrink: ${(p) => p.value};
-  height: 36px;
+  flex-grow: ${(p) => (p.$isEmpty ? 1 : p.value)};
+  flex-shrink: ${(p) => (p.$isEmpty ? 1 : p.value)};
+  height: ${(p) => p.$height};
   text-align: center;
-  line-height: 36px;
+  line-height: ${(p) => p.$height};
   padding: 0 8px;
   cursor: ${(p) => (p.onClick ? "pointer" : "inherit")};
   user-select: none;

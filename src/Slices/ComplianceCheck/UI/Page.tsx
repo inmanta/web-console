@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Content, PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
 import { Diff } from "@/Core";
 import { DryRun, useGetDryRuns } from "@/Data/Queries";
-import { DiffWizard, ToastAlert } from "@/UI/Components";
+import { DiffWizard } from "@/UI/Components";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { SelectReportAction, TriggerDryRunAction } from "./Components";
@@ -44,20 +45,19 @@ interface Props {
 
 export const View: React.FC<Props> = ({ version }) => {
   const { data, isSuccess, isError, error } = useGetDryRuns().useContinuous(version);
-  const [errorMessage, setErrorMessage] = useState("");
   const [statuses, setStatuses] = useState(Diff.defaultStatuses);
   const [selectedReport, setSelectedReport] = useState<DryRun | null>(null);
   const [searchFilter, setSearchFilter] = useState("");
   const firstReport = useRef<DryRun | null>(null);
+  const { notifyError } = useAppAlert();
 
-  /**
-   * Setting the errorMessage when data failed
-   */
   useEffect(() => {
-    if (isError) {
-      setErrorMessage(error.message);
-    }
-  }, [isError, error?.message]);
+    if (isError)
+      notifyError({
+        title: words("desiredState.complianceCheck.failed"),
+        message: error?.message,
+      });
+  }, [isError, error?.message, notifyError]);
 
   /**
    * Setting the firstReport mutable ref when data changes
@@ -82,12 +82,6 @@ export const View: React.FC<Props> = ({ version }) => {
 
   return (
     <>
-      <ToastAlert
-        data-testid="ToastAlert"
-        title={words("desiredState.complianceCheck.failed")}
-        message={errorMessage}
-        setMessage={setErrorMessage}
-      />
       <PageSection>
         <Content>
           <Content component="h1">{words("desiredState.complianceCheck.title")}</Content>

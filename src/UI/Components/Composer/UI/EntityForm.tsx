@@ -1,12 +1,17 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Alert, FlexItem, Form } from "@patternfly/react-core";
-import { set } from "lodash";
+import { AlertVariant, FlexItem, Form } from "@patternfly/react-core";
 import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel } from "@/Core";
+import { set } from "@/Core/Language/collection";
 import { sanitizeAttributes } from "@/Data";
-import { CreateModifierHandler, FieldCreator } from "@/UI/Components/ServiceInstanceForm";
+import {
+  createFormState,
+  CreateModifierHandler,
+  FieldCreator,
+} from "@/UI/Components/ServiceInstanceForm";
 import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
 import { words } from "@/UI/words";
+import { AppAlert } from "../../AppAlert";
 import { ComposerContext } from "../Data/Context";
 import { ServiceEntityShape } from "./JointJsShapes/ServiceEntityShape";
 import { updateAllMissingConnectionsHighlights } from "./JointJsShapes/createHalo";
@@ -55,8 +60,6 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
     }
 
     //if multi is true, it means the field is a multi-select field and we need to update the array of values
-    let updatedValue = {};
-
     if (multi) {
       setFormState((prev) => {
         const clone = { ...prev };
@@ -69,17 +72,17 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
           selection.push(value as string);
         }
 
-        updatedValue = set(clone, path, selection);
+        set(clone, path, selection);
 
-        return updatedValue;
+        return clone;
       });
     } else {
       setFormState((prev) => {
         const clone = { ...prev };
 
-        updatedValue = set(clone, path, value);
+        set(clone, path, value);
 
-        return updatedValue;
+        return clone;
       });
     }
   };
@@ -104,11 +107,13 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
     const selectedFields = fieldCreator.attributesToFields(serviceModel.attributes || []);
 
     setFields(selectedFields.map((field) => ({ ...field, id: uuidv4() })));
-    // Always update formState with the new cell's attributes
-    setFormState(instanceAttributes);
-    setOriginalState(instanceAttributes);
+    // Merge defaults under actual attributes so fields missing from the shape
+    // (e.g. placeholder/newly-loaded instances) still show their default values.
+    const mergedAttributes = { ...createFormState(selectedFields), ...instanceAttributes };
+    setFormState(mergedAttributes);
+    setOriginalState(mergedAttributes);
     setIsDirty(false);
-    setCurrentCellId(activeCell.id);
+    setCurrentCellId(String(activeCell.id));
   }, [activeCell]);
 
   /**
@@ -141,7 +146,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
         // Update canvas state to trigger validation checks in Composer.tsx
         setCanvasState((prev) => {
           const updated = new Map(prev);
-          updated.set(activeCell.id, activeCell);
+          updated.set(String(activeCell.id), activeCell);
           return updated;
         });
 
@@ -156,24 +161,28 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
 
   // Re-initialize when activeCell changes (detected by ID change)
   useEffect(() => {
-    if (activeCell.id !== currentCellId) {
+    if (String(activeCell.id) !== currentCellId) {
       createFieldsAndState();
     }
   }, [activeCell.id, currentCellId, createFieldsAndState]);
 
-  // Auto-save when formState changes (similar to old implementation)
+  // Auto-save when formState changes, but only when the active cell matches the
+  // initialized cell. This guards against a race where onSave already captures
+  // the new activeCell while formState/isDirty still hold the previous cell's values.
   useEffect(() => {
-    if (isDirty && formState) {
+    if (isDirty && formState && currentCellId === String(activeCell.id)) {
       onSave(formState);
     }
-  }, [formState, isDirty, onSave]);
+  }, [formState, isDirty, onSave, currentCellId, activeCell.id]);
 
   return (
     <>
       {fields && fields.length <= 0 && (
-        <FlexItem>
-          <Alert variant="info" isInline title={words("instanceComposer.formModal.noAttributes")} />
-        </FlexItem>
+        <AppAlert
+          title={words("instanceComposer.formModal.noAttributes")}
+          variant={AlertVariant.info}
+          isInline
+        />
       )}
       <FlexItem flex={{ default: "flex_1" }}>
         <Form
@@ -186,7 +195,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
             fields.map((field) => (
               <FieldInput
                 originalState={originalState}
-                key={field.name}
+                key={field.id}
                 field={{
                   ...field,
                   isDisabled: isDisabled || field.isDisabled,

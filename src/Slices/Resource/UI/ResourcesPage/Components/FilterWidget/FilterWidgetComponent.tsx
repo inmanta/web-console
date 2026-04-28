@@ -157,6 +157,8 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
                   onAddType={handleAddType}
                   onAddValue={handleAddValue}
                   onAddAgent={handleAddAgent}
+                  onChangeStatus={handleStatusChange}
+                  filter={filter}
                 />
               </Tab>
               <Tab

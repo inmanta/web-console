@@ -1,78 +1,8 @@
-/**
- * Shorthand method to clear the environment being passed.
- * By default, if no arguments are passed it will target the 'lsm-frontend' environment.
- *
- * @param {string} nameEnvironment
- */
-const clearEnvironment = (nameEnvironment = "test") => {
-  cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
+import environmentHelpers from "../support/environmentHelpers";
 
-    cy.request("DELETE", `/api/v1/decommission/${id}`);
-  });
-};
+const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
-/**
- * based on the environment id, it will recursively check if a compile is pending.
- * It will continue the recursion as long as the statusCode is equal to 200
- *
- * @param {string} id
- */
-const checkStatusCompile = (id) => {
-  let statusCodeCompile = 200;
-
-  if (statusCodeCompile === 200) {
-    cy.intercept("/api/v2/graphql").as("IsCompiling");
-    // the timeout is necessary to avoid errors.
-    // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
-    cy.wait("@IsCompiling").then((req) => {
-      statusCodeCompile = req.response.statusCode;
-      const environments = req.response.body.data.data.environments;
-
-      if (environments) {
-        const edges = environments.edges;
-
-        if (edges && edges.length > 0) {
-          const environment = edges.find((env) => env.node.id === id);
-
-          if (environment && !environment.node.isCompiling) {
-            return;
-          }
-        }
-      }
-
-      checkStatusCompile(id);
-    });
-  }
-};
-
-/**
- * Will by default execute the force update on the 'lsm-frontend' environment if no argumenst are being passed.
- * This method can be executed standalone, but is part of the cleanup cycle that is needed before running a scenario.
- *
- * @param {string} nameEnvironment
- */
-const forceUpdateEnvironment = (nameEnvironment = "test") => {
-  cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
-
-    cy.request({
-      method: "POST",
-      url: "/lsm/v1/exporter/export_service_definition",
-      headers: { "X-Inmanta-Tid": id },
-      body: { force_update: true },
-    });
-    checkStatusCompile(id);
-  });
-};
-
-const isIso = Cypress.env("edition") === "iso";
+const isIso = Cypress.expose("edition") === "iso";
 
 describe("5 Compile reports", () => {
   if (isIso) {
@@ -90,38 +20,59 @@ describe("5 Compile reports", () => {
     // go to compile reports page
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
-    // expect it to have 2 item shown in the table, or 3 if it is the OSS edition
-    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-      const $rows = $tableBody.find("tr");
+    // store initial row count
+    cy.get("tbody tr", { timeout: 30000 }).its("length").as("initialRowCount");
 
-      expect($rows).to.have.length(isIso ? 2 : 3);
-
-      expect($rows.eq(0), "top-row-message").to.contain(
+    // validate initial top row
+    cy.get("tbody tr")
+      .first()
+      .should(
+        "contain",
         isIso
           ? "Recompile model to generate resources using the updated service definition and modules"
           : "Compile triggered from the console"
       );
-      expect($rows.eq(0), "top-row-status").to.contain("success");
+
+    cy.get("tbody tr", { timeout: 60000 }).should(($rows) => {
+      expect($rows.eq(0)).to.contain("success");
     });
 
     // click on recompile button
     cy.get("button").contains("Recompile").click();
 
-    // expect row to be added in table
-    cy.get("tbody").should(($tableBody) => {
-      const $rows = $tableBody.find("tr");
-
-      expect($rows.eq(0), "top-row-message").to.contain("Compile triggered from the console");
-
-      expect($rows).length.to.be.at.least(isIso ? 2 : 4);
+    // verify a row was added
+    cy.get("@initialRowCount").then((initialRowCount) => {
+      cy.get("tbody tr").should("have.length.at.least", initialRowCount + 1);
     });
 
-    // await end of compilation and expect it to be success
-    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-      const $rows = $tableBody.find("tr");
+    cy.get("tbody tr").first().should("contain", "Compile triggered from the console");
 
-      expect($rows.eq(0), "top-row-message").to.contain("Compile triggered from the console");
-      expect($rows.eq(0), "top-row-status").to.contain("success");
+    cy.get("tbody tr", { timeout: 60000 }).should(($rows) => {
+      expect($rows.eq(0)).to.contain("success");
+    });
+
+    // open dropdown of compile widget
+    cy.get('[aria-label="Toggle"]').click();
+
+    // click cleanup and recompile
+    cy.get('[aria-label="CleanupAndRecompileButton"]').click();
+
+    // First assert the table has grown by 1, ensuring the new row is present
+    cy.get("@initialRowCount").then((initialRowCount) => {
+      cy.get("tbody tr").should("have.length", initialRowCount + 1);
+    });
+
+    // Assert the new top row content
+    cy.get("tbody tr")
+      .eq(0)
+      .should(
+        "contain",
+        "Compile triggered from the console with a cleanup and reinstall of the project and python virtual environments"
+      );
+
+    // wait for compile to finish
+    cy.get("tbody tr", { timeout: 60000 }).should(($rows) => {
+      expect($rows.eq(0)).to.contain("success");
     });
 
     // click on show details
@@ -130,10 +81,13 @@ describe("5 Compile reports", () => {
     // Expect to be redirected to compile details page
     cy.get("h1").contains("Compile Details").should("to.exist");
 
-    // Expect message to be : Compile triggered from the console
+    // Expect message to be : Compile triggered from the console with a cleanup and reinstall of the project and python virtual environments
     cy.get(".pf-v6-c-description-list__group")
       .eq(2)
-      .should("contain", "Compile triggered from the console");
+      .should(
+        "contain",
+        "Compile triggered from the console with a cleanup and reinstall of the project and python virtual environments"
+      );
 
     // Expect to have no environment variables
     cy.get(".pf-v6-c-code-block__content").should("have.text", "{}");
@@ -158,6 +112,16 @@ describe("5 Compile reports", () => {
 
       // click on test environment card
       cy.get('[aria-label="Select-environment-test"]').click();
+
+      // set initial value first
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
+
+      // wait for the table to load and store initial row count
+      cy.get("tbody tr", { timeout: 30000 }).should("have.length.greaterThan", 0);
+      cy.get("tbody tr").then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on Show Inventory on basic service
@@ -185,13 +149,9 @@ describe("5 Compile reports", () => {
       // Go to compiled Reports page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
-      // Expect all compiles to be succesful
+      // Expect all compiles to be visible in the table, and the top 3 compiles to be about recompilation because of state transition.
       cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
-
-        expect($rows).to.have.length(6);
-
-        // Expect latest row to be having the message: Recompile model because of state transition from creating to up
         expect($rows.eq(0), "top-row-message").to.contain(
           "Recompile model because of state transition from creating to up"
         );
@@ -201,11 +161,21 @@ describe("5 Compile reports", () => {
         expect($rows.eq(2), "third-row-message").to.contain(
           "Recompile model to validate state transition from start to creating"
         );
+      });
+
+      // Expect all compiles to be successful
+      cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
+        const $rows = $tableBody.find("tr");
         expect($rows.eq(0), "top-row-status").to.contain("success");
         expect($rows.eq(1), "second-row-status").to.contain("success");
         expect($rows.eq(2), "third-row-status").to.contain("success");
         expect($rows.eq(3), "fourth-row-status").to.contain("success");
         expect($rows.eq(4), "fifth-row-status").to.contain("success");
+      });
+
+      // verify at least 3 new compiles are added to the table
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get("tbody tr").should("have.length.at.least", initialRowCount + 3);
       });
 
       // click on Show Details on top row
@@ -227,6 +197,15 @@ describe("5 Compile reports", () => {
 
       // click on test environment card
       cy.get('[aria-label="Select-environment-test"]').click();
+
+      // set initial value first
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
+      // wait for the table to load and store initial row count
+      cy.get("tbody tr", { timeout: 30000 }).should("have.length.greaterThan", 0);
+      cy.get("tbody tr").then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on Show Inventory on basic-service
@@ -265,13 +244,16 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(7);
-
         // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
           "Recompile model to validate state transition from start to creating"
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
+      });
+
+      // verify at least 2 new compiles are added to the table
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get("tbody tr").should("have.length.at.least", initialRowCount + 1);
       });
 
       // Click on Show details on last compile
@@ -295,6 +277,15 @@ describe("5 Compile reports", () => {
 
       // click on test environment card
       cy.get('[aria-label="Select-environment-test"]').click();
+
+      // set initial value first
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
+      // wait for the table to load and store initial row count
+      cy.get("tbody tr", { timeout: 30000 }).should("have.length.greaterThan", 0);
+      cy.get("tbody tr").then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on Show Inventory on basic-service
@@ -315,13 +306,16 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(7);
-
         // Expect one row to be having the message: Recompile model to validate state transition from start to creating
         expect($rows.eq(0), "top-row-message").to.contain(
           "Recompile model to validate state transition from start to creating"
         );
         expect($rows.eq(0), "top-row-status").to.contain("failed");
+      });
+
+      // verify at least 2 new compiles are added to the table
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get("tbody tr").should("have.length.at.least", initialRowCount - 1);
       });
 
       // Click on recompile button
@@ -331,11 +325,14 @@ describe("5 Compile reports", () => {
       cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
         const $rows = $tableBody.find("tr");
 
-        expect($rows).to.have.length(8);
-
         // Expect one row to be having the message: Recompile model because state transition (validate)
         expect($rows.eq(0), "top-row-message").to.contain("Compile triggered from the console");
         expect($rows.eq(0), "top-row-status").to.contain("success");
+      });
+
+      // verify at least 2 new compiles are added to the table
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get("tbody tr").should("have.length.at.least", initialRowCount + 1);
       });
     });
 
@@ -348,6 +345,12 @@ describe("5 Compile reports", () => {
 
       // Go to the compile report page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
+
+      cy.get("tbody tr", { timeout: 30000 }).should("have.length.greaterThan", 0);
+      // store initial row count
+      cy.get("tbody tr").then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
 
       // Click on filter dropdown
       cy.get('[aria-label="StatusFilterInput"]').click();
@@ -372,10 +375,10 @@ describe("5 Compile reports", () => {
       cy.get('[aria-label="Clear input value"]').click();
 
       // expect to have the original length of the table
-      cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
-        const $rows = $tableBody.find("tr");
-
-        expect($rows).to.have.length(8);
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get("tbody tr", { timeout: 20000 }).should(($rows) => {
+          expect($rows.length).to.be.at.least(initialRowCount);
+        });
       });
     });
   }

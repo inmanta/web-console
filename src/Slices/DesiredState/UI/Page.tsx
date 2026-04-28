@@ -1,11 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ParsedNumber } from "@/Core";
-import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import { usePaginatedTable } from "@/Data";
 import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Queries";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
 import {
-  ToastAlert,
   PageContainer,
   ConfirmUserActionForm,
   EmptyView,
@@ -13,6 +11,7 @@ import {
   ErrorView,
   PaginationWidget,
 } from "@/UI/Components";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { DesiredStateVersionStatus } from "../Core/Domain";
@@ -29,26 +28,20 @@ import { CompareSelection } from "./Utils";
 export const Page: React.FC = () => {
   const { triggerModal, closeModal } = useContext(ModalContext);
   const deleteVersion = useDeleteDesiredStateVersion();
+  const { notifyError } = useAppAlert();
 
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "DesiredState",
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "DesiredState",
-  });
-  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
-    default: {
-      status: [
-        DesiredStateVersionStatus.active,
-        DesiredStateVersionStatus.candidate,
-        DesiredStateVersionStatus.retired,
-      ],
-    },
-    route: "DesiredState",
-    keys: { date: "DateRange", version: "IntRange" },
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter } =
+    usePaginatedTable<Filter>({
+      route: "DesiredState",
+      defaultFilter: {
+        status: [
+          DesiredStateVersionStatus.active,
+          DesiredStateVersionStatus.candidate,
+          DesiredStateVersionStatus.retired,
+        ],
+      },
+      filterKeys: { date: "DateRange", version: "IntRange" },
+    });
 
   const [compareSelection, setCompareSelection] = useState<CompareSelection>({
     kind: "None",
@@ -85,10 +78,12 @@ export const Page: React.FC = () => {
   };
 
   useEffect(() => {
-    if (deleteVersion.isError) {
-      setErrorMessage(deleteVersion.error.message);
-    }
-  }, [deleteVersion.isError, deleteVersion.error]);
+    if (deleteVersion.isError)
+      notifyError({
+        title: words("desiredState.actions.promote.failed"),
+        message: deleteVersion.error.message,
+      });
+  }, [deleteVersion.isError, deleteVersion?.error?.message, notifyError]);
 
   if (isError) {
     return (
@@ -110,7 +105,6 @@ export const Page: React.FC = () => {
             filter,
             pageSize,
             currentPage,
-            setErrorMessage,
             compareSelection,
             setCompareSelection,
             setDeleteModal,
@@ -127,12 +121,6 @@ export const Page: React.FC = () => {
                 setCurrentPage={setCurrentPage}
               />
             }
-          />
-          <ToastAlert
-            data-testid="ToastAlert"
-            title={words("desiredState.actions.promote.failed")}
-            message={errorMessage}
-            setMessage={setErrorMessage}
           />
           {data.data.length <= 0 ? (
             <EmptyView

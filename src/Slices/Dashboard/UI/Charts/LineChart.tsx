@@ -18,6 +18,28 @@ import { LineChartProps } from "../../Core/Domain";
 import { interpolateMetrics } from "../helper";
 import { colorTheme } from "../themes";
 
+// Note: Container order is important
+const CursorVoronoiContainer = createContainer("voronoi", "voronoi");
+
+const formatValueForChart = (value: null | number) => {
+  if (value === null) {
+    return null;
+  }
+
+  return value % 1 === 0 ? value : Math.round(value * 1000) / 1000;
+};
+
+const chooseWhichLabelToUse = (datum, isStacked: boolean) => {
+  if (
+    (isStacked && !datum.childName.includes("scatter-")) ||
+    (!isStacked && datum.childName.includes("scatter-"))
+  ) {
+    return `${datum.y !== null ? datum.y : "no data"}`;
+  } else {
+    return null;
+  }
+};
+
 export const LineChart: React.FC<LineChartProps> = ({
   title,
   label,
@@ -29,26 +51,6 @@ export const LineChart: React.FC<LineChartProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(0);
-
-  // Note: Container order is important
-  const CursorVoronoiContainer = createContainer("voronoi", "voronoi");
-  const formatValueForChart = (value: null | number) => {
-    if (value === null) {
-      return null;
-    }
-
-    return value % 1 === 0 ? value : Math.round(value * 1000) / 1000;
-  };
-  const chooseWhichLabelToUse = (datum) => {
-    if (
-      (isStacked && !datum.childName.includes("scatter-")) ||
-      (!isStacked && datum.childName.includes("scatter-"))
-    ) {
-      return `${datum.y !== null ? datum.y : "no data"}`;
-    } else {
-      return null;
-    }
-  };
 
   useEffect(() => {
     function handleResize() {
@@ -73,7 +75,7 @@ export const LineChart: React.FC<LineChartProps> = ({
         ariaTitle={title}
         containerComponent={
           <CursorVoronoiContainer
-            labels={({ datum }) => chooseWhichLabelToUse(datum)}
+            labels={({ datum }) => chooseWhichLabelToUse(datum, isStacked)}
             labelComponent={
               <ChartLegendTooltip
                 legendData={legendData}

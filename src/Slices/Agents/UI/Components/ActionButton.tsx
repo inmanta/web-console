@@ -3,7 +3,7 @@ import { Button } from "@patternfly/react-core";
 import { usePauseAgent } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
 import { ActionDisabledTooltip } from "@/UI/Components";
-import { GetAgentsContext } from "@S/Agents/UI/GetAgentsContext";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 
 interface Props {
   name: string;
@@ -23,10 +23,13 @@ interface Props {
  */
 export const ActionButton: React.FC<Props> = ({ name, paused }) => {
   const { environmentHandler } = useContext(DependencyContext);
-  const { setErrorMessage } = useContext(GetAgentsContext);
+  const { notifyError } = useAppAlert();
   const { mutate } = usePauseAgent({
     onError: (error) => {
-      setErrorMessage(error.message);
+      notifyError({
+        title: words("agents.actions.failed"),
+        message: error.message,
+      });
     },
   });
   const onSubmit = async () => {

@@ -1,4 +1,4 @@
-import { shapes } from "@inmanta/rappid";
+import { shapes } from "@joint/plus";
 import {
   t_global_background_color_primary_default,
   t_global_border_color_200,
@@ -15,10 +15,14 @@ export interface SidebarItemOptions extends ServiceEntityBase {
 }
 
 export const createSidebarItem = (options: SidebarItemOptions) => {
-  const defaultName =
+  const typeName =
     "type" in options.serviceModel && options.serviceModel.type
       ? options.serviceModel.type
-      : options.serviceModel.name;
+      : undefined;
+  const serviceName = options.serviceModel.name;
+
+  const defaultName =
+    typeName && serviceName ? `${typeName} - ${serviceName}` : typeName || serviceName;
 
   const name = options.label || defaultName;
 

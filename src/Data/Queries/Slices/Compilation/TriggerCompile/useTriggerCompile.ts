@@ -1,5 +1,6 @@
 import { UseBaseMutationResult, useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { usePostWithoutEnv } from "@/Data/Queries";
+import { words } from "@/UI";
 
 interface Body {
   update: boolean;
@@ -7,11 +8,13 @@ interface Body {
     type: string;
     message: string;
   };
+  reinstall: boolean;
 }
 
 interface Params {
   env: string;
   update: boolean;
+  reinstall: boolean;
 }
 
 /**
@@ -26,13 +29,14 @@ export const useTriggerCompile = (
   const post = usePostWithoutEnv()<Body>;
 
   return useMutation({
-    mutationFn: ({ env, update }) =>
+    mutationFn: ({ env, update, reinstall }) =>
       post(`/api/v1/notify/${env}`, {
         update,
         metadata: {
           type: "console",
-          message: "Compile triggered from the console",
+          message: words("compileReports.columns.messageValue")(update, reinstall),
         },
+        reinstall,
       }),
     mutationKey: ["trigger_compile"],
     ...options,

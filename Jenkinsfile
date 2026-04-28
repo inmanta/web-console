@@ -13,7 +13,7 @@ pipeline {
     }
     environment {
         GITLAB_TOKEN = credentials('jenkins_on_gitlab')
-        CLOUDSMITH_TOKEN = credentials('cloudsmith-token')
+        JOINTJS_NPM_TOKEN = credentials('jointjs-npm-token')
     }
 
     stages {
@@ -41,7 +41,8 @@ pipeline {
                             yarn format:check;
                             yarn tsc;
                             yarn check-circular-deps;
-                            node --max-old-space-size=6144 ./node_modules/.bin/vite build;
+                            yarn build:ci;
+                            yarn check-no-cdn;
                             yarn test:ci'''
                         }
                     }
@@ -50,7 +51,7 @@ pipeline {
                     steps {
                         timeout(time: 20, unit: 'MINUTES') {
                             dir('web-console') {
-                                sh '''node --max-old-space-size=6144 ./node_modules/.bin/vite build;
+                                sh '''yarn build:ci;
                                 sudo systemctl restart docker && sudo docker network prune -f;
                                 yarn run install:orchestrator:ci;
                                 yarn run cypress-test:iso;'''
@@ -71,6 +72,8 @@ pipeline {
                     junit 'web-console/cypress/reports/junit/*.xml'
                     recordCoverage(tools: [[parser: 'COBERTURA']], sourceCodeRetention: 'NEVER')
                     archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**, coverage/**, test-results.txt', allowEmptyArchive: true, onlyIfSuccessful: false
+                }
+                cleanup {
                     deleteDir()
                 }
             }

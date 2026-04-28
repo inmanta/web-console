@@ -1,0 +1,11 @@
+description: |
+  Composer now shows entity Type and Name in canvas shape headers,
+  matching sidebar labels.
+  It also includes nested embedded entity inter-service relations when
+  building service order payloads.
+  Related Composer tests were updated to align with the current shape
+  APIs and validation output.
+  Multiple inter-service-relations who share the same Type but not name; are also supported now.
+issue-nr: "6726"
+change-type: patch
+destination-branches: [master, iso9]

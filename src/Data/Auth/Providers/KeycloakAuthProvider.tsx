@@ -74,7 +74,12 @@ interface Props {
 }
 
 /**
- * KeycloakAuthProvider component provides authentication functionality using Keycloak.
+ * Keycloak-specific auth provider using keycloak-js with implicit flow.
+ *
+ * @deprecated This provider is kept for backwards compatibility with existing
+ * Keycloak deployments that use implicit flow (response_type "token"). New
+ * deployments should use OidcAuthProvider (method: "oidc-generic") which
+ * supports authorization code flow with PKCE via oidc-client-ts.
  */
 export const KeycloakAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
   children,

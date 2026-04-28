@@ -8,7 +8,6 @@ interface GetAgentsProvider {
   sort: Sort.Type;
   pageSize: PageSize.Type;
   currentPage: CurrentPage;
-  setErrorMessage: (message: string) => void;
 }
 
 export const GetAgentsContext = createContext<GetAgentsProvider>({
@@ -16,7 +15,4 @@ export const GetAgentsContext = createContext<GetAgentsProvider>({
   sort: { name: "name", order: "asc" },
   pageSize: PageSize.initial,
   currentPage: initialCurrentPage,
-  setErrorMessage: () => {
-    throw Error("Method not implemented");
-  },
 });

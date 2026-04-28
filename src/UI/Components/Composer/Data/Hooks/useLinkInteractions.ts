@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { ServiceModel } from "@/Core";
 import { ServiceEntityShape } from "../../UI";
 import { updateAllMissingConnectionsHighlights } from "../../UI/JointJsShapes/createHalo";
@@ -55,8 +55,8 @@ export const useLinkInteractions = ({
     ) => {
       setCanvasState((prev) => {
         const updated = new Map(prev);
-        updated.set(sourceShape.id, sourceShape);
-        updated.set(targetShape.id, targetShape);
+        updated.set(String(sourceShape.id), sourceShape);
+        updated.set(String(targetShape.id), targetShape);
         return updated;
       });
     };
@@ -155,7 +155,7 @@ export const useLinkInteractions = ({
       } else if (isServiceEntityShapeCell(cell)) {
         const removedShape = cell as ServiceEntityShape;
         const removedShapeId = removedShape.id as string;
-        const removedEntityType = removedShape.getEntityName();
+        const removedEntityType = removedShape.getEntityType();
 
         // Find all connected shapes using the removed shape's connections map
         // (This is more reliable than using graph.getLinks() since links may already be removed)
@@ -184,7 +184,7 @@ export const useLinkInteractions = ({
 
           // Update all connected shapes in canvas state
           for (const connectedShape of connectedShapes) {
-            newState.set(connectedShape.id, connectedShape);
+            newState.set(String(connectedShape.id), connectedShape);
           }
 
           return newState;

@@ -1,6 +1,5 @@
 import React, { FormEvent, useCallback, useContext, useEffect, useState } from "react";
 import {
-  Alert,
   DropdownGroup,
   DropdownItem,
   Form,
@@ -13,10 +12,11 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { uniqueId } from "lodash";
 import { ParsedNumber } from "@/Core";
 import { usePostExpertStateTransfer } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
+import { AppAlert } from "@/UI/Components";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
 interface Props {
@@ -27,7 +27,6 @@ interface Props {
   version: ParsedNumber;
   onClose: () => void;
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 /**
@@ -52,7 +51,6 @@ export const ExpertStateTransfer: React.FC<Props> = ({
   version,
   onClose,
   setInterfaceBlocked,
-  setErrorMessage,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
 
@@ -74,7 +72,6 @@ export const ExpertStateTransfer: React.FC<Props> = ({
           instance_display_identity={instance_display_identity}
           version={version}
           value={value}
-          setErrorMessage={setErrorMessage}
           closeModalCallback={closeModalCallback}
         />
       ),
@@ -96,7 +93,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
     <>
       <DropdownGroup label={words("instanceDetails.forceState.label")}>
         {targets.map((target) => (
-          <DropdownItem isDanger onClick={() => onStateSelect(target)} key={uniqueId(target)}>
+          <DropdownItem isDanger onClick={() => onStateSelect(target)} key={target}>
             {target}
           </DropdownItem>
         ))}
@@ -112,7 +109,6 @@ interface ModalContentProps {
   instance_display_identity: string;
   value: string;
   version: ParsedNumber;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   closeModalCallback: () => void;
 }
 
@@ -126,7 +122,6 @@ interface ModalContentProps {
  *  @prop {string} instance_display_identity - the display value of the instance Id
  *  @prop {string} value - the value of the state to be set
  *  @prop {ParsedNumber} version - the current version of the instance
- *  @prop {function} setErrorMessage - callback method to set the error message
  *
  * @returns {React.FC<ModalContentProps>} A React Component displaying the Modal Content
  */
@@ -137,11 +132,10 @@ const ModalContent: React.FC<ModalContentProps> = ({
   instance_display_identity,
   value,
   version,
-  setErrorMessage,
   closeModalCallback,
 }) => {
   const { authHelper } = useContext(DependencyContext);
-
+  const { notifyError } = useAppAlert();
   const username = authHelper.getUser();
   const message = words("instanceDetails.API.message.update")(username);
 
@@ -180,14 +174,16 @@ const ModalContent: React.FC<ModalContentProps> = ({
   };
 
   useEffect(() => {
-    if (isError) {
-      setErrorMessage(error.message);
-    }
+    if (isError)
+      notifyError({
+        title: error.message,
+        testId: "error-toast-actions-error-message",
+      });
 
     if (isSuccess) {
       closeModalCallback();
     }
-  }, [isError, isSuccess, error, closeModalCallback, setErrorMessage]);
+  }, [isError, isSuccess, error, closeModalCallback, notifyError]);
 
   return (
     <>
@@ -206,7 +202,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
         </FormGroup>
       </Form>
       <br />
-      <Alert variant="danger" title={words("instanceDetails.expert.confirm.warning")} isInline />
+      <AppAlert title={words("instanceDetails.expert.confirm.warning")} isInline />
       <br />
       <Flex>
         <FlexItem>

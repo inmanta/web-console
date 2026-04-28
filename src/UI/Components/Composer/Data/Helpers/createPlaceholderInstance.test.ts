@@ -66,7 +66,7 @@ describe("createPlaceholderInstance", () => {
     expect(result.instance.id).toBe(customId);
   });
 
-  it("should initialize all attributes with null", () => {
+  it("should initialize all attributes with empty object", () => {
     const serviceModel = createMockServiceModel("TestService", [
       {
         name: "name",
@@ -99,11 +99,7 @@ describe("createPlaceholderInstance", () => {
 
     const result = createPlaceholderInstance(serviceModel);
 
-    expect(result.instance.candidate_attributes).toEqual({
-      name: null,
-      description: null,
-      port: null,
-    });
+    expect(result.instance.candidate_attributes).toEqual({});
   });
 
   it("should set active_attributes to null", () => {

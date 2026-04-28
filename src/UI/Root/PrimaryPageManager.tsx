@@ -27,6 +27,7 @@ import { DuplicateInstancePage } from "@S/DuplicateInstance/UI";
 import { EditInstancePage } from "@S/EditInstance/UI";
 import { EventsPage } from "@S/Events/UI";
 import { FactsPage } from "@S/Facts/UI";
+import { GraphiQLPage } from "@S/GraphiQL/UI";
 import { HomePage } from "@S/Home/UI";
 import { NotificationCenterPage } from "@S/Notification/UI/Center";
 import { ParametersPage } from "@S/Parameters/UI";
@@ -46,6 +47,7 @@ export class PrimaryPageManager implements PageManager {
        * Main
        */
       Home: { ...this.routeDictionary.Home, element: <HomePage /> },
+      GraphiQL: { ...this.routeDictionary.GraphiQL, element: <GraphiQLPage /> },
       CreateEnvironment: {
         ...this.routeDictionary.CreateEnvironment,
         element: <CreateEnvironmentPage />,

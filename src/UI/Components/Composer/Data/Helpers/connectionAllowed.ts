@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { isServiceEntityShapeCell } from "./getEntitiesFromCanvas";
 import { RelationsDictionary } from ".";
 
@@ -32,11 +32,34 @@ export const checkIfConnectionIsAllowed = (
     return false;
   }
 
+  const safeEntityType = (model: { getEntityType?: () => string; getEntityName: () => string }) => {
+    try {
+      if (typeof model.getEntityType === "function") {
+        return model.getEntityType();
+      }
+    } catch {
+      // Fallback for lightweight test doubles that don't carry full model internals
+    }
+    return model.getEntityName();
+  };
+
+  const sourceType = safeEntityType(sourceModel);
   const sourceName = sourceModel.getEntityName();
+  const targetType = safeEntityType(targetModel);
   const targetName = targetModel.getEntityName();
 
-  const sourceRelations = relationsDictionary[sourceName];
-  const targetRelations = relationsDictionary[targetName];
+  const hasRelations = (type: string, name: string): boolean => {
+    if (relationsDictionary[type] || relationsDictionary[name]) {
+      return true;
+    }
+
+    return Object.keys(relationsDictionary).some(
+      (key) => key.toLowerCase() === type.toLowerCase() || key.toLowerCase() === name.toLowerCase()
+    );
+  };
+
+  const sourceRelations = hasRelations(sourceType, sourceName);
+  const targetRelations = hasRelations(targetType, targetName);
 
   if (!sourceRelations && !targetRelations) {
     return false;

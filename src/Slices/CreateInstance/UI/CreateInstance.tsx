@@ -5,11 +5,11 @@ import { usePostInstance } from "@/Data/Queries/";
 import {
   CreateModifierHandler,
   Description,
-  ToastAlert,
   FieldCreator,
   ServiceInstanceForm,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -29,11 +29,11 @@ interface Props {
  */
 export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
   const { environmentHandler, routeManager } = useContext(DependencyContext);
+  const { notifyError } = useAppAlert();
   const [isDirty, setIsDirty] = useState(false);
   const fieldCreator = new FieldCreator(new CreateModifierHandler());
   const fields = fieldCreator.create(serviceEntity);
   const location = useLocation();
-  const [errorMessage, setErrorMessage] = useState("");
   const isHalted = environmentHandler.useIsHalted();
   const navigate = useNavigate();
   const url = routeManager.useUrl("Inventory", {
@@ -45,7 +45,10 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
   const { mutate } = usePostInstance(serviceEntity.name, {
     onError: (error) => {
       setIsDirty(true);
-      setErrorMessage(error.message);
+      notifyError({
+        title: words("inventory.addInstance.failed"),
+        message: error.message,
+      });
     },
     onSuccess: ({ data }) => {
       const newUrl = routeManager.getUrl("InstanceDetails", {
@@ -60,23 +63,16 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
 
   const onSubmit = async (
     attributes: InstanceAttributeModel,
-    setIsDirty: (values: boolean) => void
+    setIsDirty: (values: boolean) => void,
+    initialState?: string
   ) => {
     //as setState used in setIsDirty doesn't change immediately we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
     setIsDirty(false);
-    mutate({ fields, attributes });
+    mutate({ fields, attributes, initial_state: initialState });
   };
 
   return (
     <>
-      {errorMessage && (
-        <ToastAlert
-          data-testid="ToastAlert"
-          title={words("inventory.addInstance.failed")}
-          message={errorMessage}
-          setMessage={setErrorMessage}
-        />
-      )}
       <Description withSpace>
         {words("inventory.addInstance.title")(serviceEntity.name)}
       </Description>
@@ -88,6 +84,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
         isSubmitDisabled={isHalted}
         isDirty={isDirty}
         setIsDirty={setIsDirty}
+        initialStates={serviceEntity.lifecycle.alternative_initial_states}
       />
     </>
   );

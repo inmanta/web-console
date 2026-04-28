@@ -87,11 +87,8 @@ describe("DesiredStateCompare", () => {
 
     await userEvent.click(button);
 
-    expect(
-      screen.getByRole("menu", {
-        name: "DiffSummaryList",
-      })
-    ).toBeVisible();
+    const menu = await screen.findByRole("menu", { name: "DiffSummaryList" });
+    expect(menu).toBeVisible();
     const items = screen.getAllByRole("menuitem", {
       name: "DiffSummaryListItem",
     });
