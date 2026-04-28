@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 //It's a JointJS file that is hard to test with Jest due to the fact that JointJS base itself on native browser functions that aren't supported by Jest environement
 
-import { dia, g, routers } from "@inmanta/rappid";
+import { dia, g, routers } from "@joint/plus";
 import { DEFAULT_PADDING } from "../config";
 
 /**

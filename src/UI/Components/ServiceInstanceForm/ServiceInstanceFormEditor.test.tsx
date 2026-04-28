@@ -27,12 +27,14 @@ import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
+import type { Mock } from "vitest";
 
 const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
-  func: undefined | ReturnType<typeof vi.fn> = undefined,
+  func: undefined | Mock = undefined,
   isEdit = false,
-  originalAttributes: InstanceAttributeModel | undefined = undefined
+  originalAttributes: InstanceAttributeModel | undefined = undefined,
+  initialStates: string[] = []
 ) => {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -45,12 +47,13 @@ const setup = (
                 <ServiceInstanceForm
                   fields={fields}
                   onCancel={vi.fn()}
-                  onSubmit={func ? func : vi.fn()}
+                  onSubmit={func ?? (vi.fn() as Mock)}
                   isEdit={isEdit}
                   originalAttributes={originalAttributes}
                   service_entity="service_entity"
                   isDirty={false}
                   setIsDirty={vi.fn()}
+                  initialStates={initialStates}
                 />
               }
             />

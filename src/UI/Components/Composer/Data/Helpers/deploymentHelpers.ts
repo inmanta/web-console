@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { v4 as uuidv4 } from "uuid";
 import { InstanceAttributeModel } from "@/Core";
 import { ServiceOrderItemAction } from "@/Slices/Orders/Core/Types";
@@ -68,7 +68,7 @@ export const canvasStateToServiceOrderItems = (
   // Collect orderItems from current shapes
   canvasState.forEach((shape) => {
     if (shape.orderItem) {
-      serviceOrderItems.set(shape.id, shape.orderItem);
+      serviceOrderItems.set(String(shape.id), shape.orderItem);
     }
   });
 

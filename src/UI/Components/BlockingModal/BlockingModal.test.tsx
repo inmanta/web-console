@@ -1,52 +1,54 @@
 import { act } from "react";
 import { render, screen } from "@testing-library/react";
 import { configureAxe } from "jest-axe";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { BlockingModal } from "./BlockingModal";
 
 const axe = configureAxe({
   rules: {
-    // disable landmark rules when testing isolated components.
     region: { enabled: false },
+    "aria-dialog-name": { enabled: false },
   },
 });
 
+const Component = () => (
+  <ModalProvider>
+    <BlockingModal />
+  </ModalProvider>
+);
+
 test("Given BlockingModal WHEN firing corresponding events THEN Modal will appear and disappear", async () => {
-  render(<BlockingModal />);
+  render(<Component />);
+
+  expect(screen.queryByTestId("blocking-modal-message")).not.toBeInTheDocument();
 
   act(() => {
     document.dispatchEvent(new CustomEvent("halt-event"));
   });
-  const modalHalt = screen.getByLabelText("halting-blocker");
-  const textHalt = screen.getByText(words("environment.halt.process"));
-
-  expect(modalHalt).toBeVisible();
-  expect(textHalt).toBeVisible();
+  expect(screen.getByTestId("blocking-modal-message")).toHaveTextContent(
+    words("environment.halt.process")
+  );
 
   await act(async () => {
     const results = await axe(document.body);
-
     expect(results).toHaveNoViolations();
   });
 
   act(() => {
     document.dispatchEvent(new CustomEvent("close-blocking-modal"));
   });
-  expect(modalHalt).not.toBeVisible();
-  expect(textHalt).not.toBeVisible();
+  expect(screen.queryByTestId("blocking-modal-message")).not.toBeInTheDocument();
 
   act(() => {
     document.dispatchEvent(new CustomEvent("resume-event"));
   });
-  const modal = screen.getByLabelText("halting-blocker");
-  const text = screen.getByText(words("environment.resume.process"));
-
-  expect(modal).toBeVisible();
-  expect(text).toBeVisible();
+  expect(screen.getByTestId("blocking-modal-message")).toHaveTextContent(
+    words("environment.resume.process")
+  );
 
   act(() => {
     document.dispatchEvent(new CustomEvent("close-blocking-modal"));
   });
-  expect(modal).not.toBeVisible();
-  expect(text).not.toBeVisible();
+  expect(screen.queryByTestId("blocking-modal-message")).not.toBeInTheDocument();
 });

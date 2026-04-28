@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @types/react from 19.2.10 to 19.2.13
+destination-branches:
+- master
+- iso9
+sections: {}

@@ -64,6 +64,7 @@ const dict = {
   "error.environment.missing": "Environment is missing",
   "error.server.intro": (errorMessage: string) =>
     `The following error occured while communicating with the server: ${errorMessage}`,
+  "error.authentication": (message: string) => `Authentication error: ${message}`,
   "error.authorizationFailed": "Authorization failed, please log in",
   "error.fetch": (error: string) => `There was an error retrieving data: ${error}`,
   "error.image.title": "Invalid image",
@@ -152,6 +153,7 @@ const dict = {
   "inventory.createInstance.title": "Create instance",
   "inventory.createInstance.items": (amount: number) =>
     amount === 1 ? "1 item" : `${amount} items`,
+  "inventory.form.withInitialState": "With initial state",
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
   "inventory.duplicateInstance.button": "Duplicate",
@@ -497,6 +499,11 @@ const dict = {
   "dashboard.logout": "Logout",
   "dashboard.documentation.tooltip": "Documentation",
   "dashboard.API.tooltip": "REST API",
+  "dashboard.graphiql.tooltip": "GraphiQL",
+  "graphiql.title": "GraphiQL",
+  "dashboard.apiActions.tooltip": "Developer Tools",
+  "dashboard.apiActions.graphiql": "GraphiQL",
+  "dashboard.apiActions.restApi": "REST API / Swagger",
   "dashboard.setting.tooltip": "Settings",
   "dashboard.status_page.tooltip": "Status page",
   "dashboard.notifications.tooltip": "Show notifications",
@@ -526,6 +533,10 @@ const dict = {
    * Latest released resource view
    */
   "resources.empty.message": "No resources found",
+  "resources.empty.filterMessage":
+    "The given combination of filters didn't match any existing resources, please edit your filter values.",
+  "resources.deploying.popover": (count: number) =>
+    `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying`,
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "discoveredResourceDetails.title": "Discovered Resource Details",
@@ -534,8 +545,21 @@ const dict = {
   "resources.column.agent": "Agent",
   "resources.column.value": "Value",
   "resources.column.requires": "Requires",
-  "resources.column.deployState": "Deploy State",
-  "resources.filters.status.placeholder": "Deploy State...",
+  "resources.column.status": "Status",
+  "resources.button.statusDetails": "Show status details",
+  "resources.popover.title": "Resource State Summary",
+  "resources.popover.deploying": "Deploying",
+  "resources.popover.lastDeployed": "Last deployed: ",
+  "resources.popover.orphan": "Orphan",
+  "resources.popover.requirement": "Requirement",
+  "resources.popover.requirements": "Requirements",
+  "resources.filters.status.isDeploying": "Is Deploying",
+  "resources.filters.status.blocked.label": "Blocked state(s)",
+  "resources.filters.status.blocked.placeholder": "Filter by blocked state",
+  "resources.filters.status.compliance.label": "Compliance state(s)",
+  "resources.filters.status.compliance.placeholder": "Filter by compliance state",
+  "resources.filters.status.lastHandlerRun.label": "Handler run state(s)",
+  "resources.filters.status.lastHandlerRun.placeholder": "Filter by handler run state",
   "resources.filters.agent.placeholder": "Agent...",
   "resources.filters.value.placeholder": "Value...",
   "resources.filters.type.placeholder": "Type...",
@@ -549,14 +573,21 @@ const dict = {
   "resources.filters.resource.value.label": "Value",
   "resources.filters.resource.value.placeholder": "Value...",
   "resources.filters.resource.agent.label": "Agent(s)",
-  "resources.filters.resource.agent.placeholder": "Agent...",
-  "resources.filters.status.section.title": "Deploy State",
+  "resources.filters.resource.agent.placeholder": "Select Agent(s)",
+  "resources.filters.resource.agent.selectInfoLabel": "Use text input",
+  "resources.filters.resource.agent.textInfoLabel": "Use select input",
+  "resources.filters.resource.agent.loading": "Loading agents...",
+  "resources.filters.desiredState.sectionTitle": "Desired State",
+  "resources.filters.desiredState.purged": "Purged",
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.clearAll": "Clear all",
   "resources.filters.active.empty.title": "No filters applied",
   "resources.filters.active.empty.body":
     "Select filters from the tabs above to refine your results.",
+  "resources.filters.active.empty.body.noTabs":
+    "Use the fields above to add filters and refine your results.",
   "resources.filters.active.group.close": (group: string) => `Remove ${group} filters`,
+  "resources.filters": "Filters",
   "resources.deploySummary.title": "Deployment state summary",
   "resources.deploySummary.deploy": "Deploy",
   "resources.deploySummary.repair": "Repair",
@@ -595,7 +626,6 @@ const dict = {
     "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
   "resources.file.get": "Get file",
   "resources.file.error": "Error fetching file content",
-  "resources.filters": "Filters",
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",
@@ -620,6 +650,12 @@ const dict = {
   "compileReports.columns.compileTime": "Compile Time",
   "compileReports.columns.actions": "Actions",
   "compileReports.columns.inProgress": "In Progress",
+  "compileReports.columns.messageValue": (update: boolean, reinstall: boolean) =>
+    update
+      ? "Compile triggered from the console with an update to the project configuration"
+      : reinstall
+        ? "Compile triggered from the console with a cleanup and reinstall of the project and python virtual environments"
+        : "Compile triggered from the console",
   "compileReports.links.details": "Show Details",
   "compileReports.filters.status.placeholder": "Select compile status...",
   "compileReports.filters.result.placeholder": "Select result...",
@@ -734,7 +770,11 @@ const dict = {
   "status.description":
     "The status of the orchestration server, loaded extensions and active components.",
   "status.supportArchive.action.download": "Download support archive",
+  "status.supportArchive.action.download.error": "Failed to download support archive",
+
   "status.supportArchive.action.downloading": "Fetching support data",
+  "status.supportArchive.action.downloading.error":
+    "Something went wrong with downloading the support archive",
 
   /** Agents */
   "agents.title": "Agents",
@@ -865,10 +905,11 @@ const dict = {
     `Select instances of ${serviceEntity}`,
   "common.environment.select": "Select an environment",
   "common.compileWidget.recompile": "Recompile",
-  "common.compileWidget.toast": (update: boolean) =>
-    `${update ? "Update and " : ""}Recompile triggered`,
+  "common.compileWidget.toast": (update: boolean, reinstall) =>
+    `${update ? "Update and " : reinstall ? "Cleanup and " : ""}Recompile triggered`,
   "common.compileWidget.toastTitle": "Recompile Info",
   "common.compileWidget.updateAndRecompile": "Update project & recompile",
+  "common.compileWidget.cleanupAndRecompile": "Cleanup project & recompile",
   "common.compileWidget.compiling": "Compiling",
   "common.compileWidget.compilationDisabled.hint":
     "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",
@@ -918,6 +959,22 @@ const dict = {
   "markdownPreviewer.download.tooltip": "Download markdown file",
   "markdownPreviewer.route.label": (instance: string) => `Markdown Preview: ${instance}`,
   "markdownPreviewer.download": "Download",
+
+  /**
+   * Markdown Container related text
+   */
+  "markdownContainer.setState.error.invalidConfigArray":
+    "⚠ Invalid configuration: expected object, got array",
+  "markdownContainer.setState.error.invalidConfig": "⚠ Invalid configuration: expected object",
+  "markdownContainer.setState.error.missingTargetState":
+    "⚠ Missing configuration: provide 'targetState'",
+  "markdownContainer.setState.error.cannotParseJson":
+    "⚠ Invalid configuration: Can't parse JSON object",
+  "markdownContainer.download.svg": "↓ SVG",
+  "markdownContainer.download.svg.title": "Download as SVG",
+  "markdownContainer.download.png": "↓ PNG",
+  "markdownContainer.download.png.title": "Download as PNG",
+  "markdownContainer.error.mermaid.title": "Error rendering Mermaid diagram:",
 
   /**
    * LogViewer related text

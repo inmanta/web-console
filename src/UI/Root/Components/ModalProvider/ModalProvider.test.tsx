@@ -1,15 +1,9 @@
-import React from "react";
 import { useContext } from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ModalContext, ModalProvider } from "./ModalProvider";
+import { ModalContext, ModalProvider, Params } from "./ModalProvider";
 
-/**
- * `MockedModalUser` is a React functional component that renders a button that imitates the flow for the Modal Provider.
- *
- * @returns {React.FC} A button that triggers a modal when clicked.
- */
-const MockedModalUser = () => {
+const MockedModalUser = ({ overrides = {} }: { overrides?: Partial<Params> }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
 
   return (
@@ -24,6 +18,7 @@ const MockedModalUser = () => {
               </button>
             </div>
           ),
+          ...overrides,
         })
       }
     >
@@ -32,57 +27,134 @@ const MockedModalUser = () => {
   );
 };
 
-const setup = () => {
-  return (
+const setup = (overrides: Partial<Params> = {}) =>
+  render(
     <ModalProvider>
-      <MockedModalUser />
+      <MockedModalUser overrides={overrides} />
     </ModalProvider>
   );
-};
 
 describe("ModalProvider", () => {
-  it("should intialize single empty div when closed", () => {
-    render(setup());
-    expect(document.querySelector("div")).toBeDefined();
+  describe("Initial state", () => {
+    it("does not render the modal on mount", () => {
+      setup();
+      expect(screen.queryByTestId("GlobalModal")).toBeNull();
+    });
+
+    it("renders children correctly", () => {
+      setup();
+      expect(screen.getByText("Click me")).toBeVisible();
+    });
   });
 
-  it("should open a model with correct content when triggerModal is triggered and close it when cancel navigation is triggered", async () => {
-    render(setup());
+  describe("triggerModal", () => {
+    it("opens the modal with title and content", async () => {
+      setup();
 
-    expect(screen.getByText("Click me")).toBeVisible();
+      await userEvent.click(screen.getByText("Click me"));
 
-    await userEvent.click(screen.getByText("Click me"));
+      expect(screen.getByTestId("GlobalModal")).toBeVisible();
+      expect(screen.getByTestId("content")).toBeVisible();
+      expect(screen.getByText("Title")).toBeVisible();
+    });
 
-    expect(screen.getByTestId("GlobalModal")).toBeVisible();
-    expect(screen.getByTestId("content")).toBeVisible();
-    expect(screen.getByText("Title")).toBeVisible();
+    it("renders a custom description when provided", async () => {
+      setup({ description: <p data-testid="modal-description">My description</p> });
 
-    expect(screen.getByLabelText("Close")).toBeVisible();
+      await userEvent.click(screen.getByText("Click me"));
 
-    await userEvent.click(screen.getByLabelText("Close"));
+      expect(screen.getByTestId("modal-description")).toBeVisible();
+    });
 
-    expect(screen.queryByTestId("GlobalModal")).toBeNull();
-    expect(screen.queryByTestId("content")).toBeNull();
-    expect(screen.queryByText("Title")).toBeNull();
+    it("renders footer actions when provided", async () => {
+      setup({ actions: <button data-testid="confirm-btn">Confirm</button> });
+
+      await userEvent.click(screen.getByText("Click me"));
+
+      expect(screen.getByTestId("confirm-btn")).toBeVisible();
+    });
+
+    it("does not render a footer when no actions are provided", async () => {
+      setup({ actions: null });
+
+      await userEvent.click(screen.getByText("Click me"));
+
+      expect(screen.queryByRole("contentinfo")).toBeNull();
+    });
+
+    it("uses custom ariaLabel and dataTestId when provided", async () => {
+      setup({ ariaLabel: "custom-aria", dataTestId: "custom-test-id" });
+
+      await userEvent.click(screen.getByText("Click me"));
+
+      expect(screen.getByTestId("custom-test-id")).toBeVisible();
+    });
   });
 
-  it("should close modal when button with closeModal function from provider is triggered", async () => {
-    render(setup());
+  describe("closeModal", () => {
+    it("closes the modal and calls cancelCb via the built-in close button", async () => {
+      const cancelCb = vi.fn();
+      setup({ cancelCb });
 
-    expect(screen.getByText("Click me")).toBeVisible();
+      await userEvent.click(screen.getByText("Click me"));
+      expect(screen.getByTestId("GlobalModal")).toBeVisible();
 
-    await userEvent.click(screen.getByText("Click me"));
+      await userEvent.click(screen.getByLabelText("Close"));
 
-    expect(screen.getByTestId("GlobalModal")).toBeVisible();
-    expect(screen.getByTestId("content")).toBeVisible();
-    expect(screen.getByText("Title")).toBeVisible();
+      expect(screen.queryByTestId("GlobalModal")).toBeNull();
+      expect(cancelCb).toHaveBeenCalledTimes(1);
+    });
 
-    expect(screen.getByLabelText("additionalCloseButton")).toBeVisible();
+    it("closes the modal and calls cancelCb via a consumer-provided close button", async () => {
+      const cancelCb = vi.fn();
+      setup({ cancelCb });
 
-    await userEvent.click(screen.getByLabelText("additionalCloseButton"));
+      await userEvent.click(screen.getByText("Click me"));
+      expect(screen.getByTestId("GlobalModal")).toBeVisible();
 
-    expect(screen.queryByTestId("GlobalModal")).toBeNull();
-    expect(screen.queryByTestId("content")).toBeNull();
-    expect(screen.queryByText("Title")).toBeNull();
+      await userEvent.click(screen.getByLabelText("additionalCloseButton"));
+
+      expect(screen.queryByTestId("GlobalModal")).toBeNull();
+      expect(cancelCb).toHaveBeenCalledTimes(1);
+    });
+
+    it("re-opens cleanly after being closed", async () => {
+      setup();
+
+      await userEvent.click(screen.getByText("Click me"));
+      expect(screen.getByTestId("GlobalModal")).toBeVisible();
+
+      await userEvent.click(screen.getByLabelText("Close"));
+      expect(screen.queryByTestId("GlobalModal")).toBeNull();
+
+      await userEvent.click(screen.getByText("Click me"));
+      expect(screen.getByTestId("GlobalModal")).toBeVisible();
+    });
+
+    it("does not throw when no cancelCb is provided", async () => {
+      setup();
+
+      await userEvent.click(screen.getByText("Click me"));
+
+      await expect(userEvent.click(screen.getByLabelText("Close"))).resolves.not.toThrow();
+    });
+  });
+
+  describe("showClose prop", () => {
+    it("hides the built-in close button when showClose is false", async () => {
+      setup({ showClose: false });
+
+      await userEvent.click(screen.getByText("Click me"));
+
+      expect(screen.queryByLabelText("Close")).toBeNull();
+    });
+
+    it("shows the built-in close button by default", async () => {
+      setup();
+
+      await userEvent.click(screen.getByText("Click me"));
+
+      expect(screen.getByLabelText("Close")).toBeVisible();
+    });
   });
 });

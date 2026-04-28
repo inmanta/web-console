@@ -1,7 +1,8 @@
 import React from "react";
-import { Alert, Button } from "@patternfly/react-core";
+import { Button } from "@patternfly/react-core";
 import { useGetServiceModel } from "@/Data/Queries";
 import { words } from "@/UI/words";
+import { AppAlert } from "../../AppAlert";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
 interface Props {
@@ -46,14 +47,11 @@ export const RelatedServiceProvider: React.FC<Props> = ({
 
   if (isError) {
     return (
-      <Alert variant="danger" isInline title={words("inventory.service.failed")}>
-        {error.message}
-        <div>
-          <Button variant="link" isInline onClick={() => refetch()}>
-            {words("retry")}
-          </Button>
-        </div>
-      </Alert>
+      <AppAlert title={words("inventory.service.failed")} message={error?.message} isInline>
+        <Button variant="link" isInline onClick={() => refetch()}>
+          {words("retry")}
+        </Button>
+      </AppAlert>
     );
   }
 

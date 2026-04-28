@@ -1,5 +1,7 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { words } from "@/UI/words";
 import { MarkdownContainer } from "./MarkdownContainer";
+import type { Mock } from "vitest";
 
 // Mock the theme function
 vi.mock("../DarkmodeOption", () => ({
@@ -16,6 +18,7 @@ describe("MarkdownContainer", () => {
     expect(screen.getByText("Heading")).toBeInTheDocument();
     expect(screen.getByText("This is some bold text.")).toBeInTheDocument();
   });
+
   it("renders the Markdown content containing script tags safely", () => {
     const markdownContent = "`<script>alert('hello');</script>`";
     const webTitle = "Container_id";
@@ -48,9 +51,11 @@ describe("MarkdownContainer", () => {
   });
 
   it("renders the Markdown content with Mermaid diagrams correctly", async () => {
-    // Import mermaid mock and set up run method
     const mermaidMock = await import("mermaid");
-    mermaidMock.default.run = vi.fn().mockResolvedValue(undefined);
+    mermaidMock.default.run = vi.fn().mockImplementation(({ nodes }: { nodes: HTMLElement[] }) => {
+      nodes[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg"></svg>';
+      return Promise.resolve();
+    });
 
     const markdownContent = "```mermaid\ngraph LR\n    A --> B\n    B --> C\n```";
     const webTitle = "Container_id";
@@ -142,5 +147,167 @@ describe("MarkdownContainer", () => {
       },
       { timeout: 2000 }
     );
+  });
+
+  it("invokes onSetStateClick when a state transfer button is clicked", async () => {
+    const markdownContent =
+      '```setState\n{"displayText":"Apply state","targetState":"desired-state"}\n```';
+    const webTitle = "Container_id";
+    const handleSetStateClick = vi.fn();
+
+    render(
+      <MarkdownContainer
+        text={markdownContent}
+        web_title={webTitle}
+        onSetStateClick={handleSetStateClick}
+      />
+    );
+
+    const button = await screen.findByRole("button", { name: "Apply state" });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(handleSetStateClick).toHaveBeenCalledWith({
+        content: '{"displayText":"Apply state","targetState":"desired-state"}',
+        targetState: "desired-state",
+      });
+    });
+  });
+
+  describe("Mermaid download toolbar", () => {
+    // Minimal SVG that mermaid would normally inject into a rendered block.
+    const SVG_MARKUP =
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100"/></svg>';
+
+    const MERMAID_MD = "```mermaid\ngraph LR\n  A --> B\n```";
+
+    beforeEach(() => {
+      // jsdom does not implement these Blob URL helpers, so provide stubs.
+      global.URL.createObjectURL = vi.fn().mockReturnValue("blob:mock-url");
+      global.URL.revokeObjectURL = vi.fn();
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+      vi.unstubAllGlobals();
+    });
+
+    it("adds SVG and PNG download buttons to a successfully rendered diagram", async () => {
+      const mermaidMock = await import("mermaid");
+
+      mermaidMock.default.run = vi
+        .fn()
+        .mockImplementation(({ nodes }: { nodes: HTMLElement[] }) => {
+          nodes[0].innerHTML = SVG_MARKUP;
+          return Promise.resolve();
+        });
+
+      render(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
+
+      await waitFor(() => expect(document.querySelector(".mermaid-toolbar")).toBeInTheDocument(), {
+        timeout: 2000,
+      });
+
+      expect(screen.getByTitle(words("markdownContainer.download.svg.title"))).toBeInTheDocument();
+      expect(screen.getByTitle(words("markdownContainer.download.png.title"))).toBeInTheDocument();
+    });
+
+    it("does not add duplicate toolbars when re-rendered with the same text", async () => {
+      const mermaidMock = await import("mermaid");
+
+      mermaidMock.default.run = vi
+        .fn()
+        .mockImplementation(({ nodes }: { nodes: HTMLElement[] }) => {
+          nodes[0].innerHTML = SVG_MARKUP;
+          return Promise.resolve();
+        });
+
+      const { rerender } = render(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
+
+      await waitFor(() => expect(document.querySelector(".mermaid-toolbar")).toBeInTheDocument(), {
+        timeout: 2000,
+      });
+
+      rerender(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
+
+      // Give re-render time to settle, then assert exactly one toolbar.
+      await waitFor(() => expect(document.querySelectorAll(".mermaid-toolbar")).toHaveLength(1), {
+        timeout: 2000,
+      });
+    });
+
+    it("triggers an SVG file download when the SVG button is clicked", async () => {
+      const mermaidMock = await import("mermaid");
+
+      mermaidMock.default.run = vi
+        .fn()
+        .mockImplementation(({ nodes }: { nodes: HTMLElement[] }) => {
+          nodes[0].innerHTML = SVG_MARKUP;
+          return Promise.resolve();
+        });
+
+      const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+
+      render(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
+
+      const svgDownloadButton = await screen.findByTitle(
+        words("markdownContainer.download.svg.title"),
+        {},
+        { timeout: 2000 }
+      );
+
+      fireEvent.click(svgDownloadButton);
+
+      expect(URL.createObjectURL).toHaveBeenCalledWith(
+        expect.objectContaining({ type: "image/svg+xml" })
+      );
+
+      expect(clickSpy).toHaveBeenCalled();
+    });
+
+    it("triggers a PNG file download when the PNG button is clicked", async () => {
+      const mermaidMock = await import("mermaid");
+
+      mermaidMock.default.run = vi
+        .fn()
+        .mockImplementation(({ nodes }: { nodes: HTMLElement[] }) => {
+          nodes[0].innerHTML = SVG_MARKUP;
+          return Promise.resolve();
+        });
+
+      const mockCtx = { scale: vi.fn() as Mock, drawImage: vi.fn() as Mock };
+      (vi.spyOn(HTMLCanvasElement.prototype, "getContext") as Mock).mockReturnValue(mockCtx);
+      vi.spyOn(HTMLCanvasElement.prototype, "toDataURL").mockReturnValue(
+        "data:image/png;base64,mock"
+      );
+      const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+
+      // Replace Image so we can fire onload synchronously after src is set.
+      // Must be a regular function (not an arrow function) because arrow functions
+      // cannot be used as constructors with `new`.
+      const mockImage = { onload: null as ((e: Event) => void) | null, src: "" };
+
+      vi.stubGlobal("Image", function () {
+        return mockImage;
+      });
+
+      render(<MarkdownContainer text={MERMAID_MD} web_title="test" />);
+
+      const pngDownloadButton = await screen.findByTitle(
+        words("markdownContainer.download.png.title"),
+        {},
+        { timeout: 2000 }
+      );
+
+      fireEvent.click(pngDownloadButton);
+
+      // The PNG pipeline is gated on the Image load event; fire it manually.
+      // src is now a data: URL (not a blob: URL) to avoid canvas taint errors.
+      expect(mockImage.src).toMatch(/^data:image\/svg\+xml/);
+      mockImage.onload?.(new Event("load"));
+
+      expect(mockCtx.drawImage).toHaveBeenCalled();
+      expect(clickSpy).toHaveBeenCalled();
+    });
   });
 });

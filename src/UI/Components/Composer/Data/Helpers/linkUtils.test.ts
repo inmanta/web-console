@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { LinkShape } from "../../UI/JointJsShapes/LinkShape";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 import { defineObjectsForJointJS } from "../../testSetup";
@@ -8,17 +8,6 @@ import {
   removeConnectionsBetweenShapes,
 } from "./linkUtils";
 
-// Mock LinkShape
-vi.mock("../../UI/JointJsShapes/LinkShape", () => ({
-  LinkShape: vi.fn().mockImplementation(() => ({
-    source: vi.fn().mockReturnThis(),
-    target: vi.fn().mockReturnThis(),
-    router: vi.fn().mockReturnThis(),
-    connector: vi.fn().mockReturnThis(),
-    set: vi.fn().mockReturnThis(),
-  })),
-}));
-
 describe("linkUtils", () => {
   beforeAll(() => {
     defineObjectsForJointJS();
@@ -27,6 +16,7 @@ describe("linkUtils", () => {
   const createMockShape = (id: string, entityName: string): ServiceEntityShape => {
     return {
       id,
+      getEntityType: vi.fn().mockReturnValue(entityName),
       getEntityName: vi.fn().mockReturnValue(entityName),
       addConnection: vi.fn(),
       removeConnection: vi.fn(),
@@ -61,7 +51,7 @@ describe("linkUtils", () => {
 
       createLinkShape(sourceShape, targetShape);
 
-      expect(targetShape.getEntityName).toHaveBeenCalled();
+      expect(targetShape.getEntityType).toHaveBeenCalled();
     });
 
     it("should apply paper options when provided", () => {

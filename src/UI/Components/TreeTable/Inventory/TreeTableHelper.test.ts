@@ -1,6 +1,7 @@
 import { PathHelper, TreeExpansionManager } from "@/UI/Components/TreeTable/Helpers";
 import { InventoryAttributeHelper } from "./AttributeHelper";
 import { InventoryTreeTableHelper } from "./TreeTableHelper";
+import type { Mock } from "vitest";
 //mock is to avoid TypeError - Temporary workaround - to be removed - https://github.com/inmanta/web-console/issues/6194
 vi.mock("@/Data/Queries/Slices/ServiceInstance");
 
@@ -92,7 +93,7 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
     }
   );
   // Act
-  const cb = vi.fn;
+  const cb = vi.fn() as Mock;
   const { rows } = treeTableHelper.createRows({ deallocation_ctx: false }, cb);
   // Assert
   const expectedRows = [

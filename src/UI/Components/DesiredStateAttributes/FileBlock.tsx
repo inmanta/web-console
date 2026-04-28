@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { CodeEditor } from "@patternfly/react-code-editor";
-import { Alert, AlertActionCloseButton, Button, Spinner } from "@patternfly/react-core";
+import { Button, Spinner } from "@patternfly/react-core";
 import { DownloadIcon } from "@patternfly/react-icons";
 import { useGetFile } from "@/Data/Queries";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { Delayed } from "@/UI/Utils";
 import { words } from "@/UI/words";
+import { AppAlert } from "../AppAlert";
 
 interface Props {
   hash: string;
@@ -47,14 +48,12 @@ export const FileBlock: React.FC<Props> = ({ hash }) => {
     return (
       <>
         {copyAndButton}
-        <Alert
-          variant="danger"
-          isInline
+        <AppAlert
           title={words("resources.file.error")}
-          actionClose={<AlertActionCloseButton onClose={close} />}
-        >
-          {errorMessage}
-        </Alert>
+          message={errorMessage}
+          onClose={close}
+          isInline
+        />
       </>
     );
   }

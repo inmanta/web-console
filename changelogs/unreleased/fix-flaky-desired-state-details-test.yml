@@ -1,0 +1,3 @@
+description: Fix flaky DesiredStateDetails empty state test by using waitFor instead of findByRole
+change-type: patch
+destination-branches: [master, iso9]

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { dia, ui } from "@inmanta/rappid";
+import { dia, ui } from "@joint/plus";
 import { InstanceAttributeModel } from "@/Core";
 import { ServiceModel } from "@/Core";
 import { words } from "@/UI/words";

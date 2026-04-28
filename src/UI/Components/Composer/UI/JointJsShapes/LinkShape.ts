@@ -1,4 +1,4 @@
-import { dia, shapes, g } from "@inmanta/rappid";
+import { dia, shapes, g } from "@joint/plus";
 
 interface LinkAttributeContext {
   model: dia.Link;
@@ -7,8 +7,8 @@ interface LinkAttributeContext {
 interface LabelLinkView extends dia.LinkView {
   sourceView: dia.CellView;
   targetView: dia.CellView;
-  sourcePoint: g.Rect;
-  targetPoint: g.Rect;
+  sourcePoint: g.Point;
+  targetPoint: g.Point;
 }
 
 /**

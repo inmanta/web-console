@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { ServiceModel, ServiceInstanceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Queries/Slices/ServiceInstance/GetInstanceWithRelations";
 import { defineObjectsForJointJS } from "../../testSetup";

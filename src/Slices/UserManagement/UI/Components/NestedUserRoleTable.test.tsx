@@ -6,6 +6,7 @@ import { within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { UserInfo } from "@/Data/Queries";
+import { AppAlertProvider } from "@/UI/Root/Components/AppAlertProvider";
 import { NestedUserRoleTable } from "./NestedUserRoleTable";
 
 const mockEnvironments = [
@@ -25,7 +26,11 @@ const mockUser: UserInfo = {
 
 function renderWithClient(ui: React.ReactElement) {
   const queryClient = new QueryClient();
-  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <AppAlertProvider>{ui}</AppAlertProvider>
+    </QueryClientProvider>
+  );
 }
 
 // Test wrapper to simulate parent state update
@@ -34,22 +39,24 @@ function TestWrapper({ initialUser }: { initialUser: UserInfo }) {
   return (
     <Page>
       <QueryClientProvider client={new QueryClient()}>
-        <NestedUserRoleTable {...user} />
-        {/* Expose a way to update user state for the test */}
-        <button
-          data-testid="simulate-parent-update"
-          onClick={() => {
-            setUser((prev) => ({
-              ...prev,
-              roles: {
-                ...prev.roles,
-                env1: prev.roles.env1.includes("admin")
-                  ? prev.roles.env1.filter((role) => role !== "admin")
-                  : [...prev.roles.env1, "admin"],
-              },
-            }));
-          }}
-        />
+        <AppAlertProvider>
+          <NestedUserRoleTable {...user} />
+          {/* Expose a way to update user state for the test */}
+          <button
+            data-testid="simulate-parent-update"
+            onClick={() => {
+              setUser((prev) => ({
+                ...prev,
+                roles: {
+                  ...prev.roles,
+                  env1: prev.roles.env1.includes("admin")
+                    ? prev.roles.env1.filter((role) => role !== "admin")
+                    : [...prev.roles.env1, "admin"],
+                },
+              }));
+            }}
+          />
+        </AppAlertProvider>
       </QueryClientProvider>
     </Page>
   );
@@ -164,7 +171,7 @@ describe("NestedUserRoleTable (with MSW)", () => {
     const checkbox = within(adminMenuItem).getByRole("checkbox");
     fireEvent.click(checkbox);
 
-    const errorMessage = await screen.findByLabelText("error-message");
+    const errorMessage = await screen.findByTestId("error-message");
 
     expect(errorMessage).toBeInTheDocument();
     expect(errorMessage).toHaveTextContent("Invalid request");

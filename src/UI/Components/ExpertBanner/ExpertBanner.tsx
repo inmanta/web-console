@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Banner, Button, Flex, Spinner } from "@patternfly/react-core";
 import { useUpdateEnvironmentSetting } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
+import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
-import { ToastAlert } from "../ToastAlert";
 
 /**
  * A React component that displays a banner when the expert mode is enabled.
@@ -15,10 +15,13 @@ export const ExpertBanner: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);
   const [isLoading, setIsLoading] = useState(false);
   const expertModeEnabled = environmentHandler.useIsExpertModeEnabled();
-  const [errorMessage, setMessage] = useState<string | undefined>(undefined);
+  const { notifyError } = useAppAlert();
   const { mutate } = useUpdateEnvironmentSetting({
     onError: (error) => {
-      setMessage(error.message);
+      notifyError({
+        title: words("error"),
+        message: error.message,
+      });
       setIsLoading(false);
     },
   });
@@ -29,14 +32,6 @@ export const ExpertBanner: React.FC = () => {
 
   return expertModeEnabled ? (
     <>
-      {errorMessage && (
-        <ToastAlert
-          data-testid="ToastAlert"
-          title={words("error")}
-          message={errorMessage}
-          setMessage={setMessage}
-        />
-      )}
       <Banner isSticky color="red" id="expert-mode-banner" aria-label="expertModeActive">
         <Flex justifyContent={{ default: "justifyContentCenter" }} gap={{ default: "gapXs" }}>
           {words("banner.expertMode")}

@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { useUrlStateWithFilter, useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
-import { useUrlStateWithCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+import React from "react";
+import { usePaginatedTable } from "@/Data";
 import { useGetFacts } from "@/Data/Queries";
 import { Filter, SortKey } from "@/Slices/Facts/Core/Types";
 import {
@@ -16,19 +15,11 @@ import { FactsTablePresenter } from "./FactsTablePresenter";
 import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
-  const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({
-    route: "Facts",
-  });
-  const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "Facts",
-  });
-  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
-    route: "Facts",
-  });
-  const [sort, setSort] = useUrlStateWithSort<SortKey>({
-    default: { name: "name", order: "asc" },
-    route: "Facts",
-  });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter, sort, setSort } =
+    usePaginatedTable<Filter, SortKey>({
+      route: "Facts",
+      defaultSort: { name: "name", order: "asc" },
+    });
 
   const { data, isSuccess, isError, error, refetch } = useGetFacts({
     pageSize,
@@ -38,12 +29,6 @@ export const Page: React.FC = () => {
   }).useContinuous();
 
   const tablePresenter = new FactsTablePresenter();
-
-  //when sorting is triggered, reset the current page
-  useEffect(() => {
-    setCurrentPage({ kind: "CurrentPage", value: "" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.order]);
 
   if (isError) {
     return (

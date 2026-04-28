@@ -23,10 +23,16 @@ const setup = () => {
 };
 
 describe("useCustomQuery", () => {
-  const mockedContext = vi.spyOn(QueryControlContext, "useQueryControl");
+  beforeEach(() => {
+    vi.spyOn(QueryControlContext, "useQueryControl").mockReturnValue({
+      queriesEnabled: true,
+      enableQueries: vi.fn(),
+      disableQueries: vi.fn(),
+    });
+  });
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   it("should execute the query when queriesEnabled is true", async () => {
@@ -48,7 +54,7 @@ describe("useCustomQuery", () => {
   });
 
   it("should not execute the query when queriesEnabled is false", async () => {
-    mockedContext.mockReturnValue({
+    vi.mocked(QueryControlContext.useQueryControl).mockReturnValue({
       queriesEnabled: false,
       enableQueries: vi.fn(),
       disableQueries: vi.fn(),

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, Dispatch, SetStateAction } from "react";
-import { dia, ui } from "@inmanta/rappid";
+import { dia, ui } from "@joint/plus";
 import styled from "styled-components";
 import { ServiceModel } from "@/Core";
 import { Inventories } from "@/Data/Queries";
@@ -21,6 +21,12 @@ export const LeftSidebar: React.FC = () => {
     relationsDictionary,
   } = useContext(ComposerContext);
   const LeftSidebarRef = useRef<HTMLDivElement>(null);
+  // Track canvasState in a ref so the sidebar can read the latest value at construction time
+  // without triggering a full teardown/recreation on every canvas interaction.
+  const canvasStateRef = useRef(canvasState);
+  useEffect(() => {
+    canvasStateRef.current = canvasState;
+  }, [canvasState]);
 
   useEffect(() => {
     if (!LeftSidebarRef.current || !scroller || !mainService || !graph) {
@@ -43,7 +49,7 @@ export const LeftSidebar: React.FC = () => {
       setCanvasState,
       graph,
       relationsDictionary,
-      canvasState
+      canvasStateRef.current
     );
 
     return () => {
@@ -56,7 +62,6 @@ export const LeftSidebar: React.FC = () => {
     serviceCatalog,
     relationsDictionary,
     setCanvasState,
-    canvasState,
     graph,
   ]);
 

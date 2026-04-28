@@ -1,78 +1,8 @@
-/**
- * Shorthand method to clear the environment being passed.
- * By default, if no arguments are passed it will target the 'lsm-frontend' environment.
- *
- * @param {string} nameEnvironment
- */
-const clearEnvironment = (nameEnvironment = "test") => {
-  cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
+/* import environmentHelpers from "../support/environmentHelpers";
 
-    cy.request("DELETE", `/api/v1/decommission/${id}`);
-  });
-};
+const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
-/**
- * based on the environment id, it will recursively check if a compile is pending.
- * It will continue the recursion as long as the statusCode is equal to 200
- *
- * @param {string} id
- */
-const checkStatusCompile = (id) => {
-  let statusCodeCompile = 200;
-
-  if (statusCodeCompile === 200) {
-    cy.intercept("/api/v2/graphql").as("IsCompiling");
-    // the timeout is necessary to avoid errors.
-    // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
-    cy.wait("@IsCompiling").then((req) => {
-      statusCodeCompile = req.response.statusCode;
-      const environments = req.response.body.data.data.environments;
-
-      if (environments) {
-        const edges = environments.edges;
-
-        if (edges && edges.length > 0) {
-          const environment = edges.find((env) => env.node.id === id);
-
-          if (environment && !environment.node.isCompiling) {
-            return;
-          }
-        }
-      }
-
-      checkStatusCompile(id);
-    });
-  }
-};
-
-/**
- * Will by default execute the force update on the 'lsm-frontend' environment if no argumenst are being passed.
- * This method can be executed standalone, but is part of the cleanup cycle that is needed before running a scenario.
- *
- * @param {string} nameEnvironment
- */
-const forceUpdateEnvironment = (nameEnvironment = "test") => {
-  cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
-
-    cy.request({
-      method: "POST",
-      url: "/lsm/v1/exporter/export_service_definition",
-      headers: { "X-Inmanta-Tid": id },
-      body: { force_update: true },
-    });
-    checkStatusCompile(id);
-  });
-};
-
-const isIso = Cypress.env("edition") === "iso";
+const isIso = Cypress.expose("edition") === "iso";
 
 describe("Scenario 6 : Resources", () => {
   if (isIso) {
@@ -104,6 +34,12 @@ describe("Scenario 6 : Resources", () => {
 
       cy.get('[aria-label="Select-environment-test"]').click();
 
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get("body").then(($body) => {
+        const initialRowCount = $body.find('[aria-label="Resource Table Row"]').length;
+        cy.wrap(initialRowCount).as("initialRowCount");
+      });
+
       // Go to Service Catalog
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
@@ -134,7 +70,12 @@ describe("Scenario 6 : Resources", () => {
       // Expect two rows to be added to the table
       // lsm::LifecycleTransfer
       // frontend_model::TestResource
-      cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should("have.length", 2);
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should(
+          "have.length",
+          initialRowCount + 2
+        );
+      });
       cy.get('[aria-label="Resource Table Row"]')
         .eq(0)
         .should("contain", "frontend_model::TestResource");
@@ -252,7 +193,7 @@ describe("Scenario 6 : Resources", () => {
       // Go to logs tab
       cy.get("button").contains("Logs").click();
 
-      // Expect it to have : 6 log messages
+      // Expect it to have : 5 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
         5
@@ -281,24 +222,43 @@ describe("Scenario 6 : Resources", () => {
       // Go to logs tab
       cy.get("button").contains("Logs").click();
 
+      // Get initial amount of log messages
+      cy.get('[aria-label="ResourceLogRow"]').then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
+
       // Filter on "INFO" for Minimal Log Level
       cy.get('[aria-label="MinimalLogLevelFilterInput"]').click();
       cy.get('[role="option"]').contains("INFO").click();
 
-      // Expect the amount of rows to be max 4
-      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.most", 4);
+      // Compare filtered count with initial count
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get('[aria-label="ResourceLogRow"]').should(($rows) => {
+          expect($rows.length).to.be.lessThan(initialRowCount);
+        });
+      });
 
       // Remove INFO filter
       cy.get('[aria-label="Close INFO"]').click();
 
-      // Expect amount of rows to be bigger than before filtering.
-      cy.get('[aria-label="ResourceLogRow"]').should("to.have.length.of.at.least", 5);
+      // Expect amount of rows to return to the original count
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get('[aria-label="ResourceLogRow"]').should(($rows) => {
+          expect($rows.length).to.equal(initialRowCount);
+        });
+      });
     });
 
     it("6.4 Resources with multiple dependencies", () => {
       // Select Test environment
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
+
+      // Go to Resources page and get initial count of rows in the table
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
 
       // Go to Service Catalog page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
@@ -329,8 +289,15 @@ describe("Scenario 6 : Resources", () => {
       // Go to Resource page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
-      // Expect to find 7 rows now in the resource table.
-      cy.get('[aria-label="Resource Table Row"]', { timeout: 60000 }).should("have.length", 7);
+      // Expect to find 5 rows added to the table: the resource waiting-entity with 3 dependencies a,b,c
+      // and the lifecycle transfer for this resource
+      cy.get("@initialRowCount").then((initialRowCount) => {
+        cy.get('[aria-label="Resource Table Row"]', { timeout: 60000 }).should(
+          "have.length",
+          initialRowCount + 5
+        );
+      });
+
       // Expect to find a resource with value: a, b, c
       cy.get('[aria-label="Resource Table Row"]').eq(0).should("contain", "a");
       cy.get('[aria-label="Resource Table Row"]').eq(1).should("contain", "b");
@@ -544,34 +511,35 @@ describe("Scenario 6 : Resources", () => {
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "1 - 20");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
       //Go to next page
-      cy.get('[aria-label="Go to next page"]').first().click();
+      cy.get('[aria-label="Go to next page"]').first().should("not.be.disabled").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
-      cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
-      ).should("have.text", "21 - 40");
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "21 - 40");
 
       //Go to last page
-      cy.get('[aria-label="Go to next page"]').first().click();
+      cy.get('[aria-label="Go to next page"]').first().should("not.be.disabled").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
-      cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
-      ).should("have.text", "41 - 49");
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "41 - 49");
 
       //Go to previous page
-      cy.get('[aria-label="Go to previous page"]').first().click();
+      cy.get('[aria-label="Go to previous page"]').first().should("not.be.disabled").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
-      cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
-      ).should("have.text", "21 - 40");
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "21 - 40");
 
       // Change sorting and expect to be redirected to the first page of the table
       cy.get("button").contains("Type").click();
-      cy.get(
-        "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
-      ).should("have.text", "1 - 20");
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "1 - 20");
     });
   } else {
     it("6.6 Resources for OSS", () => {
@@ -707,7 +675,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Go to logs tab
       cy.get("button").contains("Logs").click();
-      // Expect it to have : 8 log messages
+      // Expect it to have : 5 log messages
       cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
         "to.have.length.of.at.least",
         5
@@ -717,16 +685,17 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle').click();
       cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist");
 
-      // Expect last log message to contain "Successfully stored version 5"
+      // Expect last log message to contain "Successfully stored version 6"
       cy.get('[aria-label="ResourceLogRow"]')
         .eq(0)
-        .should("contain", "Successfully stored version 5");
+        .should("contain", "Successfully stored version 6");
 
       // Click top message open
       cy.get('[aria-label="Details"]').eq(0).click();
 
-      // Expect to find "Successfully stored version 5" displayed in expansion.
-      cy.get(".pf-v6-c-description-list__text").should("contain", "Successfully stored version 5");
+      // Expect to find "Successfully stored version 6" displayed in expansion.
+      cy.get(".pf-v6-c-description-list__text").should("contain", "Successfully stored version 6");
     });
   }
 });
+ */

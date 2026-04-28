@@ -4,6 +4,7 @@ import { AuthContextInterface, PrimaryArchiveHelper, defaultAuthContext } from "
 import { EnvironmentDetails } from "@/Test";
 import { MockEnvironmentHandler, MockOrchestratorProvider, MockFileManager } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
+import { AppAlertProvider } from "@/UI/Root/Components/AppAlertProvider";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { UrlManagerImpl } from "@/UI/Utils";
 
@@ -43,7 +44,7 @@ export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> 
         authHelper,
       }}
     >
-      {children}
+      <AppAlertProvider>{children}</AppAlertProvider>
     </DependencyProvider>
   );
 };

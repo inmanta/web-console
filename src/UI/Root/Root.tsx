@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { lazy, Suspense, useContext, useEffect, useMemo, useState } from "react";
 import { Navigate, Route, Routes } from "react-router";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { LoginPage } from "@/Slices/Login";
 import { DependencyContext } from "@/UI/Dependency";
 import { RouteOutlet, SearchSanitizer, PrimaryBaseUrlManager } from "@/UI/Routing";
@@ -9,6 +8,12 @@ import { NotFoundPage } from "@S/NotFound/UI";
 import { getThemePreference, setThemePreference } from "../Components/DarkmodeOption";
 import { PageFrame } from "./Components";
 import { PrimaryPageManager } from "./PrimaryPageManager";
+
+const ReactQueryDevtools = lazy(() =>
+  import("@tanstack/react-query-devtools").then((mod) => ({
+    default: mod.ReactQueryDevtools,
+  }))
+);
 
 export const Root: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
@@ -40,7 +45,11 @@ export const Root: React.FC = () => {
 
   return (
     <>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {import.meta.env.DEV && (
+        <Suspense fallback={null}>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </Suspense>
+      )}
       <GlobalStyleProxy />
       <SearchSanitizer.Provider>
         <Routes>

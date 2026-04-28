@@ -1,78 +1,10 @@
-/**
- * Shorthand method to clear the environment being passed.
- * By default, if no arguments are passed it will target the 'lsm-frontend' environment.
- *
- * @param {string} nameEnvironment
- */
-const clearEnvironment = (nameEnvironment = "test") => {
-  cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
+import environmentHelpers from "../support/environmentHelpers";
 
-    cy.request("DELETE", `/api/v1/decommission/${id}`);
-  });
-};
+const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
-/**
- * based on the environment id, it will recursively check if a compile is pending.
- * It will continue the recursion as long as the statusCode is equal to 200
- *
- * @param {string} id
- */
-const checkStatusCompile = (id) => {
-  let statusCodeCompile = 200;
+const isIso = Cypress.expose("edition") === "iso";
 
-  if (statusCodeCompile === 200) {
-    cy.intercept("/api/v2/graphql").as("IsCompiling");
-    // the timeout is necessary to avoid errors.
-    // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
-    cy.wait("@IsCompiling").then((req) => {
-      statusCodeCompile = req.response.statusCode;
-      const environments = req.response.body.data.data.environments;
-
-      if (environments) {
-        const edges = environments.edges;
-
-        if (edges && edges.length > 0) {
-          const environment = edges.find((env) => env.node.id === id);
-
-          if (environment && !environment.node.isCompiling) {
-            return;
-          }
-        }
-      }
-
-      checkStatusCompile(id);
-    });
-  }
-};
-
-/**
- * Will by default execute the force update on the 'lsm-frontend' environment if no argumenst are being passed.
- * This method can be executed standalone, but is part of the cleanup cycle that is needed before running a scenario.
- *
- * @param {string} nameEnvironment
- */
-const forceUpdateEnvironment = (nameEnvironment = "test") => {
-  cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
-
-    cy.request({
-      method: "POST",
-      url: "/lsm/v1/exporter/export_service_definition",
-      headers: { "X-Inmanta-Tid": id },
-      body: { force_update: true },
-    });
-    checkStatusCompile(id);
-  });
-};
-
-if (Cypress.env("edition") === "iso") {
+if (isIso) {
   describe("Scenario 2.4 Service Catalog - basic-service", () => {
     before(() => {
       clearEnvironment();
@@ -158,6 +90,7 @@ if (Cypress.env("edition") === "iso") {
     });
 
     it("2.4.2 Verify markdown preview in documentation tab", () => {
+      cy.startMonacoCDNCheck();
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
@@ -179,11 +112,13 @@ if (Cypress.env("edition") === "iso") {
       // Verify the preview view is shown
       cy.get('[aria-label="Markdown-Previewer-Success"]').should("exist").and("be.visible");
 
+      const clearEditorShortcut =
+        Cypress.platform === "darwin" ? "{meta+a}{backspace}" : "{ctrl+a}{backspace}";
       // Edit the markdown text
       cy.get(".monaco-editor")
         .click()
         .focused()
-        .type("{ctrl+a}{backspace}") // Clear existing content
+        .type(clearEditorShortcut) // Clear existing content
         .type("# Test Heading\n\nThis is a test paragraph with **bold** text.");
 
       // Verify the preview updates with the new content
@@ -191,9 +126,12 @@ if (Cypress.env("edition") === "iso") {
         .should("contain", "Test Heading")
         .and("contain", "This is a test paragraph")
         .and("contain", "bold");
+
+      cy.assertNoCDNDownloads();
     });
 
     it("2.4.3 Edit instance attributes", () => {
+      cy.startMonacoCDNCheck();
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
@@ -214,29 +152,40 @@ if (Cypress.env("edition") === "iso") {
 
       cy.get(".monaco-editor", { timeout: 15000 }).should("be.visible"); // assure the editor is loaded before further assertions.
 
+      const deleteFirstLineShortcut =
+        Cypress.platform === "darwin"
+          ? "{alt+rightArrow}{backspace}"
+          : "{ctrl+rightArrow}{backspace}";
       // edit the first line to make editor invalid (Delete the first character of the name property)
-      cy.get(".mtk20").contains("name").type("{ctrl+rightArrow}{backspace}");
+      cy.get(".mtk20").contains("name").type(deleteFirstLineShortcut);
 
       // expect the Force Update to be disabled
       cy.get('[aria-label="Expert-Submit-Button"]').should("be.disabled");
 
+      const shortcutToFixEditor =
+        Cypress.platform === "darwin" ? "{alt+rightArrow}e" : "{ctrl+rightArrow}e";
       // Adjust the name property of the instance and make editor valid again
-      cy.get(".mtk20").contains("nam").type("{ctrl+rightArrow}e");
+      cy.get(".mtk20").contains("nam").type(shortcutToFixEditor);
 
       cy.wait(1000);
 
+      const findShortcut = Cypress.platform === "darwin" ? "{meta+f}" : "{ctrl+f}";
       // edit the value of the interface_r1_name by removing a character
-      cy.get(".monaco-editor").click().focused().type("{ctrl+f}"); // open search tool
+      cy.get(".monaco-editor").click().focused().type(findShortcut); // open search tool
 
       cy.wait(1000); // let the editor settle to avoid typing text to fail
 
       // search for eth0
-      cy.get('[aria-label="Find"]').type("eth0");
+      cy.get('[aria-label="Find"]')
+        .click({ force: true })
+        .type("{selectall}{backspace}eth0", { delay: 100 });
 
       // toggle replace option
       cy.get('[aria-label="Toggle Replace"]').click();
       // go to the replace field
-      cy.get('[aria-label="Replace"]').type("eth1{enter}{enter}");
+      cy.get('[aria-label="Replace"]')
+        .click({ force: true })
+        .type("{selectall}{backspace}eth1{enter}{enter}", { delay: 100 });
 
       // confirm edit
       cy.get('[aria-label="Expert-Submit-Button"]').click();
@@ -248,6 +197,8 @@ if (Cypress.env("edition") === "iso") {
 
       // expect the value of the interface_r1_name to be updated
       cy.get('[aria-label="interface_r1_name_value"]').should("have.text", "eth1");
+
+      cy.assertNoCDNDownloads();
     });
 
     it("2.4.4 Destroy previously created instance", () => {

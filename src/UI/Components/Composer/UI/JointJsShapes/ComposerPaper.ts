@@ -1,4 +1,4 @@
-import { dia, linkTools, shapes } from "@inmanta/rappid";
+import { dia, linkTools, shapes } from "@joint/plus";
 import { ServiceModel } from "@/Core";
 import { words } from "@/UI/words";
 import { routerNamespace, anchorNamespace } from "..";
@@ -18,6 +18,8 @@ import { ServiceEntityShape } from "./ServiceEntityShape";
  */
 export class ComposerPaper {
   paper: dia.Paper;
+  private _relationsDictionary: RelationsDictionary;
+  private _serviceCatalog: ServiceModel[];
 
   constructor(
     graph: dia.Graph,
@@ -25,6 +27,9 @@ export class ComposerPaper {
     relationsDictionary: RelationsDictionary,
     serviceCatalog: ServiceModel[]
   ) {
+    this._relationsDictionary = relationsDictionary;
+    this._serviceCatalog = serviceCatalog;
+
     this.paper = new dia.Paper({
       model: graph,
       width: 1000,
@@ -147,8 +152,8 @@ export class ComposerPaper {
         sourceCell,
         targetCell,
         graph,
-        relationsDictionary,
-        serviceCatalog
+        this._relationsDictionary,
+        this._serviceCatalog
       );
       if (!canRemove) {
         return;
@@ -196,7 +201,13 @@ export class ComposerPaper {
 
           // Validate removal before proceeding (safety check, even though tool is only shown if allowed)
           if (
-            !canRemoveLink(sourceShape, targetShape, graph, relationsDictionary, serviceCatalog)
+            !canRemoveLink(
+              sourceShape,
+              targetShape,
+              graph,
+              this._relationsDictionary,
+              this._serviceCatalog
+            )
           ) {
             return;
           }
@@ -239,12 +250,20 @@ export class ComposerPaper {
       // Missing connections message(s)
       if (shape.isMissingConnections()) {
         const missingConnections = shape.getMissingConnections();
+        console.info(
+          "[Composer] Missing relations:",
+          missingConnections.map(({ entityType, name }) => ({ entityType, name }))
+        );
         const connectionLines = missingConnections.map((conn) => {
+          const displayName =
+            conn.entityType && conn.entityType !== conn.name
+              ? `${conn.name} (${conn.entityType})`
+              : conn.name;
           const line =
             conn.required === 1
-              ? words("instanceComposer.tooltip.missingConnectionSingle")(conn.name)
+              ? words("instanceComposer.tooltip.missingConnectionSingle")(displayName)
               : words("instanceComposer.tooltip.missingConnectionMultiple")(
-                  conn.name,
+                  displayName,
                   conn.missing,
                   conn.required
                 );

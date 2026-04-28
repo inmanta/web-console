@@ -20,12 +20,14 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
+import type { Mock } from "vitest";
 
 const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
-  func: undefined | ReturnType<typeof vi.fn> = undefined,
+  func: undefined | Mock = undefined,
   isEdit = false,
-  originalAttributes: InstanceAttributeModel | undefined = undefined
+  originalAttributes: InstanceAttributeModel | undefined = undefined,
+  initialStates: string[] = []
 ) => {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -38,12 +40,13 @@ const setup = (
                 <ServiceInstanceForm
                   fields={fields}
                   onCancel={vi.fn()}
-                  onSubmit={func ? func : vi.fn()}
+                  onSubmit={func ?? (vi.fn() as Mock)}
                   isEdit={isEdit}
                   originalAttributes={originalAttributes}
                   service_entity="service_entity"
                   isDirty={false}
                   setIsDirty={vi.fn()}
+                  initialStates={initialStates}
                 />
               }
             />
@@ -70,6 +73,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   server.restoreHandlers();
+  testClient.clear();
 });
 
 afterAll(() => server.close());
@@ -657,3 +661,106 @@ test.each`
     expect(screen.getByLabelText(label)).toHaveValue(newValue);
   }
 );
+
+test("GIVEN ServiceInstanceForm with initialStates WHEN initialStates are provided THEN dropdown is shown instead of button", async () => {
+  const fields = [Test.Field.text];
+  const initialStates = ["state1", "state2", "state3"];
+
+  const { component } = setup(fields, undefined, false, undefined, initialStates);
+
+  render(component);
+
+  // Should show dropdown toggle instead of regular button
+  const dropdownToggle = screen.getByLabelText("SubmitDropdownToggle");
+  expect(dropdownToggle).toBeVisible();
+
+  // Regular confirm button should not be visible
+  expect(screen.queryByRole("button", { name: words("confirm") })).not.toBeInTheDocument();
+});
+
+test("GIVEN ServiceInstanceForm with initialStates WHEN clicking dropdown THEN initial state options are shown", async () => {
+  const fields = [Test.Field.text];
+  const initialStates = ["state1", "state2", "state3"];
+
+  const { component } = setup(fields, undefined, false, undefined, initialStates);
+
+  render(component);
+
+  const dropdownToggle = screen.getByLabelText("SubmitDropdownToggle");
+  await userEvent.click(dropdownToggle);
+
+  // Check that all initial state options are visible
+  expect(screen.getByLabelText("Initial-State-Option-state1")).toBeVisible();
+  expect(screen.getByLabelText("Initial-State-Option-state2")).toBeVisible();
+  expect(screen.getByLabelText("Initial-State-Option-state3")).toBeVisible();
+});
+
+test("GIVEN ServiceInstanceForm with initialStates WHEN clicking initial state option THEN onSubmit is called with initialState", async () => {
+  const fields = [Test.Field.text];
+  const initialStates = ["state1", "state2"];
+  const submitCb = vi.fn();
+
+  const { component } = setup(fields, submitCb, false, undefined, initialStates);
+
+  render(component);
+
+  await userEvent.type(
+    screen.getByRole("textbox", { name: `TextInput-${fields[0].name}` }),
+    "test text"
+  );
+
+  const dropdownToggle = screen.getByLabelText("SubmitDropdownToggle");
+  await userEvent.click(dropdownToggle);
+
+  const stateOption = screen.getByLabelText("Initial-State-Option-state1");
+  await userEvent.click(stateOption);
+
+  expect(submitCb).toHaveBeenCalledWith(
+    {
+      [Test.Field.text.name]: "test text",
+    },
+    expect.any(Function),
+    "state1"
+  );
+});
+
+test("GIVEN ServiceInstanceForm with initialStates WHEN clicking main confirm button THEN onSubmit is called without initialState", async () => {
+  const fields = [Test.Field.text];
+  const initialStates = ["state1", "state2"];
+  const submitCb = vi.fn();
+
+  const { component } = setup(fields, submitCb, false, undefined, initialStates);
+
+  render(component);
+
+  await userEvent.type(
+    screen.getByRole("textbox", { name: `TextInput-${fields[0].name}` }),
+    "test text"
+  );
+
+  // Click the main action button (not a dropdown option)
+  const submitAction = screen.getByLabelText("submit");
+  await userEvent.click(submitAction);
+
+  expect(submitCb).toHaveBeenCalledWith(
+    {
+      [Test.Field.text.name]: "test text",
+    },
+    expect.any(Function)
+  );
+});
+
+test("GIVEN ServiceInstanceForm without initialStates WHEN no initialStates provided THEN regular button is shown", async () => {
+  const fields = [Test.Field.text];
+
+  const { component } = setup(fields, undefined, false, undefined, []);
+
+  render(component);
+
+  // Should show regular button, not dropdown
+  const confirmButton = screen.getByRole("button", { name: "submit" });
+  expect(confirmButton).toBeVisible();
+
+  // Dropdown should not be visible
+  expect(screen.queryByLabelText("SubmitDropdownToggle")).not.toBeInTheDocument();
+});

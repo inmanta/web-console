@@ -1,11 +1,11 @@
 import { TextInputTypes } from "@patternfly/react-core";
-import { cloneDeep, isEmpty, isEqual, merge } from "lodash-es";
 import {
   AttributeModel,
   FormAttributeResult,
   InstanceAttributeModel,
   ServiceInstanceModel,
 } from "@/Core";
+import { cloneDeep, isEqual, merge } from "@/Core/Language/collection";
 import { AttributeInputConverter, AttributeResultConverter, InputType } from "./AttributeConverter";
 import { parseNumberWithType } from "./parseNumberWithType";
 
@@ -74,7 +74,9 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
   getCurrentAttributes(
     instance: Pick<ServiceInstanceModel, "candidate_attributes" | "active_attributes">
   ): InstanceAttributeModel | null {
-    return instance.candidate_attributes && !isEmpty(instance.candidate_attributes)
+    const candidateAttributes = instance.candidate_attributes;
+
+    return candidateAttributes && Object.keys(candidateAttributes).length > 0
       ? instance.candidate_attributes
       : instance.active_attributes;
   }

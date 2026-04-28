@@ -1,0 +1,3 @@
+description: Implement e2e tests for the composer feature. Update config file setup for e2e tests. Fix the linking issue between shapes.
+change-type: patch
+destination-branches: [master, iso9]

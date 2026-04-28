@@ -1,5 +1,11 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import {
+  UseQueryResult,
+  useQuery,
+  useInfiniteQuery,
+  UseInfiniteQueryResult,
+  InfiniteData,
+} from "@tanstack/react-query";
 import { PageSize, Pagination, Sort } from "@/Core";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { CustomError, REFETCH_INTERVAL, useGet, getPaginationHandlers } from "@/Data/Queries";
@@ -17,15 +23,19 @@ interface Filter {
   status?: AgentStatus[];
 }
 
-/**
- * interface for the get agents query params
- */
-export interface GetAgentsParams {
+interface GetAgentsBaseParams {
   filter?: Filter;
   sort?: Sort.Sort;
   pageSize: PageSize.PageSize;
+}
+
+/** Standard paginated query */
+export interface GetAgentsParams extends GetAgentsBaseParams {
   currentPage: CurrentPage;
 }
+
+/** Infinite scroll query */
+export type GetAgentsInfiniteParams = GetAgentsBaseParams;
 
 /**
  * interface for the agents API response
@@ -48,6 +58,9 @@ interface QueryData extends Response {
  */
 interface GetAgents {
   useContinuous: (params: GetAgentsParams) => UseQueryResult<QueryData, CustomError>;
+  useInfiniteScroll: (
+    params: GetAgentsInfiniteParams
+  ) => UseInfiniteQueryResult<InfiniteData<Response>, CustomError>;
 }
 
 /**
@@ -55,6 +68,7 @@ interface GetAgents {
  *
  * @returns {GetAgents} An object containing the different available queries.
  * @returns {UseQueryResult<QueryData, CustomError>} returns.useContinuous - Fetch agents with continuous polling.
+ * @returns {UseInfiniteQueryResult<InfiniteData<QueryData>, CustomError>} returns.useInfiniteScroll - Fetch agents with infinite scrolling.
  */
 export const useGetAgents = (): GetAgents => {
   const { environmentHandler } = useContext(DependencyContext);
@@ -71,6 +85,14 @@ export const useGetAgents = (): GetAgents => {
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
+      }),
+    useInfiniteScroll: (params: GetAgentsInfiniteParams) =>
+      useInfiniteQuery({
+        queryKey: getAgentKey.list([...Object.values(params), env]),
+        queryFn: ({ pageParam }) => get(getUrl(params, pageParam || undefined)),
+        initialPageParam: "",
+        getNextPageParam: (lastPage) =>
+          new URLSearchParams(lastPage.links.next?.split("?")[1]).get("start") ?? undefined,
       }),
   };
 };

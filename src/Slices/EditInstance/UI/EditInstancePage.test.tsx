@@ -4,9 +4,9 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { cloneDeep } from "lodash";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { cloneDeep } from "@/Core/Language/collection";
 import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -17,7 +17,7 @@ import { Page } from "./Page";
 // Mock usePatch before the test
 const mockPatchFn = vi.fn();
 vi.mock("@/Data/Queries/Helpers/useQueries", async (importActual) => {
-  const actual = await importActual();
+  const actual = await importActual<typeof import("@/Data/Queries/Helpers/useQueries")>();
   return {
     ...actual,
     usePatch: () => mockPatchFn,
@@ -25,7 +25,7 @@ vi.mock("@/Data/Queries/Helpers/useQueries", async (importActual) => {
 });
 
 vi.mock("react-router", async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal<typeof import("react-router")>();
   return {
     ...actual,
     useParams: vi.fn(),

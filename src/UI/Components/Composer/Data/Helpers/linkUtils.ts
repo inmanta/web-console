@@ -1,4 +1,4 @@
-import { dia } from "@inmanta/rappid";
+import { dia } from "@joint/plus";
 import { LinkShape } from "../../UI/JointJsShapes/LinkShape";
 import { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 
@@ -38,7 +38,7 @@ export const createLinkShape = (
   }
 
   // The relation key (port) is the target entity's name
-  const sourceRelationKey = targetShape.getEntityName();
+  const sourceRelationKey = targetShape.getEntityType();
   link.source({ id: sourceShape.id, port: sourceRelationKey });
   link.target({ id: targetShape.id });
   return link;
@@ -55,11 +55,11 @@ export const addConnectionsBetweenShapes = (
   sourceShape: ServiceEntityShape,
   targetShape: ServiceEntityShape
 ): void => {
-  const sourceRelationKey = targetShape.getEntityName();
-  const targetRelationKey = sourceShape.getEntityName();
+  const sourceRelationKey = targetShape.getEntityType();
+  const targetRelationKey = sourceShape.getEntityType();
 
-  sourceShape.addConnection(targetShape.id, sourceRelationKey);
-  targetShape.addConnection(sourceShape.id, targetRelationKey);
+  sourceShape.addConnection(String(targetShape.id), sourceRelationKey);
+  targetShape.addConnection(String(sourceShape.id), targetRelationKey);
 };
 
 /**
@@ -73,9 +73,9 @@ export const removeConnectionsBetweenShapes = (
   sourceShape: ServiceEntityShape,
   targetShape: ServiceEntityShape
 ): void => {
-  const sourceRelationKey = targetShape.getEntityName();
-  const targetRelationKey = sourceShape.getEntityName();
+  const sourceRelationKey = targetShape.getEntityType();
+  const targetRelationKey = sourceShape.getEntityType();
 
-  sourceShape.removeConnection(targetShape.id, sourceRelationKey);
-  targetShape.removeConnection(sourceShape.id, targetRelationKey);
+  sourceShape.removeConnection(String(targetShape.id), sourceRelationKey);
+  targetShape.removeConnection(String(sourceShape.id), targetRelationKey);
 };

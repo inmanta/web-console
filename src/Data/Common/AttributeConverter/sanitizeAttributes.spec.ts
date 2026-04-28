@@ -96,3 +96,60 @@ test("GIVEN sanitizeAttributes WHEN boolean field value is null THEN preserves n
     null_bool: null, // Should preserve null
   });
 });
+
+test("GIVEN sanitizeAttributes WHEN InterServiceRelation field value is empty string THEN converts to null", () => {
+  const interServiceRelationField = {
+    kind: "InterServiceRelation" as const,
+    name: "related_service",
+    description: "Related service field",
+    isOptional: true,
+    isDisabled: false,
+    serviceEntity: "test_entity",
+  };
+
+  const fields = [interServiceRelationField];
+  const formState = { related_service: "" }; // Form state where value is empty string
+  const sanitized = sanitizeAttributes(fields, formState);
+
+  expect(sanitized).toMatchObject({
+    related_service: null, // Should convert empty string to null
+  });
+});
+
+test("GIVEN sanitizeAttributes WHEN InterServiceRelation field value is null THEN preserves null", () => {
+  const interServiceRelationField = {
+    kind: "InterServiceRelation" as const,
+    name: "related_service",
+    description: "Related service field",
+    isOptional: true,
+    isDisabled: false,
+    serviceEntity: "test_entity",
+  };
+
+  const fields = [interServiceRelationField];
+  const formState = { related_service: null }; // Form state where value is null
+  const sanitized = sanitizeAttributes(fields, formState);
+
+  expect(sanitized).toMatchObject({
+    related_service: null, // Should preserve null
+  });
+});
+
+test("GIVEN sanitizeAttributes WHEN InterServiceRelation field value is valid string THEN preserves value", () => {
+  const interServiceRelationField = {
+    kind: "InterServiceRelation" as const,
+    name: "related_service",
+    description: "Related service field",
+    isOptional: true,
+    isDisabled: false,
+    serviceEntity: "test_entity",
+  };
+
+  const fields = [interServiceRelationField];
+  const formState = { related_service: "service-instance-id-123" }; // Form state where value is a valid string
+  const sanitized = sanitizeAttributes(fields, formState);
+
+  expect(sanitized).toMatchObject({
+    related_service: "service-instance-id-123", // Should preserve valid string value
+  });
+});

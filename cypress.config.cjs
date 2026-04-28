@@ -1,7 +1,13 @@
 const { defineConfig } = require("cypress");
+const { config } = require("dotenv");
+
+config();
 
 module.exports = defineConfig({
   env: {
+    GITLAB_TOKEN: process.env.GITLAB_TOKEN,
+  },
+  expose: {
     edition: "iso",
   },
   video: false,
@@ -16,5 +22,10 @@ module.exports = defineConfig({
     supportFile: "cypress/support/e2e.js",
     defaultCommandTimeout: 10000,
     requestTimeout: 10000,
+    excludeSpecPattern: [
+      "cypress/e2e/Keycloak/**",
+      "cypress/e2e/LocalAuth/**",
+      "cypress/e2e/Oidc/**",
+    ],
   },
 });

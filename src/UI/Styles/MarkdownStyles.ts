@@ -811,7 +811,6 @@ export const MarkdownStyles = `
 .markdown-body pre tt {
   display: inline;
   max-width: auto;
-  padding: 0 var(--pf-t--global--spacer--xs);
   margin: 0;
   overflow: visible;
   line-height: inherit;
