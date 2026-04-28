@@ -73,7 +73,7 @@ const getInstanceError = http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab
 const getInstanceDataDelayed = http.get(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab",
   async () => {
-    delay(300);
+    await delay(300);
 
     return HttpResponse.json({
       data: instanceData,
@@ -190,7 +190,7 @@ const postStateUpdateFailed = http.post(
 export const loadingServer = setupServer(
   getServiceModel,
   getHistoryLogsDelayed,
-  getInstanceData,
+  getInstanceDataDelayed,
   getResources
 );
 
