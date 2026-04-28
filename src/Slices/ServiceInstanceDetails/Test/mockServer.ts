@@ -47,7 +47,7 @@ const getHistoryLogsError = http.get("/lsm/v1/service_inventory/mobileCore/1d96a
 const getHistoryLogsDelayed = http.get(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
   async () => {
-    await delay(500);
+    await delay("infinite");
 
     return HttpResponse.json(logsResponse);
   }
@@ -190,7 +190,7 @@ const postStateUpdateFailed = http.post(
 export const loadingServer = setupServer(
   getServiceModel,
   getHistoryLogsDelayed,
-  getInstanceDataDelayed,
+  getInstanceData,
   getResources
 );
 
