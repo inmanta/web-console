@@ -287,18 +287,18 @@ describe("Scenario 6 : Resources", () => {
           expect(parseInt(value, 10)).to.be.greaterThan(0);
         });
 
-      // Store initial count, apply two legend filters and verify table shrinks
+      // Store initial count, apply a legend filter and verify table shrinks
       cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
         cy.wrap($rows.length).as("initialRowCount");
       });
 
-      cy.get('[aria-label="LegendItem-has_update"]').click();
+      cy.get('[aria-label="LegendItem-compliant"]').click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       expectFilteredLessThan("initialRowCount");
 
       // Remove filters via the filter drawer and verify count is restored
       cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
-      cy.get('[aria-label="Close has_update"]').click();
+      cy.get('[aria-label="Close compliant"]').click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       expectRowCountRestored("initialRowCount");
     });
