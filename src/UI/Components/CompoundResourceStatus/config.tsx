@@ -31,14 +31,14 @@ export const colorConfig: Record<Resource.CompoundStateKey, string> = {
   temporarily_blocked: "var(--pf-t--color--orange--40)",
   // --- Compliance ---
   compliant: "var(--pf-t--color--green--50)",
-  non_compliant: "var(--pf-t--color--red--60)",
-  has_update: "var(--pf-t--color--orange--40)",
-  undefined: "var(--pf-t--color--gray--40)",
+  non_compliant: "var(--pf-t--color--orange--40)",
+  has_update: "var(--pf-t--color--blue--50)",
+  undefined: "var(--pf-t--color--red--60)",
   // --- LastHandlerRun ---
   failed: "var(--pf-t--color--red--60)",
-  skipped: "var(--pf-t--color--gray--40)",
+  skipped: "var(--pf-t--color--blue--50)",
   successful: "var(--pf-t--color--green--50)",
-  new: "var(--pf-t--color--blue--50)",
+  new: "var(--pf-t--color--gray--40)",
 };
 
 /** Maps each compound state type to a numeric priority value. */
