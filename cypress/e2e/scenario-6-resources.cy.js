@@ -293,7 +293,6 @@ describe("Scenario 6 : Resources", () => {
       });
 
       cy.get('[aria-label="LegendItem-has_update"]').click();
-      cy.get('[aria-label="LegendItem-blocked"]').click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       expectFilteredLessThan("initialRowCount");
 
