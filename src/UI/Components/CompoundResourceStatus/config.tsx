@@ -45,18 +45,18 @@ export const colorConfig: Record<Resource.CompoundStateKey, string> = {
 export const statusPriority: Record<Resource.CompoundStateKey, number> = {
   // --- Blocked---
   not_blocked: 0,
-  blocked: 1,
-  temporarily_blocked: 2,
+  temporarily_blocked: 1,
+  blocked: 2,
   // --- Compliance ---
   compliant: 0,
-  non_compliant: 1,
-  has_update: 2,
-  undefined: 3,
+  has_update: 1,
+  undefined: 2,
+  non_compliant: 3,
   // --- LastHandlerRun ---
   successful: 0,
-  failed: 1,
-  new: 2,
-  skipped: 3,
+  skipped: 1,
+  failed: 2,
+  new: 3,
 };
 
 /** default is the neutral icons color and state is whenever the colorConfig should be used for the icons. */
