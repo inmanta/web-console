@@ -299,7 +299,6 @@ describe("Scenario 6 : Resources", () => {
       // Remove filters via the filter drawer and verify count is restored
       cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
       cy.get('[aria-label="Close has_update"]').click();
-      cy.get('[aria-label="Close blocked"]').click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       expectRowCountRestored("initialRowCount");
     });
