@@ -44,12 +44,10 @@ const getHistoryLogsError = http.get("/lsm/v1/service_inventory/mobileCore/1d96a
   return HttpResponse.json({ message: "Not Found" }, { status: 404 });
 });
 
-const getHistoryLogsDelayed = http.get(
+const getHistoryLogsInfiniteDelay = http.get(
   "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
   async () => {
     await delay("infinite");
-
-    return HttpResponse.json(logsResponse);
   }
 );
 
@@ -185,11 +183,11 @@ const postStateUpdateFailed = http.post(
 );
 
 /**
- * Setup a test server where the queries are delayed
+ * Setup a test server where the queries are infinitely delayed
  */
 export const loadingServer = setupServer(
   getServiceModel,
-  getHistoryLogsDelayed,
+  getHistoryLogsInfiniteDelay,
   getInstanceData,
   getResources
 );
