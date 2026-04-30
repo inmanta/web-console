@@ -1,12 +1,13 @@
+import { useRef } from "react";
 import { isObject } from "@/Core";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 import { provide, Location, Replace, Update, StateConfig } from "./helpers";
 
 const searchHelper = new SearchHelper();
 
-export const useUrlState = provide(handleUrlState);
+export const useUrlState = provide(useUrlStateHandler);
 
-export function handleUrlState<Data>(
+export function useUrlStateHandler<Data>(
   config: StateConfig<Data>,
   location: Location,
   replace: Replace
@@ -21,13 +22,21 @@ export function handleUrlState<Data>(
 
   const currentValue = typeof parsedValue !== "undefined" ? parsedValue : config.default;
 
+  // Stabilize the reference — if the value is deeply equal to what we had last render.
+  // Reuse the previous object so we can get a stable reference.
+  const stableRef = useRef<Data>(currentValue);
+  if (!config.equals(stableRef.current, currentValue)) {
+    stableRef.current = currentValue;
+  }
+  const stableValue = stableRef.current;
+
   const areEqual = (a: Data, b: Data): boolean => config.equals(a, b);
 
   const getSerializedValue = (value: Data) =>
     areEqual(value, config.default) ? undefined : config.serialize(value);
 
   const setValue = (newValue: Data) => {
-    if (areEqual(newValue, currentValue)) return;
+    if (areEqual(newValue, stableValue)) return;
 
     const serialized = getSerializedValue(newValue);
     const newSearch = searchHelper.stringify({
@@ -44,7 +53,7 @@ export function handleUrlState<Data>(
     replace(`${location.pathname}${newSearch}${location.hash}`);
   };
 
-  return [currentValue, setValue];
+  return [stableValue, setValue];
 }
 
 const getKeyOrEmpty = (obj: Record<string, unknown>, key: string) => {

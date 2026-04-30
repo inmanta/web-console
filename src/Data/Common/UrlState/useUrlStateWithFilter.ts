@@ -1,13 +1,13 @@
 import { isObject, DateRange, isNotUndefined, IntRange, stringToBoolean } from "@/Core";
 import { isEqual, pickBy } from "@/Core/Language/collection";
 import { provide, Location, StateConfig, Update, Replace } from "./helpers";
-import { handleUrlState } from "./useUrlState";
+import { useUrlStateHandler } from "./useUrlState";
 
 interface Keys {
   keys?: Record<string, "IntRange" | "DateRange" | "Boolean">;
 }
 
-export const useUrlStateWithFilter = provide(handleUrlStateWithFilter);
+export const useUrlStateWithFilter = provide(useHandleUrlStateWithFilter);
 
 const serializeValue = (
   kind: "IntRange" | "DateRange" | "Boolean",
@@ -37,7 +37,7 @@ const parseValue = (
   }
 };
 
-export function handleUrlStateWithFilter<Data>(
+export function useHandleUrlStateWithFilter<Data>(
   config: Pick<StateConfig<Data>, "route"> &
     Keys & {
       default?: Data;
@@ -75,7 +75,7 @@ export function handleUrlStateWithFilter<Data>(
     return { ...(value as Data), ...parsed };
   };
 
-  return handleUrlState<Data>(
+  return useUrlStateHandler<Data>(
     {
       default: config.default || ({} as Data),
       key: "filter",

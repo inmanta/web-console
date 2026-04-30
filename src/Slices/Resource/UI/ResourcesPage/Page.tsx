@@ -41,7 +41,8 @@ export const Page: React.FC = () => {
   const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
     usePaginatedTable<Resource.FilterWithDefaultHandling, Resource.SortKey>({
       route: "Resources",
-      defaultSort: { name: "resource_type", order: "asc" },
+      defaultSort: [{ name: "resource_type", order: "asc" }],
+      multiSort: true,
       filterKeys: { disregardDefault: "Boolean" },
     });
 

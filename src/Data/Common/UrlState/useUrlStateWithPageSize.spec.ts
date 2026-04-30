@@ -1,5 +1,6 @@
+import { renderHook } from "@testing-library/react";
 import { PageSize } from "@/Core";
-import { handleUrlStateWithPageSize } from "./useUrlStateWithPageSize";
+import { useHandleUrlStateWithPageSize } from "./useUrlStateWithPageSize";
 
 test.each`
   route                | search                            | expectedValue           | valueText
@@ -10,12 +11,10 @@ test.each`
 `(
   "GIVEN handleUrlState with PageSize WHEN route is $route and search is $search THEN returns $valueText",
   async ({ route, search, expectedValue }) => {
-    const [value] = handleUrlStateWithPageSize(
-      { route },
-      { pathname: "", search, hash: "" },
-      () => undefined
+    const { result } = renderHook(() =>
+      useHandleUrlStateWithPageSize({ route }, { pathname: "", search, hash: "" }, () => undefined)
     );
 
-    expect(value).toEqual(expectedValue);
+    expect(result.current[0]).toEqual(expectedValue);
   }
 );

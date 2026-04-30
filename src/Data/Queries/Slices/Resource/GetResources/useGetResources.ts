@@ -51,7 +51,7 @@ interface GetResources {
 interface GetResourcesParams {
   pageSize: PageSize.PageSize;
   filter: Resource.Filter;
-  sort?: Sort.Type<Resource.SortKey>;
+  sort: Sort.MultiSort<Resource.SortKey>;
   currentPage: CurrentPage;
 }
 
@@ -147,18 +147,17 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
     filter: graphqlFilter,
     environment: env,
     ...paginationVariables,
-    ...(sort ? { orderBy: mapSort(sort) } : {}),
+    ...(sort.length > 0 ? { orderBy: mapSort(sort) } : {}),
   };
 
   const filterArray = filter ? Object.values(filter) : [];
-  const sortArray = sort ? [sort] : [];
 
   const queryFn = useGraphQLRequest<ResourcesGraphQLResponse>(GET_RESOURCES_QUERY, variables);
 
   return {
     useContinuous: (): UseQueryResult<GetResourcesResponse, Error> =>
       useQuery({
-        queryKey: getResourcesKey.list([pageSize, ...filterArray, ...sortArray, currentPage, env]),
+        queryKey: getResourcesKey.list([pageSize, ...filterArray, ...sort, currentPage, env]),
         queryFn,
         select: (data) => {
           const { resources, resourceSummary } = data.data;

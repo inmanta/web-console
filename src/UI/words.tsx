@@ -546,6 +546,8 @@ const dict = {
   "resources.column.value": "Value",
   "resources.column.requires": "Requires",
   "resources.column.status": "Status",
+  "resources.column.status.toolTip":
+    "Toggle fields to include them in sorting. Drag active fields to set their priority order.",
   "resources.button.statusDetails": "Show status details",
   "resources.popover.title": "Resource State Summary",
   "resources.popover.deploying": "Deploying",

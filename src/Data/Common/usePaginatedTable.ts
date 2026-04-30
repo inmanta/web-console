@@ -1,32 +1,101 @@
 import { useEffect } from "react";
-import { RouteKind, Sort } from "@/Core";
+import { PageSize, RouteKind, Sort } from "@/Core";
 import {
   useUrlStateWithCurrentPage,
   useUrlStateWithPageSize,
   useUrlStateWithFilter,
   useUrlStateWithSort,
-} from "./";
+  useUrlStateWithMultiSort,
+  CurrentPage,
+} from ".";
 
-interface UsePaginatedTableOptions<TFilter = undefined, TSort extends string = string> {
+interface BaseOptions<TFilter> {
   route: RouteKind;
-  defaultSort?: Sort.Type<TSort>;
   defaultFilter?: TFilter;
   filterKeys?: Record<string, "IntRange" | "DateRange" | "Boolean">;
 }
 
+interface SingleSortOptions<TFilter, TSort extends string> extends BaseOptions<TFilter> {
+  multiSort?: false;
+  defaultSort?: Sort.Type<TSort>;
+}
+
+interface MultiSortOptions<TFilter, TSort extends string> extends BaseOptions<TFilter> {
+  multiSort: true;
+  defaultSort?: Sort.MultiSort<TSort>;
+}
+
+export function usePaginatedTable<TFilter = undefined, TSort extends string = string>(
+  options: MultiSortOptions<TFilter, TSort>
+): {
+  currentPage: CurrentPage;
+  setCurrentPage: (currentPage: CurrentPage) => void;
+  pageSize: PageSize.Type;
+  setPageSize: (size: PageSize.Type) => void;
+  filter: TFilter;
+  setFilter: (filter: TFilter) => void;
+  sort: Sort.MultiSort<TSort>;
+  setSort: (sort: Sort.MultiSort<TSort>) => void;
+};
+
+export function usePaginatedTable<TFilter = undefined, TSort extends string = string>(
+  options: SingleSortOptions<TFilter, TSort>
+): {
+  currentPage: CurrentPage;
+  setCurrentPage: (currentPage: CurrentPage) => void;
+  pageSize: PageSize.Type;
+  setPageSize: (size: PageSize.Type) => void;
+  filter: TFilter;
+  setFilter: (filter: TFilter) => void;
+  sort: Sort.Type<TSort>;
+  setSort: (sort: Sort.Type<TSort>) => void;
+};
+
 /**
- * Note: sort and filter URL state is purely reactive — no params are written
- * to the URL unless setSort/setFilter are explicitly called by the consumer.
- * Unused return values have no side effects.
+ * Composites all URL-synced state needed for a paginated, filterable, sortable table.
+ *
+ * Manages four pieces of state in the URL:
+ * - `currentPage` — the current pagination cursor
+ * - `pageSize`    — number of rows per page
+ * - `filter`      — typed filter object, shape determined by `TFilter`
+ * - `sort`        — either a single {@link Sort.Type} or a {@link Sort.MultiSort} array,
+ *                   depending on whether `multiSort: true` is passed
+ *
+ * Resets `currentPage` automatically whenever sort or filter changes.
+ *
+ * @remarks
+ * Both `useUrlStateWithSort` and `useUrlStateWithMultiSort` are always called
+ * unconditionally to satisfy React's rules of hooks. Only the one matching
+ * `multiSort` is actually active; the other returns its default silently
+ * because its URL key won't be present.
+ *
+ * Sort and filter URL state is purely reactive — no params are written to the
+ * URL unless `setSort`/`setFilter` are explicitly called by the consumer.
+ *
+ * @overload Pass `multiSort: true` to get `sort: Sort.MultiSort<TSort>`.
+ * @overload Omit `multiSort` (or pass `false`) to get `sort: Sort.Type<TSort>`.
+ *
+ * @example Single sort (existing usage, no changes needed)
+ * const { sort, setSort, filter, setFilter } = usePaginatedTable({
+ *   route: RouteKind.MyRoute,
+ *   defaultSort: { name: "createdAt", order: "desc" },
+ * });
+ *
+ * @example Multi sort
+ * const { sort, setSort } = usePaginatedTable({
+ *   route: RouteKind.MyRoute,
+ *   multiSort: true,
+ *   defaultSort: [{ name: "status", order: "asc" }],
+ * });
+ * // Toggle a column on header click:
+ * setSort(Sort.toggleMulti(sort, "status"));
  */
-export function usePaginatedTable<TFilter = undefined, TSort extends string = string>({
-  route,
-  defaultSort,
-  defaultFilter,
-  filterKeys,
-}: UsePaginatedTableOptions<TFilter, TSort>) {
-  //TODO: The useUrlStatexxx should have stable references i between renders so that we don't need to use methods like JSON.stringify
-  //https://github.com/inmanta/web-console/issues/6817
+export function usePaginatedTable<TFilter = undefined, TSort extends string = string>(
+  options: SingleSortOptions<TFilter, TSort> | MultiSortOptions<TFilter, TSort>
+) {
+  const { route, defaultFilter, filterKeys } = options;
+  const isMulti = options.multiSort === true;
+
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({ route });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({ route });
   const [filter, setFilter] = useUrlStateWithFilter<TFilter>({
@@ -34,16 +103,39 @@ export function usePaginatedTable<TFilter = undefined, TSort extends string = st
     keys: filterKeys,
     default: defaultFilter,
   });
-  const [sort, setSort] = useUrlStateWithSort<TSort>({
-    default: defaultSort ?? { name: "" as TSort, order: "asc" },
+
+  const [singleSort, setSingleSort] = useUrlStateWithSort<TSort>({
+    default: (!isMulti ? options.defaultSort : undefined) ?? {
+      name: "" as TSort,
+      order: "asc",
+    },
     route,
   });
 
-  //when sorting or filtering is triggered, reset the current page
+  const [multiSort, setMultiSort] = useUrlStateWithMultiSort<TSort>({
+    default: isMulti ? (options.defaultSort ?? []) : [],
+    route,
+  });
+
+  const sort = isMulti ? multiSort : singleSort;
+
   useEffect(() => {
     setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.name, sort.order, JSON.stringify(filter)]);
+  }, [sort, filter]);
+
+  if (isMulti) {
+    return {
+      currentPage,
+      setCurrentPage,
+      pageSize,
+      setPageSize,
+      filter,
+      setFilter,
+      sort: multiSort,
+      setSort: setMultiSort,
+    };
+  }
 
   return {
     currentPage,
@@ -52,7 +144,7 @@ export function usePaginatedTable<TFilter = undefined, TSort extends string = st
     setPageSize,
     filter,
     setFilter,
-    sort,
-    setSort,
+    sort: singleSort,
+    setSort: setSingleSort,
   };
 }
