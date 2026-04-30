@@ -262,9 +262,7 @@ describe("ResourcesPage", () => {
     expect(
       within(table).getByRole("button", { name: words("resources.column.value") })
     ).toBeVisible();
-    expect(
-      within(table).getByRole("button", { name: words("resources.column.status") })
-    ).toBeVisible();
+    expect(within(table).getByRole("button", { name: "Sort by status fields" })).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
