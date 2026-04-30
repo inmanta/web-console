@@ -589,6 +589,68 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dnd-kit/accessibility@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "@dnd-kit/accessibility@npm:3.1.1"
+  dependencies:
+    tslib: "npm:^2.0.0"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 10/961000456a36700a9cd13be51147a818bc100f7dfabb332b80438d02e06f3b556aa0ff46ddf13bdff3b70bc8f9b63dd5a392cc285597ab1f7026e672660c54b6
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/core@npm:^6.3.1":
+  version: 6.3.1
+  resolution: "@dnd-kit/core@npm:6.3.1"
+  dependencies:
+    "@dnd-kit/accessibility": "npm:^3.1.1"
+    "@dnd-kit/utilities": "npm:^3.2.2"
+    tslib: "npm:^2.0.0"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 10/a5ae6fa8404765712aa80e308f58cb79bac9a306c274ec8272c405c2a59dd277d24b966348fe8ca6340bb3f0d75f90b8a021fa781edcf65255114d3cf2bef891
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/modifiers@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "@dnd-kit/modifiers@npm:9.0.0"
+  dependencies:
+    "@dnd-kit/utilities": "npm:^3.2.2"
+    tslib: "npm:^2.0.0"
+  peerDependencies:
+    "@dnd-kit/core": ^6.3.0
+    react: ">=16.8.0"
+  checksum: 10/2ae238a1b787029e95d92319d7e4a0e2ffba8fceed56c4b58dfee7ed6890df207bf89ce522d4126411051121954222bd8e1444fae321485b594ae518c7c4397d
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/sortable@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "@dnd-kit/sortable@npm:10.0.0"
+  dependencies:
+    "@dnd-kit/utilities": "npm:^3.2.2"
+    tslib: "npm:^2.0.0"
+  peerDependencies:
+    "@dnd-kit/core": ^6.3.0
+    react: ">=16.8.0"
+  checksum: 10/bc61c25e76905204a53f91294b8116bf106fa27247eebca2c66478450b2051d7177115a384054e7e5639e6c4430083ade63056f79ee45f549da537cf05bc5288
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/utilities@npm:^3.2.2":
+  version: 3.2.2
+  resolution: "@dnd-kit/utilities@npm:3.2.2"
+  dependencies:
+    tslib: "npm:^2.0.0"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 10/6cfe46a5fcdaced943982e7ae66b08b89235493e106eb5bc833737c25905e13375c6ecc3aa0c357d136cb21dae3966213dba063f19b7a60b1235a29a7b05ff84
+  languageName: node
+  linkType: hard
+
 "@emnapi/core@npm:1.9.2":
   version: 1.9.2
   resolution: "@emnapi/core@npm:1.9.2"
@@ -1308,6 +1370,7 @@ __metadata:
     "@patternfly/react-charts": "npm:^8.4.1"
     "@patternfly/react-code-editor": "npm:^6.4.3"
     "@patternfly/react-core": "npm:^6.4.3"
+    "@patternfly/react-drag-drop": "npm:^6.4.3"
     "@patternfly/react-icons": "npm:^6.4.0"
     "@patternfly/react-log-viewer": "npm:^6.3.0"
     "@patternfly/react-styles": "npm:^6.4.0"
@@ -1898,6 +1961,24 @@ __metadata:
     react: ^17 || ^18 || ^19
     react-dom: ^17 || ^18 || ^19
   checksum: 10/85c767d1e2d8055e41a47597dc1ab395a939e725c4fe7809933b9d8272d99cb06bf538ced1e1bc1d5b16f92ca875e36e5f8bbdfbb8dfff173a2e9890a76e44bb
+  languageName: node
+  linkType: hard
+
+"@patternfly/react-drag-drop@npm:^6.4.3":
+  version: 6.4.3
+  resolution: "@patternfly/react-drag-drop@npm:6.4.3"
+  dependencies:
+    "@dnd-kit/core": "npm:^6.3.1"
+    "@dnd-kit/modifiers": "npm:^9.0.0"
+    "@dnd-kit/sortable": "npm:^10.0.0"
+    "@patternfly/react-core": "npm:^6.4.3"
+    "@patternfly/react-icons": "npm:^6.4.0"
+    "@patternfly/react-styles": "npm:^6.4.0"
+    resize-observer-polyfill: "npm:^1.5.1"
+  peerDependencies:
+    react: ^17 || ^18 || ^19
+    react-dom: ^17 || ^18 || ^19
+  checksum: 10/d911b3ee1fcb5abb18e2b89e3dc73ff6710219dd518685cf7936bb99953ec4d63afb22edc5d68895bfb653e8c1fa8fdec3fe60ae071f1cedcfb9667c3e80368b
   languageName: node
   linkType: hard
 
@@ -11327,6 +11408,13 @@ __metadata:
     r.js: bin/r.js
     r_js: bin/r.js
   checksum: 10/7f42af10d8af210a2769501004b34f9dad4c39716f008f91faeef36c33b60a5f372ca1025c8f40b262f2522fd1ea0f36fd11e9587cba14311fac0df51a8571b0
+  languageName: node
+  linkType: hard
+
+"resize-observer-polyfill@npm:^1.5.1":
+  version: 1.5.1
+  resolution: "resize-observer-polyfill@npm:1.5.1"
+  checksum: 10/e10ee50cd6cf558001de5c6fb03fee15debd011c2f694564b71f81742eef03fb30d6c2596d1d5bf946d9991cb692fcef529b7bd2e4057041377ecc9636c753ce
   languageName: node
   linkType: hard
 

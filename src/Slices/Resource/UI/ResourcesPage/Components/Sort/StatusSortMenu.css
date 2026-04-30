@@ -1,0 +1,24 @@
+/* Targets the main wrapper of the dnd we otherwise wouldn't have access to. */
+.statusSortDragWrapper > div > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 16px;
+  min-height: 36px;
+}
+
+/* Hover effect of the main wrapper */
+.statusSortDragWrapper > div > div:hover {
+  background: var(--pf-t--global--background--color--secondary--default);
+}
+
+/* We already set these styles on our main wrapper, button styles interfere */
+.statusSortDragWrapper button {
+  padding: 0;
+  min-width: unset;
+}
+
+/* Centering the dnd icon */
+.statusSortDragWrapper button span {
+  display: flex;
+}

@@ -5,3 +5,4 @@ export * from "./useUrlStateWithPageSize";
 export * from "./useUrlStateWithSort";
 export * from "./useUrlStateWithString";
 export * from "./useUrlStateWithCurrentPage";
+export * from "./useUrlStateWithMultiSort";

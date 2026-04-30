@@ -1,8 +1,5 @@
 import { Pagination } from "@/Core/Domain/Pagination";
 import { Maybe, ParsedNumber } from "@/Core/Language";
-import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { PageSize } from "../PageSize";
-import { Sort } from "../Sort";
 
 /**
  * --- General explanation of compound state ---
@@ -190,13 +187,6 @@ export interface VersionedDetails extends BaseDetails {
 
 export const TRANSIENT_STATES = ["available", "deploying", "processing_events"];
 
-export interface ResourceParams {
-  sort?: Sort<SortKey>;
-  filter?: Filter;
-  pageSize: PageSize;
-  currentPage: CurrentPage;
-}
-
 /**
  * Interface for filtering resources
  */
@@ -218,10 +208,11 @@ export enum FilterKind {
   Status = "Status",
 }
 
-export type SortKey = "agent" | "status" | "resource_type" | "resource_id_value";
+export type StatusSortKey = "compliance" | "lastHandlerRun" | "blocked" | "isDeploying";
+export type SortKey = "agent" | "resource_type" | "resource_id_value" | StatusSortKey;
 
 export type FilterFromVersion = Omit<Filter, "status">;
-export type SortKeyFromVersion = Exclude<SortKey, "status">;
+export type SortKeyFromVersion = Exclude<SortKey, StatusSortKey>;
 
 export interface IdDetails {
   resource_type: string;

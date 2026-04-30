@@ -1,5 +1,6 @@
+import { renderHook } from "@testing-library/react";
 import moment from "moment";
-import { handleUrlStateWithFilter } from "./useUrlStateWithFilter";
+import { useHandleUrlStateWithFilter } from "./useUrlStateWithFilter";
 
 const fromDate = {
   search: "?state.Inventory.filter.timestamp[0]=from__2021-10-11T22%3A30%3A00.000Z",
@@ -28,6 +29,13 @@ const fromAndToInt = {
   ],
 };
 
+const filterKeys = {
+  timestamp: "DateRange",
+  version: "IntRange",
+  success: "Boolean",
+  details: "Boolean",
+} as const;
+
 test.each`
   search                                                                        | searchText                     | expectedValue                         | valueText
   ${""}                                                                         | ${"empty"}                     | ${{}}                                 | ${"default"}
@@ -42,49 +50,40 @@ test.each`
 `(
   "GIVEN handleUrlState with Filter WHEN search is $searchText THEN returns $valueText",
   async ({ search, expectedValue }) => {
-    const [value] = handleUrlStateWithFilter(
-      {
-        route: "Inventory",
-        keys: {
-          timestamp: "DateRange",
-          version: "IntRange",
-          success: "Boolean",
-          details: "Boolean",
-        },
-      },
-      { pathname: "", search, hash: "" },
-      () => undefined
+    const { result } = renderHook(() =>
+      useHandleUrlStateWithFilter(
+        { route: "Inventory", keys: filterKeys },
+        { pathname: "", search, hash: "" },
+        () => undefined
+      )
     );
 
-    expect(value).toEqual(expectedValue);
+    expect(result.current[0]).toEqual(expectedValue);
   }
 );
 
 test("GIVEN handleUrlState with Filter WHEN search is empty THEN returns default value", async () => {
-  const [value] = handleUrlStateWithFilter(
-    {
-      route: "Inventory",
-      keys: {
-        timestamp: "DateRange",
-        version: "IntRange",
-        success: "Boolean",
-        details: "Boolean",
+  const { result: result1 } = renderHook(() =>
+    useHandleUrlStateWithFilter(
+      {
+        route: "Inventory",
+        keys: filterKeys,
+        default: {
+          timestamp: [],
+          version: [
+            { operator: "from", value: 10 },
+            { operator: "to", value: 20 },
+          ],
+          success: false,
+          details: false,
+        },
       },
-      default: {
-        timestamp: [],
-        version: [
-          { operator: "from", value: 10 },
-          { operator: "to", value: 20 },
-        ],
-        success: false,
-        details: false,
-      },
-    },
-    { pathname: "", search: "", hash: "" },
-    () => undefined
+      { pathname: "", search: "", hash: "" },
+      () => undefined
+    )
   );
 
-  expect(value).toEqual({
+  expect(result1.current[0]).toEqual({
     timestamp: [],
     version: [
       { operator: "from", value: 10 },
@@ -94,27 +93,24 @@ test("GIVEN handleUrlState with Filter WHEN search is empty THEN returns default
     details: false,
   });
 
-  const [value2] = handleUrlStateWithFilter(
-    {
-      route: "Inventory",
-      keys: {
-        timestamp: "DateRange",
-        version: "IntRange",
-        success: "Boolean",
-        details: "Boolean",
+  const { result: result2 } = renderHook(() =>
+    useHandleUrlStateWithFilter(
+      {
+        route: "Inventory",
+        keys: filterKeys,
+        default: {
+          timestamp: [],
+          version: [],
+          success: false,
+          details: false,
+        },
       },
-      default: {
-        timestamp: [],
-        version: [],
-        success: false,
-        details: false,
-      },
-    },
-    { pathname: "", search: "", hash: "" },
-    () => undefined
+      { pathname: "", search: "", hash: "" },
+      () => undefined
+    )
   );
 
-  expect(value2).toEqual({
+  expect(result2.current[0]).toEqual({
     timestamp: [],
     version: [],
     success: false,
