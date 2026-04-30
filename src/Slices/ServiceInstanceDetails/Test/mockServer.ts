@@ -183,7 +183,7 @@ const postStateUpdateFailed = http.post(
 );
 
 /**
- * Setup a test server where the queries are infinitely delayed
+ * Setup a test server where the queries are delayed or infinitely delayed
  */
 export const loadingServer = setupServer(
   getServiceModel,
