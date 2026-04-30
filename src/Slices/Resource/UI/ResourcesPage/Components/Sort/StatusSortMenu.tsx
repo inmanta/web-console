@@ -90,6 +90,8 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }) => {
       id: s.name,
       content: (
         <Flex
+          data-testid="status-sort-item"
+          data-key={s.name}
           justifyContent={{ default: "justifyContentSpaceBetween" }}
           alignItems={{ default: "alignItemsCenter" }}
           flexWrap={{ default: "nowrap" }}
@@ -101,7 +103,7 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }) => {
         >
           <FlexItem>{label}</FlexItem>
           <FlexItem>
-            <Icon status="info">
+            <Icon status="info" data-direction={s.order} data-testid="sort-direction-icon">
               <SortIcon />
             </Icon>
           </FlexItem>
@@ -120,7 +122,7 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }) => {
             ref={toggleRef}
             variant="plain"
             onClick={() => setIsOpen((prev) => !prev)}
-            aria-label={words("resources.column.status")}
+            aria-label="Sort by status fields"
             aria-expanded={isOpen}
             style={{
               fontWeight: 600,
@@ -137,7 +139,9 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }) => {
             >
               <FlexItem>{words("resources.column.status")}</FlexItem>
               <FlexItem>
-                <Badge isRead>{activeCount}</Badge>
+                <Badge isRead data-testid="status-sort-badge">
+                  {activeCount}
+                </Badge>
               </FlexItem>
             </Flex>
           </Button>
@@ -146,10 +150,11 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }) => {
       >
         <DropdownList
           style={{ display: "flex", flexDirection: "column", gap: "6px", width: "220px" }}
+          data-testid="status-sort-menu"
         >
           {/* Active sorts — draggable to reorder */}
           {activeStatusSorts.length > 0 && (
-            <div className="statusSortDragWrapper">
+            <div className="statusSortDragWrapper" data-testid="status-sort-active-list">
               <DragDropSort items={draggableItems} onDrop={onDragFinish} variant="default" />
             </div>
           )}

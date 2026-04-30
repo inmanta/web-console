@@ -56,6 +56,7 @@ export const ResourcesTable: React.FC<Props> = ({ rows, sort, setSort, ...props 
             onSort,
             columnIndex,
           },
+          "data-testid": `sort-${displayName}`,
         }
       : {};
 

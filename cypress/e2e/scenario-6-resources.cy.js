@@ -203,31 +203,23 @@ describe("Scenario 6 : Resources", () => {
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
 
-      // Store initial resource count before adding more
-      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
-      cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
-        cy.wrap($rows.length).as("initialRowCount");
-      });
-
       // Add a resource-states instance with scale=2 to get enough resources for pagination
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#resource-states").contains("Show inventory").click();
       cy.get("#add-instance-button").click();
       cy.get("#name").type("pagination-test");
-      cy.get("#scale").type("2");
+      cy.get("#scale").clear().type("3");
       cy.get("button").contains("Confirm").click();
 
       cy.get('[aria-label="Instance-Details-Success"]', { timeout: 20000 }).should("be.visible");
       cy.get('[aria-label="CompileReportsIndication"]', { timeout: 90000 }).should("not.exist");
 
-      // Verify at least 52 new resources were added
+      // Verify that we now have at least 100 resources
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
-      cy.get("@initialRowCount").then((initialRowCount) => {
-        cy.get('[aria-label="Resource Table Row"]', { timeout: 80000 }).should(
-          "have.length.at.least",
-          initialRowCount + 52
-        );
-      });
+      cy.get('[aria-label="Resource Table Row"]', { timeout: 80000 }).should(
+        "have.length.at.least",
+        100
+      );
 
       // Switch to page size 20 and verify we start on page 1
       cy.get("#PaginationWidget-top-top-toggle").click();
@@ -262,6 +254,21 @@ describe("Scenario 6 : Resources", () => {
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
       }).should("have.text", "1 - 20");
+
+      // Changing filter should also redirect back to page 1
+      cy.get('[aria-label="Go to next page"]').first().should("not.be.disabled").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "21 - 40");
+
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+      // Filtering on type input with "lsm" will return 2 results
+      cy.get('[aria-label="Type"]').type("lsm");
+      cy.get('[aria-label="Add filter-Type"]').click();
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "1 - 2");
     });
 
     it("6.6 Compound resource status legend", () => {
@@ -308,14 +315,6 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Select-environment-test"]').click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
-
-      // Set page size to 250 to ensure all resources are visible for accurate filtering
-      cy.get("#PaginationWidget-top-top-toggle").click();
-      cy.contains(".pf-v6-c-menu__list-item", "250").click();
-      cy.get('[aria-label="Resource Table Row"]', { timeout: 20000 }).should(
-        "have.length.at.least",
-        101
-      );
 
       // Store initial row count
       cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
@@ -375,7 +374,7 @@ describe("Scenario 6 : Resources", () => {
       expectRowCountRestored("initialRowCount");
 
       // --- Status tab ---
-      cy.get("button").contains("Status").click();
+      cy.get('[role="tab"]').contains("Status").click();
 
       // Blocked state filter
       cy.get('[aria-label="Blocked state(s)-toggle"]').click();
@@ -406,6 +405,92 @@ describe("Scenario 6 : Resources", () => {
       expectFilteredLessThan("initialRowCount");
       cy.get('[aria-label="Close isDeploying"]').click();
       expectRowCountRestored("initialRowCount");
+    });
+
+    it("6.8 Resource sorting", () => {
+      cy.visit("/console/");
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      // --- Regular column sorting ---
+
+      // Default sort is resource_type asc — clicking it should switch to desc
+      cy.get("button").contains("Type").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      cy.get('[data-testid="sort-Type"]').should("have.attr", "aria-sort", "descending");
+
+      // Clicking again should switch back to asc
+      cy.get("button").contains("Type").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      cy.get('[data-testid="sort-Type"]').should("have.attr", "aria-sort", "ascending");
+
+      // Clicking a different column should move the active sort
+      cy.get("button").contains("Agent").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      cy.get('[data-testid="sort-Agent"]').should("have.attr", "aria-sort", "ascending");
+      cy.get('[data-testid="sort-Type"]').should("not.have.attr", "aria-sort");
+
+      // Sorting resets pagination to page 1
+      cy.get('[aria-label="Go to next page"]').first().click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      // Page 2 with 100 per page would show "101 - 102" or similar
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("not.have.text", "1 - 100");
+
+      cy.get("button").contains("Type").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "1 - 100");
+
+      // --- Status sort menu ---
+
+      // Badge should start at 0
+      cy.get('[aria-label="Sort by status fields"]').within(() => {
+        cy.get('[data-testid="status-sort-badge"]').should("have.text", "0");
+      });
+
+      // Open the status sort menu
+      cy.get('[aria-label="Sort by status fields"]').click();
+      cy.get('[data-testid="status-sort-menu"]').should("be.visible");
+
+      // Activate "Blocked" — badge should increment to 1
+      cy.get('[data-testid="status-sort-menu"]').contains("Blocked").click();
+      cy.get('[data-testid="status-sort-badge"]').should("have.text", "1");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      // Activate "Compliance" — badge should increment to 2
+      cy.get('[data-testid="status-sort-menu"]').contains("Compliance").click();
+      cy.get('[data-testid="status-sort-badge"]').should("have.text", "2");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      // Both active items should appear in the draggable section
+      cy.get('[data-testid="status-sort-active-list"]').within(() => {
+        cy.get('[data-testid="status-sort-item"]').should("have.length", 2);
+        cy.get('[data-testid="status-sort-item"]').eq(0).should("contain", "Blocked");
+        cy.get('[data-testid="status-sort-item"]').eq(1).should("contain", "Compliance");
+      });
+
+      // Clicking an active item toggles its direction (asc → desc)
+      cy.get('[data-testid="status-sort-active-list"]')
+        .contains('[data-testid="status-sort-item"]', "Blocked")
+        .click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      cy.get('[data-testid="status-sort-active-list"]')
+        .contains('[data-testid="status-sort-item"]', "Blocked")
+        .find('[data-testid="sort-direction-icon"]')
+        .should("have.attr", "data-direction", "desc");
+
+      // Clicking again removes it — badge decrements to 1
+      cy.get('[data-testid="status-sort-active-list"]')
+        .contains('[data-testid="status-sort-item"]', "Blocked")
+        .click();
+      cy.get('[data-testid="status-sort-badge"]').should("have.text", "1");
+      cy.get('[data-testid="status-sort-active-list"]').within(() => {
+        cy.get('[data-testid="status-sort-item"]').should("have.length", 1);
+      });
     });
   } else {
     it("6.2 Resources for OSS", () => {
