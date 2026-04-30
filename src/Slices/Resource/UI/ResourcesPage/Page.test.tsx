@@ -678,7 +678,7 @@ describe("ResourcesPage", () => {
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
     const legendBars = await screen.findAllByRole("generic", {
-      name: words("resources.deploySummary.title"),
+      name: words("resources.compoundStateSummary.title"),
     });
     expect(legendBars.length).toBeGreaterThan(0);
 
@@ -742,17 +742,17 @@ describe("ResourcesPage", () => {
     await userEvent.click(nextPageButton);
 
     const legendBars = await screen.findAllByRole("generic", {
-      name: words("resources.deploySummary.title"),
+      name: words("resources.compoundStateSummary.title"),
     });
     expect(legendBars[0]).toBeVisible();
 
     const repairButton = screen.getByRole("button", {
-      name: words("resources.deploySummary.repair"),
+      name: words("resources.compoundStateSummary.repair"),
     });
     expect(repairButton).toBeVisible();
 
     const deployButton = screen.getByRole("button", {
-      name: words("resources.deploySummary.deploy"),
+      name: words("resources.compoundStateSummary.deploy"),
     });
     expect(deployButton).toBeVisible();
 
@@ -828,7 +828,7 @@ describe("ResourcesPage", () => {
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
     const deployButton = await screen.findByRole("button", {
-      name: words("resources.deploySummary.deploy"),
+      name: words("resources.compoundStateSummary.deploy"),
     });
     await userEvent.click(deployButton);
 
@@ -859,7 +859,7 @@ describe("ResourcesPage", () => {
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
     const repairButton = await screen.findByRole("button", {
-      name: words("resources.deploySummary.repair"),
+      name: words("resources.compoundStateSummary.repair"),
     });
     await userEvent.click(repairButton);
 
@@ -882,12 +882,12 @@ describe("ResourcesPage", () => {
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
     const repairButton = screen.getByRole("button", {
-      name: words("resources.deploySummary.repair"),
+      name: words("resources.compoundStateSummary.repair"),
     });
     expect(repairButton).toBeDisabled();
 
     const deployButton = await screen.findByRole("button", {
-      name: words("resources.deploySummary.deploy"),
+      name: words("resources.compoundStateSummary.deploy"),
     });
     expect(deployButton).toBeDisabled();
 
