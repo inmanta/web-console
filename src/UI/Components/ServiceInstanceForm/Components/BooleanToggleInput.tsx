@@ -29,7 +29,6 @@ export const BooleanToggleInput: React.FC<Props> = ({
       fieldId={attributeName}
       key={attributeName}
       label={attributeName}
-      isRequired={true}
     >
       <FormHelperText>
         <HelperText>

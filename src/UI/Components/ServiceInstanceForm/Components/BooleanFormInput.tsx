@@ -33,7 +33,6 @@ export const BooleanFormInput: React.FC<Props> = ({
         fieldId={attributeName}
         key={attributeName}
         label={attributeName}
-        isRequired={!isOptional}
       >
         <FormHelperText>
           <HelperText>

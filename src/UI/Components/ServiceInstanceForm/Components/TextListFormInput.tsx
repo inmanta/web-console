@@ -130,7 +130,6 @@ export const TextListFormInput: React.FC<Props> = ({
   return (
     <FormGroup
       {...props}
-      isRequired={!isOptional}
       fieldId={attributeName}
       label={attributeName}
       className={shouldBeDisabled ? "is-disabled" : ""}
