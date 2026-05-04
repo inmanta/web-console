@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { SearchWithMenu, TEST_IDS } from "./SearchWithMenu";
@@ -60,7 +60,7 @@ describe("SearchWithMenu", () => {
       expect(menu()).toBeInTheDocument();
     });
 
-    it("closes the menu when clicking outside", () => {
+    it("closes the menu when clicking outside", async () => {
       const { input, menu } = setup();
 
       fireEvent.focus(input());
@@ -69,7 +69,9 @@ describe("SearchWithMenu", () => {
       fireEvent.mouseDown(document.body);
       fireEvent.click(document.body);
 
-      expect(menu()).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(menu()).not.toBeInTheDocument();
+      });
     });
 
     it("does not render menu when no matches", () => {
@@ -154,7 +156,9 @@ describe("SearchWithMenu", () => {
       await userEvent.click(input());
       await userEvent.click(getMenuItemButton("Cherry"));
 
-      expect(menu()).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(menu()).not.toBeInTheDocument();
+      });
     });
 
     it("calls onChange and onClear when cleared", () => {
