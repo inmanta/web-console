@@ -290,6 +290,7 @@ const dict = {
   active_attributes: "Active",
   candidate_attributes: "Candidate",
   rollback_attributes: "Rollback",
+  "instanceDetails.searchPlaceholder": "Search version…",
   "instanceDetails.expandAll": "Expand all",
   "instanceDetails.collapseAll": "Collapse all",
   "instanceDetails.resetSort": "Reset sorting",

@@ -236,14 +236,22 @@ describe("ServiceInstanceDetailsPage", () => {
 
     await userEvent.click(toggleCompare);
 
-    const selects = screen.getAllByRole("combobox");
+    const leftSelect = screen.getByRole("combobox", {
+      name: /left-side-attribute-set-select/i,
+    });
 
-    expect(selects).toHaveLength(4);
-    expect(selects[0]).toHaveValue("4");
-    expect(selects[1]).toHaveValue("active_attributes");
-    expect(selects[2]).toHaveValue("4");
-    // by default, if a candidate set is available it will set it to compare
-    expect(selects[3]).toHaveValue("candidate_attributes");
+    const rightSelect = screen.getByRole("combobox", {
+      name: /right-side-attribute-set-select/i,
+    });
+
+    expect(leftSelect).toHaveValue("active_attributes");
+    expect(rightSelect).toHaveValue("candidate_attributes");
+
+    const versionInputs = screen.getAllByTestId("swd-input");
+
+    expect(versionInputs).toHaveLength(2);
+    expect(versionInputs[0]).toHaveValue("4");
+    expect(versionInputs[1]).toHaveValue("4");
 
     // There shouldn't be a documentation tab for this Instance and ServiceModel
     expect(screen.queryByText("Documentation")).not.toBeInTheDocument();
