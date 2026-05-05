@@ -28,12 +28,7 @@ export const BooleanFormInput: React.FC<Props> = ({
 }) => {
   return (
     <>
-      <FormGroup
-        {...props}
-        fieldId={attributeName}
-        key={attributeName}
-        label={attributeName}
-      >
+      <FormGroup {...props} fieldId={attributeName} key={attributeName} label={attributeName}>
         <FormHelperText>
           <HelperText>
             <HelperTextItem>{description}</HelperTextItem>
