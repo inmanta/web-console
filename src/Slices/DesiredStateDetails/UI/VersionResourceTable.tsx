@@ -1,12 +1,12 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Resource, Sort } from "@/Core";
-import { Row } from "./Row";
+import { Row, RowFromVersion } from "./Row";
 import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 
 interface Props {
   version: string;
-  rows: Resource.RowFromVersion[];
+  rows: RowFromVersion[];
   tablePresenter: VersionResourceTablePresenter;
   sort: Sort.Type<Resource.SortKeyFromVersion>;
   setSort: (sort: Sort.Type<Resource.SortKeyFromVersion>) => void;

@@ -118,7 +118,7 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
           {filter.status && filter.status.length > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("resources.column.deployState")}
+                title={words("resources.column.status")}
                 values={filter.status}
                 onRemove={removeStatusChip}
                 onRemoveGroup={clearStatusFilters}
