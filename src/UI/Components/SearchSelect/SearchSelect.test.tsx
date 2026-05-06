@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
-import { SearchWithMenu, TEST_IDS } from "./SearchWithMenu";
+import { SearchSelect, TEST_IDS } from "./SearchSelect";
 
 const OPTIONS = ["Apple", "Banana", "Blueberry", "Cherry", "Grape"];
 
@@ -12,29 +12,20 @@ const OPTIONS = ["Apple", "Banana", "Blueberry", "Cherry", "Grape"];
  * - provides spies
  * - exposes query helpers
  */
-function setup(overrides: Partial<React.ComponentProps<typeof SearchWithMenu>> = {}) {
+function setup(overrides: Partial<React.ComponentProps<typeof SearchSelect>> = {}) {
   const onChange = vi.fn();
   const onClear = vi.fn();
 
-  render(
-    <SearchWithMenu
-      value=""
-      options={OPTIONS}
-      onChange={onChange}
-      onClear={onClear}
-      {...overrides}
-    />
-  );
+  render(<SearchSelect value="" options={OPTIONS} onChange={onChange} {...overrides} />);
 
   return {
     onChange,
     onClear,
     input: () => screen.getByTestId(TEST_IDS.input),
     menu: () => screen.queryByTestId(TEST_IDS.menu),
-    menuItems: () => screen.queryAllByRole("menuitem"),
-    clearButton: () => screen.queryByRole("button", { name: "Reset" }),
-    getMenuItemButton: (name: string) =>
-      screen.getByTestId(TEST_IDS.menuItem(name)).querySelector("button")!,
+    menuItem: (option: string) => screen.getByRole("option", { name: TEST_IDS.menuItem(option) }),
+    menuItems: () => screen.queryAllByRole("option"),
+    clearButton: () => screen.getByRole("button", { name: "Reset" }),
   };
 }
 
@@ -74,33 +65,37 @@ describe("SearchWithMenu", () => {
       });
     });
 
-    it("does not render menu when no matches", () => {
-      const { input, menu } = setup({ value: "zzz" });
+    it("does not render menu items when no matches", () => {
+      const { input, menu, menuItems } = setup({ value: "zzz" });
 
       fireEvent.focus(input());
 
-      expect(menu()).not.toBeInTheDocument();
+      expect(menu()).toBeInTheDocument();
+      expect(menuItems()).toHaveLength(0);
     });
   });
 
   describe("filtering", () => {
     it("filters by startsWith (default)", () => {
-      const { input, menuItems } = setup({ value: "b" });
+      const { input, menuItems, menuItem } = setup({ value: "b" });
 
       fireEvent.focus(input());
 
-      expect(menuItems().map((i) => i.textContent)).toEqual(["Banana", "Blueberry"]);
+      expect(menuItems()).toHaveLength(2);
+      expect(menuItem("Banana")).toBeInTheDocument();
+      expect(menuItem("Blueberry")).toBeInTheDocument();
     });
 
     it("filters by includes", () => {
-      const { input, menuItems } = setup({
+      const { input, menuItems, menuItem } = setup({
         value: "AN",
         filterStrategy: "includes",
       });
 
       fireEvent.focus(input());
 
-      expect(menuItems().map((i) => i.textContent)).toEqual(["Banana"]);
+      expect(menuItems()).toHaveLength(1);
+      expect(menuItem("Banana")).toBeInTheDocument();
     });
 
     it("shows all options with filterStrategy='all'", () => {
@@ -111,26 +106,29 @@ describe("SearchWithMenu", () => {
 
       fireEvent.focus(input());
 
-      expect(menuItems().length).toBe(OPTIONS.length);
+      expect(menuItems()).toHaveLength(OPTIONS.length);
     });
 
     it("supports custom filter function", () => {
-      const { input, menuItems } = setup({
+      const { input, menuItems, menuItem } = setup({
         value: "x",
         filterStrategy: (_: string, __: string) => _ === "Grape",
       });
 
       fireEvent.focus(input());
 
-      expect(menuItems().map((i) => i.textContent)).toEqual(["Grape"]);
+      expect(menuItems()).toHaveLength(1);
+      expect(menuItem("Grape")).toBeInTheDocument();
     });
 
     it("respects maxItems", () => {
-      const { input, menuItems } = setup({ maxItems: 2 });
+      const { input, menuItems, menuItem } = setup({ maxItems: 2 });
 
       fireEvent.focus(input());
 
-      expect(menuItems().length).toBe(2);
+      expect(menuItems()).toHaveLength(2);
+      expect(menuItem("Apple")).toBeInTheDocument();
+      expect(menuItem("Banana")).toBeInTheDocument();
     });
   });
 
@@ -142,46 +140,45 @@ describe("SearchWithMenu", () => {
     });
 
     it("calls onChange when selecting an option", async () => {
-      const { onChange, input, getMenuItemButton } = setup();
+      const { onChange, input, menuItem } = setup();
 
       await userEvent.click(input());
-      await userEvent.click(getMenuItemButton("Cherry"));
+      await userEvent.click(menuItem("Cherry"));
 
       expect(onChange).toHaveBeenCalledWith("Cherry");
     });
 
     it("closes menu after selecting option", async () => {
-      const { input, menu, getMenuItemButton } = setup();
+      const { input, menu, menuItem } = setup();
 
       await userEvent.click(input());
-      await userEvent.click(getMenuItemButton("Cherry"));
+      await userEvent.click(menuItem("Cherry"));
 
       await waitFor(() => {
         expect(menu()).not.toBeInTheDocument();
       });
     });
 
-    it("calls onChange and onClear when cleared", () => {
-      const { onChange, onClear, clearButton } = setup({ value: "Apple" });
+    it("calls onChange when cleared", () => {
+      const { onChange, clearButton } = setup({ value: "Apple" });
 
-      fireEvent.click(clearButton()!);
+      fireEvent.click(clearButton());
 
       expect(onChange).toHaveBeenCalledWith("");
-      expect(onClear).toHaveBeenCalled();
     });
 
     it("reopens with all options after clearing", async () => {
       function Wrapper() {
         const [value, setValue] = useState("Apple");
 
-        return <SearchWithMenu value={value} options={OPTIONS} onChange={(v) => setValue(v)} />;
+        return <SearchSelect value={value} options={OPTIONS} onChange={(v) => setValue(v)} />;
       }
 
       render(<Wrapper />);
 
       await userEvent.click(screen.getByRole("button", { name: "Reset" }));
 
-      expect(screen.getAllByRole("menuitem").length).toBe(OPTIONS.length);
+      expect(screen.getAllByRole("option").length).toBe(OPTIONS.length);
     });
   });
 });

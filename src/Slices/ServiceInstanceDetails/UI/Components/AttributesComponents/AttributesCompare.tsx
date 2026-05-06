@@ -9,8 +9,8 @@ import {
   getAvailableVersions,
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { words } from "@/UI";
+import { SearchSelect } from "@/UI/Components";
 import { getThemePreference } from "@/UI/Components/DarkmodeOption";
-import { SearchWithMenu } from "./SearchWithMenu";
 
 interface Props {
   instanceLogs: InstanceLog[];
@@ -93,7 +93,7 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
         <FlexItem flex={{ default: "flex_1" }}>
           <Flex flexWrap={{ default: "nowrap" }}>
             <FlexItem flex={{ default: "flex_1" }}>
-              <SearchWithMenu
+              <SearchSelect
                 value={leftVersion}
                 onChange={setLeftVersion}
                 options={availableVersions}
@@ -132,7 +132,7 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
         <FlexItem flex={{ default: "flex_1" }}>
           <Flex flexWrap={{ default: "nowrap" }}>
             <FlexItem flex={{ default: "flex_1" }}>
-              <SearchWithMenu
+              <SearchSelect
                 value={rightVersion}
                 onChange={setRightVersion}
                 options={availableVersions}
