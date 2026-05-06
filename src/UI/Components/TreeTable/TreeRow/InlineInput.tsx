@@ -54,7 +54,6 @@ export const InlineInput: React.FC<Props> = ({
       <TextListFormInput
         aria-label="new-attribute-input"
         attributeValue={formattedValue as string[]}
-        isOptional={true}
         type={TextInputTypes.text}
         handleInputChange={(value, event) => onChange(event, value)}
         placeholder={words("inventory.editAttribute.placeholder")}

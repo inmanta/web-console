@@ -16,7 +16,7 @@ import { convertLowerLimitToNumber } from "./shapeUtils";
  * `visited` tracks service entity names already in the current recursion path to break
  * cycles (e.g. A requires B which requires A).
  */
-const applyRequiredConnections = (
+export const applyRequiredConnections = (
   relations: InterServiceRelation[],
   embeddedEntities: EmbeddedEntity[],
   attrs: Record<string, unknown>,
