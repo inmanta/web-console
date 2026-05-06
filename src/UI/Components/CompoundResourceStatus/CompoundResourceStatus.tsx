@@ -95,7 +95,7 @@ export const CompoundResourceStatus = ({
             <LegendBar
               data-testid={`legend-bar-${key}`}
               items={toLegendBarItems(record)}
-              aria-label={words("resources.deploySummary.title")}
+              aria-label={words("resources.compoundStateSummary.title")}
             />
           </FlexItem>
         </Flex>

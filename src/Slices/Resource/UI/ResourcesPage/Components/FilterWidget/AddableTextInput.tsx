@@ -101,7 +101,7 @@ export const AddableTextInput: React.FC<AddableTextInputProps> = ({
             variant="control"
             onClick={handleAdd}
             data-testid="add-button"
-            aria-label={words("resources.filters.filter")}
+            aria-label={`${words("resources.filters.filter")}-${label}`}
           >
             <PlusIcon />
           </Button>
