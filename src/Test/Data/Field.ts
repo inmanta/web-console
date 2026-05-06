@@ -7,6 +7,7 @@ import {
   BooleanField,
   EnumField,
   Textarea,
+  DictField,
 } from "@/Core";
 
 export const textArea: Textarea = {
@@ -138,15 +139,13 @@ export const numberArr: TextField = {
   isDisabled: false,
 };
 
-export const dictionary: TextField = {
-  kind: "Text",
+export const dictionary: DictField = {
+  kind: "Dict",
   name: "dictionary_field",
   description: "description",
   isOptional: false,
   isDisabled: false,
-
   defaultValue: {},
-  inputType: TextInputTypes.text,
   type: "dict",
 };
 
@@ -223,10 +222,9 @@ export const nestedEditable: Field[] = [
     isDisabled: false,
   },
   {
-    kind: "Text",
+    kind: "Dict",
     name: "other_attr2",
     defaultValue: "",
-    inputType: TextInputTypes.text,
     description: "desc",
     type: "dict?",
     isOptional: true,
@@ -256,10 +254,9 @@ export const nestedEditable: Field[] = [
         isDisabled: false,
       },
       {
-        kind: "Text",
+        kind: "Dict",
         name: "dict_attr",
         defaultValue: "",
-        inputType: TextInputTypes.text,
         type: "dict",
         isOptional: false,
         isDisabled: false,

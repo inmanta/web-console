@@ -168,6 +168,18 @@ export class FieldCreator {
           };
         }
 
+        if (type === "dict") {
+          return {
+            kind: "Dict",
+            type: attribute.type,
+            name: attribute.name,
+            defaultValue: defaultValue,
+            description: attribute.description,
+            isOptional: this.isTextFieldOptional(attribute),
+            isDisabled: this.shouldFieldBeDisabled(attribute),
+          };
+        }
+
         if (attribute.validation_type === "enum" || attribute.validation_type === "enum?") {
           return {
             kind: "Enum",

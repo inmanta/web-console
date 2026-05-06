@@ -210,10 +210,10 @@ test("GIVEN FieldCreator WHEN attributes are processed for edit form THEN the fi
   expect(fields[13].kind).toBe("Enum");
   expect(fields[14].kind).toBe("Enum");
   expect(fields[15].kind).toBe("Enum");
-  expect(fields[16].kind).toBe("Text");
-  expect(fields[17].kind).toBe("Text");
-  expect(fields[18].kind).toBe("Text");
-  expect(fields[19].kind).toBe("Text");
+  expect(fields[16].kind).toBe("Dict");
+  expect(fields[17].kind).toBe("Dict");
+  expect(fields[18].kind).toBe("Dict");
+  expect(fields[19].kind).toBe("Dict");
   expect(fields[20].kind).toBe("Textarea");
   expect(fields[21].kind).toBe("Textarea");
   expect(fields[22].kind).toBe("Textarea");

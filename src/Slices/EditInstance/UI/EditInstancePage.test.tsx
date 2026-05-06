@@ -410,11 +410,11 @@ describe("EditInstancePage", () => {
       "pf-m-disabled"
     );
 
-    expect(within(embedded_base).queryByLabelText("TextInput-dict")).toBeDisabled();
-    expect(within(embedded_base).queryByLabelText("TextInput-editableDict")).toBeEnabled();
+    expect(within(embedded_base).getByTestId("DictInput-dict")).toBeDisabled();
+    expect(within(embedded_base).getByTestId("DictInput-editableDict")).not.toBeDisabled();
 
-    expect(within(embedded_base).queryByLabelText("TextInput-dict?")).toBeDisabled();
-    expect(within(embedded_base).queryByLabelText("TextInput-editableDict?")).toBeEnabled();
+    expect(within(embedded_base).getByTestId("DictInput-dict?")).toBeDisabled();
+    expect(within(embedded_base).getByTestId("DictInput-editableDict?")).not.toBeDisabled();
 
     //check controls of nested entities
 

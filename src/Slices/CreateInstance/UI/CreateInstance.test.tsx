@@ -27,6 +27,7 @@ vi.mock("@/Data/Queries/Helpers/useQueries", async (importActual) => {
     usePost: () => postMock,
   };
 });
+
 function setup(service) {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -40,6 +41,9 @@ function setup(service) {
 
   return { component };
 }
+
+const getDictValue = (testId: string, container: HTMLElement = document.body) =>
+  JSON.parse(within(container).getByTestId(testId).getAttribute("value") ?? "{}");
 
 describe("CreateInstance", () => {
   const server = setupServer();
@@ -215,10 +219,10 @@ describe("CreateInstance", () => {
     expect(screen.getByTestId("editableEnum-select-toggle")).toHaveTextContent("OPTION_ONE");
     expect(screen.getByTestId("enum?-select-toggle")).toHaveTextContent("OPTION_ONE");
 
-    expect(screen.queryByLabelText("TextInput-dict")).toHaveValue('{"default":"value"}');
-    expect(screen.queryByLabelText("TextInput-editableDict")).toHaveValue('{"default":"value"}');
-    expect(screen.queryByLabelText("TextInput-dict?")).toHaveValue('{"default":"value"}');
-    expect(screen.queryByLabelText("TextInput-editableDict?")).toHaveValue('{"default":"value"}');
+    expect(getDictValue("DictInput-dict")).toEqual({ default: "value" });
+    expect(getDictValue("DictInput-editableDict")).toEqual({ default: "value" });
+    expect(getDictValue("DictInput-dict?")).toEqual({ default: "value" });
+    expect(getDictValue("DictInput-editableDict?")).toEqual({ default: "value" });
 
     //check if embedded entities buttons are correctly displayed
     const embedded_base = screen.getByLabelText("DictListFieldInput-embedded_base");
@@ -283,18 +287,10 @@ describe("CreateInstance", () => {
       "OPTION_ONE"
     );
 
-    expect(within(embedded_base).queryByLabelText("TextInput-dict")).toHaveValue(
-      '{"default":"value"}'
-    );
-    expect(within(embedded_base).queryByLabelText("TextInput-editableDict")).toHaveValue(
-      '{"default":"value"}'
-    );
-    expect(within(embedded_base).queryByLabelText("TextInput-dict?")).toHaveValue(
-      '{"default":"value"}'
-    );
-    expect(within(embedded_base).queryByLabelText("TextInput-editableDict?")).toHaveValue(
-      '{"default":"value"}'
-    );
+    expect(getDictValue("DictInput-dict", embedded_base)).toEqual({ default: "value" });
+    expect(getDictValue("DictInput-editableDict", embedded_base)).toEqual({ default: "value" });
+    expect(getDictValue("DictInput-dict?", embedded_base)).toEqual({ default: "value" });
+    expect(getDictValue("DictInput-editableDict?", embedded_base)).toEqual({ default: "value" });
   });
 
   test("Given the CreateInstance View When creating an instance with alternative initial states Then dropdown is shown and initial_state is passed", async () => {
