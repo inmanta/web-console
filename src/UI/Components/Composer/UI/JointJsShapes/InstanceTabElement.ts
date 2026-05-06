@@ -119,8 +119,7 @@ export class InstanceTabElement {
         serviceModel.embedded_entities ?? [],
         placeholderAttrs,
         [],
-        serviceModels,
-        new Set([serviceModel.name]),
+        serviceModels
       );
 
       // Track shapes created for embedded entities
@@ -149,7 +148,7 @@ export class InstanceTabElement {
           embeddedEntityCache,
           positionTracker,
           parentPosition.x + HORIZONTAL_SPACING,
-          parentPosition.y,
+          parentPosition.y
         );
 
         if (embeddedIds.length > 0) {

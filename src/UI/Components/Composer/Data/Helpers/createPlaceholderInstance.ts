@@ -12,17 +12,13 @@ import { convertLowerLimitToNumber } from "./shapeUtils";
 /**
  * Builds the candidate_attributes for a placeholder, populating required inter-service
  * relations and embedded entities. Mutates `attrs` and `interServiceRelations` in place.
- *
- * `visited` tracks service entity names already in the current recursion path to break
- * cycles (e.g. A requires B which requires A).
  */
 export const applyRequiredConnections = (
   relations: InterServiceRelation[],
   embeddedEntities: EmbeddedEntity[],
   attrs: Record<string, unknown>,
   interServiceRelations: ServiceInstanceModel[],
-  serviceCatalog: ServiceModel[],
-  visited: Set<string>
+  serviceCatalog: ServiceModel[]
 ): void => {
   relations.forEach((relation) => {
     const lowerLimit = convertLowerLimitToNumber(relation.lower_limit);
@@ -35,19 +31,17 @@ export const applyRequiredConnections = (
       relation.upper_limit != null ? convertLowerLimitToNumber(relation.upper_limit) : null;
 
     const relatedModel = serviceCatalog.find((s) => s.name === relation.entity_type);
-    const nextVisited = new Set([...visited, relation.entity_type]);
 
     const placeholders = Array.from({ length: lowerLimit }, () => {
       const placeholderAttrs: InstanceAttributeModel = {};
 
-      if (relatedModel && !visited.has(relation.entity_type)) {
+      if (relatedModel) {
         applyRequiredConnections(
           relatedModel.inter_service_relations,
           relatedModel.embedded_entities,
           placeholderAttrs,
           interServiceRelations,
-          serviceCatalog,
-          nextVisited
+          serviceCatalog
         );
       }
 
@@ -100,8 +94,7 @@ export const applyRequiredConnections = (
         embeddedEntity.embedded_entities,
         embeddedAttrs,
         interServiceRelations,
-        serviceCatalog,
-        visited
+        serviceCatalog
       );
 
       return embeddedAttrs;
@@ -116,7 +109,6 @@ export const applyRequiredConnections = (
  * Creates a placeholder instance from a service model for new instance creation.
  * Recursively populates required inter-service relations and embedded entities at every
  * nesting level so the canvas can render and validate the new instance immediately.
- * Cycle detection prevents infinite recursion when service models reference each other.
  *
  * @param serviceModel - The service model to create a placeholder from
  * @param serviceCatalog - Full catalog used to resolve nested relation models
@@ -137,8 +129,7 @@ export const createPlaceholderInstance = (
     serviceModel.embedded_entities,
     instanceAttributes,
     interServiceRelations,
-    serviceCatalog,
-    new Set([serviceModel.name])
+    serviceCatalog
   );
 
   return {
