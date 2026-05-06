@@ -132,9 +132,13 @@ export class InstanceTabElement {
       positionTracker.reserve(actualId, dropPosition.x, dropPosition.y, bboxWidth, bboxHeight);
 
       serviceModel.embedded_entities?.forEach((embeddedEntity) => {
-        if (embeddedEntity.modifier === "r") return;
+        if (embeddedEntity.modifier === "r") {
+          return;
+        }
         const embeddedData = placeholderAttrs[embeddedEntity.name];
-        if (!embeddedData) return;
+        if (!embeddedData) {
+          return;
+        }
 
         const parentPosition = model.position();
         const embeddedIds = createEmbeddedEntityShapes(
