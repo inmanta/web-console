@@ -38,7 +38,6 @@ interface Props {
  */
 
 export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOnly = false }) => {
-  console.log("field", field);
   const [text, setText] = useState<string>(() => toText(value));
   const [isInvalid, setIsInvalid] = useState(false);
   const [height, setHeight] = useState(100);
