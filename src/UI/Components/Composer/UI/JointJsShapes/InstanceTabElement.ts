@@ -5,7 +5,17 @@ import { v4 as uuidv4 } from "uuid";
 import { EmbeddedEntity, ServiceModel } from "@/Core";
 import { createFormState, CreateModifierHandler, FieldCreator } from "../../../ServiceInstanceForm";
 import { RelationsDictionary } from "../../Data";
+import {
+  applyRequiredConnections,
+  createEmbeddedEntityShapes,
+  createLinksFromCanvasState,
+  PositionTracker,
+  getEmbeddedEntityKey,
+  getShapeDimensions,
+} from "../../Data/Helpers";
+import { HORIZONTAL_SPACING } from "../../config";
 import { ServiceEntityOptions, ServiceEntityShape } from "./ServiceEntityShape";
+import { updateAllMissingConnectionsHighlights } from "./createHalo";
 import { createSidebarItem } from "./sidebarItem";
 
 export class InstanceTabElement {
@@ -95,24 +105,81 @@ export class InstanceTabElement {
     this.stencil.on("element:drop", (elementView) => {
       const model: ServiceEntityShape = elementView.model;
       const modelId = model.id;
+      const serviceModel = model.serviceModel as ServiceModel;
 
-      // Ensure the model has a valid ID set before adding to graph
       model.set("id", modelId);
-
-      // Add the model to the canvas graph
       model.addTo(this.graph);
-
-      // Update the model ID in case JointJS changed it
       const actualId = String(model.id);
-
-      // Update columns display after shape is added to graph
       model.updateColumnsDisplay();
 
-      // Use functional form to always get the latest state
-      this.setCanvasState((prevCanvasState) => {
-        const newCanvasState = new Map(prevCanvasState);
-        newCanvasState.set(actualId, model);
-        return newCanvasState;
+      // Build placeholder attribute data for required embedded entities
+      const placeholderAttrs: Record<string, unknown> = {};
+      applyRequiredConnections(
+        serviceModel.inter_service_relations ?? [],
+        serviceModel.embedded_entities ?? [],
+        placeholderAttrs,
+        [],
+        serviceModels
+      );
+
+      // Track shapes created for embedded entities
+      const localCanvasState = new Map<string, ServiceEntityShape>();
+      const embeddedEntityCache = new Map<string, string>();
+      const positionTracker = new PositionTracker();
+
+      const dropPosition = model.position();
+      const { width: bboxWidth, height: bboxHeight } = getShapeDimensions(model);
+      positionTracker.reserve(actualId, dropPosition.x, dropPosition.y, bboxWidth, bboxHeight);
+
+      serviceModel.embedded_entities?.forEach((embeddedEntity) => {
+        if (embeddedEntity.modifier === "r") {
+          return;
+        }
+        const embeddedData = placeholderAttrs[embeddedEntity.name];
+        if (!embeddedData) {
+          return;
+        }
+
+        const parentPosition = model.position();
+        const embeddedIds = createEmbeddedEntityShapes(
+          embeddedEntity,
+          embeddedData,
+          model,
+          actualId,
+          relationsDictionary,
+          this.graph,
+          localCanvasState,
+          embeddedEntityCache,
+          positionTracker,
+          parentPosition.x + HORIZONTAL_SPACING,
+          parentPosition.y
+        );
+
+        if (embeddedIds.length > 0) {
+          const entityKey = getEmbeddedEntityKey(embeddedEntity);
+          model.connections.set(entityKey, embeddedIds);
+        }
+      });
+
+      localCanvasState.set(actualId, model);
+      createLinksFromCanvasState(localCanvasState, this.graph);
+
+      const paper = elementView.paper;
+      requestAnimationFrame(() => {
+        this.setCanvasState((prevCanvasState) => {
+          const newCanvasState = new Map(prevCanvasState);
+          localCanvasState.forEach((shape, id) => {
+            newCanvasState.set(id, shape);
+          });
+
+          if (paper) {
+            requestAnimationFrame(() => {
+              updateAllMissingConnectionsHighlights(paper);
+            });
+          }
+
+          return newCanvasState;
+        });
       });
     });
   }

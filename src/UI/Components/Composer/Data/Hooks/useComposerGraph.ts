@@ -107,7 +107,7 @@ export const useComposerGraph = ({
       dataToUse = instanceData;
     } else {
       // Case 2: Creating new instance - use placeholder
-      dataToUse = createPlaceholderInstance(mainService);
+      dataToUse = createPlaceholderInstance(mainService, serviceCatalog);
     }
 
     // Clear the graph to remove any old cells before initializing

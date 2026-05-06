@@ -156,7 +156,6 @@ export const FieldInput: React.FC<Props> = ({
           attributeName={field.name}
           attributeValue={get<string[]>(formState, makePath(path, field.name), [])}
           description={field.description}
-          isOptional={field.isOptional}
           shouldBeDisabled={
             field.isDisabled &&
             get(originalState, makePath(path, field.name).split(".")) !== undefined &&
