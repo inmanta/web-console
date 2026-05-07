@@ -45,7 +45,9 @@ export const ResourceTableControls: React.FC<Props> = ({
     <ToolbarContent>
       <Flex style={{ width: "100%" }} alignItems={{ default: "alignItemsFlexEnd" }}>
         {summaryWidget}
-        <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
+        <ToolbarItem variant="pagination" style={{ justifyContent: "flex-end", minWidth: "320px" }}>
+          {paginationWidget}
+        </ToolbarItem>
         <ToolbarItem>
           <Button
             {...(noResourcesFound && { isDanger: true })}
