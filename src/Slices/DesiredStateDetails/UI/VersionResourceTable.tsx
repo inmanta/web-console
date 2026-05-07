@@ -8,8 +8,8 @@ interface Props {
   version: string;
   rows: RowFromVersion[];
   tablePresenter: VersionResourceTablePresenter;
-  sort: Sort.Type<Resource.SortKeyFromVersion>;
-  setSort: (sort: Sort.Type<Resource.SortKeyFromVersion>) => void;
+  sort: Sort.Type<Resource.DesiredStateSortKey>;
+  setSort: (sort: Sort.Type<Resource.DesiredStateSortKey>) => void;
 }
 
 export const VersionResourceTable: React.FC<Props> = ({
@@ -20,9 +20,9 @@ export const VersionResourceTable: React.FC<Props> = ({
   setSort,
   ...props
 }) => {
-  const onSort: OnSort = (event, index, order) => {
+  const onSort: OnSort = (_event, index, order) => {
     setSort({
-      name: tablePresenter.getColumnNameForIndex(index) as Resource.SortKeyFromVersion,
+      name: tablePresenter.getColumnNameForIndex(index) as Resource.DesiredStateSortKey,
       order,
     });
   };

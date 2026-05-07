@@ -31,7 +31,7 @@ export const Provider: React.FC = () => {
 export const Page: React.FC<{ version: string }> = ({ version }) => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
   const { currentPage, setCurrentPage, pageSize, setPageSize, filter, sort, setSort } =
-    usePaginatedTable<Resource.FilterFromVersion, Resource.SortKeyFromVersion>({
+    usePaginatedTable<Resource.FilterFromVersion, Resource.DesiredStateSortKey>({
       route: "DesiredStateDetails",
       defaultSort: { name: "resource_type", order: "asc" },
     });

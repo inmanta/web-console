@@ -16,7 +16,7 @@ import {
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
-import { usePaginatedTable } from "@/Data";
+import { usePaginatedTableWithMultiSort } from "@/Data";
 import { useGetResources } from "@/Data/Queries";
 import {
   EmptyView,
@@ -39,10 +39,9 @@ import { createRows } from "./ResourcesTablePresenter";
 export const Page: React.FC = () => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
   const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
-    usePaginatedTable<Resource.FilterWithDefaultHandling, Resource.SortKey>({
+    usePaginatedTableWithMultiSort<Resource.FilterWithDefaultHandling, Resource.SortKey>({
       route: "Resources",
       defaultSort: [{ name: "resource_type", order: "asc" }],
-      multiSort: true,
       filterKeys: { disregardDefault: "Boolean" },
     });
 

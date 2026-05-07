@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { PageSize, Pagination, Resource, Sort } from "@/Core/Domain";
+import { PageSize, Pagination, Resource } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
+import { MultiSort } from "@/Data";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGraphQLRequest, REFETCH_INTERVAL } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
@@ -51,7 +52,7 @@ interface GetResources {
 interface GetResourcesParams {
   pageSize: PageSize.PageSize;
   filter: Resource.Filter;
-  sort: Sort.MultiSort<Resource.SortKey>;
+  sort: MultiSort<Resource.SortKey>;
   currentPage: CurrentPage;
 }
 

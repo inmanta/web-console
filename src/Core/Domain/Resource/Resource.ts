@@ -210,9 +210,22 @@ export enum FilterKind {
 
 export type StatusSortKey = "compliance" | "lastHandlerRun" | "blocked" | "isDeploying";
 export type SortKey = "agent" | "resource_type" | "resource_id_value" | StatusSortKey;
+export type DesiredStateSortKey = "agent" | "resource_type" | "resource_id_value";
 
 export type FilterFromVersion = Omit<Filter, "status">;
-export type SortKeyFromVersion = Exclude<SortKey, StatusSortKey>;
+
+interface StatusSortItem {
+  label: string;
+  key: StatusSortKey;
+}
+
+export const STATUS_SORT_ITEMS: StatusSortItem[] = [
+  { label: "Blocked", key: "blocked" },
+  { label: "Compliance", key: "compliance" },
+  { label: "Last Handler Run", key: "lastHandlerRun" },
+  { label: "Is Deploying", key: "isDeploying" },
+];
+export const STATUS_SORT_KEYS = STATUS_SORT_ITEMS.map((i) => i.key);
 
 export interface IdDetails {
   resource_type: string;

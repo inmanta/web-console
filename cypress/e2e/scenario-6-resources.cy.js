@@ -466,31 +466,57 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[data-testid="status-sort-badge"]').should("have.text", "2");
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
-      // Both active items should appear in the draggable section
+      // Verify active items
       cy.get('[data-testid="status-sort-active-list"]').within(() => {
         cy.get('[data-testid="status-sort-item"]').should("have.length", 2);
         cy.get('[data-testid="status-sort-item"]').eq(0).should("contain", "Blocked");
         cy.get('[data-testid="status-sort-item"]').eq(1).should("contain", "Compliance");
       });
 
-      // Clicking an active item toggles its direction (asc → desc)
-      cy.get('[data-testid="status-sort-active-list"]')
-        .contains('[data-testid="status-sort-item"]', "Blocked")
-        .click();
-      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
-      cy.get('[data-testid="status-sort-active-list"]')
-        .contains('[data-testid="status-sort-item"]', "Blocked")
-        .find('[data-testid="sort-direction-icon"]')
-        .should("have.attr", "data-direction", "desc");
+      // Verify move button disabled states
+      cy.get('[data-testid="status-sort-item"]')
+        .eq(0)
+        .find('[aria-label="Move up"]')
+        .should("be.disabled");
 
-      // Clicking again removes it — badge decrements to 1
-      cy.get('[data-testid="status-sort-active-list"]')
-        .contains('[data-testid="status-sort-item"]', "Blocked")
-        .click();
+      cy.get('[data-testid="status-sort-item"]')
+        .eq(1)
+        .find('[aria-label="Move down"]')
+        .should("be.disabled");
+
+      // Reorder items
+      cy.get('[data-testid="status-sort-item"]').eq(1).find('[aria-label="Move up"]').click();
+
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      cy.get('[data-testid="status-sort-item"]').eq(0).should("contain", "Compliance");
+      cy.get('[data-testid="status-sort-item"]').eq(1).should("contain", "Blocked");
+
+      // Toggle direction using action button
+      cy.contains('[data-testid="status-sort-item"]', "Compliance").within(() => {
+        cy.get('[data-testid="sort-direction-icon"]').should("have.attr", "data-direction", "asc");
+
+        cy.get('[aria-label="Toggle sort direction"]').click();
+      });
+
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      cy.contains('[data-testid="status-sort-item"]', "Compliance").within(() => {
+        cy.get('[data-testid="sort-direction-icon"]').should("have.attr", "data-direction", "desc");
+      });
+
+      // Clicking active item removes it
+      cy.contains('[data-testid="status-sort-item"]', "Compliance").click();
+
       cy.get('[data-testid="status-sort-badge"]').should("have.text", "1");
+
       cy.get('[data-testid="status-sort-active-list"]').within(() => {
         cy.get('[data-testid="status-sort-item"]').should("have.length", 1);
+        cy.get('[data-testid="status-sort-item"]').eq(0).should("contain", "Blocked");
       });
+
+      // Removed item should appear again in inactive list
+      cy.get('[data-testid="status-sort-menu"]').contains("Compliance").should("exist");
     });
   } else {
     it("6.2 Resources for OSS", () => {
@@ -554,6 +580,36 @@ describe("Scenario 6 : Resources", () => {
         .should("contain", "Successfully stored version");
       cy.get('[aria-label="Details"]').last().click();
       cy.contains("Successfully stored version").should("be.visible");
+    });
+
+    it("6.3 OSS basic status sort menu", () => {
+      cy.visit("/console/");
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      // Open status sort menu
+      cy.get('[aria-label="Sort by status fields"]').click();
+
+      // Badge starts at 0
+      cy.get('[data-testid="status-sort-badge"]').should("have.text", "0");
+
+      // Activate one sort (Blocked)
+      cy.get('[data-testid="status-sort-menu"]').contains("Blocked").click();
+
+      cy.get('[data-testid="status-sort-badge"]').should("have.text", "1");
+
+      cy.get('[data-testid="status-sort-active-list"]')
+        .contains('[data-testid="status-sort-item"]', "Blocked")
+        .should("exist");
+
+      // Toggle direction
+      cy.contains('[data-testid="status-sort-item"]', "Blocked").within(() => {
+        cy.get('[aria-label="Toggle sort direction"]').click();
+
+        cy.get('[data-testid="sort-direction-icon"]').should("have.attr", "data-direction");
+      });
     });
   }
 });

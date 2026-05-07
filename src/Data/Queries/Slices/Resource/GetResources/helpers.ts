@@ -1,6 +1,6 @@
-import { Resource, Sort } from "@/Core/Domain";
+import { Resource } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
-import { CurrentPage } from "@/Data/Common";
+import { CurrentPage, MultiSort } from "@/Data";
 import { PageInfo } from "./useGetResources";
 
 //TODO: mapping should still be re-evaluated again => https://github.com/inmanta/web-console/issues/6814
@@ -123,9 +123,7 @@ export function mapStatusToGraphQLFilter(statusses?: string[]): GraphQLStateFilt
  * Maps sort parameters to the GraphQL orderBy format.
  * Preserves array order as sort priority.
  */
-export function mapSort(
-  sort: Sort.MultiSort<Resource.SortKey>
-): Array<{ key: string; order: string }> {
+export function mapSort(sort: MultiSort<Resource.SortKey>): Array<{ key: string; order: string }> {
   return sort.map((s) => ({ key: s.name, order: s.order }));
 }
 
