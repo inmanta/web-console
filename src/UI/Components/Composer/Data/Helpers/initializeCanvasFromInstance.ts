@@ -348,7 +348,6 @@ export const initializeCanvasFromInstance = (
      * while existing instances loaded from the backend remain non-new.
      */
     const isNewEntity = instance.state === "creating" && !instance.active_attributes;
-    console.log(`Initializing shape for ${instance.id} (isNew: ${isNewEntity})`);
 
     const interServiceRelations: Record<string, string[]> = {};
     const rootEntities: Record<string, string[]> = {};
