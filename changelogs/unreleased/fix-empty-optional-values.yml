@@ -1,0 +1,5 @@
+description: Empty optional values are now submitted as `null` to the API instead of an empty string/array/object.
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
