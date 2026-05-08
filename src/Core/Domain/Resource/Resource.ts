@@ -208,24 +208,24 @@ export enum FilterKind {
   Status = "Status",
 }
 
-export type StatusSortKey = "compliance" | "lastHandlerRun" | "blocked" | "isDeploying";
+export const STATUS_SORT_KEYS = ["blocked", "compliance", "lastHandlerRun", "isDeploying"] as const;
+
+export type StatusSortKey = (typeof STATUS_SORT_KEYS)[number];
+
 export type SortKey = "agent" | "resource_type" | "resource_id_value" | StatusSortKey;
-export type DesiredStateSortKey = "agent" | "resource_type" | "resource_id_value";
+
+const STATUS_SORT_KEY_SET: ReadonlySet<string> = new Set(STATUS_SORT_KEYS);
+
+/**
+ * Type guard that checks whether a given SortKey is a StatusSortKey.
+ * Used to safely narrow sort keys to status-related keys.
+ */
+export const isStatusSortKey = (key: SortKey): key is StatusSortKey => STATUS_SORT_KEY_SET.has(key);
+
+/** @deprecated Use Sortkey instead, only in use for desired state resource table */
+export type OldSortKey = "agent" | "resource_type" | "resource_id_value";
 
 export type FilterFromVersion = Omit<Filter, "status">;
-
-interface StatusSortItem {
-  label: string;
-  key: StatusSortKey;
-}
-
-export const STATUS_SORT_ITEMS: StatusSortItem[] = [
-  { label: "Blocked", key: "blocked" },
-  { label: "Compliance", key: "compliance" },
-  { label: "Last Handler Run", key: "lastHandlerRun" },
-  { label: "Is Deploying", key: "isDeploying" },
-];
-export const STATUS_SORT_KEYS = STATUS_SORT_ITEMS.map((i) => i.key);
 
 export interface IdDetails {
   resource_type: string;

@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 import {
   Badge,
+  Content,
   Divider,
   Dropdown,
   DropdownItem,
   DropdownList,
+  Flex,
+  FlexItem,
   Icon,
-  MenuItemAction,
   MenuToggle,
   Tooltip,
 } from "@patternfly/react-core";
-import {
-  AngleDownIcon,
-  AngleUpIcon,
-  SortAmountDownIcon,
-  SortAmountUpIcon,
-} from "@patternfly/react-icons";
+import { DragDropSort, DraggableObject } from "@patternfly/react-drag-drop";
+import { SortAmountDownIcon, SortAmountUpIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
 import { MultiSort, toggleMulti } from "@/Data";
 import { words } from "@/UI";
@@ -25,31 +23,76 @@ interface Props {
   setSort: (sort: MultiSort<Resource.SortKey>) => void;
 }
 
+/**
+ * The StatusSortMenu component.
+ *
+ * Provides a dropdown menu for managing status-based sorting rules, including:
+ * - Enabling/disabling status sort keys
+ * - Reordering active sort keys via drag-and-drop
+ * - Toggling sort direction (ascending/descending) for each active key
+ *
+ * The component visually separates active and inactive sort keys and displays
+ * the number of active sorts in a badge on the toggle button.
+ *
+ * @Props {Props} - Component props.
+ *  @prop {MultiSort<Resource.SortKey>} sort
+ *  - The current multi-sort configuration applied to the resource list.
+ *
+ *  @prop {(sort: MultiSort<Resource.SortKey>) => void} setSort
+ *  - Callback used to update the sort configuration.
+ *
+ * @returns {React.ReactElement} The rendered status sort dropdown menu.
+ */
+
 export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const activeStatusSorts = sort.filter((sortEntry) =>
-    Resource.STATUS_SORT_KEYS.includes(sortEntry.name as Resource.StatusSortKey)
+  const activeStatusSorts: MultiSort<Resource.StatusSortKey> = sort.filter(
+    (sortEntry): sortEntry is MultiSort<Resource.StatusSortKey>[number] =>
+      Resource.isStatusSortKey(sortEntry.name)
   );
-  const inactiveItems = Resource.STATUS_SORT_ITEMS.filter(
-    (item) => !activeStatusSorts.some((sortEntry) => sortEntry.name === item.key)
+  const inactiveItems = Resource.STATUS_SORT_KEYS.filter(
+    (key) => !activeStatusSorts.some((sortEntry) => sortEntry.name === key)
   );
+
   const activeCount = activeStatusSorts.length;
+
+  const getLabel = (key: Resource.StatusSortKey) => words(`resources.sort.label.${key}`);
 
   const onToggle = (key: Resource.StatusSortKey) => {
     setSort(toggleMulti(activeStatusSorts, key));
   };
 
-  const moveUp = (index: number) => {
-    const next = [...activeStatusSorts];
-    [next[index - 1], next[index]] = [next[index], next[index - 1]];
-    setSort(next);
-  };
+  const draggableItems: DraggableObject[] = activeStatusSorts.map((sortEntry) => ({
+    id: sortEntry.name,
+    content: (
+      <Flex
+        key={sortEntry.name}
+        justifyContent={{ default: "justifyContentSpaceBetween" }}
+        alignItems={{ default: "alignItemsCenter" }}
+        data-testid="status-sort-item"
+        data-key={sortEntry.name}
+        onClick={(event) => {
+          event.stopPropagation();
+          onToggle(sortEntry.name);
+        }}
+        style={{ paddingLeft: 4, paddingRight: 12, height: "100%" }}
+      >
+        <FlexItem>{getLabel(sortEntry.name)}</FlexItem>
+        <FlexItem>
+          <Icon status="info" isInline>
+            {sortEntry.order === "desc" ? <SortAmountDownIcon /> : <SortAmountUpIcon />}
+          </Icon>
+        </FlexItem>
+      </Flex>
+    ),
+  }));
 
-  const moveDown = (index: number) => {
-    const next = [...activeStatusSorts];
-    [next[index + 1], next[index]] = [next[index], next[index + 1]];
-    setSort(next);
+  const onDrop = (_, newItems: DraggableObject[]) => {
+    const reordered = newItems.map(
+      (item) => activeStatusSorts.find((sortEntry) => sortEntry.name === item.id)!
+    );
+    setSort(reordered);
   };
 
   return (
@@ -78,68 +121,22 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactE
         )}
       >
         <DropdownList data-testid="status-sort-menu">
-          <DropdownList data-testid="status-sort-active-list">
-            {activeStatusSorts.map((sortEntry, index) => {
-              const label =
-                Resource.STATUS_SORT_ITEMS.find((item) => item.key === sortEntry.name)?.label ??
-                sortEntry.name;
-              const SortIcon = sortEntry.order === "desc" ? SortAmountDownIcon : SortAmountUpIcon;
-
-              return (
-                <DropdownItem
-                  key={sortEntry.name}
-                  itemId={sortEntry.name}
-                  data-testid="status-sort-item"
-                  data-key={sortEntry.name}
-                  onClick={() => onToggle(sortEntry.name as Resource.StatusSortKey)}
-                  actions={
-                    <>
-                      <MenuItemAction
-                        icon={<AngleUpIcon />}
-                        aria-label="Move up"
-                        isDisabled={index === 0}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          moveUp(index);
-                        }}
-                      />
-                      <MenuItemAction
-                        icon={<AngleDownIcon />}
-                        aria-label="Move down"
-                        isDisabled={index === activeStatusSorts.length - 1}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          moveDown(index);
-                        }}
-                      />
-                      <MenuItemAction
-                        icon={
-                          <Icon status="info">
-                            <SortIcon />
-                          </Icon>
-                        }
-                        aria-label="Toggle sort direction"
-                        data-direction={sortEntry.order}
-                        data-testid="sort-direction-icon"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onToggle(sortEntry.name as Resource.StatusSortKey);
-                        }}
-                      />
-                    </>
-                  }
-                >
-                  {label}
-                </DropdownItem>
-              );
-            })}
-          </DropdownList>
+          {activeStatusSorts.length > 0 && (
+            <Content data-testid="status-sort-active-list">
+              <DragDropSort
+                items={draggableItems}
+                onDrop={onDrop}
+                variant="DualListSelectorList"
+                data-testid="status-sort-active-list"
+              />
+            </Content>
+          )}
 
           {inactiveItems.length > 0 && activeStatusSorts.length > 0 && <Divider component="li" />}
 
-          {inactiveItems.map(({ label, key }) => (
+          {inactiveItems.map((key) => (
             <DropdownItem key={key} itemId={key} onClick={() => onToggle(key)}>
-              {label}
+              {getLabel(key)}
             </DropdownItem>
           ))}
         </DropdownList>

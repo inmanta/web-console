@@ -1,4 +1,5 @@
 import environmentHelpers from "../support/environmentHelpers";
+import "cypress-real-events/support";
 
 const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
@@ -466,56 +467,61 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[data-testid="status-sort-badge"]').should("have.text", "2");
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
-      // Verify active items
+      // Verify active items appear in correct order
       cy.get('[data-testid="status-sort-active-list"]').within(() => {
         cy.get('[data-testid="status-sort-item"]').should("have.length", 2);
         cy.get('[data-testid="status-sort-item"]').eq(0).should("contain", "Blocked");
         cy.get('[data-testid="status-sort-item"]').eq(1).should("contain", "Compliance");
       });
 
-      // Verify move button disabled states
-      cy.get('[data-testid="status-sort-item"]')
-        .eq(0)
-        .find('[aria-label="Move up"]')
-        .should("be.disabled");
-
-      cy.get('[data-testid="status-sort-item"]')
+      // Reorder via drag-and-drop: drag second item (Compliance) above first (Blocked)
+      cy.get('[data-testid="status-sort-active-list"]')
+        .find('[aria-label="Drag button"]')
         .eq(1)
-        .find('[aria-label="Move down"]')
-        .should("be.disabled");
+        .as("dragHandle");
 
-      // Reorder items
-      cy.get('[data-testid="status-sort-item"]').eq(1).find('[aria-label="Move up"]').click();
+      cy.get('[data-testid="status-sort-active-list"]')
+        .find('[aria-label="Drag button"]')
+        .eq(0)
+        .as("dropTarget");
 
+      // pick up item
+      cy.get("@dragHandle").realMouseDown({ button: "left" });
+
+      // move within list
+      cy.get('[data-testid="status-sort-active-list"]').realMouseMove(0, -5);
+
+      // hover over target item position
+      cy.get("@dropTarget").realMouseMove(0, 5);
+
+      // release
+      cy.get("@dragHandle").realMouseUp();
+
+      // allow re-render / state update
+      cy.wait(1000);
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
+      // assert new order
       cy.get('[data-testid="status-sort-item"]').eq(0).should("contain", "Compliance");
       cy.get('[data-testid="status-sort-item"]').eq(1).should("contain", "Blocked");
 
-      // Toggle direction using action button
-      cy.contains('[data-testid="status-sort-item"]', "Compliance").within(() => {
-        cy.get('[data-testid="sort-direction-icon"]').should("have.attr", "data-direction", "asc");
+      // Clicking an active item's row twice removes it from the active list
+      cy.get('[data-testid="status-sort-active-list"]')
+        .find('[data-testid="status-sort-item"]')
+        .contains("Compliance")
+        .click()
+        .click();
 
-        cy.get('[aria-label="Toggle sort direction"]').click();
-      });
-
-      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
-
-      cy.contains('[data-testid="status-sort-item"]', "Compliance").within(() => {
-        cy.get('[data-testid="sort-direction-icon"]').should("have.attr", "data-direction", "desc");
-      });
-
-      // Clicking active item removes it
-      cy.contains('[data-testid="status-sort-item"]', "Compliance").click();
-
+      // badge updates
       cy.get('[data-testid="status-sort-badge"]').should("have.text", "1");
 
+      // only one active item remains
       cy.get('[data-testid="status-sort-active-list"]').within(() => {
         cy.get('[data-testid="status-sort-item"]').should("have.length", 1);
         cy.get('[data-testid="status-sort-item"]').eq(0).should("contain", "Blocked");
       });
 
-      // Removed item should appear again in inactive list
+      // removed item reappears in inactive list
       cy.get('[data-testid="status-sort-menu"]').contains("Compliance").should("exist");
     });
   } else {
@@ -600,15 +606,21 @@ describe("Scenario 6 : Resources", () => {
 
       cy.get('[data-testid="status-sort-badge"]').should("have.text", "1");
 
-      cy.get('[data-testid="status-sort-active-list"]')
-        .contains('[data-testid="status-sort-item"]', "Blocked")
-        .should("exist");
+      // Add sort and validate
+      cy.get('[data-testid="status-sort-active-list"]').within(() => {
+        cy.get('[data-testid="status-sort-item"]')
+          .should("have.length", 1)
+          .and("contain", "Blocked");
 
-      // Toggle direction
-      cy.contains('[data-testid="status-sort-item"]', "Blocked").within(() => {
-        cy.get('[aria-label="Toggle sort direction"]').click();
+        cy.get('[aria-label="Drag button"]').should("have.length", 1);
+      });
 
-        cy.get('[data-testid="sort-direction-icon"]').should("have.attr", "data-direction");
+      // Remove sort and validate
+      cy.get('[data-testid="status-sort-menu"]').contains("Blocked").click().click();
+
+      cy.get('[data-testid="status-sort-menu"]').within(() => {
+        cy.get('[data-testid="status-sort-item"]').should("not.exist");
+        cy.get('[aria-label="Drag button"]').should("not.exist");
       });
     });
   }
