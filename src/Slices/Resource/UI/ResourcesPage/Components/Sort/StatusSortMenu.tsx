@@ -72,6 +72,7 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactE
         alignItems={{ default: "alignItemsCenter" }}
         data-testid="status-sort-item"
         data-key={sortEntry.name}
+        data-order={sortEntry.order}
         onClick={(event) => {
           event.stopPropagation();
           onToggle(sortEntry.name);
