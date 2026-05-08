@@ -154,7 +154,7 @@ export const FieldInput: React.FC<Props> = ({
         <TextListFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={get<string[]>(formState, makePath(path, field.name), [])}
+          attributeValue={get<string[]>(formState, makePath(path, field.name), []) ?? []}
           description={field.description}
           shouldBeDisabled={
             field.isDisabled &&
@@ -174,7 +174,7 @@ export const FieldInput: React.FC<Props> = ({
         <TextFormInput
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
-          attributeValue={get<string>(formState, makePath(path, field.name), "")}
+          attributeValue={get<string>(formState, makePath(path, field.name), "") ?? ""}
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
@@ -239,7 +239,7 @@ export const FieldInput: React.FC<Props> = ({
           aria-label={`EnumFieldInput-${field.name}`}
           options={field.options}
           attributeName={field.name}
-          attributeValue={get<string>(formState, makePath(path, field.name), "")}
+          attributeValue={get<string>(formState, makePath(path, field.name), "") ?? ""}
           description={field.description}
           isOptional={field.isOptional}
           handleInputChange={getEnumUpdate}
@@ -460,7 +460,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   isNew = false,
 }) => {
   const list = useMemo(
-    () => get<Array<unknown>>(formState, makePath(path, field.name), []),
+    () => get<Array<unknown>>(formState, makePath(path, field.name), []) ?? [],
     [formState, path, field.name]
   );
 
