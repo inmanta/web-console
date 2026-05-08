@@ -430,7 +430,7 @@ export const initializeCanvasFromInstance = (
           embeddedEntityCache,
           positionTracker,
           parentPosition.x + HORIZONTAL_SPACING,
-          parentPosition.y, 
+          parentPosition.y,
           isNewEntity
         );
 
