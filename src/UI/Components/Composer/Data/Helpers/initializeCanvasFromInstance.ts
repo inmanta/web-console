@@ -348,6 +348,7 @@ export const initializeCanvasFromInstance = (
      * while existing instances loaded from the backend remain non-new.
      */
     const isNewEntity = instance.state === "creating" && !instance.active_attributes;
+    console.log(`Initializing shape for ${instance.id} (isNew: ${isNewEntity})`);
 
     const interServiceRelations: Record<string, string[]> = {};
     const rootEntities: Record<string, string[]> = {};
@@ -429,7 +430,8 @@ export const initializeCanvasFromInstance = (
           embeddedEntityCache,
           positionTracker,
           parentPosition.x + HORIZONTAL_SPACING,
-          parentPosition.y
+          parentPosition.y, 
+          isNewEntity
         );
 
         if (embeddedIds.length > 0) {
