@@ -98,7 +98,10 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
     try {
       if (type.includes("bool")) {
         parsedValue = toOptionalBoolean(value);
-      } else if (type.includes("?") && value === "") {
+      } else if (
+        type.includes("?") &&
+        (value === "" || (Array.isArray(value) && value.length === 0))
+      ) {
         parsedValue = null;
       } else if ((isNumberType(type) || isNumberArray(type)) && value === "") {
         parsedValue = null;

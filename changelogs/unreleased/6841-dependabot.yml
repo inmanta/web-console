@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump postcss from 8.5.6 to 8.5.12
+destination-branches:
+- master
+- iso9
+sections: {}

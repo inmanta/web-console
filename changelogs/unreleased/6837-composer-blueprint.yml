@@ -1,0 +1,6 @@
+description: Automatically add embedded entities that are required by a service when adding a new entity on the canvas.
+issue-nr: 6837
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

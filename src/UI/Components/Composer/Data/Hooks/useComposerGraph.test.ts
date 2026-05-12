@@ -217,7 +217,7 @@ describe("useComposerGraph", () => {
     vi.spyOn(result.current.scroller, "zoomToFit").mockReturnValue(result.current.scroller);
 
     await waitFor(() => {
-      expect(Helpers.createPlaceholderInstance).toHaveBeenCalledWith(mainService);
+      expect(Helpers.createPlaceholderInstance).toHaveBeenCalledWith(mainService, serviceCatalog);
     });
 
     expect(Helpers.initializeCanvasFromInstance).toHaveBeenCalled();

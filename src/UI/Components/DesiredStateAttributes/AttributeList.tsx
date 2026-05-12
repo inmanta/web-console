@@ -33,7 +33,7 @@ export const AttributeList: React.FC<Props> = ({ attributes, variant = "default"
     {attributes.map((attribute) => (
       <DescriptionListGroup key={attribute.key}>
         <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
-        <DescriptionListDescription>
+        <DescriptionListDescription data-testid={`attribute-${attribute.key}`}>
           <AttributeValue attribute={attribute} variant={variant} />
         </DescriptionListDescription>
       </DescriptionListGroup>

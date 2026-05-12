@@ -409,6 +409,66 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN rendering optional inputs
   ).toBeVisible();
 });
 
+test("GIVEN ServiceInstanceForm with an optional NestedField containing required attributes WHEN rendering THEN fields are not shown by default", async () => {
+  // Regression test: when an optional entity (lower_limit=0) has non-optional attributes,
+  // showList was incorrectly initialised to true because get() returned undefined (not null)
+  // for a null form-state value, causing `undefined !== null` to evaluate to true.
+  const { component } = setup([
+    {
+      kind: "Nested",
+      name: "bgp",
+      description: null,
+      isOptional: true,
+      isDisabled: false,
+      fields: [
+        {
+          kind: "Boolean",
+          name: "enable_bfd",
+          description: null,
+          isOptional: false,
+          isDisabled: false,
+          defaultValue: false,
+          type: "bool",
+        },
+        {
+          kind: "Boolean",
+          name: "enable_ipv6",
+          description: null,
+          isOptional: false,
+          isDisabled: false,
+          defaultValue: false,
+          type: "bool",
+        },
+      ],
+    },
+  ]);
+
+  render(component);
+
+  const group = screen.getByRole("group", { name: "bgp" });
+  expect(group).toBeVisible();
+
+  // Add must be enabled and Delete disabled — both depend on showList being false.
+  // Before the fix, showList started as true, making Add disabled and Delete enabled.
+  expect(within(group).getByRole("button", { name: words("add") })).toBeEnabled();
+  expect(within(group).getByRole("button", { name: words("delete") })).toBeDisabled();
+
+  // Inner fields must not be rendered at all while the entity has not been added.
+  expect(screen.queryByLabelText("Toggle-enable_bfd")).not.toBeInTheDocument();
+  expect(screen.queryByLabelText("Toggle-enable_ipv6")).not.toBeInTheDocument();
+
+  // After clicking Add and expanding the section, inner fields should appear.
+  await userEvent.click(within(group).getByRole("button", { name: words("add") }));
+  await userEvent.click(within(group).getByRole("button", { name: "bgp" }));
+
+  expect(screen.getByLabelText("Toggle-enable_bfd")).toBeVisible();
+  expect(screen.getByLabelText("Toggle-enable_ipv6")).toBeVisible();
+
+  // Add is now disabled, Delete is enabled — entity is active.
+  expect(within(group).getByRole("button", { name: words("add") })).toBeDisabled();
+  expect(within(group).getByRole("button", { name: words("delete") })).toBeEnabled();
+});
+
 test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles open THEN the nested FlatField is shown", async () => {
   const { component } = setup([Test.Field.dictList([Test.Field.text])]);
 

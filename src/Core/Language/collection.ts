@@ -240,7 +240,7 @@ function get<T>(obj: unknown, path: string | (string | number)[], defaultValue?:
     current = (current as Record<string, unknown>)[segment];
   }
 
-  return (current === undefined ? defaultValue : (current as T | undefined)) ?? defaultValue;
+  return current === undefined ? defaultValue : (current as T);
 }
 
 export { get };
