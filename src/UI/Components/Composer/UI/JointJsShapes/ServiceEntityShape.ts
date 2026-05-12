@@ -76,6 +76,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   entityType: EntityShapeType;
   orderItem: ComposerServiceOrderItem | null;
   hasAttributeValidationErrors: boolean;
+  isLayersCollapsed: boolean;
 
   constructor(initializationOptions: ServiceEntityOptions) {
     // In JointJS 4, the model id should be provided at construction time
@@ -93,6 +94,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     this.entityType = initializationOptions.entityType;
     this.orderItem = null;
     this.hasAttributeValidationErrors = false;
+    this.isLayersCollapsed = false;
 
     this._initializeFromOptions(initializationOptions);
   }

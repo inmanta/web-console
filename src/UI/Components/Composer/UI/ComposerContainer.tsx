@@ -153,6 +153,11 @@ export const ComposerContainer = styled.div`
     &.edit {
       background-image: url(${editBttn});
     }
+    &.toggle-layers {
+      background-size: 25px 25px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
     &:hover {
       box-shadow: 4px 4px 8px var(--pf-t--global--box-shadow--color--100);
       border-radius: 3px;

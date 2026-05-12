@@ -9,6 +9,7 @@ import {
   canRemoveLink,
 } from "../../Data/Helpers";
 import { RelationsDictionary } from "../../Data/Helpers/createRelationsDictionary";
+import { getConnectedLayerData } from "./createHalo";
 import { LinkShape } from "./LinkShape";
 import { ServiceEntityShape } from "./ServiceEntityShape";
 
@@ -280,6 +281,21 @@ export class ComposerPaper {
           parts.push('<div style="margin-top: 2px;"></div>');
         }
         parts.push(`<div>${words("instanceComposer.tooltip.missingRequiredAttributes")}</div>`);
+      }
+
+      // When layers are collapsed, surface any validity errors in the hidden children
+      if (shape.isLayersCollapsed) {
+        const { shapes: layerShapes } = getConnectedLayerData(graph, shape);
+        const hasInvalidCollapsed = layerShapes.some((child) => {
+          child.validateAttributes();
+          return child.isMissingConnections() || child.hasAttributeValidationErrors;
+        });
+        if (hasInvalidCollapsed) {
+          if (parts.length > 0) {
+            parts.push('<div style="margin-top: 2px;"></div>');
+          }
+          parts.push(`<div>${words("instanceComposer.tooltip.collapsedRelationsInvalid")}</div>`);
+        }
       }
 
       if (parts.length === 0) {
