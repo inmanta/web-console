@@ -19,6 +19,8 @@ export function sanitizeAttributes(
     switch (field.kind) {
       case "Enum":
       case "Boolean":
+      case "Textarea":
+      case "TextList":
       case "Text": {
         sanitized[field.name] = converter.ensureAttributeType(formState[field.name], field.type);
 

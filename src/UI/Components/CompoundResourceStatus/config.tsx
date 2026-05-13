@@ -31,32 +31,32 @@ export const colorConfig: Record<Resource.CompoundStateKey, string> = {
   temporarily_blocked: "var(--pf-t--color--orange--40)",
   // --- Compliance ---
   compliant: "var(--pf-t--color--green--50)",
-  non_compliant: "var(--pf-t--color--red--60)",
-  has_update: "var(--pf-t--color--orange--40)",
-  undefined: "var(--pf-t--color--gray--40)",
+  non_compliant: "var(--pf-t--color--orange--40)",
+  has_update: "var(--pf-t--color--blue--50)",
+  undefined: "var(--pf-t--color--red--60)",
   // --- LastHandlerRun ---
   failed: "var(--pf-t--color--red--60)",
-  skipped: "var(--pf-t--color--gray--40)",
+  skipped: "var(--pf-t--color--blue--50)",
   successful: "var(--pf-t--color--green--50)",
-  new: "var(--pf-t--color--blue--50)",
+  new: "var(--pf-t--color--gray--40)",
 };
 
 /** Maps each compound state type to a numeric priority value. */
 export const statusPriority: Record<Resource.CompoundStateKey, number> = {
   // --- Blocked---
   not_blocked: 0,
-  blocked: 1,
-  temporarily_blocked: 2,
+  temporarily_blocked: 1,
+  blocked: 2,
   // --- Compliance ---
   compliant: 0,
-  non_compliant: 1,
-  has_update: 2,
-  undefined: 3,
+  has_update: 1,
+  undefined: 2,
+  non_compliant: 3,
   // --- LastHandlerRun ---
   successful: 0,
-  failed: 1,
-  new: 2,
-  skipped: 3,
+  skipped: 1,
+  failed: 2,
+  new: 3,
 };
 
 /** default is the neutral icons color and state is whenever the colorConfig should be used for the icons. */

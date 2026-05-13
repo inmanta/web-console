@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { defineConfig, UserConfig } from "vite";
+import { defineConfig, PluginOption, UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { execSync } from "child_process";
@@ -207,7 +207,7 @@ const blockMonacoCDNPlugin = () => ({
   },
 });
 
-const plugins = [
+const plugins: PluginOption = [
   react(),
   stripBrokenSourcemapsPlugin(),
   blockMonacoCDNPlugin(),
@@ -345,21 +345,29 @@ export default defineConfig({
         },
         chunkFileNames: "[name].[hash].js",
         entryFileNames: "[name].[hash].js",
-        manualChunks: {
-          vendor: ["react", "react-dom"],
-          patternfly: [
-            "@patternfly/react-core",
-            "@patternfly/react-icons",
-            "@patternfly/react-styles",
-            "@patternfly/react-table",
-            "@patternfly/react-tokens",
+        codeSplitting: {
+          groups: [
+            { name: "vendor", test: /node_modules[\\/](react|react-dom)[\\/]/, priority: 80 },
+            { name: "patternfly", test: /node_modules[\\/]@patternfly[\\/]/, priority: 70 },
+            {
+              name: "monaco",
+              test: /node_modules[\\/](monaco-editor|@monaco-editor)[\\/]/,
+              priority: 60,
+            },
+            { name: "jointjs", test: /node_modules[\\/]@joint[\\/]/, priority: 50 },
+            {
+              name: "utils",
+              test: /node_modules[\\/](uuid|moment|moment-timezone|bignumber\.js)[\\/]/,
+              priority: 40,
+            },
+            {
+              name: "graphql",
+              test: /node_modules[\\/](graphql|graphql-request)[\\/]/,
+              priority: 30,
+            },
+            { name: "routing", test: /node_modules[\\/]react-router[\\/]/, priority: 20 },
+            { name: "state", test: /node_modules[\\/]@tanstack[\\/]/, priority: 10 },
           ],
-          monaco: ["@monaco-editor/react", "monaco-editor"],
-          jointjs: ["@joint/plus"],
-          utils: ["uuid", "moment", "moment-timezone", "bignumber.js"],
-          graphql: ["graphql", "graphql-request"],
-          routing: ["react-router"],
-          state: ["@tanstack/react-query"],
         },
       },
     },
@@ -430,7 +438,7 @@ export default defineConfig({
       "react-dom/client",
       "monaco-editor",
       "@monaco-editor/react",
-      "mermaid",
+      "@braintree/sanitize-url",
       "@joint/plus",
       "graphql-request",
       "@patternfly/react-styles",
