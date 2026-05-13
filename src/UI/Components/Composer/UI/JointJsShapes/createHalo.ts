@@ -22,14 +22,67 @@ const EXPAND_LAYERS_ICON = makeSvgIcon(
   "M12 22a.994.994 0 0 0 .485-.126l9-5-.971-1.748L12 19.856l-8.515-4.73-.971 1.748 9 5A1 1 0 0 0 12 22zm8-20h-2v2h-2v2h2v2h2V6h2V4h-2z"
 );
 
+// VscExpandAll: two nested rectangles with a crosshair — click to expand all layers.
+// Uses a 16×16 viewBox (matching the VS Code icon grid) so it is constructed directly
+// rather than through makeSvgIcon which targets a 24×24 grid.
+const EXPAND_ALL_LAYERS_ICON = `data:image/svg+xml,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2" fill="#0066CC"/><path fill="white" d="M9 9H4v1h5V9z"/><path fill="white" d="M7 12V7H6v5h1z"/><path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M5 3l1-1h7l1 1v7l-1 1h-2v2l-1 1H3l-1-1V6l1-1h2V3zm1 2h4l1 1v4h2V3H6v2zm4 1H3v7h7V6z"/></svg>`
+)}`;
+
+/**
+ * Returns only the direct (first-layer) children of a shape and the links that
+ * connect the parent to those children (or siblings to each other).
+ * Links that go deeper than one level are excluded so they remain hidden when
+ * only the first layer is expanded.
+ */
+export const getDirectLayerData = (
+  graph: dia.Graph,
+  shape: ServiceEntityShape
+): { shapes: ServiceEntityShape[]; links: dia.Link[] } => {
+  const directShapeIds = new Set<string | number>();
+  const directShapes: ServiceEntityShape[] = [];
+
+  shape.connections.forEach((targetIds) => {
+    targetIds.forEach((targetId) => {
+      if (directShapeIds.has(targetId)) return;
+      const otherCell = graph.getCell(targetId);
+      if (!isServiceEntityShapeCell(otherCell)) return;
+      const otherShape = otherCell as ServiceEntityShape;
+      // Skip upward traversal (parent → this shape direction).
+      // Handles all entity types including "core" inter-service relation targets.
+      if (shape.parentIds.has(targetId)) return;
+      directShapeIds.add(targetId);
+      directShapes.push(otherShape);
+    });
+  });
+
+  // Only include links where both endpoints are visible (parent or a direct child).
+  // This excludes links from direct children down to grandchildren.
+  const visibleIds = new Set([shape.id, ...directShapeIds]);
+  const directLinks = graph.getLinks().filter((link) => {
+    const srcId = link.getSourceCell()?.id;
+    const tgtId = link.getTargetCell()?.id;
+    return (
+      srcId !== undefined && tgtId !== undefined && visibleIds.has(srcId) && visibleIds.has(tgtId)
+    );
+  });
+
+  return { shapes: directShapes, links: directLinks };
+};
+
 export const getConnectedLayerData = (
   graph: dia.Graph,
   shape: ServiceEntityShape
 ): { shapes: ServiceEntityShape[]; links: dia.Link[] } => {
-  // BFS using the connections map rather than graph links.
-  // The connections map is set synchronously when shapes are created, so this works
-  // even before JointJS links are established (e.g. immediately after a stencil drop).
-  // It also handles links created in either direction between parent and child shapes.
+  // BFS using the connections map so it works even before JointJS links are established
+  // (e.g. immediately after a stencil drop).
+  //
+  // The connections map is bidirectional: a child stores its parent's ID (rootEntities)
+  // alongside its own children. We use each shape's parentIds set (populated from
+  // rootEntities at construction) to detect upward traversal: if the target ID is a known
+  // parent of the current node, the traversal is going up the tree and should be skipped.
+  // When parentIds is empty (connections set post-construction via InventoryTabElement),
+  // we fall back to including the target so discovery still works.
   const visitedIds = new Set<string | number>([shape.id]);
   const layerShapes: ServiceEntityShape[] = [];
   const toVisit: ServiceEntityShape[] = [shape];
@@ -44,11 +97,14 @@ export const getConnectedLayerData = (
         if (!isServiceEntityShapeCell(otherCell)) return;
 
         const otherShape = otherCell as ServiceEntityShape;
-        if (otherShape.entityType === "embedded" || otherShape.entityType === "relation") {
-          visitedIds.add(targetId);
-          layerShapes.push(otherShape);
-          toVisit.push(otherShape);
-        }
+
+        // Skip if targetId is a known parent of the current node (upward traversal via rootEntities).
+        // This handles all entity types including "core" inter-service relation targets.
+        if (current.parentIds.has(targetId)) return;
+
+        visitedIds.add(targetId);
+        layerShapes.push(otherShape);
+        toVisit.push(otherShape);
       });
     });
   }
@@ -197,9 +253,21 @@ export const createHalo = (
 
       halo.on("action:toggle-layers:pointerdown", () => {
         shape.isLayersCollapsed = !shape.isLayersCollapsed;
-        const displayValue = shape.isLayersCollapsed ? "none" : "";
-        layerShapes.forEach((s) => s.attr("root/display", displayValue));
-        layerLinks.forEach((l) => l.attr("root/display", displayValue));
+
+        if (shape.isLayersCollapsed) {
+          // Collapse: hide all nested layers recursively and mark each as collapsed
+          // so their halos show the correct expand icon when re-revealed later
+          layerShapes.forEach((s) => {
+            s.attr("root/display", "none");
+            s.isLayersCollapsed = true;
+          });
+          layerLinks.forEach((l) => l.attr("root/display", "none"));
+        } else {
+          // Expand: show only the first layer (direct children)
+          const { shapes: directShapes, links: directLinks } = getDirectLayerData(graph, shape);
+          directShapes.forEach((s) => s.attr("root/display", ""));
+          directLinks.forEach((l) => l.attr("root/display", ""));
+        }
 
         // Recheck validity so the red halo and tooltip reflect the new collapsed state
         updateMissingConnectionsHighlight(paper, shape);
@@ -211,6 +279,36 @@ export const createHalo = (
             "data-tooltip",
             shape.isLayersCollapsed ? "Expand layers" : "Collapse layers"
           );
+        }
+      });
+
+      halo.addHandle({
+        name: "expand-all-layers",
+        position: "n",
+        icon: EXPAND_ALL_LAYERS_ICON,
+        attrs: {
+          ".handle": {
+            "data-tooltip": "Expand all layers",
+            "data-tooltip-position": "bottom",
+          },
+        },
+      });
+
+      halo.on("action:expand-all-layers:pointerdown", () => {
+        shape.isLayersCollapsed = false;
+        layerShapes.forEach((s) => {
+          s.attr("root/display", "");
+          s.isLayersCollapsed = false;
+        });
+        layerLinks.forEach((l) => l.attr("root/display", ""));
+
+        updateMissingConnectionsHighlight(paper, shape);
+
+        // Sync the toggle button to show "collapse" since all layers are now visible
+        const handleEl = halo.el?.querySelector(".handle.toggle-layers") as HTMLElement | null;
+        if (handleEl) {
+          handleEl.style.backgroundImage = `url("${COLLAPSE_LAYERS_ICON}")`;
+          handleEl.setAttribute("data-tooltip", "Collapse layers");
         }
       });
     }

@@ -60,6 +60,8 @@ export const addConnectionsBetweenShapes = (
 
   sourceShape.addConnection(String(targetShape.id), sourceRelationKey);
   targetShape.addConnection(String(sourceShape.id), targetRelationKey);
+  // sourceShape is the link source (parent); record it as a known parent of targetShape
+  targetShape.parentIds.add(String(sourceShape.id));
 };
 
 /**
@@ -78,4 +80,5 @@ export const removeConnectionsBetweenShapes = (
 
   sourceShape.removeConnection(String(targetShape.id), sourceRelationKey);
   targetShape.removeConnection(String(sourceShape.id), targetRelationKey);
+  targetShape.parentIds.delete(String(sourceShape.id));
 };
