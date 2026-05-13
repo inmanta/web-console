@@ -26,7 +26,7 @@ const EXPAND_LAYERS_ICON = makeSvgIcon(
 // Uses a 16×16 viewBox (matching the VS Code icon grid) so it is constructed directly
 // rather than through makeSvgIcon which targets a 24×24 grid.
 const EXPAND_ALL_LAYERS_ICON = `data:image/svg+xml,${encodeURIComponent(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" rx="2" fill="#0066CC"/><path fill="white" d="M9 9H4v1h5V9z"/><path fill="white" d="M7 12V7H6v5h1z"/><path fill="white" fill-rule="evenodd" clip-rule="evenodd" d="M5 3l1-1h7l1 1v7l-1 1h-2v2l-1 1H3l-1-1V6l1-1h2V3zm1 2h4l1 1v4h2V3H6v2zm4 1H3v7h7V6z"/></svg>`
+  "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\"><rect width=\"16\" height=\"16\" rx=\"2\" fill=\"#0066CC\"/><path fill=\"white\" d=\"M9 9H4v1h5V9z\"/><path fill=\"white\" d=\"M7 12V7H6v5h1z\"/><path fill=\"white\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M5 3l1-1h7l1 1v7l-1 1h-2v2l-1 1H3l-1-1V6l1-1h2V3zm1 2h4l1 1v4h2V3H6v2zm4 1H3v7h7V6z\"/></svg>"
 )}`;
 
 /**
@@ -70,11 +70,22 @@ export const getDirectLayerData = (
   return { shapes: directShapes, links: directLinks };
 };
 
+/**
+ * Reveals the first-layer children of a collapsed shape.
+ * Call this before removing a shape so its direct children remain visible on the canvas.
+ */
+export const revealDirectChildren = (graph: dia.Graph, shape: ServiceEntityShape): void => {
+  if (!shape.isLayersCollapsed) return;
+  const { shapes: directShapes, links: directLinks } = getDirectLayerData(graph, shape);
+  directShapes.forEach((s) => s.attr("root/display", ""));
+  directLinks.forEach((l) => l.attr("root/display", ""));
+};
+
 export const getConnectedLayerData = (
   graph: dia.Graph,
   shape: ServiceEntityShape
 ): { shapes: ServiceEntityShape[]; links: dia.Link[] } => {
-  // BFS using the connections map so it works even before JointJS links are established
+  // Breadth-first search using the connections map so it works even before JointJS links are established
   // (e.g. immediately after a stencil drop).
   //
   // The connections map is bidirectional: a child stores its parent's ID (rootEntities)

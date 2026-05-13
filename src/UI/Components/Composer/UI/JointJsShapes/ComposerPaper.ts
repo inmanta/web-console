@@ -9,9 +9,9 @@ import {
   canRemoveLink,
 } from "../../Data/Helpers";
 import { RelationsDictionary } from "../../Data/Helpers/createRelationsDictionary";
-import { getConnectedLayerData } from "./createHalo";
 import { LinkShape } from "./LinkShape";
 import { ServiceEntityShape } from "./ServiceEntityShape";
+import { getConnectedLayerData } from "./createHalo";
 
 /**
  * Wrapper around JointJS `dia.Paper` used by the composer.

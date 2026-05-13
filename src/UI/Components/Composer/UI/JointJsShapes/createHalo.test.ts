@@ -1,12 +1,12 @@
 import { dia, shapes } from "@joint/plus";
 import { EmbeddedEntity, ServiceModel } from "@/Core";
-import { defineObjectsForJointJS } from "../../testSetup";
 import {
   addConnectionsBetweenShapes,
   removeConnectionsBetweenShapes,
 } from "../../Data/Helpers/linkUtils";
+import { defineObjectsForJointJS } from "../../testSetup";
 import { ServiceEntityShape } from "./ServiceEntityShape";
-import { getConnectedLayerData, getDirectLayerData } from "./createHalo";
+import { getConnectedLayerData, getDirectLayerData, revealDirectChildren } from "./createHalo";
 
 describe("getConnectedLayerData", () => {
   beforeAll(() => {
@@ -152,7 +152,7 @@ describe("getConnectedLayerData", () => {
     expect(layerShapes[0].id).toBe("core-2");
   });
 
-  it("traverses nested levels (BFS finds grandchildren)", () => {
+  it("traverses nested levels (breadth-first search finds grandchildren)", () => {
     const graph = new dia.Graph();
     const parent = createShape("core-1", "core", createMockServiceModel("CoreService"), {
       embeddedEntities: { ChildType: ["embedded-1"] },
@@ -182,7 +182,7 @@ describe("getConnectedLayerData", () => {
 
   it("does not loop infinitely when child has a back-reference to the parent", () => {
     // Embedded shapes store their root entity ID in connections (rootEntities).
-    // The BFS must not re-visit the already-seen parent.
+    // must not re-visit the already-seen parent.
     const graph = new dia.Graph();
     const parent = createShape("core-1", "core", createMockServiceModel("CoreService"), {
       embeddedEntities: { ChildType: ["embedded-1"] },
@@ -256,13 +256,18 @@ describe("getConnectedLayerData", () => {
   });
 
   it("returns empty for a leaf whose relation-type parent is in the graph", () => {
-    // The leaf's rootEntities back-reference populates parentIds, so the BFS skips
+    // The leaf's rootEntities back-reference populates parentIds, so the breadth-first search skips
     // upward traversal to the parent without needing established graph links.
     // This prevents expand/collapse buttons from appearing on true leaf nodes.
     const graph = new dia.Graph();
-    const parent = createShape("relation-1", "relation", createMockServiceModel("RelationService"), {
-      embeddedEntities: { LeafType: ["embedded-1"] },
-    });
+    const parent = createShape(
+      "relation-1",
+      "relation",
+      createMockServiceModel("RelationService"),
+      {
+        embeddedEntities: { LeafType: ["embedded-1"] },
+      }
+    );
     const leaf = createShape(
       "embedded-1",
       "embedded",
@@ -317,15 +322,20 @@ describe("getConnectedLayerData", () => {
   it("shows children of a placeholder inter-service relation dropped with its parent (no links yet)", () => {
     // Placeholder drop creates a core shape and a relation shape together.
     // The relation shape has rootEntities pointing to the core shape (upward reference).
-    // The BFS from the core shape must find the relation child via parentIds direction
+    // The breadth-first search from the core shape must find the relation child via parentIds direction
     // detection, without any graph links established yet.
     const graph = new dia.Graph();
     const core = createShape("core-1", "core", createMockServiceModel("CoreService"), {
       interServiceRelations: { RelationService: ["relation-1"] },
     });
-    const relation = createShape("relation-1", "relation", createMockServiceModel("RelationService"), {
-      rootEntities: { CoreService: ["core-1"] },
-    });
+    const relation = createShape(
+      "relation-1",
+      "relation",
+      createMockServiceModel("RelationService"),
+      {
+        rootEntities: { CoreService: ["core-1"] },
+      }
+    );
 
     core.addTo(graph);
     relation.addTo(graph);
@@ -367,7 +377,11 @@ describe("getConnectedLayerData", () => {
     // must cause getConnectedLayerData to return the relation so the toggle/expand icons appear.
     const graph = new dia.Graph();
     const core = createShape("core-1", "core", createMockServiceModel("CoreService"));
-    const relation = createShape("relation-1", "relation", createMockServiceModel("RelationService"));
+    const relation = createShape(
+      "relation-1",
+      "relation",
+      createMockServiceModel("RelationService")
+    );
 
     core.addTo(graph);
     relation.addTo(graph);
@@ -387,9 +401,14 @@ describe("getConnectedLayerData", () => {
     const core = createShape("core-1", "core", createMockServiceModel("CoreService"), {
       interServiceRelations: { RelationService: ["relation-1"] },
     });
-    const relation = createShape("relation-1", "relation", createMockServiceModel("RelationService"), {
-      rootEntities: { CoreService: ["core-1"] },
-    });
+    const relation = createShape(
+      "relation-1",
+      "relation",
+      createMockServiceModel("RelationService"),
+      {
+        rootEntities: { CoreService: ["core-1"] },
+      }
+    );
 
     core.addTo(graph);
     relation.addTo(graph);
@@ -407,7 +426,11 @@ describe("getConnectedLayerData", () => {
     // the child's halo does not incorrectly show expand/collapse icons.
     const graph = new dia.Graph();
     const core = createShape("core-1", "core", createMockServiceModel("CoreService"));
-    const relation = createShape("relation-1", "relation", createMockServiceModel("RelationService"));
+    const relation = createShape(
+      "relation-1",
+      "relation",
+      createMockServiceModel("RelationService")
+    );
 
     core.addTo(graph);
     relation.addTo(graph);
@@ -420,7 +443,7 @@ describe("getConnectedLayerData", () => {
 
   it("detects children whose connections are set post-construction (InventoryTabElement pattern)", () => {
     // InventoryTabElement.ts sets connections directly on the model after drop,
-    // before JointJS links are created. The BFS must find those children.
+    // before JointJS links are created. The breadth-first search must find those children.
     const graph = new dia.Graph();
     const parent = createShape("relation-1", "relation", createMockServiceModel("RelationService"));
     const child = createShape(
@@ -629,5 +652,179 @@ describe("getDirectLayerData", () => {
 
     expect(links).toHaveLength(1);
     expect(links[0]).toBe(siblingLink);
+  });
+});
+
+describe("revealDirectChildren", () => {
+  beforeAll(() => {
+    defineObjectsForJointJS();
+  });
+
+  const createMockServiceModel = (name: string): ServiceModel => ({
+    name,
+    environment: "test",
+    lifecycle: { initial_state: "active", states: [], transfers: [] },
+    attributes: [],
+    config: {},
+    embedded_entities: [],
+    inter_service_relations: [],
+    owned_entities: [],
+    owner: null,
+  });
+
+  const createMockEmbeddedEntity = (name: string, type: string): EmbeddedEntity => ({
+    name,
+    type,
+    lower_limit: 0,
+    upper_limit: null,
+    modifier: "rw",
+    attributes: [],
+    embedded_entities: [],
+    inter_service_relations: [],
+  });
+
+  const createShape = (
+    id: string,
+    entityType: "core" | "embedded" | "relation",
+    serviceModel: ServiceModel | EmbeddedEntity,
+    connections: {
+      embeddedEntities?: Record<string, string[]>;
+      interServiceRelations?: Record<string, string[]>;
+      rootEntities?: Record<string, string[]>;
+    } = {}
+  ): ServiceEntityShape =>
+    new ServiceEntityShape({
+      id,
+      entityType,
+      serviceModel,
+      instanceAttributes: {},
+      readonly: false,
+      isNew: true,
+      lockedOnCanvas: false,
+      relationsDictionary: {},
+      embeddedEntities: connections.embeddedEntities ?? {},
+      interServiceRelations: connections.interServiceRelations ?? {},
+      rootEntities: connections.rootEntities ?? {},
+    });
+
+  it("makes direct children visible when the parent is collapsed", () => {
+    const graph = new dia.Graph();
+    const parent = createShape("core-1", "core", createMockServiceModel("CoreService"), {
+      embeddedEntities: { ChildType: ["embedded-1"] },
+    });
+    const child = createShape(
+      "embedded-1",
+      "embedded",
+      createMockEmbeddedEntity("child", "ChildType")
+    );
+
+    parent.addTo(graph);
+    child.addTo(graph);
+
+    // Simulate collapse: hide the child and mark the parent as collapsed
+    child.attr("root/display", "none");
+    parent.isLayersCollapsed = true;
+
+    revealDirectChildren(graph, parent);
+
+    expect(child.attr("root/display")).toBe("");
+  });
+
+  it("does not reveal grandchildren — only the first layer", () => {
+    const graph = new dia.Graph();
+    const parent = createShape("core-1", "core", createMockServiceModel("CoreService"), {
+      embeddedEntities: { ChildType: ["embedded-1"] },
+    });
+    const child = createShape(
+      "embedded-1",
+      "embedded",
+      createMockEmbeddedEntity("child", "ChildType"),
+      { embeddedEntities: { GrandchildType: ["embedded-2"] } }
+    );
+    const grandchild = createShape(
+      "embedded-2",
+      "embedded",
+      createMockEmbeddedEntity("grandchild", "GrandchildType")
+    );
+
+    parent.addTo(graph);
+    child.addTo(graph);
+    grandchild.addTo(graph);
+
+    // Simulate full collapse of all layers
+    child.attr("root/display", "none");
+    child.isLayersCollapsed = true;
+    grandchild.attr("root/display", "none");
+    grandchild.isLayersCollapsed = true;
+    parent.isLayersCollapsed = true;
+
+    revealDirectChildren(graph, parent);
+
+    expect(child.attr("root/display")).toBe("");
+    expect(grandchild.attr("root/display")).toBe("none");
+  });
+
+  it("makes links between direct children visible", () => {
+    const graph = new dia.Graph();
+    const embeddedModel = createMockEmbeddedEntity("child", "ChildType");
+    const parent = createShape("core-1", "core", createMockServiceModel("CoreService"), {
+      embeddedEntities: { ChildType: ["embedded-1", "embedded-2"] },
+    });
+    const child1 = createShape("embedded-1", "embedded", embeddedModel);
+    const child2 = createShape("embedded-2", "embedded", embeddedModel);
+
+    parent.addTo(graph);
+    child1.addTo(graph);
+    child2.addTo(graph);
+
+    const siblingLink = new shapes.standard.Link();
+    siblingLink.source({ id: "embedded-1" });
+    siblingLink.target({ id: "embedded-2" });
+    siblingLink.addTo(graph);
+
+    // Simulate collapse
+    child1.attr("root/display", "none");
+    child2.attr("root/display", "none");
+    siblingLink.attr("root/display", "none");
+    parent.isLayersCollapsed = true;
+
+    revealDirectChildren(graph, parent);
+
+    expect(siblingLink.attr("root/display")).toBe("");
+  });
+
+  it("does nothing when the shape is not collapsed", () => {
+    const graph = new dia.Graph();
+    const parent = createShape("core-1", "core", createMockServiceModel("CoreService"), {
+      embeddedEntities: { ChildType: ["embedded-1"] },
+    });
+    const child = createShape(
+      "embedded-1",
+      "embedded",
+      createMockEmbeddedEntity("child", "ChildType")
+    );
+
+    parent.addTo(graph);
+    child.addTo(graph);
+
+    // Child is hidden for some other reason; parent is NOT collapsed
+    child.attr("root/display", "none");
+    parent.isLayersCollapsed = false;
+
+    revealDirectChildren(graph, parent);
+
+    // Should remain hidden — revealDirectChildren only acts on collapsed parents
+    expect(child.attr("root/display")).toBe("none");
+  });
+
+  it("does nothing when the shape has no children", () => {
+    const graph = new dia.Graph();
+    const parent = createShape("core-1", "core", createMockServiceModel("CoreService"));
+
+    parent.addTo(graph);
+    parent.isLayersCollapsed = true;
+
+    // Should not throw and shapes/links lists remain empty
+    expect(() => revealDirectChildren(graph, parent)).not.toThrow();
   });
 });

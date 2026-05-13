@@ -4,7 +4,7 @@ import { InstanceAttributeModel } from "@/Core";
 import { ServiceModel } from "@/Core";
 import { words } from "@/UI/words";
 import { ServiceEntityShape } from "../../UI";
-import { createHalo } from "../../UI/JointJsShapes/createHalo";
+import { createHalo, revealDirectChildren } from "../../UI/JointJsShapes/createHalo";
 import { RelationsDictionary } from "../Helpers";
 import { isServiceEntityShapeCell } from "../Helpers";
 import { canRemoveShape } from "../Helpers/relationsHelpers";
@@ -173,6 +173,10 @@ export const useCanvasInteractions = ({
           // order item from being generated for this shape.
           initialShapeInfoRef.current.delete(cell.id as string);
 
+          // If the removed shape has collapsed children, reveal the first layer
+          // so those children remain visible after the parent disappears.
+          if (graph) revealDirectChildren(graph, cell as ServiceEntityShape);
+
           // Removing the cell will also remove all connected links.
           // The graph `remove` handler takes care of cleaning up connections
           // and updating canvasState for all affected shapes.
@@ -202,6 +206,10 @@ export const useCanvasInteractions = ({
           // which will send a delete API request for this shape.
           // Note: If the shape wasn't in initialShapeInfoRef, it means it was newly added,
           // so there's nothing to delete on the server - just removing it is sufficient.
+
+          // If the removed shape has collapsed children, reveal the first layer
+          // so those children remain visible after the parent disappears.
+          if (graph) revealDirectChildren(graph, cell as ServiceEntityShape);
 
           // Removing the cell will also remove all connected links.
           // The graph `remove` handler takes care of cleaning up connections
