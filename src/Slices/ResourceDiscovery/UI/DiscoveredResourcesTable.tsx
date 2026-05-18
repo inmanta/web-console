@@ -55,14 +55,14 @@ export const DiscoveredResourcesTable: React.FC<Props> = ({
       : {};
 
     return (
-      <Th key={displayName} {...sortParams}>
+      <Th key={displayName} {...sortParams} modifier="nowrap">
         {displayName}
       </Th>
     );
   });
 
   return (
-    <Table {...props} variant={TableVariant.compact}>
+    <Table {...props} variant={TableVariant.compact} isStickyHeader>
       <Thead>
         <Tr>
           {heads}

@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump picomatch from 2.3.1 to 2.3.2
+destination-branches:
+- master
+- iso9
+sections: {}

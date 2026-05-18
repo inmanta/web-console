@@ -687,11 +687,9 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         const value = sanitized[field.name as keyof InstanceAttributeModel];
 
         switch (field.kind) {
-          case "Boolean":
           case "Enum":
           case "Text":
           case "Textarea":
-          case "TextList":
             return isEmptyValue(value);
           default:
             return false;

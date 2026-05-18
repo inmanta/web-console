@@ -65,7 +65,7 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
     (filter.status && filter.status.length > 0);
 
   return (
-    <StackItem style={{ minHeight: "300px" }}>
+    <StackItem>
       <Flex
         justifyContent={{ default: "justifyContentSpaceBetween" }}
         alignItems={{ default: "alignItemsCenter" }}
@@ -118,7 +118,7 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
           {filter.status && filter.status.length > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("resources.column.deployState")}
+                title={words("resources.column.status")}
                 values={filter.status}
                 onRemove={removeStatusChip}
                 onRemoveGroup={clearStatusFilters}

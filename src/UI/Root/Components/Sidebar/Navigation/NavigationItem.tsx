@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { NavLink } from "react-router";
 import { Label, NavItem, Tooltip } from "@patternfly/react-core";
 import { LockIcon } from "@patternfly/react-icons";
-import { CompileReportsIndication } from "@/Slices/Resource/UI/ResourcesPage/Components/CompileReportsIndication";
+import { BlinkingDot } from "@/Slices/Resource/UI/ResourcesPage/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchHelper } from "@/UI/Routing";
 
@@ -128,7 +128,7 @@ const CompileReportItem: React.FC<Label & Url & { isActive?: boolean }> = ({
         {label}
         {isCompiling && (
           <Tooltip key={"ongoing-compilation-tooltip"} content={"Compiling"}>
-            <CompileReportsIndication role="presentation" aria-label="CompileReportsIndication" />
+            <BlinkingDot role="presentation" aria-label="CompileReportsIndication" />
           </Tooltip>
         )}
       </NavLink>

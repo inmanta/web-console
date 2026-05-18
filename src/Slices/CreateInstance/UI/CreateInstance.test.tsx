@@ -21,7 +21,7 @@ const axe = configureAxe({
 // Mock usePost before the test
 const postMock = vi.fn();
 vi.mock("@/Data/Queries/Helpers/useQueries", async (importActual) => {
-  const actual = await importActual();
+  const actual = await importActual<typeof import("@/Data/Queries/Helpers/useQueries")>();
   return {
     ...actual,
     usePost: () => postMock,

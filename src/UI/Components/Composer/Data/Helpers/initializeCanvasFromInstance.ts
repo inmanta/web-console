@@ -81,7 +81,8 @@ export const createEmbeddedEntityShapes = (
   embeddedEntityCache: Map<string, string>,
   positionTracker: PositionTracker,
   offsetX: number,
-  offsetY: number
+  offsetY: number,
+  isNew: boolean = false
 ): string[] => {
   const createdIds: string[] = [];
   const dataArray = Array.isArray(embeddedData) ? embeddedData : [embeddedData];
@@ -171,7 +172,8 @@ export const createEmbeddedEntityShapes = (
           embeddedEntityCache,
           positionTracker,
           offsetX + NESTED_HORIZONTAL_OFFSET,
-          offsetY
+          offsetY,
+          isNew
         );
 
         if (nestedIds.length > 0) {
@@ -190,7 +192,7 @@ export const createEmbeddedEntityShapes = (
     const shapeOptions: ServiceEntityOptions = {
       entityType: "embedded",
       readonly: false,
-      isNew: false,
+      isNew,
       lockedOnCanvas: false,
       id: embeddedId,
       relationsDictionary,
@@ -427,7 +429,8 @@ export const initializeCanvasFromInstance = (
           embeddedEntityCache,
           positionTracker,
           parentPosition.x + HORIZONTAL_SPACING,
-          parentPosition.y
+          parentPosition.y,
+          isNewEntity
         );
 
         if (embeddedIds.length > 0) {

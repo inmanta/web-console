@@ -68,7 +68,11 @@ monaco.languages.setMonarchTokensProvider("python", {
 // Register plain text language
 monaco.languages.register({ id: "plaintext" });
 
-loader.config({ monaco });
+// Pass the locally-bundled monaco instance so the loader never fetches from the
+// default jsdelivr CDN. Override paths.vs as a belt-and-suspenders guard: if
+// state.monaco were somehow unset, the fallback script URL would be relative
+// (/loader.js) instead of the CDN URL.
+loader.config({ monaco, paths: { vs: "" } });
 loader.init();
 
 const container = document.getElementById("root") as HTMLElement;

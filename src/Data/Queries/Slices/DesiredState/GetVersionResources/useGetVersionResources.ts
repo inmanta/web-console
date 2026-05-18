@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { PageSize, Pagination } from "@/Core";
 import { Resource } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
@@ -12,7 +12,7 @@ import { getVersionResourcesUrl } from "./getVersionResourcesUrl";
  * Interface for the API response containing the resources data
  */
 interface Result {
-  data: Resource.FromVersion[];
+  data: Resource.FromVersionResource[];
   links: Pagination.Links;
   metadata: Pagination.Metadata;
 }
@@ -82,6 +82,7 @@ export const useGetVersionResources = ({
         ]),
         queryFn: () => get(url),
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
+        placeholderData: keepPreviousData,
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),

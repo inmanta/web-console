@@ -93,16 +93,14 @@ describe("DiscoveredResourcesPage", () => {
       })
     ).toBeVisible();
 
-    // Apply a value filter using the toolbar and verify the table updates
+    // Open the filter drawer and apply a value filter
     const user = userEvent.setup();
-    const valueInput = screen.getByTestId("ValueFilterInput");
-    await user.clear(valueInput);
-    await user.type(valueInput, "ubuntu");
-    await user.click(
-      screen.getByRole("button", {
-        name: /submit search/i,
-      })
-    );
+
+    await user.click(screen.getByRole("button", { name: /filters/i }));
+
+    const valueInput = await screen.findByRole("textbox", { name: "Value" });
+
+    await user.type(valueInput, "ubuntu{Enter}");
 
     const filteredRows = await screen.findAllByRole("row", {
       name: "DiscoveredResourceRow",

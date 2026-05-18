@@ -1,5 +1,6 @@
 import {
   cloneDeep,
+  get,
   groupBy,
   isEqual,
   merge,
@@ -82,5 +83,39 @@ describe("collection utils", () => {
     const result = pickBy(input, (value) => value !== undefined);
 
     expect(result).toEqual({ a: 1, c: 3 });
+  });
+
+  describe("get", () => {
+    it("returns the value at the given path", () => {
+      expect(get({ a: 1 }, "a")).toBe(1);
+    });
+
+    it("returns null when the field value is null", () => {
+      expect(get({ a: null }, "a")).toBeNull();
+    });
+
+    it("returns undefined when the key is absent", () => {
+      expect(get({}, "a")).toBeUndefined();
+    });
+
+    it("does not substitute the default value when the field value is null", () => {
+      expect(get({ a: null }, "a", "fallback")).toBeNull();
+    });
+
+    it("returns the default value when the key is absent", () => {
+      expect(get({}, "a", "fallback")).toBe("fallback");
+    });
+
+    it("traverses nested paths", () => {
+      expect(get({ a: { b: { c: 42 } } }, "a.b.c")).toBe(42);
+    });
+
+    it("returns undefined for a missing nested segment", () => {
+      expect(get({ a: {} }, "a.b.c")).toBeUndefined();
+    });
+
+    it("returns the default value when the root object is null", () => {
+      expect(get(null, "a", "fallback")).toBe("fallback");
+    });
   });
 });

@@ -1,3 +1,5 @@
+import "./monacoHelpers";
+
 // Wrap in before() to ensure it runs before any test
 beforeEach(() => {
   cy.on("uncaught:exception", (err) => {
