@@ -114,7 +114,9 @@ export const useCanvasInteractions = ({
     const scheduleHaloRefresh = () => setTimeout(refreshHalo, 0);
 
     const handleLinkRemovedForHalo = (cell: dia.Cell) => {
-      if (cell instanceof dia.Link) scheduleHaloRefresh();
+      if (cell instanceof dia.Link) {
+        scheduleHaloRefresh();
+      }
     };
 
     // Handle right-click context menu on entity shapes
@@ -183,7 +185,9 @@ export const useCanvasInteractions = ({
 
           // If the removed shape has collapsed children, reveal the first layer
           // so those children remain visible after the parent disappears.
-          if (graph) revealDirectChildren(graph, cell as ServiceEntityShape);
+          if (graph) {
+            revealDirectChildren(graph, cell as ServiceEntityShape);
+          }
 
           // Removing the cell will also remove all connected links.
           // The graph `remove` handler takes care of cleaning up connections
@@ -217,7 +221,9 @@ export const useCanvasInteractions = ({
 
           // If the removed shape has collapsed children, reveal the first layer
           // so those children remain visible after the parent disappears.
-          if (graph) revealDirectChildren(graph, cell as ServiceEntityShape);
+          if (graph) {
+            revealDirectChildren(graph, cell as ServiceEntityShape);
+          }
 
           // Removing the cell will also remove all connected links.
           // The graph `remove` handler takes care of cleaning up connections

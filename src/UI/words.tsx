@@ -254,6 +254,9 @@ const dict = {
   "instanceComposer.zoomHandler.zoomOut": "Zoom out",
   "instanceComposer.stencil.new": "New",
   "instanceComposer.stencil.inventory": "Inventory",
+  "instanceComposer.halo.expandLayers": "Expand layers",
+  "instanceComposer.halo.collapseLayers": "Collapse layers",
+  "instanceComposer.halo.expandAllLayers": "Expand all layers",
 
   /**
    * Service Instance Details text

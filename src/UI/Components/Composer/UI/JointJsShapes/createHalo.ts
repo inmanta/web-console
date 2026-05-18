@@ -1,6 +1,7 @@
 import { dia, highlighters, ui } from "@joint/plus";
 import { t_global_border_radius_small } from "@patternfly/react-tokens";
 import { RelationsDictionary, checkIfConnectionIsAllowed } from "../../Data/Helpers";
+import { words } from "@/UI/words";
 import { isServiceEntityShapeCell } from "../../Data/Helpers/getEntitiesFromCanvas";
 import collapseLayersIcon from "../icons/collapse-layers.svg";
 import expandAllLayersIcon from "../icons/expand-all-layers.svg";
@@ -63,8 +64,11 @@ export const getDirectLayerData = (
  * Call this before removing a shape so its direct children remain visible on the canvas.
  */
 export const revealDirectChildren = (graph: dia.Graph, shape: ServiceEntityShape): void => {
-  if (!shape.isLayersCollapsed) return;
+  if (!shape.isLayersCollapsed) {
+    return;
+  }
   const { shapes: directShapes, links: directLinks } = getDirectLayerData(graph, shape);
+
   directShapes.forEach((s) => s.attr("root/display", ""));
   directLinks.forEach((l) => l.attr("root/display", ""));
 };
@@ -253,7 +257,9 @@ export const createHalo = (
         icon: shape.isLayersCollapsed ? expandLayersIcon : collapseLayersIcon,
         attrs: {
           ".handle": {
-            "data-tooltip": shape.isLayersCollapsed ? "Expand layers" : "Collapse layers",
+            "data-tooltip": shape.isLayersCollapsed
+              ? words("instanceComposer.halo.expandLayers")
+              : words("instanceComposer.halo.collapseLayers"),
             "data-tooltip-position": "bottom",
           },
         },
@@ -285,7 +291,9 @@ export const createHalo = (
           handleEl.style.backgroundImage = `url("${shape.isLayersCollapsed ? expandLayersIcon : collapseLayersIcon}")`;
           handleEl.setAttribute(
             "data-tooltip",
-            shape.isLayersCollapsed ? "Expand layers" : "Collapse layers"
+            shape.isLayersCollapsed
+              ? words("instanceComposer.halo.expandLayers")
+              : words("instanceComposer.halo.collapseLayers")
           );
         }
       });
@@ -296,7 +304,7 @@ export const createHalo = (
         icon: expandAllLayersIcon,
         attrs: {
           ".handle": {
-            "data-tooltip": "Expand all layers",
+            "data-tooltip": words("instanceComposer.halo.expandAllLayers"),
             "data-tooltip-position": "bottom",
           },
         },
@@ -316,7 +324,7 @@ export const createHalo = (
         const handleEl = halo.el?.querySelector(".handle.toggle-layers") as HTMLElement | null;
         if (handleEl) {
           handleEl.style.backgroundImage = `url("${collapseLayersIcon}")`;
-          handleEl.setAttribute("data-tooltip", "Collapse layers");
+          handleEl.setAttribute("data-tooltip", words("instanceComposer.halo.collapseLayers"));
         }
       });
     }
