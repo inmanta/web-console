@@ -4,6 +4,8 @@ import {
   Drawer,
   DrawerContent,
   DrawerContentBody,
+  Flex,
+  Label,
   PageSection,
 } from "@patternfly/react-core";
 import { Resource } from "@/Core";
@@ -69,7 +71,14 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
             paddingBottom: "var(--pf-t--global--spacer--md)",
           }}
         >
-          <Content component="h1">{words("desiredState.details.title")}</Content>
+          <Content component="h1">
+            <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
+              {words("desiredState.details.title")}
+              <Label color="purple" data-testid="version-label">
+                {words("desiredState.details.title.tag")(version)}
+              </Label>
+            </Flex>
+          </Content>
           <Controls
             paginationWidget={
               <PaginationWidget

@@ -810,6 +810,7 @@ const dict = {
 
   /** Desired State */
   "desiredState.title": "Desired State",
+  "desiredState.details.title.tag": (version) => `Version: ${version}`,
   "desiredState.empty.message": "No desired state versions found",
   "desiredState.columns.date": "Date",
   "desiredState.columns.version": "Version",
