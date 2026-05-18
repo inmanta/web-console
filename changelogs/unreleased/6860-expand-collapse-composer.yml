@@ -1,0 +1,4 @@
+description: Relations in the composer can now be expanded and collapsed.
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
