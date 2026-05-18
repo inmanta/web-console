@@ -1,7 +1,7 @@
 import { dia, highlighters, ui } from "@joint/plus";
 import { t_global_border_radius_small } from "@patternfly/react-tokens";
-import { RelationsDictionary, checkIfConnectionIsAllowed } from "../../Data/Helpers";
 import { words } from "@/UI/words";
+import { RelationsDictionary, checkIfConnectionIsAllowed } from "../../Data/Helpers";
 import { isServiceEntityShapeCell } from "../../Data/Helpers/getEntitiesFromCanvas";
 import collapseLayersIcon from "../icons/collapse-layers.svg";
 import expandAllLayersIcon from "../icons/expand-all-layers.svg";
