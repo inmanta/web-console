@@ -461,4 +461,38 @@ describe("ServiceInstanceDetailsPage", () => {
 
     server.close();
   }, 25000);
+
+  it("Should hide the Markdown Previewer button on older versions when expert mode is enabled", async () => {
+    const server = serverWithDocumentation;
+
+    server.listen();
+    const component = setupServiceInstanceDetails(true);
+
+    render(component);
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    // On the latest version, the preview button should be visible in expert mode
+    expect(screen.getByRole("button", { name: "preview-button" })).toBeVisible();
+
+    // Switch to an older version
+    await userEvent.click(screen.getByRole("cell", { name: "3" }));
+
+    expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 3");
+
+    // The preview button should be hidden on older versions
+    expect(screen.queryByRole("button", { name: "preview-button" })).not.toBeInTheDocument();
+
+    // Switch back to the latest version
+    await userEvent.click(screen.getByRole("cell", { name: "4" }));
+
+    expect(screen.queryByTestId("selected-version")).not.toBeInTheDocument();
+
+    // The preview button should be visible again on the latest version
+    expect(screen.getByRole("button", { name: "preview-button" })).toBeVisible();
+
+    server.close();
+  }, 15000);
 });
