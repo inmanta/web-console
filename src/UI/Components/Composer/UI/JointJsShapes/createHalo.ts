@@ -2,32 +2,11 @@ import { dia, highlighters, ui } from "@joint/plus";
 import { t_global_border_radius_small } from "@patternfly/react-tokens";
 import { RelationsDictionary, checkIfConnectionIsAllowed } from "../../Data/Helpers";
 import { isServiceEntityShapeCell } from "../../Data/Helpers/getEntitiesFromCanvas";
+import collapseLayersIcon from "../icons/collapse-layers.svg";
+import expandAllLayersIcon from "../icons/expand-all-layers.svg";
+import expandLayersIcon from "../icons/expand-layers.svg";
+import linkIcon from "../icons/link.svg";
 import { ServiceEntityShape } from "./ServiceEntityShape";
-
-const makeSvgIcon = (...paths: string[]): string => {
-  const pathEls = paths.map((d) => `<path fill="white" d="${d}"/>`).join("");
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect width="24" height="24" rx="3" fill="#0066CC"/>${pathEls}</svg>`;
-  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
-};
-
-// BiLayerMinus: layers are visible — click to collapse
-const COLLAPSE_LAYERS_ICON = makeSvgIcon(
-  "m2.513 12.833 9.022 5.04a.995.995 0 0 0 .973.001l8.978-5a1 1 0 0 0-.002-1.749l-9.022-5a1 1 0 0 0-.968-.001l-8.978 4.96a1 1 0 0 0-.003 1.749zm9.464-4.69 6.964 3.859-6.917 3.853-6.964-3.89 6.917-3.822z",
-  "m3.485 15.126-.971 1.748 9 5a1 1 0 0 0 .971 0l9-5-.971-1.748L12 19.856l-8.515-4.73zM16 4h6v2h-6z"
-);
-
-// BiLayerPlus: layers are hidden — click to expand
-const EXPAND_LAYERS_ICON = makeSvgIcon(
-  "m21.484 11.125-9.022-5a1 1 0 0 0-.968-.001l-8.978 4.96a1 1 0 0 0-.003 1.749l9.022 5.04a.995.995 0 0 0 .973.001l8.978-5a1 1 0 0 0-.002-1.749zm-9.461 4.73-6.964-3.89 6.917-3.822 6.964 3.859-6.917 3.853z",
-  "M12 22a.994.994 0 0 0 .485-.126l9-5-.971-1.748L12 19.856l-8.515-4.73-.971 1.748 9 5A1 1 0 0 0 12 22zm8-20h-2v2h-2v2h2v2h2V6h2V4h-2z"
-);
-
-// VscExpandAll: two nested rectangles with a crosshair — click to expand all layers.
-// Uses a 16×16 viewBox (matching the VS Code icon grid) so it is constructed directly
-// rather than through makeSvgIcon which targets a 24×24 grid.
-const EXPAND_ALL_LAYERS_ICON = `data:image/svg+xml,${encodeURIComponent(
-  "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\"><rect width=\"16\" height=\"16\" rx=\"2\" fill=\"#0066CC\"/><path fill=\"white\" d=\"M9 9H4v1h5V9z\"/><path fill=\"white\" d=\"M7 12V7H6v5h1z\"/><path fill=\"white\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M5 3l1-1h7l1 1v7l-1 1h-2v2l-1 1H3l-1-1V6l1-1h2V3zm1 2h4l1 1v4h2V3H6v2zm4 1H3v7h7V6z\"/></svg>"
-)}`;
 
 /**
  * Returns only the direct (first-layer) children of a shape and the links that
@@ -239,6 +218,7 @@ export const createHalo = (
 
   halo.changeHandle("link", {
     name: "link",
+    icon: linkIcon,
   });
 
   const cellModel = cellView.model;
@@ -253,7 +233,7 @@ export const createHalo = (
       halo.addHandle({
         name: "toggle-layers",
         position: "nw",
-        icon: shape.isLayersCollapsed ? EXPAND_LAYERS_ICON : COLLAPSE_LAYERS_ICON,
+        icon: shape.isLayersCollapsed ? expandLayersIcon : collapseLayersIcon,
         attrs: {
           ".handle": {
             "data-tooltip": shape.isLayersCollapsed ? "Expand layers" : "Collapse layers",
@@ -285,7 +265,7 @@ export const createHalo = (
 
         const handleEl = halo.el?.querySelector(".handle.toggle-layers") as HTMLElement | null;
         if (handleEl) {
-          handleEl.style.backgroundImage = `url("${shape.isLayersCollapsed ? EXPAND_LAYERS_ICON : COLLAPSE_LAYERS_ICON}")`;
+          handleEl.style.backgroundImage = `url("${shape.isLayersCollapsed ? expandLayersIcon : collapseLayersIcon}")`;
           handleEl.setAttribute(
             "data-tooltip",
             shape.isLayersCollapsed ? "Expand layers" : "Collapse layers"
@@ -296,7 +276,7 @@ export const createHalo = (
       halo.addHandle({
         name: "expand-all-layers",
         position: "n",
-        icon: EXPAND_ALL_LAYERS_ICON,
+        icon: expandAllLayersIcon,
         attrs: {
           ".handle": {
             "data-tooltip": "Expand all layers",
@@ -318,7 +298,7 @@ export const createHalo = (
         // Sync the toggle button to show "collapse" since all layers are now visible
         const handleEl = halo.el?.querySelector(".handle.toggle-layers") as HTMLElement | null;
         if (handleEl) {
-          handleEl.style.backgroundImage = `url("${COLLAPSE_LAYERS_ICON}")`;
+          handleEl.style.backgroundImage = `url("${collapseLayersIcon}")`;
           handleEl.setAttribute("data-tooltip", "Collapse layers");
         }
       });
