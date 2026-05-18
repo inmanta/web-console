@@ -58,7 +58,23 @@ export const DocumentationTabContent: React.FC<Props> = ({
   const { logsQuery, instance } = useContext(InstanceDetailsContext);
   const { environmentHandler } = useContext(DependencyContext);
   const { triggerModal } = useContext(ModalContext);
-  const [expanded, setExpanded] = useState(0);
+  const [expandedSet, setExpandedSet] = useState<Set<number>>(() => {
+    const sorted = sortDocAttributeDescriptors(docAttributeDescriptors);
+    const initial = new Set<number>();
+
+    sorted.forEach((d, i) => {
+      if (d.webDefaultOpen) {
+        initial.add(i);
+      }
+    });
+
+    // Fall back to opening the first item when none are marked as default open
+    if (initial.size === 0 && sorted.length > 1) {
+      initial.add(0);
+    }
+
+    return initial;
+  });
   const [, setInterfaceBlocked] = useState(false);
   const navigateTo = useNavigateTo();
 
@@ -136,11 +152,17 @@ export const DocumentationTabContent: React.FC<Props> = ({
   }
 
   const onToggle = (index: number) => {
-    if (index === expanded) {
-      setExpanded(-1);
-    } else {
-      setExpanded(index);
-    }
+    setExpandedSet((prev) => {
+      const next = new Set(prev);
+
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+
+      return next;
+    });
   };
 
   const MarkdownPreviewerButton = () => {
@@ -191,7 +213,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
       <MarkdownPreviewerButton />
       <Accordion asDefinitionList togglePosition="start">
         {sections.map((section, index) => (
-          <AccordionItem isExpanded={expanded === index} key={section.title}>
+          <AccordionItem isExpanded={expandedSet.has(index)} key={section.title}>
             <AccordionToggle
               onClick={() => {
                 onToggle(index);
@@ -205,7 +227,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
                 attributeValue={section.value}
                 web_title={section.title}
                 onSetStateClick={handleStateTransferClick}
-                isExpanded={expanded === index}
+                isExpanded={expandedSet.has(index)}
               />
             </AccordionContent>
           </AccordionItem>
