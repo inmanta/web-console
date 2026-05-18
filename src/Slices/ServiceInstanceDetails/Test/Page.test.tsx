@@ -3,6 +3,10 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import {
+  DocAttributeDescriptors,
+  sortDocAttributeDescriptors,
+} from "../UI/Tabs/DocumentationTabContent";
+import {
   defaultServer,
   errorServerHistory,
   errorServerInstance,
@@ -11,10 +15,6 @@ import {
   serverWithMultipleDocumentation,
 } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
-import {
-  DocAttributeDescriptors,
-  sortDocAttributeDescriptors,
-} from "../UI/Tabs/DocumentationTabContent";
 
 describe("ServiceInstanceDetailsPage", () => {
   it("Should render the view in its loading states", async () => {
