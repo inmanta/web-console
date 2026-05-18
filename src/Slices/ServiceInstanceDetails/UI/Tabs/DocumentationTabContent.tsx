@@ -75,10 +75,15 @@ export const DocumentationTabContent: React.FC<Props> = ({
     }
   }, [isLatest, logsQuery.data, logsQuery.isLoading, selectedVersion, instance]);
 
+  const sortedDescriptors = useMemo(
+    () => sortDocAttributeDescriptors(docAttributeDescriptors),
+    [docAttributeDescriptors]
+  );
+
   // Memoize sections calculation
   const sections = useMemo(() => {
-    return selectedSet ? getDocumentationSections(docAttributeDescriptors, selectedSet) : [];
-  }, [docAttributeDescriptors, selectedSet]);
+    return selectedSet ? getDocumentationSections(sortedDescriptors, selectedSet) : [];
+  }, [sortedDescriptors, selectedSet]);
 
   const handleStateTransferClick = useCallback(
     ({ targetState }: { content: string; targetState: string }) => {
@@ -211,6 +216,29 @@ export const DocumentationTabContent: React.FC<Props> = ({
       </Accordion>
     </TabContentWrapper>
   );
+};
+
+/**
+ * Sorts documentation attribute descriptors by webOrder ascending.
+ * Descriptors without webOrder or with webOrder === -1 are placed after all
+ * explicitly ordered items, preserving their original relative order.
+ */
+export const sortDocAttributeDescriptors = (
+  descriptors: DocAttributeDescriptors[]
+): DocAttributeDescriptors[] => {
+  return descriptors.slice().sort((a, b) => {
+    const aOrdered = a.webOrder !== undefined && a.webOrder !== -1;
+    const bOrdered = b.webOrder !== undefined && b.webOrder !== -1;
+
+    if (aOrdered && bOrdered) {
+      return (a.webOrder as number) - (b.webOrder as number);
+    } else if (aOrdered) {
+      return -1;
+    } else if (bOrdered) {
+      return 1;
+    }
+    return 0;
+  });
 };
 
 /**
