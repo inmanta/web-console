@@ -94,10 +94,18 @@ export const useCanvasInteractions = ({
     // Rebuild the active halo so its action icons reflect the updated connection state.
     // Deferred via setTimeout so all synchronous graph/connection handlers run first.
     const refreshHalo = () => {
-      if (!haloRef.current) return;
+      if (!haloRef.current) {
+        return;
+      }
+
       const cellView = haloRef.current.options.cellView as dia.CellView | undefined;
-      if (!cellView) return;
+
+      if (!cellView) {
+        return;
+      }
+
       haloRef.current.remove();
+
       const halo = createHalo(graph, paper, cellView, relationsDictionary);
       halo.render();
       haloRef.current = halo;

@@ -23,13 +23,22 @@ export const getDirectLayerData = (
 
   shape.connections.forEach((targetIds) => {
     targetIds.forEach((targetId) => {
-      if (directShapeIds.has(targetId)) return;
+      if (directShapeIds.has(targetId)) {
+        return;
+      }
+
       const otherCell = graph.getCell(targetId);
-      if (!isServiceEntityShapeCell(otherCell)) return;
+      if (!isServiceEntityShapeCell(otherCell)) {
+        return;
+      }
+
       const otherShape = otherCell as ServiceEntityShape;
       // Skip upward traversal (parent → this shape direction).
       // Handles all entity types including "core" inter-service relation targets.
-      if (shape.parentIds.has(targetId)) return;
+      if (shape.parentIds.has(targetId)) {
+        return;
+      }
+
       directShapeIds.add(targetId);
       directShapes.push(otherShape);
     });
@@ -82,15 +91,21 @@ export const getConnectedLayerData = (
 
     current.connections.forEach((targetIds) => {
       targetIds.forEach((targetId) => {
-        if (visitedIds.has(targetId)) return;
+        if (visitedIds.has(targetId)) {
+          return;
+        }
         const otherCell = graph.getCell(targetId);
-        if (!isServiceEntityShapeCell(otherCell)) return;
+        if (!isServiceEntityShapeCell(otherCell)) {
+          return;
+        }
 
         const otherShape = otherCell as ServiceEntityShape;
 
         // Skip if targetId is a known parent of the current node (upward traversal via rootEntities).
         // This handles all entity types including "core" inter-service relation targets.
-        if (current.parentIds.has(targetId)) return;
+        if (current.parentIds.has(targetId)) {
+          return;
+        }
 
         visitedIds.add(targetId);
         layerShapes.push(otherShape);
@@ -106,6 +121,7 @@ export const getConnectedLayerData = (
   const layerLinks = graph.getLinks().filter((link) => {
     const srcId = link.getSourceCell()?.id;
     const tgtId = link.getTargetCell()?.id;
+
     return (
       (srcId !== undefined && layerShapeIds.has(srcId)) ||
       (tgtId !== undefined && layerShapeIds.has(tgtId))
@@ -123,6 +139,7 @@ const clearHighlights = (paper: dia.Paper) => {
   const shapes = paper.findViewsInArea(area);
   shapes.forEach((shape) => {
     const highlight = dia.HighlighterView.get(shape, HIGHLIGHT_NAME);
+
     if (highlight) {
       highlight.remove();
     }
