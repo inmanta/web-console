@@ -26,6 +26,8 @@ export interface DocAttributeDescriptors {
   title: string;
   iconName: string;
   attributeName: string;
+  webOrder?: number;
+  webDefaultOpen?: boolean;
 }
 
 // Interface representing the attributes needed for the markdownCards
