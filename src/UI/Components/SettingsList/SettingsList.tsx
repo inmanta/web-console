@@ -22,7 +22,9 @@ interface Setting {
 export const SettingsList: React.FC<Props> = ({ config, onChange, Switch, isDisabled }) => {
   const settings = configToSettings(config);
 
-  if (settings.length <= 0) return null;
+  if (settings.length <= 0) {
+    return null;
+  }
 
   const handleChange = (name: string) => (checked: boolean) => onChange(name, checked);
 

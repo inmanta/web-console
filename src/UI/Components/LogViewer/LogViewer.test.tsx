@@ -116,6 +116,7 @@ describe("LogViewerComponent", () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return mockLink as any;
       }
+
       return originalCreateElement.call(document, tagName);
     });
 

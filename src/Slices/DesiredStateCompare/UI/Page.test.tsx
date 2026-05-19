@@ -40,6 +40,7 @@ describe("DesiredStateCompare", () => {
         return HttpResponse.json({ message: "error" }, { status: 500 });
       }
       counterForFile123++;
+
       return HttpResponse.json({ content: window.btoa("abcdefgh") });
     }),
     http.get("/api/v1/file/a47be15ee60a88c7bcc4bce900d921a8d34d5678", () => {
@@ -47,6 +48,7 @@ describe("DesiredStateCompare", () => {
         return HttpResponse.json({ message: "error" }, { status: 500 });
       }
       counterForFile567++;
+
       return HttpResponse.json({ content: window.btoa("efghijkl") });
     })
   );

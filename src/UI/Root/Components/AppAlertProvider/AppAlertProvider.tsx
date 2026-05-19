@@ -22,19 +22,24 @@ interface AppAlertContextProps {
 
 const defaultContext: AppAlertContextProps = {
   notify: () => {
-    if (import.meta.env.DEV) console.warn("AppAlertContext.notify called outside AppAlertProvider");
+    if (import.meta.env.DEV) {
+      console.warn("AppAlertContext.notify called outside AppAlertProvider");
+    }
   },
   notifySuccess: () => {
-    if (import.meta.env.DEV)
+    if (import.meta.env.DEV) {
       console.warn("AppAlertContext.notifySuccess called outside AppAlertProvider");
+    }
   },
   notifyError: () => {
-    if (import.meta.env.DEV)
+    if (import.meta.env.DEV) {
       console.warn("AppAlertContext.notifyError called outside AppAlertProvider");
+    }
   },
   notifyInfo: () => {
-    if (import.meta.env.DEV)
+    if (import.meta.env.DEV) {
       console.warn("AppAlertContext.notifyInfo called outside AppAlertProvider");
+    }
   },
 };
 

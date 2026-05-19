@@ -16,6 +16,7 @@ vi.mock("../Helpers/deploymentHelpers", () => ({
         attributes: shape.getSanitizedAttributes(),
       });
     });
+
     return orderItems;
   }),
 }));
@@ -35,6 +36,7 @@ describe("useServiceOrderItems", () => {
       isMissingConnections: vi.fn().mockReturnValue(hasMissingConnections),
       hasAttributeValidationErrors: hasAttributeErrors,
     } as unknown as ServiceEntityShape;
+
     return shape;
   };
 

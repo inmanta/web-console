@@ -54,6 +54,7 @@ describe("MarkdownContainer", () => {
     const mermaidMock = await import("mermaid");
     mermaidMock.default.run = vi.fn().mockImplementation(({ nodes }: { nodes: HTMLElement[] }) => {
       nodes[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg"></svg>';
+
       return Promise.resolve();
     });
 
@@ -199,6 +200,7 @@ describe("MarkdownContainer", () => {
         .fn()
         .mockImplementation(({ nodes }: { nodes: HTMLElement[] }) => {
           nodes[0].innerHTML = SVG_MARKUP;
+
           return Promise.resolve();
         });
 
@@ -219,6 +221,7 @@ describe("MarkdownContainer", () => {
         .fn()
         .mockImplementation(({ nodes }: { nodes: HTMLElement[] }) => {
           nodes[0].innerHTML = SVG_MARKUP;
+
           return Promise.resolve();
         });
 
@@ -243,6 +246,7 @@ describe("MarkdownContainer", () => {
         .fn()
         .mockImplementation(({ nodes }: { nodes: HTMLElement[] }) => {
           nodes[0].innerHTML = SVG_MARKUP;
+
           return Promise.resolve();
         });
 
@@ -272,6 +276,7 @@ describe("MarkdownContainer", () => {
         .fn()
         .mockImplementation(({ nodes }: { nodes: HTMLElement[] }) => {
           nodes[0].innerHTML = SVG_MARKUP;
+
           return Promise.resolve();
         });
 

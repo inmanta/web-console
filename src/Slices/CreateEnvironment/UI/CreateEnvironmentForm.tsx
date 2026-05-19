@@ -41,6 +41,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
     onSuccess: (data) => {
       const dataUpdater = (previousData: { data: Environment[] | undefined }) => {
         const oldData = previousData?.data || [];
+
         return { data: [...oldData, data.data] };
       };
 

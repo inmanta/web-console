@@ -102,7 +102,9 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               options={agentOptions.filter((option) => !filter.agent?.includes(option.value))}
               onFilter={setAgentSearch}
               onReachEnd={() => {
-                if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+                if (hasNextPage && !isFetchingNextPage) {
+                  fetchNextPage();
+                }
               }}
               isLoading={isLoading || isFetchingNextPage}
               onToggleInputMode={() => setInputMode("text")}

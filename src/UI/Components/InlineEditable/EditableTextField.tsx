@@ -42,7 +42,9 @@ const EditView: EditViewComponent = ({ value, onChange, onSubmit, label }) => (
     value={value}
     onChange={(_event, value) => onChange(value)}
     onKeyDown={(event) => {
-      if (event.key && event.key !== "Enter") return;
+      if (event.key && event.key !== "Enter") {
+        return;
+      }
 
       onSubmit();
     }}

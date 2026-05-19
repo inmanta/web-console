@@ -6,7 +6,9 @@ export class PathHelper {
   }
 
   public getParent(path: string): string {
-    if (!this.isNested(path)) return path;
+    if (!this.isNested(path)) {
+      return path;
+    }
 
     const parts = path.split(this.separator);
 
@@ -16,7 +18,9 @@ export class PathHelper {
   }
 
   public getSelf(path: string): string {
-    if (!this.isNested(path)) return path;
+    if (!this.isNested(path)) {
+      return path;
+    }
 
     return path.split(this.separator).pop() as string;
   }

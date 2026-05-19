@@ -44,6 +44,7 @@ export function sanitizeAttributes(
 
         // Convert empty string to null for InterServiceRelation fields
         sanitized[field.name] = value === "" ? null : value;
+
         return;
       }
       case "RelationList": {
@@ -55,7 +56,9 @@ export function sanitizeAttributes(
       case "DictList": {
         const list = formState[field.name];
 
-        if (!Array.isArray(list)) return;
+        if (!Array.isArray(list)) {
+          return;
+        }
 
         if (field.max && list.length > field.max) {
           sanitized[field.name] = list

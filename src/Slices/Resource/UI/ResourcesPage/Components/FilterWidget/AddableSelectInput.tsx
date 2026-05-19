@@ -74,7 +74,9 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
     onFilter(next);
     setFocusedItemIndex(null);
 
-    if (!isOpen) setIsOpen(true);
+    if (!isOpen) {
+      setIsOpen(true);
+    }
   };
 
   const handleSelect = (value: string) => {
@@ -86,7 +88,9 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
   };
 
   const handleAdd = () => {
-    if (!filterValue.trim()) return;
+    if (!filterValue.trim()) {
+      return;
+    }
     onAdd(filterValue.trim());
     setFilterValue("");
     onFilter("");
@@ -95,7 +99,9 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
   };
 
   const handleMenuArrowKeys = (key: string) => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      return;
+    }
 
     setFocusedItemIndex((prev) => {
       if (key === "ArrowDown") {
@@ -146,7 +152,9 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
     const el = e.currentTarget;
     const isBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 10;
 
-    if (isBottom) onReachEnd();
+    if (isBottom) {
+      onReachEnd();
+    }
   };
 
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
@@ -217,7 +225,9 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
             isOpen={isOpen}
             onOpenChange={(open) => {
               setIsOpen(open);
-              if (!open) setFocusedItemIndex(null);
+              if (!open) {
+                setFocusedItemIndex(null);
+              }
             }}
             onSelect={(_e, value) => handleSelect(String(value))}
             toggle={toggle}
