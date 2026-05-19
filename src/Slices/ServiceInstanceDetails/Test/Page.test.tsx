@@ -3,11 +3,16 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe, toHaveNoViolations } from "jest-axe";
 import {
+  DocAttributeDescriptors,
+  sortDocAttributeDescriptors,
+} from "../UI/Tabs/DocumentationTabContent";
+import {
   defaultServer,
   errorServerHistory,
   errorServerInstance,
   loadingServer,
   serverWithDocumentation,
+  serverWithMultipleDocumentation,
 } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
 
@@ -256,213 +261,382 @@ describe("ServiceInstanceDetailsPage", () => {
   // TODO: @LukasStordeur Implement test when config tab has usecases.
   //it("Should render a success view and with config section if present", async () => { });
 
-  it("Should render a success view with documentation", async () => {
+  describe("with documentation server", () => {
     const server = serverWithDocumentation;
 
-    server.listen();
-    const component = setupServiceInstanceDetails();
+    beforeAll(() => server.listen());
+    afterEach(() => server.resetHandlers());
+    afterAll(() => server.close());
 
-    render(component);
+    it("Should render a success view with documentation", async () => {
+      const component = setupServiceInstanceDetails();
 
-    expect(
-      await screen.findByRole("region", { name: "Instance-Details-Success" })
-    ).toBeInTheDocument();
+      render(component);
 
-    // active attribute set. By default, the latest version is selected, and shouldn't display a label.
-    expect(screen.queryByTestId("selected-version")).not.toBeInTheDocument();
+      expect(
+        await screen.findByRole("region", { name: "Instance-Details-Success" })
+      ).toBeInTheDocument();
 
-    // should display the right timestamp in the rows for each version
-    expect(screen.getByTestId("version-4-timestamp")).toHaveTextContent("2022/09/02 14:01:19");
-    expect(screen.getByTestId("version-3-timestamp")).toHaveTextContent("2022/09/02 13:56:16");
+      // active attribute set. By default, the latest version is selected, and shouldn't display a label.
+      expect(screen.queryByTestId("selected-version")).not.toBeInTheDocument();
 
-    expect(screen.getByText("Documentation")).toBeInTheDocument();
+      // should display the right timestamp in the rows for each version
+      expect(screen.getByTestId("version-4-timestamp")).toHaveTextContent("2022/09/02 14:01:19");
+      expect(screen.getByTestId("version-3-timestamp")).toHaveTextContent("2022/09/02 13:56:16");
 
-    expect(
-      screen.getByRole("heading", {
-        name: /Getting started/i,
-      })
-    ).toBeVisible();
+      expect(screen.getByText("Documentation")).toBeInTheDocument();
 
-    // candidate attribute set
-    // in this version, we should have documentation available
-    await userEvent.click(screen.getByRole("cell", { name: "3" }));
+      expect(
+        screen.getByRole("heading", {
+          name: /Getting started/i,
+        })
+      ).toBeVisible();
 
-    expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 3");
+      // candidate attribute set
+      // in this version, we should have documentation available
+      await userEvent.click(screen.getByRole("cell", { name: "3" }));
 
-    expect(
-      screen.getByRole("heading", {
-        name: /we are adding documentation/i,
-      })
-    ).toBeVisible();
+      expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 3");
 
-    // rollback attribute set
-    // in this version, topography documentation is an empty string, so fall back to message informing the user.
-    await userEvent.click(screen.getByRole("cell", { name: "2" }));
+      expect(
+        screen.getByRole("heading", {
+          name: /we are adding documentation/i,
+        })
+      ).toBeVisible();
 
-    expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 2");
+      // rollback attribute set
+      // in this version, topography documentation is an empty string, so fall back to message informing the user.
+      await userEvent.click(screen.getByRole("cell", { name: "2" }));
 
-    expect(
-      screen.getByText(/this version doesn’t contain documentation for topography yet\./i)
-    ).toBeVisible();
+      expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 2");
 
-    // in this version, topography attribute didn't exist yet in any attribute set, but is available in the ServiceModel.
-    await userEvent.click(screen.getByRole("cell", { name: "1" }));
+      expect(
+        screen.getByText(/this version doesn’t contain documentation for topography yet\./i)
+      ).toBeVisible();
 
-    expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 1");
+      // in this version, topography attribute didn't exist yet in any attribute set, but is available in the ServiceModel.
+      await userEvent.click(screen.getByRole("cell", { name: "1" }));
 
-    expect(
-      screen.getByText(/this version doesn’t contain documentation for topography yet\./i)
-    ).toBeVisible();
+      expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 1");
 
-    // Events
+      expect(
+        screen.getByText(/this version doesn’t contain documentation for topography yet\./i)
+      ).toBeVisible();
 
-    // Select the Events tab
-    await userEvent.click(screen.getByText("Events"));
+      // Events
 
-    // Should have a link to navigate to the full events page
-    const allEventsLink = screen.getByRole("link", {
-      name: /see all events/i,
-    });
+      // Select the Events tab
+      await userEvent.click(screen.getByText("Events"));
 
-    expect(allEventsLink).toBeVisible();
+      // Should have a link to navigate to the full events page
+      const allEventsLink = screen.getByRole("link", {
+        name: /see all events/i,
+      });
 
-    // Should have the right href attribute
-    expect(allEventsLink).toHaveAttribute(
-      "href",
-      "/lsm/catalog/mobileCore/inventory/1d96a1ab/events?env=c85c0a64-ed45-4cba-bdc5-703f65a225f7&state.InstanceDetails.version=1&state.InstanceDetails.tab=Events"
-    );
+      expect(allEventsLink).toBeVisible();
 
-    // In this version, expect only two rows with aria-label Event table row
-    expect(
-      screen.getAllByRole("row", {
+      // Should have the right href attribute
+      expect(allEventsLink).toHaveAttribute(
+        "href",
+        "/lsm/catalog/mobileCore/inventory/1d96a1ab/events?env=c85c0a64-ed45-4cba-bdc5-703f65a225f7&state.InstanceDetails.version=1&state.InstanceDetails.tab=Events"
+      );
+
+      // In this version, expect only two rows with aria-label Event table row
+      expect(
+        screen.getAllByRole("row", {
+          name: /Event\-table\-row/i,
+        })
+      ).toHaveLength(2);
+
+      // The source state should be empty since this is the very first version and thus only has a target-state.
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-source\-0/i,
+        })
+      ).toBeEmptyDOMElement();
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-source\-1/i,
+        })
+      ).toBeEmptyDOMElement();
+
+      // both should have the same target state "start"
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-target\-0/i,
+        })
+      ).toHaveTextContent(/start/i);
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-target\-1/i,
+        })
+      ).toHaveTextContent(/start/i);
+
+      // the timestamps should be up to three fractions seconds
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-date\-0/i,
+        })
+      ).toHaveTextContent(/2022\/09\/02 13:56:856/i);
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-date\-1/i,
+        })
+      ).toHaveTextContent(/2022\/09\/02 13:56:840/i);
+
+      // expect that there are no compile reports available for these rows
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-compile\-0/i,
+        })
+      ).toBeEmptyDOMElement();
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-compile\-1/i,
+        })
+      ).toBeEmptyDOMElement();
+
+      // Select the version 3rd in the history, this one should contain three rows, and have one with a warning color, one with a validation report, and one with an export report.
+      await userEvent.click(screen.getByRole("cell", { name: "3" }));
+
+      const rowsVersion3 = screen.getAllByRole("row", {
         name: /Event\-table\-row/i,
-      })
-    ).toHaveLength(2);
+      });
 
-    // The source state should be empty since this is the very first version and thus only has a target-state.
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-source\-0/i,
-      })
-    ).toBeEmptyDOMElement();
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-source\-1/i,
-      })
-    ).toBeEmptyDOMElement();
+      expect(rowsVersion3).toHaveLength(3);
 
-    // both should have the same target state "start"
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-target\-0/i,
-      })
-    ).toHaveTextContent(/start/i);
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-target\-1/i,
-      })
-    ).toHaveTextContent(/start/i);
+      expect(rowsVersion3[0]).toHaveStyle(
+        "background-color: var(--pf-t--global--color--status--warning--default)"
+      );
+      expect(rowsVersion3[1]).not.toHaveStyle("background-color: inherit");
+      expect(rowsVersion3[2]).not.toHaveStyle("background-color: inherit");
 
-    // the timestamps should be up to three fractions seconds
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-date\-0/i,
-      })
-    ).toHaveTextContent(/2022\/09\/02 13:56:856/i);
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-date\-1/i,
-      })
-    ).toHaveTextContent(/2022\/09\/02 13:56:840/i);
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-compile\-0/i,
+        })
+      ).toHaveTextContent(/validation/i);
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-compile\-1/i,
+        })
+      ).toHaveTextContent(/export/i);
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-compile\-2/i,
+        })
+      ).toBeEmptyDOMElement();
 
-    // expect that there are no compile reports available for these rows
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-compile\-0/i,
-      })
-    ).toBeEmptyDOMElement();
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-compile\-1/i,
-      })
-    ).toBeEmptyDOMElement();
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-target\-0/i,
+        })
+      ).toHaveTextContent(/creating/i);
+      expect(
+        screen.getByRole("cell", {
+          name: /event\-source\-0/i,
+        })
+      ).toHaveTextContent(/acknowledged/i);
 
-    // Select the version 3rd in the history, this one should contain three rows, and have one with a warning color, one with a validation report, and one with an export report.
-    await userEvent.click(screen.getByRole("cell", { name: "3" }));
+      // Resources Tab
 
-    const rowsVersion3 = screen.getAllByRole("row", {
-      name: /Event\-table\-row/i,
-    });
+      // Make sure the version is set to latest
+      await userEvent.click(screen.getAllByLabelText("History-Row")[0]);
 
-    expect(rowsVersion3).toHaveLength(3);
+      // Select the Resources tab
+      await userEvent.click(screen.getByText("Resources"));
 
-    expect(rowsVersion3[0]).toHaveStyle(
-      "background-color: var(--pf-t--global--color--status--warning--default)"
-    );
-    expect(rowsVersion3[1]).not.toHaveStyle("background-color: inherit");
-    expect(rowsVersion3[2]).not.toHaveStyle("background-color: inherit");
+      expect(screen.getByText("Deployment Progress")).toBeVisible();
+      expect(screen.getByText("1 / 1")).toBeVisible();
+      expect(screen.getByLabelText("LegendItem-deployed")).toHaveTextContent("1");
 
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-compile\-0/i,
-      })
-    ).toHaveTextContent(/validation/i);
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-compile\-1/i,
-      })
-    ).toHaveTextContent(/export/i);
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-compile\-2/i,
-      })
-    ).toBeEmptyDOMElement();
+      expect(screen.getByText("Resource")).toBeVisible();
+      expect(screen.getByText("State")).toBeVisible();
 
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-target\-0/i,
-      })
-    ).toHaveTextContent(/creating/i);
-    expect(
-      screen.getByRole("cell", {
-        name: /event\-source\-0/i,
-      })
-    ).toHaveTextContent(/acknowledged/i);
+      expect(screen.getByTestId("Status-deployed")).toBeVisible();
 
-    // Resources Tab
+      expect(screen.getByText("hello[world,v=42]")).toBeVisible();
 
-    // Make sure the version is set to latest
-    await userEvent.click(screen.getAllByLabelText("History-Row")[0]);
+      // Change Version to older
+      await userEvent.click(screen.getAllByLabelText("History-Row")[1]);
 
-    // Select the Resources tab
-    await userEvent.click(screen.getByText("Resources"));
+      expect(screen.queryByText("Latest Version")).toBeNull();
+      expect(screen.getByRole("tab", { name: "resources-content" })).toBeDisabled();
 
-    expect(screen.getByText("Deployment Progress")).toBeVisible();
-    expect(screen.getByText("1 / 1")).toBeVisible();
-    expect(screen.getByLabelText("LegendItem-deployed")).toHaveTextContent("1");
+      expect(screen.getByTestId("Status-deployed")).not.toBeVisible();
 
-    expect(screen.getByText("Resource")).toBeVisible();
-    expect(screen.getByText("State")).toBeVisible();
+      expect(screen.getByText("hello[world,v=42]")).not.toBeVisible();
 
-    expect(screen.getByTestId("Status-deployed")).toBeVisible();
+      // Change Version to latest
+      await userEvent.click(screen.getAllByLabelText("History-Row")[0]);
 
-    expect(screen.getByText("hello[world,v=42]")).toBeVisible();
+      expect(screen.getByRole("tab", { name: "resources-content" })).toBeEnabled();
+    }, 25000);
 
-    // Change Version to older
-    await userEvent.click(screen.getAllByLabelText("History-Row")[1]);
+    it("Should hide the Markdown Previewer button on older versions when expert mode is enabled", async () => {
+      const component = setupServiceInstanceDetails(true);
 
-    expect(screen.queryByText("Latest Version")).toBeNull();
-    expect(screen.getByRole("tab", { name: "resources-content" })).toBeDisabled();
+      render(component);
 
-    expect(screen.getByTestId("Status-deployed")).not.toBeVisible();
+      expect(
+        await screen.findByRole("region", { name: "Instance-Details-Success" })
+      ).toBeInTheDocument();
 
-    expect(screen.getByText("hello[world,v=42]")).not.toBeVisible();
+      // On the latest version, the preview button should be visible in expert mode
+      expect(screen.getByRole("button", { name: "preview-button" })).toBeVisible();
 
-    // Change Version to latest
-    await userEvent.click(screen.getAllByLabelText("History-Row")[0]);
+      // Switch to an older version
+      await userEvent.click(screen.getByRole("cell", { name: "3" }));
 
-    expect(screen.getByRole("tab", { name: "resources-content" })).toBeEnabled();
+      expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 3");
 
-    server.close();
-  }, 20000);
+      // The preview button should be hidden on older versions
+      expect(screen.queryByRole("button", { name: "preview-button" })).not.toBeInTheDocument();
+
+      // Switch back to the latest version
+      await userEvent.click(screen.getByRole("cell", { name: "4" }));
+
+      expect(screen.queryByTestId("selected-version")).not.toBeInTheDocument();
+
+      // The preview button should be visible again on the latest version
+      expect(screen.getByRole("button", { name: "preview-button" })).toBeVisible();
+    }, 15000);
+  });
+
+  describe("with multiple documentation sections server", () => {
+    const server = serverWithMultipleDocumentation;
+
+    beforeAll(() => server.listen());
+    afterEach(() => server.resetHandlers());
+    afterAll(() => server.close());
+
+    it("Should render documentation sections in web_order sort order with the default-open section expanded", async () => {
+      const component = setupServiceInstanceDetails();
+
+      render(component);
+
+      await screen.findByRole("region", { name: "Instance-Details-Success" });
+
+      expect(screen.getByText("Documentation")).toBeInTheDocument();
+
+      const architectureToggle = screen.getByRole("button", { name: /Architecture/i });
+      const topographyToggle = screen.getByRole("button", { name: /Topography/i });
+      const readmeToggle = screen.getByRole("button", { name: /Readme/i });
+
+      // Verify sort order: Architecture (1) → Topography (2) → Readme (-1 → last)
+      const allButtons = screen.getAllByRole("button");
+      const archIdx = allButtons.indexOf(architectureToggle);
+      const topoIdx = allButtons.indexOf(topographyToggle);
+      const readmeIdx = allButtons.indexOf(readmeToggle);
+
+      expect(archIdx).toBeLessThan(topoIdx);
+      expect(topoIdx).toBeLessThan(readmeIdx);
+
+      // Architecture has web_default_open: true → expanded by default
+      expect(architectureToggle).toHaveAttribute("aria-expanded", "true");
+      // Topography and Readme start collapsed
+      expect(topographyToggle).toHaveAttribute("aria-expanded", "false");
+      expect(readmeToggle).toHaveAttribute("aria-expanded", "false");
+    }, 15000);
+
+    it("Should allow multiple documentation sections to be open simultaneously", async () => {
+      const component = setupServiceInstanceDetails();
+
+      render(component);
+
+      await screen.findByRole("region", { name: "Instance-Details-Success" });
+
+      const architectureToggle = screen.getByRole("button", { name: /Architecture/i });
+      const topographyToggle = screen.getByRole("button", { name: /Topography/i });
+      const readmeToggle = screen.getByRole("button", { name: /Readme/i });
+
+      // Architecture is open by default; others are closed
+      expect(architectureToggle).toHaveAttribute("aria-expanded", "true");
+      expect(topographyToggle).toHaveAttribute("aria-expanded", "false");
+
+      // Open Topography
+      await userEvent.click(topographyToggle);
+
+      // Both Architecture AND Topography must now be open — multi-expand
+      expect(architectureToggle).toHaveAttribute("aria-expanded", "true");
+      expect(topographyToggle).toHaveAttribute("aria-expanded", "true");
+      expect(readmeToggle).toHaveAttribute("aria-expanded", "false");
+    }, 15000);
+
+    it("Should collapse a documentation section when its open toggle is clicked again", async () => {
+      const component = setupServiceInstanceDetails();
+
+      render(component);
+
+      await screen.findByRole("region", { name: "Instance-Details-Success" });
+
+      const architectureToggle = screen.getByRole("button", { name: /Architecture/i });
+
+      // Architecture is open by default
+      expect(architectureToggle).toHaveAttribute("aria-expanded", "true");
+
+      // Clicking it again should collapse it
+      await userEvent.click(architectureToggle);
+
+      expect(architectureToggle).toHaveAttribute("aria-expanded", "false");
+    }, 15000);
+  });
+});
+
+describe("sortDocAttributeDescriptors", () => {
+  const makeDescriptor = (title: string, webOrder?: number): DocAttributeDescriptors => ({
+    title,
+    iconName: "FaBook",
+    attributeName: title.toLowerCase(),
+    webOrder,
+  });
+
+  it("should sort items by webOrder ascending", () => {
+    const input = [makeDescriptor("C", 3), makeDescriptor("A", 1), makeDescriptor("B", 2)];
+    const result = sortDocAttributeDescriptors(input);
+
+    expect(result.map((d) => d.title)).toEqual(["A", "B", "C"]);
+  });
+
+  it("should place items with webOrder === -1 after explicitly ordered items", () => {
+    const input = [makeDescriptor("Unordered", -1), makeDescriptor("First", 1)];
+    const result = sortDocAttributeDescriptors(input);
+
+    expect(result[0].title).toBe("First");
+    expect(result[1].title).toBe("Unordered");
+  });
+
+  it("should place items without webOrder after explicitly ordered items", () => {
+    const input = [
+      makeDescriptor("NoOrder"),
+      makeDescriptor("Second", 2),
+      makeDescriptor("First", 1),
+    ];
+    const result = sortDocAttributeDescriptors(input);
+
+    expect(result.map((d) => d.title)).toEqual(["First", "Second", "NoOrder"]);
+  });
+
+  it("should preserve the relative order of multiple unordered items", () => {
+    const input = [makeDescriptor("X"), makeDescriptor("Y"), makeDescriptor("A", 1)];
+    const result = sortDocAttributeDescriptors(input);
+
+    expect(result.map((d) => d.title)).toEqual(["A", "X", "Y"]);
+  });
+
+  it("should return original order when all items lack webOrder", () => {
+    const input = [makeDescriptor("X"), makeDescriptor("Y"), makeDescriptor("Z")];
+    const result = sortDocAttributeDescriptors(input);
+
+    expect(result.map((d) => d.title)).toEqual(["X", "Y", "Z"]);
+  });
+
+  it("should not mutate the input array", () => {
+    const input = [makeDescriptor("B", 2), makeDescriptor("A", 1)];
+    const snapshot = input.map((d) => d.title);
+
+    sortDocAttributeDescriptors(input);
+
+    expect(input.map((d) => d.title)).toEqual(snapshot);
+  });
 });
