@@ -166,7 +166,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
   };
 
   const MarkdownPreviewerButton = () => {
-    if (!isExpertModeEnabled) {
+    if (!isExpertModeEnabled || !isLatest) {
       return null;
     }
 
