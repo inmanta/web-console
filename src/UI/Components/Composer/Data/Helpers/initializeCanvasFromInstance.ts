@@ -178,7 +178,10 @@ export const createEmbeddedEntityShapes = (
 
         if (nestedIds.length > 0) {
           const entityKey = getEmbeddedEntityKey(nestedEntity);
-          nestedEmbeddedEntities[entityKey] = nestedIds;
+          nestedEmbeddedEntities[entityKey] = [
+            ...(nestedEmbeddedEntities[entityKey] || []),
+            ...nestedIds,
+          ];
         }
       }
     });
@@ -435,7 +438,8 @@ export const initializeCanvasFromInstance = (
 
         if (embeddedIds.length > 0) {
           const entityKey = getEmbeddedEntityKey(embeddedEntity);
-          shape.connections.set(entityKey, embeddedIds);
+          const existing = shape.connections.get(entityKey) || [];
+          shape.connections.set(entityKey, [...existing, ...embeddedIds]);
         }
       }
     });
