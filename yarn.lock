@@ -1167,7 +1167,7 @@ __metadata:
     react-router: "npm:^7.14.1"
     regenerator-runtime: "npm:^0.14.1"
     rimraf: "npm:^6.1.3"
-    styled-components: "npm:^6.4.0"
+    styled-components: "npm:^6.4.2"
     ts-prune: "npm:^0.10.3"
     typescript: "npm:^5.9.3"
     typescript-eslint: "npm:^8.59.0"
@@ -11884,9 +11884,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"styled-components@npm:^6.4.0":
-  version: 6.4.0
-  resolution: "styled-components@npm:6.4.0"
+"styled-components@npm:^6.4.2":
+  version: 6.4.2
+  resolution: "styled-components@npm:6.4.2"
   dependencies:
     "@emotion/is-prop-valid": "npm:1.4.0"
     css-to-react-native: "npm:3.2.0"
@@ -11904,7 +11904,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: 10/df2914444d1d4e950be68cee686dae37ff243917f71be523a0dbac62ecfe22d04344547efe7d9722e9f137d76248171a2cc37208d9d9b425445e48dee89e71ca
+  checksum: 10/9298e414c4c6719ab5936eb2ed11d74717f55bd6e620660da8f672caac4f76f455630a8472aaf5e633b2c106262f9ad854b5caa4ec414ede8b1dc94b5686298c
   languageName: node
   linkType: hard
 
@@ -11983,11 +11983,11 @@ __metadata:
   linkType: hard
 
 "systeminformation@npm:^5.31.1":
-  version: 5.31.5
-  resolution: "systeminformation@npm:5.31.5"
+  version: 5.31.6
+  resolution: "systeminformation@npm:5.31.6"
   bin:
     systeminformation: lib/cli.js
-  checksum: 10/6efe04b1873bf3e6488064a9462575dc6d83fc4b509bd8922304c87b658964e3ce598db8e1af123e0fa49d76b2cc85c7211b8f6c8a6b8c69846698f8ce65ca2c
+  checksum: 10/42c986adc6af3dc296458177a5bb79922d7892a684b8271bce6dfaf9d40285330606a36dbb0b41f3b76fd745b6658a92bf5c62d6d56d4a746d64bb45be81b394
   conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard

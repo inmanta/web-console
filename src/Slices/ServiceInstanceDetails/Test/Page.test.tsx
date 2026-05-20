@@ -3,11 +3,16 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import {
+  DocAttributeDescriptors,
+  sortDocAttributeDescriptors,
+} from "../UI/Tabs/DocumentationTabContent";
+import {
   defaultServer,
   errorServerHistory,
   errorServerInstance,
   loadingServer,
   serverWithDocumentation,
+  serverWithMultipleDocumentation,
 } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
 
@@ -461,4 +466,181 @@ describe("ServiceInstanceDetailsPage", () => {
 
     server.close();
   }, 25000);
+
+  it("Should render documentation sections in web_order sort order with the default-open section expanded", async () => {
+    const server = serverWithMultipleDocumentation;
+
+    server.listen();
+    const component = setupServiceInstanceDetails();
+
+    render(component);
+
+    await screen.findByRole("region", { name: "Instance-Details-Success" });
+
+    expect(screen.getByText("Documentation")).toBeInTheDocument();
+
+    const architectureToggle = screen.getByRole("button", { name: /Architecture/i });
+    const topographyToggle = screen.getByRole("button", { name: /Topography/i });
+    const readmeToggle = screen.getByRole("button", { name: /Readme/i });
+
+    // Verify sort order: Architecture (1) → Topography (2) → Readme (-1 → last)
+    const allButtons = screen.getAllByRole("button");
+    const archIdx = allButtons.indexOf(architectureToggle);
+    const topoIdx = allButtons.indexOf(topographyToggle);
+    const readmeIdx = allButtons.indexOf(readmeToggle);
+
+    expect(archIdx).toBeLessThan(topoIdx);
+    expect(topoIdx).toBeLessThan(readmeIdx);
+
+    // Architecture has web_default_open: true → expanded by default
+    expect(architectureToggle).toHaveAttribute("aria-expanded", "true");
+    // Topography and Readme start collapsed
+    expect(topographyToggle).toHaveAttribute("aria-expanded", "false");
+    expect(readmeToggle).toHaveAttribute("aria-expanded", "false");
+
+    server.close();
+  }, 15000);
+
+  it("Should allow multiple documentation sections to be open simultaneously", async () => {
+    const server = serverWithMultipleDocumentation;
+
+    server.listen();
+    const component = setupServiceInstanceDetails();
+
+    render(component);
+
+    await screen.findByRole("region", { name: "Instance-Details-Success" });
+
+    const architectureToggle = screen.getByRole("button", { name: /Architecture/i });
+    const topographyToggle = screen.getByRole("button", { name: /Topography/i });
+    const readmeToggle = screen.getByRole("button", { name: /Readme/i });
+
+    // Architecture is open by default; others are closed
+    expect(architectureToggle).toHaveAttribute("aria-expanded", "true");
+    expect(topographyToggle).toHaveAttribute("aria-expanded", "false");
+
+    // Open Topography
+    await userEvent.click(topographyToggle);
+
+    // Both Architecture AND Topography must now be open — multi-expand
+    expect(architectureToggle).toHaveAttribute("aria-expanded", "true");
+    expect(topographyToggle).toHaveAttribute("aria-expanded", "true");
+    expect(readmeToggle).toHaveAttribute("aria-expanded", "false");
+
+    server.close();
+  }, 15000);
+
+  it("Should collapse a documentation section when its open toggle is clicked again", async () => {
+    const server = serverWithMultipleDocumentation;
+
+    server.listen();
+    const component = setupServiceInstanceDetails();
+
+    render(component);
+
+    await screen.findByRole("region", { name: "Instance-Details-Success" });
+
+    const architectureToggle = screen.getByRole("button", { name: /Architecture/i });
+
+    // Architecture is open by default
+    expect(architectureToggle).toHaveAttribute("aria-expanded", "true");
+
+    // Clicking it again should collapse it
+    await userEvent.click(architectureToggle);
+
+    expect(architectureToggle).toHaveAttribute("aria-expanded", "false");
+
+    server.close();
+  }, 15000);
+});
+
+describe("sortDocAttributeDescriptors", () => {
+  const makeDescriptor = (title: string, webOrder?: number): DocAttributeDescriptors => ({
+    title,
+    iconName: "FaBook",
+    attributeName: title.toLowerCase(),
+    webOrder,
+  });
+
+  it("should sort items by webOrder ascending", () => {
+    const input = [makeDescriptor("C", 3), makeDescriptor("A", 1), makeDescriptor("B", 2)];
+    const result = sortDocAttributeDescriptors(input);
+
+    expect(result.map((d) => d.title)).toEqual(["A", "B", "C"]);
+  });
+
+  it("should place items with webOrder === -1 after explicitly ordered items", () => {
+    const input = [makeDescriptor("Unordered", -1), makeDescriptor("First", 1)];
+    const result = sortDocAttributeDescriptors(input);
+
+    expect(result[0].title).toBe("First");
+    expect(result[1].title).toBe("Unordered");
+  });
+
+  it("should place items without webOrder after explicitly ordered items", () => {
+    const input = [
+      makeDescriptor("NoOrder"),
+      makeDescriptor("Second", 2),
+      makeDescriptor("First", 1),
+    ];
+    const result = sortDocAttributeDescriptors(input);
+
+    expect(result.map((d) => d.title)).toEqual(["First", "Second", "NoOrder"]);
+  });
+
+  it("should preserve the relative order of multiple unordered items", () => {
+    const input = [makeDescriptor("X"), makeDescriptor("Y"), makeDescriptor("A", 1)];
+    const result = sortDocAttributeDescriptors(input);
+
+    expect(result.map((d) => d.title)).toEqual(["A", "X", "Y"]);
+  });
+
+  it("should return original order when all items lack webOrder", () => {
+    const input = [makeDescriptor("X"), makeDescriptor("Y"), makeDescriptor("Z")];
+    const result = sortDocAttributeDescriptors(input);
+
+    expect(result.map((d) => d.title)).toEqual(["X", "Y", "Z"]);
+  });
+
+  it("should not mutate the input array", () => {
+    const input = [makeDescriptor("B", 2), makeDescriptor("A", 1)];
+    const snapshot = input.map((d) => d.title);
+
+    sortDocAttributeDescriptors(input);
+
+    expect(input.map((d) => d.title)).toEqual(snapshot);
+  });
+  it("Should hide the Markdown Previewer button on older versions when expert mode is enabled", async () => {
+    const server = serverWithDocumentation;
+
+    server.listen();
+    const component = setupServiceInstanceDetails(true);
+
+    render(component);
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    // On the latest version, the preview button should be visible in expert mode
+    expect(screen.getByRole("button", { name: "preview-button" })).toBeVisible();
+
+    // Switch to an older version
+    await userEvent.click(screen.getByRole("cell", { name: "3" }));
+
+    expect(screen.getByTestId("selected-version")).toHaveTextContent("Version: 3");
+
+    // The preview button should be hidden on older versions
+    expect(screen.queryByRole("button", { name: "preview-button" })).not.toBeInTheDocument();
+
+    // Switch back to the latest version
+    await userEvent.click(screen.getByRole("cell", { name: "4" }));
+
+    expect(screen.queryByTestId("selected-version")).not.toBeInTheDocument();
+
+    // The preview button should be visible again on the latest version
+    expect(screen.getByRole("button", { name: "preview-button" })).toBeVisible();
+
+    server.close();
+  }, 15000);
 });
