@@ -262,6 +262,7 @@ export const sortDocAttributeDescriptors = (
     } else if (bOrdered) {
       return 1;
     }
+
     return 0;
   });
 };
