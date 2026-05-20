@@ -25,5 +25,6 @@ export const removeInvertedSelection = (selection: string, selectedStates: strin
   if (selectedStates.includes(invertedFilter)) {
     return toggleValueInList(invertedFilter, selectedStates);
   }
+
   return selectedStates;
 };

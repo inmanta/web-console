@@ -23,6 +23,7 @@ export const Provider: React.FC = () => {
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
     if (selected) {
       environmentHandler.set(navigate, location, item.environmentId);
+
       return;
     }
 

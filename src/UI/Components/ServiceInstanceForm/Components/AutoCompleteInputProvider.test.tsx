@@ -16,6 +16,7 @@ const server = setupServer(
     if (filter === "ab") {
       data = [];
     }
+
     return HttpResponse.json({
       data,
       metadata: {

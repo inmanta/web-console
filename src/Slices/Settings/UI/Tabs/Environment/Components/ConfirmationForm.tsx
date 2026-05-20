@@ -98,7 +98,9 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
       onSubmit={(event) => {
         event.preventDefault();
 
-        if (validated !== "success" || isBusy) return;
+        if (validated !== "success" || isBusy) {
+          return;
+        }
 
         onConfirm(type);
       }}

@@ -66,9 +66,12 @@ const DEFAULT_COLOR = "var(--pf-t--global--icon--color--severity--minor--default
 
 /** Resolves the correct colors for every compound state Icon. */
 const resolveColor = (variant: ColorVariant = "state", state?: Resource.CompoundState): string => {
-  if (variant === "default") return DEFAULT_COLOR;
+  if (variant === "default") {
+    return DEFAULT_COLOR;
+  }
 
   const key = state?.toLowerCase() as Resource.CompoundStateKey | undefined;
+
   return key !== undefined && key in colorConfig ? colorConfig[key] : DEFAULT_COLOR;
 };
 

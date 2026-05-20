@@ -14,11 +14,15 @@ export const useDrawer: UseDrawer = (env) => {
   const onDrawerClose = () => setIsDrawerOpen(false);
 
   const onDrawerOpen = () => {
-    if (!drawerRef.current) return;
+    if (!drawerRef.current) {
+      return;
+    }
 
     const firstTabbableItem = drawerRef.current.querySelector<HTMLDivElement>("a, button");
 
-    if (!firstTabbableItem) return;
+    if (!firstTabbableItem) {
+      return;
+    }
 
     firstTabbableItem.focus();
   };
@@ -43,7 +47,9 @@ export const useDrawer: UseDrawer = (env) => {
     : [undefined, undefined, false, () => undefined];
 
   useEffect(() => {
-    if (!env) setIsDrawerOpen(false);
+    if (!env) {
+      setIsDrawerOpen(false);
+    }
   }, [env]);
 
   return {

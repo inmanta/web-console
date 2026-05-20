@@ -50,7 +50,9 @@ export const DictInputWithRow: React.FC<Props> = ({ info }) => {
 };
 
 const getSanitizedNewEntry = ([key, value]: Entry) => {
-  if (key.length <= 0) return {};
+  if (key.length <= 0) {
+    return {};
+  }
 
   return { [key]: value };
 };

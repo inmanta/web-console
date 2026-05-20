@@ -89,7 +89,7 @@ export class FieldCreator {
           .filter(isNotNull)
       : [];
 
-    if (this.isList(entity))
+    if (this.isList(entity)) {
       return {
         kind: "DictList",
         name: entity.name,
@@ -100,6 +100,7 @@ export class FieldCreator {
         max: entity.upper_limit,
         isDisabled: this.shouldFieldBeDisabled(entity),
       };
+    }
 
     return {
       kind: "Nested",
@@ -119,7 +120,7 @@ export class FieldCreator {
       return null;
     }
 
-    if (interServiceRelation.upper_limit === 1)
+    if (interServiceRelation.upper_limit === 1) {
       return {
         kind: "InterServiceRelation",
         name: interServiceRelation.name,
@@ -128,6 +129,7 @@ export class FieldCreator {
         isDisabled: this.shouldFieldBeDisabled(interServiceRelation),
         serviceEntity: interServiceRelation.entity_type,
       };
+    }
 
     return {
       kind: "RelationList",

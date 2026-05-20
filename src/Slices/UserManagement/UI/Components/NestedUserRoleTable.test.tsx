@@ -26,6 +26,7 @@ const mockUser: UserInfo = {
 
 function renderWithClient(ui: React.ReactElement) {
   const queryClient = new QueryClient();
+
   return render(
     <QueryClientProvider client={queryClient}>
       <AppAlertProvider>{ui}</AppAlertProvider>
@@ -36,6 +37,7 @@ function renderWithClient(ui: React.ReactElement) {
 // Test wrapper to simulate parent state update
 function TestWrapper({ initialUser }: { initialUser: UserInfo }) {
   const [user, setUser] = React.useState(initialUser);
+
   return (
     <Page>
       <QueryClientProvider client={new QueryClient()}>
@@ -66,7 +68,9 @@ describe("NestedUserRoleTable (with MSW)", () => {
   let server: ReturnType<typeof setupServer>;
 
   afterEach(() => {
-    if (server) server.close();
+    if (server) {
+      server.close();
+    }
   });
 
   it("renders environments and roles", async () => {

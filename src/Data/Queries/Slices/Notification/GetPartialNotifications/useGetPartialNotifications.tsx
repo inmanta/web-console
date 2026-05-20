@@ -61,6 +61,7 @@ const formatOrderBy = (orderBy: Array<{ key: string; order: string }>): string =
   const formatted = orderBy
     .map((item) => `{key: "${item.key}", order: "${item.order}"}`)
     .join(", ");
+
   return `[${formatted}]`;
 };
 
@@ -104,6 +105,7 @@ export const useGetPartialNotifications = ({
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         select: (data) => {
           const notifications = data.data.notifications.edges.map((edge) => edge.node);
+
           return {
             notifications,
             errors: data.errors,

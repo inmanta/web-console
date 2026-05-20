@@ -49,6 +49,7 @@ export const usePostGraphQL = (env?: string): UseMutationResult<unknown, Error, 
       await handleErrors(response);
 
       const text = await response.text();
+
       return text.trim() ? JSON.parse(text) : {};
     },
   });

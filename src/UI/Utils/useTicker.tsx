@@ -11,9 +11,13 @@ type Interval = "OneSecond" | "TenSeconds" | "OneMinute";
 type IntervalWithNever = Interval | "Never";
 
 const getIntervalForDiff = (diff: number): IntervalWithNever => {
-  if (diff > ONE_HOUR) return "OneMinute";
+  if (diff > ONE_HOUR) {
+    return "OneMinute";
+  }
 
-  if (diff > ONE_MINUTE) return "TenSeconds";
+  if (diff > ONE_MINUTE) {
+    return "TenSeconds";
+  }
 
   return "OneSecond";
 };
@@ -49,7 +53,9 @@ export const useTickerWithInterval = (interval: IntervalWithNever): number => {
   const [now, setNow] = useState(0);
 
   useEffect(() => {
-    if (interval === "Never") return;
+    if (interval === "Never") {
+      return;
+    }
 
     const timeout = setTimeout(() => {
       setNow(Date.now());

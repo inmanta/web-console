@@ -258,6 +258,7 @@ export const createLinksFromCanvasState = (
       neighbors = graph.getNeighbors(sourceShape);
     } catch (error) {
       console.error(`Failed to get neighbors for ${sourceShape.id}:`, error);
+
       return;
     }
 
@@ -284,6 +285,7 @@ export const createLinksFromCanvasState = (
         const linkAlreadyExists = existingLinks.some((link) => {
           const linkSource = link.source();
           const linkTarget = link.target();
+
           return (
             (linkSource.id === sourceShape.id && linkTarget.id === targetId) ||
             (linkSource.id === targetId && linkTarget.id === sourceShape.id)
@@ -332,6 +334,7 @@ export const initializeCanvasFromInstance = (
 
     if (!serviceModel) {
       console.warn(`Service model not found for ${instance.service_entity}`);
+
       return;
     }
 

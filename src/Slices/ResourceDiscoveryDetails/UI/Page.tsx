@@ -11,6 +11,7 @@ import { AttributesCard } from "./AttributesCard";
 // which cannot be tested reliably in test-environments.
 export const PageWrapper: React.FC = () => {
   const { resourceId } = useRouteParams<"DiscoveredResourceDetails">();
+
   return <Page resourceId={resourceId} />;
 };
 

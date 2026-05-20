@@ -57,6 +57,7 @@ export const useLinkInteractions = ({
         const updated = new Map(prev);
         updated.set(String(sourceShape.id), sourceShape);
         updated.set(String(targetShape.id), targetShape);
+
         return updated;
       });
     };
@@ -86,6 +87,7 @@ export const useLinkInteractions = ({
       const shapes = canvasHandlers.getShapesFromLink(linkView.model);
       if (!shapes) {
         linkView.remove();
+
         return;
       }
 
@@ -97,6 +99,7 @@ export const useLinkInteractions = ({
         !targetShape.validateConnection(sourceShape)
       ) {
         linkView.remove();
+
         return;
       }
 
@@ -125,6 +128,7 @@ export const useLinkInteractions = ({
         // Skip if this is a temporary link being removed during connection creation
         if (skipLinkRemovalRef.current) {
           skipLinkRemovalRef.current = false; // Reset flag after skipping
+
           return;
         }
 
@@ -143,6 +147,7 @@ export const useLinkInteractions = ({
         ) {
           // Prevent removal by re-adding the link to the graph
           cell.addTo(graph);
+
           return;
         }
 

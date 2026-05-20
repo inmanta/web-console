@@ -85,6 +85,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
       if (logsQuery.isLoading || !logsQuery.data) {
         return undefined;
       }
+
       return getSelectedAttributeSet(logsQuery.data, selectedVersion);
     } else {
       return getSelectedAttributeSetFromInstance(instance);
@@ -103,7 +104,9 @@ export const DocumentationTabContent: React.FC<Props> = ({
 
   const handleStateTransferClick = useCallback(
     ({ targetState }: { content: string; targetState: string }) => {
-      if (!targetState) return;
+      if (!targetState) {
+        return;
+      }
 
       const instanceDisplayIdentity = instance.service_identity_attribute_value || instance.id;
 
@@ -259,6 +262,7 @@ export const sortDocAttributeDescriptors = (
     } else if (bOrdered) {
       return 1;
     }
+
     return 0;
   });
 };
@@ -306,7 +310,9 @@ const getSelectedAttributeSet = (
     (log: InstanceLog) => String(log.version) === version
   );
 
-  if (!selectedLog) return; // Return void if no matching log is found
+  if (!selectedLog) {
+    return;
+  } // Return void if no matching log is found
 
   if (selectedLog.candidate_attributes) {
     return selectedLog.candidate_attributes;
