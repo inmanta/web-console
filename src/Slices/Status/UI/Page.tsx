@@ -31,6 +31,7 @@ export const Page: React.FC = () => {
       </Wrapper>
     );
   }
+
   return (
     <Wrapper>
       <LoadingView ariaLabel="ServerStatus-Loading" />

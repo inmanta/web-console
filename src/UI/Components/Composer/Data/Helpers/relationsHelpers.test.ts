@@ -83,6 +83,7 @@ describe("relationsHelpers", () => {
     } as unknown as ServiceEntityShape;
     // Make it pass instanceof checks
     Object.setPrototypeOf(shape, ServiceEntityShape.prototype);
+
     return shape;
   };
 

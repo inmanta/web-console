@@ -192,7 +192,9 @@ export const SingleTextSelect: React.FC<Props> = ({
     switch (event.key) {
       // Select the first available option
       case "Enter":
-        if (!isOpen) break;
+        if (!isOpen) {
+          break;
+        }
 
         const hasExplicitFocus = focusedItemIndex !== null && focusedItem.value !== "no results";
         const exactMatch = options.find(

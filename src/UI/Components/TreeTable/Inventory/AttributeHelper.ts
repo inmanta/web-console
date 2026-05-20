@@ -86,8 +86,9 @@ export class InventoryAttributeHelper implements AttributeHelper<InventoryAttrib
       (entity) => entity.name === prefix[0]
     );
 
-    if (matchingEmbeddedEntity)
+    if (matchingEmbeddedEntity) {
       return this.findInServiceLike(matchingEmbeddedEntity, prefix.slice(1), key);
+    }
 
     const fromRelations = this.findInRelations(service, key);
 
@@ -269,9 +270,13 @@ export function isMultiLeaf(
  * @returns {string | undefined}
  */
 function getType(node: TreeNode | undefined): string | undefined {
-  if (typeof node === "undefined") return undefined;
+  if (typeof node === "undefined") {
+    return undefined;
+  }
 
-  if (node.kind !== "Leaf") return undefined;
+  if (node.kind !== "Leaf") {
+    return undefined;
+  }
 
   return node.type;
 }
@@ -284,9 +289,13 @@ function getType(node: TreeNode | undefined): string | undefined {
  * @returns {unknown}
  */
 export function getValue(node: TreeNode | undefined): unknown {
-  if (typeof node === "undefined") return undefined;
+  if (typeof node === "undefined") {
+    return undefined;
+  }
 
-  if (node.kind !== "Leaf") return undefined;
+  if (node.kind !== "Leaf") {
+    return undefined;
+  }
 
   return node.value;
 }
@@ -299,7 +308,9 @@ export function getValue(node: TreeNode | undefined): unknown {
  * @returns {boolean}
  */
 export function isLeaf(node: TreeNode | undefined): boolean {
-  if (typeof node === "undefined") return true;
+  if (typeof node === "undefined") {
+    return true;
+  }
 
   return node.kind === "Leaf";
 }
@@ -312,9 +323,13 @@ export function isLeaf(node: TreeNode | undefined): boolean {
  * @returns {boolean | undefined}
  */
 function getHasRelation(node: TreeNode | undefined): boolean | undefined {
-  if (typeof node === "undefined") return undefined;
+  if (typeof node === "undefined") {
+    return undefined;
+  }
 
-  if (node.kind !== "Leaf") return undefined;
+  if (node.kind !== "Leaf") {
+    return undefined;
+  }
 
   return node.hasRelation;
 }
@@ -327,9 +342,13 @@ function getHasRelation(node: TreeNode | undefined): boolean | undefined {
  * @returns {string | undefined}
  */
 function getEntity(node: TreeNode | undefined): string | undefined {
-  if (typeof node === "undefined") return undefined;
+  if (typeof node === "undefined") {
+    return undefined;
+  }
 
-  if (node.kind !== "Leaf") return undefined;
+  if (node.kind !== "Leaf") {
+    return undefined;
+  }
 
   return node.entity;
 }

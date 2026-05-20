@@ -82,6 +82,7 @@ export class ComposerPaper {
           // Check both directions to ensure the connection is valid from both sides
           const sourceToTargetAllowed = sourceEntityBlock.validateConnection(targetEntityBlock);
           const targetToSourceAllowed = targetEntityBlock.validateConnection(sourceEntityBlock);
+
           return sourceToTargetAllowed && targetToSourceAllowed && baseValidators;
         }
 
@@ -268,6 +269,7 @@ export class ComposerPaper {
                   conn.missing,
                   conn.required
                 );
+
           return `<div>${line}</div>`;
         });
         parts.push(...connectionLines);

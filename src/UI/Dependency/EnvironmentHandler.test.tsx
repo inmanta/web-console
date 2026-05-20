@@ -128,6 +128,7 @@ describe("EnvironmentHandler", () => {
       http.get("/api/v2/environment_settings", () => {
         if (counter === 0) {
           counter++;
+
           return HttpResponse.json({
             data: {
               settings: {
@@ -138,6 +139,7 @@ describe("EnvironmentHandler", () => {
             },
           });
         }
+
         return HttpResponse.json({
           data: {
             settings: {

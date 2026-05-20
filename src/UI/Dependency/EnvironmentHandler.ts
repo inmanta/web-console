@@ -79,13 +79,17 @@ export function EnvironmentHandlerImpl(
   }
 
   function useIsHalted(): boolean {
-    if (env === null) return false;
+    if (env === null) {
+      return false;
+    }
 
     return env.halted;
   }
 
   function useIsCompiling(): boolean {
-    if (env === null) return false;
+    if (env === null) {
+      return false;
+    }
 
     return env.isCompiling;
   }
@@ -113,6 +117,7 @@ export function EnvironmentHandlerImpl(
     ) {
       return Boolean(envSettings.data.definition[settingName]?.default);
     }
+
     return false;
   }
 

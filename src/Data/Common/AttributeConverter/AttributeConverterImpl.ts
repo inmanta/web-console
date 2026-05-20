@@ -25,7 +25,9 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
    * Determines what kind of input should be used for a Service Attribute
    */
   getInputType(attributeModel: AttributeModel): InputType {
-    if (attributeModel.type.includes("bool")) return "bool";
+    if (attributeModel.type.includes("bool")) {
+      return "bool";
+    }
 
     return this.matchTextInputWithPatternflyInput(attributeModel.type);
   }

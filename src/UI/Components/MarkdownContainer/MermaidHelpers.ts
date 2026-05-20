@@ -198,7 +198,9 @@ export function renderMermaidBlocks(
     // (.then fires). addDownloadToolbar's own guard prevents double-injection
     // when both paths fire for the same block.
     const activateBlock = () => {
-      if (block.classList.contains("mermaid-error")) return;
+      if (block.classList.contains("mermaid-error")) {
+        return;
+      }
       block.classList.add("mermaid-diagram");
       block.setAttribute("data-zoomable", "true");
       block.addEventListener("click", handleImageClick);
@@ -213,6 +215,7 @@ export function renderMermaidBlocks(
     const blockObserver = new MutationObserver((_mutations, obs) => {
       if (block.classList.contains("mermaid-error")) {
         obs.disconnect();
+
         return;
       }
       if (block.querySelector("svg")) {

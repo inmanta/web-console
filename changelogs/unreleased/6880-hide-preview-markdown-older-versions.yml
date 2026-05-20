@@ -1,0 +1,8 @@
+change-type: patch
+description: "Hide the Markdown Previewer button on the Documentation tab when viewing older versions of a service instance."
+issue-nr: 6880
+destination-branches:
+- master
+- iso9
+sections:
+  minor-improvement: "{{description}}"

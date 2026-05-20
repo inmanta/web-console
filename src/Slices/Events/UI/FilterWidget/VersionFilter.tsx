@@ -21,7 +21,9 @@ export const VersionFilter: React.FC<Props> = ({ versions, isVisible, update }) 
   const [idInput, setIdInput] = useState("");
 
   const onIdInput = (event) => {
-    if ((event.key && event.key !== "Enter") || idInput === "") return;
+    if ((event.key && event.key !== "Enter") || idInput === "") {
+      return;
+    }
 
     update(uniq(toggleValueInList(idInput, versions)));
     setIdInput("");
