@@ -51,6 +51,7 @@ export const getDirectLayerData = (
   const directLinks = graph.getLinks().filter((link) => {
     const srcId = link.getSourceCell()?.id;
     const tgtId = link.getTargetCell()?.id;
+
     return (
       srcId !== undefined && tgtId !== undefined && visibleIds.has(srcId) && visibleIds.has(tgtId)
     );
@@ -177,6 +178,7 @@ const updateMissingConnectionsHighlight = (paper: dia.Paper, shape: ServiceEntit
     const { shapes: layerShapes } = getConnectedLayerData(graph, shapeToCheck);
     hasInvalidCollapsedLayers = layerShapes.some((child) => {
       child.validateAttributes();
+
       return child.isMissingConnections() || child.hasAttributeValidationErrors;
     });
   }

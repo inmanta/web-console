@@ -290,6 +290,7 @@ export class ComposerPaper {
         const { shapes: layerShapes } = getConnectedLayerData(graph, shape);
         const hasInvalidCollapsed = layerShapes.some((child) => {
           child.validateAttributes();
+
           return child.isMissingConnections() || child.hasAttributeValidationErrors;
         });
         if (hasInvalidCollapsed) {
