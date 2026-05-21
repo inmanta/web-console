@@ -606,6 +606,8 @@ const dict = {
   "resources.history.tabs.requires": "Requires",
   "resources.history.empty.message": "No requirements found",
   "resources.attributes.title": "Desired State",
+  "resources.attributes.view.structured": "Structured",
+  "resources.attributes.view.json": "JSON",
   "resources.references.title": "References",
   "resources.references.empty": "No references defined on this resource.",
   "resources.references.column.type": "Type",

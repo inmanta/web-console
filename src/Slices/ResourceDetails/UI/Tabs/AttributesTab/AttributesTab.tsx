@@ -1,14 +1,25 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import {
   Card,
   CardBody,
   DescriptionList,
+  Flex,
+  FlexItem,
   Stack,
   StackItem,
+  ToggleGroup,
+  ToggleGroupItem,
 } from "@patternfly/react-core";
 import { Details } from "@/Core/Domain/Resource/Resource";
 import { JsonFormatter, XmlFormatter } from "@/Data";
 import { AttributeClassifier, AttributeList } from "@/UI/Components";
+import {
+  CodeEditorCopyControl,
+  CodeEditorHeightToggleControl,
+} from "@/UI/Components/CodeEditorControls";
+import { getThemePreference } from "@/UI/Components/DarkmodeOption";
+import { words } from "@/UI/words";
 import { buildMutatorSubstitutions, extractMutators } from "@S/ResourceDetails/Core/Mutator";
 import { extractReferences } from "@S/ResourceDetails/Core/Reference";
 import {
@@ -24,15 +35,10 @@ interface Props {
   onNavigateToReference: (id: string) => void;
 }
 
-/** Keys we never want to surface in the Desired State tab. */
 const HIDDEN_KEYS = new Set(["mutators", "references"]);
 
-/**
- * Applies the mutator substitutions on top of `attributes`. Returns the
- * substituted attributes together with the set of top-level keys touched by
- * at least one mutator — those keys are rendered by `MutatedAttributeRow`
- * instead of going through the default `AttributeList`.
- */
+type ViewMode = "structured" | "json";
+
 const applyMutatorSubstitutions = (
   attributes: Record<string, unknown>,
   substitutions: Record<string, string>
@@ -64,6 +70,9 @@ const applyMutatorSubstitutions = (
 };
 
 export const AttributesTab: React.FC<Props> = ({ details, onNavigateToReference }) => {
+  const [viewMode, setViewMode] = useState<ViewMode>("structured");
+  const [isEditorExpanded, setIsEditorExpanded] = useState(false);
+
   const { substituted, mutatedKeys, getReferenceType } = useMemo(() => {
     const mutators = extractMutators(details.attributes);
     const substitutions = buildMutatorSubstitutions(mutators);
@@ -83,6 +92,11 @@ export const AttributesTab: React.FC<Props> = ({ details, onNavigateToReference 
     };
   }, [details.attributes]);
 
+  const rawJson = useMemo(
+    () => JSON.stringify(details.attributes, null, 2),
+    [details.attributes]
+  );
+
   const classifier = new AttributeClassifier(
     new JsonFormatter(),
     new XmlFormatter(),
@@ -97,29 +111,81 @@ export const AttributesTab: React.FC<Props> = ({ details, onNavigateToReference 
     .sort()
     .map((key) => ({ key, value: substituted[key] }));
 
+  const editorHeight = isEditorExpanded
+    ? "calc(100vh - 300px)"
+    : rawJson.split("\n").length > 15
+      ? "400px"
+      : "sizeToFit";
+
   return (
     <Card isCompact>
       <CardBody>
         <Stack hasGutter>
-          {mutatedEntries.length > 0 && (
-            <StackItem>
-              <DescriptionList isHorizontal>
-                {mutatedEntries.map(({ key, value }) => (
-                  <MutatedAttributeRow
-                    key={key}
-                    attributeKey={key}
-                    value={value}
-                    onNavigateToReference={onNavigateToReference}
-                    getReferenceType={getReferenceType}
+          <StackItem>
+            <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+              <FlexItem>
+                <ToggleGroup aria-label="Desired State view toggle" isCompact>
+                  <ToggleGroupItem
+                    text={words("resources.attributes.view.structured")}
+                    buttonId="desired-state-view-structured"
+                    isSelected={viewMode === "structured"}
+                    onChange={() => setViewMode("structured")}
                   />
-                ))}
-              </DescriptionList>
-            </StackItem>
-          )}
-          {classifiedAttributes.length > 0 && (
+                  <ToggleGroupItem
+                    text={words("resources.attributes.view.json")}
+                    buttonId="desired-state-view-json"
+                    isSelected={viewMode === "json"}
+                    onChange={() => setViewMode("json")}
+                  />
+                </ToggleGroup>
+              </FlexItem>
+            </Flex>
+          </StackItem>
+          {viewMode === "json" ? (
             <StackItem>
-              <AttributeList attributes={classifiedAttributes} />
+              <CodeEditor
+                isReadOnly
+                isDarkTheme={getThemePreference() === "dark"}
+                code={rawJson}
+                isLanguageLabelVisible
+                language={Language.json}
+                isDownloadEnabled
+                customControls={
+                  <>
+                    <CodeEditorCopyControl code={rawJson} />
+                    <CodeEditorHeightToggleControl
+                      code={rawJson}
+                      isExpanded={isEditorExpanded}
+                      onToggle={() => setIsEditorExpanded(!isEditorExpanded)}
+                    />
+                  </>
+                }
+                height={editorHeight}
+              />
             </StackItem>
+          ) : (
+            <>
+              {mutatedEntries.length > 0 && (
+                <StackItem>
+                  <DescriptionList isHorizontal>
+                    {mutatedEntries.map(({ key, value }) => (
+                      <MutatedAttributeRow
+                        key={key}
+                        attributeKey={key}
+                        value={value}
+                        onNavigateToReference={onNavigateToReference}
+                        getReferenceType={getReferenceType}
+                      />
+                    ))}
+                  </DescriptionList>
+                </StackItem>
+              )}
+              {classifiedAttributes.length > 0 && (
+                <StackItem>
+                  <AttributeList attributes={classifiedAttributes} />
+                </StackItem>
+              )}
+            </>
           )}
         </Stack>
       </CardBody>
