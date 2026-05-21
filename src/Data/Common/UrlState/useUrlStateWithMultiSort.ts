@@ -20,6 +20,7 @@ export const equalsMulti = <Key extends string>(a: MultiSort<Key>, b: MultiSort<
     a.length === b.length &&
     a.every(({ name, order }, i) => {
       const other = b[i];
+
       return name === other.name && order === other.order;
     })
   );
@@ -50,8 +51,10 @@ export const parseMulti = <Key extends string>(value: unknown): MultiSort<Key> =
   if (typeof value !== "string" || !value) {
     return [];
   }
+
   return value.split(",").flatMap((part) => {
     const parsed = Sort.parse<Key>(part);
+
     return parsed ? [parsed] : [];
   });
 };
