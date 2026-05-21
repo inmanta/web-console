@@ -1,0 +1,181 @@
+{
+  "data": {
+    "resource_id": "future::lsm::ServiceAttributeValue[lsm,uri=3ef00f70-ef21-3821-969f-1c3193f69fd4:compliance]",
+    "resource_type": "future::lsm::ServiceAttributeValue",
+    "agent": "lsm",
+    "id_attribute": "uri",
+    "id_attribute_value": "3ef00f70-ef21-3821-969f-1c3193f69fd4:compliance",
+    "attributes": {
+      "uri": "3ef00f70-ef21-3821-969f-1c3193f69fd4:compliance",
+      "value": null,
+      "purged": false,
+      "mutators": [
+        {
+          "args": [
+            {
+              "id": "future::lsm::ServiceAttributeValue[lsm,uri=3ef00f70-ef21-3821-969f-1c3193f69fd4:compliance]",
+              "name": "resource",
+              "type": "resource"
+            },
+            { "id": "b5d776d4-f3c4-358e-a102-2d1b2fc28a18", "name": "value", "type": "reference" },
+            { "name": "destination", "type": "literal", "value": "value" }
+          ],
+          "type": "core::Replace"
+        }
+      ],
+      "requires": [
+        "future::std::ResourceCompliance[std,name=3ef00f70-ef21-3821-969f-1c3193f69fd4]"
+      ],
+      "references": [
+        {
+          "id": "b5d776d4-f3c4-358e-a102-2d1b2fc28a18",
+          "args": [
+            {
+              "name": "resources_compliance_info",
+              "type": "mjson",
+              "value": [null, null, null],
+              "references": {
+                "$[0]": {
+                  "id": "39a2aaf5-70df-3363-b7a0-1f09bc3a313a",
+                  "name": "$[0]",
+                  "type": "reference"
+                },
+                "$[1]": {
+                  "id": "0bca1fb2-d88a-335e-a834-17324dde83bf",
+                  "name": "$[1]",
+                  "type": "reference"
+                },
+                "$[2]": {
+                  "id": "0432e70b-cb53-36e5-aa07-d3292b726249",
+                  "name": "$[2]",
+                  "type": "reference"
+                }
+              }
+            },
+            {
+              "name": "environment",
+              "type": "literal",
+              "value": "1c337bad-1701-49c9-90fe-028d88deb7ee"
+            },
+            {
+              "name": "template",
+              "type": "literal",
+              "value": "# Compliance report\n\nThe compliance report below summarizes the compliance of a part of the current desired state.  This report\nis updated every time a resource is redeployed, whether the resource fails or not.\n\n{{ dict(name=\"\", value=\"**Value**\", description=\"**Description**\") | md_table(stats_table) }}\n\n## Warning resources\n\nHere are all the resources that should be looked at because their compliance (or non-compliance) is unexpected.\n\n{%- for info in warning_resources_info %}\n{%- set diff = (info.diff | md_diff_block()) if info.diff else (info.error | md_code_block()) %}\n{%- set link = \":link: \" + (\"Resource details\" | md_link(info.resource_url)) %}\n{%- set message = \":bulb: \" + info.message %}\n{%- set content = link + \"\\n\" + message + \"\\n\" + diff %}\n\n{{ info.resource_id | md_details(content) }}\n\n{%- endfor %}\n\n## Non compliant resources\n\nHere is the list of all resources which currently don't match the desired state.  This shows the changes the orchestrator\nwould make if these resources were deployed successfully.  Depending on the context in which this desired state is emitted,\nthese differences may or may not be expected/desired.  They are shown here below not because they need to be looked into per\nse, but rather for visibility on the orchestrator knowledge of the current network compliance.\n\n{%- for info in non_compliant_resources_info %}\n{%- set diff = (info.diff | md_diff_block()) if info.diff else (info.error | md_code_block()) %}\n{%- set link = \":link: \" + (\"Resource details\" | md_link(info.resource_url)) %}\n{%- set content = link + \"\\n\" + diff %}\n\n{{ info.resource_id | md_details(content) }}\n\n{%- endfor %}\n"
+            }
+          ],
+          "type": "future::std::ComplianceReport"
+        },
+        {
+          "id": "39a2aaf5-70df-3363-b7a0-1f09bc3a313a",
+          "args": [
+            {
+              "id": "01297085-f2d8-3097-9ba0-4b4c418bf180",
+              "name": "compliance_status",
+              "type": "reference"
+            }
+          ],
+          "type": "future::std::CompliantResourceCompliance"
+        },
+        {
+          "id": "01297085-f2d8-3097-9ba0-4b4c418bf180",
+          "args": [
+            {
+              "name": "compliance_resource",
+              "type": "literal",
+              "value": "future::std::ResourceCompliance[std,name=3ef00f70-ef21-3821-969f-1c3193f69fd4]"
+            },
+            {
+              "name": "resource_id",
+              "type": "literal",
+              "value": "future::lsm::ServiceAttributeValue[lsm,uri=3ef00f70-ef21-3821-969f-1c3193f69fd4:documentation]"
+            },
+            {
+              "name": "environment",
+              "type": "literal",
+              "value": "1c337bad-1701-49c9-90fe-028d88deb7ee"
+            }
+          ],
+          "type": "future::std::ResourceComplianceStatus"
+        },
+        {
+          "id": "0bca1fb2-d88a-335e-a834-17324dde83bf",
+          "args": [
+            {
+              "id": "79b1c346-09cd-33cb-afe3-344cec8a4192",
+              "name": "compliance_status",
+              "type": "reference"
+            }
+          ],
+          "type": "future::std::CompliantResourceCompliance"
+        },
+        {
+          "id": "79b1c346-09cd-33cb-afe3-344cec8a4192",
+          "args": [
+            {
+              "name": "compliance_resource",
+              "type": "literal",
+              "value": "future::std::ResourceCompliance[std,name=3ef00f70-ef21-3821-969f-1c3193f69fd4]"
+            },
+            {
+              "name": "resource_id",
+              "type": "literal",
+              "value": "netbox::resources::Interface[http://172.25.162.59:8080,uri=cpe-1:ethernet-1/2]"
+            },
+            {
+              "name": "environment",
+              "type": "literal",
+              "value": "1c337bad-1701-49c9-90fe-028d88deb7ee"
+            }
+          ],
+          "type": "future::std::ResourceComplianceStatus"
+        },
+        {
+          "id": "0432e70b-cb53-36e5-aa07-d3292b726249",
+          "args": [
+            {
+              "id": "8e713d57-5c6c-33a7-9732-fd40c32324fc",
+              "name": "compliance_status",
+              "type": "reference"
+            }
+          ],
+          "type": "future::std::CompliantResourceCompliance"
+        },
+        {
+          "id": "8e713d57-5c6c-33a7-9732-fd40c32324fc",
+          "args": [
+            {
+              "name": "compliance_resource",
+              "type": "literal",
+              "value": "future::std::ResourceCompliance[std,name=3ef00f70-ef21-3821-969f-1c3193f69fd4]"
+            },
+            {
+              "name": "resource_id",
+              "type": "literal",
+              "value": "fs::JsonFile[telegraf,uri=/config/port-info-service-tags.json:cpe-1:ethernet-1/2]"
+            },
+            {
+              "name": "environment",
+              "type": "literal",
+              "value": "1c337bad-1701-49c9-90fe-028d88deb7ee"
+            }
+          ],
+          "type": "future::std::ResourceComplianceStatus"
+        }
+      ],
+      "send_event": true,
+      "instance_id": "3ef00f70-ef21-3821-969f-1c3193f69fd4",
+      "report_only": false,
+      "attribute_path": "compliance",
+      "receive_events": true,
+      "service_entity": "UserNetworkInterface",
+      "purge_on_delete": false,
+      "desired_state_version": 3
+    },
+    "last_deploy": "2026-05-18T12:13:22.879226+00:00",
+    "first_generated_time": "2026-05-15T11:53:38.851136+00:00",
+    "status": "deployed",
+    "requires_status": {
+      "future::std::ResourceCompliance[std,name=3ef00f70-ef21-3821-969f-1c3193f69fd4]": "deployed"
+    }
+  }
+}

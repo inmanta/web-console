@@ -1,0 +1,25 @@
+services:
+  vite:
+    image: "node:22"
+    pull_policy: always
+    entrypoint: ["/entrypoint.sh"]
+    volumes:
+      - ./entrypoint.sh:/entrypoint.sh
+      - ./:/home/node/web-console
+    environment:
+      VITE_API_BASEURL: http://172.25.162.3:8888/
+      JOINTJS_NPM_TOKEN: ${JOINTJS_NPM_TOKEN}
+    user: "root:root"
+    networks:
+      mgmt:
+        ipv4_address: 172.20.0.3
+
+volumes:
+  web-console-data: {}
+
+networks:
+  mgmt:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/28
+          gateway: 172.20.0.1
