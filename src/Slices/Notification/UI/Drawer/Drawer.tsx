@@ -112,7 +112,9 @@ const View: React.FC<ViewProps> = ({ response, onClose, mutate, drawerRef }) => 
     };
 
   const onClearAll = () => {
-    if (!response.isSuccess) return;
+    if (!response.isSuccess) {
+      return;
+    }
 
     getOnUpdate(response.data.data.map((notification) => notification.id))({
       read: true,
@@ -121,7 +123,9 @@ const View: React.FC<ViewProps> = ({ response, onClose, mutate, drawerRef }) => 
   };
 
   const onReadAll = () => {
-    if (!response.isSuccess) return;
+    if (!response.isSuccess) {
+      return;
+    }
 
     getOnUpdate(
       response.data.data

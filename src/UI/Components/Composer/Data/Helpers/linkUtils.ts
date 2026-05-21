@@ -41,6 +41,7 @@ export const createLinkShape = (
   const sourceRelationKey = targetShape.getEntityType();
   link.source({ id: sourceShape.id, port: sourceRelationKey });
   link.target({ id: targetShape.id });
+
   return link;
 };
 

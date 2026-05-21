@@ -105,40 +105,6 @@ if (isIso) {
         .should("be.visible")
         .and("have.text", "l3out");
 
-      // Step 4: Drag project shape onto canvas.
-      cy.contains('g[data-type="standard.Path"] tspan', "project")
-        .closest('g[data-type="standard.Path"]')
-        .as("projectPath");
-
-      cy.get('[data-testid="canvas"]').then(($canvas) => {
-        const rect = $canvas[0].getBoundingClientRect();
-        const boxSpacing = 140;
-        const dropX = rect.left + rect.width / 2 + boxSpacing;
-        const dropY = rect.top + rect.height / 2;
-
-        cy.get("@projectPath").trigger("mousedown", {
-          button: 0,
-          which: 1,
-          force: true,
-        });
-
-        cy.get("body").trigger("mousemove", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-
-        cy.get('[data-testid="canvas"]').trigger("mouseup", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-      });
-
       cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "project", { timeout: 10000 })
         .closest('g[data-type="app.ServiceEntityShape"]')
         .as("projectEntity")
@@ -146,82 +112,13 @@ if (isIso) {
           cy.get("rect.joint-halo-highlight-missing").should("exist");
         });
 
-      // Step 5: Drag ProjectNaming shape above project.
-      cy.contains('g[data-type="standard.Path"] tspan', "ProjectNaming")
-        .closest('g[data-type="standard.Path"]')
-        .as("projectNamingPath");
-
-      cy.get("@projectEntity").then(($projectEntity) => {
-        const projectRect = $projectEntity[0].getBoundingClientRect();
-        const dropX = projectRect.left + projectRect.width / 2;
-        const dropY = projectRect.top - 80;
-
-        cy.get("@projectNamingPath").trigger("mousedown", {
-          button: 0,
-          which: 1,
-          force: true,
-        });
-
-        cy.get("body").trigger("mousemove", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-
-        cy.get('[data-testid="canvas"]').trigger("mouseup", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-      });
-
       cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "ProjectNaming", {
         timeout: 10000,
       })
         .closest('g[data-type="app.ServiceEntityShape"]')
-        .as("projectNamingEntity")
-        .within(() => {
-          cy.get("rect.joint-halo-highlight-missing").should("exist");
-        });
+        .as("projectNamingEntity");
 
-      // Step 6: Connect ProjectNaming -> project.
-      cy.get("@projectNamingEntity").click({ force: true });
-
-      cy.get("@projectEntity").then(($target) => {
-        const targetRect = $target[0].getBoundingClientRect();
-        const targetX = targetRect.left + targetRect.width / 2;
-        const targetY = targetRect.top + targetRect.height / 2;
-
-        cy.get('div.handle.link.e[data-action="link"]', { timeout: 10000 })
-          .should("be.visible")
-          .trigger("mousedown", {
-            button: 0,
-            which: 1,
-            force: true,
-          });
-
-        cy.get("body").trigger("mousemove", {
-          button: 0,
-          which: 1,
-          clientX: targetX,
-          clientY: targetY,
-          force: true,
-        });
-
-        cy.get("@projectEntity").trigger("mouseup", {
-          button: 0,
-          which: 1,
-          clientX: targetX,
-          clientY: targetY,
-          force: true,
-        });
-      });
-
-      // Step 7: Connect project -> l3out.
+      // Step 4: Connect project -> l3out.
       cy.get("@projectEntity").click({ force: true });
 
       cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid="header-l3out"])').as(
@@ -273,7 +170,7 @@ if (isIso) {
         cy.get("rect.joint-halo-highlight-missing").should("not.exist");
       });
 
-      // Step 8: Fill Project form fields.
+      // Step 5: Fill Project form fields.
       cy.get("#name").clear().type("pxs-project");
 
       cy.get("#environment").click({ force: true });
@@ -283,7 +180,7 @@ if (isIso) {
         cy.get("rect.joint-halo-highlight-missing").should("not.exist");
       });
 
-      // Step 9: Fill l3out form fields.
+      // Step 6: Fill l3out form fields.
       cy.get("@l3outEntity").click({ force: true });
       cy.get("#name").clear().type("pxs-l3out");
       cy.get("#rd").clear().type("3");
@@ -292,7 +189,7 @@ if (isIso) {
         cy.get("rect.joint-halo-highlight-missing").should("not.exist");
       });
 
-      // Step 10: Deploy and validate resulting order details.
+      // Step 7: Deploy and validate resulting order details.
       cy.get('[data-testid="deploy-button"]').should("be.enabled").click();
 
       cy.get('[aria-label="OrderDetailsView-Success"]', { timeout: 60000 }).should("be.visible");
@@ -627,10 +524,6 @@ if (isIso) {
         .closest('g[data-type="standard.Path"]')
         .as("projectPath");
 
-      cy.contains('g[data-type="standard.Path"] tspan', "ProjectNaming")
-        .closest('g[data-type="standard.Path"]')
-        .as("projectNamingPath");
-
       // Step 4: Duo 1 - The existing project already has a ProjectNaming loaded from the instance.
       cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid*="ProjectNaming"])', {
         timeout: 10000,
@@ -639,7 +532,7 @@ if (isIso) {
         .eq(0)
         .as("firstProjectNamingEntity");
 
-      // Step 5: Duo 2 - Drag a second project above the existing one, then its ProjectNaming to the right, then connect.
+      // Step 5: Duo 2 - Drag a second project. Its ProjectNaming is auto-added to the canvas.
       cy.get("@existingProjectEntity").then(($existingProject) => {
         const rect = $existingProject[0].getBoundingClientRect();
         const dropX = rect.left + rect.width / 2;
@@ -669,60 +562,9 @@ if (isIso) {
         .eq(1)
         .as("secondProjectEntity");
 
-      cy.get("@secondProjectEntity").then(($secondProject) => {
-        const rect = $secondProject[0].getBoundingClientRect();
-        const dropX = rect.right + 120;
-        const dropY = rect.top + rect.height / 2;
-
-        cy.get("@projectNamingPath").trigger("mousedown", { button: 0, which: 1, force: true });
-        cy.get("body").trigger("mousemove", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-        cy.get('[data-testid="canvas"]').trigger("mouseup", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-      });
-
       cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid*="ProjectNaming"])', {
         timeout: 10000,
-      })
-        .should("have.length", 2)
-        .eq(1)
-        .as("secondProjectNamingEntity");
-
-      cy.get("@secondProjectNamingEntity").click({ force: true });
-
-      cy.get("@secondProjectEntity").then(($target) => {
-        const targetRect = $target[0].getBoundingClientRect();
-        const targetX = targetRect.left + targetRect.width / 2;
-        const targetY = targetRect.top + targetRect.height / 2;
-
-        cy.get('div.handle.link.e[data-action="link"]', { timeout: 10000 })
-          .should("be.visible")
-          .trigger("mousedown", { button: 0, which: 1, force: true });
-        cy.get("body").trigger("mousemove", {
-          button: 0,
-          which: 1,
-          clientX: targetX,
-          clientY: targetY,
-          force: true,
-        });
-        cy.get("@secondProjectEntity").trigger("mouseup", {
-          button: 0,
-          which: 1,
-          clientX: targetX,
-          clientY: targetY,
-          force: true,
-        });
-      });
+      }).should("have.length", 2);
 
       // Fill second project form fields.
       cy.get("@secondProjectEntity").click({ force: true });
@@ -730,7 +572,7 @@ if (isIso) {
       cy.get("#environment").click({ force: true });
       cy.contains('[role="menuitem"], [role="option"]', /lab/i).click();
 
-      // Step 6: Duo 3 - Drag a third project below the existing one, then its ProjectNaming to the right, then connect.
+      // Step 6: Duo 3 - Drag a third project. Its ProjectNaming is auto-added to the canvas.
       cy.get("@existingProjectEntity").then(($existingProject) => {
         const rect = $existingProject[0].getBoundingClientRect();
         const dropX = rect.left + rect.width / 2;
@@ -760,60 +602,9 @@ if (isIso) {
         .eq(2)
         .as("thirdProjectEntity");
 
-      cy.get("@thirdProjectEntity").then(($thirdProject) => {
-        const rect = $thirdProject[0].getBoundingClientRect();
-        const dropX = rect.right + 120;
-        const dropY = rect.top + rect.height / 2;
-
-        cy.get("@projectNamingPath").trigger("mousedown", { button: 0, which: 1, force: true });
-        cy.get("body").trigger("mousemove", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-        cy.get('[data-testid="canvas"]').trigger("mouseup", {
-          button: 0,
-          which: 1,
-          clientX: dropX,
-          clientY: dropY,
-          force: true,
-        });
-      });
-
       cy.get('g[data-type="app.ServiceEntityShape"]:has([data-testid*="ProjectNaming"])', {
         timeout: 10000,
-      })
-        .should("have.length", 3)
-        .eq(2)
-        .as("thirdProjectNamingEntity");
-
-      cy.get("@thirdProjectNamingEntity").click({ force: true });
-
-      cy.get("@thirdProjectEntity").then(($target) => {
-        const targetRect = $target[0].getBoundingClientRect();
-        const targetX = targetRect.left + targetRect.width / 2;
-        const targetY = targetRect.top + targetRect.height / 2;
-
-        cy.get('div.handle.link.e[data-action="link"]', { timeout: 10000 })
-          .should("be.visible")
-          .trigger("mousedown", { button: 0, which: 1, force: true });
-        cy.get("body").trigger("mousemove", {
-          button: 0,
-          which: 1,
-          clientX: targetX,
-          clientY: targetY,
-          force: true,
-        });
-        cy.get("@thirdProjectEntity").trigger("mouseup", {
-          button: 0,
-          which: 1,
-          clientX: targetX,
-          clientY: targetY,
-          force: true,
-        });
-      });
+      }).should("have.length", 3);
 
       // Fill third project form fields.
       cy.get("@thirdProjectEntity").click({ force: true });

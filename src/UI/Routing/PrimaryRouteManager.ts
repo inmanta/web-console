@@ -125,11 +125,15 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
 
     const { route } = routeMatch;
 
-    if (!routeHasParams(route)) return pathname;
+    if (!routeHasParams(route)) {
+      return pathname;
+    }
 
     const parent = getParentWithoutParams(route);
 
-    if (typeof parent === "undefined") return getUrl("Home", undefined);
+    if (typeof parent === "undefined") {
+      return getUrl("Home", undefined);
+    }
 
     return getUrl(parent.kind, undefined);
   }
@@ -163,27 +167,39 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   }
 
   function getUrlForApiUri(uri: string): string | undefined {
-    if (uri.length <= 0) return undefined;
+    if (uri.length <= 0) {
+      return undefined;
+    }
 
     const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
 
-    if (match === null) return undefined;
+    if (match === null) {
+      return undefined;
+    }
 
-    if (match.params.id === undefined) return undefined;
+    if (match.params.id === undefined) {
+      return undefined;
+    }
 
     return getUrl("CompileDetails", { id: match.params.id });
   }
 
   function getParamsFromUrl(uri: string): RouteKindWithId<"CompileDetails"> | undefined {
-    if (uri.length <= 0) return undefined;
+    if (uri.length <= 0) {
+      return undefined;
+    }
 
     const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
 
-    if (match === null) return undefined;
+    if (match === null) {
+      return undefined;
+    }
 
-    if (match.params.id === undefined) return undefined;
+    if (match.params.id === undefined) {
+      return undefined;
+    }
 
     const params = { id: match.params.id };
 
@@ -199,7 +215,9 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
       (pair): pair is [Route, PathMatch] => pair[1] !== null
     );
 
-    if (typeof routeWithMatch === "undefined") return undefined;
+    if (typeof routeWithMatch === "undefined") {
+      return undefined;
+    }
 
     const [route, match] = routeWithMatch;
 
@@ -223,7 +241,9 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   function getCrumbs(url: string): Crumb[] {
     const routeMatch = getRouteMatchFromUrl(url);
 
-    if (typeof routeMatch === "undefined") return [];
+    if (typeof routeMatch === "undefined") {
+      return [];
+    }
 
     const { route, params } = routeMatch;
     const lineage = getLineageFromRoute(route);

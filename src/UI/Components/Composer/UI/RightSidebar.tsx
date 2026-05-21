@@ -21,6 +21,7 @@ export const RightSidebar: React.FC = () => {
   useEffect(() => {
     if (!activeCell) {
       setDescription(mainService?.description || null);
+
       return;
     }
 

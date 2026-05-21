@@ -147,6 +147,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
         setCanvasState((prev) => {
           const updated = new Map(prev);
           updated.set(String(activeCell.id), activeCell);
+
           return updated;
         });
 

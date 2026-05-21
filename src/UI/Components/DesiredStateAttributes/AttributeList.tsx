@@ -199,7 +199,9 @@ export const getDefaultHeightEditor = (attribute: ClassifiedAttribute): string =
     attribute.kind === "Code"
   ) {
     const lineCount = attribute.value.split("\n").length;
+
     return lineCount > 15 ? "300px" : "sizeToFit";
   }
+
   return "sizeToFit";
 };

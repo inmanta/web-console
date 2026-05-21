@@ -19,6 +19,7 @@ vi.mock("../../UI/JointJsShapes/ComposerPaper", () => ({
     _serviceCatalog: ServiceModel[]
   ) {
     const paper = new dia.Paper({ model: graph, width: 800, height: 600 });
+
     return { paper };
   }),
 }));
@@ -26,6 +27,7 @@ vi.mock("../../UI/JointJsShapes/ComposerPaper", () => ({
 // Mock requestAnimationFrame to prevent async issues
 global.requestAnimationFrame = vi.fn((callback) => {
   setTimeout(callback, 0);
+
   return 1;
 });
 
@@ -217,7 +219,7 @@ describe("useComposerGraph", () => {
     vi.spyOn(result.current.scroller, "zoomToFit").mockReturnValue(result.current.scroller);
 
     await waitFor(() => {
-      expect(Helpers.createPlaceholderInstance).toHaveBeenCalledWith(mainService);
+      expect(Helpers.createPlaceholderInstance).toHaveBeenCalledWith(mainService, serviceCatalog);
     });
 
     expect(Helpers.initializeCanvasFromInstance).toHaveBeenCalled();
@@ -450,6 +452,7 @@ describe("useComposerGraph", () => {
         // Use a simple rectangle shape that has proper markup
         const mockCell = new shapes.standard.Rectangle({ id: "test-cell" });
         graph.addCell(mockCell);
+
         return new Map();
       }
     );

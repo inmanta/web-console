@@ -51,6 +51,7 @@ describe("DiscoveredResourcesPage", () => {
         // Subsequent calls (e.g., after applying a filter): return a filtered subset
         const filtered = DiscoveredResources.response.data.filter((item) => {
           const value = (item.values as { name?: string }).name ?? "";
+
           return value.toLowerCase().includes("ubuntu");
         });
 

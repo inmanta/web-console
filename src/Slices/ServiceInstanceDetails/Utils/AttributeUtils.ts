@@ -38,7 +38,9 @@ export const getAvailableAttributesSets = (
   const selectedLog: InstanceLog | null =
     logs.find((log: InstanceLog) => String(log.version) === version) || null;
 
-  if (!selectedLog) return {};
+  if (!selectedLog) {
+    return {};
+  }
 
   const sets = {};
 

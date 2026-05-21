@@ -80,11 +80,15 @@ export const MarkdownContainer: React.FC<Props> = ({
   }, [web_title, theme]);
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible) {
+      return;
+    }
 
     const container = containerRef.current;
 
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     // Render markdown to HTML string (includes <pre class="mermaid"> blocks)
     const result = md.render(text);
@@ -101,7 +105,9 @@ export const MarkdownContainer: React.FC<Props> = ({
         '.mermaid-diagram[data-zoomable="true"]'
       ) as HTMLElement | null;
 
-      if (!diagram) return;
+      if (!diagram) {
+        return;
+      }
 
       event.stopPropagation();
 
@@ -167,7 +173,9 @@ export const MarkdownContainer: React.FC<Props> = ({
       const target = event.target as HTMLElement;
       const button = target.closest(".pf-v6-c-button[data-setstate-content]") as HTMLElement | null;
 
-      if (!button) return;
+      if (!button) {
+        return;
+      }
 
       event.stopPropagation();
 

@@ -51,6 +51,7 @@ export class InputInfoCreator {
       .sort()
       .reduce((sortedSections, sectionName) => {
         sortedSections[sectionName] = groupedBySection[sectionName];
+
         return sortedSections;
       }, {} as EnvironmentSettings.SectionnedInputInfo);
   }

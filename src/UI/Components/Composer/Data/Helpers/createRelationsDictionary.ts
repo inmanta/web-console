@@ -15,6 +15,7 @@ const toNumber = (value: NumericInput, fallback = 0): number => {
   if (typeof value === "bigint") {
     return Number(value);
   }
+
   return Number(value);
 };
 
@@ -25,6 +26,7 @@ const toNumberOrNull = (value: NumericInput): number | null => {
   if (typeof value === "bigint") {
     return Number(value);
   }
+
   return Number(value);
 };
 
@@ -54,9 +56,13 @@ const connect = (
   rules: Rules,
   reverseRules?: Rules
 ) => {
-  if (!dict[a]) dict[a] = {};
+  if (!dict[a]) {
+    dict[a] = {};
+  }
   dict[a][b] = rules;
-  if (!dict[b]) dict[b] = {};
+  if (!dict[b]) {
+    dict[b] = {};
+  }
   dict[b][a] = reverseRules ?? rules;
 };
 

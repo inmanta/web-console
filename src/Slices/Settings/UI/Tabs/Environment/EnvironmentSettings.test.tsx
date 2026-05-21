@@ -64,6 +64,7 @@ describe("EnvironmentSettings", () => {
         if (body && body["name"] === "dev") {
           return HttpResponse.json();
         }
+
         return HttpResponse.json({ message: "Invalid environment name" }, { status: 400 });
       })
     );
@@ -203,6 +204,7 @@ describe("EnvironmentSettings", () => {
         if (body && body["repository"] === newRepository && body["branch"] === newBranch) {
           return HttpResponse.json();
         }
+
         return HttpResponse.json({ message: "Invalid environment name" }, { status: 400 });
       })
     );
@@ -357,6 +359,7 @@ describe("EnvironmentSettings", () => {
         if (body && body["project_id"] === "project_id_b") {
           return HttpResponse.json();
         }
+
         return HttpResponse.json({ message: "Invalid environment name" }, { status: 400 });
       })
     );

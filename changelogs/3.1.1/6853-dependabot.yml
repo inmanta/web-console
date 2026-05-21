@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump lodash from 4.17.23 to 4.18.1
+destination-branches:
+- master
+- iso9
+sections: {}

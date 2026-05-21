@@ -1656,6 +1656,148 @@ export const logsWithDocumentationResponse = {
   },
 };
 
+// --- Multi-documentation fixtures ---
+// Three documentation sections with web_order and web_default_open set, to cover
+// sorting, default-open, and multi-expand behaviour.
+//
+// Declaration order:  topography (order 2) → architecture (order 1) → readme (order -1)
+// Expected sort order: architecture (1) → topography (2) → readme (-1 → last)
+
+export const instanceDataWithMultipleDocumentation: ServiceInstanceModel = {
+  ...instanceData,
+  version: 2,
+  candidate_attributes: {
+    topography: "# Topography\n\nTopography content.",
+    architecture: "# Architecture\n\nArchitecture content.",
+    readme: "# Readme\n\nReadme content.",
+  },
+};
+
+export const serviceModelWithMultipleDocumentation: ServiceModel = {
+  ...serviceModel,
+  attributes: [
+    // declared first, web_order: 2 → renders second after sort
+    {
+      name: "topography",
+      description: "Topography of this instance",
+      modifier: "r",
+      attribute_annotations: {
+        web_icon: "FaBook",
+        web_content_type: "text/markdown",
+        web_title: "Topography",
+        web_presentation: "documentation",
+        web_order: 2,
+      },
+      type: "string",
+      default_value: "# Topography\n\nTopography content.",
+      default_value_set: true,
+      validation_type: null,
+      validation_parameters: null,
+    },
+    // declared second, web_order: 1, web_default_open: true → renders first, expanded by default
+    {
+      name: "architecture",
+      description: "Architecture of this instance",
+      modifier: "r",
+      attribute_annotations: {
+        web_icon: "FaNetworkWired",
+        web_content_type: "text/markdown",
+        web_title: "Architecture",
+        web_presentation: "documentation",
+        web_order: 1,
+        web_default_open: true,
+      },
+      type: "string",
+      default_value: "# Architecture\n\nArchitecture content.",
+      default_value_set: true,
+      validation_type: null,
+      validation_parameters: null,
+    },
+    // web_order: -1 → treated as unordered, sorts to end
+    {
+      name: "readme",
+      description: "Readme for this instance",
+      modifier: "r",
+      attribute_annotations: {
+        web_icon: "FaFileAlt",
+        web_content_type: "text/markdown",
+        web_title: "Readme",
+        web_presentation: "documentation",
+        web_order: -1,
+      },
+      type: "string",
+      default_value: "# Readme\n\nReadme content.",
+      default_value_set: true,
+      validation_type: null,
+      validation_parameters: null,
+    },
+  ],
+};
+
+const historyDataWithMultipleDocumentation: InstanceLog[] = [
+  {
+    service_instance_id: "1d96a1ab",
+    environment: "5bfe1994-365f-49ec-bff1-fed77bbbf8e6",
+    service_entity: "mobileCore",
+    service_entity_version: 0,
+    version: 2,
+    desired_state_version: 2,
+    timestamp: "2022-09-02T12:01:19.626854+00:00",
+    config: {},
+    state: "up",
+    candidate_attributes: {
+      topography: "# Topography\n\nTopography content.",
+      architecture: "# Architecture\n\nArchitecture content.",
+      readme: "# Readme\n\nReadme content.",
+    },
+    active_attributes: null,
+    rollback_attributes: null,
+    created_at: "2022-09-02T11:56:06.852941+00:00",
+    last_updated: "2022-09-02T12:01:19.626854+00:00",
+    callback: [],
+    deleted: false,
+    events: [],
+    service_identity_attribute_value: "core1",
+    transfer_context: "auto",
+  },
+  {
+    service_instance_id: "1d96a1ab",
+    environment: "5bfe1994-365f-49ec-bff1-fed77bbbf8e6",
+    service_entity: "mobileCore",
+    service_entity_version: 0,
+    version: 1,
+    desired_state_version: 1,
+    timestamp: "2022-09-02T11:56:06.852941+00:00",
+    config: {},
+    state: "start",
+    candidate_attributes: {
+      topography: "# Old topography.",
+    },
+    active_attributes: null,
+    rollback_attributes: null,
+    created_at: "2022-09-02T11:56:06.852941+00:00",
+    last_updated: "2022-09-02T11:56:06.852941+00:00",
+    callback: [],
+    deleted: false,
+    events: [],
+    service_identity_attribute_value: "core1",
+    transfer_context: "auto",
+  },
+];
+
+export const logsWithMultipleDocumentationResponse = {
+  data: historyDataWithMultipleDocumentation,
+  links: {
+    self: "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log?limit=50&sort=version.desc",
+  },
+  metadata: {
+    total: 2,
+    before: 0,
+    after: 0,
+    page_size: 50,
+  },
+};
+
 export const JSONSchema = {
   data: {
     $defs: {

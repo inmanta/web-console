@@ -36,7 +36,9 @@ export function getUrl(params: GetResourceLogsParams): string {
 }
 
 const serializeTimestampFilter = (filter?: DateRange.Type[]): string[] | undefined => {
-  if (typeof filter === "undefined") return undefined;
+  if (typeof filter === "undefined") {
+    return undefined;
+  }
 
   return filter.map(
     (timestampWithOperator) =>

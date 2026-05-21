@@ -24,13 +24,7 @@ export const BooleanToggleInput: React.FC<Props> = ({
   ...props
 }) => {
   return (
-    <FormGroup
-      {...props}
-      fieldId={attributeName}
-      key={attributeName}
-      label={attributeName}
-      isRequired={true}
-    >
+    <FormGroup {...props} fieldId={attributeName} key={attributeName} label={attributeName}>
       <FormHelperText>
         <HelperText>
           <HelperTextItem>{description}</HelperTextItem>

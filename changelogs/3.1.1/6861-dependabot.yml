@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump msw from 2.13.5 to 2.14.3
+destination-branches:
+- master
+- iso9
+sections: {}

@@ -64,7 +64,9 @@ const DiffView: React.FC<{
 
   useEffect(() => {
     // keep the refetching until there are still resources to check
-    if (todo <= 0 && isLoading) return;
+    if (todo <= 0 && isLoading) {
+      return;
+    }
     refetch();
   }, [todo, isLoading, refetch]);
 

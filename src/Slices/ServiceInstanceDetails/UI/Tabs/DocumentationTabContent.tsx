@@ -26,6 +26,8 @@ export interface DocAttributeDescriptors {
   title: string;
   iconName: string;
   attributeName: string;
+  webOrder?: number;
+  webDefaultOpen?: boolean;
 }
 
 // Interface representing the attributes needed for the markdownCards
@@ -56,7 +58,23 @@ export const DocumentationTabContent: React.FC<Props> = ({
   const { logsQuery, instance } = useContext(InstanceDetailsContext);
   const { environmentHandler } = useContext(DependencyContext);
   const { triggerModal } = useContext(ModalContext);
-  const [expanded, setExpanded] = useState(0);
+  const [expandedSet, setExpandedSet] = useState<Set<number>>(() => {
+    const sorted = sortDocAttributeDescriptors(docAttributeDescriptors);
+    const initial = new Set<number>();
+
+    sorted.forEach((d, i) => {
+      if (d.webDefaultOpen) {
+        initial.add(i);
+      }
+    });
+
+    // Fall back to opening the first item when none are marked as default open
+    if (initial.size === 0 && sorted.length > 1) {
+      initial.add(0);
+    }
+
+    return initial;
+  });
   const [, setInterfaceBlocked] = useState(false);
   const navigateTo = useNavigateTo();
 
@@ -67,20 +85,28 @@ export const DocumentationTabContent: React.FC<Props> = ({
       if (logsQuery.isLoading || !logsQuery.data) {
         return undefined;
       }
+
       return getSelectedAttributeSet(logsQuery.data, selectedVersion);
     } else {
       return getSelectedAttributeSetFromInstance(instance);
     }
   }, [isLatest, logsQuery.data, logsQuery.isLoading, selectedVersion, instance]);
 
+  const sortedDescriptors = useMemo(
+    () => sortDocAttributeDescriptors(docAttributeDescriptors),
+    [docAttributeDescriptors]
+  );
+
   // Memoize sections calculation
   const sections = useMemo(() => {
-    return selectedSet ? getDocumentationSections(docAttributeDescriptors, selectedSet) : [];
-  }, [docAttributeDescriptors, selectedSet]);
+    return selectedSet ? getDocumentationSections(sortedDescriptors, selectedSet) : [];
+  }, [sortedDescriptors, selectedSet]);
 
   const handleStateTransferClick = useCallback(
     ({ targetState }: { content: string; targetState: string }) => {
-      if (!targetState) return;
+      if (!targetState) {
+        return;
+      }
 
       const instanceDisplayIdentity = instance.service_identity_attribute_value || instance.id;
 
@@ -129,15 +155,21 @@ export const DocumentationTabContent: React.FC<Props> = ({
   }
 
   const onToggle = (index: number) => {
-    if (index === expanded) {
-      setExpanded(-1);
-    } else {
-      setExpanded(index);
-    }
+    setExpandedSet((prev) => {
+      const next = new Set(prev);
+
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+
+      return next;
+    });
   };
 
   const MarkdownPreviewerButton = () => {
-    if (!isExpertModeEnabled) {
+    if (!isExpertModeEnabled || !isLatest) {
       return null;
     }
 
@@ -184,7 +216,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
       <MarkdownPreviewerButton />
       <Accordion asDefinitionList togglePosition="start">
         {sections.map((section, index) => (
-          <AccordionItem isExpanded={expanded === index} key={section.title}>
+          <AccordionItem isExpanded={expandedSet.has(index)} key={section.title}>
             <AccordionToggle
               onClick={() => {
                 onToggle(index);
@@ -198,7 +230,7 @@ export const DocumentationTabContent: React.FC<Props> = ({
                 attributeValue={section.value}
                 web_title={section.title}
                 onSetStateClick={handleStateTransferClick}
-                isExpanded={expanded === index}
+                isExpanded={expandedSet.has(index)}
               />
             </AccordionContent>
           </AccordionItem>
@@ -209,6 +241,30 @@ export const DocumentationTabContent: React.FC<Props> = ({
       </Accordion>
     </TabContentWrapper>
   );
+};
+
+/**
+ * Sorts documentation attribute descriptors by webOrder ascending.
+ * Descriptors without webOrder or with webOrder === -1 are placed after all
+ * explicitly ordered items, preserving their original relative order.
+ */
+export const sortDocAttributeDescriptors = (
+  descriptors: DocAttributeDescriptors[]
+): DocAttributeDescriptors[] => {
+  return descriptors.slice().sort((a, b) => {
+    const aOrdered = a.webOrder !== undefined && a.webOrder !== -1;
+    const bOrdered = b.webOrder !== undefined && b.webOrder !== -1;
+
+    if (aOrdered && bOrdered) {
+      return (a.webOrder as number) - (b.webOrder as number);
+    } else if (aOrdered) {
+      return -1;
+    } else if (bOrdered) {
+      return 1;
+    }
+
+    return 0;
+  });
 };
 
 /**
@@ -254,7 +310,9 @@ const getSelectedAttributeSet = (
     (log: InstanceLog) => String(log.version) === version
   );
 
-  if (!selectedLog) return; // Return void if no matching log is found
+  if (!selectedLog) {
+    return;
+  } // Return void if no matching log is found
 
   if (selectedLog.candidate_attributes) {
     return selectedLog.candidate_attributes;

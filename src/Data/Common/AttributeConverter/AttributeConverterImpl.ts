@@ -25,8 +25,12 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
    * Determines what kind of input should be used for a Service Attribute
    */
   getInputType(attributeModel: AttributeModel): InputType {
-    if (attributeModel.type.includes("dict")) return "dict";
-    if (attributeModel.type.includes("bool")) return "bool";
+    if (attributeModel.type.includes("dict")) {
+      return "dict";
+    }
+    if (attributeModel.type.includes("bool")) {
+      return "bool";
+    }
 
     return this.matchTextInputWithPatternflyInput(attributeModel.type);
   }
@@ -99,7 +103,10 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
     try {
       if (type.includes("bool")) {
         parsedValue = toOptionalBoolean(value);
-      } else if (type.includes("?") && value === "") {
+      } else if (
+        type.includes("?") &&
+        (value === "" || (Array.isArray(value) && value.length === 0))
+      ) {
         parsedValue = null;
       } else if ((isNumberType(type) || isNumberArray(type)) && value === "") {
         parsedValue = null;

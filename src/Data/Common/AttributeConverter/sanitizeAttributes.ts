@@ -19,6 +19,8 @@ export function sanitizeAttributes(
     switch (field.kind) {
       case "Enum":
       case "Boolean":
+      case "Textarea":
+      case "TextList":
       case "Text": {
         sanitized[field.name] = converter.ensureAttributeType(formState[field.name], field.type);
 
@@ -42,6 +44,7 @@ export function sanitizeAttributes(
 
         // Convert empty string to null for InterServiceRelation fields
         sanitized[field.name] = value === "" ? null : value;
+
         return;
       }
       case "RelationList": {
@@ -53,7 +56,9 @@ export function sanitizeAttributes(
       case "DictList": {
         const list = formState[field.name];
 
-        if (!Array.isArray(list)) return;
+        if (!Array.isArray(list)) {
+          return;
+        }
 
         if (field.max && list.length > field.max) {
           sanitized[field.name] = list
