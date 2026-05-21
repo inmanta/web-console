@@ -40,6 +40,7 @@ export const checkIfConnectionIsAllowed = (
     } catch {
       // Fallback for lightweight test doubles that don't carry full model internals
     }
+
     return model.getEntityName();
   };
 

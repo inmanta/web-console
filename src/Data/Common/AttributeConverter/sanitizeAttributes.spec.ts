@@ -1,3 +1,5 @@
+import { TextInputTypes } from "@patternfly/react-core";
+import { Textarea } from "@/Core";
 import { Field } from "@/Test";
 import { createFormState } from "@/UI/Components";
 import { sanitizeAttributes } from "./sanitizeAttributes";
@@ -152,4 +154,61 @@ test("GIVEN sanitizeAttributes WHEN InterServiceRelation field value is valid st
   expect(sanitized).toMatchObject({
     related_service: "service-instance-id-123", // Should preserve valid string value
   });
+});
+
+test("GIVEN sanitizeAttributes WHEN TextList field value is empty string THEN converts to null for optional type", () => {
+  const textListField = {
+    kind: "TextList" as const,
+    name: "tags",
+    description: "Tags",
+    isOptional: true,
+    isDisabled: false,
+    defaultValue: [],
+    inputType: TextInputTypes.text,
+    type: "string[]?",
+  };
+
+  const fields = [textListField];
+  const formState = { tags: "" };
+  const sanitized = sanitizeAttributes(fields, formState);
+
+  expect(sanitized).toMatchObject({ tags: null });
+});
+
+test("GIVEN sanitizeAttributes WHEN TextList field value is empty array THEN converts to null for optional type", () => {
+  const textListField = {
+    kind: "TextList" as const,
+    name: "tags",
+    description: "Tags",
+    isOptional: true,
+    isDisabled: false,
+    defaultValue: [],
+    inputType: TextInputTypes.text,
+    type: "string[]?",
+  };
+
+  const fields = [textListField];
+  const formState = { tags: [] };
+  const sanitized = sanitizeAttributes(fields, formState);
+
+  expect(sanitized).toMatchObject({ tags: null });
+});
+
+test("GIVEN sanitizeAttributes WHEN Textarea field value is empty string THEN converts to null for optional type", () => {
+  const textareaField: Textarea = {
+    kind: "Textarea",
+    name: "description",
+    description: "Description",
+    isOptional: true,
+    isDisabled: false,
+    defaultValue: "",
+    inputType: TextInputTypes.text,
+    type: "string?",
+  };
+
+  const fields = [textareaField];
+  const formState = { description: "" };
+  const sanitized = sanitizeAttributes(fields, formState);
+
+  expect(sanitized).toMatchObject({ description: null });
 });

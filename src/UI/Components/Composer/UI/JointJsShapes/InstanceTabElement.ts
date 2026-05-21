@@ -152,7 +152,8 @@ export class InstanceTabElement {
           embeddedEntityCache,
           positionTracker,
           parentPosition.x + HORIZONTAL_SPACING,
-          parentPosition.y
+          parentPosition.y,
+          true
         );
 
         if (embeddedIds.length > 0) {

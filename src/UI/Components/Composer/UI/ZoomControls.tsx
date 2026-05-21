@@ -101,6 +101,7 @@ export const ZoomControls: React.FC = () => {
     };
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
+
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };

@@ -147,6 +147,7 @@ describe("ComplianceCheck page", () => {
       }),
       http.post("/api/v2/dryrun/123", () => {
         data = { data: [Mock.a, ...Mock.listOfReports] };
+
         return HttpResponse.json(data);
       })
     );

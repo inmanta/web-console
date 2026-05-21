@@ -57,6 +57,7 @@ export class KeyFactory {
     if (this.queryKey) {
       keyArray.push(this.queryKey);
     }
+
     return keyArray;
   }
 

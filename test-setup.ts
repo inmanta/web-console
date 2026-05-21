@@ -157,6 +157,7 @@ const formatConsoleArgs = (args: unknown[]) => {
           return `[${typeof arg}: Circular or complex object]`;
         }
       }
+
       return String(arg);
     })
     .join(" ");

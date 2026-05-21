@@ -138,6 +138,13 @@ export default [
       "@stylistic/keyword-spacing": "warn",
       "@stylistic/comma-spacing": "warn",
       "@stylistic/func-call-spacing": "warn",
+
+      curly: ["error", "all"],
+
+      "padding-line-between-statements": [
+        "warn",
+        { blankLine: "always", prev: "*", next: "return" },
+      ],
     },
   },
 

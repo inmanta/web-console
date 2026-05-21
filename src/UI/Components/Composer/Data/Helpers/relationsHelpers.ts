@@ -121,8 +121,10 @@ const getServiceModelForShape = (
     if (parentShape) {
       const parentServiceModel = parentShape.serviceModel;
       const embeddedEntity = findEmbeddedEntityRecursive(parentServiceModel, entityType);
+
       return embeddedEntity || parentServiceModel;
     }
+
     return null;
   }
 
@@ -173,6 +175,7 @@ const wouldViolateLowerLimit = (currentCount: number, lowerLimit: number | bigin
   // If lowerLimit is 0, we can always remove (can't go below 0)
   // Otherwise, check if removal would violate the limit
   const countAfterRemoval = currentCount - 1;
+
   return limit > 0 && countAfterRemoval < limit;
 };
 

@@ -39,6 +39,7 @@ export class PositionTracker {
         return true;
       }
     }
+
     return false;
   }
 

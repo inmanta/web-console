@@ -96,6 +96,7 @@ describe("Environment Actions", () => {
     server.use(
       http.delete("/api/v2/environment/env", () => {
         counter++;
+
         return HttpResponse.json();
       })
     );
@@ -147,6 +148,7 @@ describe("Environment Actions", () => {
     server.use(
       http.delete("/api/v2/decommission/env", () => {
         counter++;
+
         return HttpResponse.json();
       })
     );

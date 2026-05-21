@@ -42,13 +42,21 @@ export const objectHasKey = <X extends Record<string, unknown>, Y extends Proper
 ): obj is X & Record<Y, unknown> => prop in obj;
 
 export const isObject = (value: unknown): value is Record<string, unknown> => {
-  if (typeof value !== "object") return false;
+  if (typeof value !== "object") {
+    return false;
+  }
 
-  if (Array.isArray(value)) return false;
+  if (Array.isArray(value)) {
+    return false;
+  }
 
-  if (value === null) return false;
+  if (value === null) {
+    return false;
+  }
 
-  if (Object.keys(value).length <= 0) return false;
+  if (Object.keys(value).length <= 0) {
+    return false;
+  }
 
   return true;
 };

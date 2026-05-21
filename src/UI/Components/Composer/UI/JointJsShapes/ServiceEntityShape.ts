@@ -242,16 +242,19 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     });
 
     this.set("items", [names, values]);
+
     return this;
   }
 
   protected _setColumns(data: Array<ColumnData> = []) {
     this._setColumnItems(data);
+
     return this;
   }
 
   setColumns(data: Array<ColumnData>): this {
     this._setColumns(data);
+
     return this;
   }
 
@@ -646,6 +649,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     // Some shapes (e.g. relation-only) might not have attributes to validate
     if (!("attributes" in this.serviceModel) || !this.serviceModel.attributes) {
       this.hasAttributeValidationErrors = false;
+
       return;
     }
 
@@ -675,6 +679,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
         if (typeof value === "object") {
           return Object.keys(value as Record<string, unknown>).length === 0;
         }
+
         return false;
       };
 
@@ -921,6 +926,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
       embedded_entities: embeddedShape.serviceModel.embedded_entities || [],
       inter_service_relations: embeddedShape.serviceModel.inter_service_relations || [],
     });
+
     return sanitizeAttributes(fields, filteredAttributes);
   }
 
@@ -934,6 +940,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     // Only include Core and Relation types (embedded entities are nested in their parent's attributes)
     if (this.entityType !== "core" && this.entityType !== "relation") {
       this.orderItem = null;
+
       return;
     }
 
@@ -1007,6 +1014,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     if (this.orderItem === null) {
       this.updateOrderItem(canvasState);
     }
+
     return this.orderItem;
   }
 }

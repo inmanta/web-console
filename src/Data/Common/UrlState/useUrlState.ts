@@ -36,7 +36,9 @@ export function useUrlStateHandler<Data>(
     areEqual(value, config.default) ? undefined : config.serialize(value);
 
   const setValue = (newValue: Data) => {
-    if (areEqual(newValue, stableValue)) return;
+    if (areEqual(newValue, stableValue)) {
+      return;
+    }
 
     const serialized = getSerializedValue(newValue);
     const newSearch = searchHelper.stringify({

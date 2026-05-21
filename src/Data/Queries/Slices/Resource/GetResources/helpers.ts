@@ -47,7 +47,9 @@ function isCompoundStateKey(value: string): value is Resource.CompoundStateKey {
  * For compound states, it maps status values to their corresponding field with an eq operator.
  */
 export function mapStatusToGraphQLFilter(statusses?: string[]): GraphQLStateFilter {
-  if (!statusses?.length) return {};
+  if (!statusses?.length) {
+    return {};
+  }
 
   const filter: GraphQLStateFilter = {};
 
@@ -78,7 +80,9 @@ export function mapStatusToGraphQLFilter(statusses?: string[]): GraphQLStateFilt
       continue;
     }
 
-    if (!isCompoundStateKey(key)) continue;
+    if (!isCompoundStateKey(key)) {
+      continue;
+    }
 
     const { field, value } = STATUS_FIELD_MAP[key];
 

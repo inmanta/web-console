@@ -22,19 +22,23 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   }).useContinuous();
 
   useEffect(() => {
-    if (!envID) return;
+    if (!envID) {
+      return;
+    }
 
-    if (isError && error)
+    if (isError && error) {
       notifyError({
         title: words("error"),
         message: error.message,
       });
+    }
 
-    if (isSuccess && (data?.errors?.length || 0) > 0)
+    if (isSuccess && (data?.errors?.length || 0) > 0) {
       notifyError({
         title: words("error"),
         message: (data?.errors ?? []).join(", "),
       });
+    }
   }, [isError, error, isSuccess, data, envID, notifyError]);
 
   const hasErrors = !!envID && (isError || (isSuccess && (data?.errors?.length ?? 0) > 0));
@@ -84,7 +88,9 @@ const getVariantFromNotifications = (
     return NotificationBadgeVariant.attention;
   }
 
-  if (notifications.some(isUnread)) return NotificationBadgeVariant.unread;
+  if (notifications.some(isUnread)) {
+    return NotificationBadgeVariant.unread;
+  }
 
   return NotificationBadgeVariant.read;
 };
