@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
   ColumnsIcon,
   HistoryIcon,
@@ -8,6 +8,7 @@ import {
   TableIcon,
 } from "@patternfly/react-icons";
 import { Details } from "@/Core/Domain/Resource/Resource";
+import { useUrlStateWithExpansion } from "@/Data";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
@@ -33,26 +34,51 @@ interface Props {
   data: Details;
 }
 
-/**
- * The Tabs component.
- *
- * This component is responsible of displaying the tabs of the resource details.
- *
- * @Props {Props} - The props of the component
- *  @prop {string} id - The id of the resource
- *  @prop {TabKey} activeTab - The active tab
- *  @prop {(tab: TabKey) => void} setActiveTab - The function to set the active tab
- *  @prop {Details} data - The data of the resource
- *
- * @returns {React.FC<Props>} A React Component displaying the tabs of the resource details
- */
+export const REFERENCES_EXPANSION_KEY = "references-expansion";
+
 export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab, data }) => {
+  const [isReferenceExpanded, onReferenceExpansion] = useUrlStateWithExpansion({
+    route: "ResourceDetails",
+    key: REFERENCES_EXPANSION_KEY,
+  });
+  const pendingExpandRef = useRef<string | null>(null);
+
+  const onNavigateToReference = useCallback(
+    (referenceId: string) => {
+      pendingExpandRef.current = referenceId;
+      setActiveTab(TabKey.References);
+    },
+    [setActiveTab]
+  );
+
+  /**
+   * `setActiveTab` and `onReferenceExpansion` both write to the URL via
+   * `react-router`'s `replace`, each based on the location captured at
+   * render time. Calling them in the same tick makes the second overwrite
+   * the first. We therefore defer the expansion to a follow-up render once
+   * the tab change has landed in the URL.
+   */
+  useEffect(() => {
+    const pending = pendingExpandRef.current;
+
+    if (pending === null) {
+      return;
+    }
+    if (isReferenceExpanded(pending)) {
+      pendingExpandRef.current = null;
+
+      return;
+    }
+    pendingExpandRef.current = null;
+    onReferenceExpansion(pending)();
+  }, [isReferenceExpanded, onReferenceExpansion]);
+
   return (
     <IconTabs
       activeTab={activeTab}
       onChange={setActiveTab}
       tabs={[
-        attributesTab(data),
+        attributesTab(data, onNavigateToReference),
         referencesTab(data),
         requiresTab(data),
         historyTab(id, data),
@@ -70,11 +96,14 @@ const requiresTab = (data: Details): TabDescriptor<TabKey> => ({
   view: <RequiresTab details={data} />,
 });
 
-const attributesTab = (data: Details): TabDescriptor<TabKey> => ({
+const attributesTab = (
+  data: Details,
+  onNavigateToReference: (id: string) => void
+): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("resources.attributes.title"),
   icon: <ListIcon />,
-  view: <AttributesTab details={data} />,
+  view: <AttributesTab details={data} onNavigateToReference={onNavigateToReference} />,
 });
 
 const referencesTab = (data: Details): TabDescriptor<TabKey> => ({

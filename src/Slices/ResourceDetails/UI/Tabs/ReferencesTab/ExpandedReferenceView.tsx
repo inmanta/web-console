@@ -24,6 +24,7 @@ import { MjsonValueView } from "./MjsonValueView";
 interface Props {
   reference: Reference;
   onNavigateToReference: (id: string) => void;
+  getReferenceType: (id: string) => string | undefined;
 }
 
 const isMjsonArg = (arg: ReferenceArg): arg is MjsonArg => arg.type === "mjson";
@@ -39,6 +40,7 @@ const isMjsonArg = (arg: ReferenceArg): arg is MjsonArg => arg.type === "mjson";
 export const ExpandedReferenceView: React.FC<Props> = ({
   reference,
   onNavigateToReference,
+  getReferenceType,
 }) => {
   const linkedArgs = reference.args.filter(
     (arg): arg is Extract<ReferenceArg, { type: "reference" | "resource" }> =>
@@ -72,10 +74,10 @@ export const ExpandedReferenceView: React.FC<Props> = ({
                     <DescriptionListDescription>
                       {isReferenceArg(arg) ? (
                         <Label color="blue" onClick={() => onNavigateToReference(arg.id)}>
-                          → {arg.id}
+                          {getReferenceType(arg.id) ?? "reference"} · {arg.id}
                         </Label>
                       ) : (
-                        <Label color="grey">{arg.id}</Label>
+                        <Label color="grey">resource · {arg.id}</Label>
                       )}
                     </DescriptionListDescription>
                   </DescriptionListGroup>
@@ -93,6 +95,7 @@ export const ExpandedReferenceView: React.FC<Props> = ({
                       <MjsonValueView
                         arg={arg}
                         onNavigateToReference={onNavigateToReference}
+                        getReferenceType={getReferenceType}
                       />
                     </DescriptionListDescription>
                   </DescriptionListGroup>

@@ -9,6 +9,7 @@ interface Props {
   isExpanded: boolean;
   onToggle: () => void;
   onNavigateToReference: (id: string) => void;
+  getReferenceType: (id: string) => string | undefined;
   rowRef: React.RefObject<HTMLSpanElement | null>;
   numberOfColumns: number;
   index: number;
@@ -19,6 +20,7 @@ export const ReferencesTableRow: React.FC<Props> = ({
   isExpanded,
   onToggle,
   onNavigateToReference,
+  getReferenceType,
   rowRef,
   numberOfColumns,
   index,
@@ -44,6 +46,7 @@ export const ReferencesTableRow: React.FC<Props> = ({
             <ExpandedReferenceView
               reference={reference}
               onNavigateToReference={onNavigateToReference}
+              getReferenceType={getReferenceType}
             />
           </Td>
         </Tr>

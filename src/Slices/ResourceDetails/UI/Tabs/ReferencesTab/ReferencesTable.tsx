@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { useUrlStateWithExpansion } from "@/Data";
 import { scrollRowIntoView } from "@/UI/Utils";
@@ -16,6 +16,19 @@ export const ReferencesTable: React.FC<Props> = ({ references }) => {
     key: "references-expansion",
   });
   const rowRefs = useRef(new Map<string, React.RefObject<HTMLSpanElement | null>>());
+  const typeById = useMemo(() => {
+    const map = new Map<string, string>();
+
+    for (const reference of references) {
+      map.set(reference.id, reference.type);
+    }
+
+    return map;
+  }, [references]);
+  const getReferenceType = useCallback(
+    (id: string): string | undefined => typeById.get(id),
+    [typeById]
+  );
 
   const getRowRef = useCallback((id: string) => {
     let ref = rowRefs.current.get(id);
@@ -62,6 +75,7 @@ export const ReferencesTable: React.FC<Props> = ({ references }) => {
           isExpanded={isExpanded(reference.id)}
           onToggle={onExpansion(reference.id)}
           onNavigateToReference={onNavigateToReference}
+          getReferenceType={getReferenceType}
           rowRef={getRowRef(reference.id)}
           numberOfColumns={3}
         />
