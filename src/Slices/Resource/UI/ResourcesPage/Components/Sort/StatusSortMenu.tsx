@@ -32,6 +32,7 @@ export const reorderSorts = (
 ): MultiSort<Resource.StatusSortKey> =>
   newOrder.flatMap((id) => {
     const match = activeStatusSorts.find((entry) => entry.name === id);
+
     return match ? [match] : [];
   });
 
