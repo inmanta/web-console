@@ -31,7 +31,7 @@ export const ResourcesTable: React.FC<Props> = ({ rows, sort, setSort, ...props 
   const heads = columnHeads.map(({ apiName, displayName }, columnIndex) => {
     if (apiName === "status") {
       return (
-        <Th style={{ textAlign: "end" }} key={displayName}>
+        <Th style={{ textAlign: "end", overflow: "visible" }} key={displayName}>
           <StatusSortMenu sort={sort} setSort={setSort} />
         </Th>
       );
