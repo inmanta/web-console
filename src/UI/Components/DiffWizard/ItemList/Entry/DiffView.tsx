@@ -11,8 +11,8 @@ import { Diff } from "@/Core";
 // _ReactDiffViewer receives the exports namespace instead of the class, and React
 // throws "Element type is invalid" when it tries to render it.
 // Named imports (DiffMethod) are resolved separately and are unaffected.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ReactDiffViewer = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   typeof _ReactDiffViewer === "function" ? _ReactDiffViewer : (_ReactDiffViewer as any).default
 ) as typeof _ReactDiffViewer;
 
