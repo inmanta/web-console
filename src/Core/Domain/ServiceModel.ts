@@ -31,6 +31,8 @@ export interface AttributeAnnotations {
   web_icon?: string;
   web_title?: string;
   web_content_type?: string;
+  web_order?: number;
+  web_default_open?: boolean;
 }
 
 /**

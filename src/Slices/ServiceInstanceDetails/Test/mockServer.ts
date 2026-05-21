@@ -4,11 +4,14 @@ import {
   logsResponse,
   instanceData,
   instanceDataWithDocumentation,
+  instanceDataWithMultipleDocumentation,
   JSONSchema,
   serviceModel,
   serviceModelWithConfig,
   serviceModelWithDocumentation,
+  serviceModelWithMultipleDocumentation,
   logsWithDocumentationResponse,
+  logsWithMultipleDocumentationResponse,
 } from "./mockData";
 
 const getServiceModel = http.get("/lsm/v1/service_catalog/mobileCore", () => {
@@ -263,6 +266,43 @@ export const serverWithDocumentation = setupServer(
   getServiceModelWithDocumentation,
   getHistoryLogsWithDocumentation,
   getInstanceDataWithDocumentation,
+  getResources
+);
+
+const getServiceModelWithMultipleDocumentation = http.get(
+  "/lsm/v1/service_catalog/mobileCore",
+  async () => {
+    return HttpResponse.json({
+      data: serviceModelWithMultipleDocumentation,
+    });
+  }
+);
+
+const getInstanceDataWithMultipleDocumentation = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab",
+  async () => {
+    return HttpResponse.json({
+      data: instanceDataWithMultipleDocumentation,
+    });
+  }
+);
+
+const getHistoryLogsWithMultipleDocumentation = http.get(
+  "/lsm/v1/service_inventory/mobileCore/1d96a1ab/log",
+  async () => {
+    return HttpResponse.json(logsWithMultipleDocumentationResponse);
+  }
+);
+
+/**
+ * Setup a test server with multiple documentation sections that carry
+ * web_order and web_default_open annotations, used to test sorting,
+ * default-open, and multi-expand behaviour.
+ */
+export const serverWithMultipleDocumentation = setupServer(
+  getServiceModelWithMultipleDocumentation,
+  getHistoryLogsWithMultipleDocumentation,
+  getInstanceDataWithMultipleDocumentation,
   getResources
 );
 
