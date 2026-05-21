@@ -71,7 +71,7 @@ const applyMutatorSubstitutions = (
 
 export const AttributesTab: React.FC<Props> = ({ details, onNavigateToReference }) => {
   const [viewMode, setViewMode] = useState<ViewMode>("structured");
-  const [isEditorExpanded, setIsEditorExpanded] = useState(false);
+  const [isEditorExpanded, setIsEditorExpanded] = useState(true);
 
   const { substituted, mutatedKeys, getReferenceType } = useMemo(() => {
     const mutators = extractMutators(details.attributes);
@@ -111,84 +111,80 @@ export const AttributesTab: React.FC<Props> = ({ details, onNavigateToReference 
     .sort()
     .map((key) => ({ key, value: substituted[key] }));
 
-  const editorHeight = isEditorExpanded
-    ? "calc(100vh - 300px)"
-    : rawJson.split("\n").length > 15
-      ? "400px"
-      : "sizeToFit";
+  const editorHeight = isEditorExpanded ? "calc(100vh - 300px)" : "sizeToFit";
 
   return (
-    <Card isCompact>
-      <CardBody>
-        <Stack hasGutter>
-          <StackItem>
-            <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
-              <FlexItem>
-                <ToggleGroup aria-label="Desired State view toggle" isCompact>
-                  <ToggleGroupItem
-                    text={words("resources.attributes.view.structured")}
-                    buttonId="desired-state-view-structured"
-                    isSelected={viewMode === "structured"}
-                    onChange={() => setViewMode("structured")}
-                  />
-                  <ToggleGroupItem
-                    text={words("resources.attributes.view.json")}
-                    buttonId="desired-state-view-json"
-                    isSelected={viewMode === "json"}
-                    onChange={() => setViewMode("json")}
-                  />
-                </ToggleGroup>
-              </FlexItem>
-            </Flex>
-          </StackItem>
-          {viewMode === "json" ? (
-            <StackItem>
-              <CodeEditor
-                isReadOnly
-                isDarkTheme={getThemePreference() === "dark"}
-                code={rawJson}
-                isLanguageLabelVisible
-                language={Language.json}
-                isDownloadEnabled
-                customControls={
-                  <>
-                    <CodeEditorCopyControl code={rawJson} />
-                    <CodeEditorHeightToggleControl
-                      code={rawJson}
-                      isExpanded={isEditorExpanded}
-                      onToggle={() => setIsEditorExpanded(!isEditorExpanded)}
-                    />
-                  </>
-                }
-                height={editorHeight}
+    <Stack hasGutter>
+      <StackItem>
+        <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+          <FlexItem>
+            <ToggleGroup aria-label="Desired State view toggle" isCompact>
+              <ToggleGroupItem
+                text={words("resources.attributes.view.structured")}
+                buttonId="desired-state-view-structured"
+                isSelected={viewMode === "structured"}
+                onChange={() => setViewMode("structured")}
               />
-            </StackItem>
-          ) : (
-            <>
-              {mutatedEntries.length > 0 && (
-                <StackItem>
-                  <DescriptionList isHorizontal>
-                    {mutatedEntries.map(({ key, value }) => (
-                      <MutatedAttributeRow
-                        key={key}
-                        attributeKey={key}
-                        value={value}
-                        onNavigateToReference={onNavigateToReference}
-                        getReferenceType={getReferenceType}
-                      />
-                    ))}
-                  </DescriptionList>
-                </StackItem>
-              )}
-              {classifiedAttributes.length > 0 && (
-                <StackItem>
-                  <AttributeList attributes={classifiedAttributes} />
-                </StackItem>
-              )}
-            </>
-          )}
-        </Stack>
-      </CardBody>
-    </Card>
+              <ToggleGroupItem
+                text={words("resources.attributes.view.json")}
+                buttonId="desired-state-view-json"
+                isSelected={viewMode === "json"}
+                onChange={() => setViewMode("json")}
+              />
+            </ToggleGroup>
+          </FlexItem>
+        </Flex>
+      </StackItem>
+      <StackItem isFilled>
+        {viewMode === "json" ? (
+          <CodeEditor
+            isReadOnly
+            isDarkTheme={getThemePreference() === "dark"}
+            code={rawJson}
+            isLanguageLabelVisible
+            language={Language.json}
+            isDownloadEnabled
+            customControls={
+              <>
+                <CodeEditorCopyControl code={rawJson} />
+                <CodeEditorHeightToggleControl
+                  code={rawJson}
+                  isExpanded={isEditorExpanded}
+                  onToggle={() => setIsEditorExpanded(!isEditorExpanded)}
+                />
+              </>
+            }
+            height={editorHeight}
+          />
+        ) : (
+          <Card isCompact>
+            <CardBody>
+              <Stack hasGutter>
+                {mutatedEntries.length > 0 && (
+                  <StackItem>
+                    <DescriptionList isHorizontal>
+                      {mutatedEntries.map(({ key, value }) => (
+                        <MutatedAttributeRow
+                          key={key}
+                          attributeKey={key}
+                          value={value}
+                          onNavigateToReference={onNavigateToReference}
+                          getReferenceType={getReferenceType}
+                        />
+                      ))}
+                    </DescriptionList>
+                  </StackItem>
+                )}
+                {classifiedAttributes.length > 0 && (
+                  <StackItem>
+                    <AttributeList attributes={classifiedAttributes} />
+                  </StackItem>
+                )}
+              </Stack>
+            </CardBody>
+          </Card>
+        )}
+      </StackItem>
+    </Stack>
   );
 };
