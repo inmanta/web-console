@@ -12,6 +12,7 @@ export function usePrompt(message: string, when = true) {
     if (when) {
       return !window.confirm(message);
     }
+
     return false;
   }, [message, when]);
 
@@ -30,6 +31,7 @@ export function usePrompt(message: string, when = true) {
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
+
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };

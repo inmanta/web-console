@@ -39,6 +39,7 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
     }),
     http.post("lsm/v1/callbacks", async () => {
       data.push({ ...Callback.a, callback_id: "1234" });
+
       return HttpResponse.json();
     })
   );
@@ -97,6 +98,7 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
     }),
     http.delete("lsm/v1/callbacks/79e7d0b6-5f81-43ce-ade6-a71bc5fb445f", async () => {
       data = data.slice(1);
+
       return HttpResponse.json();
     })
   );

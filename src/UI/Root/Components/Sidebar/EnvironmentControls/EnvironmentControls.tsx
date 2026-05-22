@@ -42,5 +42,6 @@ export const EnvironmentControls: React.FC = () => {
       </Stack>
     );
   }
+
   return null;
 };

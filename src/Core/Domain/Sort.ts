@@ -14,11 +14,15 @@ export const equals = (a: Sort, b: Sort): boolean => a.name === b.name && a.orde
 export const serialize = (sort: Sort): string => `${sort.name}.${sort.order}`;
 
 export const parse = <Key extends string = string>(value: unknown): Sort<Key> | undefined => {
-  if (typeof value !== "string") return undefined;
+  if (typeof value !== "string") {
+    return undefined;
+  }
 
   const [name, order] = value.split(".");
 
-  if (!orderIsValid(order)) return undefined;
+  if (!orderIsValid(order)) {
+    return undefined;
+  }
 
   return { name: name as Key, order };
 };

@@ -121,6 +121,7 @@ describe("AppAlertProvider", () => {
   it("does not throw when notify is called without testId, message or variant", async () => {
     const Wrapper = () => {
       const { notify } = useAppAlert();
+
       return <button onClick={() => notify({ title: "No testid" })}>No TestId</button>;
     };
 

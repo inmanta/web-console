@@ -165,6 +165,7 @@ describe("FilterWidgetComponent", () => {
   it("toggles the purged status via the switch in the resource tab", async () => {
     const Wrapper = () => {
       const [filter, setFilter] = useState<Resource.Filter>({});
+
       return (
         <FilterWidgetComponent
           filter={filter}

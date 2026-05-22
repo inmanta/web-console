@@ -34,7 +34,9 @@ const OidcInnerProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   }
 
   const getUser = (): string | null => {
-    if (!auth.user?.profile) return null;
+    if (!auth.user?.profile) {
+      return null;
+    }
 
     return (
       (auth.user.profile.preferred_username as string) ||

@@ -101,6 +101,7 @@ export const checkEmbeddedEntityConnections = (
     getEmbeddedEntityKey(embeddedEntity),
     getEmbeddedEntityKey(embeddedEntity)
   );
+
   return checkConnectionRequirement(shape, configuration);
 };
 
@@ -117,6 +118,7 @@ export const checkInterServiceRelationConnections = (
     getInterServiceRelationKey(relation),
     relation.name
   );
+
   return checkConnectionRequirement(shape, configuration);
 };
 
@@ -133,6 +135,7 @@ export const getEmbeddedEntityMissingConnections = (
     getEmbeddedEntityKey(embeddedEntity),
     getEmbeddedEntityKey(embeddedEntity)
   );
+
   return getMissingConnectionDetails(shape, configuration);
 };
 
@@ -149,5 +152,6 @@ export const getInterServiceRelationMissingConnections = (
     getInterServiceRelationKey(relation),
     relation.name
   );
+
   return getMissingConnectionDetails(shape, configuration);
 };

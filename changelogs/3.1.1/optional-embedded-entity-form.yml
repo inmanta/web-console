@@ -1,0 +1,5 @@
+description: Bugfix for optional embedded entities in the service instance form, ensuring that they are not automatically added when they are optional, even when they contain required nested attributes.
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

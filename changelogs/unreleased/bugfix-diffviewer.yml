@@ -1,0 +1,5 @@
+description: |
+  Fixed an issue where the DiffViewer component was not rendering due to an import error caused by a CJS interop bug in Vite 8 / Rollup. 
+  Updated the import statement to handle both default and named exports correctly, ensuring that the DiffViewer component renders as expected.
+change-type: patch
+destination-branches: [master, iso9]
