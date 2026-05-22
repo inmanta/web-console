@@ -412,11 +412,21 @@ describe("EditInstancePage", () => {
       "pf-m-disabled"
     );
 
-    expect(within(embedded_base).getByTestId("DictInput-dict")).toBeDisabled();
-    expect(within(embedded_base).getByTestId("DictInput-editableDict")).not.toBeDisabled();
+    expect(within(embedded_base).getByTestId("DictInput-dict")).toHaveAttribute(
+      "aria-disabled",
+      "true"
+    );
+    expect(within(embedded_base).getByTestId("DictInput-editableDict")).not.toHaveAttribute(
+      "aria-disabled"
+    );
 
-    expect(within(embedded_base).getByTestId("DictInput-dict?")).toBeDisabled();
-    expect(within(embedded_base).getByTestId("DictInput-editableDict?")).not.toBeDisabled();
+    expect(within(embedded_base).getByTestId("DictInput-dict?")).toHaveAttribute(
+      "aria-disabled",
+      "true"
+    );
+    expect(within(embedded_base).getByTestId("DictInput-editableDict?")).not.toHaveAttribute(
+      "aria-disabled"
+    );
 
     //check controls of nested entities
 

@@ -1,5 +1,3 @@
-import type { editor } from "monaco-editor";
-
 export type DictPrimitive = string | number | boolean;
 export type DictValue = Record<string, DictPrimitive | object>;
 
@@ -12,8 +10,13 @@ export type DictValue = Record<string, DictPrimitive | object>;
  * @returns {string} A pretty-printed JSON string representation of the object.
  */
 export function toText(value: unknown): string {
-  if (!value || typeof value !== "object") return "{}";
-  if (Object.keys(value).length === 0) return "{}";
+  if (!value || typeof value !== "object") {
+    return "{}";
+  }
+  if (Object.keys(value).length === 0) {
+    return "{}";
+  }
+
   return JSON.stringify(value, null, 2);
 }
 
@@ -32,32 +35,9 @@ export function toDict(text: string): DictValue | null {
     if (typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)) {
       return parsed;
     }
+
     return null;
   } catch {
     return null;
   }
 }
-
-/**
- * Monaco Editor configuration for JSON dictionary editing.
- *
- * Disables most visual clutter (minimap, line numbers, scrollbars)
- * and enables auto-formatting on paste and type.
- */
-export const EDITOR_OPTIONS: editor.IStandaloneEditorConstructionOptions = {
-  minimap: { enabled: false },
-  scrollBeyondLastLine: false,
-  wordWrap: "off",
-  lineNumbers: "off",
-  folding: false,
-  lineDecorationsWidth: 0,
-  renderLineHighlight: "line",
-  overviewRulerLanes: 0,
-  hideCursorInOverviewRuler: true,
-  scrollbar: {
-    vertical: "hidden",
-    horizontal: "hidden",
-  },
-  formatOnPaste: true,
-  formatOnType: true,
-};

@@ -2,16 +2,6 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { DictField } from "@/Core";
 import { DictFieldInput } from "./DictFieldInput";
 
-vi.mock("@monaco-editor/react", () => ({
-  Editor: ({ onChange, value }: { onChange: (v: string) => void; value: string }) => (
-    <textarea
-      data-testid="monaco-editor"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
-  ),
-}));
-
 const field: DictField = {
   name: "dict",
   description: "A dictionary field",
@@ -28,8 +18,9 @@ describe("DictFieldInput", () => {
   test("renders with the correct initial value", () => {
     render(<DictFieldInput field={field} value={defaultValue} onChange={vi.fn()} />);
 
-    const hiddenInput = screen.getByTestId("DictInput-dict");
-    const parsedValue = JSON.parse(hiddenInput.getAttribute("value") ?? "{}");
+    // code-editor-content is consistent with what's present in the test-setup.ts
+    const content = screen.getByTestId("code-editor-content");
+    const parsedValue = JSON.parse(content.textContent ?? "{}");
 
     expect(parsedValue).toEqual(defaultValue);
   });
@@ -39,7 +30,7 @@ describe("DictFieldInput", () => {
 
     render(<DictFieldInput field={field} value={{}} onChange={onChange} />);
 
-    const editor = screen.getByTestId("monaco-editor");
+    const editor = screen.getByTestId("code-editor-textarea");
 
     fireEvent.change(editor, { target: { value: '{"key":"value"}' } });
 
@@ -51,29 +42,25 @@ describe("DictFieldInput", () => {
 
     render(<DictFieldInput field={field} value={{}} onChange={onChange} />);
 
-    const editor = screen.getByTestId("monaco-editor");
+    const editor = screen.getByTestId("code-editor-textarea");
 
     fireEvent.change(editor, { target: { value: "not valid json" } });
 
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  test("hidden input is disabled when readOnly is true", () => {
+  test("editor is disabled when readOnly is true", () => {
     render(<DictFieldInput field={field} value={defaultValue} onChange={vi.fn()} readOnly />);
 
-    const hiddenInput = screen.getByTestId("DictInput-dict");
-
-    expect(hiddenInput).toBeDisabled();
+    expect(screen.getByTestId("DictInput-dict")).toHaveAttribute("aria-disabled", "true");
   });
 
-  test("hidden input is enabled when readOnly is false", () => {
+  test("editor is not disabled when readOnly is false", () => {
     render(
       <DictFieldInput field={field} value={defaultValue} onChange={vi.fn()} readOnly={false} />
     );
 
-    const hiddenInput = screen.getByTestId("DictInput-dict");
-
-    expect(hiddenInput).not.toBeDisabled();
+    expect(screen.getByTestId("DictInput-dict")).not.toHaveAttribute("aria-disabled");
   });
 
   test("renders the required asterisk when isOptional is false", () => {

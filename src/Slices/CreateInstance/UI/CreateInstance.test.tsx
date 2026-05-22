@@ -43,8 +43,12 @@ function setup(service) {
   return { component };
 }
 
-const getDictValue = (testId: string, container: HTMLElement = document.body) =>
-  JSON.parse(within(container).getByTestId(testId).getAttribute("value") ?? "{}");
+const getDictValue = (testId: string, container: HTMLElement = document.body) => {
+  const dictContainer = within(container).getByTestId(testId);
+  const content = within(dictContainer).getByTestId("code-editor-content");
+
+  return JSON.parse(content.textContent ?? "{}");
+};
 
 describe("CreateInstance", () => {
   const server = setupServer();
