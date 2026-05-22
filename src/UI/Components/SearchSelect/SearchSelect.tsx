@@ -12,7 +12,11 @@ import {
   SelectOption,
 } from "@patternfly/react-core";
 import { words } from "@/UI";
-import { TEST_IDS } from "./SearchSelect.test";
+
+export const TEST_IDS = {
+  toggle: "swm-toggle",
+  input: "swm-input",
+};
 
 export interface SearchSelectProps {
   value: string;
@@ -20,6 +24,17 @@ export interface SearchSelectProps {
   options: string[];
 }
 
+/**
+ * A searchable select dropdown following the PatternFly "inline search filter" menu pattern.
+ *
+ * The toggle button shows the currently selected value. When opened, a search field at the
+ * top of the dropdown filters the option list in real time (case-insensitive substring match).
+ * Selecting an option calls {@link SearchSelectProps.onChange} and closes the menu.
+ * Typing a query that yields no matches shows a disabled "No results found" item.
+ *
+ * @param {SearchSelectProps} props - Component props.
+ * @returns {React.ReactElement} The rendered select menu.
+ */
 export function SearchSelect({ value, onChange, options }: SearchSelectProps): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");

@@ -1,12 +1,7 @@
 import { ComponentProps, useState } from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { SearchSelect } from "./SearchSelect";
-
-export const TEST_IDS = {
-  toggle: "swm-toggle",
-  input: "swm-input",
-};
+import { SearchSelect, TEST_IDS } from "./SearchSelect";
 
 const OPTIONS = ["Apple", "Banana", "Blueberry", "Cherry", "Grape"];
 
