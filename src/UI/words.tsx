@@ -53,6 +53,7 @@ const dict = {
   success: "Success",
   "success.title": "Success",
   "info.title": "Info",
+  noResults: "No results found",
 
   /**
    * Error related text

@@ -97,9 +97,6 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
                 value={leftVersion}
                 onChange={setLeftVersion}
                 options={availableVersions}
-                placeholder={words("instanceDetails.searchPlaceholder")}
-                filterStrategy="startsWith"
-                maxItems={5}
               />
             </FlexItem>
             <FlexItem flex={{ default: "flex_1" }}>
@@ -136,9 +133,6 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
                 value={rightVersion}
                 onChange={setRightVersion}
                 options={availableVersions}
-                placeholder={words("instanceDetails.searchPlaceholder")}
-                filterStrategy="startsWith"
-                maxItems={5}
               />
             </FlexItem>
             <FlexItem flex={{ default: "flex_1" }}>

@@ -1,185 +1,109 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
-  Select,
-  SelectList,
-  SelectOption,
+  Divider,
+  Menu,
+  MenuContainer,
+  MenuContent,
+  MenuList,
+  MenuSearch,
+  MenuSearchInput,
   MenuToggle,
-  MenuToggleElement,
-  TextInputGroup,
-  TextInputGroupMain,
-  TextInputGroupUtilities,
-  Button,
+  SearchInput,
+  SelectOption,
 } from "@patternfly/react-core";
-import { TimesIcon } from "@patternfly/react-icons";
+import { words } from "@/UI";
+import { TEST_IDS } from "./SearchSelect.test";
 
-export interface SearchSelectProps<T extends string = string> {
-  value: T | string;
+export interface SearchSelectProps {
+  value: string;
   onChange: (value: string) => void;
-  options: T[];
-  placeholder?: string;
-  filterStrategy?: "startsWith" | "includes" | "all" | ((option: string, value: string) => boolean);
-  maxItems?: number;
+  options: string[];
 }
 
-export const TEST_IDS = {
-  input: "swd-input",
-  menu: "swd-menu",
-  menuItem: (option: string) => `swd-item-${option}`,
-};
-
-/**
- * The SearchSelect component.
- *
- * Provides a searchable typeahead select input with a dropdown menu.
- * Supports filtering strategies (startsWith, includes, all, or custom function),
- * optional result limiting, and prioritization of exact matches.
- *
- * @template T - The type of selectable option strings.
- *
- * @props {SearchSelectProps<T>} - Component props.
- *  @prop {T | string} value - Current input value controlling the component.
- *  @prop {(value: string) => void} onChange - Callback triggered when the input value changes or an option is selected.
- *  @prop {T[]} options - List of selectable options.
- *  @prop {string} [placeholder] - Placeholder text shown in the input field.
- *  @prop {"startsWith" | "includes" | "all" | ((option: string, value: string) => boolean)} [filterStrategy]
- *    - Strategy used to filter options based on input.
- *      - "startsWith": matches options beginning with the input
- *      - "includes": matches options containing the input
- *      - "all": disables filtering
- *      - function: custom filtering logic
- *  @prop {number} [maxItems] - Maximum number of items to display in the dropdown.
- *
- * @returns {React.ReactElement} The rendered searchable select menu component.
- */
-export function SearchSelect<T extends string = string>({
-  value,
-  onChange,
-  options,
-  placeholder = "Search or select…",
-  filterStrategy = "startsWith",
-  maxItems,
-}: SearchSelectProps<T>): React.ReactElement {
+export function SearchSelect({ value, onChange, options }: SearchSelectProps): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const filter = useCallback(
-    (option: string, value: string): boolean => {
-      if (!value) {
-        return true;
-      }
-
-      if (typeof filterStrategy === "function") {
-        return filterStrategy(option, value);
-      }
-
-      const lower = value.toLowerCase();
-
-      if (filterStrategy === "all") {
-        return true;
-      }
-
-      if (filterStrategy === "includes") {
-        return option.toLowerCase().includes(lower);
-      }
-
-      return option.toLowerCase().startsWith(lower);
-    },
-    [filterStrategy]
-  );
-
-  const filtered = useMemo(() => {
-    // First apply the filtering strategy to all options based on the current value
-    const filteredAll = options.filter((option) => filter(option, value));
-
-    // If there is no input value, just return a truncated list (if maxItems is set)
-    // This avoids unnecessary prioritization or sorting work
-    if (!value) {
-      return filteredAll.slice(0, maxItems ?? options.length);
-    }
-
-    // Try to find an exact match (case-insensitive) so it can be prioritized
-    const exact = filteredAll.find((option) => option.toLowerCase() === value.toLowerCase());
-
-    // If an exact match exists, move it to the top of the list
-    // Otherwise, keep the original filtered order
-    const prioritized = exact
-      ? [exact, ...filteredAll.filter((option) => option !== exact)]
-      : filteredAll;
-
-    // Finally, apply max item limit if provided
-    return prioritized.slice(0, maxItems ?? options.length);
-  }, [options, value, filter, maxItems]);
-
-  const handleSearchChange = (_event: React.FormEvent<HTMLInputElement>, val: string) => {
-    onChange(val);
-    setIsOpen(true);
-  };
+  const [searchValue, setSearchValue] = useState("");
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = (
-    _event: React.MouseEvent | undefined,
-    selected: string | number | undefined
+    _event: React.MouseEvent<Element, MouseEvent> | undefined,
+    itemId: string | number | undefined
   ) => {
-    onChange(String(selected ?? ""));
+    onChange(String(itemId ?? ""));
     setIsOpen(false);
+    setSearchValue("");
   };
 
-  const handleClear = () => {
-    onChange("");
-    setIsOpen(true);
-    inputRef.current?.focus();
+  const handleSearchChange = (val: string) => {
+    if (!isOpen) {
+      setIsOpen(true);
+    }
+    setSearchValue(val);
   };
 
-  const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
+  const menuItems = options
+    .filter((o) => o.toLowerCase().includes(searchValue.toLowerCase()))
+    .map((option) => (
+      <SelectOption key={option} itemId={option}>
+        {option}
+      </SelectOption>
+    ));
+
+  if (searchValue && menuItems.length === 0) {
+    menuItems.push(
+      <SelectOption isDisabled key="no result">
+        {words("noResults")}
+      </SelectOption>
+    );
+  }
+
+  const toggle = (
     <MenuToggle
       ref={toggleRef}
-      variant="typeahead"
+      data-testid={TEST_IDS.toggle}
       onClick={() => setIsOpen((o) => !o)}
       isExpanded={isOpen}
       isFullWidth
     >
-      <TextInputGroup isPlain>
-        <TextInputGroupMain
-          value={value}
-          onClick={() => setIsOpen(true)}
-          onChange={(event, val) => handleSearchChange(event, val)}
-          innerRef={inputRef}
-          placeholder={placeholder}
-          role="combobox"
-          isExpanded={isOpen}
-          inputProps={{
-            "data-testid": TEST_IDS.input,
-            onFocus: () => setIsOpen(true),
-          }}
-        />
-        <TextInputGroupUtilities {...(!value ? { style: { display: "none" } } : {})}>
-          <Button variant="plain" onClick={handleClear} aria-label="Reset" icon={<TimesIcon />} />
-        </TextInputGroupUtilities>
-      </TextInputGroup>
+      {value || words("instanceDetails.searchPlaceholder")}
     </MenuToggle>
   );
 
+  const menu = (
+    <Menu ref={menuRef} onSelect={handleSelect} activeItemId={value} isScrollable>
+      <MenuSearch>
+        <MenuSearchInput>
+          <SearchInput
+            value={searchValue}
+            aria-label={words("instanceDetails.searchPlaceholder")}
+            placeholder={words("instanceDetails.searchPlaceholder")}
+            onChange={(_event, val) => handleSearchChange(val)}
+            onClear={(event) => {
+              event.stopPropagation();
+              handleSearchChange("");
+            }}
+            data-testid={TEST_IDS.input}
+          />
+        </MenuSearchInput>
+      </MenuSearch>
+      <Divider />
+      <MenuContent maxMenuHeight="200px">
+        <MenuList>{menuItems}</MenuList>
+      </MenuContent>
+    </Menu>
+  );
+
   return (
-    <Select
-      isOpen={isOpen}
-      selected={value}
-      onSelect={handleSelect}
-      onOpenChange={setIsOpen}
+    <MenuContainer
+      menu={menu}
+      popperProps={{ placement: "bottom" }}
+      menuRef={menuRef}
       toggle={toggle}
-      variant="typeahead"
-      data-testid={TEST_IDS.menu}
-    >
-      <SelectList>
-        {filtered.map((option) => (
-          <SelectOption
-            key={option}
-            aria-label={TEST_IDS.menuItem(option)}
-            value={option}
-            isSelected={option === value}
-          >
-            {option}
-          </SelectOption>
-        ))}
-      </SelectList>
-    </Select>
+      toggleRef={toggleRef}
+      isOpen={isOpen}
+      onOpenChange={setIsOpen}
+      onOpenChangeKeys={["Escape"]}
+    />
   );
 }

@@ -252,11 +252,11 @@ describe("ServiceInstanceDetailsPage", () => {
     expect(leftSelect).toHaveValue("active_attributes");
     expect(rightSelect).toHaveValue("candidate_attributes");
 
-    const versionInputs = screen.getAllByTestId("swd-input");
+    const versionToggles = screen.getAllByTestId("swm-toggle");
 
-    expect(versionInputs).toHaveLength(2);
-    expect(versionInputs[0]).toHaveValue("4");
-    expect(versionInputs[1]).toHaveValue("4");
+    expect(versionToggles).toHaveLength(2);
+    expect(versionToggles[0]).toHaveTextContent("4");
+    expect(versionToggles[1]).toHaveTextContent("4");
 
     // There shouldn't be a documentation tab for this Instance and ServiceModel
     expect(screen.queryByText("Documentation")).not.toBeInTheDocument();
