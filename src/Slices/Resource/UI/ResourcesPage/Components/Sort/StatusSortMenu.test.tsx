@@ -25,8 +25,7 @@ vi.mock("@patternfly/react-drag-drop", () => ({
   ),
 }));
 
-const makeSort = (entries: Array<{ name: Resource.StatusSortKey; order: "asc" | "desc" }>) =>
-  entries;
+type ActiveStatusSorts = { name: Resource.StatusSortKey; order: "asc" | "desc" }[];
 
 const emptySort: MultiSort<Resource.SortKey> = [];
 
@@ -51,12 +50,10 @@ describe("StatusSortMenu", () => {
     });
 
     it("reflects the number of active status sorts", () => {
-      const { badge } = setup(
-        makeSort([
-          { name: "blocked", order: "asc" },
-          { name: "compliance", order: "desc" },
-        ])
-      );
+      const { badge } = setup([
+        { name: "blocked", order: "asc" },
+        { name: "compliance", order: "desc" },
+      ]);
       expect(badge()).toHaveTextContent("2");
     });
 
@@ -100,12 +97,10 @@ describe("StatusSortMenu", () => {
     });
 
     it("calls setSort without the deactivated key", async () => {
-      const { toggle, setSort } = setup(
-        makeSort([
-          { name: "blocked", order: "desc" },
-          { name: "compliance", order: "desc" },
-        ])
-      );
+      const { toggle, setSort } = setup([
+        { name: "blocked", order: "desc" },
+        { name: "compliance", order: "desc" },
+      ]);
       await userEvent.click(toggle());
       fireEvent.click(screen.getByText("resources.sort.label.blocked"));
 
@@ -116,10 +111,10 @@ describe("StatusSortMenu", () => {
 
   describe("reorderSorts - drag drop reorder logic", () => {
     it("returns active sorts in the new order", () => {
-      const activeStatusSorts = makeSort([
+      const activeStatusSorts: ActiveStatusSorts = [
         { name: "blocked", order: "asc" },
         { name: "compliance", order: "desc" },
-      ]);
+      ];
 
       const result = reorderSorts(["compliance", "blocked"], activeStatusSorts);
 
@@ -130,7 +125,7 @@ describe("StatusSortMenu", () => {
     });
 
     it("omits inactive keys from the result", () => {
-      const activeStatusSorts = makeSort([{ name: "blocked", order: "asc" }]);
+      const activeStatusSorts: ActiveStatusSorts = [{ name: "blocked", order: "asc" }];
 
       const result = reorderSorts(["compliance", "blocked", "isDeploying"], activeStatusSorts);
 

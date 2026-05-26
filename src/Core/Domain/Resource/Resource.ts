@@ -222,7 +222,7 @@ const STATUS_SORT_KEY_SET: ReadonlySet<string> = new Set(STATUS_SORT_KEYS);
  */
 export const isStatusSortKey = (key: SortKey): key is StatusSortKey => STATUS_SORT_KEY_SET.has(key);
 
-export type SortKeyFromVersion = "agent" | "resource_type" | "resource_id_value";
+export type SortKeyFromVersion = Exclude<SortKey, StatusSortKey>;
 
 export type FilterFromVersion = Omit<Filter, "status">;
 

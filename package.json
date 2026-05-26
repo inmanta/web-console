@@ -85,7 +85,6 @@
     "cypress": "^15.14.1",
     "cypress-file-upload": "^5.0.8",
     "cypress-multi-reporters": "^2.0.5",
-    "cypress-real-events": "^1.15.0",
     "dotenv": "^17.4.2",
     "dotenv-cli": "^11.0.0",
     "eslint": "^10.2.1",

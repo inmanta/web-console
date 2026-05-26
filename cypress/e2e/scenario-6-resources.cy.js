@@ -1,5 +1,4 @@
 import environmentHelpers from "../support/environmentHelpers";
-import "cypress-real-events/support";
 
 const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
@@ -476,35 +475,61 @@ describe("Scenario 6 : Resources", () => {
       // Reorder via drag-and-drop: drag second item (Compliance) above first (Blocked)
       cy.get('[aria-label="draggable-sort-items"]')
         .find('[aria-label="Drag button"]')
-        .eq(1)
-        .as("dragHandle");
+        .then(($buttons) => {
+          const handleRect = $buttons[1].getBoundingClientRect(); // Compliance (second)
+          const targetRect = $buttons[0].getBoundingClientRect(); // Blocked   (first)
 
-      cy.get('[aria-label="draggable-sort-items"]')
-        .find('[aria-label="Drag button"]')
-        .eq(0)
-        .as("dropTarget");
+          const startX = handleRect.left + handleRect.width / 2;
+          const startY = handleRect.top + handleRect.height / 2;
+          const dropX = targetRect.left + targetRect.width / 2;
+          const dropY = targetRect.top + targetRect.height / 2;
 
-      // pick up item
-      cy.get("@dragHandle").realMouseDown({ button: "left" });
+          cy.wrap($buttons[1])
+            .trigger("pointerdown", {
+              force: true,
+              isPrimary: true,
+              button: 0,
+              clientX: startX,
+              clientY: startY,
+            })
+            .wait(1000)
+            .trigger("pointermove", {
+              force: true,
+              isPrimary: true,
+              button: 0,
+              clientX: dropX,
+              clientY: dropY,
+            })
+            .wait(1000);
 
-      // move within list
-      cy.get('[aria-label="draggable-sort-items"]').realMouseMove(0, -5);
+          // Drag is in flight here — overlay must exist before we drop.
+          cy.get('[data-testid="status-sort-drag-overlay"]').should("exist");
 
-      // hover over target item position
-      cy.get("@dropTarget").realMouseMove(0, 5);
+          cy.wrap($buttons[1]).trigger("pointerup", {
+            force: true,
+            isPrimary: true,
+            button: 0,
+            clientX: dropX,
+            clientY: dropY,
+          });
+        });
 
-      // release
-      cy.get("@dragHandle").realMouseUp();
+      // Cypress retries until the DOM reflects the reorder — no fixed wait needed
+      cy.get('[data-testid^="status-sort-item-"]')
+        .first()
+        .should("have.attr", "data-testid", "status-sort-item-compliance-active");
 
-      // allow re-render / state update
-      cy.wait(1000);
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
-      // assert new order
+      // assert full new order
       cy.get('[data-testid^="status-sort-item-"]').then((items) => {
         expect(items[0]).to.have.attr("data-testid", "status-sort-item-compliance-active");
         expect(items[1]).to.have.attr("data-testid", "status-sort-item-blocked-active");
       });
+
+      // Wait for dnd-kit's drag overlay portal to be torn down before interacting —
+      // while it is mounted it sits on top of the list and blocks clicks.
+      cy.get('[data-testid="status-sort-drag-overlay"]').should("not.exist");
 
       // First click toggles asc -> desc
       cy.get("#compliance").should("have.attr", "data-order", "asc").click();

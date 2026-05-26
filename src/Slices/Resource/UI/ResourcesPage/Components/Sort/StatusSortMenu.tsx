@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   Badge,
   DataList,
@@ -75,64 +75,80 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactE
     [sort]
   );
 
-  const activeSortStatus = sortStatus.map((entry) => entry.name);
-  const inactiveSortStatus = Resource.STATUS_SORT_KEYS.filter(
-    (key) => !activeSortStatus.includes(key)
+  // Status sorts and regular sorts are mutually exclusive — calling setSort with only
+  // status sorts intentionally clears any active regular-column sort.
+  const handleToggle = useCallback(
+    (key: Resource.StatusSortKey) => {
+      setSort(toggleMulti(sortStatus, key));
+    },
+    [setSort, sortStatus]
   );
-  const itemOrder = [...activeSortStatus, ...inactiveSortStatus];
 
-  const handleToggle = (key: Resource.StatusSortKey) => {
-    setSort(toggleMulti(sortStatus, key));
-  };
+  const onDrop = useCallback(
+    (_: unknown, newItems: DraggableObject[]) => {
+      const newOrder = newItems.map((item) => item.id as Resource.StatusSortKey);
+      setSort(reorderSorts(newOrder, sortStatus));
+    },
+    [setSort, sortStatus]
+  );
 
-  const onDrop = (_: unknown, newItems: DraggableObject[]) => {
-    const newOrder = newItems.map((item) => item.id as Resource.StatusSortKey);
-    setSort(reorderSorts(newOrder, sortStatus));
-  };
+  const items = useMemo(() => {
+    const activeSortStatus = sortStatus.map((entry) => entry.name);
+    const inactiveSortStatus = Resource.STATUS_SORT_KEYS.filter(
+      (key) => !activeSortStatus.includes(key)
+    );
+    const itemOrder = [...activeSortStatus, ...inactiveSortStatus];
 
-  const items = itemOrder.map((key) => {
-    const activeEntry = sortStatus.find((entry) => entry.name === key);
-    const isActive = Boolean(activeEntry);
+    return itemOrder.map((key) => {
+      const activeEntry = sortStatus.find((entry) => entry.name === key);
+      const isActive = Boolean(activeEntry);
 
-    return {
-      id: key,
-      props: {
-        "data-order": activeEntry?.order,
-        "data-testid": `status-sort-item-${key}-${isActive ? "active" : "inactive"}`,
-      },
-      content: (
-        <DataListItemCells
-          dataListCells={[
-            <DataListCell
-              key={`label-${key}`}
-              style={{ cursor: "pointer", opacity: isActive ? 1 : 0.5 }}
-              onClick={(event) => {
-                event.stopPropagation();
-                handleToggle(key);
-              }}
-            >
-              {getLabel(key)}
-            </DataListCell>,
-            isActive && (
+      return {
+        id: key,
+        props: {
+          "data-order": activeEntry?.order,
+          "data-testid": `status-sort-item-${key}-${isActive ? "active" : "inactive"}`,
+        },
+        content: (
+          <DataListItemCells
+            dataListCells={[
               <DataListCell
-                key={`sort-icon-${key}`}
-                isFilled={false}
+                key={`label-${key}`}
                 style={{ cursor: "pointer" }}
                 onClick={(event) => {
                   event.stopPropagation();
                   handleToggle(key);
                 }}
               >
-                <Icon status="info" isInline>
-                  {activeEntry?.order === "desc" ? <SortAmountDownIcon /> : <SortAmountUpIcon />}
-                </Icon>
-              </DataListCell>
-            ),
-          ]}
-        />
-      ),
-    };
-  });
+                {getLabel(key)}
+              </DataListCell>,
+              ...(isActive
+                ? [
+                    <DataListCell
+                      key={`sort-icon-${key}`}
+                      isFilled={false}
+                      style={{ cursor: "pointer" }}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleToggle(key);
+                      }}
+                    >
+                      <Icon status="info" isInline>
+                        {activeEntry?.order === "desc" ? (
+                          <SortAmountDownIcon />
+                        ) : (
+                          <SortAmountUpIcon />
+                        )}
+                      </Icon>
+                    </DataListCell>,
+                  ]
+                : []),
+            ]}
+          />
+        ),
+      };
+    });
+  }, [sortStatus, handleToggle]);
 
   const toggle = (
     <MenuToggle
@@ -158,7 +174,7 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactE
         items={items}
         onDrop={onDrop}
         variant="DataList"
-        overlayProps={{ isCompact: true }}
+        overlayProps={{ isCompact: true, "data-testid": "status-sort-drag-overlay" }}
       >
         <DataList aria-label="draggable-sort-items" isCompact />
       </DragDropSort>
@@ -166,7 +182,8 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactE
   );
 
   return (
-    <Tooltip content={words("resources.column.status.toolTip")}>
+    <>
+      <Tooltip content={words("resources.column.status.toolTip")} triggerRef={toggleRef} />
       <MenuContainer
         isOpen={isOpen}
         onOpenChange={setIsOpen}
@@ -176,6 +193,6 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactE
         menu={menu}
         popperProps={{ position: "center" }}
       />
-    </Tooltip>
+    </>
   );
 };
