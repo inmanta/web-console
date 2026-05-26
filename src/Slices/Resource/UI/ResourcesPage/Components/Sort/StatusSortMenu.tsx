@@ -10,7 +10,11 @@ import {
   MenuToggle,
   Tooltip,
 } from "@patternfly/react-core";
-import { DragDropSort, DraggableObject } from "@patternfly/react-drag-drop";
+import {
+  DragDropSort,
+  DragDropSortDragEndEvent,
+  DraggableObject,
+} from "@patternfly/react-drag-drop";
 import { SortAmountDownIcon, SortAmountUpIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
 import { MultiSort, toggleMulti } from "@/Data";
@@ -85,7 +89,7 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactE
   );
 
   const onDrop = useCallback(
-    (_: unknown, newItems: DraggableObject[]) => {
+    (_: DragDropSortDragEndEvent, newItems: DraggableObject[]) => {
       const newOrder = newItems.map((item) => item.id as Resource.StatusSortKey);
       setSort(reorderSorts(newOrder, sortStatus));
     },
