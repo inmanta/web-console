@@ -76,6 +76,8 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   entityType: EntityShapeType;
   orderItem: ComposerServiceOrderItem | null;
   hasAttributeValidationErrors: boolean;
+  isLayersCollapsed: boolean;
+  parentIds: Set<string>;
 
   constructor(initializationOptions: ServiceEntityOptions) {
     // In JointJS 4, the model id should be provided at construction time
@@ -93,6 +95,8 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     this.entityType = initializationOptions.entityType;
     this.orderItem = null;
     this.hasAttributeValidationErrors = false;
+    this.isLayersCollapsed = false;
+    this.parentIds = new Set<string>();
 
     this._initializeFromOptions(initializationOptions);
   }
@@ -307,6 +311,9 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     });
     Object.entries(rootEntities).forEach(([entityType, entityId]) => {
       this.connections.set(entityType, entityId);
+    });
+    Object.values(rootEntities).forEach((ids) => {
+      ids.forEach((id) => this.parentIds.add(id));
     });
 
     // Prepare columns for display (will be rendered in initialize method)
