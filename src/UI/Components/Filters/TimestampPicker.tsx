@@ -15,6 +15,7 @@ interface Props {
   from: Date | undefined;
   datePickerLabel: string;
   timePickerLabel: string;
+  action?: React.ReactNode;
 }
 
 /** Both the Date and the Time Picker from Patternfly are in beta stage, e.g. validation doesn't work as expected */
@@ -24,6 +25,7 @@ export const TimestampPicker: React.FC<Props> = ({
   from,
   datePickerLabel,
   timePickerLabel,
+  action,
 }) => {
   const [timeText, setTimeText] = useState("");
 
@@ -92,12 +94,16 @@ export const TimestampPicker: React.FC<Props> = ({
         aria-label={timePickerLabel}
         inputProps={{ value: timeText }}
       />
+
+      {action}
     </StyledInputGroup>
   );
 };
 
 const StyledInputGroup = styled(InputGroup)`
-  height: 65px;
+  flex-wrap: wrap;
+  overflow: visible;
+  width: 100%;
 `;
 
 const formatDateWithSlashes = (date: Date): string => {

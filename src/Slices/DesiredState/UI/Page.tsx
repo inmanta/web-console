@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Queries";
@@ -10,12 +11,13 @@ import {
   LoadingView,
   ErrorView,
   PaginationWidget,
+  countActiveFilters,
 } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { DesiredStateVersionStatus } from "../Core/Domain";
-import { TableControls } from "./Components";
+import { TableControls, ConnectedFilterWidget } from "./Components";
 import { DesiredStatesTable } from "./DesiredStatesTable";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
 import { CompareSelection } from "./Utils";
@@ -30,26 +32,45 @@ export const Page: React.FC = () => {
   const deleteVersion = useDeleteDesiredStateVersion();
   const { notifyError } = useAppAlert();
 
-  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter } =
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter } =
     usePaginatedTable<Filter>({
       route: "DesiredState",
-      defaultFilter: {
-        status: [
-          DesiredStateVersionStatus.active,
-          DesiredStateVersionStatus.candidate,
-          DesiredStateVersionStatus.retired,
-        ],
-      },
       filterKeys: { date: "DateRange", version: "IntRange" },
     });
+
+  const filterWithDefaults = useMemo(
+    () =>
+      filter.status
+        ? filter
+        : {
+            ...filter,
+            status: [
+              DesiredStateVersionStatus.active,
+              DesiredStateVersionStatus.candidate,
+              DesiredStateVersionStatus.retired,
+            ],
+          },
+    [filter]
+  );
 
   const [compareSelection, setCompareSelection] = useState<CompareSelection>({
     kind: "None",
   });
 
+  const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
+
+  const onCloseFilterWidget = useCallback(() => {
+    setIsDrawerExpanded(false);
+  }, []);
+
+  const activeFilterCount = useMemo(
+    () => countActiveFilters(filterWithDefaults),
+    [filterWithDefaults]
+  );
+
   const { data, refetch, isError, error, isSuccess } = useGetDesiredStates().useContinuous(
     pageSize,
-    filter,
+    filterWithDefaults,
     currentPage
   );
 
@@ -103,7 +124,7 @@ export const Page: React.FC = () => {
       <PageContainer pageTitle={words("desiredState.title")}>
         <GetDesiredStatesContext.Provider
           value={{
-            filter,
+            filter: filterWithDefaults,
             pageSize,
             currentPage,
             compareSelection,
@@ -112,8 +133,6 @@ export const Page: React.FC = () => {
           }}
         >
           <TableControls
-            filter={filter}
-            setFilter={setFilter}
             paginationWidget={
               <PaginationWidget
                 data={data}
@@ -122,15 +141,37 @@ export const Page: React.FC = () => {
                 setCurrentPage={setCurrentPage}
               />
             }
+            onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
+            isDrawerExpanded={isDrawerExpanded}
+            activeFilterCount={activeFilterCount}
           />
-          {data.data.length <= 0 ? (
-            <EmptyView
-              message={words("desiredState.empty.message")}
-              aria-label="DesiredStatesView-Empty"
-            />
-          ) : (
-            <DesiredStatesTable rows={data.data} aria-label="DesiredStatesView-Success" />
-          )}
+          <Drawer
+            isExpanded={isDrawerExpanded}
+            isInline
+            style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+          >
+            <DrawerContent
+              panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
+            >
+              <DrawerContentBody
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flex: "1 1 auto",
+                  minHeight: 0,
+                }}
+              >
+                {data.data.length <= 0 ? (
+                  <EmptyView
+                    message={words("desiredState.empty.message")}
+                    aria-label="DesiredStatesView-Empty"
+                  />
+                ) : (
+                  <DesiredStatesTable rows={data.data} aria-label="DesiredStatesView-Success" />
+                )}
+              </DrawerContentBody>
+            </DrawerContent>
+          </Drawer>
         </GetDesiredStatesContext.Provider>
       </PageContainer>
     );
