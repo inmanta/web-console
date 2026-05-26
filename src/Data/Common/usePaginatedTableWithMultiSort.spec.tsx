@@ -14,13 +14,13 @@ const wrapper =
 // ── sort parsing ─────────────────────────────────────────────────────────────
 
 test.each`
-  search                                                | searchText                      | expectedSort                                                             | valueText
-  ${""}                                                 | ${"empty"}                      | ${[]}                                                                    | ${"default empty"}
-  ${"?state.Resources.sort=agent.asc"}                  | ${"agent.asc"}                  | ${[{ name: "agent", order: "asc" }]}                                     | ${"agent.asc"}
-  ${"?state.Resources.sort=agent.asc,blocked.desc"}     | ${"agent.asc,blocked.desc"}     | ${[{ name: "agent", order: "asc" }, { name: "blocked", order: "desc" }]} | ${"agent.asc,blocked.desc"}
+  search                                                  | searchText                        | expectedSort                                                                   | valueText
+  ${""}                                                   | ${"empty"}                        | ${[]}                                                                          | ${"default empty"}
+  ${"?state.Resources.sort=agent.asc"}                    | ${"agent.asc"}                    | ${[{ name: "agent", order: "asc" }]}                                           | ${"agent.asc"}
+  ${"?state.Resources.sort=agent.asc,blocked.desc"}       | ${"agent.asc,blocked.desc"}       | ${[{ name: "agent", order: "asc" }, { name: "blocked", order: "desc" }]}       | ${"agent.asc,blocked.desc"}
   ${"?state.Resources.sort=resource_type.desc,agent.asc"} | ${"resource_type.desc,agent.asc"} | ${[{ name: "resource_type", order: "desc" }, { name: "agent", order: "asc" }]} | ${"resource_type.desc,agent.asc (order preserved)"}
-  ${"?state.Resources.sort=invalid"}                    | ${"invalid"}                    | ${[]}                                                                    | ${"default empty (bad entry dropped)"}
-  ${"?state.Resources.sort=agent.asc,bad,blocked.desc"} | ${"agent.asc,bad,blocked.desc"} | ${[{ name: "agent", order: "asc" }, { name: "blocked", order: "desc" }]} | ${"agent.asc,blocked.desc (bad entry dropped)"}
+  ${"?state.Resources.sort=invalid"}                      | ${"invalid"}                      | ${[]}                                                                          | ${"default empty (bad entry dropped)"}
+  ${"?state.Resources.sort=agent.asc,bad,blocked.desc"}   | ${"agent.asc,bad,blocked.desc"}   | ${[{ name: "agent", order: "asc" }, { name: "blocked", order: "desc" }]}       | ${"agent.asc,blocked.desc (bad entry dropped)"}
 `(
   "GIVEN usePaginatedTableWithMultiSort WHEN search is $searchText THEN sort returns $valueText",
   ({ search, expectedSort }: { search: string; expectedSort: MultiSort<Resource.SortKey> }) => {
@@ -39,7 +39,11 @@ test("GIVEN usePaginatedTableWithMultiSort WHEN no URL sort param THEN returns d
   const defaultSort: MultiSort<Resource.SortKey> = [{ name: "agent", order: "asc" }];
 
   const { result } = renderHook(
-    () => usePaginatedTableWithMultiSort<undefined, Resource.SortKey>({ route: "Resources", defaultSort }),
+    () =>
+      usePaginatedTableWithMultiSort<undefined, Resource.SortKey>({
+        route: "Resources",
+        defaultSort,
+      }),
     { wrapper: wrapper() }
   );
 
@@ -62,9 +66,9 @@ test("GIVEN usePaginatedTableWithMultiSort WHEN URL sort param is set THEN URL v
 // ── pageSize ─────────────────────────────────────────────────────────────────
 
 test.each`
-  search                               | searchText | expectedPageSize        | valueText
-  ${""}                                | ${"empty"} | ${PageSize.from("100")} | ${"100 (Resources default)"}
-  ${"?state.Resources.pageSize=20"}    | ${"20"}    | ${PageSize.from("20")}  | ${"20"}
+  search                            | searchText | expectedPageSize        | valueText
+  ${""}                             | ${"empty"} | ${PageSize.from("100")} | ${"100 (Resources default)"}
+  ${"?state.Resources.pageSize=20"} | ${"20"}    | ${PageSize.from("20")}  | ${"20"}
 `(
   "GIVEN usePaginatedTableWithMultiSort WHEN search is $searchText THEN pageSize returns $valueText",
   ({ search, expectedPageSize }: { search: string; expectedPageSize: PageSize.Type }) => {
@@ -98,7 +102,8 @@ test("GIVEN usePaginatedTableWithMultiSort WHEN sort changes THEN currentPage re
 
 test("GIVEN usePaginatedTableWithMultiSort WHEN filter changes THEN currentPage resets to empty", async () => {
   const { result } = renderHook(
-    () => usePaginatedTableWithMultiSort<{ type?: string[] }, Resource.SortKey>({ route: "Resources" }),
+    () =>
+      usePaginatedTableWithMultiSort<{ type?: string[] }, Resource.SortKey>({ route: "Resources" }),
     { wrapper: wrapper() }
   );
 

@@ -24,9 +24,7 @@ export const ResourcesTable: React.FC<Props> = ({ rows, sort, setSort, ...props 
     setSort([{ name, order }]);
   };
 
-  const activeRegularSort = sort.find(
-    (sortEntry) => !Resource.isStatusSortKey(sortEntry.name)
-  );
+  const activeRegularSort = sort.find((sortEntry) => !Resource.isStatusSortKey(sortEntry.name));
 
   const heads = columnHeads.map(({ apiName, displayName }, columnIndex) => {
     if (apiName === "status") {
