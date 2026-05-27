@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
+import { Drawer, DrawerContent, DrawerContentBody, Stack, StackItem } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Queries";
@@ -120,7 +120,10 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     return (
-      <PageContainer pageTitle={words("desiredState.title")}>
+      <PageContainer
+        pageTitle={words("desiredState.title")}
+        style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+      >
         <GetDesiredStatesContext.Provider
           value={{
             filter: filterWithDefaults,
@@ -164,7 +167,11 @@ export const Page: React.FC = () => {
                     aria-label="DesiredStatesView-Empty"
                   />
                 ) : (
-                  <DesiredStatesTable rows={data.data} aria-label="DesiredStatesView-Success" />
+                  <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+                    <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                      <DesiredStatesTable rows={data.data} aria-label="DesiredStatesView-Success" />
+                    </StackItem>
+                  </Stack>
                 )}
               </DrawerContentBody>
             </DrawerContent>

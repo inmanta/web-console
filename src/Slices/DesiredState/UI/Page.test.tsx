@@ -254,11 +254,13 @@ describe("DesiredStatesView", () => {
 
     await userEvent.type(fromDatePicker, "2021-12-06");
 
+    await userEvent.click(screen.getByLabelText("Apply date from filter"));
+
     const toDatePicker = screen.getByLabelText("To Date Picker");
 
     await userEvent.type(toDatePicker, "2021-12-07");
 
-    await userEvent.click(screen.getByLabelText("Apply date filter"));
+    await userEvent.click(screen.getByLabelText("Apply date to filter"));
 
     const rowsAfter = await screen.findAllByRole("row", {
       name: "DesiredStates Table Row",
@@ -303,15 +305,17 @@ describe("DesiredStatesView", () => {
 
     await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
 
-    const fromDatePicker = await screen.findByLabelText("Version range from");
+    const fromVersionPicker = await screen.findByLabelText("Version range from");
 
-    await userEvent.type(fromDatePicker, "3");
+    await userEvent.type(fromVersionPicker, "3");
 
-    const toDatePicker = await screen.findByLabelText("Version range to");
+    await userEvent.click(await screen.findByLabelText("Apply Version from filter"));
 
-    await userEvent.type(toDatePicker, "5");
+    const toVersionPicker = await screen.findByLabelText("Version range to");
 
-    await userEvent.click(await screen.findByLabelText("Apply Version filter"));
+    await userEvent.type(toVersionPicker, "5");
+
+    await userEvent.click(await screen.findByLabelText("Apply Version to filter"));
 
     const rowsAfter = await screen.findAllByRole("row", {
       name: "DesiredStates Table Row",

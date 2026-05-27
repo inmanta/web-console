@@ -6,6 +6,7 @@ import {
   EmptyStateBody,
   Flex,
   FlexItem,
+  Form,
   FormGroup,
   InputGroup,
   InputGroupItem,
@@ -44,7 +45,9 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
   // --- Status ---
   const handleStatusSelect = (selection: string | ((prev: string[]) => string[])) => {
-    if (typeof selection !== "string") return;
+    if (typeof selection !== "string") {
+      return;
+    }
     const current = filter.status ? [...filter.status] : [];
     const updated = uniq(toggleValueInList(selection, current)) as DesiredStateVersionStatus[];
 
@@ -60,23 +63,29 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
   const clearStatusFilters = () => setFilter({ ...filter, status: undefined });
 
   // --- Date ---
-  const applyDateFilter = () => {
-    let updated = filter.date ? [...filter.date] : [];
+  const applyDateFromFilter = () => {
+    if (!dateFrom) {
+      return;
+    }
+    const updated = [
+      ...(filter.date ?? []).filter((d) => d.operator !== RangeOperator.Operator.From),
+      { date: dateFrom, operator: RangeOperator.Operator.From },
+    ];
 
-    if (dateFrom) {
-      updated = [
-        ...updated.filter((d) => d.operator !== RangeOperator.Operator.From),
-        { date: dateFrom, operator: RangeOperator.Operator.From },
-      ];
-    }
-    if (dateTo) {
-      updated = [
-        ...updated.filter((d) => d.operator !== RangeOperator.Operator.To),
-        { date: dateTo, operator: RangeOperator.Operator.To },
-      ];
-    }
-    setFilter({ ...filter, date: updated.length > 0 ? updated : undefined });
+    setFilter({ ...filter, date: updated });
     setDateFrom(undefined);
+  };
+
+  const applyDateToFilter = () => {
+    if (!dateTo) {
+      return;
+    }
+    const updated = [
+      ...(filter.date ?? []).filter((d) => d.operator !== RangeOperator.Operator.To),
+      { date: dateTo, operator: RangeOperator.Operator.To },
+    ];
+
+    setFilter({ ...filter, date: updated });
     setDateTo(undefined);
   };
 
@@ -90,25 +99,33 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
   const clearDateFilters = () => setFilter({ ...filter, date: undefined });
 
   // --- Version ---
-  const applyVersionFilter = () => {
-    let updated = filter.version ? [...filter.version] : [];
+  const applyVersionFromFilter = () => {
     const from = versionFrom !== "" ? parseInt(versionFrom, 10) : undefined;
+
+    if (from === undefined || isNaN(from)) {
+      return;
+    }
+    const updated = [
+      ...(filter.version ?? []).filter((v) => v.operator !== RangeOperator.Operator.From),
+      { value: from, operator: RangeOperator.Operator.From },
+    ];
+
+    setFilter({ ...filter, version: updated });
+    setVersionFrom("");
+  };
+
+  const applyVersionToFilter = () => {
     const to = versionTo !== "" ? parseInt(versionTo, 10) : undefined;
 
-    if (from !== undefined && !isNaN(from)) {
-      updated = [
-        ...updated.filter((v) => v.operator !== RangeOperator.Operator.From),
-        { value: from, operator: RangeOperator.Operator.From },
-      ];
+    if (to === undefined || isNaN(to)) {
+      return;
     }
-    if (to !== undefined && !isNaN(to)) {
-      updated = [
-        ...updated.filter((v) => v.operator !== RangeOperator.Operator.To),
-        { value: to, operator: RangeOperator.Operator.To },
-      ];
-    }
-    setFilter({ ...filter, version: updated.length > 0 ? updated : undefined });
-    setVersionFrom("");
+    const updated = [
+      ...(filter.version ?? []).filter((v) => v.operator !== RangeOperator.Operator.To),
+      { value: to, operator: RangeOperator.Operator.To },
+    ];
+
+    setFilter({ ...filter, version: updated });
     setVersionTo("");
   };
 
@@ -136,96 +153,129 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
   return (
     <FilterDrawerPanelContent title={words("desiredState.filters")} onClose={onClose}>
       <Stack hasGutter>
-        <StackItem>
-          <FormGroup label={words("desiredState.columns.status")}>
-            <MultiTextSelect
-              toggleAriaLabel="Status"
-              options={desiredStateStatuses.map((status) => ({
-                value: status,
-                children: status,
-                isSelected: (filter.status ?? []).includes(status),
-              }))}
-              setSelected={handleStatusSelect}
-              placeholderText={words("desiredState.filters.status.placeholder")}
-              selected={filter.status ?? []}
-            />
-          </FormGroup>
-        </StackItem>
+        <Form onSubmit={(e) => e.preventDefault()}>
+          <StackItem>
+            <FormGroup label={words("desiredState.columns.status")}>
+              <MultiTextSelect
+                toggleAriaLabel="Status"
+                options={desiredStateStatuses.map((status) => ({
+                  value: status,
+                  children: status,
+                  isSelected: (filter.status ?? []).includes(status),
+                }))}
+                setSelected={handleStatusSelect}
+                placeholderText={words("desiredState.filters.status.placeholder")}
+                selected={filter.status ?? []}
+              />
+            </FormGroup>
+          </StackItem>
 
-        <StackItem>
-          <FormGroup label={words("desiredState.columns.date")}>
-            <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsSm" }}>
-              <FlexItem>
-                <FormGroup label={words("desiredState.filters.from")}>
-                  <TimestampPicker
-                    timestamp={dateFrom}
-                    onChange={setDateFrom}
-                    from={undefined}
-                    datePickerLabel="From Date Picker"
-                    timePickerLabel="From Time Picker"
-                  />
-                </FormGroup>
-              </FlexItem>
-              <FlexItem>
-                <FormGroup label={words("desiredState.filters.to")}>
-                  <TimestampPicker
-                    timestamp={dateTo}
-                    onChange={setDateTo}
-                    from={dateFrom}
-                    datePickerLabel="To Date Picker"
-                    timePickerLabel="To Time Picker"
-                    action={
-                      <Button
-                        variant="control"
-                        style={{ marginLeft: "auto" }}
-                        onClick={applyDateFilter}
-                        isDisabled={!(dateFrom || dateTo)}
-                        aria-label="Apply date filter"
-                      >
-                        <PlusIcon />
-                      </Button>
-                    }
-                  />
-                </FormGroup>
-              </FlexItem>
-            </Flex>
-          </FormGroup>
-        </StackItem>
+          <StackItem>
+            <FormGroup label={words("desiredState.columns.date")}>
+              <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsSm" }}>
+                <FlexItem>
+                  <FormGroup label={words("desiredState.filters.from")}>
+                    <TimestampPicker
+                      timestamp={dateFrom}
+                      onChange={setDateFrom}
+                      from={undefined}
+                      datePickerLabel="From Date Picker"
+                      timePickerLabel="From Time Picker"
+                      action={
+                        <Button
+                          variant="control"
+                          onClick={applyDateFromFilter}
+                          isDisabled={!dateFrom}
+                          aria-label="Apply date from filter"
+                        >
+                          <PlusIcon />
+                        </Button>
+                      }
+                    />
+                  </FormGroup>
+                </FlexItem>
+                <FlexItem>
+                  <FormGroup label={words("desiredState.filters.to")}>
+                    <TimestampPicker
+                      timestamp={dateTo}
+                      onChange={setDateTo}
+                      from={dateFrom}
+                      datePickerLabel="To Date Picker"
+                      timePickerLabel="To Time Picker"
+                      action={
+                        <Button
+                          variant="control"
+                          onClick={applyDateToFilter}
+                          isDisabled={!dateTo}
+                          aria-label="Apply date to filter"
+                        >
+                          <PlusIcon />
+                        </Button>
+                      }
+                    />
+                  </FormGroup>
+                </FlexItem>
+              </Flex>
+            </FormGroup>
+          </StackItem>
 
-        <StackItem>
-          <FormGroup label={words("desiredState.columns.version")}>
-            <InputGroup>
-              <InputGroupItem isFill>
-                <TextInput
-                  value={versionFrom}
-                  onChange={(_e, val) => setVersionFrom(val)}
-                  type="number"
-                  placeholder={words("desiredState.filters.from")}
-                  aria-label="Version range from"
-                />
-              </InputGroupItem>
-              <InputGroupItem isFill>
-                <TextInput
-                  value={versionTo}
-                  onChange={(_e, val) => setVersionTo(val)}
-                  type="number"
-                  placeholder={words("desiredState.filters.to")}
-                  aria-label="Version range to"
-                />
-              </InputGroupItem>
-              <InputGroupItem>
-                <Button
-                  variant="control"
-                  onClick={applyVersionFilter}
-                  isDisabled={!versionFrom && !versionTo}
-                  aria-label="Apply Version filter"
-                >
-                  <PlusIcon />
-                </Button>
-              </InputGroupItem>
-            </InputGroup>
-          </FormGroup>
-        </StackItem>
+          <StackItem>
+            <FormGroup label={words("desiredState.columns.version")}>
+              <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsSm" }}>
+                <FlexItem>
+                  <FormGroup label={words("desiredState.filters.from")}>
+                    <InputGroup>
+                      <InputGroupItem isFill>
+                        <TextInput
+                          value={versionFrom}
+                          onChange={(_e, val) => setVersionFrom(val)}
+                          type="number"
+                          placeholder={words("desiredState.filters.from")}
+                          aria-label="Version range from"
+                        />
+                      </InputGroupItem>
+                      <InputGroupItem>
+                        <Button
+                          variant="control"
+                          onClick={applyVersionFromFilter}
+                          isDisabled={!versionFrom}
+                          aria-label="Apply Version from filter"
+                        >
+                          <PlusIcon />
+                        </Button>
+                      </InputGroupItem>
+                    </InputGroup>
+                  </FormGroup>
+                </FlexItem>
+                <FlexItem>
+                  <FormGroup label={words("desiredState.filters.to")}>
+                    <InputGroup>
+                      <InputGroupItem isFill>
+                        <TextInput
+                          value={versionTo}
+                          onChange={(_e, val) => setVersionTo(val)}
+                          type="number"
+                          placeholder={words("desiredState.filters.to")}
+                          aria-label="Version range to"
+                        />
+                      </InputGroupItem>
+                      <InputGroupItem>
+                        <Button
+                          variant="control"
+                          onClick={applyVersionToFilter}
+                          isDisabled={!versionTo}
+                          aria-label="Apply Version to filter"
+                        >
+                          <PlusIcon />
+                        </Button>
+                      </InputGroupItem>
+                    </InputGroup>
+                  </FormGroup>
+                </FlexItem>
+              </Flex>
+            </FormGroup>
+          </StackItem>
+        </Form>
 
         <Divider />
 

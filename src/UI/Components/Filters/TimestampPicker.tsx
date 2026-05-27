@@ -5,6 +5,7 @@ import {
   isValidDate,
   yyyyMMddFormat,
   InputGroup,
+  InputGroupItem,
 } from "@patternfly/react-core";
 import moment from "moment";
 import styled from "styled-components";
@@ -77,13 +78,15 @@ export const TimestampPicker: React.FC<Props> = ({
 
   return (
     <StyledInputGroup>
-      <DatePicker
-        value={timestamp && isValidDate(timestamp) ? yyyyMMddFormat(timestamp) : ""}
-        dateParse={parseDate}
-        onChange={onDateChange}
-        rangeStart={from}
-        aria-label={datePickerLabel}
-      />
+      <InputGroupItem isFill>
+        <DatePicker
+          value={timestamp && isValidDate(timestamp) ? yyyyMMddFormat(timestamp) : ""}
+          dateParse={parseDate}
+          onChange={onDateChange}
+          rangeStart={from}
+          aria-label={datePickerLabel}
+        />
+      </InputGroupItem>
 
       <TimePicker
         style={{ width: "150px" }}
