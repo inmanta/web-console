@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { memo, useMemo, useRef } from "react";
 import { Bullseye, Button, Flex, FlexItem, Popover } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import { Resource } from "@/Core";
@@ -16,10 +16,22 @@ export interface ResourceRow {
   status: Resource.ResourceState;
 }
 
+// Stable references so memo comparison never fails on these props
+const gapNone = { default: "gapNone" as const };
+const gapMd = { default: "gapMd" as const };
+const noWrap = { default: "nowrap" as const };
+const alignCenter = { default: "alignItemsCenter" as const };
+const statusCellStyle = { height: "100%", justifySelf: "flex-end" };
+const bullseyeStyle = { width: "20px" };
+const inlineFlex = { display: "inline-flex" as const };
+
 export const ResourceTableRow: React.FC<{
   row: ResourceRow;
-}> = ({ row }) => {
+}> = memo(({ row }) => {
   const buttonWrapperRef = useRef<HTMLDivElement>(null);
+
+  // Stable element reference — Popper only diffs bodyContent when row actually changes
+  const popoverBody = useMemo(() => <ResourceStateInfo row={row} />, [row]);
 
   return (
     <Tbody>
@@ -34,16 +46,8 @@ export const ResourceTableRow: React.FC<{
           {row.value}
         </Td>
         <Td dataLabel={words("resources.column.status")}>
-          <Flex
-            gap={{ default: "gapNone" }}
-            flexWrap={{ default: "nowrap" }}
-            alignItems={{ default: "alignItemsCenter" }}
-            style={{
-              height: "100%",
-              justifySelf: "flex-end",
-            }}
-          >
-            <Bullseye style={{ width: "20px" }}>
+          <Flex gap={gapNone} flexWrap={noWrap} alignItems={alignCenter} style={statusCellStyle}>
+            <Bullseye style={bullseyeStyle}>
               {row.status.isDeploying && <BlinkingDot $size={10} />}
             </Bullseye>
 
@@ -52,24 +56,20 @@ export const ResourceTableRow: React.FC<{
               variant="plain"
               aria-label={words("resources.button.statusDetails")}
             >
-              <Flex
-                gap={{ default: "gapMd" }}
-                flexWrap={{ default: "nowrap" }}
-                alignItems={{ default: "alignItemsCenter" }}
-              >
-                <FlexItem style={{ display: "inline-flex" }}>
+              <Flex gap={gapMd} flexWrap={noWrap} alignItems={alignCenter}>
+                <FlexItem style={inlineFlex}>
                   {statusGroupIcons["blocked"]({
                     state: row.status.blocked,
                     variant: row.status.isOrphan ? "default" : "state",
                   })}
                 </FlexItem>
-                <FlexItem style={{ display: "inline-flex" }}>
+                <FlexItem style={inlineFlex}>
                   {statusGroupIcons["compliance"]({
                     state: row.status.compliance,
                     variant: row.status.isOrphan ? "default" : "state",
                   })}
                 </FlexItem>
-                <FlexItem style={{ display: "inline-flex" }}>
+                <FlexItem style={inlineFlex}>
                   {statusGroupIcons["lastHandlerRun"]({
                     state: row.status.lastHandlerRun,
                     variant: row.status.isOrphan ? "default" : "state",
@@ -82,7 +82,7 @@ export const ResourceTableRow: React.FC<{
                 aria-label="Clickable popover"
                 position="left"
                 headerContent={words("resources.popover.title")}
-                bodyContent={<ResourceStateInfo row={row} />}
+                bodyContent={popoverBody}
                 distance={row.status.isDeploying ? 30 : 20}
               />
             </Button>
@@ -94,4 +94,4 @@ export const ResourceTableRow: React.FC<{
       </Tr>
     </Tbody>
   );
-};
+});
