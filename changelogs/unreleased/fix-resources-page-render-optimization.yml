@@ -1,5 +1,4 @@
 description: Reduced unnecessary re-renders on the Resources page by memoizing ResourceTableRow and ResourcesTable, hoisting stable prop object references, and computing rows with useMemo.
 change-type: patch
 destination-branches: [master, iso9]
-sections:
-  minor-improvement: "{{description}}"
+
