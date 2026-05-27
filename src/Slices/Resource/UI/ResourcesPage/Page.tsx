@@ -71,6 +71,8 @@ export const Page: React.FC = () => {
   const updateFilter = (updater: (filter: Resource.Filter) => Resource.Filter): void =>
     setFilter(updater(filterWithDefaults));
 
+  const rows = useMemo(() => createRows(data?.resources ?? []), [data?.resources]);
+
   if (isError) {
     return <ErrorView message={error.message} ariaLabel="ResourcesPage-Error" retry={refetch} />;
   }
@@ -81,7 +83,6 @@ export const Page: React.FC = () => {
   const resources = data.resources;
   const resourceSummary = data.resourceSummary;
   const deployingCount = resourceSummary.isDeploying["true"];
-  const rows = createRows(resources);
 
   return (
     <>

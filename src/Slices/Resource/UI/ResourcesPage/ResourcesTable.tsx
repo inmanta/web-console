@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useCallback } from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Resource, Sort } from "@/Core";
 import { words } from "@/UI";
@@ -16,13 +16,16 @@ interface Props {
   setSort: (sort: Sort.Type<Resource.SortKey>) => void;
 }
 
-export const ResourcesTable: React.FC<Props> = ({ rows, sort, setSort, ...props }) => {
-  const onSort: OnSort = (_event, index, order) => {
-    setSort({
-      name: getColumnNameForIndex(index) as Resource.SortKey,
-      order,
-    });
-  };
+export const ResourcesTable: React.FC<Props> = memo(({ rows, sort, setSort, ...props }) => {
+  const onSort: OnSort = useCallback(
+    (_event, index, order) => {
+      setSort({
+        name: getColumnNameForIndex(index) as Resource.SortKey,
+        order,
+      });
+    },
+    [setSort]
+  );
   const activeSortIndex = getIndexForColumnName(sort.name);
   const smallHeaders = ["status"];
   const heads = columnHeads.map(({ apiName, displayName }, columnIndex) => {
@@ -71,4 +74,4 @@ export const ResourcesTable: React.FC<Props> = ({ rows, sort, setSort, ...props 
       ))}
     </Table>
   );
-};
+});
