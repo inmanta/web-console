@@ -39,7 +39,9 @@ export const ConnectedFilterWidget: React.FC<Props> = memo(({ onClose }) => {
     [filter]
   );
 
-  return <FilterWidgetComponent filter={filterWithDefaults} setFilter={setFilter} onClose={onClose} />;
+  return (
+    <FilterWidgetComponent filter={filterWithDefaults} setFilter={setFilter} onClose={onClose} />
+  );
 });
 
 ConnectedFilterWidget.displayName = "ConnectedFilterWidget";

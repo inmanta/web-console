@@ -32,11 +32,10 @@ export const Page: React.FC = () => {
   const deleteVersion = useDeleteDesiredStateVersion();
   const { notifyError } = useAppAlert();
 
-  const { currentPage, setCurrentPage, pageSize, setPageSize, filter } =
-    usePaginatedTable<Filter>({
-      route: "DesiredState",
-      filterKeys: { date: "DateRange", version: "IntRange" },
-    });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter } = usePaginatedTable<Filter>({
+    route: "DesiredState",
+    filterKeys: { date: "DateRange", version: "IntRange" },
+  });
 
   const filterWithDefaults = useMemo(
     () =>
@@ -150,9 +149,7 @@ export const Page: React.FC = () => {
             isInline
             style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
           >
-            <DrawerContent
-              panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
-            >
+            <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
               <DrawerContentBody
                 style={{
                   display: "flex",

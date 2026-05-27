@@ -313,9 +313,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
               <Title headingLevel="h4" size="md">
                 {words("resources.filters.active.empty.title")}
               </Title>
-              <EmptyStateBody>
-                {words("resources.filters.active.empty.body.noTabs")}
-              </EmptyStateBody>
+              <EmptyStateBody>{words("resources.filters.active.empty.body.noTabs")}</EmptyStateBody>
             </EmptyState>
           )}
         </StackItem>

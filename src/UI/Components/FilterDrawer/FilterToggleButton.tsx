@@ -27,9 +27,7 @@ export const FilterToggleButton: React.FC<Props> = ({
   >
     <Flex alignItems={{ default: "alignItemsCenter" }} spaceItems={{ default: "spaceItemsSm" }}>
       <FlexItem>
-        <Badge
-          {...(isDanger && { style: { backgroundColor: "var(--pf-t--color--red--60)" } })}
-        >
+        <Badge {...(isDanger && { style: { backgroundColor: "var(--pf-t--color--red--60)" } })}>
           {activeFilterCount}
         </Badge>
       </FlexItem>
