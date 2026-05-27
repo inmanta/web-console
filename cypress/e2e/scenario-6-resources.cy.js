@@ -492,15 +492,13 @@ describe("Scenario 6 : Resources", () => {
               clientX: startX,
               clientY: startY,
             })
-            .wait(1000)
             .trigger("pointermove", {
               force: true,
               isPrimary: true,
               button: 0,
               clientX: dropX,
               clientY: dropY,
-            })
-            .wait(1000);
+            });
 
           // Drag is in flight here — overlay must exist before we drop.
           cy.get('[data-testid="status-sort-drag-overlay"]').should("exist");
