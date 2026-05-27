@@ -36,7 +36,10 @@ describe("EnvironmentControls", () => {
   const server = setupServer();
 
   beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
+  afterEach(() => {
+    server.resetHandlers();
+    testClient.clear();
+  });
   afterAll(() => server.close());
 
   test("GIVEN EnvironmentControls WHEN rendered THEN it should be accessible", async () => {
