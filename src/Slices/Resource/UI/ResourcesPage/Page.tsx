@@ -116,11 +116,7 @@ export const Page: React.FC = () => {
                   {deployingCount > 0 && (
                     <>
                       {deployingCount}
-                      <Spinner
-                        size="sm"
-                        isInline
-                        style={{ willChange: "transform", isolation: "isolate" }}
-                      />
+                      <Spinner size="sm" isInline />
                       <span>/</span>
                     </>
                   )}
