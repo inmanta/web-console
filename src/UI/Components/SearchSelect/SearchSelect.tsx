@@ -112,7 +112,6 @@ export function SearchSelect({ value, onChange, options }: SearchSelectProps): R
   return (
     <MenuContainer
       menu={menu}
-      popperProps={{ placement: "bottom" }}
       menuRef={menuRef}
       toggle={toggle}
       toggleRef={toggleRef}

@@ -161,7 +161,6 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
         options={{
           readOnly: true,
           renderSideBySide: true,
-          scrollbar: { vertical: "hidden" },
         }}
         theme={`vs-${preferredTheme}`}
         language="json"
