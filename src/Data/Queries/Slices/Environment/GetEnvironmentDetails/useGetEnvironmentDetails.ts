@@ -35,6 +35,7 @@ export const useGetEnvironmentDetails = (): GetEnvironmentDetails => {
         retry: false,
         select: (data) => data.data,
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
+        staleTime: REFETCH_INTERVAL,
       }),
   };
 };
