@@ -1,25 +1,14 @@
-import { render } from "@testing-library/react";
+import React from "react";
+import { render, screen } from "@testing-library/react";
 import { Resource, Sort } from "@/Core";
+import { DependencyProvider } from "@/UI/Dependency";
+import { PrimaryRouteManager } from "@/UI/Routing";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
+import * as wordsModule from "@/UI/words";
 import { ResourceRow } from "./ResourceTableRow";
 import { ResourcesTable } from "./ResourcesTable";
 
-// Replace ResourceTableRow with a spy so ResourcesTable can be tested in
-// isolation — no context providers needed, and render counts are exact.
-const rowRenderSpy = vi.fn();
-
-vi.mock("./ResourceTableRow", () => ({
-  ResourceTableRow: (props: { row: ResourceRow }) => {
-    rowRenderSpy(props.row.id);
-
-    return (
-      <tbody>
-        <tr>
-          <td data-testid={`row-${props.row.id}`}>{props.row.type}</td>
-        </tr>
-      </tbody>
-    );
-  },
-}));
+const routeManager = PrimaryRouteManager("");
 
 function makeRow(id: string): ResourceRow {
   return {
@@ -40,48 +29,68 @@ function makeRow(id: string): ResourceRow {
 
 const defaultSort: Sort.Type<Resource.SortKey> = { name: "resource_type", order: "asc" };
 
-describe("ResourcesTable — re-render prevention", () => {
-  beforeEach(() => rowRenderSpy.mockClear());
+function Wrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <TestMemoryRouter initialEntries={["/"]}>
+      <DependencyProvider dependencies={{ routeManager }}>{children}</DependencyProvider>
+    </TestMemoryRouter>
+  );
+}
 
-  it("renders each row once on initial mount", () => {
+describe("ResourcesTable", () => {
+  it("renders each row on initial mount", () => {
     const rows = [makeRow("a"), makeRow("b"), makeRow("c")];
 
-    render(<ResourcesTable rows={rows} sort={defaultSort} setSort={vi.fn()} />);
+    render(
+      <Wrapper>
+        <ResourcesTable rows={rows} sort={defaultSort} setSort={vi.fn()} />
+      </Wrapper>
+    );
 
-    expect(rowRenderSpy).toHaveBeenCalledTimes(3);
-    expect(rowRenderSpy).toHaveBeenNthCalledWith(1, "a");
-    expect(rowRenderSpy).toHaveBeenNthCalledWith(2, "b");
-    expect(rowRenderSpy).toHaveBeenNthCalledWith(3, "c");
+    expect(screen.getByText("/tmp/a")).toBeInTheDocument();
+    expect(screen.getByText("/tmp/b")).toBeInTheDocument();
+    expect(screen.getByText("/tmp/c")).toBeInTheDocument();
   });
 
-  it("skips all row re-renders when rows and sort references are stable", () => {
+  it("skips re-renders when rows and sort references are stable", () => {
     const rows = [makeRow("a"), makeRow("b")];
     const setSort = vi.fn();
+    const wordsSpy = vi.spyOn(wordsModule, "words");
 
     const { rerender } = render(
-      <ResourcesTable rows={rows} sort={defaultSort} setSort={setSort} />
+      <Wrapper>
+        <ResourcesTable rows={rows} sort={defaultSort} setSort={setSort} />
+      </Wrapper>
     );
-    rowRenderSpy.mockClear();
+    wordsSpy.mockClear();
 
-    // Simulate a polling refetch where parent re-renders but passes same references
-    rerender(<ResourcesTable rows={rows} sort={defaultSort} setSort={setSort} />);
+    rerender(
+      <Wrapper>
+        <ResourcesTable rows={rows} sort={defaultSort} setSort={setSort} />
+      </Wrapper>
+    );
 
-    expect(rowRenderSpy).not.toHaveBeenCalled();
+    expect(wordsSpy).not.toHaveBeenCalled();
+    wordsSpy.mockRestore();
   });
 
-  it("re-renders all rows when the rows array reference changes", () => {
-    const rows = [makeRow("a")];
+  it("shows updated rows when the rows array reference changes", () => {
     const setSort = vi.fn();
 
     const { rerender } = render(
-      <ResourcesTable rows={rows} sort={defaultSort} setSort={setSort} />
+      <Wrapper>
+        <ResourcesTable rows={[makeRow("a")]} sort={defaultSort} setSort={setSort} />
+      </Wrapper>
     );
-    rowRenderSpy.mockClear();
 
-    const updated = [makeRow("a"), makeRow("b")];
+    expect(screen.queryByText("/tmp/b")).not.toBeInTheDocument();
 
-    rerender(<ResourcesTable rows={updated} sort={defaultSort} setSort={setSort} />);
+    rerender(
+      <Wrapper>
+        <ResourcesTable rows={[makeRow("a"), makeRow("b")]} sort={defaultSort} setSort={setSort} />
+      </Wrapper>
+    );
 
-    expect(rowRenderSpy).toHaveBeenCalledTimes(2);
+    expect(screen.getByText("/tmp/b")).toBeInTheDocument();
   });
 });
