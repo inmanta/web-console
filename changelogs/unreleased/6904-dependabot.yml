@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @patternfly/react-charts from 8.4.1 to 8.5.1
+destination-branches:
+- master
+- iso9
+sections: {}
