@@ -8,6 +8,7 @@ test("GIVEN getBodyPut WHEN attributes contain numeric strings THEN sanitizes ty
     { ...Field.bool, name: "attr3", isOptional: true, type: "bool?" },
     { ...Field.number, name: "attr4", isOptional: true, type: "int?" },
   ];
+
   const attributes = {
     attr1: "some value",
     attr3: true,
@@ -28,6 +29,7 @@ test("GIVEN getBodyPut WHEN all attributes provided THEN sends all attributes wi
     { ...Field.text, name: "attr1", isOptional: false, type: "string" },
     { ...Field.text, name: "attr2", isOptional: false, type: "string" },
   ];
+
   const attributes = {
     attr1: "value1",
     attr2: "value2",
