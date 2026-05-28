@@ -284,7 +284,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[role="menuitem"]').contains("Compare with current state").click();
 
     cy.get("h1").should("have.text", "Compliance Check");
-    cy.get('[aria-label="ReportListSelect"]').should("be.visible");
+    cy.get('[aria-label="ReportListSelect"]').contains("No Dry runs exist").should("be.visible");
     cy.get(".pf-v6-c-button").contains("Perform dry run").click();
 
     cy.get('[aria-label="StatusFilter"]').click();
@@ -328,7 +328,7 @@ describe("Scenario 4 Desired State", () => {
     // Expect diff-module to be empty
     cy.get(".pf-v6-c-page__main-section").eq(1).children().should("have.length", 1);
 
-    cy.get('[aria-label="ReportListSelect"]').should("be.visible");
+    cy.get('[aria-label="ReportListSelect"]').contains("No Dry runs exist").should("be.visible");
 
     // perform dry-run
     cy.get(".pf-v6-c-button").contains("Perform dry run").click();
