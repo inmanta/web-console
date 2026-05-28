@@ -1,6 +1,6 @@
 description: Added sorting on the resources page. It is now possible to sort by compound state and deployment status.
 issue-nr: 6505
-change-type: patch 
+change-type: minor 
 destination-branches: [master, iso9]
 sections:
   minor-improvement: "{{description}}"
