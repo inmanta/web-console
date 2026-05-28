@@ -34,9 +34,7 @@ describe("DictFieldInput", () => {
   });
 
   test("renders a pre-stringified object without crashing", () => {
-    render(
-      <DictFieldInput field={field} value={'{"default":"value"}'} onChange={vi.fn()} />
-    );
+    render(<DictFieldInput field={field} value={'{"default":"value"}'} onChange={vi.fn()} />);
 
     const content = screen.getByTestId("code-editor-content");
     const parsedValue = JSON.parse(content.textContent ?? "{}");
