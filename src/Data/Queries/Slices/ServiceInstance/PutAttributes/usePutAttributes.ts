@@ -17,9 +17,8 @@ interface Response {
 /**
  * React Query hook for updating instance attributes via PUT.
  *
- * Uses PUT /api/v1/service_inventory/{service_entity}/{id} with
- * `ignore_read_only_attributes=true` so the server safely ignores any read-only
- * fields present in the payload.
+ * Uses PUT /api/v1/service_inventory/{service_entity}/{id}.
+ * `current_version` and `ignore_read_only_attributes` are sent in the request body.
  *
  * @returns {UseMutationResult<Response, Error, MutationBody, unknown>} The mutation object.
  */
@@ -31,11 +30,12 @@ export const usePutAttributes = (
 ): UseMutationResult<Response, Error, MutationBody, unknown> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const url = `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}&ignore_read_only_attributes=true`;
+  const url = `/api/v1/service_inventory/${service_entity}/${id}`;
   const put = usePut(env)<BodyPut>;
 
   return useMutation({
-    mutationFn: ({ fields, updatedAttributes }) => put(url, getBodyPut(fields, updatedAttributes)),
+    mutationFn: ({ fields, updatedAttributes }) =>
+      put(url, getBodyPut(fields, updatedAttributes, version)),
     mutationKey: ["put_instance_attributes", service_entity, id, version, env],
     ...options,
   });

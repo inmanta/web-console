@@ -272,11 +272,13 @@ describe("EditInstancePage", () => {
 
     const body = {
       put_id: expect.any(String),
+      current_version: 3,
       attributes: expectedInstance,
+      ignore_read_only_attributes: true,
     };
 
     expect(mockPutFn).toHaveBeenCalledWith(
-      "/api/v1/service_inventory/service_name_d/service_instance_id_a?current_version=3&ignore_read_only_attributes=true",
+      "/api/v1/service_inventory/service_name_d/service_instance_id_a",
       body
     );
 

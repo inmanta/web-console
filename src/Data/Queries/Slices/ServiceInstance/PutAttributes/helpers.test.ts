@@ -14,11 +14,13 @@ test("GIVEN getBodyPut WHEN attributes contain numeric strings THEN sanitizes ty
     attr4: "42",
   };
 
-  const body = getBodyPut(fields, attributes);
+  const body = getBodyPut(fields, attributes, 3);
 
   expect(body.attributes.attr1).toEqual("some value");
   expect(body.attributes.attr3).toBe(true);
   expect(body.attributes.attr4).toEqual(42);
+  expect(body.current_version).toEqual(3);
+  expect(body.ignore_read_only_attributes).toBe(true);
 });
 
 test("GIVEN getBodyPut WHEN all attributes provided THEN sends all attributes without diffing", () => {
@@ -31,7 +33,7 @@ test("GIVEN getBodyPut WHEN all attributes provided THEN sends all attributes wi
     attr2: "value2",
   };
 
-  const body = getBodyPut(fields, attributes);
+  const body = getBodyPut(fields, attributes, 1);
 
   expect(body.attributes.attr1).toEqual("value1");
   expect(body.attributes.attr2).toEqual("value2");
@@ -41,8 +43,8 @@ test("GIVEN getBodyPut THEN generates a unique put_id on each call", () => {
   const fields = [{ ...Field.text, name: "attr1", isOptional: false, type: "string" }];
   const attributes = { attr1: "value" };
 
-  const body1 = getBodyPut(fields, attributes);
-  const body2 = getBodyPut(fields, attributes);
+  const body1 = getBodyPut(fields, attributes, 1);
+  const body2 = getBodyPut(fields, attributes, 1);
 
   expect(typeof body1.put_id).toBe("string");
   expect(body1.put_id.length).toBeGreaterThan(0);
