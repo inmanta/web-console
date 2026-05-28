@@ -1,0 +1,4 @@
+description: Edit instance now uses PUT /api/v1/service_inventory with ignore_read_only_attributes instead of PATCH v2 for services with strict modifier enforcement.
+issue-nr: 6903
+change-type: minor
+destination-branches: [master, iso9]

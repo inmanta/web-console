@@ -15,6 +15,7 @@ export * from "./PatchAttributesExpert";
 export * from "./PostExpertStateTransfer";
 export * from "./PostMetadata";
 export * from "./PatchAttributes";
+export * from "./PutAttributes";
 export * from "./PostStateTransfer";
 export * from "./PostInstance";
 export * from "./PostInstanceConfig";
