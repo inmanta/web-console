@@ -31,7 +31,7 @@ export const usePutAttributes = (
 ): UseMutationResult<Response, Error, MutationBody, unknown> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const url = `/api/v1/service_inventory/${service_entity}/${id}?current_version=${version}&ignore_read_only_attributes=true`;
+  const url = `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}&ignore_read_only_attributes=true`;
   const put = usePut(env)<BodyPut>;
 
   return useMutation({
