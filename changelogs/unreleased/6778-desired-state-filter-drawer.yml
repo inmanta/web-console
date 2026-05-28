@@ -1,5 +1,5 @@
 description: The Desired State page filters have been migrated to a side panel drawer, matching the pattern already used by the Resources page.
-destination-branches: [master, iso9]
-change-type: patch
+destination-branches: [master]
+change-type: major
 sections:
   minor-improvement: "{{description}}"
