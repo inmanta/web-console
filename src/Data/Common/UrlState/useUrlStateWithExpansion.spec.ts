@@ -1,4 +1,5 @@
-import { handleUrlStateWithExpansion } from "./useUrlStateWithExpansion";
+import { renderHook } from "@testing-library/react";
+import { useHandleUrlStateWithExpansion } from "./useUrlStateWithExpansion";
 
 test.each`
   search                                                                    | searchText   | expectedValue       | valueText
@@ -8,12 +9,14 @@ test.each`
 `(
   "GIVEN handleUrlState with Expansion WHEN search is $searchText THEN returns $valueText",
   async ({ search, expectedValue }) => {
-    const [value] = handleUrlStateWithExpansion(
-      { route: "Inventory" },
-      { pathname: "", search, hash: "" },
-      () => undefined
+    const { result } = renderHook(() =>
+      useHandleUrlStateWithExpansion(
+        { route: "Inventory" },
+        { pathname: "", search, hash: "" },
+        () => undefined
+      )
     );
 
-    expect(value).toEqual(expectedValue);
+    expect(result.current[0]).toEqual(expectedValue);
   }
 );
