@@ -8,7 +8,7 @@ import { DictValue, toDict, toText } from "./helpers";
 interface Props {
   field: DictField;
   value: unknown;
-  onChange: (value: DictValue) => void;
+  onChange: (value: DictValue | null) => void;
   readOnly?: boolean;
 }
 
@@ -32,39 +32,22 @@ export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOn
   const [isInvalid, setIsInvalid] = useState(false);
   const [height, setHeight] = useState(100);
 
-  const handleEditorDidMount: ComponentProps<typeof CodeEditor>["onEditorDidMount"] = (
-    editor,
-    monaco
-  ) => {
-    // Disable schema validation — without this Monaco rejects all
-    // properties because it has no schema to validate against.
-    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-      validate: true,
-      schemaValidation: "ignore",
-    });
-
+  const handleEditorDidMount: ComponentProps<typeof CodeEditor>["onEditorDidMount"] = (editor) => {
     // Initial height
-    setHeight(Math.min(editor.getContentHeight(), 400));
+    setHeight(Math.min(editor.getContentHeight(), 350));
 
     // Resize height accordingly
     editor.onDidContentSizeChange((e) => {
-      setHeight(Math.min(e.contentHeight, 400));
-    });
-
-    // Set errors whenever invalid json
-    monaco.editor.onDidChangeMarkers(() => {
-      const model = editor.getModel();
-      if (model) {
-        const markers = monaco.editor.getModelMarkers({ resource: model.uri });
-        setIsInvalid(markers.some((m) => m.severity === monaco.MarkerSeverity.Error));
-      }
+      setHeight(Math.min(e.contentHeight, 350));
     });
   };
 
   const handleChange = (val: string) => {
     setText(val);
     const parsed = toDict(val);
-    if (parsed !== null) {
+    // toDict returns undefined only on a parse error
+    setIsInvalid(parsed === undefined);
+    if (parsed !== undefined) {
       onChange(parsed);
     }
   };
@@ -81,9 +64,9 @@ export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOn
         aria-disabled={readOnly || undefined}
         code={text}
         language={Language.json}
+        // Explicit height prevents unbounded growth of the Editor
         height={`${height}px`}
         isReadOnly={readOnly}
-        isLanguageLabelVisible
         isLineNumbersVisible={false}
         isHeaderPlain
         options={{ scrollBeyondLastLine: false, folding: false }}

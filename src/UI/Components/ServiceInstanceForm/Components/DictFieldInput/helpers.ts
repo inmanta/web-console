@@ -1,43 +1,54 @@
-export type DictPrimitive = string | number | boolean;
-export type DictValue = Record<string, DictPrimitive | object>;
+export type DictValue = Record<string, unknown>;
 
 /**
- * Converts a JavaScript object into a formatted JSON string.
+ * Converts a value into a formatted JSON string for display in the editor.
  *
- * If the input is not a valid object or is empty, returns an empty JSON object string ("{}").
+ * - null   → "null"
+ * - string → tries to parse as JSON first (handles pre-stringified objects)
+ * - object → pretty-printed JSON
+ * - other  → "{}"
  *
  * @param {unknown} value - The value to convert into a JSON string.
- * @returns {string} A pretty-printed JSON string representation of the object.
+ * @returns {string} A pretty-printed JSON string representation of the value.
  */
 export function toText(value: unknown): string {
-  if (!value || typeof value !== "object") {
-    return "{}";
-  }
-  if (Object.keys(value).length === 0) {
-    return "{}";
-  }
+  try {
+    const parsed = typeof value === "string" ? JSON.parse(value) : value;
 
-  return JSON.stringify(value, null, 2);
+    if (parsed !== null && (typeof parsed !== "object" || Array.isArray(parsed))) {
+      return "{}";
+    }
+
+    return JSON.stringify(parsed, null, 2);
+  } catch {
+    return "{}";
+  }
 }
 
 /**
- * Parses a JSON string into a dictionary object.
+ * Parses a JSON string into a dictionary object or null.
  *
- * Only valid JSON objects (non-array, non-null) are accepted.
- * Returns null if parsing fails or the structure is invalid.
+ * Returns undefined (error sentinel) when parsing fails or the result is not a plain object or null.
+ * Returns null when the JSON is the literal "null".
+ * Returns a DictValue object otherwise.
  *
  * @param {string} text - JSON string to parse.
- * @returns {DictValue | null} Parsed object or null if invalid.
+ * @returns {DictValue | null | undefined} Parsed object, null, or undefined on error.
  */
-export function toDict(text: string): DictValue | null {
+export function toDict(text: string): DictValue | null | undefined {
   try {
     const parsed = JSON.parse(text);
-    if (typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)) {
+
+    if (parsed === null) {
+      return null;
+    }
+
+    if (typeof parsed === "object" && !Array.isArray(parsed)) {
       return parsed;
     }
 
-    return null;
+    return undefined;
   } catch {
-    return null;
+    return undefined;
   }
 }
