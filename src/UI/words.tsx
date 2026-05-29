@@ -585,6 +585,7 @@ const dict = {
   "resources.filters.desiredState.purged": "Purged",
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.clearAll": "Clear all",
+  "resources.filters.active.resetAll": "Reset Filters",
   "resources.filters.active.empty.title": "No filters applied",
   "resources.filters.active.empty.body":
     "Select filters from the tabs above to refine your results.",
