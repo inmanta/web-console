@@ -585,7 +585,8 @@ describe("ResourcesPage", () => {
       expect(results).toHaveNoViolations();
     });
   });
-  test("clear all filters removes default orphan filter", async () => {
+
+  test("reset filters restores default orphan filter", async () => {
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) =>
         HttpResponse.json({
@@ -598,18 +599,25 @@ describe("ResourcesPage", () => {
 
     render(component);
 
+    // Default !orphaned filter is active — only non-orphaned resources shown
     const rows = await screen.findAllByLabelText("Resource Table Row");
     expect(rows).toHaveLength(3);
 
     await openFiltersDrawer();
 
-    const clearAllButton = await screen.findByRole("button", {
-      name: words("resources.filters.active.clearAll"),
-    });
-    await userEvent.click(clearAllButton);
+    // Remove the !orphaned chip, which disables the orphaned default and shows all resources
+    await userEvent.click(screen.getByLabelText("Close !orphaned"));
+    const rowsWithoutOrphanFilter = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsWithoutOrphanFilter).toHaveLength(6);
 
-    const rowsAfterClearingFilters = await screen.findAllByLabelText("Resource Table Row");
-    expect(rowsAfterClearingFilters).toHaveLength(6);
+    // Reset Filters should restore the !orphaned default
+    const resetFiltersButton = await screen.findByRole("button", {
+      name: words("resources.filters.active.resetAll"),
+    });
+    await userEvent.click(resetFiltersButton);
+
+    const rowsAfterReset = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterReset).toHaveLength(3);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -629,21 +637,21 @@ describe("ResourcesPage", () => {
     await openFiltersDrawer();
 
     // Default filter (orphaned excluded) counts as 1
-    expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("1");
+    expect(screen.getByRole("button", { name: /^\d*\s*Filters$/ })).toHaveTextContent("1");
 
     const agentInput = await screen.findByPlaceholderText(
       words("resources.filters.resource.agent.placeholder")
     );
     await userEvent.type(agentInput, "agent2{enter}");
 
-    expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("2");
+    expect(screen.getByRole("button", { name: /^\d*\s*Filters$/ })).toHaveTextContent("2");
 
     const typeInput = await screen.findByPlaceholderText(
       words("resources.filters.resource.type.placeholder")
     );
     await userEvent.type(typeInput, "std::File{enter}");
 
-    expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("3");
+    expect(screen.getByRole("button", { name: /^\d*\s*Filters$/ })).toHaveTextContent("3");
   });
 
   test("agent filter dropdown shows options fetched from the API", async () => {
