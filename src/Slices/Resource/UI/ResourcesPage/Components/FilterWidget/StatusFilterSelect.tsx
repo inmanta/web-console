@@ -6,28 +6,9 @@ import { words } from "@/UI/words";
 import { IncludeExcludeSelect } from "./IncludeExcludeSelect";
 import { removeInvertedSelection } from "./utils";
 
-//As we don't have enums in our type domains this is the best solution for now
-//But can possibly be reworked in:
-//TODO: https://github.com/inmanta/web-console/issues/6814
-const LastHandlerRunValues = [
-  "failed",
-  "skipped",
-  "successful",
-  "new",
-] as const satisfies Resource.LastHandlerRunKey[];
-
-const ComplianceValues = [
-  "compliant",
-  "has_update",
-  "non_compliant",
-  "undefined",
-] as const satisfies Resource.ComplianceKey[];
-
-const BlockedValues = [
-  "blocked",
-  "not_blocked",
-  "temporarily_blocked",
-] as const satisfies Resource.BlockedKey[];
+const LastHandlerRunValues = Object.keys(Resource.LAST_HANDLER_RUN) as Resource.LastHandlerRunKey[];
+const ComplianceValues = Object.keys(Resource.COMPLIANCE) as Resource.ComplianceKey[];
+const BlockedValues = Object.keys(Resource.BLOCKED) as Resource.BlockedKey[];
 
 export interface StatusFilterSelectProps {
   selectedStatuses?: string[];
