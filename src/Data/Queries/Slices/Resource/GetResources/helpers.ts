@@ -3,31 +3,6 @@ import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common";
 import { PageInfo } from "./useGetResources";
 
-//TODO: mapping should still be re-evaluated again => https://github.com/inmanta/web-console/issues/6814
-/** This is used to map the statusses of all compound states correctly */
-const STATUS_FIELD_MAP = {
-  // --- LastHandlerRun ---
-  failed: { field: "lastHandlerRun", value: "FAILED" },
-  skipped: { field: "lastHandlerRun", value: "SKIPPED" },
-  successful: { field: "lastHandlerRun", value: "SUCCESSFUL" },
-  new: { field: "lastHandlerRun", value: "NEW" },
-  // --- Compliance ---
-  compliant: { field: "compliance", value: "COMPLIANT" },
-  non_compliant: { field: "compliance", value: "NON_COMPLIANT" },
-  has_update: { field: "compliance", value: "HAS_UPDATE" },
-  undefined: { field: "compliance", value: "UNDEFINED" },
-  // --- Blocked---
-  blocked: { field: "blocked", value: "BLOCKED" },
-  not_blocked: { field: "blocked", value: "NOT_BLOCKED" },
-  temporarily_blocked: { field: "blocked", value: "TEMPORARILY_BLOCKED" },
-} satisfies Record<
-  Resource.CompoundStateKey,
-  {
-    field: keyof Resource.CompoundStateSummary;
-    value: Resource.CompoundState;
-  }
->;
-
 type GraphQLStateFilter = Partial<{
   purged: boolean;
   isOrphan: boolean;
@@ -36,10 +11,6 @@ type GraphQLStateFilter = Partial<{
   compliance: { eq?: Resource.Compliance[]; neq?: Resource.Compliance[] };
   blocked: { eq?: Resource.Blocked[]; neq?: Resource.Blocked[] };
 }>;
-
-function isCompoundStateKey(value: string): value is Resource.CompoundStateKey {
-  return value in STATUS_FIELD_MAP;
-}
 
 /**
  * Maps a filter.status array to GraphQL ResourceFilter fields.
@@ -80,22 +51,12 @@ export function mapStatusToGraphQLFilter(statusses?: string[]): GraphQLStateFilt
       continue;
     }
 
-    if (!isCompoundStateKey(key)) {
-      continue;
-    }
-
-    const { field, value } = STATUS_FIELD_MAP[key];
-
-    switch (field) {
-      case "lastHandlerRun":
-        lastHandlerRun[operator].push(value);
-        break;
-      case "compliance":
-        compliance[operator].push(value);
-        break;
-      case "blocked":
-        blocked[operator].push(value);
-        break;
+    if (key in Resource.LAST_HANDLER_RUN) {
+      lastHandlerRun[operator].push(Resource.LAST_HANDLER_RUN[key]);
+    } else if (key in Resource.COMPLIANCE) {
+      compliance[operator].push(Resource.COMPLIANCE[key]);
+    } else if (key in Resource.BLOCKED) {
+      blocked[operator].push(Resource.BLOCKED[key]);
     }
   }
 
