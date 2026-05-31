@@ -18,17 +18,20 @@ import { ServiceEntityShape } from "./ServiceEntityShape";
  */
 export class ComposerPaper {
   paper: dia.Paper;
-  private _relationsDictionary: RelationsDictionary;
-  private _serviceCatalog: ServiceModel[];
+  // Held as refs (not snapshots) so the paper always reads the latest catalog and
+  // relations dictionary in its event handlers without needing to be recreated when
+  // those change. See useComposerGraph for why recreating the paper must be avoided.
+  private _relationsDictionaryRef: { current: RelationsDictionary };
+  private _serviceCatalogRef: { current: ServiceModel[] };
 
   constructor(
     graph: dia.Graph,
     editable: boolean,
-    relationsDictionary: RelationsDictionary,
-    serviceCatalog: ServiceModel[]
+    relationsDictionaryRef: { current: RelationsDictionary },
+    serviceCatalogRef: { current: ServiceModel[] }
   ) {
-    this._relationsDictionary = relationsDictionary;
-    this._serviceCatalog = serviceCatalog;
+    this._relationsDictionaryRef = relationsDictionaryRef;
+    this._serviceCatalogRef = serviceCatalogRef;
 
     this.paper = new dia.Paper({
       model: graph,
@@ -152,8 +155,8 @@ export class ComposerPaper {
         sourceCell,
         targetCell,
         graph,
-        this._relationsDictionary,
-        this._serviceCatalog
+        this._relationsDictionaryRef.current,
+        this._serviceCatalogRef.current
       );
       if (!canRemove) {
         return;
@@ -205,8 +208,8 @@ export class ComposerPaper {
               sourceShape,
               targetShape,
               graph,
-              this._relationsDictionary,
-              this._serviceCatalog
+              this._relationsDictionaryRef.current,
+              this._serviceCatalogRef.current
             )
           ) {
             return;

@@ -57,11 +57,24 @@ export const useComposerGraph = ({
 }: UseComposerGraphParams): UseComposerGraphReturn => {
   const initializationKeyRef = useRef<string | null>(null);
 
+  // The paper only reads the catalog and relations dictionary inside its event
+  // handlers (e.g. when deciding whether a link may be removed). Keeping them in
+  // refs lets the paper always see the latest values without being part of its
+  // useMemo dependencies — so the paper is NOT recreated when the catalog is
+  // refetched mid-session. Recreating it would leave a fresh, still-frozen paper
+  // that the init effect skips (its instance key is unchanged), blanking the canvas.
+  const relationsDictionaryRef = useRef(relationsDictionary);
+  const serviceCatalogRef = useRef<ServiceModel[]>(serviceCatalog || []);
+  useEffect(() => {
+    relationsDictionaryRef.current = relationsDictionary;
+    serviceCatalogRef.current = serviceCatalog || [];
+  }, [relationsDictionary, serviceCatalog]);
+
   // Create graph, paper, and scroller only once using useMemo to prevent recreation on every render
   const graph = useMemo(() => new dia.Graph({}, { cellNamespace: shapes }), []);
   const paper = useMemo(
-    () => new ComposerPaper(graph, editable, relationsDictionary, serviceCatalog || []).paper,
-    [graph, editable, relationsDictionary, serviceCatalog]
+    () => new ComposerPaper(graph, editable, relationsDictionaryRef, serviceCatalogRef).paper,
+    [graph, editable]
   );
 
   const scroller = useMemo(
