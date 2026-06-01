@@ -209,29 +209,33 @@ describe("Scenario 6 : Resources", () => {
         cy.wrap($rows.length).as("initialRowCount");
       });
 
-      // Add a resource-states instance with scale=2 to get enough resources for pagination
+      // Add a resource-states instance with scale=3 to get enough resources for pagination
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#resource-states").contains("Show inventory").click();
       cy.get("#add-instance-button").click();
       cy.get("#name").type("pagination-test");
-      cy.get("#scale").type("2");
+      cy.get("#scale").clear().type("3");
       cy.get("button").contains("Confirm").click();
 
       cy.get('[aria-label="Instance-Details-Success"]', { timeout: 20000 }).should("be.visible");
       cy.get('[aria-label="CompileReportsIndication"]', { timeout: 90000 }).should("not.exist");
 
-      // Verify at least 52 new resources were added
+      // Set page size to 250 before verifying count so all resources are visible
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get("#PaginationWidget-top-top-toggle").click();
+      cy.get('[data-action="per-page-250"]').click();
+
+      // Verify at least 76 new resources were added
       cy.get("@initialRowCount").then((initialRowCount) => {
         cy.get('[aria-label="Resource Table Row"]', { timeout: 80000 }).should(
           "have.length.at.least",
-          initialRowCount + 52
+          initialRowCount + 76
         );
       });
 
       // Switch to page size 20 and verify we start on page 1
       cy.get("#PaginationWidget-top-top-toggle").click();
-      cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist"); // 100 is default
+      cy.contains(".pf-v6-c-menu__list-item", "250").find("svg").should("exist");
       cy.contains(".pf-v6-c-menu__list-item", "20").click();
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
@@ -405,6 +409,54 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Is Deploying"]').click();
       expectFilteredLessThan("initialRowCount");
       cy.get('[aria-label="Close isDeploying"]').click();
+      expectRowCountRestored("initialRowCount");
+
+      // --- Orphaned filter ---
+      // Intercept the delete so we can confirm the server processed it before proceeding
+      cy.intercept("DELETE", "/lsm/v1/service_inventory/resource-states/**").as("DeleteInstance");
+
+      // Delete the "test" resource-states instance to orphan its resources
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+      cy.get("#resource-states").contains("Show inventory").click();
+      cy.get('[aria-label="IdentityCell-test"]')
+        .closest('[aria-label="InstanceRow-Intro"]')
+        .find('[aria-label="row actions toggle"]')
+        .click();
+      cy.get('[role="menuitem"]').contains("Delete").click();
+      cy.get("button").contains("Yes").click();
+      cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);
+
+      // Navigate to Resources, then wait for the recompile to start and finish
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="CompileReportsIndication"]', { timeout: 30000 }).should("exist");
+      cy.get('[aria-label="CompileReportsIndication"]', { timeout: 90000 }).should("not.exist");
+
+      // Restore page size to 250 so all resources are visible for accurate counting
+      cy.get("#PaginationWidget-top-top-toggle").click();
+      cy.get('[data-action="per-page-250"]').click();
+
+      // Open the filter drawer on the Status tab
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+      cy.get("button").contains("Status").click();
+
+      // Intercept the GraphQL resource query — needed because keepPreviousData keeps
+      // stale rows visible while the new request is in flight, so we must wait for
+      // each response before asserting row counts
+      cy.intercept("POST", "/api/v2/graphql").as("resourcesQuery");
+
+      // "Orphaned" shows only the orphaned resources — fewer than the total
+      cy.get("button").contains("Orphaned").click();
+      cy.wait("@resourcesQuery");
+      expectFilteredLessThan("initialRowCount");
+
+      // "Not Orphaned" hides the orphaned resources — also fewer than the total
+      cy.get("button").contains("Not Orphaned").click();
+      cy.wait("@resourcesQuery");
+      expectFilteredLessThan("initialRowCount");
+
+      // "Both" restores the full count (resources still exist, just reclassified as orphaned)
+      cy.get("button").contains("Both").click();
+      cy.wait("@resourcesQuery");
       expectRowCountRestored("initialRowCount");
     });
   } else {

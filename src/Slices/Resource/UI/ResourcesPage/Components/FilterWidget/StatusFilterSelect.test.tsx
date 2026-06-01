@@ -4,6 +4,15 @@ import { userEvent } from "@testing-library/user-event";
 import { words } from "@/UI";
 import { StatusFilterSelect } from "./StatusFilterSelect";
 
+const getById = (id: string): HTMLElement => {
+  const el = document.getElementById(id);
+  if (!el) {
+    throw new Error(`No element found with id: "${id}"`);
+  }
+
+  return el;
+};
+
 const StatusFilterHarness: React.FC<{ initial?: string[] }> = ({ initial }) => {
   const [selected, setSelected] = useState<string[]>(initial ?? []);
 
@@ -174,5 +183,27 @@ describe("StatusFilterSelect", () => {
 
     await userEvent.click(isDeployingSwitch);
     expect(isDeployingSwitch).not.toBeChecked();
+  });
+
+  it("orphaned toggle group selections are mutually exclusive and can be reset to Both", async () => {
+    render(<StatusFilterHarness initial={["!orphaned"]} />);
+
+    // Switch to Orphaned — clears Not Orphaned
+    const orphanedInclude = getById("orphaned-include");
+    await userEvent.click(orphanedInclude);
+    expect(document.getElementById("orphaned-include")).toHaveAttribute("aria-pressed", "true");
+    expect(document.getElementById("orphaned-exclude")).toHaveAttribute("aria-pressed", "false");
+
+    // Switch back to Not Orphaned — clears Orphaned
+    const orphanedExclude = getById("orphaned-exclude");
+    await userEvent.click(orphanedExclude);
+    expect(document.getElementById("orphaned-exclude")).toHaveAttribute("aria-pressed", "true");
+    expect(document.getElementById("orphaned-include")).toHaveAttribute("aria-pressed", "false");
+
+    // Reset to Both — clears Not Orphaned
+    const orphanedBoth = getById("orphaned-both");
+    await userEvent.click(orphanedBoth);
+    expect(document.getElementById("orphaned-both")).toHaveAttribute("aria-pressed", "true");
+    expect(document.getElementById("orphaned-exclude")).toHaveAttribute("aria-pressed", "false");
   });
 });
