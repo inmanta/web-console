@@ -6,9 +6,13 @@ import { words } from "@/UI/words";
 import { IncludeExcludeSelect } from "./IncludeExcludeSelect";
 import { removeInvertedSelection } from "./utils";
 
-const LastHandlerRunValues = Object.keys(Resource.LAST_HANDLER_RUN) as Resource.LastHandlerRunKey[];
-const ComplianceValues = Object.keys(Resource.COMPLIANCE) as Resource.ComplianceKey[];
-const BlockedValues = Object.keys(Resource.BLOCKED) as Resource.BlockedKey[];
+function typedKeys<T extends object>(obj: T): (keyof T)[] {
+  return Object.keys(obj) as (keyof T)[];
+}
+
+const LastHandlerRunValues = typedKeys(Resource.LAST_HANDLER_RUN);
+const ComplianceValues = typedKeys(Resource.COMPLIANCE);
+const BlockedValues = typedKeys(Resource.BLOCKED);
 
 export interface StatusFilterSelectProps {
   selectedStatuses?: string[];

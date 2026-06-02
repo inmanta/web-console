@@ -72,7 +72,7 @@ const resolveColor = (variant: ColorVariant = "state", state?: Resource.Compound
 
   const key = state?.toLowerCase() as Resource.CompoundStateKey | undefined;
 
-  return key !== undefined ? colorConfig[key] : DEFAULT_COLOR;
+  return key !== undefined && key in colorConfig ? colorConfig[key] : DEFAULT_COLOR;
 };
 
 /** Icons for every compound state. */
