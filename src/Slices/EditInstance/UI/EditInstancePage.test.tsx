@@ -136,7 +136,7 @@ describe("EditInstancePage", () => {
       }
     ),
     http.patch("/lsm/v1/service_inventory/service_name_a/service_instance_id_a", async () => {}),
-    http.put("/api/v1/service_inventory/service_name_d/service_instance_id_a", async () => {})
+    http.put("/lsm/v1/service_inventory/service_name_d/service_instance_id_a", async () => {})
   );
 
   beforeAll(() => {
@@ -278,7 +278,7 @@ describe("EditInstancePage", () => {
     };
 
     expect(mockPutFn).toHaveBeenCalledWith(
-      "/api/v1/service_inventory/service_name_d/service_instance_id_a",
+      "/lsm/v1/service_inventory/service_name_d/service_instance_id_a",
       body
     );
 
