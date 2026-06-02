@@ -67,7 +67,9 @@ export const cloneDeep = <T>(value: T): T => {
  * Lightweight replacement for `lodash/isEqual` to avoid bundling lodash.
  */
 export const isEqual = (a: unknown, b: unknown): boolean => {
-  if (a === b) return true;
+  if (a === b) {
+    return true;
+  }
 
   if (a === null || b === null || a === undefined || b === undefined) {
     return a === b;
@@ -89,7 +91,9 @@ export const isEqual = (a: unknown, b: unknown): boolean => {
     }
 
     for (let index = 0; index < a.length; index += 1) {
-      if (!isEqual(a[index], b[index])) return false;
+      if (!isEqual(a[index], b[index])) {
+        return false;
+      }
     }
 
     return true;

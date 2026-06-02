@@ -40,6 +40,7 @@ function triggerRefetch() {
 vi.mock("@/Data/Queries", () => ({
   useGet: () => async (path: string) => {
     const response = await fetch(path);
+
     return response.json();
   },
   useGetInstanceConfig: () => ({
@@ -49,11 +50,13 @@ vi.mock("@/Data/Queries", () => ({
       useEffect(() => {
         const cb = () => setRerender({});
         subscribeRefetch(cb);
+
         return () => {
           // Remove on unmount
           refetchSubscribers = refetchSubscribers.filter((f) => f !== cb);
         };
       }, []);
+
       return {
         data: mockConfigData,
         isSuccess: true,

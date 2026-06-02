@@ -11,6 +11,7 @@ import {
 import { RelationsDictionary } from "../../Data/Helpers/createRelationsDictionary";
 import { LinkShape } from "./LinkShape";
 import { ServiceEntityShape } from "./ServiceEntityShape";
+import { getConnectedLayerData } from "./createHalo";
 
 /**
  * Wrapper around JointJS `dia.Paper` used by the composer.
@@ -81,6 +82,7 @@ export class ComposerPaper {
           // Check both directions to ensure the connection is valid from both sides
           const sourceToTargetAllowed = sourceEntityBlock.validateConnection(targetEntityBlock);
           const targetToSourceAllowed = targetEntityBlock.validateConnection(sourceEntityBlock);
+
           return sourceToTargetAllowed && targetToSourceAllowed && baseValidators;
         }
 
@@ -267,6 +269,7 @@ export class ComposerPaper {
                   conn.missing,
                   conn.required
                 );
+
           return `<div>${line}</div>`;
         });
         parts.push(...connectionLines);
@@ -280,6 +283,22 @@ export class ComposerPaper {
           parts.push('<div style="margin-top: 2px;"></div>');
         }
         parts.push(`<div>${words("instanceComposer.tooltip.missingRequiredAttributes")}</div>`);
+      }
+
+      // When layers are collapsed, surface any validity errors in the hidden children
+      if (shape.isLayersCollapsed) {
+        const { shapes: layerShapes } = getConnectedLayerData(graph, shape);
+        const hasInvalidCollapsed = layerShapes.some((child) => {
+          child.validateAttributes();
+
+          return child.isMissingConnections() || child.hasAttributeValidationErrors;
+        });
+        if (hasInvalidCollapsed) {
+          if (parts.length > 0) {
+            parts.push('<div style="margin-top: 2px;"></div>');
+          }
+          parts.push(`<div>${words("instanceComposer.tooltip.collapsedRelationsInvalid")}</div>`);
+        }
       }
 
       if (parts.length === 0) {

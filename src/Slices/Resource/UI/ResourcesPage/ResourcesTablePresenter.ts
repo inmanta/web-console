@@ -37,6 +37,7 @@ export const getColumnNameForIndex = (index: number): string | undefined => {
   if (index > -1 && index < columnHeads.length + 1) {
     return columnHeads[index].apiName;
   }
+
   return undefined;
 };
 

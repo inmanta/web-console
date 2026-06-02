@@ -35,7 +35,9 @@ export const AttributesFilter: React.FC<Props> = ({ sets, update, isVisible }) =
   >(undefined);
 
   const onAttributeRuleChange = (rule: AttributeRule) => {
-    if (typeof attributeSetFilter === "undefined") return;
+    if (typeof attributeSetFilter === "undefined") {
+      return;
+    }
 
     setAttributeSetFilter(undefined);
     update(
@@ -59,7 +61,9 @@ export const AttributesFilter: React.FC<Props> = ({ sets, update, isVisible }) =
 
   const onAttributeSetChange = (attributeSet: ServiceInstanceParams.AttributeSet) => {
     setAttributeSetFilter((current) => {
-      if (current === attributeSet) return undefined;
+      if (current === attributeSet) {
+        return undefined;
+      }
 
       return attributeSet;
     });
@@ -179,11 +183,17 @@ function getRuleForAttributeSet(
   { empty, notEmpty }: AttributeSets,
   attributeSet: ServiceInstanceParams.AttributeSet | undefined
 ): AttributeRule | undefined {
-  if (typeof attributeSet === "undefined") return undefined;
+  if (typeof attributeSet === "undefined") {
+    return undefined;
+  }
 
-  if (empty.includes(attributeSet)) return AttributeRule.Empty;
+  if (empty.includes(attributeSet)) {
+    return AttributeRule.Empty;
+  }
 
-  if (notEmpty.includes(attributeSet)) return AttributeRule.NotEmpty;
+  if (notEmpty.includes(attributeSet)) {
+    return AttributeRule.NotEmpty;
+  }
 
   return undefined;
 }

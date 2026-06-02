@@ -17,5 +17,6 @@ export function isServiceEntityShapeCell(cell: dia.Cell): cell is ServiceEntityS
 
 export const getEntitiesFromCanvas = (graph: dia.Graph): ServiceEntityShape[] => {
   const elementsOnCanvas = graph.getElements();
+
   return elementsOnCanvas.filter(isServiceEntityShape);
 };

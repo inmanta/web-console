@@ -20,6 +20,7 @@ describe("linkUtils", () => {
       getEntityName: vi.fn().mockReturnValue(entityName),
       addConnection: vi.fn(),
       removeConnection: vi.fn(),
+      parentIds: new Set<string>(),
     } as unknown as ServiceEntityShape;
   };
 
@@ -110,6 +111,16 @@ describe("linkUtils", () => {
       // Target connects to source using source's entity name
       expect(targetShape.addConnection).toHaveBeenCalledWith("source-1", "ServiceA");
     });
+
+    it("should register source as a known parent of target in parentIds", () => {
+      const sourceShape = createMockShape("source-1", "ServiceA");
+      const targetShape = createMockShape("target-1", "ServiceB");
+
+      addConnectionsBetweenShapes(sourceShape, targetShape);
+
+      expect(targetShape.parentIds.has("source-1")).toBe(true);
+      expect(sourceShape.parentIds.has("target-1")).toBe(false);
+    });
   });
 
   describe("removeConnectionsBetweenShapes", () => {
@@ -133,6 +144,16 @@ describe("linkUtils", () => {
       expect(sourceShape.removeConnection).toHaveBeenCalledWith("target-1", "ServiceB");
       // Target removes connection to source using source's entity name
       expect(targetShape.removeConnection).toHaveBeenCalledWith("source-1", "ServiceA");
+    });
+
+    it("should remove source from target's parentIds", () => {
+      const sourceShape = createMockShape("source-1", "ServiceA");
+      const targetShape = createMockShape("target-1", "ServiceB");
+      targetShape.parentIds.add("source-1");
+
+      removeConnectionsBetweenShapes(sourceShape, targetShape);
+
+      expect(targetShape.parentIds.has("source-1")).toBe(false);
     });
   });
 });

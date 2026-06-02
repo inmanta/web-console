@@ -66,5 +66,6 @@ export const convertLowerLimitToNumber = (
   if (typeof lowerLimit === "bigint") {
     return Number(lowerLimit);
   }
+
   return lowerLimit ?? 0;
 };

@@ -37,6 +37,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
     }),
     http.get("lsm/v1/callbacks", async () => {
       await delay(500);
+
       return HttpResponse.json({ data: Callback.list });
     })
   );

@@ -75,6 +75,7 @@ export const CompoundResourceStatus = ({
         height: "20px",
         onClick,
       }));
+
     return items;
   };
 

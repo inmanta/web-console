@@ -6,7 +6,9 @@ export class SearchHelper {
    * Clears the leading question mark character from the search string if present.
    */
   private clearQuestionMark(search: string): string {
-    if (search.startsWith("?")) return search.slice(1);
+    if (search.startsWith("?")) {
+      return search.slice(1);
+    }
 
     return search;
   }
