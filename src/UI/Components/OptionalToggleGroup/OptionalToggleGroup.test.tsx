@@ -11,9 +11,7 @@ describe("OptionalToggleGroup", () => {
   it("GIVEN one option active WHEN the other option is clicked THEN it replaces the active one", async () => {
     const onChange = vi.fn();
 
-    render(
-      <OptionalToggleGroup options={options} selected={["orphaned"]} onChange={onChange} />
-    );
+    render(<OptionalToggleGroup options={options} selected={["orphaned"]} onChange={onChange} />);
 
     await userEvent.click(screen.getByRole("button", { name: "Not Orphaned" }));
 
@@ -23,9 +21,7 @@ describe("OptionalToggleGroup", () => {
   it("GIVEN one option active WHEN that same option is clicked THEN it is deselected", async () => {
     const onChange = vi.fn();
 
-    render(
-      <OptionalToggleGroup options={options} selected={["!orphaned"]} onChange={onChange} />
-    );
+    render(<OptionalToggleGroup options={options} selected={["!orphaned"]} onChange={onChange} />);
 
     await userEvent.click(screen.getByRole("button", { name: "Not Orphaned" }));
 
