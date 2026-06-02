@@ -4,6 +4,7 @@ import { ParsedNumber } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Queries";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
+
 import {
   PageContainer,
   ConfirmUserActionForm,
@@ -16,11 +17,10 @@ import {
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
-import { DesiredStateVersionStatus } from "../Core/Domain";
 import { TableControls, ConnectedFilterWidget } from "./Components";
 import { DesiredStatesTable } from "./DesiredStatesTable";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
-import { CompareSelection } from "./Utils";
+import { CompareSelection, applyFilterDefaults } from "./Utils";
 
 /**
  * The Page component that renders the desired state page.
@@ -37,20 +37,7 @@ export const Page: React.FC = () => {
     filterKeys: { date: "DateRange", version: "IntRange", disregardDefault: "Boolean" },
   });
 
-  const filterWithDefaults = useMemo(
-    () =>
-      !filter.disregardDefault && !filter.status
-        ? {
-            ...filter,
-            status: [
-              DesiredStateVersionStatus.active,
-              DesiredStateVersionStatus.candidate,
-              DesiredStateVersionStatus.retired,
-            ],
-          }
-        : filter,
-    [filter]
-  );
+  const filterWithDefaults = useMemo(() => applyFilterDefaults(filter), [filter]);
 
   const [compareSelection, setCompareSelection] = useState<CompareSelection>({
     kind: "None",

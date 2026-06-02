@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from "react";
 import { useUrlStateWithFilter } from "@/Data";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
-import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
+import { applyFilterDefaults } from "@S/DesiredState/UI/Utils";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
 interface Props {
@@ -17,7 +17,6 @@ interface Props {
  *
  * The disregardDefault flag is stored in the URL to survive round-trips and
  * signals that the user has explicitly cleared the default status filters.
- * The same default-status logic applied here must match Page.tsx's filterWithDefaults.
  */
 export const ConnectedFilterWidget: React.FC<Props> = memo(({ onClose }) => {
   const [filter, setFilter] = useUrlStateWithFilter<Filter>({
@@ -25,20 +24,7 @@ export const ConnectedFilterWidget: React.FC<Props> = memo(({ onClose }) => {
     keys: { date: "DateRange", version: "IntRange", disregardDefault: "Boolean" },
   });
 
-  const filterWithDefaults = useMemo(
-    () =>
-      !filter.disregardDefault && !filter.status
-        ? {
-            ...filter,
-            status: [
-              DesiredStateVersionStatus.active,
-              DesiredStateVersionStatus.candidate,
-              DesiredStateVersionStatus.retired,
-            ],
-          }
-        : filter,
-    [filter]
-  );
+  const filterWithDefaults = useMemo(() => applyFilterDefaults(filter), [filter]);
 
   return (
     <FilterWidgetComponent filter={filterWithDefaults} setFilter={setFilter} onClose={onClose} />

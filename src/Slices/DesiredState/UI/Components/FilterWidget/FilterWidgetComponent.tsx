@@ -57,10 +57,15 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
   const removeStatusChip = (value: string) => {
     const updated = (filter.status ?? []).filter((s) => s !== value);
 
-    setFilter({ ...filter, status: updated.length > 0 ? updated : undefined, disregardDefault: true });
+    setFilter({
+      ...filter,
+      status: updated.length > 0 ? updated : undefined,
+      disregardDefault: true,
+    });
   };
 
-  const clearStatusFilters = () => setFilter({ ...filter, status: undefined, disregardDefault: true });
+  const clearStatusFilters = () =>
+    setFilter({ ...filter, status: undefined, disregardDefault: true });
 
   // --- Date ---
   const applyDateFromFilter = () => {
