@@ -6,6 +6,7 @@ import {
   DrawerHead,
   DrawerPanelBody,
   DrawerPanelContent,
+  Form,
   Stack,
   StackItem,
   Tab,
@@ -146,46 +147,48 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
         </DrawerActions>
       </DrawerHead>
       <DrawerPanelBody>
-        <Stack hasGutter>
-          <StackItem isFilled>
-            <Tabs activeKey={activeTabKey} onSelect={(_, tabIndex) => setActiveTabKey(tabIndex)}>
-              <Tab
-                eventKey={0}
-                title={<TabTitleText>{words("resources.filters.tabs.resource")}</TabTitleText>}
-              >
-                <ResourceFilterForm
-                  onAddType={handleAddType}
-                  onAddValue={handleAddValue}
-                  onAddAgent={handleAddAgent}
-                  onChangeStatus={handleStatusChange}
-                  filter={filter}
-                />
-              </Tab>
-              <Tab
-                eventKey={1}
-                title={<TabTitleText>{words("resources.filters.tabs.status")}</TabTitleText>}
-              >
-                <StatusFilterSelect
-                  selectedStatuses={filter.status}
-                  onChange={handleStatusChange}
-                />
-              </Tab>
-            </Tabs>
-          </StackItem>
-          <Divider />
-          <ActiveFiltersSection
-            filter={filter}
-            onClearAll={clearAllFilters}
-            removeTypeChip={removeTypeChip}
-            removeAgentChip={removeAgentChip}
-            removeValueChip={removeValueChip}
-            removeStatusChip={removeStatusChip}
-            clearTypeFilters={clearTypeFilters}
-            clearAgentFilters={clearAgentFilters}
-            clearValueFilters={clearValueFilters}
-            clearStatusFilters={clearStatusFilters}
-          />
-        </Stack>
+        <Form>
+          <Stack hasGutter>
+            <StackItem isFilled>
+              <Tabs activeKey={activeTabKey} onSelect={(_, tabIndex) => setActiveTabKey(tabIndex)}>
+                <Tab
+                  eventKey={0}
+                  title={<TabTitleText>{words("resources.filters.tabs.resource")}</TabTitleText>}
+                >
+                  <ResourceFilterForm
+                    onAddType={handleAddType}
+                    onAddValue={handleAddValue}
+                    onAddAgent={handleAddAgent}
+                    onChangeStatus={handleStatusChange}
+                    filter={filter}
+                  />
+                </Tab>
+                <Tab
+                  eventKey={1}
+                  title={<TabTitleText>{words("resources.filters.tabs.status")}</TabTitleText>}
+                >
+                  <StatusFilterSelect
+                    selectedStatuses={filter.status}
+                    onChange={handleStatusChange}
+                  />
+                </Tab>
+              </Tabs>
+            </StackItem>
+            <Divider />
+            <ActiveFiltersSection
+              filter={filter}
+              onClearAll={clearAllFilters}
+              removeTypeChip={removeTypeChip}
+              removeAgentChip={removeAgentChip}
+              removeValueChip={removeValueChip}
+              removeStatusChip={removeStatusChip}
+              clearTypeFilters={clearTypeFilters}
+              clearAgentFilters={clearAgentFilters}
+              clearValueFilters={clearValueFilters}
+              clearStatusFilters={clearStatusFilters}
+            />
+          </Stack>
+        </Form>
       </DrawerPanelBody>
     </DrawerPanelContent>
   );

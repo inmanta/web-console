@@ -1,14 +1,8 @@
 import React from "react";
-import {
-  FormGroup,
-  Stack,
-  StackItem,
-  Switch,
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@patternfly/react-core";
+import { FormGroup, Stack, StackItem, Switch } from "@patternfly/react-core";
 import { Resource, toggleValueInList } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
+import { OptionalToggleGroup } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { IncludeExcludeSelect } from "./IncludeExcludeSelect";
 import { removeInvertedSelection } from "./utils";
@@ -51,21 +45,12 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
     const updatedSelection = uniq(toggleValueInList(selection, safeSelectedStates));
     onChange(updatedSelection);
   };
-  console.log("selectedStatuses", selectedStatuses);
 
   const handleIsDeploying = (hasChanged: boolean) => {
     const currentStatuses = selectedStatuses ?? [];
     const updatedSelection = hasChanged
       ? [...currentStatuses, "isDeploying"]
       : currentStatuses.filter((s) => s !== "isDeploying");
-    onChange(updatedSelection);
-  };
-
-  const handleOrphanedChange = (value: "orphaned" | "!orphaned" | "any") => {
-    const currentStatuses = (selectedStatuses ?? []).filter(
-      (status) => status !== "orphaned" && status !== "!orphaned"
-    );
-    const updatedSelection = value === "any" ? currentStatuses : [...currentStatuses, value];
     onChange(updatedSelection);
   };
 
@@ -105,38 +90,34 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
         </FormGroup>
       </StackItem>
       <StackItem>
-        <ToggleGroup isFill isCompact>
-          <ToggleGroupItem
-            text={words("resources.filters.status.orphaned.include")}
-            buttonId="orphaned-include"
-            isSelected={selectedStatuses?.includes("orphaned") ?? false}
-            onChange={() => handleOrphanedChange("orphaned")}
+        <FormGroup label={words("resources.filters.status.orphaned.label")}>
+          <OptionalToggleGroup
+            selected={selectedStatuses ?? []}
+            onChange={onChange}
+            options={[
+              {
+                label: words("resources.filters.status.orphaned.include"),
+                value: "orphaned",
+                buttonId: "orphaned-include",
+              },
+              {
+                label: words("resources.filters.status.orphaned.exclude"),
+                value: "!orphaned",
+                buttonId: "orphaned-exclude",
+              },
+            ]}
           />
-          <ToggleGroupItem
-            text={words("resources.filters.status.orphaned.exclude")}
-            buttonId="orphaned-exclude"
-            isSelected={selectedStatuses?.includes("!orphaned") ?? false}
-            onChange={() => handleOrphanedChange("!orphaned")}
-          />
-          <ToggleGroupItem
-            text={words("resources.filters.status.orphaned.both")}
-            buttonId="orphaned-both"
-            isSelected={
-              !selectedStatuses?.includes("orphaned") && !selectedStatuses?.includes("!orphaned")
-            }
-            onChange={() => handleOrphanedChange("any")}
-          />
-        </ToggleGroup>
+        </FormGroup>
       </StackItem>
       <StackItem>
-        <Switch
-          id={words("resources.filters.status.isDeploying")}
-          aria-label={words("resources.filters.status.isDeploying")}
-          label={words("resources.filters.status.isDeploying")}
-          isChecked={selectedStatuses?.includes("isDeploying") ?? false}
-          onChange={(_event, hasChanged) => handleIsDeploying(hasChanged)}
-          isReversed
-        />
+        <FormGroup label={words("resources.filters.status.isDeploying")}>
+          <Switch
+            id={words("resources.filters.status.isDeploying")}
+            aria-label={words("resources.filters.status.isDeploying")}
+            isChecked={selectedStatuses?.includes("isDeploying") ?? false}
+            onChange={(_event, hasChanged) => handleIsDeploying(hasChanged)}
+          />
+        </FormGroup>
       </StackItem>
     </Stack>
   );

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Stack, StackItem, Switch, Title } from "@patternfly/react-core";
+import { FormGroup, Stack, StackItem, Switch, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { useGetAgents } from "@/Data/Queries";
 import { useDebounce } from "@/UI";
@@ -128,14 +128,14 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
           </Title>
         </StackItem>
         <StackItem>
-          <Switch
-            id={words("resources.filters.desiredState.purged")}
-            aria-label={words("resources.filters.desiredState.purged")}
-            label={words("resources.filters.desiredState.purged")}
-            isChecked={filter.status?.includes("purged") ?? false}
-            onChange={(_event, hasChanged) => handlePurgedChange(hasChanged)}
-            isReversed
-          />
+          <FormGroup label={words("resources.filters.desiredState.purged")}>
+            <Switch
+              id={words("resources.filters.desiredState.purged")}
+              aria-label={words("resources.filters.desiredState.purged")}
+              isChecked={filter.status?.includes("purged") ?? false}
+              onChange={(_event, hasChanged) => handlePurgedChange(hasChanged)}
+            />
+          </FormGroup>
         </StackItem>
       </Stack>
     </>

@@ -13,6 +13,15 @@ const expectFilteredLessThan = (alias) => {
   });
 };
 
+// Helper to verify row count is more than initial
+const expectMoreThan = (alias) => {
+  cy.get(`@${alias}`).then((initialCount) => {
+    cy.get('[aria-label="Resource Table Row"]').should(($rows) => {
+      expect($rows.length).to.be.greaterThan(initialCount);
+    });
+  });
+};
+
 // Helper to verify row count is restored to initial
 const expectRowCountRestored = (alias) => {
   cy.get(`@${alias}`).then((initialCount) => {
@@ -373,7 +382,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Purged filter
       cy.get("button").contains("Resource").click();
-      cy.get('[aria-label="Purged"]').click();
+      cy.get('label[for="Purged"]').click();
       expectFilteredLessThan("initialRowCount");
       cy.get('[aria-label="Close purged"]').click();
       expectRowCountRestored("initialRowCount");
@@ -406,7 +415,7 @@ describe("Scenario 6 : Resources", () => {
       expectRowCountRestored("initialRowCount");
 
       // Is Deploying toggle filter
-      cy.get('[aria-label="Is Deploying"]').click();
+      cy.get('label[for="Is Deploying"]').click();
       expectFilteredLessThan("initialRowCount");
       cy.get('[aria-label="Close isDeploying"]').click();
       expectRowCountRestored("initialRowCount");
@@ -444,18 +453,23 @@ describe("Scenario 6 : Resources", () => {
       // each response before asserting row counts
       cy.intercept("POST", "/api/v2/graphql").as("resourcesQuery");
 
-      // "Orphaned" shows only the orphaned resources — fewer than the total
-      cy.get("button").contains("Orphaned").click();
+      // Capture the row count with "Not Orphaned" active as the baseline for orphan filter assertions
+      cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
+
+      // Deselect "Not Orphaned" — no filter, all resources visible including orphaned
+      cy.get("#orphaned-exclude").click();
+      cy.wait("@resourcesQuery");
+      expectMoreThan("initialRowCount");
+
+      // Select "Orphaned" — only orphaned resources, fewer than the baseline
+      cy.get("#orphaned-include").click();
       cy.wait("@resourcesQuery");
       expectFilteredLessThan("initialRowCount");
 
-      // "Not Orphaned" hides the orphaned resources — also fewer than the total
-      cy.get("button").contains("Not Orphaned").click();
-      cy.wait("@resourcesQuery");
-      expectFilteredLessThan("initialRowCount");
-
-      // "Both" restores the full count (resources still exist, just reclassified as orphaned)
-      cy.get("button").contains("Both").click();
+      // Reselect "Not Orphaned" — restores to initial count
+      cy.get("#orphaned-exclude").click();
       cy.wait("@resourcesQuery");
       expectRowCountRestored("initialRowCount");
     });

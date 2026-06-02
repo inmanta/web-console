@@ -44,6 +44,7 @@ export * from "./SingleTextSelect";
 export * from "./SummaryChart";
 export * from "./TextWithCopy";
 export * from "./DateWithTimeDiffTooltip";
+export * from "./OptionalToggleGroup";
 export * from "./Toggle";
 export * from "./TreeTable";
 export * from "./CompoundResourceStatus";

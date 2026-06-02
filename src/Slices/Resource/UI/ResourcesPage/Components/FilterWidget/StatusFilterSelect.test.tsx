@@ -185,25 +185,26 @@ describe("StatusFilterSelect", () => {
     expect(isDeployingSwitch).not.toBeChecked();
   });
 
-  it("orphaned toggle group selections are mutually exclusive and can be reset to Both", async () => {
+  it("orphaned toggles are mutually exclusive and deselecting clears the filter", async () => {
     render(<StatusFilterHarness initial={["!orphaned"]} />);
 
-    // Switch to Orphaned — clears Not Orphaned
-    const orphanedInclude = getById("orphaned-include");
-    await userEvent.click(orphanedInclude);
+    // Initial state: Not Orphaned active
+    expect(document.getElementById("orphaned-include")).toHaveAttribute("aria-pressed", "false");
+    expect(document.getElementById("orphaned-exclude")).toHaveAttribute("aria-pressed", "true");
+
+    // Selecting Orphaned clears Not Orphaned
+    await userEvent.click(getById("orphaned-include"));
     expect(document.getElementById("orphaned-include")).toHaveAttribute("aria-pressed", "true");
     expect(document.getElementById("orphaned-exclude")).toHaveAttribute("aria-pressed", "false");
 
-    // Switch back to Not Orphaned — clears Orphaned
-    const orphanedExclude = getById("orphaned-exclude");
-    await userEvent.click(orphanedExclude);
-    expect(document.getElementById("orphaned-exclude")).toHaveAttribute("aria-pressed", "true");
+    // Selecting Not Orphaned clears Orphaned
+    await userEvent.click(getById("orphaned-exclude"));
     expect(document.getElementById("orphaned-include")).toHaveAttribute("aria-pressed", "false");
+    expect(document.getElementById("orphaned-exclude")).toHaveAttribute("aria-pressed", "true");
 
-    // Reset to Both — clears Not Orphaned
-    const orphanedBoth = getById("orphaned-both");
-    await userEvent.click(orphanedBoth);
-    expect(document.getElementById("orphaned-both")).toHaveAttribute("aria-pressed", "true");
+    // Clicking the active toggle deselects it — no filter
+    await userEvent.click(getById("orphaned-exclude"));
+    expect(document.getElementById("orphaned-include")).toHaveAttribute("aria-pressed", "false");
     expect(document.getElementById("orphaned-exclude")).toHaveAttribute("aria-pressed", "false");
   });
 });
