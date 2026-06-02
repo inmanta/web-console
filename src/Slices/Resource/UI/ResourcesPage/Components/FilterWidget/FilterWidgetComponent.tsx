@@ -131,7 +131,7 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
     });
   };
 
-  const clearAllFilters = () => {
+  const onResetFilters = () => {
     setFilter({});
   };
 
@@ -175,7 +175,7 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
           <Divider />
           <ActiveFiltersSection
             filter={filter}
-            onResetFilters={clearAllFilters}
+            onResetFilters={onResetFilters}
             removeTypeChip={removeTypeChip}
             removeAgentChip={removeAgentChip}
             removeValueChip={removeValueChip}
