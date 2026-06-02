@@ -15,27 +15,28 @@ interface Props {
  * Only the table area needs to respond to filter changes; the filter widget itself
  * preserves its UI state (open dropdowns, active picker) across filter updates.
  *
- * The same default-status logic applied here must match Page.tsx's filterWithDefaults
- * so both components always agree on the effective filter state.
+ * The disregardDefault flag is stored in the URL to survive round-trips and
+ * signals that the user has explicitly cleared the default status filters.
+ * The same default-status logic applied here must match Page.tsx's filterWithDefaults.
  */
 export const ConnectedFilterWidget: React.FC<Props> = memo(({ onClose }) => {
   const [filter, setFilter] = useUrlStateWithFilter<Filter>({
     route: "DesiredState",
-    keys: { date: "DateRange", version: "IntRange" },
+    keys: { date: "DateRange", version: "IntRange", disregardDefault: "Boolean" },
   });
 
   const filterWithDefaults = useMemo(
     () =>
-      filter.status
-        ? filter
-        : {
+      !filter.disregardDefault && !filter.status
+        ? {
             ...filter,
             status: [
               DesiredStateVersionStatus.active,
               DesiredStateVersionStatus.candidate,
               DesiredStateVersionStatus.retired,
             ],
-          },
+          }
+        : filter,
     [filter]
   );
 

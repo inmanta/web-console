@@ -57,10 +57,10 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
   const removeStatusChip = (value: string) => {
     const updated = (filter.status ?? []).filter((s) => s !== value);
 
-    setFilter({ ...filter, status: updated.length > 0 ? updated : undefined });
+    setFilter({ ...filter, status: updated.length > 0 ? updated : undefined, disregardDefault: true });
   };
 
-  const clearStatusFilters = () => setFilter({ ...filter, status: undefined });
+  const clearStatusFilters = () => setFilter({ ...filter, status: undefined, disregardDefault: true });
 
   // --- Date ---
   const applyDateFromFilter = () => {
@@ -289,13 +289,11 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
                 {words("resources.filters.active.title")}
               </Title>
             </FlexItem>
-            {hasActiveFilters && (
-              <FlexItem>
-                <Button variant="link" isInline onClick={clearAllFilters}>
-                  {words("resources.filters.active.clearAll")}
-                </Button>
-              </FlexItem>
-            )}
+            <FlexItem>
+              <Button variant="link" isInline onClick={clearAllFilters}>
+                {words("resources.filters.active.resetFilters")}
+              </Button>
+            </FlexItem>
           </Flex>
 
           {hasActiveFilters ? (
@@ -306,6 +304,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
                     categoryName={words("desiredState.columns.status")}
                     isCompact
                     isClosable
+                    isEditable
                     onClick={clearStatusFilters}
                     closeBtnAriaLabel={words("resources.filters.active.group.close")(
                       words("desiredState.columns.status")
@@ -325,6 +324,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
                     categoryName={words("desiredState.columns.date")}
                     isCompact
                     isClosable
+                    isEditable
                     onClick={clearDateFilters}
                     closeBtnAriaLabel={words("resources.filters.active.group.close")(
                       words("desiredState.columns.date")
@@ -344,6 +344,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
                     categoryName={words("desiredState.columns.version")}
                     isCompact
                     isClosable
+                    isEditable
                     onClick={clearVersionFilters}
                     closeBtnAriaLabel={words("resources.filters.active.group.close")(
                       words("desiredState.columns.version")

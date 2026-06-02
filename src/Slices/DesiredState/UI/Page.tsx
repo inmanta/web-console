@@ -34,21 +34,21 @@ export const Page: React.FC = () => {
 
   const { currentPage, setCurrentPage, pageSize, setPageSize, filter } = usePaginatedTable<Filter>({
     route: "DesiredState",
-    filterKeys: { date: "DateRange", version: "IntRange" },
+    filterKeys: { date: "DateRange", version: "IntRange", disregardDefault: "Boolean" },
   });
 
   const filterWithDefaults = useMemo(
     () =>
-      filter.status
-        ? filter
-        : {
+      !filter.disregardDefault && !filter.status
+        ? {
             ...filter,
             status: [
               DesiredStateVersionStatus.active,
               DesiredStateVersionStatus.candidate,
               DesiredStateVersionStatus.retired,
             ],
-          },
+          }
+        : filter,
     [filter]
   );
 
@@ -62,10 +62,11 @@ export const Page: React.FC = () => {
     setIsDrawerExpanded(false);
   }, []);
 
-  const activeFilterCount = useMemo(
-    () => countActiveFilters(filterWithDefaults),
-    [filterWithDefaults]
-  );
+  const activeFilterCount = useMemo(() => {
+    const { disregardDefault: _disregardDefault, ...filterValues } = filterWithDefaults;
+
+    return countActiveFilters(filterValues);
+  }, [filterWithDefaults]);
 
   const { data, refetch, isError, error, isSuccess } = useGetDesiredStates().useContinuous(
     pageSize,
