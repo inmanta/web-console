@@ -68,16 +68,16 @@ export const BLOCKED = {
 } as const;
 
 export type LastHandlerRunKey = keyof typeof LAST_HANDLER_RUN;
-export type LastHandlerRun = (typeof LAST_HANDLER_RUN)[LastHandlerRunKey];
+export type LastHandlerRunValue = (typeof LAST_HANDLER_RUN)[LastHandlerRunKey];
 
 export type ComplianceKey = keyof typeof COMPLIANCE;
-export type Compliance = (typeof COMPLIANCE)[ComplianceKey];
+export type ComplianceValue = (typeof COMPLIANCE)[ComplianceKey];
 
 export type BlockedKey = keyof typeof BLOCKED;
-export type Blocked = (typeof BLOCKED)[BlockedKey];
+export type BlockedValue = (typeof BLOCKED)[BlockedKey];
 
 /** Union of all compound state values across all three groups. */
-export type CompoundState = LastHandlerRun | Compliance | Blocked;
+export type CompoundState = LastHandlerRunValue | ComplianceValue | BlockedValue;
 
 /** Union of all lowercase compound state keys. Used to key colorConfig, statusPriority, etc. */
 export type CompoundStateKey = LastHandlerRunKey | ComplianceKey | BlockedKey;
@@ -117,9 +117,9 @@ export interface ResourceState {
   isDeploying: boolean;
   isOrphan: boolean;
   lastHandlerRunAt?: string;
-  lastHandlerRun: LastHandlerRun;
-  compliance: Compliance;
-  blocked: Blocked;
+  lastHandlerRun: LastHandlerRunValue;
+  compliance: ComplianceValue;
+  blocked: BlockedValue;
 }
 
 /**

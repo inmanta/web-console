@@ -7,9 +7,9 @@ type GraphQLStateFilter = Partial<{
   purged: boolean;
   isOrphan: boolean;
   isDeploying: boolean;
-  lastHandlerRun: { eq?: Resource.LastHandlerRun[]; neq?: Resource.LastHandlerRun[] };
-  compliance: { eq?: Resource.Compliance[]; neq?: Resource.Compliance[] };
-  blocked: { eq?: Resource.Blocked[]; neq?: Resource.Blocked[] };
+  lastHandlerRun: { eq?: Resource.LastHandlerRunValue[]; neq?: Resource.LastHandlerRunValue[] };
+  compliance: { eq?: Resource.ComplianceValue[]; neq?: Resource.ComplianceValue[] };
+  blocked: { eq?: Resource.BlockedValue[]; neq?: Resource.BlockedValue[] };
 }>;
 
 /**
@@ -24,12 +24,21 @@ export function mapStatusToGraphQLFilter(statusses?: string[]): GraphQLStateFilt
 
   const filter: GraphQLStateFilter = {};
 
-  const lastHandlerRun: { eq: Resource.LastHandlerRun[]; neq: Resource.LastHandlerRun[] } = {
+  const lastHandlerRun: {
+    eq: Resource.LastHandlerRunValue[];
+    neq: Resource.LastHandlerRunValue[];
+  } = {
     eq: [],
     neq: [],
   };
-  const compliance: { eq: Resource.Compliance[]; neq: Resource.Compliance[] } = { eq: [], neq: [] };
-  const blocked: { eq: Resource.Blocked[]; neq: Resource.Blocked[] } = { eq: [], neq: [] };
+  const compliance: { eq: Resource.ComplianceValue[]; neq: Resource.ComplianceValue[] } = {
+    eq: [],
+    neq: [],
+  };
+  const blocked: { eq: Resource.BlockedValue[]; neq: Resource.BlockedValue[] } = {
+    eq: [],
+    neq: [],
+  };
 
   for (const status of statusses) {
     const isNegated = status.startsWith("!");
