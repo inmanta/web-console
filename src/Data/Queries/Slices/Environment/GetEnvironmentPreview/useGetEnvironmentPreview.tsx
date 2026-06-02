@@ -77,6 +77,7 @@ export const useGetEnvironmentPreview = (): GetEnvironmentPreview => {
         refetchInterval: REFETCH_INTERVAL,
         select: (data) => {
           const environments = data.data.environments.edges.map((edge) => edge.node);
+
           return {
             environments,
             errors: data.errors,

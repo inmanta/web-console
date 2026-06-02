@@ -31,6 +31,7 @@ export const DictEditor: React.FC<Props> = ({
       setValue(
         (() => {
           const { [key]: _omitted, ...rest } = value;
+
           return { ...rest, [k]: v };
         })()
       );

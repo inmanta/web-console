@@ -113,11 +113,13 @@ export const Provider: React.FC<Props> = ({ settings: { settings, definition } }
 
   const handleReset = (id: string) => {
     dispatch({ type: "reset", payload: id });
+
     return resetSetting.mutate(id);
   };
 
   const handleUpdate = (id: string, value: EnvironmentSettings.Value) => {
     dispatch({ type: "update", payload: { [id]: value } });
+
     return updateSetting.mutate({ id, value });
   };
 

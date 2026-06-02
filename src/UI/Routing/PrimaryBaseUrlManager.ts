@@ -13,10 +13,15 @@ export class PrimaryBaseUrlManager implements BaseUrlManager {
     // Normalize the pathname by removing trailing slash
     const normalizedPathname = this.pathname.replace(/\/$/, "");
 
-    if (!normalizedPathname.includes(anchor)) return anchor;
-    if (normalizedPathname.split(anchor).length > 2) return anchor;
+    if (!normalizedPathname.includes(anchor)) {
+      return anchor;
+    }
+    if (normalizedPathname.split(anchor).length > 2) {
+      return anchor;
+    }
 
     const [pre] = normalizedPathname.split(anchor);
+
     return `${pre}${anchor}`;
   }
 

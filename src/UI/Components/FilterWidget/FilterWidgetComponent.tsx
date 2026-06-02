@@ -82,6 +82,7 @@ export const FilterWidgetComponent = ({
 
   const hasActiveFilters = fields.some(({ filterKey }) => {
     const values = filter[filterKey];
+
     return values && values.length > 0;
   });
 

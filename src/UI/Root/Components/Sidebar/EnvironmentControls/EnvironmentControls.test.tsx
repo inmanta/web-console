@@ -90,6 +90,7 @@ describe("EnvironmentControls", () => {
       }),
       http.post("/api/v2/actions/environment/halt", () => {
         requestSpy();
+
         return HttpResponse.json();
       })
     );

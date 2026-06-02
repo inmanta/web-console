@@ -109,6 +109,7 @@ describe("ResourceDiscoveryDetailsPage", () => {
         if (callCount === 1) {
           return HttpResponse.json({ error: "Network error" }, { status: 500 });
         }
+
         return HttpResponse.json({ data: mockResourceDetails });
       })
     );

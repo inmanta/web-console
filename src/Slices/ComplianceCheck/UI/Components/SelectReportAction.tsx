@@ -30,11 +30,15 @@ export const SelectReportAction: React.FC<Props> = ({
   // This should be the trigger from the command
 
   const onSelect = (value) => {
-    if (!reportsData) return;
+    if (!reportsData) {
+      return;
+    }
 
     const report = reportsData.find((report) => report.id === value);
 
-    if (report === undefined) return;
+    if (report === undefined) {
+      return;
+    }
 
     setSelectedReport(report);
     setIsOpen(false);
@@ -68,11 +72,17 @@ const Picker: React.FC<PickerProps> = ({
   setIsOpen,
   onSelect,
 }) => {
-  if (!reportsData) return null;
+  if (!reportsData) {
+    return null;
+  }
 
-  if (reportsData.length <= 0) return <EmptyPicker />;
+  if (reportsData.length <= 0) {
+    return <EmptyPicker />;
+  }
 
-  if (!selectedReport) return null;
+  if (!selectedReport) {
+    return null;
+  }
 
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
     <MenuToggle

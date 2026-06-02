@@ -317,6 +317,58 @@ describe("initializeCanvasFromInstance", () => {
     expect(applyGridLayout).toHaveBeenCalledWith(graph);
   });
 
+  it("should include all embedded entities of the same type in the root shape connections", () => {
+    // Regression: two embedded entity fields sharing the same type ("Port") but different names
+    // ("port_a" / "port_b") produced identical connection keys via `entity.type || entity.name`.
+    // The old code used `connections.set(key, ids)` which silently overwrote the first batch,
+    // leaving only the second batch in the root shape's connections map.
+    const createPortEntity = (name: string) => ({
+      name,
+      type: "Port",
+      lower_limit: 0,
+      upper_limit: null,
+      modifier: "rw" as const,
+      attributes: [],
+      embedded_entities: [],
+      inter_service_relations: [],
+    });
+
+    const serviceModel = createMockServiceModel("TestService", {
+      embedded_entities: [createPortEntity("port_a"), createPortEntity("port_b")],
+    });
+
+    const instance = createMockInstance("instance-1", "TestService", {
+      candidate_attributes: {
+        port_a: { name: "alpha" },
+        port_b: { name: "beta" },
+      },
+    });
+
+    const instanceData = createMockInstanceWithRelations(instance);
+    const serviceCatalog: ServiceModel[] = [serviceModel];
+    const graph = new dia.Graph();
+
+    const result = initializeCanvasFromInstance(instanceData, serviceCatalog, {}, graph);
+
+    // 1 root + 2 embedded shapes
+    expect(result.size).toBe(3);
+
+    const rootShape = result.get("instance-1");
+    expect(rootShape).toBeDefined();
+
+    const embeddedIds = [...result.entries()]
+      .filter(([id, shape]) => id !== "instance-1" && shape.entityType === "embedded")
+      .map(([id]) => id);
+
+    expect(embeddedIds).toHaveLength(2);
+
+    // Root shape must reference BOTH embedded shapes under the shared connection key "Port"
+    const portConnections = rootShape!.connections.get("Port");
+    expect(portConnections).toHaveLength(2);
+    expect(portConnections).toContain(embeddedIds[0]);
+    expect(portConnections).toContain(embeddedIds[1]);
+  });
+
   it("should skip read-only embedded entities", () => {
     const embeddedEntity = {
       name: "Embedded1",

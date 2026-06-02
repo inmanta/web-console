@@ -237,6 +237,47 @@ export const usePostWithoutEnv = (options?: { message?: string }) => {
 /**
  * Custom hook to create a PUT request function.
  *
+ * @param {string} env - The environment Id to be used in the request headers.
+ * @param {Object} [options] - Optional configuration for the PUT request.
+ * @param {string} [options.message] - Optional message to include in the request headers.
+ *
+ * @returns {Function(path: string, body: Body): Promise<Response>} - A function that performs a PUT request.
+ *
+ * @template Body - The type of the request body.
+ */
+export const usePut = (env: string, options?: { message?: string }) => {
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname
+  );
+  const baseUrl = baseUrlManager.getBaseUrl();
+  const { createHeaders, handleErrors } = useFetchHelpers();
+  const headers = createHeaders({ env, message: options?.message });
+
+  return async <Body>(path: string, body: Body) => {
+    try {
+      const response = await fetch(`${baseUrl}${path}`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify(body),
+      });
+
+      await handleErrors(response);
+
+      const text = await response.text();
+
+      if (text) {
+        return JSON.parse(text);
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+};
+
+/**
+ * Custom hook to create a PUT request function.
+ *
  * @param {Object} [options] - Optional configuration for the PUT request.
  * @param {string} [options.message] - Optional message to include in the request headers.
  *

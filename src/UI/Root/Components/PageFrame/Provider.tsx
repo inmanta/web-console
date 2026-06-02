@@ -32,15 +32,21 @@ const getEnvironmentId = (
   environmentRole: EnvironmentRole,
   environment: EnvironmentPreview | undefined
 ): string | undefined => {
-  if (environmentRole === "Forbidden") return undefined;
+  if (environmentRole === "Forbidden") {
+    return undefined;
+  }
 
   if (environmentRole === "Required") {
-    if (environment) return environment.id;
+    if (environment) {
+      return environment.id;
+    }
 
     return words("error.environment.missing");
   }
 
-  if (environment) return environment.id;
+  if (environment) {
+    return environment.id;
+  }
 
   return undefined;
 };

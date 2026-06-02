@@ -159,6 +159,7 @@ describe("Events Page", () => {
             });
           }
           counter++;
+
           return HttpResponse.json({
             data: [],
             links: { self: "" },
@@ -272,6 +273,7 @@ describe("Events Page", () => {
               },
             });
           }
+
           return HttpResponse.json(response);
         }
       )

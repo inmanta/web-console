@@ -1,0 +1,3 @@
+description: Added ESLint rules to enforce block bodies on if/else statements and require blank lines before return statements.
+change-type: patch
+destination-branches: [master, iso9]

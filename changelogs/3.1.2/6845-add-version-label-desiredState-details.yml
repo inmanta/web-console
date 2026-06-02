@@ -1,0 +1,3 @@
+description: Add a label tag to the desired state details page to show the version of the desired state being viewed.
+change-type: patch
+destination-branches: [master, iso9]

@@ -38,7 +38,9 @@ export function getUrl(params: GetInstanceEventParams, timezone = moment.tz.gues
  * @returns {object} An object with filter parameters formatted for the API
  */
 const filterToParam = (filter: Filter, timezone: string) => {
-  if (typeof filter === "undefined") return {};
+  if (typeof filter === "undefined") {
+    return {};
+  }
 
   const { source, destination, version, event_type, timestamp } = filter;
   const serializedTimestampOperatorFilters = timestamp?.map(

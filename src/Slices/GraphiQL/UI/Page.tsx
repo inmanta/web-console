@@ -47,6 +47,7 @@ export const Page: React.FC = () => {
 
   const env = useMemo(() => {
     const envParam = new URLSearchParams(search).get("env");
+
     return envParam ?? undefined;
   }, [search]);
 
@@ -64,6 +65,7 @@ export const Page: React.FC = () => {
     style.setAttribute("data-graphiql-styles", "");
     style.textContent = `@layer graphiql-vendor {\n${graphiqlCSS}\n}`;
     document.head.appendChild(style);
+
     return () => style.remove();
   }, []);
 

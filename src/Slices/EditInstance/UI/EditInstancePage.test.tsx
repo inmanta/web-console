@@ -14,18 +14,22 @@ import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
 
-// Mock usePatch before the test
+// Mock usePatch and usePut before the test
 const mockPatchFn = vi.fn();
+const mockPutFn = vi.fn();
 vi.mock("@/Data/Queries/Helpers/useQueries", async (importActual) => {
   const actual = await importActual<typeof import("@/Data/Queries/Helpers/useQueries")>();
+
   return {
     ...actual,
     usePatch: () => mockPatchFn,
+    usePut: () => mockPutFn,
   };
 });
 
 vi.mock("react-router", async (importOriginal) => {
   const actual = await importOriginal<typeof import("react-router")>();
+
   return {
     ...actual,
     useParams: vi.fn(),
@@ -132,7 +136,7 @@ describe("EditInstancePage", () => {
       }
     ),
     http.patch("/lsm/v1/service_inventory/service_name_a/service_instance_id_a", async () => {}),
-    http.patch("/lsm/v2/service_inventory/service_name_d/service_instance_id_a", async () => {})
+    http.put("/lsm/v1/service_inventory/service_name_d/service_instance_id_a", async () => {})
   );
 
   beforeAll(() => {
@@ -141,6 +145,7 @@ describe("EditInstancePage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockPatchFn.mockClear();
+    mockPutFn.mockClear();
   });
 
   afterAll(() => {
@@ -229,7 +234,7 @@ describe("EditInstancePage", () => {
     });
   });
 
-  test("Given the EditInstance View When changing a v2 embedded entity Then the correct request  with correct body is fired", async () => {
+  test("Given the EditInstance View When changing a strict-enforcement embedded entity Then the correct PUT request with correct body is fired", async () => {
     mockedUseParams.mockReturnValue({ service: "service_name_d", instance });
 
     const { component } = setup();
@@ -266,19 +271,14 @@ describe("EditInstancePage", () => {
     expectedInstance.bandwidth = "24";
 
     const body = {
-      edit: [
-        {
-          edit_id: "service_instance_id_a_version=3",
-          operation: "replace",
-          target: ".",
-          value: expectedInstance,
-        },
-      ],
-      patch_id: expect.any(String),
+      put_id: expect.any(String),
+      current_version: 3,
+      attributes: expectedInstance,
+      ignore_read_only_attributes: true,
     };
 
-    expect(mockPatchFn).toHaveBeenCalledWith(
-      "/lsm/v2/service_inventory/service_name_d/service_instance_id_a?current_version=3",
+    expect(mockPutFn).toHaveBeenCalledWith(
+      "/lsm/v1/service_inventory/service_name_d/service_instance_id_a",
       body
     );
 

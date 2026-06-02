@@ -7,7 +7,9 @@ export class PageStateSanitizer {
     const lineage = this.routeManager.getLineageFromRoute(this.routeManager.getRoute(routeKind));
     const kinds = lineage.map((route) => route.kind);
 
-    if (getKeysExcluding(kinds, pageState).length > 0) return false;
+    if (getKeysExcluding(kinds, pageState).length > 0) {
+      return false;
+    }
 
     return true;
   }

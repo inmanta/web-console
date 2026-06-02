@@ -38,6 +38,7 @@ export default function mermaidPlugin(md: MarkdownIt, _baseId: string, _options:
     // For mermaid blocks, emit a <pre class="mermaid"> that Mermaid will
     // process later via its run() or init() API. This avoids React rendering issues.
     const content = md.utils.escapeHtml(token.content);
+
     return `<pre class="mermaid">${content}</pre>`;
   }
 
