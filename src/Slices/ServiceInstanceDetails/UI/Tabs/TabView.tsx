@@ -152,6 +152,8 @@ const getDocumentationAttributeDescriptors = (
           title: attribute.attribute_annotations.web_title,
           iconName: attribute.attribute_annotations.web_icon || "FaBook",
           attributeName: attribute.name,
+          webOrder: attribute.attribute_annotations.web_order,
+          webDefaultOpen: attribute.attribute_annotations.web_default_open,
         });
       }
     }

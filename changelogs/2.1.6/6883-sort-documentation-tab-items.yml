@@ -1,0 +1,9 @@
+change-type: patch
+description: Add web_order sorting and multi-expand support to the documentation tab collapsibles
+destination-branches:
+- iso8
+sections:
+  feature: |
+    "Add support for `web_order` and `web_default_open` attribute annotations on the Service Instance Details documentation tab. 
+    Sections can now be sorted by `web_order` (use `-1` or omit to keep declaration order), multiple sections can be open simultaneously, 
+    and `web_default_open: true` expands a section on first render."
