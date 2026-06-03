@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Stack, StackItem, Switch, Title } from "@patternfly/react-core";
+import { Form, Stack, StackItem, Switch, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { useGetAgents } from "@/Data/Queries";
 import { useDebounce } from "@/UI";
@@ -67,60 +67,62 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
 
   return (
     <>
-      <Stack hasGutter style={{ padding: "1rem 0" }}>
-        <StackItem>
-          <Title headingLevel="h3" size="md">
-            {words("resources.filters.resource.sectionTitle")}
-          </Title>
-        </StackItem>
-        <StackItem>
-          <AddableTextInput
-            label={words("resources.filters.resource.type.label")}
-            placeholder={words("resources.filters.resource.type.placeholder")}
-            onAdd={onAddType}
-
-            //TODO: decide what to do with the hints for these inputs, releated to:
-            // https://github.com/inmanta/web-console/issues/6823
-            /* hint={words("resources.filters.resource.type.hint")} */
-          />
-        </StackItem>
-        <StackItem>
-          <AddableTextInput
-            label={words("resources.filters.resource.value.label")}
-            placeholder={words("resources.filters.resource.value.placeholder")}
-            onAdd={onAddValue}
-
-            /* hint={words("resources.filters.resource.value.hint")} */
-          />
-        </StackItem>
-        <StackItem>
-          {inputMode === "select" ? (
-            <AddableSelectInput
-              label={words("resources.filters.resource.agent.label")}
-              placeholder={words("resources.filters.resource.agent.placeholder")}
-              onAdd={onAddAgent}
-              options={agentOptions.filter((option) => !filter.agent?.includes(option.value))}
-              onFilter={setAgentSearch}
-              onReachEnd={() => {
-                if (hasNextPage && !isFetchingNextPage) {
-                  fetchNextPage();
-                }
-              }}
-              isLoading={isLoading || isFetchingNextPage}
-              onToggleInputMode={() => setInputMode("text")}
-            />
-          ) : (
+      <Form onSubmit={(e) => e.preventDefault()}>
+        <Stack hasGutter style={{ padding: "1rem 0" }}>
+          <StackItem>
+            <Title headingLevel="h3" size="md">
+              {words("resources.filters.resource.sectionTitle")}
+            </Title>
+          </StackItem>
+          <StackItem>
             <AddableTextInput
-              label={words("resources.filters.resource.agent.label")}
-              placeholder={words("resources.filters.resource.agent.placeholder")}
-              onAdd={onAddAgent}
-              onToggleInputMode={() => setInputMode("select")}
+              label={words("resources.filters.resource.type.label")}
+              placeholder={words("resources.filters.resource.type.placeholder")}
+              onAdd={onAddType}
 
-              /* hint={words("resources.filters.resource.agent.hint")} */
+              //TODO: decide what to do with the hints for these inputs, releated to:
+              // https://github.com/inmanta/web-console/issues/6823
+              /* hint={words("resources.filters.resource.type.hint")} */
             />
-          )}
-        </StackItem>
-      </Stack>
+          </StackItem>
+          <StackItem>
+            <AddableTextInput
+              label={words("resources.filters.resource.value.label")}
+              placeholder={words("resources.filters.resource.value.placeholder")}
+              onAdd={onAddValue}
+
+              /* hint={words("resources.filters.resource.value.hint")} */
+            />
+          </StackItem>
+          <StackItem>
+            {inputMode === "select" ? (
+              <AddableSelectInput
+                label={words("resources.filters.resource.agent.label")}
+                placeholder={words("resources.filters.resource.agent.placeholder")}
+                onAdd={onAddAgent}
+                options={agentOptions.filter((option) => !filter.agent?.includes(option.value))}
+                onFilter={setAgentSearch}
+                onReachEnd={() => {
+                  if (hasNextPage && !isFetchingNextPage) {
+                    fetchNextPage();
+                  }
+                }}
+                isLoading={isLoading || isFetchingNextPage}
+                onToggleInputMode={() => setInputMode("text")}
+              />
+            ) : (
+              <AddableTextInput
+                label={words("resources.filters.resource.agent.label")}
+                placeholder={words("resources.filters.resource.agent.placeholder")}
+                onAdd={onAddAgent}
+                onToggleInputMode={() => setInputMode("select")}
+
+                /* hint={words("resources.filters.resource.agent.hint")} */
+              />
+            )}
+          </StackItem>
+        </Stack>
+      </Form>
       <Stack hasGutter style={{ padding: "1rem 0" }}>
         <StackItem>
           <Title headingLevel="h3" size="md">

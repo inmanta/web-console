@@ -3,7 +3,7 @@ import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/re
 import { Config, Field, InstanceAttributeModel } from "@/Core";
 import { usePatch } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { BodyV1, BodyV2, getBodyV1, getBodyV2 } from "./helpers";
+import { BodyV1, getBodyV1 } from "./helpers";
 
 interface MutationBody {
   fields: Field[];
@@ -16,12 +16,14 @@ interface Response {
 }
 
 /**
- * React Query hook for patching instance attributes.
+ * React Query hook for patching instance attributes via PATCH v1.
  *
- * @returns {UseMutationResult<Response, Error, MutationBody, unknown>}- The mutation object from `useMutation` hook.
+ * Sends only the changed attributes (diff against current state) to
+ * PATCH /lsm/v1/service_inventory/{service_entity}/{id}.
+ *
+ * @returns {UseMutationResult<Response, Error, MutationBody, unknown>} The mutation object.
  */
 export const usePatchAttributes = (
-  apiVersion: string,
   service_entity: string,
   id: string,
   version: number,
@@ -29,20 +31,13 @@ export const usePatchAttributes = (
 ): UseMutationResult<Response, Error, MutationBody, unknown> => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
-  const url = `/lsm/${apiVersion}/service_inventory/${service_entity}/${id}?current_version=${version}`;
-  const patch = usePatch(env)<BodyV1 | BodyV2>;
+  const url = `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`;
+  const patch = usePatch(env)<BodyV1>;
 
   return useMutation({
-    mutationFn: (body) => {
-      const { fields, currentAttributes, updatedAttributes } = body;
-      const convertedBody =
-        apiVersion === "v2"
-          ? getBodyV2(fields, updatedAttributes, id, version)
-          : getBodyV1(fields, currentAttributes, updatedAttributes);
-
-      return patch(url, convertedBody);
-    },
-    mutationKey: ["post_instance_config", service_entity, id, version, apiVersion, env],
+    mutationFn: ({ fields, currentAttributes, updatedAttributes }) =>
+      patch(url, getBodyV1(fields, currentAttributes, updatedAttributes)),
+    mutationKey: ["post_instance_config", service_entity, id, version, env],
     ...options,
   });
 };

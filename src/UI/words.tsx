@@ -240,6 +240,7 @@ const dict = {
   ) => `Missing relations: ${name} (${missing}/${required})`,
   "instanceComposer.tooltip.missingRequiredAttributes":
     "This entity has missing required attributes",
+  "instanceComposer.tooltip.collapsedRelationsInvalid": "Collapsed relation(s) are not valid",
   "instanceComposer.disabled":
     "Your license doesn't give you access to the Instance Composer, please contact support for more details.",
   "instanceComposer.title": "Instance Composer",
@@ -253,6 +254,9 @@ const dict = {
   "instanceComposer.zoomHandler.zoomOut": "Zoom out",
   "instanceComposer.stencil.new": "New",
   "instanceComposer.stencil.inventory": "Inventory",
+  "instanceComposer.halo.expandLayers": "Expand layers",
+  "instanceComposer.halo.collapseLayers": "Collapse layers",
+  "instanceComposer.halo.expandAllLayers": "Expand all layers",
 
   /**
    * Service Instance Details text
@@ -546,6 +550,8 @@ const dict = {
   "resources.column.value": "Value",
   "resources.column.requires": "Requires",
   "resources.column.status": "Status",
+  "resources.column.status.toolTip":
+    "Toggle fields to include them in sorting. Drag active fields to set their priority order.",
   "resources.button.statusDetails": "Show status details",
   "resources.popover.title": "Resource State Summary",
   "resources.popover.deploying": "Deploying",
@@ -581,6 +587,7 @@ const dict = {
   "resources.filters.desiredState.purged": "Purged",
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.clearAll": "Clear all",
+  "resources.filters.active.resetFilters": "Reset Filters",
   "resources.filters.active.empty.title": "No filters applied",
   "resources.filters.active.empty.body":
     "Select filters from the tabs above to refine your results.",
@@ -588,6 +595,10 @@ const dict = {
     "Use the fields above to add filters and refine your results.",
   "resources.filters.active.group.close": (group: string) => `Remove ${group} filters`,
   "resources.filters": "Filters",
+  "resources.sort.label.blocked": "Blocked",
+  "resources.sort.label.compliance": "Compliance",
+  "resources.sort.label.lastHandlerRun": "Last Handler Run",
+  "resources.sort.label.isDeploying": "Is Deploying",
   "resources.compoundStateSummary.title": "Compound state summary",
   "resources.compoundStateSummary.deploy": "Deploy",
   "resources.compoundStateSummary.repair": "Repair",
@@ -822,6 +833,9 @@ const dict = {
   "desiredState.actions.promote": "Promote",
   "desiredState.actions.promote.failed": "Promoting desired state version failed",
   "desiredState.actions.promote.disabledTooltip": "Promoting this version is not allowed",
+  "desiredState.filters": "Filters",
+  "desiredState.filters.from": "From",
+  "desiredState.filters.to": "To",
   "desiredState.filters.status.placeholder": "Select status...",
   "desiredState.filters.version.placeholder": "Filter by version",
   "desiredState.filters.date.placeholder": "Filter by date",

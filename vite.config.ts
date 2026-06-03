@@ -444,6 +444,7 @@ export default defineConfig({
       "@patternfly/react-styles",
       "nullthrows",
       "picomatch-browser",
+      "react-diff-viewer-continued",
     ],
     exclude: ["@joint/core", "monaco-graphql"],
     force: true,
