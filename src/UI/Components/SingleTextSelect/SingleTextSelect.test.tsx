@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { SingleTextSelect } from "./SingleTextSelect";
 
@@ -23,7 +23,7 @@ test("SingleTextSelect renders with placeholder text", () => {
 test("SingleTextSelect opens dropdown on click", async () => {
   render(<SingleTextSelect selected={null} setSelected={vi.fn()} options={options} />);
   await userEvent.click(screen.getByRole("combobox"));
-  expect(screen.getByText("Apple")).toBeVisible();
+  await waitFor(() => expect(screen.getByText("Apple")).toBeVisible());
 });
 
 test("SingleTextSelect calls setSelected when selecting an option", async () => {
