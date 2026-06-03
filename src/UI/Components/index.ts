@@ -48,3 +48,4 @@ export * from "./OptionalToggleGroup";
 export * from "./Toggle";
 export * from "./TreeTable";
 export * from "./CompoundResourceStatus";
+export * from "./FilterDrawer";

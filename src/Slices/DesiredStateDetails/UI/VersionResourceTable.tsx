@@ -20,7 +20,7 @@ export const VersionResourceTable: React.FC<Props> = ({
   setSort,
   ...props
 }) => {
-  const onSort: OnSort = (event, index, order) => {
+  const onSort: OnSort = (_event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as Resource.SortKeyFromVersion,
       order,

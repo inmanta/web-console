@@ -1,4 +1,5 @@
-import { handleUrlStateWithCurrentPage } from "./useUrlStateWithCurrentPage";
+import { renderHook } from "@testing-library/react";
+import { useHandleUrlStateWithCurrentPage } from "./useUrlStateWithCurrentPage";
 
 const startParameter = decodeURIComponent("start=frontend_model%3A%3ATestResource");
 const firstIdParameter = decodeURIComponent(
@@ -17,13 +18,14 @@ test.each`
 `(
   "GIVEN handleUrlState with PageSize WHEN search is $searchText THEN returns $valueText",
   async ({ search, expectedValue }) => {
-    const [value] = handleUrlStateWithCurrentPage(
-      { route: "Resources" },
-      { pathname: "", search, hash: "" },
-      () => undefined
+    const { result } = renderHook(() =>
+      useHandleUrlStateWithCurrentPage(
+        { route: "Resources" },
+        { pathname: "", search, hash: "" },
+        () => undefined
+      )
     );
-
-    expect(value).toEqual({
+    expect(result.current[0]).toEqual({
       kind: "CurrentPage",
       value: expectedValue,
     });
