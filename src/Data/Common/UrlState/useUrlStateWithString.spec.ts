@@ -1,4 +1,5 @@
-import { handleUrlStateWithString } from "./useUrlStateWithString";
+import { renderHook } from "@testing-library/react";
+import { useHandleUrlStateWithString } from "./useUrlStateWithString";
 
 test.each`
   search                               | searchText      | expectedValue   | valueText
@@ -7,12 +8,14 @@ test.each`
 `(
   "GIVEN handleUrlState with String WHEN search is $searchText THEN returns $valueText",
   async ({ search, expectedValue }) => {
-    const [value] = handleUrlStateWithString(
-      { default: "Info", key: "tab", route: "Inventory" },
-      { pathname: "", search, hash: "" },
-      () => undefined
+    const { result } = renderHook(() =>
+      useHandleUrlStateWithString(
+        { default: "Info", key: "tab", route: "Inventory" },
+        { pathname: "", search, hash: "" },
+        () => undefined
+      )
     );
 
-    expect(value).toEqual(expectedValue);
+    expect(result.current[0]).toEqual(expectedValue);
   }
 );
