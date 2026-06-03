@@ -2,3 +2,4 @@ export * from "./Actions";
 export * from "./TableControls";
 export * from "./ResourcesLink";
 export * from "./DesiredStateStatusLabel";
+export * from "./FilterWidget";
