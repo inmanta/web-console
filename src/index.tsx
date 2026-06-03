@@ -1,7 +1,4 @@
 import "@patternfly/react-core/dist/styles/base.css";
-import "@patternfly/react-styles/css/components/_index.css";
-import "@patternfly/react-styles/css/layouts/_index.css";
-import "@patternfly/react-styles/css/utilities/_index.css";
 import "monaco-editor/min/vs/editor/editor.main.css";
 import "@/Core/Language/Extensions";
 import { loader } from "@monaco-editor/react";
