@@ -4,7 +4,7 @@ import { Maybe, ParsedNumber } from "@/Core/Language";
 /**
  * --- General explanation of compound state ---
  * Old status field for resources had 1 big flaw which was that it hid information:
- * - Did it deploy succesfully in the past?
+ * - Did it deploy successfully in the past?
  * - Is the intent correctly enforced?
  * In short, more information should be available about a resource now in comparison to before.
  * See {@link ResourceState} for details about resource state fields.
@@ -14,75 +14,79 @@ import { Maybe, ParsedNumber } from "@/Core/Language";
 /**
  * Result of the last handler execution for a resource. More of a health check because it is not supposed to fail.
  *
- * Possible values:
- * - `"FAILED"` — Something went wrong in the handler execution. This could be a communication error with a device or an uncaught exception in the handler code.
- * - `"SKIPPED"` — Handler decided that the resource is not ready to be processed by it. Most common reason for handler deciding to skip is that one of
- * it's dependencies is in a failed state. Imagine a resource wanting to write it's intent on a virtual machine but the virtual machine itself doesn't exist.
- * It can only write that intent on that machine once it exist, so it will decide to skip the processing of that resource.
- * - `"SUCCESSFUL"` — Handler finishes it's run successfully, handler succeeded to enfore the resource's intent in the real world.
- * - `"NEW"` — Handler has never finished run for this resource yet. Perhaps because it's waiting in queue, perhaps it is running at this very moment but it takes a while.
+ * - `failed → "FAILED"` — Something went wrong in the handler execution. This could be a communication error with a device or an uncaught exception in the handler code.
+ * - `skipped → "SKIPPED"` — Handler decided that the resource is not ready to be processed by it. Most common reason for handler deciding to skip is that one of
+ *   its dependencies is in a failed state.
+ * - `successful → "SUCCESSFUL"` — Handler finishes its run successfully, handler succeeded to enforce the resource's intent in the real world.
+ * - `new → "NEW"` — Handler has never finished run for this resource yet. Perhaps because it's waiting in queue, perhaps it is running at this very moment but it takes a while.
  *
- * These values match the uppercase values returned by the resource state API.
+ * Keys are the lowercase filter strings; values are the uppercase API enum values.
  */
-export type LastHandlerRun = "FAILED" | "SKIPPED" | "SUCCESSFUL" | "NEW";
+export const LAST_HANDLER_RUN = {
+  failed: "FAILED",
+  skipped: "SKIPPED",
+  successful: "SUCCESSFUL",
+  new: "NEW",
+} as const;
 
 /**
  * Indicates whether the real-world state matches the intended configuration. Is about intent being reflected in the real world.
  *
- * Possible values:
- * - `"COMPLIANT"` — Derived from a successful handler result. May be overwritten when the intent is updated.
- * - `"NON_COMPLIANT"` — Derived from a handler failure with 1 exception.
- * Report only resources will get this state assigned to it as well because they are not allowed to enfore their intent (even if lastHandlerRun is successful).
- * - `"HAS_UPDATE"` — The intent for this resource has received an update since the last handler run.
- * Special form of non-compliance, the real world doesn't match the resource's intent but only because we haven't yet tried.
- * A Resource with lastHandlerRun NEW would always have HAS_UPDATE as the compliance value.
- * - `"UNDEFINED"` — Special form of HAS_UPDATE. Intent of the resource is unknown, these won't be send to the handler. Results in resource being BLOCKED.
- */
-export type Compliance = "COMPLIANT" | "NON_COMPLIANT" | "HAS_UPDATE" | "UNDEFINED";
-
-/**
- * Indicates whether execution of the resource handler is blocked. Heavily tied to UNDEFINED.
+ * - `compliant → "COMPLIANT"` — Derived from a successful handler result. May be overwritten when the intent is updated.
+ * - `has_update → "HAS_UPDATE"` — The intent for this resource has received an update since the last handler run.
+ *   Special form of non-compliance; the real world doesn't match the resource's intent but only because we haven't yet tried.
+ *   A resource with lastHandlerRun NEW would always have HAS_UPDATE as the compliance value.
+ * - `non_compliant → "NON_COMPLIANT"` — Derived from a handler failure with 1 exception.
+ *   Report-only resources will get this state assigned as well because they are not allowed to enforce their intent.
+ * - `undefined → "UNDEFINED"` — Special form of HAS_UPDATE. Intent of the resource is unknown, these won't be sent to the handler. Results in resource being BLOCKED.
  *
- * Possible values:
- * - `"BLOCKED"` — The resource cannot currently be processed.
- * - `"NOT_BLOCKED"` — The resource can be processed normally.
- * - `"TEMPORARILY_BLOCKED"` — The resource is blocked but may become unblocked automatically.
+ * Keys are the lowercase filter strings; values are the uppercase API enum values.
  */
-export type Blocked = "BLOCKED" | "NOT_BLOCKED" | "TEMPORARILY_BLOCKED";
+export const COMPLIANCE = {
+  compliant: "COMPLIANT",
+  has_update: "HAS_UPDATE",
+  non_compliant: "NON_COMPLIANT",
+  undefined: "UNDEFINED",
+} as const;
 
 /**
- * Union of all compound state values.
- * Combines {@link LastHandlerRun}, {@link Compliance}, and {@link Blocked}.
+ * Indicates whether execution of the resource handler is blocked. Heavily tied to UNDEFINED compliance.
+ *
+ * - `blocked → "BLOCKED"` — The resource cannot currently be processed.
+ * - `not_blocked → "NOT_BLOCKED"` — The resource can be processed normally.
+ * - `temporarily_blocked → "TEMPORARILY_BLOCKED"` — The resource is blocked but may become unblocked automatically.
+ *
+ * Keys are the lowercase filter strings; values are the uppercase API enum values.
  */
-export type CompoundState = LastHandlerRun | Compliance | Blocked;
+export const BLOCKED = {
+  blocked: "BLOCKED",
+  not_blocked: "NOT_BLOCKED",
+  temporarily_blocked: "TEMPORARILY_BLOCKED",
+} as const;
 
-/**
- * Lowercased versions of the compound state enums, matching the keys in the resourceSummary API response.
- * @example LastHandlerRunKey = "failed" | "skipped" | "successful" | "new"
- */
-export type LastHandlerRunKey = Lowercase<LastHandlerRun>;
-export type ComplianceKey = Lowercase<Compliance>;
-export type BlockedKey = Lowercase<Blocked>;
+export type LastHandlerRunKey = keyof typeof LAST_HANDLER_RUN;
+export type LastHandlerRunValue = (typeof LAST_HANDLER_RUN)[LastHandlerRunKey];
 
-/** Union of all lowercased compound state keys. Used to key colorConfig, statusPriority, etc. */
+export type ComplianceKey = keyof typeof COMPLIANCE;
+export type ComplianceValue = (typeof COMPLIANCE)[ComplianceKey];
+
+export type BlockedKey = keyof typeof BLOCKED;
+export type BlockedValue = (typeof BLOCKED)[BlockedKey];
+
+/** Union of all compound state values across all three groups. */
+export type CompoundState = LastHandlerRunValue | ComplianceValue | BlockedValue;
+
+/** Union of all lowercase compound state keys. Used to key colorConfig, statusPriority, etc. */
 export type CompoundStateKey = LastHandlerRunKey | ComplianceKey | BlockedKey;
 
 /**
- * Maps a union of uppercase API enum strings to a count record with lowercased keys.
- * Used to type each group within {@link CompoundStateSummary}.
- *
- * @example SummaryRecord<"FAILED" | "SKIPPED"> = { failed: number; skipped: number }
- */
-type SummaryRecord<T extends string> = Record<Lowercase<T>, number>;
-
-/**
  * The three compound state groups returned in the resourceSummary API response.
- * Each group maps its lowercased status keys to a resource count.
+ * Each group maps its lowercase status keys to a resource count.
  */
 export interface CompoundStateSummary {
-  lastHandlerRun: SummaryRecord<LastHandlerRun>;
-  compliance: SummaryRecord<Compliance>;
-  blocked: SummaryRecord<Blocked>;
+  lastHandlerRun: Record<LastHandlerRunKey, number>;
+  compliance: Record<ComplianceKey, number>;
+  blocked: Record<BlockedKey, number>;
 }
 
 /**
@@ -110,9 +114,9 @@ export interface ResourceState {
   isDeploying: boolean;
   isOrphan: boolean;
   lastHandlerRunAt?: string;
-  lastHandlerRun: LastHandlerRun;
-  compliance: Compliance;
-  blocked: Blocked;
+  lastHandlerRun: LastHandlerRunValue;
+  compliance: ComplianceValue;
+  blocked: BlockedValue;
 }
 
 /**
