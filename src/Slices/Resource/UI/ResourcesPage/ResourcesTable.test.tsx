@@ -27,7 +27,7 @@ function makeRow(id: string): ResourceRow {
   };
 }
 
-const defaultSort: Sort.Type<Resource.SortKey> = { name: "resource_type", order: "asc" };
+const defaultSort: Sort.Sort<Resource.SortKey>[] = [{ name: "resource_type", order: "asc" }];
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
