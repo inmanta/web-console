@@ -8,12 +8,15 @@ import {
   DropdownGroup,
   DropdownItem,
   DropdownList,
+  Flex,
+  FlexItem,
   MenuToggle,
   MenuToggleElement,
   SearchInput,
+  Split,
+  SplitItem,
 } from "@patternfly/react-core";
 import { CheckIcon, PlusCircleIcon, SignOutAltIcon, UserCircleIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import fallBackImage from "@images/inmanta-wings.svg";
 import { DarkmodeOption } from "@/UI/Components/DarkmodeOption";
 import { DependencyContext } from "@/UI/Dependency";
@@ -77,18 +80,46 @@ export const EnvSelector: React.FC<Props> = ({
           onClick={handleToggle}
           icon={authHelper.getUser() ? <UserCircleIcon /> : null}
         >
-          <StyledDiv>
-            <div>
-              {authHelper.getUser() && <StyledText>{authHelper.getUser()}</StyledText>}
+          <Flex alignItems={{ default: "alignItemsCenter" }} style={{ gap: "20px" }}>
+            <FlexItem>
+              {authHelper.getUser() && (
+                <Content style={{ fontWeight: "bold", textAlign: "start" }}>
+                  {authHelper.getUser()}
+                </Content>
+              )}
               <div>{toggleText.length > 28 ? toggleText.slice(0, 20) + "..." : toggleText}</div>
-            </div>
-          </StyledDiv>
+            </FlexItem>
+          </Flex>
         </MenuToggle>
       )}
     >
-      <StyledDropdownList>
+      <DropdownList style={{ minWidth: "300px" }}>
+        {authHelper.getUser() && (
+          <>
+            <Flex
+              key="user-info"
+              alignItems={{ default: "alignItemsCenter" }}
+              spaceItems={{ default: "spaceItemsSm" }}
+              style={{
+                padding: "var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md)",
+                color: "var(--pf-t--global--text--color--subtle)",
+              }}
+            >
+              <FlexItem>
+                <UserCircleIcon />
+              </FlexItem>
+              <FlexItem>
+                <span>{authHelper.getUser()}</span>
+              </FlexItem>
+            </Flex>
+            <Divider />
+          </>
+        )}
         <DropdownGroup label={words("home.environment.selector")} key="envs-group">
-          <SearchContainer onClick={(e) => e.stopPropagation()}>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{ padding: "var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md)" }}
+          >
             <SearchInput
               aria-label={words("home.environmentSwitcher.search.placeholder")}
               placeholder={words("home.environmentSwitcher.search.placeholder")}
@@ -96,23 +127,27 @@ export const EnvSelector: React.FC<Props> = ({
               onChange={(_event, value) => setSearchText(value)}
               onClear={() => setSearchText("")}
             />
-          </SearchContainer>
+          </div>
           {filteredItems.map((item, index) => (
             <DropdownItem
               onClick={() => onSelect(item.displayName)}
               key={`env-${index}-${item.environmentId}`}
               icon={<EnvironmentIcon icon={item.icon} />}
             >
-              <EnvItemRow>
-                <span>
-                  {item.displayName.length > 28
-                    ? item.displayName.slice(0, 20) + "..."
-                    : item.displayName}
-                </span>
+              <Split>
+                <SplitItem isFilled>
+                  <span>
+                    {item.displayName.length > 28
+                      ? item.displayName.slice(0, 20) + "..."
+                      : item.displayName}
+                  </span>
+                </SplitItem>
                 {item.displayName === toggleText && (
-                  <CheckIcon color="var(--pf-t--global--color--brand--default)" />
+                  <SplitItem>
+                    <CheckIcon color="var(--pf-t--global--color--brand--default)" />
+                  </SplitItem>
                 )}
-              </EnvItemRow>
+              </Split>
             </DropdownItem>
           ))}
         </DropdownGroup>
@@ -138,46 +173,21 @@ export const EnvSelector: React.FC<Props> = ({
           )}
         </div>
         <DarkmodeOption />
-      </StyledDropdownList>
+      </DropdownList>
     </Dropdown>
   );
 };
 
 const EnvironmentIcon: React.FC<{ icon?: string }> = ({ icon }) => (
-  <EnvironmentBrand src={icon ?? fallBackImage} alt="" $hasCustomIcon={!!icon} />
+  <Brand
+    src={icon ?? fallBackImage}
+    alt=""
+    style={{
+      width: "20px",
+      height: "20px",
+      ...(icon
+        ? { borderRadius: "50%", objectFit: "cover" as const }
+        : { objectFit: "contain" as const }),
+    }}
+  />
 );
-
-const StyledText = styled(Content)`
-  font-weight: bold;
-  text-align: start;
-`;
-
-const StyledDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  align-items: center;
-`;
-
-const EnvItemRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-`;
-
-const SearchContainer = styled.div`
-  padding: var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md);
-`;
-
-const StyledDropdownList = styled(DropdownList)`
-  min-width: 300px;
-`;
-
-/** Circular crop for custom icons; contain for the fallback SVG. */
-const EnvironmentBrand = styled(Brand)<{ $hasCustomIcon: boolean }>`
-  width: 20px;
-  height: 20px;
-  ${({ $hasCustomIcon }) =>
-    $hasCustomIcon ? "border-radius: 50%; object-fit: cover;" : "object-fit: contain;"}
-`;

@@ -19,16 +19,16 @@ test.each`
   }
 );
 
-const { Home, Catalog, Inventory, CreateInstance, Events, Diagnose } =
+const { Dashboard, Catalog, Inventory, CreateInstance, Events, Diagnose } =
   routeManager.getRouteDictionary();
 
 it.each`
-  route             | routeTxt            | length | result                                        | resultTxt
-  ${Catalog}        | ${"Catalog"}        | ${2}   | ${[Home, Catalog]}                            | ${"[Home, Catalog]"}
-  ${Inventory}      | ${"Inventory"}      | ${3}   | ${[Home, Catalog, Inventory]}                 | ${"[Home, Catalog, Inventory]"}
-  ${CreateInstance} | ${"CreateInstance"} | ${4}   | ${[Home, Catalog, Inventory, CreateInstance]} | ${"[Home, Catalog, Inventory, CreateInstance]"}
-  ${Events}         | ${"Events"}         | ${4}   | ${[Home, Catalog, Inventory, Events]}         | ${"[Home, Catalog, Inventory, Events]"}
-  ${Diagnose}       | ${"Diagnose"}       | ${4}   | ${[Home, Catalog, Inventory, Diagnose]}       | ${"[Home, Catalog, Inventory, Diagnose]"}
+  route             | routeTxt            | length | result                                              | resultTxt
+  ${Catalog}        | ${"Catalog"}        | ${2}   | ${[Dashboard, Catalog]}                             | ${"[Dashboard, Catalog]"}
+  ${Inventory}      | ${"Inventory"}      | ${3}   | ${[Dashboard, Catalog, Inventory]}                  | ${"[Dashboard, Catalog, Inventory]"}
+  ${CreateInstance} | ${"CreateInstance"} | ${4}   | ${[Dashboard, Catalog, Inventory, CreateInstance]}  | ${"[Dashboard, Catalog, Inventory, CreateInstance]"}
+  ${Events}         | ${"Events"}         | ${4}   | ${[Dashboard, Catalog, Inventory, Events]}          | ${"[Dashboard, Catalog, Inventory, Events]"}
+  ${Diagnose}       | ${"Diagnose"}       | ${4}   | ${[Dashboard, Catalog, Inventory, Diagnose]}        | ${"[Dashboard, Catalog, Inventory, Diagnose]"}
 `(
   "GIVEN getLineageFromRoute WHEN passed $routeTxt THEN returns routes #$length $resultTxt",
   ({ route, length, result }) => {
@@ -41,7 +41,6 @@ it.each`
 
 it.each`
   url                                          | result                                                              | resultTxt
-  ${"/"}                                       | ${{ route: Home, params: undefined }}                               | ${"Home(undefined)"}
   ${"/lsm/catalog"}                            | ${{ route: Catalog, params: undefined }}                            | ${"Catalog(undefined)"}
   ${"/lsm/catalog/xyz/inventory"}              | ${{ route: Inventory, params: { service: "xyz" } }}                 | ${"Inventory({service: 'xyz'})"}
   ${"/lsm/catalog/xyz/inventory/add"}          | ${{ route: CreateInstance, params: { service: "xyz" } }}            | ${"CreateInstance({service: 'xyz'})"}
@@ -62,15 +61,15 @@ test("Given getUrlForApiUri When uri is known Then returns url", () => {
   expect(routeManager.getUrlForApiUri("/api/v2/compilereport/123")).toMatch("/compilereports/123");
 });
 
-test("GIVEN '/lsm/catalog' THEN breadcrumbs should be ['Home','Catalog']", () => {
+test("GIVEN '/lsm/catalog' THEN breadcrumbs should be ['Dashboard','Catalog']", () => {
   const crumbs = routeManager.getCrumbs("/lsm/catalog");
 
   expect(crumbs).toHaveLength(2);
   expect(crumbs).toEqual([
     {
-      kind: "Home",
-      label: "Home",
-      url: "/",
+      kind: "Dashboard",
+      label: "Dashboard",
+      url: "/dashboard",
       active: false,
     },
     {
@@ -82,15 +81,15 @@ test("GIVEN '/lsm/catalog' THEN breadcrumbs should be ['Home','Catalog']", () =>
   ]);
 });
 
-test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Home', 'Catalog', 'Inventory']", () => {
+test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Dashboard', 'Catalog', 'Inventory']", () => {
   const crumbs = routeManager.getCrumbs("/lsm/catalog/xyz/inventory");
 
   expect(crumbs).toHaveLength(3);
   expect(crumbs).toEqual([
     {
-      kind: "Home",
-      label: "Home",
-      url: "/",
+      kind: "Dashboard",
+      label: "Dashboard",
+      url: "/dashboard",
       active: false,
     },
     {
@@ -108,15 +107,15 @@ test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Home', 'Ca
   ]);
 });
 
-test("GIVEN '/resources/123' THEN breadcrumbs should be ['Home', 'Resources', 'Resource Details']", () => {
+test("GIVEN '/resources/123' THEN breadcrumbs should be ['Dashboard', 'Resources', 'Resource Details']", () => {
   const crumbs = routeManager.getCrumbs("/resources/123");
 
   expect(crumbs).toHaveLength(3);
   expect(crumbs).toEqual([
     {
-      kind: "Home",
-      label: "Home",
-      url: "/",
+      kind: "Dashboard",
+      label: "Dashboard",
+      url: "/dashboard",
       active: false,
     },
     {

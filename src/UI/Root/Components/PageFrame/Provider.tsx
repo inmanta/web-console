@@ -20,7 +20,7 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
   return (
     <PageFrame environmentId={environmentId}>
       {environmentId === words("error.environment.missing") ? (
-        <Navigate to={routeManager.getUrl("Home", undefined)} />
+        <Navigate to={routeManager.getUrl("Dashboard", undefined)} />
       ) : (
         children
       )}

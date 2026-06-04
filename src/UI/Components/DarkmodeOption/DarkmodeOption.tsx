@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DropdownItem } from "@patternfly/react-core";
+import { MoonIcon, SunIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 
 const storageKey = "theme-preference";
@@ -58,7 +59,11 @@ export const DarkmodeOption: React.FC = () => {
   };
 
   return (
-    <DropdownItem key="darkmode-toggle" onClick={toggleTheme}>
+    <DropdownItem
+      key="darkmode-toggle"
+      onClick={toggleTheme}
+      icon={theme === "dark" ? <SunIcon /> : <MoonIcon />}
+    >
       {words("theme.toggle")(theme)}
     </DropdownItem>
   );
