@@ -1,7 +1,9 @@
 import React, { memo, useCallback } from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
-import { Resource, Sort } from "@/Core";
+import { Resource } from "@/Core";
+import { MultiSort } from "@/Data";
 import { words } from "@/UI";
+import { StatusSortMenu } from "./Components";
 import { ResourceTableRow, ResourceRow } from "./ResourceTableRow";
 import {
   columnHeads,
@@ -12,46 +14,47 @@ import {
 
 interface Props {
   rows: ResourceRow[];
-  sort: Sort.Type<Resource.SortKey>;
-  setSort: (sort: Sort.Type<Resource.SortKey>) => void;
+  sort: MultiSort<Resource.SortKey>;
+  setSort: (sort: MultiSort<Resource.SortKey>) => void;
 }
 
 export const ResourcesTable: React.FC<Props> = memo(({ rows, sort, setSort, ...props }) => {
   const onSort: OnSort = useCallback(
     (_event, index, order) => {
-      setSort({
-        name: getColumnNameForIndex(index) as Resource.SortKey,
-        order,
-      });
+      const name = getColumnNameForIndex(index) as Resource.SortKey;
+      setSort([{ name, order }]);
     },
     [setSort]
   );
-  const activeSortIndex = getIndexForColumnName(sort.name);
-  const smallHeaders = ["status"];
+
+  const activeRegularSort = sort.find((sortEntry) => !Resource.isStatusSortKey(sortEntry.name));
+
   const heads = columnHeads.map(({ apiName, displayName }, columnIndex) => {
+    if (apiName === "status") {
+      return (
+        <Th style={{ textAlign: "end", overflow: "visible" }} key={displayName}>
+          <StatusSortMenu sort={sort} setSort={setSort} />
+        </Th>
+      );
+    }
+
     const hasSort = sortableColumns.includes(apiName);
     const sortParams = hasSort
       ? {
           sort: {
             sortBy: {
-              index: activeSortIndex,
-              direction: sort.order,
+              index: activeRegularSort ? getIndexForColumnName(activeRegularSort.name) : undefined,
+              direction: activeRegularSort?.order ?? "asc",
             },
             onSort,
             columnIndex,
           },
+          "data-testid": `sort-${displayName}`,
         }
       : {};
 
-    const widthModifier = smallHeaders.includes(apiName) ? "fitContent" : "nowrap";
-
     return (
-      <Th
-        key={displayName}
-        {...sortParams}
-        modifier={widthModifier}
-        textCenter={apiName === "status"}
-      >
+      <Th key={displayName} {...sortParams} modifier="nowrap">
         {displayName}
       </Th>
     );

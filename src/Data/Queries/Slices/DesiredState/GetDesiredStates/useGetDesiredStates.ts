@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { DateRange, IntRange, PageSize, Pagination } from "@/Core";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { CustomError, REFETCH_INTERVAL, useGet, getPaginationHandlers } from "@/Data/Queries";
@@ -74,6 +74,7 @@ export const useGetDesiredStates = (): GetDesiredStates => {
         queryKey: getDesiredStatesKey.list([pageSize, ...Object.values(filter), currentPage, env]),
         queryFn: () => get(getDesiredStatesUrl({ pageSize, filter, currentPage })),
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
+        placeholderData: keepPreviousData,
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
