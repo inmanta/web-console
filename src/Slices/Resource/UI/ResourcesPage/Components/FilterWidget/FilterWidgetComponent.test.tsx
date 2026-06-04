@@ -156,10 +156,8 @@ describe("FilterWidgetComponent", () => {
       disregardDefault: true,
     });
 
-    await userEvent.click(screen.getByRole("button", { name: "Clear all" }));
-    expect(setFilter).toHaveBeenNthCalledWith(9, {
-      disregardDefault: true,
-    });
+    await userEvent.click(screen.getByRole("button", { name: "Reset Filters" }));
+    expect(setFilter).toHaveBeenNthCalledWith(9, {});
   });
 
   it("toggles the purged status via the switch in the resource tab", async () => {
