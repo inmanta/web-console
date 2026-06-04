@@ -42,6 +42,7 @@ pipeline {
                             yarn tsc;
                             yarn check-circular-deps;
                             yarn build:ci;
+                            yarn check-no-cdn;
                             yarn test:ci'''
                         }
                     }

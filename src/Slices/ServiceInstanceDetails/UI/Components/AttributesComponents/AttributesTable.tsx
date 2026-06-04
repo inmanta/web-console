@@ -260,6 +260,7 @@ export const AttributesTable: React.FC<Props> = ({
     const handleToggle = () => {
       setExpandedNodeIds((prev) => {
         const other = prev.filter((id) => id !== node.id);
+
         return isExpanded ? other : [...other, node.id];
       });
     };

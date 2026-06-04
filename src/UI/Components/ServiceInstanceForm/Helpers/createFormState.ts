@@ -12,6 +12,7 @@ export const createFormState = (fields: FieldLikeWithFormState[]): InstanceAttri
   const returnValue = fields.reduce((acc, curr) => {
     switch (curr.kind) {
       case "Boolean":
+      case "Dict":
       case "Enum":
       case "Text":
       case "Textarea":
@@ -84,6 +85,7 @@ export const createEditFormState = (
     if (originalAttributes?.[curr.name] !== undefined) {
       switch (curr.kind) {
         case "Boolean":
+        case "Dict":
         case "Enum":
         case "Textarea":
         case "TextList":
@@ -159,6 +161,7 @@ export const createDuplicateFormState = (
     if (originalAttributes?.[curr.name] !== undefined) {
       switch (curr.kind) {
         case "Boolean":
+        case "Dict":
         case "Enum":
         case "Textarea":
         case "TextList":

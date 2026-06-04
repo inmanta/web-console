@@ -116,6 +116,7 @@ describe("FactsPage", () => {
               data: response.data.slice(0, 4),
             });
           }
+
           return HttpResponse.json(response);
         })
       );
@@ -148,6 +149,7 @@ describe("FactsPage", () => {
             data: response.data.slice(0, 4),
           });
         }
+
         return HttpResponse.json({
           data: Mock.list,
           metadata: {

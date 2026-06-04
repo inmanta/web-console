@@ -11,12 +11,9 @@ import { PathHelper, TreeExpansionManager } from "./Helpers";
 import { InventoryAttributeHelper } from "./Inventory";
 import { InventoryTreeTableHelper } from "./Inventory/TreeTableHelper";
 import { TreeTable } from "./TreeTable";
+import type { Mock } from "vitest";
 
-function inventorySetup(
-  attributes: Attributes,
-  service?: ServiceModel,
-  setTab?: ReturnType<typeof vi.fn>
-) {
+function inventorySetup(attributes: Attributes, service?: ServiceModel, setTab?: Mock) {
   const component = (
     <QueryClientProvider client={testClient}>
       <MockedDependencyProvider>
@@ -89,7 +86,7 @@ test("TreeTable with 1st level of attributes containing annotations should not r
   };
 
   // mock the setTab function
-  const setTab = vi.fn();
+  const setTab = vi.fn() as Mock;
 
   render(
     inventorySetup(

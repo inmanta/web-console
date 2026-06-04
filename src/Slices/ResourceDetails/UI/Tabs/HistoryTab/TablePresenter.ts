@@ -2,9 +2,10 @@ import { ColumnHead, DatePresenter, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 import { ResourceHistory, ResourceHistoryRow } from "@S/ResourceDetails/Core/ResourceHistory";
 
-export class ResourceHistoryTablePresenter
-  implements TablePresenter<ResourceHistory, ResourceHistoryRow>
-{
+export class ResourceHistoryTablePresenter implements TablePresenter<
+  ResourceHistory,
+  ResourceHistoryRow
+> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 

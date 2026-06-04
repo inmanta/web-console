@@ -219,6 +219,7 @@ export class InventoryTabElement {
           requestAnimationFrame(() => {
             this.updateCanvasStateAfterDrop(modelId, model, graph, setCanvasState);
           });
+
           return;
         }
 
@@ -329,9 +330,11 @@ const buildGroups = (
 
     groups[serviceName] = instances.map((instance, index) => {
       const isOnCanvas = canvasInstanceIds.has(instance.id);
+
       return createInventorySidebarItem(instance, serviceModel, index, isOnCanvas);
     });
   });
+
   return groups;
 };
 

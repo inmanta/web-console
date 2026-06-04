@@ -108,7 +108,7 @@ describe("Given ExpertBanner", () => {
     vi.mocked(useUpdateEnvironmentSettingModule.useUpdateEnvironmentSetting).mockImplementation(
       (options) => {
         if (options?.onError) {
-          onErrorCallback = options.onError;
+          onErrorCallback = options.onError as unknown as typeof onErrorCallback;
         }
 
         return {

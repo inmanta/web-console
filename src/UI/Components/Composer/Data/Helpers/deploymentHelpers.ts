@@ -103,6 +103,7 @@ const transformUpdateItem = (item: ComposerServiceOrderItem): ComposerServiceOrd
   // Note: Embedded entities are nested in parent attributes, so they don't appear as separate items
   if (item.action === "update" && item.attributes && !item.edits) {
     const { attributes, ...rest } = item;
+
     return {
       ...rest,
       edits: [
@@ -115,6 +116,7 @@ const transformUpdateItem = (item: ComposerServiceOrderItem): ComposerServiceOrd
       ] as [Record<string, unknown>],
     };
   }
+
   return item;
 };
 

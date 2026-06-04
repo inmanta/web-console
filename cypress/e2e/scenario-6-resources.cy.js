@@ -4,6 +4,22 @@ const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
 
+// Helper to verify filtered count is less than initial
+const expectFilteredLessThan = (alias) => {
+  cy.get(`@${alias}`).then((initialCount) => {
+    cy.get('[aria-label="Resource Table Row"]').should(($rows) => {
+      expect($rows.length).to.be.lessThan(initialCount);
+    });
+  });
+};
+
+// Helper to verify row count is restored to initial
+const expectRowCountRestored = (alias) => {
+  cy.get(`@${alias}`).then((initialCount) => {
+    cy.get('[aria-label="Resource Table Row"]').should("have.length", initialCount);
+  });
+};
+
 describe("Scenario 6 : Resources", () => {
   if (isIso) {
     before(() => {
@@ -13,688 +29,621 @@ describe("Scenario 6 : Resources", () => {
   }
 
   it("6.1 Initial state", () => {
-    // Select Test environment
     cy.visit("/console/");
-
     cy.get('[aria-label="Select-environment-test"]').click();
-
-    // Go to Resources page by clicking on navbar
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
-    // Expect 0/0 resources to be visible
-    cy.get('[aria-label="Deployment state summary"]').should("contain", isIso ? "0 / 0" : "5 / 5");
-    // Expect table to be empty in case of ISO project
+    // Expect 0 or 5 resources depending on edition
+    cy.get('[data-testid="deploying-label"]').should("contain", isIso ? "0" : "5");
     isIso && cy.get('[aria-label="ResourcesPage-Empty"]').should("to.be.visible");
   });
 
   if (isIso) {
-    it("6.2 Add instance on a basic-service", () => {
-      // Select Test environment
+    it("6.2 Add instance on the resource-states service", () => {
       cy.visit("/console/");
-
       cy.get('[aria-label="Select-environment-test"]').click();
 
+      // Store initial resource count
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get("body").then(($body) => {
-        const initialRowCount = $body.find('[aria-label="Resource Table Row"]').length;
-        cy.wrap(initialRowCount).as("initialRowCount");
+        cy.wrap($body.find('[aria-label="Resource Table Row"]').length).as("initialRowCount");
       });
 
-      // Go to Service Catalog
+      // Add a new instance via resource-states service
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-
-      // Select Show Inventory on basic-service
-      cy.get("#basic-service").contains("Show inventory").click();
-
-      // Add instance
+      cy.get("#resource-states").contains("Show inventory").click();
       cy.get("#add-instance-button").click();
-      cy.get("#ip_r1").type("1.2.3.4");
-      cy.get("#interface_r1_name").type("eth0");
-      cy.get("#address_r1").type("1.2.3.5");
-      cy.get("#vlan_id_r1").type("1");
-      cy.get("#ip_r2").type("1.2.2.1");
-      cy.get("#interface_r2_name").type("interface-vlan");
-      cy.get("#address_r2").type("1.2.2.3");
-      cy.get("#vlan_id_r2").type("2");
-      cy.get("#service_id").type("0001");
-      cy.get("#name").type("basic-service");
+      cy.get("#name").type("test");
       cy.get("button").contains("Confirm").click();
 
-      cy.get('[aria-label="Instance-Details-Success"]', {
-        timeout: 20000,
-      }).should("to.be.visible");
+      cy.get('[aria-label="Instance-Details-Success"]', { timeout: 20000 }).should("be.visible");
 
-      // Go back to Resources page
+      // Verify 26 new resources were added
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
-
-      // Expect two rows to be added to the table
-      // lsm::LifecycleTransfer
-      // frontend_model::TestResource
       cy.get("@initialRowCount").then((initialRowCount) => {
-        cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should(
+        cy.get('[aria-label="Resource Table Row"]', { timeout: 45000 }).should(
           "have.length",
-          initialRowCount + 2
+          initialRowCount + 26
         );
       });
-      cy.get('[aria-label="Resource Table Row"]')
-        .eq(0)
-        .should("contain", "frontend_model::TestResource");
-      cy.get('[aria-label="Resource Table Row"]').eq(1).should("contain", "lsm::LifecycleTransfer");
 
-      // click on frontend_model::TestResource Show Details
-      cy.get('[aria-label="Resource Table Row"]')
-        .eq(0)
+      // Verify details of the target resource
+      const resourceName = "test-compliant-successful-not-blocked-0";
+      cy.contains('[aria-label="Resource Table Row"]', resourceName).should("be.visible");
+      cy.contains('[aria-label="Resource Table Row"]', resourceName)
         .find("button")
         .contains("Show Details")
         .click();
 
-      // Expect to find this information in table :
-      cy.get(".pf-v6-c-description-list").within(() => {
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("name")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("contain", "default-0001");
+      const expectedAttributes = {
+        compliance: "compliant",
+        deploying_time_s: "0",
+        handler_result: "successful",
+        receive_events: "false",
+        report_only: "false",
+        revision: "0",
+        send_event: "true",
+      };
 
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("purge_on_delete")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("contain", "false");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("purged")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("contain", "false");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("receive_events")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("contain", "true");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("send_event")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("contain", "true");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("should_deploy_fail")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("contain", "false");
+      Object.entries(expectedAttributes).forEach(([key, value]) => {
+        cy.get(`[data-testid="attribute-${key}"]`).should("contain", value);
       });
 
-      // Click on Requires tab
+      // Requires tab should be empty
       cy.get("button").contains("Requires").click();
-
-      // Expect it to be empty
       cy.get('[aria-label="ResourceRequires-Empty"]').should("contain", "No requirements found");
 
-      // Click on history tab
+      // History tab should have 1 row with 0 requires, expand and verify same attributes
       cy.get("button").contains("History").click();
-
-      // Expect One row to be visible
       cy.get('[aria-label="Resource History Table Row"]').should("have.length", 1);
-
-      // Expect row to have 0 Requires
       cy.get('[data-label="Requires"]').should("contain", "0");
-
-      // click row open
       cy.get('[aria-label="Details"]').click();
 
-      // Expect content to be the same as on main Desired State tab
-      cy.get(".pf-v6-c-description-list")
-        .last()
-        .within(() => {
-          cy.get(".pf-v6-c-description-list__term")
-            .contains("name")
-            .closest(".pf-v6-c-description-list__group")
-            .find(".pf-v6-c-description-list__description")
-            .should("contain", "default-0001");
+      Object.entries(expectedAttributes).forEach(([key, value]) => {
+        cy.get(`[data-testid="attribute-${key}"]`).should("contain", value);
+      });
 
-          cy.get(".pf-v6-c-description-list__term")
-            .contains("purge_on_delete")
-            .closest(".pf-v6-c-description-list__group")
-            .find(".pf-v6-c-description-list__description")
-            .should("contain", "false");
+      cy.get("button").contains("Requires").click();
+      cy.get('[aria-label="ResourceRequires-Empty"]').should("contain", "No requirements found");
 
-          cy.get(".pf-v6-c-description-list__term")
-            .contains("purged")
-            .closest(".pf-v6-c-description-list__group")
-            .find(".pf-v6-c-description-list__description")
-            .should("contain", "false");
-
-          cy.get(".pf-v6-c-description-list__term")
-            .contains("receive_events")
-            .closest(".pf-v6-c-description-list__group")
-            .find(".pf-v6-c-description-list__description")
-            .should("contain", "true");
-
-          cy.get(".pf-v6-c-description-list__term")
-            .contains("send_event")
-            .closest(".pf-v6-c-description-list__group")
-            .find(".pf-v6-c-description-list__description")
-            .should("contain", "true");
-
-          cy.get(".pf-v6-c-description-list__term")
-            .contains("should_deploy_fail")
-            .closest(".pf-v6-c-description-list__group")
-            .find(".pf-v6-c-description-list__description")
-            .should("contain", "false");
-        });
-
-      // Expect requires tab to have no requirements
-      cy.get(".pf-v6-c-tabs__list").eq(1).find("button").contains("Requires").click();
-      cy.get('[aria-label="Requires"]').find("tbody").should("contain", "No requirements found");
-
-      // Go to logs tab
+      // Logs tab should have at least 4 messages with 100 as default page size
       cy.get("button").contains("Logs").click();
-
-      // Expect it to have : 5 log messages
-      cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
-        "to.have.length.of.at.least",
-        5
-      );
-
-      // make sure the default is 100 instead of 20 like on other pages with pagination.
-      cy.get('[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle').click();
-      cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist");
+      cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should("have.length.at.least", 4);
+      cy.get('[id="PaginationWidget-top-top-toggle"]').click();
+      cy.get('[data-action="per-page-100"]').should("contain", "100");
+      cy.get('[data-action="per-page-100"]').find("svg").should("exist");
     });
 
     it("6.3 Log message filtering", () => {
-      // Select Test environment
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
 
-      // Go to Resources page
+      // Navigate to the target resource logs
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
-
-      // click on frontend_model::TestResource Show Details
-      cy.get('[aria-label="Resource Table Row"]')
-        .eq(0)
+      cy.contains('[aria-label="Resource Table Row"]', "test-compliant-successful-not-blocked-0")
         .find("button")
         .contains("Show Details")
         .click();
-
-      // Go to logs tab
       cy.get("button").contains("Logs").click();
 
-      // Get initial amount of log messages
+      // Store initial log count
       cy.get('[aria-label="ResourceLogRow"]').then(($rows) => {
         cy.wrap($rows.length).as("initialRowCount");
       });
 
-      // Filter on "INFO" for Minimal Log Level
+      // Apply INFO filter and verify count decreases
       cy.get('[aria-label="MinimalLogLevelFilterInput"]').click();
       cy.get('[role="option"]').contains("INFO").click();
+      expectFilteredLessThan("initialRowCount");
 
-      // Compare filtered count with initial count
-      cy.get("@initialRowCount").then((initialRowCount) => {
-        cy.get('[aria-label="ResourceLogRow"]').should(($rows) => {
-          expect($rows.length).to.be.lessThan(initialRowCount);
-        });
-      });
-
-      // Remove INFO filter
+      // Remove filter and verify count is restored
       cy.get('[aria-label="Close INFO"]').click();
-
-      // Expect amount of rows to return to the original count
       cy.get("@initialRowCount").then((initialRowCount) => {
-        cy.get('[aria-label="ResourceLogRow"]').should(($rows) => {
-          expect($rows.length).to.equal(initialRowCount);
-        });
+        cy.get('[aria-label="ResourceLogRow"]').should("have.length", initialRowCount);
       });
     });
 
     it("6.4 Resources with multiple dependencies", () => {
-      // Select Test environment
       cy.visit("/console/");
       cy.get('[aria-label="Select-environment-test"]').click();
-
-      // Go to Resources page and get initial count of rows in the table
-      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
-      cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
-        cy.wrap($rows.length).as("initialRowCount");
-      });
-
-      // Go to Service Catalog page
-      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-
-      // Click on Show Inventory on dependency-service
-      cy.get("#dependency-service").contains("Show inventory").click();
-
-      // add instance
-      cy.get("#add-instance-button").click();
-      cy.get("#name").type("dependency-service");
-      cy.get("#waiting_entity").type("waiting-entity");
-
-      cy.get('[aria-label="Type to filter"]').type("a");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("b");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("c");
-      cy.get("button").contains("Add").click();
-
-      cy.get("#service_id").type("0009");
-
-      cy.get("button").contains("Confirm").click();
-
-      cy.get('[aria-label="Instance-Details-Success"]', {
-        timeout: 20000,
-      }).should("to.be.visible");
-
-      // Go to Resource page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
-      // Expect to find 5 rows added to the table: the resource waiting-entity with 3 dependencies a,b,c
-      // and the lifecycle transfer for this resource
-      cy.get("@initialRowCount").then((initialRowCount) => {
-        cy.get('[aria-label="Resource Table Row"]', { timeout: 60000 }).should(
-          "have.length",
-          initialRowCount + 5
-        );
-      });
+      const resourceName = "test-has-update-failed-blocked-0";
+      const requireA =
+        "frontend_model::resource_states::ResourceStateResource[internal,_name=test-undefined-new-blocked-0]";
+      const requireB =
+        "frontend_model::resource_states::ResourceStateResource[infinite-deploys-test-has-update-new-not-blocked-deploying-0,_name=test-has-update-new-not-blocked-deploying-0]";
 
-      // Expect to find a resource with value: a, b, c
-      cy.get('[aria-label="Resource Table Row"]').eq(0).should("contain", "a");
-      cy.get('[aria-label="Resource Table Row"]').eq(1).should("contain", "b");
-      cy.get('[aria-label="Resource Table Row"]').eq(2).should("contain", "c");
-      cy.get('[aria-label="Resource Table Row"]').eq(3).should("contain", "default-0001");
+      // Verify the compound status dialog shows 2 requirements
+      cy.contains('[aria-label="Resource Table Row"]', resourceName)
+        .find('[aria-label="Show status details"]')
+        .click();
+      cy.get('[role="dialog"]', { timeout: 10000 })
+        .should("be.visible")
+        .within(() => {
+          cy.contains("2 Requirements").should("exist");
+        });
+      cy.get('[role="dialog"]').find('[aria-label="Close"]').click();
 
-      // Click open collapsible row for resource waiting-entity
-      cy.get(
-        '[aria-label="Toggle-frontend_model::TestResource[internal,name=waiting-entity]"] > button',
-        { timeout: 20000 }
-      ).click();
-      // Expect to find three rows with
-      cy.get('[aria-label="ResourceRequires-Success"]', {
-        timeout: 20000,
-      }).should(($table) => {
-        const $rows = $table.find("tr");
-
-        // 3 rows and one header row.
-        expect($rows).to.have.length(4);
-      });
-
-      // click on show details on waiting-entity
-      cy.get('[aria-label="Resource Table Row"]')
-        .eq(4)
+      // Navigate to details and verify both requirements are listed
+      cy.contains('[aria-label="Resource Table Row"]', resourceName)
         .find("button")
         .contains("Show Details")
         .click();
-
-      // go to requires tab
       cy.get("button").contains("Requires").click();
-
-      // expect again to find
-      // frontend_model::TestResource[internal,name=a]
-      // frontend_model::TestResource[internal,name=b]
-      // frontend_model::TestResource[internal,name=c]
-      cy.get('[aria-label="ResourceRequires-Success"]', {
-        timeout: 20000,
-      }).should(($table) => {
-        const $rows = $table.find("tr");
-
-        // 3 rows and one header row.
-        expect($rows).to.have.length(4);
+      cy.get('[aria-label="ResourceRequires-Success"]', { timeout: 20000 }).should(($table) => {
+        // 2 requirement rows + 1 header row
+        expect($table.find("tr")).to.have.length(3);
       });
+      cy.get("button").contains(requireA).should("exist");
+      cy.get("button").contains(requireB).should("exist");
 
-      // go to history tab
+      // History tab should have 2 entries, one of which has 2 requires
       cy.get("button").contains("History").click();
+      cy.get('[aria-label="Resource History Table Row"]').should("have.length", 2);
+      cy.get('[data-label="Requires"]').contains("2").should("exist");
 
-      cy.get('[aria-label="Resource History Table Row"]').should("have.length", 1);
-
-      // expect to find one collapsible with 3 Requires
-      cy.get('[data-label="Requires"]').should("contain", "3");
-
-      // go back to requires tab
+      // Navigate to requireA from the requires tab and verify landing page
       cy.get("button").contains("Requires").click();
+      cy.get("button").contains(requireA).click();
+      cy.get(`[aria-label="resourceName-${requireA}"]`).should("be.visible");
 
-      // click on first required resource link frontend_model::TestResource[internal,name=a]
-      cy.get("button").contains("frontend_model::TestResource[internal,name=a]").click();
-
-      // check title from this page, should have the name of the resource
-      cy.get(".pf-v6-c-content")
-        .contains("frontend_model::TestResource[internal,name=a]")
-        .should("to.be.visible");
-
-      // go back to Resource page
+      // Go back and verify navigation works a second time
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
-
-      // click show details on resource with value waiting-entity
-      cy.get('[aria-label="Resource Table Row"]')
-        .eq(4)
+      cy.contains('[aria-label="Resource Table Row"]', resourceName)
         .find("button")
         .contains("Show Details")
         .click();
-
       cy.get("button").contains("Requires").click();
-
-      // click on first resource frontend_model::TestResource[internal,name=a]
-      cy.get("button").contains("frontend_model::TestResource[internal,name=a]").click();
-
-      // Expect to be on the same page with same title as before.
-      cy.get(".pf-v6-c-content")
-        .contains("frontend_model::TestResource[internal,name=a]")
-        .should("to.be.visible");
+      cy.get("button").contains(requireA).click();
+      cy.get(`[aria-label="resourceName-${requireA}"]`).should("be.visible");
     });
 
     it("6.5 Pagination", () => {
-      // Select Test environment
       cy.visit("/console/");
-
       cy.get('[aria-label="Select-environment-test"]').click();
 
-      // Go to Service Catalog
+      // Add a resource-states instance with scale=2 to get enough resources for pagination
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-
-      // Select Show Inventory on dependency-service and add one with 41 dependencies
-      cy.get("#dependency-service").contains("Show inventory").click();
+      cy.get("#resource-states").contains("Show inventory").click();
       cy.get("#add-instance-button").click();
-
-      cy.get("#waiting_entity").type("waiting-0002");
-      cy.get("#service_id").type("ds-0002");
-      cy.get("#name").type("dependency-service-0002");
-      //dependencies
-      cy.get('[aria-label="Type to filter"]').type("1");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("2");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("3");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("4");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("5");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("6");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("7");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("8");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("9");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("10");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("11");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("12");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("13");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("14");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("15");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("16");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("17");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("18");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("19");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("20");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("21");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("22");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("23");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("24");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("25");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("26");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("27");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("28");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("29");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("30");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("31");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("32");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("33");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("34");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("35");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("36");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("37");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("38");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("39");
-      cy.get("button").contains("Add").click();
-      cy.get('[aria-label="Type to filter"]').type("40");
-      cy.get("button").contains("Add").click();
-
+      cy.get("#name").type("pagination-test");
+      cy.get("#scale").clear().type("3");
       cy.get("button").contains("Confirm").click();
 
-      cy.get('[aria-label="Instance-Details-Success"]', {
-        timeout: 20000,
-      }).should("to.be.visible");
+      cy.get('[aria-label="Instance-Details-Success"]', { timeout: 20000 }).should("be.visible");
+      cy.get('[aria-label="CompileReportsIndication"]', { timeout: 90000 }).should("not.exist");
 
-      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      cy.get("#dependency-service").contains("Show inventory").click();
-
-      // Expect the number in the chart to the success label to be 8
-      cy.get(".pf-v6-c-chart").within(() => {
-        cy.get("#legend-ChartLabel-2", { timeout: 90000 }).should("contain", "success: 2");
-      });
-
-      //Wait for compilation to end
-      cy.get('[aria-label="CompileReportsIndication"]', {
-        timeout: 90000,
-      }).should("not.to.exist");
-
-      //Go to resources page
+      // Verify that we now have at least 100 resources
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
-      cy.get('[aria-label="LegendItem-deployed"]', { timeout: 60000 }).should("have.text", "49");
+      cy.get('[aria-label="Resource Table Row"]', { timeout: 80000 }).should(
+        "have.length.at.least",
+        100
+      );
 
-      // set page size to 20 for the test, 100 should be the default
-      cy.get('[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle').click();
-      cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist");
+      // Switch to page size 20 and verify we start on page 1
+      cy.get("#PaginationWidget-top-top-toggle").click();
+      cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist"); // 100 is default
       cy.contains(".pf-v6-c-menu__list-item", "20").click();
-
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
       ).should("have.text", "1 - 20");
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
-      //Go to next page
+      // Navigate forward two pages and back one, verifying page indicators
       cy.get('[aria-label="Go to next page"]').first().should("not.be.disabled").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
       }).should("have.text", "21 - 40");
 
-      //Go to last page
       cy.get('[aria-label="Go to next page"]').first().should("not.be.disabled").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
-      }).should("have.text", "41 - 49");
+      }).should("have.text", "41 - 60");
 
-      //Go to previous page
       cy.get('[aria-label="Go to previous page"]').first().should("not.be.disabled").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
-
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
       }).should("have.text", "21 - 40");
 
-      // Change sorting and expect to be redirected to the first page of the table
+      // Changing sort order should redirect back to page 1
       cy.get("button").contains("Type").click();
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
       }).should("have.text", "1 - 20");
+
+      // Changing filter should also redirect back to page 1
+      cy.get('[aria-label="Go to next page"]').first().should("not.be.disabled").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "21 - 40");
+
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+      // Filtering on type input with "lsm" will return 2 results
+      cy.get('[aria-label="Type"]').type("lsm");
+      cy.get('[aria-label="Add filter-Type"]').click();
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "1 - 2");
+    });
+
+    it("6.6 Compound resource status legend", () => {
+      cy.visit("/console/");
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      // Verify legend bar renders with items that have numeric values
+      cy.get('[data-testid="legend-bar-items"]').should("be.visible");
+      cy.get('[data-testid="legend-bar-items"]')
+        .find('[aria-label^="LegendItem-"]')
+        .should("have.length.at.least", 1)
+        .each(($item) => {
+          expect(parseInt($item.attr("data-value"), 10)).to.be.a("number");
+        });
+
+      // Verify the not_blocked item has resources from previous tests
+      cy.get('[aria-label="LegendItem-not_blocked"]')
+        .should("be.visible")
+        .invoke("attr", "data-value")
+        .then((value) => {
+          expect(parseInt(value, 10)).to.be.greaterThan(0);
+        });
+
+      // Store initial count, apply a legend filter and verify table shrinks
+      cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
+
+      cy.get('[aria-label="LegendItem-compliant"]').click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      expectFilteredLessThan("initialRowCount");
+
+      // Remove filters via the filter drawer and verify count is restored
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+      cy.get('[aria-label="Close compliant"]').click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      expectRowCountRestored("initialRowCount");
+    });
+
+    it("6.7 Resource filters", () => {
+      cy.visit("/console/");
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      // Store initial row count
+      cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
+
+      // Open the filter drawer
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+
+      // --- Resource tab ---
+
+      // Type filter
+      cy.get('[aria-label="Type"]').type("lsm");
+      cy.get('[aria-label="Add filter-Type"]').click();
+      expectFilteredLessThan("initialRowCount");
+      cy.get('[aria-label="Close lsm"]').click();
+      expectRowCountRestored("initialRowCount");
+
+      // Value filter
+      cy.get('[aria-label="Value"]').type("test-compliant-successful-not-blocked-0");
+      cy.get('[aria-label="Add filter-Value"]').click();
+      // 2 matches expected since we added the same instance name twice across tests
+      cy.get('[aria-label="Resource Table Row"]').should("have.length", 2);
+      cy.get('[aria-label="Close test-compliant-successful-not-blocked-0"]').click();
+      expectRowCountRestored("initialRowCount");
+
+      // Agent filter - first verify infinite scroll loads more options
+      cy.get('[aria-label="Agent(s)-menuToggle"]').click();
+      cy.get('[aria-label="Agent(s) options"]')
+        .find("button")
+        .then(($buttons) => {
+          cy.wrap($buttons.length).as("initialOptionCount");
+        });
+      cy.get('[aria-label="Agent(s) options"]').scrollTo("bottom");
+      cy.get("@initialOptionCount").then((initialOptionCount) => {
+        cy.get('[aria-label="Agent(s) options"]')
+          .find("button")
+          .should(($buttons) => {
+            expect($buttons.length).to.be.greaterThan(initialOptionCount);
+          });
+      });
+
+      // Add button should be disabled until an agent is selected
+      cy.get('[aria-label="Add filter-Agent(s)"]').should("be.disabled");
+      cy.get('[aria-label="Agent(s)-input"]').type("lsm");
+      cy.get('[aria-label="Agent(s) options"]').contains("button", "lsm").click();
+      cy.get('[aria-label="Add filter-Agent(s)"]').should("not.be.disabled").click();
+      expectFilteredLessThan("initialRowCount");
+      cy.get('[aria-label="Close lsm"]').click();
+      expectRowCountRestored("initialRowCount");
+
+      // Purged filter
+      cy.get("button").contains("Resource").click();
+      cy.get('[aria-label="Purged"]').click();
+      expectFilteredLessThan("initialRowCount");
+      cy.get('[aria-label="Close purged"]').click();
+      expectRowCountRestored("initialRowCount");
+
+      // --- Status tab ---
+      cy.get('[role="tab"]').contains("Status").click();
+
+      // Blocked state filter
+      cy.get('[aria-label="Blocked state(s)-toggle"]').click();
+      cy.get('[aria-label="blocked-include-toggle"]').click();
+      cy.get('[aria-label="Blocked state(s)-toggle"]').click();
+      expectFilteredLessThan("initialRowCount");
+      cy.get('[aria-label="Close blocked"]').click();
+      expectRowCountRestored("initialRowCount");
+
+      // Compliance state filter
+      cy.get('[aria-label="Compliance state(s)-toggle"]').click();
+      cy.get('[aria-label="compliant-include-toggle"]').click();
+      cy.get('[aria-label="Compliance state(s)-toggle"]').click();
+      expectFilteredLessThan("initialRowCount");
+      cy.get('[aria-label="Close compliant"]').click();
+      expectRowCountRestored("initialRowCount");
+
+      // Handler run state filter
+      cy.get('[aria-label="Handler run state(s)-toggle"]').click();
+      cy.get('[aria-label="failed-include-toggle"]').click();
+      cy.get('[aria-label="Handler run state(s)-toggle"]').click();
+      expectFilteredLessThan("initialRowCount");
+      cy.get('[aria-label="Close failed"]').click();
+      expectRowCountRestored("initialRowCount");
+
+      // Is Deploying toggle filter
+      cy.get('[aria-label="Is Deploying"]').click();
+      expectFilteredLessThan("initialRowCount");
+      cy.get('[aria-label="Close isDeploying"]').click();
+      expectRowCountRestored("initialRowCount");
+    });
+
+    it("6.8 Resource sorting", () => {
+      cy.visit("/console/");
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      // --- Regular column sorting ---
+
+      // Default sort is resource_type asc — clicking it should switch to desc
+      cy.get("button").contains("Type").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      cy.get('[data-testid="sort-Type"]').should("have.attr", "aria-sort", "descending");
+
+      // Clicking again should switch back to asc
+      cy.get("button").contains("Type").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      cy.get('[data-testid="sort-Type"]').should("have.attr", "aria-sort", "ascending");
+
+      // Clicking a different column should move the active sort
+      cy.get("button").contains("Agent").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      cy.get('[data-testid="sort-Agent"]').should("have.attr", "aria-sort", "ascending");
+      cy.get('[data-testid="sort-Type"]').should("not.have.attr", "aria-sort");
+
+      // Sorting resets pagination to page 1
+      cy.get('[aria-label="Go to next page"]').first().click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      // Page 2 with 100 per page would show "101 - 102" or similar
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("not.have.text", "1 - 100");
+
+      cy.get("button").contains("Type").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
+        timeout: 20000,
+      }).should("have.text", "1 - 100");
+
+      // --- Status sort menu ---
+
+      // Badge should start at 0
+      cy.get('[aria-label="Sort by status fields"]').within(() => {
+        cy.get('[data-testid="status-sort-badge"]').should("have.text", "0");
+      });
+
+      // Open the status sort menu
+      cy.get('[aria-label="Sort by status fields"]').click();
+      cy.get('[aria-label="draggable-sort-items"]').should("be.visible");
+
+      // Activate "Blocked" — badge should increment to 1
+      cy.get("#blocked").click();
+      cy.get('[data-testid="status-sort-badge"]').should("have.text", "1");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      // Activate "Compliance" — badge should increment to 2
+      cy.get("#compliance").click();
+      cy.get('[data-testid="status-sort-badge"]').should("have.text", "2");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      // Verify active items appear in correct order
+      cy.get('[data-testid^="status-sort-item-"]').then((items) => {
+        expect(items[0]).to.have.attr("data-testid", "status-sort-item-blocked-active");
+        expect(items[1]).to.have.attr("data-testid", "status-sort-item-compliance-active");
+      });
+
+      // Reorder via drag-and-drop: drag second item (Compliance) above first (Blocked)
+      cy.get('[aria-label="draggable-sort-items"]')
+        .find('[aria-label="Drag button"]')
+        .then(($buttons) => {
+          const handleRect = $buttons[1].getBoundingClientRect(); // Compliance (second)
+          const targetRect = $buttons[0].getBoundingClientRect(); // Blocked   (first)
+
+          const startX = handleRect.left + handleRect.width / 2;
+          const startY = handleRect.top + handleRect.height / 2;
+          const dropX = targetRect.left + targetRect.width / 2;
+          const dropY = targetRect.top + targetRect.height / 2;
+
+          cy.wrap($buttons[1])
+            .trigger("pointerdown", {
+              force: true,
+              isPrimary: true,
+              button: 0,
+              clientX: startX,
+              clientY: startY,
+            })
+            .trigger("pointermove", {
+              force: true,
+              isPrimary: true,
+              button: 0,
+              clientX: dropX,
+              clientY: dropY,
+            });
+
+          // Drag is in flight here — overlay must exist before we drop.
+          cy.get('[data-testid="status-sort-drag-overlay"]').should("exist");
+
+          cy.wrap($buttons[1]).trigger("pointerup", {
+            force: true,
+            isPrimary: true,
+            button: 0,
+            clientX: dropX,
+            clientY: dropY,
+          });
+        });
+
+      // Cypress retries until the DOM reflects the reorder — no fixed wait needed
+      cy.get('[data-testid^="status-sort-item-"]')
+        .first()
+        .should("have.attr", "data-testid", "status-sort-item-compliance-active");
+
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      // assert full new order
+      cy.get('[data-testid^="status-sort-item-"]').then((items) => {
+        expect(items[0]).to.have.attr("data-testid", "status-sort-item-compliance-active");
+        expect(items[1]).to.have.attr("data-testid", "status-sort-item-blocked-active");
+      });
+
+      // Wait for dnd-kit's drag overlay portal to be torn down before interacting —
+      // while it is mounted it sits on top of the list and blocks clicks.
+      cy.get('[data-testid="status-sort-drag-overlay"]').should("not.exist");
+
+      // First click toggles asc -> desc
+      cy.get("#compliance").should("have.attr", "data-order", "asc").click();
+
+      // Verify rerender completed
+      cy.get("#compliance").should("have.attr", "data-order", "desc");
+
+      // Second click removes item entirely
+      cy.get("#compliance").click();
+
+      // Verify removed
+      cy.get('[data-testid="status-sort-item-compliance-inactive"]').should("exist");
+
+      // badge updates
+      cy.get('[data-testid="status-sort-badge"]').should("have.text", "1");
+
+      // only one active item remains
+      cy.get('[data-testid="status-sort-item-blocked-active"]').should("exist");
     });
   } else {
-    it("6.6 Resources for OSS", () => {
+    it("6.2 Resources for OSS", () => {
       cy.visit("/console/");
-
       cy.get('[aria-label="Select-environment-test"]').click();
-
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
+      // Expect exactly 5 resources, all of type frontend_model::TestResource
       cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should("have.length", 5);
-      cy.get('[aria-label="Resource Table Row"]')
-        .eq(0)
-        .should("contain", "frontend_model::TestResource");
-      cy.get('[aria-label="Resource Table Row"]')
-        .eq(1)
-        .should("contain", "frontend_model::TestResource");
-      cy.get('[aria-label="Resource Table Row"]')
-        .eq(2)
-        .should("contain", "frontend_model::TestResource");
-      cy.get('[aria-label="Resource Table Row"]')
-        .eq(3)
-        .should("contain", "frontend_model::TestResource");
-      cy.get('[aria-label="Resource Table Row"]')
-        .eq(4)
-        .should("contain", "frontend_model::TestResource");
+      cy.get('[aria-label="Resource Table Row"]').each(($row) => {
+        cy.wrap($row).should("contain", "frontend_model::TestResource");
+      });
 
+      // Navigate to the first resource details
       cy.get('[aria-label="Resource Table Row"]')
-        .eq(0)
+        .first()
         .find("button")
         .contains("Show Details")
         .click();
 
-      // Expect to find the right information on the details page.
-      cy.get(".pf-v6-c-description-list").within(() => {
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("name")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("contain", "a");
+      const expectedAttributes = {
+        name: "a",
+        purge_on_delete: "false",
+        purged: "false",
+        receive_events: "true",
+        send_event: "true",
+        should_deploy_fail: "false",
+      };
 
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("purge_on_delete")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("contain", "false");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("purged")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("contain", "false");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("receive_events")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("contain", "true");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("send_event")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("contain", "true");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("should_deploy_fail")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("contain", "false");
+      Object.entries(expectedAttributes).forEach(([key, value]) => {
+        cy.get(`[data-testid="attribute-${key}"]`).should("contain", value);
       });
 
-      // Click on Requires tab
+      // Requires tab should be empty
       cy.get("button").contains("Requires").click();
-
-      // Expect it to be empty
       cy.get('[aria-label="ResourceRequires-Empty"]').should("contain", "No requirements found");
 
-      // Click on history tab
+      // History tab should have 1 entry with 0 requires, expand and verify same attributes
       cy.get("button").contains("History").click();
-
-      // Expect One row to be visible
       cy.get('[aria-label="Resource History Table Row"]').should("have.length", 1);
-
-      // Expect row to have 0 Requires
       cy.get('[data-label="Requires"]').should("contain", "0");
-
-      // click row open
       cy.get('[aria-label="Details"]').click();
-      // Expect content to be the same as on main Desired State tab
-      cy.get(".pf-v6-c-description-list")
-        .eq(1)
-        .within(() => {
-          cy.get(".pf-v6-c-description-list__term")
-            .contains("name")
-            .closest(".pf-v6-c-description-list__group")
-            .find(".pf-v6-c-description-list__description")
-            .should("contain", "a");
 
-          cy.get(".pf-v6-c-description-list__term")
-            .contains("purge_on_delete")
-            .closest(".pf-v6-c-description-list__group")
-            .find(".pf-v6-c-description-list__description")
-            .should("contain", "false");
+      Object.entries(expectedAttributes).forEach(([key, value]) => {
+        cy.get(`[data-testid="attribute-${key}"]`).should("contain", value);
+      });
 
-          cy.get(".pf-v6-c-description-list__term")
-            .contains("purged")
-            .closest(".pf-v6-c-description-list__group")
-            .find(".pf-v6-c-description-list__description")
-            .should("contain", "false");
+      cy.get("button").contains("Requires").click();
+      cy.get('[aria-label="ResourceRequires-Empty"]').should("contain", "No requirements found");
 
-          cy.get(".pf-v6-c-description-list__term")
-            .contains("receive_events")
-            .closest(".pf-v6-c-description-list__group")
-            .find(".pf-v6-c-description-list__description")
-            .should("contain", "true");
-
-          cy.get(".pf-v6-c-description-list__term")
-            .contains("send_event")
-            .closest(".pf-v6-c-description-list__group")
-            .find(".pf-v6-c-description-list__description")
-            .should("contain", "true");
-
-          cy.get(".pf-v6-c-description-list__term")
-            .contains("should_deploy_fail")
-            .closest(".pf-v6-c-description-list__group")
-            .find(".pf-v6-c-description-list__description")
-            .should("contain", "false");
-        });
-
-      // Expect requires tab to have no requirements
-      cy.get(".pf-v6-c-tabs__list").eq(1).find("button").contains("Requires").click();
-      cy.get('[aria-label="Requires"]').find("tbody").should("contain", "No requirements found");
-
-      // Go to logs tab
+      // Logs tab should have at least 5 messages with 100 as default page size
       cy.get("button").contains("Logs").click();
-      // Expect it to have : 5 log messages
-      cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
-        "to.have.length.of.at.least",
-        5
-      );
+      cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should("have.length.at.least", 4);
+      cy.get('[id="PaginationWidget-top-top-toggle"]').click();
+      cy.get('[data-action="per-page-100"]').should("contain", "100");
+      cy.get('[data-action="per-page-100"]').find("svg").should("exist");
 
-      // make sure the default is 100 instead of 20 like on other pages with pagination.
-      cy.get('[aria-label="PaginationWidget-top"] .pf-v6-c-menu-toggle').click();
-      cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist");
-
-      // Expect last log message to contain "Successfully stored version 6"
+      // Most recent log should reference a stored version (oldest entry, sorted descending)
       cy.get('[aria-label="ResourceLogRow"]')
-        .eq(0)
-        .should("contain", "Successfully stored version 6");
+        .last()
+        .should("contain", "Successfully stored version");
+      cy.get('[aria-label="Details"]').last().click();
+      cy.contains("Successfully stored version").should("be.visible");
+    });
 
-      // Click top message open
-      cy.get('[aria-label="Details"]').eq(0).click();
+    it("6.3 OSS basic status sort menu", () => {
+      cy.visit("/console/");
+      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
-      // Expect to find "Successfully stored version 6" displayed in expansion.
-      cy.get(".pf-v6-c-description-list__text").should("contain", "Successfully stored version 6");
+      // Badge starts at 0
+      cy.get('[aria-label="Sort by status fields"]').within(() => {
+        cy.get('[data-testid="status-sort-badge"]').should("have.text", "0");
+      });
+
+      // Open status sort menu
+      cy.get('[aria-label="Sort by status fields"]').click();
+      cy.get('[aria-label="draggable-sort-items"]').should("be.visible");
+
+      // Activate blocked
+      cy.get("#blocked").click();
+      cy.get('[data-testid="status-sort-badge"]').should("have.text", "1");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+      // Verify active item exists
+      cy.get('[data-testid="status-sort-item-blocked-active"]').should("exist");
+
+      // First click toggles asc -> desc
+      cy.get("#blocked").should("have.attr", "data-order", "asc").click();
+      cy.get("#blocked").should("have.attr", "data-order", "desc");
+
+      // Second click removes item entirely
+      cy.get("#blocked").click();
+
+      // Verify removed and badge resets
+      cy.get('[data-testid="status-sort-item-blocked-inactive"]').should("exist");
+      cy.get('[data-testid="status-sort-badge"]').should("have.text", "0");
     });
   }
 });

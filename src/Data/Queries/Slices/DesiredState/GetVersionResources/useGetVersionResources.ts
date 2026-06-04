@@ -12,7 +12,7 @@ import { getVersionResourcesUrl } from "./getVersionResourcesUrl";
  * Interface for the API response containing the resources data
  */
 interface Result {
-  data: Resource.FromVersion[];
+  data: Resource.FromVersionResource[];
   links: Pagination.Links;
   metadata: Pagination.Metadata;
 }

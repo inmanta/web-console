@@ -29,7 +29,6 @@ interface Props {
   attributeName: string;
   attributeValue: string[];
   description?: string | null;
-  isOptional: boolean;
   shouldBeDisabled?: boolean;
   type: TextInputTypes;
   typeHint?: string;
@@ -45,7 +44,6 @@ interface Props {
  *  @prop {string} attributeName - The name of the attribute.
  *  @prop {string[]} attributeValue - The value of the attribute.
  *  @prop {string | null} description - The description of the attribute.
- *  @prop {boolean} isOptional - Whether the attribute is optional.
  *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
  *  @prop {string} typeHint - The type hint for the attribute.
  *  @prop {string} typeHint - The type hint for the attribute.
@@ -59,7 +57,6 @@ export const TextListFormInput: React.FC<Props> = ({
   attributeName,
   attributeValue,
   description,
-  isOptional,
   shouldBeDisabled = false,
   typeHint,
   placeholder,
@@ -130,7 +127,6 @@ export const TextListFormInput: React.FC<Props> = ({
   return (
     <FormGroup
       {...props}
-      isRequired={!isOptional}
       fieldId={attributeName}
       label={attributeName}
       className={shouldBeDisabled ? "is-disabled" : ""}

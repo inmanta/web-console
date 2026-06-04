@@ -78,7 +78,7 @@ export const ServiceInventory: React.FunctionComponent<{
     );
   }
 
-  if (isSuccess)
+  if (isSuccess) {
     return (
       <ServiceInventoryContext.Provider
         value={{
@@ -125,6 +125,7 @@ export const ServiceInventory: React.FunctionComponent<{
         </Wrapper>
       </ServiceInventoryContext.Provider>
     );
+  }
 
   return (
     <Wrapper name={serviceName}>

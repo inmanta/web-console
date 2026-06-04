@@ -32,6 +32,7 @@ describe("Order Page", () => {
     server.use(
       http.get("/lsm/v2/order", async () => {
         await delay(200);
+
         return HttpResponse.json(emptyResponse);
       })
     );
@@ -101,8 +102,10 @@ describe("Order Page", () => {
       http.get("/lsm/v2/order", () => {
         if (counter < 1) {
           counter++;
+
           return HttpResponse.json(emptyResponse);
         }
+
         return HttpResponse.json(orderResponse);
       })
     );

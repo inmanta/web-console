@@ -1,14 +1,14 @@
 import { provide, Location, Replace, StateConfig, Update } from "./helpers";
-import { handleUrlState } from "./useUrlState";
+import { useUrlStateHandler } from "./useUrlState";
 
-export const useUrlStateWithString = provide(handleUrlStateWithString);
+export const useUrlStateWithString = provide(useHandleUrlStateWithString);
 
-export function handleUrlStateWithString<Data extends string>(
+export function useHandleUrlStateWithString<Data extends string>(
   config: Pick<StateConfig<Data>, "default" | "key" | "route">,
   location: Location,
   replace: Replace
 ): [Data, Update<Data>] {
-  return handleUrlState<Data>(
+  return useUrlStateHandler<Data>(
     {
       default: config.default,
       key: config.key,

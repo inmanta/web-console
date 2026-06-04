@@ -61,12 +61,14 @@ export const createCanvasHandlers = (graph: dia.Graph): CanvasHandlers => {
     const source = linkView.model.source();
     if (!source.id) {
       linkView.remove();
+
       return null;
     }
 
     const sourceCell = graph.getCell(source.id);
     if (!sourceCell || !isServiceEntityShapeCell(sourceCell)) {
       linkView.remove();
+
       return null;
     }
 

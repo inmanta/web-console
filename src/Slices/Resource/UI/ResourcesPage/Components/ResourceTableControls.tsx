@@ -1,15 +1,7 @@
 import React from "react";
-import {
-  Badge,
-  Button,
-  Flex,
-  FlexItem,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
-} from "@patternfly/react-core";
-import { FilterIcon } from "@patternfly/react-icons";
+import { Flex, Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { words } from "@/UI";
+import { FilterToggleButton } from "@/UI/Components";
 
 interface Props {
   summaryWidget: React.ReactNode;
@@ -17,6 +9,7 @@ interface Props {
   onToggleFilters: () => void;
   isDrawerExpanded: boolean;
   activeFilterCount: number;
+  noResourcesFound: boolean;
 }
 
 /**
@@ -30,6 +23,7 @@ interface Props {
  *  @prop {() => void} onToggleFilters - The function to toggle the filters
  *  @prop {boolean} isDrawerExpanded - Whether the drawer is expanded
  *  @prop {number} activeFilterCount - The number of active filters
+ *  @props {boolean} noResourcesFound - Whether there are no resources found with the current filters
  */
 export const ResourceTableControls: React.FC<Props> = ({
   summaryWidget,
@@ -37,32 +31,25 @@ export const ResourceTableControls: React.FC<Props> = ({
   onToggleFilters,
   isDrawerExpanded,
   activeFilterCount,
+  noResourcesFound,
 }) => (
-  <>
-    <Toolbar aria-label="Resources-toolbar">
-      <ToolbarContent>
+  <Toolbar aria-label="Resources-toolbar" style={{ paddingBlockEnd: 0 }}>
+    <ToolbarContent>
+      <Flex style={{ width: "100%" }} alignItems={{ default: "alignItemsFlexEnd" }}>
         {summaryWidget}
-        <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
-        <ToolbarItem>
-          <Button
-            onClick={onToggleFilters}
-            variant="link"
-            icon={<FilterIcon />}
-            iconPosition="end"
-            aria-pressed={isDrawerExpanded}
-          >
-            <Flex
-              alignItems={{ default: "alignItemsCenter" }}
-              spaceItems={{ default: "spaceItemsSm" }}
-            >
-              <FlexItem>
-                <Badge>{activeFilterCount}</Badge>
-              </FlexItem>
-              <FlexItem>{words("resources.filters")}</FlexItem>
-            </Flex>
-          </Button>
+        <ToolbarItem variant="pagination" style={{ justifyContent: "flex-end", minWidth: "320px" }}>
+          {paginationWidget}
         </ToolbarItem>
-      </ToolbarContent>
-    </Toolbar>
-  </>
+        <ToolbarItem>
+          <FilterToggleButton
+            onClick={onToggleFilters}
+            isExpanded={isDrawerExpanded}
+            activeFilterCount={activeFilterCount}
+            label={words("resources.filters")}
+            isDanger={noResourcesFound}
+          />
+        </ToolbarItem>
+      </Flex>
+    </ToolbarContent>
+  </Toolbar>
 );

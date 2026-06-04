@@ -20,7 +20,9 @@ const valueIsValid = (value: unknown): value is Value =>
   typeof value === "string" && listOfValues.includes(value);
 
 export const from = (value: string): PageSize => {
-  if (!valueIsValid(value)) return initial;
+  if (!valueIsValid(value)) {
+    return initial;
+  }
 
   return { kind: "PageSize", value };
 };

@@ -15,7 +15,8 @@ import {
 import { OrderDetailsPage } from ".";
 
 vi.mock("react-router", async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal<typeof import("react-router")>();
+
   return {
     ...actual,
     useParams: vi.fn().mockReturnValue({ id: "1234" }),
@@ -45,6 +46,7 @@ describe("Order Details", () => {
     server.use(
       http.get("/lsm/v2/order/1234", async () => {
         await delay(200);
+
         return HttpResponse.json({ message: "something went wrong" }, { status: 500 });
       })
     );

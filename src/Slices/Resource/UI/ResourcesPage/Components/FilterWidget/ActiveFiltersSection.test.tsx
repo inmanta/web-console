@@ -46,7 +46,7 @@ describe("ActiveFiltersSection", () => {
     expect(screen.getByText("Type")).toBeInTheDocument();
     expect(screen.getByText("Agent(s)")).toBeInTheDocument();
     expect(screen.getByText("Value")).toBeInTheDocument();
-    expect(screen.getByText("Deploy State")).toBeInTheDocument();
+    expect(screen.getByText("Status")).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("button", { name: "Clear all" }));
     expect(handlers.onClearAll).toHaveBeenCalledTimes(1);

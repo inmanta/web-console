@@ -8,7 +8,9 @@ export const Delayed: React.FC<React.PropsWithChildren<Props>> = ({ delay, child
   const [visible, setVisible] = useState(!Boolean(delay));
 
   useEffect(() => {
-    if (!delay) return undefined;
+    if (!delay) {
+      return undefined;
+    }
 
     const timerId = setTimeout(() => setVisible(true), delay);
 

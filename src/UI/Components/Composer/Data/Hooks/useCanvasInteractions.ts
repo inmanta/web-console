@@ -4,7 +4,7 @@ import { InstanceAttributeModel } from "@/Core";
 import { ServiceModel } from "@/Core";
 import { words } from "@/UI/words";
 import { ServiceEntityShape } from "../../UI";
-import { createHalo } from "../../UI/JointJsShapes/createHalo";
+import { createHalo, revealDirectChildren } from "../../UI/JointJsShapes/createHalo";
 import { RelationsDictionary } from "../Helpers";
 import { isServiceEntityShapeCell } from "../Helpers";
 import { canRemoveShape } from "../Helpers/relationsHelpers";
@@ -91,6 +91,34 @@ export const useCanvasInteractions = ({
       }
     };
 
+    // Rebuild the active halo so its action icons reflect the updated connection state.
+    // Deferred via setTimeout so all synchronous graph/connection handlers run first.
+    const refreshHalo = () => {
+      if (!haloRef.current) {
+        return;
+      }
+
+      const cellView = haloRef.current.options.cellView as dia.CellView | undefined;
+
+      if (!cellView) {
+        return;
+      }
+
+      haloRef.current.remove();
+
+      const halo = createHalo(graph, paper, cellView, relationsDictionary);
+      halo.render();
+      haloRef.current = halo;
+    };
+
+    const scheduleHaloRefresh = () => setTimeout(refreshHalo, 0);
+
+    const handleLinkRemovedForHalo = (cell: dia.Cell) => {
+      if (cell instanceof dia.Link) {
+        scheduleHaloRefresh();
+      }
+    };
+
     // Handle right-click context menu on entity shapes
     const handleCellContextMenu = (cellView: dia.CellView, event: dia.Event) => {
       const cell = cellView.model;
@@ -155,6 +183,12 @@ export const useCanvasInteractions = ({
           // order item from being generated for this shape.
           initialShapeInfoRef.current.delete(cell.id as string);
 
+          // If the removed shape has collapsed children, reveal the first layer
+          // so those children remain visible after the parent disappears.
+          if (graph) {
+            revealDirectChildren(graph, cell as ServiceEntityShape);
+          }
+
           // Removing the cell will also remove all connected links.
           // The graph `remove` handler takes care of cleaning up connections
           // and updating canvasState for all affected shapes.
@@ -184,6 +218,12 @@ export const useCanvasInteractions = ({
           // which will send a delete API request for this shape.
           // Note: If the shape wasn't in initialShapeInfoRef, it means it was newly added,
           // so there's nothing to delete on the server - just removing it is sufficient.
+
+          // If the removed shape has collapsed children, reveal the first layer
+          // so those children remain visible after the parent disappears.
+          if (graph) {
+            revealDirectChildren(graph, cell as ServiceEntityShape);
+          }
 
           // Removing the cell will also remove all connected links.
           // The graph `remove` handler takes care of cleaning up connections
@@ -232,12 +272,16 @@ export const useCanvasInteractions = ({
     paper.on("blank:pointerup", handleBlankClick);
     paper.on("cell:pointerup", handleCellClick);
     paper.on("cell:contextmenu", handleCellContextMenu);
+    paper.on("link:connect", scheduleHaloRefresh);
+    graph.on("remove", handleLinkRemovedForHalo);
 
     return () => {
       paper.off("blank:pointerdown", handleBlankPointerDown);
       paper.off("blank:pointerup", handleBlankClick);
       paper.off("cell:pointerup", handleCellClick);
       paper.off("cell:contextmenu", handleCellContextMenu);
+      paper.off("link:connect", scheduleHaloRefresh);
+      graph.off("remove", handleLinkRemovedForHalo);
       if (contextMenuRef.current) {
         contextMenuRef.current.remove();
         contextMenuRef.current = null;

@@ -168,7 +168,9 @@ export const applyAutoLayoutToEmbeddedEntities = (graph: dia.Graph): void => {
   // Position embedded entities relative to their parents using the same logic as createEmbeddedEntityShapes
   embeddedByParent.forEach((embeddedList, parentId) => {
     const parent = parentMap.get(parentId);
-    if (!parent) return;
+    if (!parent) {
+      return;
+    }
 
     const parentPos = parent.position();
     const offsetX = parentPos.x + HORIZONTAL_SPACING;
@@ -177,6 +179,7 @@ export const applyAutoLayoutToEmbeddedEntities = (graph: dia.Graph): void => {
     embeddedList.sort((a, b) => {
       const aPos = a.position();
       const bPos = b.position();
+
       return aPos.y - bPos.y;
     });
 
@@ -240,12 +243,14 @@ export const applyGridLayout = (graph: dia.Graph): void => {
     // Find incoming links (links that target this element)
     const incomingLinks = graph.getLinks().filter((link) => {
       const targetElement = link.getTargetElement();
+
       return targetElement ? String(targetElement.id) === elementId : false;
     });
 
     if (incomingLinks.length === 0) {
       // Root element (no incoming links)
       depthMap.set(elementId, 0);
+
       return 0;
     }
 
@@ -261,6 +266,7 @@ export const applyGridLayout = (graph: dia.Graph): void => {
 
     const depth = maxSourceDepth + 1;
     depthMap.set(elementId, depth);
+
     return depth;
   };
 

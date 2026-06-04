@@ -756,10 +756,12 @@ describe("ConfigurationTab", () => {
         if (counter === 0) {
           return HttpResponse.json({ data: EnvironmentSettings.base });
         }
+
         return HttpResponse.json({ data: EnvironmentSettings.auto_deploy });
       }),
       http.delete("/api/v2/environment_settings/auto_deploy", () => {
         counter++;
+
         return HttpResponse.json();
       }),
       http.get("/api/v2/environment_settings/auto_deploy", () => {

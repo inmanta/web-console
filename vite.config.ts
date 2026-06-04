@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { defineConfig, UserConfig } from "vite";
+import { defineConfig, PluginOption, UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { execSync } from "child_process";
@@ -191,9 +191,26 @@ const stripBrokenSourcemapsPlugin = () => ({
   },
 });
 
-const plugins = [
+// Physically remove Monaco CDN URL strings from the production bundle so they
+// can never be used even if a loader instance slips through deduplication or
+// loader.config() is called too late. The URLs only exist as dead string
+// literals in @monaco-editor/loader's default config; removing them has no
+// runtime side-effect beyond making CDN loading impossible.
+const blockMonacoCDNPlugin = () => ({
+  name: "block-monaco-cdn",
+  renderChunk(code: string) {
+    const cleaned = code.replace(
+      /https:\/\/cdn\.jsdelivr\.net\/npm\/monaco-editor@[^/'"]+\/min\/vs/g,
+      ""
+    );
+    return cleaned !== code ? { code: cleaned, map: null } : null;
+  },
+});
+
+const plugins: PluginOption = [
   react(),
   stripBrokenSourcemapsPlugin(),
+  blockMonacoCDNPlugin(),
   versionPlugin(),
   moveAssetsToRootPlugin(),
   copyConfigPlugin(),
@@ -240,24 +257,6 @@ export default defineConfig({
         find: "@rappidcss",
         replacement: resolve(__dirname, "node_modules/@joint/plus/joint-plus.css"),
       },
-      // Resolve monaco-graphql to the instance nested inside @graphiql/react to
-      // ensure only one copy of the library is loaded. Without this alias, both
-      // the root-level monaco-graphql and the one bundled with @graphiql/react
-      // register a "graphql" Monaco language, producing a console error
-      // ("Language graphql is already registered") and breaking autocompletion.
-      //
-      // NOTE: This path depends on Yarn NOT hoisting monaco-graphql to the root.
-      // If the lockfile changes and Yarn hoists it, this path will no longer exist
-      // and the build will silently fall back to two separate copies. Verify after
-      // a lockfile update that node_modules/@graphiql/react/node_modules/monaco-graphql
-      // still exists.
-      {
-        find: "monaco-graphql",
-        replacement: resolve(
-          __dirname,
-          "./node_modules/@graphiql/react/node_modules/monaco-graphql"
-        ),
-      },
       // In tests, redirect ALL monaco-editor imports (including deep ESM subpaths like
       // monaco-editor/esm/vs/base/common/uri.js) to the mock. A regex find is required
       // because a string alias does a prefix replacement, turning subpath imports into
@@ -271,6 +270,13 @@ export default defineConfig({
           ]
         : []),
     ],
+    // Ensure only one copy of each monaco package is loaded.
+    // @patternfly/react-code-editor nests its own @monaco-editor/loader@1.4.0
+    // (CDN default: monaco-editor@0.43.0). Without deduplication that loader gets
+    // its own module-level state, ignores our loader.config() call in index.tsx,
+    // and hits cdn.jsdelivr.net at runtime. Deduplicating forces all consumers to
+    // share the root instance so our config applies universally.
+    dedupe: ["monaco-editor", "@monaco-editor/loader", "@monaco-editor/react"],
   },
   server: {
     port: 9000,
@@ -339,21 +345,29 @@ export default defineConfig({
         },
         chunkFileNames: "[name].[hash].js",
         entryFileNames: "[name].[hash].js",
-        manualChunks: {
-          vendor: ["react", "react-dom"],
-          patternfly: [
-            "@patternfly/react-core",
-            "@patternfly/react-icons",
-            "@patternfly/react-styles",
-            "@patternfly/react-table",
-            "@patternfly/react-tokens",
+        codeSplitting: {
+          groups: [
+            { name: "vendor", test: /node_modules[\\/](react|react-dom)[\\/]/, priority: 80 },
+            { name: "patternfly", test: /node_modules[\\/]@patternfly[\\/]/, priority: 70 },
+            {
+              name: "monaco",
+              test: /node_modules[\\/](monaco-editor|@monaco-editor)[\\/]/,
+              priority: 60,
+            },
+            { name: "jointjs", test: /node_modules[\\/]@joint[\\/]/, priority: 50 },
+            {
+              name: "utils",
+              test: /node_modules[\\/](uuid|moment|moment-timezone|bignumber\.js)[\\/]/,
+              priority: 40,
+            },
+            {
+              name: "graphql",
+              test: /node_modules[\\/](graphql|graphql-request)[\\/]/,
+              priority: 30,
+            },
+            { name: "routing", test: /node_modules[\\/]react-router[\\/]/, priority: 20 },
+            { name: "state", test: /node_modules[\\/]@tanstack[\\/]/, priority: 10 },
           ],
-          monaco: ["@monaco-editor/react", "monaco-editor"],
-          jointjs: ["@joint/plus"],
-          utils: ["uuid", "moment", "moment-timezone", "bignumber.js"],
-          graphql: ["graphql", "graphql-request"],
-          routing: ["react-router"],
-          state: ["@tanstack/react-query"],
         },
       },
     },
@@ -424,12 +438,13 @@ export default defineConfig({
       "react-dom/client",
       "monaco-editor",
       "@monaco-editor/react",
-      "mermaid",
+      "@braintree/sanitize-url",
       "@joint/plus",
       "graphql-request",
       "@patternfly/react-styles",
       "nullthrows",
       "picomatch-browser",
+      "react-diff-viewer-continued",
     ],
     exclude: ["@joint/core", "monaco-graphql"],
     force: true,

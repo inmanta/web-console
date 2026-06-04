@@ -1,4 +1,4 @@
-import { createMemoryHistory } from "@remix-run/router";
+import { UNSAFE_createMemoryHistory as createMemoryHistory } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
@@ -128,6 +128,7 @@ describe("EnvironmentHandler", () => {
       http.get("/api/v2/environment_settings", () => {
         if (counter === 0) {
           counter++;
+
           return HttpResponse.json({
             data: {
               settings: {
@@ -138,6 +139,7 @@ describe("EnvironmentHandler", () => {
             },
           });
         }
+
         return HttpResponse.json({
           data: {
             settings: {

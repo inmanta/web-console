@@ -81,7 +81,8 @@ export const createEmbeddedEntityShapes = (
   embeddedEntityCache: Map<string, string>,
   positionTracker: PositionTracker,
   offsetX: number,
-  offsetY: number
+  offsetY: number,
+  isNew: boolean = false
 ): string[] => {
   const createdIds: string[] = [];
   const dataArray = Array.isArray(embeddedData) ? embeddedData : [embeddedData];
@@ -171,12 +172,16 @@ export const createEmbeddedEntityShapes = (
           embeddedEntityCache,
           positionTracker,
           offsetX + NESTED_HORIZONTAL_OFFSET,
-          offsetY
+          offsetY,
+          isNew
         );
 
         if (nestedIds.length > 0) {
           const entityKey = getEmbeddedEntityKey(nestedEntity);
-          nestedEmbeddedEntities[entityKey] = nestedIds;
+          nestedEmbeddedEntities[entityKey] = [
+            ...(nestedEmbeddedEntities[entityKey] || []),
+            ...nestedIds,
+          ];
         }
       }
     });
@@ -190,7 +195,7 @@ export const createEmbeddedEntityShapes = (
     const shapeOptions: ServiceEntityOptions = {
       entityType: "embedded",
       readonly: false,
-      isNew: false,
+      isNew,
       lockedOnCanvas: false,
       id: embeddedId,
       relationsDictionary,
@@ -256,6 +261,7 @@ export const createLinksFromCanvasState = (
       neighbors = graph.getNeighbors(sourceShape);
     } catch (error) {
       console.error(`Failed to get neighbors for ${sourceShape.id}:`, error);
+
       return;
     }
 
@@ -282,6 +288,7 @@ export const createLinksFromCanvasState = (
         const linkAlreadyExists = existingLinks.some((link) => {
           const linkSource = link.source();
           const linkTarget = link.target();
+
           return (
             (linkSource.id === sourceShape.id && linkTarget.id === targetId) ||
             (linkSource.id === targetId && linkTarget.id === sourceShape.id)
@@ -330,6 +337,7 @@ export const initializeCanvasFromInstance = (
 
     if (!serviceModel) {
       console.warn(`Service model not found for ${instance.service_entity}`);
+
       return;
     }
 
@@ -427,12 +435,14 @@ export const initializeCanvasFromInstance = (
           embeddedEntityCache,
           positionTracker,
           parentPosition.x + HORIZONTAL_SPACING,
-          parentPosition.y
+          parentPosition.y,
+          isNewEntity
         );
 
         if (embeddedIds.length > 0) {
           const entityKey = getEmbeddedEntityKey(embeddedEntity);
-          shape.connections.set(entityKey, embeddedIds);
+          const existing = shape.connections.get(entityKey) || [];
+          shape.connections.set(entityKey, [...existing, ...embeddedIds]);
         }
       }
     });
