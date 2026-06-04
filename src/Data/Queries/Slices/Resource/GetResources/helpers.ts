@@ -1,6 +1,6 @@
-import { Resource, Sort } from "@/Core/Domain";
+import { Resource } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
-import { CurrentPage } from "@/Data/Common";
+import { CurrentPage, MultiSort } from "@/Data";
 import { PageInfo } from "./useGetResources";
 
 type GraphQLStateFilter = Partial<{
@@ -95,15 +95,10 @@ export function mapStatusToGraphQLFilter(statusses?: string[]): GraphQLStateFilt
 
 /**
  * Maps sort parameters to the GraphQL orderBy format.
+ * Preserves array order as sort priority.
  */
-export function mapSort(
-  sort: Sort.Type<Resource.SortKey> | undefined
-): Array<{ key: string; order: string }> | undefined {
-  if (!sort) {
-    return undefined;
-  }
-
-  return [{ key: sort.name, order: sort.order }];
+export function mapSort(sort: MultiSort<Resource.SortKey>): Array<{ key: string; order: string }> {
+  return sort.map((s) => ({ key: s.name, order: s.order }));
 }
 
 /**
