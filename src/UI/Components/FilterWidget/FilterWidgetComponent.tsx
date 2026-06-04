@@ -11,6 +11,7 @@ import {
   EmptyStateBody,
   Flex,
   FlexItem,
+  Form,
   Stack,
   StackItem,
   Title,
@@ -99,22 +100,24 @@ export const FilterWidgetComponent = ({
       <DrawerPanelBody>
         <Stack hasGutter>
           <StackItem>
-            <Stack hasGutter style={{ padding: "1rem 0" }}>
-              <StackItem>
-                <Title headingLevel="h3" size="md">
-                  {sectionTitle}
-                </Title>
-              </StackItem>
-              {fields.map(({ label, placeholder, filterKey }) => (
-                <StackItem key={filterKey}>
-                  <AddableTextInput
-                    label={label}
-                    placeholder={placeholder}
-                    onAdd={(value) => handleAdd(filterKey, value)}
-                  />
+            <Form onSubmit={(e) => e.preventDefault()}>
+              <Stack hasGutter style={{ padding: "1rem 0" }}>
+                <StackItem>
+                  <Title headingLevel="h3" size="md">
+                    {sectionTitle}
+                  </Title>
                 </StackItem>
-              ))}
-            </Stack>
+                {fields.map(({ label, placeholder, filterKey }) => (
+                  <StackItem key={filterKey}>
+                    <AddableTextInput
+                      label={label}
+                      placeholder={placeholder}
+                      onAdd={(value) => handleAdd(filterKey, value)}
+                    />
+                  </StackItem>
+                ))}
+              </Stack>
+            </Form>
           </StackItem>
           <Divider />
           <StackItem>

@@ -5,6 +5,7 @@ import {
   isValidDate,
   yyyyMMddFormat,
   InputGroup,
+  InputGroupItem,
 } from "@patternfly/react-core";
 import moment from "moment";
 import styled from "styled-components";
@@ -15,6 +16,7 @@ interface Props {
   from: Date | undefined;
   datePickerLabel: string;
   timePickerLabel: string;
+  action?: React.ReactNode;
 }
 
 /** Both the Date and the Time Picker from Patternfly are in beta stage, e.g. validation doesn't work as expected */
@@ -24,6 +26,7 @@ export const TimestampPicker: React.FC<Props> = ({
   from,
   datePickerLabel,
   timePickerLabel,
+  action,
 }) => {
   const [timeText, setTimeText] = useState("");
 
@@ -75,13 +78,15 @@ export const TimestampPicker: React.FC<Props> = ({
 
   return (
     <StyledInputGroup>
-      <DatePicker
-        value={timestamp && isValidDate(timestamp) ? yyyyMMddFormat(timestamp) : ""}
-        dateParse={parseDate}
-        onChange={onDateChange}
-        rangeStart={from}
-        aria-label={datePickerLabel}
-      />
+      <InputGroupItem isFill>
+        <DatePicker
+          value={timestamp && isValidDate(timestamp) ? yyyyMMddFormat(timestamp) : ""}
+          dateParse={parseDate}
+          onChange={onDateChange}
+          rangeStart={from}
+          aria-label={datePickerLabel}
+        />
+      </InputGroupItem>
 
       <TimePicker
         style={{ width: "150px" }}
@@ -92,12 +97,16 @@ export const TimestampPicker: React.FC<Props> = ({
         aria-label={timePickerLabel}
         inputProps={{ value: timeText }}
       />
+
+      {action}
     </StyledInputGroup>
   );
 };
 
 const StyledInputGroup = styled(InputGroup)`
-  height: 65px;
+  flex-wrap: wrap;
+  overflow: visible;
+  width: 100%;
 `;
 
 const formatDateWithSlashes = (date: Date): string => {
