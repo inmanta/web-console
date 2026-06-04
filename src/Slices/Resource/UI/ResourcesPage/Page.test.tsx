@@ -262,9 +262,7 @@ describe("ResourcesPage", () => {
     expect(
       within(table).getByRole("button", { name: words("resources.column.value") })
     ).toBeVisible();
-    expect(
-      within(table).getByRole("columnheader", { name: words("resources.column.status") })
-    ).toBeVisible();
+    expect(within(table).getByRole("button", { name: "Sort by status fields" })).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -612,7 +610,7 @@ describe("ResourcesPage", () => {
 
     // Reset Filters should restore the !orphaned default
     const resetFiltersButton = await screen.findByRole("button", {
-      name: words("resources.filters.active.resetAll"),
+      name: words("resources.filters.active.resetFilters"),
     });
     await userEvent.click(resetFiltersButton);
 

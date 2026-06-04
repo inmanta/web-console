@@ -77,7 +77,7 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
         </FlexItem>
         <FlexItem>
           <Button variant="link" isInline onClick={onResetFilters}>
-            {words("resources.filters.active.resetAll")}
+            {words("resources.filters.active.resetFilters")}
           </Button>
         </FlexItem>
       </Flex>
