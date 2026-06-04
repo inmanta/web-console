@@ -229,7 +229,8 @@ if (isIso) {
     it("Should delete permanently an existing l3out instance", () => {
       // Step 1: Open existing l3out instance and enter edit composer.
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-PXSDC Test Env"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("PXSDC Test Env").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#l3out").contains("Show inventory").click();
 
@@ -345,7 +346,8 @@ if (isIso) {
     it("Should be able to add an instance and connect it to an existing instance", () => {
       // Step 1: Open project inventory and enter edit composer.
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-PXSDC Test Env"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("PXSDC Test Env").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#project").contains("Show inventory").click();
 
@@ -491,7 +493,8 @@ if (isIso) {
     it("Should not leak data between forms when clicking through multiple instances", () => {
       // Step 1: Open project inventory and enter edit composer.
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-PXSDC Test Env"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("PXSDC Test Env").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#project").contains("Show inventory").click();
 

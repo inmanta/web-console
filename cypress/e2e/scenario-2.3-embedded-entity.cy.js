@@ -14,7 +14,8 @@ if (isIso) {
       // Go from Home page to Service Inventory of embedded-service
       cy.visit("/console/");
 
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#embedded-entity-service").contains("Show inventory").click();
 
@@ -55,7 +56,8 @@ if (isIso) {
     it("2.3.2 - show diagonse view", () => {
       // Go from Home page to Service Inventory of Embedded-service
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       // Expect to find one badge on the embedded-service row.
       cy.get("#embedded-entity-service")
@@ -93,7 +95,8 @@ if (isIso) {
 
     it("2.3.3 - Deploy progress bar should navigate to Resources of instance details", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       // Expect to find one badge on the embedded-service row.
       cy.get("#embedded-entity-service")
@@ -112,7 +115,8 @@ if (isIso) {
     it("2.3.4 Delete previously created instance", () => {
       cy.visit("/console/");
 
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#embedded-entity-service").contains("Show inventory").click();
 

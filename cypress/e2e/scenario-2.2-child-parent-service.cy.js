@@ -12,7 +12,8 @@ if (isIso) {
     });
     it("2.2.1 Add Instance on parent-service", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#parent-service").contains("Show inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
@@ -66,7 +67,8 @@ if (isIso) {
     it("2.2.2 Remove Parent Service and Child Service", () => {
       cy.visit("/console/");
 
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#parent-service").contains("Show inventory").click();
       cy.get('[data-label="State"]').eq(0, { timeout: 90000 }).should("have.text", "up");

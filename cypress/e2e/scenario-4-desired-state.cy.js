@@ -15,7 +15,8 @@ describe("Scenario 4 Desired State", () => {
   it("4.1 Initial setup", () => {
     // Go from Home page to Service Inventory of Basic-service
     cy.visit("/console/");
-    cy.get('[aria-label="Select-environment-test"]').click();
+    cy.get('[data-testid="env-selector-toggle"]').click();
+    cy.get('[role="menuitem"]').contains("test").click();
 
     if (isIso) {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();

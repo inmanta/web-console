@@ -15,7 +15,8 @@ describe("5 Compile reports", () => {
   it("5.1 initial state", () => {
     cy.visit("/console/");
 
-    cy.get('[aria-label="Select-environment-test"]').click();
+    cy.get('[data-testid="env-selector-toggle"]').click();
+    cy.get('[role="menuitem"]').contains("test").click();
 
     // go to compile reports page
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
@@ -111,7 +112,8 @@ describe("5 Compile reports", () => {
       cy.visit("/console/");
 
       // click on test environment card
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+    cy.get('[role="menuitem"]').contains("test").click();
 
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
@@ -196,7 +198,8 @@ describe("5 Compile reports", () => {
       cy.visit("/console/");
 
       // click on test environment card
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+    cy.get('[role="menuitem"]').contains("test").click();
 
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
@@ -276,7 +279,8 @@ describe("5 Compile reports", () => {
       cy.visit("/console/");
 
       // click on test environment card
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+    cy.get('[role="menuitem"]').contains("test").click();
 
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
@@ -341,7 +345,8 @@ describe("5 Compile reports", () => {
       cy.visit("/console/");
 
       // click on test environment card
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+    cy.get('[role="menuitem"]').contains("test").click();
 
       // Go to the compile report page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();

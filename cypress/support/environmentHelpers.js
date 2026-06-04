@@ -6,7 +6,8 @@
  */
 const clearEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
+  cy.get('[data-testid="env-selector-toggle"]').click();
+  cy.get('[role="menuitem"]').contains(nameEnvironment).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -59,7 +60,8 @@ const checkStatusCompile = (id) => {
  */
 const forceUpdateEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
+  cy.get('[data-testid="env-selector-toggle"]').click();
+  cy.get('[role="menuitem"]').contains(nameEnvironment).click();
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");

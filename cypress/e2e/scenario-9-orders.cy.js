@@ -13,7 +13,8 @@ if (isIso) {
 
     it("Displays a Partial order with multiple dependencies correctly", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
 
       // go to the Orders page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Orders").click();

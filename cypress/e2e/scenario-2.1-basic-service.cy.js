@@ -24,7 +24,8 @@ if (isIso) {
         "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
       ).as("GetServiceInventory");
 
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
@@ -56,7 +57,8 @@ if (isIso) {
     it("2.1.2 Add Instance Submit form, INVALID form, EDIT form, VALID form", () => {
       // Go from Home page to Service Inventory of Basic-service
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
       cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
@@ -109,7 +111,8 @@ if (isIso) {
 
     it("2.1.3 Edit previously created instance, Instance Details history, documentation tab", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       // Expect to find one badge on the basic-service row.
       cy.get("#basic-service")
@@ -185,7 +188,8 @@ if (isIso) {
     it("2.1.4 Duplicate instance with Editor", () => {
       cy.startMonacoCDNCheck();
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
@@ -292,7 +296,8 @@ if (isIso) {
         "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
       ).as("GetServiceInventory");
 
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
@@ -325,7 +330,8 @@ if (isIso) {
     it("2.1.6 Instance Details page", () => {
       cy.visit("/console/");
 
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       // Expect to find one badges on the basic-service row.
       cy.get("#basic-service", { timeout: 40000 }).should(($parent) => {
@@ -470,7 +476,8 @@ if (isIso) {
         "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
       ).as("GetServiceInventory");
 
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
 
       // START WORKAROUND
 

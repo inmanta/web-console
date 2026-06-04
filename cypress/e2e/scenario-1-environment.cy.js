@@ -69,7 +69,8 @@ const deleteEnv = (name) => {
   cy.get('[aria-label="delete"]').click();
   cy.url().should("eq", Cypress.config().baseUrl + "/console");
 
-  cy.get(`[aria-label="Select-environment-${name}"]`).should("not.exist");
+  cy.get('[data-testid="env-selector-toggle"]').click();
+  cy.contains('[role="menuitem"]', name).should("not.exist");
 };
 
 /**
@@ -89,7 +90,8 @@ const isIso = Cypress.expose("edition") === "iso";
 describe("Environment", () => {
   it("1.1 cancel creation of an environment", function () {
     cy.visit("/console/");
-    cy.get('[aria-label="Overview-Success"] > :first-child').click();
+    cy.get('[data-testid="env-selector-toggle"]').click();
+    cy.get('[role="menuitem"]').contains("Create new environment").click();
     cy.url().should("eq", Cypress.config().baseUrl + "/console/environment/create");
     fillCreateEnvForm({
       envName: testName(1),
@@ -123,10 +125,9 @@ describe("Environment", () => {
       cy.get("h1").contains("Desired State").should("to.be.visible");
     }
 
-    // go back to home and check if env is visible
-    cy.get('[aria-label="BreadcrumbItem"]').contains("Home").click();
-
-    cy.get(`[aria-label="Select-environment-${testName(2)}"]`).click();
+    // select newly created environment to verify settings
+    cy.get('[data-testid="env-selector-toggle"]').click();
+    cy.get('[role="menuitem"]').contains(testName(2)).click();
 
     openSettings(testName(2));
     deleteEnv(testName(2), testProjectName(2));
@@ -206,7 +207,8 @@ describe("Environment", () => {
     it("1.5 Clear environment", function () {
       // Fill The form and submit
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get('[aria-label="ServiceCatalog-Empty"]', {
         timeout: 10000,
@@ -219,7 +221,8 @@ describe("Environment", () => {
       cy.get("button").contains("Clear environment").click();
       cy.get("button").contains("Cancel").click();
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       cy.get('[aria-label="ServiceCatalog-Empty"]', {
@@ -234,7 +237,8 @@ describe("Environment", () => {
       cy.get('[aria-label="clear environment check"]').type("test");
       cy.get("button").contains("I understand the consequences, clear this environment").click();
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      cy.get('[data-testid="env-selector-toggle"]').click();
+      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
 
