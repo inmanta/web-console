@@ -1,0 +1,6 @@
+description: Replaced the environment overview Home page with a smart default redirect. Dashboard is now the default landing page. When no environment is selected the app auto-selects the first available environment; when no environments exist it redirects to Create Environment. The environment dropdown gains a search field, per-environment icons, and a "Create new environment" link.
+issue-nr: 6935
+change-type: minor
+destination-branches: [master]
+sections:
+  minor-improvement: "{{description}}"

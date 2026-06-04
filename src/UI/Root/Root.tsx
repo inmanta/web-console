@@ -1,11 +1,12 @@
 import React, { lazy, Suspense, useContext, useEffect, useMemo, useState } from "react";
-import { Navigate, Route, Routes } from "react-router";
+import { Route, Routes } from "react-router";
 import { LoginPage } from "@/Slices/Login";
 import { DependencyContext } from "@/UI/Dependency";
 import { RouteOutlet, SearchSanitizer, PrimaryBaseUrlManager } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
 import { getThemePreference, setThemePreference } from "../Components/DarkmodeOption";
+import { DefaultRoute } from "./Components/DefaultRoute";
 import { PageFrame } from "./Components";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
@@ -55,9 +56,7 @@ export const Root: React.FC = () => {
         <Routes>
           <Route path={`${basePathname}/login`} element={<LoginPage />} />
           <Route element={<RouteOutlet />}>
-            {routeManager.isBaseUrlDefined() && (
-              <Route path="/" element={<Navigate to={routeManager.getUrl("Home", undefined)} />} />
-            )}
+            <Route path="/" element={<DefaultRoute />} />
             <Route
               path="*"
               element={

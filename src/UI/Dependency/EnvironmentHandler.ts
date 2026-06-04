@@ -133,6 +133,10 @@ export function EnvironmentHandlerImpl(
     return useSelected()?.isExpertMode || false;
   }
 
+  function useAll(): EnvironmentPreview[] {
+    return environments;
+  }
+
   useEffect(() => {
     setEnv(determineSelected(environments, search) || null);
   }, [search, environments]);
@@ -142,6 +146,7 @@ export function EnvironmentHandlerImpl(
     useId,
     useName,
     useSelected,
+    useAll,
     determineSelected,
     useIsHalted,
     useIsServerCompileEnabled,

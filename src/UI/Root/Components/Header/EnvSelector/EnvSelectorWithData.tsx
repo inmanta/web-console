@@ -82,7 +82,6 @@ export const EnvSelectorWithData: React.FC<Props> = ({
     return (
       <EnvSelectorWrapper
         selectorItems={envsWithProjectName.map(environmentToSelector)}
-        environmentNames={envsWithProjectName.map(environmentToName)}
         onSelectEnvironment={onSelectEnvironment}
         defaultToggleText={
           selectedEnvironment
@@ -107,11 +106,15 @@ export const EnvSelectorWithData: React.FC<Props> = ({
 const environmentToSelector = ({
   id,
   project_id: projectId,
+  icon,
   ...environment
 }: FlatEnvironment): EnvironmentSelectorItem => ({
   displayName: environmentToName(environment),
   projectId,
   environmentId: id,
+  // The API returns the icon as a bare data URI body (e.g. "image/svg+xml;base64,...").
+  // Prepend the scheme so it is a valid src value.
+  icon: icon ? `data:${icon}` : undefined,
 });
 
 /**

@@ -5,6 +5,6 @@ export const path = "/";
 export const route = (base: string): Route<"Home"> => ({
   kind: "Home",
   path: `${base}${path}`,
-  generateLabel: () => "Home",
+  generateLabel: () => "Environments",
   environmentRole: "Forbidden",
 });

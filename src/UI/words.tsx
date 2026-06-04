@@ -698,8 +698,8 @@ const dict = {
   "compileDetails.stages.copy": "Copy full command to clipboard",
 
   "home.title": "Home",
-  "home.navigation.tooltip": "Go to the overview page",
-  "home.navigation.button": "Overview",
+  "home.environmentSwitcher.search.placeholder": "Search by name or project",
+  "home.environmentSwitcher.create.button": "Create new environment",
   "home.empty.message": "No environments found",
   "home.create.env.desciption": "Create new environment",
   "home.create.env": "Create environment",

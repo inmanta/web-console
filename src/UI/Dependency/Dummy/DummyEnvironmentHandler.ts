@@ -46,11 +46,16 @@ export function DummyEnvironmentHandler(): EnvironmentHandler {
     throw new Error("Method not implemented.");
   }
 
+  function useAll(): EnvironmentPreview[] {
+    return [];
+  }
+
   return {
     useName,
     useId,
     set,
     useSelected,
+    useAll,
     determineSelected,
     useIsHalted,
     useIsCompiling,
