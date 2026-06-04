@@ -697,7 +697,6 @@ const dict = {
   "compileDetails.stages.columns.errstream": "Error Stream",
   "compileDetails.stages.copy": "Copy full command to clipboard",
 
-  "home.title": "Home",
   "home.environmentSwitcher.search.placeholder": "Search by name or project",
   "home.environmentSwitcher.create.button": "Create new environment",
   "home.empty.message": "No environments found",
