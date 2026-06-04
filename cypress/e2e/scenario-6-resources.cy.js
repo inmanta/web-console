@@ -387,7 +387,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Purged filter
       cy.get("button").contains("Resource").click();
-      cy.get("#purged").click();
+      cy.get('label[for="purged"]').click();
       expectFilteredLessThan("initialRowCount");
       cy.get('[aria-label="Close purged"]').click();
       expectRowCountRestored("initialRowCount");
@@ -420,7 +420,7 @@ describe("Scenario 6 : Resources", () => {
       expectRowCountRestored("initialRowCount");
 
       // Is Deploying toggle filter
-      cy.get("#is-deploying").click();
+      cy.get('label[for="is-deploying"]').click();
       expectFilteredLessThan("initialRowCount");
       cy.get('[aria-label="Close isDeploying"]').click();
       expectRowCountRestored("initialRowCount");
