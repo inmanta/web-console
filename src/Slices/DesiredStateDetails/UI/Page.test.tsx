@@ -135,6 +135,8 @@ describe("DesiredStateDetails", () => {
       })
     ).toBeVisible();
 
+    expect(await screen.findByTestId("version-label")).toHaveTextContent("Version: 123");
+
     await act(async () => {
       const results = await axe(document.body);
 

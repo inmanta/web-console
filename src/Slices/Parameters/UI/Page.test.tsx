@@ -51,6 +51,7 @@ describe("ParametersPage", () => {
             data: Parameters.response.data.slice(0, 3),
           });
         }
+
         return HttpResponse.json(Parameters.response);
       })
     );
@@ -91,6 +92,7 @@ describe("ParametersPage", () => {
             data: Parameters.response.data.slice(0, 3),
           });
         }
+
         return HttpResponse.json(Parameters.response);
       })
     );
@@ -143,6 +145,7 @@ describe("ParametersPage", () => {
             data: Parameters.response.data.slice(0, 3),
           });
         }
+
         return HttpResponse.json(Parameters.response);
       })
     );
@@ -210,6 +213,7 @@ describe("ParametersPage", () => {
             data: Parameters.response.data.slice(0, 3),
           });
         }
+
         return HttpResponse.json({
           ...Parameters.response,
           links: {

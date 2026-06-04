@@ -17,7 +17,7 @@ export const DeployButton: React.FC = () => {
     <ResourcePageActionButton
       method={DeployAgentsAction.deploy}
       tooltip={words("resources.deploy.tooltip")}
-      textContent={words("resources.deploySummary.deploy")}
+      textContent={words("resources.compoundStateSummary.deploy")}
     />
   );
 };

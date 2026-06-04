@@ -53,6 +53,7 @@ describe("Agents", () => {
     server.use(
       http.get("/api/v2/agents", async () => {
         await delay(200);
+
         return HttpResponse.json({
           data: [],
           links: { self: "" },
@@ -123,6 +124,7 @@ describe("Agents", () => {
             data: AgentsMock.response.data.slice(0, 3),
           });
         }
+
         return HttpResponse.json(AgentsMock.response);
       })
     );
@@ -171,6 +173,7 @@ describe("Agents", () => {
             data: AgentsMock.response.data.slice(0, 3),
           });
         }
+
         return HttpResponse.json(AgentsMock.response);
       })
     );
@@ -222,6 +225,7 @@ describe("Agents", () => {
       http.post("/api/v2/agent/aws/pause", () => {
         data.data[0].status = "paused";
         data.data[0].paused = "true";
+
         return HttpResponse.json();
       }),
       http.get("/api/v2/agents", () => {
@@ -271,6 +275,7 @@ describe("Agents", () => {
       http.post("/api/v2/agent/bru-23-r321/unpause", () => {
         data.data[1].status = "up";
         data.data[1].paused = false;
+
         return HttpResponse.json();
       }),
       http.get("/api/v2/agents", () => {
@@ -375,6 +380,7 @@ describe("Agents", () => {
     server.use(
       http.post("/api/v2/agent/aws/keep_paused_on_resume", () => {
         data.data[0].keep_paused_on_resume = true;
+
         return HttpResponse.json();
       }),
       http.get("/api/v2/agents", () => {
@@ -415,6 +421,7 @@ describe("Agents", () => {
     server.use(
       http.post("/api/v2/agent/ecx/unpause_on_resume", () => {
         data.data[3].unpause_on_resume = true;
+
         return HttpResponse.json();
       }),
       http.get("/api/v2/agents", () => {
@@ -485,6 +492,7 @@ describe("Agents", () => {
             data: AgentsMock.response.data.slice(0, 3),
           });
         }
+
         return HttpResponse.json({
           ...AgentsMock.response,
           metadata: {

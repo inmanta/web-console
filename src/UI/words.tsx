@@ -240,6 +240,7 @@ const dict = {
   ) => `Missing relations: ${name} (${missing}/${required})`,
   "instanceComposer.tooltip.missingRequiredAttributes":
     "This entity has missing required attributes",
+  "instanceComposer.tooltip.collapsedRelationsInvalid": "Collapsed relation(s) are not valid",
   "instanceComposer.disabled":
     "Your license doesn't give you access to the Instance Composer, please contact support for more details.",
   "instanceComposer.title": "Instance Composer",
@@ -253,6 +254,9 @@ const dict = {
   "instanceComposer.zoomHandler.zoomOut": "Zoom out",
   "instanceComposer.stencil.new": "New",
   "instanceComposer.stencil.inventory": "Inventory",
+  "instanceComposer.halo.expandLayers": "Expand layers",
+  "instanceComposer.halo.collapseLayers": "Collapse layers",
+  "instanceComposer.halo.expandAllLayers": "Expand all layers",
 
   /**
    * Service Instance Details text
@@ -533,6 +537,10 @@ const dict = {
    * Latest released resource view
    */
   "resources.empty.message": "No resources found",
+  "resources.empty.filterMessage":
+    "The given combination of filters didn't match any existing resources, please edit your filter values.",
+  "resources.deploying.popover": (count: number) =>
+    `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying`,
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "discoveredResourceDetails.title": "Discovered Resource Details",
@@ -541,8 +549,23 @@ const dict = {
   "resources.column.agent": "Agent",
   "resources.column.value": "Value",
   "resources.column.requires": "Requires",
-  "resources.column.deployState": "Deploy State",
-  "resources.filters.status.placeholder": "Deploy State...",
+  "resources.column.status": "Status",
+  "resources.column.status.toolTip":
+    "Toggle fields to include them in sorting. Drag active fields to set their priority order.",
+  "resources.button.statusDetails": "Show status details",
+  "resources.popover.title": "Resource State Summary",
+  "resources.popover.deploying": "Deploying",
+  "resources.popover.lastDeployed": "Last deployed: ",
+  "resources.popover.orphan": "Orphan",
+  "resources.popover.requirement": "Requirement",
+  "resources.popover.requirements": "Requirements",
+  "resources.filters.status.isDeploying": "Is Deploying",
+  "resources.filters.status.blocked.label": "Blocked state(s)",
+  "resources.filters.status.blocked.placeholder": "Filter by blocked state",
+  "resources.filters.status.compliance.label": "Compliance state(s)",
+  "resources.filters.status.compliance.placeholder": "Filter by compliance state",
+  "resources.filters.status.lastHandlerRun.label": "Handler run state(s)",
+  "resources.filters.status.lastHandlerRun.placeholder": "Filter by handler run state",
   "resources.filters.agent.placeholder": "Agent...",
   "resources.filters.value.placeholder": "Value...",
   "resources.filters.type.placeholder": "Type...",
@@ -556,19 +579,29 @@ const dict = {
   "resources.filters.resource.value.label": "Value",
   "resources.filters.resource.value.placeholder": "Value...",
   "resources.filters.resource.agent.label": "Agent(s)",
-  "resources.filters.resource.agent.placeholder": "Agent...",
-  "resources.filters.status.section.title": "Deploy State",
+  "resources.filters.resource.agent.placeholder": "Select Agent(s)",
+  "resources.filters.resource.agent.selectInfoLabel": "Use text input",
+  "resources.filters.resource.agent.textInfoLabel": "Use select input",
+  "resources.filters.resource.agent.loading": "Loading agents...",
+  "resources.filters.desiredState.sectionTitle": "Desired State",
+  "resources.filters.desiredState.purged": "Purged",
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.clearAll": "Clear all",
+  "resources.filters.active.resetFilters": "Reset Filters",
   "resources.filters.active.empty.title": "No filters applied",
   "resources.filters.active.empty.body":
     "Select filters from the tabs above to refine your results.",
   "resources.filters.active.empty.body.noTabs":
     "Use the fields above to add filters and refine your results.",
   "resources.filters.active.group.close": (group: string) => `Remove ${group} filters`,
-  "resources.deploySummary.title": "Deployment state summary",
-  "resources.deploySummary.deploy": "Deploy",
-  "resources.deploySummary.repair": "Repair",
+  "resources.filters": "Filters",
+  "resources.sort.label.blocked": "Blocked",
+  "resources.sort.label.compliance": "Compliance",
+  "resources.sort.label.lastHandlerRun": "Last Handler Run",
+  "resources.sort.label.isDeploying": "Is Deploying",
+  "resources.compoundStateSummary.title": "Compound state summary",
+  "resources.compoundStateSummary.deploy": "Deploy",
+  "resources.compoundStateSummary.repair": "Repair",
   "resources.link.details": "Show Details",
   "resources.details.title": "Resource Details",
   "resources.info.id": "Id",
@@ -604,7 +637,6 @@ const dict = {
     "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
   "resources.file.get": "Get file",
   "resources.file.error": "Error fetching file content",
-  "resources.filters": "Filters",
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",
@@ -789,6 +821,7 @@ const dict = {
 
   /** Desired State */
   "desiredState.title": "Desired State",
+  "desiredState.details.title.tag": (version) => `Version: ${version}`,
   "desiredState.empty.message": "No desired state versions found",
   "desiredState.columns.date": "Date",
   "desiredState.columns.version": "Version",
@@ -800,6 +833,9 @@ const dict = {
   "desiredState.actions.promote": "Promote",
   "desiredState.actions.promote.failed": "Promoting desired state version failed",
   "desiredState.actions.promote.disabledTooltip": "Promoting this version is not allowed",
+  "desiredState.filters": "Filters",
+  "desiredState.filters.from": "From",
+  "desiredState.filters.to": "To",
   "desiredState.filters.status.placeholder": "Select status...",
   "desiredState.filters.version.placeholder": "Filter by version",
   "desiredState.filters.date.placeholder": "Filter by date",
@@ -940,7 +976,7 @@ const dict = {
   "markdownPreviewer.download": "Download",
 
   /**
-   * Markdown Container State Transfer related text
+   * Markdown Container related text
    */
   "markdownContainer.setState.error.invalidConfigArray":
     "⚠ Invalid configuration: expected object, got array",
@@ -949,6 +985,11 @@ const dict = {
     "⚠ Missing configuration: provide 'targetState'",
   "markdownContainer.setState.error.cannotParseJson":
     "⚠ Invalid configuration: Can't parse JSON object",
+  "markdownContainer.download.svg": "↓ SVG",
+  "markdownContainer.download.svg.title": "Download as SVG",
+  "markdownContainer.download.png": "↓ PNG",
+  "markdownContainer.download.png.title": "Download as PNG",
+  "markdownContainer.error.mermaid.title": "Error rendering Mermaid diagram:",
 
   /**
    * LogViewer related text

@@ -9,9 +9,10 @@ import { words } from "@/UI/words";
  *
  * @returns {DiscoveredResourcesTablePresenter} DiscoveredResourcesTablePresenter class
  */
-export class DiscoveredResourcesTablePresenter
-  implements TablePresenter<DiscoveredResource, DiscoveredResource>
-{
+export class DiscoveredResourcesTablePresenter implements TablePresenter<
+  DiscoveredResource,
+  DiscoveredResource
+> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 

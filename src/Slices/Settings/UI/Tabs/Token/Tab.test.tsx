@@ -35,6 +35,7 @@ describe("Token Tab", () => {
         if (body["client_types"].length === 0) {
           return HttpResponse.json({ data: "tokenstring123" });
         }
+
         return HttpResponse.json({ message: "wrong params" }, { status: 400 });
       })
     );
@@ -63,6 +64,7 @@ describe("Token Tab", () => {
         if (body["client_types"].length === 1 && body["client_types"][0] === "agent") {
           return HttpResponse.json({ data: "tokenstring123" });
         }
+
         return HttpResponse.json({ message: "wrong params" }, { status: 400 });
       })
     );

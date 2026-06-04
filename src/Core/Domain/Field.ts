@@ -16,7 +16,8 @@ export type Field =
   | NestedField
   | DictListField
   | RelationListField
-  | InterServiceRelationField;
+  | InterServiceRelationField
+  | DictField;
 
 export type FieldLikeWithFormState = Field;
 
@@ -39,6 +40,12 @@ export interface TextField extends BaseField {
   kind: "Text";
   defaultValue: unknown;
   inputType: TextInputTypes;
+  type: string;
+}
+
+export interface DictField extends BaseField {
+  kind: "Dict";
+  defaultValue: unknown;
   type: string;
 }
 

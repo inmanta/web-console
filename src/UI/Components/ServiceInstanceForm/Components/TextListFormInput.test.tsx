@@ -15,7 +15,6 @@ describe("TextListInputField", () => {
         attributeValue={["value1", "value2", "value3"]}
         description="a text list input field"
         handleInputChange={handleClick}
-        isOptional={false}
       />
     );
 
@@ -32,7 +31,6 @@ describe("TextListInputField", () => {
         attributeValue={["value1", "value2", "value3"]}
         description="a text list input field"
         handleInputChange={handleClick}
-        isOptional={false}
       />
     );
 
@@ -58,7 +56,6 @@ describe("TextListInputField", () => {
         attributeValue={["value1", "value2", "value3"]}
         description="a text list input field"
         handleInputChange={handleClick}
-        isOptional={false}
       />
     );
 
@@ -82,7 +79,6 @@ describe("TextListInputField", () => {
         attributeValue={["value1", "value2", "value3"]}
         description="a text list input field"
         handleInputChange={handleClick}
-        isOptional={false}
       />
     );
 
@@ -107,7 +103,6 @@ describe("TextListInputField", () => {
         attributeValue={["value1", "value2", "value3"]}
         description="a text list input field"
         handleInputChange={handleClick}
-        isOptional={false}
         suggestions={["apple", "banana", "cherry"]}
       />
     );

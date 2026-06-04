@@ -22,9 +22,13 @@ export const FreeTextFilter: React.FC<Props> = ({
     update(searchEntries ? searchEntries.filter((value) => value !== id) : []);
 
   const onTextInput = (event) => {
-    if (event.key && event.key !== "Enter") return;
+    if (event.key && event.key !== "Enter") {
+      return;
+    }
 
-    if (textInput.length <= 0) return;
+    if (textInput.length <= 0) {
+      return;
+    }
 
     update(searchEntries ? [...searchEntries, textInput] : [textInput]);
     setTextInput("");

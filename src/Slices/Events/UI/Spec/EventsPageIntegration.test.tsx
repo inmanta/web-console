@@ -33,6 +33,7 @@ describe("Given the Events Page", () => {
               metadata: Pagination.metadata,
             });
           }
+
           return HttpResponse.json({
             data: InstanceEvent.listA,
             links: Pagination.links,
@@ -89,6 +90,7 @@ describe("Given the Events Page", () => {
             metadata: Pagination.metadata,
           });
         }
+
         return HttpResponse.json({
           data: InstanceEvent.listA,
           links: Pagination.links,
@@ -155,6 +157,7 @@ describe("Given the Events Page", () => {
               metadata: Pagination.metadata,
             });
           }
+
           return HttpResponse.json({
             data: InstanceEvent.listA,
             links: Pagination.links,

@@ -20,10 +20,11 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
+import type { Mock } from "vitest";
 
 const setup = (
   fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
-  func: undefined | ReturnType<typeof vi.fn> = undefined,
+  func: undefined | Mock = undefined,
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined,
   initialStates: string[] = []
@@ -39,7 +40,7 @@ const setup = (
                 <ServiceInstanceForm
                   fields={fields}
                   onCancel={vi.fn()}
-                  onSubmit={func ? func : vi.fn()}
+                  onSubmit={func ?? (vi.fn() as Mock)}
                   isEdit={isEdit}
                   originalAttributes={originalAttributes}
                   service_entity="service_entity"
@@ -406,6 +407,66 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN rendering optional inputs
       name: "BooleanFieldInput-boolean_field_2",
     })
   ).toBeVisible();
+});
+
+test("GIVEN ServiceInstanceForm with an optional NestedField containing required attributes WHEN rendering THEN fields are not shown by default", async () => {
+  // Regression test: when an optional entity (lower_limit=0) has non-optional attributes,
+  // showList was incorrectly initialised to true because get() returned undefined (not null)
+  // for a null form-state value, causing `undefined !== null` to evaluate to true.
+  const { component } = setup([
+    {
+      kind: "Nested",
+      name: "bgp",
+      description: null,
+      isOptional: true,
+      isDisabled: false,
+      fields: [
+        {
+          kind: "Boolean",
+          name: "enable_bfd",
+          description: null,
+          isOptional: false,
+          isDisabled: false,
+          defaultValue: false,
+          type: "bool",
+        },
+        {
+          kind: "Boolean",
+          name: "enable_ipv6",
+          description: null,
+          isOptional: false,
+          isDisabled: false,
+          defaultValue: false,
+          type: "bool",
+        },
+      ],
+    },
+  ]);
+
+  render(component);
+
+  const group = screen.getByRole("group", { name: "bgp" });
+  expect(group).toBeVisible();
+
+  // Add must be enabled and Delete disabled — both depend on showList being false.
+  // Before the fix, showList started as true, making Add disabled and Delete enabled.
+  expect(within(group).getByRole("button", { name: words("add") })).toBeEnabled();
+  expect(within(group).getByRole("button", { name: words("delete") })).toBeDisabled();
+
+  // Inner fields must not be rendered at all while the entity has not been added.
+  expect(screen.queryByLabelText("Toggle-enable_bfd")).not.toBeInTheDocument();
+  expect(screen.queryByLabelText("Toggle-enable_ipv6")).not.toBeInTheDocument();
+
+  // After clicking Add and expanding the section, inner fields should appear.
+  await userEvent.click(within(group).getByRole("button", { name: words("add") }));
+  await userEvent.click(within(group).getByRole("button", { name: "bgp" }));
+
+  expect(screen.getByLabelText("Toggle-enable_bfd")).toBeVisible();
+  expect(screen.getByLabelText("Toggle-enable_ipv6")).toBeVisible();
+
+  // Add is now disabled, Delete is enabled — entity is active.
+  expect(within(group).getByRole("button", { name: words("add") })).toBeDisabled();
+  expect(within(group).getByRole("button", { name: words("delete") })).toBeEnabled();
 });
 
 test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles open THEN the nested FlatField is shown", async () => {

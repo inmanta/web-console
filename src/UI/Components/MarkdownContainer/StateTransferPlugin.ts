@@ -128,6 +128,7 @@ export default function stateTransferPlugin(md: MarkdownIt, _baseId: string, _op
     // Create a button element with PatternFly 6 classes
     // The button will be styled via PatternFly CSS and can have click handlers attached in MarkdownContainer
     const disabledAttr = hasConfigError ? " disabled" : "";
+
     return `<button class="${classes.join(" ")}" type="button"${disabledAttr} ${dataAttributes.join(" ")}>${escapedText}</button>`;
   }
 

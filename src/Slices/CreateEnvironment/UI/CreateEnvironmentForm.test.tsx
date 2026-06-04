@@ -235,6 +235,7 @@ describe("CreateEnvironmentForm", () => {
         if (body && body["name"] === "new-project") {
           return HttpResponse.json({ data: newProject });
         }
+
         return HttpResponse.json({ message: "wrong params" }, { status: 400 });
       }),
       http.put("/api/v2/environment", async ({ request }) => {

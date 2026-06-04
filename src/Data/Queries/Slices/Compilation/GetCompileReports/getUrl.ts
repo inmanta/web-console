@@ -24,7 +24,9 @@ export function getUrl(params: CompileReportsParams, timezone = moment.tz.guess(
 }
 
 const filterToParam = (filter: Filter, timezone: string) => {
-  if (typeof filter === "undefined") return {};
+  if (typeof filter === "undefined") {
+    return {};
+  }
 
   const { status, requested } = filter;
   const serializedTimestampOperatorFilters = requested?.map(
@@ -44,7 +46,9 @@ const filterToParam = (filter: Filter, timezone: string) => {
 };
 
 function translateStatusFilter(status?: CompileStatus) {
-  if (!status) return {};
+  if (!status) {
+    return {};
+  }
 
   switch (status) {
     case CompileStatus.success:
