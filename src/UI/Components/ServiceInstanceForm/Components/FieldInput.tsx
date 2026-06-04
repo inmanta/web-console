@@ -10,6 +10,7 @@ import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { words } from "@/UI/words";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { BooleanToggleInput } from "./BooleanToggleInput";
+import { DictFieldInput } from "./DictFieldInput";
 import { RelatedServiceProvider } from "./RelatedServiceProvider";
 import { SelectFormInput } from "./SelectFormInput";
 import { TextFormInput } from "./TextFormInput";
@@ -217,6 +218,22 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           suggestions={suggestionsList}
+        />
+      );
+    case "Dict":
+      return (
+        <DictFieldInput
+          key={field.id || field.name}
+          field={field}
+          value={get(formState, makePath(path, field.name))}
+          readOnly={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
+          }
+          onChange={(value) => {
+            getUpdate(makePath(path, field.name), value);
+          }}
         />
       );
     case "InterServiceRelation":

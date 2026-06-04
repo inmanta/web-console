@@ -100,6 +100,12 @@ describe("Scenario 4 Desired State", () => {
     cy.contains("button", "Filters").click();
     cy.get('[aria-label="Value"]').type("default{enter}");
 
+    // Wait for the filtered results to load before clicking
+    cy.get('[aria-label="VersionResourcesTable-Success"]')
+      .find("tbody")
+      .eq(0)
+      .should("contain", "default");
+
     // go to details of first resource
     cy.get("tbody").eq(0).contains("Show Details").click();
     cy.get(".pf-v6-c-content--small").should(

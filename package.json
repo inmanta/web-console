@@ -1,6 +1,6 @@
 {
   "name": "@inmanta/web-console",
-  "version": "3.1.2",
+  "version": "4.0.0",
   "description": "Web Console for Inmanta Orchestrator",
   "exports": "./dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
@@ -131,6 +131,7 @@
     "@patternfly/react-charts": "^8.5.1",
     "@patternfly/react-code-editor": "^6.4.3",
     "@patternfly/react-core": "^6.4.3",
+    "@patternfly/react-drag-drop": "^6.4.3",
     "@patternfly/react-icons": "^6.4.0",
     "@patternfly/react-log-viewer": "^6.3.0",
     "@patternfly/react-styles": "^6.4.0",

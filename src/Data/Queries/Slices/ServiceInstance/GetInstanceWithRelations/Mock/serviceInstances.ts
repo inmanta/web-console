@@ -1,6 +1,6 @@
 import { ServiceInstanceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Queries";
-import { ComposerServiceOrderItem } from "@/UI/Components/Composer/Data";
+import type { ComposerServiceOrderItem } from "@/UI/Components/Composer/Data";
 
 export const testInstance: ServiceInstanceModel = {
   id: "d938d5bb-8bf1-4b41-9e17-ae0b5069cbbf",
