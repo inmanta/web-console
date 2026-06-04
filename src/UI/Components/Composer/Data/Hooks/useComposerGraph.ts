@@ -159,9 +159,9 @@ export const useComposerGraph = ({
 
     // Update missing connections highlights after canvas is initialized
     // Use setTimeout to ensure paper is fully rendered
-    // that's also when we want to recenter the view on the content.
+    // that's also when we want to fit the view to all content.
     setTimeout(() => {
-      scroller.centerContent();
+      scroller.zoomToFit({ useModelGeometry: true, padding: 40 });
       updateAllMissingConnectionsHighlights(paper);
     }, 100);
   }, [
