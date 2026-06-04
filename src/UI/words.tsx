@@ -53,6 +53,7 @@ const dict = {
   success: "Success",
   "success.title": "Success",
   "info.title": "Info",
+  noResults: "No results found",
 
   /**
    * Error related text
@@ -294,6 +295,7 @@ const dict = {
   active_attributes: "Active",
   candidate_attributes: "Candidate",
   rollback_attributes: "Rollback",
+  "instanceDetails.searchPlaceholder": "Search version…",
   "instanceDetails.expandAll": "Expand all",
   "instanceDetails.collapseAll": "Collapse all",
   "instanceDetails.resetSort": "Reset sorting",
