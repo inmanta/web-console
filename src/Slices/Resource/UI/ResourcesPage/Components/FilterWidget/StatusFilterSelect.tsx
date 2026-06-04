@@ -1,4 +1,3 @@
-import React from "react";
 import { FormGroup, Stack, StackItem, Switch } from "@patternfly/react-core";
 import { Resource, toggleValueInList } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
@@ -110,14 +109,12 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
         </FormGroup>
       </StackItem>
       <StackItem>
-        <FormGroup label={words("resources.filters.status.isDeploying")}>
-          <Switch
-            id={words("resources.filters.status.isDeploying")}
-            aria-label={words("resources.filters.status.isDeploying")}
-            isChecked={selectedStatuses?.includes("isDeploying") ?? false}
-            onChange={(_event, hasChanged) => handleIsDeploying(hasChanged)}
-          />
-        </FormGroup>
+        <Switch
+          id="is-deploying"
+          label={words("resources.filters.status.isDeploying")}
+          isChecked={selectedStatuses?.includes("isDeploying") ?? false}
+          onChange={(_event, hasChanged) => handleIsDeploying(hasChanged)}
+        />
       </StackItem>
     </Stack>
   );

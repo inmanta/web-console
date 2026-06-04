@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Divider,
   DrawerActions,
@@ -147,7 +147,7 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
         </DrawerActions>
       </DrawerHead>
       <DrawerPanelBody>
-        <Form>
+        <Form onSubmit={(e) => e.preventDefault()}>
           <Stack hasGutter>
             <StackItem isFilled>
               <Tabs activeKey={activeTabKey} onSelect={(_, tabIndex) => setActiveTabKey(tabIndex)}>
