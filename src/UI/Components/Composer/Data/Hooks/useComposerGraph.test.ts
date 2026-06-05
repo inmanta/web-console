@@ -1,8 +1,9 @@
 import { dia, shapes, ui } from "@joint/plus";
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { ServiceModel, ServiceInstanceModel } from "@/Core";
 import { InstanceWithRelations } from "@/Data/Queries";
 
+import { updateAllMissingConnectionsHighlights } from "../../UI/JointJsShapes/createHalo";
 import { defineObjectsForJointJS } from "../../testSetup";
 import * as Helpers from "../Helpers";
 import { RelationsDictionary } from "../Helpers/createRelationsDictionary";
@@ -16,6 +17,19 @@ vi.mock("../../UI/JointJsShapes/ComposerPaper", () => ({
     // frozen: true mirrors the real ComposerPaper, so a recreated-but-never-unfrozen
     // paper is observable in tests via isFrozen().
     const paper = new dia.Paper({ model: graph, width: 800, height: 600, frozen: true });
+
+    // Override unfreeze to only flip the frozen flag without triggering the
+    // synchronous rendering batch (and thus 'render:done'). Without this,
+    // unfreeze() would fire 'render:done' synchronously and consume the
+    // paper.once() handler before a test can set up its spy.
+    // isFrozen() checks `!!this.options.frozen`, so clearing that flag is enough.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (paper as any).unfreeze = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (paper as any).options.frozen = false;
+
+      return paper;
+    };
 
     return { paper };
   }),
@@ -591,6 +605,128 @@ describe("useComposerGraph", () => {
     });
 
     consoleWarnSpy.mockRestore();
+  });
+
+  it("should center content and refresh highlights on the paper 'render:done' event", async () => {
+    const { result } = renderHook(() =>
+      useComposerGraph({
+        editable,
+        serviceName,
+        instanceId: undefined,
+        serviceCatalog,
+        mainService,
+        relationsDictionary,
+        instanceData,
+        isInstanceDataReady,
+        onCanvasStateInitialized,
+        onInitialShapeInfoTracked,
+      })
+    );
+
+    // zoomToFit touches the DOM; stub it so we can assert it was invoked.
+    const zoomToFitSpy = vi
+      .spyOn(result.current.scroller, "zoomToFit")
+      .mockImplementation(() => result.current.scroller);
+
+    await waitFor(() => {
+      expect(Helpers.initializeCanvasFromInstance).toHaveBeenCalled();
+    });
+
+    // The handler must not have run during mount: the synchronous mock paper
+    // auto-fires 'render:done' from inside addCell (before the hook registers its
+    // one-shot handler), so only an explicit trigger should drive zooming.
+    expect(zoomToFitSpy).not.toHaveBeenCalled();
+
+    // The init effect registers a one-shot 'render:done' handler instead of a
+    // setTimeout; simulate the async paper finishing its render batch. The event
+    // carries an update-stats object; priority >= 2 keeps the PaperScroller's own
+    // onPaperRenderDone from running its DOM-touching adjustPaper in jsdom.
+    act(() => {
+      result.current.paper.trigger("render:done", { priority: 2 });
+    });
+
+    expect(zoomToFitSpy).toHaveBeenCalledTimes(1);
+    expect(zoomToFitSpy).toHaveBeenCalledWith({ useModelGeometry: true, padding: 40, maxScale: 1 });
+    expect(vi.mocked(updateAllMissingConnectionsHighlights)).toHaveBeenCalledWith(
+      result.current.paper
+    );
+
+    // The handler is one-shot (paper.once): a later 'render:done' must not yank
+    // the view by re-zooming. This guards against a regression to paper.on.
+    act(() => {
+      result.current.paper.trigger("render:done", { priority: 2 });
+    });
+
+    expect(zoomToFitSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("should dispose the paper and scroller on unmount, scroller before paper", () => {
+    const { result, unmount } = renderHook(() =>
+      useComposerGraph({
+        editable,
+        serviceName,
+        instanceId: undefined,
+        serviceCatalog,
+        mainService,
+        relationsDictionary,
+        instanceData,
+        isInstanceDataReady,
+        onCanvasStateInitialized,
+        onInitialShapeInfoTracked,
+      })
+    );
+
+    const paperRemoveSpy = vi
+      .spyOn(result.current.paper, "remove")
+      .mockImplementation(() => result.current.paper);
+    const scrollerRemoveSpy = vi
+      .spyOn(result.current.scroller, "remove")
+      .mockImplementation(() => result.current.scroller);
+
+    unmount();
+
+    expect(scrollerRemoveSpy).toHaveBeenCalledTimes(1);
+    expect(paperRemoveSpy).toHaveBeenCalledTimes(1);
+    // The scroller wraps the paper's element, so it must be removed first.
+    expect(scrollerRemoveSpy.mock.invocationCallOrder[0]).toBeLessThan(
+      paperRemoveSpy.mock.invocationCallOrder[0]
+    );
+  });
+
+  it("should dispose the previous paper and scroller when they are recreated", () => {
+    // Changing `editable` is a dependency of the paper useMemo, so the paper (and
+    // therefore the scroller) is recreated. The cleanup effect must dispose the
+    // old views — this is the leak path the teardown fixes for long-lived pages.
+    const { result, rerender } = renderHook(
+      ({ editable }) =>
+        useComposerGraph({
+          editable,
+          serviceName,
+          instanceId: undefined,
+          serviceCatalog,
+          mainService,
+          relationsDictionary,
+          instanceData,
+          isInstanceDataReady,
+          onCanvasStateInitialized,
+          onInitialShapeInfoTracked,
+        }),
+      { initialProps: { editable: true } }
+    );
+
+    const firstPaper = result.current.paper;
+    const firstScroller = result.current.scroller;
+    const paperRemoveSpy = vi.spyOn(firstPaper, "remove").mockImplementation(() => firstPaper);
+    const scrollerRemoveSpy = vi
+      .spyOn(firstScroller, "remove")
+      .mockImplementation(() => firstScroller);
+
+    rerender({ editable: false });
+
+    expect(result.current.paper).not.toBe(firstPaper);
+    expect(result.current.scroller).not.toBe(firstScroller);
+    expect(scrollerRemoveSpy).toHaveBeenCalledTimes(1);
+    expect(paperRemoveSpy).toHaveBeenCalledTimes(1);
   });
 
   it("should keep the same, unfrozen paper when the service catalog reference changes mid-session", async () => {
