@@ -192,6 +192,14 @@ export const useComposerGraph = ({
     if (paper.isFrozen()) {
       paper.unfreeze();
     }
+
+    // Update missing connections highlights after canvas is initialized
+    // Use setTimeout to ensure paper is fully rendered
+    // that's also when we want to fit the view to all content.
+    setTimeout(() => {
+      scroller.zoomToFit({ useModelGeometry: true, padding: 40, maxScale: 1 });
+      updateAllMissingConnectionsHighlights(paper);
+    }, 100);
   }, [
     instanceId,
     isInstanceDataReady,
