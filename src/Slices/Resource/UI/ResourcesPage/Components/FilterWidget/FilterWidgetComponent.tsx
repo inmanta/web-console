@@ -21,7 +21,7 @@ import { StatusFilterSelect } from "./StatusFilterSelect";
 
 interface FilterWidgetComponentProps {
   onClose: () => void;
-  filter: Resource.FilterWithDefaultHandling;
+  filter: Resource.Filter;
   setFilter: (filter: Resource.FilterWithDefaultHandling) => void;
 }
 
@@ -131,8 +131,8 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
     });
   };
 
-  const onResetFilters = () => {
-    setFilter({});
+  const clearAllFilters = () => {
+    setFilter({ disregardDefault: true });
   };
 
   return (
@@ -175,7 +175,7 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
           <Divider />
           <ActiveFiltersSection
             filter={filter}
-            onResetFilters={onResetFilters}
+            onClearAll={clearAllFilters}
             removeTypeChip={removeTypeChip}
             removeAgentChip={removeAgentChip}
             removeValueChip={removeValueChip}
