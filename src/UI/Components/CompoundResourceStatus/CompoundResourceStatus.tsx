@@ -5,11 +5,16 @@ import { LegendBar } from "../LegendBar";
 import { colorConfig, statusGroupIcons, statusPriority } from "./config";
 
 /** Type guard for Object.entries results on a compound state record.
- * Narrows [string, unknown] to [Resource.CompoundStateType, number]. */
+ * Narrows [string, unknown] to [Resource.CompoundStateKey, number]. */
 const isCompoundStatusEntry = (
   entry: [string, unknown]
 ): entry is [Resource.CompoundStateKey, number] => {
-  return entry[0] in colorConfig && typeof entry[1] === "number";
+  return (
+    (entry[0] in Resource.LAST_HANDLER_RUN ||
+      entry[0] in Resource.COMPLIANCE ||
+      entry[0] in Resource.BLOCKED) &&
+    typeof entry[1] === "number"
+  );
 };
 
 interface CompoundResourceProps {
