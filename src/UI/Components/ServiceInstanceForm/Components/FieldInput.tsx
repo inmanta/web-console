@@ -208,11 +208,7 @@ export const FieldInput: React.FC<Props> = ({
           }
           type={field.inputType}
           handleInputChange={(value, _event) => {
-            if (field.type.includes("dict")) {
-              getUpdate(makePath(path, field.name), tryParseJSON(value));
-            } else {
-              getUpdate(makePath(path, field.name), value);
-            }
+            getUpdate(makePath(path, field.name), value);
           }}
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
