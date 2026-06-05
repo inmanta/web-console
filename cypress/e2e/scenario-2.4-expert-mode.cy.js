@@ -1,6 +1,6 @@
 import environmentHelpers from "../support/environmentHelpers";
 
-const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
+const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
 
@@ -14,14 +14,13 @@ if (isIso) {
     it("2.4.1 Force new state in the instance", () => {
       // Go from Home page to Service Inventory of Basic-service
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.intercept(
         "GET",
         "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
       ).as("GetServiceInventory");
 
-      cy.get('[data-testid="env-selector-toggle"]').click();
-      cy.get('[role="menuitem"]').contains("test").click();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
@@ -63,8 +62,7 @@ if (isIso) {
 
       // Go back to service inventory
       cy.visit("/console/");
-      cy.get('[data-testid="env-selector-toggle"]').click();
-      cy.get('[role="menuitem"]').contains("test").click();
+      selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
@@ -94,8 +92,7 @@ if (isIso) {
     it("2.4.2 Verify markdown preview in documentation tab", () => {
       cy.startMonacoCDNCheck();
       cy.visit("/console/");
-      cy.get('[data-testid="env-selector-toggle"]').click();
-      cy.get('[role="menuitem"]').contains("test").click();
+      selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
 
@@ -136,8 +133,7 @@ if (isIso) {
     it("2.4.3 Edit instance attributes", () => {
       cy.startMonacoCDNCheck();
       cy.visit("/console/");
-      cy.get('[data-testid="env-selector-toggle"]').click();
-      cy.get('[role="menuitem"]').contains("test").click();
+      selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Expect to find one badge on the basic-service row.
@@ -207,8 +203,7 @@ if (isIso) {
 
     it("2.4.4 Destroy previously created instance", () => {
       cy.visit("/console/");
-      cy.get('[data-testid="env-selector-toggle"]').click();
-      cy.get('[role="menuitem"]').contains("test").click();
+      selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Expect to find one badge on the basic-service row.

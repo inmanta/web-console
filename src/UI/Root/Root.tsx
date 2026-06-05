@@ -60,7 +60,7 @@ export const Root: React.FC = () => {
             <Route
               path="*"
               element={
-                <PageFrame environmentRole="Optional">
+                <PageFrame environmentRole="Required">
                   <NotFoundPage />
                 </PageFrame>
               }

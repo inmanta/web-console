@@ -4,15 +4,26 @@
  *
  * @param {string} nameEnvironment
  */
-const clearEnvironment = (nameEnvironment = "test") => {
-  cy.visit("/console/");
+/**
+ * Selects an environment from the header dropdown.
+ * Assumes a page with the header is already loaded.
+ *
+ * @param {string} nameEnvironment - partial or full display name of the environment
+ */
+const selectEnvironment = (nameEnvironment = "test (lsm-frontend)") => {
   cy.get('[data-testid="env-selector-toggle"]').click();
   cy.get('[role="menuitem"]').contains(nameEnvironment).click();
+};
+
+const clearEnvironment = (nameEnvironment = "test") => {
+  cy.visit("/console/");
+  selectEnvironment(nameEnvironment);
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
-
-    cy.request("DELETE", `/api/v1/decommission/${id}`);
+    if (id) {
+      cy.request("DELETE", `/api/v1/decommission/${id}`);
+    }
   });
 };
 
@@ -60,8 +71,7 @@ const checkStatusCompile = (id) => {
  */
 const forceUpdateEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get('[data-testid="env-selector-toggle"]').click();
-  cy.get('[role="menuitem"]').contains(nameEnvironment).click();
+  selectEnvironment(nameEnvironment);
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -77,6 +87,7 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
 };
 
 module.exports = {
+  selectEnvironment,
   clearEnvironment,
   checkStatusCompile,
   forceUpdateEnvironment,

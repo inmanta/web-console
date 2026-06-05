@@ -1,6 +1,6 @@
 import environmentHelpers from "../support/environmentHelpers";
 
-const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
+const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
 
@@ -14,9 +14,8 @@ describe("5 Compile reports", () => {
 
   it("5.1 initial state", () => {
     cy.visit("/console/");
+    selectEnvironment();
 
-    cy.get('[data-testid="env-selector-toggle"]').click();
-    cy.get('[role="menuitem"]').contains("test").click();
 
     // go to compile reports page
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
@@ -110,11 +109,11 @@ describe("5 Compile reports", () => {
     it("5.2 Compile after adding a Service instance", () => {
       // go to home page
       cy.visit("/console/");
+      selectEnvironment();
+    selectEnvironment();
 
       // click on test environment card
-      cy.get('[data-testid="env-selector-toggle"]').click();
-    cy.get('[role="menuitem"]').contains("test").click();
-
+  
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
@@ -196,11 +195,11 @@ describe("5 Compile reports", () => {
     it("5.3 Compile after adding a rejected Service Instance", () => {
       // go to home page
       cy.visit("/console/");
+      selectEnvironment();
+    selectEnvironment();
 
       // click on test environment card
-      cy.get('[data-testid="env-selector-toggle"]').click();
-    cy.get('[role="menuitem"]').contains("test").click();
-
+  
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
       // wait for the table to load and store initial row count
@@ -277,11 +276,11 @@ describe("5 Compile reports", () => {
     it("5.4 Remove rejected instance should fix compile", () => {
       // go to home page
       cy.visit("/console/");
+      selectEnvironment();
+    selectEnvironment();
 
       // click on test environment card
-      cy.get('[data-testid="env-selector-toggle"]').click();
-    cy.get('[role="menuitem"]').contains("test").click();
-
+  
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
       // wait for the table to load and store initial row count
@@ -343,11 +342,11 @@ describe("5 Compile reports", () => {
     it("5.5 Filter based on status", () => {
       // go to home page
       cy.visit("/console/");
+      selectEnvironment();
+    selectEnvironment();
 
       // click on test environment card
-      cy.get('[data-testid="env-selector-toggle"]').click();
-    cy.get('[role="menuitem"]').contains("test").click();
-
+  
       // Go to the compile report page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 

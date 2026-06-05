@@ -7,7 +7,7 @@
  */
 import environmentHelpers from "../support/environmentHelpers";
 
-const { checkStatusCompile } = environmentHelpers;
+const { checkStatusCompile, selectEnvironment } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
 
@@ -15,7 +15,7 @@ if (isIso) {
   describe("Scenario 8 Composer", () => {
     before(() => {
       // Setup: Ensure a clean test state for this scenario.
-      const envName = "PXSDC Test Env";
+      const envName = "Test PXSDC";
       const projectName = "PXSDC Test Project";
 
       // ensure environment is not present before removing the project
@@ -40,7 +40,7 @@ if (isIso) {
     });
 
     it("Should create pxsdc project from a repo url and create instances", () => {
-      const envName = "PXSDC Test Env";
+      const envName = "Test PXSDC";
       const projectName = "PXSDC Test Project";
 
       // Step 1: Create a new environment from repository.
@@ -229,8 +229,7 @@ if (isIso) {
     it("Should delete permanently an existing l3out instance", () => {
       // Step 1: Open existing l3out instance and enter edit composer.
       cy.visit("/console/");
-      cy.get('[data-testid="env-selector-toggle"]').click();
-      cy.get('[role="menuitem"]').contains("PXSDC Test Env").click();
+      selectEnvironment("Test PXSDC");
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#l3out").contains("Show inventory").click();
 
@@ -346,8 +345,7 @@ if (isIso) {
     it("Should be able to add an instance and connect it to an existing instance", () => {
       // Step 1: Open project inventory and enter edit composer.
       cy.visit("/console/");
-      cy.get('[data-testid="env-selector-toggle"]').click();
-      cy.get('[role="menuitem"]').contains("PXSDC Test Env").click();
+      selectEnvironment("Test PXSDC");
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#project").contains("Show inventory").click();
 
@@ -493,8 +491,7 @@ if (isIso) {
     it("Should not leak data between forms when clicking through multiple instances", () => {
       // Step 1: Open project inventory and enter edit composer.
       cy.visit("/console/");
-      cy.get('[data-testid="env-selector-toggle"]').click();
-      cy.get('[role="menuitem"]').contains("PXSDC Test Env").click();
+      selectEnvironment("Test PXSDC");
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#project").contains("Show inventory").click();
 

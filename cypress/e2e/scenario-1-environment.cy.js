@@ -1,3 +1,7 @@
+import environmentHelpers from "../support/environmentHelpers";
+
+const { selectEnvironment } = environmentHelpers;
+
 const testProjectName = (id) => "Test Project Name " + id;
 const testName = (id) => "TestName " + id;
 
@@ -67,9 +71,9 @@ const deleteEnv = (name) => {
 
   cy.get('[aria-label="delete environment check"]').type(name);
   cy.get('[aria-label="delete"]').click();
-  cy.url().should("eq", Cypress.config().baseUrl + "/console");
 
   cy.get('[data-testid="env-selector-toggle"]').click();
+  cy.contains('[role="menuitem"]', "test (lsm-frontend)").should("be.visible");
   cy.contains('[role="menuitem"]', name).should("not.exist");
 };
 
@@ -89,16 +93,15 @@ const isIso = Cypress.expose("edition") === "iso";
 
 describe("Environment", () => {
   it("1.1 cancel creation of an environment", function () {
-    cy.visit("/console/");
-    cy.get('[data-testid="env-selector-toggle"]').click();
-    cy.get('[role="menuitem"]').contains("Create new environment").click();
-    cy.url().should("eq", Cypress.config().baseUrl + "/console/environment/create");
+    cy.visit("/console/environment/create");
     fillCreateEnvForm({
       envName: testName(1),
       projectName: testProjectName(1),
     });
     cy.get("button").contains("Cancel").click();
-    cy.url().should("eq", Cypress.config().baseUrl + "/console");
+    cy.get('[data-testid="env-selector-toggle"]').click();
+    cy.contains('[role="menuitem"]', "test (lsm-frontend)").should("be.visible");
+    cy.get('[data-testid="env-selector-toggle"]').click();
   });
 
   it("1.2 Create new  environment", function () {
@@ -125,15 +128,11 @@ describe("Environment", () => {
       cy.get("h1").contains("Desired State").should("to.be.visible");
     }
 
-    // select newly created environment to verify settings
-    cy.get('[data-testid="env-selector-toggle"]').click();
-    cy.get('[role="menuitem"]').contains(testName(2)).click();
-
     openSettings(testName(2));
     deleteEnv(testName(2), testProjectName(2));
   });
 
-  it("1.4 Edit created environment", function () {
+  it("1.3 Edit created environment", function () {
     //Fill The form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
@@ -204,11 +203,10 @@ describe("Environment", () => {
 
   // specific to ISO
   if (isIso) {
-    it("1.5 Clear environment", function () {
+    it("1.4 Clear environment", function () {
       // Fill The form and submit
       cy.visit("/console/");
-      cy.get('[data-testid="env-selector-toggle"]').click();
-      cy.get('[role="menuitem"]').contains("test").click();
+      selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get('[aria-label="ServiceCatalog-Empty"]', {
         timeout: 10000,
@@ -221,8 +219,7 @@ describe("Environment", () => {
       cy.get("button").contains("Clear environment").click();
       cy.get("button").contains("Cancel").click();
       cy.visit("/console/");
-      cy.get('[data-testid="env-selector-toggle"]').click();
-      cy.get('[role="menuitem"]').contains("test").click();
+      selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       cy.get('[aria-label="ServiceCatalog-Empty"]', {
@@ -237,8 +234,7 @@ describe("Environment", () => {
       cy.get('[aria-label="clear environment check"]').type("test");
       cy.get("button").contains("I understand the consequences, clear this environment").click();
       cy.visit("/console/");
-      cy.get('[data-testid="env-selector-toggle"]').click();
-      cy.get('[role="menuitem"]').contains("test").click();
+      selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
 
@@ -252,7 +248,7 @@ describe("Environment", () => {
     });
   }
 
-  it("1.6 Edit environment configuration", function () {
+  it("1.5 Edit environment configuration", function () {
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
       envName: testName(6),

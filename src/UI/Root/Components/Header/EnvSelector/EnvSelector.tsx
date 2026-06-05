@@ -128,28 +128,34 @@ export const EnvSelector: React.FC<Props> = ({
               onClear={() => setSearchText("")}
             />
           </div>
-          {filteredItems.map((item, index) => (
-            <DropdownItem
-              onClick={() => onSelect(item.displayName)}
-              key={`env-${index}-${item.environmentId}`}
-              icon={<EnvironmentIcon icon={item.icon} />}
-            >
-              <Split>
-                <SplitItem isFilled>
-                  <span>
-                    {item.displayName.length > 28
-                      ? item.displayName.slice(0, 20) + "..."
-                      : item.displayName}
-                  </span>
-                </SplitItem>
-                {item.displayName === toggleText && (
-                  <SplitItem>
-                    <CheckIcon color="var(--pf-t--global--color--brand--default)" />
-                  </SplitItem>
-                )}
-              </Split>
+          {items.length === 0 ? (
+            <DropdownItem isDisabled key="no-env">
+              {words("home.environmentSwitcher.noEnvironments")}
             </DropdownItem>
-          ))}
+          ) : (
+            filteredItems.map((item, index) => (
+              <DropdownItem
+                onClick={() => onSelect(item.displayName)}
+                key={`env-${index}-${item.environmentId}`}
+                icon={<EnvironmentIcon icon={item.icon} />}
+              >
+                <Split>
+                  <SplitItem isFilled>
+                    <span>
+                      {item.displayName.length > 28
+                        ? item.displayName.slice(0, 20) + "..."
+                        : item.displayName}
+                    </span>
+                  </SplitItem>
+                  {item.displayName === toggleText && (
+                    <SplitItem>
+                      <CheckIcon color="var(--pf-t--global--color--brand--default)" />
+                    </SplitItem>
+                  )}
+                </Split>
+              </DropdownItem>
+            ))
+          )}
         </DropdownGroup>
         <div>
           <Divider />

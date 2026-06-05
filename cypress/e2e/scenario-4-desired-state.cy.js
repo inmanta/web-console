@@ -1,6 +1,6 @@
 import environmentHelpers from "../support/environmentHelpers";
 
-const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
+const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
 
@@ -15,8 +15,7 @@ describe("Scenario 4 Desired State", () => {
   it("4.1 Initial setup", () => {
     // Go from Home page to Service Inventory of Basic-service
     cy.visit("/console/");
-    cy.get('[data-testid="env-selector-toggle"]').click();
-    cy.get('[role="menuitem"]').contains("test").click();
+    selectEnvironment();
 
     if (isIso) {
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
@@ -402,5 +401,6 @@ describe("Scenario 4 Desired State", () => {
 
     // go back to Home.
     cy.visit("/console/");
+    selectEnvironment();
   });
 });
