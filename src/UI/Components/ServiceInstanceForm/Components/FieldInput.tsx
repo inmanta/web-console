@@ -10,6 +10,7 @@ import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { words } from "@/UI/words";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { BooleanToggleInput } from "./BooleanToggleInput";
+import { DictFieldInput } from "./DictFieldInput";
 import { RelatedServiceProvider } from "./RelatedServiceProvider";
 import { SelectFormInput } from "./SelectFormInput";
 import { TextFormInput } from "./TextFormInput";
@@ -207,16 +208,28 @@ export const FieldInput: React.FC<Props> = ({
           }
           type={field.inputType}
           handleInputChange={(value, _event) => {
-            if (field.type.includes("dict")) {
-              getUpdate(makePath(path, field.name), tryParseJSON(value));
-            } else {
-              getUpdate(makePath(path, field.name), value);
-            }
+            getUpdate(makePath(path, field.name), value);
           }}
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           suggestions={suggestionsList}
+        />
+      );
+    case "Dict":
+      return (
+        <DictFieldInput
+          key={field.id || field.name}
+          field={field}
+          value={get(formState, makePath(path, field.name))}
+          readOnly={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
+          }
+          onChange={(value) => {
+            getUpdate(makePath(path, field.name), value);
+          }}
         />
       );
     case "InterServiceRelation":
