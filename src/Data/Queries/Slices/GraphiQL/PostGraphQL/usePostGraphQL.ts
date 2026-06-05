@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { FetcherParams } from "@graphiql/toolkit";
+import { FetcherParams, SyncExecutionResult } from "@graphiql/toolkit";
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
 import { useFetchHelpers } from "@/Data/Queries/Helpers/useFetchHelpers";
 import { PrimaryBaseUrlManager } from "@/UI";
@@ -13,7 +13,9 @@ import { PrimaryBaseUrlManager } from "@/UI";
  * @param {string} [env] - Optional environment Id to include as X-Inmanta-Tid header.
  * @returns {UseMutationResult} The mutation object whose `mutateAsync` serves as the GraphiQL Fetcher.
  */
-export const usePostGraphQL = (env?: string): UseMutationResult<unknown, Error, FetcherParams> => {
+export const usePostGraphQL = (
+  env?: string
+): UseMutationResult<SyncExecutionResult, Error, FetcherParams> => {
   const { createHeaders, handleErrors } = useFetchHelpers();
 
   const baseUrl = useMemo(
