@@ -25,7 +25,9 @@ vi.mock("../../UI/JointJsShapes/ComposerPaper", () => ({
     // isFrozen() checks `!!this.options.frozen`, so clearing that flag is enough.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (paper as any).unfreeze = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (paper as any).options.frozen = false;
+
       return paper;
     };
 
