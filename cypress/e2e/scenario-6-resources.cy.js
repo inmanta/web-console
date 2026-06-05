@@ -445,18 +445,19 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="CompileReportsIndication"]', { timeout: 30000 }).should("exist");
       cy.get('[aria-label="CompileReportsIndication"]', { timeout: 90000 }).should("not.exist");
 
+      // Intercept the GraphQL resource query — needed because keepPreviousData keeps
+      // stale rows visible while the new request is in flight, so we must wait for
+      // each response before asserting row counts.
+      cy.intercept("POST", "/api/v2/graphql").as("resourcesQuery");
+
       // Restore page size to 250 so all resources are visible for accurate counting
       cy.get("#PaginationWidget-top-top-toggle").click();
       cy.get('[data-action="per-page-250"]').click();
+      cy.wait("@resourcesQuery");
 
       // Open the filter drawer on the Status tab
       cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
       cy.get('[role="tab"]').contains("Status").click();
-
-      // Intercept the GraphQL resource query — needed because keepPreviousData keeps
-      // stale rows visible while the new request is in flight, so we must wait for
-      // each response before asserting row counts
-      cy.intercept("POST", "/api/v2/graphql").as("resourcesQuery");
 
       // Capture the row count with "Not Orphaned" active as the baseline for orphan filter assertions
       cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
