@@ -13,13 +13,17 @@ import type { Mock } from "vitest";
 // Mock ComposerPaper - must use function (not arrow) for Vitest 4 constructor compatibility.
 // Kept here because it needs dia.Paper and the JointJS env from defineObjectsForJointJS (runs in beforeAll).
 vi.mock("../../UI/JointJsShapes/ComposerPaper", () => ({
-  ComposerPaper: vi.fn().mockImplementation(function (
-    graph: dia.Graph,
-    _editable: boolean,
-    _relationsDictionary: RelationsDictionary,
-    _serviceCatalog: ServiceModel[]
-  ) {
-    const paper = new dia.Paper({ model: graph, width: 800, height: 600 });
+  ComposerPaper: vi.fn().mockImplementation(function (graph: dia.Graph) {
+    // frozen: true mirrors the real ComposerPaper, so a recreated-but-never-unfrozen
+    // paper is observable in tests via isFrozen().
+    const paper = new dia.Paper({ model: graph, width: 800, height: 600, frozen: true });
+
+    // Override unfreeze to only flip the frozen flag without triggering the
+    // synchronous rendering batch (and thus 'render:done'). Without this,
+    // unfreeze() would fire 'render:done' synchronously and consume the
+    // paper.once() handler before a test can set up its spy.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (paper as any).unfreeze = () => { (paper as any)._frozen = false; return paper; };
 
     return { paper };
   }),
@@ -717,4 +721,62 @@ describe("useComposerGraph", () => {
     expect(scrollerRemoveSpy).toHaveBeenCalledTimes(1);
     expect(paperRemoveSpy).toHaveBeenCalledTimes(1);
   });
+
+  it("should keep the same, unfrozen paper when the service catalog reference changes mid-session", async () => {
+    // Reproduces the frozen/blank-canvas scenario: while editing an existing instance
+    // (so the graph holds cells), a 5s catalog refetch hands down a NEW serviceCatalog
+    // array reference. With the buggy behavior the paper useMemo recreated a fresh
+    // frozen paper, and the init effect early-returned (instance key unchanged + graph
+    // has cells), leaving the canvas blank. The paper must stay the same, unfrozen
+    // instance instead.
+    vi.mocked(Helpers.initializeCanvasFromInstance).mockImplementation((_d, _c, _dict, graph) => {
+      // Add a cell so graph.getCells().length > 0, which is what makes the init
+      // effect take its early-return path on the second render.
+      graph.addCell(new shapes.standard.Rectangle({ id: "existing-cell" }));
+
+      return new Map();
+    });
+
+    const mockInstance = createMockInstance("existing-id", "test-service");
+    const mockInstanceData = createMockInstanceWithRelations(mockInstance);
+
+    const { result, rerender } = renderHook(
+      ({ serviceCatalog }) =>
+        useComposerGraph({
+          editable,
+          serviceName,
+          instanceId: "existing-id",
+          serviceCatalog,
+          mainService,
+          relationsDictionary,
+          instanceData: mockInstanceData,
+          isInstanceDataReady: true,
+          onCanvasStateInitialized,
+          onInitialShapeInfoTracked,
+        }),
+      { initialProps: { serviceCatalog } }
+    );
+
+    vi.spyOn(result.current.scroller, "zoomToFit").mockImplementation(
+      () => result.current.scroller
+    );
+    vi.spyOn(result.current.scroller, "centerContent").mockImplementation(
+      () => result.current.scroller
+    );
+
+    // After initialization the paper is unfrozen and rendering the instance.
+    await waitFor(() => {
+      expect(Helpers.initializeCanvasFromInstance).toHaveBeenCalled();
+    });
+    const firstPaper = result.current.paper;
+    expect(firstPaper.isFrozen()).toBe(false);
+
+    // A background catalog refetch hands down a new array reference (same content).
+    rerender({ serviceCatalog: [...(serviceCatalog as ServiceModel[])] });
+
+    // The paper must be the SAME instance and still rendering — not a fresh frozen one.
+    expect(result.current.paper).toBe(firstPaper);
+    expect(result.current.paper.isFrozen()).toBe(false);
+  });
+  
 });
