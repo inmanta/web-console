@@ -161,7 +161,7 @@ export const useComposerGraph = ({
     // Use setTimeout to ensure paper is fully rendered
     // that's also when we want to fit the view to all content.
     setTimeout(() => {
-      scroller.zoomToFit({ useModelGeometry: true, padding: 40 });
+      scroller.zoomToFit({ useModelGeometry: true, padding: 40, maxScale: 1 });
       updateAllMissingConnectionsHighlights(paper);
     }, 100);
   }, [
