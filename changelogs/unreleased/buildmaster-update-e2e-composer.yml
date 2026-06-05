@@ -1,0 +1,3 @@
+description: Fix the zoom level of the composer on render to prevent it from being too small and causing test failures.
+change-type: patch
+destination-branches: [master, iso9]
