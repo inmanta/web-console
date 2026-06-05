@@ -184,7 +184,7 @@ export const useComposerGraph = ({
     // This replaces a fragile setTimeout that merely guessed at render completion.
     // See https://docs.jointjs.com/api/dia/Paper/#events
     paper.once("render:done", () => {
-      scroller.centerContent();
+      scroller.zoomToFit({ useModelGeometry: true, padding: 40, maxScale: 1 });
       updateAllMissingConnectionsHighlights(paper);
     });
 

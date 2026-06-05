@@ -22,8 +22,9 @@ vi.mock("../../UI/JointJsShapes/ComposerPaper", () => ({
     // synchronous rendering batch (and thus 'render:done'). Without this,
     // unfreeze() would fire 'render:done' synchronously and consume the
     // paper.once() handler before a test can set up its spy.
+    // isFrozen() checks `!!this.options.frozen`, so clearing that flag is enough.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (paper as any).unfreeze = () => { (paper as any)._frozen = false; return paper; };
+    (paper as any).unfreeze = () => { (paper as any).options.frozen = false; return paper; };
 
     return { paper };
   }),
@@ -617,9 +618,9 @@ describe("useComposerGraph", () => {
       })
     );
 
-    // centerContent touches the DOM; stub it so we can assert it was invoked.
-    const centerContentSpy = vi
-      .spyOn(result.current.scroller, "centerContent")
+    // zoomToFit touches the DOM; stub it so we can assert it was invoked.
+    const zoomToFitSpy = vi
+      .spyOn(result.current.scroller, "zoomToFit")
       .mockImplementation(() => result.current.scroller);
 
     await waitFor(() => {
@@ -628,8 +629,8 @@ describe("useComposerGraph", () => {
 
     // The handler must not have run during mount: the synchronous mock paper
     // auto-fires 'render:done' from inside addCell (before the hook registers its
-    // one-shot handler), so only an explicit trigger should drive centering.
-    expect(centerContentSpy).not.toHaveBeenCalled();
+    // one-shot handler), so only an explicit trigger should drive zooming.
+    expect(zoomToFitSpy).not.toHaveBeenCalled();
 
     // The init effect registers a one-shot 'render:done' handler instead of a
     // setTimeout; simulate the async paper finishing its render batch. The event
@@ -639,18 +640,19 @@ describe("useComposerGraph", () => {
       result.current.paper.trigger("render:done", { priority: 2 });
     });
 
-    expect(centerContentSpy).toHaveBeenCalledTimes(1);
+    expect(zoomToFitSpy).toHaveBeenCalledTimes(1);
+    expect(zoomToFitSpy).toHaveBeenCalledWith({ useModelGeometry: true, padding: 40, maxScale: 1 });
     expect(vi.mocked(updateAllMissingConnectionsHighlights)).toHaveBeenCalledWith(
       result.current.paper
     );
 
     // The handler is one-shot (paper.once): a later 'render:done' must not yank
-    // the view by re-centering. This guards against a regression to paper.on.
+    // the view by re-zooming. This guards against a regression to paper.on.
     act(() => {
       result.current.paper.trigger("render:done", { priority: 2 });
     });
 
-    expect(centerContentSpy).toHaveBeenCalledTimes(1);
+    expect(zoomToFitSpy).toHaveBeenCalledTimes(1);
   });
 
   it("should dispose the paper and scroller on unmount, scroller before paper", () => {
