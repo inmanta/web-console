@@ -98,6 +98,19 @@ export const useComposerGraph = ({
     [paper]
   );
 
+  // Dispose the paper and scroller views when they are recreated or the composer
+  // unmounts. Without this, each mount leaks the views' DOM nodes and the event
+  // bindings they registered. This mirrors the teardown prescribed by the official
+  // JointJS React integration guide (https://docs.jointjs.com/learn/integration/react/):
+  // remove the scroller first, then the paper. The graph is a plain model and needs
+  // no explicit disposal.
+  useEffect(() => {
+    return () => {
+      scroller.remove();
+      paper.remove();
+    };
+  }, [paper, scroller]);
+
   // Initialize canvas from instance data or create placeholder for new instance
   useEffect(() => {
     if (!serviceCatalog || !mainService || !graph || !paper || !scroller) {
@@ -165,7 +178,17 @@ export const useComposerGraph = ({
     // Embedded entities can't be targetted by ids since they don't have any persistent ids.
     applyAutoLayoutToEmbeddedEntities(graph);
 
-    // Unfreeze paper if it's frozen
+    // Center the view and refresh highlights once the async paper has finished
+    // rendering. The 'render:done' event fires when all scheduled updates are
+    // processed, so cell views exist in the DOM and are safe to measure/center.
+    // This replaces a fragile setTimeout that merely guessed at render completion.
+    // See https://docs.jointjs.com/api/dia/Paper/#events
+    paper.once("render:done", () => {
+      scroller.zoomToFit({ useModelGeometry: true, padding: 40, maxScale: 1 });
+      updateAllMissingConnectionsHighlights(paper);
+    });
+
+    // Unfreeze the paper so the scheduled batch renders and triggers 'render:done'.
     if (paper.isFrozen()) {
       paper.unfreeze();
     }
