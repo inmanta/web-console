@@ -1,0 +1,3 @@
+description: The instance composer now disposes its JointJS paper and scroller on unmount to avoid leaking views and event listeners, and waits for the paper's 'render:done' event before centering the canvas instead of a fixed timeout.
+change-type: patch
+destination-branches: [master, iso9]
