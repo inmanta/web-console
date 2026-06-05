@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router";
-import { Fetcher } from "@graphiql/toolkit";
+import { Fetcher, SyncExecutionResult } from "@graphiql/toolkit";
 import { useQueryClient } from "@tanstack/react-query";
 import { GraphiQL } from "graphiql";
 import graphiqlCSS from "graphiql/style.css?inline";
@@ -89,7 +89,7 @@ export const Page: React.FC = () => {
   // Wrap mutateAsync in useCallback for a stable reference — GraphiQL re-triggers
   // introspection whenever the fetcher identity changes.
   const fetcher = useCallback<Fetcher>(
-    (graphQLParams) => mutateAsync(graphQLParams),
+    (graphQLParams) => mutateAsync(graphQLParams) as Promise<SyncExecutionResult>,
     [mutateAsync]
   );
 
