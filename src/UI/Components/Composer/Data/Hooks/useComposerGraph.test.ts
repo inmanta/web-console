@@ -24,7 +24,10 @@ vi.mock("../../UI/JointJsShapes/ComposerPaper", () => ({
     // paper.once() handler before a test can set up its spy.
     // isFrozen() checks `!!this.options.frozen`, so clearing that flag is enough.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (paper as any).unfreeze = () => { (paper as any).options.frozen = false; return paper; };
+    (paper as any).unfreeze = () => {
+      (paper as any).options.frozen = false;
+      return paper;
+    };
 
     return { paper };
   }),
@@ -780,5 +783,4 @@ describe("useComposerGraph", () => {
     expect(result.current.paper).toBe(firstPaper);
     expect(result.current.paper.isFrozen()).toBe(false);
   });
-  
 });
