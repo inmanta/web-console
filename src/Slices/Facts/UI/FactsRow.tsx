@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { Link } from "@/UI/Components";
+import { DateWithTooltip, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";
@@ -17,7 +17,9 @@ export const FactsRow: React.FC<Props> = ({ row }) => {
     <Tbody>
       <Tr aria-label="FactsRow">
         <Td dataLabel={words("facts.column.name")}>{row.name}</Td>
-        <Td dataLabel={words("facts.column.updated")}>{row.updated}</Td>
+        <Td dataLabel={words("facts.column.updated")}>
+          {row.updated && <DateWithTooltip timestamp={row.updated} />}
+        </Td>
         <Td modifier="breakWord" dataLabel={words("facts.column.value")}>
           {row.value}
         </Td>
