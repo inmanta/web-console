@@ -1,0 +1,6 @@
+description: Fixed the DictField JSON editor not adapting its content color in dark mode.
+issue-nr: 6948
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

@@ -3,6 +3,7 @@ import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import { FormGroup, FormHelperText, HelperText, HelperTextItem } from "@patternfly/react-core";
 import { DictField } from "@/Core";
 import { words } from "@/UI";
+import { getThemePreference } from "@/UI/Components/DarkmodeOption";
 import { DictValue, toDict, toText } from "./helpers";
 
 interface Props {
@@ -77,6 +78,7 @@ export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOn
         isReadOnly={readOnly}
         isLineNumbersVisible={false}
         isHeaderPlain
+        isDarkTheme={getThemePreference() === "dark"}
         options={{ scrollBeyondLastLine: false, folding: false }}
         onEditorDidMount={handleEditorDidMount}
         onChange={readOnly ? undefined : handleChange}
