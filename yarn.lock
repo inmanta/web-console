@@ -1152,7 +1152,7 @@ __metadata:
     "@patternfly/react-core": "npm:^6.5.1"
     "@patternfly/react-drag-drop": "npm:^6.4.3"
     "@patternfly/react-icons": "npm:^6.4.0"
-    "@patternfly/react-log-viewer": "npm:^6.3.0"
+    "@patternfly/react-log-viewer": "npm:^6.4.0"
     "@patternfly/react-styles": "npm:^6.4.0"
     "@patternfly/react-table": "npm:^6.4.3"
     "@patternfly/react-tokens": "npm:^6.4.0"
@@ -1806,9 +1806,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-log-viewer@npm:^6.3.0":
-  version: 6.3.0
-  resolution: "@patternfly/react-log-viewer@npm:6.3.0"
+"@patternfly/react-log-viewer@npm:^6.4.0":
+  version: 6.4.0
+  resolution: "@patternfly/react-log-viewer@npm:6.4.0"
   dependencies:
     "@patternfly/react-core": "npm:^6.0.0"
     "@patternfly/react-icons": "npm:^6.0.0"
@@ -1817,7 +1817,7 @@ __metadata:
   peerDependencies:
     react: ^17 || ^18 || ^19
     react-dom: ^17 || ^18 || ^19
-  checksum: 10/95b24f0073c83191938868922366d58b98ba5b77ade37a1e4c0df6174c4140590b7f06d6fa227f0ebd6b2b200a2873011d6cee2acb27934156015d2c3b51b0c0
+  checksum: 10/7ab4b5095a65bb4bc1cd9e451d0f82300377d0be0ede1e6f401c961dc2d9a2631d5249bcb7c3ef91baa81cc49c953252fe717d5c10fa270f98de06a7d94b7a85
   languageName: node
   linkType: hard
 
