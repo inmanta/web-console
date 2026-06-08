@@ -10,7 +10,7 @@ import {
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { words } from "@/UI";
 import { SearchSelect } from "@/UI/Components";
-import { getThemePreference } from "@/UI/Components/DarkmodeOption";
+import { useTheme } from "@/UI/Components/DarkmodeOption";
 
 interface Props {
   instanceLogs: InstanceLog[];
@@ -45,7 +45,7 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
   const [rightSelectedSet, setRightSelectedSet] = useState<AttributeSets>("candidate_attributes");
   const [availableVersions, setAvailableVersions] = useState<string[]>([]);
 
-  const preferredTheme = getThemePreference() || "light";
+  const { theme: preferredTheme } = useTheme();
 
   useEffect(() => {
     if (instanceLogs && instanceLogs.length) {

@@ -2,13 +2,13 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { instanceData } from "@/Slices/ServiceInstanceDetails/Test/mockData";
 import { defaultServer } from "@/Slices/ServiceInstanceDetails/Test/mockServer";
 import { SetupWrapper } from "@/Slices/ServiceInstanceDetails/Test/mockSetup";
-import { getThemePreference } from "@/UI/Components/DarkmodeOption";
+import { useTheme } from "@/UI/Components/DarkmodeOption";
 import { words } from "@/UI/words";
 import { MarkdownPreviewer } from "./MarkdownPreviewer";
 
-// Mock the getThemePreference function
+// Mock the theme hook
 vi.mock("@/UI/Components/DarkmodeOption", () => ({
-  getThemePreference: vi.fn().mockReturnValue("light"),
+  useTheme: vi.fn(() => ({ isDark: false, theme: "light", setTheme: vi.fn() })),
 }));
 
 // Mock the CodeEditor component to avoid Monaco editor issues
@@ -87,7 +87,7 @@ describe("MarkdownPreviewer", () => {
 
   it("should handle dark theme correctly", async () => {
     // Override the mock to return dark theme
-    (getThemePreference as ReturnType<typeof vi.fn>).mockReturnValue("dark");
+    (useTheme as ReturnType<typeof vi.fn>).mockReturnValue({ isDark: true, theme: "dark", setTheme: vi.fn() });
 
     render(setup());
 
