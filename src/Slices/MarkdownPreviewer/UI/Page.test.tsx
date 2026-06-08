@@ -87,7 +87,11 @@ describe("MarkdownPreviewer", () => {
 
   it("should handle dark theme correctly", async () => {
     // Override the mock to return dark theme
-    (useTheme as ReturnType<typeof vi.fn>).mockReturnValue({ isDark: true, theme: "dark", setTheme: vi.fn() });
+    (useTheme as ReturnType<typeof vi.fn>).mockReturnValue({
+      isDark: true,
+      theme: "dark",
+      setTheme: vi.fn(),
+    });
 
     render(setup());
 
