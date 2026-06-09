@@ -12,6 +12,7 @@ interface Props {
   sort: Sort.Type<SortKey>;
   setSort: (sort: Sort.Type<SortKey>) => void;
 }
+
 export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSort, ...props }) => {
   const onSort: OnSort = (event, index, order) => {
     setSort({
@@ -48,7 +49,11 @@ export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSor
         <Tr>{heads}</Tr>
       </Thead>
       {rows.map((row) => (
-        <FactsRow row={row} key={row.id} />
+        <FactsRow
+          row={row}
+          key={row.id}
+          numberOfColumns={tablePresenter.getNumberOfColumns()}
+        />
       ))}
     </Table>
   );

@@ -185,4 +185,57 @@ describe("FactsPage", () => {
 
     expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(8);
   });
+
+  test("GIVEN Facts page WHEN a row has a JSON value THEN shows 'View Value' button, otherwise shows the raw value", async () => {
+    server.use(
+      http.get("/api/v2/facts", () => {
+        return HttpResponse.json({
+          data: [Mock.jsonFact, Mock.list[0]],
+          metadata: { total: 2, before: 0, after: 0, page_size: 10 },
+          links: { self: "" },
+        });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    // Wait for the JSON row's button to appear — implicitly waits for the correct data to load
+    expect(await screen.findByRole("button", { name: words("facts.value.viewButton") })).toBeVisible();
+
+    // Exactly one "View Value" button — the plain-text row doesn't get one
+    expect(screen.getAllByRole("button", { name: words("facts.value.viewButton") })).toHaveLength(1);
+
+    // The plain-text value is directly visible as a cell, no button wrapping it
+    expect(screen.getByRole("cell", { name: Mock.list[0].value })).toBeVisible();
+  });
+
+  test("GIVEN Facts page WHEN clicking 'View Value' THEN formatted JSON and a copy button are shown", async () => {
+    server.use(
+      http.get("/api/v2/facts", () => {
+        return HttpResponse.json({
+          data: [Mock.jsonFact],
+          metadata: { total: 1, before: 0, after: 0, page_size: 10 },
+          links: { self: "" },
+        });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    const viewValueButton = await screen.findByRole("button", {
+      name: words("facts.value.viewButton"),
+    });
+
+    await userEvent.click(viewValueButton);
+
+    // Formatted JSON content is now visible — check for a distinctive key/value pair
+    expect(
+      await screen.findByText((content) => content.includes('"status": "deployed"'))
+    ).toBeVisible();
+
+    // Copy button rendered by ClipboardCopyButton inside CodeBlockAction
+    expect(screen.getByRole("button", { name: "Copy to clipboard" })).toBeVisible();
+  });
 });

@@ -1,3 +1,13 @@
+export const jsonFact = {
+  id: "b3c4d5e6-f7a8-4b9c-0d1e-2f3a4b5c6d7e",
+  name: "jsonValueFact",
+  value: '{"status":"deployed", "diff":{}, "error":""}',
+  environment: "80a8d40c-0323-4305-822d-d377ada8ce04",
+  resource_id: "aws_dc::HostedConnection[aws,hcid=abcd]",
+  source: "fact",
+  updated: "2021-03-18T17:10:43.896300",
+};
+
 export const list = [
   {
     id: "62d6de91-0b6f-46b9-8355-9e7da56b0029",

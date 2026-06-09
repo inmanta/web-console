@@ -1,0 +1,6 @@
+description: Facts table rows with a JSON value now show a "View Value" button that expands an inline code block with formatted JSON and a copy button.
+issue-nr: 6934
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
