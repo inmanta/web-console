@@ -24,13 +24,13 @@ export interface OptionalToggleGroupProps<T extends string = string> {
  * other option in the group. Selecting the active option deactivates it, leaving no selection.
  * Unrelated values in the selected list are preserved.
  *
- * @returns {React.FC} The OptionalToggleGroup component.
+ * @returns {React.ReactElement} The OptionalToggleGroup component.
  */
 export const OptionalToggleGroup = <T extends string>({
   options,
   selected,
   onChange,
-}: OptionalToggleGroupProps<T>) => {
+}: OptionalToggleGroupProps<T>): React.ReactElement => {
   const optionValues = options.map((option) => option.value);
 
   const handleChange = (value: T) => {
