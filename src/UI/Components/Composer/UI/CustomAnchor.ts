@@ -5,8 +5,9 @@ import { g, dia, anchors } from "@joint/plus";
 export const anchorNamespace = { ...anchors };
 
 /**
- *  creates new custom anchor
- *  https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#anchors.custom
+ * Creates a new custom anchor. Signature: (view, magnet, ref, args) => g.Point
+ * (this implementation only needs the first three arguments).
+ * https://docs.jointjs.com/learn/features/diagram-basics/links/
  */
 const customAnchor = function (
   this: { paper: dia.Paper },

@@ -4,7 +4,7 @@ import { Flex, FlexItem, Hint, HintTitle, HintBody, Button } from "@patternfly/r
 import { CloseIcon } from "@patternfly/react-icons";
 import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
 import { PageContainer } from "@/UI/Components";
-import { getThemePreference } from "@/UI/Components/DarkmodeOption";
+import { useTheme } from "@/UI/Components/DarkmodeOption";
 import { words } from "@/UI/words";
 import { MarkdownCodeEditorControls, useDocumentationContent } from ".";
 
@@ -25,6 +25,7 @@ interface Props {
  */
 export const MarkdownPreviewer: React.FC<Props> = ({ service, instance, instanceId }) => {
   const { code: initialCode, pageTitle } = useDocumentationContent({ service, instanceId });
+  const { isDark } = useTheme();
   const [showHint, setShowHint] = useState(true);
   const [markdownContent, setMarkdownContent] = useState(initialCode);
 
@@ -50,7 +51,7 @@ export const MarkdownPreviewer: React.FC<Props> = ({ service, instance, instance
       <Flex direction={{ default: "column" }}>
         <FlexItem flex={{ default: "flex_1" }}>
           <CodeEditor
-            isDarkTheme={getThemePreference() === "dark"}
+            isDarkTheme={isDark}
             isLineNumbersVisible
             isMinimapVisible
             isLanguageLabelVisible
