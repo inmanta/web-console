@@ -1,7 +1,7 @@
-import React from "react";
 import { FormGroup, Stack, StackItem, Switch } from "@patternfly/react-core";
 import { Resource, toggleValueInList } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
+import { OptionalToggleGroup } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { IncludeExcludeSelect } from "./IncludeExcludeSelect";
 import { removeInvertedSelection } from "./utils";
@@ -74,13 +74,31 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
         </FormGroup>
       </StackItem>
       <StackItem>
+        <FormGroup label={words("resources.filters.status.orphaned.label")}>
+          <OptionalToggleGroup
+            selected={selectedStatuses ?? []}
+            onChange={onChange}
+            options={[
+              {
+                label: words("resources.filters.status.orphaned.include"),
+                value: "orphaned",
+                buttonId: "orphaned-include",
+              },
+              {
+                label: words("resources.filters.status.orphaned.exclude"),
+                value: "!orphaned",
+                buttonId: "orphaned-exclude",
+              },
+            ]}
+          />
+        </FormGroup>
+      </StackItem>
+      <StackItem>
         <Switch
-          id={words("resources.filters.status.isDeploying")}
-          aria-label={words("resources.filters.status.isDeploying")}
+          id="is-deploying"
           label={words("resources.filters.status.isDeploying")}
           isChecked={selectedStatuses?.includes("isDeploying") ?? false}
           onChange={(_event, hasChanged) => handleIsDeploying(hasChanged)}
-          isReversed
         />
       </StackItem>
     </Stack>
