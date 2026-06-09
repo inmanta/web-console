@@ -3,6 +3,7 @@ import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import { FormGroup, FormHelperText, HelperText, HelperTextItem } from "@patternfly/react-core";
 import { DictField } from "@/Core";
 import { words } from "@/UI";
+import { useTheme } from "@/UI/Components/DarkmodeOption";
 import { DictValue, toDict, toText } from "./helpers";
 
 interface Props {
@@ -31,6 +32,7 @@ export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOn
   const [text, setText] = useState<string>(() => toText(value));
   const [isInvalid, setIsInvalid] = useState(false);
   const [height, setHeight] = useState(100);
+  const { isDark } = useTheme();
 
   // Tracks the serialized form of the last value we emitted via onChange so we
   // can distinguish a parent re-render carrying our own round-tripped value from
@@ -77,6 +79,7 @@ export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOn
         isReadOnly={readOnly}
         isLineNumbersVisible={false}
         isHeaderPlain
+        isDarkTheme={isDark}
         options={{ scrollBeyondLastLine: false, folding: false }}
         onEditorDidMount={handleEditorDidMount}
         onChange={readOnly ? undefined : handleChange}
