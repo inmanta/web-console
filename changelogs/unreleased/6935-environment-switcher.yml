@@ -1,4 +1,8 @@
-description: Replaced the environment overview Home page with a smart default redirect. Dashboard is now the default landing page. When no environment is selected the app auto-selects the first available environment; when no environments exist it redirects to Create Environment. The environment dropdown gains a search field, per-environment icons, and a "Create new environment" link.
+description: |
+  The Environment overview page has been removed, and the Environment Dashboard will now be the default when loading the application. 
+  The last selected environment is stored in local storage so the application will by default load that environmnent when the id is not provided in the URL. 
+  When no environment is available to load, the user will be redirected to the create environment page.
+  The main menu in the application header now also contains a search box to quickly find and switch to an environment.
 issue-nr: 6935
 change-type: minor
 destination-branches: [master]
