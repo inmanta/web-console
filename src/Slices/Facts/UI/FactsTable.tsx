@@ -49,11 +49,7 @@ export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSor
         <Tr>{heads}</Tr>
       </Thead>
       {rows.map((row) => (
-        <FactsRow
-          row={row}
-          key={row.id}
-          numberOfColumns={tablePresenter.getNumberOfColumns()}
-        />
+        <FactsRow row={row} key={row.id} numberOfColumns={tablePresenter.getNumberOfColumns()} />
       ))}
     </Table>
   );

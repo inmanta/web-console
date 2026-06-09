@@ -201,10 +201,14 @@ describe("FactsPage", () => {
     render(component);
 
     // Wait for the JSON row's button to appear — implicitly waits for the correct data to load
-    expect(await screen.findByRole("button", { name: words("facts.value.viewButton") })).toBeVisible();
+    expect(
+      await screen.findByRole("button", { name: words("facts.value.viewButton") })
+    ).toBeVisible();
 
     // Exactly one "View Value" button — the plain-text row doesn't get one
-    expect(screen.getAllByRole("button", { name: words("facts.value.viewButton") })).toHaveLength(1);
+    expect(screen.getAllByRole("button", { name: words("facts.value.viewButton") })).toHaveLength(
+      1
+    );
 
     // The plain-text value is directly visible as a cell, no button wrapping it
     expect(screen.getByRole("cell", { name: Mock.list[0].value })).toBeVisible();
