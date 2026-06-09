@@ -3,7 +3,7 @@ import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-ta
 import { Sort } from "@/Core";
 import { SortKey } from "@/Slices/Facts/Core/Types";
 import { Fact } from "@S/Facts/Core/Domain";
-import { FactsRow } from "./FactsRow";
+import { FactsRow, isJsonObject } from "./FactsRow";
 import { FactsTablePresenter } from "./FactsTablePresenter";
 
 interface Props {
@@ -14,13 +14,16 @@ interface Props {
 }
 
 export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSort, ...props }) => {
-  const onSort: OnSort = (event, index, order) => {
+  const onSort: OnSort = (_event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as SortKey,
       order,
     });
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
+  const hasExpandableRows = rows.some((row) => isJsonObject(row.value));
+  const numberOfColumns =
+    tablePresenter.getNumberOfColumns() + (hasExpandableRows ? 1 : 0);
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
     const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
     const sortParams = hasSort
@@ -46,10 +49,19 @@ export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSor
   return (
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
-        <Tr>{heads}</Tr>
+        <Tr>
+          {hasExpandableRows && <Th screenReaderText="Row expansion" />}
+          {heads}
+        </Tr>
       </Thead>
-      {rows.map((row) => (
-        <FactsRow row={row} key={row.id} numberOfColumns={tablePresenter.getNumberOfColumns()} />
+      {rows.map((row, rowIndex) => (
+        <FactsRow
+          row={row}
+          key={row.id}
+          rowIndex={rowIndex}
+          numberOfColumns={numberOfColumns}
+          showExpandColumn={hasExpandableRows}
+        />
       ))}
     </Table>
   );

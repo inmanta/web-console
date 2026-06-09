@@ -6,7 +6,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";
 
-function isJsonObject(value: string): boolean {
+export function isJsonObject(value: string): boolean {
   try {
     const parsed = JSON.parse(value);
 
@@ -18,10 +18,12 @@ function isJsonObject(value: string): boolean {
 
 interface Props {
   row: Pick<Fact, "name" | "updated" | "value" | "resource_id">;
+  rowIndex: number;
   numberOfColumns: number;
+  showExpandColumn: boolean;
 }
 
-export const FactsRow: React.FC<Props> = ({ row, numberOfColumns }) => {
+export const FactsRow: React.FC<Props> = ({ row, rowIndex, numberOfColumns, showExpandColumn }) => {
   const { routeManager } = useContext(DependencyContext);
   const [isExpanded, setIsExpanded] = useState(false);
   const valueIsJson = isJsonObject(row.value);
@@ -30,6 +32,19 @@ export const FactsRow: React.FC<Props> = ({ row, numberOfColumns }) => {
   return (
     <Tbody isExpanded={valueIsJson ? isExpanded : undefined}>
       <Tr aria-label="FactsRow">
+        {showExpandColumn && (
+          <Td
+            expand={
+              valueIsJson
+                ? {
+                    rowIndex,
+                    isExpanded,
+                    onToggle: () => setIsExpanded((prev) => !prev),
+                  }
+                : undefined
+            }
+          />
+        )}
         <Td dataLabel={words("facts.column.name")}>{row.name}</Td>
         <Td dataLabel={words("facts.column.updated")}>
           {row.updated && <DateWithTooltip timestamp={row.updated} />}
