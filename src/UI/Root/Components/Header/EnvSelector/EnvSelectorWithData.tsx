@@ -113,7 +113,6 @@ const environmentToSelector = ({
   projectId,
   environmentId: id,
   // The API returns the icon as a bare data URI body (e.g. "image/svg+xml;base64,...").
-  // Prepend the scheme so it is a valid src value.
   icon: icon ? `data:${icon}` : undefined,
 });
 

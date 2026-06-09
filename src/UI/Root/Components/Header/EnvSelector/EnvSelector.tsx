@@ -103,6 +103,7 @@ export const EnvSelector: React.FC<Props> = ({
       style={{
         paddingBlockEnd: 0,
       }}
+      onSelect={() => setIsOpen(false)}
     >
       <MenuContent>
         <MenuGroup label={words("home.environment.selector")} key="envs-group">
