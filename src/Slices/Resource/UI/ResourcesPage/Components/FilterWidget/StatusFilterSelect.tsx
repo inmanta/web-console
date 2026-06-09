@@ -1,4 +1,4 @@
-import { FormGroup, Stack, StackItem, Switch } from "@patternfly/react-core";
+import { FormGroup, Stack, StackItem } from "@patternfly/react-core";
 import { Resource, toggleValueInList } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
 import { OptionalToggleGroup } from "@/UI/Components";
@@ -27,14 +27,6 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
     const currentStatuses = selectedStatuses ?? [];
     const safeSelectedStates = removeInvertedSelection(selection, currentStatuses);
     const updatedSelection = uniq(toggleValueInList(selection, safeSelectedStates));
-    onChange(updatedSelection);
-  };
-
-  const handleIsDeploying = (hasChanged: boolean) => {
-    const currentStatuses = selectedStatuses ?? [];
-    const updatedSelection = hasChanged
-      ? [...currentStatuses, "isDeploying"]
-      : currentStatuses.filter((s) => s !== "isDeploying");
     onChange(updatedSelection);
   };
 
@@ -80,12 +72,12 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
             onChange={onChange}
             options={[
               {
-                label: words("resources.filters.status.orphaned.include"),
+                label: words("include"),
                 value: "orphaned",
                 buttonId: "orphaned-include",
               },
               {
-                label: words("resources.filters.status.orphaned.exclude"),
+                label: words("exclude"),
                 value: "!orphaned",
                 buttonId: "orphaned-exclude",
               },
@@ -94,12 +86,24 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
         </FormGroup>
       </StackItem>
       <StackItem>
-        <Switch
-          id="is-deploying"
-          label={words("resources.filters.status.isDeploying")}
-          isChecked={selectedStatuses?.includes("isDeploying") ?? false}
-          onChange={(_event, hasChanged) => handleIsDeploying(hasChanged)}
-        />
+        <FormGroup label={words("resources.filters.status.isDeploying")}>
+          <OptionalToggleGroup
+            selected={selectedStatuses ?? []}
+            onChange={onChange}
+            options={[
+              {
+                label: words("include"),
+                value: "isDeploying",
+                buttonId: "isDeploying-include",
+              },
+              {
+                label: words("exclude"),
+                value: "!isDeploying",
+                buttonId: "isDeploying-exclude",
+              },
+            ]}
+          />
+        </FormGroup>
       </StackItem>
     </Stack>
   );
