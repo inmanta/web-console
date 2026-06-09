@@ -23,12 +23,12 @@ const { Dashboard, Catalog, Inventory, CreateInstance, Events, Diagnose } =
   routeManager.getRouteDictionary();
 
 it.each`
-  route             | routeTxt            | length | result                                              | resultTxt
-  ${Catalog}        | ${"Catalog"}        | ${2}   | ${[Dashboard, Catalog]}                             | ${"[Dashboard, Catalog]"}
-  ${Inventory}      | ${"Inventory"}      | ${3}   | ${[Dashboard, Catalog, Inventory]}                  | ${"[Dashboard, Catalog, Inventory]"}
-  ${CreateInstance} | ${"CreateInstance"} | ${4}   | ${[Dashboard, Catalog, Inventory, CreateInstance]}  | ${"[Dashboard, Catalog, Inventory, CreateInstance]"}
-  ${Events}         | ${"Events"}         | ${4}   | ${[Dashboard, Catalog, Inventory, Events]}          | ${"[Dashboard, Catalog, Inventory, Events]"}
-  ${Diagnose}       | ${"Diagnose"}       | ${4}   | ${[Dashboard, Catalog, Inventory, Diagnose]}        | ${"[Dashboard, Catalog, Inventory, Diagnose]"}
+  route             | routeTxt            | length | result                                             | resultTxt
+  ${Catalog}        | ${"Catalog"}        | ${2}   | ${[Dashboard, Catalog]}                            | ${"[Dashboard, Catalog]"}
+  ${Inventory}      | ${"Inventory"}      | ${3}   | ${[Dashboard, Catalog, Inventory]}                 | ${"[Dashboard, Catalog, Inventory]"}
+  ${CreateInstance} | ${"CreateInstance"} | ${4}   | ${[Dashboard, Catalog, Inventory, CreateInstance]} | ${"[Dashboard, Catalog, Inventory, CreateInstance]"}
+  ${Events}         | ${"Events"}         | ${4}   | ${[Dashboard, Catalog, Inventory, Events]}         | ${"[Dashboard, Catalog, Inventory, Events]"}
+  ${Diagnose}       | ${"Diagnose"}       | ${4}   | ${[Dashboard, Catalog, Inventory, Diagnose]}       | ${"[Dashboard, Catalog, Inventory, Diagnose]"}
 `(
   "GIVEN getLineageFromRoute WHEN passed $routeTxt THEN returns routes #$length $resultTxt",
   ({ route, length, result }) => {

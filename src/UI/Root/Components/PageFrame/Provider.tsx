@@ -18,7 +18,7 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
   const { environmentHandler, routeManager } = useContext(DependencyContext);
   const environment = environmentHandler.useSelected();
   const allEnvironments = environmentHandler.useAll();
-const { notifyInfo } = useAppAlert();
+  const { notifyInfo } = useAppAlert();
   const environmentId = getEnvironmentId(environmentRole, environment);
 
   const redirectingToCreateEnv =
@@ -38,7 +38,12 @@ const { notifyInfo } = useAppAlert();
 
   if (environmentId === words("error.environment.missing")) {
     if (allEnvironments.length > 0) {
-      return <Navigate to={`${routeManager.getUrl("Dashboard", undefined)}?env=${allEnvironments[0].id}`} replace />;
+      return (
+        <Navigate
+          to={`${routeManager.getUrl("Dashboard", undefined)}?env=${allEnvironments[0].id}`}
+          replace
+        />
+      );
     }
 
     return <Navigate to={routeManager.getUrl("CreateEnvironment", undefined)} replace />;

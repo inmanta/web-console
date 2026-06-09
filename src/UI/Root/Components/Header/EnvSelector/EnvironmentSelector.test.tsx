@@ -292,9 +292,7 @@ describe("EnvironmentSelector", () => {
 
     await userEvent.click(toggle);
 
-    expect(
-      screen.getByPlaceholderText("Search by name or project")
-    ).toBeVisible();
+    expect(screen.getByPlaceholderText("Search by name or project")).toBeVisible();
   });
 
   test("GIVEN EnvironmentSelector WHEN user types in search THEN only matching environments are shown", async () => {
@@ -344,9 +342,7 @@ describe("EnvironmentSelector", () => {
 
     const allMenuItems = screen.queryAllByRole("menuitem");
     const itemsWithProd = allMenuItems.filter((item) => item.textContent?.includes("(prod)"));
-    const itemsWithDefault = allMenuItems.filter((item) =>
-      item.textContent?.includes("(default)")
-    );
+    const itemsWithDefault = allMenuItems.filter((item) => item.textContent?.includes("(default)"));
 
     expect(itemsWithProd).toHaveLength(2);
     expect(itemsWithDefault).toHaveLength(0);

@@ -42,8 +42,8 @@ describe("Scenario 6 : Resources", () => {
     it("6.2 Add instance on the resource-states service", () => {
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
-  
+      selectEnvironment();
+
       // Store initial resource count
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get("body").then(($body) => {
@@ -118,8 +118,8 @@ describe("Scenario 6 : Resources", () => {
     it("6.3 Log message filtering", () => {
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
-  
+      selectEnvironment();
+
       // Navigate to the target resource logs
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.contains('[aria-label="Resource Table Row"]', "test-compliant-successful-not-blocked-0")
@@ -148,8 +148,8 @@ describe("Scenario 6 : Resources", () => {
     it("6.4 Resources with multiple dependencies", () => {
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
-        cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      selectEnvironment();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
       const resourceName = "test-has-update-failed-blocked-0";
       const requireA =
@@ -205,8 +205,8 @@ describe("Scenario 6 : Resources", () => {
     it("6.5 Pagination", () => {
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
-  
+      selectEnvironment();
+
       // Add a resource-states instance with scale=2 to get enough resources for pagination
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#resource-states").contains("Show inventory").click();
@@ -278,8 +278,8 @@ describe("Scenario 6 : Resources", () => {
     it("6.6 Compound resource status legend", () => {
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
-        cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      selectEnvironment();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
       // Verify legend bar renders with items that have numeric values
@@ -318,8 +318,8 @@ describe("Scenario 6 : Resources", () => {
     it("6.7 Resource filters", () => {
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
-        cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      selectEnvironment();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
       // Store initial row count
@@ -416,8 +416,8 @@ describe("Scenario 6 : Resources", () => {
     it("6.8 Resource sorting", () => {
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
-        cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      selectEnvironment();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
       // --- Regular column sorting ---
@@ -558,8 +558,8 @@ describe("Scenario 6 : Resources", () => {
     it("6.2 Resources for OSS", () => {
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
-        cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      selectEnvironment();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
       // Expect exactly 5 resources, all of type frontend_model::TestResource
       cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should("have.length", 5);
@@ -622,8 +622,8 @@ describe("Scenario 6 : Resources", () => {
     it("6.3 OSS basic status sort menu", () => {
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
-        cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      selectEnvironment();
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
       // Badge starts at 0

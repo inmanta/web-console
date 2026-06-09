@@ -700,6 +700,7 @@ const dict = {
   "home.environmentSwitcher.search.placeholder": "Search by name or project",
   "home.environmentSwitcher.create.button": "Create new environment",
   "home.environmentSwitcher.noEnvironments": "No environments available",
+  "home.environmentSwitcher.signedInAs": "Signed in as: ",
   "home.noEnvironments.toast.title": "No environments available",
   "home.noEnvironments.toast.message": "You were redirected to create an environment.",
   "home.empty.message": "No environments found",

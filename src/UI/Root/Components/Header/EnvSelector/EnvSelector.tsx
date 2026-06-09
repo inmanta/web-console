@@ -10,13 +10,21 @@ import {
   DropdownList,
   Flex,
   FlexItem,
+  MenuSearch,
+  MenuSearchInput,
   MenuToggle,
   MenuToggleElement,
   SearchInput,
   Split,
   SplitItem,
 } from "@patternfly/react-core";
-import { CheckIcon, PlusCircleIcon, SignOutAltIcon, UserCircleIcon, UsersIcon } from "@patternfly/react-icons";
+import {
+  CheckIcon,
+  PlusCircleIcon,
+  SignOutAltIcon,
+  UserCircleIcon,
+  UsersIcon,
+} from "@patternfly/react-icons";
 import fallBackImage from "@images/inmanta-wings.svg";
 import { DarkmodeOption } from "@/UI/Components/DarkmodeOption";
 import { DependencyContext } from "@/UI/Dependency";
@@ -96,18 +104,20 @@ export const EnvSelector: React.FC<Props> = ({
     >
       <DropdownList style={{ minWidth: "300px" }}>
         <DropdownGroup label={words("home.environment.selector")} key="envs-group">
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{ padding: "var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md)" }}
-          >
-            <SearchInput
-              aria-label={words("home.environmentSwitcher.search.placeholder")}
-              placeholder={words("home.environmentSwitcher.search.placeholder")}
-              value={searchText}
-              onChange={(_event, value) => setSearchText(value)}
-              onClear={() => setSearchText("")}
-            />
-          </div>
+          <MenuSearch>
+            <MenuSearchInput>
+              <SearchInput
+                aria-label={words("home.environmentSwitcher.search.placeholder")}
+                placeholder={words("home.environmentSwitcher.search.placeholder")}
+                value={searchText}
+                onChange={(_event, value) => setSearchText(value)}
+                onClear={() => setSearchText("")}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  event.stopPropagation();
+                }}
+              />
+            </MenuSearchInput>
+          </MenuSearch>
           {items.length === 0 ? (
             <DropdownItem isDisabled key="no-env">
               {words("home.environmentSwitcher.noEnvironments")}
@@ -166,16 +176,19 @@ export const EnvSelector: React.FC<Props> = ({
               alignItems={{ default: "alignItemsCenter" }}
               spaceItems={{ default: "spaceItemsSm" }}
               style={{
-                padding: "var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md)",
+                padding: "var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--lg)",
                 color: "var(--pf-t--global--text--color--subtle)",
-                backgroundColor: "var(--pf-t--global--background--color--secondary--default)"
+                backgroundColor: "var(--pf-t--global--background--color--secondary--default)",
               }}
             >
               <FlexItem>
                 <UserCircleIcon />
               </FlexItem>
               <FlexItem>
-                <span>Signed in as: <strong>{authHelper.getUser()}</strong></span>
+                <span>
+                  {words("home.environmentSwitcher.signedInAs")}
+                  <strong>{authHelper.getUser()}</strong>
+                </span>
               </FlexItem>
             </Flex>
           </>
@@ -192,6 +205,8 @@ const EnvironmentIcon: React.FC<{ icon?: string }> = ({ icon }) => (
     style={{
       width: "20px",
       height: "20px",
+      display: "block",
+      margin: "0 auto",
       ...(icon
         ? { borderRadius: "50%", objectFit: "cover" as const }
         : { objectFit: "contain" as const }),

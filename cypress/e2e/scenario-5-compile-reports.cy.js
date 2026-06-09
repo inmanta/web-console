@@ -16,7 +16,6 @@ describe("5 Compile reports", () => {
     cy.visit("/console/");
     selectEnvironment();
 
-
     // go to compile reports page
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
@@ -110,10 +109,10 @@ describe("5 Compile reports", () => {
       // go to home page
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
+      selectEnvironment();
 
       // click on test environment card
-  
+
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
@@ -196,10 +195,10 @@ describe("5 Compile reports", () => {
       // go to home page
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
+      selectEnvironment();
 
       // click on test environment card
-  
+
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
       // wait for the table to load and store initial row count
@@ -277,10 +276,10 @@ describe("5 Compile reports", () => {
       // go to home page
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
+      selectEnvironment();
 
       // click on test environment card
-  
+
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
       // wait for the table to load and store initial row count
@@ -343,10 +342,10 @@ describe("5 Compile reports", () => {
       // go to home page
       cy.visit("/console/");
       selectEnvironment();
-    selectEnvironment();
+      selectEnvironment();
 
       // click on test environment card
-  
+
       // Go to the compile report page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 

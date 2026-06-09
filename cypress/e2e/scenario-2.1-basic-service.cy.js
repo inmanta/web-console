@@ -471,7 +471,6 @@ if (isIso) {
         "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
       ).as("GetServiceInventory");
 
-
       // START WORKAROUND
 
       // TODO: Remove workaround for race condition.
