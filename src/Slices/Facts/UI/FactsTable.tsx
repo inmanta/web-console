@@ -22,8 +22,7 @@ export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSor
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
   const hasExpandableRows = rows.some((row) => isJsonObject(row.value));
-  const numberOfColumns =
-    tablePresenter.getNumberOfColumns() + (hasExpandableRows ? 1 : 0);
+  const numberOfColumns = tablePresenter.getNumberOfColumns() + (hasExpandableRows ? 1 : 0);
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
     const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
     const sortParams = hasSort
