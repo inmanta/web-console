@@ -1,0 +1,5 @@
+description: Add an orphaned filter to the Resources page status filter.
+change-type: minor
+destination-branches: [iso9]
+sections:
+  feature: "{{description}}"

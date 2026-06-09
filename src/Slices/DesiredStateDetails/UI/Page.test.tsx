@@ -38,6 +38,7 @@ describe("DesiredStateDetails", () => {
   });
   afterEach(() => {
     server.resetHandlers();
+    testClient.clear();
   });
   afterAll(() => {
     server.close();
