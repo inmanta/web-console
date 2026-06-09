@@ -208,7 +208,7 @@ describe("StatusPage", () => {
     expect(within(errorContainer).getByText("error")).toBeVisible();
 
     await act(async () => {
-      const results = await axe(document.body, {});
+      const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
