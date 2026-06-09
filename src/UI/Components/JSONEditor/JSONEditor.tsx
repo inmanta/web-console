@@ -4,7 +4,7 @@ import { Spinner } from "@patternfly/react-core";
 
 import { useGetJSONSchema } from "@/Data/Queries";
 import { words } from "@/UI";
-import { getThemePreference } from "../DarkmodeOption";
+import { useTheme } from "../DarkmodeOption";
 import { ErrorMessageContainer } from "../ErrorMessageContainer";
 
 interface Props {
@@ -35,7 +35,7 @@ export const JSONEditor: React.FC<Props> = ({
   onChange,
   readOnly = false,
 }) => {
-  const preferedTheme = getThemePreference() || "light";
+  const { theme: preferedTheme } = useTheme();
 
   const [isLoading, setIsLoading] = useState(true);
   const [editorState, setEditorState] = useState<string>(data);

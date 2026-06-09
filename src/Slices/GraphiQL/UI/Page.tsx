@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 import { Fetcher } from "@graphiql/toolkit";
 import { useQueryClient } from "@tanstack/react-query";
@@ -7,7 +7,7 @@ import graphiqlCSS from "graphiql/style.css?inline";
 import styled, { createGlobalStyle } from "styled-components";
 import { useGetGraphQLSchema, usePostGraphQL, graphQLSchemaKey } from "@/Data/Queries";
 import { PageContainer } from "@/UI/Components";
-import { getThemePreference } from "@/UI/Components/DarkmodeOption";
+import { useTheme } from "@/UI/Components/DarkmodeOption";
 import { words } from "@/UI/words";
 
 // ?inline tells Vite to give us the CSS as a plain string instead of injecting
@@ -34,7 +34,7 @@ const DEFAULT_QUERY = `{
  * is ready and shows "error fetching schema".
  *
  * Theme is kept in sync with the app's dark/light mode by observing class
- * changes on <html> (set by setThemePreference) and forwarding the value to
+ * changes on <html> (tracked by useTheme) and forwarding the value to
  * GraphiQL's forcedTheme prop.
  *
  * The sidebar's "Re-fetch schema" button is intercepted via event delegation
@@ -51,11 +51,7 @@ export const Page: React.FC = () => {
     return envParam ?? undefined;
   }, [search]);
 
-  // Mirror the app-wide theme so GraphiQL matches the current dark/light mode.
-  // MutationObserver watches for class changes on <html> made by setThemePreference.
-  const [theme, setTheme] = useState<"dark" | "light">(
-    () => (getThemePreference() ?? "light") as "dark" | "light"
-  );
+  const { theme } = useTheme();
 
   // Inject graphiql's CSS (including its bundled Monaco copy) inside a
   // @layer so it has lower cascade priority than the app's own Monaco styles.
@@ -67,19 +63,6 @@ export const Page: React.FC = () => {
     document.head.appendChild(style);
 
     return () => style.remove();
-  }, []);
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setTheme((getThemePreference() ?? "light") as "dark" | "light");
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => observer.disconnect();
   }, []);
 
   const queryClient = useQueryClient();
