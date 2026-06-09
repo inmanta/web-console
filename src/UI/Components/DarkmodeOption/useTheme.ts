@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
+/** Application theme variant. */
+type Theme = "dark" | "light";
+
+/** localStorage key for the persisted theme preference. */
 const STORAGE_KEY = "theme-preference";
 
 /**
@@ -18,9 +22,9 @@ const PF_LIGHT_CLASS = "pf-v6-theme-light";
 
 /**
  * Retrieves the user's theme preference from localStorage or the system's color scheme.
- * @returns {"dark" | "light"} The resolved theme preference.
+ * @returns {Theme} The resolved theme preference.
  */
-export const getThemePreference = (): "dark" | "light" => {
+export const getThemePreference = (): Theme => {
   const stored = localStorage.getItem(STORAGE_KEY);
 
   if (stored === "dark" || stored === "light") {
@@ -30,7 +34,7 @@ export const getThemePreference = (): "dark" | "light" => {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 };
 
-const loadHighlightTheme = (theme: "dark" | "light"): void => {
+const loadHighlightTheme = (theme: Theme): void => {
   // Dynamically import the appropriate highlight.js theme.
   // We intentionally don't await these imports: they load CSS side effects.
   if (theme === "dark") {
@@ -47,9 +51,9 @@ const loadHighlightTheme = (theme: "dark" | "light"): void => {
  *
  * To upgrade PatternFly: update PF_DARK_CLASS / PF_LIGHT_CLASS above — nothing else changes.
  *
- * @param {"dark" | "light"} theme - The theme to apply.
+ * @param {Theme} theme - The theme to apply.
  */
-export const setThemePreference = (theme: "dark" | "light"): void => {
+export const setThemePreference = (theme: Theme): void => {
   localStorage.setItem(STORAGE_KEY, theme);
   // Stable, framework-agnostic signal — observed by useTheme's MutationObserver.
   document.documentElement.setAttribute(THEME_ATTR, theme);
@@ -67,12 +71,12 @@ export const setThemePreference = (theme: "dark" | "light"): void => {
  * required. Watching data-theme (not the PF class) keeps the hook decoupled from
  * PatternFly version-specific class names.
  *
- * @returns {{ isDark: boolean, theme: "dark" | "light", setTheme: (theme: "dark" | "light") => void }}
+ * @returns {{ isDark: boolean, theme: Theme, setTheme: (theme: Theme) => void }}
  */
 export const useTheme = (): {
   isDark: boolean;
-  theme: "dark" | "light";
-  setTheme: (theme: "dark" | "light") => void;
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
 } => {
   const [isDark, setIsDark] = useState(() => getThemePreference() === "dark");
 
@@ -89,7 +93,7 @@ export const useTheme = (): {
     return () => observer.disconnect();
   }, []);
 
-  const setTheme = useCallback((theme: "dark" | "light"): void => {
+  const setTheme = useCallback((theme: Theme): void => {
     setThemePreference(theme);
     // The MutationObserver above picks up the data-theme change and updates
     // isDark automatically — no manual setState needed here.
