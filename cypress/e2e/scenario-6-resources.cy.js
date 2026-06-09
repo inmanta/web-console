@@ -440,15 +440,25 @@ describe("Scenario 6 : Resources", () => {
       cy.get("button").contains("Yes").click();
       cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);
 
-      // Navigate to Resources, then wait for the recompile to start and finish
+      // Wait for two env-preview polls (≈10 s) before asserting — the compile can start
+      // and finish within one 5 s cycle, making a should("exist") check unreliable on CI.
+      cy.intercept("POST", "/api/v2/graphql", (req) => {
+        if (req.body?.query?.includes("isCompiling")) {
+          req.alias = "envPreviewPoll";
+        }
+      });
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
-      cy.get('[aria-label="CompileReportsIndication"]', { timeout: 30000 }).should("exist");
+      cy.wait("@envPreviewPoll");
+      cy.wait("@envPreviewPoll");
       cy.get('[aria-label="CompileReportsIndication"]', { timeout: 90000 }).should("not.exist");
 
-      // Intercept the GraphQL resource query — needed because keepPreviousData keeps
-      // stale rows visible while the new request is in flight, so we must wait for
-      // each response before asserting row counts.
-      cy.intercept("POST", "/api/v2/graphql").as("resourcesQuery");
+      // Target GetResources queries only — a generic graphql intercept is consumed by
+      // background env-preview polls, causing cy.wait to resolve against stale data.
+      cy.intercept("POST", "/api/v2/graphql", (req) => {
+        if (req.body?.query?.includes("GetResources")) {
+          req.alias = "resourcesQuery";
+        }
+      });
 
       // Restore page size to 250 so all resources are visible for accurate counting
       cy.get("#PaginationWidget-top-top-toggle").click();
@@ -516,8 +526,15 @@ describe("Scenario 6 : Resources", () => {
         timeout: 20000,
       }).should("not.have.text", "1 - 20");
 
+      // Wait for the sort-triggered request before asserting — keepPreviousData keeps
+      // stale page-2 data visible while the new request is in-flight.
+      cy.intercept("POST", "/api/v2/graphql", (req) => {
+        if (req.body?.query?.includes("GetResources")) {
+          req.alias = "sortResetQuery";
+        }
+      });
       cy.get("button").contains("Type").click();
-      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      cy.wait("@sortResetQuery");
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
       }).should("have.text", "1 - 20");
