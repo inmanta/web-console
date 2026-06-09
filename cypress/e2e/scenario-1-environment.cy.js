@@ -219,7 +219,7 @@ describe("Environment", () => {
       cy.get("button").contains("Clear environment").click();
       cy.get("button").contains("Cancel").click();
       cy.visit("/console/");
-      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       cy.get('[aria-label="ServiceCatalog-Empty"]', {
@@ -234,7 +234,7 @@ describe("Environment", () => {
       cy.get('[aria-label="clear environment check"]').type("test");
       cy.get("button").contains("I understand the consequences, clear this environment").click();
       cy.visit("/console/");
-      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
 

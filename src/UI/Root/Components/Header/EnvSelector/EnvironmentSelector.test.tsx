@@ -68,6 +68,10 @@ describe("EnvironmentSelector", () => {
     server.resetHandlers();
   });
 
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   afterAll(() => {
     server.close();
   });
@@ -365,6 +369,36 @@ describe("EnvironmentSelector", () => {
     await userEvent.click(toggle);
 
     expect(screen.getByText("Create new environment")).toBeVisible();
+  });
+
+  test("GIVEN EnvironmentSelector WHEN user selects a different environment THEN localStorage is updated with the new environment id", async () => {
+    server.use(
+      http.get("/api/v2/environment", async () => {
+        return HttpResponse.json({ data: Environment.filterable });
+      }),
+      http.get("/api/v2/project", async () => {
+        return HttpResponse.json({ data: Project.filterable });
+      })
+    );
+
+    const onSelectEnv = (item: EnvironmentSelectorItem) => {
+      localStorage.setItem("lastSelectedEnvironment", item.environmentId);
+    };
+
+    const envA = Environment.filterable[0];
+    const envB = Environment.filterable[2];
+
+    render(setup(onSelectEnv));
+
+    const toggle = await screen.findByText(`${envA.name} (${envA.projectName})`);
+
+    await userEvent.click(toggle);
+
+    const listItem = screen.getAllByText(`${envB.name} (${envB.projectName})`)[0];
+
+    await userEvent.click(listItem);
+
+    expect(localStorage.getItem("lastSelectedEnvironment")).toBe(envB.id);
   });
 
   test("GIVEN EnvironmentSelector WHEN environment has an icon THEN an img element is rendered for that item", async () => {

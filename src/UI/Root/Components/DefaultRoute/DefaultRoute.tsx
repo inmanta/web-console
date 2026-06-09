@@ -7,6 +7,8 @@ import { DependencyContext } from "@/UI/Dependency";
  * - If an environment is already selected → go to Dashboard (keeps the ?env= param)
  * - If environments exist but none is selected → auto-select the first one and go to Dashboard
  * - If no environments exist at all → go to Create Environment
+ * - If a last selected environment exists in localStorage → auto-select it and go to Dashboard
+ * - If a last selected environment exists in localStorage but is not found in the list of environments → auto-select the first one and go to Dashboard
  *
  * This component is rendered inside RouteOutlet which wraps the Initializer, so
  * environmentHandler.useAll() is guaranteed to be populated before this renders.

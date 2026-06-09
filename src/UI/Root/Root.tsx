@@ -6,8 +6,8 @@ import { RouteOutlet, SearchSanitizer, PrimaryBaseUrlManager } from "@/UI/Routin
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
 import { getThemePreference, setThemePreference } from "../Components/DarkmodeOption";
-import { DefaultRoute } from "./Components/DefaultRoute";
 import { PageFrame } from "./Components";
+import { DefaultRoute } from "./Components/DefaultRoute";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 const ReactQueryDevtools = lazy(() =>

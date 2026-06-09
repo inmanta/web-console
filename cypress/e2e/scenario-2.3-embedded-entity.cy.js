@@ -55,7 +55,6 @@ if (isIso) {
     it("2.3.2 - show diagonse view", () => {
       // Go from Home page to Service Inventory of Embedded-service
       cy.visit("/console/");
-      selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       // Expect to find one badge on the embedded-service row.
       cy.get("#embedded-entity-service")
@@ -89,12 +88,10 @@ if (isIso) {
       cy.get("h1").contains("Diagnose Service Instance").should("be.visible");
       cy.get('[aria-label="Diagnostics-Empty"]').should("be.visible");
       cy.visit("/console/");
-      selectEnvironment();
     });
 
     it("2.3.3 - Deploy progress bar should navigate to Resources of instance details", () => {
       cy.visit("/console/");
-      selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       // Expect to find one badge on the embedded-service row.
       cy.get("#embedded-entity-service")
@@ -108,12 +105,10 @@ if (isIso) {
       cy.get('[aria-label="resources-content"]').should("have.attr", "aria-selected", "true");
 
       cy.visit("/console/");
-      selectEnvironment();
     });
 
     it("2.3.4 Delete previously created instance", () => {
       cy.visit("/console/");
-      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#embedded-entity-service").contains("Show inventory").click();

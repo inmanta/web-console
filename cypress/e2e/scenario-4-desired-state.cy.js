@@ -401,6 +401,5 @@ describe("Scenario 4 Desired State", () => {
 
     // go back to Home.
     cy.visit("/console/");
-    selectEnvironment();
   });
 });

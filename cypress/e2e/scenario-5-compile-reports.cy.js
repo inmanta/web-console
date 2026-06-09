@@ -108,10 +108,6 @@ describe("5 Compile reports", () => {
     it("5.2 Compile after adding a Service instance", () => {
       // go to home page
       cy.visit("/console/");
-      selectEnvironment();
-      selectEnvironment();
-
-      // click on test environment card
 
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
@@ -194,10 +190,6 @@ describe("5 Compile reports", () => {
     it("5.3 Compile after adding a rejected Service Instance", () => {
       // go to home page
       cy.visit("/console/");
-      selectEnvironment();
-      selectEnvironment();
-
-      // click on test environment card
 
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
@@ -275,10 +267,6 @@ describe("5 Compile reports", () => {
     it("5.4 Remove rejected instance should fix compile", () => {
       // go to home page
       cy.visit("/console/");
-      selectEnvironment();
-      selectEnvironment();
-
-      // click on test environment card
 
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
@@ -341,10 +329,6 @@ describe("5 Compile reports", () => {
     it("5.5 Filter based on status", () => {
       // go to home page
       cy.visit("/console/");
-      selectEnvironment();
-      selectEnvironment();
-
-      // click on test environment card
 
       // Go to the compile report page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();

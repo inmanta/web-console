@@ -1,15 +1,23 @@
 import React from "react";
+import { MemoryRouter, Route, Routes, useSearchParams } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { MemoryRouter, Route, Routes } from "react-router";
 import { EnvironmentPreview } from "@/Data/Queries";
-import { MockedDependencyProvider } from "@/Test";
 import { MockEnvironmentHandler } from "@/Test/Mock";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { DefaultRoute } from "./DefaultRoute";
 
-const DashboardSentinel: React.FC = () => <div>Dashboard Page</div>;
+const DashboardSentinel: React.FC = () => {
+  const [params] = useSearchParams();
+
+  return (
+    <>
+      <div>Dashboard Page</div>
+      {params.get("env") && <span data-testid="selected-env">{params.get("env")}</span>}
+    </>
+  );
+};
 const CreateEnvSentinel: React.FC = () => <div>Create Environment Page</div>;
 
 const makeEnvPreview = (id: string): EnvironmentPreview => ({
@@ -66,6 +74,10 @@ const setup = ({
 };
 
 describe("DefaultRoute", () => {
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   test("GIVEN no environments exist THEN redirects to Create Environment", () => {
     setup({ allEnvironments: [] });
 
@@ -87,5 +99,25 @@ describe("DefaultRoute", () => {
     setup({ allEnvironments: envs, selectedEnvironment: selected });
 
     expect(screen.getByText("Dashboard Page")).toBeVisible();
+  });
+
+  test("GIVEN a valid environment id in localStorage THEN redirects to Dashboard with that environment", () => {
+    const envs = [makeEnvPreview("env-1"), makeEnvPreview("env-2")];
+
+    localStorage.setItem("lastSelectedEnvironment", "env-2");
+    setup({ allEnvironments: envs });
+
+    expect(screen.getByText("Dashboard Page")).toBeVisible();
+    expect(screen.getByTestId("selected-env").textContent).toBe("env-2");
+  });
+
+  test("GIVEN an unknown environment id in localStorage THEN redirects to Dashboard with the first environment", () => {
+    const envs = [makeEnvPreview("env-1"), makeEnvPreview("env-2")];
+
+    localStorage.setItem("lastSelectedEnvironment", "env-999");
+    setup({ allEnvironments: envs });
+
+    expect(screen.getByText("Dashboard Page")).toBeVisible();
+    expect(screen.getByTestId("selected-env").textContent).toBe("env-1");
   });
 });

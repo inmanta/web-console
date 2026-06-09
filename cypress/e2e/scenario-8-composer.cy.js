@@ -345,7 +345,7 @@ if (isIso) {
     it("Should be able to add an instance and connect it to an existing instance", () => {
       // Step 1: Open project inventory and enter edit composer.
       cy.visit("/console/");
-      selectEnvironment("Test PXSDC");
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#project").contains("Show inventory").click();
 
@@ -491,7 +491,7 @@ if (isIso) {
     it("Should not leak data between forms when clicking through multiple instances", () => {
       // Step 1: Open project inventory and enter edit composer.
       cy.visit("/console/");
-      selectEnvironment("Test PXSDC");
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#project").contains("Show inventory").click();
 
