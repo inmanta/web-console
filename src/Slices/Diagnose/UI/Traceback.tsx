@@ -2,7 +2,7 @@ import React from "react";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import { ExpandableSection } from "@patternfly/react-core";
 import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
-import { getThemePreference } from "@/UI/Components/DarkmodeOption";
+import { useTheme } from "@/UI/Components/DarkmodeOption";
 import { words } from "@/UI/words";
 
 /**
@@ -12,11 +12,13 @@ import { words } from "@/UI/words";
  * @returns {React.FC} A component that displays a traceback.
  */
 export const Traceback: React.FC<{ trace: string }> = ({ trace }) => {
+  const { isDark } = useTheme();
+
   return (
     <ExpandableSection toggleText={words("diagnose.rejection.traceback")}>
       <CodeEditor
         code={trace}
-        isDarkTheme={getThemePreference() === "dark"}
+        isDarkTheme={isDark}
         language={Language.python}
         isReadOnly
         isDownloadEnabled
