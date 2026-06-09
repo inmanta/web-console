@@ -7,4 +7,4 @@ issue-nr: 6935
 change-type: minor
 destination-branches: [master]
 sections:
-  minor-improvement: "{{description}}"
+  feature: "{{description}}"
