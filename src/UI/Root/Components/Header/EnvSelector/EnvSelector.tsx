@@ -16,7 +16,7 @@ import {
   Split,
   SplitItem,
 } from "@patternfly/react-core";
-import { CheckIcon, PlusCircleIcon, SignOutAltIcon, UserCircleIcon } from "@patternfly/react-icons";
+import { CheckIcon, PlusCircleIcon, SignOutAltIcon, UserCircleIcon, UsersIcon } from "@patternfly/react-icons";
 import fallBackImage from "@images/inmanta-wings.svg";
 import { DarkmodeOption } from "@/UI/Components/DarkmodeOption";
 import { DependencyContext } from "@/UI/Dependency";
@@ -69,6 +69,7 @@ export const EnvSelector: React.FC<Props> = ({
       }}
       onOpenChange={(open: boolean) => setIsOpen(open)}
       onClick={handleToggle}
+      style={{ paddingBottom: 0 }}
       toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
         <MenuToggle
           id="toggle-button"
@@ -94,27 +95,6 @@ export const EnvSelector: React.FC<Props> = ({
       )}
     >
       <DropdownList style={{ minWidth: "300px" }}>
-        {authHelper.getUser() && (
-          <>
-            <Flex
-              key="user-info"
-              alignItems={{ default: "alignItemsCenter" }}
-              spaceItems={{ default: "spaceItemsSm" }}
-              style={{
-                padding: "var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md)",
-                color: "var(--pf-t--global--text--color--subtle)",
-              }}
-            >
-              <FlexItem>
-                <UserCircleIcon />
-              </FlexItem>
-              <FlexItem>
-                <span>{authHelper.getUser()}</span>
-              </FlexItem>
-            </Flex>
-            <Divider />
-          </>
-        )}
         <DropdownGroup label={words("home.environment.selector")} key="envs-group">
           <div
             onClick={(e) => e.stopPropagation()}
@@ -157,28 +137,49 @@ export const EnvSelector: React.FC<Props> = ({
             ))
           )}
         </DropdownGroup>
-        <div>
-          <Divider />
+        <Divider />
+        <DropdownItem
+          onClick={() => navigate(routeManager.getUrl("CreateEnvironment", undefined))}
+          icon={<PlusCircleIcon />}
+        >
+          {words("home.environmentSwitcher.create.button")}
+        </DropdownItem>
+        {showUserManagement && (
           <DropdownItem
-            onClick={() => navigate(routeManager.getUrl("CreateEnvironment", undefined))}
-            icon={<PlusCircleIcon />}
+            onClick={() => navigate(routeManager.getUrl("UserManagement", undefined))}
+            icon={<UsersIcon />}
           >
-            {words("home.environmentSwitcher.create.button")}
+            {words("userManagement.title")}
           </DropdownItem>
-          {showUserManagement && (
-            <DropdownItem
-              onClick={() => navigate(routeManager.getUrl("UserManagement", undefined))}
-            >
-              {words("userManagement.title")}
-            </DropdownItem>
-          )}
-          {showLogout && (
-            <DropdownItem onClick={() => authHelper.logout()} icon={<SignOutAltIcon />}>
-              {words("dashboard.logout")}
-            </DropdownItem>
-          )}
-        </div>
+        )}
+        {showLogout && (
+          <DropdownItem onClick={() => authHelper.logout()} icon={<SignOutAltIcon />}>
+            {words("dashboard.logout")}
+          </DropdownItem>
+        )}
         <DarkmodeOption />
+        {authHelper.getUser() && (
+          <>
+            <Divider />
+            <Flex
+              key="user-info"
+              alignItems={{ default: "alignItemsCenter" }}
+              spaceItems={{ default: "spaceItemsSm" }}
+              style={{
+                padding: "var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md)",
+                color: "var(--pf-t--global--text--color--subtle)",
+                backgroundColor: "var(--pf-t--global--background--color--secondary--default)"
+              }}
+            >
+              <FlexItem>
+                <UserCircleIcon />
+              </FlexItem>
+              <FlexItem>
+                <span>Signed in as: <strong>{authHelper.getUser()}</strong></span>
+              </FlexItem>
+            </Flex>
+          </>
+        )}
       </DropdownList>
     </Dropdown>
   );

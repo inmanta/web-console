@@ -32,6 +32,7 @@ export function EnvironmentHandlerImpl(
     const params = new URLSearchParams(search);
 
     if (params.get("env") !== environmentId) {
+      localStorage.setItem("lastSelectedEnvironment", environmentId);
       params.set("env", environmentId);
       navigate(routeManager.getRelatedUrlWithoutParams(pathname) + `?${params}`);
     }

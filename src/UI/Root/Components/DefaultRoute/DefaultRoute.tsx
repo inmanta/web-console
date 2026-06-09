@@ -28,5 +28,9 @@ export const DefaultRoute: React.FC = () => {
     return <Navigate to={createEnvUrl} replace />;
   }
 
-  return <Navigate to={`${dashboardUrl}?env=${allEnvironments[0].id}`} replace />;
+  const lastEnvId = localStorage.getItem("lastSelectedEnvironment");
+  const lastEnv = lastEnvId ? allEnvironments.find((e) => e.id === lastEnvId) : undefined;
+  const fallbackEnv = lastEnv ?? allEnvironments[0];
+
+  return <Navigate to={`${dashboardUrl}?env=${fallbackEnv.id}`} replace />;
 };

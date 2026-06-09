@@ -1,6 +1,6 @@
 import environmentHelpers from "../support/environmentHelpers";
 
-const { selectEnvironment } = environmentHelpers;
+const { selectEnvironment, getDefaultEnvName } = environmentHelpers;
 
 const testProjectName = (id) => "Test Project Name " + id;
 const testName = (id) => "TestName " + id;
@@ -73,7 +73,7 @@ const deleteEnv = (name) => {
   cy.get('[aria-label="delete"]').click();
 
   cy.get('[data-testid="env-selector-toggle"]').click();
-  cy.contains('[role="menuitem"]', "test (lsm-frontend)").should("be.visible");
+  cy.contains('[role="menuitem"]', getDefaultEnvName()).should("be.visible");
   cy.contains('[role="menuitem"]', name).should("not.exist");
 };
 
@@ -100,7 +100,7 @@ describe("Environment", () => {
     });
     cy.get("button").contains("Cancel").click();
     cy.get('[data-testid="env-selector-toggle"]').click();
-    cy.contains('[role="menuitem"]', "test (lsm-frontend)").should("be.visible");
+    cy.contains('[role="menuitem"]', getDefaultEnvName()).should("be.visible");
     cy.get('[data-testid="env-selector-toggle"]').click();
   });
 
