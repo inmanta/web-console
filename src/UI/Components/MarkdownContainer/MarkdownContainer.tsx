@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import hljs from "highlight.js";
 import markdownit from "markdown-it";
 import { full } from "markdown-it-emoji";
-import { getThemePreference } from "../DarkmodeOption";
+import { useTheme } from "../DarkmodeOption";
 import { renderMermaidBlocks } from "./MermaidHelpers";
 import mermaidPlugin from "./MermaidPlugin";
 import setStatePlugin from "./StateTransferPlugin";
@@ -44,7 +44,7 @@ export const MarkdownContainer: React.FC<Props> = ({
   onSetStateClick,
   isVisible = true,
 }) => {
-  const theme = getThemePreference() || "default";
+  const { theme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const lastProcessedText = useRef<string>("");
 

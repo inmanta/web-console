@@ -1,8 +1,5 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
-import { InstanceComposerPage } from "@/Slices/InstanceComposerCreator/UI";
-import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
-import { InstanceComposerViewerPage } from "@/Slices/InstanceComposerViewer/UI";
 import { MarkdownPreviewerPage } from "@/Slices/MarkdownPreviewer/UI";
 import { OrderDetailsPage } from "@/Slices/OrderDetails/UI";
 import { OrdersPage } from "@/Slices/Orders/UI";
@@ -11,6 +8,7 @@ import { DiscoveredResourceDetailsPage } from "@/Slices/ResourceDiscoveryDetails
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { ServiceInstanceDetailsPage } from "@/Slices/ServiceInstanceDetails/UI";
 import { UserManagementPage } from "@/Slices/UserManagement/UI/Page";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { AgentsPage } from "@S/Agents/UI";
 import { CompileDetailsPage } from "@S/CompileDetails/UI";
 import { CompileReportsPage } from "@S/CompileReports/UI";
@@ -36,6 +34,32 @@ import { ServiceCatalogPage } from "@S/ServiceCatalog/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
+
+// The instance composer pages pull in @joint/plus (~530 KB) and its supporting
+// code. Load them lazily so that heavy chunk is fetched only when a composer
+// route is opened, instead of on the initial load of every page.
+const InstanceComposerPage = lazy(() =>
+  import("@/Slices/InstanceComposerCreator/UI").then((module) => ({
+    default: module.InstanceComposerPage,
+  }))
+);
+const InstanceComposerEditorPage = lazy(() =>
+  import("@/Slices/InstanceComposerEditor/UI").then((module) => ({
+    default: module.InstanceComposerEditorPage,
+  }))
+);
+const InstanceComposerViewerPage = lazy(() =>
+  import("@/Slices/InstanceComposerViewer/UI").then((module) => ({
+    default: module.InstanceComposerViewerPage,
+  }))
+);
+
+/**
+ * Wraps a lazily-loaded page in a Suspense boundary with a loading fallback.
+ */
+const withSuspense = (element: React.ReactElement): React.ReactElement => (
+  <Suspense fallback={<LoadingView ariaLabel="LoadingComposer" />}>{element}</Suspense>
+);
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;
@@ -95,15 +119,15 @@ export class PrimaryPageManager implements PageManager {
       },
       InstanceComposer: {
         ...this.routeDictionary.InstanceComposer,
-        element: <InstanceComposerPage />,
+        element: withSuspense(<InstanceComposerPage />),
       },
       InstanceComposerEditor: {
         ...this.routeDictionary.InstanceComposerEditor,
-        element: <InstanceComposerEditorPage />,
+        element: withSuspense(<InstanceComposerEditorPage />),
       },
       InstanceComposerViewer: {
         ...this.routeDictionary.InstanceComposerViewer,
-        element: <InstanceComposerViewerPage />,
+        element: withSuspense(<InstanceComposerViewerPage />),
       },
       CreateInstance: {
         ...this.routeDictionary.CreateInstance,

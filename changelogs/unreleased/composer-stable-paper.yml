@@ -1,0 +1,3 @@
+description: The instance composer no longer recreates its JointJS paper when the service catalog is refetched mid-session, which previously left the canvas frozen and blank until the next navigation. The paper now reads the latest catalog and relations dictionary via refs and is kept stable for the session.
+change-type: patch
+destination-branches: [master, iso9]

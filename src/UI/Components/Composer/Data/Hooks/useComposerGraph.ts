@@ -57,11 +57,24 @@ export const useComposerGraph = ({
 }: UseComposerGraphParams): UseComposerGraphReturn => {
   const initializationKeyRef = useRef<string | null>(null);
 
+  // The paper only reads the catalog and relations dictionary inside its event
+  // handlers (e.g. when deciding whether a link may be removed). Keeping them in
+  // refs lets the paper always see the latest values without being part of its
+  // useMemo dependencies — so the paper is NOT recreated when the catalog is
+  // refetched mid-session. Recreating it would leave a fresh, still-frozen paper
+  // that the init effect skips (its instance key is unchanged), blanking the canvas.
+  const relationsDictionaryRef = useRef(relationsDictionary);
+  const serviceCatalogRef = useRef<ServiceModel[]>(serviceCatalog || []);
+  useEffect(() => {
+    relationsDictionaryRef.current = relationsDictionary;
+    serviceCatalogRef.current = serviceCatalog || [];
+  }, [relationsDictionary, serviceCatalog]);
+
   // Create graph, paper, and scroller only once using useMemo to prevent recreation on every render
   const graph = useMemo(() => new dia.Graph({}, { cellNamespace: shapes }), []);
   const paper = useMemo(
-    () => new ComposerPaper(graph, editable, relationsDictionary, serviceCatalog || []).paper,
-    [graph, editable, relationsDictionary, serviceCatalog]
+    () => new ComposerPaper(graph, editable, relationsDictionaryRef, serviceCatalogRef).paper,
+    [graph, editable]
   );
 
   const scroller = useMemo(
@@ -84,6 +97,19 @@ export const useComposerGraph = ({
       }),
     [paper]
   );
+
+  // Dispose the paper and scroller views when they are recreated or the composer
+  // unmounts. Without this, each mount leaks the views' DOM nodes and the event
+  // bindings they registered. This mirrors the teardown prescribed by the official
+  // JointJS React integration guide (https://docs.jointjs.com/learn/integration/react/):
+  // remove the scroller first, then the paper. The graph is a plain model and needs
+  // no explicit disposal.
+  useEffect(() => {
+    return () => {
+      scroller.remove();
+      paper.remove();
+    };
+  }, [paper, scroller]);
 
   // Initialize canvas from instance data or create placeholder for new instance
   useEffect(() => {
@@ -152,16 +178,26 @@ export const useComposerGraph = ({
     // Embedded entities can't be targetted by ids since they don't have any persistent ids.
     applyAutoLayoutToEmbeddedEntities(graph);
 
-    // Unfreeze paper if it's frozen
+    // Center the view and refresh highlights once the async paper has finished
+    // rendering. The 'render:done' event fires when all scheduled updates are
+    // processed, so cell views exist in the DOM and are safe to measure/center.
+    // This replaces a fragile setTimeout that merely guessed at render completion.
+    // See https://docs.jointjs.com/api/dia/Paper/#events
+    paper.once("render:done", () => {
+      scroller.zoomToFit({ useModelGeometry: true, padding: 40, maxScale: 1 });
+      updateAllMissingConnectionsHighlights(paper);
+    });
+
+    // Unfreeze the paper so the scheduled batch renders and triggers 'render:done'.
     if (paper.isFrozen()) {
       paper.unfreeze();
     }
 
     // Update missing connections highlights after canvas is initialized
     // Use setTimeout to ensure paper is fully rendered
-    // that's also when we want to recenter the view on the content.
+    // that's also when we want to fit the view to all content.
     setTimeout(() => {
-      scroller.centerContent();
+      scroller.zoomToFit({ useModelGeometry: true, padding: 40, maxScale: 1 });
       updateAllMissingConnectionsHighlights(paper);
     }, 100);
   }, [

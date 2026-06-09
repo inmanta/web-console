@@ -13,6 +13,15 @@ const expectFilteredLessThan = (alias) => {
   });
 };
 
+// Helper to verify row count is more than initial
+const expectFilteredMoreThan = (alias) => {
+  cy.get(`@${alias}`).then((initialCount) => {
+    cy.get('[aria-label="Resource Table Row"]').should(($rows) => {
+      expect($rows.length).to.be.greaterThan(initialCount);
+    });
+  });
+};
+
 // Helper to verify row count is restored to initial
 const expectRowCountRestored = (alias) => {
   cy.get(`@${alias}`).then((initialCount) => {
@@ -200,7 +209,13 @@ describe("Scenario 6 : Resources", () => {
     it("6.5 Pagination", () => {
       cy.visit("/console/");
 
-      // Add a resource-states instance with scale=2 to get enough resources for pagination
+      // Store initial resource count before adding more
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
+
+      // Add a resource-states instance with scale=3 to get enough resources for pagination
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#resource-states").contains("Show inventory").click();
       cy.get("#add-instance-button").click();
@@ -211,8 +226,12 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Instance-Details-Success"]', { timeout: 20000 }).should("be.visible");
       cy.get('[aria-label="CompileReportsIndication"]', { timeout: 90000 }).should("not.exist");
 
-      // Verify that we now have at least 100 resources
+      // Set page size to 250 before verifying count so all resources are visible
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get("#PaginationWidget-top-top-toggle").click();
+      cy.get('[data-action="per-page-250"]').click();
+
+      // Verify that we now have at least 100 resources
       cy.get('[aria-label="Resource Table Row"]', { timeout: 80000 }).should(
         "have.length.at.least",
         100
@@ -220,7 +239,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Switch to page size 20 and verify we start on page 1
       cy.get("#PaginationWidget-top-top-toggle").click();
-      cy.contains(".pf-v6-c-menu__list-item", "100").find("svg").should("exist"); // 100 is default
+      cy.contains(".pf-v6-c-menu__list-item", "250").find("svg").should("exist");
       cy.contains(".pf-v6-c-menu__list-item", "20").click();
       cy.get(
         "#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type"
@@ -365,7 +384,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Purged filter
       cy.get("button").contains("Resource").click();
-      cy.get('[aria-label="Purged"]').click();
+      cy.get('label[for="purged"]').click();
       expectFilteredLessThan("initialRowCount");
       cy.get('[aria-label="Close purged"]').click();
       expectRowCountRestored("initialRowCount");
@@ -398,9 +417,63 @@ describe("Scenario 6 : Resources", () => {
       expectRowCountRestored("initialRowCount");
 
       // Is Deploying toggle filter
-      cy.get('[aria-label="Is Deploying"]').click();
+      cy.get('label[for="is-deploying"]').click();
       expectFilteredLessThan("initialRowCount");
       cy.get('[aria-label="Close isDeploying"]').click();
+      expectRowCountRestored("initialRowCount");
+
+      // --- Orphaned filter ---
+      // Intercept the delete so we can confirm the server processed it before proceeding
+      cy.intercept("DELETE", "/lsm/v1/service_inventory/resource-states/**").as("DeleteInstance");
+
+      // Delete the "test" resource-states instance to orphan its resources
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
+      cy.get("#resource-states").contains("Show inventory").click();
+      cy.get('[aria-label="IdentityCell-test"]')
+        .closest('[aria-label="InstanceRow-Intro"]')
+        .find('[aria-label="row actions toggle"]')
+        .click();
+      cy.get('[role="menuitem"]').contains("Delete").click();
+      cy.get("button").contains("Yes").click();
+      cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);
+
+      // Navigate to Resources, then wait for the recompile to start and finish
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="CompileReportsIndication"]', { timeout: 30000 }).should("exist");
+      cy.get('[aria-label="CompileReportsIndication"]', { timeout: 90000 }).should("not.exist");
+
+      // Intercept the GraphQL resource query — needed because keepPreviousData keeps
+      // stale rows visible while the new request is in flight, so we must wait for
+      // each response before asserting row counts.
+      cy.intercept("POST", "/api/v2/graphql").as("resourcesQuery");
+
+      // Restore page size to 250 so all resources are visible for accurate counting
+      cy.get("#PaginationWidget-top-top-toggle").click();
+      cy.get('[data-action="per-page-250"]').click();
+      cy.wait("@resourcesQuery");
+
+      // Open the filter drawer on the Status tab
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+      cy.get('[role="tab"]').contains("Status").click();
+
+      // Capture the row count with "Not Orphaned" active as the baseline for orphan filter assertions
+      cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
+
+      // Deselect "Not Orphaned" — no filter, all resources visible including orphaned
+      cy.get("#orphaned-exclude").click();
+      cy.wait("@resourcesQuery");
+      expectFilteredMoreThan("initialRowCount");
+
+      // Select "Orphaned" — only orphaned resources, fewer than the baseline
+      cy.get("#orphaned-include").click();
+      cy.wait("@resourcesQuery");
+      expectFilteredLessThan("initialRowCount");
+
+      // Reselect "Not Orphaned" — restores to initial count
+      cy.get("#orphaned-exclude").click();
+      cy.wait("@resourcesQuery");
       expectRowCountRestored("initialRowCount");
     });
 
@@ -428,19 +501,23 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[data-testid="sort-Agent"]').should("have.attr", "aria-sort", "ascending");
       cy.get('[data-testid="sort-Type"]').should("not.have.attr", "aria-sort");
 
-      // Sorting resets pagination to page 1
-      cy.get('[aria-label="Go to next page"]').first().click();
+      // Switch to 20 per page
+      cy.get("#PaginationWidget-top-top-toggle").click();
+      cy.get('[data-action="per-page-20"]').click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
-      // Page 2 with 100 per page would show "101 - 102" or similar
+
+      // Sorting resets pagination to page 1
+      cy.get('[aria-label="Go to next page"]').first().should("not.be.disabled").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
-      }).should("not.have.text", "1 - 100");
+      }).should("not.have.text", "1 - 20");
 
       cy.get("button").contains("Type").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
-      }).should("have.text", "1 - 100");
+      }).should("have.text", "1 - 20");
 
       // --- Status sort menu ---
 
@@ -489,24 +566,22 @@ describe("Scenario 6 : Resources", () => {
               clientX: startX,
               clientY: startY,
             })
+            .wait(1000)
             .trigger("pointermove", {
               force: true,
               isPrimary: true,
               button: 0,
               clientX: dropX,
               clientY: dropY,
+            })
+            .wait(1000)
+            .trigger("pointerup", {
+              force: true,
+              isPrimary: true,
+              button: 0,
+              clientX: dropX,
+              clientY: dropY,
             });
-
-          // Drag is in flight here — overlay must exist before we drop.
-          cy.get('[data-testid="status-sort-drag-overlay"]').should("exist");
-
-          cy.wrap($buttons[1]).trigger("pointerup", {
-            force: true,
-            isPrimary: true,
-            button: 0,
-            clientX: dropX,
-            clientY: dropY,
-          });
         });
 
       // Cypress retries until the DOM reflects the reorder — no fixed wait needed

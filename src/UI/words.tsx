@@ -53,6 +53,7 @@ const dict = {
   success: "Success",
   "success.title": "Success",
   "info.title": "Info",
+  noResults: "No results found",
 
   /**
    * Error related text
@@ -294,6 +295,7 @@ const dict = {
   active_attributes: "Active",
   candidate_attributes: "Candidate",
   rollback_attributes: "Rollback",
+  "instanceDetails.searchPlaceholder": "Search version…",
   "instanceDetails.expandAll": "Expand all",
   "instanceDetails.collapseAll": "Collapse all",
   "instanceDetails.resetSort": "Reset sorting",
@@ -560,6 +562,9 @@ const dict = {
   "resources.popover.requirement": "Requirement",
   "resources.popover.requirements": "Requirements",
   "resources.filters.status.isDeploying": "Is Deploying",
+  "resources.filters.status.orphaned.label": "Orphaned",
+  "resources.filters.status.orphaned.include": "Include",
+  "resources.filters.status.orphaned.exclude": "Exclude",
   "resources.filters.status.blocked.label": "Blocked state(s)",
   "resources.filters.status.blocked.placeholder": "Filter by blocked state",
   "resources.filters.status.compliance.label": "Compliance state(s)",
