@@ -1,0 +1,6 @@
+description: Compound state popovers and legend tooltips on the Resources page now show human-readable labels (e.g. "Not Blocked", "Last Handler Run") instead of raw status keys.
+issue-nr: 6957
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

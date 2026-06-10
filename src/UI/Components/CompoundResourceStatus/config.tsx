@@ -3,8 +3,15 @@ import { Icon } from "@patternfly/react-core";
 import { CubeIcon, ShieldAltIcon, TrafficLightIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
 
+/** Display labels for each compound state group, shown in the group icon's popover. */
+export const statusGroupLabels: Record<keyof Resource.CompoundStateSummary, string> = {
+  blocked: "Blocked",
+  compliance: "Compliance",
+  lastHandlerRun: "Last Handler Run",
+};
+
 /** Status config which maps the compound state types to a displayed string output.
- * Used in the ResourceTableRow.
+ * Used in the ResourceTableRow and CompoundResourceStatus.
  */
 export const statusMapping: Record<Resource.CompoundState, string> = {
   // --- Blocked --

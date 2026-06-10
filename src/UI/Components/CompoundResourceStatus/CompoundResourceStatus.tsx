@@ -2,7 +2,13 @@ import { Content, Flex, FlexItem, Popover } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { words } from "@/UI";
 import { LegendBar } from "../LegendBar";
-import { colorConfig, statusGroupIcons, statusPriority } from "./config";
+import {
+  colorConfig,
+  statusGroupIcons,
+  statusGroupLabels,
+  statusMapping,
+  statusPriority,
+} from "./config";
 
 /** Type guard for Object.entries results on a compound state record.
  * Narrows [string, unknown] to [Resource.CompoundStateKey, number]. */
@@ -76,7 +82,7 @@ export const CompoundResourceStatus = ({
         id: status,
         value,
         backgroundColor: colorConfig[status],
-        label: status,
+        label: statusMapping[status.toUpperCase()],
         height: "20px",
         onClick,
       }));
@@ -90,7 +96,7 @@ export const CompoundResourceStatus = ({
         <Flex key={key} flex={{ default: "flex_1" }} alignItems={{ default: "alignItemsCenter" }}>
           <FlexItem style={{ display: "inline-flex" }}>
             <Popover
-              bodyContent={<Content component="p">{key}</Content>}
+              bodyContent={<Content component="p">{statusGroupLabels[key]}</Content>}
               triggerAction="hover"
               position="left"
             >
