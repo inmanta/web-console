@@ -3,8 +3,9 @@ import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-ta
 import { Sort } from "@/Core";
 import { SortKey } from "@/Slices/Facts/Core/Types";
 import { Fact } from "@S/Facts/Core/Domain";
-import { FactsRow, isJsonObject } from "./FactsRow";
+import { FactsRow } from "./FactsRow";
 import { FactsTablePresenter } from "./FactsTablePresenter";
+import { isExpandableValue } from "./helpers";
 
 interface Props {
   rows: Fact[];
@@ -21,7 +22,7 @@ export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSor
     });
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
-  const hasExpandableRows = rows.some((row) => isJsonObject(row.value));
+  const hasExpandableRows = rows.some((row) => isExpandableValue(row.value));
   const numberOfColumns = tablePresenter.getNumberOfColumns() + (hasExpandableRows ? 1 : 0);
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
     const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);

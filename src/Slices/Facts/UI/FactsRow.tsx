@@ -1,20 +1,14 @@
 import React, { useState, useContext } from "react";
-import { Button, CodeBlock, CodeBlockAction, CodeBlockCode } from "@patternfly/react-core";
+import { CodeEditor } from "@patternfly/react-code-editor";
+import { Button } from "@patternfly/react-core";
 import { ExpandableRowContent, Tbody, Tr, Td } from "@patternfly/react-table";
-import { ClipboardCopyButton, DateWithTooltip, Link } from "@/UI/Components";
+import { DateWithTooltip, Link } from "@/UI/Components";
+import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
+import { useTheme } from "@/UI/Components/DarkmodeOption";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";
-
-export function isJsonObject(value: string): boolean {
-  try {
-    const parsed = JSON.parse(value);
-
-    return typeof parsed === "object" && parsed !== null;
-  } catch {
-    return false;
-  }
-}
+import { LANGUAGE_MAP, detectValueType, getCodeContent, getValuePreview } from "./helpers";
 
 interface Props {
   row: Pick<Fact, "name" | "updated" | "value" | "resource_id">;
@@ -25,17 +19,19 @@ interface Props {
 
 export const FactsRow: React.FC<Props> = ({ row, rowIndex, numberOfColumns, showExpandColumn }) => {
   const { routeManager } = useContext(DependencyContext);
+  const { isDark } = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
-  const valueIsJson = isJsonObject(row.value);
-  const formattedJson = valueIsJson ? JSON.stringify(JSON.parse(row.value), null, 2) : null;
+  const valueType = detectValueType(row.value);
+  const isExpandable = valueType !== "plain";
+  const valuePreview = getValuePreview(row.value);
 
   return (
-    <Tbody isExpanded={valueIsJson ? isExpanded : undefined}>
+    <Tbody isExpanded={isExpandable ? isExpanded : undefined}>
       <Tr aria-label="FactsRow">
         {showExpandColumn && (
           <Td
             expand={
-              valueIsJson
+              isExpandable
                 ? {
                     rowIndex,
                     isExpanded,
@@ -50,9 +46,9 @@ export const FactsRow: React.FC<Props> = ({ row, rowIndex, numberOfColumns, show
           {row.updated && <DateWithTooltip timestamp={row.updated} />}
         </Td>
         <Td modifier="breakWord" dataLabel={words("facts.column.value")}>
-          {valueIsJson ? (
+          {isExpandable ? (
             <Button variant="link" isInline onClick={() => setIsExpanded((prev) => !prev)}>
-              {words("facts.value.viewButton")}
+              {valuePreview}
             </Button>
           ) : (
             row.value
@@ -70,19 +66,20 @@ export const FactsRow: React.FC<Props> = ({ row, rowIndex, numberOfColumns, show
           </Link>
         </Td>
       </Tr>
-      {valueIsJson && (
+      {isExpandable && (
         <Tr isExpanded={isExpanded}>
           <Td colSpan={numberOfColumns}>
             <ExpandableRowContent>
-              <CodeBlock
-                actions={
-                  <CodeBlockAction>
-                    <ClipboardCopyButton value={formattedJson ?? ""} />
-                  </CodeBlockAction>
-                }
-              >
-                <CodeBlockCode>{formattedJson}</CodeBlockCode>
-              </CodeBlock>
+              <CodeEditor
+                isReadOnly
+                isDarkTheme={isDark}
+                code={getCodeContent(row.value, valueType)}
+                language={LANGUAGE_MAP[valueType]}
+                isLanguageLabelVisible
+                isDownloadEnabled
+                customControls={<CodeEditorCopyControl code={row.value} />}
+                height="200px"
+              />
             </ExpandableRowContent>
           </Td>
         </Tr>
