@@ -54,6 +54,8 @@ const dict = {
   "success.title": "Success",
   "info.title": "Info",
   noResults: "No results found",
+  include: "Include",
+  exclude: "Exclude",
 
   /**
    * Error related text
@@ -562,6 +564,7 @@ const dict = {
   "resources.popover.requirement": "Requirement",
   "resources.popover.requirements": "Requirements",
   "resources.filters.status.isDeploying": "Is Deploying",
+  "resources.filters.status.orphaned.label": "Orphaned",
   "resources.filters.status.blocked.label": "Blocked state(s)",
   "resources.filters.status.blocked.placeholder": "Filter by blocked state",
   "resources.filters.status.compliance.label": "Compliance state(s)",

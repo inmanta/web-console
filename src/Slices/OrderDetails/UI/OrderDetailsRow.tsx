@@ -14,7 +14,7 @@ import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { TextWithCopy, Toggle } from "@/UI/Components";
 import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
-import { getThemePreference } from "@/UI/Components/DarkmodeOption";
+import { useTheme } from "@/UI/Components/DarkmodeOption";
 import { words } from "@/UI/words";
 import { OrderDependencies } from "./OrderDependencies";
 import { OrderStateDetails } from "./OrderStateDetails";
@@ -43,6 +43,8 @@ export const OrderDetailsRow: React.FC<Props> = ({
   onToggle,
   numberOfColumns,
 }) => {
+  const { isDark } = useTheme();
+
   return (
     <>
       <Tr aria-label="ServiceOrderDetailsRow">
@@ -90,7 +92,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
                   {row.config && Object.keys(row.config).length ? (
                     <CodeEditor
                       code={JSON.stringify(row.config, null, 2)}
-                      isDarkTheme={getThemePreference() === "dark"}
+                      isDarkTheme={isDark}
                       language={Language.json}
                       isDownloadEnabled
                       customControls={

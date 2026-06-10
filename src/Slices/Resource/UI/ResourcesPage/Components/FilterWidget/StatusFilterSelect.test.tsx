@@ -4,6 +4,15 @@ import { userEvent } from "@testing-library/user-event";
 import { words } from "@/UI";
 import { StatusFilterSelect } from "./StatusFilterSelect";
 
+const getById = (id: string): HTMLElement => {
+  const el = document.getElementById(id);
+  if (!el) {
+    throw new Error(`No element found with id: "${id}"`);
+  }
+
+  return el;
+};
+
 const StatusFilterHarness: React.FC<{ initial?: string[] }> = ({ initial }) => {
   const [selected, setSelected] = useState<string[]>(initial ?? []);
 
@@ -163,16 +172,49 @@ describe("StatusFilterSelect", () => {
     expect(blockedExcludeActive).toBeVisible();
   });
 
-  it("toggles the isDeploying switch on and off", async () => {
-    render(<StatusFilterHarness />);
+  it("isDeploying toggles are mutually exclusive and deselecting clears the filter", async () => {
+    render(<StatusFilterHarness initial={["!isDeploying"]} />);
 
-    const isDeployingSwitch = screen.getByRole("switch", { name: "Is Deploying" });
-    expect(isDeployingSwitch).not.toBeChecked();
+    // Initial state: Exclude active
+    expect(document.getElementById("isDeploying-include")).toHaveAttribute("aria-pressed", "false");
+    expect(document.getElementById("isDeploying-exclude")).toHaveAttribute("aria-pressed", "true");
 
-    await userEvent.click(isDeployingSwitch);
-    expect(isDeployingSwitch).toBeChecked();
+    // Selecting Include clears Exclude
+    await userEvent.click(getById("isDeploying-include"));
+    expect(document.getElementById("isDeploying-include")).toHaveAttribute("aria-pressed", "true");
+    expect(document.getElementById("isDeploying-exclude")).toHaveAttribute("aria-pressed", "false");
 
-    await userEvent.click(isDeployingSwitch);
-    expect(isDeployingSwitch).not.toBeChecked();
+    // Selecting Exclude clears Include
+    await userEvent.click(getById("isDeploying-exclude"));
+    expect(document.getElementById("isDeploying-include")).toHaveAttribute("aria-pressed", "false");
+    expect(document.getElementById("isDeploying-exclude")).toHaveAttribute("aria-pressed", "true");
+
+    // Clicking the active toggle deselects it — no filter
+    await userEvent.click(getById("isDeploying-exclude"));
+    expect(document.getElementById("isDeploying-include")).toHaveAttribute("aria-pressed", "false");
+    expect(document.getElementById("isDeploying-exclude")).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("orphaned toggles are mutually exclusive and deselecting clears the filter", async () => {
+    render(<StatusFilterHarness initial={["!orphaned"]} />);
+
+    // Initial state: Not Orphaned active
+    expect(document.getElementById("orphaned-include")).toHaveAttribute("aria-pressed", "false");
+    expect(document.getElementById("orphaned-exclude")).toHaveAttribute("aria-pressed", "true");
+
+    // Selecting Orphaned clears Not Orphaned
+    await userEvent.click(getById("orphaned-include"));
+    expect(document.getElementById("orphaned-include")).toHaveAttribute("aria-pressed", "true");
+    expect(document.getElementById("orphaned-exclude")).toHaveAttribute("aria-pressed", "false");
+
+    // Selecting Not Orphaned clears Orphaned
+    await userEvent.click(getById("orphaned-exclude"));
+    expect(document.getElementById("orphaned-include")).toHaveAttribute("aria-pressed", "false");
+    expect(document.getElementById("orphaned-exclude")).toHaveAttribute("aria-pressed", "true");
+
+    // Clicking the active toggle deselects it — no filter
+    await userEvent.click(getById("orphaned-exclude"));
+    expect(document.getElementById("orphaned-include")).toHaveAttribute("aria-pressed", "false");
+    expect(document.getElementById("orphaned-exclude")).toHaveAttribute("aria-pressed", "false");
   });
 });

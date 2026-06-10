@@ -10,7 +10,7 @@ import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { CodeEditorCopyControl, CodeEditorHeightToggleControl } from "../CodeEditorControls";
-import { getThemePreference } from "../DarkmodeOption";
+import { useTheme } from "../DarkmodeOption";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 import { FileBlock } from "./FileBlock";
 
@@ -46,6 +46,7 @@ const AttributeValue: React.FC<{
   variant?: AttributeTextVariant;
 }> = ({ attribute, variant }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { isDark } = useTheme();
 
   const getEditorHeight = (attribute: ClassifiedAttribute) => {
     return isExpanded ? "calc(100vh - 300px)" : getDefaultHeightEditor(attribute);
@@ -84,7 +85,7 @@ const AttributeValue: React.FC<{
         <CodeEditor
           key={`json-${isExpanded}`}
           isReadOnly
-          isDarkTheme={getThemePreference() === "dark"}
+          isDarkTheme={isDark}
           code={attribute.value}
           isLanguageLabelVisible
           language={Language.json}
@@ -108,7 +109,7 @@ const AttributeValue: React.FC<{
         <CodeEditor
           key={`xml-${isExpanded}`}
           isReadOnly
-          isDarkTheme={getThemePreference() === "dark"}
+          isDarkTheme={isDark}
           code={attribute.value}
           isLanguageLabelVisible
           language={Language.xml}
@@ -131,7 +132,7 @@ const AttributeValue: React.FC<{
         <CodeEditor
           key={`python-${isExpanded}`}
           isReadOnly
-          isDarkTheme={getThemePreference() === "dark"}
+          isDarkTheme={isDark}
           code={attribute.value}
           isLanguageLabelVisible
           language={Language.python}
@@ -154,7 +155,7 @@ const AttributeValue: React.FC<{
         <CodeEditor
           key={`code-${isExpanded}`}
           isReadOnly
-          isDarkTheme={getThemePreference() === "dark"}
+          isDarkTheme={isDark}
           code={attribute.value}
           isDownloadEnabled
           customControls={
