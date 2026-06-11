@@ -439,8 +439,10 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[role="menuitem"]').contains("Delete").click();
       cy.get("button").contains("Yes").click();
       cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);
+      cy.get('[role="dialog"]').should("not.exist");
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="ResourcesPage-Success"]', { timeout: 20000 }).should("be.visible");
       // Once the recompile finishes, "test" resources are orphaned and hidden by the default
       // Not Orphaned filter. Retries until no value cell starts with "test-".
       cy.get('[aria-label="Resource Table Row"] td[data-label="Value"]', { timeout: 90000 }).should(
