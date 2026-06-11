@@ -10,18 +10,16 @@ import environmentHelpers from "../support/environmentHelpers";
 const { checkStatusCompile, selectEnvironment } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
+const PXSDC_ENV_NAME = "Test PXSDC";
+const PXSDC_PROJECT_NAME = "PXSDC Test Project";
 
 if (isIso) {
   describe("Scenario 8 Composer", () => {
     before(() => {
-      // Setup: Ensure a clean test state for this scenario.
-      const envName = "Test PXSDC";
-      const projectName = "PXSDC Test Project";
-
       // ensure environment is not present before removing the project
       cy.request("/api/v2/environment?details=true").then((response) => {
         const environments = response.body.data || [];
-        const environment = environments.find((item) => item.name === envName);
+        const environment = environments.find((item) => item.name === PXSDC_ENV_NAME);
 
         if (environment) {
           cy.request("DELETE", `/api/v2/environment/${environment.id}`);
@@ -31,7 +29,7 @@ if (isIso) {
       // delete only the PXSDC test project
       cy.request("/api/v2/project?environment_details=true").then((response) => {
         const projects = response.body.data || [];
-        const project = projects.find((item) => item.name === projectName);
+        const project = projects.find((item) => item.name === PXSDC_PROJECT_NAME);
 
         if (project) {
           cy.request("DELETE", `api/v1/project/${project.id}`);
@@ -40,16 +38,13 @@ if (isIso) {
     });
 
     it("Should create pxsdc project from a repo url and create instances", () => {
-      const envName = "Test PXSDC";
-      const projectName = "PXSDC Test Project";
-
       // Step 1: Create a new environment from repository.
       cy.visit("/console/environment/create");
 
-      cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(projectName);
-      cy.get('[role="option"]').contains(projectName).click();
+      cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(PXSDC_PROJECT_NAME);
+      cy.get('[role="option"]').contains(PXSDC_PROJECT_NAME).click();
 
-      cy.get('[aria-label="Name-input"]').type(envName);
+      cy.get('[aria-label="Name-input"]').type(PXSDC_ENV_NAME);
       cy.get('[aria-label="Description-input"]').type("Environment for PXSDC test model");
 
       cy.env(["GITLAB_TOKEN"]).then(({ GITLAB_TOKEN }) => {
@@ -229,7 +224,7 @@ if (isIso) {
     it("Should delete permanently an existing l3out instance", () => {
       // Step 1: Open existing l3out instance and enter edit composer.
       cy.visit("/console/");
-      selectEnvironment("Test PXSDC");
+      selectEnvironment(PXSDC_ENV_NAME);
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#l3out").contains("Show inventory").click();
 

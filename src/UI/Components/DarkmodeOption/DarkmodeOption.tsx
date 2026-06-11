@@ -1,5 +1,5 @@
 import React from "react";
-import { DropdownItem } from "@patternfly/react-core";
+import { MenuItem } from "@patternfly/react-core";
 import { MoonIcon, SunIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { useTheme } from "./useTheme";
@@ -16,12 +16,12 @@ export const DarkmodeOption: React.FC = () => {
   };
 
   return (
-    <DropdownItem
+    <MenuItem
       key="darkmode-toggle"
       onClick={toggleTheme}
       icon={theme === "dark" ? <SunIcon /> : <MoonIcon />}
     >
       {words("theme.toggle")(theme)}
-    </DropdownItem>
+    </MenuItem>
   );
 };
