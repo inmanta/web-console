@@ -50,6 +50,7 @@ describe("Scenario 6 : Resources", () => {
   if (isIso) {
     it("6.2 Add instance on the resource-states service", () => {
       cy.visit("/console/");
+      selectEnvironment();
 
       // Store initial resource count
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
@@ -124,6 +125,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.3 Log message filtering", () => {
       cy.visit("/console/");
+      selectEnvironment();
 
       // Navigate to the target resource logs
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
@@ -152,6 +154,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.4 Resources with multiple dependencies", () => {
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
@@ -208,6 +211,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.5 Pagination", () => {
       cy.visit("/console/");
+      selectEnvironment();
 
       // Store initial resource count before adding more
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
@@ -289,6 +293,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.6 Compound resource status legend", () => {
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
@@ -328,6 +333,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.7 Resource filters", () => {
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
@@ -479,6 +485,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.8 Resource sorting", () => {
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
@@ -622,6 +629,7 @@ describe("Scenario 6 : Resources", () => {
   } else {
     it("6.2 Resources for OSS", () => {
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
@@ -685,6 +693,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.3 OSS basic status sort menu", () => {
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");

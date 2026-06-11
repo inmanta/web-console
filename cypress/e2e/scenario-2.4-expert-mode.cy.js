@@ -62,6 +62,7 @@ if (isIso) {
 
       // Go back to service inventory
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
@@ -92,6 +93,7 @@ if (isIso) {
     it("2.4.2 Verify markdown preview in documentation tab", () => {
       cy.startMonacoCDNCheck();
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#basic-service").contains("Show inventory").click();
@@ -133,6 +135,7 @@ if (isIso) {
     it("2.4.3 Edit instance attributes", () => {
       cy.startMonacoCDNCheck();
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
@@ -203,6 +206,8 @@ if (isIso) {
 
     it("2.4.4 Destroy previously created instance", () => {
       cy.visit("/console/");
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Expect to find one badge on the basic-service row.

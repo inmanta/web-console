@@ -92,6 +92,7 @@ if (isIso) {
     it("3.2 Create success instance and check details", () => {
       // Select 'test' environment
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
@@ -162,6 +163,7 @@ if (isIso) {
     it("3.3 Create a failed Instance by Duplicating and check details", () => {
       // Select 'test' environment
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
@@ -238,8 +240,9 @@ if (isIso) {
     });
 
     it("3.4 Callbacks", () => {
-      // Select card 'test' environment on home page
+      // Select 'test' environment
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
@@ -335,8 +338,9 @@ if (isIso) {
     });
 
     it("3.5 Delete Service", () => {
-      // Select card 'test' environment on home page
+      // Select 'test' environment
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 

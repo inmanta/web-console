@@ -65,6 +65,7 @@ if (isIso) {
     });
     it("2.2.2 Remove Parent Service and Child Service", () => {
       cy.visit("/console/");
+      selectEnvironment();
 
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get("#parent-service").contains("Show inventory").click();
