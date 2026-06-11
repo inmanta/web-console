@@ -188,9 +188,16 @@ const TextContainer = styled.span<{ $variant?: AttributeTextVariant }>`
 `;
 
 /**
- * Determines the height for code editors based on content length
- * @param attribute The attribute to determine height for
- * @returns "300px" if lines > 15, otherwise "sizeToFit"
+ * Determines the height for code editors based on content length.
+ * Uses explicit px values instead of "sizeToFit" because PatternFly's sizeToFit
+ * calls editor.layout() but never updates the container's CSS height, leaving
+ * the container at 0px (invalid CSS value) while Monaco overflows it.
+ *
+ * Monaco line height: Math.round(GOLDEN_LINE_HEIGHT_RATIO * fontSize)
+ *   Windows/Linux: Math.round(1.35 * 14) = 19px
+ *   macOS:         Math.round(1.5  * 12) = 18px
+ * Using 19px covers both platforms (slightly tall on macOS — better than too short).
+ * The height prop targets the Monaco container only; the toolbar sits outside it.
  */
 export const getDefaultHeightEditor = (attribute: ClassifiedAttribute): string => {
   if (
@@ -200,9 +207,8 @@ export const getDefaultHeightEditor = (attribute: ClassifiedAttribute): string =
     attribute.kind === "Code"
   ) {
     const lineCount = attribute.value.split("\n").length;
-
-    return lineCount > 15 ? "300px" : "sizeToFit";
+    return `${Math.min(lineCount * 19, 300)}px`;
   }
 
-  return "sizeToFit";
+  return "19px";
 };
