@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { DiffEditor } from "@monaco-editor/react";
 import { Divider, Flex, FlexItem, FormSelect, FormSelectOption } from "@patternfly/react-core";
 import { InstanceAttributeModel } from "@/Core";
@@ -9,13 +9,16 @@ import {
   getAvailableVersions,
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { words } from "@/UI";
-import { SearchSelect } from "@/UI/Components";
+import { SearchSelect, SearchSelectOption } from "@/UI/Components";
 import { useTheme } from "@/UI/Components/DarkmodeOption";
+import { MomentDatePresenter } from "@/UI/Utils";
 
 interface Props {
   instanceLogs: InstanceLog[];
   selectedVersion: string;
 }
+
+const datePresenter = new MomentDatePresenter();
 
 /**
  * The AttributesCompare Component.
@@ -43,17 +46,19 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
   >({});
   const [leftSelectedSet, setLeftSelectedSet] = useState<AttributeSets>("active_attributes");
   const [rightSelectedSet, setRightSelectedSet] = useState<AttributeSets>("candidate_attributes");
-  const [availableVersions, setAvailableVersions] = useState<string[]>([]);
 
   const { theme: preferredTheme } = useTheme();
 
-  useEffect(() => {
-    if (instanceLogs && instanceLogs.length) {
-      const versions = getAvailableVersions(instanceLogs);
-
-      setAvailableVersions(versions);
-    }
-  }, [instanceLogs]);
+  // The creation date of each version is shown as a description below the version
+  // in the dropdown, so the user can tell the versions apart by more than their number.
+  const availableVersions: SearchSelectOption[] = useMemo(
+    () =>
+      getAvailableVersions(instanceLogs).map(({ version, timestamp }) => ({
+        value: version,
+        description: datePresenter.getFull(timestamp),
+      })),
+    [instanceLogs]
+  );
 
   useEffect(() => {
     if (rightVersion) {

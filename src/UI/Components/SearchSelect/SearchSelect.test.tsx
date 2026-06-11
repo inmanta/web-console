@@ -47,4 +47,37 @@ describe("SearchSelect", () => {
     await userEvent.click(getSelectableOptions().find((o) => o.textContent?.includes("Cherry"))!);
     expect(screen.getByTestId(TEST_IDS.toggle)).toHaveTextContent("Cherry");
   });
+
+  describe("with described options", () => {
+    const OPTIONS_WITH_DESCRIPTIONS = [
+      { value: "Apple", description: "A red fruit" },
+      { value: "Banana", description: "A yellow fruit" },
+    ];
+
+    it("renders the description of each option", async () => {
+      render(<Wrapper options={OPTIONS_WITH_DESCRIPTIONS} />);
+      await userEvent.click(screen.getByTestId(TEST_IDS.toggle));
+      const options = getSelectableOptions();
+
+      OPTIONS_WITH_DESCRIPTIONS.forEach((option, index) => {
+        expect(options[index]).toHaveTextContent(option.value);
+        expect(options[index]).toHaveTextContent(option.description);
+      });
+    });
+
+    it("filters on the value only, not the description", async () => {
+      render(<Wrapper options={OPTIONS_WITH_DESCRIPTIONS} />);
+      await userEvent.click(screen.getByTestId(TEST_IDS.toggle));
+
+      // "fruit" appears in every description, but in no value
+      await userEvent.type(screen.getByRole("textbox"), "fruit");
+      expect(getSelectableOptions()).toHaveLength(0);
+
+      await userEvent.clear(screen.getByRole("textbox"));
+      await userEvent.type(screen.getByRole("textbox"), "banana");
+      const filtered = getSelectableOptions();
+      expect(filtered).toHaveLength(1);
+      expect(filtered[0]).toHaveTextContent(OPTIONS_WITH_DESCRIPTIONS[1].value);
+    });
+  });
 });
