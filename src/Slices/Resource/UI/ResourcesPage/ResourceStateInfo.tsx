@@ -2,12 +2,7 @@ import { Flex, FlexItem, Content, Icon, ListItem, List, Popover } from "@pattern
 import { UnlinkIcon, ClockIcon, CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
 import { words } from "@/UI";
-import {
-  DateWithTooltip,
-  statusGroupIcons,
-  statusGroupLabels,
-  statusMapping,
-} from "@/UI/Components";
+import { DateWithTooltip, statusGroupIcons, statusMapping } from "@/UI/Components";
 import { BlinkingDot } from "./Components";
 import { ResourceRow } from "./ResourceTableRow";
 
@@ -30,11 +25,13 @@ const StatusListItem = ({
     <ListItem
       icon={
         <Popover
-          bodyContent={<Content component="p">{statusGroupLabels[compoundStateKey]}</Content>}
+          bodyContent={
+            <Content component="p">{words(`resources.status.label.${compoundStateKey}`)}</Content>
+          }
           triggerAction="hover"
           position="left"
         >
-          <>{statusGroupIcons[compoundStateKey]({ state })}</>
+          {statusGroupIcons[compoundStateKey]({ state })}
         </Popover>
       }
       style={{ alignItems: "flex-end" }}

@@ -1,2 +1,2 @@
 export * from "./CompoundResourceStatus";
-export { statusGroupIcons, statusGroupLabels, statusMapping } from "./config";
+export { statusGroupIcons, statusMapping } from "./config";
