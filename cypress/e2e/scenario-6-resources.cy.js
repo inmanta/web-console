@@ -440,17 +440,15 @@ describe("Scenario 6 : Resources", () => {
       cy.get("button").contains("Yes").click();
       cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);
 
-      // Wait for two env-preview polls (≈10 s) before asserting — the compile can start
-      // and finish within one 5 s cycle, making a should("exist") check unreliable on CI.
-      cy.intercept("POST", "/api/v2/graphql", (req) => {
-        if (req.body?.query?.includes("isCompiling")) {
-          req.alias = "envPreviewPoll";
-        }
-      });
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
-      cy.wait("@envPreviewPoll");
-      cy.wait("@envPreviewPoll");
-      cy.get('[aria-label="CompileReportsIndication"]', { timeout: 90000 }).should("not.exist");
+      // Once the recompile finishes, "test" resources are orphaned and hidden by the default
+      // Not Orphaned filter. Retries until no value cell starts with "test-".
+      cy.get('[aria-label="Resource Table Row"] td[data-label="Value"]', { timeout: 90000 }).should(
+        ($cells) => {
+          const testCells = $cells.filter((i, el) => el.textContent.trim().startsWith("test-"));
+          expect(testCells).to.have.length(0);
+        }
+      );
 
       // Target GetResources queries only — a generic graphql intercept is consumed by
       // background env-preview polls, causing cy.wait to resolve against stale data.
@@ -524,17 +522,9 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
-      }).should("not.have.text", "1 - 20");
+      }).should("have.text", "21 - 40");
 
-      // Wait for the sort-triggered request before asserting — keepPreviousData keeps
-      // stale page-2 data visible while the new request is in-flight.
-      cy.intercept("POST", "/api/v2/graphql", (req) => {
-        if (req.body?.query?.includes("GetResources")) {
-          req.alias = "sortResetQuery";
-        }
-      });
       cy.get("button").contains("Type").click();
-      cy.wait("@sortResetQuery");
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
       }).should("have.text", "1 - 20");
