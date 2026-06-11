@@ -207,6 +207,7 @@ export const getDefaultHeightEditor = (attribute: ClassifiedAttribute): string =
     attribute.kind === "Code"
   ) {
     const lineCount = attribute.value.split("\n").length;
+
     return `${Math.min(lineCount * 19, 300)}px`;
   }
 
