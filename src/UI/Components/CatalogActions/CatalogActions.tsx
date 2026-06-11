@@ -76,10 +76,10 @@ export const CatalogActions: React.FC = () => {
           </Content>
           <Content component="ul">
             <Content component="li">
-              - <b>{words("catalog.update.confirmation.p3")}</b>
+              <b>{words("catalog.update.confirmation.p3")}</b>
             </Content>
             <Content component="li">
-              - <b>{words("catalog.update.confirmation.p4")}</b>
+              <b>{words("catalog.update.confirmation.p4")}</b>
             </Content>
           </Content>
           <Content>{words("catalog.update.confirmation.p5")}</Content>
