@@ -450,18 +450,20 @@ describe("Scenario 6 : Resources", () => {
         }
       );
 
-      // Target GetResources queries only — a generic graphql intercept is consumed by
-      // background env-preview polls, causing cy.wait to resolve against stale data.
-      cy.intercept("POST", "/api/v2/graphql", (req) => {
-        if (req.body?.query?.includes("GetResources")) {
-          req.alias = "resourcesQuery";
-        }
-      });
-
-      // Restore page size to 250 so all resources are visible for accurate counting
+      // Restore page size to 250 so all resources are visible for accurate counting.
       cy.get("#PaginationWidget-top-top-toggle").click();
       cy.get('[data-action="per-page-250"]').click();
-      cy.wait("@resourcesQuery");
+      // keepPreviousData keeps the old page on screen while the new request is in flight,
+      // so retry until the header reads "1 - N of N": all resources rendered on one page.
+      cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text", {
+        timeout: 20000,
+      }).should(($text) => {
+        const [range, total] = $text
+          .find("b")
+          .toArray()
+          .map((el) => el.textContent.trim());
+        expect(range).to.eq(`1 - ${total}`);
+      });
 
       // Open the filter drawer on the Status tab
       cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
@@ -474,17 +476,14 @@ describe("Scenario 6 : Resources", () => {
 
       // Deselect "Not Orphaned" — no filter, all resources visible including orphaned
       cy.get("#orphaned-exclude").click();
-      cy.wait("@resourcesQuery");
       expectFilteredMoreThan("initialRowCount");
 
       // Select "Orphaned" — only orphaned resources, fewer than the baseline
       cy.get("#orphaned-include").click();
-      cy.wait("@resourcesQuery");
       expectFilteredLessThan("initialRowCount");
 
       // Reselect "Not Orphaned" — restores to initial count
       cy.get("#orphaned-exclude").click();
-      cy.wait("@resourcesQuery");
       expectRowCountRestored("initialRowCount");
     });
 
