@@ -35,7 +35,7 @@ test("Given the getHeightEditor function When called with different attribute ty
         key: "jsonShort",
         value: '{\n  "name": "test",\n  "value": 123\n}',
       },
-      expected: "sizeToFit",
+      expected: "76px",
     },
     {
       type: "Json",
@@ -55,7 +55,7 @@ test("Given the getHeightEditor function When called with different attribute ty
         key: "xmlShort",
         value: "<root>\n  <element>value</element>\n</root>",
       },
-      expected: "sizeToFit",
+      expected: "57px",
     },
     {
       type: "Xml",
@@ -75,7 +75,7 @@ test("Given the getHeightEditor function When called with different attribute ty
         key: "pythonShort",
         value: "def hello():\n  print('Hello, world!')\n\nhello()",
       },
-      expected: "sizeToFit",
+      expected: "76px",
     },
     {
       type: "Python",
@@ -95,7 +95,7 @@ test("Given the getHeightEditor function When called with different attribute ty
         key: "codeShort",
         value: "function test() {\n  return true;\n}",
       },
-      expected: "sizeToFit",
+      expected: "57px",
     },
     {
       type: "Code",
@@ -115,7 +115,7 @@ test("Given the getHeightEditor function When called with different attribute ty
         key: "text",
         value: "This is just a regular text value",
       },
-      expected: "sizeToFit",
+      expected: "19px",
     },
   ];
 

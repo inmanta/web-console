@@ -54,6 +54,8 @@ const dict = {
   "success.title": "Success",
   "info.title": "Info",
   noResults: "No results found",
+  include: "Include",
+  exclude: "Exclude",
 
   /**
    * Error related text
@@ -563,8 +565,6 @@ const dict = {
   "resources.popover.requirements": "Requirements",
   "resources.filters.status.isDeploying": "Is Deploying",
   "resources.filters.status.orphaned.label": "Orphaned",
-  "resources.filters.status.orphaned.include": "Include",
-  "resources.filters.status.orphaned.exclude": "Exclude",
   "resources.filters.status.blocked.label": "Blocked state(s)",
   "resources.filters.status.blocked.placeholder": "Filter by blocked state",
   "resources.filters.status.compliance.label": "Compliance state(s)",
@@ -604,6 +604,9 @@ const dict = {
   "resources.sort.label.compliance": "Compliance",
   "resources.sort.label.lastHandlerRun": "Last Handler Run",
   "resources.sort.label.isDeploying": "Is Deploying",
+  "resources.status.label.blocked": "Blocked",
+  "resources.status.label.compliance": "Compliance",
+  "resources.status.label.lastHandlerRun": "Last Handler Run",
   "resources.compoundStateSummary.title": "Compound state summary",
   "resources.compoundStateSummary.deploy": "Deploy",
   "resources.compoundStateSummary.repair": "Repair",
@@ -702,9 +705,12 @@ const dict = {
   "compileDetails.stages.columns.errstream": "Error Stream",
   "compileDetails.stages.copy": "Copy full command to clipboard",
 
-  "home.title": "Home",
-  "home.navigation.tooltip": "Go to the overview page",
-  "home.navigation.button": "Overview",
+  "home.environmentSwitcher.search.placeholder": "Search by name or project",
+  "home.environmentSwitcher.create.button": "Create new environment",
+  "home.environmentSwitcher.noEnvironments": "No environments available",
+  "home.environmentSwitcher.signedInAs": "Signed in as: ",
+  "home.noEnvironments.toast.title": "No environments available",
+  "home.noEnvironments.toast.message": "You were redirected to create an environment.",
   "home.empty.message": "No environments found",
   "home.create.env.desciption": "Create new environment",
   "home.create.env": "Create environment",

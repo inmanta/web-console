@@ -7,7 +7,8 @@ if (Cypress.expose("oidc")) {
       cy.get("input[type=submit]").click();
     });
 
-    cy.get("h1").contains("Home").should("be.visible");
+    // This is an environment-less project, and thus should redirect to the create environment page after login.
+    cy.get("h1").contains("Create environment").should("be.visible");
 
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();

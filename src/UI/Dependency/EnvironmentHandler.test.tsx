@@ -21,6 +21,10 @@ describe("EnvironmentHandler", () => {
     server.resetHandlers();
   });
 
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   afterAll(() => {
     server.close();
   });
@@ -28,6 +32,25 @@ describe("EnvironmentHandler", () => {
   const wrapper = ({ children }) => (
     <QueryClientProvider client={testClient}>{children}</QueryClientProvider>
   );
+
+  test("GIVEN set() is called with a different environment id THEN localStorage is updated", async () => {
+    const history = createMemoryHistory();
+    const currentEnv = Environment.previewFilterable[0];
+    const nextEnv = Environment.previewFilterable[1];
+
+    history.push(`?env=${currentEnv.id}`);
+
+    const { result } = renderHook(
+      () => EnvironmentHandlerImpl(() => history.location, routeManager),
+      { wrapper }
+    );
+
+    await act(async () => {
+      result.current.set(history.push, history.location, nextEnv.id);
+    });
+
+    expect(localStorage.getItem("lastSelectedEnvironment")).toBe(nextEnv.id);
+  });
 
   test("EnvironmentHandler updates environment correctly", async () => {
     server.use(

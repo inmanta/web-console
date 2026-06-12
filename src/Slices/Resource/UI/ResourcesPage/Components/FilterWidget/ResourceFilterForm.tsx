@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { Stack, StackItem, Switch, Title } from "@patternfly/react-core";
+import { FormGroup, Stack, StackItem, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { useGetAgents } from "@/Data/Queries";
 import { useDebounce } from "@/UI";
+import { OptionalToggleGroup } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { AddableSelectInput, SelectOption } from "./AddableSelectInput";
 import { AddableTextInput } from "./AddableTextInput";
@@ -56,14 +57,6 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
       }))
     );
   }, [data]);
-
-  const handlePurgedChange = (hasChanged: boolean) => {
-    const current = filter.status ?? [];
-
-    const updated = hasChanged ? [...current, "purged"] : current.filter((s) => s !== "purged");
-
-    onChangeStatus(updated);
-  };
 
   return (
     <>
@@ -129,12 +122,24 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
           </Title>
         </StackItem>
         <StackItem>
-          <Switch
-            id="purged"
-            label={words("resources.filters.desiredState.purged")}
-            isChecked={filter.status?.includes("purged") ?? false}
-            onChange={(_event, hasChanged) => handlePurgedChange(hasChanged)}
-          />
+          <FormGroup label={words("resources.filters.desiredState.purged")}>
+            <OptionalToggleGroup
+              selected={filter.status ?? []}
+              onChange={onChangeStatus}
+              options={[
+                {
+                  label: words("include"),
+                  value: "purged",
+                  buttonId: "purged-include",
+                },
+                {
+                  label: words("exclude"),
+                  value: "!purged",
+                  buttonId: "purged-exclude",
+                },
+              ]}
+            />
+          </FormGroup>
         </StackItem>
       </Stack>
     </>

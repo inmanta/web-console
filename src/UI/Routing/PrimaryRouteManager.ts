@@ -32,7 +32,6 @@ import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { GraphiQL } from "@S/GraphiQL";
-import { Home } from "@S/Home";
 import { Notification } from "@S/Notification";
 import { OrderDetails } from "@S/OrderDetails";
 import { Orders } from "@S/Orders";
@@ -54,7 +53,6 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
      * Main
      */
     CreateEnvironment: CreateEnvironment.route(baseUrl),
-    Home: Home.route(baseUrl),
     GraphiQL: GraphiQL.route(baseUrl),
     NotificationCenter: Notification.route(baseUrl),
     Settings: Settings.route(baseUrl),
@@ -120,7 +118,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     const routeMatch = getRouteMatchFromUrl(pathname);
 
     if (typeof routeMatch === "undefined") {
-      return getUrl("Home", undefined);
+      return getUrl("Dashboard", undefined);
     }
 
     const { route } = routeMatch;
@@ -132,7 +130,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     const parent = getParentWithoutParams(route);
 
     if (typeof parent === "undefined") {
-      return getUrl("Home", undefined);
+      return getUrl("Dashboard", undefined);
     }
 
     return getUrl(parent.kind, undefined);
