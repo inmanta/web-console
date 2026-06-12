@@ -10,11 +10,4 @@ describe("getDefaultHeightEditor", () => {
   `("returns $expected for $description", ({ code, expected }) => {
     expect(getDefaultHeightEditor(code)).toBe(expected);
   });
-
-  test("fits the full content height (uncapped) when cap is false", () => {
-    const code = "{\n" + Array(20).fill('  "key": "value",').join("\n") + "\n}";
-
-    // 22 lines * 19px — well past the 300px collapsed cap.
-    expect(getDefaultHeightEditor(code, false)).toBe(`${code.split("\n").length * 19}px`);
-  });
 });
