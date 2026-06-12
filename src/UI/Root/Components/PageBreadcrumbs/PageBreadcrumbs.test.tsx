@@ -25,10 +25,8 @@ test("GIVEN Breadcrumbs WHEN url is '/' THEN 0 Breadcrumbs are shown", () => {
   const { component } = setup(["/"]);
 
   render(component);
-  const crumb = screen.getByRole("listitem", { name: "BreadcrumbItem" });
 
-  expect(within(crumb).queryByRole("link")).not.toBeInTheDocument();
-  expect(within(crumb).getByText("Home")).toBeInTheDocument();
+  expect(screen.queryByRole("listitem", { name: "BreadcrumbItem" })).not.toBeInTheDocument();
 });
 
 test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog' THEN plain Catalog Breadcrumb is shown", () => {

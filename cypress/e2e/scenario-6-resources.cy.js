@@ -1,6 +1,6 @@
 import environmentHelpers from "../support/environmentHelpers";
 
-const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
+const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
 
@@ -39,7 +39,7 @@ describe("Scenario 6 : Resources", () => {
 
   it("6.1 Initial state", () => {
     cy.visit("/console/");
-    cy.get('[aria-label="Select-environment-test"]').click();
+    selectEnvironment();
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
     // Expect 0 or 5 resources depending on edition
@@ -50,7 +50,7 @@ describe("Scenario 6 : Resources", () => {
   if (isIso) {
     it("6.2 Add instance on the resource-states service", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
 
       // Store initial resource count
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
@@ -125,7 +125,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.3 Log message filtering", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
 
       // Navigate to the target resource logs
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
@@ -154,7 +154,8 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.4 Resources with multiple dependencies", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
       const resourceName = "test-has-update-failed-blocked-0";
@@ -210,7 +211,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.5 Pagination", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
 
       // Store initial resource count before adding more
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
@@ -292,7 +293,8 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.6 Compound resource status legend", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
@@ -331,7 +333,8 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.7 Resource filters", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
@@ -482,7 +485,8 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.8 Resource sorting", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
@@ -625,7 +629,8 @@ describe("Scenario 6 : Resources", () => {
   } else {
     it("6.2 Resources for OSS", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
       // Expect exactly 5 resources, all of type frontend_model::TestResource
@@ -688,7 +693,8 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.3 OSS basic status sort menu", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
