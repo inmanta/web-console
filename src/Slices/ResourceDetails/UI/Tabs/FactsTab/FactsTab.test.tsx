@@ -85,17 +85,17 @@ describe("FactsTab", () => {
     expect(sortedByDateDesc[0].name).toEqual("location");
     expect(sortedByDateDesc[sortedByDateDesc.length - 1].name).toEqual("jumboFrameCapable");
 
-    const pythonValue = Mock.response.data.find((f) => f.name === "pythonValueFact")?.value;
+    const jsonValue = Mock.response.data.find((f) => f.name === "jsonValueFact")?.value;
 
     const sortedByValueAsc = sortFactRows(Mock.response.data, "value", "asc");
 
-    expect(sortedByValueAsc[0].value).toEqual(pythonValue);
+    expect(sortedByValueAsc[0].value).toEqual(jsonValue);
     expect(sortedByValueAsc[sortedByValueAsc.length - 1].value).toEqual("no");
 
     const sortedByValueDesc = sortFactRows(Mock.response.data, "value", "desc");
 
     expect(sortedByValueDesc[0].value).toEqual("no");
-    expect(sortedByValueDesc[sortedByValueDesc.length - 1].value).toEqual(pythonValue);
+    expect(sortedByValueDesc[sortedByValueDesc.length - 1].value).toEqual(jsonValue);
 
     const factsWithUndefinedDate = [
       ...Mock.response.data,

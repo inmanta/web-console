@@ -1,110 +1,70 @@
-import { Language } from "@patternfly/react-code-editor";
-import { XmlFormatter } from "@/Data/Common";
-
-// ─── Constants & Types ────────────────────────────────────────────────────────
+import { CodeEditorProps } from "@patternfly/react-code-editor";
+import { JsonFormatter, XmlFormatter } from "@/Data";
+import { AttributeClassifier } from "@/UI/Components";
 
 /**
- * Number of characters shown in the value column before the preview is
- * truncated with an ellipsis. Keep in sync with the constant imported in
- * Page.test.tsx when computing expected preview strings.
+ * A classifier configured the way the Facts table needs it: multiline,
+ * non-structured values are treated as generic "code" (shown in the editor
+ * without highlighting). All the content-detection logic lives in
+ * {@link AttributeClassifier}, so facts and resource attributes classify values
+ * identically. Built lazily to avoid constructing formatters at module load.
+ */
+let classifier: AttributeClassifier | undefined;
+
+function getClassifier(): AttributeClassifier {
+  classifier ??= new AttributeClassifier(new JsonFormatter(), new XmlFormatter(), (key, value) => ({
+    kind: "Code",
+    key,
+    value,
+  }));
+
+  return classifier;
+}
+
+/**
+ * Number of characters shown in a value preview before it is truncated with an
+ * ellipsis. Exported so tests can derive the expected preview string.
  */
 export const VALUE_PREVIEW_LENGTH = 20;
 
 /**
- * The detected format of a fact value string.
- * - `"json"`   — a JSON object or array
- * - `"xml"`    — valid XML markup
- * - `"python"` — a Python-style dict/list/tuple literal
- * - `"plain"`  — anything else; shown inline in the table, not expandable
- */
-export type ValueType = "json" | "xml" | "python" | "plain";
-
-// ─── Detection ────────────────────────────────────────────────────────────────
-
-/** Returns true when the value is a JSON object or array (not a scalar). */
-function isJsonObject(value: string): boolean {
-  try {
-    const parsed = JSON.parse(value);
-
-    return typeof parsed === "object" && parsed !== null;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Returns true when the value is well-formed XML.
- * Uses the browser's DOMParser so we get a proper parse error instead of
- * relying on a simple `startsWith("<")` heuristic.
- */
-function isXml(value: string): boolean {
-  const trimmed = value.trim();
-
-  if (!trimmed.startsWith("<")) {
-    return false;
-  }
-  try {
-    const doc = new DOMParser().parseFromString(trimmed, "application/xml");
-
-    return !doc.querySelector("parsererror");
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Returns true when the value looks like a Python dict, list, or tuple.
- * Detection requires the value to start with `{`, `[`, or `(` AND contain at
- * least one Python-specific token (`True`, `False`, `None`) or a
- * single-quoted string — both of which are illegal in JSON.
- */
-function isPythonLike(value: string): boolean {
-  const trimmed = value.trim();
-
-  if (!trimmed.startsWith("{") && !trimmed.startsWith("[") && !trimmed.startsWith("(")) {
-    return false;
-  }
-
-  return /\bTrue\b|\bFalse\b|\bNone\b/.test(trimmed) || /'[^']*'/.test(trimmed);
-}
-
-/**
- * Classifies a fact value string into one of the supported format types.
- * The order of checks matters: JSON is tried first because a JSON string also
- * starts with `{` or `[`, which would otherwise trigger `isPythonLike`.
+ * Classifies a raw fact value into the code-editor language it should be shown
+ * as, delegating to the shared {@link AttributeClassifier}.
  *
- * @param value - The raw fact value string to classify.
- * @returns The detected `ValueType`.
+ * @param value - The raw fact value string.
+ * @returns The editor language, `undefined` for generic code, or `null` for inline text.
  */
-export function detectValueType(value: string): ValueType {
-  if (isJsonObject(value)) {
-    return "json";
-  }
-  if (isXml(value)) {
-    return "xml";
-  }
-  if (isPythonLike(value)) {
-    return "python";
-  }
-
-  return "plain";
+export function detectLanguage(value: string): CodeEditorProps["language"] | null {
+  return getClassifier().detectLanguage(value);
 }
 
 /**
- * Returns `true` when a fact value should be shown in an expandable code
- * editor rather than inline in the table cell.
+ * Returns the display-ready version of a fact value, formatted by the shared
+ * {@link AttributeClassifier} — JSON and XML are pretty-printed, generic code is
+ * returned unchanged — so facts and resource attributes render identically.
+ * Falls back to the raw value when nothing matched.
+ *
+ * @param value - The raw fact value string.
+ */
+export function getFormattedValue(value: string): string {
+  const [attribute] = getClassifier().classify({ value });
+
+  return attribute && "value" in attribute ? attribute.value : value;
+}
+
+/**
+ * Returns `true` when a fact value should be shown in the code editor rather
+ * than inline as plain text.
  *
  * @param value - The raw fact value string.
  */
 export function isExpandableValue(value: string): boolean {
-  return detectValueType(value) !== "plain";
+  return detectLanguage(value) !== null;
 }
 
-// ─── Display ──────────────────────────────────────────────────────────────────
-
 /**
- * Returns a truncated preview of a value for display in the table cell.
- * Values longer than `VALUE_PREVIEW_LENGTH` are clipped and suffixed with `…`.
+ * Returns a truncated preview of a value. Values longer than
+ * `VALUE_PREVIEW_LENGTH` are clipped and suffixed with `…`.
  *
  * @param value - The raw fact value string.
  * @returns The full value if short enough, otherwise the first
@@ -112,36 +72,4 @@ export function isExpandableValue(value: string): boolean {
  */
 export function getValuePreview(value: string): string {
   return value.length > VALUE_PREVIEW_LENGTH ? `${value.slice(0, VALUE_PREVIEW_LENGTH)}…` : value;
-}
-
-/**
- * Maps each expandable `ValueType` to the corresponding PatternFly
- * `CodeEditor` language for syntax highlighting.
- */
-export const LANGUAGE_MAP: Record<Exclude<ValueType, "plain">, Language> = {
-  json: Language.json,
-  xml: Language.xml,
-  python: Language.python,
-};
-
-/**
- * Returns the content string to pass to the `CodeEditor`.
- * JSON and XML are pre-formatted before display; Python is passed as-is
- * because no formatter is available for Python literals.
- *
- * @param value - The raw fact value string.
- * @param type  - The detected `ValueType` of the value.
- * @returns The display-ready code string.
- */
-const xmlFormatter = new XmlFormatter();
-
-export function getCodeContent(value: string, type: ValueType): string {
-  switch (type) {
-    case "json":
-      return JSON.stringify(JSON.parse(value), null, 2);
-    case "xml":
-      return xmlFormatter.format(value);
-    default:
-      return value;
-  }
 }

@@ -1,14 +1,11 @@
 import React, { useState, useContext } from "react";
-import { CodeEditor } from "@patternfly/react-code-editor";
 import { Button } from "@patternfly/react-core";
 import { ExpandableRowContent, Tbody, Tr, Td } from "@patternfly/react-table";
-import { DateWithTooltip, Link } from "@/UI/Components";
-import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
-import { useTheme } from "@/UI/Components/DarkmodeOption";
+import { DateWithTooltip, Link, ReadOnlyCodeEditor } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";
-import { LANGUAGE_MAP, detectValueType, getCodeContent, getValuePreview } from "./helpers";
+import { detectLanguage, getFormattedValue, getValuePreview } from "./helpers";
 
 interface Props {
   row: Pick<Fact, "name" | "updated" | "value" | "resource_id">;
@@ -19,10 +16,9 @@ interface Props {
 
 export const FactsRow: React.FC<Props> = ({ row, rowIndex, numberOfColumns, showExpandColumn }) => {
   const { routeManager } = useContext(DependencyContext);
-  const { isDark } = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
-  const valueType = detectValueType(row.value);
-  const isExpandable = valueType !== "plain";
+  const language = detectLanguage(row.value);
+  const isExpandable = language !== null;
   const valuePreview = getValuePreview(row.value);
 
   return (
@@ -66,20 +62,11 @@ export const FactsRow: React.FC<Props> = ({ row, rowIndex, numberOfColumns, show
           </Link>
         </Td>
       </Tr>
-      {isExpandable && (
+      {language !== null && (
         <Tr isExpanded={isExpanded}>
           <Td colSpan={numberOfColumns}>
             <ExpandableRowContent>
-              <CodeEditor
-                isReadOnly
-                isDarkTheme={isDark}
-                code={getCodeContent(row.value, valueType)}
-                language={LANGUAGE_MAP[valueType]}
-                isLanguageLabelVisible
-                isDownloadEnabled
-                customControls={<CodeEditorCopyControl code={row.value} />}
-                height="200px"
-              />
+              <ReadOnlyCodeEditor value={getFormattedValue(row.value)} language={language} />
             </ExpandableRowContent>
           </Td>
         </Tr>

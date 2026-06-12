@@ -12,28 +12,6 @@ test("GIVEN AttributeClassifier WHEN provided with a custom multiline classifier
   const classifier = new AttributeClassifier(
     new JsonFormatter(),
     new XmlFormatter(),
-    (key: string, value: string) => ({ kind: "Python", key, value })
-  );
-
-  expect(classifier.classify({ f: attributes["f"], ff: attributes["ff"] })).toEqual([
-    {
-      kind: "Python",
-      key: "f",
-      value:
-        "This text has a length longer than 80. abcdefghijklmnopqrstvuwxyz abcdefghijklmnopqrstvuwxyz",
-    },
-    {
-      kind: "Python",
-      key: "ff",
-      value: "This text contains a newline.\nblablabla...",
-    },
-  ]);
-});
-
-test("GIVEN AttributeClassifier WHEN provided with a custom Code classifier THEN returns the correct list of ClassifiedAttributes", () => {
-  const classifier = new AttributeClassifier(
-    new JsonFormatter(),
-    new XmlFormatter(),
     (key: string, value: string) => ({ kind: "Code", key, value })
   );
 

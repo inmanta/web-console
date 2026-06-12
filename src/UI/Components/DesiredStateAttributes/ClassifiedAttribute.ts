@@ -10,7 +10,6 @@ export type ClassifiedAttribute =
   | File
   | Json
   | Xml
-  | Python
   | Code;
 
 /**
@@ -52,11 +51,6 @@ type Password = Base<"Password">;
  * Represents a file path or file content attribute
  */
 type File = Base<"File">;
-
-/**
- * Represents a Python code attribute
- */
-type Python = Base<"Python">;
 
 /**
  * Represents generic code attribute (language unspecified)

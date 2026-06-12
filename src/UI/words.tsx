@@ -823,7 +823,6 @@ const dict = {
   "facts.column.value": "Value",
   "facts.column.resourceId": "Resource Id",
   "facts.empty.message": "No facts found",
-  "facts.value.viewButton": "View Value",
 
   /** Desired State */
   "desiredState.title": "Desired State",

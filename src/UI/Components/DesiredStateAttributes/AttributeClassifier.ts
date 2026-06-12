@@ -1,3 +1,4 @@
+import { CodeEditorProps, Language } from "@patternfly/react-code-editor";
 import { Formatter } from "@/Core";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 
@@ -39,6 +40,21 @@ export class AttributeClassifier {
   }
 
   /**
+   * Detects the code-editor language of a single raw string value by running it
+   * through {@link classify} and mapping the resulting kind.
+   *
+   * @param value - The raw string value to classify.
+   * @returns A {@link Language} for highlightable content, `undefined` for
+   *   generic multiline "code" (shown without highlighting), or `null` for short
+   *   plain text that should be shown inline rather than in the editor.
+   */
+  detectLanguage(value: string): CodeEditorProps["language"] | null {
+    const [attribute] = this.classify({ value });
+
+    return this.kindToLanguage(attribute?.kind);
+  }
+
+  /**
    * Classifies a single key-value pair into an appropriate attribute type.
    *
    * @param key - The attribute key
@@ -67,6 +83,14 @@ export class AttributeClassifier {
     }
 
     if (this.isString(value)) {
+      if (this.isJsonString(value)) {
+        return {
+          kind: "Json",
+          key,
+          value: this.jsonFormatter.format(JSON.parse(value)),
+        };
+      }
+
       if (this.isXml(value)) {
         return {
           kind: "Xml",
@@ -96,6 +120,27 @@ export class AttributeClassifier {
       key,
       value: `${value}`,
     };
+  }
+
+  /**
+   * Maps a classified kind to the code-editor language it should render as.
+   *
+   * @param kind - The classified attribute kind (or undefined when nothing matched).
+   * @returns A {@link Language}, `undefined` for generic code, or `null` for inline text.
+   */
+  private kindToLanguage(
+    kind: ClassifiedAttribute["kind"] | undefined
+  ): CodeEditorProps["language"] | null {
+    switch (kind) {
+      case "Json":
+        return Language.json;
+      case "Xml":
+        return Language.xml;
+      case "Code":
+        return undefined;
+      default:
+        return null;
+    }
   }
 
   /**
@@ -139,6 +184,22 @@ export class AttributeClassifier {
   }
 
   /**
+   * Checks if a string parses to a JSON object or array (not a scalar).
+   *
+   * @param value - String to check
+   * @returns True if the string is a JSON object or array
+   */
+  private isJsonString(value: string): boolean {
+    try {
+      const parsed = JSON.parse(value);
+
+      return typeof parsed === "object" && parsed !== null;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Determines if a string value should be treated as multiline.
    *
    * @param value - String value to check
@@ -159,14 +220,25 @@ export class AttributeClassifier {
   }
 
   /**
-   * Determines if a string contains XML content.
+   * Determines if a string contains well-formed XML.
+   * Uses the browser's DOMParser so malformed markup that merely starts with
+   * `<` and ends with `>` isn't mistaken for XML.
    *
    * @param value - String to check
-   * @returns True if the string appears to be XML (starts with < and ends with >)
+   * @returns True if the string is well-formed XML
    */
   private isXml(value: string): boolean {
-    const trimmedValue = value.trimStart().trimEnd();
+    const trimmed = value.trim();
 
-    return trimmedValue.startsWith("<") && trimmedValue.endsWith(">");
+    if (!trimmed.startsWith("<")) {
+      return false;
+    }
+    try {
+      const doc = new DOMParser().parseFromString(trimmed, "application/xml");
+
+      return !doc.querySelector("parsererror");
+    } catch {
+      return false;
+    }
   }
 }

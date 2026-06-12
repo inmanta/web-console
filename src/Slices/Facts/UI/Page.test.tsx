@@ -37,7 +37,7 @@ vi.mock("@patternfly/react-code-editor", () => ({
     onClick: () => void;
     "aria-label": string;
   }) => <button onClick={onClick} aria-label={ariaLabel} />,
-  Language: { json: "json", xml: "xml", python: "python" },
+  Language: { json: "json", xml: "xml" },
 }));
 
 const previewOf = (name: string) => {
@@ -67,15 +67,14 @@ function setup() {
 describe("FactsPage", () => {
   const jsonFactValuePreview = previewOf("jsonValueFact");
   const xmlFactValuePreview = previewOf("xmlValueFact");
-  const pythonFactValuePreview = previewOf("pythonValueFact");
 
   const response = {
     data: Mock.list,
     metadata: {
-      total: 11,
+      total: 10,
       before: 0,
       after: 0,
-      page_size: 11,
+      page_size: 10,
     },
     links: { self: "" },
   };
@@ -97,7 +96,7 @@ describe("FactsPage", () => {
 
     const rows = await screen.findAllByRole("row", { name: "FactsRow" });
 
-    expect(rows).toHaveLength(11);
+    expect(rows).toHaveLength(10);
     expect(within(rows[0]).getByRole("cell", { name: "awsDevice" })).toBeVisible();
 
     await act(async () => {
@@ -161,7 +160,7 @@ describe("FactsPage", () => {
 
       render(component);
 
-      expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(11);
+      expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(10);
 
       const input = await screen.findByPlaceholderText(placeholderText);
 
@@ -207,7 +206,7 @@ describe("FactsPage", () => {
 
     render(component);
 
-    expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(11);
+    expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(10);
 
     await userEvent.click(screen.getByLabelText("Go to next page"));
 
@@ -220,7 +219,7 @@ describe("FactsPage", () => {
 
     await userEvent.click(resourceIdButton);
 
-    expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(11);
+    expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(10);
   });
 
   test("GIVEN Facts page WHEN a row has a JSON value THEN shows a value preview button, otherwise shows the raw value", async () => {
@@ -291,39 +290,6 @@ describe("FactsPage", () => {
     expect(
       await screen.findByText((content) => content.includes("<host>localhost</host>"))
     ).toBeVisible();
-
-    expect(screen.getByRole("button", { name: words("copy") })).toBeVisible();
-    expect(screen.getByRole("button", { name: "Download code" })).toBeVisible();
-  });
-
-  test("GIVEN Facts page WHEN a row has a Python value THEN shows a value preview button, otherwise shows the raw value", async () => {
-    server.use(
-      http.get("/api/v2/facts", () => {
-        return HttpResponse.json(response);
-      })
-    );
-    const { component } = setup();
-
-    render(component);
-
-    expect(await screen.findByRole("button", { name: pythonFactValuePreview })).toBeVisible();
-    expect(screen.getAllByRole("button", { name: pythonFactValuePreview })).toHaveLength(1);
-  });
-
-  test("GIVEN Facts page WHEN clicking the Python value preview THEN Python and a copy button are shown", async () => {
-    server.use(
-      http.get("/api/v2/facts", () => {
-        return HttpResponse.json(response);
-      })
-    );
-    const { component } = setup();
-
-    render(component);
-
-    await userEvent.click(await screen.findByRole("button", { name: pythonFactValuePreview }));
-
-    // Python value shown as-is — check for a distinctive token
-    expect(await screen.findByText((content) => content.includes("'enabled': True"))).toBeVisible();
 
     expect(screen.getByRole("button", { name: words("copy") })).toBeVisible();
     expect(screen.getByRole("button", { name: "Download code" })).toBeVisible();

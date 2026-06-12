@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { CodeEditor, Language } from "@patternfly/react-code-editor";
+import React from "react";
+import { Language } from "@patternfly/react-code-editor";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -9,8 +9,7 @@ import {
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
-import { CodeEditorCopyControl, CodeEditorHeightToggleControl } from "../CodeEditorControls";
-import { useTheme } from "../DarkmodeOption";
+import { ReadOnlyCodeEditor } from "../ReadOnlyCodeEditor";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 import { FileBlock } from "./FileBlock";
 
@@ -20,6 +19,12 @@ interface Props {
 }
 
 type AttributeTextVariant = "default" | "monospace";
+
+/** Maps a code-editor attribute kind to its highlighting language (generic `Code` has none). */
+const KIND_TO_LANGUAGE: Partial<Record<ClassifiedAttribute["kind"], Language>> = {
+  Json: Language.json,
+  Xml: Language.xml,
+};
 
 /**
  * A component that displays a list of attributes.
@@ -45,13 +50,6 @@ const AttributeValue: React.FC<{
   attribute: ClassifiedAttribute;
   variant?: AttributeTextVariant;
 }> = ({ attribute, variant }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const { isDark } = useTheme();
-
-  const getEditorHeight = (attribute: ClassifiedAttribute) => {
-    return isExpanded ? "calc(100vh - 300px)" : getDefaultHeightEditor(attribute);
-  };
-
   switch (attribute.kind) {
     case "Undefined":
       return (
@@ -81,95 +79,10 @@ const AttributeValue: React.FC<{
       return <FileBlock hash={attribute.value} />;
 
     case "Json":
-      return (
-        <CodeEditor
-          key={`json-${isExpanded}`}
-          isReadOnly
-          isDarkTheme={isDark}
-          code={attribute.value}
-          isLanguageLabelVisible
-          language={Language.json}
-          isDownloadEnabled
-          customControls={
-            <>
-              <CodeEditorCopyControl code={attribute.value} />
-              <CodeEditorHeightToggleControl
-                code={attribute.value}
-                isExpanded={isExpanded}
-                onToggle={() => setIsExpanded(!isExpanded)}
-              />
-            </>
-          }
-          height={getEditorHeight(attribute)}
-        />
-      );
-
     case "Xml":
-      return (
-        <CodeEditor
-          key={`xml-${isExpanded}`}
-          isReadOnly
-          isDarkTheme={isDark}
-          code={attribute.value}
-          isLanguageLabelVisible
-          language={Language.xml}
-          isDownloadEnabled
-          customControls={
-            <>
-              <CodeEditorCopyControl code={attribute.value} />
-              <CodeEditorHeightToggleControl
-                code={attribute.value}
-                isExpanded={isExpanded}
-                onToggle={() => setIsExpanded(!isExpanded)}
-              />
-            </>
-          }
-          height={getEditorHeight(attribute)}
-        />
-      );
-    case "Python":
-      return (
-        <CodeEditor
-          key={`python-${isExpanded}`}
-          isReadOnly
-          isDarkTheme={isDark}
-          code={attribute.value}
-          isLanguageLabelVisible
-          language={Language.python}
-          isDownloadEnabled
-          customControls={
-            <>
-              <CodeEditorCopyControl code={attribute.value} />
-              <CodeEditorHeightToggleControl
-                code={attribute.value}
-                isExpanded={isExpanded}
-                onToggle={() => setIsExpanded(!isExpanded)}
-              />
-            </>
-          }
-          height={getEditorHeight(attribute)}
-        />
-      );
     case "Code":
       return (
-        <CodeEditor
-          key={`code-${isExpanded}`}
-          isReadOnly
-          isDarkTheme={isDark}
-          code={attribute.value}
-          isDownloadEnabled
-          customControls={
-            <>
-              <CodeEditorCopyControl code={attribute.value} />
-              <CodeEditorHeightToggleControl
-                code={attribute.value}
-                isExpanded={isExpanded}
-                onToggle={() => setIsExpanded(!isExpanded)}
-              />
-            </>
-          }
-          height={getEditorHeight(attribute)}
-        />
+        <ReadOnlyCodeEditor value={attribute.value} language={KIND_TO_LANGUAGE[attribute.kind]} />
       );
   }
 };
@@ -186,30 +99,3 @@ const TextContainer = styled.span<{ $variant?: AttributeTextVariant }>`
       ? "font-family: var(--pf-t--global--font--family--mono)"
       : "inherit"};
 `;
-
-/**
- * Determines the height for code editors based on content length.
- * Uses explicit px values instead of "sizeToFit" because PatternFly's sizeToFit
- * calls editor.layout() but never updates the container's CSS height, leaving
- * the container at 0px (invalid CSS value) while Monaco overflows it.
- *
- * Monaco line height: Math.round(GOLDEN_LINE_HEIGHT_RATIO * fontSize)
- *   Windows/Linux: Math.round(1.35 * 14) = 19px
- *   macOS:         Math.round(1.5  * 12) = 18px
- * Using 19px covers both platforms (slightly tall on macOS — better than too short).
- * The height prop targets the Monaco container only; the toolbar sits outside it.
- */
-export const getDefaultHeightEditor = (attribute: ClassifiedAttribute): string => {
-  if (
-    attribute.kind === "Json" ||
-    attribute.kind === "Xml" ||
-    attribute.kind === "Python" ||
-    attribute.kind === "Code"
-  ) {
-    const lineCount = attribute.value.split("\n").length;
-
-    return `${Math.min(lineCount * 19, 300)}px`;
-  }
-
-  return "19px";
-};

@@ -14,10 +14,16 @@ export const attributes = {
   ff: "This text contains a newline.\nblablabla...",
   g: {},
   hash: "filehash",
+  jsonArrayString: "[1, 2, 3]",
+  jsonObjectString: '{"key": "value"}',
+  jsonScalarString: '"just a quoted string"',
   some_password: "abcde",
   wrongXml1: "<class 'AttributeError'>: 'RPCError' object has no attribute '_tag'",
   wrongXml2: "<class 'AttributeError'>",
   whiteSpacedXML: "  <note><to>Tove</to><from>Jani</from></note> ",
+  // "version" and "requires" are ignored by default and never appear in `classified`.
+  version: "1.0",
+  requires: "std::testmodule",
 };
 
 export const classified: ClassifiedAttribute[] = [
@@ -54,6 +60,21 @@ export const classified: ClassifiedAttribute[] = [
     value: "filehash",
   },
   {
+    kind: "Json",
+    key: "jsonArrayString",
+    value: "[\n    1,\n    2,\n    3\n]",
+  },
+  {
+    kind: "Json",
+    key: "jsonObjectString",
+    value: '{\n    "key": "value"\n}',
+  },
+  {
+    kind: "SingleLine",
+    key: "jsonScalarString",
+    value: '"just a quoted string"',
+  },
+  {
     kind: "Password",
     key: "some_password",
     value: "****",
@@ -69,7 +90,7 @@ export const classified: ClassifiedAttribute[] = [
     value: "<class 'AttributeError'>: 'RPCError' object has no attribute '_tag'",
   },
   {
-    kind: "Xml",
+    kind: "SingleLine",
     key: "wrongXml2",
     value: "<class 'AttributeError'>",
   },
