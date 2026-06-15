@@ -68,6 +68,10 @@ describe("EnvironmentSelector", () => {
     server.resetHandlers();
   });
 
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   afterAll(() => {
     server.close();
   });
@@ -274,5 +278,118 @@ describe("EnvironmentSelector", () => {
 
     expect(await screen.findByText("test_user")).toBeVisible();
     expect(screen.getByText("test-env1 (default)")).toBeVisible();
+  });
+
+  test("GIVEN EnvironmentSelector WHEN dropdown is opened THEN search input is rendered", async () => {
+    server.use(
+      http.get("/api/v2/environment", async () => {
+        return HttpResponse.json({ data: Environment.filterable });
+      }),
+      http.get("/api/v2/project", async () => {
+        return HttpResponse.json({ data: Project.filterable });
+      })
+    );
+
+    render(setup());
+
+    const toggle = await screen.findByTestId("env-selector-toggle");
+
+    await userEvent.click(toggle);
+
+    expect(screen.getByPlaceholderText("Search by name or project")).toBeVisible();
+  });
+
+  test("GIVEN EnvironmentSelector WHEN user types in search THEN only matching environments are shown", async () => {
+    server.use(
+      http.get("/api/v2/environment", async () => {
+        return HttpResponse.json({ data: Environment.filterable });
+      }),
+      http.get("/api/v2/project", async () => {
+        return HttpResponse.json({ data: Project.filterable });
+      })
+    );
+
+    render(setup());
+
+    const toggle = await screen.findByTestId("env-selector-toggle");
+
+    await userEvent.click(toggle);
+
+    const searchInput = screen.getByPlaceholderText("Search by name or project");
+
+    await userEvent.type(searchInput, "dev");
+
+    expect(screen.getByRole("menuitem", { name: /dev-env2/ })).toBeVisible();
+    expect(screen.queryByRole("menuitem", { name: /test-env1/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: /test-env2/ })).not.toBeInTheDocument();
+  });
+
+  test("GIVEN EnvironmentSelector WHEN user searches by project name THEN matching environments are shown", async () => {
+    server.use(
+      http.get("/api/v2/environment", async () => {
+        return HttpResponse.json({ data: Environment.filterable });
+      }),
+      http.get("/api/v2/project", async () => {
+        return HttpResponse.json({ data: Project.filterable });
+      })
+    );
+
+    render(setup());
+
+    const toggle = await screen.findByTestId("env-selector-toggle");
+
+    await userEvent.click(toggle);
+
+    const searchInput = screen.getByPlaceholderText("Search by name or project");
+
+    await userEvent.type(searchInput, "prod");
+
+    const allMenuItems = screen.queryAllByRole("menuitem");
+    const itemsWithProd = allMenuItems.filter((item) => item.textContent?.includes("(prod)"));
+    const itemsWithDefault = allMenuItems.filter((item) => item.textContent?.includes("(default)"));
+
+    expect(itemsWithProd).toHaveLength(2);
+    expect(itemsWithDefault).toHaveLength(0);
+  });
+
+  test("GIVEN EnvironmentSelector WHEN dropdown is opened THEN 'Create new environment' link is visible", async () => {
+    server.use(
+      http.get("/api/v2/environment", async () => {
+        return HttpResponse.json({ data: Environment.filterable });
+      }),
+      http.get("/api/v2/project", async () => {
+        return HttpResponse.json({ data: Project.filterable });
+      })
+    );
+
+    render(setup());
+
+    const toggle = await screen.findByTestId("env-selector-toggle");
+
+    await userEvent.click(toggle);
+
+    expect(screen.getByText("Create new environment")).toBeVisible();
+  });
+
+  test("GIVEN EnvironmentSelector WHEN environment has an icon THEN an img element is rendered for that item", async () => {
+    server.use(
+      http.get("/api/v2/environment", async () => {
+        return HttpResponse.json({ data: Environment.filterable });
+      }),
+      http.get("/api/v2/project", async () => {
+        return HttpResponse.json({ data: Project.filterable });
+      })
+    );
+
+    render(setup());
+
+    const toggle = await screen.findByTestId("env-selector-toggle");
+
+    await userEvent.click(toggle);
+
+    // Environment.filterable[0] (test-env1) has an icon field
+    const imgElements = screen.getAllByRole("img", { hidden: true });
+
+    expect(imgElements.length).toBeGreaterThan(0);
   });
 });

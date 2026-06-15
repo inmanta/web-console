@@ -1,19 +1,19 @@
 import environmentHelpers from "../support/environmentHelpers";
 
-const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
+const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
-
+const LSM_TEST_ENVIRONMENT = "test (lsm-frontend)";
 if (isIso) {
   describe("Scenario 9 : Order Overview", () => {
     before(() => {
-      clearEnvironment();
-      forceUpdateEnvironment();
+      clearEnvironment(LSM_TEST_ENVIRONMENT);
+      forceUpdateEnvironment(LSM_TEST_ENVIRONMENT);
     });
 
     it("Displays a Partial order with multiple dependencies correctly", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment(LSM_TEST_ENVIRONMENT);
 
       // go to the Orders page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Orders").click();

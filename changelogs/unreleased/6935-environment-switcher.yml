@@ -1,0 +1,10 @@
+description: |
+  The Environment overview page has been removed, and the Environment Dashboard will now be the default when loading the application. 
+  The last selected environment is stored in local storage so the application will by default load that environmnent when the id is not provided in the URL. 
+  When no environment is available to load, the user will be redirected to the create environment page.
+  The main menu in the application header now also contains a search box to quickly find and switch to an environment.
+issue-nr: 6935
+change-type: minor
+destination-branches: [master]
+sections:
+  feature: "{{description}}"
