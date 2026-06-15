@@ -61,11 +61,16 @@ export function MockEnvironmentHandler(
     return;
   }
 
+  function useAll(): EnvironmentPreview[] {
+    return [];
+  }
+
   return {
     useId,
     set,
     useName,
     useSelected,
+    useAll,
     determineSelected,
     useIsHalted,
     useIsCompiling,

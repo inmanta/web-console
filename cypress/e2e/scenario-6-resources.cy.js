@@ -1,6 +1,6 @@
 import environmentHelpers from "../support/environmentHelpers";
 
-const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
+const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
 
@@ -39,7 +39,7 @@ describe("Scenario 6 : Resources", () => {
 
   it("6.1 Initial state", () => {
     cy.visit("/console/");
-    cy.get('[aria-label="Select-environment-test"]').click();
+    selectEnvironment();
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
     // Expect 0 or 5 resources depending on edition
@@ -50,7 +50,7 @@ describe("Scenario 6 : Resources", () => {
   if (isIso) {
     it("6.2 Add instance on the resource-states service", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
 
       // Store initial resource count
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
@@ -125,7 +125,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.3 Log message filtering", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
 
       // Navigate to the target resource logs
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
@@ -154,7 +154,8 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.4 Resources with multiple dependencies", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
       const resourceName = "test-has-update-failed-blocked-0";
@@ -210,7 +211,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.5 Pagination", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
 
       // Store initial resource count before adding more
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
@@ -292,7 +293,8 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.6 Compound resource status legend", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
@@ -331,7 +333,8 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.7 Resource filters", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
@@ -439,21 +442,18 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[role="menuitem"]').contains("Delete").click();
       cy.get("button").contains("Yes").click();
       cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);
+      cy.get('[role="dialog"]').should("not.exist");
 
-      // Navigate to Resources, then wait for the recompile to start and finish
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
-      cy.get('[aria-label="CompileReportsIndication"]', { timeout: 30000 }).should("exist");
-      cy.get('[aria-label="CompileReportsIndication"]', { timeout: 90000 }).should("not.exist");
-
-      // Intercept the GraphQL resource query — needed because keepPreviousData keeps
-      // stale rows visible while the new request is in flight, so we must wait for
-      // each response before asserting row counts.
-      cy.intercept("POST", "/api/v2/graphql").as("resourcesQuery");
-
-      // Restore page size to 250 so all resources are visible for accurate counting
-      cy.get("#PaginationWidget-top-top-toggle").click();
-      cy.get('[data-action="per-page-250"]').click();
-      cy.wait("@resourcesQuery");
+      cy.get('[aria-label="ResourcesPage-Success"]', { timeout: 20000 }).should("be.visible");
+      // Once the recompile finishes, "test" resources are orphaned and hidden by the default
+      // Not Orphaned filter. Retries until no value cell starts with "test-".
+      cy.get('[aria-label="Resource Table Row"] td[data-label="Value"]', { timeout: 90000 }).should(
+        ($cells) => {
+          const testCells = $cells.filter((i, el) => el.textContent.trim().startsWith("test-"));
+          expect(testCells).to.have.length(0);
+        }
+      );
 
       // Open the filter drawer on the Status tab
       cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
@@ -466,23 +466,21 @@ describe("Scenario 6 : Resources", () => {
 
       // Deselect "Not Orphaned" — no filter, all resources visible including orphaned
       cy.get("#orphaned-exclude").click();
-      cy.wait("@resourcesQuery");
       expectFilteredMoreThan("initialRowCount");
 
       // Select "Orphaned" — only orphaned resources, fewer than the baseline
       cy.get("#orphaned-include").click();
-      cy.wait("@resourcesQuery");
       expectFilteredLessThan("initialRowCount");
 
       // Reselect "Not Orphaned" — restores to initial count
       cy.get("#orphaned-exclude").click();
-      cy.wait("@resourcesQuery");
       expectRowCountRestored("initialRowCount");
     });
 
     it("6.8 Resource sorting", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
@@ -514,10 +512,9 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
-      }).should("not.have.text", "1 - 20");
+      }).should("have.text", "21 - 40");
 
       cy.get("button").contains("Type").click();
-      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
       }).should("have.text", "1 - 20");
@@ -625,7 +622,8 @@ describe("Scenario 6 : Resources", () => {
   } else {
     it("6.2 Resources for OSS", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
 
       // Expect exactly 5 resources, all of type frontend_model::TestResource
@@ -688,7 +686,8 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.3 OSS basic status sort menu", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 

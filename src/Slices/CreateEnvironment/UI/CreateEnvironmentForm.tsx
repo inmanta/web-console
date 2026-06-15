@@ -33,7 +33,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
   const { orchestratorProvider, environmentHandler } = useContext(DependencyContext);
   const isLsmEnabled = orchestratorProvider.isLsmEnabled();
   const navigateTo = useNavigateTo();
-  const navigateToHome = () => navigateTo("Home", undefined);
+  const navigateToHome = () => navigateTo("Dashboard", undefined);
   const client = useQueryClient();
   const createProject = useCreateProject();
 

@@ -43,7 +43,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   const [isBusy, setIsBusy] = useState(false);
   const validated = environment.name === candidateEnv ? "success" : "default";
 
-  const redirectToHome = () => navigateTo("Home", undefined);
+  const redirectToHome = () => navigateTo("Dashboard", undefined);
 
   const deleteEnv = useDeleteEnvironment(environment.id, {
     onSuccess: () => {

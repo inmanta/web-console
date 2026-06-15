@@ -1,6 +1,6 @@
 import environmentHelpers from "../support/environmentHelpers";
 
-const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
+const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
 
@@ -13,7 +13,7 @@ if (isIso) {
 
     it("3.1 Check empty state", () => {
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on kebab menu and select Show Details on basic-service
@@ -92,7 +92,8 @@ if (isIso) {
     it("3.2 Create success instance and check details", () => {
       // Select 'test' environment
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // click on Show Inventory on basic-service
@@ -162,7 +163,8 @@ if (isIso) {
     it("3.3 Create a failed Instance by Duplicating and check details", () => {
       // Select 'test' environment
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // click on Show Inventory on basic-service
@@ -238,9 +240,10 @@ if (isIso) {
     });
 
     it("3.4 Callbacks", () => {
-      // Select card 'test' environment on home page
+      // Select 'test' environment
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on kebab menu and select Show Details on basic-service
@@ -335,9 +338,10 @@ if (isIso) {
     });
 
     it("3.5 Delete Service", () => {
-      // Select card 'test' environment on home page
+      // Select 'test' environment
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       // Click on Delete button
