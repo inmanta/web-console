@@ -1,17 +1,31 @@
 /**
- * Shorthand method to clear the environment being passed.
- * By default, if no arguments are passed it will target the 'test' environment.
- *
- * @param {string} nameEnvironment
+ * Returns the default environment display name for the current edition.
  */
+const getDefaultEnvName = () =>
+  Cypress.expose("edition") === "iso" ? "test (lsm-frontend)" : "test (oss-frontend)";
+
+/**
+ * Selects an environment from the header dropdown.
+ * Assumes a page with the header is already loaded.
+ * Defaults to the edition-appropriate test environment when no name is given.
+ *
+ * @param {string} [nameEnvironment] - partial or full display name of the environment
+ */
+const selectEnvironment = (nameEnvironment) => {
+  const resolvedName = nameEnvironment ?? getDefaultEnvName();
+  cy.get('[data-testid="env-selector-toggle"]').click();
+  cy.get('[role="menuitem"]').contains(resolvedName).click();
+};
+
 const clearEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
+  selectEnvironment(nameEnvironment);
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
-
-    cy.request("DELETE", `/api/v1/decommission/${id}`);
+    if (id) {
+      cy.request("DELETE", `/api/v1/decommission/${id}`);
+    }
   });
 };
 
@@ -59,7 +73,7 @@ const checkStatusCompile = (id) => {
  */
 const forceUpdateEnvironment = (nameEnvironment = "test") => {
   cy.visit("/console/");
-  cy.get(`[aria-label="Select-environment-${nameEnvironment}"]`).click();
+  selectEnvironment(nameEnvironment);
   cy.url().then((url) => {
     const location = new URL(url);
     const id = location.searchParams.get("env");
@@ -75,6 +89,8 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
 };
 
 module.exports = {
+  getDefaultEnvName,
+  selectEnvironment,
   clearEnvironment,
   checkStatusCompile,
   forceUpdateEnvironment,

@@ -7,7 +7,7 @@ if (localAuth) {
     cy.get('[id="pf-login-username-id"]').type("admin");
     cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
 
-    cy.get("h1").contains("Home").should("be.visible");
+    cy.get("h1").contains("Dashboard | env").should("be.visible");
 
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
@@ -123,7 +123,7 @@ if (localAuth) {
     cy.get('[id="pf-login-username-id"]').type("admin");
     cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
 
-    cy.get("h1").contains("Home").should("be.visible");
+    cy.get("h1").contains("Dashboard | env").should("be.visible");
 
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
@@ -159,7 +159,7 @@ if (localAuth) {
     cy.get('[id="pf-login-username-id"]').type("admin");
     cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
 
-    cy.get("h1").contains("Home").should("be.visible");
+    cy.get("h1").contains("Dashboard | env").should("be.visible");
 
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
@@ -183,7 +183,7 @@ if (localAuth) {
     cy.get('[id="pf-login-username-id"]').type("admin");
     cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
 
-    cy.get("h1").contains("Home").should("be.visible");
+    cy.get("h1").contains("Dashboard | env").should("be.visible");
 
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
@@ -220,6 +220,6 @@ if (localAuth) {
     cy.get('[id="pf-login-username-id"]').type("admin");
     cy.get('[id="pf-login-password-id"]').type("12345678{enter}");
 
-    cy.get("h1").contains("Home").should("be.visible");
+    cy.get("h1").contains("Dashboard | env").should("be.visible");
   });
 }
