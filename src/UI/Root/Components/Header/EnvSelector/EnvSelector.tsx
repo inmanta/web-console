@@ -1,24 +1,40 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import {
+  Avatar,
   Content,
   Divider,
-  Dropdown,
-  DropdownGroup,
-  DropdownItem,
-  DropdownList,
+  Flex,
+  FlexItem,
+  Menu,
+  MenuContainer,
+  MenuContent,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+  MenuSearch,
+  MenuSearchInput,
   MenuToggle,
   MenuToggleElement,
-  Tooltip,
+  SearchInput,
+  Split,
+  SplitItem,
 } from "@patternfly/react-core";
-import { UserCircleIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
+import {
+  CheckIcon,
+  PlusCircleIcon,
+  SignOutAltIcon,
+  UserCircleIcon,
+  UsersIcon,
+} from "@patternfly/react-icons";
 import { DarkmodeOption } from "@/UI/Components/DarkmodeOption";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import fallBackImage from "@images/inmanta-wings.svg";
+import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 
 interface Props {
-  items: string[];
+  items: EnvironmentSelectorItem[];
   onSelect: (value: string) => void;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
@@ -34,6 +50,15 @@ export const EnvSelector: React.FC<Props> = ({
 }) => {
   const { routeManager, authHelper } = useContext(DependencyContext);
   const navigate = useNavigate();
+  const menuRef = React.useRef<HTMLDivElement>(null);
+  const toggleRef = React.useRef<MenuToggleElement>(null);
+  const [searchText, setSearchText] = useState("");
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchText("");
+    }
+  }, [isOpen]);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -44,77 +69,160 @@ export const EnvSelector: React.FC<Props> = ({
   const showUserManagement = !authHelper.isDisabled() && authConfig?.method === "database";
   const showLogout = !authHelper.isDisabled();
 
+  const filteredItems = searchText
+    ? items.filter((item) => item.displayName.toLowerCase().includes(searchText.toLowerCase()))
+    : items;
+
+  const toggle = (
+    <MenuToggle
+      id="toggle-button"
+      data-testid="env-selector-toggle"
+      ref={toggleRef}
+      isExpanded={isOpen}
+      aria-label={toggleText}
+      isFullHeight
+      onClick={handleToggle}
+      icon={authHelper.getUser() ? <UserCircleIcon /> : null}
+    >
+      <Flex alignItems={{ default: "alignItemsCenter" }} style={{ gap: "20px" }}>
+        <FlexItem>
+          {authHelper.getUser() && (
+            <Content style={{ fontWeight: "bold", textAlign: "start" }}>
+              {authHelper.getUser()}
+            </Content>
+          )}
+          <Content>{toggleText.length > 28 ? toggleText.slice(0, 20) + "..." : toggleText}</Content>
+        </FlexItem>
+      </Flex>
+    </MenuToggle>
+  );
+
+  const menu = (
+    <Menu
+      ref={menuRef}
+      style={{
+        paddingBlockEnd: 0,
+      }}
+      onSelect={() => setIsOpen(false)}
+    >
+      <MenuContent>
+        <MenuGroup label={words("home.environment.selector")} key="envs-group">
+          <MenuSearch>
+            <MenuSearchInput>
+              <SearchInput
+                aria-label={words("home.environmentSwitcher.search.placeholder")}
+                placeholder={words("home.environmentSwitcher.search.placeholder")}
+                value={searchText}
+                onChange={(_event, value) => setSearchText(value)}
+                onClear={() => setSearchText("")}
+                onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                  event.stopPropagation();
+                }}
+              />
+            </MenuSearchInput>
+          </MenuSearch>
+        </MenuGroup>
+        <MenuList>
+          {items.length === 0 ? (
+            <MenuItem isDisabled key="no-env">
+              {words("home.environmentSwitcher.noEnvironments")}
+            </MenuItem>
+          ) : (
+            filteredItems.map((item, index) => (
+              <MenuItem
+                onClick={() => onSelect(item.displayName)}
+                key={`env-${index}-${item.environmentId}`}
+                icon={<EnvironmentIcon icon={item.icon} />}
+              >
+                <Split>
+                  <SplitItem isFilled>
+                    <span>
+                      {item.displayName.length > 28
+                        ? item.displayName.slice(0, 20) + "..."
+                        : item.displayName}
+                    </span>
+                  </SplitItem>
+                  {item.displayName === toggleText && (
+                    <SplitItem>
+                      <CheckIcon color="var(--pf-t--global--color--brand--default)" />
+                    </SplitItem>
+                  )}
+                </Split>
+              </MenuItem>
+            ))
+          )}
+          <Divider />
+          <MenuItem
+            onClick={() => navigate(routeManager.getUrl("CreateEnvironment", undefined))}
+            icon={<PlusCircleIcon />}
+          >
+            {words("home.environmentSwitcher.create.button")}
+          </MenuItem>
+          {showUserManagement && (
+            <MenuItem
+              onClick={() => navigate(routeManager.getUrl("UserManagement", undefined))}
+              icon={<UsersIcon />}
+            >
+              {words("userManagement.title")}
+            </MenuItem>
+          )}
+          {showLogout && (
+            <MenuItem onClick={() => authHelper.logout()} icon={<SignOutAltIcon />}>
+              {words("dashboard.logout")}
+            </MenuItem>
+          )}
+          <DarkmodeOption />
+          {authHelper.getUser() && (
+            <>
+              <Divider />
+              <Flex
+                key="user-info"
+                alignItems={{ default: "alignItemsCenter" }}
+                spaceItems={{ default: "spaceItemsSm" }}
+                style={{
+                  padding: "var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--lg)",
+                  color: "var(--pf-t--global--text--color--subtle)",
+                  backgroundColor: "var(--pf-t--global--background--color--secondary--default)",
+                }}
+              >
+                <FlexItem>
+                  <UserCircleIcon />
+                </FlexItem>
+                <FlexItem>
+                  <span>
+                    {words("home.environmentSwitcher.signedInAs")}
+                    <strong>{authHelper.getUser()}</strong>
+                  </span>
+                </FlexItem>
+              </Flex>
+            </>
+          )}
+        </MenuList>
+      </MenuContent>
+    </Menu>
+  );
+
   return (
-    <Dropdown
+    <MenuContainer
+      menu={menu}
+      menuRef={menuRef}
+      toggle={toggle}
+      toggleRef={toggleRef}
       isOpen={isOpen}
+      onOpenChange={(isOpen) => setIsOpen(isOpen)}
+      onOpenChangeKeys={["Escape"]}
       popperProps={{
         position: "end",
+        minWidth: "300px",
       }}
-      onOpenChange={(open: boolean) => setIsOpen(open)}
-      onClick={handleToggle}
-      toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-        <MenuToggle
-          id="toggle-button"
-          data-testid="env-selector-toggle"
-          ref={toggleRef}
-          isExpanded={isOpen}
-          aria-label={toggleText}
-          isFullHeight
-          onClick={handleToggle}
-          icon={authHelper.getUser() ? <UserCircleIcon /> : null}
-        >
-          <StyledDiv>
-            <div>
-              {authHelper.getUser() && <StyledText>{authHelper.getUser()}</StyledText>}
-              <div>{toggleText.length > 28 ? toggleText.slice(0, 20) + "..." : toggleText}</div>
-            </div>
-          </StyledDiv>
-        </MenuToggle>
-      )}
-    >
-      <DropdownList>
-        <DropdownGroup label={words("home.environment.selector")} key="envs-group">
-          {items.map((item, index) => (
-            <DropdownItem onClick={() => onSelect(item)} key={`env-${index}-${item}`}>
-              {item.length > 28 ? item.slice(0, 20) + "..." : item}
-            </DropdownItem>
-          ))}
-        </DropdownGroup>
-        <div key="overview-link">
-          <Divider />
-          <Tooltip content={words("home.navigation.tooltip")} entryDelay={500}>
-            <DropdownItem onClick={() => navigate(routeManager.getUrl("Home", undefined))}>
-              {words("home.navigation.button")}
-            </DropdownItem>
-          </Tooltip>
-          <>
-            {showUserManagement && (
-              <DropdownItem
-                onClick={() => navigate(routeManager.getUrl("UserManagement", undefined))}
-              >
-                {words("userManagement.title")}
-              </DropdownItem>
-            )}
-            {showLogout && (
-              <DropdownItem onClick={() => authHelper.logout()}>
-                {words("dashboard.logout")}
-              </DropdownItem>
-            )}
-          </>
-        </div>
-        <DarkmodeOption />
-      </DropdownList>
-    </Dropdown>
+    />
   );
 };
 
-const StyledText = styled(Content)`
-  font-weight: bold;
-  text-align: start;
-`;
-const StyledDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  align-items: center;
-`;
+const EnvironmentIcon: React.FC<{ icon?: string }> = ({ icon }) => (
+  <Avatar
+    src={icon ?? fallBackImage}
+    alt="Environment icon"
+    style={{ height: "20px", width: "20px", display: "block" }}
+  />
+);

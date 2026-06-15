@@ -11,7 +11,7 @@ import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
  * @returns {React.FC} The Provider component
  */
 export const Provider: React.FC = () => {
-  const { environmentHandler, routeManager, orchestratorProvider } = useContext(DependencyContext);
+  const { environmentHandler, routeManager } = useContext(DependencyContext);
   const location = useLocation();
   const navigate = useNavigate();
   const selected = environmentHandler.useSelected();
@@ -29,9 +29,7 @@ export const Provider: React.FC = () => {
 
     const newLocation = {
       ...location,
-      pathname: orchestratorProvider.isLsmEnabled()
-        ? routeManager.getUrl("Catalog", undefined)
-        : routeManager.getUrl("CompileReports", undefined),
+      pathname: routeManager.getUrl("Dashboard", undefined),
     };
 
     environmentHandler.set(navigate, newLocation, item.environmentId);

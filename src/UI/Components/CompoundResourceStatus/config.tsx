@@ -1,10 +1,10 @@
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 import { Icon } from "@patternfly/react-core";
 import { CubeIcon, ShieldAltIcon, TrafficLightIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
 
 /** Status config which maps the compound state types to a displayed string output.
- * Used in the ResourceTableRow.
+ * Used in the ResourceTableRow and CompoundResourceStatus.
  */
 export const statusMapping: Record<Resource.CompoundState, string> = {
   // --- Blocked --
@@ -78,7 +78,7 @@ const resolveColor = (variant: ColorVariant = "state", state?: Resource.Compound
 /** Icons for every compound state. */
 export const statusGroupIcons: Record<
   keyof Resource.CompoundStateSummary,
-  (options?: { state?: Resource.CompoundState; variant?: ColorVariant }) => ReactNode
+  (options?: { state?: Resource.CompoundState; variant?: ColorVariant }) => ReactElement
 > = {
   blocked: ({ state, variant } = {}) => (
     <Icon size="heading_2xl">
