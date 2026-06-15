@@ -3,7 +3,13 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SearchSelect, TEST_IDS } from "./SearchSelect";
 
-const OPTIONS = ["Apple", "Banana", "Blueberry", "Cherry", "Grape"];
+const OPTIONS = [
+  { value: "Apple" },
+  { value: "Banana" },
+  { value: "Blueberry" },
+  { value: "Cherry" },
+  { value: "Grape" },
+];
 
 function Wrapper({
   initialValue = "",
@@ -48,28 +54,51 @@ describe("SearchSelect", () => {
     expect(screen.getByTestId(TEST_IDS.toggle)).toHaveTextContent("Cherry");
   });
 
-  describe("with described options", () => {
-    const OPTIONS_WITH_DESCRIPTIONS = [
-      { value: "Apple", description: "A red fruit" },
-      { value: "Banana", description: "A yellow fruit" },
+  describe("with children", () => {
+    const OPTIONS_WITH_CHILDREN = [
+      {
+        value: "Apple",
+        children: (
+          <>
+            Apple <span>A red fruit</span>
+          </>
+        ),
+      },
+      {
+        value: "Banana",
+        children: (
+          <>
+            Banana <span>A yellow fruit</span>
+          </>
+        ),
+      },
     ];
 
-    it("renders the description of each option", async () => {
-      render(<Wrapper options={OPTIONS_WITH_DESCRIPTIONS} />);
+    it("renders the children of each option", async () => {
+      render(<Wrapper options={OPTIONS_WITH_CHILDREN} />);
       await userEvent.click(screen.getByTestId(TEST_IDS.toggle));
       const options = getSelectableOptions();
 
-      OPTIONS_WITH_DESCRIPTIONS.forEach((option, index) => {
-        expect(options[index]).toHaveTextContent(option.value);
-        expect(options[index]).toHaveTextContent(option.description);
-      });
+      expect(options[0]).toHaveTextContent("Apple");
+      expect(options[0]).toHaveTextContent("A red fruit");
+      expect(options[1]).toHaveTextContent("Banana");
+      expect(options[1]).toHaveTextContent("A yellow fruit");
     });
 
-    it("filters on the value only, not the description", async () => {
-      render(<Wrapper options={OPTIONS_WITH_DESCRIPTIONS} />);
+    it("shows the full children on the toggle after selection", async () => {
+      render(<Wrapper options={OPTIONS_WITH_CHILDREN} />);
+      await userEvent.click(screen.getByTestId(TEST_IDS.toggle));
+      await userEvent.click(getSelectableOptions().find((o) => o.textContent?.includes("Banana"))!);
+      const toggle = screen.getByTestId(TEST_IDS.toggle);
+      expect(toggle).toHaveTextContent("Banana");
+      expect(toggle).toHaveTextContent("A yellow fruit");
+    });
+
+    it("filters on the value only, not the children content", async () => {
+      render(<Wrapper options={OPTIONS_WITH_CHILDREN} />);
       await userEvent.click(screen.getByTestId(TEST_IDS.toggle));
 
-      // "fruit" appears in every description, but in no value
+      // "fruit" appears in every children, but in no value
       await userEvent.type(screen.getByRole("textbox"), "fruit");
       expect(getSelectableOptions()).toHaveLength(0);
 
@@ -77,7 +106,7 @@ describe("SearchSelect", () => {
       await userEvent.type(screen.getByRole("textbox"), "banana");
       const filtered = getSelectableOptions();
       expect(filtered).toHaveLength(1);
-      expect(filtered[0]).toHaveTextContent(OPTIONS_WITH_DESCRIPTIONS[1].value);
+      expect(filtered[0]).toHaveTextContent(OPTIONS_WITH_CHILDREN[1].value);
     });
   });
 });

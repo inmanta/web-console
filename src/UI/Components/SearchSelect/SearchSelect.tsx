@@ -10,6 +10,7 @@ import {
   MenuToggle,
   SearchInput,
   SelectOption,
+  SelectOptionProps,
 } from "@patternfly/react-core";
 import { words } from "@/UI";
 
@@ -18,15 +19,10 @@ export const TEST_IDS = {
   input: "swm-input",
 };
 
-export interface SearchSelectOption {
-  value: string;
-  description?: string;
-}
-
 export interface SearchSelectProps {
   value: string;
   onChange: (value: string) => void;
-  options: (string | SearchSelectOption)[];
+  options: SelectOptionProps[];
 }
 
 /**
@@ -34,8 +30,9 @@ export interface SearchSelectProps {
  *
  * The toggle button shows the currently selected value. When opened, a search field at the
  * top of the dropdown filters the option list in real time (case-insensitive substring match
- * on the option value only). Options can be plain strings, or objects with a description
- * that is rendered as muted secondary text below the value and is ignored by the search.
+ * on the option value only). Options can be plain strings, or objects following PatternFly’s {@link SelectOptionProps} —
+ * pass {@link SelectOptionProps.children} to control what is rendered in the option row
+ * (e.g. version + styled timestamp); search always filters only on the plain value.
  * Selecting an option calls {@link SearchSelectProps.onChange} and closes the menu.
  * Typing a query that yields no matches shows a disabled "No results found" item.
  *
@@ -64,15 +61,11 @@ export function SearchSelect({ value, onChange, options }: SearchSelectProps): R
     setSearchValue(val);
   };
 
-  const normalizedOptions: SearchSelectOption[] = options.map((option) =>
-    typeof option === "string" ? { value: option } : option
-  );
-
-  const menuItems = normalizedOptions
-    .filter((option) => option.value.toLowerCase().includes(searchValue.toLowerCase()))
+  const menuItems = options
+    .filter((option) => String(option.value).toLowerCase().includes(searchValue.toLowerCase()))
     .map((option) => (
-      <SelectOption key={option.value} itemId={option.value} description={option.description}>
-        {option.value}
+      <SelectOption key={option.value} itemId={option.value}>
+        {option.children ?? option.value}
       </SelectOption>
     ));
 
@@ -84,6 +77,8 @@ export function SearchSelect({ value, onChange, options }: SearchSelectProps): R
     );
   }
 
+  const selectedOption = options.find((o) => String(o.value) === value);
+
   const toggle = (
     <MenuToggle
       ref={toggleRef}
@@ -92,7 +87,7 @@ export function SearchSelect({ value, onChange, options }: SearchSelectProps): R
       isExpanded={isOpen}
       isFullWidth
     >
-      {value || words("instanceDetails.searchPlaceholder")}
+      {(selectedOption?.children ?? value) || words("instanceDetails.searchPlaceholder")}
     </MenuToggle>
   );
 

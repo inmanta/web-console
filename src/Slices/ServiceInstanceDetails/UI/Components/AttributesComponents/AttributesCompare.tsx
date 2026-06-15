@@ -1,6 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { DiffEditor } from "@monaco-editor/react";
-import { Divider, Flex, FlexItem, FormSelect, FormSelectOption } from "@patternfly/react-core";
+import {
+  Content,
+  Divider,
+  Flex,
+  FlexItem,
+  FormSelect,
+  FormSelectOption,
+  SelectOptionProps,
+} from "@patternfly/react-core";
 import { InstanceAttributeModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 import {
@@ -9,7 +17,7 @@ import {
   getAvailableVersions,
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { words } from "@/UI";
-import { SearchSelect, SearchSelectOption } from "@/UI/Components";
+import { SearchSelect } from "@/UI/Components";
 import { useTheme } from "@/UI/Components/DarkmodeOption";
 import { MomentDatePresenter } from "@/UI/Utils";
 
@@ -49,13 +57,18 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
 
   const { theme: preferredTheme } = useTheme();
 
-  // The creation date of each version is shown as a description below the version
-  // in the dropdown, so the user can tell the versions apart by more than their number.
-  const availableVersions: SearchSelectOption[] = useMemo(
+  const availableVersions: SelectOptionProps[] = useMemo(
     () =>
       getAvailableVersions(instanceLogs).map(({ version, timestamp }) => ({
         value: version,
-        description: datePresenter.getFull(timestamp),
+        children: (
+          <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
+            {version}
+            <Content style={{ color: "var(--pf-t--global--text--color--subtle)" }}>
+              ({datePresenter.getFull(timestamp)})
+            </Content>
+          </Flex>
+        ),
       })),
     [instanceLogs]
   );

@@ -218,21 +218,14 @@ export const sortTreeRows = (
   return sortData(tableData);
 };
 
-// A version available in the history logs, with the timestamp of when it was created.
-export interface VersionInfo {
-  version: string;
-  timestamp: string;
-}
-
 /**
  * Helper method to get the list of versions available in the history logs.
  *
  * @param {InstanceLog[]} instanceLogs
- * @returns {VersionInfo[]} An array with the available versions and their creation timestamps.
+ * @returns {Pick<InstanceLog, "version" | "timestamp">[]} An array with the available versions and their creation timestamps.
  */
-export const getAvailableVersions = (instanceLogs: InstanceLog[]): VersionInfo[] => {
-  return instanceLogs.map((log) => ({
-    version: String(log.version),
-    timestamp: log.timestamp,
-  }));
+export const getAvailableVersions = (
+  instanceLogs: InstanceLog[]
+): Pick<InstanceLog, "version" | "timestamp">[] => {
+  return instanceLogs.map(({ version, timestamp }) => ({ version, timestamp }));
 };

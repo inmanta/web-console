@@ -168,12 +168,7 @@ describe("getAvailableVersions", () => {
   it("should return the version and timestamp of each log", () => {
     const result = getAvailableVersions(historyData);
 
-    expect(result).toEqual(
-      historyData.map((log) => ({
-        version: String(log.version),
-        timestamp: log.timestamp,
-      }))
-    );
+    expect(result).toEqual(historyData.map(({ version, timestamp }) => ({ version, timestamp })));
   });
 });
 
