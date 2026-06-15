@@ -439,21 +439,18 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[role="menuitem"]').contains("Delete").click();
       cy.get("button").contains("Yes").click();
       cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);
+      cy.get('[role="dialog"]').should("not.exist");
 
-      // Navigate to Resources, then wait for the recompile to start and finish
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
-      cy.get('[aria-label="CompileReportsIndication"]', { timeout: 30000 }).should("exist");
-      cy.get('[aria-label="CompileReportsIndication"]', { timeout: 90000 }).should("not.exist");
-
-      // Intercept the GraphQL resource query — needed because keepPreviousData keeps
-      // stale rows visible while the new request is in flight, so we must wait for
-      // each response before asserting row counts.
-      cy.intercept("POST", "/api/v2/graphql").as("resourcesQuery");
-
-      // Restore page size to 250 so all resources are visible for accurate counting
-      cy.get("#PaginationWidget-top-top-toggle").click();
-      cy.get('[data-action="per-page-250"]').click();
-      cy.wait("@resourcesQuery");
+      cy.get('[aria-label="ResourcesPage-Success"]', { timeout: 20000 }).should("be.visible");
+      // Once the recompile finishes, "test" resources are orphaned and hidden by the default
+      // Not Orphaned filter. Retries until no value cell starts with "test-".
+      cy.get('[aria-label="Resource Table Row"] td[data-label="Value"]', { timeout: 90000 }).should(
+        ($cells) => {
+          const testCells = $cells.filter((i, el) => el.textContent.trim().startsWith("test-"));
+          expect(testCells).to.have.length(0);
+        }
+      );
 
       // Open the filter drawer on the Status tab
       cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
@@ -466,17 +463,14 @@ describe("Scenario 6 : Resources", () => {
 
       // Deselect "Not Orphaned" — no filter, all resources visible including orphaned
       cy.get("#orphaned-exclude").click();
-      cy.wait("@resourcesQuery");
       expectFilteredMoreThan("initialRowCount");
 
       // Select "Orphaned" — only orphaned resources, fewer than the baseline
       cy.get("#orphaned-include").click();
-      cy.wait("@resourcesQuery");
       expectFilteredLessThan("initialRowCount");
 
       // Reselect "Not Orphaned" — restores to initial count
       cy.get("#orphaned-exclude").click();
-      cy.wait("@resourcesQuery");
       expectRowCountRestored("initialRowCount");
     });
 
@@ -514,10 +508,9 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
-      }).should("not.have.text", "1 - 20");
+      }).should("have.text", "21 - 40");
 
       cy.get("button").contains("Type").click();
-      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
       }).should("have.text", "1 - 20");
