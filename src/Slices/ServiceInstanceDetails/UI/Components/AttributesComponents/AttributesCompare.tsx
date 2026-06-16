@@ -1,21 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { DiffEditor } from "@monaco-editor/react";
-import { Divider, Flex, FlexItem, FormSelect, FormSelectOption } from "@patternfly/react-core";
+import {
+  Divider,
+  Flex,
+  FlexItem,
+  FormSelect,
+  FormSelectOption,
+  SelectOptionProps,
+  Label,
+} from "@patternfly/react-core";
 import { InstanceAttributeModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import {
-  AttributeSets,
-  getAvailableAttributesSets,
-  getAvailableVersions,
-} from "@/Slices/ServiceInstanceDetails/Utils";
+import { AttributeSets, getAvailableAttributesSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { words } from "@/UI";
 import { SearchSelect } from "@/UI/Components";
 import { useTheme } from "@/UI/Components/DarkmodeOption";
+import { MomentDatePresenter } from "@/UI/Utils";
 
 interface Props {
   instanceLogs: InstanceLog[];
   selectedVersion: string;
 }
+
+const datePresenter = new MomentDatePresenter();
 
 /**
  * The AttributesCompare Component.
@@ -43,17 +50,24 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
   >({});
   const [leftSelectedSet, setLeftSelectedSet] = useState<AttributeSets>("active_attributes");
   const [rightSelectedSet, setRightSelectedSet] = useState<AttributeSets>("candidate_attributes");
-  const [availableVersions, setAvailableVersions] = useState<string[]>([]);
 
   const { theme: preferredTheme } = useTheme();
 
-  useEffect(() => {
-    if (instanceLogs && instanceLogs.length) {
-      const versions = getAvailableVersions(instanceLogs);
-
-      setAvailableVersions(versions);
-    }
-  }, [instanceLogs]);
+  const availableVersions: SelectOptionProps[] = useMemo(
+    () =>
+      instanceLogs.map(({ version, timestamp }) => ({
+        value: version,
+        children: (
+          <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
+            {version}
+            <Label color="blue" variant="outline">
+              {datePresenter.getFull(timestamp)}
+            </Label>
+          </Flex>
+        ),
+      })),
+    [instanceLogs]
+  );
 
   useEffect(() => {
     if (rightVersion) {
