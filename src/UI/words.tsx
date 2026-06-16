@@ -365,9 +365,14 @@ const dict = {
   "events.title": "Service Instance Events",
   "events.failed.body": (error: string) => `There was an error retrieving data: ${error}`,
   "events.caption": (id: string) => `Showing events of instance ${id}`,
+  "events.filters": "Filters",
   "events.filters.source.placeholder": "Select a source state...",
   "events.filters.destination.placeholder": "Select a destination state...",
   "events.filters.eventType.placeholder": "Select an Event Type...",
+  "events.filters.version.label": "Version",
+  "events.filters.version.placeholder": "Filter by version...",
+  "events.filters.from": "From",
+  "events.filters.to": "To",
   "events.filters.date.to": "to",
 
   /**

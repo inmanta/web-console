@@ -1,5 +1,5 @@
 import { act } from "react";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
@@ -23,7 +23,7 @@ describe("Given the Events Page", () => {
     ${"Version"}     | ${"number"} | ${"1"}                 | ${"Filter by version..."}          | ${"version"}
   `(
     "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the events with that $filterUrlName should be fetched and shown",
-    async ({ filterName, filterType, filterValue, placeholderText, filterUrlName }) => {
+    async ({ filterType, filterValue, placeholderText, filterUrlName }) => {
       server.use(
         http.get(`/lsm/v1/service_inventory/${Service.a.name}/id1/events`, async ({ request }) => {
           if (request.url.includes(`filter.${filterUrlName}=${filterValue}`)) {
@@ -52,13 +52,7 @@ describe("Given the Events Page", () => {
 
       expect(initialRows).toHaveLength(14);
 
-      await userEvent.click(
-        within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-          name: "FilterPicker",
-        })
-      );
-
-      await userEvent.click(screen.getByRole("option", { name: filterName }));
+      await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
 
       const input = await screen.findByPlaceholderText(placeholderText);
 
@@ -108,13 +102,7 @@ describe("Given the Events Page", () => {
 
     expect(initialRows).toHaveLength(14);
 
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
-
-    await userEvent.click(screen.getByRole("option", { name: "Date" }));
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
 
     const fromDatePicker = await screen.findByLabelText("From Date Picker");
 
@@ -176,13 +164,7 @@ describe("Given the Events Page", () => {
 
       expect(initialRows).toHaveLength(14);
 
-      await userEvent.click(
-        within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-          name: "FilterPicker",
-        })
-      );
-
-      await userEvent.click(screen.getByRole("option", { name: "Date" }));
+      await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
 
       const toDatePicker = await screen.findByLabelText(`${filterType} Date Picker`);
 

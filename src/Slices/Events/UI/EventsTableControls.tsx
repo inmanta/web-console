@@ -1,27 +1,44 @@
 import React from "react";
-import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { Filter } from "@/Slices/Events/Core/Types";
-import { EventsFilterWidget } from "./FilterWidget";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import { FilterToggleButton } from "@/UI/Components";
+import { words } from "@/UI/words";
 
 interface Props {
-  filter: Filter;
-  setFilter: (filter: Filter) => void;
   paginationWidget: React.ReactNode;
-  states: string[];
+  onToggleFilters: () => void;
+  isDrawerExpanded: boolean;
+  activeFilterCount: number;
 }
 
+/**
+ * The EventsTableControls component.
+ *
+ * Renders the Events table toolbar: the pagination widget and a toggle button
+ * that opens the filter side panel, showing the number of active filters.
+ *
+ * @Props {Props} - Component props.
+ *  @prop {React.ReactNode} paginationWidget - The pagination widget.
+ *  @prop {() => void} onToggleFilters - Toggles the filter side panel.
+ *  @prop {boolean} isDrawerExpanded - Whether the filter side panel is expanded.
+ *  @prop {number} activeFilterCount - The number of active filters.
+ */
 export const EventsTableControls: React.FC<Props> = ({
-  filter,
-  setFilter,
   paginationWidget,
-  states,
-}) => {
-  return (
-    <Toolbar clearAllFilters={() => setFilter({})} collapseListedFiltersBreakpoint="xl">
-      <ToolbarContent>
-        <EventsFilterWidget filter={filter} setFilter={setFilter} states={states} />
-        <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
-      </ToolbarContent>
-    </Toolbar>
-  );
-};
+  onToggleFilters,
+  isDrawerExpanded,
+  activeFilterCount,
+}) => (
+  <Toolbar aria-label="Events-toolbar">
+    <ToolbarContent>
+      <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
+      <ToolbarItem>
+        <FilterToggleButton
+          onClick={onToggleFilters}
+          isExpanded={isDrawerExpanded}
+          activeFilterCount={activeFilterCount}
+          label={words("events.filters")}
+        />
+      </ToolbarItem>
+    </ToolbarContent>
+  </Toolbar>
+);
