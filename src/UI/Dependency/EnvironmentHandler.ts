@@ -32,7 +32,6 @@ export function EnvironmentHandlerImpl(
     const params = new URLSearchParams(search);
 
     if (params.get("env") !== environmentId) {
-      localStorage.setItem("lastSelectedEnvironment", environmentId);
       params.set("env", environmentId);
       navigate(routeManager.getRelatedUrlWithoutParams(pathname) + `?${params}`);
     }
@@ -141,6 +140,12 @@ export function EnvironmentHandlerImpl(
   useEffect(() => {
     setEnv(determineSelected(environments, search) || null);
   }, [search, environments]);
+
+  useEffect(() => {
+    if (env && env.id !== localStorage.getItem("lastSelectedEnvironment")) {
+      localStorage.setItem("lastSelectedEnvironment", env.id);
+    }
+  }, [env]);
 
   return {
     set,
