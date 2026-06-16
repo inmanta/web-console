@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump tmp from 0.2.6 to 0.2.7
+destination-branches:
+- master
+sections: {}

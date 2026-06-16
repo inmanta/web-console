@@ -25,11 +25,13 @@ const StatusListItem = ({
     <ListItem
       icon={
         <Popover
-          bodyContent={<Content component="p">{compoundStateKey}</Content>}
+          bodyContent={
+            <Content component="p">{words(`resources.status.label.${compoundStateKey}`)}</Content>
+          }
           triggerAction="hover"
           position="left"
         >
-          <>{statusGroupIcons[compoundStateKey]({ state })}</>
+          {statusGroupIcons[compoundStateKey]({ state })}
         </Popover>
       }
       style={{ alignItems: "flex-end" }}

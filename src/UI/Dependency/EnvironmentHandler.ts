@@ -133,15 +133,26 @@ export function EnvironmentHandlerImpl(
     return useSelected()?.isExpertMode || false;
   }
 
+  function useAll(): EnvironmentPreview[] {
+    return environments;
+  }
+
   useEffect(() => {
     setEnv(determineSelected(environments, search) || null);
   }, [search, environments]);
+
+  useEffect(() => {
+    if (env && env.id !== localStorage.getItem("lastSelectedEnvironment")) {
+      localStorage.setItem("lastSelectedEnvironment", env.id);
+    }
+  }, [env]);
 
   return {
     set,
     useId,
     useName,
     useSelected,
+    useAll,
     determineSelected,
     useIsHalted,
     useIsServerCompileEnabled,
