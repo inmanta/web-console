@@ -60,7 +60,9 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
         children: (
           <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
             {version}
-            <Label color="blue">{datePresenter.getFull(timestamp)}</Label>
+            <Label color="blue" variant="outline">
+              {datePresenter.getFull(timestamp)}
+            </Label>
           </Flex>
         ),
       })),
