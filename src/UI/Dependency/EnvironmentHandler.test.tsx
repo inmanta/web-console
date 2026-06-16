@@ -33,23 +33,27 @@ describe("EnvironmentHandler", () => {
     <QueryClientProvider client={testClient}>{children}</QueryClientProvider>
   );
 
-  test("GIVEN set() is called with a different environment id THEN localStorage is updated", async () => {
+  test("GIVEN the url changes to a known environment THEN localStorage is updated", async () => {
     const history = createMemoryHistory();
-    const currentEnv = Environment.previewFilterable[0];
     const nextEnv = Environment.previewFilterable[1];
 
-    history.push(`?env=${currentEnv.id}`);
-
-    const { result } = renderHook(
+    const { result, rerender } = renderHook(
       () => EnvironmentHandlerImpl(() => history.location, routeManager),
       { wrapper }
     );
 
     await act(async () => {
-      result.current.set(history.push, history.location, nextEnv.id);
+      result.current.setAllEnvironments(Environment.previewFilterable);
     });
 
-    expect(localStorage.getItem("lastSelectedEnvironment")).toBe(nextEnv.id);
+    await act(async () => {
+      history.push(`?env=${nextEnv.id}`);
+      rerender();
+    });
+
+    await waitFor(() => {
+      expect(localStorage.getItem("lastSelectedEnvironment")).toBe(nextEnv.id);
+    });
   });
 
   test("EnvironmentHandler updates environment correctly", async () => {
