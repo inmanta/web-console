@@ -307,6 +307,7 @@ const dict = {
   "instanceDetails.setState.label": "Set state",
   "instanceDetails.forceState.label": "Force state",
   "instanceDetails.stateTransfer.confirmTitle": "Confirm set state transfer",
+  "instanceDetails.stateTransfer.messageLabel": "Message",
   "instanceDetails.expertActions": "Expert Actions",
   "instanceDetails.actions": "Actions",
   "instanceDetails.expert.transfer.options": "Select Operation",
