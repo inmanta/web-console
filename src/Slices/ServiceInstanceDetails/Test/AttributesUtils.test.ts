@@ -3,7 +3,6 @@ import {
   formatTreeRowData,
   getAttributeSetsFromInstance,
   getAvailableAttributesSets,
-  getAvailableVersions,
   sortTreeRows,
   TreeRowData,
 } from "../Utils";
@@ -157,18 +156,6 @@ describe("getAvailableAttributesSets", () => {
         telco_ip_range: "192.168.126.0/24",
       },
     });
-  });
-});
-
-describe("getAvailableVersions", () => {
-  it("should return an empty array if logs array is empty", () => {
-    expect(getAvailableVersions([])).toEqual([]);
-  });
-
-  it("should return the version and timestamp of each log", () => {
-    const result = getAvailableVersions(historyData);
-
-    expect(result).toEqual(historyData.map(({ version, timestamp }) => ({ version, timestamp })));
   });
 });
 

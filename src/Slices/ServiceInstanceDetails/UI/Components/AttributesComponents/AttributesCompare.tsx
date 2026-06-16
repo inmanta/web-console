@@ -1,21 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { DiffEditor } from "@monaco-editor/react";
 import {
-  Content,
   Divider,
   Flex,
   FlexItem,
   FormSelect,
   FormSelectOption,
   SelectOptionProps,
+  Label,
 } from "@patternfly/react-core";
 import { InstanceAttributeModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import {
-  AttributeSets,
-  getAvailableAttributesSets,
-  getAvailableVersions,
-} from "@/Slices/ServiceInstanceDetails/Utils";
+import { AttributeSets, getAvailableAttributesSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { words } from "@/UI";
 import { SearchSelect } from "@/UI/Components";
 import { useTheme } from "@/UI/Components/DarkmodeOption";
@@ -59,14 +55,12 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
 
   const availableVersions: SelectOptionProps[] = useMemo(
     () =>
-      getAvailableVersions(instanceLogs).map(({ version, timestamp }) => ({
+      instanceLogs.map(({ version, timestamp }) => ({
         value: version,
         children: (
           <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
             {version}
-            <Content style={{ color: "var(--pf-t--global--text--color--subtle)" }}>
-              ({datePresenter.getFull(timestamp)})
-            </Content>
+            <Label color="blue">{datePresenter.getFull(timestamp)}</Label>
           </Flex>
         ),
       })),

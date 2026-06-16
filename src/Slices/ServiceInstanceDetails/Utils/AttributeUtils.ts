@@ -217,15 +217,3 @@ export const sortTreeRows = (
 
   return sortData(tableData);
 };
-
-/**
- * Helper method to get the list of versions available in the history logs.
- *
- * @param {InstanceLog[]} instanceLogs
- * @returns {Pick<InstanceLog, "version" | "timestamp">[]} An array with the available versions and their creation timestamps.
- */
-export const getAvailableVersions = (
-  instanceLogs: InstanceLog[]
-): Pick<InstanceLog, "version" | "timestamp">[] => {
-  return instanceLogs.map(({ version, timestamp }) => ({ version, timestamp }));
-};
