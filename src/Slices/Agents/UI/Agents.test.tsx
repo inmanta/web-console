@@ -139,15 +139,9 @@ describe("Agents", () => {
 
     expect(initialRows).toHaveLength(6);
 
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
 
-    await userEvent.click(screen.getByRole("option", { name: words("attribute.name") }));
-
-    const input = screen.getByPlaceholderText(words("home.filters.env.placeholder"));
+    const input = screen.getByPlaceholderText(words("agents.filters.name.placeholder"));
 
     await userEvent.type(input, "internal{enter}");
 
@@ -188,13 +182,7 @@ describe("Agents", () => {
 
     expect(initialRows).toHaveLength(6);
 
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
-
-    await userEvent.click(screen.getByRole("option", { name: words("agent.tests.status") }));
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
 
     const input = screen.getByPlaceholderText(words("agents.filters.status.placeholder"));
 
@@ -235,6 +223,8 @@ describe("Agents", () => {
     const { component } = setup();
 
     render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: /Filters/i }));
 
     const input = await screen.findByPlaceholderText(words("agents.filters.name.placeholder"));
 
@@ -285,6 +275,8 @@ describe("Agents", () => {
     const { component } = setup();
 
     render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: /Filters/i }));
 
     const input = await screen.findByPlaceholderText(words("agents.filters.name.placeholder"));
 

@@ -1,1 +1,2 @@
-export * from "./AgentsFilterWidget";
+export * from "./FilterWidgetComponent";
+export * from "./ConnectedFilterWidget";

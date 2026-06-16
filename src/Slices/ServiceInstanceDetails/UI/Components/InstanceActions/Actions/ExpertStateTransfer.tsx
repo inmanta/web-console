@@ -6,6 +6,7 @@ import {
   FormGroup,
   FormSelect,
   FormSelectOption,
+  TextArea,
   Content,
   Spinner,
   Button,
@@ -137,7 +138,9 @@ const ModalContent: React.FC<ModalContentProps> = ({
   const { authHelper } = useContext(DependencyContext);
   const { notifyError } = useAppAlert();
   const username = authHelper.getUser();
-  const message = words("instanceDetails.API.message.update")(username);
+  const [message, setMessage] = useState<string>(
+    words("instanceDetails.API.message.update")(username)
+  );
 
   const { mutate, isError, error, isSuccess, isPending } = usePostExpertStateTransfer(
     instance_id,
@@ -200,6 +203,18 @@ const ModalContent: React.FC<ModalContentProps> = ({
               <FormSelectOption key={index} value={operation} label={operation} />
             ))}
           </FormSelect>
+        </FormGroup>
+        <FormGroup
+          label={words("instanceDetails.stateTransfer.messageLabel")}
+          fieldId="expert-state-transfer-message"
+        >
+          <TextArea
+            id="expert-state-transfer-message"
+            value={message}
+            onChange={(_event, value) => setMessage(value)}
+            aria-label="expert-state-transfer-message-input"
+            data-testid={`${instance_display_identity}-state-message`}
+          />
         </FormGroup>
       </Form>
       <br />

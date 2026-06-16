@@ -1,5 +1,8 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { http, HttpResponse } from "msw";
+import { words } from "@/UI";
+import { instanceData } from "./mockData";
 import { defaultServer, serverFailedActions } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
 
@@ -209,6 +212,92 @@ describe("Page Actions - Success", () => {
 
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
+  });
+
+  it("Normal Instance Actions - sends the user provided message on state transfer", async () => {
+    let capturedBody: Record<string, unknown> | null = null;
+
+    server.use(
+      http.post("/lsm/v1/service_inventory/mobileCore/1d96a1ab/state", async ({ request }) => {
+        capturedBody = (await request.json()) as Record<string, unknown>;
+
+        return HttpResponse.json({ status: 200 });
+      })
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Actions-Toggle" }));
+    await userEvent.click(screen.getByRole("menuitem", { name: /update_start/i }));
+
+    // the message field is prefilled with the default console message
+    const messageField = screen.getByLabelText("state-transfer-message-input");
+
+    expect(messageField).toHaveValue(words("instanceDetails.API.message.update")(null));
+
+    // the user replaces it with a custom message
+    await userEvent.clear(messageField);
+    await userEvent.type(messageField, "Custom transfer reason");
+
+    await userEvent.click(screen.getByRole("button", { name: /yes/i }));
+
+    await waitFor(() => expect(capturedBody).not.toBeNull());
+
+    expect(capturedBody).toEqual({
+      message: "Custom transfer reason",
+      current_version: instanceData.version,
+      target_state: "update_start",
+    });
+  });
+
+  it("Expert actions - sends the user provided message on force state", async () => {
+    let capturedBody: Record<string, unknown> | null = null;
+
+    server.use(
+      http.post(
+        "/lsm/v1/service_inventory/mobileCore/1d96a1ab/expert/state",
+        async ({ request }) => {
+          capturedBody = (await request.json()) as Record<string, unknown>;
+
+          return HttpResponse.json({ status: 200 });
+        }
+      )
+    );
+
+    render(setupServiceInstanceDetails(true));
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Expert-Actions-Toggle" }));
+    await userEvent.click(screen.getByRole("menuitem", { name: "up" }));
+
+    // the message field is prefilled with the default console message
+    const messageField = screen.getByLabelText("expert-state-transfer-message-input");
+
+    expect(messageField).toHaveValue(words("instanceDetails.API.message.update")(null));
+
+    // the user provides a custom message and selects an operation
+    await userEvent.clear(messageField);
+    await userEvent.type(messageField, "Forcing back up");
+
+    await userEvent.selectOptions(screen.getByRole("combobox"), "clear candidate");
+
+    await userEvent.click(screen.getByRole("button", { name: /yes/i }));
+
+    await waitFor(() => expect(capturedBody).not.toBeNull());
+
+    expect(capturedBody).toEqual({
+      message: "Forcing back up",
+      current_version: instanceData.version,
+      target_state: "up",
+      operation: "clear candidate",
+    });
   });
 });
 
