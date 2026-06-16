@@ -5,6 +5,7 @@ import {
   useInfiniteQuery,
   UseInfiniteQueryResult,
   InfiniteData,
+  keepPreviousData,
 } from "@tanstack/react-query";
 import { PageSize, Pagination, Sort } from "@/Core";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
@@ -84,6 +85,7 @@ export const useGetAgents = (): GetAgents => {
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
+        placeholderData: keepPreviousData,
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
       }),
     useInfiniteScroll: (params: GetAgentsInfiniteParams) =>
