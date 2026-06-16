@@ -10,6 +10,7 @@ import {
   MenuToggle,
   SearchInput,
   SelectOption,
+  SelectOptionProps,
 } from "@patternfly/react-core";
 import { words } from "@/UI";
 
@@ -21,14 +22,17 @@ export const TEST_IDS = {
 export interface SearchSelectProps {
   value: string;
   onChange: (value: string) => void;
-  options: string[];
+  options: SelectOptionProps[];
 }
 
 /**
  * A searchable select dropdown following the PatternFly "inline search filter" menu pattern.
  *
  * The toggle button shows the currently selected value. When opened, a search field at the
- * top of the dropdown filters the option list in real time (case-insensitive substring match).
+ * top of the dropdown filters the option list in real time (case-insensitive substring match
+ * on the option value only). Options can be plain strings, or objects following PatternFly’s {@link SelectOptionProps} —
+ * pass {@link SelectOptionProps.children} to control what is rendered in the option row
+ * (e.g. version + styled timestamp); search always filters only on the plain value.
  * Selecting an option calls {@link SearchSelectProps.onChange} and closes the menu.
  * Typing a query that yields no matches shows a disabled "No results found" item.
  *
@@ -58,10 +62,10 @@ export function SearchSelect({ value, onChange, options }: SearchSelectProps): R
   };
 
   const menuItems = options
-    .filter((o) => o.toLowerCase().includes(searchValue.toLowerCase()))
+    .filter((option) => String(option.value).toLowerCase().includes(searchValue.toLowerCase()))
     .map((option) => (
-      <SelectOption key={option} itemId={option}>
-        {option}
+      <SelectOption key={option.value} itemId={option.value}>
+        {option.children ?? option.value}
       </SelectOption>
     ));
 
@@ -73,6 +77,8 @@ export function SearchSelect({ value, onChange, options }: SearchSelectProps): R
     );
   }
 
+  const selectedOption = options.find((o) => String(o.value) === value);
+
   const toggle = (
     <MenuToggle
       ref={toggleRef}
@@ -81,7 +87,7 @@ export function SearchSelect({ value, onChange, options }: SearchSelectProps): R
       isExpanded={isOpen}
       isFullWidth
     >
-      {value || words("instanceDetails.searchPlaceholder")}
+      {(selectedOption?.children ?? value) || words("instanceDetails.searchPlaceholder")}
     </MenuToggle>
   );
 
