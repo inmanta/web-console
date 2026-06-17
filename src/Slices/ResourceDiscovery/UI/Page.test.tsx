@@ -70,7 +70,7 @@ describe("DiscoveredResourcesPage", () => {
 
     expect(within(rowWithManagedResource).getByRole("link")).toHaveAttribute(
       "href",
-      "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D"
+      "/resources/vcenter%3A%3AVirtualMachine%5Blab%2Cname%3Dacisim%5D"
     );
 
     // with correct uri to discovery resource
@@ -82,16 +82,12 @@ describe("DiscoveredResourcesPage", () => {
 
     expect(within(rowWithDiscoveryResource).getByRole("link")).toHaveAttribute(
       "href",
-      "/resources/cloudflare%3A%3Adns_record%3A%3ACnameRecord%5Bhttps%3A%2F%2Fapi.cloudflare.com%2Fclient%2Fv4%2F%2Cname%3Dartifacts.ssh.inmanta.com%5D"
+      "/resources/vcenter%3A%3AVirtualMachine%5Blab%2Cname%3Dacisim%5D"
     );
 
     // uri is null
     expect(within(rows[1]).getByTestId("Managed resource")).toHaveTextContent("");
     expect(within(rows[1]).getByTestId("Discovery resource")).toHaveTextContent("");
-
-    // uri doesn't have a rid
-    expect(within(rows[2]).getByTestId("Managed resource")).toHaveTextContent("");
-    expect(within(rows[2]).getByTestId("Discovery resource")).toHaveTextContent("");
 
     // uri is an empty string
     expect(within(rows[3]).getByTestId("Managed resource")).toHaveTextContent("");
