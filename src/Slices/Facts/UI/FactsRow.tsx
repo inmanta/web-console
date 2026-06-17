@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
 import { Button } from "@patternfly/react-core";
 import { ExpandableRowContent, Tbody, Tr, Td } from "@patternfly/react-table";
-import { DateWithTooltip, Link, ReadOnlyCodeEditor } from "@/UI/Components";
+import { AttributeValue, DateWithTooltip, Link, isEditorKind } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";
-import { detectLanguage, getFormattedValue, getValuePreview } from "./helpers";
+import { classifyValue, getValuePreview } from "./helpers";
 
 interface Props {
   row: Pick<Fact, "name" | "updated" | "value" | "resource_id">;
@@ -17,8 +17,8 @@ interface Props {
 export const FactsRow: React.FC<Props> = ({ row, rowIndex, numberOfColumns, showExpandColumn }) => {
   const { routeManager } = useContext(DependencyContext);
   const [isExpanded, setIsExpanded] = useState(false);
-  const language = detectLanguage(row.value);
-  const isExpandable = language !== null;
+  const attribute = classifyValue(row.value);
+  const isExpandable = isEditorKind(attribute.kind);
   const valuePreview = getValuePreview(row.value);
 
   return (
@@ -47,7 +47,7 @@ export const FactsRow: React.FC<Props> = ({ row, rowIndex, numberOfColumns, show
               {valuePreview}
             </Button>
           ) : (
-            row.value
+            <AttributeValue attribute={attribute} />
           )}
         </Td>
         <Td modifier="breakWord" dataLabel={words("facts.column.resourceId")}>
@@ -62,11 +62,11 @@ export const FactsRow: React.FC<Props> = ({ row, rowIndex, numberOfColumns, show
           </Link>
         </Td>
       </Tr>
-      {language !== null && (
+      {isExpandable && (
         <Tr isExpanded={isExpanded}>
           <Td colSpan={numberOfColumns}>
             <ExpandableRowContent>
-              <ReadOnlyCodeEditor value={getFormattedValue(row.value)} language={language} />
+              <AttributeValue attribute={attribute} />
             </ExpandableRowContent>
           </Td>
         </Tr>

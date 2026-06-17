@@ -1,24 +1,35 @@
-import { CodeEditorProps } from "@patternfly/react-code-editor";
-import { JsonFormatter, XmlFormatter } from "@/Data";
-import { AttributeClassifier } from "@/UI/Components";
+import { ClassifiedAttribute, createAttributeClassifier } from "@/Data";
+import { isEditorKind } from "@/UI/Components";
 
 /**
- * A classifier configured the way the Facts table needs it: multiline,
- * non-structured values are treated as generic "code" (shown in the editor
- * without highlighting). All the content-detection logic lives in
- * {@link AttributeClassifier}, so facts and resource attributes classify values
- * identically. Built lazily to avoid constructing formatters at module load.
+ * Facts-configured classifier (lazy singleton). All content-detection and
+ * formatting logic lives in the shared {@link createAttributeClassifier}, so
+ * facts and resource attributes classify values identically. Built lazily to
+ * avoid constructing formatters at module load.
  */
-let classifier: AttributeClassifier | undefined;
+let classifier: ReturnType<typeof createAttributeClassifier> | undefined;
 
-function getClassifier(): AttributeClassifier {
-  classifier ??= new AttributeClassifier(new JsonFormatter(), new XmlFormatter(), (key, value) => ({
-    kind: "Code",
-    key,
-    value,
-  }));
+/**
+ * Classifies a single raw fact value via the shared classifier. The resulting
+ * {@link ClassifiedAttribute} `kind` decides how the row renders: structured and
+ * generic "code" kinds expand into the editor, everything else shows inline.
+ *
+ * @param value - The raw fact value string.
+ */
+export function classifyValue(value: string): ClassifiedAttribute {
+  classifier ??= createAttributeClassifier();
 
-  return classifier;
+  return classifier.classify({ value })[0];
+}
+
+/**
+ * Returns `true` when a fact value should expand into the code editor (structured
+ * or generic "code") rather than render inline as plain text.
+ *
+ * @param value - The raw fact value string.
+ */
+export function isExpandableValue(value: string): boolean {
+  return isEditorKind(classifyValue(value).kind);
 }
 
 /**
@@ -26,41 +37,6 @@ function getClassifier(): AttributeClassifier {
  * ellipsis. Exported so tests can derive the expected preview string.
  */
 export const VALUE_PREVIEW_LENGTH = 20;
-
-/**
- * Classifies a raw fact value into the code-editor language it should be shown
- * as, delegating to the shared {@link AttributeClassifier}.
- *
- * @param value - The raw fact value string.
- * @returns The editor language, `undefined` for generic code, or `null` for inline text.
- */
-export function detectLanguage(value: string): CodeEditorProps["language"] | null {
-  return getClassifier().detectLanguage(value);
-}
-
-/**
- * Returns the display-ready version of a fact value, formatted by the shared
- * {@link AttributeClassifier} — JSON and XML are pretty-printed, generic code is
- * returned unchanged — so facts and resource attributes render identically.
- * Falls back to the raw value when nothing matched.
- *
- * @param value - The raw fact value string.
- */
-export function getFormattedValue(value: string): string {
-  const [attribute] = getClassifier().classify({ value });
-
-  return attribute && "value" in attribute ? attribute.value : value;
-}
-
-/**
- * Returns `true` when a fact value should be shown in the code editor rather
- * than inline as plain text.
- *
- * @param value - The raw fact value string.
- */
-export function isExpandableValue(value: string): boolean {
-  return detectLanguage(value) !== null;
-}
 
 /**
  * Returns a truncated preview of a value. Values longer than

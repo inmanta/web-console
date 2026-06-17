@@ -1,6 +1,7 @@
 export * as DiffWizard from "./DiffWizard";
 export * from "./AppAlert";
 export * from "./ActionDisabledTooltip";
+export * from "./AttributeList";
 export * from "./AttributesTable";
 export * from "./BlockingModal";
 export * from "./BooleanSwitch";
@@ -12,7 +13,6 @@ export * from "./ConfirmUserActionForm";
 export * from "./DateWithTooltip";
 export * from "./DefaultSwitch";
 export * from "./Description";
-export * from "./DesiredStateAttributes";
 export * from "./DictEditor";
 export * from "./EmptyView";
 export * from "./ErrorView";

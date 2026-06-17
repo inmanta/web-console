@@ -1,4 +1,3 @@
-import { CodeEditorProps, Language } from "@patternfly/react-code-editor";
 import { Formatter } from "@/Core";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 
@@ -37,21 +36,6 @@ export class AttributeClassifier {
       .map(([key, value]) => this.classifyKeyValue(key, value))
       .filter((attribute): attribute is ClassifiedAttribute => attribute !== null)
       .sort((a, b) => (a.key < b.key ? -1 : 1));
-  }
-
-  /**
-   * Detects the code-editor language of a single raw string value by running it
-   * through {@link classify} and mapping the resulting kind.
-   *
-   * @param value - The raw string value to classify.
-   * @returns A {@link Language} for highlightable content, `undefined` for
-   *   generic multiline "code" (shown without highlighting), or `null` for short
-   *   plain text that should be shown inline rather than in the editor.
-   */
-  detectLanguage(value: string): CodeEditorProps["language"] | null {
-    const [attribute] = this.classify({ value });
-
-    return this.kindToLanguage(attribute?.kind);
   }
 
   /**
@@ -120,27 +104,6 @@ export class AttributeClassifier {
       key,
       value: `${value}`,
     };
-  }
-
-  /**
-   * Maps a classified kind to the code-editor language it should render as.
-   *
-   * @param kind - The classified attribute kind (or undefined when nothing matched).
-   * @returns A {@link Language}, `undefined` for generic code, or `null` for inline text.
-   */
-  private kindToLanguage(
-    kind: ClassifiedAttribute["kind"] | undefined
-  ): CodeEditorProps["language"] | null {
-    switch (kind) {
-      case "Json":
-        return Language.json;
-      case "Xml":
-        return Language.xml;
-      case "Code":
-        return undefined;
-      default:
-        return null;
-    }
   }
 
   /**
@@ -220,25 +183,17 @@ export class AttributeClassifier {
   }
 
   /**
-   * Determines if a string contains well-formed XML.
-   * Uses the browser's DOMParser so malformed markup that merely starts with
-   * `<` and ends with `>` isn't mistaken for XML.
+   * Determines if a string looks like XML.
+   * Uses a cheap structural check (starts with `<` and ends with `>`) rather
+   * than parsing: XML payloads can be thousands of lines, and running untrusted
+   * markup through DOMParser risks XSS for a marginal gain in precision.
    *
    * @param value - String to check
-   * @returns True if the string is well-formed XML
+   * @returns True if the trimmed string starts with `<` and ends with `>`
    */
   private isXml(value: string): boolean {
     const trimmed = value.trim();
 
-    if (!trimmed.startsWith("<")) {
-      return false;
-    }
-    try {
-      const doc = new DOMParser().parseFromString(trimmed, "application/xml");
-
-      return !doc.querySelector("parsererror");
-    } catch {
-      return false;
-    }
+    return trimmed.startsWith("<") && trimmed.endsWith(">");
   }
 }

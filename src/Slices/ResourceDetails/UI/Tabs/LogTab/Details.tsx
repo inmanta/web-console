@@ -6,8 +6,8 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import { isObjectEmpty } from "@/Core";
-import { JsonFormatter, XmlFormatter } from "@/Data";
-import { AttributeClassifier, AttributeList, CodeText } from "@/UI/Components";
+import { createAttributeClassifier } from "@/Data";
+import { AttributeList, CodeText } from "@/UI/Components";
 import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
 
 interface Props {
@@ -36,8 +36,4 @@ export const Details: React.FC<Props> = ({ log }) => {
   );
 };
 
-const classifier = new AttributeClassifier(
-  new JsonFormatter(),
-  new XmlFormatter(),
-  (key: string, value: string) => ({ kind: "Code", key, value })
-);
+const classifier = createAttributeClassifier();

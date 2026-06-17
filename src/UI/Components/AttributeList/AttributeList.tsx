@@ -1,5 +1,4 @@
 import React from "react";
-import { Language } from "@patternfly/react-code-editor";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -8,23 +7,17 @@ import {
 } from "@patternfly/react-core";
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
+import { ClassifiedAttribute } from "@/Data";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
-import { ReadOnlyCodeEditor } from "../ReadOnlyCodeEditor";
-import { ClassifiedAttribute } from "./ClassifiedAttribute";
+import { ReadOnlyCodeEditor, languageForKind } from "../ReadOnlyCodeEditor";
 import { FileBlock } from "./FileBlock";
+
+type AttributeTextVariant = "default" | "monospace";
 
 interface Props {
   attributes: ClassifiedAttribute[];
   variant?: AttributeTextVariant;
 }
-
-type AttributeTextVariant = "default" | "monospace";
-
-/** Maps a code-editor attribute kind to its highlighting language (generic `Code` has none). */
-const KIND_TO_LANGUAGE: Partial<Record<ClassifiedAttribute["kind"], Language>> = {
-  Json: Language.json,
-  Xml: Language.xml,
-};
 
 /**
  * A component that displays a list of attributes.
@@ -46,7 +39,14 @@ export const AttributeList: React.FC<Props> = ({ attributes, variant = "default"
   </DescriptionList>
 );
 
-const AttributeValue: React.FC<{
+/**
+ * Renders a single classified attribute's value with the control appropriate to
+ * its kind — copyable text for SingleLine/MultiLine, the code editor for
+ * JSON/XML/Code, a file block for File, etc. Use this directly (instead of
+ * {@link AttributeList}) when you need the value rendering without the
+ * surrounding description-list term/label.
+ */
+export const AttributeValue: React.FC<{
   attribute: ClassifiedAttribute;
   variant?: AttributeTextVariant;
 }> = ({ attribute, variant }) => {
@@ -82,7 +82,7 @@ const AttributeValue: React.FC<{
     case "Xml":
     case "Code":
       return (
-        <ReadOnlyCodeEditor value={attribute.value} language={KIND_TO_LANGUAGE[attribute.kind]} />
+        <ReadOnlyCodeEditor value={attribute.value} language={languageForKind(attribute.kind)} />
       );
   }
 };

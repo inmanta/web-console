@@ -1,8 +1,8 @@
 import React from "react";
 import { PageSection, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { JsonFormatter, XmlFormatter } from "@/Data";
-import { AttributeClassifier, AttributeList } from "@/UI/Components";
+import { createAttributeClassifier } from "@/Data";
+import { AttributeList } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -18,9 +18,4 @@ export const Details: React.FC<Props> = ({ details, ...props }) => (
   </div>
 );
 
-const classifier = new AttributeClassifier(
-  new JsonFormatter(),
-  new XmlFormatter(),
-  (key: string, value: string) => ({ kind: "Code", key, value }),
-  () => false
-);
+const classifier = createAttributeClassifier({ includeAllKeys: true });

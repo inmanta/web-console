@@ -1,4 +1,5 @@
-import { JsonFormatter, XmlFormatter } from "@/Data";
+import { JsonFormatter } from "../JsonFormatter";
+import { XmlFormatter } from "../XmlFormatter";
 import { AttributeClassifier } from "./AttributeClassifier";
 import { attributes, classified } from "./Data";
 

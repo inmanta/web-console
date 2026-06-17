@@ -1,48 +1,30 @@
-import { Language } from "@patternfly/react-code-editor";
 import { JsonFormatter } from "@/Data";
-import {
-  VALUE_PREVIEW_LENGTH,
-  detectLanguage,
-  getFormattedValue,
-  getValuePreview,
-  isExpandableValue,
-} from "./helpers";
+import { VALUE_PREVIEW_LENGTH, classifyValue, getValuePreview } from "./helpers";
 
-describe("detectLanguage", () => {
+describe("classifyValue", () => {
   test.each`
-    value                        | expected
-    ${'{"a": 1}'}                | ${Language.json}
-    ${"[1, 2, 3]"}               | ${Language.json}
-    ${"<note><to>x</to></note>"} | ${Language.xml}
-    ${"just plain text"}         | ${null}
-    ${"42"}                      | ${null}
-  `("classifies $value as $expected", ({ value, expected }) => {
-    expect(detectLanguage(value)).toBe(expected);
+    value                        | expectedKind
+    ${'{"a": 1}'}                | ${"Json"}
+    ${"[1, 2, 3]"}               | ${"Json"}
+    ${"<note><to>x</to></note>"} | ${"Xml"}
+    ${"just plain text"}         | ${"SingleLine"}
+    ${"42"}                      | ${"SingleLine"}
+  `("classifies $value as $expectedKind", ({ value, expectedKind }) => {
+    expect(classifyValue(value).kind).toBe(expectedKind);
   });
 
-  test("classifies long or multiline non-structured values as generic code (undefined)", () => {
-    expect(detectLanguage("a".repeat(81))).toBeUndefined();
-    expect(detectLanguage("line one\nline two")).toBeUndefined();
+  test("classifies long or multiline non-structured values as generic code", () => {
+    expect(classifyValue("a".repeat(81)).kind).toBe("Code");
+    expect(classifyValue("line one\nline two").kind).toBe("Code");
   });
-});
 
-describe("getFormattedValue", () => {
   test("pretty-prints structured values via the shared classifier", () => {
     const raw = '{"b":2,"a":1}';
 
-    expect(getFormattedValue(raw)).toBe(new JsonFormatter().format(JSON.parse(raw)));
-  });
-
-  test("returns plain values unchanged", () => {
-    expect(getFormattedValue("plain text")).toBe("plain text");
-  });
-});
-
-describe("isExpandableValue", () => {
-  test("is true for structured and code values, false for short plain text", () => {
-    expect(isExpandableValue('{"a": 1}')).toBe(true);
-    expect(isExpandableValue("line one\nline two")).toBe(true);
-    expect(isExpandableValue("plain text")).toBe(false);
+    expect(classifyValue(raw)).toMatchObject({
+      kind: "Json",
+      value: new JsonFormatter().format(JSON.parse(raw)),
+    });
   });
 });
 

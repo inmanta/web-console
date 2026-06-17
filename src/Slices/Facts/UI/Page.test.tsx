@@ -235,8 +235,7 @@ describe("FactsPage", () => {
     expect(await screen.findByRole("button", { name: jsonFactValuePreview })).toBeVisible();
     expect(screen.getAllByRole("button", { name: jsonFactValuePreview })).toHaveLength(1);
 
-    // Plain-text values are directly visible as cells, not wrapped in buttons
-    expect(screen.getByRole("cell", { name: Mock.list[0].value })).toBeVisible();
+    expect(screen.getByText(Mock.list[0].value)).toBeVisible();
   });
 
   test("GIVEN Facts page WHEN clicking the value preview THEN formatted JSON and a copy button are shown", async () => {

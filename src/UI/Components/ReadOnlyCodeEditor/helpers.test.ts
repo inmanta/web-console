@@ -1,4 +1,38 @@
-import { getDefaultHeightEditor } from "./helpers";
+import { Language } from "@patternfly/react-code-editor";
+import { getDefaultHeightEditor, isEditorKind, languageForKind } from "./helpers";
+
+vi.mock("@patternfly/react-code-editor", () => ({
+  Language: { json: "json", xml: "xml" },
+}));
+
+describe("languageForKind", () => {
+  test.each`
+    kind            | expected
+    ${"Json"}       | ${Language.json}
+    ${"Xml"}        | ${Language.xml}
+    ${"Code"}       | ${undefined}
+    ${"SingleLine"} | ${undefined}
+    ${"MultiLine"}  | ${undefined}
+  `("maps the $kind kind to $expected", ({ kind, expected }) => {
+    expect(languageForKind(kind)).toBe(expected);
+  });
+});
+
+describe("isEditorKind", () => {
+  test.each`
+    kind            | expected
+    ${"Json"}       | ${true}
+    ${"Xml"}        | ${true}
+    ${"Code"}       | ${true}
+    ${"SingleLine"} | ${false}
+    ${"MultiLine"}  | ${false}
+    ${"Password"}   | ${false}
+    ${"File"}       | ${false}
+    ${"Undefined"}  | ${false}
+  `("returns $expected for the $kind kind", ({ kind, expected }) => {
+    expect(isEditorKind(kind)).toBe(expected);
+  });
+});
 
 describe("getDefaultHeightEditor", () => {
   test.each`

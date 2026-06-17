@@ -7,6 +7,7 @@ export class XmlFormatter implements Formatter {
       return formatXml(source, {
         collapseContent: true,
         lineSeparator: "\n",
+        indentation: "  ",
       });
     } catch {
       return source;
