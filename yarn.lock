@@ -1246,8 +1246,8 @@ __metadata:
     "@eslint/eslintrc": "npm:^3.3.5"
     "@eslint/js": "npm:^10.0.1"
     "@graphiql/react": "npm:^0.37.3"
-    "@joint/layout-directed-graph": "npm:^4.2.3"
-    "@joint/plus": "npm:^4.2.3"
+    "@joint/layout-directed-graph": "npm:^4.2.5"
+    "@joint/plus": "npm:^4.2.4"
     "@loadable/component": "npm:^5.16.7"
     "@monaco-editor/react": "npm:^4.7.0"
     "@patternfly/react-charts": "npm:^8.5.1"
@@ -1498,30 +1498,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joint/core@npm:~4.2.3, @joint/core@npm:~4.2.4":
-  version: 4.2.4
-  resolution: "@joint/core@npm:4.2.4::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40joint%2Fcore%2F-%2Fcore-4.2.4.tgz"
-  checksum: 10/07c0ab92ca9590a9cbb810e2cc3e8ee0648433ba5628ec390418ebe3f3d24cd213c0f9ca8991152977ad1eb8543db9c13095f0abfe85a26438d15c850a33b8b4
+"@joint/core@npm:~4.2.5":
+  version: 4.2.5
+  resolution: "@joint/core@npm:4.2.5::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40joint%2Fcore%2F-%2Fcore-4.2.5.tgz"
+  checksum: 10/eb2613b86c9b631ebd9e320aac69bb48c39b202b7ff4614fe28c9e42e066383620772de81437cc1638c387e4d7fbef7ffc97045dd902e2eca0a5971f4dee8d58
   languageName: node
   linkType: hard
 
-"@joint/layout-directed-graph@npm:^4.2.3":
-  version: 4.2.3
-  resolution: "@joint/layout-directed-graph@npm:4.2.3::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40joint%2Flayout-directed-graph%2F-%2Flayout-directed-graph-4.2.3.tgz"
+"@joint/layout-directed-graph@npm:^4.2.5":
+  version: 4.2.5
+  resolution: "@joint/layout-directed-graph@npm:4.2.5::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40joint%2Flayout-directed-graph%2F-%2Flayout-directed-graph-4.2.5.tgz"
   dependencies:
     "@dagrejs/dagre": "npm:~1.1.4"
     "@dagrejs/graphlib": "npm:~2.2.4"
-    "@joint/core": "npm:~4.2.3"
-  checksum: 10/3f2053958bf891965efd8769832e22d777c4a83fb48383626b6914f1bb67af43aee572a0454ce1aa85bf9370a16fc9c458915e437a68ec1dd537446055e26d88
+    "@joint/core": "npm:~4.2.5"
+  checksum: 10/b6a0650f977dcad70512a252596f45b8584aff28f2775b9f5e062dce2bb111d46017401e6fa76673ae145c2b46564fe6f8fa123ece9521e90bce5295e0c7fd53
   languageName: node
   linkType: hard
 
-"@joint/plus@npm:^4.2.3":
-  version: 4.2.3
-  resolution: "@joint/plus@npm:4.2.3::__archiveUrl=https%3A%2F%2Fnpm.jointjs.com%2Fapi%2Fv4%2Fprojects%2F77690663%2Fpackages%2Fnpm%2F%40joint%2Fplus%2F-%2F%40joint%2Fplus-4.2.3.tgz"
+"@joint/plus@npm:^4.2.4":
+  version: 4.2.4
+  resolution: "@joint/plus@npm:4.2.4::__archiveUrl=https%3A%2F%2Fnpm.jointjs.com%2Fapi%2Fv4%2Fprojects%2F77690663%2Fpackages%2Fnpm%2F%40joint%2Fplus%2F-%2F%40joint%2Fplus-4.2.4.tgz"
   dependencies:
-    "@joint/core": "npm:~4.2.4"
-  checksum: 10/c75d65e7001f5b1c3659dca36b3b7371f2bfc8a1f0101a8de957a01297a931b9bc360b4b057577208655bf85320f856a375dc26a4a4fe7ffbf395a1244174690
+    "@joint/core": "npm:~4.2.5"
+  checksum: 10/06b05d16ec93b7fd692ff74a1f8a5447aa20a3ba39f5f307bfc0c84eecd5ad997f9f665ad7d899b45398cde4db5fbb11270bd8a629e7a68688d974ba1cfd90a5
   languageName: node
   linkType: hard
 
