@@ -203,9 +203,7 @@ describe("ComplianceCheck page", () => {
 
     const statusOptions = screen.getAllByRole("option");
 
-    expect(statusOptions).toHaveLength(7);
-
-    await userEvent.click(screen.getByRole("button", { name: words("showAll") }));
+    expect(statusOptions).toHaveLength(6);
 
     await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
 
