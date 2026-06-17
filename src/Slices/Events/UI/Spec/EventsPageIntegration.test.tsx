@@ -108,11 +108,13 @@ describe("Given the Events Page", () => {
 
     await userEvent.type(fromDatePicker, "2021-04-28");
 
+    await userEvent.click(await screen.findByLabelText("Apply date from filter"));
+
     const toDatePicker = await screen.findByLabelText("To Date Picker");
 
     await userEvent.type(toDatePicker, "2021-04-30");
 
-    await userEvent.click(await screen.findByLabelText("Apply date filter"));
+    await userEvent.click(await screen.findByLabelText("Apply date to filter"));
 
     const rowsAfter = await screen.findAllByRole("row", {
       name: "Event table row",
@@ -170,7 +172,9 @@ describe("Given the Events Page", () => {
 
       await userEvent.type(toDatePicker, value);
 
-      await userEvent.click(await screen.findByLabelText("Apply date filter"));
+      await userEvent.click(
+        await screen.findByLabelText(`Apply date ${filterType.toLowerCase()} filter`)
+      );
 
       const rowsAfter = await screen.findAllByRole("row", {
         name: "Event table row",

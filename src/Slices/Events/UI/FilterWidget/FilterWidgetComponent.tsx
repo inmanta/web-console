@@ -136,25 +136,31 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
   const clearVersionFilters = () => setFilter({ ...filter, version: undefined });
 
   // --- Date ---
-  const applyDateFilter = () => {
-    let updated = filter.timestamp ?? [];
-
-    if (from) {
-      updated = [
-        ...updated.filter((entry) => entry.operator !== RangeOperator.Operator.From),
-        { date: from, operator: RangeOperator.Operator.From },
-      ];
+  const applyDateFromFilter = () => {
+    if (!from) {
+      return;
     }
 
-    if (to) {
-      updated = [
-        ...updated.filter((entry) => entry.operator !== RangeOperator.Operator.To),
-        { date: to, operator: RangeOperator.Operator.To },
-      ];
-    }
+    const updated = [
+      ...(filter.timestamp ?? []).filter((entry) => entry.operator !== RangeOperator.Operator.From),
+      { date: from, operator: RangeOperator.Operator.From },
+    ];
 
-    setFilter({ ...filter, timestamp: updated.length > 0 ? updated : undefined });
+    setFilter({ ...filter, timestamp: updated });
     setFrom(undefined);
+  };
+
+  const applyDateToFilter = () => {
+    if (!to) {
+      return;
+    }
+
+    const updated = [
+      ...(filter.timestamp ?? []).filter((entry) => entry.operator !== RangeOperator.Operator.To),
+      { date: to, operator: RangeOperator.Operator.To },
+    ];
+
+    setFilter({ ...filter, timestamp: updated });
     setTo(undefined);
   };
 
@@ -275,6 +281,16 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
                       from={undefined}
                       datePickerLabel="From Date Picker"
                       timePickerLabel="From Time Picker"
+                      action={
+                        <Button
+                          variant="control"
+                          onClick={applyDateFromFilter}
+                          isDisabled={!from}
+                          aria-label="Apply date from filter"
+                        >
+                          <PlusIcon />
+                        </Button>
+                      }
                     />
                   </FormGroup>
                 </FlexItem>
@@ -286,18 +302,18 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
                       from={from}
                       datePickerLabel="To Date Picker"
                       timePickerLabel="To Time Picker"
+                      action={
+                        <Button
+                          variant="control"
+                          onClick={applyDateToFilter}
+                          isDisabled={!to}
+                          aria-label="Apply date to filter"
+                        >
+                          <PlusIcon />
+                        </Button>
+                      }
                     />
                   </FormGroup>
-                </FlexItem>
-                <FlexItem>
-                  <Button
-                    variant="control"
-                    onClick={applyDateFilter}
-                    isDisabled={!(from || to)}
-                    aria-label="Apply date filter"
-                  >
-                    {words("add")}
-                  </Button>
                 </FlexItem>
               </Flex>
             </FormGroup>
