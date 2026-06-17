@@ -1,0 +1,6 @@
+description: Fixed an issue where the discovery resource URI was not correctly generated, leading to failed API calls in certain scenarios.
+issue-nr: 6963
+change-type: patch
+destination-branches: [master, iso9, iso8]
+sections:
+  bugfix: "{{description}}"
