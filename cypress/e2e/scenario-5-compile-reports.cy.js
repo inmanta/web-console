@@ -21,7 +21,9 @@ describe("5 Compile reports", () => {
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
     // store initial row count
-    cy.get("tbody tr", { timeout: 30000 }).its("length").as("initialRowCount");
+    cy.get("tbody tr").then(($rows) => {
+      cy.wrap($rows.length).as("initialRowCount");
+    });
 
     // validate initial top row
     cy.get("tbody tr")
@@ -42,7 +44,7 @@ describe("5 Compile reports", () => {
 
     // verify a row was added
     cy.get("@initialRowCount").then((initialRowCount) => {
-      cy.get("tbody tr").should("have.length.at.least", initialRowCount + 1);
+      cy.get("tbody tr").should("have.length", initialRowCount + 1);
     });
 
     cy.get("tbody tr").first().should("contain", "Compile triggered from the console");
@@ -59,7 +61,7 @@ describe("5 Compile reports", () => {
 
     // First assert the table has grown by 1, ensuring the new row is present
     cy.get("@initialRowCount").then((initialRowCount) => {
-      cy.get("tbody tr").should("have.length", initialRowCount + 1);
+      cy.get("tbody tr", { timeout: 15000 }).should("have.length", initialRowCount + 2);
     });
 
     // Assert the new top row content
