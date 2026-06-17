@@ -15,6 +15,8 @@ import { Page as ResourceDiscoveryDetailsPage } from "./Page";
 // Mock data for individual resource details
 const mockResourceDetails = {
   discovered_resource_id: "vcenter::VirtualMachine[lab,name=acisim]",
+  discovery_resource_id: "vcenter::VirtualMachine[lab,name=acisim]",
+  managed_resource_id: "vcenter::VirtualMachine[lab,name=datasim]",
   managed_resource_uri:
     "/api/v2/resource/cloudflare::dns_record::CnameRecord[https://api.cloudflare.com/client/v4/,name=artifacts.ssh.inmanta.com]",
   discovery_resource_uri:
@@ -47,17 +49,21 @@ const mockResourceDetails = {
 const mockResourceDetailsNoManaged = {
   ...mockResourceDetails,
   managed_resource_uri: null,
+  managed_resource_id: null,
 };
 
 const mockResourceDetailsNoDiscovery = {
   ...mockResourceDetails,
   discovery_resource_uri: null,
+  discovery_resource_id: null,
 };
 
 const mockResourceDetailsNoLinks = {
   ...mockResourceDetails,
   managed_resource_uri: null,
   discovery_resource_uri: null,
+  managed_resource_id: null,
+  discovery_resource_id: null,
 };
 
 function setup(resourceId = "test-resource-id") {
