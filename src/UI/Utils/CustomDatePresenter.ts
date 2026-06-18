@@ -1,6 +1,6 @@
-import dayjs from "@/dayjs";
 import { DateInfo } from "@/Core";
 import { DatePresenter } from "@/UI/Presenters";
+import dayjs from "@/dayjs";
 
 export class CustomDatePresenter implements DatePresenter {
   private readonly timezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;

@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
 import { Button, Flex } from "@patternfly/react-core";
-import dayjs from "@/dayjs";
 import styled from "styled-components";
 import { useGetMetrics } from "@/Data/Queries";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import dayjs from "@/dayjs";
 import { Section } from "./Section";
 
 /**

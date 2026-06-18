@@ -1,7 +1,7 @@
-import dayjs from "@/dayjs";
 import qs from "qs";
 import { DateRange, RangeOperator } from "@/Core";
 import { urlEncodeParams } from "@/Data/Queries";
+import dayjs from "@/dayjs";
 import { GetResourceLogsParams } from "./useGetResourceLogs";
 
 /**

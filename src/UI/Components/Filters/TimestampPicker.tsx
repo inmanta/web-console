@@ -7,8 +7,8 @@ import {
   InputGroup,
   InputGroupItem,
 } from "@patternfly/react-core";
-import dayjs from "@/dayjs";
 import styled from "styled-components";
+import dayjs from "@/dayjs";
 
 interface Props {
   timestamp: Date | undefined;

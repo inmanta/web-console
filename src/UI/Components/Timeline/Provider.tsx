@@ -1,6 +1,6 @@
 import React from "react";
-import dayjs from "@/dayjs";
 import { CustomDatePresenter, useTickerWithInterval } from "@/UI/Utils";
+import dayjs from "@/dayjs";
 import { Timeline } from "./Timeline";
 
 interface Props {
