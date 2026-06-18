@@ -69,8 +69,14 @@ export function EnvironmentHandlerImpl(
     const parsed = searchHelper.parse(search);
     const envId = parsed["env"];
 
+    const savedEnvId = localStorage.getItem("lastSelectedEnvironment");
+
     if (envId) {
       const env = allEnvironments.find((environment) => environment.id === envId);
+
+      return env;
+    } else if (savedEnvId) {
+      const env = allEnvironments.find((environment) => environment.id === savedEnvId);
 
       return env;
     }

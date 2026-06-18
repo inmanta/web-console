@@ -57,6 +57,7 @@ export const Root: React.FC = () => {
           <Route path={`${basePathname}/login`} element={<LoginPage />} />
           <Route element={<RouteOutlet />}>
             <Route path="/" element={<DefaultRoute />} />
+            <Route path={basePathname} element={<DefaultRoute />} />
             <Route
               path="*"
               element={

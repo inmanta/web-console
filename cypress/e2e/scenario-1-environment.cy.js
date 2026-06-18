@@ -437,4 +437,44 @@ describe("Environment", () => {
     cy.get(".pf-v6-c-tabs__list").find("button").contains("Environment").click();
     deleteEnv(testName(6), testProjectName(6));
   });
+
+  it("1.6 Last selected environment is loaded when navigating to root path", function () {
+    const envName = testName(7);
+    const projectName = testProjectName(7);
+
+    // Create environment 7
+    cy.visit("/console/environment/create");
+    fillCreateEnvForm({
+      envName,
+      projectName,
+      shouldPassEnvName: true,
+      fillOptionalInputs: true,
+    });
+    cy.get("button").contains("Submit").click();
+
+    // Select the default environment and capture its ID
+    selectEnvironment();
+
+    cy.url().then((defaultUrl) => {
+      const defaultEnvId = new URL(defaultUrl).searchParams.get("env");
+
+      // Load base path and confirm redirect to the default environment
+      cy.visit("/console/");
+      cy.url().should("include", `env=${defaultEnvId}`);
+    });
+
+    // Select environment 7
+    selectEnvironment(envName);
+    cy.url().then((env7Url) => {
+      const env7Id = new URL(env7Url).searchParams.get("env");
+
+      // Load base path and confirm redirect to environment 7
+      cy.visit("/console/");
+      cy.url().should("include", `env=${env7Id}`);
+    });
+
+    // Clean up environment 7
+    openSettings(envName);
+    deleteEnv(envName);
+  });
 });
