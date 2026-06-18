@@ -1,11 +1,14 @@
-import moment from "moment-timezone";
+import dayjs from "@/dayjs";
 import qs from "qs";
 import { CompileStatus, RangeOperator } from "@/Core";
 import { urlEncodeParams } from "@/Data/Queries";
 import { Filter } from "@/Slices/CompileReports/Core/Types";
 import { CompileReportsParams } from "./useGetCompileReports";
 
-export function getUrl(params: CompileReportsParams, timezone = moment.tz.guess()): string {
+export function getUrl(
+  params: CompileReportsParams,
+  timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+): string {
   const { pageSize, sort, filter, currentPage } = urlEncodeParams<CompileReportsParams>(params);
 
   const serializedFilters =
@@ -31,8 +34,10 @@ const filterToParam = (filter: Filter, timezone: string) => {
   const { status, requested } = filter;
   const serializedTimestampOperatorFilters = requested?.map(
     (timestampWithOperator) =>
-      `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${moment
-        .tz(timestampWithOperator.date, timezone)
+      `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${dayjs(
+        timestampWithOperator.date
+      )
+        .tz(timezone)
         .utc()
         .format("YYYY-MM-DD+HH:mm:ss")}`
   );

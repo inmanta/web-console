@@ -1,18 +1,17 @@
 import { renderHook } from "@testing-library/react";
-import moment from "moment";
 import { useHandleUrlStateWithFilter } from "./useUrlStateWithFilter";
 
 const fromDate = {
   search: "?state.Inventory.filter.timestamp[0]=from__2021-10-11T22%3A30%3A00.000Z",
-  value: [{ operator: "from", date: moment("2021-10-11T22:30:00.000Z").toDate() }],
+  value: [{ operator: "from", date: new Date("2021-10-11T22:30:00.000Z") }],
 };
 
 const fromAndToDate = {
   search:
     "?state.Inventory.filter.timestamp[0]=from__2021-10-11T22%3A30%3A00.000Z&state.Inventory.filter.timestamp[1]=to__2021-10-21T21%3A00%3A00.000Z",
   value: [
-    { operator: "from", date: moment("2021-10-11T22:30:00.000Z").toDate() },
-    { operator: "to", date: moment("2021-10-21T21:00:00.000Z").toDate() },
+    { operator: "from", date: new Date("2021-10-11T22:30:00.000Z") },
+    { operator: "to", date: new Date("2021-10-21T21:00:00.000Z") },
   ],
 };
 

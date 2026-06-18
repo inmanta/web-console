@@ -10,7 +10,7 @@ import {
   ToolbarGroup,
 } from "@patternfly/react-core";
 import { DryRun } from "@/Data/Queries";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { Progress as DomainProgress } from "@S/ComplianceCheck/Core/Domain";
 
 interface Props {
@@ -19,7 +19,7 @@ interface Props {
   reportsData?: DryRun[];
 }
 
-const datePresenter = new MomentDatePresenter();
+const datePresenter = new CustomDatePresenter();
 
 export const SelectReportAction: React.FC<Props> = ({
   setSelectedReport,

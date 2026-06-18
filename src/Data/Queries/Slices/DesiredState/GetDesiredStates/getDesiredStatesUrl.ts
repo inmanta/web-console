@@ -1,4 +1,4 @@
-import moment from "moment-timezone";
+import dayjs from "@/dayjs";
 import qs from "qs";
 import { RangeOperator } from "@/Core";
 import { urlEncodeParams } from "@/Data/Queries";
@@ -14,7 +14,7 @@ import { GetDesiredStatesParams } from "./useGetDesiredStates";
  */
 export function getDesiredStatesUrl(
   params: GetDesiredStatesParams,
-  timezone = moment.tz.guess()
+  timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 ): string {
   const { filter, pageSize, currentPage } = urlEncodeParams<GetDesiredStatesParams>(params);
 
@@ -29,8 +29,10 @@ export function getDesiredStatesUrl(
               status: filterWithDefaults.status,
               date: filterWithDefaults.date?.map(
                 (timestampWithOperator) =>
-                  `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${moment
-                    .tz(timestampWithOperator.date, timezone)
+                  `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${dayjs(
+                    timestampWithOperator.date
+                  )
+                    .tz(timezone)
                     .utc()
                     .format("YYYY-MM-DD+HH:mm:ss")}`
               ),

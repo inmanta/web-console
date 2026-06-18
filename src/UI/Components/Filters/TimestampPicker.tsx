@@ -7,7 +7,7 @@ import {
   InputGroup,
   InputGroupItem,
 } from "@patternfly/react-core";
-import moment from "moment";
+import dayjs from "@/dayjs";
 import styled from "styled-components";
 
 interface Props {
@@ -110,14 +110,14 @@ const StyledInputGroup = styled(InputGroup)`
 `;
 
 const formatDateWithSlashes = (date: Date): string => {
-  return moment(date).format("YYYY/MM/DD");
+  return dayjs(date).format("YYYY/MM/DD");
 };
 
 const isValidSlashedFormat = (dateString: string): boolean =>
-  moment(dateString, "YYYY/MM/DD", true).isValid();
+  dayjs(dateString, "YYYY/MM/DD", true).isValid();
 
 const isValidDashedFormat = (dateString: string): boolean =>
-  moment(dateString, "YYYY-MM-DD", true).isValid();
+  dayjs(dateString, "YYYY-MM-DD", true).isValid();
 
 const validateDateFormat = (dateString: string, date: Date | string): boolean => {
   let formattedDate;
@@ -136,7 +136,7 @@ const validateDateFormat = (dateString: string, date: Date | string): boolean =>
 
 const parseDate = (val: string): Date => {
   if (isValidSlashedFormat(val)) {
-    return moment(val, "YYYY/MM/DD", true).toDate();
+    return dayjs(val, "YYYY/MM/DD", true).toDate();
   } else if (isValidDashedFormat(val)) {
     return new Date(`${val}T00:00:00`);
   }

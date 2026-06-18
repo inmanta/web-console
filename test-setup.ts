@@ -1,6 +1,5 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import moment from "moment-timezone";
 
 import "jest-axe/extend-expect";
 
@@ -100,8 +99,15 @@ const linkShapeMock = vi.hoisted(() => ({
   }),
 }));
 
-// Set default timezone
-moment.tz.setDefault("Europe/Brussels");
+// Set default timezone for tests to Europe/Brussels,
+// matching the previous moment.tz.setDefault("Europe/Brussels") behavior.
+// This ensures MomentDatePresenter picks up Brussels timezone at instantiation time.
+const _originalResolvedOptions = Intl.DateTimeFormat.prototype.resolvedOptions;
+vi.spyOn(Intl.DateTimeFormat.prototype, "resolvedOptions").mockImplementation(function (
+  this: Intl.DateTimeFormat
+) {
+  return { ..._originalResolvedOptions.call(this), timeZone: "Europe/Brussels" };
+});
 
 // Mock window.matchMedia
 Object.defineProperty(window, "matchMedia", {

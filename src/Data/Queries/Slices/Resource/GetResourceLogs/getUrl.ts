@@ -1,4 +1,4 @@
-import moment from "moment-timezone";
+import dayjs from "@/dayjs";
 import qs from "qs";
 import { DateRange, RangeOperator } from "@/Core";
 import { urlEncodeParams } from "@/Data/Queries";
@@ -42,8 +42,10 @@ const serializeTimestampFilter = (filter?: DateRange.Type[]): string[] | undefin
 
   return filter.map(
     (timestampWithOperator) =>
-      `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${moment
-        .tz(timestampWithOperator.date, moment.tz.guess())
+      `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${dayjs(
+        timestampWithOperator.date
+      )
+        .tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
         .utc()
         .format("YYYY-MM-DD+HH:mm:ss")}`
   );

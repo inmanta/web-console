@@ -15,14 +15,14 @@ import { AttributeSets, getAvailableAttributesSets } from "@/Slices/ServiceInsta
 import { words } from "@/UI";
 import { SearchSelect } from "@/UI/Components";
 import { useTheme } from "@/UI/Components/DarkmodeOption";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 
 interface Props {
   instanceLogs: InstanceLog[];
   selectedVersion: string;
 }
 
-const datePresenter = new MomentDatePresenter();
+const datePresenter = new CustomDatePresenter();
 
 /**
  * The AttributesCompare Component.

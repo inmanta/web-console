@@ -1,16 +1,16 @@
-import moment from "moment-timezone";
+import dayjs from "@/dayjs";
 import { DateInfo } from "@/Core";
 import { DatePresenter } from "@/UI/Presenters";
 
-export class MomentDatePresenter implements DatePresenter {
+export class CustomDatePresenter implements DatePresenter {
+  private readonly timezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   format(timestamp: string, template: string): string {
-    return moment.utc(timestamp).tz(this.timezone).format(template);
+    return dayjs.utc(timestamp).tz(this.timezone).format(template);
   }
 
-  private readonly timezone: string = moment.tz.guess();
-
   diff(timestamp1: string, timestamp2: string): string {
-    return `${moment.duration(moment(timestamp1).diff(moment(timestamp2))).asSeconds()} s`;
+    return `${dayjs.duration(dayjs(timestamp1).diff(dayjs(timestamp2))).asSeconds()} s`;
   }
 
   get(timestamp: string): DateInfo {
@@ -34,14 +34,14 @@ export class MomentDatePresenter implements DatePresenter {
   }
 
   private getRelative(timestamp: string): string {
-    return moment.utc(timestamp).tz(this.timezone).fromNow();
+    return dayjs.utc(timestamp).tz(this.timezone).fromNow();
   }
 
   parseFull(timestamp: string): Date {
-    return moment.tz(timestamp, "YYYY/MM/DD HH:mm:ss", this.timezone).toDate();
+    return dayjs.tz(timestamp, "YYYY/MM/DD HH:mm:ss", this.timezone).toDate();
   }
 
   toUnixMs(timestamp: string): number {
-    return moment.utc(timestamp).valueOf();
+    return dayjs.utc(timestamp).valueOf();
   }
 }
