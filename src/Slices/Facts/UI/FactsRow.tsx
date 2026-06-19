@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { memo, useState, useContext } from "react";
 import { Button, Truncate } from "@patternfly/react-core";
 import { ExpandableRowContent, Tbody, Tr, Td } from "@patternfly/react-table";
 import { ClassifiedAttribute } from "@/Data";
@@ -15,72 +15,72 @@ interface Props {
   showExpandColumn: boolean;
 }
 
-export const FactsRow: React.FC<Props> = ({
-  row,
-  attribute,
-  rowIndex,
-  numberOfColumns,
-  showExpandColumn,
-}) => {
-  const { routeManager } = useContext(DependencyContext);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const isExpandable = isEditorKind(attribute.kind);
+export const FactsRow: React.FC<Props> = memo(
+  ({ row, attribute, rowIndex, numberOfColumns, showExpandColumn }) => {
+    const { routeManager } = useContext(DependencyContext);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const isExpandable = isEditorKind(attribute.kind);
 
-  return (
-    <Tbody isExpanded={isExpandable ? isExpanded : undefined}>
-      <Tr aria-label="FactsRow">
-        {showExpandColumn && (
-          <Td
-            expand={
-              isExpandable
-                ? {
-                    rowIndex,
-                    isExpanded,
-                    onToggle: () => setIsExpanded((prev) => !prev),
-                  }
-                : undefined
-            }
-          />
-        )}
-        <Td dataLabel={words("facts.column.name")}>{row.name}</Td>
-        <Td dataLabel={words("facts.column.updated")}>
-          {row.updated && <DateWithTooltip timestamp={row.updated} />}
-        </Td>
-        <Td modifier="breakWord" dataLabel={words("facts.column.value")}>
-          {isExpandable ? (
-            <Button
-              variant="link"
-              isInline
-              onClick={() => setIsExpanded((prev) => !prev)}
-              aria-expanded={isExpanded}
-            >
-              <Truncate content={row.value} />
-            </Button>
-          ) : (
-            <AttributeValue attribute={attribute} />
+    return (
+      <Tbody isExpanded={isExpandable ? isExpanded : undefined}>
+        <Tr aria-label="FactsRow">
+          {showExpandColumn && (
+            <Td
+              expand={
+                isExpandable
+                  ? {
+                      rowIndex,
+                      isExpanded,
+                      onToggle: () => setIsExpanded((prev) => !prev),
+                    }
+                  : undefined
+              }
+            />
           )}
-        </Td>
-        <Td modifier="breakWord" dataLabel={words("facts.column.resourceId")}>
-          <Link
-            pathname={routeManager.getUrl("ResourceDetails", {
-              resourceId: row.resource_id,
-            })}
-          >
-            <Button variant="link" isInline>
-              {row.resource_id}
-            </Button>
-          </Link>
-        </Td>
-      </Tr>
-      {isExpandable && (
-        <Tr isExpanded={isExpanded}>
-          <Td colSpan={numberOfColumns}>
-            <ExpandableRowContent>
+          <Td dataLabel={words("facts.column.name")}>{row.name}</Td>
+          <Td dataLabel={words("facts.column.updated")}>
+            {row.updated && <DateWithTooltip timestamp={row.updated} />}
+          </Td>
+          <Td modifier="breakWord" dataLabel={words("facts.column.value")}>
+            {isExpandable ? (
+              <Button
+                variant="link"
+                isInline
+                onClick={() => setIsExpanded((prev) => !prev)}
+                aria-expanded={isExpanded}
+              >
+                <Truncate
+                  content={row.value}
+                  maxCharsDisplayed={30}
+                  tooltipProps={{ isVisible: false, trigger: "manual" }}
+                />
+              </Button>
+            ) : (
               <AttributeValue attribute={attribute} />
-            </ExpandableRowContent>
+            )}
+          </Td>
+          <Td modifier="breakWord" dataLabel={words("facts.column.resourceId")}>
+            <Link
+              pathname={routeManager.getUrl("ResourceDetails", {
+                resourceId: row.resource_id,
+              })}
+            >
+              <Button variant="link" isInline>
+                {row.resource_id}
+              </Button>
+            </Link>
           </Td>
         </Tr>
-      )}
-    </Tbody>
-  );
-};
+        {isExpandable && (
+          <Tr isExpanded={isExpanded}>
+            <Td colSpan={numberOfColumns}>
+              <ExpandableRowContent>
+                <AttributeValue attribute={attribute} />
+              </ExpandableRowContent>
+            </Td>
+          </Tr>
+        )}
+      </Tbody>
+    );
+  }
+);
