@@ -725,7 +725,7 @@ const dict = {
   "home.manageProjects.callout.suffix": ". Delete its environments first to unlock the action.",
   "home.manageProjects.environments.count": (n: number) => `${n} environment${n === 1 ? "" : "s"}`,
   "home.manageProjects.environments.remain": (n: number) =>
-    `${n} environment${n === 1 ? "" : "s"} remain`,
+    `${n} environment${n === 1 ? "" : "s"} remaining`,
   "home.manageProjects.environments.empty": "empty",
   "home.manageProjects.delete.button": "Delete",
   "home.manageProjects.delete.confirm.button": "Confirm delete",
