@@ -23,10 +23,10 @@ import { uniq } from "@/Core/Language/collection";
 import { Filter } from "@/Slices/Events/Core/Types";
 import { FilterDrawerPanelContent, MultiTextSelect } from "@/UI/Components";
 import { TimestampPicker } from "@/UI/Components/Filters";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 
-const datePresenter = new MomentDatePresenter();
+const datePresenter = new CustomDatePresenter();
 
 interface Props {
   filter: Filter;

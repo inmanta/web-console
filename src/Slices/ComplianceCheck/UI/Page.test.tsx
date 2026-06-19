@@ -8,7 +8,7 @@ import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { View } from "./Page";
 
@@ -20,7 +20,7 @@ const axe = configureAxe({
 });
 
 function setup() {
-  const datePresenter = new MomentDatePresenter();
+  const datePresenter = new CustomDatePresenter();
 
   const component = (
     <QueryClientProvider client={testClient}>

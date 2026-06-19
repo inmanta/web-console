@@ -2,7 +2,7 @@ import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import {
   DocAttributeDescriptors,
   sortDocAttributeDescriptors,
@@ -18,7 +18,7 @@ import {
 } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
 
-const datePresenter = new MomentDatePresenter();
+const datePresenter = new CustomDatePresenter();
 
 describe("ServiceInstanceDetailsPage", () => {
   it("Should render the view in its loading states", async () => {

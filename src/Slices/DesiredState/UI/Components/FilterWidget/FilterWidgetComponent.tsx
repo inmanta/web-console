@@ -21,13 +21,13 @@ import { PlusIcon } from "@patternfly/react-icons";
 import { RangeOperator, toggleValueInList } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
-import { MomentDatePresenter } from "@/UI";
+import { CustomDatePresenter } from "@/UI";
 import { FilterDrawerPanelContent, MultiTextSelect } from "@/UI/Components";
 import { TimestampPicker } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
 import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 
-const datePresenter = new MomentDatePresenter();
+const datePresenter = new CustomDatePresenter();
 
 interface Props {
   filter: Filter;
