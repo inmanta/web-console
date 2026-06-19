@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import {
   Avatar,
+  Button,
   Content,
   Divider,
   Flex,
@@ -16,12 +17,14 @@ import {
   MenuSearchInput,
   MenuToggle,
   MenuToggleElement,
+  ModalVariant,
   SearchInput,
   Split,
   SplitItem,
 } from "@patternfly/react-core";
 import {
   CheckIcon,
+  FolderOpenIcon,
   PlusCircleIcon,
   SignOutAltIcon,
   UserCircleIcon,
@@ -29,9 +32,11 @@ import {
 } from "@patternfly/react-icons";
 import { DarkmodeOption } from "@/UI/Components/DarkmodeOption";
 import { DependencyContext } from "@/UI/Dependency";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider/ModalProvider";
 import { words } from "@/UI/words";
 import fallBackImage from "@images/inmanta-wings.svg";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
+import { ManageProjectsModal } from "./ManageProjectsModal";
 
 interface Props {
   items: EnvironmentSelectorItem[];
@@ -49,6 +54,7 @@ export const EnvSelector: React.FC<Props> = ({
   toggleText,
 }) => {
   const { routeManager, authHelper } = useContext(DependencyContext);
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const navigate = useNavigate();
   const menuRef = React.useRef<HTMLDivElement>(null);
   const toggleRef = React.useRef<MenuToggleElement>(null);
@@ -157,6 +163,25 @@ export const EnvSelector: React.FC<Props> = ({
             icon={<PlusCircleIcon />}
           >
             {words("home.environmentSwitcher.create.button")}
+          </MenuItem>
+          <MenuItem
+            onClick={() =>
+              triggerModal({
+                title: words("home.manageProjects.title"),
+                description: words("home.manageProjects.description"),
+                content: <ManageProjectsModal />,
+                variant: ModalVariant.medium,
+                actions: (
+                  <Button key="close" variant="secondary" onClick={closeModal}>
+                    {words("home.manageProjects.close.button")}
+                  </Button>
+                ),
+              })
+            }
+            icon={<FolderOpenIcon />}
+            data-testid="manage-projects-menu-item"
+          >
+            {words("home.environmentSwitcher.manageProjects.button")}
           </MenuItem>
           {showUserManagement && (
             <MenuItem

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, createContext, useState } from "react";
+import React, { PropsWithChildren, createContext, useEffect, useState } from "react";
 import { Modal, ModalVariant, ModalBody, ModalFooter, ModalHeader } from "@patternfly/react-core";
 
 type IconVariant = "success" | "danger" | "warning" | "info" | "custom";
@@ -142,6 +142,27 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
       cancelCb();
     }
   };
+
+  useEffect(() => {
+    if (!isOpen || !showClose) {
+      return;
+    }
+
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target.closest(".pf-v6-c-backdrop") !== null &&
+        target.closest('[role="dialog"]') === null
+      ) {
+        closeModal();
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+
+    return () => document.removeEventListener("click", handleClick);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, showClose]);
 
   return (
     <ModalContext.Provider

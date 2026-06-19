@@ -10,6 +10,7 @@ import { AuthProvider, KeycloakAuthConfig, LocalConfig } from "@/Data";
 import { EnvironmentPreview, useGetEnvironments, useGetProjects } from "@/Data/Queries";
 import { AuthTestWrapper, Environment, MockedDependencyProvider, Project } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
@@ -391,5 +392,64 @@ describe("EnvironmentSelector", () => {
     const imgElements = screen.getAllByRole("img", { hidden: true });
 
     expect(imgElements.length).toBeGreaterThan(0);
+  });
+
+  test("GIVEN EnvironmentSelector WHEN dropdown is opened THEN 'Manage projects' item is visible", async () => {
+    server.use(
+      http.get("/api/v2/environment", async () => {
+        return HttpResponse.json({ data: Environment.filterable });
+      }),
+      http.get("/api/v2/project", async () => {
+        return HttpResponse.json({ data: Project.filterable });
+      })
+    );
+
+    render(setup());
+
+    const toggle = await screen.findByTestId("env-selector-toggle");
+
+    await userEvent.click(toggle);
+
+    expect(screen.getByTestId("manage-projects-menu-item")).toBeVisible();
+    expect(screen.getByText("Manage projects")).toBeVisible();
+  });
+
+  test("GIVEN EnvironmentSelector WHEN 'Manage projects' is clicked THEN modal opens with project list", async () => {
+    server.use(
+      http.get("/api/v2/environment", async () => {
+        return HttpResponse.json({ data: Environment.filterable });
+      }),
+      http.get("/api/v2/project", async () => {
+        return HttpResponse.json({ data: Project.filterable });
+      })
+    );
+
+    render(
+      <ErrorBoundary>
+        <TestMemoryRouter initialEntries={["/?env=123"]}>
+          <QueryClientProvider client={testClient}>
+            <AuthProvider config={undefined}>
+              <AuthTestWrapper>
+                <ModalProvider>
+                  <EnvSelectorWrapper
+                    onSelectEnvironment={() => {}}
+                    selectedEnvironment={Environment.previewFilterable[0]}
+                  />
+                </ModalProvider>
+              </AuthTestWrapper>
+            </AuthProvider>
+          </QueryClientProvider>
+        </TestMemoryRouter>
+      </ErrorBoundary>
+    );
+
+    const toggle = await screen.findByTestId("env-selector-toggle");
+
+    await userEvent.click(toggle);
+
+    await userEvent.click(screen.getByRole("menuitem", { name: "Manage projects" }));
+
+    expect(await screen.findByRole("dialog")).toBeVisible();
+    expect(await screen.findByText("Manage projects")).toBeVisible();
   });
 });
