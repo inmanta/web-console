@@ -2,16 +2,7 @@
  * Represents different types of attributes with specific rendering requirements
  * based on their content type.
  */
-export type ClassifiedAttribute =
-  | Undefined
-  | SingleLine
-  | MultiLine
-  | Password
-  | File
-  | Json
-  | Xml
-  | Python
-  | Code;
+export type ClassifiedAttribute = Undefined | SingleLine | Password | File | Json | Xml | Code;
 
 /**
  * Base interface for attribute types that have a key-value structure
@@ -27,11 +18,6 @@ interface Base<Kind> {
  * Represents a single line text attribute
  */
 type SingleLine = Base<"SingleLine">;
-
-/**
- * Represents a multi-line text attribute
- */
-type MultiLine = Base<"MultiLine">;
 
 /**
  * Represents a JSON formatted attribute
@@ -52,11 +38,6 @@ type Password = Base<"Password">;
  * Represents a file path or file content attribute
  */
 type File = Base<"File">;
-
-/**
- * Represents a Python code attribute
- */
-type Python = Base<"Python">;
 
 /**
  * Represents generic code attribute (language unspecified)

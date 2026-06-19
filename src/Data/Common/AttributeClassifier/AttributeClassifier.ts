@@ -1,29 +1,25 @@
-import { Formatter } from "@/Core";
+import { JsonFormatter } from "../JsonFormatter";
+import { XmlFormatter } from "../XmlFormatter";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 
 /**
  * Classifies attribute key-value pairs into different types based on their content and format.
  * Used to determine how attributes should be displayed in the UI.
+ *
+ * The JSON/XML formatters and the multiline-as-`Code` behaviour are the same
+ * everywhere, so they are baked in. The only thing that varies is `includeAllKeys`.
+ *
+ * @param options.includeAllKeys - When `true`, no key is filtered out. Defaults
+ *   to `false`, which ignores the `version` and `requires` keys.
  */
 export class AttributeClassifier {
-  /**
-   * Creates a new AttributeClassifier.
-   *
-   * @param jsonFormatter - Formatter for JSON values
-   * @param xmlFormatter - Formatter for XML strings
-   * @param multilineClassifierFn - Custom classifier for multiline strings
-   * @param isKeyIgnored - Function to determine if an attribute key should be ignored
-   */
-  constructor(
-    private readonly jsonFormatter: Formatter<unknown>,
-    private readonly xmlFormatter: Formatter,
-    private readonly multilineClassifierFn: (
-      key: string,
-      value: string
-    ) => ClassifiedAttribute | null = (key, value) => ({ kind: "MultiLine", key, value }),
-    private readonly isKeyIgnored: (key: string) => boolean = (key: string) =>
-      key === "version" || key === "requires"
-  ) {}
+  private readonly jsonFormatter = new JsonFormatter();
+  private readonly xmlFormatter = new XmlFormatter();
+  private readonly includeAllKeys: boolean;
+
+  constructor({ includeAllKeys = false }: { includeAllKeys?: boolean } = {}) {
+    this.includeAllKeys = includeAllKeys;
+  }
 
   /**
    * Classifies all attributes in an object and returns them as a sorted array.
@@ -67,6 +63,14 @@ export class AttributeClassifier {
     }
 
     if (this.isString(value)) {
+      if (this.isJsonString(value)) {
+        return {
+          kind: "Json",
+          key,
+          value: this.jsonFormatter.format(JSON.parse(value)),
+        };
+      }
+
       if (this.isXml(value)) {
         return {
           kind: "Xml",
@@ -76,7 +80,9 @@ export class AttributeClassifier {
       }
 
       if (this.isMultiLine(value)) {
-        return this.multilineClassifierFn(key, value);
+        // Multiline, non-structured strings render in the code editor without
+        // syntax highlighting.
+        return { kind: "Code", key, value };
       }
 
       return { kind: "SingleLine", key, value };
@@ -96,6 +102,22 @@ export class AttributeClassifier {
       key,
       value: `${value}`,
     };
+  }
+
+  /**
+   * Determines if an attribute key should be skipped during classification.
+   * Unless `includeAllKeys` was set, the `version` and `requires` keys are
+   * ignored (they are framework metadata, not user-facing attributes).
+   *
+   * @param key - Key to check
+   * @returns True if the key should be left out of the result
+   */
+  private isKeyIgnored(key: string): boolean {
+    if (this.includeAllKeys) {
+      return false;
+    }
+
+    return key === "version" || key === "requires";
   }
 
   /**
@@ -139,6 +161,22 @@ export class AttributeClassifier {
   }
 
   /**
+   * Checks if a string parses to a JSON object or array (not a scalar).
+   *
+   * @param value - String to check
+   * @returns True if the string is a JSON object or array
+   */
+  private isJsonString(value: string): boolean {
+    try {
+      const parsed = JSON.parse(value);
+
+      return typeof parsed === "object" && parsed !== null;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
    * Determines if a string value should be treated as multiline.
    *
    * @param value - String value to check
@@ -159,14 +197,17 @@ export class AttributeClassifier {
   }
 
   /**
-   * Determines if a string contains XML content.
+   * Determines if a string looks like XML.
+   * Uses a cheap structural check (starts with `<` and ends with `>`) rather
+   * than parsing: XML payloads can be thousands of lines, and running untrusted
+   * markup through DOMParser risks XSS for a marginal gain in precision.
    *
    * @param value - String to check
-   * @returns True if the string appears to be XML (starts with < and ends with >)
+   * @returns True if the trimmed string starts with `<` and ends with `>`
    */
   private isXml(value: string): boolean {
-    const trimmedValue = value.trimStart().trimEnd();
+    const trimmed = value.trim();
 
-    return trimmedValue.startsWith("<") && trimmedValue.endsWith(">");
+    return trimmed.startsWith("<") && trimmed.endsWith(">");
   }
 }

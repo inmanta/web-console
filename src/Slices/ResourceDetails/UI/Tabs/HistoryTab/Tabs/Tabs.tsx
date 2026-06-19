@@ -1,11 +1,12 @@
 import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
 import { ListIcon, ModuleIcon } from "@patternfly/react-icons";
-
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { JsonFormatter, XmlFormatter } from "@/Data";
-import { AttributeClassifier, AttributeList, IconTabs, TabDescriptor } from "@/UI/Components";
+import { AttributeClassifier } from "@/Data";
+import { AttributeList, IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
+
+const classifier = new AttributeClassifier();
 
 export enum TabKey {
   Attributes = "Attributes",
@@ -77,11 +78,6 @@ const requiresTab = (requires: string[]): TabDescriptor<TabKey> => ({
  * @returns {React.FC<{ attributes: Record<string, unknown> }>} A React Component displaying the attributes of the resource
  */
 const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({ attributes }) => {
-  const classifier = new AttributeClassifier(
-    new JsonFormatter(),
-    new XmlFormatter(),
-    (key: string, value: string) => ({ kind: "Code", key, value })
-  );
   const classifiedAttributes = classifier.classify(attributes);
 
   return (

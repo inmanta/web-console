@@ -1,13 +1,15 @@
 import React from "react";
 import { PageSection, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { JsonFormatter, XmlFormatter } from "@/Data";
-import { AttributeClassifier, AttributeList } from "@/UI/Components";
+import { AttributeClassifier } from "@/Data";
+import { AttributeList } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface Props {
   details: Resource.VersionedDetails;
 }
+
+const classifier = new AttributeClassifier({ includeAllKeys: true });
 
 export const Details: React.FC<Props> = ({ details, ...props }) => (
   <div {...props}>
@@ -16,11 +18,4 @@ export const Details: React.FC<Props> = ({ details, ...props }) => (
       <AttributeList attributes={classifier.classify(details.attributes)} />
     </PageSection>
   </div>
-);
-
-const classifier = new AttributeClassifier(
-  new JsonFormatter(),
-  new XmlFormatter(),
-  (key: string, value: string) => ({ kind: "Code", key, value }),
-  () => false
 );
