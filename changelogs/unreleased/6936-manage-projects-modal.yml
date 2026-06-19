@@ -1,0 +1,6 @@
+description: Added a "Manage projects" option to the environment selector menu, opening a modal that lists all projects and allows deletion of projects that have no environments.
+issue-nr: 6936
+change-type: minor
+destination-branches: [master]
+sections:
+  feature: "{{description}}"
