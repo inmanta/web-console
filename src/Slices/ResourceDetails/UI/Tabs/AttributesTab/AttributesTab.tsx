@@ -1,12 +1,14 @@
 import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
 import { Details } from "@/Core/Domain/Resource/Resource";
-import { createAttributeClassifier } from "@/Data";
+import { AttributeClassifier } from "@/Data";
 import { AttributeList } from "@/UI/Components";
 
 interface Props {
   details: Details;
 }
+
+const classifier = new AttributeClassifier();
 
 /**
  * The AttributesTab component.
@@ -18,7 +20,7 @@ interface Props {
  * @returns {React.FC<Props>} A React Component displaying the attributes of a resource
  */
 export const AttributesTab: React.FC<Props> = ({ details }) => {
-  const classifiedAttributes = createAttributeClassifier().classify(details.attributes);
+  const classifiedAttributes = classifier.classify(details.attributes);
 
   return (
     <Card isCompact>

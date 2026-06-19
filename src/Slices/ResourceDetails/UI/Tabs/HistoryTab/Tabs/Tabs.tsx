@@ -2,9 +2,11 @@ import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
 import { ListIcon, ModuleIcon } from "@patternfly/react-icons";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { createAttributeClassifier } from "@/Data";
+import { AttributeClassifier } from "@/Data";
 import { AttributeList, IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
+
+const classifier = new AttributeClassifier();
 
 export enum TabKey {
   Attributes = "Attributes",
@@ -76,7 +78,7 @@ const requiresTab = (requires: string[]): TabDescriptor<TabKey> => ({
  * @returns {React.FC<{ attributes: Record<string, unknown> }>} A React Component displaying the attributes of the resource
  */
 const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({ attributes }) => {
-  const classifiedAttributes = createAttributeClassifier().classify(attributes);
+  const classifiedAttributes = classifier.classify(attributes);
 
   return (
     <Card isCompact>

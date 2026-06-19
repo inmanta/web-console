@@ -41,8 +41,8 @@ export const classified: ClassifiedAttribute[] = [
   { kind: "Xml", key: "c", value: xml.format(attributes.c) },
   { kind: "Json", key: "d", value: json.format(attributes.d) },
   { kind: "Undefined", key: "e" },
-  { kind: "MultiLine", key: "f", value: attributes.f },
-  { kind: "MultiLine", key: "ff", value: attributes.ff },
+  { kind: "Code", key: "f", value: attributes.f },
+  { kind: "Code", key: "ff", value: attributes.ff },
   { kind: "Json", key: "g", value: json.format(attributes.g) },
   { kind: "File", key: "hash", value: attributes.hash },
   {

@@ -6,13 +6,15 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import { isObjectEmpty } from "@/Core";
-import { createAttributeClassifier } from "@/Data";
+import { AttributeClassifier } from "@/Data";
 import { AttributeList, CodeText } from "@/UI/Components";
 import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
 
 interface Props {
   log: ResourceLog;
 }
+
+const classifier = new AttributeClassifier();
 
 /**
  * A component that displays the details of a resource log.
@@ -35,5 +37,3 @@ export const Details: React.FC<Props> = ({ log }) => {
     </DescriptionList>
   );
 };
-
-const classifier = createAttributeClassifier();

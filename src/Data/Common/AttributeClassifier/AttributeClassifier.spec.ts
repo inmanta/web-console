@@ -1,27 +1,19 @@
-import { JsonFormatter } from "../JsonFormatter";
-import { XmlFormatter } from "../XmlFormatter";
 import { AttributeClassifier } from "./AttributeClassifier";
-import { attributes, classified } from "./Data";
+import { attributes, classified } from "./Mock";
 
 test("GIVEN AttributeClassifier WHEN provided with a mixed attributes object THEN returns the correct list of ClassifiedAttributes", () => {
-  const classifier = new AttributeClassifier(new JsonFormatter(), new XmlFormatter());
+  const classifier = new AttributeClassifier();
 
   expect(classifier.classify(attributes)).toEqual(classified);
 });
 
-test("GIVEN AttributeClassifier WHEN provided with a custom multiline classifier THEN returns the correct list of ClassifiedAttributes", () => {
-  const classifier = new AttributeClassifier(
-    new JsonFormatter(),
-    new XmlFormatter(),
-    (key: string, value: string) => ({ kind: "Code", key, value })
-  );
+test("GIVEN AttributeClassifier WHEN includeAllKeys is true THEN the version and requires keys are classified too", () => {
+  const classifier = new AttributeClassifier({ includeAllKeys: true });
 
-  expect(classifier.classify({ f: attributes["f"] })).toEqual([
-    {
-      kind: "Code",
-      key: "f",
-      value:
-        "This text has a length longer than 80. abcdefghijklmnopqrstvuwxyz abcdefghijklmnopqrstvuwxyz",
-    },
+  expect(
+    classifier.classify({ version: attributes.version, requires: attributes.requires })
+  ).toEqual([
+    { kind: "SingleLine", key: "requires", value: attributes.requires },
+    { kind: "SingleLine", key: "version", value: attributes.version },
   ]);
 });

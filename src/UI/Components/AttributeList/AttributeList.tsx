@@ -41,8 +41,8 @@ export const AttributeList: React.FC<Props> = ({ attributes, variant = "default"
 
 /**
  * Renders a single classified attribute's value with the control appropriate to
- * its kind — copyable text for SingleLine/MultiLine, the code editor for
- * JSON/XML/Code, a file block for File, etc. Use this directly (instead of
+ * its kind — copyable text for SingleLine, the code editor for JSON/XML/Code, a
+ * file block for File, etc. Use this directly (instead of
  * {@link AttributeList}) when you need the value rendering without the
  * surrounding description-list term/label.
  */
@@ -68,13 +68,6 @@ export const AttributeValue: React.FC<{
         </TextWithCopy>
       );
 
-    case "MultiLine":
-      return (
-        <MultiTextWithCopy value={attribute.value} tooltipContent="Copy to clipboard">
-          <TextContainer $variant={variant}>{attribute.value}</TextContainer>
-        </MultiTextWithCopy>
-      );
-
     case "File":
       return <FileBlock hash={attribute.value} />;
 
@@ -86,12 +79,6 @@ export const AttributeValue: React.FC<{
       );
   }
 };
-
-const MultiTextWithCopy = styled(TextWithCopy)`
-  display: block;
-  max-width: 80ch;
-  white-space: pre-wrap;
-`;
 
 const TextContainer = styled.span<{ $variant?: AttributeTextVariant }>`
   ${(p) =>

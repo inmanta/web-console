@@ -1,13 +1,15 @@
 import React from "react";
 import { PageSection, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { createAttributeClassifier } from "@/Data";
+import { AttributeClassifier } from "@/Data";
 import { AttributeList } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface Props {
   details: Resource.VersionedDetails;
 }
+
+const classifier = new AttributeClassifier({ includeAllKeys: true });
 
 export const Details: React.FC<Props> = ({ details, ...props }) => (
   <div {...props}>
@@ -17,5 +19,3 @@ export const Details: React.FC<Props> = ({ details, ...props }) => (
     </PageSection>
   </div>
 );
-
-const classifier = createAttributeClassifier({ includeAllKeys: true });

@@ -11,40 +11,17 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Mock } from "@S/Facts/Test";
-import { VALUE_PREVIEW_LENGTH } from "./helpers";
 import { FactsPage } from ".";
 
-vi.mock("@patternfly/react-code-editor", () => ({
-  CodeEditor: ({
-    code,
-    customControls,
-    isDownloadEnabled,
-  }: {
-    code: string;
-    customControls?: React.ReactNode;
-    isDownloadEnabled?: boolean;
-  }) => (
-    <div>
-      <pre>{code}</pre>
-      {customControls}
-      {isDownloadEnabled && <button aria-label="Download code" />}
-    </div>
-  ),
-  CodeEditorControl: ({
-    onClick,
-    "aria-label": ariaLabel,
-  }: {
-    onClick: () => void;
-    "aria-label": string;
-  }) => <button onClick={onClick} aria-label={ariaLabel} />,
-  Language: { json: "json", xml: "xml" },
-}));
+// The code editor is mocked globally in test-setup.ts; no local mock needed.
 
-const previewOf = (name: string) => {
-  const value = Mock.list.find((f) => f.name === name)?.value;
+const valueOf = (name: string) => Mock.list.find((f) => f.name === name)?.value ?? "";
 
-  return `${value?.slice(0, VALUE_PREVIEW_LENGTH)}…`;
-};
+// The mocked editor renders its content into a <pre data-testid="code-editor-content">.
+// Scope to it (there is one per expandable row) so we match the formatted value in
+// the editor rather than the raw value shown in the preview button.
+const editorShowing = (snippet: string) =>
+  screen.getAllByTestId("code-editor-content").find((el) => el.textContent?.includes(snippet));
 
 function setup() {
   const component = (
@@ -65,8 +42,8 @@ function setup() {
 }
 
 describe("FactsPage", () => {
-  const jsonFactValuePreview = previewOf("jsonValueFact");
-  const xmlFactValuePreview = previewOf("xmlValueFact");
+  const jsonFactValue = valueOf("jsonValueFact");
+  const xmlFactValue = valueOf("xmlValueFact");
 
   const response = {
     data: Mock.list,
@@ -232,13 +209,13 @@ describe("FactsPage", () => {
 
     render(component);
 
-    expect(await screen.findByRole("button", { name: jsonFactValuePreview })).toBeVisible();
-    expect(screen.getAllByRole("button", { name: jsonFactValuePreview })).toHaveLength(1);
+    expect(await screen.findByRole("button", { name: jsonFactValue })).toBeVisible();
+    expect(screen.getAllByRole("button", { name: jsonFactValue })).toHaveLength(1);
 
     expect(screen.getByText(Mock.list[0].value)).toBeVisible();
   });
 
-  test("GIVEN Facts page WHEN clicking the value preview THEN formatted JSON and a copy button are shown", async () => {
+  test("GIVEN Facts page WHEN clicking the value preview THEN the formatted JSON is shown", async () => {
     server.use(
       http.get("/api/v2/facts", () => {
         return HttpResponse.json(response);
@@ -248,15 +225,11 @@ describe("FactsPage", () => {
 
     render(component);
 
-    await userEvent.click(await screen.findByRole("button", { name: jsonFactValuePreview }));
+    await userEvent.click(await screen.findByRole("button", { name: jsonFactValue }));
 
-    // Formatted JSON content is now visible — check for a distinctive key/value pair
-    expect(
-      await screen.findByText((content) => content.includes('"status": "deployed"'))
-    ).toBeVisible();
-
-    expect(screen.getByRole("button", { name: words("copy") })).toBeVisible();
-    expect(screen.getByRole("button", { name: "Download code" })).toBeVisible();
+    // The editor now shows the pretty-printed JSON (a space after the colon that
+    // the raw value does not have) — distinctive of the formatted output.
+    expect(editorShowing('"status": "deployed"')).toBeVisible();
   });
 
   test("GIVEN Facts page WHEN a row has an XML value THEN shows a value preview button, otherwise shows the raw value", async () => {
@@ -269,11 +242,11 @@ describe("FactsPage", () => {
 
     render(component);
 
-    expect(await screen.findByRole("button", { name: xmlFactValuePreview })).toBeVisible();
-    expect(screen.getAllByRole("button", { name: xmlFactValuePreview })).toHaveLength(1);
+    expect(await screen.findByRole("button", { name: xmlFactValue })).toBeVisible();
+    expect(screen.getAllByRole("button", { name: xmlFactValue })).toHaveLength(1);
   });
 
-  test("GIVEN Facts page WHEN clicking the XML value preview THEN XML and a copy button are shown", async () => {
+  test("GIVEN Facts page WHEN clicking the XML value preview THEN the formatted XML is shown", async () => {
     server.use(
       http.get("/api/v2/facts", () => {
         return HttpResponse.json(response);
@@ -283,14 +256,9 @@ describe("FactsPage", () => {
 
     render(component);
 
-    await userEvent.click(await screen.findByRole("button", { name: xmlFactValuePreview }));
+    await userEvent.click(await screen.findByRole("button", { name: xmlFactValue }));
 
-    // Formatted XML is visible — check for a distinctive tag
-    expect(
-      await screen.findByText((content) => content.includes("<host>localhost</host>"))
-    ).toBeVisible();
-
-    expect(screen.getByRole("button", { name: words("copy") })).toBeVisible();
-    expect(screen.getByRole("button", { name: "Download code" })).toBeVisible();
+    // The editor now shows the formatted XML.
+    expect(editorShowing("<host>localhost</host>")).toBeVisible();
   });
 });

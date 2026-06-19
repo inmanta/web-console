@@ -1,31 +1,37 @@
 import React, { useState, useContext } from "react";
-import { Button } from "@patternfly/react-core";
+import { Button, Truncate } from "@patternfly/react-core";
 import { ExpandableRowContent, Tbody, Tr, Td } from "@patternfly/react-table";
+import { ClassifiedAttribute } from "@/Data";
 import { AttributeValue, DateWithTooltip, Link, isEditorKind } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";
-import { classifyValue, getValuePreview } from "./helpers";
 
 interface Props {
   row: Pick<Fact, "name" | "updated" | "value" | "resource_id">;
+  attribute: ClassifiedAttribute;
   rowIndex: number;
   numberOfColumns: number;
   showExpandColumn: boolean;
 }
 
-export const FactsRow: React.FC<Props> = ({ row, rowIndex, numberOfColumns, showExpandColumn }) => {
+export const FactsRow: React.FC<Props> = ({
+  row,
+  attribute,
+  rowIndex,
+  numberOfColumns,
+  showExpandColumn,
+}) => {
   const { routeManager } = useContext(DependencyContext);
   const [isExpanded, setIsExpanded] = useState(false);
-  const attribute = classifyValue(row.value);
   const isExpandable = isEditorKind(attribute.kind);
-  const valuePreview = getValuePreview(row.value);
 
   return (
     <Tbody isExpanded={isExpandable ? isExpanded : undefined}>
       <Tr aria-label="FactsRow">
         {showExpandColumn && (
           <Td
+            aria-expanded={isExpanded}
             expand={
               isExpandable
                 ? {
@@ -44,7 +50,7 @@ export const FactsRow: React.FC<Props> = ({ row, rowIndex, numberOfColumns, show
         <Td modifier="breakWord" dataLabel={words("facts.column.value")}>
           {isExpandable ? (
             <Button variant="link" isInline onClick={() => setIsExpanded((prev) => !prev)}>
-              {valuePreview}
+              <Truncate content={row.value} />
             </Button>
           ) : (
             <AttributeValue attribute={attribute} />

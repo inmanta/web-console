@@ -1,11 +1,14 @@
 import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
+import { AttributeClassifier } from "@/Data";
 import { SortKey } from "@/Slices/Facts/Core/Types";
+import { isEditorKind } from "@/UI/Components";
 import { Fact } from "@S/Facts/Core/Domain";
 import { FactsRow } from "./FactsRow";
 import { FactsTablePresenter } from "./FactsTablePresenter";
-import { isExpandableValue } from "./helpers";
+
+const classifier = new AttributeClassifier();
 
 interface Props {
   rows: Fact[];
@@ -22,7 +25,11 @@ export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSor
     });
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
-  const hasExpandableRows = rows.some((row) => isExpandableValue(row.value));
+  const classifiedRows = rows.map((row) => ({
+    row,
+    attribute: classifier.classify({ value: row.value })[0],
+  }));
+  const hasExpandableRows = classifiedRows.some(({ attribute }) => isEditorKind(attribute.kind));
   const numberOfColumns = tablePresenter.getNumberOfColumns() + (hasExpandableRows ? 1 : 0);
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
     const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
@@ -54,9 +61,10 @@ export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSor
           {heads}
         </Tr>
       </Thead>
-      {rows.map((row, rowIndex) => (
+      {classifiedRows.map(({ row, attribute }, rowIndex) => (
         <FactsRow
           row={row}
+          attribute={attribute}
           key={row.id}
           rowIndex={rowIndex}
           numberOfColumns={numberOfColumns}
