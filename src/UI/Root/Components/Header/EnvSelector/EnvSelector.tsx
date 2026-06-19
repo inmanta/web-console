@@ -35,8 +35,8 @@ import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider/ModalProvider";
 import { words } from "@/UI/words";
 import fallBackImage from "@images/inmanta-wings.svg";
-import { ManageProjectsModal } from "./ManageProjectsModal";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
+import { ManageProjectsModal } from "./ManageProjectsModal";
 
 interface Props {
   items: EnvironmentSelectorItem[];
