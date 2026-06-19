@@ -195,7 +195,9 @@
     "ws": "^8.17.1",
     "@babel/runtime": "^7.26.10",
     "http-proxy-middleware": "^2.0.8",
-    "form-data": "^2.5.6"
+    "form-data": "^2.5.6",
+    "qs": "^6.15.2",
+    "uuid@^8.3.2": "11.1.1"
   },
   "madge": {
     "fileExtensions": [

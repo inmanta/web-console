@@ -1,0 +1,5 @@
+change-type: patch
+description: Patch security vulnerabilities in transitive dependencies (tar 7.5.16, minimatch 9.0.7, qs 6.15.2, uuid 11.1.1, serialize-javascript 7.0.5)
+destination-branches:
+- master
+sections: {}
