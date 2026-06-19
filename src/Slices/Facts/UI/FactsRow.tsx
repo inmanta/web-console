@@ -31,7 +31,6 @@ export const FactsRow: React.FC<Props> = ({
       <Tr aria-label="FactsRow">
         {showExpandColumn && (
           <Td
-            aria-expanded={isExpanded}
             expand={
               isExpandable
                 ? {
@@ -49,7 +48,12 @@ export const FactsRow: React.FC<Props> = ({
         </Td>
         <Td modifier="breakWord" dataLabel={words("facts.column.value")}>
           {isExpandable ? (
-            <Button variant="link" isInline onClick={() => setIsExpanded((prev) => !prev)}>
+            <Button
+              variant="link"
+              isInline
+              onClick={() => setIsExpanded((prev) => !prev)}
+              aria-expanded={isExpanded}
+            >
               <Truncate content={row.value} />
             </Button>
           ) : (

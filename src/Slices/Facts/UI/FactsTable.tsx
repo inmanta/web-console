@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { AttributeClassifier } from "@/Data";
@@ -25,10 +25,14 @@ export const FactsTable: React.FC<Props> = ({ rows, tablePresenter, sort, setSor
     });
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
-  const classifiedRows = rows.map((row) => ({
-    row,
-    attribute: classifier.classify({ value: row.value })[0],
-  }));
+  const classifiedRows = useMemo(
+    () =>
+      rows.map((row) => ({
+        row,
+        attribute: classifier.classify({ value: row.value })[0],
+      })),
+    [rows]
+  );
   const hasExpandableRows = classifiedRows.some(({ attribute }) => isEditorKind(attribute.kind));
   const numberOfColumns = tablePresenter.getNumberOfColumns() + (hasExpandableRows ? 1 : 0);
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
