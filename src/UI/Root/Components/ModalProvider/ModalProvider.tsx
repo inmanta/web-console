@@ -144,7 +144,9 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!isOpen || !showClose) {return;}
+    if (!isOpen || !showClose) {
+      return;
+    }
 
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
