@@ -2,6 +2,7 @@ export * from "./ImageHelper";
 export * from "./PrimaryArchiveHelper";
 export * from "./OrchestratorProvider";
 export * from "./PrimaryFileManager";
+export * from "./AttributeClassifier";
 export * from "./AttributeConverter";
 export * from "./JsonFormatter";
 export * from "./UrlState";

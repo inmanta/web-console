@@ -16,7 +16,7 @@ export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
       { displayName: words("facts.column.value"), apiName: "value" },
       { displayName: words("facts.column.resourceId"), apiName: "resource_id" },
     ];
-    this.numberOfColumns = this.columnHeads.length + 1;
+    this.numberOfColumns = this.columnHeads.length;
   }
 
   createRows(sourceData: Fact[]): Fact[] {
