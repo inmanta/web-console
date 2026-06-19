@@ -1,6 +1,6 @@
 import React from "react";
-import moment from "moment";
-import { MomentDatePresenter, useTickerWithInterval } from "@/UI/Utils";
+import { CustomDatePresenter, useTickerWithInterval } from "@/UI/Utils";
+import dayjs from "@/dayjs";
 import { Timeline } from "./Timeline";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
   success?: boolean | null;
 }
 
-const datePresenter = new MomentDatePresenter();
+const datePresenter = new CustomDatePresenter();
 
 export const Provider: React.FC<Props> = ({ requested, started, completed, success }) => {
   useTickerWithInterval(!(started && completed) ? "OneSecond" : "Never");
@@ -46,7 +46,7 @@ export const Provider: React.FC<Props> = ({ requested, started, completed, succe
 };
 
 const getDiff = (timestampA: string, timestampB: string): string => {
-  const seconds = moment.duration(moment.utc(timestampA).diff(moment.utc(timestampB))).asSeconds();
+  const seconds = dayjs.duration(dayjs.utc(timestampA).diff(dayjs.utc(timestampB))).asSeconds();
   const rounded = Math.round(seconds);
 
   return rounded === 1 ? "1 second" : `${rounded} seconds`;

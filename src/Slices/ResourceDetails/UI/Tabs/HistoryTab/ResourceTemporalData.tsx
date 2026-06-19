@@ -6,14 +6,14 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import { Details } from "@/Core/Domain/Resource/Resource";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 
 interface Props {
   details: Details;
 }
 
-const datePresenter = new MomentDatePresenter();
+const datePresenter = new CustomDatePresenter();
 
 export const ResourceTemporalData: React.FC<Props> = ({ details }) => (
   <DescriptionList isHorizontal aria-label="ResourceTemporalData-Success">
