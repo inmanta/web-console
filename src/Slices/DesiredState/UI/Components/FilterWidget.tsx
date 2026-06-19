@@ -3,7 +3,7 @@ import { ToolbarGroup } from "@patternfly/react-core";
 import { DateRange, IntRange } from "@/Core";
 
 import { Filter, FilterKind, FilterList } from "@/Slices/DesiredState/Core/Types";
-import { MomentDatePresenter } from "@/UI";
+import { CustomDatePresenter } from "@/UI";
 import { FilterPicker } from "@/UI/Components";
 import { IntRangeFilter, SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
@@ -54,7 +54,7 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
         update={updateStatus}
       />
       <TimestampFilter
-        datePresenter={new MomentDatePresenter()}
+        datePresenter={new CustomDatePresenter()}
         isVisible={filterKind === FilterKind.Date}
         timestampFilters={filter.date ? filter.date : []}
         update={updateDate}

@@ -1,6 +1,6 @@
 import React from "react";
 import { Sort } from "@/Core";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { CompileReport } from "@S/CompileReports/Core/Domain";
 import { CompileReportsTable } from "./CompileReportsTable";
 import { CompileReportsTablePresenter } from "./CompileReportsTablePresenter";
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const TableProvider: React.FC<Props> = ({ compileReports, ...props }) => {
-  const tablePresenter = new CompileReportsTablePresenter(new MomentDatePresenter());
+  const tablePresenter = new CompileReportsTablePresenter(new CustomDatePresenter());
   const rows = tablePresenter.createRows(compileReports);
 
   return <CompileReportsTable {...props} tablePresenter={tablePresenter} rows={rows} />;

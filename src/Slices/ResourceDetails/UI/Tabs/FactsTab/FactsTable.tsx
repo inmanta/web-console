@@ -3,8 +3,10 @@ import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { Order } from "@/Core/Domain/Sort";
 import { ColumnHead } from "@/UI/Presenters";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
+
+const datePresenter = new CustomDatePresenter();
 import { Fact } from "@S/Facts/Core/Domain";
 
 type FactRow = Pick<Fact, "id" | "name" | "updated" | "value">;
@@ -62,7 +64,7 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
         {rows.map((fact) => (
           <Tr key={fact.id} aria-label="Facts table row">
             <Td>{fact.name}</Td>
-            <Td>{fact.updated && new MomentDatePresenter().getFull(fact.updated)}</Td>
+            <Td>{fact.updated && datePresenter.getFull(fact.updated)}</Td>
             <Td>{fact.value}</Td>
           </Tr>
         ))}

@@ -1179,10 +1179,11 @@ __metadata:
     "@vitest/coverage-v8": "npm:^4.1.5"
     "@vitest/ui": "npm:^4.1.5"
     bignumber.js: "npm:^11.1.1"
-    copy-to-clipboard: "npm:^4.0.0"
+    copy-to-clipboard: "npm:^4.0.2"
     cypress: "npm:^15.14.1"
     cypress-file-upload: "npm:^5.0.8"
     cypress-multi-reporters: "npm:^2.0.5"
+    dayjs: "npm:^1.11.21"
     dotenv: "npm:^17.4.2"
     dotenv-cli: "npm:^11.0.0"
     eslint: "npm:^10.2.1"
@@ -1212,8 +1213,6 @@ __metadata:
     mocha-junit-reporter: "npm:^2.2.1"
     mochawesome: "npm:^7.1.4"
     mochawesome-report-generator: "npm:^6.3.2"
-    moment: "npm:^2.30.1"
-    moment-timezone: "npm:^0.6.1"
     monaco-editor: "npm:^0.52.2"
     msw: "npm:^2.14.3"
     oidc-client-ts: "npm:^3.5.0"
@@ -5108,10 +5107,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"copy-to-clipboard@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "copy-to-clipboard@npm:4.0.0"
-  checksum: 10/4bd31ec71cc956fb6aa783efa9dd65e979fbbe4175f243c2a83f75d3c257e82e94cebfe3944ddca261afb094e233e4e474bd647cd0b7d4beb14a955632c158c9
+"copy-to-clipboard@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "copy-to-clipboard@npm:4.0.2"
+  checksum: 10/3d8446b16f042937a53a97d82b473895d216ef5d50c2c1e977ce7f7fed084c28a58fa9529314540977a0a71e687605cf8afdb911a04adf19eafe5e7060842972
   languageName: node
   linkType: hard
 
@@ -5750,6 +5749,13 @@ __metadata:
   version: 1.11.20
   resolution: "dayjs@npm:1.11.20"
   checksum: 10/5347533f21a55b8bb1b1ef559be9b805514c3a8fb7e68b75fb7e73808131c59e70909c073aa44ce8a0d159195cd110cdd4081cf87ab96cb06fee3edacae791c6
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.21":
+  version: 1.11.21
+  resolution: "dayjs@npm:1.11.21"
+  checksum: 10/dd16f9f2706b61b90e3c346a3211ac3afd9e26193136ce0e87f70bf74d1c17a447bceb230a88b175467fc9f5e3243d8c1544b9897092a12d9c80ee44d338dcb6
   languageName: node
   linkType: hard
 
@@ -9736,22 +9742,6 @@ __metadata:
   bin:
     lookup-amd: bin/cli.js
   checksum: 10/dadf8c602dd970e211136b22271231a853f76ec0b857a3bfa765e52a1f45f313a8e8bc7e1961f96bb1eced14e557cdbc798b37f5c17f0235cf29155617f4e7a9
-  languageName: node
-  linkType: hard
-
-"moment-timezone@npm:^0.6.1":
-  version: 0.6.1
-  resolution: "moment-timezone@npm:0.6.1"
-  dependencies:
-    moment: "npm:^2.29.4"
-  checksum: 10/20a80969712e35cab0ccda1cebe6fd768201bc1c9aa4528881bb8dd352bfcae2564546bf634ee7768aafd1dabb8054982964590084a1af8feab0574dd1d3ea3e
-  languageName: node
-  linkType: hard
-
-"moment@npm:^2.29.4, moment@npm:^2.30.1":
-  version: 2.30.1
-  resolution: "moment@npm:2.30.1"
-  checksum: 10/ae42d876d4ec831ef66110bdc302c0657c664991e45cf2afffc4b0f6cd6d251dde11375c982a5c0564ccc0fa593fc564576ddceb8c8845e87c15f58aa6baca69
   languageName: node
   linkType: hard
 

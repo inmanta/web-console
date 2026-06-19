@@ -1,7 +1,7 @@
-import moment from "moment-timezone";
 import qs from "qs";
 import { RangeOperator } from "@/Core";
 import { urlEncodeParams } from "@/Data/Queries";
+import dayjs from "@/dayjs";
 import { Filter, GetInstanceEventParams } from "./useGetEvents";
 
 /**
@@ -11,7 +11,7 @@ import { Filter, GetInstanceEventParams } from "./useGetEvents";
  * @param {string} timezone - The timezone to use for timestamp conversions, defaults to the user's local timezone
  * @returns {string} The formatted URL for the API request
  */
-export function getUrl(params: GetInstanceEventParams, timezone = moment.tz.guess()): string {
+export function getUrl(params: GetInstanceEventParams, timezone = dayjs.tz.guess()): string {
   const { serviceName, id, filter, sort, pageSize, currentPage } =
     urlEncodeParams<GetInstanceEventParams>(params);
 
@@ -45,8 +45,10 @@ const filterToParam = (filter: Filter, timezone: string) => {
   const { source, destination, version, event_type, timestamp } = filter;
   const serializedTimestampOperatorFilters = timestamp?.map(
     (timestampWithOperator) =>
-      `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${moment
-        .tz(timestampWithOperator.date, timezone)
+      `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${dayjs(
+        timestampWithOperator.date
+      )
+        .tz(timezone)
         .utc()
         .format("YYYY-MM-DD+HH:mm:ss")}`
   );
