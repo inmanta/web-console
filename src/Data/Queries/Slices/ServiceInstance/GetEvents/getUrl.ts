@@ -11,10 +11,7 @@ import { Filter, GetInstanceEventParams } from "./useGetEvents";
  * @param {string} timezone - The timezone to use for timestamp conversions, defaults to the user's local timezone
  * @returns {string} The formatted URL for the API request
  */
-export function getUrl(
-  params: GetInstanceEventParams,
-  timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-): string {
+export function getUrl(params: GetInstanceEventParams, timezone = dayjs.tz.guess()): string {
   const { serviceName, id, filter, sort, pageSize, currentPage } =
     urlEncodeParams<GetInstanceEventParams>(params);
 

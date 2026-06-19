@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom";
 import React from "react";
+import dayjs from "@/dayjs";
 
 import "jest-axe/extend-expect";
 
@@ -99,15 +100,8 @@ const linkShapeMock = vi.hoisted(() => ({
   }),
 }));
 
-// Set default timezone for tests to Europe/Brussels,
-// matching the previous moment.tz.setDefault("Europe/Brussels") behavior.
-// This ensures MomentDatePresenter picks up Brussels timezone at instantiation time.
-const _originalResolvedOptions = Intl.DateTimeFormat.prototype.resolvedOptions;
-vi.spyOn(Intl.DateTimeFormat.prototype, "resolvedOptions").mockImplementation(function (
-  this: Intl.DateTimeFormat
-) {
-  return { ..._originalResolvedOptions.call(this), timeZone: "Europe/Brussels" };
-});
+// Fix timezone to Europe/Brussels for all tests so date-related assertions are deterministic.
+vi.spyOn(dayjs.tz, "guess").mockReturnValue("Europe/Brussels");
 
 // Mock window.matchMedia
 Object.defineProperty(window, "matchMedia", {

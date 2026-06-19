@@ -45,7 +45,7 @@ const serializeTimestampFilter = (filter?: DateRange.Type[]): string[] | undefin
       `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${dayjs(
         timestampWithOperator.date
       )
-        .tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
+        .tz(dayjs.tz.guess())
         .utc()
         .format("YYYY-MM-DD+HH:mm:ss")}`
   );

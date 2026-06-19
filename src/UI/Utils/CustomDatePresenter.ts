@@ -3,7 +3,7 @@ import { DatePresenter } from "@/UI/Presenters";
 import dayjs from "@/dayjs";
 
 export class CustomDatePresenter implements DatePresenter {
-  private readonly timezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  private readonly timezone: string = dayjs.tz.guess();
 
   format(timestamp: string, template: string): string {
     return dayjs.utc(timestamp).tz(this.timezone).format(template);

@@ -17,7 +17,7 @@ import { GetParametersParams } from "./useGetParameters";
  */
 export function getUrl(
   { pageSize, filter, sort, currentPage }: GetParametersParams,
-  timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  timezone = dayjs.tz.guess()
 ): string {
   const filterParam =
     filter && Object.keys(filter).length > 0

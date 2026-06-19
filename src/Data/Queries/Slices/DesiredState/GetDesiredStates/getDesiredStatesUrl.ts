@@ -14,7 +14,7 @@ import { GetDesiredStatesParams } from "./useGetDesiredStates";
  */
 export function getDesiredStatesUrl(
   params: GetDesiredStatesParams,
-  timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  timezone = dayjs.tz.guess()
 ): string {
   const { filter, pageSize, currentPage } = urlEncodeParams<GetDesiredStatesParams>(params);
 

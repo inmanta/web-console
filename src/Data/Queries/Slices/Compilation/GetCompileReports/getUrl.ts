@@ -5,10 +5,7 @@ import { Filter } from "@/Slices/CompileReports/Core/Types";
 import dayjs from "@/dayjs";
 import { CompileReportsParams } from "./useGetCompileReports";
 
-export function getUrl(
-  params: CompileReportsParams,
-  timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-): string {
+export function getUrl(params: CompileReportsParams, timezone = dayjs.tz.guess()): string {
   const { pageSize, sort, filter, currentPage } = urlEncodeParams<CompileReportsParams>(params);
 
   const serializedFilters =
