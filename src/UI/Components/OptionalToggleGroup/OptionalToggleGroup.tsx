@@ -1,9 +1,14 @@
 import { ToggleGroup, ToggleGroupItem } from "@patternfly/react-core";
 
 export interface OptionalToggleGroupOption<T extends string = string> {
-  label: string;
   value: T;
   buttonId: string;
+  label?: string;
+  icon?: {
+    active: React.ReactNode;
+    inactive: React.ReactNode;
+  };
+  ariaLabel?: string;
 }
 
 export interface OptionalToggleGroupProps<T extends string = string> {
@@ -16,7 +21,10 @@ export interface OptionalToggleGroupProps<T extends string = string> {
  * OptionalToggleGroup component.
  *
  * @props {OptionalToggleGroupProps} props - The props of the component.
- *  @prop {OptionalToggleGroupOption[]} options - The toggle options to render.
+ *  @prop {OptionalToggleGroupOption[]} options - The toggle options to render. Each option is shown
+ *    in one of two ways: provide a `label` to render it as text, or provide an active/inactive
+ *    `icon` pair together with an `ariaLabel` (the icons are decorative, so the `ariaLabel` supplies
+ *    the accessible name).
  *  @prop {string[]} selected - The full list of currently active filter values. Only values matching this group's options are considered.
  *  @prop {function} onChange - Called with the updated full list after applying mutual-exclusion logic.
  *
@@ -43,15 +51,21 @@ export const OptionalToggleGroup = <T extends string>({
 
   return (
     <ToggleGroup>
-      {options.map(({ label, value, buttonId }) => (
-        <ToggleGroupItem
-          key={value}
-          text={label}
-          buttonId={buttonId}
-          isSelected={selected.includes(value)}
-          onChange={() => handleChange(value)}
-        />
-      ))}
+      {options.map(({ value, buttonId, label, icon, ariaLabel }) => {
+        const isSelected = selected.includes(value);
+
+        return (
+          <ToggleGroupItem
+            key={value}
+            aria-label={label ?? ariaLabel}
+            text={icon ? undefined : label}
+            icon={icon ? (isSelected ? icon.active : icon.inactive) : undefined}
+            buttonId={buttonId}
+            isSelected={isSelected}
+            onChange={() => handleChange(value)}
+          />
+        );
+      })}
     </ToggleGroup>
   );
 };

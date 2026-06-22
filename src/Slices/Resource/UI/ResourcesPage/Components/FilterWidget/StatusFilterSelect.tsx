@@ -1,10 +1,13 @@
 import { FormGroup, Stack, StackItem } from "@patternfly/react-core";
-import { Resource, toggleValueInList } from "@/Core";
+import { Resource, removeInvertedSelection, toggleValueInList } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
-import { OptionalToggleGroup } from "@/UI/Components";
+import {
+  IncludeExcludeSelect,
+  OptionalToggleGroup,
+  excludeIcons,
+  includeIcons,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
-import { IncludeExcludeSelect } from "./IncludeExcludeSelect";
-import { removeInvertedSelection } from "./utils";
 
 function typedKeys<T extends object>(obj: T): (keyof T)[] {
   return Object.keys(obj) as (keyof T)[];
@@ -72,14 +75,16 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
             onChange={onChange}
             options={[
               {
-                label: words("include"),
                 value: "orphaned",
                 buttonId: "orphaned-include",
+                icon: includeIcons,
+                ariaLabel: `${words("include")} ${words("resources.filters.status.orphaned.label")}`,
               },
               {
-                label: words("exclude"),
                 value: "!orphaned",
                 buttonId: "orphaned-exclude",
+                icon: excludeIcons,
+                ariaLabel: `${words("exclude")} ${words("resources.filters.status.orphaned.label")}`,
               },
             ]}
           />
@@ -92,14 +97,16 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
             onChange={onChange}
             options={[
               {
-                label: words("include"),
                 value: "isDeploying",
                 buttonId: "isDeploying-include",
+                icon: includeIcons,
+                ariaLabel: `${words("include")} ${words("resources.filters.status.isDeploying")}`,
               },
               {
-                label: words("exclude"),
                 value: "!isDeploying",
                 buttonId: "isDeploying-exclude",
+                icon: excludeIcons,
+                ariaLabel: `${words("exclude")} ${words("resources.filters.status.isDeploying")}`,
               },
             ]}
           />

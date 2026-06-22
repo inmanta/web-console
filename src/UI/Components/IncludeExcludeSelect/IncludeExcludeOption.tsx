@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@patternfly/react-core";
-import { CheckCircleIcon, CheckIcon, TimesCircleIcon, TimesIcon } from "@patternfly/react-icons";
 import { Td, Tr } from "@patternfly/react-table";
+import { excludeIcons, includeIcons } from "./includeExcludeIcons";
 
 export interface IncludeExcludeOptionProps {
   state: string;
@@ -39,34 +39,14 @@ export const IncludeExcludeOption: React.FC<IncludeExcludeOptionProps> = ({
     <Td>
       <Button variant="plain" onClick={onInclude} aria-label={`${state}-include-toggle`} isInline>
         <span aria-label={includeActive ? `${state}-include-active` : `${state}-include-inactive`}>
-          {includeActive ? (
-            <CheckIcon
-              color="var(--pf-t--global--icon--color--status--success--default)"
-              aria-hidden="true"
-            />
-          ) : (
-            <CheckCircleIcon
-              color="var(--pf-t--global--icon--color--disabled)"
-              aria-hidden="true"
-            />
-          )}
+          {includeActive ? includeIcons.active : includeIcons.inactive}
         </span>
       </Button>
     </Td>
     <Td>
       <Button variant="plain" onClick={onExclude} aria-label={`${state}-exclude-toggle`} isInline>
         <span aria-label={excludeActive ? `${state}-exclude-active` : `${state}-exclude-inactive`}>
-          {excludeActive ? (
-            <TimesIcon
-              color="var(--pf-t--global--icon--color--status--danger--default)"
-              aria-hidden="true"
-            />
-          ) : (
-            <TimesCircleIcon
-              color="var(--pf-t--global--icon--color--disabled)"
-              aria-hidden="true"
-            />
-          )}
+          {excludeActive ? excludeIcons.active : excludeIcons.inactive}
         </span>
       </Button>
     </Td>

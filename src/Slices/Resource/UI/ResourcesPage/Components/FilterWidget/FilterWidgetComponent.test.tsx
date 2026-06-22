@@ -175,8 +175,12 @@ describe("FilterWidgetComponent", () => {
 
     renderWithDrawer(<Wrapper />);
 
-    const purgedInclude = screen.getByRole("button", { name: words("include") });
-    const purgedExclude = screen.getByRole("button", { name: words("exclude") });
+    const purgedInclude = screen.getByRole("button", {
+      name: `${words("include")} ${words("resources.filters.desiredState.purged")}`,
+    });
+    const purgedExclude = screen.getByRole("button", {
+      name: `${words("exclude")} ${words("resources.filters.desiredState.purged")}`,
+    });
 
     expect(purgedInclude).toHaveAttribute("aria-pressed", "false");
     expect(purgedExclude).toHaveAttribute("aria-pressed", "false");
