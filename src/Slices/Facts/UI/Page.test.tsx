@@ -13,6 +13,16 @@ import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Mock } from "@S/Facts/Test";
 import { FactsPage } from ".";
 
+// The code editor is mocked globally in test-setup.ts; no local mock needed.
+
+const valueOf = (name: string) => Mock.list.find((f) => f.name === name)?.value ?? "";
+
+// The mocked editor renders its content into a <pre data-testid="code-editor-content">.
+// Scope to it (there is one per expandable row) so we match the formatted value in
+// the editor rather than the raw value shown in the preview button.
+const editorShowing = (snippet: string) =>
+  screen.getAllByTestId("code-editor-content").find((el) => el.textContent?.includes(snippet));
+
 function setup() {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -32,13 +42,16 @@ function setup() {
 }
 
 describe("FactsPage", () => {
+  const jsonFactValue = valueOf("jsonValueFact");
+  const xmlFactValue = valueOf("xmlValueFact");
+
   const response = {
     data: Mock.list,
     metadata: {
-      total: 8,
+      total: 10,
       before: 0,
       after: 0,
-      page_size: 8,
+      page_size: 10,
     },
     links: { self: "" },
   };
@@ -60,7 +73,7 @@ describe("FactsPage", () => {
 
     const rows = await screen.findAllByRole("row", { name: "FactsRow" });
 
-    expect(rows).toHaveLength(8);
+    expect(rows).toHaveLength(10);
     expect(within(rows[0]).getByRole("cell", { name: "awsDevice" })).toBeVisible();
 
     await act(async () => {
@@ -124,7 +137,7 @@ describe("FactsPage", () => {
 
       render(component);
 
-      expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(8);
+      expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(10);
 
       const input = await screen.findByPlaceholderText(placeholderText);
 
@@ -170,7 +183,7 @@ describe("FactsPage", () => {
 
     render(component);
 
-    expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(8);
+    expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(10);
 
     await userEvent.click(screen.getByLabelText("Go to next page"));
 
@@ -183,6 +196,69 @@ describe("FactsPage", () => {
 
     await userEvent.click(resourceIdButton);
 
-    expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(8);
+    expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(10);
+  });
+
+  test("GIVEN Facts page WHEN a row has a JSON value THEN shows a value preview button, otherwise shows the raw value", async () => {
+    server.use(
+      http.get("/api/v2/facts", () => {
+        return HttpResponse.json(response);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByRole("button", { name: jsonFactValue })).toBeVisible();
+    expect(screen.getAllByRole("button", { name: jsonFactValue })).toHaveLength(1);
+
+    expect(screen.getByText(Mock.list[0].value)).toBeVisible();
+  });
+
+  test("GIVEN Facts page WHEN clicking the value preview THEN the formatted JSON is shown", async () => {
+    server.use(
+      http.get("/api/v2/facts", () => {
+        return HttpResponse.json(response);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: jsonFactValue }));
+
+    // The editor now shows the pretty-printed JSON (a space after the colon that
+    // the raw value does not have) — distinctive of the formatted output.
+    expect(editorShowing('"status": "deployed"')).toBeVisible();
+  });
+
+  test("GIVEN Facts page WHEN a row has an XML value THEN shows a value preview button, otherwise shows the raw value", async () => {
+    server.use(
+      http.get("/api/v2/facts", () => {
+        return HttpResponse.json(response);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findByRole("button", { name: xmlFactValue })).toBeVisible();
+    expect(screen.getAllByRole("button", { name: xmlFactValue })).toHaveLength(1);
+  });
+
+  test("GIVEN Facts page WHEN clicking the XML value preview THEN the formatted XML is shown", async () => {
+    server.use(
+      http.get("/api/v2/facts", () => {
+        return HttpResponse.json(response);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: xmlFactValue }));
+
+    // The editor now shows the formatted XML.
+    expect(editorShowing("<host>localhost</host>")).toBeVisible();
   });
 });
