@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@patternfly/react-core";
 import { Td, Tr } from "@patternfly/react-table";
-import { excludeIcons, includeIcons } from "./includeExcludeIcons";
+import { excludeIcons, includeIcons } from "../IncludeExcludeIcons";
 
 export interface IncludeExcludeOptionProps {
   state: string;

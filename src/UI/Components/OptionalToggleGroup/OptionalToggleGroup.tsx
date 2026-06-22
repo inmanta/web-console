@@ -1,15 +1,13 @@
 import { ToggleGroup, ToggleGroupItem } from "@patternfly/react-core";
+import { IncludeExcludeIconPair } from "../IncludeExcludeIcons";
 
-export interface OptionalToggleGroupOption<T extends string = string> {
+export type OptionalToggleGroupOption<T extends string = string> = {
   value: T;
   buttonId: string;
-  label?: string;
-  icon?: {
-    active: React.ReactNode;
-    inactive: React.ReactNode;
-  };
-  ariaLabel?: string;
-}
+} & (
+  | { label: string; icon?: never; ariaLabel?: never }
+  | { icon: IncludeExcludeIconPair; ariaLabel: string; label?: never }
+);
 
 export interface OptionalToggleGroupProps<T extends string = string> {
   options: OptionalToggleGroupOption<T>[];
@@ -57,7 +55,7 @@ export const OptionalToggleGroup = <T extends string>({
         return (
           <ToggleGroupItem
             key={value}
-            aria-label={label ?? ariaLabel}
+            aria-label={icon ? ariaLabel : undefined}
             text={icon ? undefined : label}
             icon={icon ? (isSelected ? icon.active : icon.inactive) : undefined}
             buttonId={buttonId}
