@@ -1,6 +1,5 @@
-import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { delay, graphql, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { NotificationsResponse } from "@/Data/Queries";
@@ -71,11 +70,13 @@ describe("Badge", () => {
       });
 
       expect(button).toBeVisible();
-      expect(button).toHaveAttribute("data-variant", variant);
+      // The badge renders immediately in the neutral `read` state while loading, so wait
+      // for it to settle on the variant derived from the resolved notifications.
+      await waitFor(() => expect(button).toHaveAttribute("data-variant", variant));
     }
   );
 
-  test("Given Badge WHEN request is loading THEN variant is not shown and badge is disabled", () => {
+  test("Given Badge WHEN request is loading THEN an enabled read badge is shown", () => {
     server.use(
       queryBase.operation(() => {
         delay(100);
@@ -97,11 +98,11 @@ describe("Badge", () => {
 
     render(component);
 
-    const badge = screen.getByRole("button", { name: "Badge" });
+    const badge = screen.getByRole("button", { name: "Badge-Success" });
 
     expect(badge).toBeVisible();
-    expect(badge).toBeDisabled();
-    expect(badge).not.toHaveAttribute("data-variant");
+    expect(badge).toBeEnabled();
+    expect(badge).toHaveAttribute("data-variant", "read");
   });
 
   test("Given Badge WHEN request fails THEN error is shown", async () => {
