@@ -24,6 +24,8 @@ export * from "./FilterPicker";
 export * from "./Filters";
 export * from "./IconTabs";
 export * from "./ImageUpload";
+export * from "./IncludeExcludeIcons";
+export * from "./IncludeExcludeSelect";
 export * from "./InlineEditable";
 export * from "./InstanceState";
 export * from "./LegendBar";

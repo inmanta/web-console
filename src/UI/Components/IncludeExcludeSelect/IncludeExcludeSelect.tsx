@@ -2,7 +2,7 @@ import React, { ReactElement, useState } from "react";
 import { MenuToggle, MenuToggleElement, Select } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 import { Table, Tbody } from "@patternfly/react-table";
-import { invertFilter } from "../utils";
+import { invertFilter } from "@/Core";
 import { IncludeExcludeOption } from "./IncludeExcludeOption";
 
 export interface IncludeExcludeSelectProps {

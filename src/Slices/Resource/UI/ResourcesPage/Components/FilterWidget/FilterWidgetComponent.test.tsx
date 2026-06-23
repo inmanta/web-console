@@ -3,6 +3,7 @@ import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Resource } from "@/Core";
+import { getById } from "@/Test";
 import { words } from "@/UI";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
@@ -175,8 +176,8 @@ describe("FilterWidgetComponent", () => {
 
     renderWithDrawer(<Wrapper />);
 
-    const purgedInclude = screen.getByRole("button", { name: words("include") });
-    const purgedExclude = screen.getByRole("button", { name: words("exclude") });
+    const purgedInclude = getById("purged-include");
+    const purgedExclude = getById("purged-exclude");
 
     expect(purgedInclude).toHaveAttribute("aria-pressed", "false");
     expect(purgedExclude).toHaveAttribute("aria-pressed", "false");

@@ -3,7 +3,7 @@ import { FormGroup, Stack, StackItem, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { useGetAgents } from "@/Data/Queries";
 import { useDebounce } from "@/UI";
-import { OptionalToggleGroup } from "@/UI/Components";
+import { OptionalToggleGroup, excludeIcons, includeIcons } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { AddableSelectInput, SelectOption } from "./AddableSelectInput";
 import { AddableTextInput } from "./AddableTextInput";
@@ -128,14 +128,16 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               onChange={onChangeStatus}
               options={[
                 {
-                  label: words("include"),
                   value: "purged",
                   buttonId: "purged-include",
+                  icon: includeIcons,
+                  ariaLabel: `${words("include")} ${words("resources.filters.desiredState.purged")}`,
                 },
                 {
-                  label: words("exclude"),
                   value: "!purged",
                   buttonId: "purged-exclude",
+                  icon: excludeIcons,
+                  ariaLabel: `${words("exclude")} ${words("resources.filters.desiredState.purged")}`,
                 },
               ]}
             />
