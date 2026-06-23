@@ -50,6 +50,16 @@ const getDictValue = (testId: string, container: HTMLElement = document.body) =>
   return JSON.parse(content.textContent ?? "{}");
 };
 
+const getBooleanOption = (
+  name: string,
+  option: "true" | "false",
+  container: HTMLElement = document.body
+) => {
+  const group = within(container).getByRole("generic", { name: `BooleanFieldInput-${name}` });
+
+  return within(group).getByRole("button", { name: words(option) });
+};
+
 describe("CreateInstance", () => {
   const server = setupServer();
 
@@ -202,8 +212,8 @@ describe("CreateInstance", () => {
 
     expect(screen.queryByLabelText("Toggle-bool")).toBeChecked();
     expect(screen.queryByLabelText("Toggle-editableBool")).toBeChecked();
-    expect(screen.queryByTestId("bool?-true")).toBeChecked();
-    expect(screen.queryByTestId("editableBool?-true")).toBeChecked();
+    expect(getBooleanOption("bool?", "true")).toHaveAttribute("aria-pressed", "true");
+    expect(getBooleanOption("editableBool?", "true")).toHaveAttribute("aria-pressed", "true");
 
     expect(screen.queryByLabelText("TextFieldInput-string[]")).toHaveTextContent("1.1.1.1");
     expect(screen.queryByLabelText("TextFieldInput-string[]")).toHaveTextContent("8.8.8.8");
@@ -253,8 +263,14 @@ describe("CreateInstance", () => {
 
     expect(within(embedded_base).queryByLabelText("Toggle-bool")).toBeChecked();
     expect(within(embedded_base).queryByLabelText("Toggle-editableBool")).toBeChecked();
-    expect(within(embedded_base).queryByTestId("bool?-true")).toBeChecked();
-    expect(within(embedded_base).queryByTestId("editableBool?-true")).toBeChecked();
+    expect(getBooleanOption("bool?", "true", embedded_base)).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+    expect(getBooleanOption("editableBool?", "true", embedded_base)).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
 
     expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]")).toHaveTextContent(
       "1.1.1.1"

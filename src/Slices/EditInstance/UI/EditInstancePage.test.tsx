@@ -75,6 +75,16 @@ function setup() {
   return { component };
 }
 
+const getBooleanOption = (
+  name: string,
+  option: "true" | "false",
+  container: HTMLElement = document.body
+) => {
+  const group = within(container).getByRole("generic", { name: `BooleanFieldInput-${name}` });
+
+  return within(group).getByRole("button", { name: words(option) });
+};
+
 describe("EditInstancePage", () => {
   const instance = "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3";
 
@@ -378,13 +388,11 @@ describe("EditInstancePage", () => {
     expect(within(embedded_base).queryByLabelText("Toggle-bool")).toBeDisabled();
     expect(within(embedded_base).queryByLabelText("Toggle-editableBool")).toBeEnabled();
 
-    expect(within(embedded_base).queryByTestId("bool?-true")).toBeDisabled();
-    expect(within(embedded_base).queryByTestId("bool?-false")).toBeDisabled();
-    expect(within(embedded_base).queryByTestId("bool?-none")).toBeDisabled();
+    expect(getBooleanOption("bool?", "true", embedded_base)).toBeDisabled();
+    expect(getBooleanOption("bool?", "false", embedded_base)).toBeDisabled();
 
-    expect(within(embedded_base).queryByTestId("editableBool?-true")).toBeEnabled();
-    expect(within(embedded_base).queryByTestId("editableBool?-false")).toBeEnabled();
-    expect(within(embedded_base).queryByTestId("editableBool?-none")).toBeEnabled();
+    expect(getBooleanOption("editableBool?", "true", embedded_base)).toBeEnabled();
+    expect(getBooleanOption("editableBool?", "false", embedded_base)).toBeEnabled();
 
     expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]")).toHaveClass(
       "is-disabled"

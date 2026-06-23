@@ -1,14 +1,22 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, FormFieldGroupExpandable, FormFieldGroupHeader } from "@patternfly/react-core";
+import {
+  Button,
+  FormFieldGroupExpandable,
+  FormFieldGroupHeader,
+  FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+} from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { v4 as uuidv4 } from "uuid";
 import { InstanceAttributeModel, DictListField, Field, NestedField, FormSuggestion } from "@/Core";
 import { get } from "@/Core/Language/collection";
 import { toOptionalBoolean } from "@/Data";
 import { useSuggestedValues } from "@/Data/Queries";
+import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { words } from "@/UI/words";
-import { BooleanFormInput } from "./BooleanFormInput";
 import { BooleanToggleInput } from "./BooleanToggleInput";
 import { DictFieldInput } from "./DictFieldInput";
 import { RelatedServiceProvider } from "./RelatedServiceProvider";
@@ -115,41 +123,53 @@ export const FieldInput: React.FC<Props> = ({
   }, [suggestions, data, isLoading, error]);
 
   switch (field.kind) {
-    case "Boolean":
-      return field.isOptional ? (
-        <BooleanFormInput
+    case "Boolean": {
+      const booleanPath = makePath(path, field.name);
+
+      if (!field.isOptional) {
+        return (
+          <BooleanToggleInput
+            aria-label={`BooleanToggleInput-${field.name}`}
+            attributeName={field.name}
+            isChecked={get<boolean | undefined>(formState, booleanPath)}
+            handleInputChange={(value, _event) => getUpdate(booleanPath, toOptionalBoolean(value))}
+            description={field.description}
+            key={field.id || field.name}
+            shouldBeDisabled={
+              field.isDisabled && get(originalState, booleanPath) !== undefined && !isNew
+            }
+          />
+        );
+      }
+
+      // The optional boolean maps onto the toggle group as a single nullable value:
+      // a selected option means true/false, an empty selection means null.
+      const booleanValue = get<boolean | null>(formState, booleanPath, null);
+
+      return (
+        <FormGroup
           aria-label={`BooleanFieldInput-${field.name}`}
-          attributeName={field.name}
-          isOptional={field.isOptional}
-          isChecked={get<boolean | null>(formState, makePath(path, field.name), null)}
-          handleInputChange={(value, _event) =>
-            getUpdate(makePath(path, field.name), toOptionalBoolean(value))
-          }
-          description={field.description}
+          fieldId={field.name}
           key={field.id || field.name}
-          shouldBeDisabled={
-            field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined &&
-            !isNew
-          }
-        />
-      ) : (
-        <BooleanToggleInput
-          aria-label={`BooleanToggleInput-${field.name}`}
-          attributeName={field.name}
-          isChecked={get<boolean | undefined>(formState, makePath(path, field.name))}
-          handleInputChange={(value, _event) =>
-            getUpdate(makePath(path, field.name), toOptionalBoolean(value))
-          }
-          description={field.description}
-          key={field.id || field.name}
-          shouldBeDisabled={
-            field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined &&
-            !isNew
-          }
-        />
+          label={field.name}
+        >
+          <FormHelperText>
+            <HelperText>
+              <HelperTextItem>{field.description}</HelperTextItem>
+            </HelperText>
+          </FormHelperText>
+          <OptionalToggleGroup
+            isDisabled={field.isDisabled && get(originalState, booleanPath) !== undefined && !isNew}
+            selected={booleanValue === null ? [] : [booleanValue]}
+            onChange={(next) => getUpdate(booleanPath, next[0] ?? null)}
+            options={[
+              { value: true, buttonId: `${field.name}-true`, label: words("true") },
+              { value: false, buttonId: `${field.name}-false`, label: words("false") },
+            ]}
+          />
+        </FormGroup>
       );
+    }
     case "TextList":
       return (
         <TextListFormInput
