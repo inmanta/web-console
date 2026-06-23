@@ -24,8 +24,9 @@ export interface OptionalToggleGroupProps<T extends string | boolean = string> {
  *    in one of two ways: provide a `label` to render it as text, or provide an active/inactive
  *    `icon` pair together with an `ariaLabel` (the icons are decorative, so the `ariaLabel` supplies
  *    the accessible name).
- *  @prop {string[]} selected - The full list of currently active filter values. Only values matching this group's options are considered.
- *  @prop {function} onChange - Called with the updated full list after applying mutual-exclusion logic.
+ *  @prop {T[]} selected - The full list of currently active values (`T` is the option value type,
+ *    `string | boolean`). Only values matching this group's options are considered.
+ *  @prop {function} onChange - Called with the updated `T[]` list after applying mutual-exclusion logic.
  *  @prop {boolean} [isDisabled] - When true, all options are disabled and cannot be toggled.
  *
  * @notes At most one option can be active at a time. Selecting an inactive option deactivates any

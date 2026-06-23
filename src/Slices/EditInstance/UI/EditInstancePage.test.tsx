@@ -7,7 +7,7 @@ import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { cloneDeep } from "@/Core/Language/collection";
-import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
+import { getBooleanFieldOption, Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
@@ -74,16 +74,6 @@ function setup() {
 
   return { component };
 }
-
-const getBooleanOption = (
-  name: string,
-  option: "true" | "false",
-  container: HTMLElement = document.body
-) => {
-  const group = within(container).getByRole("generic", { name: `BooleanFieldInput-${name}` });
-
-  return within(group).getByRole("button", { name: words(option) });
-};
 
 describe("EditInstancePage", () => {
   const instance = "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3";
@@ -388,11 +378,11 @@ describe("EditInstancePage", () => {
     expect(within(embedded_base).queryByLabelText("Toggle-bool")).toBeDisabled();
     expect(within(embedded_base).queryByLabelText("Toggle-editableBool")).toBeEnabled();
 
-    expect(getBooleanOption("bool?", "true", embedded_base)).toBeDisabled();
-    expect(getBooleanOption("bool?", "false", embedded_base)).toBeDisabled();
+    expect(getBooleanFieldOption("bool?", "true", embedded_base)).toBeDisabled();
+    expect(getBooleanFieldOption("bool?", "false", embedded_base)).toBeDisabled();
 
-    expect(getBooleanOption("editableBool?", "true", embedded_base)).toBeEnabled();
-    expect(getBooleanOption("editableBool?", "false", embedded_base)).toBeEnabled();
+    expect(getBooleanFieldOption("editableBool?", "true", embedded_base)).toBeEnabled();
+    expect(getBooleanFieldOption("editableBool?", "false", embedded_base)).toBeEnabled();
 
     expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]")).toHaveClass(
       "is-disabled"

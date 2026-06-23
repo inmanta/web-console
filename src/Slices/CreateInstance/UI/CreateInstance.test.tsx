@@ -5,7 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
+import { getBooleanFieldOption, MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -48,16 +48,6 @@ const getDictValue = (testId: string, container: HTMLElement = document.body) =>
   const content = within(dictContainer).getByTestId("code-editor-content");
 
   return JSON.parse(content.textContent ?? "{}");
-};
-
-const getBooleanOption = (
-  name: string,
-  option: "true" | "false",
-  container: HTMLElement = document.body
-) => {
-  const group = within(container).getByRole("generic", { name: `BooleanFieldInput-${name}` });
-
-  return within(group).getByRole("button", { name: words(option) });
 };
 
 describe("CreateInstance", () => {
@@ -212,8 +202,8 @@ describe("CreateInstance", () => {
 
     expect(screen.queryByLabelText("Toggle-bool")).toBeChecked();
     expect(screen.queryByLabelText("Toggle-editableBool")).toBeChecked();
-    expect(getBooleanOption("bool?", "true")).toHaveAttribute("aria-pressed", "true");
-    expect(getBooleanOption("editableBool?", "true")).toHaveAttribute("aria-pressed", "true");
+    expect(getBooleanFieldOption("bool?", "true")).toHaveAttribute("aria-pressed", "true");
+    expect(getBooleanFieldOption("editableBool?", "true")).toHaveAttribute("aria-pressed", "true");
 
     expect(screen.queryByLabelText("TextFieldInput-string[]")).toHaveTextContent("1.1.1.1");
     expect(screen.queryByLabelText("TextFieldInput-string[]")).toHaveTextContent("8.8.8.8");
@@ -263,11 +253,11 @@ describe("CreateInstance", () => {
 
     expect(within(embedded_base).queryByLabelText("Toggle-bool")).toBeChecked();
     expect(within(embedded_base).queryByLabelText("Toggle-editableBool")).toBeChecked();
-    expect(getBooleanOption("bool?", "true", embedded_base)).toHaveAttribute(
+    expect(getBooleanFieldOption("bool?", "true", embedded_base)).toHaveAttribute(
       "aria-pressed",
       "true"
     );
-    expect(getBooleanOption("editableBool?", "true", embedded_base)).toHaveAttribute(
+    expect(getBooleanFieldOption("editableBool?", "true", embedded_base)).toHaveAttribute(
       "aria-pressed",
       "true"
     );
