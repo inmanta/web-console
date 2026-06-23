@@ -1,17 +1,9 @@
 import React, { useState } from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { getById } from "@/Test";
 import { words } from "@/UI";
 import { StatusFilterSelect } from "./StatusFilterSelect";
-
-const getById = (id: string): HTMLElement => {
-  const el = document.getElementById(id);
-  if (!el) {
-    throw new Error(`No element found with id: "${id}"`);
-  }
-
-  return el;
-};
 
 const StatusFilterHarness: React.FC<{ initial?: string[] }> = ({ initial }) => {
   const [selected, setSelected] = useState<string[]>(initial ?? []);
