@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
-import { delay, graphql, HttpResponse } from "msw";
+import { graphql, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { NotificationsResponse } from "@/Data/Queries";
 import { MockedDependencyProvider } from "@/Test";
@@ -24,7 +24,7 @@ function setup() {
     </QueryClientProvider>
   );
 
-  return { component };
+  return { component, queryClient };
 }
 const server = setupServer();
 
@@ -61,7 +61,7 @@ describe("Badge", () => {
           });
         })
       );
-      const { component } = setup();
+      const { component, queryClient } = setup();
 
       render(component);
 
@@ -70,36 +70,25 @@ describe("Badge", () => {
       });
 
       expect(button).toBeVisible();
-      // The badge renders immediately in the neutral `read` state while loading, so wait
-      // for it to settle on the variant derived from the resolved notifications.
+      // Wait for the query to settle first — otherwise the `read` rows pass on the
+      // identical loading default before the response is processed.
+      await waitFor(() => expect(queryClient.isFetching()).toBe(0));
       await waitFor(() => expect(button).toHaveAttribute("data-variant", variant));
     }
   );
 
   test("Given Badge WHEN request is loading THEN an enabled read badge is shown", () => {
     server.use(
-      queryBase.operation(() => {
-        delay(100);
-
-        return HttpResponse.json<{ data: NotificationsResponse }>({
-          data: {
-            data: {
-              notifications: {
-                edges: [],
-              },
-            },
-            errors: [],
-            extensions: {},
-          },
-        });
-      })
+      queryBase.operation(() =>
+        HttpResponse.json<{ data: NotificationsResponse }>({
+          data: { data: { notifications: { edges: [] } }, errors: [], extensions: {} },
+        })
+      )
     );
     const { component } = setup();
-
     render(component);
 
     const badge = screen.getByRole("button", { name: "Badge-Success" });
-
     expect(badge).toBeVisible();
     expect(badge).toBeEnabled();
     expect(badge).toHaveAttribute("data-variant", "read");

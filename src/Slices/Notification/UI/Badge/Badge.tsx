@@ -60,8 +60,8 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
     );
   }
 
-  // While the first request is in flight, default to the neutral `read` variant and keep
-  // the badge enabled, so it doesn't flash from disabled to active on initial load.
+  // While a request is in flight (initial load or after an environment switch), default to the
+  // neutral `read` variant and keep the badge enabled, so it doesn't flash from disabled to active.
   const variant = getVariantFromNotifications(data?.notifications ?? []);
 
   return (
