@@ -12,6 +12,12 @@ type Props = Omit<CodeEditorProps, "isDarkTheme" | "ref">;
  * CodeEditor that applies our common preset — app theme, copy + download controls,
  * and content-sized height with an expand toggle. Read-only by default; pass
  * `isReadOnly={false}` + `onChange` to edit. All other PF props pass through.
+ *
+ * @note Two props deviate from PF's semantics:
+ * - `isCopyEnabled` (default `true`) is *intercepted*, not forwarded: it toggles
+ *   our http-safe {@link CodeEditorCopyControl} instead of PF's built-in copy,
+ *   which relies on `navigator.clipboard` and breaks on http origins.
+ * - `isDownloadEnabled` defaults to `true` here (PF defaults it to `false`).
  */
 export const CodeEditor: React.FC<Props> = ({
   code = "",
