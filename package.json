@@ -123,7 +123,7 @@
     "crypto": false
   },
   "dependencies": {
-    "@graphiql/react": "^0.37.3",
+    "@graphiql/react": "^0.37.7",
     "@joint/layout-directed-graph": "^4.2.5",
     "@joint/plus": "^4.2.4",
     "@loadable/component": "^5.16.7",
