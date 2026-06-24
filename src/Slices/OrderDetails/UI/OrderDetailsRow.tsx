@@ -1,5 +1,5 @@
 import React from "react";
-import { CodeEditor, Language } from "@patternfly/react-code-editor";
+import { Language } from "@patternfly/react-code-editor";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -12,9 +12,7 @@ import { Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
-import { TextWithCopy, Toggle } from "@/UI/Components";
-import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
-import { useTheme } from "@/UI/Components/DarkmodeOption";
+import { CodeEditor, TextWithCopy, Toggle } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { OrderDependencies } from "./OrderDependencies";
 import { OrderStateDetails } from "./OrderStateDetails";
@@ -43,8 +41,6 @@ export const OrderDetailsRow: React.FC<Props> = ({
   onToggle,
   numberOfColumns,
 }) => {
-  const { isDark } = useTheme();
-
   return (
     <>
       <Tr aria-label="ServiceOrderDetailsRow">
@@ -92,13 +88,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
                   {row.config && Object.keys(row.config).length ? (
                     <CodeEditor
                       code={JSON.stringify(row.config, null, 2)}
-                      isDarkTheme={isDark}
                       language={Language.json}
-                      isDownloadEnabled
-                      customControls={
-                        <CodeEditorCopyControl code={JSON.stringify(row.config, null, 2)} />
-                      }
-                      isReadOnly
                       height="400px"
                     />
                   ) : (
@@ -115,13 +105,6 @@ export const OrderDetailsRow: React.FC<Props> = ({
                     <CodeEditor
                       code={JSON.stringify(row.attributes || row.edits, null, 2)}
                       language={Language.json}
-                      isDownloadEnabled
-                      customControls={
-                        <CodeEditorCopyControl
-                          code={JSON.stringify(row.attributes || row.edits, null, 2)}
-                        />
-                      }
-                      isReadOnly
                       height="400px"
                     />
                   </DescriptionListDescription>

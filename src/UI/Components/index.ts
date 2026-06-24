@@ -35,7 +35,7 @@ export * from "./MultiTextSelect";
 export * from "./PageContainer";
 export * from "./PageSectionWithTitle";
 export * from "./PaginationWidget";
-export * from "./ReadOnlyCodeEditor";
+export * from "./CodeEditor";
 export * from "./RequiresTable";
 export * from "./ResourceLink";
 export * from "./ResourceStatus";

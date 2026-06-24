@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { CodeEditor } from "@patternfly/react-code-editor";
 import { Button, Spinner } from "@patternfly/react-core";
 import { DownloadIcon } from "@patternfly/react-icons";
 import { useGetFile } from "@/Data/Queries";
@@ -7,6 +6,7 @@ import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { Delayed } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { AppAlert } from "../AppAlert";
+import { CodeEditor } from "../CodeEditor";
 
 interface Props {
   hash: string;
@@ -62,7 +62,7 @@ export const FileBlock: React.FC<Props> = ({ hash }) => {
     return (
       <>
         {copyAndButton}
-        <CodeEditor code={data} isReadOnly isDownloadEnabled height="300px" />
+        <CodeEditor code={data} height="300px" isCopyEnabled={false} />
       </>
     );
   }

@@ -9,8 +9,9 @@ import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { ClassifiedAttribute } from "@/Data";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
-import { ReadOnlyCodeEditor, languageForKind } from "../ReadOnlyCodeEditor";
+import { CodeEditor } from "../CodeEditor";
 import { FileBlock } from "./FileBlock";
+import { languageForKind } from "./helpers";
 
 type AttributeTextVariant = "default" | "monospace";
 
@@ -74,9 +75,7 @@ export const AttributeValue: React.FC<{
     case "Json":
     case "Xml":
     case "Code":
-      return (
-        <ReadOnlyCodeEditor value={attribute.value} language={languageForKind(attribute.kind)} />
-      );
+      return <CodeEditor code={attribute.value} language={languageForKind(attribute.kind)} />;
   }
 };
 
