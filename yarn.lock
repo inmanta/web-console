@@ -1138,6 +1138,35 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphiql/react@npm:^0.37.7":
+  version: 0.37.7
+  resolution: "@graphiql/react@npm:0.37.7"
+  dependencies:
+    "@graphiql/toolkit": "npm:^0.12.1"
+    "@radix-ui/react-dialog": "npm:^1.1"
+    "@radix-ui/react-dropdown-menu": "npm:^2.1"
+    "@radix-ui/react-tooltip": "npm:^1.2"
+    "@radix-ui/react-visually-hidden": "npm:^1.2"
+    clsx: "npm:^1.2.1"
+    framer-motion: "npm:^12.12"
+    get-value: "npm:^3.0.1"
+    graphql-language-service: "npm:^5.5.2"
+    jsonc-parser: "npm:^3.3.1"
+    markdown-it: "npm:^14.1.0"
+    monaco-editor: "npm:0.52.2"
+    monaco-graphql: "npm:^1.8.0"
+    prettier: "npm:^3.5.3"
+    react-compiler-runtime: "npm:19.1.0-rc.1"
+    set-value: "npm:^4.1.0"
+    zustand: "npm:^5"
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
+    react: ^18 || ^19
+    react-dom: ^18 || ^19
+  checksum: 10/e213f661d4be0502a9eafcd3cfb5639b199c442bca169e143d8d784c5685773c7a86f1fb1c89ccc3548254a98bff48bdb04be738f15695177e7d9b14a0aa157c
+  languageName: node
+  linkType: hard
+
 "@graphiql/toolkit@npm:^0.11.3":
   version: 0.11.3
   resolution: "@graphiql/toolkit@npm:0.11.3"
@@ -1151,6 +1180,22 @@ __metadata:
     graphql-ws:
       optional: true
   checksum: 10/a28d5261900bff00ca550963f9b0fba035e63b87dbed5c4c1fd1dd5a8963d2c614a9161af58fd4782027b86874be2403cb3e86514567e25dce171ba9823ddc62
+  languageName: node
+  linkType: hard
+
+"@graphiql/toolkit@npm:^0.12.1":
+  version: 0.12.1
+  resolution: "@graphiql/toolkit@npm:0.12.1"
+  dependencies:
+    "@n1ru4l/push-pull-async-iterable-iterator": "npm:^3.1.0"
+    meros: "npm:^1.1.4"
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
+    graphql-ws: ">= 4.5.0"
+  peerDependenciesMeta:
+    graphql-ws:
+      optional: true
+  checksum: 10/b0dfacdbb795dbe1d08eb570cc3ab360575e61c3eb429b63a4cb51b24ef0160dd4073bce5de98a44baac3fa9bac9321177069332121455f80cc490f196dced8d
   languageName: node
   linkType: hard
 
@@ -1245,7 +1290,7 @@ __metadata:
     "@eslint/compat": "npm:^2.0.5"
     "@eslint/eslintrc": "npm:^3.3.5"
     "@eslint/js": "npm:^10.0.1"
-    "@graphiql/react": "npm:^0.37.3"
+    "@graphiql/react": "npm:^0.37.7"
     "@joint/layout-directed-graph": "npm:^4.2.5"
     "@joint/plus": "npm:^4.2.4"
     "@loadable/component": "npm:^5.16.7"
@@ -7904,6 +7949,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphql-language-service@npm:^5.5.1, graphql-language-service@npm:^5.5.2":
+  version: 5.5.2
+  resolution: "graphql-language-service@npm:5.5.2"
+  dependencies:
+    debounce-promise: "npm:^3.1.2"
+    nullthrows: "npm:^1.0.0"
+    vscode-languageserver-types: "npm:^3.17.1"
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
+  bin:
+    graphql: dist/temp-bin.js
+  checksum: 10/0b921718005fafdba7a2a4b269f832469ba435417526aa8993f490453e1e7f6dc1508ae49a780a40089c20a4815f1e75c6ce4e0b128daee390a7e055f0a77082
+  languageName: node
+  linkType: hard
+
 "graphql-request@npm:^7.4.0":
   version: 7.4.0
   resolution: "graphql-request@npm:7.4.0"
@@ -10028,6 +10088,20 @@ __metadata:
     monaco-editor: ">= 0.20.0 < 0.53"
     prettier: ^2.8.0 || ^3.0.0
   checksum: 10/1d0ae9642ba8599e78275395f53cafba473e87272f0027f74fc05dda56a57267715dc0f6eee38b9e18b9c7f9ccc4107dda33862063d069ca3597ad0fd1e4cf5a
+  languageName: node
+  linkType: hard
+
+"monaco-graphql@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "monaco-graphql@npm:1.8.0"
+  dependencies:
+    graphql-language-service: "npm:^5.5.1"
+    picomatch-browser: "npm:^2.2.6"
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
+    monaco-editor: ">= 0.20.0 < 0.53"
+    prettier: ^2.8.0 || ^3.0.0
+  checksum: 10/23943301b122ba7398128ca842038b26f67024b7a50abdbf898e425e9628b64224da206c9f1e62559254f5d2f0eb5cb26423da8ed84d35306ab950ad5ec7f23e
   languageName: node
   linkType: hard
 
