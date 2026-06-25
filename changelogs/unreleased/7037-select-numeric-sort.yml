@@ -1,0 +1,6 @@
+description: Service instance form selects with numeric enum options now sort by value instead of alphabetically (5, 6, ... 128 instead of 10, 128, ... 5), and long option lists are now scrollable.
+issue-nr: 7037
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"
