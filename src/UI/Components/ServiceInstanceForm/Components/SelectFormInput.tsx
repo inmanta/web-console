@@ -50,7 +50,9 @@ export const SelectFormInput: React.FC<Props> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const selectOptions = Object.keys(options).sort();
+  const selectOptions = Object.keys(options).sort((a, b) =>
+    a.localeCompare(b, undefined, { numeric: true })
+  );
   const formattedOptions = selectOptions.map((option) => {
     return {
       value: options[option],
@@ -118,6 +120,7 @@ export const SelectFormInput: React.FC<Props> = ({
       <Select
         id={`${attributeName}-select`}
         isOpen={isOpen}
+        isScrollable
         selected={selectOptions.length === 1 ? selectOptions[0] : attributeValue}
         onSelect={onSelect}
         onOpenChange={(isOpen) => setIsOpen(isOpen)}
