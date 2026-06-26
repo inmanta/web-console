@@ -37,6 +37,19 @@ export const CodeEditor: React.FC<Props> = ({
   const isAutoHeight = height === undefined;
   const resolvedHeight = isAutoHeight ? getAutoHeight(code, isExpanded) : height;
 
+  const hasControls = isCopyEnabled || isAutoHeight;
+  const customControls = hasControls ? (
+    <>
+      {isCopyEnabled && <CodeEditorCopyControl code={code} />}
+      {isAutoHeight && (
+        <CodeEditorHeightToggleControl
+          isExpanded={isExpanded}
+          onToggle={() => setIsExpanded(!isExpanded)}
+        />
+      )}
+    </>
+  ) : undefined;
+
   return (
     <PFCodeEditor
       // Remount on toggle so Monaco re-layouts to the new height.
@@ -49,17 +62,7 @@ export const CodeEditor: React.FC<Props> = ({
       isDownloadEnabled={isDownloadEnabled}
       // Default to showing the label when a language is set; ?? keeps an explicit false.
       isLanguageLabelVisible={isLanguageLabelVisible ?? language !== undefined}
-      customControls={
-        <>
-          {isCopyEnabled && <CodeEditorCopyControl code={code} />}
-          {isAutoHeight && (
-            <CodeEditorHeightToggleControl
-              isExpanded={isExpanded}
-              onToggle={() => setIsExpanded(!isExpanded)}
-            />
-          )}
-        </>
-      }
+      customControls={customControls}
       {...rest}
     />
   );
