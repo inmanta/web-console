@@ -24,11 +24,7 @@ describe("normalizeSuggestions", () => {
 
   it("coerces numeric scalars and pair fields to strings", () => {
     expect(
-      normalizeSuggestions([
-        100,
-        { label: "10 Gbps", value: 10000 },
-        { label: 1, value: 2 },
-      ])
+      normalizeSuggestions([100, { label: "10 Gbps", value: 10000 }, { label: 1, value: 2 }])
     ).toEqual([
       { label: "100", value: "100" },
       { label: "10 Gbps", value: "10000" },
