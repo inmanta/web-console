@@ -2,7 +2,14 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Button, FormFieldGroupExpandable, FormFieldGroupHeader } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { v4 as uuidv4 } from "uuid";
-import { InstanceAttributeModel, DictListField, Field, NestedField, FormSuggestion } from "@/Core";
+import {
+  InstanceAttributeModel,
+  DictListField,
+  Field,
+  NestedField,
+  FormSuggestion,
+  SuggestionValue,
+} from "@/Core";
 import { get } from "@/Core/Language/collection";
 import { toOptionalBoolean } from "@/Data";
 import { useSuggestedValues } from "@/Data/Queries";
@@ -70,7 +77,8 @@ export const FieldInput: React.FC<Props> = ({
   suggestions,
 }) => {
   const { data, isLoading, error } = useSuggestedValues(suggestions).useOneTime();
-  const [suggestionsList, setSuggestionsList] = useState<string[] | null>(null);
+  // Already normalized to { label, value }[] by useSuggestedValues; just forward it.
+  const suggestionsList: SuggestionValue[] | null = !isLoading && !error ? (data ?? null) : null;
 
   // Get the controlled value for the field
   // If the value is an object or an array, it needs to be converted.
@@ -93,26 +101,6 @@ export const FieldInput: React.FC<Props> = ({
     },
     [getUpdate, path, field.name]
   );
-
-  useEffect(() => {
-    if (!isLoading && !error) {
-      // if the data is of type array, we can use it directly
-      if (Array.isArray(data)) {
-        setSuggestionsList(data);
-      } else if (
-        data &&
-        data.metadata &&
-        data.metadata.values &&
-        Array.isArray(data.metadata.values) &&
-        // TODO: remove this when the API returns a fixed format.
-        data.metadata.values.every((value) => typeof value === "string")
-      ) {
-        setSuggestionsList(data.metadata.values);
-      }
-    } else {
-      setSuggestionsList(null);
-    }
-  }, [suggestions, data, isLoading, error]);
 
   switch (field.kind) {
     case "Boolean":

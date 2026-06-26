@@ -1,13 +1,14 @@
 import React, { useEffect, forwardRef } from "react";
 import { Menu, MenuContent, MenuGroup, MenuItem, MenuList, Popper } from "@patternfly/react-core";
 import styled from "styled-components";
+import { SuggestionValue } from "@/Core";
 
 interface Props {
-  suggestions: string[];
+  suggestions: SuggestionValue[];
   filter: string;
-  handleSuggestionClick: (suggestion: string) => void;
+  handleSuggestionClick: (value: string) => void;
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+  close: () => void;
 }
 
 /**
@@ -17,25 +18,25 @@ interface Props {
  * @example
  * // Usage
  * <SuggestionsPopover
- *   suggestions={["apple", "banana", "cherry"]}
- *   handleSuggestionClick={(suggestion) => console.log(suggestion)}
+ *   suggestions={[{ label: "apple", value: "apple" }, { label: "10 Gbps", value: "10000" }]}
+ *   handleSuggestionClick={(value) => console.log(value)}
  *   filter="a"
- *   setIsOpen={setIsOpen}
+ *   close={close}
  *   isOpen={isOpen}
  *   ref={inputRef}
  * />
  *
  * @param {Object} props - The component props.
- * @param {string[]} props.suggestions - The list of suggestions to display.
- * @param {Function} props.handleSuggestionClick - The callback function to handle suggestion click events.
- * @param {string} props.filter - The filter string to match suggestions.
- * @param {Function} props.setIsOpen - The callback function to set the open state of the popover.
+ * @param {SuggestionValue[]} props.suggestions - The list of suggestions to display. Each carries a `label` (shown + searched) and a `value` (submitted).
+ * @param {Function} props.handleSuggestionClick - The callback invoked with the selected suggestion's `value`.
+ * @param {string} props.filter - The filter string matched against each suggestion's `label`.
+ * @param {Function} props.close - Callback to close the popover (selection, click-outside, keyboard dismiss).
  * @param {boolean} props.isOpen - The current open state of the popover.
  * @param {React.RefObject<NonNullable<HTMLInputElement>>} props.ref - The ref for the input element.
  * @returns {React.FC} The rendered SuggestionsPopover component.
  */
 export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Props>(
-  ({ suggestions, handleSuggestionClick, filter, setIsOpen, isOpen }, ref) => {
+  ({ suggestions, handleSuggestionClick, filter, close, isOpen }, ref) => {
     if (!ref) {
       throw new Error("You need to define a ref for the SuggestionsPopover component.");
     }
@@ -43,20 +44,23 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
     const reference = ref as React.RefObject<NonNullable<HTMLInputElement>>;
     const parentCurrent = reference?.current;
 
-    const [autocompleteOptions, setAutocompleteOptions] = React.useState<string[]>([]);
     const autocompleteRef = React.useRef<HTMLDivElement>(null);
+
+    const autocompleteOptions = suggestions.filter((suggestion) =>
+      suggestion.label.toLowerCase().includes(filter.toLowerCase())
+    );
 
     /**
      * Handles the suggestion click event.
      *
      * @param {React.MouseEvent} event - The click event.
-     * @param {string} suggestion - The suggestion value.
+     * @param {SuggestionValue} suggestion - The clicked suggestion.
      * @returns {void}
      */
-    const handleSuggestionClickInternal = (event, suggestion) => {
+    const handleSuggestionClickInternal = (event, suggestion: SuggestionValue) => {
       event.stopPropagation();
-      handleSuggestionClick(suggestion);
-      setIsOpen(false);
+      handleSuggestionClick(suggestion.value);
+      close();
     };
 
     /**
@@ -73,7 +77,7 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
         !autocompleteRef.current.contains(event.target) &&
         !parentCurrent?.contains(event.target)
       ) {
-        setIsOpen(false);
+        close();
       }
     };
 
@@ -103,17 +107,17 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
             break;
           // the escape key will close the menu and return browser focus to the input.
           case "Escape":
-            setIsOpen(false);
+            close();
             reference.current && reference.current.focus();
             // the tab, and enter keys will close the menu, and the tab key will move browser
             // focus forward one element (by default)
             break;
           case "Enter":
             event.preventDefault();
-            setIsOpen(false);
+            close();
             break;
           case "Tab":
-            setIsOpen(false);
+            close();
             break;
           default:
             break;
@@ -127,7 +131,7 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
         event.key === "Tab"
       ) {
         event.preventDefault();
-        setIsOpen(false);
+        close();
         reference.current && reference.current.focus();
       }
     };
@@ -139,11 +143,11 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
             <MenuList>
               {autocompleteOptions.map((suggestion) => (
                 <MenuItem
-                  aria-label={suggestion}
-                  key={suggestion}
+                  aria-label={suggestion.label}
+                  key={`${suggestion.label}::${suggestion.value}`}
                   onClick={(event) => handleSuggestionClickInternal(event, suggestion)}
                 >
-                  {suggestion}
+                  {suggestion.label}
                 </MenuItem>
               ))}
             </MenuList>
@@ -151,14 +155,6 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
         </MenuContent>
       </Menu>
     );
-
-    useEffect(() => {
-      const filteredOptions: string[] = suggestions.filter((suggestion) =>
-        suggestion.toLowerCase().includes(filter.toLowerCase())
-      );
-
-      setAutocompleteOptions(filteredOptions);
-    }, [filter, suggestions]);
 
     useEffect(() => {
       window.addEventListener("keydown", handleMenuKeys);

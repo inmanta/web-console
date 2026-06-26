@@ -83,11 +83,27 @@ export interface FormAttributeResult {
 }
 
 /**
+ * Interface representing a single suggestion.
+ *
+ * The `label` is shown to the user and searched on, while the `value` is what
+ * gets submitted to the API. A plain string suggestion normalizes to a pair
+ * where `label === value`.
+ */
+export interface SuggestionValue {
+  label: string;
+  value: string;
+}
+
+/**
  * Interface representing a suggestions that are stored in the web_suggested_values.
+ *
+ * A suggestion entry can be a plain string (label and value are identical) or a
+ * `{ label, value }` pair where the displayed/searched label differs from the
+ * submitted value.
  */
 export interface FormSuggestion {
   type: FormSuggestionType;
-  values?: string[];
+  values?: (string | SuggestionValue)[];
   parameter_name?: string;
 }
 
