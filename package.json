@@ -62,7 +62,7 @@
     "@eslint/compat": "^2.0.5",
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^10.0.1",
-    "@remix-run/router": "^1.23.2",
+    "@remix-run/router": "^1.23.3",
     "@stylistic/eslint-plugin-ts": "^4.4.1",
     "@tanstack/react-query-devtools": "^5.100.14",
     "@testing-library/dom": "^10.4.1",
