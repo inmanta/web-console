@@ -7,7 +7,7 @@ import {
   FormSelect,
   FormSelectOption,
   SelectOptionProps,
-  Label,
+  Content,
 } from "@patternfly/react-core";
 import { InstanceAttributeModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
@@ -53,21 +53,33 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
 
   const { theme: preferredTheme } = useTheme();
 
-  const availableVersions: SelectOptionProps[] = useMemo(
-    () =>
-      instanceLogs.map(({ version, timestamp }) => ({
-        value: version,
-        children: (
-          <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
-            {version}
-            <Label color="blue" variant="outline">
-              {datePresenter.getFull(timestamp)}
-            </Label>
-          </Flex>
-        ),
-      })),
-    [instanceLogs]
-  );
+  const availableVersions: SelectOptionProps[] = useMemo(() => {
+    // Width of the longest version, so every timestamp starts at the same place.
+    const versionColWidth = instanceLogs.length
+      ? Math.max(...instanceLogs.map(({ version }) => String(version).length))
+      : 0;
+
+    return instanceLogs.map(({ version, timestamp }) => ({
+      value: version,
+      children: (
+        <Flex
+          gap={{ default: "gapSm" }}
+          alignItems={{ default: "alignItemsCenter" }}
+          flexWrap={{ default: "nowrap" }}
+        >
+          <Content style={{ minWidth: `${versionColWidth}ch` }}>{version}</Content>
+          <Content
+            style={{
+              fontSize: "var(--pf-t--global--font--size--body--sm)",
+              color: "var(--pf-t--global--text--color--subtle)",
+            }}
+          >
+            {datePresenter.getFull(timestamp)}
+          </Content>
+        </Flex>
+      ),
+    }));
+  }, [instanceLogs]);
 
   useEffect(() => {
     if (rightVersion) {
