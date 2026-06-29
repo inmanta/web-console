@@ -209,13 +209,16 @@ test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field
     })
   ).toBeVisible();
 
-  expect(screen.getAllByRole("radio")).toHaveLength(3);
+  const trueButton = screen.getByRole("button", { name: words("true") });
+  const falseButton = screen.getByRole("button", { name: words("false") });
 
-  const trueRadioButton = screen.getByRole("radio", { name: "True" });
+  // An optional boolean starts with neither option selected, representing null.
+  expect(trueButton).toHaveAttribute("aria-pressed", "false");
+  expect(falseButton).toHaveAttribute("aria-pressed", "false");
 
-  await userEvent.click(trueRadioButton);
+  await userEvent.click(trueButton);
 
-  expect(trueRadioButton).toBeChecked();
+  expect(trueButton).toHaveAttribute("aria-pressed", "true");
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field", async () => {
@@ -635,7 +638,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     "test text"
   );
 
-  await userEvent.click(screen.getByRole("radio", { name: words("true") }));
+  await userEvent.click(screen.getByRole("button", { name: words("true") }));
 
   const group = screen.getByRole("group", {
     name: "nested_field",

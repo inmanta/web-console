@@ -7,7 +7,7 @@ import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { cloneDeep } from "@/Core/Language/collection";
-import { Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
+import { getBooleanFieldOption, Service, ServiceInstance, MockedDependencyProvider } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
@@ -378,13 +378,11 @@ describe("EditInstancePage", () => {
     expect(within(embedded_base).queryByLabelText("Toggle-bool")).toBeDisabled();
     expect(within(embedded_base).queryByLabelText("Toggle-editableBool")).toBeEnabled();
 
-    expect(within(embedded_base).queryByTestId("bool?-true")).toBeDisabled();
-    expect(within(embedded_base).queryByTestId("bool?-false")).toBeDisabled();
-    expect(within(embedded_base).queryByTestId("bool?-none")).toBeDisabled();
+    expect(getBooleanFieldOption("bool?", "true", embedded_base)).toBeDisabled();
+    expect(getBooleanFieldOption("bool?", "false", embedded_base)).toBeDisabled();
 
-    expect(within(embedded_base).queryByTestId("editableBool?-true")).toBeEnabled();
-    expect(within(embedded_base).queryByTestId("editableBool?-false")).toBeEnabled();
-    expect(within(embedded_base).queryByTestId("editableBool?-none")).toBeEnabled();
+    expect(getBooleanFieldOption("editableBool?", "true", embedded_base)).toBeEnabled();
+    expect(getBooleanFieldOption("editableBool?", "false", embedded_base)).toBeEnabled();
 
     expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]")).toHaveClass(
       "is-disabled"
