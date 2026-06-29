@@ -9,7 +9,6 @@ interface CopyControlProps {
 }
 
 interface HeightToggleProps {
-  code: string;
   isExpanded: boolean;
   onToggle: () => void;
 }
@@ -42,7 +41,6 @@ export const CodeEditorCopyControl: React.FC<CopyControlProps> = ({ code }) => {
  * The CodeEditorHeightToggleControl Component
  *
  * @props {HeightToggleProps} props - The props of the component.
- *  @prop {string} code - The code content
  *  @prop {boolean} isExpanded - Whether the editor is currently expanded
  *  @prop {() => void} onToggle - Callback to toggle the height
  *
