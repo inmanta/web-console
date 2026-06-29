@@ -46,8 +46,6 @@ const dict = {
   "load.previous": "Load previous",
   "load.next": "Load next",
   copy: "Copy",
-  "copy.raw": "Copy raw",
-  "copy.raw.tooltip": "Copy with escaped newlines",
   "copy.clipboard": "Copy to clipboard",
   noData: "There is no data available to display.",
   success: "Success",
@@ -977,9 +975,7 @@ const dict = {
     "This editor is for preview purposes only. Changes made here will not be saved into the service attributes.",
   "markdownPreviewer.pageTitle": (service: string, instance: string) =>
     `Markdown Preview: ${service} - ${instance}`,
-  "markdownPreviewer.download.tooltip": "Download markdown file",
   "markdownPreviewer.route.label": (instance: string) => `Markdown Preview: ${instance}`,
-  "markdownPreviewer.download": "Download",
 
   /**
    * Markdown Container related text
