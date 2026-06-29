@@ -5,7 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
+import { getBooleanFieldOption, MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -202,8 +202,8 @@ describe("CreateInstance", () => {
 
     expect(screen.queryByLabelText("Toggle-bool")).toBeChecked();
     expect(screen.queryByLabelText("Toggle-editableBool")).toBeChecked();
-    expect(screen.queryByTestId("bool?-true")).toBeChecked();
-    expect(screen.queryByTestId("editableBool?-true")).toBeChecked();
+    expect(getBooleanFieldOption("bool?", "true")).toHaveAttribute("aria-pressed", "true");
+    expect(getBooleanFieldOption("editableBool?", "true")).toHaveAttribute("aria-pressed", "true");
 
     expect(screen.queryByLabelText("TextFieldInput-string[]")).toHaveTextContent("1.1.1.1");
     expect(screen.queryByLabelText("TextFieldInput-string[]")).toHaveTextContent("8.8.8.8");
@@ -253,8 +253,14 @@ describe("CreateInstance", () => {
 
     expect(within(embedded_base).queryByLabelText("Toggle-bool")).toBeChecked();
     expect(within(embedded_base).queryByLabelText("Toggle-editableBool")).toBeChecked();
-    expect(within(embedded_base).queryByTestId("bool?-true")).toBeChecked();
-    expect(within(embedded_base).queryByTestId("editableBool?-true")).toBeChecked();
+    expect(getBooleanFieldOption("bool?", "true", embedded_base)).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+    expect(getBooleanFieldOption("editableBool?", "true", embedded_base)).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
 
     expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]")).toHaveTextContent(
       "1.1.1.1"
