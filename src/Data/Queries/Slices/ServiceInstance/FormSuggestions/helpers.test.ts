@@ -1,5 +1,5 @@
 import { SuggestionValue } from "@/Core";
-import { normalizeSuggestions } from "./useSuggestions";
+import { normalizeSuggestions } from "./helpers";
 
 describe("normalizeSuggestions", () => {
   it("normalizes a bare string to a { label, value } pair where label === value", () => {

@@ -57,7 +57,10 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
      * @param {SuggestionValue} suggestion - The clicked suggestion.
      * @returns {void}
      */
-    const handleSuggestionClickInternal = (event, suggestion: SuggestionValue) => {
+    const handleSuggestionClickInternal = (
+      event: React.MouseEvent,
+      suggestion: SuggestionValue
+    ) => {
       event.stopPropagation();
       handleSuggestionClick(suggestion.value);
       close();

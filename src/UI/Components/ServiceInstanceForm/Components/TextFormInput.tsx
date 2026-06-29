@@ -80,10 +80,10 @@ export const TextFormInput: React.FC<Props> = ({
   // Leaving the field is its "commit" point: resolve the value to its label,
   // Plain (non-suggestion) fields are left alone so their typed text isn't normalized.
   const handleBlur = () => {
+    editedRef.current = false;
     if (!hasSuggestions) {
       return;
     }
-    editedRef.current = false;
     setDisplayValue(resolveLabel(suggestions, attributeValue));
   };
 
