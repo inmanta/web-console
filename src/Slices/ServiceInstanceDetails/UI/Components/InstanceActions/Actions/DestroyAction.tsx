@@ -58,6 +58,7 @@ export const DestroyAction: React.FC<Props> = ({
       ),
       iconVariant: "danger",
     });
+    onClose();
   };
 
   /**

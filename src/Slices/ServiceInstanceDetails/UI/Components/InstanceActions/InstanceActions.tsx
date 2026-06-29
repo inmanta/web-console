@@ -87,7 +87,7 @@ export const InstanceActions: React.FC = () => {
               instance_id={instance.id}
               service_entity={instance.service_entity}
               version={instance.version}
-              onClose={() => setIsDropdownOpen(false)}
+              onClose={() => setIsExpertDropdownOpen(false)}
               setInterfaceBlocked={setBlockedInterface}
             />
             {!instance.deleted && expertStateTargets.length > 0 && (
@@ -101,7 +101,7 @@ export const InstanceActions: React.FC = () => {
                   instance_id={instance.id}
                   service_entity={instance.service_entity}
                   version={instance.version}
-                  onClose={() => setIsDropdownOpen(false)}
+                  onClose={() => setIsExpertDropdownOpen(false)}
                   setInterfaceBlocked={setBlockedInterface}
                 />
               </>
