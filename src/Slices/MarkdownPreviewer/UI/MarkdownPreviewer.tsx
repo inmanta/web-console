@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { CodeEditor, Language } from "@patternfly/react-code-editor";
+import { Language } from "@patternfly/react-code-editor";
 import { Flex, FlexItem, Hint, HintTitle, HintBody, Button } from "@patternfly/react-core";
 import { CloseIcon } from "@patternfly/react-icons";
 import { MarkdownCard } from "@/Slices/ServiceInventory/UI/Tabs/MarkdownCard";
-import { PageContainer } from "@/UI/Components";
-import { useTheme } from "@/UI/Components/DarkmodeOption";
+import { CodeEditor, PageContainer } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { MarkdownCodeEditorControls, useDocumentationContent } from ".";
+import { useDocumentationContent } from ".";
 
 interface Props {
   service: string;
@@ -25,7 +24,6 @@ interface Props {
  */
 export const MarkdownPreviewer: React.FC<Props> = ({ service, instance, instanceId }) => {
   const { code: initialCode, pageTitle } = useDocumentationContent({ service, instanceId });
-  const { isDark } = useTheme();
   const [showHint, setShowHint] = useState(true);
   const [markdownContent, setMarkdownContent] = useState(initialCode);
 
@@ -51,22 +49,13 @@ export const MarkdownPreviewer: React.FC<Props> = ({ service, instance, instance
       <Flex direction={{ default: "column" }}>
         <FlexItem flex={{ default: "flex_1" }}>
           <CodeEditor
-            isDarkTheme={isDark}
-            isLineNumbersVisible
             isMinimapVisible
-            isLanguageLabelVisible
             code={markdownContent}
             language={Language.markdown}
-            isFullHeight
+            isReadOnly={false}
             height="calc(100vh - 550px)"
+            downloadFileName={`${service}-${instance}-documentation`}
             onChange={setMarkdownContent}
-            customControls={
-              <MarkdownCodeEditorControls
-                code={markdownContent}
-                service={service}
-                instance={instance}
-              />
-            }
           />
         </FlexItem>
         <FlexItem flex={{ default: "flex_1" }}>
