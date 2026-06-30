@@ -1968,14 +1968,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-styles@npm:^6.0.0, @patternfly/react-styles@npm:^6.4.0":
-  version: 6.4.0
-  resolution: "@patternfly/react-styles@npm:6.4.0"
-  checksum: 10/fcd90c905ba749845efe8edb3dd35f05a151973ba4fe26847cf41863954b925a10b93a9a8821fc78a93d411ca1fae7b01d57b92b7fa690bbf1b98f13318f5d36
-  languageName: node
-  linkType: hard
-
-"@patternfly/react-styles@npm:^6.5.1":
+"@patternfly/react-styles@npm:^6.0.0, @patternfly/react-styles@npm:^6.4.0, @patternfly/react-styles@npm:^6.5.1":
   version: 6.5.1
   resolution: "@patternfly/react-styles@npm:6.5.1"
   checksum: 10/fbde0dc871a67fd4e41284bf3290ce215b424c04b6f4ef5474941e182a638100e082bda40ab45658fae035e971377eae0760a6509655e461553d62e1e870cb0a

@@ -1,4 +1,4 @@
-description: Aligned the custom expand/collapse toggles on the order details and callbacks rows with PatternFly's chevron direction (down when collapsed, up when expanded), so they are consistent with the rest of the console's expandable components.
+description: Made the expand/collapse chevron directions consistent across the console.
 issue-nr: 7046
 change-type: patch
 destination-branches: [master]
