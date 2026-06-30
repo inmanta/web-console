@@ -68,14 +68,7 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
           flexWrap={{ default: "nowrap" }}
         >
           <Content style={{ minWidth: `${versionColWidth}ch` }}>{version}</Content>
-          <Content
-            style={{
-              fontSize: "var(--pf-t--global--font--size--body--sm)",
-              color: "var(--pf-t--global--text--color--subtle)",
-            }}
-          >
-            {datePresenter.getFull(timestamp)}
-          </Content>
+          <Content component="small">{datePresenter.getFull(timestamp)}</Content>
         </Flex>
       ),
     }));
