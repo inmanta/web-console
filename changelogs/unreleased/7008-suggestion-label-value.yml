@@ -1,4 +1,4 @@
-description: Service instance form suggestions now support `{ label, value }` pairs, showing a human-friendly label while submitting the underlying value.
+description: Service instance form suggestions now support "label/value pairs", showing a human-friendly label while submitting the underlying value.
 issue-nr: 7008
 change-type: minor
 destination-branches: [master, iso9]

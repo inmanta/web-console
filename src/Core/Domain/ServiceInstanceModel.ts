@@ -87,7 +87,7 @@ export interface FormAttributeResult {
  *
  * This is the shape the form actually consumes: the `label` is shown to the user
  * and searched on, while the `value` is what gets submitted to the API. Both are
- * always strings — `normalizeSuggestions` coerces every raw entry (see
+ * always strings - `normalizeSuggestions` coerces every raw entry (see
  * {@link RawFormSuggestion}) into this shape. A plain string suggestion
  * normalizes to a pair where `label === value`.
  */
