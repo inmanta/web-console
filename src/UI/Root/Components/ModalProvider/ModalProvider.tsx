@@ -157,6 +157,10 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
     // Close only when the press starts on the backdrop, not inside the dialog,
     // so a press that begins in the dialog and ends on the backdrop is ignored.
     const handleMouseDown = (e: MouseEvent) => {
+      if (e.button !== 0) {
+        return;
+      }
+
       const target = e.target as HTMLElement;
       if (
         target.closest(`.${BACKDROP_CLASS}`) !== null &&

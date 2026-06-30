@@ -166,10 +166,10 @@ describe("ModalProvider", () => {
       await userEvent.click(screen.getByText("Click me"));
 
       // Press begins on the modal content (e.g. selecting text) and is released
-      // on the backdrop — must not close the modal. The decision is made on
+      // on the backdrop - must not close the modal. The decision is made on
       // mousedown, so a backdrop release after an inside press is a no-op.
       fireEvent.mouseDown(screen.getByTestId("content"));
-      fireEvent.click(getBackdrop());
+      fireEvent.mouseUp(getBackdrop());
 
       expect(screen.getByTestId("GlobalModal")).toBeVisible();
     });

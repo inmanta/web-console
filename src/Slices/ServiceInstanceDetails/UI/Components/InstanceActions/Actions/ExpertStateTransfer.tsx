@@ -79,6 +79,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
       iconVariant: "danger",
       cancelCb: closeModalCallback,
     });
+    onClose();
   };
 
   /**
@@ -87,8 +88,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
   const closeModalCallback = useCallback(() => {
     closeModal();
     setInterfaceBlocked(false);
-    onClose();
-  }, [closeModal, setInterfaceBlocked, onClose]);
+  }, [closeModal, setInterfaceBlocked]);
 
   return (
     <>
