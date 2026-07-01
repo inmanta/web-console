@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Content, Tooltip } from "@patternfly/react-core";
-import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
+import { AngleDownIcon, AngleUpIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import { getShortUuidFromRaw } from "@/Core";
 import { TextWithCopy } from "@/UI/Components";
@@ -83,7 +83,7 @@ const Toggle: React.FC<{
 }> = ({ text, onClick, isExpanded }) => {
   return (
     <Button variant="plain" aria-label="Action" onClick={onClick}>
-      {isExpanded ? <AngleDownIcon /> : <AngleRightIcon />} {text}
+      {isExpanded ? <AngleUpIcon /> : <AngleDownIcon />} {text}
     </Button>
   );
 };
