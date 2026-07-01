@@ -1,17 +1,19 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
 import { useGet, getParametersKey } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
+import { normalizeSuggestions } from "./helpers";
 
 interface ResponseData {
-  parameter: Record<string, Record<string, unknown>>;
+  parameter?: { metadata?: { values?: unknown } };
 }
 
 /**
  * React Query hook to handle suggested values for a parameter.
- * If the suggestions are literal, it will return the values directly.
- * If the suggestions are parameters, it will fetch the parameter from the API.
+ * Every flavor is normalized to a single `{ label, value }[]` shape:
+ * If the suggestions are literal, it normalizes the inline values.
+ * If the suggestions are parameters, it fetches the parameter from the API and normalizes its values.
  * if the suggestions are null or undefined, it will return null as data, and a success status.
  *
  * @param suggestions - The suggestions for the parameter.
@@ -34,8 +36,12 @@ export const useSuggestedValues = (suggestions: FormSuggestion | null | undefine
   if (suggestions.type === "literal") {
     return {
       useOneTime: () => {
+        // A field's literal values are static for its lifetime, so memoizing
+        // once keeps the normalized array referentially stable across renders.
+        const data = useMemo(() => normalizeSuggestions(suggestions.values), []);
+
         return {
-          data: suggestions.values,
+          data,
           status: "success",
           error: null,
           isLoading: false,
@@ -47,13 +53,13 @@ export const useSuggestedValues = (suggestions: FormSuggestion | null | undefine
   return {
     /**
      * Custom hook to fetch the parameter from the API once.
-     * @returns The result of the query, including the parameter data.
+     * @returns The result of the query, including the normalized suggestions.
      */
     useOneTime: () =>
       useQuery({
         queryKey: getParametersKey.single(suggestions.parameter_name || "no_parameter", [env]),
         queryFn: () => get(`/api/v1/parameter/${suggestions.parameter_name}`),
-        select: (data) => data.parameter,
+        select: (data) => normalizeSuggestions(data.parameter?.metadata?.values),
       }),
   };
 };

@@ -44,3 +44,11 @@ it("GIVEN prepBody without initial_state THEN body does not include initial_stat
   expect(body.attributes.string_attribute).toEqual("lorem ipsum");
   expect(body).not.toHaveProperty("initial_state");
 });
+
+it("GIVEN prepBody WHEN a numeric field holds a string value (e.g. a suggestion) THEN it is sanitized to a number", () => {
+  const fields = [{ ...Field.number, name: "bandwidth", isOptional: false, type: "int" }];
+  const body = prepBody(fields, { bandwidth: "10000" });
+
+  expect(body.attributes.bandwidth).toBe(10000);
+  expect(typeof body.attributes.bandwidth).toBe("number");
+});
