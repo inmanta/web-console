@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   FormGroup,
@@ -11,7 +11,9 @@ import {
   TextInputTypes,
 } from "@patternfly/react-core";
 import { HelpIcon } from "@patternfly/react-icons";
+import { SuggestionValue } from "@/Core";
 import { SuggestionsPopover } from "./SuggestionsPopover";
+import { resolveLabel, resolveValue } from "./suggestionResolvers";
 
 interface Props {
   attributeName: string;
@@ -24,24 +26,13 @@ interface Props {
   shouldBeDisabled?: boolean;
   isTextarea?: boolean;
   handleInputChange: (value, event) => void;
-  suggestions?: string[] | null;
+  suggestions?: SuggestionValue[] | null;
 }
 
 /**
- * A form input component for text-based input fields.
- *
- * @component
- * @param {Props} props - The props for the TextListFormInput component.
- *  @prop {string} attributeName - The name of the attribute.
- *  @prop {string} attributeValue - The value of the attribute.
- *  @prop {string | null} description - The description of the attribute.
- *  @prop {boolean} isOptional - Whether the attribute is optional.
- *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
- *  @prop {string} typeHint - The type hint for the attribute.
- *  @prop {string} typeHint - The type hint for the attribute.
- *  @prop {string} placeholder - The placeholder for the input field.
- *  @prop {function} handleInputChange - The callback for handling input changes.
- *  @prop {string[]} suggestions - The suggestions for the input field.
+ * A text/textarea form input. With suggestions it behaves as a typeahead: the
+ * field shows a suggestion's `label` but submits its `value`, free typing still
+ * works, and a stored value is mapped back to its label on load.
  */
 export const TextFormInput: React.FC<Props> = ({
   attributeName,
@@ -57,27 +48,53 @@ export const TextFormInput: React.FC<Props> = ({
   suggestions = [],
   ...props
 }) => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [inputValue, setInputValue] = React.useState(attributeValue);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const hasSuggestions = !!(suggestions && suggestions.length > 0);
+  const editedRef = useRef(false);
+  const [displayValue, setDisplayValue] = useState<string>(() =>
+    resolveLabel(suggestions, attributeValue)
+  );
 
-  /**
-   * Handles the input change.
-   *
-   * @param {string} value - The new value of the input field.
-   *
-   * @returns {void}
-   */
-  const handleChange = (value) => {
-    setInputValue(value);
+  const handleType = (text: string) => {
+    editedRef.current = true;
+    setDisplayValue(text);
+
+    if (!hasSuggestions && type === "number") {
+      // Plain number field: convert the input to a number (empty -> null) right here.
+      handleInputChange(text === "" ? null : Number(text), null);
+    } else {
+      // Suggestion fields submit a string; sanitizeAttributes applies the
+      // attribute's real (e.g. numeric) type at submit.
+      handleInputChange(resolveValue(suggestions, text), null);
+    }
+  };
+
+  // Selecting a suggestion shows its label and submits its value.
+  const handleSelect = (value: string) => {
+    editedRef.current = true;
+    setDisplayValue(resolveLabel(suggestions, value));
+    handleInputChange(value, null);
+  };
+
+  // Leaving the field is its "commit" point: resolve the value to its label,
+  // Plain (non-suggestion) fields are left alone so their typed text isn't normalized.
+  const handleBlur = () => {
+    editedRef.current = false;
+    if (!hasSuggestions) {
+      return;
+    }
+    setDisplayValue(resolveLabel(suggestions, attributeValue));
   };
 
   useEffect(() => {
-    if (attributeValue !== inputValue) {
-      handleInputChange(inputValue, null);
+    // Show the label for the controlled value: on mount, on an edit round-trip,
+    // and once async suggestions arrive. Skipped while the user is editing
+    // (editedRef) so what they type is never overwritten by a resolved label.
+    if (!editedRef.current) {
+      setDisplayValue(resolveLabel(suggestions, attributeValue));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [attributeValue, inputValue]);
+  }, [attributeValue, suggestions]);
 
   return (
     <FormGroup
@@ -108,8 +125,8 @@ export const TextFormInput: React.FC<Props> = ({
       </FormHelperText>
       {isTextarea ? (
         <TextArea
-          value={inputValue || ""}
-          onChange={(_event, value) => handleChange(value)}
+          value={displayValue || ""}
+          onChange={(_event, value) => handleType(value)}
           id={attributeName}
           name={attributeName}
           placeholder={placeholder}
@@ -123,35 +140,28 @@ export const TextFormInput: React.FC<Props> = ({
           <TextInput
             ref={inputRef}
             isRequired={!isOptional}
-            type={type}
+            // Rendered as text so a non-numeric label coupled to a numeric
+            // value can show (e.g. "10 Gbps" + 10000).
+            type={hasSuggestions ? TextInputTypes.text : type}
             id={attributeName}
             name={attributeName}
             placeholder={placeholder}
             aria-describedby={`${attributeName}-helper`}
             aria-label={`TextInput-${attributeName}`}
-            value={inputValue}
-            onChange={(_event, value) => {
-              if (type === "number") {
-                handleChange(value === "" ? null : Number(value));
-              } else {
-                handleChange(value);
-              }
-            }}
+            value={displayValue}
+            onChange={(_event, value) => handleType(value)}
             isDisabled={shouldBeDisabled}
-            onFocus={() => setIsOpen(true)}
+            onFocus={() => hasSuggestions && setIsOpen(true)}
+            onBlur={handleBlur}
           />
-          {suggestions && suggestions.length > 0 && (
+          {hasSuggestions && (
             <SuggestionsPopover
               suggestions={suggestions}
-              filter={inputRef.current?.value || ""}
-              handleSuggestionClick={(suggestion) => {
-                if (inputRef.current) {
-                  handleChange(suggestion);
-                }
-              }}
+              filter={displayValue}
+              handleSuggestionClick={handleSelect}
               ref={inputRef}
               isOpen={isOpen}
-              setIsOpen={setIsOpen}
+              close={() => setIsOpen(false)}
             />
           )}
         </>
