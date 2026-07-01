@@ -5,11 +5,15 @@ import { EnvironmentPreview } from "@/Data/Queries";
  * MockEnvironmentHandler is a function that returns a mocked EnvironmentHandler object.
  *
  * @param {FlatEnvironment} environment - The environment to be used in the mock.
+ * @param {boolean} isCompiling - Whether the mocked environment reports as compiling.
+ * @param {EnvironmentPreview[]} allEnvironments - The list returned by `useAll()`, for tests that
+ *   exercise logic depending on the full environment list (defaults to empty).
  * @returns {EnvironmentHandler}An EnvironmentHandler object.
  */
 export function MockEnvironmentHandler(
   environment: FlatEnvironment,
-  isCompiling: boolean = false
+  isCompiling: boolean = false,
+  allEnvironments: EnvironmentPreview[] = []
 ): EnvironmentHandler {
   function useName(): string {
     return environment.name;
@@ -62,7 +66,7 @@ export function MockEnvironmentHandler(
   }
 
   function useAll(): EnvironmentPreview[] {
-    return [];
+    return allEnvironments;
   }
 
   return {
