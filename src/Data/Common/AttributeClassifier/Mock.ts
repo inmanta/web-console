@@ -39,11 +39,21 @@ export const classified: ClassifiedAttribute[] = [
   { kind: "SingleLine", key: "aaa", value: "true" },
   { kind: "SingleLine", key: "b", value: attributes.b },
   { kind: "Xml", key: "c", value: xml.format(attributes.c), rawValue: attributes.c },
-  { kind: "Json", key: "d", value: json.format(attributes.d), rawValue: JSON.stringify(attributes.d) },
+  {
+    kind: "Json",
+    key: "d",
+    value: json.format(attributes.d),
+    rawValue: JSON.stringify(attributes.d),
+  },
   { kind: "Undefined", key: "e" },
   { kind: "Code", key: "f", value: attributes.f },
   { kind: "Code", key: "ff", value: attributes.ff },
-  { kind: "Json", key: "g", value: json.format(attributes.g), rawValue: JSON.stringify(attributes.g) },
+  {
+    kind: "Json",
+    key: "g",
+    value: json.format(attributes.g),
+    rawValue: JSON.stringify(attributes.g),
+  },
   { kind: "File", key: "hash", value: attributes.hash },
   {
     kind: "Json",
@@ -66,5 +76,10 @@ export const classified: ClassifiedAttribute[] = [
     rawValue: attributes.whiteSpacedXML,
   },
   { kind: "SingleLine", key: "wrongXml1", value: attributes.wrongXml1 },
-  { kind: "Xml", key: "wrongXml2", value: xml.format(attributes.wrongXml2), rawValue: attributes.wrongXml2 },
+  {
+    kind: "Xml",
+    key: "wrongXml2",
+    value: xml.format(attributes.wrongXml2),
+    rawValue: attributes.wrongXml2,
+  },
 ];

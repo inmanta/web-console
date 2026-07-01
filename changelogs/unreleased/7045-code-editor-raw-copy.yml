@@ -1,4 +1,4 @@
-description: Code editors now offer a "Copy raw value" action that copies the original, un-formatted JSON/XML string behind the pretty-printed view.
+description: Attribute values and order details shown as formatted JSON/XML now offer a "Copy raw value" action that copies the original, un-formatted string behind the pretty-printed view.
 issue-nr: 7045
 change-type: patch
 destination-branches: [master, iso9]
