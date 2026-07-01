@@ -1,7 +1,4 @@
-/**
- * A form input component for managing a list of text values.
- */
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Label,
   LabelGroup,
@@ -19,8 +16,10 @@ import {
 } from "@patternfly/react-core";
 
 import { HelpIcon, TimesIcon } from "@patternfly/react-icons";
+import { SuggestionValue } from "@/Core";
 import { words } from "@/UI/words";
 import { SuggestionsPopover } from "./SuggestionsPopover";
+import { resolveLabel, resolveValue } from "./suggestionResolvers";
 
 /**
  * Props for the TextListFormInput component.
@@ -34,22 +33,25 @@ interface Props {
   typeHint?: string;
   placeholder?: string;
   handleInputChange: (value: string[], event: React.FormEvent<HTMLInputElement> | null) => void;
-  suggestions?: string[] | null;
+  suggestions?: SuggestionValue[] | null;
 }
 
 /**
  * A form input component for managing a list of text values.
  *
+ * When suggestions are provided, the field behaves as a typeahead: each chip
+ * displays the suggestion's `label` while the stored/submitted value is its
+ * `value`. Free typing still works (the typed text is both shown and stored).
+ *
  * @props {Props} props - The props for the TextListFormInput component.
  *  @prop {string} attributeName - The name of the attribute.
- *  @prop {string[]} attributeValue - The value of the attribute.
+ *  @prop {string[]} attributeValue - The submitted values of the attribute.
  *  @prop {string | null} description - The description of the attribute.
  *  @prop {boolean} shouldBeDisabled - Whether the attribute should be disabled. Default is false.
  *  @prop {string} typeHint - The type hint for the attribute.
- *  @prop {string} typeHint - The type hint for the attribute.
  *  @prop {string} placeholder - The placeholder for the input field.
  *  @prop {function} handleInputChange - The callback for handling input changes.
- *  @prop {string[]} suggestions - The suggestions for the input field.
+ *  @prop {SuggestionValue[]} suggestions - The suggestions for the input field; selecting one stores its `value` and displays its `label`.
  *
  *  @returns {React.FC<Props>} The TextListFormInput component.
  */
@@ -67,11 +69,12 @@ export const TextListFormInput: React.FC<Props> = ({
   const [inputValue, setInputValue] = React.useState("");
   const [currentChips, setCurrentChips] = React.useState<string[]>([]);
   const [isOpen, setIsOpen] = React.useState(false);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const hasSuggestions = !!(suggestions && suggestions.length > 0);
 
   /**
    * Callback for removing a chip from the chip selections.
-   * @param chipToDelete - The chip to be removed.
+   * @param chipToDelete - The chip value to be removed.
    */
   const deleteChip = (chipToDelete: string) => {
     const newChips = currentChips.filter((chip) => !Object.is(chip, chipToDelete));
@@ -92,17 +95,24 @@ export const TextListFormInput: React.FC<Props> = ({
   };
 
   /**
-   * Adds a new chip to the chip selections.
+   * Adds a new chip. When the input text matches a suggestion label (whether
+   * picked from the list or typed), that suggestion's value is stored; otherwise
+   * the typed text is stored as-is.
    *
    * @returns {void}
    */
   const addChip = () => {
-    if (inputValue.trim()) {
-      const newChips = [...currentChips, inputValue.trim()];
-      setCurrentChips(newChips);
-      handleInputChange(newChips, null);
-      setInputValue("");
+    const trimmed = inputValue.trim();
+
+    if (!trimmed) {
+      return;
     }
+
+    const newChips = [...currentChips, resolveValue(suggestions, trimmed)];
+
+    setCurrentChips(newChips);
+    handleInputChange(newChips, null);
+    setInputValue("");
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -152,16 +162,16 @@ export const TextListFormInput: React.FC<Props> = ({
         </HelperText>
       </FormHelperText>
       <TextInputGroup isDisabled={shouldBeDisabled}>
-        {suggestions && suggestions.length > 0 && (
+        {hasSuggestions && (
           <SuggestionsPopover
             suggestions={suggestions}
             filter={inputValue}
-            handleSuggestionClick={(suggestion) => {
-              setInputValue(suggestion);
+            handleSuggestionClick={(value) => {
+              setInputValue(resolveLabel(suggestions, value));
             }}
             ref={inputRef}
             isOpen={isOpen}
-            setIsOpen={setIsOpen}
+            close={() => setIsOpen(false)}
           />
         )}
         <TextInputGroupMain
@@ -169,7 +179,7 @@ export const TextListFormInput: React.FC<Props> = ({
           value={inputValue}
           placeholder={placeholder}
           onChange={handleChangeInput}
-          onFocus={() => setIsOpen(true)}
+          onFocus={() => hasSuggestions && setIsOpen(true)}
           onKeyDown={handleKeyDown}
         >
           <LabelGroup>
@@ -179,9 +189,9 @@ export const TextListFormInput: React.FC<Props> = ({
                 key={currentChip}
                 onClose={() => deleteChip(currentChip)}
                 disabled={shouldBeDisabled}
-                closeBtnAriaLabel={`Close ${currentChip}`}
+                closeBtnAriaLabel={`Close ${resolveLabel(suggestions, currentChip)}`}
               >
-                <Truncate content={currentChip} />
+                <Truncate content={resolveLabel(suggestions, currentChip)} />
               </Label>
             ))}
           </LabelGroup>
