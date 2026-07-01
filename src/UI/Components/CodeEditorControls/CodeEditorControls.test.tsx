@@ -1,6 +1,10 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import copy from "copy-to-clipboard";
-import { CodeEditorCopyControl, CodeEditorHeightToggleControl } from "./CodeEditorControls";
+import {
+  CodeEditorCopyControl,
+  CodeEditorHeightToggleControl,
+  CodeEditorRawCopyControl,
+} from "./CodeEditorControls";
 
 vi.mock("copy-to-clipboard", () => ({
   default: vi.fn(),
@@ -16,7 +20,7 @@ vi.mock("@patternfly/react-code-editor", () => ({
 
 describe("CodeEditorCopyControl", () => {
   const defaultProps = {
-    code: "const test = 'Hello World';",
+    value: "const test = 'Hello World';",
   };
 
   afterEach(() => {
@@ -34,7 +38,30 @@ describe("CodeEditorCopyControl", () => {
     const copyButton = screen.getByTestId("control-Copy");
     fireEvent.click(copyButton);
 
-    expect(copy).toHaveBeenCalledWith(defaultProps.code);
+    expect(copy).toHaveBeenCalledWith(defaultProps.value);
+  });
+});
+
+describe("CodeEditorRawCopyControl", () => {
+  const defaultProps = {
+    rawValue: '{"name":"bics.com"}',
+  };
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should render the raw copy button", () => {
+    render(<CodeEditorRawCopyControl {...defaultProps} />);
+    expect(screen.getByTestId("control-Copy raw value")).toBeInTheDocument();
+  });
+
+  it("should copy the raw value when clicked", () => {
+    render(<CodeEditorRawCopyControl {...defaultProps} />);
+
+    fireEvent.click(screen.getByTestId("control-Copy raw value"));
+
+    expect(copy).toHaveBeenCalledWith(defaultProps.rawValue);
   });
 });
 
