@@ -87,7 +87,7 @@ export const InstanceActions: React.FC = () => {
               instance_id={instance.id}
               service_entity={instance.service_entity}
               version={instance.version}
-              onClose={() => setIsDropdownOpen(false)}
+              collapseToggle={() => setIsExpertDropdownOpen(false)}
               setInterfaceBlocked={setBlockedInterface}
             />
             {!instance.deleted && expertStateTargets.length > 0 && (
@@ -101,7 +101,7 @@ export const InstanceActions: React.FC = () => {
                   instance_id={instance.id}
                   service_entity={instance.service_entity}
                   version={instance.version}
-                  onClose={() => setIsDropdownOpen(false)}
+                  collapseToggle={() => setIsExpertDropdownOpen(false)}
                   setInterfaceBlocked={setBlockedInterface}
                 />
               </>
@@ -180,7 +180,7 @@ export const InstanceActions: React.FC = () => {
             instance_display_identity={instance.service_identity_attribute_value ?? instance.id}
             instance_id={instance.id}
             version={instance.version}
-            onClose={() => setIsDropdownOpen(false)}
+            collapseToggle={() => setIsDropdownOpen(false)}
             setInterfaceBlocked={setBlockedInterface}
           />
           {stateTargets.length > 0 && (
@@ -195,7 +195,7 @@ export const InstanceActions: React.FC = () => {
                   instance_id={instance.id}
                   service_entity={instance.service_entity}
                   version={instance.version}
-                  onClose={() => setIsDropdownOpen(false)}
+                  collapseToggle={() => setIsDropdownOpen(false)}
                   setInterfaceBlocked={setBlockedInterface}
                 />
               </DropdownGroup>
