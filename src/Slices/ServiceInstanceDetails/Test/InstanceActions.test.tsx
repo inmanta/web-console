@@ -122,6 +122,37 @@ describe("Page Actions - Success", () => {
     );
   });
 
+  it("Expert actions - collapses the toggle when an action opens its modal", async () => {
+    render(setupServiceInstanceDetails(true));
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    const expertDropdown = screen.getByRole("button", {
+      name: "Expert-Actions-Toggle",
+    });
+
+    // opening the dropdown expands the toggle
+    await userEvent.click(expertDropdown);
+    expect(expertDropdown).toHaveAttribute("aria-expanded", "true");
+
+    // selecting a state target opens the modal and must collapse the toggle,
+    // so it does not stay highlighted behind the modal
+    await userEvent.click(screen.getByRole("menuitem", { name: "up" }));
+    expect(screen.getByRole("dialog")).toBeVisible();
+    expect(expertDropdown).toHaveAttribute("aria-expanded", "false");
+
+    // the same must hold for the destroy action
+    await userEvent.click(screen.getByRole("button", { name: /no/i }));
+    await userEvent.click(expertDropdown);
+    expect(expertDropdown).toHaveAttribute("aria-expanded", "true");
+
+    await userEvent.click(screen.getByRole("menuitem", { name: /destroy/i }));
+    expect(screen.getByRole("dialog")).toBeVisible();
+    expect(expertDropdown).toHaveAttribute("aria-expanded", "false");
+  });
+
   it("Normal Instance Actions Enabled - delete action", async () => {
     const component = setupServiceInstanceDetails();
 
