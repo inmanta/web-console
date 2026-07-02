@@ -1,13 +1,23 @@
 import { useContext, useEffect } from "react";
-import { useNavigate, useLocation, useParams, Params } from "react-router";
+import { useNavigate, useLocation, useParams, Params, NavigateOptions } from "react-router";
 import { RouteKind, RouteParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 
-type NavigateTo = (kind: RouteKind, params: RouteParams<typeof kind>, search?: string) => void;
+type NavigateTo = (
+  kind: RouteKind,
+  params: RouteParams<typeof kind>,
+  newSearch?: string,
+  options?: NavigateOptions
+) => void;
 
 /**
  * The useNavigateTo hook returns a navigateTo function which navigates to a route.
- * @param newSearch This string should start with a question mark "?".
+ * @param kind The route to navigate to.
+ * @param params The route parameters for that route.
+ * @param newSearch The query string to use; must start with a question mark "?". When omitted, the
+ *   current location's search is preserved.
+ * @param options React Router's `NavigateOptions` (e.g. `{ replace: true }` to replace the current
+ *   history entry instead of pushing a new one — useful for redirects).
  * @throws Will throw an error when newSearch is invalid
  */
 export const useNavigateTo = (): NavigateTo => {
@@ -15,14 +25,14 @@ export const useNavigateTo = (): NavigateTo => {
   const { search } = useLocation();
   const navigate = useNavigate();
 
-  return (routeKind, params, newSearch) => {
+  return (routeKind, params, newSearch, options) => {
     if (newSearch !== undefined) {
       validateSearch(newSearch);
     }
 
     const pathname = routeManager.getUrl(routeKind, params);
 
-    navigate(`${pathname}${newSearch || search}`);
+    navigate(`${pathname}${newSearch || search}`, options);
   };
 };
 

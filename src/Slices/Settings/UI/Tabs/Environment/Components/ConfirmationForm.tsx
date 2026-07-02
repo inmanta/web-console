@@ -12,8 +12,14 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import { FlatEnvironment } from "@/Core";
-import { useClearEnvironment, useDeleteEnvironment, getEnvironmentsKey } from "@/Data/Queries";
+import {
+  useClearEnvironment,
+  useDeleteEnvironment,
+  getEnvironmentsKey,
+  GetEnvironmentPreviewKey,
+} from "@/Data/Queries";
 import { AppAlert } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -35,24 +41,43 @@ interface Props {
  */
 export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   const { closeModal } = useContext(ModalContext);
+  const { environmentHandler } = useContext(DependencyContext);
   const navigateTo = useNavigateTo();
   const client = useQueryClient();
+  const allEnvironments = environmentHandler.useAll();
 
   const [candidateEnv, setCandidateEnv] = useState("");
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
   const [isBusy, setIsBusy] = useState(false);
   const validated = environment.name === candidateEnv ? "success" : "default";
 
-  const redirectToHome = () => navigateTo("Dashboard", undefined);
+  const redirectToHome = () => navigateTo("Dashboard", undefined, undefined, { replace: true });
 
   const deleteEnv = useDeleteEnvironment(environment.id, {
-    onSuccess: () => {
-      //reset the queries removes the cache which improves the ux when navigating back to the environments page,
-      // without it the user won't see loading state and will see the old data for a split second and then removed env will be removed from the view
+    onSuccess: async () => {
+      // reset removes the cache so the header env selector / user management list show a loading
+      // state instead of briefly rendering the deleted env. Fire-and-forget: neither drives the redirect.
       client.resetQueries({ queryKey: getEnvironmentsKey.root() });
 
+      // Refresh the preview list (feeds the header env preview and PageFrame/Provider) so the deleted
+      // env is gone app-wide. Awaited so the empty-list fallback below reaches the Provider only after
+      // the list has emptied. Note: allEnvironments here is the render snapshot and is NOT refreshed by
+      // this await — the filter below drops the deleted env, which is what makes `remaining` correct.
+      await client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
+
       closeModal();
-      redirectToHome();
+
+      // Navigate straight to a surviving env instead of the neutral Dashboard URL, so we skip the
+      // Provider's missing-env bounce that would otherwise flash a blank Dashboard. When no envs are
+      // left, fall back to the Provider (redirectToHome) so its "no environments" toast still fires.
+      // Both replace the history entry so Back doesn't return to the deleted env's URL.
+      const remaining = allEnvironments.filter((env) => env.id !== environment.id);
+
+      if (remaining.length > 0) {
+        navigateTo("Dashboard", undefined, `?env=${remaining[0].id}`, { replace: true });
+      } else {
+        redirectToHome();
+      }
     },
     onError: (error) => {
       setErrorMessage(error.message);

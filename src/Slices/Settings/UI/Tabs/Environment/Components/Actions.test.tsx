@@ -1,18 +1,39 @@
+import { useLocation } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
+import { EnvironmentPreview } from "@/Data/Queries";
+import { Environment, EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Actions } from "./Actions";
 
-function setup(protectedEnvironment: boolean = false) {
+/**
+ * Renders the current router location so navigation triggered by the component under test can be
+ * asserted (pathname and search are exposed separately to keep assertions precise).
+ */
+const LocationView = () => {
+  const location = useLocation();
+
+  return (
+    <>
+      <div data-testid="location-pathname">{location.pathname}</div>
+      <div data-testid="location-search">{location.search}</div>
+    </>
+  );
+};
+
+function setup(
+  protectedEnvironment: boolean = false,
+  allEnvironments: EnvironmentPreview[] = [],
+  environment: { id: string; name: string } = { id: "env", name: "connect" }
+) {
   const component = (
     <QueryClientProvider client={testClient}>
-      <TestMemoryRouter>
+      <TestMemoryRouter initialEntries={[`/?env=${environment.id}`]}>
         <MockedDependencyProvider
           env={{
             ...EnvironmentDetails.env,
@@ -21,10 +42,12 @@ function setup(protectedEnvironment: boolean = false) {
               protected_environment: protectedEnvironment,
             },
           }}
+          allEnvironments={allEnvironments}
         >
           <ModalProvider>
-            <Actions environment={{ id: "env", name: "connect" }} />
+            <Actions environment={environment} />
           </ModalProvider>
+          <LocationView />
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
@@ -117,6 +140,51 @@ describe("Environment Actions", () => {
     await userEvent.click(deleteButton);
 
     expect(counter).toBe(1);
+  });
+
+  test("GIVEN delete executed WHEN other environments remain THEN navigates directly to a surviving env", async () => {
+    const { previewA, previewB } = Environment;
+
+    server.use(http.delete(`/api/v2/environment/${previewA.id}`, () => HttpResponse.json()));
+    // Delete previewA while previewB survives; previewA must be filtered out of the navigation target.
+    const { component } = setup(false, [previewA, previewB], previewA);
+
+    render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: "Delete environment" }));
+    await userEvent.type(
+      screen.getByRole<HTMLInputElement>("textbox", { name: "delete environment check" }),
+      previewA.name
+    );
+    await userEvent.click(screen.getByRole("button", { name: "delete" }));
+
+    await waitFor(() =>
+      expect(screen.getByTestId("location-search")).toHaveTextContent(`?env=${previewB.id}`)
+    );
+    expect(screen.getByTestId("location-pathname")).toHaveTextContent("/dashboard");
+  });
+
+  test("GIVEN delete executed WHEN no environments remain THEN falls back to the home redirect", async () => {
+    const { previewA } = Environment;
+
+    server.use(http.delete(`/api/v2/environment/${previewA.id}`, () => HttpResponse.json()));
+    // previewA is the only environment, so `remaining` is empty and we defer to the Provider (redirectToHome)
+    const { component } = setup(false, [previewA], previewA);
+
+    render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: "Delete environment" }));
+    await userEvent.type(
+      screen.getByRole<HTMLInputElement>("textbox", { name: "delete environment check" }),
+      previewA.name
+    );
+    await userEvent.click(screen.getByRole("button", { name: "delete" }));
+
+    await waitFor(() =>
+      expect(screen.getByTestId("location-pathname")).toHaveTextContent("/dashboard")
+    );
+    // No surviving env to select, so the current search is preserved rather than pointing at one.
+    expect(screen.getByTestId("location-search")).toHaveTextContent(`?env=${previewA.id}`);
   });
 
   test("GIVEN Environment Actions and delete modal WHEN delete executed and error THEN error is shown", async () => {
