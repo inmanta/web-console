@@ -1,11 +1,15 @@
 import React from "react";
 import { CodeEditorControl } from "@patternfly/react-code-editor";
-import { CopyIcon, ExpandIcon, CompressIcon } from "@patternfly/react-icons";
+import { CopyIcon, OutlinedCopyIcon, ExpandIcon, CompressIcon } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
 import { words } from "@/UI/words";
 
 interface CopyControlProps {
-  code: string;
+  value: string;
+}
+
+interface RawCopyControlProps {
+  rawValue: string;
 }
 
 interface HeightToggleProps {
@@ -17,21 +21,46 @@ interface HeightToggleProps {
  * The CodeEditorCopyControl Component
  *
  * @props {CopyControlProps} props - The props of the component.
- *  @prop {string} code - The code content
+ *  @prop {string} value - The code content
  *
  * @note We can't use the default copy control from the codeEditor component,
  * because it uses navigator.clipboard which is not available on http, only on secure origins.
  *
  * @returns {React.FC<CopyControlProps>} A React Component that provides the copy control for the CodeEditor.
  */
-export const CodeEditorCopyControl: React.FC<CopyControlProps> = ({ code }) => {
+export const CodeEditorCopyControl: React.FC<CopyControlProps> = ({ value }) => {
   return (
     <CodeEditorControl
       icon={<CopyIcon />}
       aria-label={words("copy")}
       tooltipProps={{ content: words("copy") }}
       onClick={() => {
-        copy(code);
+        copy(value);
+      }}
+    />
+  );
+};
+
+/**
+ * The CodeEditorRawCopyControl Component
+ *
+ * Copies the raw, un-prettified string value rather than the formatted code the
+ * editor displays. Used for JSON attributes, whose stored value is a compact
+ * single-line string that the console pretty-prints for readability.
+ *
+ * @props {RawCopyControlProps} props - The props of the component.
+ *  @prop {string} rawValue - The raw string to copy
+ *
+ * @returns {React.FC<RawCopyControlProps>} A React Component that copies the raw value.
+ */
+export const CodeEditorRawCopyControl: React.FC<RawCopyControlProps> = ({ rawValue }) => {
+  return (
+    <CodeEditorControl
+      icon={<OutlinedCopyIcon />}
+      aria-label={words("copy.raw")}
+      tooltipProps={{ content: words("copy.raw") }}
+      onClick={() => {
+        copy(rawValue);
       }}
     />
   );

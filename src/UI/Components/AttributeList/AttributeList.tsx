@@ -75,7 +75,13 @@ export const AttributeValue: React.FC<{
     case "Json":
     case "Xml":
     case "Code":
-      return <CodeEditor code={attribute.value} language={languageForKind(attribute.kind)} />;
+      return (
+        <CodeEditor
+          code={attribute.value}
+          language={languageForKind(attribute.kind)}
+          rawValue={"rawValue" in attribute ? attribute.rawValue : undefined}
+        />
+      );
   }
 };
 
