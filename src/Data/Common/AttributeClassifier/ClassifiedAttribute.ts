@@ -20,14 +20,26 @@ interface Base<Kind> {
 type SingleLine = Base<"SingleLine">;
 
 /**
+ * Base for attributes whose `value` is a pretty-printed view of an original
+ * string. `rawValue` carries that original, compact form so the UI can offer a
+ * "copy raw value" action — reconstructing it from the formatted `value` is not
+ * reliable (XML formatting in particular has no exact inverse).
+ *
+ * @template Kind The specific type identifier
+ */
+interface Formatted<Kind> extends Base<Kind> {
+  rawValue: string;
+}
+
+/**
  * Represents a JSON formatted attribute
  */
-type Json = Base<"Json">;
+type Json = Formatted<"Json">;
 
 /**
  * Represents an XML formatted attribute
  */
-type Xml = Base<"Xml">;
+type Xml = Formatted<"Xml">;
 
 /**
  * Represents a password attribute (sensitive content)
