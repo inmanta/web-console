@@ -68,6 +68,8 @@ export class AttributeClassifier {
           kind: "Json",
           key,
           value: this.jsonFormatter.format(JSON.parse(value)),
+          // The original string is the raw form (byte-exact, no re-serialization).
+          rawValue: value,
         };
       }
 
@@ -76,6 +78,7 @@ export class AttributeClassifier {
           kind: "Xml",
           key,
           value: this.xmlFormatter.format(value),
+          rawValue: value,
         };
       }
 
@@ -93,6 +96,8 @@ export class AttributeClassifier {
         kind: "Json",
         key,
         value: this.jsonFormatter.format(value),
+        // No source string exists for an object value; the compact JSON is the raw form.
+        rawValue: JSON.stringify(value),
       };
     }
 

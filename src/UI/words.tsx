@@ -46,6 +46,7 @@ const dict = {
   "load.previous": "Load previous",
   "load.next": "Load next",
   copy: "Copy",
+  "copy.raw": "Copy raw value",
   "copy.clipboard": "Copy to clipboard",
   noData: "There is no data available to display.",
   success: "Success",
