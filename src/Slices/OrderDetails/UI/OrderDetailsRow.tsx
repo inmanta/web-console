@@ -10,12 +10,17 @@ import {
 import { InfoAltIcon } from "@patternfly/react-icons";
 import { Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
+import { JsonFormatter } from "@/Data";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { CodeEditor, TextWithCopy, Toggle } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { OrderDependencies } from "./OrderDependencies";
 import { OrderStateDetails } from "./OrderStateDetails";
+
+// Same JSON pretty-printer the AttributeClassifier uses console-wide, so config
+// and attribute payloads render with identical formatting everywhere.
+const jsonFormatter = new JsonFormatter();
 
 interface Props {
   row: ServiceOrderItem;
@@ -87,7 +92,8 @@ export const OrderDetailsRow: React.FC<Props> = ({
                 <DescriptionListDescription>
                   {row.config && Object.keys(row.config).length ? (
                     <CodeEditor
-                      code={JSON.stringify(row.config, null, 2)}
+                      code={jsonFormatter.format(row.config)}
+                      rawValue={JSON.stringify(row.config)}
                       language={Language.json}
                       height="400px"
                     />
@@ -103,7 +109,8 @@ export const OrderDetailsRow: React.FC<Props> = ({
                   <DescriptionListTerm>{words("orders.row.body")}</DescriptionListTerm>
                   <DescriptionListDescription>
                     <CodeEditor
-                      code={JSON.stringify(row.attributes || row.edits, null, 2)}
+                      code={jsonFormatter.format(row.attributes || row.edits)}
+                      rawValue={JSON.stringify(row.attributes || row.edits)}
                       language={Language.json}
                       height="400px"
                     />
