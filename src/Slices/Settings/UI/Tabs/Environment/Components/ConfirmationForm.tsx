@@ -62,7 +62,7 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
       // Refresh the preview list (feeds the header env preview and PageFrame/Provider) so the deleted
       // env is gone app-wide. Awaited so the empty-list fallback below reaches the Provider only after
       // the list has emptied. Note: allEnvironments here is the render snapshot and is NOT refreshed by
-      // this await — the filter below drops the deleted env, which is what makes `remaining` correct.
+      // this await; the filter below drops the deleted env, which is what makes `remaining` correct.
       await client.refetchQueries({ queryKey: GetEnvironmentPreviewKey.root() });
 
       closeModal();

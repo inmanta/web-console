@@ -17,7 +17,7 @@ type NavigateTo = (
  * @param newSearch The query string to use; must start with a question mark "?". When omitted, the
  *   current location's search is preserved.
  * @param options React Router's `NavigateOptions` (e.g. `{ replace: true }` to replace the current
- *   history entry instead of pushing a new one — useful for redirects).
+ *   history entry instead of pushing a new one, useful for redirects).
  * @throws Will throw an error when newSearch is invalid
  */
 export const useNavigateTo = (): NavigateTo => {
