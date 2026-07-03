@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import { AuthProvider as OidcContextProvider, useAuth } from "react-oidc-context";
 import { useLocation, useNavigate } from "react-router";
-import { Bullseye, Button, Content, Spinner, Stack, StackItem, Title } from "@patternfly/react-core";
+import {
+  Bullseye,
+  Button,
+  Content,
+  Spinner,
+  Stack,
+  StackItem,
+  Title,
+} from "@patternfly/react-core";
 import { words } from "@/UI";
 import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import { AuthContext } from "../AuthContext";
@@ -44,7 +52,12 @@ const OidcFallbackChooser: React.FC<OidcFallbackChooserProps> = ({
         </Button>
       </StackItem>
       <StackItem>
-        <Button variant="secondary" isBlock onClick={onLocalLogin} aria-label="local-login-fallback">
+        <Button
+          variant="secondary"
+          isBlock
+          onClick={onLocalLogin}
+          aria-label="local-login-fallback"
+        >
           {words("login.fallback.local")}
         </Button>
       </StackItem>
