@@ -1,15 +1,144 @@
-import React from "react";
+import React, { useState } from "react";
 import { AuthProvider as OidcContextProvider, useAuth } from "react-oidc-context";
-import { Bullseye, Spinner } from "@patternfly/react-core";
+import { useLocation, useNavigate } from "react-router";
+import { Bullseye, Button, Content, Spinner, Stack, StackItem, Title } from "@patternfly/react-core";
 import { words } from "@/UI";
+import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import { AuthContext } from "../AuthContext";
 import { OidcAuthConfig } from "../types";
+import { clearLocalToken, getLocalToken, getLocalUsername, setLocalToken } from "./localToken";
+
+interface OidcFallbackChooserProps {
+  errorMessage?: string;
+  onIdpLogin: () => void;
+  onLocalLogin: () => void;
+}
+
+/**
+ * Break-glass screen shown when the identity provider cannot authenticate the user
+ * and the database local login fallback is enabled. It offers a retry against the
+ * IdP and a route to the local database login form.
+ */
+const OidcFallbackChooser: React.FC<OidcFallbackChooserProps> = ({
+  errorMessage,
+  onIdpLogin,
+  onLocalLogin,
+}) => (
+  <Bullseye>
+    <Stack hasGutter style={{ maxWidth: "30rem", textAlign: "center" }}>
+      <StackItem>
+        <Title headingLevel="h1" size="lg">
+          {words("login.title")}
+        </Title>
+      </StackItem>
+      <StackItem>
+        <Content component="p">
+          {errorMessage
+            ? words("error.authentication")(errorMessage)
+            : words("login.fallback.description")}
+        </Content>
+      </StackItem>
+      <StackItem>
+        <Button variant="primary" isBlock onClick={onIdpLogin}>
+          {words("login.fallback.idp")}
+        </Button>
+      </StackItem>
+      <StackItem>
+        <Button variant="secondary" isBlock onClick={onLocalLogin} aria-label="local-login-fallback">
+          {words("login.fallback.local")}
+        </Button>
+      </StackItem>
+    </Stack>
+  </Bullseye>
+);
+
+interface InnerProps {
+  localFallback: boolean;
+}
 
 /**
  * Inner provider that bridges react-oidc-context to our AuthContext.
+ *
+ * When localFallback is enabled and the IdP cannot authenticate the user, the
+ * provider does not dead-end on a redirect: it keeps the /login route reachable
+ * and offers a database login so an admin can get in when the IdP is unavailable.
  */
-const OidcInnerProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+const OidcInnerProvider: React.FC<React.PropsWithChildren<InnerProps>> = ({
+  children,
+  localFallback,
+}) => {
   const auth = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [localUser, setLocalUser] = useState<string | null>(getLocalUsername());
+
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname
+  );
+  const basePathname = baseUrlManager.getBasePathname();
+  const loginPath = `${basePathname}/login`;
+
+  const hasLocalSession = (): boolean => !!getLocalToken();
+
+  const getUser = (): string | null => {
+    if (auth.user?.profile) {
+      return (
+        (auth.user.profile.preferred_username as string) ||
+        auth.user.profile.email ||
+        auth.user.profile.sub ||
+        null
+      );
+    }
+
+    return localUser;
+  };
+
+  const getToken = (): string | null => auth.user?.access_token || getLocalToken();
+
+  const updateUser = (username: string, token: string): void => {
+    setLocalToken(username, token);
+    setLocalUser(username);
+  };
+
+  const logout = (): void => {
+    if (hasLocalSession()) {
+      clearLocalToken();
+      setLocalUser(null);
+      navigate(loginPath);
+
+      return;
+    }
+    auth.signoutRedirect();
+  };
+
+  const login = (): void => {
+    // A 401 also triggers this. If we hold a local fallback session (its token is no
+    // longer valid), or the user is on the local login page (e.g. a failed login
+    // attempt returns 401), return to the login form instead of bouncing to the IdP.
+    if (hasLocalSession() || location.pathname.endsWith("/login")) {
+      clearLocalToken();
+      setLocalUser(null);
+      navigate(loginPath);
+
+      return;
+    }
+    auth.signinRedirect();
+  };
+
+  const isDisabled = (): boolean => !getUser();
+
+  const isDatabaseSession = (): boolean => !auth.isAuthenticated && hasLocalSession();
+
+  const contextValue = {
+    getUser,
+    getToken,
+    login,
+    logout,
+    isDisabled,
+    updateUser,
+    isDatabaseSession,
+  };
 
   if (auth.isLoading) {
     return (
@@ -19,11 +148,20 @@ const OidcInnerProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     );
   }
 
-  if (auth.error) {
-    return <Bullseye>{words("error.authentication")(auth.error.message || "")}</Bullseye>;
+  // Authenticated through the IdP, or holding a local fallback session: render the app.
+  if (auth.isAuthenticated || hasLocalSession()) {
+    return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
   }
 
-  if (!auth.isAuthenticated) {
+  // Manual break-glass: when the fallback is enabled the /login route stays reachable by
+  // URL, so an admin can deliberately choose local login even while the IdP is healthy.
+  if (localFallback && location.pathname.endsWith("/login")) {
+    return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+  }
+
+  // Identity provider first: as long as the IdP has not errored, redirect to it just like
+  // a normal OIDC login.
+  if (!auth.error) {
     auth.signinRedirect();
 
     return (
@@ -33,47 +171,19 @@ const OidcInnerProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     );
   }
 
-  const getUser = (): string | null => {
-    if (!auth.user?.profile) {
-      return null;
-    }
-
+  // The IdP failed to authenticate the user. Offer the database login as a backup when it
+  // is enabled; otherwise show the error as before.
+  if (localFallback) {
     return (
-      (auth.user.profile.preferred_username as string) ||
-      auth.user.profile.email ||
-      auth.user.profile.sub ||
-      null
+      <OidcFallbackChooser
+        errorMessage={auth.error.message}
+        onIdpLogin={() => auth.signinRedirect()}
+        onLocalLogin={() => navigate(loginPath)}
+      />
     );
-  };
+  }
 
-  const getToken = (): string | null => {
-    return auth.user?.access_token || null;
-  };
-
-  const logout = (): void => {
-    auth.signoutRedirect();
-  };
-
-  const login = (): void => {
-    auth.signinRedirect();
-  };
-
-  const isDisabled = () => !getUser();
-
-  return (
-    <AuthContext.Provider
-      value={{
-        getUser,
-        getToken,
-        login,
-        logout,
-        isDisabled,
-        updateUser: (_user: string, _token: string) => {},
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <Bullseye>{words("error.authentication")(auth.error.message || "")}</Bullseye>;
 };
 
 interface Props {
@@ -109,7 +219,7 @@ export const OidcAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
 
   return (
     <OidcContextProvider {...oidcConfig}>
-      <OidcInnerProvider>{children}</OidcInnerProvider>
+      <OidcInnerProvider localFallback={!!config.localFallback}>{children}</OidcInnerProvider>
     </OidcContextProvider>
   );
 };

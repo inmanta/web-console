@@ -3,7 +3,7 @@ import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { UserShieldIcon } from "@patternfly/react-icons";
 import { Td, Tr } from "@patternfly/react-table";
 import { useRemoveUser, UserInfo } from "@/Data/Queries";
-import { words } from "@/UI";
+import { DependencyContext, words } from "@/UI";
 import { ConfirmUserActionForm } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -23,8 +23,9 @@ interface Props {
  */
 export const UserInfoRow: React.FC<Props> = ({ user }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
+  const { authHelper } = useContext(DependencyContext);
   const authConfig = globalThis && globalThis.auth;
-  const showRoles = authConfig?.provider === "policy-engine" && authConfig?.method === "database";
+  const showRoles = authConfig?.provider === "policy-engine" && authHelper.isDatabaseSession();
   const [isExpanded, setIsExpanded] = useState(false);
   const { notifyError } = useAppAlert();
   const { mutate } = useRemoveUser({
