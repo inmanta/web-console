@@ -1,23 +1,35 @@
 import React, { useState } from "react";
+import { Title } from "@patternfly/react-core";
+import { useQueryClient } from "@tanstack/react-query";
+import styled from "styled-components";
 import { ClientType, toggleValueInList } from "@/Core";
-import { useGenerateToken } from "@/Data/Queries";
+import { getTokensKey, useGenerateToken } from "@/Data/Queries";
+import { words } from "@/UI/words";
 import { TokenForm } from "./TokenForm";
+import { TokenTable } from "./TokenTable";
 
 /**
  * Token tab for the Settings page
  *
- * It handles the generation of tokens for the current user
+ * It handles the generation of tokens for the current environment and lists the
+ * registered (revocable) tokens so they can be revoked.
  *
  * @returns {React.FC} The Token tab
  */
 export const Tab: React.FC = () => {
+  const client = useQueryClient();
   const [clientTypes, setClientTypes] = useState<ClientType[]>([]);
+  const [isRevocable, setIsRevocable] = useState(false);
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const { mutate } = useGenerateToken({
     onError: (error) => setError(error.message),
-    onSuccess: (data) => setToken(data.data),
+    onSuccess: (data) => {
+      setToken(data.data);
+      // A revocable token was added to the registry: refresh the list.
+      client.invalidateQueries({ queryKey: getTokensKey.root() });
+    },
   });
 
   const isClientTypeSelected = (clientType: ClientType): boolean =>
@@ -39,20 +51,33 @@ export const Tab: React.FC = () => {
     setError(null);
     setToken(null);
     setIsBusy(true);
-    mutate({ client_types: clientTypes });
+    mutate({ client_types: clientTypes, idempotent: !isRevocable });
 
     setIsBusy(false);
   };
 
   return (
-    <TokenForm
-      onGenerate={onGenerate}
-      onErrorClose={() => setError(null)}
-      getClientTypeSelector={getClientTypeSelector}
-      isClientTypeSelected={isClientTypeSelected}
-      token={token}
-      error={error}
-      isBusy={isBusy}
-    />
+    <>
+      <TokenForm
+        onGenerate={onGenerate}
+        onErrorClose={() => setError(null)}
+        getClientTypeSelector={getClientTypeSelector}
+        isClientTypeSelected={isClientTypeSelected}
+        isRevocable={isRevocable}
+        onRevocableChange={setIsRevocable}
+        token={token}
+        error={error}
+        isBusy={isBusy}
+      />
+      <RegisteredTitle headingLevel="h2">
+        {words("settings.tabs.token.registered.title")}
+      </RegisteredTitle>
+      <TokenTable />
+    </>
   );
 };
+
+const RegisteredTitle = styled(Title)`
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+`;
