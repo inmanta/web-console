@@ -978,6 +978,8 @@ const dict = {
   "userManagement.name": "Name",
   "userManagement.changePassword": "Change Password",
   "userManagement.changePassword.placeholder": "New Password...",
+  "userManagement.changePassword.currentPassword": "Current Password",
+  "userManagement.changePassword.currentPassword.placeholder": "Current Password...",
   "userManagement.changePassword.success": "Password changed successfully",
   "userManagement.changePassword.message": (username: string) =>
     `Please provide a new password for user ${username}`,
