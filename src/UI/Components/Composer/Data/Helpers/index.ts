@@ -11,3 +11,4 @@ export * from "./linkUtils";
 export * from "./connectionValidationUtils";
 export * from "./relationsHelpers";
 export * from "./positionTracker";
+export * from "./findOwningInstanceShape";

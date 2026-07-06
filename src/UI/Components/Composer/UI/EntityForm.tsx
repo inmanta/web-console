@@ -1,9 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AlertVariant, FlexItem, Form } from "@patternfly/react-core";
 import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel } from "@/Core";
 import { set } from "@/Core/Language/collection";
 import { sanitizeAttributes } from "@/Data";
+import { TemplateContext } from "@/Data/Queries";
 import {
   createFormState,
   CreateModifierHandler,
@@ -13,6 +14,7 @@ import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
 import { words } from "@/UI/words";
 import { AppAlert } from "../../AppAlert";
 import { ComposerContext } from "../Data/Context";
+import { findOwningInstanceShape } from "../Data/Helpers";
 import { ServiceEntityShape } from "./JointJsShapes/ServiceEntityShape";
 import { updateAllMissingConnectionsHighlights } from "./JointJsShapes/createHalo";
 
@@ -35,12 +37,44 @@ interface Props {
  * @returns {React.FC<Props>} The EntityForm component.
  */
 export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
-  const { paper, setCanvasState } = useContext(ComposerContext);
+  const { paper, canvasState, setCanvasState } = useContext(ComposerContext);
   const [formState, setFormState] = useState<InstanceAttributeModel>({});
   const [fields, setFields] = useState<Field[] | null>(null);
   const [originalState, setOriginalState] = useState<InstanceAttributeModel>({});
   const [isDirty, setIsDirty] = useState(false);
   const [currentCellId, setCurrentCellId] = useState<string | null>(null);
+
+  // Identity used to resolve `${...}` variables in a suggestion's parameter name.
+  // An embedded entity's suggestions resolve against its owning instance -
+  // entity_type, identity, and id all belong to the service instance, not the
+  // embedded part - so we climb to that instance's shape; a top-level shape uses
+  // itself.
+  const suggestionContext: TemplateContext = useMemo(() => {
+    const source =
+      activeCell.entityType === "embedded"
+        ? findOwningInstanceShape(activeCell, canvasState)
+        : activeCell;
+
+    if (!source) {
+      return {};
+    }
+
+    const { serviceModel } = source;
+    const serviceIdentity =
+      "service_identity" in serviceModel ? serviceModel.service_identity : undefined;
+    // Live form values for the active cell; stored attributes for a parent shape.
+    const attributes = source === activeCell ? formState : source.instanceAttributes;
+    const identityValue = serviceIdentity ? attributes[serviceIdentity] : undefined;
+
+    return {
+      entity_type: serviceModel.name,
+      identifying_attribute:
+        identityValue === undefined || identityValue === null || identityValue === ""
+          ? undefined
+          : String(identityValue),
+      instance_id: source.isNew ? undefined : String(source.id),
+    };
+  }, [activeCell, formState, canvasState]);
 
   /**
    * function to update the state within the form.
@@ -205,6 +239,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
                 getUpdate={getUpdate}
                 path={null}
                 suggestions={field.suggestion}
+                suggestionContext={suggestionContext}
               />
             ))}
         </Form>

@@ -20,7 +20,7 @@ import {
 } from "@/Core";
 import { get } from "@/Core/Language/collection";
 import { toOptionalBoolean } from "@/Data";
-import { useSuggestedValues } from "@/Data/Queries";
+import { TemplateContext, useSuggestedValues } from "@/Data/Queries";
 import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { words } from "@/UI/words";
@@ -39,6 +39,7 @@ interface Props {
   path: string | null;
   isNew?: boolean;
   suggestions?: FormSuggestion | null;
+  suggestionContext?: TemplateContext;
 }
 
 /**
@@ -72,6 +73,7 @@ const makePath = (path: string | null, next: string): string =>
  *   @prop {string} path - The path of the field within the form.
  *   @prop {boolean} isNew - Flag indicating whether the field is newly added. Default is false.
  *   @prop {FormSuggestion | null} suggestions - The suggestions for the field. Default is null.
+ *   @prop {TemplateContext} suggestionContext - The form's values for `${...}` variables in a suggestion's parameter name.
  *
  * @returns {React.FC<Props>} The rendered FieldInput component.
  */
@@ -83,8 +85,12 @@ export const FieldInput: React.FC<Props> = ({
   path,
   isNew = false,
   suggestions,
+  suggestionContext,
 }) => {
-  const { data, isLoading, error } = useSuggestedValues(suggestions).useOneTime();
+  const { data, isLoading, error, modelError } = useSuggestedValues(
+    suggestions,
+    suggestionContext
+  ).useOneTime();
   // Already normalized to { label, value }[] by useSuggestedValues; just forward it.
   const suggestionsList: SuggestionValue[] | null = !isLoading && !error ? (data ?? null) : null;
 
@@ -176,6 +182,7 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           suggestions={suggestionsList}
+          errorMessage={modelError}
         />
       );
     case "Textarea":
@@ -199,6 +206,7 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           isTextarea
+          errorMessage={modelError}
         />
       );
     case "Text":
@@ -222,6 +230,7 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           suggestions={suggestionsList}
+          errorMessage={modelError}
         />
       );
     case "Dict":
@@ -281,6 +290,7 @@ export const FieldInput: React.FC<Props> = ({
           getUpdate={getUpdate}
           path={path}
           isNew={isNew}
+          suggestionContext={suggestionContext}
         />
       );
     case "DictList":
@@ -292,6 +302,7 @@ export const FieldInput: React.FC<Props> = ({
           getUpdate={getUpdate}
           path={path}
           isNew={isNew}
+          suggestionContext={suggestionContext}
         />
       );
     case "RelationList":
@@ -357,6 +368,7 @@ interface NestedProps {
   getUpdate: GetUpdate;
   path: string | null;
   isNew?: boolean;
+  suggestionContext?: TemplateContext;
 }
 
 /**
@@ -377,6 +389,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   getUpdate,
   path,
   isNew = false,
+  suggestionContext,
 }) => {
   const [showList, setShowList] = useState(
     !field.isOptional || get(formState, makePath(path, field.name)) != null
@@ -445,6 +458,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
             getUpdate={getUpdate}
             path={makePath(path, field.name)}
             suggestions={childField.suggestion}
+            suggestionContext={suggestionContext}
             isNew={isNew}
           />
         ))}
@@ -459,6 +473,7 @@ interface DictListProps {
   getUpdate: GetUpdate;
   path: string | null;
   isNew?: boolean;
+  suggestionContext?: TemplateContext;
 }
 
 /**
@@ -479,6 +494,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   getUpdate,
   path,
   isNew = false,
+  suggestionContext,
 }) => {
   const list = useMemo(
     () => get<Array<unknown>>(formState, makePath(path, field.name), []) ?? [],
@@ -618,6 +634,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               path={makePath(path, `${field.name}.${index}`)}
               isNew={isNew || addedItemsPaths.includes(`${makePath(path, field.name)}.${index}`)}
               suggestions={childField.suggestion}
+              suggestionContext={suggestionContext}
             />
           ))}
         </FormFieldGroupExpandable>
