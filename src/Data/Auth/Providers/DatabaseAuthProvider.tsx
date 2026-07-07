@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { PrimaryBaseUrlManager } from "@/UI/Routing";
-import { createCookie, getCookie, removeCookie } from "../../Common/CookieHelper";
 import { AuthContext } from "../AuthContext";
+import { clearLocalToken, getLocalToken, getLocalUsername, setLocalToken } from "./localToken";
 
 /**
  * DatabaseAuthProvider component provides authentication functionality using a database.
@@ -17,15 +17,10 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({ childr
   );
   const basePathname = baseUrlManager.getBasePathname();
 
-  const clearCookies = (): void => {
-    removeCookie("inmanta_user");
-    localStorage.removeItem("inmanta_user");
-  };
-
   const getUser = (): string | null => user;
 
   const logout = useCallback((): void => {
-    clearCookies();
+    clearLocalToken();
     navigate(`${basePathname}/login`);
   }, [navigate, basePathname]);
 
@@ -33,26 +28,25 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({ childr
     // The login function is called when we also get a 401 error.
     // This means that the user is not authenticated and
     // we need to clear the cookies to avoid lingering cookies that are invalid.
-    clearCookies();
+    clearLocalToken();
     navigate(`${basePathname}/login`);
   };
 
-  const getToken = (): string | null => getCookie("inmanta_user");
+  const getToken = (): string | null => getLocalToken();
 
   const updateUser = (username: string, token: string) => {
     setUser(username);
-    localStorage.setItem("inmanta_user", username);
-
-    const hoursToExpire = 12;
-    createCookie("inmanta_user", token, hoursToExpire);
+    setLocalToken(username, token);
   };
 
   const isDisabled = () => !getToken();
 
+  const isDatabaseSession = () => true;
+
   useEffect(() => {
     // If user is not set and token is present, set the user from the local storage or logs out. case where there is an user but not token is handled automatically as lacks of token prompt use to login again
     if (!user && getToken()) {
-      const username = localStorage.getItem("inmanta_user");
+      const username = getLocalUsername();
 
       if (username) {
         setUser(username);
@@ -63,7 +57,9 @@ export const DatabaseAuthProvider: React.FC<React.PropsWithChildren> = ({ childr
   }, [user, logout]);
 
   return (
-    <AuthContext.Provider value={{ getUser, login, logout, updateUser, getToken, isDisabled }}>
+    <AuthContext.Provider
+      value={{ getUser, login, logout, updateUser, getToken, isDisabled, isDatabaseSession }}
+    >
       {children}
     </AuthContext.Provider>
   );
