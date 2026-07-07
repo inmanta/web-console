@@ -1,25 +1,26 @@
 import React from "react";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { Parameter } from "@/Core";
 import { ClassifiedAttribute } from "@/Data";
 import {
   AttributeExpandTd,
   AttributeExpansionRow,
   AttributeValueCell,
-  DateWithTooltip,
   useAttributeExpansion,
 } from "@/UI/Components";
-import { words } from "@/UI/words";
+import { CustomDatePresenter } from "@/UI/Utils";
+import { Fact } from "@S/Facts/Core/Domain";
+
+const datePresenter = new CustomDatePresenter();
 
 interface Props {
-  row: Parameter;
+  row: Pick<Fact, "id" | "name" | "updated" | "value">;
   attribute: ClassifiedAttribute;
   rowIndex: number;
   numberOfColumns: number;
   showExpandColumn: boolean;
 }
 
-export const ParametersTableRow: React.FC<Props> = ({
+export const FactsRow: React.FC<Props> = ({
   row,
   attribute,
   rowIndex,
@@ -30,7 +31,7 @@ export const ParametersTableRow: React.FC<Props> = ({
 
   return (
     <Tbody isExpanded={isExpandable ? isExpanded : undefined}>
-      <Tr aria-label="Parameters Table Row">
+      <Tr aria-label="Facts table row">
         {showExpandColumn && (
           <AttributeExpandTd
             isExpandable={isExpandable}
@@ -39,16 +40,9 @@ export const ParametersTableRow: React.FC<Props> = ({
             onToggle={toggleExpanded}
           />
         )}
-        <Td dataLabel={words("parameters.columns.name")} width={20}>
-          {row.name}
-        </Td>
-        <Td dataLabel={words("parameters.columns.updated")} width={10}>
-          {row.updated ? <DateWithTooltip timestamp={row.updated} /> : ""}
-        </Td>
-        <Td dataLabel={words("parameters.columns.source")} width={10}>
-          {row.source}
-        </Td>
-        <Td modifier="breakWord" dataLabel={words("parameters.columns.value")}>
+        <Td>{row.name}</Td>
+        <Td>{row.updated && datePresenter.getFull(row.updated)}</Td>
+        <Td modifier="breakWord">
           <AttributeValueCell
             value={row.value}
             attribute={attribute}

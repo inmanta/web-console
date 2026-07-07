@@ -1,8 +1,15 @@
-import React, { memo, useState, useContext } from "react";
-import { Button, Truncate } from "@patternfly/react-core";
-import { ExpandableRowContent, Tbody, Tr, Td } from "@patternfly/react-table";
+import React, { memo, useContext } from "react";
+import { Button } from "@patternfly/react-core";
+import { Tbody, Tr, Td } from "@patternfly/react-table";
 import { ClassifiedAttribute } from "@/Data";
-import { AttributeValue, DateWithTooltip, Link, isEditorKind } from "@/UI/Components";
+import {
+  AttributeExpandTd,
+  AttributeExpansionRow,
+  AttributeValueCell,
+  DateWithTooltip,
+  Link,
+  useAttributeExpansion,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";
@@ -18,23 +25,17 @@ interface Props {
 export const FactsRow: React.FC<Props> = memo(
   ({ row, attribute, rowIndex, numberOfColumns, showExpandColumn }) => {
     const { routeManager } = useContext(DependencyContext);
-    const [isExpanded, setIsExpanded] = useState(false);
-    const isExpandable = isEditorKind(attribute.kind);
+    const { isExpandable, isExpanded, toggleExpanded } = useAttributeExpansion(attribute);
 
     return (
       <Tbody isExpanded={isExpandable ? isExpanded : undefined}>
         <Tr aria-label="FactsRow">
           {showExpandColumn && (
-            <Td
-              expand={
-                isExpandable
-                  ? {
-                      rowIndex,
-                      isExpanded,
-                      onToggle: () => setIsExpanded((prev) => !prev),
-                    }
-                  : undefined
-              }
+            <AttributeExpandTd
+              isExpandable={isExpandable}
+              rowIndex={rowIndex}
+              isExpanded={isExpanded}
+              onToggle={toggleExpanded}
             />
           )}
           <Td dataLabel={words("facts.column.name")}>{row.name}</Td>
@@ -42,22 +43,12 @@ export const FactsRow: React.FC<Props> = memo(
             {row.updated && <DateWithTooltip timestamp={row.updated} />}
           </Td>
           <Td modifier="breakWord" dataLabel={words("facts.column.value")}>
-            {isExpandable ? (
-              <Button
-                variant="link"
-                isInline
-                onClick={() => setIsExpanded((prev) => !prev)}
-                aria-expanded={isExpanded}
-              >
-                <Truncate
-                  content={row.value}
-                  maxCharsDisplayed={30}
-                  tooltipProps={{ isVisible: false, trigger: "manual" }}
-                />
-              </Button>
-            ) : (
-              <AttributeValue attribute={attribute} />
-            )}
+            <AttributeValueCell
+              value={row.value}
+              attribute={attribute}
+              isExpanded={isExpanded}
+              onToggle={toggleExpanded}
+            />
           </Td>
           <Td modifier="breakWord" dataLabel={words("facts.column.resourceId")}>
             <Link
@@ -72,13 +63,11 @@ export const FactsRow: React.FC<Props> = memo(
           </Td>
         </Tr>
         {isExpandable && (
-          <Tr isExpanded={isExpanded}>
-            <Td colSpan={numberOfColumns}>
-              <ExpandableRowContent>
-                <AttributeValue attribute={attribute} />
-              </ExpandableRowContent>
-            </Td>
-          </Tr>
+          <AttributeExpansionRow
+            isExpanded={isExpanded}
+            colSpan={numberOfColumns}
+            attribute={attribute}
+          />
         )}
       </Tbody>
     );

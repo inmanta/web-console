@@ -262,4 +262,32 @@ describe("ParametersPage", () => {
 
     expect(initialRows2).toHaveLength(10);
   });
+
+  test("When a parameter has a long value Then it renders an expandable preview that reveals the code editor", async () => {
+    server.use(http.get("/api/v2/parameters", () => HttpResponse.json(Parameters.response)));
+
+    const { component } = setup();
+
+    render(component);
+
+    const longValue =
+      Parameters.response.data.find((parameter) => parameter.name === "different_param")?.value ??
+      "";
+
+    // A long value is now classified as expandable: the cell renders a preview
+    // button (rather than the previous plain truncated cell) that reveals the
+    // value in the mocked code editor (test-setup.ts). The button label is a
+    // middle-truncated form of the value, so match on its distinctive tail.
+    const [preview] = await screen.findAllByRole("button", { name: /long value$/ });
+
+    await userEvent.click(preview);
+
+    // The editor renders the value verbatim (whitespace preserved), so the full
+    // fixture value appears in its content.
+    const editor = screen
+      .getAllByTestId("code-editor-content")
+      .find((element) => element.textContent?.includes(longValue));
+
+    expect(editor).toBeVisible();
+  });
 });

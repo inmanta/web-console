@@ -1,6 +1,6 @@
-import React from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
@@ -9,6 +9,14 @@ import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Mock } from "@S/Facts/Test";
 import { FactsTab } from "./FactsTab";
 import { sortFactRows } from "./FactsTable";
+
+const valueOf = (name: string) => Mock.list.find((f) => f.name === name)?.value ?? "";
+
+// The code editor is mocked globally in test-setup.ts; it renders its content
+// into a <pre data-testid="code-editor-content">. Scope to it so we match the
+// formatted value in the editor rather than the raw value in the preview button.
+const editorShowing = (snippet: string) =>
+  screen.getAllByTestId("code-editor-content").find((el) => el.textContent?.includes(snippet));
 
 function setup() {
   const component = (
@@ -63,6 +71,30 @@ describe("FactsTab", () => {
     expect(await screen.findByRole("region", { name: "Facts-Loading" })).toBeInTheDocument();
 
     expect(await screen.findByRole("grid", { name: "Facts-Success" })).toBeInTheDocument();
+  });
+
+  test("Given the FactsTab When a fact has a JSON value Then it expands into the formatted editor", async () => {
+    server.use(http.get("/api/v2/resource/abc/facts", () => HttpResponse.json(Mock.response)));
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: valueOf("jsonValueFact") }));
+
+    // The editor shows the pretty-printed JSON (a space after the colon that the
+    // raw value does not have) - distinctive of the formatted output.
+    expect(editorShowing('"status": "deployed"')).toBeVisible();
+  });
+
+  test("Given the FactsTab When a fact has an XML value Then it expands into the formatted editor", async () => {
+    server.use(http.get("/api/v2/resource/abc/facts", () => HttpResponse.json(Mock.response)));
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(await screen.findByRole("button", { name: valueOf("xmlValueFact") }));
+
+    expect(editorShowing("<host>localhost</host>")).toBeVisible();
   });
 
   test("Given sortFactRows When sorting by different columns Then the result is correct", async () => {
