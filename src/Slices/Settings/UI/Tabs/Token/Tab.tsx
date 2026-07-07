@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Title } from "@patternfly/react-core";
 import { useQueryClient } from "@tanstack/react-query";
-import styled from "styled-components";
 import { ClientType, toggleValueInList } from "@/Core";
 import { getTokensKey, useGenerateToken } from "@/Data/Queries";
 import { words } from "@/UI/words";
@@ -69,15 +68,10 @@ export const Tab: React.FC = () => {
         error={error}
         isBusy={isBusy}
       />
-      <RegisteredTitle headingLevel="h2">
+      <Title className="lined_section" headingLevel="h2" size="md">
         {words("settings.tabs.token.registered.title")}
-      </RegisteredTitle>
+      </Title>
       <TokenTable />
     </>
   );
 };
-
-const RegisteredTitle = styled(Title)`
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-`;
