@@ -18,7 +18,7 @@ import {
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
 import { set as setAtPath } from "@/Core/Language/collection";
-import { TemplateContext } from "@/Data/Queries";
+import { SuggestionContext } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
@@ -117,7 +117,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   // The form's identity, used to resolve `${...}` variables in a suggestion's
   // parameter name. The identifying attribute is read live from the form state;
   // instance_id is absent on a create form ("no value").
-  const suggestionContext: TemplateContext = useMemo(() => {
+  const suggestionContext: SuggestionContext = useMemo(() => {
     const identityValue = serviceIdentity ? formState[serviceIdentity] : undefined;
 
     return {

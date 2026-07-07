@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel } from "@/Core";
 import { set } from "@/Core/Language/collection";
 import { sanitizeAttributes } from "@/Data";
-import { TemplateContext } from "@/Data/Queries";
+import { SuggestionContext } from "@/Data/Queries";
 import {
   createFormState,
   CreateModifierHandler,
@@ -14,7 +14,6 @@ import { FieldInput } from "@/UI/Components/ServiceInstanceForm/Components";
 import { words } from "@/UI/words";
 import { AppAlert } from "../../AppAlert";
 import { ComposerContext } from "../Data/Context";
-import { findOwningInstanceShape } from "../Data/Helpers";
 import { ServiceEntityShape } from "./JointJsShapes/ServiceEntityShape";
 import { updateAllMissingConnectionsHighlights } from "./JointJsShapes/createHalo";
 
@@ -49,11 +48,8 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
   // entity_type, identity, and id all belong to the service instance, not the
   // embedded part - so we climb to that instance's shape; a top-level shape uses
   // itself.
-  const suggestionContext: TemplateContext = useMemo(() => {
-    const source =
-      activeCell.entityType === "embedded"
-        ? findOwningInstanceShape(activeCell, canvasState)
-        : activeCell;
+  const suggestionContext: SuggestionContext = useMemo(() => {
+    const source = activeCell.getRootInstance(canvasState);
 
     if (!source) {
       return {};

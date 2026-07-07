@@ -32,7 +32,7 @@ export interface TemplateVariable {
  * The values available for substitution, keyed by namespace.
  * An absent or empty entry means "no value (yet)".
  */
-export type TemplateContext = Partial<Record<TemplateNamespace, string>>;
+export type SuggestionContext = Partial<Record<TemplateNamespace, string>>;
 
 /** Extracts the namespaces between brackets */
 const templateVariablePattern = /\$\{([^}]*)\}/g;
@@ -92,7 +92,7 @@ export const getUnknownNamespaces = (template: string): string[] =>
  * @param context - The values to substitute, keyed by namespace.
  * @returns The resolved string, e.g. `"topology_files_Connection"`.
  */
-export const substituteVariables = (template: string, context: TemplateContext): string =>
+export const substituteVariables = (template: string, context: SuggestionContext): string =>
   template.replace(templateVariablePattern, (_match, namespace: string) =>
     encodeURIComponent(context[namespace] ?? "")
   );

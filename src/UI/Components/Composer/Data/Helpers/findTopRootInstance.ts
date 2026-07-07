@@ -1,11 +1,15 @@
-interface ShapeNode {
-  id: string | number;
-  entityType: "core" | "embedded" | "relation";
-  parentIds: Set<string>;
-}
+import type { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntityShape";
 
 /**
- * Walks up an embedded shape's parent chain to its owning instance shape - the
+ * The subset of a shape this walk needs: its id, its type, and the ids of the
+ * shapes it hangs off. Typed as a `Pick` of the real shape so we reuse that
+ * contract instead of inventing a parallel interface, while staying generic
+ * enough to unit-test with plain objects.
+ */
+type RootWalkable = Pick<ServiceEntityShape, "id" | "entityType" | "parentIds">;
+
+/**
+ * Walks up an embedded shape's parent chain to its top root instance - the
  * first non-embedded ancestor (core or relation).
  *
  * `parentIds` is not reliably a single top-level id: the backend-load path sets
@@ -16,9 +20,9 @@ interface ShapeNode {
  *
  * @param shape - The starting shape (a non-embedded shape is returned as-is).
  * @param cells - The canvas shapes, keyed by id.
- * @returns The owning instance shape, or undefined if none can be resolved.
+ * @returns The top root instance shape, or undefined if none can be resolved.
  */
-export const findOwningInstanceShape = <T extends ShapeNode>(
+export const findTopRootInstance = <T extends RootWalkable>(
   shape: T,
   cells: Map<string, T>
 ): T | undefined => {

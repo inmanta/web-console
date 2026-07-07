@@ -8,7 +8,7 @@ import { words } from "@/UI/words";
 import { normalizeSuggestions } from "./helpers";
 import {
   TEMPLATE_NAMESPACES,
-  TemplateContext,
+  SuggestionContext,
   extractVariables,
   getUnknownNamespaces,
   isKnownNamespace,
@@ -24,7 +24,7 @@ interface ResponseData {
  * literal values are normalized inline, parameters are fetched and normalized, and
  * null/undefined yields null data.
  *
- * A `parameter_name` may contain `${...}` variables resolved from `templateContext`
+ * A `parameter_name` may contain `${...}` variables resolved from `suggestionContext`
  * before the fetch; the resolved name is the query key, so distinct contexts cache
  * separately. A required variable without a value (e.g. `${instance_id}` on a create
  * form) disables the query instead of fetching a malformed name. An unknown variable
@@ -32,12 +32,12 @@ interface ResponseData {
  * genuine fetch failure that stays silent.
  *
  * @param suggestions - The field's suggestions.
- * @param templateContext - Values for `${...}` variables, keyed by namespace.
+ * @param suggestionContext - Values for `${...}` variables, keyed by namespace.
  * @returns `{ useOneTime }` returning the query result plus `modelError`.
  */
 export const useSuggestedValues = (
   suggestions: FormSuggestion | null | undefined,
-  templateContext: TemplateContext = {}
+  suggestionContext: SuggestionContext = {}
 ) => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
@@ -82,9 +82,9 @@ export const useSuggestedValues = (
       const isResolvable =
         !modelError &&
         variables.every(
-          ({ namespace }) => isKnownNamespace(namespace) && templateContext[namespace]
+          ({ namespace }) => isKnownNamespace(namespace) && suggestionContext[namespace]
         );
-      const resolvedName = isResolvable ? substituteVariables(template, templateContext) : "";
+      const resolvedName = isResolvable ? substituteVariables(template, suggestionContext) : "";
       // Debounce values typed into a field (`${identifying_attribute}`) so they
       // re-query on settle; the seeded first value keeps static names instant.
       const debouncedName = useDebounce(resolvedName, 500);

@@ -20,7 +20,7 @@ import {
 } from "@/Core";
 import { get } from "@/Core/Language/collection";
 import { toOptionalBoolean } from "@/Data";
-import { TemplateContext, useSuggestedValues } from "@/Data/Queries";
+import { SuggestionContext, useSuggestedValues } from "@/Data/Queries";
 import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { words } from "@/UI/words";
@@ -39,7 +39,7 @@ interface Props {
   path: string | null;
   isNew?: boolean;
   suggestions?: FormSuggestion | null;
-  suggestionContext?: TemplateContext;
+  suggestionContext?: SuggestionContext;
 }
 
 /**
@@ -73,7 +73,7 @@ const makePath = (path: string | null, next: string): string =>
  *   @prop {string} path - The path of the field within the form.
  *   @prop {boolean} isNew - Flag indicating whether the field is newly added. Default is false.
  *   @prop {FormSuggestion | null} suggestions - The suggestions for the field. Default is null.
- *   @prop {TemplateContext} suggestionContext - The form's values for `${...}` variables in a suggestion's parameter name.
+ *   @prop {SuggestionContext} suggestionContext - The form's values for `${...}` variables in a suggestion's parameter name.
  *
  * @returns {React.FC<Props>} The rendered FieldInput component.
  */
@@ -368,7 +368,7 @@ interface NestedProps {
   getUpdate: GetUpdate;
   path: string | null;
   isNew?: boolean;
-  suggestionContext?: TemplateContext;
+  suggestionContext?: SuggestionContext;
 }
 
 /**
@@ -473,7 +473,7 @@ interface DictListProps {
   getUpdate: GetUpdate;
   path: string | null;
   isNew?: boolean;
-  suggestionContext?: TemplateContext;
+  suggestionContext?: SuggestionContext;
 }
 
 /**
