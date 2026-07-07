@@ -1,0 +1,5 @@
+description: Added a database login fallback for OIDC and JWT authentication. When enabled and the identity provider is unavailable, an admin can sign in with a local database account and manage users and roles as with database authentication.
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

@@ -46,6 +46,11 @@ const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   };
   const isDisabled = () => !getUser();
 
+  // The legacy Keycloak provider (implicit flow, login-required) does not support the
+  // database local login fallback. Deployments that need it should migrate to the
+  // generic OIDC provider (method "oidc-generic").
+  const isDatabaseSession = () => false;
+
   useEffect(() => {
     if (keycloak && !keycloak.profile) {
       keycloak.loadUserProfile();
@@ -61,6 +66,7 @@ const KeycloakProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         login,
         logout,
         isDisabled,
+        isDatabaseSession,
         updateUser: (_user: string, _token: string) => {},
       }}
     >

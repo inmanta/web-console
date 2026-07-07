@@ -942,6 +942,10 @@ const dict = {
   "login.title": "Log in to your account",
   "login.subtitle": "Enter your credentials",
   "login.login": "Log in",
+  "login.fallback.description":
+    "The identity provider could not sign you in. You can retry, or use a local account.",
+  "login.fallback.idp": "Sign in with your identity provider",
+  "login.fallback.local": "Sign in with a local account",
 
   /**
    * User Management

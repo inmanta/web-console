@@ -39,9 +39,9 @@ export const EnvSelector: React.FC<Props> = ({
     setIsOpen(!isOpen);
   };
 
-  // Only show the user management link if the auth method is database. Other auth methods have external user and role management.
-  const authConfig = globalThis && globalThis.auth;
-  const showUserManagement = !authHelper.isDisabled() && authConfig?.method === "database";
+  // Only show the user management link for a database session (database auth, or the
+  // OIDC/JWT local login fallback). Other auth methods have external user and role management.
+  const showUserManagement = !authHelper.isDisabled() && authHelper.isDatabaseSession();
   const showLogout = !authHelper.isDisabled();
 
   return (

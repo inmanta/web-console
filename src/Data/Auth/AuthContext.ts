@@ -38,6 +38,15 @@ export interface AuthContextInterface {
    * @returns the boolean.
    */
   isDisabled: () => boolean;
+
+  /**
+   * Whether the active session authenticates against the built-in database, either
+   * because database auth is configured or because the user logged in via the local
+   * login fallback while an external provider (OIDC/JWT) is configured. When true,
+   * database user and role management is available.
+   * @returns the boolean.
+   */
+  isDatabaseSession: () => boolean;
 }
 
 /**
@@ -50,6 +59,7 @@ export const defaultAuthContext: AuthContextInterface = {
   updateUser: (_user: string, _token: string) => {},
   getToken: () => null,
   isDisabled: () => true,
+  isDatabaseSession: () => false,
 };
 
 /**
