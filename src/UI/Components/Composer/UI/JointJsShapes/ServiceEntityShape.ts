@@ -401,9 +401,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
    * @param canvasState - The full canvas state map, keyed by shape id.
    * @returns The top root instance shape, or undefined if it can't be resolved.
    */
-  getRootInstance(
-    canvasState: Map<string, ServiceEntityShape>
-  ): ServiceEntityShape | undefined {
+  getRootInstance(canvasState: Map<string, ServiceEntityShape>): ServiceEntityShape | undefined {
     return findTopRootInstance(this, canvasState);
   }
 

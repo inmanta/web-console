@@ -84,7 +84,9 @@ export const useSuggestedValues = (
         variables.every(
           (namespace) => isKnownNamespace(namespace) && suggestionVariables[namespace]
         );
-      const resolvedName = isResolvable ? substituteVariables(parameterName, suggestionVariables) : "";
+      const resolvedName = isResolvable
+        ? substituteVariables(parameterName, suggestionVariables)
+        : "";
       // Debounce values typed into a field (`${identifying_attribute}`) so they
       // re-query on settle; the seeded first value keeps static names instant.
       const debouncedName = useDebounce(resolvedName, 500);
