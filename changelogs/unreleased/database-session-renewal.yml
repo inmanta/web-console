@@ -1,0 +1,5 @@
+description: Automatically renew the database login session before it expires, so active users are no longer logged out mid-session when the session token reaches its (default one hour) lifetime.
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
