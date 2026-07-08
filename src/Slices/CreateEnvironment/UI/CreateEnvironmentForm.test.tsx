@@ -9,6 +9,7 @@ import { Environment, MockedDependencyProvider, Project } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as routing from "@/UI/Routing/Utils";
+import { words } from "@/UI/words";
 import { Page } from "./Page";
 
 const axe = configureAxe({
@@ -63,6 +64,29 @@ describe("CreateEnvironmentForm", () => {
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("Given CreateEnvironmentForm Then the repository and branch fields expose an example tooltip", async () => {
+    server.use(
+      http.get("/api/v2/project", () => {
+        return HttpResponse.json({ data: Project.filterable });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    expect(
+      await screen.findByRole("button", {
+        name: `More info for ${words("createEnv.repository")} field`,
+      })
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", {
+        name: `More info for ${words("createEnv.branch")} field`,
+      })
+    ).toBeVisible();
   });
 
   test("Given CreateEnvironmentForm When no projects are known, THEN cannot add empty project name", async () => {
