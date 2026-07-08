@@ -1,0 +1,3 @@
+description: Add a token registry view to the Settings Tokens tab. Tokens can now be generated as revocable (registered) tokens, and registered tokens are listed with their creator, client types, issue and last-used times, and can be individually revoked.
+change-type: minor
+destination-branches: [master, iso9]
