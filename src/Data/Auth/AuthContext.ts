@@ -24,8 +24,10 @@ export interface AuthContextInterface {
    * Function to update the current user and their token.
    * @param user - The new user.
    * @param token - The new token.
+   * @param expiresIn - Lifetime of the token in seconds, or null when it does not expire. Used to renew
+   *                    the session before it expires.
    */
-  updateUser: (user: string, token: string) => void;
+  updateUser: (user: string, token: string, expiresIn?: number | null) => void;
 
   /**
    * Function to get the current user's token.
@@ -56,7 +58,7 @@ export const defaultAuthContext: AuthContextInterface = {
   getUser: () => null,
   login: () => {},
   logout: () => {},
-  updateUser: (_user: string, _token: string) => {},
+  updateUser: (_user: string, _token: string, _expiresIn?: number | null) => {},
   getToken: () => null,
   isDisabled: () => true,
   isDatabaseSession: () => false,
