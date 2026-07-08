@@ -14,6 +14,7 @@ import {
   TextField,
   Textarea,
 } from "@/Core";
+import { SUGGESTION_NAMESPACES } from "@/Data/Queries";
 import * as Test from "@/Test";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -196,6 +197,81 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   const suggestions = screen.queryAllByRole("menuitem");
 
   expect(suggestions).toHaveLength(0);
+});
+
+test("GIVEN ServiceInstanceForm WHEN a parameter_name contains ${entity_type} THEN the parameter resolved for this form's entity is fetched", async () => {
+  const values = ["value1", "value2", "value3"];
+
+  // Only the name resolved from the form's entity type serves values; fetching
+  // the raw, unresolved template would 404 and yield no suggestions.
+  server.use(
+    http.get("/api/v1/parameter/param_name_service_entity", () => {
+      return HttpResponse.json({
+        parameter: {
+          metadata: { values },
+        },
+      });
+    })
+  );
+
+  const { component } = setup([Test.Field.textSuggestionsTemplated]);
+
+  render(component);
+
+  const textBox = screen.getByRole("textbox", {
+    name: `TextInput-${Test.Field.textSuggestionsTemplated.name}`,
+  });
+
+  // simulate click on the input to show the suggestions
+  await userEvent.click(textBox);
+
+  const suggestions = await screen.findAllByRole("menuitem");
+
+  expect(suggestions).toHaveLength(values.length);
+});
+
+test("GIVEN ServiceInstanceForm WHEN a parameter_name contains an unknown ${...} variable THEN a model error is shown and no suggestions appear", async () => {
+  const { component } = setup([Test.Field.textSuggestionsUnknownVariable]);
+
+  render(component);
+
+  expect(
+    screen.getByText(
+      words("inventory.form.suggestions.unknownVariable")(
+        "entity_typo",
+        SUGGESTION_NAMESPACES.join(", ")
+      )
+    )
+  ).toBeVisible();
+
+  const textBox = screen.getByRole("textbox", {
+    name: `TextInput-${Test.Field.textSuggestionsUnknownVariable.name}`,
+  });
+
+  // simulate click on the input to show the suggestions
+  await userEvent.click(textBox);
+
+  expect(screen.queryAllByRole("menuitem")).toHaveLength(0);
+});
+
+test("GIVEN ServiceInstanceForm WHEN a parameter_name depends on ${instance_id} and there is none (create) THEN no suggestions appear", async () => {
+  const { component } = setup([
+    {
+      ...Test.Field.textSuggestionsTemplated,
+      suggestion: { type: "parameters", parameter_name: "param_name_${instance_id}" },
+    },
+  ]);
+
+  render(component);
+
+  const textBox = screen.getByRole("textbox", {
+    name: `TextInput-${Test.Field.textSuggestionsTemplated.name}`,
+  });
+
+  // simulate click on the input to show the suggestions
+  await userEvent.click(textBox);
+
+  expect(screen.queryAllByRole("menuitem")).toHaveLength(0);
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field", async () => {

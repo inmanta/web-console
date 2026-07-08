@@ -1,0 +1,6 @@
+description: Service instance form suggestions can now use ${entity_type}, ${identifying_attribute} and ${instance_id} variables in the suggested values parameter name, resolved from the current form's identity.
+issue-nr: 7009
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

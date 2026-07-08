@@ -56,6 +56,30 @@ export const textSuggestions2: TextField = {
   type: "string?",
 };
 
+export const textSuggestionsTemplated: TextField = {
+  kind: "Text",
+  name: "text_field",
+  description: "description",
+  isOptional: true,
+  isDisabled: false,
+  defaultValue: "",
+  inputType: TextInputTypes.text,
+  suggestion: { type: "parameters", parameter_name: "param_name_${entity_type}" },
+  type: "string?",
+};
+
+export const textSuggestionsUnknownVariable: TextField = {
+  kind: "Text",
+  name: "text_field",
+  description: "description",
+  isOptional: true,
+  isDisabled: false,
+  defaultValue: "",
+  inputType: TextInputTypes.text,
+  suggestion: { type: "parameters", parameter_name: "param_name_${entity_typo}" },
+  type: "string?",
+};
+
 export const textDisabled: TextField = {
   kind: "Text",
   name: "text_field_disabled",
