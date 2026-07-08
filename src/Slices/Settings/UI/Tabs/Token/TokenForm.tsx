@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Button,
+  Checkbox,
   Flex,
   FlexItem,
   InputGroup,
@@ -19,6 +20,8 @@ interface Props {
   onErrorClose(): void;
   getClientTypeSelector(clientType: ClientType): (selected: boolean) => void;
   isClientTypeSelected(clientType: ClientType): boolean;
+  isRevocable: boolean;
+  onRevocableChange(value: boolean): void;
   token: string | null;
   error: string | null;
   isBusy: boolean;
@@ -28,6 +31,8 @@ export const TokenForm: React.FC<Props> = ({
   onGenerate,
   getClientTypeSelector,
   isClientTypeSelected,
+  isRevocable,
+  onRevocableChange,
   token,
   error,
   onErrorClose,
@@ -63,6 +68,16 @@ export const TokenForm: React.FC<Props> = ({
             isDisabled={isBusy}
           />
         </ToggleGroup>
+      </FlexItem>
+      <FlexItem>
+        <Checkbox
+          id="token-revocable"
+          label={words("settings.tabs.token.revocable")}
+          aria-label="RevocableOption"
+          isChecked={isRevocable}
+          isDisabled={isBusy}
+          onChange={(_event, checked) => onRevocableChange(checked)}
+        />
       </FlexItem>
       <FlexItem>
         <Button variant="primary" onClick={onGenerate} isDisabled={isBusy}>

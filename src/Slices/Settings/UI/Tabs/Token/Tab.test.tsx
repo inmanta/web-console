@@ -25,6 +25,10 @@ describe("Token Tab", () => {
   const server = setupServer();
 
   beforeAll(() => server.listen());
+  // The tab also renders the registered-token list; give it a default (empty) response.
+  beforeEach(() =>
+    server.use(http.get("/api/v2/environment_auth", () => HttpResponse.json({ data: [] })))
+  );
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
@@ -84,6 +88,49 @@ describe("Token Tab", () => {
     await waitFor(() => {
       expect(screen.queryByLabelText("ToastError")).toBeNull();
     });
+  });
+
+  test("GIVEN the revocable checkbox is checked WHEN generate is clicked THEN idempotent is false", async () => {
+    let requestBody: Record<string, unknown> | null = null;
+    server.use(
+      http.post("/api/v2/environment_auth", async ({ request }) => {
+        requestBody = (await request.json()) as Record<string, unknown>;
+
+        return HttpResponse.json({ data: "tokenstring123" });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(screen.getByRole("checkbox", { name: "RevocableOption" }));
+    await userEvent.click(
+      screen.getByRole("button", { name: words("settings.tabs.token.generate") })
+    );
+
+    await waitFor(() => expect(requestBody).toEqual({ client_types: [], idempotent: false }));
+  });
+
+  test("GIVEN the revocable checkbox is unchecked WHEN generate is clicked THEN idempotent is true", async () => {
+    let requestBody: Record<string, unknown> | null = null;
+    server.use(
+      http.post("/api/v2/environment_auth", async ({ request }) => {
+        requestBody = (await request.json()) as Record<string, unknown>;
+
+        return HttpResponse.json({ data: "tokenstring123" });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(
+      screen.getByRole("button", { name: words("settings.tabs.token.generate") })
+    );
+
+    await waitFor(() => expect(requestBody).toEqual({ client_types: [], idempotent: true }));
   });
 
   test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
