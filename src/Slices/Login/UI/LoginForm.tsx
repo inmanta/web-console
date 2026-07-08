@@ -71,7 +71,7 @@ export const LoginPageComponent: React.FC<Props> = ({ submitButtonText }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      authHelper.updateUser(data.data.user.username, data.data.token);
+      authHelper.updateUser(data.data.user.username, data.data.token, data.data.expires_in);
       navigate(basePathname);
     }
   }, [isSuccess, navigate, data, authHelper, basePathname]);
