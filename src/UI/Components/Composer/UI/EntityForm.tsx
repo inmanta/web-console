@@ -43,39 +43,12 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
   const [isDirty, setIsDirty] = useState(false);
   const [currentCellId, setCurrentCellId] = useState<string | null>(null);
 
-  // Values that resolve `${...}` variables in a suggestion's parameter name.
-  // An embedded entity's suggestions resolve against its owning instance -
-  // entity_type, the identifying attribute, and id all belong to the service
-  // instance, not the embedded part - so we climb to that instance's shape; a
-  // top-level shape uses itself.
-  const suggestionVariables: SuggestionVariables = useMemo(() => {
-    const source = activeCell.getRootInstance(canvasState);
-
-    if (!source) {
-      return {};
-    }
-
-    const { serviceModel } = source;
-    // The name of the attribute that identifies the instance (the model's `service_identity`).
-    const identifyingAttributeName =
-      "service_identity" in serviceModel ? serviceModel.service_identity : undefined;
-    // Live form values for the active cell; stored attributes for a parent shape.
-    const attributes = source === activeCell ? formState : source.instanceAttributes;
-    const identifyingAttributeValue = identifyingAttributeName
-      ? attributes[identifyingAttributeName]
-      : undefined;
-
-    return {
-      entity_type: serviceModel.name,
-      identifying_attribute:
-        identifyingAttributeValue === undefined ||
-        identifyingAttributeValue === null ||
-        identifyingAttributeValue === ""
-          ? undefined
-          : String(identifyingAttributeValue),
-      instance_id: source.isNew ? undefined : String(source.id),
-    };
-  }, [activeCell, formState, canvasState]);
+  // Auto-save replaces the canvasState map on every edit, so canvasState alone
+  // picks up the live identifying-attribute value - no formState dependency needed.
+  const suggestionVariables: SuggestionVariables = useMemo(
+    () => activeCell.getSuggestionVariables(canvasState),
+    [activeCell, canvasState]
+  );
 
   /**
    * function to update the state within the form.
