@@ -12,7 +12,7 @@ import {
 } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { useChangeUserPassword } from "@/Data/Queries";
-import { words } from "@/UI";
+import { DependencyContext, words } from "@/UI";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
@@ -29,7 +29,11 @@ interface Props {
  */
 export const ChangePasswordForm: React.FC<Props> = ({ user }) => {
   const { closeModal } = useContext(ModalContext);
+  const { authHelper } = useContext(DependencyContext);
+  // Changing your own password requires the current one; an administrator changing another user's does not.
+  const isSelf = authHelper.getUser() === user;
   const [password, setPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   const { notifySuccess } = useAppAlert();
   const { mutate, isPending, isError, error } = useChangeUserPassword(user, {
     onSuccess: () => {
@@ -53,7 +57,7 @@ export const ChangePasswordForm: React.FC<Props> = ({ user }) => {
     event: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>
   ): void => {
     event.preventDefault();
-    mutate({ password });
+    mutate(isSelf ? { password, current_password: currentPassword } : { password });
   };
 
   return (
@@ -71,6 +75,17 @@ export const ChangePasswordForm: React.FC<Props> = ({ user }) => {
           </HelperText>
         </FormHelperText>
       )}
+      {isSelf && (
+        <FormGroup label={words("userManagement.changePassword.currentPassword")} isRequired>
+          <TextInput
+            aria-label="current-password-input"
+            type="password"
+            placeholder={words("userManagement.changePassword.currentPassword.placeholder")}
+            value={currentPassword}
+            onChange={(_event, value) => setCurrentPassword(value)}
+          />
+        </FormGroup>
+      )}
       <FormGroup label="New Password" isRequired>
         <TextInput
           aria-label="new-password-input"
@@ -87,7 +102,7 @@ export const ChangePasswordForm: React.FC<Props> = ({ user }) => {
             variant="primary"
             type="submit"
             isLoading={isPending}
-            isDisabled={isPending || password.length < 1}
+            isDisabled={isPending || password.length < 1 || (isSelf && currentPassword.length < 1)}
           >
             {words("userManagement.changePassword")}
           </Button>
