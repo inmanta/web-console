@@ -394,12 +394,8 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   }
 
   /**
-   * Resolves the top root instance shape whose identity a suggestion's `${...}`
-   * variables resolve against: an embedded shape climbs its parent chain to the
-   * first non-embedded ancestor, a top-level shape is its own root.
-   *
-   * Not cached: the parent chain changes as links are drawn or removed on the
-   * canvas, so it is recomputed against the current canvas state each time.
+   * Resolves the top root instance shape: an embedded shape climbs its parent
+   * chain to the first non-embedded ancestor, a top-level shape is its own root.
    *
    * @param canvasState - The full canvas state map, keyed by shape id.
    * @returns The top root instance shape, or undefined if it can't be resolved.

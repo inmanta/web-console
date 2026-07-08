@@ -14,7 +14,7 @@ import {
   TextField,
   Textarea,
 } from "@/Core";
-import { TEMPLATE_NAMESPACES } from "@/Data/Queries";
+import { SUGGESTION_NAMESPACES } from "@/Data/Queries";
 import * as Test from "@/Test";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -239,7 +239,7 @@ test("GIVEN ServiceInstanceForm WHEN a parameter_name contains an unknown ${...}
     screen.getByText(
       words("inventory.form.suggestions.unknownVariable")(
         "entity_typo",
-        TEMPLATE_NAMESPACES.join(", ")
+        SUGGESTION_NAMESPACES.join(", ")
       )
     )
   ).toBeVisible();

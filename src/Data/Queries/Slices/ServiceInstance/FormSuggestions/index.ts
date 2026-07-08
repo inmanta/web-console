@@ -1,3 +1,3 @@
 export { useSuggestedValues } from "./useSuggestions";
-export { TEMPLATE_NAMESPACES } from "./templateVariables";
-export type { SuggestionContext } from "./templateVariables";
+export { SUGGESTION_NAMESPACES } from "./suggestionVariables";
+export type { SuggestionVariables } from "./suggestionVariables";

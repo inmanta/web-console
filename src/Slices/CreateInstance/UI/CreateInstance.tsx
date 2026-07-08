@@ -85,7 +85,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
         isDirty={isDirty}
         setIsDirty={setIsDirty}
         initialStates={serviceEntity.lifecycle.alternative_initial_states}
-        serviceIdentity={serviceEntity.service_identity}
+        identifyingAttributeName={serviceEntity.service_identity}
       />
     </>
   );

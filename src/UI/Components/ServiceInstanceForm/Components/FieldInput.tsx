@@ -20,7 +20,7 @@ import {
 } from "@/Core";
 import { get } from "@/Core/Language/collection";
 import { toOptionalBoolean } from "@/Data";
-import { SuggestionContext, useSuggestedValues } from "@/Data/Queries";
+import { SuggestionVariables, useSuggestedValues } from "@/Data/Queries";
 import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { words } from "@/UI/words";
@@ -39,7 +39,7 @@ interface Props {
   path: string | null;
   isNew?: boolean;
   suggestions?: FormSuggestion | null;
-  suggestionContext?: SuggestionContext;
+  suggestionVariables?: SuggestionVariables;
 }
 
 /**
@@ -73,7 +73,7 @@ const makePath = (path: string | null, next: string): string =>
  *   @prop {string} path - The path of the field within the form.
  *   @prop {boolean} isNew - Flag indicating whether the field is newly added. Default is false.
  *   @prop {FormSuggestion | null} suggestions - The suggestions for the field. Default is null.
- *   @prop {SuggestionContext} suggestionContext - The form's values for `${...}` variables in a suggestion's parameter name.
+ *   @prop {SuggestionVariables} suggestionVariables - The form's values for `${...}` variables in a suggestion's parameter name.
  *
  * @returns {React.FC<Props>} The rendered FieldInput component.
  */
@@ -85,11 +85,11 @@ export const FieldInput: React.FC<Props> = ({
   path,
   isNew = false,
   suggestions,
-  suggestionContext,
+  suggestionVariables,
 }) => {
   const { data, isLoading, error, modelError } = useSuggestedValues(
     suggestions,
-    suggestionContext
+    suggestionVariables
   ).useOneTime();
   // Already normalized to { label, value }[] by useSuggestedValues; just forward it.
   const suggestionsList: SuggestionValue[] | null = !isLoading && !error ? (data ?? null) : null;
@@ -290,7 +290,7 @@ export const FieldInput: React.FC<Props> = ({
           getUpdate={getUpdate}
           path={path}
           isNew={isNew}
-          suggestionContext={suggestionContext}
+          suggestionVariables={suggestionVariables}
         />
       );
     case "DictList":
@@ -302,7 +302,7 @@ export const FieldInput: React.FC<Props> = ({
           getUpdate={getUpdate}
           path={path}
           isNew={isNew}
-          suggestionContext={suggestionContext}
+          suggestionVariables={suggestionVariables}
         />
       );
     case "RelationList":
@@ -368,7 +368,7 @@ interface NestedProps {
   getUpdate: GetUpdate;
   path: string | null;
   isNew?: boolean;
-  suggestionContext?: SuggestionContext;
+  suggestionVariables?: SuggestionVariables;
 }
 
 /**
@@ -389,7 +389,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   getUpdate,
   path,
   isNew = false,
-  suggestionContext,
+  suggestionVariables,
 }) => {
   const [showList, setShowList] = useState(
     !field.isOptional || get(formState, makePath(path, field.name)) != null
@@ -458,7 +458,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
             getUpdate={getUpdate}
             path={makePath(path, field.name)}
             suggestions={childField.suggestion}
-            suggestionContext={suggestionContext}
+            suggestionVariables={suggestionVariables}
             isNew={isNew}
           />
         ))}
@@ -473,7 +473,7 @@ interface DictListProps {
   getUpdate: GetUpdate;
   path: string | null;
   isNew?: boolean;
-  suggestionContext?: SuggestionContext;
+  suggestionVariables?: SuggestionVariables;
 }
 
 /**
@@ -494,7 +494,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   getUpdate,
   path,
   isNew = false,
-  suggestionContext,
+  suggestionVariables,
 }) => {
   const list = useMemo(
     () => get<Array<unknown>>(formState, makePath(path, field.name), []) ?? [],
@@ -634,7 +634,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               path={makePath(path, `${field.name}.${index}`)}
               isNew={isNew || addedItemsPaths.includes(`${makePath(path, field.name)}.${index}`)}
               suggestions={childField.suggestion}
-              suggestionContext={suggestionContext}
+              suggestionVariables={suggestionVariables}
             />
           ))}
         </FormFieldGroupExpandable>

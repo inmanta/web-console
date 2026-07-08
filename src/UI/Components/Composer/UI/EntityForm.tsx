@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel } from "@/Core";
 import { set } from "@/Core/Language/collection";
 import { sanitizeAttributes } from "@/Data";
-import { SuggestionContext } from "@/Data/Queries";
+import { SuggestionVariables } from "@/Data/Queries";
 import {
   createFormState,
   CreateModifierHandler,
@@ -43,12 +43,12 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
   const [isDirty, setIsDirty] = useState(false);
   const [currentCellId, setCurrentCellId] = useState<string | null>(null);
 
-  // Identity used to resolve `${...}` variables in a suggestion's parameter name.
+  // Values that resolve `${...}` variables in a suggestion's parameter name.
   // An embedded entity's suggestions resolve against its owning instance -
-  // entity_type, identity, and id all belong to the service instance, not the
-  // embedded part - so we climb to that instance's shape; a top-level shape uses
-  // itself.
-  const suggestionContext: SuggestionContext = useMemo(() => {
+  // entity_type, the identifying attribute, and id all belong to the service
+  // instance, not the embedded part - so we climb to that instance's shape; a
+  // top-level shape uses itself.
+  const suggestionVariables: SuggestionVariables = useMemo(() => {
     const source = activeCell.getRootInstance(canvasState);
 
     if (!source) {
@@ -56,18 +56,23 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
     }
 
     const { serviceModel } = source;
-    const serviceIdentity =
+    // The name of the attribute that identifies the instance (the model's `service_identity`).
+    const identifyingAttributeName =
       "service_identity" in serviceModel ? serviceModel.service_identity : undefined;
     // Live form values for the active cell; stored attributes for a parent shape.
     const attributes = source === activeCell ? formState : source.instanceAttributes;
-    const identityValue = serviceIdentity ? attributes[serviceIdentity] : undefined;
+    const identifyingAttributeValue = identifyingAttributeName
+      ? attributes[identifyingAttributeName]
+      : undefined;
 
     return {
       entity_type: serviceModel.name,
       identifying_attribute:
-        identityValue === undefined || identityValue === null || identityValue === ""
+        identifyingAttributeValue === undefined ||
+        identifyingAttributeValue === null ||
+        identifyingAttributeValue === ""
           ? undefined
-          : String(identityValue),
+          : String(identifyingAttributeValue),
       instance_id: source.isNew ? undefined : String(source.id),
     };
   }, [activeCell, formState, canvasState]);
@@ -235,7 +240,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
                 getUpdate={getUpdate}
                 path={null}
                 suggestions={field.suggestion}
-                suggestionContext={suggestionContext}
+                suggestionVariables={suggestionVariables}
               />
             ))}
         </Form>

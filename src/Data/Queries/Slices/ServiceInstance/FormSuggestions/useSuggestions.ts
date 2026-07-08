@@ -7,13 +7,13 @@ import { useDebounce } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { normalizeSuggestions } from "./helpers";
 import {
-  TEMPLATE_NAMESPACES,
-  SuggestionContext,
+  SUGGESTION_NAMESPACES,
+  SuggestionVariables,
   extractVariables,
   getUnknownNamespaces,
   isKnownNamespace,
   substituteVariables,
-} from "./templateVariables";
+} from "./suggestionVariables";
 
 interface ResponseData {
   parameter?: { metadata?: { values?: unknown } };
@@ -24,20 +24,20 @@ interface ResponseData {
  * literal values are normalized inline, parameters are fetched and normalized, and
  * null/undefined yields null data.
  *
- * A `parameter_name` may contain `${...}` variables resolved from `suggestionContext`
- * before the fetch; the resolved name is the query key, so distinct contexts cache
+ * A `parameter_name` may contain `${...}` variables resolved from `suggestionVariables`
+ * before the fetch; the resolved name is the query key, so distinct values cache
  * separately. A required variable without a value (e.g. `${instance_id}` on a create
  * form) disables the query instead of fetching a malformed name. An unknown variable
  * is reported as `modelError` (never fetched) - distinct from the query `error`, a
  * genuine fetch failure that stays silent.
  *
  * @param suggestions - The field's suggestions.
- * @param suggestionContext - Values for `${...}` variables, keyed by namespace.
+ * @param suggestionVariables - Values for `${...}` variables, keyed by namespace.
  * @returns `{ useOneTime }` returning the query result plus `modelError`.
  */
 export const useSuggestedValues = (
   suggestions: FormSuggestion | null | undefined,
-  suggestionContext: SuggestionContext = {}
+  suggestionVariables: SuggestionVariables = {}
 ) => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
@@ -62,16 +62,16 @@ export const useSuggestedValues = (
     };
   }
 
-  const template = suggestions.parameter_name || "";
-  const variables = extractVariables(template);
-  const unknownNamespaces = getUnknownNamespaces(template);
+  const parameterName = suggestions.parameter_name || "";
+  const variables = extractVariables(parameterName);
+  const unknownNamespaces = getUnknownNamespaces(parameterName);
   // A broken annotation is a model error, not a fetch failure: reported separately
   // and never fetched, leaving `error` for genuine fetch failures.
   const modelError =
     unknownNamespaces.length > 0
       ? words("inventory.form.suggestions.unknownVariable")(
           unknownNamespaces.join(", "),
-          TEMPLATE_NAMESPACES.join(", ")
+          SUGGESTION_NAMESPACES.join(", ")
         )
       : null;
 
@@ -82,9 +82,9 @@ export const useSuggestedValues = (
       const isResolvable =
         !modelError &&
         variables.every(
-          ({ namespace }) => isKnownNamespace(namespace) && suggestionContext[namespace]
+          (namespace) => isKnownNamespace(namespace) && suggestionVariables[namespace]
         );
-      const resolvedName = isResolvable ? substituteVariables(template, suggestionContext) : "";
+      const resolvedName = isResolvable ? substituteVariables(parameterName, suggestionVariables) : "";
       // Debounce values typed into a field (`${identifying_attribute}`) so they
       // re-query on settle; the seeded first value keeps static names instant.
       const debouncedName = useDebounce(resolvedName, 500);

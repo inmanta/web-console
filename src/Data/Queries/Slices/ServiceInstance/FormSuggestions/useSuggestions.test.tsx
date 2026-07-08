@@ -7,7 +7,7 @@ import { FormSuggestion } from "@/Core";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI/words";
-import { TEMPLATE_NAMESPACES } from "./templateVariables";
+import { SUGGESTION_NAMESPACES } from "./suggestionVariables";
 import { useSuggestedValues } from "./useSuggestions";
 
 const wrapper = ({ children }: { children: React.ReactNode }) => {
@@ -195,7 +195,7 @@ describe("useSuggestedValues templated parameter names", () => {
     expect(result.current.modelError).toEqual(
       words("inventory.form.suggestions.unknownVariable")(
         "entity_typo",
-        TEMPLATE_NAMESPACES.join(", ")
+        SUGGESTION_NAMESPACES.join(", ")
       )
     );
     expect(result.current.error).toBeNull();

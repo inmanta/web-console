@@ -18,7 +18,7 @@ import {
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
 import { set as setAtPath } from "@/Core/Language/collection";
-import { SuggestionContext } from "@/Data/Queries";
+import { SuggestionVariables } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
@@ -43,7 +43,7 @@ interface Props {
   isDirty: boolean;
   setIsDirty: React.Dispatch<React.SetStateAction<boolean>>;
   initialStates?: string[];
-  serviceIdentity?: string;
+  identifyingAttributeName?: string;
   instanceId?: string;
 }
 
@@ -84,7 +84,7 @@ const getFormState = (
  *   @prop {boolean} isSubmitDisabled - Indicates whether the submit button is disabled.
  *   @prop {string} [apiVersion="v1"] - API version ("v1" or "v2"). Default is "v1".
  *   @prop {boolean} [isEdit=false] - Whether the form is in edit mode. Default is false.
- *   @prop {string} [serviceIdentity] - Name of the attribute designated by the service's `service_identity`, if any.
+ *   @prop {string} [identifyingAttributeName] - Name of the attribute designated by the service's `service_identity`, if any.
  *   @prop {string} [instanceId] - Id of the edited instance; absent when creating.
  * @returns {React.FC<Props>} The rendered ServiceInstanceForm component.
  */
@@ -100,7 +100,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   isDirty,
   setIsDirty,
   initialStates = [],
-  serviceIdentity,
+  identifyingAttributeName,
   instanceId,
 }) => {
   const [formState, setFormState] = useState(
@@ -114,21 +114,25 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   const [isEditorValid, setIsEditorValid] = useState(true);
   const [isSubmitDropdownOpen, setIsSubmitDropdownOpen] = useState(false);
 
-  // The form's identity, used to resolve `${...}` variables in a suggestion's
-  // parameter name. The identifying attribute is read live from the form state;
-  // instance_id is absent on a create form ("no value").
-  const suggestionContext: SuggestionContext = useMemo(() => {
-    const identityValue = serviceIdentity ? formState[serviceIdentity] : undefined;
+  // Values that resolve `${...}` variables in a suggestion's parameter name.
+  // `identifyingAttributeName` is the name of the identifying attribute; its value
+  // is read live from the form state. instance_id is absent on a create form ("no value").
+  const suggestionVariables: SuggestionVariables = useMemo(() => {
+    const identifyingAttributeValue = identifyingAttributeName
+      ? formState[identifyingAttributeName]
+      : undefined;
 
     return {
       entity_type: service_entity,
       identifying_attribute:
-        identityValue === undefined || identityValue === null || identityValue === ""
+        identifyingAttributeValue === undefined ||
+        identifyingAttributeValue === null ||
+        identifyingAttributeValue === ""
           ? undefined
-          : String(identityValue),
+          : String(identifyingAttributeValue),
       instance_id: instanceId,
     };
-  }, [service_entity, serviceIdentity, instanceId, formState]);
+  }, [service_entity, identifyingAttributeName, instanceId, formState]);
 
   usePrompt(words("notification.instanceForm.prompt"), isDirty);
 
@@ -257,7 +261,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
             getUpdate={getUpdate}
             path={null}
             suggestions={field.suggestion}
-            suggestionContext={suggestionContext}
+            suggestionVariables={suggestionVariables}
           />
         ))
       )}

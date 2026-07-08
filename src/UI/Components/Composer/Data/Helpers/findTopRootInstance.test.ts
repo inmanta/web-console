@@ -1,19 +1,13 @@
-import { findTopRootInstance } from "./findTopRootInstance";
-
-interface TestShape {
-  id: string;
-  entityType: "core" | "embedded" | "relation";
-  parentIds: Set<string>;
-}
+import { findTopRootInstance, PartialEntityShape } from "./findTopRootInstance";
 
 const shape = (
   id: string,
-  entityType: TestShape["entityType"],
+  entityType: PartialEntityShape["entityType"],
   parentIds: string[] = []
-): TestShape => ({ id, entityType, parentIds: new Set(parentIds) });
+): PartialEntityShape => ({ id, entityType, parentIds: new Set(parentIds) });
 
-const canvas = (...shapes: TestShape[]): Map<string, TestShape> =>
-  new Map(shapes.map((s) => [s.id, s]));
+const canvas = (...shapes: PartialEntityShape[]): Map<string, PartialEntityShape> =>
+  new Map(shapes.map((s) => [String(s.id), s]));
 
 describe("findTopRootInstance", () => {
   it("returns a non-embedded shape as-is", () => {

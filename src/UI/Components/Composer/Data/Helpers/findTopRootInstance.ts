@@ -6,7 +6,7 @@ import type { ServiceEntityShape } from "../../UI/JointJsShapes/ServiceEntitySha
  * contract instead of inventing a parallel interface, while staying generic
  * enough to unit-test with plain objects.
  */
-type RootWalkable = Pick<ServiceEntityShape, "id" | "entityType" | "parentIds">;
+export type PartialEntityShape = Pick<ServiceEntityShape, "id" | "entityType" | "parentIds">;
 
 /**
  * Walks up an embedded shape's parent chain to its top root instance - the
@@ -22,7 +22,7 @@ type RootWalkable = Pick<ServiceEntityShape, "id" | "entityType" | "parentIds">;
  * @param cells - The canvas shapes, keyed by id.
  * @returns The top root instance shape, or undefined if none can be resolved.
  */
-export const findTopRootInstance = <T extends RootWalkable>(
+export const findTopRootInstance = <T extends PartialEntityShape>(
   shape: T,
   cells: Map<string, T>
 ): T | undefined => {
