@@ -781,6 +781,20 @@ const dict = {
   "settings.tabs.token.description":
     "Generate authentication tokens for authorizing agents, api or compiler for this specific environment.",
   "settings.tabs.token.generate": "Generate",
+  "settings.tabs.token.revocable": "Create a revocable token",
+  "settings.tabs.token.registered.title": "Registered tokens",
+  "settings.tabs.token.empty": "No revocable tokens have been created for this environment.",
+  "settings.tabs.token.column.createdBy": "Created by",
+  "settings.tabs.token.column.clientTypes": "Client types",
+  "settings.tabs.token.column.issuedAt": "Issued at",
+  "settings.tabs.token.column.lastUsed": "Last used",
+  "settings.tabs.token.column.status": "Status",
+  "settings.tabs.token.status.active": "Active",
+  "settings.tabs.token.status.revoked": "Revoked",
+  "settings.tabs.token.revoke": "Revoke",
+  "settings.tabs.token.revoke.title": "Revoke token",
+  "settings.tabs.token.revoke.confirm": (jti: string) =>
+    `Are you sure you want to revoke token ${jti}? This action cannot be undone.`,
   "settings.update": "Setting Changed",
   "settings.warning.update": "Changed value has not been saved",
   "settings.protected.message": (protected_by: string) =>
