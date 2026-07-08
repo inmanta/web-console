@@ -105,6 +105,8 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         apiVersion={formApiVersion}
         isDirty={isDirty}
         setIsDirty={setIsDirty}
+        identifyingAttributeName={serviceEntity.service_identity}
+        instanceId={instance.id}
       />
     </>
   );

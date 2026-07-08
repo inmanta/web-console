@@ -27,6 +27,7 @@ interface Props {
   isTextarea?: boolean;
   handleInputChange: (value, event) => void;
   suggestions?: SuggestionValue[] | null;
+  errorMessage?: string | null;
 }
 
 /**
@@ -46,6 +47,7 @@ export const TextFormInput: React.FC<Props> = ({
   isTextarea = false,
   shouldBeDisabled = false,
   suggestions = [],
+  errorMessage,
   ...props
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -132,6 +134,7 @@ export const TextFormInput: React.FC<Props> = ({
           placeholder={placeholder}
           isRequired={!isOptional}
           isDisabled={shouldBeDisabled}
+          validated={errorMessage ? "error" : "default"}
           aria-describedby={`${attributeName}-helper`}
           aria-label={`TextareaInput-${attributeName}`}
         />
@@ -151,6 +154,7 @@ export const TextFormInput: React.FC<Props> = ({
             value={displayValue}
             onChange={(_event, value) => handleType(value)}
             isDisabled={shouldBeDisabled}
+            validated={errorMessage ? "error" : "default"}
             onFocus={() => hasSuggestions && setIsOpen(true)}
             onBlur={handleBlur}
           />
@@ -165,6 +169,13 @@ export const TextFormInput: React.FC<Props> = ({
             />
           )}
         </>
+      )}
+      {errorMessage && (
+        <FormHelperText>
+          <HelperText>
+            <HelperTextItem variant="error">{errorMessage}</HelperTextItem>
+          </HelperText>
+        </FormHelperText>
       )}
     </FormGroup>
   );

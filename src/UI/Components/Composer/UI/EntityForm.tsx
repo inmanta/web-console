@@ -1,9 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AlertVariant, FlexItem, Form } from "@patternfly/react-core";
 import { v4 as uuidv4 } from "uuid";
 import { Field, InstanceAttributeModel } from "@/Core";
 import { set } from "@/Core/Language/collection";
 import { sanitizeAttributes } from "@/Data";
+import { SuggestionVariables } from "@/Data/Queries";
 import {
   createFormState,
   CreateModifierHandler,
@@ -35,12 +36,19 @@ interface Props {
  * @returns {React.FC<Props>} The EntityForm component.
  */
 export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
-  const { paper, setCanvasState } = useContext(ComposerContext);
+  const { paper, canvasState, setCanvasState } = useContext(ComposerContext);
   const [formState, setFormState] = useState<InstanceAttributeModel>({});
   const [fields, setFields] = useState<Field[] | null>(null);
   const [originalState, setOriginalState] = useState<InstanceAttributeModel>({});
   const [isDirty, setIsDirty] = useState(false);
   const [currentCellId, setCurrentCellId] = useState<string | null>(null);
+
+  // Auto-save replaces the canvasState map on every edit, so canvasState alone
+  // picks up the live identifying-attribute value - no formState dependency needed.
+  const suggestionVariables: SuggestionVariables = useMemo(
+    () => activeCell.getSuggestionVariables(canvasState),
+    [activeCell, canvasState]
+  );
 
   /**
    * function to update the state within the form.
@@ -205,6 +213,7 @@ export const EntityForm: React.FC<Props> = ({ activeCell, isDisabled }) => {
                 getUpdate={getUpdate}
                 path={null}
                 suggestions={field.suggestion}
+                suggestionVariables={suggestionVariables}
               />
             ))}
         </Form>

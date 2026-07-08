@@ -168,6 +168,8 @@ const dict = {
     `Change attributes of instance ${instanceId}`,
   "inventory.duplicateInstance.header": (instanceId: string) =>
     `Create an instance based of instance ${instanceId}`,
+  "inventory.form.suggestions.unknownVariable": (variables: string, supported: string) =>
+    `Unknown variable(s) in the suggested values parameter name: ${variables}. Supported variables: ${supported}.`,
   "inventory.form.typeHint.list": (listBaseType: string) => `A list of ${listBaseType}s`,
   "inventory.form.typeHint.dict": 'Key-value pairs, following the JSON syntax: {"key": "value"}',
   "inventory.form.placeholder.intList": "1, 2, 3",
