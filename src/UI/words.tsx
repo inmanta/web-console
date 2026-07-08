@@ -750,7 +750,10 @@ const dict = {
   "createEnv.description": "Description",
   "createEnv.projectName": "Project Name",
   "createEnv.repository": "Repository",
+  "createEnv.repository.tooltip":
+    "The URL of the repository, for example: https://code.inmanta.com/my_project.git",
   "createEnv.branch": "Branch",
+  "createEnv.branch.tooltip": "The branch of the repository, for example: main",
   "createEnv.icon": "Icon",
 
   /**
