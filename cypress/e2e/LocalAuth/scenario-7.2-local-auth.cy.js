@@ -5,7 +5,7 @@ if (localAuth) {
     cy.visit("/console/");
 
     cy.get('[id="pf-login-username-id"]').type("admin");
-    cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
+    cy.get('[id="pf-login-password-id"]').type("Str0ng-Pass!{enter}");
 
     cy.get("h1").contains("Dashboard | env").should("be.visible");
 

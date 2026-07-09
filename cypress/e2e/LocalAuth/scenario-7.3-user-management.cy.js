@@ -5,7 +5,7 @@ if (localAuth) {
     cy.visit("/console/");
 
     cy.get('[id="pf-login-username-id"]').type("admin");
-    cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
+    cy.get('[id="pf-login-password-id"]').type("Str0ng-Pass!{enter}");
 
     cy.get("h1").contains("Dashboard | env").should("be.visible");
 
@@ -121,7 +121,7 @@ if (localAuth) {
     cy.visit("/console/");
 
     cy.get('[id="pf-login-username-id"]').type("admin");
-    cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
+    cy.get('[id="pf-login-password-id"]').type("Str0ng-Pass!{enter}");
 
     cy.get("h1").contains("Dashboard | env").should("be.visible");
 
@@ -157,7 +157,7 @@ if (localAuth) {
     cy.visit("/console/");
 
     cy.get('[id="pf-login-username-id"]').type("admin");
-    cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
+    cy.get('[id="pf-login-password-id"]').type("Str0ng-Pass!{enter}");
 
     cy.get("h1").contains("Dashboard | env").should("be.visible");
 
@@ -181,7 +181,7 @@ if (localAuth) {
     cy.visit("/console/");
 
     cy.get('[id="pf-login-username-id"]').type("admin");
-    cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
+    cy.get('[id="pf-login-password-id"]').type("Str0ng-Pass!{enter}");
 
     cy.get("h1").contains("Dashboard | env").should("be.visible");
 
@@ -200,7 +200,7 @@ if (localAuth) {
 
     // admin is the logged-in user, so this is a self-service change: the current password is required
     // and the submit button stays disabled until it is filled (PR #7071).
-    cy.get('[aria-label="current-password-input"]').type("adminadmin");
+    cy.get('[aria-label="current-password-input"]').type("Str0ng-Pass!");
 
     cy.get('[aria-label="new-password-input"]').type("123");
 
