@@ -53,7 +53,9 @@ export const resolveFormTabs = (
   }
 
   // Keys must be unique: a smaller Set than the array means a duplicate key.
-  if (new Set(catalog.map((tab) => tab.key)).size !== catalog.length) {
+  const knownKeys = new Set(catalog.map((tab) => tab.key));
+
+  if (knownKeys.size !== catalog.length) {
     return { kind: "error", message: words("inventory.form.tabs.invalidCatalog") };
   }
 
@@ -68,7 +70,6 @@ export const resolveFormTabs = (
   }
 
   // Every field assignment must point at a key that exists in the catalog.
-  const knownKeys = new Set(catalog.map((tab) => tab.key));
   const unknownAssignment = fields.find(
     (field) => field.tab !== undefined && !knownKeys.has(field.tab)
   );

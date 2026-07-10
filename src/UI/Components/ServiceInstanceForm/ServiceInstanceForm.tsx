@@ -308,7 +308,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
                 </>
               }
             >
-              <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
+              <Flex direction={{ default: "column" }} gap={{ default: "gapLg" }}>
                 {tabFields.map(fieldToInput)}
               </Flex>
             </Tab>
