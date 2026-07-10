@@ -246,9 +246,12 @@ export default defineConfig({
         find: "@joint/plus",
         replacement: resolve(__dirname, "./node_modules/@joint/plus/joint-plus.mjs"),
       },
-      // Force @joint/core to use ESM entry (avoids dist/joint.js)
+      // Force @joint/core's bare import to the ESM entry (avoids dist/joint.js).
+      // Regex matches only the exact specifier: a string alias prefix-replaces, mangling
+      // @joint/plus >=4.3.0's deep imports (e.g. @joint/core/src/highlighters/index.mjs)
+      // into @joint/core/joint.mjs/src/... Subpaths resolve via the package's exports map.
       {
-        find: "@joint/core",
+        find: /^@joint\/core$/,
         replacement: resolve(__dirname, "./node_modules/@joint/core/joint.mjs"),
       },
       // Force uuid to use CJS entry point
