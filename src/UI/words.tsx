@@ -170,6 +170,12 @@ const dict = {
     `Create an instance based of instance ${instanceId}`,
   "inventory.form.suggestions.unknownVariable": (variables: string, supported: string) =>
     `Unknown variable(s) in the suggested values parameter name: ${variables}. Supported variables: ${supported}.`,
+  "inventory.form.tabs.invalidCatalog":
+    "The web_tabs entity annotation is malformed. Every tab requires a unique string 'key' and a string 'label'.",
+  "inventory.form.tabs.defaultRequired": (count: number) =>
+    `The web_tabs entity annotation must mark exactly one tab as default, but ${count} tabs are marked.`,
+  "inventory.form.tabs.unknownKey": (fieldName: string, tabKey: string) =>
+    `Field "${fieldName}" is assigned to tab "${tabKey}", which is not defined in the web_tabs entity annotation.`,
   "inventory.form.typeHint.list": (listBaseType: string) => `A list of ${listBaseType}s`,
   "inventory.form.typeHint.dict": 'Key-value pairs, following the JSON syntax: {"key": "value"}',
   "inventory.form.placeholder.intList": "1, 2, 3",
