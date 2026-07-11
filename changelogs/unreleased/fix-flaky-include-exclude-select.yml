@@ -1,0 +1,3 @@
+description: Stabilize the flaky IncludeExcludeSelect unit test (wait for the dropdown to open before asserting visibility).
+change-type: patch
+destination-branches: [master, iso9]

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { invertFilter } from "@/Core";
@@ -37,10 +37,14 @@ describe("IncludeExcludeSelect", () => {
       const toggle = screen.getByRole("button", { name: `${label}-toggle` });
       await userEvent.click(toggle);
 
-      expect(screen.getByRole("grid")).toBeVisible();
-      expect(screen.getByText("blocked")).toBeVisible();
-      expect(screen.getByText("not_blocked")).toBeVisible();
-      expect(screen.getByText("temporarily_blocked")).toBeVisible();
+      // The PatternFly Select menu opens asynchronously, so wait for it to
+      // settle before asserting visibility instead of checking synchronously.
+      await waitFor(() => {
+        expect(screen.getByRole("grid")).toBeVisible();
+        expect(screen.getByText("blocked")).toBeVisible();
+        expect(screen.getByText("not_blocked")).toBeVisible();
+        expect(screen.getByText("temporarily_blocked")).toBeVisible();
+      });
     });
 
     it("closes the dropdown when the toggle is clicked again", async () => {
@@ -50,7 +54,9 @@ describe("IncludeExcludeSelect", () => {
       await userEvent.click(toggle);
       await userEvent.click(toggle);
 
-      expect(screen.queryByRole("grid")).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryByRole("grid")).not.toBeInTheDocument();
+      });
     });
   });
 
@@ -61,7 +67,7 @@ describe("IncludeExcludeSelect", () => {
 
       const toggle = screen.getByRole("button", { name: `${label}-toggle` });
       await userEvent.click(toggle);
-      const menuToggle = screen.getByRole("button", { name: "blocked-include-toggle" });
+      const menuToggle = await screen.findByRole("button", { name: "blocked-include-toggle" });
       await userEvent.click(menuToggle);
 
       expect(onOptionClick).toHaveBeenCalledWith("blocked");
@@ -74,7 +80,7 @@ describe("IncludeExcludeSelect", () => {
       const toggle = screen.getByRole("button", { name: `${label}-toggle` });
       await userEvent.click(toggle);
 
-      expect(screen.getByLabelText("blocked-include-active")).toBeInTheDocument();
+      expect(await screen.findByLabelText("blocked-include-active")).toBeInTheDocument();
       expect(screen.getByLabelText("not_blocked-include-inactive")).toBeInTheDocument();
     });
   });
@@ -86,7 +92,7 @@ describe("IncludeExcludeSelect", () => {
 
       const toggle = screen.getByRole("button", { name: `${label}-toggle` });
       await userEvent.click(toggle);
-      await userEvent.click(screen.getByRole("button", { name: "blocked-exclude-toggle" }));
+      await userEvent.click(await screen.findByRole("button", { name: "blocked-exclude-toggle" }));
 
       expect(onOptionClick).toHaveBeenCalledWith(invertFilter("blocked"));
       expect(onOptionClick).toHaveBeenCalledTimes(1);
@@ -98,7 +104,7 @@ describe("IncludeExcludeSelect", () => {
       const toggle = screen.getByRole("button", { name: `${label}-toggle` });
       await userEvent.click(toggle);
 
-      expect(screen.getByLabelText("blocked-exclude-active")).toBeInTheDocument();
+      expect(await screen.findByLabelText("blocked-exclude-active")).toBeInTheDocument();
       expect(screen.getByLabelText("blocked-include-inactive")).toBeInTheDocument();
     });
   });
@@ -115,7 +121,7 @@ describe("IncludeExcludeSelect", () => {
       const toggle = screen.getByRole("button", { name: `${label}-toggle` });
       await userEvent.click(toggle);
 
-      expect(screen.getByLabelText("blocked-include-active")).toBeInTheDocument();
+      expect(await screen.findByLabelText("blocked-include-active")).toBeInTheDocument();
       expect(screen.getByLabelText("not_blocked-exclude-active")).toBeInTheDocument();
       expect(screen.getByLabelText("temporarily_blocked-include-inactive")).toBeInTheDocument();
       expect(screen.getByLabelText("temporarily_blocked-exclude-inactive")).toBeInTheDocument();
