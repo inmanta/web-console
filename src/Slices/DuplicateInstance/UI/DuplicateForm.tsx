@@ -84,6 +84,7 @@ export const DuplicateForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         setIsDirty={setIsDirty}
         initialStates={serviceEntity.lifecycle.alternative_initial_states}
         identifyingAttributeName={serviceEntity.service_identity}
+        entityAnnotations={serviceEntity.entity_annotations}
       />
     </>
   );
