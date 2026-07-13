@@ -71,6 +71,18 @@ export const Page: React.FC = () => {
   const updateFilter = (updater: (filter: Resource.Filter) => Resource.Filter): void =>
     setFilter(updater(filterWithDefaults));
 
+  const onDeployingClick = (): void => {
+    updateFilter((filter) => {
+      const current = filter.status ?? [];
+
+      if (current.includes("isDeploying")) {
+        return { ...filter, status: current.filter((status) => status !== "isDeploying") };
+      }
+
+      return { ...filter, status: [...current, "isDeploying"] };
+    });
+  };
+
   const rows = useMemo(() => createRows(data?.resources ?? []), [data?.resources]);
 
   if (isError) {
@@ -111,6 +123,7 @@ export const Page: React.FC = () => {
                 variant="outline"
                 color="blue"
                 data-testid="deploying-label"
+                onClick={deployingCount > 0 ? onDeployingClick : undefined}
               >
                 <span style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
                   {deployingCount > 0 && (
