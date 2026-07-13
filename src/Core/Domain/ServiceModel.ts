@@ -33,6 +33,41 @@ export interface AttributeAnnotations {
   web_content_type?: string;
   web_order?: number;
   web_default_open?: boolean;
+  web_tab?: string;
+}
+
+/**
+ * A single tab in the `web_tabs` catalog on a service entity's annotations.
+ * `key` is what a `web_tab` attribute/relation annotation refers to, `label` is the
+ * visible tab title. Ordering is explicit through `order` (ties or missing values
+ * fall back to `key`) so it never depends on list position. Exactly one tab must be
+ * marked as `default`; it catches fields without a `web_tab` assignment.
+ */
+export interface FormTabDefinition {
+  key: string;
+  label: string;
+  order?: number;
+  default?: boolean;
+  icon?: string;
+}
+
+/**
+ * Interface that represents the annotations on a service entity (`__annotations`).
+ * The values originate from the model author, so `web_tabs` is validated at runtime
+ * (see resolveFormTabs) before being used.
+ */
+export interface EntityAnnotations {
+  web_tabs?: FormTabDefinition[];
+  [key: string]: unknown;
+}
+
+/**
+ * Interface that represents the annotations on an inter-service relation
+ * (lsm::RelationAnnotations).
+ */
+export interface RelationAnnotations {
+  web_tab?: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -116,7 +151,7 @@ export interface ServiceModel extends ServiceIdentifier {
   attributes: AttributeModel[];
   service_identity?: string;
   service_identity_display_name?: string | null;
-  entity_annotations?: Record<string, unknown>;
+  entity_annotations?: EntityAnnotations;
   config: Config;
   instance_summary?: InstanceSummary | null;
   embedded_entities: EmbeddedEntity[];
@@ -143,7 +178,7 @@ export interface RelationAttribute {
  */
 export interface InterServiceRelation extends RelationAttribute {
   name: string;
-  attribute_annotations?: Record<string, unknown>;
+  attribute_annotations?: RelationAnnotations;
   description?: string | null;
   entity_type: string;
 }

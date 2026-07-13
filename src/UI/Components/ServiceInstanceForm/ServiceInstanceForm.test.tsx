@@ -8,6 +8,7 @@ import { setupServer } from "msw/node";
 import {
   BooleanField,
   DictListField,
+  EntityAnnotations,
   EnumField,
   InstanceAttributeModel,
   NestedField,
@@ -28,7 +29,8 @@ const setup = (
   func: undefined | Mock = undefined,
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined,
-  initialStates: string[] = []
+  initialStates: string[] = [],
+  entityAnnotations: EntityAnnotations | undefined = undefined
 ) => {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -48,6 +50,7 @@ const setup = (
                   isDirty={false}
                   setIsDirty={vi.fn()}
                   initialStates={initialStates}
+                  entityAnnotations={entityAnnotations}
                 />
               }
             />
@@ -902,4 +905,80 @@ test("GIVEN ServiceInstanceForm without initialStates WHEN no initialStates prov
 
   // Dropdown should not be visible
   expect(screen.queryByLabelText("SubmitDropdownToggle")).not.toBeInTheDocument();
+});
+
+test("GIVEN ServiceInstanceForm WHEN the entity has no web_tabs annotation THEN the form renders as a single column without tabs", () => {
+  const { component } = setup([Test.Field.text, Test.Field.number]);
+
+  render(component);
+
+  expect(screen.queryByRole("tab")).not.toBeInTheDocument();
+  // Fields still render (single column), not swallowed by the tab branch.
+  expect(screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })).toBeVisible();
+});
+
+test("GIVEN ServiceInstanceForm WHEN the entity has a web_tabs catalog THEN fields render in ordered tabs and the default tab shows first with the unassigned fields", async () => {
+  const { general, network, extras, entityAnnotations } = Test.Service.FormTabs;
+  const assigned = { ...Test.Field.text, tab: network.key };
+  const unassigned = Test.Field.number;
+
+  const { component } = setup(
+    [assigned, unassigned],
+    undefined,
+    false,
+    undefined,
+    [],
+    entityAnnotations
+  );
+
+  render(component);
+
+  const tabs = screen.getAllByRole("tab");
+
+  expect(tabs.map((tab) => tab.textContent)).toEqual([general.label, network.label, extras.label]);
+
+  // The default tab is initially shown and catches the unassigned field;
+  // content of the inactive tabs is hidden.
+  expect(screen.getByRole("spinbutton", { name: `TextInput-${unassigned.name}` })).toBeVisible();
+  expect(
+    screen.queryByRole("textbox", { name: `TextInput-${assigned.name}` })
+  ).not.toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole("tab", { name: network.label }));
+
+  expect(screen.getByRole("textbox", { name: `TextInput-${assigned.name}` })).toBeVisible();
+  expect(
+    screen.queryByRole("spinbutton", { name: `TextInput-${unassigned.name}` })
+  ).not.toBeInTheDocument();
+});
+
+test("GIVEN ServiceInstanceForm WHEN the web_tabs catalog does not have exactly one default THEN the model error is surfaced and the form falls back to a single column", () => {
+  const { general, network } = Test.Service.FormTabs;
+  const twoDefaults: EntityAnnotations = {
+    web_tabs: [general, { ...network, default: true }],
+  };
+
+  const { component } = setup([Test.Field.text], undefined, false, undefined, [], twoDefaults);
+
+  render(component);
+
+  expect(screen.getByTestId("FormTabs-Error")).toHaveTextContent(
+    words("inventory.form.tabs.defaultRequired")(2)
+  );
+  expect(screen.queryByRole("tab")).not.toBeInTheDocument();
+  expect(screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })).toBeVisible();
+});
+
+test("GIVEN ServiceInstanceForm WHEN a field is assigned to a tab that is not in the web_tabs catalog THEN the model error is surfaced", () => {
+  const { entityAnnotations } = Test.Service.FormTabs;
+  const assigned = { ...Test.Field.text, tab: "not_in_catalog" };
+
+  const { component } = setup([assigned], undefined, false, undefined, [], entityAnnotations);
+
+  render(component);
+
+  expect(screen.getByTestId("FormTabs-Error")).toHaveTextContent(
+    words("inventory.form.tabs.unknownKey")(assigned.name, "not_in_catalog")
+  );
+  expect(screen.queryByRole("tab")).not.toBeInTheDocument();
 });

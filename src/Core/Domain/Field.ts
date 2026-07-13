@@ -21,6 +21,10 @@ export type Field =
 
 export type FieldLikeWithFormState = Field;
 
+/**
+ * Properties shared by every field kind.
+ * `tab` is the field's `web_tab` key, resolved only for top-level fields.
+ */
 interface BaseField {
   name: string;
   description?: string | null;
@@ -28,6 +32,7 @@ interface BaseField {
   isOptional: boolean;
   isDisabled: boolean;
   suggestion?: FormSuggestion | null;
+  tab?: string;
 }
 
 export interface BooleanField extends BaseField {

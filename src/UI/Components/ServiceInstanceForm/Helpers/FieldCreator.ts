@@ -70,15 +70,19 @@ export class FieldCreator {
    *
    * @return This will return you an Entity with a nested fields Array which can contain again new Entities.
    */
-  private embeddedEntityToField(entity: EmbeddedEntity): Field | null {
+  private embeddedEntityToField(entity: EmbeddedEntity, embedded?: boolean): Field | null {
     if (!this.fieldModifierHandler.validateModifier(entity.modifier, true)) {
       return null;
     }
 
+    // Tab assignment is only resolved for top-level fields; an assigned embedded
+    // relation moves its whole sub-form onto the tab as one unit.
+    const tab = embedded ? undefined : entity.attribute_annotations?.web_tab;
+
     const fieldsFromAttributes: Field[] = this.attributesToFields(entity.attributes, true);
 
     const fieldsFromEmbeddedEntities = entity.embedded_entities
-      .map((entity) => this.embeddedEntityToField(entity))
+      .map((entity) => this.embeddedEntityToField(entity, true))
       .filter(isNotNull);
 
     const fieldsFromRelations = entity.inter_service_relations
@@ -99,6 +103,7 @@ export class FieldCreator {
         min: entity.lower_limit,
         max: entity.upper_limit,
         isDisabled: this.shouldFieldBeDisabled(entity),
+        tab,
       };
     }
 
@@ -109,6 +114,7 @@ export class FieldCreator {
       isOptional: this.isOptional(entity),
       fields: [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities, ...fieldsFromRelations],
       isDisabled: this.shouldFieldBeDisabled(entity),
+      tab,
     };
   }
 
@@ -120,6 +126,8 @@ export class FieldCreator {
       return null;
     }
 
+    const tab = embedded ? undefined : interServiceRelation.attribute_annotations?.web_tab;
+
     if (interServiceRelation.upper_limit === 1) {
       return {
         kind: "InterServiceRelation",
@@ -128,6 +136,7 @@ export class FieldCreator {
         isOptional: this.isOptional(interServiceRelation),
         isDisabled: this.shouldFieldBeDisabled(interServiceRelation),
         serviceEntity: interServiceRelation.entity_type,
+        tab,
       };
     }
 
@@ -140,6 +149,7 @@ export class FieldCreator {
       serviceEntity: interServiceRelation.entity_type,
       min: interServiceRelation.lower_limit,
       max: interServiceRelation.upper_limit,
+      tab,
     };
   }
 
@@ -151,98 +161,108 @@ export class FieldCreator {
         this.fieldModifierHandler.validateModifier(attribute.modifier, embedded)
       )
       .map((attribute) => {
-        const type = converter.getInputType(attribute);
-        const defaultValue = converter.getFormDefaultValue(
-          type,
-          attribute.default_value_set,
-          attribute.default_value
-        );
+        const field = this.attributeToField(attribute, converter);
 
-        if (type === "bool") {
-          return {
-            kind: "Boolean",
-            name: attribute.name,
-            defaultValue: defaultValue,
-            description: attribute.description,
-            type: attribute.type,
-            isOptional: attribute.type.includes("?"),
-            isDisabled: this.shouldFieldBeDisabled(attribute),
-          };
-        }
-
-        if (type === "dict") {
-          return {
-            kind: "Dict",
-            type: attribute.type,
-            name: attribute.name,
-            defaultValue: defaultValue,
-            description: attribute.description,
-            isOptional: this.isTextFieldOptional(attribute),
-            isDisabled: this.shouldFieldBeDisabled(attribute),
-          };
-        }
-
-        if (attribute.validation_type === "enum" || attribute.validation_type === "enum?") {
-          return {
-            kind: "Enum",
-            name: attribute.name,
-            defaultValue: defaultValue,
-            description: attribute.description,
-            type: attribute.type,
-            isOptional: attribute.type.includes("?"),
-            options: attribute.validation_parameters.names,
-            isDisabled: this.shouldFieldBeDisabled(attribute),
-            suggestion: attribute.attribute_annotations?.web_suggested_values || null,
-          };
-        }
-
-        if (attribute.type === "string[]" || attribute.type === "string[]?") {
-          return {
-            kind: "TextList",
-            name: attribute.name,
-            defaultValue: defaultValue,
-            inputType: type,
-            description: attribute.description,
-            type: attribute.type,
-            isOptional: this.isTextFieldOptional(attribute),
-            isDisabled: this.shouldFieldBeDisabled(attribute),
-            suggestion: attribute.attribute_annotations?.web_suggested_values || null,
-          };
-        }
-
-        // WORKAROUND TO ADD SUPPORT FOR TEXTAREA
-        if (
-          (attribute.type === "string" || attribute.type === "string?") &&
-          (attribute.validation_type === "pydantic.constr" ||
-            attribute.validation_type === "pydantic.constr?") &&
-          attribute.validation_parameters.max_length &&
-          attribute.validation_parameters.max_length > 255
-        ) {
-          return {
-            kind: "Textarea",
-            name: attribute.name,
-            defaultValue: defaultValue,
-            inputType: type,
-            description: attribute.description,
-            type: attribute.type,
-            isOptional: this.isTextFieldOptional(attribute),
-            isDisabled: this.shouldFieldBeDisabled(attribute),
-            suggestion: attribute.attribute_annotations?.web_suggested_values || null,
-          };
-        }
-
-        return {
-          kind: "Text",
-          name: attribute.name,
-          defaultValue: defaultValue,
-          inputType: type,
-          description: attribute.description,
-          type: attribute.type,
-          isOptional: this.isTextFieldOptional(attribute),
-          isDisabled: this.shouldFieldBeDisabled(attribute),
-          suggestion: attribute.attribute_annotations?.web_suggested_values || null,
-        };
+        // Tab assignment is only resolved for top-level fields.
+        return embedded ? field : { ...field, tab: attribute.attribute_annotations?.web_tab };
       });
+  }
+
+  private attributeToField(
+    attribute: AttributeModel,
+    converter: AttributeInputConverterImpl
+  ): Field {
+    const type = converter.getInputType(attribute);
+    const defaultValue = converter.getFormDefaultValue(
+      type,
+      attribute.default_value_set,
+      attribute.default_value
+    );
+
+    if (type === "bool") {
+      return {
+        kind: "Boolean",
+        name: attribute.name,
+        defaultValue: defaultValue,
+        description: attribute.description,
+        type: attribute.type,
+        isOptional: attribute.type.includes("?"),
+        isDisabled: this.shouldFieldBeDisabled(attribute),
+      };
+    }
+
+    if (type === "dict") {
+      return {
+        kind: "Dict",
+        type: attribute.type,
+        name: attribute.name,
+        defaultValue: defaultValue,
+        description: attribute.description,
+        isOptional: this.isTextFieldOptional(attribute),
+        isDisabled: this.shouldFieldBeDisabled(attribute),
+      };
+    }
+
+    if (attribute.validation_type === "enum" || attribute.validation_type === "enum?") {
+      return {
+        kind: "Enum",
+        name: attribute.name,
+        defaultValue: defaultValue,
+        description: attribute.description,
+        type: attribute.type,
+        isOptional: attribute.type.includes("?"),
+        options: attribute.validation_parameters.names,
+        isDisabled: this.shouldFieldBeDisabled(attribute),
+        suggestion: attribute.attribute_annotations?.web_suggested_values || null,
+      };
+    }
+
+    if (attribute.type === "string[]" || attribute.type === "string[]?") {
+      return {
+        kind: "TextList",
+        name: attribute.name,
+        defaultValue: defaultValue,
+        inputType: type,
+        description: attribute.description,
+        type: attribute.type,
+        isOptional: this.isTextFieldOptional(attribute),
+        isDisabled: this.shouldFieldBeDisabled(attribute),
+        suggestion: attribute.attribute_annotations?.web_suggested_values || null,
+      };
+    }
+
+    // WORKAROUND TO ADD SUPPORT FOR TEXTAREA
+    if (
+      (attribute.type === "string" || attribute.type === "string?") &&
+      (attribute.validation_type === "pydantic.constr" ||
+        attribute.validation_type === "pydantic.constr?") &&
+      attribute.validation_parameters.max_length &&
+      attribute.validation_parameters.max_length > 255
+    ) {
+      return {
+        kind: "Textarea",
+        name: attribute.name,
+        defaultValue: defaultValue,
+        inputType: type,
+        description: attribute.description,
+        type: attribute.type,
+        isOptional: this.isTextFieldOptional(attribute),
+        isDisabled: this.shouldFieldBeDisabled(attribute),
+        suggestion: attribute.attribute_annotations?.web_suggested_values || null,
+      };
+    }
+
+    return {
+      kind: "Text",
+      name: attribute.name,
+      defaultValue: defaultValue,
+      inputType: type,
+      description: attribute.description,
+      type: attribute.type,
+      isOptional: this.isTextFieldOptional(attribute),
+      isDisabled: this.shouldFieldBeDisabled(attribute),
+      suggestion: attribute.attribute_annotations?.web_suggested_values || null,
+    };
   }
 
   private isTextFieldOptional(attribute: AttributeModel): boolean {
