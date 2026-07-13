@@ -1,0 +1,6 @@
+description: The deploying spinner label on the Resources page is now clickable when resources are deploying, toggling the isDeploying filter on and off.
+issue-nr: 6993
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

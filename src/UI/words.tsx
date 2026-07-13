@@ -557,7 +557,9 @@ const dict = {
   "resources.empty.filterMessage":
     "The given combination of filters didn't match any existing resources, please edit your filter values.",
   "resources.deploying.popover": (count: number) =>
-    `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying`,
+    `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying${
+      count > 0 ? ", click to filter" : ""
+    }`,
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "discoveredResourceDetails.title": "Discovered Resource Details",

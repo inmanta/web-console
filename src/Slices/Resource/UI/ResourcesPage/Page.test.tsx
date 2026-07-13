@@ -30,6 +30,7 @@ interface GqlVariables {
     agent?: { contains?: string[] };
     resourceIdValue?: { contains?: string[] };
     isOrphan?: boolean;
+    isDeploying?: boolean;
   };
   first?: number;
   after?: string;
@@ -715,6 +716,59 @@ describe("ResourcesPage", () => {
     const label = screen.getByTestId("deploying-label");
 
     expect(label).toHaveTextContent("3");
+  });
+
+  test("clicking the deploying label toggles the isDeploying filter on and off", async () => {
+    let lastVariables: GqlVariables | undefined;
+
+    server.use(
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
+        lastVariables = variables;
+
+        return HttpResponse.json({
+          data: toGqlResponse({
+            ...BASE_DATA,
+            resourceSummary: createMockResourceSummary({ isDeploying: { true: 3, false: 3 } }),
+          }),
+        });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
+
+    // First click adds the isDeploying filter
+    await userEvent.click(within(screen.getByTestId("deploying-label")).getByRole("button"));
+    await waitFor(() => expect(lastVariables?.filter?.isDeploying).toBe(true));
+
+    // Second click removes it again
+    await userEvent.click(within(screen.getByTestId("deploying-label")).getByRole("button"));
+    await waitFor(() => expect(lastVariables?.filter?.isDeploying).toBeUndefined());
+  });
+
+  test("deploying label is not clickable when nothing is deploying", async () => {
+    server.use(
+      queryLink.query("GetResources", () =>
+        HttpResponse.json({
+          data: toGqlResponse({
+            ...BASE_DATA,
+            resourceSummary: createMockResourceSummary({ isDeploying: { true: 0, false: 6 } }),
+          }),
+        })
+      )
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
+
+    // Without an onClick, PatternFly renders the label as plain content, not a button
+    expect(within(screen.getByTestId("deploying-label")).queryByRole("button")).not.toBeInTheDocument();
   });
 
   test("toolbar stays visible and updates after navigating to next page", async () => {
