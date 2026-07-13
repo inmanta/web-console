@@ -90,9 +90,9 @@ const ExpiryInput: React.FC<ExpiryInputProps> = ({ onChange, isDisabled }) => {
         </FormSelect>
       </FlexItem>
       {choice === "custom" && (
-        <>
-          <FlexItem>
-            <TextInput
+        <FlexItem>
+          <InputGroup>
+            <AmountInput
               id="token-expiry-amount"
               type="number"
               aria-label="ExpiryCustomAmount"
@@ -100,9 +100,7 @@ const ExpiryInput: React.FC<ExpiryInputProps> = ({ onChange, isDisabled }) => {
               onChange={(_event, value) => update(choice, value, customUnit)}
               isDisabled={isDisabled}
             />
-          </FlexItem>
-          <FlexItem>
-            <FormSelect
+            <UnitSelect
               id="token-expiry-unit"
               aria-label="ExpiryCustomUnit"
               value={customUnit}
@@ -112,9 +110,9 @@ const ExpiryInput: React.FC<ExpiryInputProps> = ({ onChange, isDisabled }) => {
               {CUSTOM_UNITS.map((option) => (
                 <FormSelectOption key={option.unit} value={option.unit} label={option.unit} />
               ))}
-            </FormSelect>
-          </FlexItem>
-        </>
+            </UnitSelect>
+          </InputGroup>
+        </FlexItem>
       )}
     </>
   );
@@ -229,6 +227,14 @@ export const TokenForm: React.FC<Props> = ({
 const StyledInputGroup = styled(InputGroup)`
   padding-bottom: 1rem;
   max-width: 600px;
+`;
+
+const AmountInput = styled(TextInput)`
+  width: 6rem;
+`;
+
+const UnitSelect = styled(FormSelect)`
+  width: auto;
 `;
 
 const Container = styled.div`
