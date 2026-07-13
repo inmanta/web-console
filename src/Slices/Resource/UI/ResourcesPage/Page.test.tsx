@@ -768,7 +768,9 @@ describe("ResourcesPage", () => {
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
     // Without an onClick, PatternFly renders the label as plain content, not a button
-    expect(within(screen.getByTestId("deploying-label")).queryByRole("button")).not.toBeInTheDocument();
+    expect(
+      within(screen.getByTestId("deploying-label")).queryByRole("button")
+    ).not.toBeInTheDocument();
   });
 
   test("toolbar stays visible and updates after navigating to next page", async () => {
