@@ -71,6 +71,7 @@ export const TokenTable: React.FC = () => {
           <Th>{words("settings.tabs.token.column.issuedAt")}</Th>
           <Th>{words("settings.tabs.token.column.lastUsed")}</Th>
           <Th>{words("settings.tabs.token.column.status")}</Th>
+          <Th>{words("settings.tabs.token.column.revokedAt")}</Th>
           <Th screenReaderText={words("common.emptyColumnHeader")} />
         </Tr>
       </Thead>
@@ -88,6 +89,7 @@ export const TokenTable: React.FC = () => {
                 <Label color="green">{words("settings.tabs.token.status.active")}</Label>
               )}
             </Td>
+            <Td>{formatDate(token.revoked_at)}</Td>
             <Td isActionCell>
               <Button
                 variant="danger"

@@ -18,6 +18,7 @@ const makeToken = (overrides: Partial<Token> = {}): Token => ({
   issued_at: "2026-07-04T10:00:00+00:00",
   expires_at: null,
   revoked: false,
+  revoked_at: null,
   last_used: null,
   ...overrides,
 });
@@ -52,12 +53,13 @@ describe("TokenTable", () => {
   });
 
   test("GIVEN registered tokens THEN they are listed with creator, client types and status", async () => {
+    const revokedAt = "2026-07-10T12:00:00+00:00";
     server.use(
       http.get("/api/v2/environment_auth", () =>
         HttpResponse.json({
           data: [
             makeToken({ jti: "aaa", created_by: "alice", client_types: ["api", "compiler"] }),
-            makeToken({ jti: "bbb", created_by: "bob", revoked: true }),
+            makeToken({ jti: "bbb", created_by: "bob", revoked: true, revoked_at: revokedAt }),
           ],
         })
       )
@@ -72,6 +74,8 @@ describe("TokenTable", () => {
 
     const revokedRow = screen.getByLabelText("token-row-bbb");
     expect(within(revokedRow).getByText(words("settings.tabs.token.status.revoked"))).toBeVisible();
+    // The revocation moment is shown for revoked tokens.
+    expect(within(revokedRow).getByText(new Date(revokedAt).toLocaleString())).toBeVisible();
     // An already-revoked token cannot be revoked again.
     expect(within(revokedRow).getByRole("button", { name: "revoke-bbb" })).toBeDisabled();
   });

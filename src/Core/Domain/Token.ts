@@ -21,5 +21,6 @@ export interface Token {
   issued_at: string;
   expires_at: string | null;
   revoked: boolean;
+  revoked_at: string | null;
   last_used: string | null;
 }
