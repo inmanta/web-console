@@ -19,6 +19,7 @@ export const Tab: React.FC = () => {
   const client = useQueryClient();
   const [clientTypes, setClientTypes] = useState<ClientType[]>([]);
   const [isRevocable, setIsRevocable] = useState(false);
+  const [expire, setExpire] = useState<number | null>(null);
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -50,7 +51,12 @@ export const Tab: React.FC = () => {
     setError(null);
     setToken(null);
     setIsBusy(true);
-    mutate({ client_types: clientTypes, idempotent: !isRevocable });
+    // Only revocable (non-idempotent) tokens can carry an expiry.
+    mutate({
+      client_types: clientTypes,
+      idempotent: !isRevocable,
+      ...(isRevocable && expire !== null ? { expire } : {}),
+    });
 
     setIsBusy(false);
   };
@@ -64,6 +70,8 @@ export const Tab: React.FC = () => {
         isClientTypeSelected={isClientTypeSelected}
         isRevocable={isRevocable}
         onRevocableChange={setIsRevocable}
+        expire={expire}
+        onExpireChange={setExpire}
         token={token}
         error={error}
         isBusy={isBusy}

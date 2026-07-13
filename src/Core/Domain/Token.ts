@@ -8,6 +8,12 @@ export interface TokenInfo {
    * revoked. When true (the default), the token is reproducible and stateless (not revocable).
    */
   idempotent?: boolean;
+
+  /**
+   * The lifetime of the token in seconds. When not set, the server's signing configuration governs
+   * the expiry. Only valid for non-idempotent (revocable) tokens.
+   */
+  expire?: number;
 }
 
 /**

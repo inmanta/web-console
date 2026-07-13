@@ -1,0 +1,4 @@
+description: Allow setting a token expiry when creating a token and show each token's expiry in the Tokens tab
+issue-nr: 7104
+change-type: minor
+destination-branches: [master, iso9]
