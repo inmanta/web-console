@@ -812,12 +812,16 @@ const dict = {
   "settings.tabs.tokens": "Tokens",
   "settings.tabs.token.disabledInfo": "An authenticated user is required to create tokens",
   "settings.tabs.token.description":
-    "Generate authentication tokens for authorizing agents, api or compiler for this specific environment.",
+    "Generate an authentication token for this environment. Tokens give API access by default.",
   "settings.tabs.token.generate": "Generate",
   "settings.tabs.token.revocable": "Create a revocable token",
   "settings.tabs.token.expiry": "Expires after",
   "settings.tabs.token.expiry.never": "Never",
   "settings.tabs.token.expiry.custom": "Custom",
+  "settings.tabs.token.advanced": "Advanced options",
+  "settings.tabs.token.clientTypes": "Client types",
+  "settings.tabs.token.clientTypes.help":
+    "Most tokens only need api. The agent and compiler client types are only required when connecting an externally hosted agent or a remote compiler to this environment.",
   "settings.tabs.token.registered.title": "Registered tokens",
   "settings.tabs.token.empty": "No revocable tokens have been created for this environment.",
   "settings.tabs.token.column.createdBy": "Created by",
