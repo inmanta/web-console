@@ -134,6 +134,65 @@ describe("Token Tab", () => {
     await waitFor(() => expect(requestBody).toEqual({ client_types: [], idempotent: true }));
   });
 
+  test("GIVEN a revocable token with an expiry WHEN generate is clicked THEN expire is sent", async () => {
+    let requestBody: Record<string, unknown> | null = null;
+    server.use(
+      http.post("/api/v2/environment_auth", async ({ request }) => {
+        requestBody = (await request.json()) as Record<string, unknown>;
+
+        return HttpResponse.json({ data: "tokenstring123" });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    // Make the revocable state explicit so this test is independent of the form's default.
+    const revocable: HTMLInputElement = screen.getByRole("checkbox", { name: "RevocableOption" });
+    if (!revocable.checked) {
+      await userEvent.click(revocable);
+    }
+
+    await userEvent.selectOptions(screen.getByRole("combobox", { name: "ExpiryOption" }), "3600");
+    await userEvent.click(
+      screen.getByRole("button", { name: words("settings.tabs.token.generate") })
+    );
+
+    await waitFor(() =>
+      expect(requestBody).toEqual({ client_types: [], idempotent: false, expire: 3600 })
+    );
+  });
+
+  test("GIVEN a non-revocable token THEN the expiry select is disabled and expire is not sent", async () => {
+    let requestBody: Record<string, unknown> | null = null;
+    server.use(
+      http.post("/api/v2/environment_auth", async ({ request }) => {
+        requestBody = (await request.json()) as Record<string, unknown>;
+
+        return HttpResponse.json({ data: "tokenstring123" });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    // Make the revocable state explicit so this test is independent of the form's default.
+    const revocable: HTMLInputElement = screen.getByRole("checkbox", { name: "RevocableOption" });
+    if (revocable.checked) {
+      await userEvent.click(revocable);
+    }
+
+    expect(screen.getByRole("combobox", { name: "ExpiryOption" })).toBeDisabled();
+
+    await userEvent.click(
+      screen.getByRole("button", { name: words("settings.tabs.token.generate") })
+    );
+
+    await waitFor(() => expect(requestBody).toEqual({ client_types: [], idempotent: true }));
+  });
+
   test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
     server.use(
       http.post("/api/v2/environment_auth", () => {

@@ -4,6 +4,8 @@ import {
   Checkbox,
   Flex,
   FlexItem,
+  FormSelect,
+  FormSelectOption,
   InputGroup,
   TextInput,
   ToggleGroup,
@@ -15,6 +17,15 @@ import { ClientType } from "@/Core";
 import { AppAlert, ClipboardCopyButton, Description } from "@/UI/Components";
 import { words } from "@/UI/words";
 
+// Preset token lifetimes in seconds; the empty default means no explicit expiry.
+const EXPIRY_OPTIONS: { seconds: number; label: string }[] = [
+  { seconds: 3600, label: "1 hour" },
+  { seconds: 86400, label: "1 day" },
+  { seconds: 604800, label: "7 days" },
+  { seconds: 2592000, label: "30 days" },
+  { seconds: 31536000, label: "1 year" },
+];
+
 interface Props {
   onGenerate(): void;
   onErrorClose(): void;
@@ -22,6 +33,8 @@ interface Props {
   isClientTypeSelected(clientType: ClientType): boolean;
   isRevocable: boolean;
   onRevocableChange(value: boolean): void;
+  expire: number | null;
+  onExpireChange(value: number | null): void;
   token: string | null;
   error: string | null;
   isBusy: boolean;
@@ -33,6 +46,8 @@ export const TokenForm: React.FC<Props> = ({
   isClientTypeSelected,
   isRevocable,
   onRevocableChange,
+  expire,
+  onExpireChange,
   token,
   error,
   onErrorClose,
@@ -78,6 +93,28 @@ export const TokenForm: React.FC<Props> = ({
           isDisabled={isBusy}
           onChange={(_event, checked) => onRevocableChange(checked)}
         />
+      </FlexItem>
+      <FlexItem>
+        <label htmlFor="token-expiry">{words("settings.tabs.token.expiry")}</label>
+      </FlexItem>
+      <FlexItem>
+        <FormSelect
+          id="token-expiry"
+          aria-label="ExpiryOption"
+          value={expire === null ? "" : String(expire)}
+          onChange={(_event, value) => onExpireChange(value === "" ? null : Number(value))}
+          // An idempotent (non-revocable) token carries no time-based claims, so it cannot expire.
+          isDisabled={isBusy || !isRevocable}
+        >
+          <FormSelectOption value="" label={words("settings.tabs.token.expiry.never")} />
+          {EXPIRY_OPTIONS.map((option) => (
+            <FormSelectOption
+              key={option.seconds}
+              value={String(option.seconds)}
+              label={option.label}
+            />
+          ))}
+        </FormSelect>
       </FlexItem>
       <FlexItem>
         <Button variant="primary" onClick={onGenerate} isDisabled={isBusy}>
