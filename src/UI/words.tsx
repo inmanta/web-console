@@ -815,6 +815,7 @@ const dict = {
   "settings.tabs.token.revocable": "Create a revocable token",
   "settings.tabs.token.expiry": "Expires after",
   "settings.tabs.token.expiry.never": "Never",
+  "settings.tabs.token.expiry.custom": "Custom",
   "settings.tabs.token.registered.title": "Registered tokens",
   "settings.tabs.token.empty": "No revocable tokens have been created for this environment.",
   "settings.tabs.token.column.createdBy": "Created by",
