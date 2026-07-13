@@ -70,7 +70,6 @@ export const Tab: React.FC = () => {
         isClientTypeSelected={isClientTypeSelected}
         isRevocable={isRevocable}
         onRevocableChange={setIsRevocable}
-        expire={expire}
         onExpireChange={setExpire}
         token={token}
         error={error}
