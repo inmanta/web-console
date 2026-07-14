@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump graphql from 17.0.1 to 17.0.2
+destination-branches:
+- master
+sections: {}
