@@ -7,7 +7,7 @@ import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
 import { words } from "@/UI";
 import { TextWithCopy } from "@/UI/Components";
 import { CopyMultiOptions } from "@/UI/Components/CopyMultiOptions";
-import { getInstanceIdentity } from "./getInstanceIdentity";
+import { getInstanceDisplayName } from "./getInstanceDisplayName";
 
 interface Props {
   dependencies: ServiceOrderItemDependencies;
@@ -21,13 +21,13 @@ interface Props {
  *
  * Dependencies contain the ID of the instance and their matching status.
  * The instance_id only refers to an instance being part of the Order, so the matching
- * service_order_item is looked up in orderItems to resolve its service identity, same as
+ * service_order_item is looked up in orderItems to resolve its display name, same as
  * the OrderInstanceLink cell.
  *
  * Clicking a dependency row expands and focuses the matching row in the order details table.
  *
  * @param dependencies ServiceOrderItemDependencies
- * @param orderItems all service_order_items of the order, used to resolve the identity of each dependency
+ * @param orderItems all service_order_items of the order, used to resolve the display name of each dependency
  * @param expandInstanceOrderDetailsRow callback invoked with the instanceId of the clicked dependency
  * @returns ReactNode
  */
@@ -49,10 +49,10 @@ export const OrderDependencies: React.FC<Props> = ({
       <Table>
         <Tbody>
           {Object.entries(dependencies).map(([instance_id, status], index) => {
-            const identity = getInstanceIdentity(
+            const instanceDisplayName = getInstanceDisplayName(
               orderItems.find((item) => item.instance_id === instance_id)
             );
-            const displayValue = identity || instance_id;
+            const displayValue = instanceDisplayName || instance_id;
 
             const content = expandInstanceOrderDetailsRow ? (
               <Button
@@ -81,11 +81,11 @@ export const OrderDependencies: React.FC<Props> = ({
                 }
               >
                 <Td>
-                  {identity ? (
+                  {instanceDisplayName ? (
                     <>
                       {content}
                       <CopyMultiOptions
-                        options={[identity, instance_id]}
+                        options={[instanceDisplayName, instance_id]}
                         tooltipContent={words("serviceIdentity.copy")}
                       />
                     </>

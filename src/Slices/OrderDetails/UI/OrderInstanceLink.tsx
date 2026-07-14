@@ -7,7 +7,7 @@ import { TextWithCopy } from "@/UI/Components";
 import { CopyMultiOptions } from "@/UI/Components/CopyMultiOptions";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { getInstanceIdentity } from "./getInstanceIdentity";
+import { getInstanceDisplayName } from "./getInstanceDisplayName";
 
 interface Props {
   row: ServiceOrderItem;
@@ -29,12 +29,12 @@ export const OrderInstanceLink: React.FC<Props> = ({ row }) => {
   const { routeManager } = useContext(DependencyContext);
   const navigate = useNavigate();
 
-  const identity = getInstanceIdentity(row);
-  const displayValue = identity || row.instance_id;
+  const instanceDisplayName = getInstanceDisplayName(row);
+  const displayValue = instanceDisplayName || row.instance_id;
 
   const instanceDetailsUrl = routeManager.useUrl("InstanceDetails", {
     service: row.service_entity,
-    instance: identity || row.instance_id,
+    instance: instanceDisplayName || row.instance_id,
     instanceId: row.instance_id,
   });
 
@@ -58,12 +58,12 @@ export const OrderInstanceLink: React.FC<Props> = ({ row }) => {
     </Button>
   );
 
-  if (identity) {
+  if (instanceDisplayName) {
     return (
       <>
         {content}
         <CopyMultiOptions
-          options={[identity, row.instance_id]}
+          options={[instanceDisplayName, row.instance_id]}
           tooltipContent={words("serviceIdentity.copy")}
         />
       </>
