@@ -135,9 +135,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
     ({ date, operator }) => `${operator} | ${datePresenter.getFull(date.toISOString())}`
   );
   const hasActiveFilters =
-    (filter.name?.length ?? 0) > 0 ||
-    (filter.source?.length ?? 0) > 0 ||
-    updatedChips.length > 0;
+    (filter.name?.length ?? 0) > 0 || (filter.source?.length ?? 0) > 0 || updatedChips.length > 0;
 
   return (
     <FilterDrawerPanelContent title={words("parameters.filters")} onClose={onClose}>
