@@ -27,6 +27,8 @@ interface Props {
   isExpanded: boolean;
   onToggle: () => void;
   numberOfColumns: number;
+  rowRef?: (element: HTMLTableRowElement | null) => void;
+  expandInstanceOrderDetailsRow?: (instanceId: string) => void;
 }
 
 /**
@@ -38,6 +40,8 @@ interface Props {
  * @param isExpanded boolean
  * @param onToggle callback method
  * @param numberOfColumns number
+ * @param rowRef ref callback used to scroll to and focus this row from a dependency link
+ * @param expandInstanceOrderDetailsRow callback invoked to expand and focus the row for a given instanceId
  * @returns ReactNode
  */
 export const OrderDetailsRow: React.FC<Props> = ({
@@ -45,10 +49,12 @@ export const OrderDetailsRow: React.FC<Props> = ({
   isExpanded,
   onToggle,
   numberOfColumns,
+  rowRef,
+  expandInstanceOrderDetailsRow,
 }) => {
   return (
     <>
-      <Tr aria-label="ServiceOrderDetailsRow">
+      <Tr aria-label="ServiceOrderDetailsRow" ref={rowRef} tabIndex={-1}>
         <Td>
           <Toggle expanded={isExpanded} onToggle={onToggle} aria-label={"Toggle-DetailsRow"} />
         </Td>
@@ -84,7 +90,10 @@ export const OrderDetailsRow: React.FC<Props> = ({
               <TopAlignedLayout aria-label="Expanded-Dependencies">
                 <DescriptionListTerm>{words("orders.row.dependencies")}</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <OrderDependencies dependencies={row.status.direct_dependencies} />
+                  <OrderDependencies
+                    dependencies={row.status.direct_dependencies}
+                    expandInstanceOrderDetailsRow={expandInstanceOrderDetailsRow}
+                  />
                 </DescriptionListDescription>
               </TopAlignedLayout>
               <TopAlignedLayout aria-label="Expanded-Config">
