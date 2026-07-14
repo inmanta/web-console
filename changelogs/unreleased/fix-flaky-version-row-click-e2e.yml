@@ -1,0 +1,3 @@
+description: Stabilize the flaky version selection in the basic-service e2e scenario (click the version cell directly instead of double-triggering a raw click on the row).
+change-type: patch
+destination-branches: [master, iso9, iso8]
