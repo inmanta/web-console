@@ -129,9 +129,9 @@ if (isIso) {
       cy.get('[aria-label="History-Row"]').eq(0).should("contain", "up");
 
       // Selecting a version in the table should change the tags in the heading of the page.
-      cy.get('[id="version-2"]').trigger("click");
-      cy.wait(1000);
-      cy.get('[id="version-2"]').trigger("click");
+      cy.get('[id="version-2"]').within(() => {
+        cy.get('[data-label="version"]').click();
+      });
 
       cy.get('[data-testid="selected-version"]', { timeout: 30000 }).should(
         "have.text",
