@@ -76,11 +76,3 @@ const decodeParams = (params: Params): Params =>
       value === undefined ? value : decodeURIComponent(value),
     ])
   );
-
-export const encodeParams = (params: Params): Params =>
-  Object.fromEntries(
-    Object.entries(params).map(([key, value]) => [
-      key,
-      value === undefined ? value : encodeURIComponent(value),
-    ])
-  );

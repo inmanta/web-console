@@ -54,6 +54,7 @@ export const OrderDetailsTable: React.FC<Props> = ({ tablePresenter, rows, ...pr
         {rows.map((row) => (
           <OrderDetailsRow
             row={row}
+            orderItems={rows}
             key={row.instance_id}
             isExpanded={isExpanded(row.instance_id)}
             onToggle={onExpansion(row.instance_id)}

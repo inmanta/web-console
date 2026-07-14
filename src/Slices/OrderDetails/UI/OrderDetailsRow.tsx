@@ -13,9 +13,10 @@ import styled from "styled-components";
 import { JsonFormatter } from "@/Data";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
-import { CodeEditor, TextWithCopy, Toggle } from "@/UI/Components";
+import { CodeEditor, Toggle } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { OrderDependencies } from "./OrderDependencies";
+import { OrderInstanceLink } from "./OrderInstanceLink";
 import { OrderStateDetails } from "./OrderStateDetails";
 
 // Same JSON pretty-printer the AttributeClassifier uses console-wide, so config
@@ -24,6 +25,7 @@ const jsonFormatter = new JsonFormatter();
 
 interface Props {
   row: ServiceOrderItem;
+  orderItems: ServiceOrderItem[];
   isExpanded: boolean;
   onToggle: () => void;
   numberOfColumns: number;
@@ -37,6 +39,7 @@ interface Props {
  * Displays all the details in expandable rows about the service_order_item
  *
  * @param row  ServiceOrderItem
+ * @param orderItems all service_order_items of the order, used to resolve the identity of dependencies
  * @param isExpanded boolean
  * @param onToggle callback method
  * @param numberOfColumns number
@@ -46,6 +49,7 @@ interface Props {
  */
 export const OrderDetailsRow: React.FC<Props> = ({
   row,
+  orderItems,
   isExpanded,
   onToggle,
   numberOfColumns,
@@ -59,7 +63,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
           <Toggle expanded={isExpanded} onToggle={onToggle} aria-label={"Toggle-DetailsRow"} />
         </Td>
         <Td width={35} dataLabel={words("orders.column.instanceId")}>
-          <TextWithCopy value={row.instance_id} tooltipContent={words("serviceIdentity.copy")} />
+          <OrderInstanceLink row={row} />
         </Td>
         <Td width={25} dataLabel={words("orders.column.serviceEntity")}>
           {row.service_entity}
@@ -92,6 +96,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
                 <DescriptionListDescription>
                   <OrderDependencies
                     dependencies={row.status.direct_dependencies}
+                    orderItems={orderItems}
                     expandInstanceOrderDetailsRow={expandInstanceOrderDetailsRow}
                   />
                 </DescriptionListDescription>
