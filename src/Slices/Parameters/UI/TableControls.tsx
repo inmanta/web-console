@@ -1,22 +1,46 @@
 import React from "react";
-import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { Filter } from "@/Slices/Parameters/Core/Types";
-
-import { FilterWidget } from "./FilterWidget";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import { FilterToggleButton } from "@/UI/Components";
+import { words } from "@/UI/words";
 
 interface Props {
-  filter: Filter;
-  setFilter: (filter: Filter) => void;
   paginationWidget: React.ReactNode;
+  onToggleFilters: () => void;
+  isDrawerExpanded: boolean;
+  activeFilterCount: number;
 }
 
-export const TableControls: React.FC<Props> = ({ filter, setFilter, paginationWidget }) => {
-  return (
-    <Toolbar clearAllFilters={() => setFilter({})} collapseListedFiltersBreakpoint="xl">
-      <ToolbarContent>
-        <FilterWidget filter={filter} setFilter={setFilter} />
-        <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
-      </ToolbarContent>
-    </Toolbar>
-  );
-};
+/**
+ * The TableControls component for the Parameters page.
+ *
+ * Renders the toolbar with the pagination widget and the filter toggle button
+ * that opens the side-panel filter drawer.
+ *
+ * @Props {Props} - Component props.
+ *  @prop {React.ReactNode} paginationWidget - The pagination widget.
+ *  @prop {() => void} onToggleFilters - The function to toggle the filter drawer.
+ *  @prop {boolean} isDrawerExpanded - Whether the filter drawer is expanded.
+ *  @prop {number} activeFilterCount - The number of active filters.
+ *
+ * @returns {React.ReactElement} The rendered table controls.
+ */
+export const TableControls: React.FC<Props> = ({
+  paginationWidget,
+  onToggleFilters,
+  isDrawerExpanded,
+  activeFilterCount,
+}) => (
+  <Toolbar>
+    <ToolbarContent>
+      <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
+      <ToolbarItem>
+        <FilterToggleButton
+          onClick={onToggleFilters}
+          isExpanded={isDrawerExpanded}
+          activeFilterCount={activeFilterCount}
+          label={words("parameters.filters")}
+        />
+      </ToolbarItem>
+    </ToolbarContent>
+  </Toolbar>
+);
