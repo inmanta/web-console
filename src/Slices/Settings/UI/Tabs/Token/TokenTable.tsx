@@ -76,32 +76,36 @@ export const TokenTable: React.FC = () => {
         </Tr>
       </Thead>
       <Tbody>
-        {data.map((token) => (
-          <Tr key={token.jti} aria-label={`token-row-${token.jti}`}>
-            <Td>{token.created_by ?? "-"}</Td>
-            <Td>{token.client_types.join(", ")}</Td>
-            <Td>{formatDate(token.issued_at)}</Td>
-            <Td>{formatDate(token.last_used)}</Td>
-            <Td>
-              {token.revoked ? (
-                <Label color="red">{words("settings.tabs.token.status.revoked")}</Label>
-              ) : (
-                <Label color="green">{words("settings.tabs.token.status.active")}</Label>
-              )}
-            </Td>
-            <Td>{formatDate(token.revoked_at)}</Td>
-            <Td isActionCell>
-              <Button
-                variant="danger"
-                isDisabled={token.revoked}
-                aria-label={`revoke-${token.jti}`}
-                onClick={() => confirmRevoke(token.jti)}
-              >
-                {words("settings.tabs.token.revoke")}
-              </Button>
-            </Td>
-          </Tr>
-        ))}
+        {data.map((token) => {
+          const isRevoked = token.revoked_at !== null;
+
+          return (
+            <Tr key={token.jti} aria-label={`token-row-${token.jti}`}>
+              <Td>{token.created_by ?? "-"}</Td>
+              <Td>{token.client_types.join(", ")}</Td>
+              <Td>{formatDate(token.issued_at)}</Td>
+              <Td>{formatDate(token.last_used)}</Td>
+              <Td>
+                {isRevoked ? (
+                  <Label color="red">{words("settings.tabs.token.status.revoked")}</Label>
+                ) : (
+                  <Label color="green">{words("settings.tabs.token.status.active")}</Label>
+                )}
+              </Td>
+              <Td>{formatDate(token.revoked_at)}</Td>
+              <Td isActionCell>
+                <Button
+                  variant="danger"
+                  isDisabled={isRevoked}
+                  aria-label={`revoke-${token.jti}`}
+                  onClick={() => confirmRevoke(token.jti)}
+                >
+                  {words("settings.tabs.token.revoke")}
+                </Button>
+              </Td>
+            </Tr>
+          );
+        })}
       </Tbody>
     </Table>
   );

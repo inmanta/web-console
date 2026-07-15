@@ -17,7 +17,6 @@ const makeToken = (overrides: Partial<Token> = {}): Token => ({
   environment: null,
   issued_at: "2026-07-04T10:00:00+00:00",
   expires_at: null,
-  revoked: false,
   revoked_at: null,
   last_used: null,
   ...overrides,
@@ -59,7 +58,7 @@ describe("TokenTable", () => {
         HttpResponse.json({
           data: [
             makeToken({ jti: "aaa", created_by: "alice", client_types: ["api", "compiler"] }),
-            makeToken({ jti: "bbb", created_by: "bob", revoked: true, revoked_at: revokedAt }),
+            makeToken({ jti: "bbb", created_by: "bob", revoked_at: revokedAt }),
           ],
         })
       )
