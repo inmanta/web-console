@@ -1,0 +1,4 @@
+description: Show when a token was revoked in the Tokens tab
+issue-nr: 7103
+change-type: minor
+destination-branches: [master, iso9]
