@@ -797,6 +797,7 @@ const dict = {
   "settings.tabs.token.column.issuedAt": "Issued at",
   "settings.tabs.token.column.lastUsed": "Last used",
   "settings.tabs.token.column.status": "Status",
+  "settings.tabs.token.column.revokedAt": "Revoked at",
   "settings.tabs.token.status.active": "Active",
   "settings.tabs.token.status.revoked": "Revoked",
   "settings.tabs.token.revoke": "Revoke",
