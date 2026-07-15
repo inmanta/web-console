@@ -69,6 +69,7 @@ export const TokenTable: React.FC = () => {
           <Th>{words("settings.tabs.token.column.createdBy")}</Th>
           <Th>{words("settings.tabs.token.column.clientTypes")}</Th>
           <Th>{words("settings.tabs.token.column.issuedAt")}</Th>
+          <Th>{words("settings.tabs.token.column.expiresAt")}</Th>
           <Th>{words("settings.tabs.token.column.lastUsed")}</Th>
           <Th>{words("settings.tabs.token.column.status")}</Th>
           <Th>{words("settings.tabs.token.column.revokedAt")}</Th>
@@ -84,6 +85,7 @@ export const TokenTable: React.FC = () => {
               <Td>{token.created_by ?? "-"}</Td>
               <Td>{token.client_types.join(", ")}</Td>
               <Td>{formatDate(token.issued_at)}</Td>
+              <Td>{formatDate(token.expires_at)}</Td>
               <Td>{formatDate(token.last_used)}</Td>
               <Td>
                 {isRevoked ? (
