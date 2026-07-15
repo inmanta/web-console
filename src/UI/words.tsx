@@ -822,6 +822,7 @@ const dict = {
   "settings.tabs.token.column.issuedAt": "Issued at",
   "settings.tabs.token.column.lastUsed": "Last used",
   "settings.tabs.token.column.status": "Status",
+  "settings.tabs.token.column.revokedAt": "Revoked at",
   "settings.tabs.token.status.active": "Active",
   "settings.tabs.token.status.revoked": "Revoked",
   "settings.tabs.token.revoke": "Revoke",
@@ -935,11 +936,13 @@ const dict = {
   "parameters.empty.message": "No parameters found",
   "parameters.columns.name": "Name",
   "parameters.columns.updated": "Last Updated",
-  "parameters.columns.updated.tests": "Updated",
   "parameters.columns.source": "Source",
   "parameters.columns.value": "Value",
   "parameters.filters.name.placeholder": "Filter by name",
   "parameters.filters.source.placeholder": "Filter by source",
+  "parameters.filters": "Filters",
+  "parameters.filters.from": "From",
+  "parameters.filters.to": "To",
 
   /**
    * Notification

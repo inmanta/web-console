@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { DateRange, PageSize, Parameter, Sort } from "@/Core/Domain";
 import { Handlers, Links, Metadata } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
@@ -80,6 +80,7 @@ export const useGetParameters = (params: GetParametersParams): GetParameters => 
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
+        placeholderData: keepPreviousData,
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
       }),
   };

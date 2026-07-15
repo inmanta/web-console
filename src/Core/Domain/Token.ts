@@ -20,6 +20,6 @@ export interface Token {
   environment: string | null;
   issued_at: string;
   expires_at: string | null;
-  revoked: boolean;
+  revoked_at: string | null;
   last_used: string | null;
 }

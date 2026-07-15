@@ -90,7 +90,7 @@ describe("Token Tab", () => {
     });
   });
 
-  test("GIVEN the revocable checkbox is checked WHEN generate is clicked THEN idempotent is false", async () => {
+  test("GIVEN the default form (revocable checked) WHEN generate is clicked THEN idempotent is false", async () => {
     let requestBody: Record<string, unknown> | null = null;
     server.use(
       http.post("/api/v2/environment_auth", async ({ request }) => {
@@ -104,7 +104,7 @@ describe("Token Tab", () => {
 
     render(component);
 
-    await userEvent.click(screen.getByRole("checkbox", { name: "RevocableOption" }));
+    expect(screen.getByRole("checkbox", { name: "RevocableOption" })).toBeChecked();
     await userEvent.click(
       screen.getByRole("button", { name: words("settings.tabs.token.generate") })
     );
@@ -126,6 +126,7 @@ describe("Token Tab", () => {
 
     render(component);
 
+    await userEvent.click(screen.getByRole("checkbox", { name: "RevocableOption" }));
     await userEvent.click(
       screen.getByRole("button", { name: words("settings.tabs.token.generate") })
     );
