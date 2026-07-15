@@ -478,8 +478,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   }
 
   private getAllowedRelations():
-    | Record<string, { lower_limit: number; upper_limit: number | null }>
-    | undefined {
+    Record<string, { lower_limit: number; upper_limit: number | null }> | undefined {
     const entityType = this.getEntityType();
     const entityName = this.getEntityName();
 

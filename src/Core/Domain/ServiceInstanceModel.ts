@@ -106,9 +106,7 @@ export interface SuggestionValue {
  * before the form uses it.
  */
 export type RawFormSuggestion =
-  | string
-  | number
-  | { label: string | number; value: string | number };
+  string | number | { label: string | number; value: string | number };
 
 /**
  * Interface representing the suggestions that are stored in the web_suggested_values.
