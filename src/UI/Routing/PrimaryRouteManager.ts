@@ -162,7 +162,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
 
     // generatePath already encodeURIComponent's each param; encoding them here too would
     // double-encode values with special characters (e.g. "Parent 1" -> "Parent%2520" instead
-    // of "Parent%20"), which then only gets decoded once and leaks a raw "Parent%20" into the UI.
+    // of "Parent%20").
     return generatePath(route.path, params);
   }
 

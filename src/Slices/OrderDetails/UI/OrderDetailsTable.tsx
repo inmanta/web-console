@@ -22,15 +22,38 @@ export const OrderDetailsTable: React.FC<Props> = ({ tablePresenter, rows, ...pr
   const [isExpanded, onExpansion, expand] = useExpansion();
   const rowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
 
-  const expandInstanceOrderDetailsRow = (instanceId: string) => {
-    expand(instanceId);
-    // Row content re-renders on expansion, but the row itself stays mounted, so the ref is
-    // already available to scroll to and focus in the same tick.
+  // Row content re-renders on expansion, but the row itself stays mounted, so the ref is
+  // already available to scroll to (and, when needed, focus) in the same tick.
+  const scrollInstanceOrderDetailsRowIntoView = (
+    instanceId: string,
+    { focus }: { focus: boolean }
+  ) => {
     const rowElement = rowRefs.current[instanceId];
 
     if (rowElement) {
       rowElement.scrollIntoView({ behavior: "smooth", block: "center" });
-      rowElement.focus();
+
+      if (focus) {
+        rowElement.focus();
+      }
+    }
+  };
+
+  const expandInstanceOrderDetailsRow = (instanceId: string) => {
+    expand(instanceId);
+    scrollInstanceOrderDetailsRowIntoView(instanceId, { focus: true });
+  };
+
+  // Only scroll when a row transitions from collapsed to expanded: its newly revealed content
+  // (dependencies, config, ...) can extend well below the fold. Focus is left alone here, since
+  // the toggle button the user just clicked already has it.
+  const toggleInstanceOrderDetailsRow = (instanceId: string) => () => {
+    const wasExpanded = isExpanded(instanceId);
+
+    onExpansion(instanceId)();
+
+    if (!wasExpanded) {
+      scrollInstanceOrderDetailsRowIntoView(instanceId, { focus: false });
     }
   };
 
@@ -57,7 +80,7 @@ export const OrderDetailsTable: React.FC<Props> = ({ tablePresenter, rows, ...pr
             orderItems={rows}
             key={row.instance_id}
             isExpanded={isExpanded(row.instance_id)}
-            onToggle={onExpansion(row.instance_id)}
+            onToggle={toggleInstanceOrderDetailsRow(row.instance_id)}
             numberOfColumns={tablePresenter.getNumberOfColumns()}
             rowRef={(element) => {
               rowRefs.current[row.instance_id] = element;
