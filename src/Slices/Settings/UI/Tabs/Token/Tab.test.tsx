@@ -161,7 +161,10 @@ describe("Token Tab", () => {
       await userEvent.click(revocable);
     }
 
-    await userEvent.selectOptions(screen.getByRole("combobox", { name: "ExpiryOption" }), "3600");
+    await userEvent.selectOptions(
+      screen.getByRole("combobox", { name: words("settings.tabs.token.expiry") }),
+      "3600"
+    );
     await userEvent.click(
       screen.getByRole("button", { name: words("settings.tabs.token.generate") })
     );
@@ -191,7 +194,10 @@ describe("Token Tab", () => {
       await userEvent.click(revocable);
     }
 
-    await userEvent.selectOptions(screen.getByRole("combobox", { name: "ExpiryOption" }), "custom");
+    await userEvent.selectOptions(
+      screen.getByRole("combobox", { name: words("settings.tabs.token.expiry") }),
+      "custom"
+    );
     await userEvent.type(screen.getByRole("spinbutton", { name: "ExpiryCustomAmount" }), "12");
     await userEvent.selectOptions(
       screen.getByRole("combobox", { name: "ExpiryCustomUnit" }),
@@ -226,7 +232,10 @@ describe("Token Tab", () => {
       await userEvent.click(revocable);
     }
 
-    await userEvent.selectOptions(screen.getByRole("combobox", { name: "ExpiryOption" }), "custom");
+    await userEvent.selectOptions(
+      screen.getByRole("combobox", { name: words("settings.tabs.token.expiry") }),
+      "custom"
+    );
     await userEvent.click(
       screen.getByRole("button", { name: words("settings.tabs.token.generate") })
     );
@@ -254,7 +263,9 @@ describe("Token Tab", () => {
       await userEvent.click(revocable);
     }
 
-    expect(screen.getByRole("combobox", { name: "ExpiryOption" })).toBeDisabled();
+    expect(
+      screen.getByRole("combobox", { name: words("settings.tabs.token.expiry") })
+    ).toBeDisabled();
 
     await userEvent.click(
       screen.getByRole("button", { name: words("settings.tabs.token.generate") })
