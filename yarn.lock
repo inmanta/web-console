@@ -1468,6 +1468,7 @@ __metadata:
     mochawesome: "npm:^7.1.4"
     mochawesome-report-generator: "npm:^6.3.2"
     monaco-editor: "npm:^0.52.2"
+    monaco-graphql: "npm:^1.8.0"
     msw: "npm:^2.14.3"
     oidc-client-ts: "npm:^3.5.0"
     prettier: "npm:^3.9.5"
