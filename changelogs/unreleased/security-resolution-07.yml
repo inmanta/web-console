@@ -1,0 +1,5 @@
+change-type: patch
+description: Patch security vulnerabilities in transitive dependencies (vite 8.1.4, vite-plugin-mkcert 2.1.0, markdown-it 14.3.0, undici 8.7.0, @babel/core 7.29.7)
+destination-branches:
+- master
+sections: {}
