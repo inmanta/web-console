@@ -53,11 +53,17 @@ describe("TokenTable", () => {
 
   test("GIVEN registered tokens THEN they are listed with creator, client types and status", async () => {
     const revokedAt = "2026-07-10T12:00:00+00:00";
+    const expiresAt = "2026-08-04T10:00:00+00:00";
     server.use(
       http.get("/api/v2/environment_auth", () =>
         HttpResponse.json({
           data: [
-            makeToken({ jti: "aaa", created_by: "alice", client_types: ["api", "compiler"] }),
+            makeToken({
+              jti: "aaa",
+              created_by: "alice",
+              client_types: ["api", "compiler"],
+              expires_at: expiresAt,
+            }),
             makeToken({ jti: "bbb", created_by: "bob", revoked_at: revokedAt }),
           ],
         })
@@ -70,6 +76,7 @@ describe("TokenTable", () => {
     expect(within(activeRow).getByText("alice")).toBeVisible();
     expect(within(activeRow).getByText("api, compiler")).toBeVisible();
     expect(within(activeRow).getByText(words("settings.tabs.token.status.active"))).toBeVisible();
+    expect(within(activeRow).getByText(new Date(expiresAt).toLocaleString())).toBeVisible();
 
     const revokedRow = screen.getByLabelText("token-row-bbb");
     expect(within(revokedRow).getByText(words("settings.tabs.token.status.revoked"))).toBeVisible();

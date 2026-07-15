@@ -1,0 +1,4 @@
+description: Allow setting a token expiry (presets or a custom amount and unit) when creating a token, show each token's expiry in the Tokens tab, and simplify the create-token form to generate api tokens by default with the client types moved to a collapsed advanced section
+issue-nr: 7104
+change-type: minor
+destination-branches: [master, iso9]
