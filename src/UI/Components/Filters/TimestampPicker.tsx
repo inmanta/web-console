@@ -19,7 +19,6 @@ interface Props {
   action?: React.ReactNode;
 }
 
-/** Both the Date and the Time Picker from Patternfly are in beta stage, e.g. validation doesn't work as expected */
 export const TimestampPicker: React.FC<Props> = ({
   timestamp,
   onChange,

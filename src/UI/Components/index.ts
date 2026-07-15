@@ -1,4 +1,6 @@
 export * as DiffWizard from "./DiffWizard";
+export * from "./AddableTextInput";
+export * from "./AddableSelectInput";
 export * from "./AppAlert";
 export * from "./ActionDisabledTooltip";
 export * from "./AttributeList";
@@ -20,7 +22,6 @@ export * from "./ErrorView";
 export * from "./EventIcon";
 export * from "./EventsTable";
 export * from "./FilterForm";
-export * from "./FilterWidget";
 export * from "./FilterPicker";
 export * from "./Filters";
 export * from "./IconTabs";

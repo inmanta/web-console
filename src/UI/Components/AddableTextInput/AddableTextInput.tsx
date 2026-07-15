@@ -10,13 +10,14 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
-import { words } from "@/UI";
 
 export interface AddableTextInputProps {
   label: string;
   placeholder: string;
   onAdd: (value: string) => void;
   hint?: string;
+  toggleLabel?: string;
+  type?: React.ComponentProps<typeof TextInput>["type"];
   onToggleInputMode?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -24,22 +25,24 @@ export interface AddableTextInputProps {
  * The AddableTextInput component.
  *
  * Provides a text input paired with a control button to append values to a filter category.
+ * Shared building block for the filter drawers; all display text is supplied through props.
  *
  * @Props {AddableTextInputProps} - Component props.
  *  @prop {string} label - Label shown above the input field.
  *  @prop {string} placeholder - Placeholder text displayed within the input.
  *  @prop {(value: string) => void} onAdd - Callback executed with the trimmed value when the add action is triggered.
- *  @prop {string} hint - Hint displayed on hover of the help label.
- *  @prop {(event) => React.MouseEvent<HTMLButtonElement>} onToggleInputMode
- *  - Callback executed whenever we press on the labelInfo of the FormGroup
+ *  @prop {string} [hint] - Hint displayed on hover of the help label.
+ *  @prop {string} [toggleLabel] - Label for the input-mode toggle link; only rendered when onToggleInputMode is provided.
+ *  @prop {(event) => void} [onToggleInputMode] - Callback executed whenever we press on the labelInfo of the FormGroup.
  * @returns {React.ReactElement} The rendered addable text input.
  */
-
 export const AddableTextInput: React.FC<AddableTextInputProps> = ({
   label,
   placeholder,
   onAdd,
   hint,
+  toggleLabel,
+  type = "text",
   onToggleInputMode,
 }) => {
   const [value, setValue] = useState("");
@@ -79,7 +82,7 @@ export const AddableTextInput: React.FC<AddableTextInputProps> = ({
       labelInfo={
         onToggleInputMode && (
           <Button variant="link" isInline onClick={onToggleInputMode}>
-            {words("resources.filters.resource.agent.textInfoLabel")}
+            {toggleLabel}
           </Button>
         )
       }
@@ -88,7 +91,7 @@ export const AddableTextInput: React.FC<AddableTextInputProps> = ({
         <InputGroupItem isFill>
           <TextInput
             id={inputId}
-            type="text"
+            type={type}
             placeholder={placeholder}
             value={value}
             onChange={(_, nextValue) => setValue(nextValue)}
@@ -100,8 +103,9 @@ export const AddableTextInput: React.FC<AddableTextInputProps> = ({
           <Button
             variant="control"
             onClick={handleAdd}
+            isDisabled={!value.trim()}
             data-testid="add-button"
-            aria-label={`${words("resources.filters.filter")}-${label}`}
+            aria-label={`Add filter-${label}`}
           >
             <PlusIcon />
           </Button>

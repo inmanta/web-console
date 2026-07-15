@@ -13,6 +13,8 @@ interface Props {
   isVisible: boolean;
 }
 
+/* TODO: Remove this components once the CompileReports and ResourceDetails LogTab
+   has been moved to the new drawer filter system in favour of the TimestampRangeFilter */
 export const TimestampFilter: React.FC<Props> = ({
   datePresenter,
   timestampFilters,

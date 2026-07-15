@@ -1,28 +1,16 @@
-import React, { useState } from "react";
-import {
-  Button,
-  Divider,
-  EmptyState,
-  EmptyStateBody,
-  Flex,
-  FlexItem,
-  Form,
-  FormGroup,
-  InputGroup,
-  InputGroupItem,
-  Label,
-  LabelGroup,
-  Stack,
-  StackItem,
-  TextInput,
-  Title,
-} from "@patternfly/react-core";
-import { PlusIcon } from "@patternfly/react-icons";
+import React from "react";
+import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
 import { EventType, RangeOperator, toggleValueInList } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
 import { Filter } from "@/Slices/Events/Core/Types";
-import { FilterDrawerPanelContent, MultiTextSelect } from "@/UI/Components";
-import { TimestampPicker } from "@/UI/Components/Filters";
+import {
+  ActiveFilterGroup,
+  ActiveFilters,
+  AddableTextInput,
+  FilterDrawerPanelContent,
+  MultiTextSelect,
+} from "@/UI/Components";
+import { TimestampRangeFilter } from "@/UI/Components/Filters";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 
@@ -52,10 +40,6 @@ interface Props {
  * @returns {React.ReactElement} The rendered filter widget.
  */
 export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, states, onClose }) => {
-  const [versionInput, setVersionInput] = useState("");
-  const [from, setFrom] = useState<Date | undefined>();
-  const [to, setTo] = useState<Date | undefined>();
-
   const eventTypes = Object.values(EventType);
 
   // --- Event type ---
@@ -116,16 +100,8 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
   const clearDestinationFilters = () => setFilter({ ...filter, destination: undefined });
 
   // --- Version ---
-  const applyVersionFilter = () => {
-    const trimmed = versionInput.trim();
-
-    if (!trimmed) {
-      return;
-    }
-
-    setFilter({ ...filter, version: uniq([...(filter.version ?? []), trimmed]) });
-    setVersionInput("");
-  };
+  const addVersion = (value: string) =>
+    setFilter({ ...filter, version: uniq([...(filter.version ?? []), value]) });
 
   const removeVersionChip = (value: string) => {
     const updated = (filter.version ?? []).filter((version) => version !== value);
@@ -136,34 +112,6 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
   const clearVersionFilters = () => setFilter({ ...filter, version: undefined });
 
   // --- Date ---
-  const applyDateFromFilter = () => {
-    if (!from) {
-      return;
-    }
-
-    const updated = [
-      ...(filter.timestamp ?? []).filter((entry) => entry.operator !== RangeOperator.Operator.From),
-      { date: from, operator: RangeOperator.Operator.From },
-    ];
-
-    setFilter({ ...filter, timestamp: updated });
-    setFrom(undefined);
-  };
-
-  const applyDateToFilter = () => {
-    if (!to) {
-      return;
-    }
-
-    const updated = [
-      ...(filter.timestamp ?? []).filter((entry) => entry.operator !== RangeOperator.Operator.To),
-      { date: to, operator: RangeOperator.Operator.To },
-    ];
-
-    setFilter({ ...filter, timestamp: updated });
-    setTo(undefined);
-  };
-
   const removeTimestampChip = (operator: RangeOperator.Operator) => {
     const updated = (filter.timestamp ?? []).filter((entry) => entry.operator !== operator);
 
@@ -178,6 +126,14 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
     operator: entry.operator,
     label: `${entry.operator} | ${datePresenter.getFull(entry.date.toISOString())}`,
   }));
+
+  const removeTimestampChipByLabel = (label: string) => {
+    const chip = timestampChips.find((entry) => entry.label === label);
+
+    if (chip) {
+      removeTimestampChip(chip.operator);
+    }
+  };
 
   const hasActiveFilters =
     (filter.event_type?.length ?? 0) > 0 ||
@@ -239,230 +195,79 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
           </StackItem>
 
           <StackItem>
-            <FormGroup label={words("events.filters.version.label")}>
-              <InputGroup>
-                <InputGroupItem isFill>
-                  <TextInput
-                    value={versionInput}
-                    onChange={(_event, value) => setVersionInput(value)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        event.preventDefault();
-                        applyVersionFilter();
-                      }
-                    }}
-                    type="number"
-                    placeholder={words("events.filters.version.placeholder")}
-                    aria-label="VersionFilterInput"
-                  />
-                </InputGroupItem>
-                <InputGroupItem>
-                  <Button
-                    variant="control"
-                    onClick={applyVersionFilter}
-                    isDisabled={!versionInput.trim()}
-                    aria-label="Apply version filter"
-                  >
-                    <PlusIcon />
-                  </Button>
-                </InputGroupItem>
-              </InputGroup>
-            </FormGroup>
+            <AddableTextInput
+              label={words("events.filters.version.label")}
+              placeholder={words("events.filters.version.placeholder")}
+              onAdd={addVersion}
+              type="number"
+            />
           </StackItem>
 
           <StackItem>
-            <FormGroup label={words("events.column.date")}>
-              <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsSm" }}>
-                <FlexItem>
-                  <FormGroup label={words("events.filters.from")}>
-                    <TimestampPicker
-                      timestamp={from}
-                      onChange={setFrom}
-                      from={undefined}
-                      datePickerLabel="From Date Picker"
-                      timePickerLabel="From Time Picker"
-                      action={
-                        <Button
-                          variant="control"
-                          onClick={applyDateFromFilter}
-                          isDisabled={!from}
-                          aria-label="Apply date from filter"
-                        >
-                          <PlusIcon />
-                        </Button>
-                      }
-                    />
-                  </FormGroup>
-                </FlexItem>
-                <FlexItem>
-                  <FormGroup label={words("events.filters.to")}>
-                    <TimestampPicker
-                      timestamp={to}
-                      onChange={setTo}
-                      from={from}
-                      datePickerLabel="To Date Picker"
-                      timePickerLabel="To Time Picker"
-                      action={
-                        <Button
-                          variant="control"
-                          onClick={applyDateToFilter}
-                          isDisabled={!to}
-                          aria-label="Apply date to filter"
-                        >
-                          <PlusIcon />
-                        </Button>
-                      }
-                    />
-                  </FormGroup>
-                </FlexItem>
-              </Flex>
-            </FormGroup>
+            <TimestampRangeFilter
+              label={words("events.column.date")}
+              fromLabel={words("events.filters.from")}
+              toLabel={words("events.filters.to")}
+              value={filter.timestamp ?? []}
+              onChange={(timestamp) => setFilter({ ...filter, timestamp })}
+            />
           </StackItem>
         </Form>
 
         <Divider />
 
-        <StackItem>
-          <Flex
-            justifyContent={{ default: "justifyContentSpaceBetween" }}
-            alignItems={{ default: "alignItemsCenter" }}
-          >
-            <FlexItem>
-              <Title headingLevel="h3" size="md">
-                {words("resources.filters.active.title")}
-              </Title>
-            </FlexItem>
-            <FlexItem>
-              <Button variant="link" isInline onClick={clearAllFilters}>
-                {words("resources.filters.active.resetFilters")}
-              </Button>
-            </FlexItem>
-          </Flex>
-
-          {hasActiveFilters ? (
-            <Stack hasGutter style={{ padding: "1rem 0" }}>
-              {(filter.event_type?.length ?? 0) > 0 && (
-                <StackItem>
-                  <LabelGroup
-                    categoryName={words("events.column.eventType")}
-                    isCompact
-                    isClosable
-                    isEditable
-                    onClick={clearEventTypeFilters}
-                    closeBtnAriaLabel={words("resources.filters.active.group.close")(
-                      words("events.column.eventType")
-                    )}
-                  >
-                    {(filter.event_type ?? []).map((eventType) => (
-                      <Label
-                        key={eventType}
-                        color="grey"
-                        onClose={() => removeEventTypeChip(eventType)}
-                      >
-                        {eventType}
-                      </Label>
-                    ))}
-                  </LabelGroup>
-                </StackItem>
-              )}
-              {(filter.source?.length ?? 0) > 0 && (
-                <StackItem>
-                  <LabelGroup
-                    categoryName={words("events.column.sourceState")}
-                    isCompact
-                    isClosable
-                    isEditable
-                    onClick={clearSourceFilters}
-                    closeBtnAriaLabel={words("resources.filters.active.group.close")(
-                      words("events.column.sourceState")
-                    )}
-                  >
-                    {(filter.source ?? []).map((source) => (
-                      <Label key={source} color="grey" onClose={() => removeSourceChip(source)}>
-                        {source}
-                      </Label>
-                    ))}
-                  </LabelGroup>
-                </StackItem>
-              )}
-              {(filter.destination?.length ?? 0) > 0 && (
-                <StackItem>
-                  <LabelGroup
-                    categoryName={words("events.column.destinationState")}
-                    isCompact
-                    isClosable
-                    isEditable
-                    onClick={clearDestinationFilters}
-                    closeBtnAriaLabel={words("resources.filters.active.group.close")(
-                      words("events.column.destinationState")
-                    )}
-                  >
-                    {(filter.destination ?? []).map((destination) => (
-                      <Label
-                        key={destination}
-                        color="grey"
-                        onClose={() => removeDestinationChip(destination)}
-                      >
-                        {destination}
-                      </Label>
-                    ))}
-                  </LabelGroup>
-                </StackItem>
-              )}
-              {(filter.version?.length ?? 0) > 0 && (
-                <StackItem>
-                  <LabelGroup
-                    categoryName={words("events.filters.version.label")}
-                    isCompact
-                    isClosable
-                    isEditable
-                    onClick={clearVersionFilters}
-                    closeBtnAriaLabel={words("resources.filters.active.group.close")(
-                      words("events.filters.version.label")
-                    )}
-                  >
-                    {(filter.version ?? []).map((version) => (
-                      <Label key={version} color="grey" onClose={() => removeVersionChip(version)}>
-                        {version}
-                      </Label>
-                    ))}
-                  </LabelGroup>
-                </StackItem>
-              )}
-              {timestampChips.length > 0 && (
-                <StackItem>
-                  <LabelGroup
-                    categoryName={words("events.column.date")}
-                    isCompact
-                    isClosable
-                    isEditable
-                    onClick={clearTimestampFilters}
-                    closeBtnAriaLabel={words("resources.filters.active.group.close")(
-                      words("events.column.date")
-                    )}
-                  >
-                    {timestampChips.map((chip) => (
-                      <Label
-                        key={chip.label}
-                        color="grey"
-                        onClose={() => removeTimestampChip(chip.operator)}
-                      >
-                        {chip.label}
-                      </Label>
-                    ))}
-                  </LabelGroup>
-                </StackItem>
-              )}
-            </Stack>
-          ) : (
-            <EmptyState variant="xs">
-              <Title headingLevel="h4" size="md">
-                {words("resources.filters.active.empty.title")}
-              </Title>
-              <EmptyStateBody>{words("resources.filters.active.empty.body.noTabs")}</EmptyStateBody>
-            </EmptyState>
+        <ActiveFilters hasActiveFilters={hasActiveFilters} onClear={clearAllFilters}>
+          {(filter.event_type?.length ?? 0) > 0 && (
+            <StackItem>
+              <ActiveFilterGroup
+                title={words("events.column.eventType")}
+                values={filter.event_type}
+                onRemove={removeEventTypeChip}
+                onRemoveGroup={clearEventTypeFilters}
+              />
+            </StackItem>
           )}
-        </StackItem>
+          {(filter.source?.length ?? 0) > 0 && (
+            <StackItem>
+              <ActiveFilterGroup
+                title={words("events.column.sourceState")}
+                values={filter.source}
+                onRemove={removeSourceChip}
+                onRemoveGroup={clearSourceFilters}
+              />
+            </StackItem>
+          )}
+          {(filter.destination?.length ?? 0) > 0 && (
+            <StackItem>
+              <ActiveFilterGroup
+                title={words("events.column.destinationState")}
+                values={filter.destination}
+                onRemove={removeDestinationChip}
+                onRemoveGroup={clearDestinationFilters}
+              />
+            </StackItem>
+          )}
+          {(filter.version?.length ?? 0) > 0 && (
+            <StackItem>
+              <ActiveFilterGroup
+                title={words("events.filters.version.label")}
+                values={filter.version}
+                onRemove={removeVersionChip}
+                onRemoveGroup={clearVersionFilters}
+              />
+            </StackItem>
+          )}
+          {timestampChips.length > 0 && (
+            <StackItem>
+              <ActiveFilterGroup
+                title={words("events.column.date")}
+                values={timestampChips.map((chip) => chip.label)}
+                onRemove={removeTimestampChipByLabel}
+                onRemoveGroup={clearTimestampFilters}
+              />
+            </StackItem>
+          )}
+        </ActiveFilters>
       </Stack>
     </FilterDrawerPanelContent>
   );

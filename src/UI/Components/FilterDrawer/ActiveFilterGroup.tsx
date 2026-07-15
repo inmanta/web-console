@@ -1,6 +1,5 @@
 import React from "react";
 import { Label, LabelGroup } from "@patternfly/react-core";
-import { words } from "@/UI/words";
 
 export interface ActiveFilterGroupProps {
   title: string;
@@ -13,6 +12,7 @@ export interface ActiveFilterGroupProps {
  * The ActiveFilterGroup component.
  *
  * This component is responsible of rendering the active values of a single filter category as a dismissible label group.
+ * Values prefixed with "!" (exclusions) are rendered in red. Shared building block for the filter drawers.
  *
  * @Props {ActiveFilterGroupProps} - Component props.
  *  @prop {string} title - Display name for the category heading.
@@ -39,9 +39,7 @@ export const ActiveFilterGroup: React.FC<ActiveFilterGroupProps> = ({
       isClosable={Boolean(onRemoveGroup)}
       onClick={onRemoveGroup}
       isEditable
-      closeBtnAriaLabel={
-        onRemoveGroup ? words("resources.filters.active.group.close")(title) : undefined
-      }
+      closeBtnAriaLabel={onRemoveGroup ? `Remove ${title} filters` : undefined}
     >
       {values.map((value) => (
         <Label

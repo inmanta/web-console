@@ -1,21 +1,14 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { words } from "@/UI";
 import { AddableTextInput } from "./AddableTextInput";
 
 describe("AddableTextInput", () => {
   it("adds a trimmed value when the add button is clicked", async () => {
     const handleAdd = vi.fn();
 
-    render(
-      <AddableTextInput
-        label="Type"
-        placeholder={words("resources.filters.resource.type.placeholder")}
-        onAdd={handleAdd}
-      />
-    );
+    render(<AddableTextInput label="Type" placeholder="Type..." onAdd={handleAdd} />);
 
-    const input = screen.getByPlaceholderText(words("resources.filters.resource.type.placeholder"));
+    const input = screen.getByPlaceholderText("Type...");
 
     await userEvent.type(input, "  example  ");
 
@@ -27,24 +20,20 @@ describe("AddableTextInput", () => {
     expect(input).toHaveValue("");
   });
 
-  it("does not call onAdd for empty or whitespace-only values", async () => {
+  it("disables the add button and does not call onAdd for empty or whitespace-only values", async () => {
     const handleAdd = vi.fn();
 
-    render(
-      <AddableTextInput
-        label="Agent"
-        placeholder={words("resources.filters.resource.agent.placeholder")}
-        onAdd={handleAdd}
-      />
-    );
+    render(<AddableTextInput label="Agent" placeholder="Agent..." onAdd={handleAdd} />);
 
-    const input = screen.getByPlaceholderText(
-      words("resources.filters.resource.agent.placeholder")
-    );
+    const input = screen.getByPlaceholderText("Agent...");
+
+    expect(screen.getByTestId("add-button")).toBeDisabled();
 
     await userEvent.type(input, "   ");
-    const addButton = screen.getByTestId("add-button");
-    await userEvent.click(addButton);
+
+    expect(screen.getByTestId("add-button")).toBeDisabled();
+
+    fireEvent.keyPress(input, { key: "Enter", code: "Enter", charCode: 13 });
 
     expect(handleAdd).not.toHaveBeenCalled();
     expect(input).toHaveValue("   ");
@@ -53,17 +42,9 @@ describe("AddableTextInput", () => {
   it("adds the current value when the enter key is pressed", async () => {
     const handleAdd = vi.fn();
 
-    render(
-      <AddableTextInput
-        label="Value"
-        placeholder={words("resources.filters.resource.value.placeholder")}
-        onAdd={handleAdd}
-      />
-    );
+    render(<AddableTextInput label="Value" placeholder="Value..." onAdd={handleAdd} />);
 
-    const input = screen.getByPlaceholderText(
-      words("resources.filters.resource.value.placeholder")
-    );
+    const input = screen.getByPlaceholderText("Value...");
 
     await userEvent.type(input, "to-add");
 
@@ -92,5 +73,24 @@ describe("AddableTextInput", () => {
     await user.hover(helpIcon);
     const hint = await screen.findByText("This is a helpful hint");
     expect(hint).toBeInTheDocument();
+  });
+
+  it("renders the toggle link and calls onToggleInputMode when clicked", async () => {
+    const handleToggle = vi.fn();
+
+    render(
+      <AddableTextInput
+        label="Agent"
+        placeholder="Agent..."
+        onAdd={vi.fn()}
+        toggleLabel="Use select input"
+        onToggleInputMode={handleToggle}
+      />
+    );
+
+    const toggle = screen.getByRole("button", { name: "Use select input" });
+    await userEvent.click(toggle);
+
+    expect(handleToggle).toHaveBeenCalledTimes(1);
   });
 });

@@ -16,9 +16,8 @@ import {
   TextInputGroupUtilities,
 } from "@patternfly/react-core";
 import { PlusIcon, TimesIcon } from "@patternfly/react-icons";
-import { words } from "@/UI";
 
-export interface SelectOption {
+export interface AddableSelectOption {
   value: string;
   label: string;
 }
@@ -26,12 +25,15 @@ export interface SelectOption {
 export interface AddableSelectInputProps {
   label: string;
   placeholder?: string;
-  options: SelectOption[];
+  options: AddableSelectOption[];
   onAdd: (value: string) => void;
   onFilter: (value: string) => void;
   onReachEnd: () => void;
   onToggleInputMode: () => void;
+  toggleLabel: string;
   isLoading: boolean;
+  loadingLabel?: string;
+  emptyLabel?: string;
 }
 
 /**
@@ -40,19 +42,22 @@ export interface AddableSelectInputProps {
  * Provides a typeahead select input paired with a control button to append values to a filter category.
  * Clicking the input opens the full options list; typing filters it via the onFilter callback.
  * Scrolling to the bottom of the list triggers onReachEnd for paginated option loading.
+ * Shared building block for the filter drawers; all display text is supplied through props.
  *
  * @Props {AddableSelectInputProps} - Component props.
  *  @prop {string} label - Label shown above the select field.
  *  @prop {string} [placeholder] - Optional placeholder text shown in the input when no value is entered.
- *  @prop {SelectOption[]} options - The list of selectable options.
+ *  @prop {AddableSelectOption[]} options - The list of selectable options.
  *  @prop {(value: string) => void} onAdd - Callback executed with the current input value when the add action is triggered.
  *  @prop {(value: string) => void} onFilter - Callback executed when the search input value changes, used to filter options externally.
  *  @prop {() => void} onReachEnd - Callback executed when the menu scroll reaches near the end, used to load more options.
  *  @prop {() => void} onToggleInputMode - Callback executed whenever we press on the labelInfo of the FormGroup.
+ *  @prop {string} toggleLabel - Label for the input-mode toggle link.
  *  @prop {boolean} isLoading - Whether options are currently being loaded; shows a spinner entry at the bottom of the list.
+ *  @prop {string} [loadingLabel] - Text shown next to the spinner while options load.
+ *  @prop {string} [emptyLabel] - Text shown when there are no options and nothing is loading.
  * @returns {React.ReactElement} The rendered addable select input.
  */
-
 export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
   label,
   placeholder,
@@ -61,7 +66,10 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
   onFilter,
   onReachEnd,
   onToggleInputMode,
+  toggleLabel,
   isLoading,
+  loadingLabel,
+  emptyLabel,
 }) => {
   const [filterValue, setFilterValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -214,7 +222,7 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
             onFilter("");
           }}
         >
-          {words("resources.filters.resource.agent.selectInfoLabel")}
+          {toggleLabel}
         </Button>
       }
     >
@@ -254,7 +262,7 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
               {isLoading && (
                 <SelectOption value="__loading__" isDisabled>
                   <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
-                    {words("resources.filters.resource.agent.loading")}
+                    {loadingLabel}
                     <Spinner size="sm" />
                   </Flex>
                 </SelectOption>
@@ -262,7 +270,7 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
 
               {options.length === 0 && !isLoading && (
                 <SelectOption value="__empty__" isDisabled>
-                  {words("agents.empty.message")}
+                  {emptyLabel}
                 </SelectOption>
               )}
             </SelectList>
@@ -274,7 +282,7 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
             onClick={handleAdd}
             isDisabled={!filterValue}
             data-testid="add-button"
-            aria-label={`${words("resources.filters.filter")}-${label}`}
+            aria-label={`Add filter-${label}`}
           >
             <PlusIcon />
           </Button>

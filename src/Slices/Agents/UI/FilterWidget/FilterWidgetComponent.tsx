@@ -1,27 +1,15 @@
-import React, { useState } from "react";
-import {
-  Button,
-  Divider,
-  EmptyState,
-  EmptyStateBody,
-  Flex,
-  FlexItem,
-  Form,
-  FormGroup,
-  InputGroup,
-  InputGroupItem,
-  Label,
-  LabelGroup,
-  Stack,
-  StackItem,
-  TextInput,
-  Title,
-} from "@patternfly/react-core";
-import { PlusIcon } from "@patternfly/react-icons";
+import React from "react";
+import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
 import { toggleValueInList } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
 import { Filter } from "@/Slices/Agents/Core/Types";
-import { FilterDrawerPanelContent, MultiTextSelect } from "@/UI/Components";
+import {
+  ActiveFilterGroup,
+  ActiveFilters,
+  AddableTextInput,
+  FilterDrawerPanelContent,
+  MultiTextSelect,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
 import { AgentStatus } from "@S/Agents/Core/Domain";
 
@@ -46,21 +34,11 @@ interface Props {
  * @returns {React.ReactElement} The rendered filter widget.
  */
 export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onClose }) => {
-  const [nameInput, setNameInput] = useState("");
-
   const agentStatuses = Object.values(AgentStatus);
 
   // --- Name ---
-  const applyNameFilter = () => {
-    const trimmed = nameInput.trim();
-
-    if (!trimmed) {
-      return;
-    }
-
-    setFilter({ ...filter, name: uniq([...(filter.name ?? []), trimmed]) });
-    setNameInput("");
-  };
+  const addName = (value: string) =>
+    setFilter({ ...filter, name: uniq([...(filter.name ?? []), value]) });
 
   const removeNameChip = (value: string) => {
     const updated = (filter.name ?? []).filter((name) => name !== value);
@@ -114,109 +92,39 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           </StackItem>
 
           <StackItem>
-            <FormGroup label={words("agents.columns.name")}>
-              <InputGroup>
-                <InputGroupItem isFill>
-                  <TextInput
-                    value={nameInput}
-                    onChange={(_event, value) => setNameInput(value)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        event.preventDefault();
-                        applyNameFilter();
-                      }
-                    }}
-                    type="search"
-                    placeholder={words("agents.filters.name.placeholder")}
-                    aria-label="NameFilterInput"
-                  />
-                </InputGroupItem>
-                <InputGroupItem>
-                  <Button
-                    variant="control"
-                    onClick={applyNameFilter}
-                    isDisabled={!nameInput.trim()}
-                    aria-label="Apply name filter"
-                  >
-                    <PlusIcon />
-                  </Button>
-                </InputGroupItem>
-              </InputGroup>
-            </FormGroup>
+            <AddableTextInput
+              label={words("agents.columns.name")}
+              placeholder={words("agents.filters.name.placeholder")}
+              onAdd={addName}
+              type="search"
+            />
           </StackItem>
         </Form>
 
         <Divider />
 
-        <StackItem>
-          <Flex
-            justifyContent={{ default: "justifyContentSpaceBetween" }}
-            alignItems={{ default: "alignItemsCenter" }}
-          >
-            <FlexItem>
-              <Title headingLevel="h3" size="md">
-                {words("resources.filters.active.title")}
-              </Title>
-            </FlexItem>
-            <FlexItem>
-              <Button variant="link" isInline onClick={clearAllFilters}>
-                {words("resources.filters.active.resetFilters")}
-              </Button>
-            </FlexItem>
-          </Flex>
-
-          {hasActiveFilters ? (
-            <Stack hasGutter style={{ padding: "1rem 0" }}>
-              {(filter.name?.length ?? 0) > 0 && (
-                <StackItem>
-                  <LabelGroup
-                    categoryName={words("agents.columns.name")}
-                    isCompact
-                    isClosable
-                    isEditable
-                    onClick={clearNameFilters}
-                    closeBtnAriaLabel={words("resources.filters.active.group.close")(
-                      words("agents.columns.name")
-                    )}
-                  >
-                    {(filter.name ?? []).map((name) => (
-                      <Label key={name} color="grey" onClose={() => removeNameChip(name)}>
-                        {name}
-                      </Label>
-                    ))}
-                  </LabelGroup>
-                </StackItem>
-              )}
-              {(filter.status?.length ?? 0) > 0 && (
-                <StackItem>
-                  <LabelGroup
-                    categoryName={words("agents.columns.status")}
-                    isCompact
-                    isClosable
-                    isEditable
-                    onClick={clearStatusFilters}
-                    closeBtnAriaLabel={words("resources.filters.active.group.close")(
-                      words("agents.columns.status")
-                    )}
-                  >
-                    {(filter.status ?? []).map((status) => (
-                      <Label key={status} color="grey" onClose={() => removeStatusChip(status)}>
-                        {status}
-                      </Label>
-                    ))}
-                  </LabelGroup>
-                </StackItem>
-              )}
-            </Stack>
-          ) : (
-            <EmptyState variant="xs">
-              <Title headingLevel="h4" size="md">
-                {words("resources.filters.active.empty.title")}
-              </Title>
-              <EmptyStateBody>{words("resources.filters.active.empty.body.noTabs")}</EmptyStateBody>
-            </EmptyState>
+        <ActiveFilters hasActiveFilters={hasActiveFilters} onClear={clearAllFilters}>
+          {(filter.name?.length ?? 0) > 0 && (
+            <StackItem>
+              <ActiveFilterGroup
+                title={words("agents.columns.name")}
+                values={filter.name}
+                onRemove={removeNameChip}
+                onRemoveGroup={clearNameFilters}
+              />
+            </StackItem>
           )}
-        </StackItem>
+          {(filter.status?.length ?? 0) > 0 && (
+            <StackItem>
+              <ActiveFilterGroup
+                title={words("agents.columns.status")}
+                values={filter.status}
+                onRemove={removeStatusChip}
+                onRemoveGroup={clearStatusFilters}
+              />
+            </StackItem>
+          )}
+        </ActiveFilters>
       </Stack>
     </FilterDrawerPanelContent>
   );
