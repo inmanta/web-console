@@ -18,7 +18,7 @@ import { TokenTable } from "./TokenTable";
 export const Tab: React.FC = () => {
   const client = useQueryClient();
   const [clientTypes, setClientTypes] = useState<ClientType[]>([]);
-  const [isRevocable, setIsRevocable] = useState(false);
+  const [isRevocable, setIsRevocable] = useState(true);
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
