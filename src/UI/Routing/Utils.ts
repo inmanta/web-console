@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { useNavigate, useLocation, useParams, Params, NavigateOptions } from "react-router";
+import { useNavigate, useLocation, useParams, NavigateOptions } from "react-router";
 import { RouteKind, RouteParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 
@@ -45,12 +45,12 @@ const validateSearch = (search: string): void => {
 };
 
 /**
- * @NOTE useRouteParams decodes the parameter values before returning them.
+ * @NOTE react-router already decodes matched param values internally (see its `decodePath`),
+ * so no further decoding is needed here. Decoding again would mangle (or throw on) values
+ * containing a literal "%", since a value like "100%" only survives a single decode pass.
  */
 export const useRouteParams = <R extends RouteKind>(): RouteParams<R> => {
-  const params = useParams();
-
-  return decodeParams(params) as RouteParams<R>;
+  return useParams() as RouteParams<R>;
 };
 
 /**
@@ -68,19 +68,3 @@ export const useDocumentTitle = (title: string): void => {
     };
   }, [title]);
 };
-
-const decodeParams = (params: Params): Params =>
-  Object.fromEntries(
-    Object.entries(params).map(([key, value]) => [
-      key,
-      value === undefined ? value : decodeURIComponent(value),
-    ])
-  );
-
-export const encodeParams = (params: Params): Params =>
-  Object.fromEntries(
-    Object.entries(params).map(([key, value]) => [
-      key,
-      value === undefined ? value : encodeURIComponent(value),
-    ])
-  );

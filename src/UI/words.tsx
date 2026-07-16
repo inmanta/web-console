@@ -436,6 +436,7 @@ const dict = {
   "orderDetails.table.empty": "No orders details could be found.",
   "orders.links.details": "Show Details",
   "orders.row.empty": "Empty",
+  "orders.row.instanceCreationFailed": "Order failed to create instance.",
   "orders.status.failed": "failed",
   "orders.status.acknowledged": "acknowledged",
   "orders.status.completed": "completed",
