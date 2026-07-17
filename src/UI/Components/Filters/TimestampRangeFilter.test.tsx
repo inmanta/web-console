@@ -53,7 +53,7 @@ describe("TimestampRangeFilter", () => {
     expect(entries[0].operator).toBe(RangeOperator.Operator.From);
   });
 
-  it("keeps the other operator's entry when applying a bound", async () => {
+  it("keeps the other operator's entry when applying a value", async () => {
     const onChange = renderFilter([
       { date: new Date("2020-01-01T00:00:00.000Z"), operator: RangeOperator.Operator.From },
     ]);

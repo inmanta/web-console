@@ -3,20 +3,23 @@ import type { DateRange, IntRange } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
 import type { DatePresenter } from "@/UI/Presenters";
 
-/** Keys of F whose value is a string array - i.e. the "chip" filter fields. */
-type ListKey<F> = {
-  [K in keyof F]-?: NonNullable<F[K]> extends readonly string[] ? K : never;
+/**
+ * Given a filter type F and a value type T, resolves to the union of F's keys whose value is a
+ * T (ignoring whether the field is optional). This is what lets each action below accept only
+ * the keys it makes sense for - e.g. a date action won't accept the key of a string field.
+ */
+type KeyForValue<F, T> = {
+  [K in keyof F]-?: NonNullable<F[K]> extends T ? K : never;
 }[keyof F];
 
-/** Keys of F whose value is a DateRange array - i.e. the from/to date-range fields. */
-type DateKey<F> = {
-  [K in keyof F]-?: NonNullable<F[K]> extends readonly DateRange.Type[] ? K : never;
-}[keyof F];
+/** A string-array field - i.e. a "chip" filter field. */
+type ListKey<F> = KeyForValue<F, readonly string[]>;
 
-/** Keys of F whose value is an IntRange array - i.e. the from/to integer-range fields. */
-type IntKey<F> = {
-  [K in keyof F]-?: NonNullable<F[K]> extends readonly IntRange.Type[] ? K : never;
-}[keyof F];
+/** A DateRange-array field - i.e. a from/to date-range field. */
+type DateKey<F> = KeyForValue<F, readonly DateRange.Type[]>;
+
+/** An IntRange-array field - i.e. a from/to integer-range field. */
+type IntKey<F> = KeyForValue<F, readonly IntRange.Type[]>;
 
 /**
  * getFilterActions.
@@ -27,15 +30,19 @@ type IntKey<F> = {
  * without name collisions. See the per-action docstrings below for what each does.
  *
  * String writes normalise an emptied list to undefined and accept an optional `patch` of extra
- * fields (e.g. a page's disregardDefault flag). For the ranges, applying a bound is handled
- * upstream by TimestampRangeFilter / IntRangeFilter, so only the chip side lives here.
+ * fields (e.g. a page's disregardDefault flag). For the ranges, applying a from/to value is
+ * handled upstream by TimestampRangeFilter / IntRangeFilter, so only the chip side lives here.
  *
  * @param filter - The current filter state.
  * @param setFilter - Setter to persist filter changes upstream.
  * @returns The scoped, per-shape actions described above.
  */
 export const getFilterActions = <F extends object>(filter: F, setFilter: (filter: F) => void) => {
-  /** Read an array field, coalescing a missing/unset value to []. Caller supplies the element type E. */
+  /**
+   * Read a field as an array, treating a missing/unset value as []. The element type E is
+   * supplied by the caller (which already knows the field's shape from the key type it passes),
+   * keeping the single unavoidable cast here instead of scattering it across every action.
+   */
   const arrayValues = <E>(key: keyof F): E[] => {
     const value = filter[key];
 

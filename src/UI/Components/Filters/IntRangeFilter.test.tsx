@@ -20,14 +20,14 @@ const renderFilter = (value: IntRange.Type[] = []) => {
 };
 
 describe("IntRangeFilter", () => {
-  it("disables both apply buttons until a bound is entered", () => {
+  it("disables both apply buttons until a value is entered", () => {
     renderFilter();
 
     expect(screen.getByLabelText("Apply Version from filter")).toBeDisabled();
     expect(screen.getByLabelText("Apply Version to filter")).toBeDisabled();
   });
 
-  it("applies the from bound with the From operator", async () => {
+  it("applies the from value with the From operator", async () => {
     const onChange = renderFilter();
 
     await userEvent.type(screen.getByLabelText("Version range from"), "3");
@@ -36,7 +36,7 @@ describe("IntRangeFilter", () => {
     expect(onChange).toHaveBeenCalledWith([{ value: 3, operator: RangeOperator.Operator.From }]);
   });
 
-  it("applies the to bound when Enter is pressed", async () => {
+  it("applies the to value when Enter is pressed", async () => {
     const onChange = renderFilter();
 
     await userEvent.type(screen.getByLabelText("Version range to"), "5{enter}");
@@ -53,7 +53,7 @@ describe("IntRangeFilter", () => {
     expect(onChange).toHaveBeenCalledWith([{ value: 9, operator: RangeOperator.Operator.From }]);
   });
 
-  it("keeps the other operator's entry when applying a bound", async () => {
+  it("keeps the other operator's entry when applying a value", async () => {
     const onChange = renderFilter([{ value: 1, operator: RangeOperator.Operator.From }]);
 
     await userEvent.type(screen.getByLabelText("Version range to"), "5");

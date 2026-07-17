@@ -10,6 +10,7 @@ import {
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { IntRange, RangeOperator } from "@/Core";
+import { words } from "@/UI/words";
 
 interface Props {
   label: string;
@@ -31,10 +32,10 @@ interface Props {
  *
  * @Props {Props} - Component props.
  *  @prop {string} label - Label for the outer form group (the range category).
- *  @prop {string} fromLabel - Label for the "from" bound.
- *  @prop {string} toLabel - Label for the "to" bound.
+ *  @prop {string} fromLabel - Label for the "from" input.
+ *  @prop {string} toLabel - Label for the "to" input.
  *  @prop {IntRange.Type[]} value - The currently committed range entries.
- *  @prop {(value: IntRange.Type[]) => void} onChange - Callback with the updated range when a bound is applied.
+ *  @prop {(value: IntRange.Type[]) => void} onChange - Callback with the updated range when a from/to value is applied.
  *
  * @returns {React.ReactElement} The rendered integer-range filter input.
  */
@@ -42,7 +43,7 @@ export const IntRangeFilter: React.FC<Props> = ({ label, fromLabel, toLabel, val
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
-  const applyBound = (raw: string, operator: RangeOperator.Operator, reset: () => void) => {
+  const applyRangeValue = (raw: string, operator: RangeOperator.Operator, reset: () => void) => {
     const parsed = raw !== "" ? parseInt(raw, 10) : undefined;
 
     if (parsed === undefined || isNaN(parsed)) {
@@ -55,8 +56,8 @@ export const IntRangeFilter: React.FC<Props> = ({ label, fromLabel, toLabel, val
     reset();
   };
 
-  const applyFrom = () => applyBound(from, RangeOperator.Operator.From, () => setFrom(""));
-  const applyTo = () => applyBound(to, RangeOperator.Operator.To, () => setTo(""));
+  const applyFrom = () => applyRangeValue(from, RangeOperator.Operator.From, () => setFrom(""));
+  const applyTo = () => applyRangeValue(to, RangeOperator.Operator.To, () => setTo(""));
 
   const onEnter = (apply: () => void) => (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
@@ -76,7 +77,7 @@ export const IntRangeFilter: React.FC<Props> = ({ label, fromLabel, toLabel, val
                   onChange={(_e, val) => setFrom(val)}
                   type="number"
                   placeholder={fromLabel}
-                  aria-label={`${label} range from`}
+                  aria-label={words("filters.range.from.input")(label)}
                   onKeyDown={onEnter(applyFrom)}
                 />
               </InputGroupItem>
@@ -85,7 +86,7 @@ export const IntRangeFilter: React.FC<Props> = ({ label, fromLabel, toLabel, val
                   variant="control"
                   onClick={applyFrom}
                   isDisabled={!from}
-                  aria-label={`Apply ${label} from filter`}
+                  aria-label={words("filters.range.from.apply")(label)}
                 >
                   <PlusIcon />
                 </Button>
@@ -102,7 +103,7 @@ export const IntRangeFilter: React.FC<Props> = ({ label, fromLabel, toLabel, val
                   onChange={(_e, val) => setTo(val)}
                   type="number"
                   placeholder={toLabel}
-                  aria-label={`${label} range to`}
+                  aria-label={words("filters.range.to.input")(label)}
                   onKeyDown={onEnter(applyTo)}
                 />
               </InputGroupItem>
@@ -111,7 +112,7 @@ export const IntRangeFilter: React.FC<Props> = ({ label, fromLabel, toLabel, val
                   variant="control"
                   onClick={applyTo}
                   isDisabled={!to}
-                  aria-label={`Apply ${label} to filter`}
+                  aria-label={words("filters.range.to.apply")(label)}
                 >
                   <PlusIcon />
                 </Button>

@@ -1059,6 +1059,20 @@ const dict = {
   "markdownContainer.error.mermaid.title": "Error rendering Mermaid diagram:",
 
   /**
+   * Shared filter-drawer range inputs (TimestampRangeFilter / IntRangeFilter)
+   */
+  "filters.timestamp.from.datePicker": "From Date Picker",
+  "filters.timestamp.from.timePicker": "From Time Picker",
+  "filters.timestamp.to.datePicker": "To Date Picker",
+  "filters.timestamp.to.timePicker": "To Time Picker",
+  "filters.timestamp.from.apply": "Apply date from filter",
+  "filters.timestamp.to.apply": "Apply date to filter",
+  "filters.range.from.input": (label: string) => `${label} range from`,
+  "filters.range.to.input": (label: string) => `${label} range to`,
+  "filters.range.from.apply": (label: string) => `Apply ${label} from filter`,
+  "filters.range.to.apply": (label: string) => `Apply ${label} to filter`,
+
+  /**
    * LogViewer related text
    */
   "logViewer.selectLog": "Select log",
