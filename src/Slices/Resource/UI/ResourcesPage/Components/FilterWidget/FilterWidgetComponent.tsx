@@ -15,6 +15,7 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { Resource } from "@/Core";
+import { getFilterActions } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { ActiveFiltersSection } from "./ActiveFiltersSection";
 import { ResourceFilterForm } from "./ResourceFilterForm";
@@ -44,97 +45,32 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
   setFilter,
 }) => {
   const [activeTabKey, setActiveTabKey] = useState<string | number>(0);
+  const { addString, setStrings, removeStringChip, clearStringGroup } = getFilterActions(
+    filter,
+    setFilter
+  );
 
-  const handleAddType = (type: string) => {
-    setFilter({
-      ...filter,
-      type: filter.type ? [...filter.type, type] : [type],
-    });
-  };
+  const handleAddType = (type: string) => addString("type", type);
+  const handleAddValue = (value: string) => addString("value", value);
+  const handleAddAgent = (agent: string) => addString("agent", agent);
 
-  const handleAddValue = (value: string) => {
-    setFilter({
-      ...filter,
-      value: filter.value ? [...filter.value, value] : [value],
-    });
-  };
+  const removeTypeChip = (id: string) => removeStringChip("type", id);
+  const removeAgentChip = (id: string) => removeStringChip("agent", id);
+  const removeValueChip = (id: string) => removeStringChip("value", id);
 
-  const handleAddAgent = (agent: string) => {
-    setFilter({
-      ...filter,
-      agent: filter.agent ? [...filter.agent, agent] : [agent],
-    });
-  };
+  const clearTypeFilters = () => clearStringGroup("type");
+  const clearAgentFilters = () => clearStringGroup("agent");
+  const clearValueFilters = () => clearStringGroup("value");
 
+  // Status changes must also set disregardDefault (it suppresses the default !orphaned view),
+  // passed as the actions' patch argument.
   const handleStatusChange = (statuses: string[]) => {
-    setFilter({
-      ...filter,
-      status: statuses.length > 0 ? statuses : undefined,
-      disregardDefault: true,
-    });
+    setStrings("status", statuses, { disregardDefault: true });
   };
-
-  const removeTypeChip = (id: string) => {
-    setFilter({
-      ...filter,
-      type: filter.type?.filter((value) => value !== id),
-    });
-  };
-
-  const removeAgentChip = (id: string) => {
-    setFilter({
-      ...filter,
-      agent: filter.agent?.filter((value) => value !== id),
-    });
-  };
-
-  const removeValueChip = (id: string) => {
-    setFilter({
-      ...filter,
-      value: filter.value?.filter((value) => value !== id),
-    });
-  };
-
   const removeStatusChip = (id: string) => {
-    setFilter({
-      ...filter,
-      status: filter.status?.filter((value) => value !== id),
-      disregardDefault: true,
-    });
+    removeStringChip("status", id, { disregardDefault: true });
   };
-
-  const clearTypeFilters = () => {
-    setFilter({
-      ...filter,
-      type: undefined,
-    });
-  };
-
-  const clearAgentFilters = () => {
-    setFilter({
-      ...filter,
-      agent: undefined,
-    });
-  };
-
-  const clearValueFilters = () => {
-    setFilter({
-      ...filter,
-      value: undefined,
-    });
-  };
-
-  const clearStatusFilters = () => {
-    setFilter({
-      ...filter,
-      status: undefined,
-      disregardDefault: true,
-    });
-  };
-
-  const onResetFilters = () => {
-    setFilter({});
-  };
+  const clearStatusFilters = () => clearStringGroup("status", { disregardDefault: true });
 
   return (
     <DrawerPanelContent isResizable minSize="300px">
@@ -177,7 +113,7 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
             <Divider />
             <ActiveFiltersSection
               filter={filter}
-              onResetFilters={onResetFilters}
+              onResetFilters={() => setFilter({})}
               removeTypeChip={removeTypeChip}
               removeAgentChip={removeAgentChip}
               removeValueChip={removeValueChip}

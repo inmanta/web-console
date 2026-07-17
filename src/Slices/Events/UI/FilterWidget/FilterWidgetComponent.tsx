@@ -1,7 +1,6 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
-import { EventType, RangeOperator, toggleValueInList } from "@/Core";
-import { uniq } from "@/Core/Language/collection";
+import { EventType } from "@/Core";
 import { Filter } from "@/Slices/Events/Core/Types";
 import {
   ActiveFilterGroup,
@@ -9,6 +8,7 @@ import {
   AddableTextInput,
   FilterDrawerPanelContent,
   MultiTextSelect,
+  getFilterActions,
 } from "@/UI/Components";
 import { TimestampRangeFilter } from "@/UI/Components/Filters";
 import { CustomDatePresenter } from "@/UI/Utils";
@@ -40,100 +40,25 @@ interface Props {
  * @returns {React.ReactElement} The rendered filter widget.
  */
 export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, states, onClose }) => {
+  const {
+    addString,
+    toggleString,
+    removeStringChip,
+    clearStringGroup,
+    dateChips,
+    removeDateChip,
+    clearDateRange,
+  } = getFilterActions(filter, setFilter);
+
   const eventTypes = Object.values(EventType);
 
-  // --- Event type ---
-  const handleEventTypeSelect = (selection: string | ((prev: string[]) => string[])) => {
-    if (typeof selection !== "string") {
-      return;
-    }
-
-    const updated = uniq(toggleValueInList(selection, filter.event_type ?? [])) as EventType[];
-
-    setFilter({ ...filter, event_type: updated.length > 0 ? updated : undefined });
-  };
-
-  const removeEventTypeChip = (value: string) => {
-    const updated = (filter.event_type ?? []).filter((eventType) => eventType !== value);
-
-    setFilter({ ...filter, event_type: updated.length > 0 ? updated : undefined });
-  };
-
-  const clearEventTypeFilters = () => setFilter({ ...filter, event_type: undefined });
-
-  // --- Source ---
-  const handleSourceSelect = (selection: string | ((prev: string[]) => string[])) => {
-    if (typeof selection !== "string") {
-      return;
-    }
-
-    const updated = uniq(toggleValueInList(selection, filter.source ?? []));
-
-    setFilter({ ...filter, source: updated.length > 0 ? updated : undefined });
-  };
-
-  const removeSourceChip = (value: string) => {
-    const updated = (filter.source ?? []).filter((source) => source !== value);
-
-    setFilter({ ...filter, source: updated.length > 0 ? updated : undefined });
-  };
-
-  const clearSourceFilters = () => setFilter({ ...filter, source: undefined });
-
-  // --- Destination ---
-  const handleDestinationSelect = (selection: string | ((prev: string[]) => string[])) => {
-    if (typeof selection !== "string") {
-      return;
-    }
-
-    const updated = uniq(toggleValueInList(selection, filter.destination ?? []));
-
-    setFilter({ ...filter, destination: updated.length > 0 ? updated : undefined });
-  };
-
-  const removeDestinationChip = (value: string) => {
-    const updated = (filter.destination ?? []).filter((destination) => destination !== value);
-
-    setFilter({ ...filter, destination: updated.length > 0 ? updated : undefined });
-  };
-
-  const clearDestinationFilters = () => setFilter({ ...filter, destination: undefined });
-
-  // --- Version ---
-  const addVersion = (value: string) =>
-    setFilter({ ...filter, version: uniq([...(filter.version ?? []), value]) });
-
-  const removeVersionChip = (value: string) => {
-    const updated = (filter.version ?? []).filter((version) => version !== value);
-
-    setFilter({ ...filter, version: updated.length > 0 ? updated : undefined });
-  };
-
-  const clearVersionFilters = () => setFilter({ ...filter, version: undefined });
-
-  // --- Date ---
-  const removeTimestampChip = (operator: RangeOperator.Operator) => {
-    const updated = (filter.timestamp ?? []).filter((entry) => entry.operator !== operator);
-
-    setFilter({ ...filter, timestamp: updated.length > 0 ? updated : undefined });
-  };
-
-  const clearTimestampFilters = () => setFilter({ ...filter, timestamp: undefined });
-
-  const clearAllFilters = () => setFilter({});
-
-  const timestampChips = (filter.timestamp ?? []).map((entry) => ({
-    operator: entry.operator,
-    label: `${entry.operator} | ${datePresenter.getFull(entry.date.toISOString())}`,
-  }));
-
-  const removeTimestampChipByLabel = (label: string) => {
-    const chip = timestampChips.find((entry) => entry.label === label);
-
-    if (chip) {
-      removeTimestampChip(chip.operator);
-    }
-  };
+  const onSelect =
+    (key: "event_type" | "source" | "destination") =>
+    (selection: string | ((prev: string[]) => string[])) => {
+      if (typeof selection === "string") {
+        toggleString(key, selection);
+      }
+    };
 
   const hasActiveFilters =
     (filter.event_type?.length ?? 0) > 0 ||
@@ -155,7 +80,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
                   children: eventType,
                   isSelected: (filter.event_type ?? []).includes(eventType),
                 }))}
-                setSelected={handleEventTypeSelect}
+                setSelected={onSelect("event_type")}
                 placeholderText={words("events.filters.eventType.placeholder")}
                 selected={filter.event_type ?? []}
               />
@@ -171,7 +96,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
                   children: state,
                   isSelected: (filter.source ?? []).includes(state),
                 }))}
-                setSelected={handleSourceSelect}
+                setSelected={onSelect("source")}
                 placeholderText={words("events.filters.source.placeholder")}
                 selected={filter.source ?? []}
               />
@@ -187,7 +112,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
                   children: state,
                   isSelected: (filter.destination ?? []).includes(state),
                 }))}
-                setSelected={handleDestinationSelect}
+                setSelected={onSelect("destination")}
                 placeholderText={words("events.filters.destination.placeholder")}
                 selected={filter.destination ?? []}
               />
@@ -198,7 +123,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
             <AddableTextInput
               label={words("events.filters.version.label")}
               placeholder={words("events.filters.version.placeholder")}
-              onAdd={addVersion}
+              onAdd={(value) => addString("version", value)}
               type="number"
             />
           </StackItem>
@@ -216,14 +141,14 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
 
         <Divider />
 
-        <ActiveFilters hasActiveFilters={hasActiveFilters} onClear={clearAllFilters}>
+        <ActiveFilters hasActiveFilters={hasActiveFilters} onClear={() => setFilter({})}>
           {(filter.event_type?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
                 title={words("events.column.eventType")}
                 values={filter.event_type}
-                onRemove={removeEventTypeChip}
-                onRemoveGroup={clearEventTypeFilters}
+                onRemove={(value) => removeStringChip("event_type", value)}
+                onRemoveGroup={() => clearStringGroup("event_type")}
               />
             </StackItem>
           )}
@@ -232,8 +157,8 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
               <ActiveFilterGroup
                 title={words("events.column.sourceState")}
                 values={filter.source}
-                onRemove={removeSourceChip}
-                onRemoveGroup={clearSourceFilters}
+                onRemove={(value) => removeStringChip("source", value)}
+                onRemoveGroup={() => clearStringGroup("source")}
               />
             </StackItem>
           )}
@@ -242,8 +167,8 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
               <ActiveFilterGroup
                 title={words("events.column.destinationState")}
                 values={filter.destination}
-                onRemove={removeDestinationChip}
-                onRemoveGroup={clearDestinationFilters}
+                onRemove={(value) => removeStringChip("destination", value)}
+                onRemoveGroup={() => clearStringGroup("destination")}
               />
             </StackItem>
           )}
@@ -252,18 +177,18 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
               <ActiveFilterGroup
                 title={words("events.filters.version.label")}
                 values={filter.version}
-                onRemove={removeVersionChip}
-                onRemoveGroup={clearVersionFilters}
+                onRemove={(value) => removeStringChip("version", value)}
+                onRemoveGroup={() => clearStringGroup("version")}
               />
             </StackItem>
           )}
-          {timestampChips.length > 0 && (
+          {(filter.timestamp?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
                 title={words("events.column.date")}
-                values={timestampChips.map((chip) => chip.label)}
-                onRemove={removeTimestampChipByLabel}
-                onRemoveGroup={clearTimestampFilters}
+                values={dateChips("timestamp", datePresenter)}
+                onRemove={(label) => removeDateChip("timestamp", label)}
+                onRemoveGroup={() => clearDateRange("timestamp")}
               />
             </StackItem>
           )}

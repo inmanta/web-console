@@ -1,7 +1,5 @@
 import React from "react";
 import { Divider, Form, FormGroup, Stack, StackItem } from "@patternfly/react-core";
-import { toggleValueInList } from "@/Core";
-import { uniq } from "@/Core/Language/collection";
 import { Filter } from "@/Slices/Agents/Core/Types";
 import {
   ActiveFilterGroup,
@@ -9,6 +7,7 @@ import {
   AddableTextInput,
   FilterDrawerPanelContent,
   MultiTextSelect,
+  getFilterActions,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { AgentStatus } from "@S/Agents/Core/Domain";
@@ -34,40 +33,12 @@ interface Props {
  * @returns {React.ReactElement} The rendered filter widget.
  */
 export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onClose }) => {
+  const { addString, toggleString, removeStringChip, clearStringGroup } = getFilterActions(
+    filter,
+    setFilter
+  );
+
   const agentStatuses = Object.values(AgentStatus);
-
-  // --- Name ---
-  const addName = (value: string) =>
-    setFilter({ ...filter, name: uniq([...(filter.name ?? []), value]) });
-
-  const removeNameChip = (value: string) => {
-    const updated = (filter.name ?? []).filter((name) => name !== value);
-
-    setFilter({ ...filter, name: updated.length > 0 ? updated : undefined });
-  };
-
-  const clearNameFilters = () => setFilter({ ...filter, name: undefined });
-
-  // --- Status ---
-  const handleStatusSelect = (selection: string | ((prev: string[]) => string[])) => {
-    if (typeof selection !== "string") {
-      return;
-    }
-
-    const updated = uniq(toggleValueInList(selection, filter.status ?? [])) as AgentStatus[];
-
-    setFilter({ ...filter, status: updated.length > 0 ? updated : undefined });
-  };
-
-  const removeStatusChip = (value: string) => {
-    const updated = (filter.status ?? []).filter((status) => status !== value);
-
-    setFilter({ ...filter, status: updated.length > 0 ? updated : undefined });
-  };
-
-  const clearStatusFilters = () => setFilter({ ...filter, status: undefined });
-
-  const clearAllFilters = () => setFilter({});
 
   const hasActiveFilters = (filter.name?.length ?? 0) > 0 || (filter.status?.length ?? 0) > 0;
 
@@ -84,7 +55,11 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
                   children: status,
                   isSelected: (filter.status ?? []).includes(status),
                 }))}
-                setSelected={handleStatusSelect}
+                setSelected={(selection) => {
+                  if (typeof selection === "string") {
+                    toggleString("status", selection);
+                  }
+                }}
                 placeholderText={words("agents.filters.status.placeholder")}
                 selected={filter.status ?? []}
               />
@@ -95,7 +70,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
             <AddableTextInput
               label={words("agents.columns.name")}
               placeholder={words("agents.filters.name.placeholder")}
-              onAdd={addName}
+              onAdd={(value) => addString("name", value)}
               type="search"
             />
           </StackItem>
@@ -103,14 +78,14 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
         <Divider />
 
-        <ActiveFilters hasActiveFilters={hasActiveFilters} onClear={clearAllFilters}>
+        <ActiveFilters hasActiveFilters={hasActiveFilters} onClear={() => setFilter({})}>
           {(filter.name?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
                 title={words("agents.columns.name")}
                 values={filter.name}
-                onRemove={removeNameChip}
-                onRemoveGroup={clearNameFilters}
+                onRemove={(value) => removeStringChip("name", value)}
+                onRemoveGroup={() => clearStringGroup("name")}
               />
             </StackItem>
           )}
@@ -119,8 +94,8 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
               <ActiveFilterGroup
                 title={words("agents.columns.status")}
                 values={filter.status}
-                onRemove={removeStatusChip}
-                onRemoveGroup={clearStatusFilters}
+                onRemove={(value) => removeStringChip("status", value)}
+                onRemoveGroup={() => clearStringGroup("status")}
               />
             </StackItem>
           )}

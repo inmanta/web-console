@@ -7,6 +7,7 @@ import {
   ActiveFilters,
   AddableTextInput,
   FilterDrawerPanelContent,
+  getFilterActions,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 
@@ -54,18 +55,7 @@ export const DesiredStateDetailsFilterWidget: React.FC<DesiredStateDetailsFilter
       route: "DesiredStateDetails",
     });
 
-    const addValue = (key: TextFilterKey, value: string) =>
-      setFilter({ ...filter, [key]: [...(filter[key] ?? []), value] });
-
-    const removeChip = (key: TextFilterKey, value: string) => {
-      const updated = (filter[key] ?? []).filter((v) => v !== value);
-
-      setFilter({ ...filter, [key]: updated.length > 0 ? updated : undefined });
-    };
-
-    const clearGroup = (key: TextFilterKey) => setFilter({ ...filter, [key]: undefined });
-
-    const clearAllFilters = () => setFilter({});
+    const { addString, removeStringChip, clearStringGroup } = getFilterActions(filter, setFilter);
 
     const hasActiveFilters = FIELDS.some(({ key }) => (filter[key]?.length ?? 0) > 0);
 
@@ -83,7 +73,7 @@ export const DesiredStateDetailsFilterWidget: React.FC<DesiredStateDetailsFilter
                 <AddableTextInput
                   label={label}
                   placeholder={placeholder}
-                  onAdd={(value) => addValue(key, value)}
+                  onAdd={(value) => addString(key, value)}
                 />
               </StackItem>
             ))}
@@ -91,15 +81,15 @@ export const DesiredStateDetailsFilterWidget: React.FC<DesiredStateDetailsFilter
 
           <Divider />
 
-          <ActiveFilters hasActiveFilters={hasActiveFilters} onClear={clearAllFilters}>
+          <ActiveFilters hasActiveFilters={hasActiveFilters} onClear={() => setFilter({})}>
             {FIELDS.map(({ key, label }) =>
               (filter[key]?.length ?? 0) > 0 ? (
                 <StackItem key={key}>
                   <ActiveFilterGroup
                     title={label}
                     values={filter[key]}
-                    onRemove={(value) => removeChip(key, value)}
-                    onRemoveGroup={() => clearGroup(key)}
+                    onRemove={(value) => removeStringChip(key, value)}
+                    onRemoveGroup={() => clearStringGroup(key)}
                   />
                 </StackItem>
               ) : null
