@@ -13,6 +13,7 @@ export interface ActiveFilterGroupProps {
  * The ActiveFilterGroup component.
  *
  * This component is responsible of rendering the active values of a single filter category as a dismissible label group.
+ * Values prefixed with "!" (exclusions) are rendered in red. Shared building block for the filter drawers.
  *
  * @Props {ActiveFilterGroupProps} - Component props.
  *  @prop {string} title - Display name for the category heading.

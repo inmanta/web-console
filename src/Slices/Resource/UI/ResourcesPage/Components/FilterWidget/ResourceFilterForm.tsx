@@ -3,10 +3,15 @@ import { FormGroup, Stack, StackItem, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { useGetAgents } from "@/Data/Queries";
 import { useDebounce } from "@/UI";
-import { OptionalToggleGroup, excludeIcons, includeIcons } from "@/UI/Components";
+import {
+  AddableSelectInput,
+  AddableSelectOption,
+  AddableTextInput,
+  OptionalToggleGroup,
+  excludeIcons,
+  includeIcons,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
-import { AddableSelectInput, SelectOption } from "./AddableSelectInput";
-import { AddableTextInput } from "./AddableTextInput";
 
 export interface ResourceFilterFormProps {
   onAddType: (type: string) => void;
@@ -45,7 +50,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
       filter: debouncedSearch ? { name: [debouncedSearch] } : undefined,
     });
 
-  const agentOptions = useMemo<SelectOption[]>(() => {
+  const agentOptions = useMemo<AddableSelectOption[]>(() => {
     if (!data?.pages) {
       return [];
     }
@@ -101,6 +106,9 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               }}
               isLoading={isLoading || isFetchingNextPage}
               onToggleInputMode={() => setInputMode("text")}
+              toggleLabel={words("resources.filters.resource.agent.selectInfoLabel")}
+              loadingLabel={words("resources.filters.resource.agent.loading")}
+              emptyLabel={words("agents.empty.message")}
             />
           ) : (
             <AddableTextInput
@@ -108,8 +116,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               placeholder={words("resources.filters.resource.agent.placeholder")}
               onAdd={onAddAgent}
               onToggleInputMode={() => setInputMode("select")}
-
-              /* hint={words("resources.filters.resource.agent.hint")} */
+              toggleLabel={words("resources.filters.resource.agent.textInfoLabel")}
             />
           )}
         </StackItem>

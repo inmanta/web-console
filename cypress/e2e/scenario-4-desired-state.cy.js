@@ -124,7 +124,7 @@ describe("Scenario 4 Desired State", () => {
 
     // Open filter drawer and clear the filter
     cy.contains("button", "Filters", { timeout: 30000 }).click();
-    cy.contains("button", "Clear all").click();
+    cy.contains("button", "Reset Filters").click();
 
     cy.wait("@FILTER_UPDATE");
 

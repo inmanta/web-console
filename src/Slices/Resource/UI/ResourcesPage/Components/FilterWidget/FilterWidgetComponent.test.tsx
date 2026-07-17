@@ -116,19 +116,19 @@ describe("FilterWidgetComponent", () => {
     await userEvent.click(screen.getByLabelText(/Close agent-1/i));
     expect(setFilter).toHaveBeenNthCalledWith(2, {
       ...filter,
-      agent: [],
+      agent: undefined,
     });
 
     await userEvent.click(screen.getByLabelText(/Close value-1/i));
     expect(setFilter).toHaveBeenNthCalledWith(3, {
       ...filter,
-      value: [],
+      value: undefined,
     });
 
     await userEvent.click(screen.getByLabelText(/Close deployed/i));
     expect(setFilter).toHaveBeenNthCalledWith(4, {
       ...filter,
-      status: [],
+      status: undefined,
       disregardDefault: true,
     });
 

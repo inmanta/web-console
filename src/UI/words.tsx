@@ -607,7 +607,6 @@ const dict = {
   "resources.filters.desiredState.sectionTitle": "Desired State",
   "resources.filters.desiredState.purged": "Purged",
   "resources.filters.active.title": "Active filters",
-  "resources.filters.active.clearAll": "Clear all",
   "resources.filters.active.resetFilters": "Reset Filters",
   "resources.filters.active.empty.title": "No filters applied",
   "resources.filters.active.empty.body":
@@ -1071,6 +1070,20 @@ const dict = {
   "markdownContainer.download.png": "↓ PNG",
   "markdownContainer.download.png.title": "Download as PNG",
   "markdownContainer.error.mermaid.title": "Error rendering Mermaid diagram:",
+
+  /**
+   * Shared filter-drawer range inputs (TimestampRangeFilter / IntRangeFilter)
+   */
+  "filters.timestamp.from.datePicker": "From Date Picker",
+  "filters.timestamp.from.timePicker": "From Time Picker",
+  "filters.timestamp.to.datePicker": "To Date Picker",
+  "filters.timestamp.to.timePicker": "To Time Picker",
+  "filters.timestamp.from.apply": "Apply date from filter",
+  "filters.timestamp.to.apply": "Apply date to filter",
+  "filters.range.from.input": (label: string) => `${label} range from`,
+  "filters.range.to.input": (label: string) => `${label} range to`,
+  "filters.range.from.apply": (label: string) => `Apply ${label} from filter`,
+  "filters.range.to.apply": (label: string) => `Apply ${label} to filter`,
 
   /**
    * LogViewer related text

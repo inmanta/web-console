@@ -9,24 +9,26 @@ const options = [
 const getInput = () =>
   screen.getByTestId("search-input").querySelector("input") as HTMLInputElement;
 
+const renderInput = (overrides = {}) =>
+  render(
+    <AddableSelectInput
+      label="Test"
+      options={options}
+      onAdd={vi.fn()}
+      onFilter={vi.fn()}
+      isLoading={false}
+      onReachEnd={vi.fn()}
+      onToggleInputMode={vi.fn()}
+      toggleLabel="Use text input"
+      {...overrides}
+    />
+  );
+
 describe("AddableSelectInput", () => {
   it("adds typed value when add button is clicked", () => {
     const onAdd = vi.fn();
-    const onFilter = vi.fn();
-    const onReachEnd = vi.fn();
-    const onToggleInputMode = vi.fn();
 
-    render(
-      <AddableSelectInput
-        label="Test"
-        options={options}
-        onAdd={onAdd}
-        onFilter={onFilter}
-        isLoading={false}
-        onReachEnd={onReachEnd}
-        onToggleInputMode={onToggleInputMode}
-      />
-    );
+    renderInput({ onAdd });
 
     const input = getInput();
     const button = screen.getByTestId("add-button");
@@ -39,22 +41,9 @@ describe("AddableSelectInput", () => {
   });
 
   it("calls onFilter when typing", () => {
-    const onAdd = vi.fn();
     const onFilter = vi.fn();
-    const onReachEnd = vi.fn();
-    const onToggleInputMode = vi.fn();
 
-    render(
-      <AddableSelectInput
-        label="Test"
-        options={options}
-        onAdd={onAdd}
-        onFilter={onFilter}
-        isLoading={false}
-        onReachEnd={onReachEnd}
-        onToggleInputMode={onToggleInputMode}
-      />
-    );
+    renderInput({ onFilter });
 
     const input = getInput();
 
@@ -64,22 +53,9 @@ describe("AddableSelectInput", () => {
   });
 
   it("clears input when clear button is used", () => {
-    const onAdd = vi.fn();
     const onFilter = vi.fn();
-    const onReachEnd = vi.fn();
-    const onToggleInputMode = vi.fn();
 
-    render(
-      <AddableSelectInput
-        label="Test"
-        options={options}
-        onAdd={onAdd}
-        onFilter={onFilter}
-        isLoading={false}
-        onReachEnd={onReachEnd}
-        onToggleInputMode={onToggleInputMode}
-      />
-    );
+    renderInput({ onFilter });
 
     const input = getInput();
 
@@ -92,21 +68,8 @@ describe("AddableSelectInput", () => {
 
   it("adds value when pressing Enter", () => {
     const onAdd = vi.fn();
-    const onFilter = vi.fn();
-    const onReachEnd = vi.fn();
-    const onToggleInputMode = vi.fn();
 
-    render(
-      <AddableSelectInput
-        label="Test"
-        options={options}
-        onAdd={onAdd}
-        onFilter={onFilter}
-        isLoading={false}
-        onReachEnd={onReachEnd}
-        onToggleInputMode={onToggleInputMode}
-      />
-    );
+    renderInput({ onAdd });
 
     const input = getInput();
 
@@ -115,5 +78,15 @@ describe("AddableSelectInput", () => {
 
     expect(onAdd).toHaveBeenCalledWith("enter-value");
     expect(input.value).toBe("");
+  });
+
+  it("calls onToggleInputMode when the toggle link is clicked", () => {
+    const onToggleInputMode = vi.fn();
+
+    renderInput({ onToggleInputMode });
+
+    fireEvent.click(screen.getByRole("button", { name: "Use text input" }));
+
+    expect(onToggleInputMode).toHaveBeenCalledTimes(1);
   });
 });
