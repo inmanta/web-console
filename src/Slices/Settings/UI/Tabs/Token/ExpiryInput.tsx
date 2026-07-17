@@ -65,7 +65,7 @@ export const ExpiryInput: React.FC<Props> = ({ onChange, isDisabled }) => {
   };
 
   return (
-    <FormGroup label={words("settings.tabs.token.expiry")} fieldId="token-expiry">
+    <StyledFormGroup label={words("settings.tabs.token.expiry")} fieldId="token-expiry">
       <Flex gap={{ default: "gapSm" }} flexWrap={{ default: "nowrap" }}>
         <FlexItem>
           <FormSelect
@@ -111,7 +111,7 @@ export const ExpiryInput: React.FC<Props> = ({ onChange, isDisabled }) => {
           </FlexItem>
         )}
       </Flex>
-    </FormGroup>
+    </StyledFormGroup>
   );
 };
 
@@ -121,4 +121,8 @@ const AmountInput = styled(TextInput)`
 
 const UnitSelect = styled(FormSelect)`
   width: auto;
+`;
+
+const StyledFormGroup = styled(FormGroup)`
+  --pf-v6-c-form--m-horizontal__group-label--md--GridColumnWidth: 16rem;
 `;
