@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ClientType, toggleValueInList } from "@/Core";
 import { getTokensKey, useGenerateToken } from "@/Data/Queries";
 import { words } from "@/UI/words";
+import { DEFAULT_EXPIRY_SECONDS } from "./ExpiryInput";
 import { TokenForm } from "./TokenForm";
 import { TokenTable } from "./TokenTable";
 
@@ -18,8 +19,7 @@ import { TokenTable } from "./TokenTable";
 export const Tab: React.FC = () => {
   const client = useQueryClient();
   const [clientTypes, setClientTypes] = useState<ClientType[]>(["api"]);
-  const [isRevocable, setIsRevocable] = useState(true);
-  const [expire, setExpire] = useState<number | null>(null);
+  const [expire, setExpire] = useState<number | null>(DEFAULT_EXPIRY_SECONDS);
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -51,11 +51,10 @@ export const Tab: React.FC = () => {
     setError(null);
     setToken(null);
     setIsBusy(true);
-    // Only revocable (non-idempotent) tokens can carry an expiry.
     mutate({
       client_types: clientTypes,
-      idempotent: !isRevocable,
-      ...(isRevocable && expire !== null ? { expire } : {}),
+      idempotent: false,
+      ...(expire !== null ? { expire } : {}),
     });
 
     setIsBusy(false);
@@ -68,8 +67,6 @@ export const Tab: React.FC = () => {
         onErrorClose={() => setError(null)}
         getClientTypeSelector={getClientTypeSelector}
         isClientTypeSelected={isClientTypeSelected}
-        isRevocable={isRevocable}
-        onRevocableChange={setIsRevocable}
         onExpireChange={setExpire}
         token={token}
         error={error}

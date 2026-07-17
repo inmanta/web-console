@@ -15,7 +15,7 @@ interface Props {
 
 /**
  * Displays the instance_id of a service_order_item, or its service identity
- * display name/attribute value when the status provides one, same as the Instance rows
+ * attribute value when the status provides one, same as the Instance rows
  * on the Service Inventory table.
  *
  * Navigates to the instance details page when clicked. If the order item is a create action

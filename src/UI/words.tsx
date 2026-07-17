@@ -423,7 +423,7 @@ const dict = {
   "orders.column.option": "Options",
   "orders.column.action": "Action",
   "orders.column.serviceEntity": "Service Entity",
-  "orders.column.instanceId": "Instance Id",
+  "orders.column.instance": "Instance",
   "orders.row.dependencies": "Dependencies",
   "orders.row.config": "Config",
   "orders.row.state": "State",
@@ -817,7 +817,6 @@ const dict = {
   "settings.tabs.token.description.details":
     "Most tokens only need API access. The agent and compiler types are only required for connecting an externally hosted agent or a remote compiler to this environment.",
   "settings.tabs.token.generate": "Generate",
-  "settings.tabs.token.revocable": "Create a revocable token",
   "settings.tabs.token.expiry": "Expires after",
   "settings.tabs.token.expiry.never": "Never",
   "settings.tabs.token.expiry.custom": "Custom",

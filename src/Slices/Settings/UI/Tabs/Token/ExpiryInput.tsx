@@ -11,19 +11,28 @@ import {
 import styled from "styled-components";
 import { words } from "@/UI/words";
 
-// Preset token lifetimes in seconds; the empty default means no explicit expiry.
+const ONE_MINUTE_SECONDS = 60;
+const ONE_HOUR_SECONDS = 60 * ONE_MINUTE_SECONDS;
+const ONE_DAY_SECONDS = 24 * ONE_HOUR_SECONDS;
+const THIRTY_DAYS_SECONDS = 30 * ONE_DAY_SECONDS;
+const ONE_YEAR_SECONDS = 365 * ONE_DAY_SECONDS;
+
+// The default preselected lifetime for newly created tokens.
+export const DEFAULT_EXPIRY_SECONDS = 7 * ONE_DAY_SECONDS;
+
+// Preset token lifetimes in seconds; the empty option means no explicit expiry.
 const EXPIRY_OPTIONS: { seconds: number; label: string }[] = [
-  { seconds: 3600, label: "1 hour" },
-  { seconds: 86400, label: "1 day" },
-  { seconds: 604800, label: "7 days" },
-  { seconds: 2592000, label: "30 days" },
-  { seconds: 31536000, label: "1 year" },
+  { seconds: ONE_HOUR_SECONDS, label: "1 hour" },
+  { seconds: ONE_DAY_SECONDS, label: "1 day" },
+  { seconds: DEFAULT_EXPIRY_SECONDS, label: "7 days" },
+  { seconds: THIRTY_DAYS_SECONDS, label: "30 days" },
+  { seconds: ONE_YEAR_SECONDS, label: "1 year" },
 ];
 
 const CUSTOM_UNITS: { unit: string; seconds: number }[] = [
-  { unit: "minutes", seconds: 60 },
-  { unit: "hours", seconds: 3600 },
-  { unit: "days", seconds: 86400 },
+  { unit: "minutes", seconds: ONE_MINUTE_SECONDS },
+  { unit: "hours", seconds: ONE_HOUR_SECONDS },
+  { unit: "days", seconds: ONE_DAY_SECONDS },
 ];
 
 interface Props {
@@ -38,7 +47,7 @@ interface Props {
  * @returns {React.FC<Props>} The expiry input.
  */
 export const ExpiryInput: React.FC<Props> = ({ onChange, isDisabled }) => {
-  const [choice, setChoice] = useState("");
+  const [choice, setChoice] = useState(String(DEFAULT_EXPIRY_SECONDS));
   const [customAmount, setCustomAmount] = useState("");
   const [customUnit, setCustomUnit] = useState("days");
 
