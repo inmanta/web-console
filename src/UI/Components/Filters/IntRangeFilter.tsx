@@ -57,9 +57,15 @@ export const IntRangeFilter: React.FC<Props> = ({ label, fromLabel, toLabel, val
   };
 
   const applyFrom = () => {
+    if (!from) {
+      return;
+    }
     applyRangeValue(from, RangeOperator.Operator.From, () => setFrom(""));
   };
   const applyTo = () => {
+    if (!to) {
+      return;
+    }
     applyRangeValue(to, RangeOperator.Operator.To, () => setTo(""));
   };
 
