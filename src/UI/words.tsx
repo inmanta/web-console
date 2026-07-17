@@ -612,6 +612,7 @@ const dict = {
     "Select filters from the tabs above to refine your results.",
   "resources.filters.active.empty.body.noTabs":
     "Use the fields above to add filters and refine your results.",
+  "resources.filters.active.group.close": (group: string) => `Remove ${group} filters`,
   "resources.filters": "Filters",
   "resources.sort.label.blocked": "Blocked",
   "resources.sort.label.compliance": "Compliance",

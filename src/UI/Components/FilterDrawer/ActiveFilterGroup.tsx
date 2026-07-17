@@ -1,5 +1,6 @@
 import React from "react";
 import { Label, LabelGroup } from "@patternfly/react-core";
+import { words } from "@/UI/words";
 
 export interface ActiveFilterGroupProps {
   title: string;
@@ -39,7 +40,9 @@ export const ActiveFilterGroup: React.FC<ActiveFilterGroupProps> = ({
       isClosable={Boolean(onRemoveGroup)}
       onClick={onRemoveGroup}
       isEditable
-      closeBtnAriaLabel={onRemoveGroup ? `Remove ${title} filters` : undefined}
+      closeBtnAriaLabel={
+        onRemoveGroup ? words("resources.filters.active.group.close")(title) : undefined
+      }
     >
       {values.map((value) => (
         <Label
