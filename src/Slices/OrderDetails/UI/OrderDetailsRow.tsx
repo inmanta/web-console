@@ -62,7 +62,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
         <Td>
           <Toggle expanded={isExpanded} onToggle={onToggle} aria-label={"Toggle-DetailsRow"} />
         </Td>
-        <Td width={35} dataLabel={words("orders.column.instanceId")}>
+        <Td width={35} dataLabel={words("orders.column.instance")}>
           <OrderInstanceLink row={row} />
         </Td>
         <Td width={25} dataLabel={words("orders.column.serviceEntity")}>
