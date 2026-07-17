@@ -7,7 +7,13 @@ const renderFilter = (value: IntRange.Type[] = []) => {
   const onChange = vi.fn();
 
   render(
-    <IntRangeFilter label="Version" fromLabel="From" toLabel="To" value={value} onChange={onChange} />
+    <IntRangeFilter
+      label="Version"
+      fromLabel="From"
+      toLabel="To"
+      value={value}
+      onChange={onChange}
+    />
   );
 
   return onChange;
