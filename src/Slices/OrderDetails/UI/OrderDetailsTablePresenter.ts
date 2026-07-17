@@ -19,8 +19,8 @@ export class OrderDetailsTablePresenter implements TablePresenter<
   constructor() {
     this.columnHeads = [
       {
-        displayName: words("orders.column.instanceId"),
-        apiName: "instance_id",
+        displayName: words("orders.column.instance"),
+        apiName: "instance",
       },
       {
         displayName: words("orders.column.serviceEntity"),

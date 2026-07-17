@@ -2,12 +2,9 @@ import React, { useContext } from "react";
 import { Button, Label } from "@patternfly/react-core";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
 import { useGetTokens, useRevokeToken } from "@/Data/Queries";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import { DateWithTooltip, EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
-
-const formatDate = (value: string | null): string =>
-  value ? new Date(value).toLocaleString() : "-";
 
 /**
  * Lists the registered (revocable) tokens of the current environment and allows revoking them.
@@ -84,9 +81,13 @@ export const TokenTable: React.FC = () => {
             <Tr key={token.jti} aria-label={`token-row-${token.jti}`}>
               <Td>{token.created_by ?? "-"}</Td>
               <Td>{token.client_types.join(", ")}</Td>
-              <Td>{formatDate(token.issued_at)}</Td>
-              <Td>{formatDate(token.expires_at)}</Td>
-              <Td>{formatDate(token.last_used)}</Td>
+              <Td>
+                <DateWithTooltip timestamp={token.issued_at} />
+              </Td>
+              <Td>
+                {token.expires_at ? <DateWithTooltip timestamp={token.expires_at} isFull /> : "-"}
+              </Td>
+              <Td>{token.last_used ? <DateWithTooltip timestamp={token.last_used} /> : "-"}</Td>
               <Td>
                 {isRevoked ? (
                   <Label color="red">{words("settings.tabs.token.status.revoked")}</Label>
@@ -94,7 +95,9 @@ export const TokenTable: React.FC = () => {
                   <Label color="green">{words("settings.tabs.token.status.active")}</Label>
                 )}
               </Td>
-              <Td>{formatDate(token.revoked_at)}</Td>
+              <Td>
+                {token.revoked_at ? <DateWithTooltip timestamp={token.revoked_at} isFull /> : "-"}
+              </Td>
               <Td isActionCell>
                 <Button
                   variant="danger"

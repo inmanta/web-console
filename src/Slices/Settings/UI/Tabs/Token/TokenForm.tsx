@@ -5,7 +5,6 @@ import {
   Form,
   FormGroup,
   InputGroup,
-  Switch,
   TextInput,
   Title,
   ToggleGroup,
@@ -82,8 +81,6 @@ interface Props {
   onErrorClose(): void;
   getClientTypeSelector(clientType: ClientType): (selected: boolean) => void;
   isClientTypeSelected(clientType: ClientType): boolean;
-  isRevocable: boolean;
-  onRevocableChange(value: boolean): void;
   onExpireChange(value: number | null): void;
   token: string | null;
   error: string | null;
@@ -94,8 +91,6 @@ export const TokenForm: React.FC<Props> = ({
   onGenerate,
   getClientTypeSelector,
   isClientTypeSelected,
-  isRevocable,
-  onRevocableChange,
   onExpireChange,
   token,
   error,
@@ -107,18 +102,7 @@ export const TokenForm: React.FC<Props> = ({
       {words("settings.tabs.token.title")}
     </Title>
     <Description>{words("settings.tabs.token.description")}</Description>
-    <StyledFormGroup label={words("settings.tabs.token.revocable")}>
-      <Switch
-        id="token-revocable"
-        aria-label="RevocableOption"
-        isChecked={isRevocable}
-        isDisabled={isBusy}
-        onChange={(_event, checked) => onRevocableChange(checked)}
-      />
-    </StyledFormGroup>
-
-    {/* An idempotent (non-revocable) token carries no time-based claims, so it cannot expire. */}
-    {isRevocable && <ExpiryInput onChange={onExpireChange} isDisabled={isBusy} />}
+    <ExpiryInput onChange={onExpireChange} isDisabled={isBusy} />
     <AdvancedSection
       toggleText={words("settings.tabs.token.advanced")}
       getClientTypeSelector={getClientTypeSelector}

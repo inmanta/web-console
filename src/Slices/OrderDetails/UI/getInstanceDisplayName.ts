@@ -9,5 +9,5 @@ export function getInstanceDisplayName(row: ServiceOrderItem | undefined): strin
     return null;
   }
 
-  return row.status.service_identity_display_name || row.status.service_identity_attribute_value;
+  return row.status.service_identity_attribute_value;
 }
