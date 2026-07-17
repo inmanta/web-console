@@ -56,8 +56,12 @@ export const IntRangeFilter: React.FC<Props> = ({ label, fromLabel, toLabel, val
     reset();
   };
 
-  const applyFrom = () => applyRangeValue(from, RangeOperator.Operator.From, () => setFrom(""));
-  const applyTo = () => applyRangeValue(to, RangeOperator.Operator.To, () => setTo(""));
+  const applyFrom = () => {
+    applyRangeValue(from, RangeOperator.Operator.From, () => setFrom(""));
+  };
+  const applyTo = () => {
+    applyRangeValue(to, RangeOperator.Operator.To, () => setTo(""));
+  };
 
   const onEnter = (apply: () => void) => (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
