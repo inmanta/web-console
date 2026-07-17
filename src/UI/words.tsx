@@ -812,8 +812,11 @@ const dict = {
   "settings.tabs.configuration": "Configuration",
   "settings.tabs.tokens": "Tokens",
   "settings.tabs.token.disabledInfo": "An authenticated user is required to create tokens",
+  "settings.tabs.token.title": "Configure New Token",
   "settings.tabs.token.description":
-    "Generate an authentication token for this environment. Tokens give API access by default.",
+    "Generate an authentication token for this environment. By default, generated tokens will provide API access.",
+  "settings.tabs.token.description.details":
+    "Most tokens only need API access. The agent and compiler types are only required for connecting an externally hosted agent or a remote compiler to this environment.",
   "settings.tabs.token.generate": "Generate",
   "settings.tabs.token.revocable": "Create a revocable token",
   "settings.tabs.token.expiry": "Expires after",
@@ -821,8 +824,9 @@ const dict = {
   "settings.tabs.token.expiry.custom": "Custom",
   "settings.tabs.token.advanced": "Advanced options",
   "settings.tabs.token.clientTypes": "Client types",
-  "settings.tabs.token.clientTypes.help":
-    "Most tokens only need api. The agent and compiler client types are only required when connecting an externally hosted agent or a remote compiler to this environment.",
+  "settings.tabs.token.clientTypes.api": "API",
+  "settings.tabs.token.clientTypes.agent": "Agent",
+  "settings.tabs.token.clientTypes.compiler": "Compiler",
   "settings.tabs.token.registered.title": "Registered tokens",
   "settings.tabs.token.empty": "No revocable tokens have been created for this environment.",
   "settings.tabs.token.column.createdBy": "Created by",

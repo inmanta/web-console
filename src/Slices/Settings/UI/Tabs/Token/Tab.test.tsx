@@ -111,7 +111,7 @@ describe("Token Tab", () => {
 
     render(component);
 
-    expect(screen.getByRole("checkbox", { name: "RevocableOption" })).toBeChecked();
+    expect(screen.getByRole("switch", { name: "RevocableOption" })).toBeChecked();
     await userEvent.click(
       screen.getByRole("button", { name: words("settings.tabs.token.generate") })
     );
@@ -119,7 +119,7 @@ describe("Token Tab", () => {
     await waitFor(() => expect(requestBody).toEqual({ client_types: ["api"], idempotent: false }));
   });
 
-  test("GIVEN the revocable checkbox is unchecked WHEN generate is clicked THEN idempotent is true", async () => {
+  test("GIVEN the revocable switch is unchecked WHEN generate is clicked THEN idempotent is true", async () => {
     let requestBody: Record<string, unknown> | null = null;
     server.use(
       http.post("/api/v2/environment_auth", async ({ request }) => {
@@ -133,7 +133,7 @@ describe("Token Tab", () => {
 
     render(component);
 
-    await userEvent.click(screen.getByRole("checkbox", { name: "RevocableOption" }));
+    await userEvent.click(screen.getByRole("switch", { name: "RevocableOption" }));
     await userEvent.click(
       screen.getByRole("button", { name: words("settings.tabs.token.generate") })
     );
@@ -156,7 +156,7 @@ describe("Token Tab", () => {
     render(component);
 
     // Make the revocable state explicit so this test is independent of the form's default.
-    const revocable: HTMLInputElement = screen.getByRole("checkbox", { name: "RevocableOption" });
+    const revocable: HTMLInputElement = screen.getByRole("switch", { name: "RevocableOption" });
     if (!revocable.checked) {
       await userEvent.click(revocable);
     }
@@ -189,7 +189,7 @@ describe("Token Tab", () => {
     render(component);
 
     // Make the revocable state explicit so this test is independent of the form's default.
-    const revocable: HTMLInputElement = screen.getByRole("checkbox", { name: "RevocableOption" });
+    const revocable: HTMLInputElement = screen.getByRole("switch", { name: "RevocableOption" });
     if (!revocable.checked) {
       await userEvent.click(revocable);
     }
@@ -227,7 +227,7 @@ describe("Token Tab", () => {
     render(component);
 
     // Make the revocable state explicit so this test is independent of the form's default.
-    const revocable: HTMLInputElement = screen.getByRole("checkbox", { name: "RevocableOption" });
+    const revocable: HTMLInputElement = screen.getByRole("switch", { name: "RevocableOption" });
     if (!revocable.checked) {
       await userEvent.click(revocable);
     }
@@ -243,7 +243,7 @@ describe("Token Tab", () => {
     await waitFor(() => expect(requestBody).toEqual({ client_types: ["api"], idempotent: false }));
   });
 
-  test("GIVEN a non-revocable token THEN the expiry select is disabled and expire is not sent", async () => {
+  test("GIVEN a non-revocable token THEN the expiry input is hidden and expire is not sent", async () => {
     let requestBody: Record<string, unknown> | null = null;
     server.use(
       http.post("/api/v2/environment_auth", async ({ request }) => {
@@ -258,14 +258,14 @@ describe("Token Tab", () => {
     render(component);
 
     // Make the revocable state explicit so this test is independent of the form's default.
-    const revocable: HTMLInputElement = screen.getByRole("checkbox", { name: "RevocableOption" });
+    const revocable: HTMLInputElement = screen.getByRole("switch", { name: "RevocableOption" });
     if (revocable.checked) {
       await userEvent.click(revocable);
     }
 
     expect(
-      screen.getByRole("combobox", { name: words("settings.tabs.token.expiry") })
-    ).toBeDisabled();
+      screen.queryByRole("combobox", { name: words("settings.tabs.token.expiry") })
+    ).toBeNull();
 
     await userEvent.click(
       screen.getByRole("button", { name: words("settings.tabs.token.generate") })
