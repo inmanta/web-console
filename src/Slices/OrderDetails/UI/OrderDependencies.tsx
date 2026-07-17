@@ -21,13 +21,13 @@ interface Props {
  *
  * Dependencies contain the ID of the instance and their matching status.
  * The instance_id only refers to an instance being part of the Order, so the matching
- * service_order_item is looked up in orderItems to resolve its display name, same as
+ * service_order_item is looked up in orderItems to resolve its attribute value, same as
  * the OrderInstanceLink cell.
  *
  * Clicking a dependency row expands and focuses the matching row in the order details table.
  *
  * @param dependencies ServiceOrderItemDependencies
- * @param orderItems all service_order_items of the order, used to resolve the display name of each dependency
+ * @param orderItems all service_order_items of the order, used to resolve the attribute value of each dependency
  * @param expandInstanceOrderDetailsRow callback invoked with the instanceId of the clicked dependency
  * @returns ReactNode
  */

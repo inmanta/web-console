@@ -32,7 +32,21 @@ test("GIVEN OrderDependencies WHEN the matching order item has no service identi
   expect(screen.getByText(dependencyItem.instance_id)).toBeVisible();
 });
 
-test("GIVEN OrderDependencies WHEN the matching order item has a service_identity_display_name THEN it is shown instead of the raw instance_id", () => {
+test("GIVEN OrderDependencies WHEN the matching order item has a service_identity_attribute_value THEN it is shown instead of the raw instance_id", () => {
+  const item: ServiceOrderItem = {
+    ...dependencyItem,
+    status: { ...dependencyItem.status, service_identity_attribute_value: "attribute-value" },
+  };
+
+  render(
+    <OrderDependencies dependencies={{ [item.instance_id]: "completed" }} orderItems={[item]} />
+  );
+
+  expect(screen.getByText("attribute-value")).toBeVisible();
+  expect(screen.queryByText(item.instance_id)).not.toBeInTheDocument();
+});
+
+test("GIVEN OrderDependencies WHEN the matching order item only has a service_identity_display_name THEN the raw instance_id is shown, not the display name (regression)", () => {
   const item: ServiceOrderItem = {
     ...dependencyItem,
     status: { ...dependencyItem.status, service_identity_display_name: "Parent 1" },
@@ -42,8 +56,8 @@ test("GIVEN OrderDependencies WHEN the matching order item has a service_identit
     <OrderDependencies dependencies={{ [item.instance_id]: "completed" }} orderItems={[item]} />
   );
 
-  expect(screen.getByText("Parent 1")).toBeVisible();
-  expect(screen.queryByText(item.instance_id)).not.toBeInTheDocument();
+  expect(screen.getByText(item.instance_id)).toBeVisible();
+  expect(screen.queryByText("Parent 1")).not.toBeInTheDocument();
 });
 
 test("GIVEN OrderDependencies WHEN no order item matches the dependency's instance_id THEN the raw instance_id is shown", () => {
@@ -54,10 +68,10 @@ test("GIVEN OrderDependencies WHEN no order item matches the dependency's instan
   expect(screen.getByText("unknown-instance-id")).toBeVisible();
 });
 
-test("GIVEN OrderDependencies WHEN a display name is set THEN copy to clipboard offers both the display name and the raw instance_id", async () => {
+test("GIVEN OrderDependencies WHEN an attribute value is set THEN copy to clipboard offers both the attribute value and the raw instance_id", async () => {
   const item: ServiceOrderItem = {
     ...dependencyItem,
-    status: { ...dependencyItem.status, service_identity_display_name: "Parent 1" },
+    status: { ...dependencyItem.status, service_identity_attribute_value: "attribute-value" },
   };
 
   render(
@@ -66,6 +80,6 @@ test("GIVEN OrderDependencies WHEN a display name is set THEN copy to clipboard 
 
   await userEvent.click(screen.getByRole("button", { name: "Copy to clipboard" }));
 
-  expect(await screen.findByRole("menuitem", { name: "Parent 1" })).toBeVisible();
+  expect(await screen.findByRole("menuitem", { name: "attribute-value" })).toBeVisible();
   expect(await screen.findByRole("menuitem", { name: item.instance_id })).toBeVisible();
 });

@@ -7,6 +7,7 @@ import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
+import { DEFAULT_EXPIRY_SECONDS } from "./ExpiryInput";
 import { Tab } from "./Tab";
 
 function setup() {
@@ -97,7 +98,7 @@ describe("Token Tab", () => {
     await waitFor(() => expect(requestBody).toMatchObject({ client_types: ["agent"] }));
   });
 
-  test("GIVEN the default form (revocable checked) WHEN generate is clicked THEN idempotent is false", async () => {
+  test("GIVEN the default form WHEN generate is clicked THEN idempotent is false", async () => {
     let requestBody: Record<string, unknown> | null = null;
     server.use(
       http.post("/api/v2/environment_auth", async ({ request }) => {
@@ -111,15 +112,20 @@ describe("Token Tab", () => {
 
     render(component);
 
-    expect(screen.getByRole("switch", { name: "RevocableOption" })).toBeChecked();
     await userEvent.click(
       screen.getByRole("button", { name: words("settings.tabs.token.generate") })
     );
 
-    await waitFor(() => expect(requestBody).toEqual({ client_types: ["api"], idempotent: false }));
+    await waitFor(() =>
+      expect(requestBody).toEqual({
+        client_types: ["api"],
+        idempotent: false,
+        expire: DEFAULT_EXPIRY_SECONDS,
+      })
+    );
   });
 
-  test("GIVEN the revocable switch is unchecked WHEN generate is clicked THEN idempotent is true", async () => {
+  test("GIVEN a token with an expiry WHEN generate is clicked THEN expire is sent", async () => {
     let requestBody: Record<string, unknown> | null = null;
     server.use(
       http.post("/api/v2/environment_auth", async ({ request }) => {
@@ -132,34 +138,6 @@ describe("Token Tab", () => {
     const { component } = setup();
 
     render(component);
-
-    await userEvent.click(screen.getByRole("switch", { name: "RevocableOption" }));
-    await userEvent.click(
-      screen.getByRole("button", { name: words("settings.tabs.token.generate") })
-    );
-
-    await waitFor(() => expect(requestBody).toEqual({ client_types: ["api"], idempotent: true }));
-  });
-
-  test("GIVEN a revocable token with an expiry WHEN generate is clicked THEN expire is sent", async () => {
-    let requestBody: Record<string, unknown> | null = null;
-    server.use(
-      http.post("/api/v2/environment_auth", async ({ request }) => {
-        requestBody = (await request.json()) as Record<string, unknown>;
-
-        return HttpResponse.json({ data: "tokenstring123" });
-      })
-    );
-
-    const { component } = setup();
-
-    render(component);
-
-    // Make the revocable state explicit so this test is independent of the form's default.
-    const revocable: HTMLInputElement = screen.getByRole("switch", { name: "RevocableOption" });
-    if (!revocable.checked) {
-      await userEvent.click(revocable);
-    }
 
     await userEvent.selectOptions(
       screen.getByRole("combobox", { name: words("settings.tabs.token.expiry") }),
@@ -187,12 +165,6 @@ describe("Token Tab", () => {
     const { component } = setup();
 
     render(component);
-
-    // Make the revocable state explicit so this test is independent of the form's default.
-    const revocable: HTMLInputElement = screen.getByRole("switch", { name: "RevocableOption" });
-    if (!revocable.checked) {
-      await userEvent.click(revocable);
-    }
 
     await userEvent.selectOptions(
       screen.getByRole("combobox", { name: words("settings.tabs.token.expiry") }),
@@ -226,12 +198,6 @@ describe("Token Tab", () => {
 
     render(component);
 
-    // Make the revocable state explicit so this test is independent of the form's default.
-    const revocable: HTMLInputElement = screen.getByRole("switch", { name: "RevocableOption" });
-    if (!revocable.checked) {
-      await userEvent.click(revocable);
-    }
-
     await userEvent.selectOptions(
       screen.getByRole("combobox", { name: words("settings.tabs.token.expiry") }),
       "custom"
@@ -241,37 +207,6 @@ describe("Token Tab", () => {
     );
 
     await waitFor(() => expect(requestBody).toEqual({ client_types: ["api"], idempotent: false }));
-  });
-
-  test("GIVEN a non-revocable token THEN the expiry input is hidden and expire is not sent", async () => {
-    let requestBody: Record<string, unknown> | null = null;
-    server.use(
-      http.post("/api/v2/environment_auth", async ({ request }) => {
-        requestBody = (await request.json()) as Record<string, unknown>;
-
-        return HttpResponse.json({ data: "tokenstring123" });
-      })
-    );
-
-    const { component } = setup();
-
-    render(component);
-
-    // Make the revocable state explicit so this test is independent of the form's default.
-    const revocable: HTMLInputElement = screen.getByRole("switch", { name: "RevocableOption" });
-    if (revocable.checked) {
-      await userEvent.click(revocable);
-    }
-
-    expect(
-      screen.queryByRole("combobox", { name: words("settings.tabs.token.expiry") })
-    ).toBeNull();
-
-    await userEvent.click(
-      screen.getByRole("button", { name: words("settings.tabs.token.generate") })
-    );
-
-    await waitFor(() => expect(requestBody).toEqual({ client_types: ["api"], idempotent: true }));
   });
 
   test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {

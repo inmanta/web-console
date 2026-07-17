@@ -8,7 +8,10 @@ import { Token } from "@/Core/Domain";
 import { MockedDependencyProvider } from "@/Test";
 import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { TokenTable } from "./TokenTable";
+
+const datePresenter = new CustomDatePresenter();
 
 const makeToken = (overrides: Partial<Token> = {}): Token => ({
   jti: "11111111-1111-1111-1111-111111111111",
@@ -76,12 +79,12 @@ describe("TokenTable", () => {
     expect(within(activeRow).getByText("alice")).toBeVisible();
     expect(within(activeRow).getByText("api, compiler")).toBeVisible();
     expect(within(activeRow).getByText(words("settings.tabs.token.status.active"))).toBeVisible();
-    expect(within(activeRow).getByText(new Date(expiresAt).toLocaleString())).toBeVisible();
+    expect(within(activeRow).getByText(datePresenter.getFull(expiresAt))).toBeVisible();
 
     const revokedRow = screen.getByLabelText("token-row-bbb");
     expect(within(revokedRow).getByText(words("settings.tabs.token.status.revoked"))).toBeVisible();
     // The revocation moment is shown for revoked tokens.
-    expect(within(revokedRow).getByText(new Date(revokedAt).toLocaleString())).toBeVisible();
+    expect(within(revokedRow).getByText(datePresenter.getFull(revokedAt))).toBeVisible();
     // An already-revoked token cannot be revoked again.
     expect(within(revokedRow).getByRole("button", { name: "revoke-bbb" })).toBeDisabled();
   });

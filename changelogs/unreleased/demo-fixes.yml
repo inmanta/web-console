@@ -1,0 +1,8 @@
+description: | 
+  - Default the create-token form in the Settings page to a revocable token
+    - Don't allow the user to make a non-revocable token in the web-console.
+  - Default the create-token form in the Settings page to a 7-day expiry
+  - Use proper date formatting, consitent with the rest of the web-console for the token table.
+  - Use service_identity_attribute_value for the service instance in the order details rows.
+change-type: minor
+destination-branches: [master, iso9]
