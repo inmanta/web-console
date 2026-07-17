@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import {
   Button,
-  Checkbox,
   ExpandableSection,
-  Flex,
-  FlexItem,
-  HelperText,
-  HelperTextItem,
+  Form,
+  FormGroup,
   InputGroup,
+  Switch,
   TextInput,
   Title,
   ToggleGroup,
@@ -46,50 +44,35 @@ const AdvancedSection: React.FC<AdvancedSectionProps> = ({
       isExpanded={isExpanded}
       onToggle={(_event, expanded) => setIsExpanded(expanded)}
     >
-      <Flex
-        direction={{ default: "column" }}
-        alignItems={{ default: "alignItemsFlexStart" }}
-        gap={{ default: "gapSm" }}
-      >
-        <FlexItem>
-          <Title headingLevel="h3" size="md">
-            {words("settings.tabs.token.clientTypes")}
-          </Title>
-        </FlexItem>
-        <FlexItem>
-          <ToggleGroup aria-label="ClientTypes">
-            <ToggleGroupItem
-              icon={<KeyIcon />}
-              text="api"
-              aria-label="ApiOption"
-              isSelected={isClientTypeSelected("api")}
-              onChange={(_event, selected) => getClientTypeSelector("api")(selected)}
-              isDisabled={isBusy}
-            />
-            <ToggleGroupItem
-              icon={<RobotIcon />}
-              text="agent"
-              aria-label="AgentOption"
-              isSelected={isClientTypeSelected("agent")}
-              onChange={(_event, selected) => getClientTypeSelector("agent")(selected)}
-              isDisabled={isBusy}
-            />
-            <ToggleGroupItem
-              icon={<CodeIcon />}
-              text="compiler"
-              aria-label="CompilerOption"
-              isSelected={isClientTypeSelected("compiler")}
-              onChange={(_event, selected) => getClientTypeSelector("compiler")(selected)}
-              isDisabled={isBusy}
-            />
-          </ToggleGroup>
-        </FlexItem>
-        <FlexItem>
-          <HelperText>
-            <HelperTextItem>{words("settings.tabs.token.clientTypes.help")}</HelperTextItem>
-          </HelperText>
-        </FlexItem>
-      </Flex>
+      <StyledFormGroup fieldId="client-types" label={words("settings.tabs.token.clientTypes")}>
+        <ToggleGroup aria-label="ClientTypes">
+          <ToggleGroupItem
+            icon={<KeyIcon />}
+            text={words("settings.tabs.token.clientTypes.api")}
+            aria-label="ApiOption"
+            isSelected={isClientTypeSelected("api")}
+            onChange={(_event, selected) => getClientTypeSelector("api")(selected)}
+            isDisabled={isBusy}
+          />
+          <ToggleGroupItem
+            icon={<RobotIcon />}
+            text={words("settings.tabs.token.clientTypes.agent")}
+            aria-label="AgentOption"
+            isSelected={isClientTypeSelected("agent")}
+            onChange={(_event, selected) => getClientTypeSelector("agent")(selected)}
+            isDisabled={isBusy}
+          />
+          <ToggleGroupItem
+            icon={<CodeIcon />}
+            text={words("settings.tabs.token.clientTypes.compiler")}
+            aria-label="CompilerOption"
+            isSelected={isClientTypeSelected("compiler")}
+            onChange={(_event, selected) => getClientTypeSelector("compiler")(selected)}
+            isDisabled={isBusy}
+          />
+        </ToggleGroup>
+      </StyledFormGroup>
+      <StyledDescription>{words("settings.tabs.token.description.details")}</StyledDescription>
     </ExpandableSection>
   );
 };
@@ -119,29 +102,23 @@ export const TokenForm: React.FC<Props> = ({
   onErrorClose,
   isBusy,
 }) => (
-  <Container>
+  <Form isHorizontal>
+    <Title className="lined_section" headingLevel="h2" size="md">
+      {words("settings.tabs.token.title")}
+    </Title>
     <Description>{words("settings.tabs.token.description")}</Description>
-    <PaddedFlex alignItems={{ default: "alignItemsFlexEnd" }}>
-      <FlexItem>
-        {/* An idempotent (non-revocable) token carries no time-based claims, so it cannot expire. */}
-        <ExpiryInput onChange={onExpireChange} isDisabled={isBusy || !isRevocable} />
-      </FlexItem>
-      <FlexItem>
-        <Checkbox
-          id="token-revocable"
-          label={words("settings.tabs.token.revocable")}
-          aria-label="RevocableOption"
-          isChecked={isRevocable}
-          isDisabled={isBusy}
-          onChange={(_event, checked) => onRevocableChange(checked)}
-        />
-      </FlexItem>
-      <FlexItem>
-        <Button variant="primary" onClick={onGenerate} isDisabled={isBusy}>
-          {words("settings.tabs.token.generate")}
-        </Button>
-      </FlexItem>
-    </PaddedFlex>
+    <StyledFormGroup label={words("settings.tabs.token.revocable")}>
+      <Switch
+        id="token-revocable"
+        aria-label="RevocableOption"
+        isChecked={isRevocable}
+        isDisabled={isBusy}
+        onChange={(_event, checked) => onRevocableChange(checked)}
+      />
+    </StyledFormGroup>
+
+    {/* An idempotent (non-revocable) token carries no time-based claims, so it cannot expire. */}
+    {isRevocable && <ExpiryInput onChange={onExpireChange} isDisabled={isBusy} />}
     <AdvancedSection
       toggleText={words("settings.tabs.token.advanced")}
       getClientTypeSelector={getClientTypeSelector}
@@ -164,7 +141,11 @@ export const TokenForm: React.FC<Props> = ({
         aria-label="CopyTokenToClipboard"
         style={{ alignItems: "center" }}
       />
+      <Button variant="primary" onClick={onGenerate} isDisabled={isBusy}>
+        {words("settings.tabs.token.generate")}
+      </Button>
     </StyledInputGroup>
+
     {error && (
       <AppAlert
         testId="ToastError"
@@ -174,20 +155,20 @@ export const TokenForm: React.FC<Props> = ({
         isInline
       />
     )}
-  </Container>
+  </Form>
 );
 
 const StyledInputGroup = styled(InputGroup)`
+  padding-bottom: 4rem;
   padding-top: 1rem;
-  padding-bottom: 1rem;
-  max-width: 600px;
+  max-width: 800px;
 `;
 
-const Container = styled.div`
-  padding-top: 1rem;
+// force the labels to not wrap after two words.
+const StyledFormGroup = styled(FormGroup)`
+  --pf-v6-c-form--m-horizontal__group-label--md--GridColumnWidth: 16rem;
 `;
 
-const PaddedFlex = styled(Flex)`
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+const StyledDescription = styled(Description)`
+  margin-top: 1rem;
 `;
