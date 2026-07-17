@@ -829,7 +829,7 @@ const dict = {
   "settings.tabs.token.empty": "No revocable tokens have been created for this environment.",
   "settings.tabs.token.column.createdBy": "Created by",
   "settings.tabs.token.column.clientTypes": "Client types",
-  "settings.tabs.token.column.issuedAt": "Issued at",
+  "settings.tabs.token.column.issuedAt": "Issued",
   "settings.tabs.token.column.expiresAt": "Expires at",
   "settings.tabs.token.column.lastUsed": "Last used",
   "settings.tabs.token.column.status": "Status",
