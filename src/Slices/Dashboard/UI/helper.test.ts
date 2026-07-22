@@ -2,8 +2,6 @@ import { Metric } from "../Core/Domain";
 import { mockedMetrics } from "../Core/Mock";
 import { alignTooltipLegendData, formatLegendData, formatMetricsToStacked } from "./helper";
 
-// Widened to `string` so indexing BackendMetric falls back to `any`, same as the existing
-// pattern in GraphCard.test.tsx — the literal key type doesn't structurally match StackedMetric.
 const metricKey: string = "lsm.service_instance_count";
 
 describe("alignTooltipLegendData", () => {
