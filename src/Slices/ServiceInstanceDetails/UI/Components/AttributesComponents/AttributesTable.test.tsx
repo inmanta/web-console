@@ -107,7 +107,11 @@ describe("AttributesTable", () => {
     };
 
     it("renders a unit-annotated attribute in its auto-selected display unit", () => {
-      setup(["candidate_attributes"], { candidate_attributes: { bandwidth: 150000 } }, bandwidthServiceModel);
+      setup(
+        ["candidate_attributes"],
+        { candidate_attributes: { bandwidth: 150000 } },
+        bandwidthServiceModel
+      );
 
       expect(screen.getByText("150 Mbit/s")).toBeVisible();
     });
@@ -115,7 +119,11 @@ describe("AttributesTable", () => {
     it("shows the raw value and API unit in a tooltip", async () => {
       const user = userEvent.setup();
 
-      setup(["candidate_attributes"], { candidate_attributes: { bandwidth: 150000 } }, bandwidthServiceModel);
+      setup(
+        ["candidate_attributes"],
+        { candidate_attributes: { bandwidth: 150000 } },
+        bandwidthServiceModel
+      );
 
       await user.hover(screen.getByText("150 Mbit/s"));
 
@@ -142,10 +150,16 @@ describe("AttributesTable", () => {
         ],
       };
 
-      setup(["candidate_attributes"], { candidate_attributes: { bandwidth: 150000 } }, badServiceModel);
+      setup(
+        ["candidate_attributes"],
+        { candidate_attributes: { bandwidth: 150000 } },
+        badServiceModel
+      );
 
       expect(screen.getByText("150000")).toBeVisible();
-      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Unrecognized web_unit "parsecs"'));
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Unrecognized web_unit "parsecs"')
+      );
 
       warnSpy.mockRestore();
     });
