@@ -1,4 +1,4 @@
-import { AttributeModel, DictListField, EmbeddedEntity, NestedField } from "@/Core";
+import { AttributeModel, DictListField, EmbeddedEntity, NestedField, UnitField } from "@/Core";
 import { Service } from "@/Test";
 import { InterServiceRelationFields, RelationListFields } from "@/Test/Data/Field";
 import { InterServiceRelations } from "@/Test/Data/Service";
@@ -380,5 +380,148 @@ test("GIVEN FieldCreator WHEN web_tab annotations appear below the top level THE
   ["nested_attribute", "deeper_entity", "nested_relation"].forEach((name) => {
     expect(nestedByName(name)).toBeDefined();
     expect(nestedByName(name)?.tab).toBeUndefined();
+  });
+});
+
+describe("FieldCreator: web_presentation: 'unit' (issue #7022 / #7133)", () => {
+  const bandwidthAttribute: AttributeModel = {
+    name: "bandwidth",
+    description: "description",
+    modifier: "rw+",
+    type: "int",
+    default_value: null,
+    default_value_set: false,
+    validation_type: "pydantic.conint",
+    validation_parameters: { le: 1000000 },
+    attribute_annotations: { web_presentation: "unit", web_unit: "kbit/s" },
+  };
+
+  test("GIVEN an int attribute with a valid web_unit annotation WHEN fields are created THEN the field has kind Unit with a resolved config and bounds", () => {
+    const fields = new FieldCreator(new CreateModifierHandler()).create({
+      attributes: [bandwidthAttribute],
+      embedded_entities: [],
+      inter_service_relations: [],
+    });
+    const field = fields[0] as UnitField;
+
+    expect(field.kind).toBe("Unit");
+    expect(field.config.kind).toBe("bitrate");
+    expect(field.config.apiUnit).toBe("kbit/s");
+    expect(field.config.isInt).toBe(true);
+    expect(field.bounds).toEqual({ le: 1000000 });
+  });
+
+  test("GIVEN a float attribute with a valid web_unit annotation WHEN fields are created THEN the field has kind Unit with isInt false", () => {
+    const fields = new FieldCreator(new CreateModifierHandler()).create({
+      attributes: [{ ...bandwidthAttribute, type: "float", validation_parameters: {} }],
+      embedded_entities: [],
+      inter_service_relations: [],
+    });
+    const field = fields[0] as UnitField;
+
+    expect(field.kind).toBe("Unit");
+    expect(field.config.isInt).toBe(false);
+  });
+
+  test("GIVEN web_unit_scales restricted to iec on a base unit WHEN fields are created THEN the resolved config only offers IEC units", () => {
+    const fields = new FieldCreator(new CreateModifierHandler()).create({
+      attributes: [
+        {
+          ...bandwidthAttribute,
+          name: "memory_limit",
+          type: "int",
+          validation_parameters: {},
+          attribute_annotations: { web_presentation: "unit", web_unit: "B", web_unit_scales: "iec" },
+        },
+      ],
+      embedded_entities: [],
+      inter_service_relations: [],
+    });
+    const field = fields[0] as UnitField;
+
+    expect(field.config.offeredUnits).toEqual(["B", "KiB", "MiB", "GiB", "TiB", "PiB"]);
+  });
+
+  test("GIVEN an invalid web_unit_scales value WHEN fields are created THEN it is ignored rather than degrading the field", () => {
+    const fields = new FieldCreator(new CreateModifierHandler()).create({
+      attributes: [
+        {
+          ...bandwidthAttribute,
+          name: "memory_limit",
+          type: "int",
+          validation_parameters: {},
+          attribute_annotations: {
+            web_presentation: "unit",
+            web_unit: "B",
+            web_unit_scales: "not-a-scale",
+          },
+        },
+      ],
+      embedded_entities: [],
+      inter_service_relations: [],
+    });
+    const field = fields[0] as UnitField;
+
+    expect(field.kind).toBe("Unit");
+    expect(field.config.scales).toBe("both");
+  });
+
+  test("GIVEN an unrecognized web_unit WHEN fields are created THEN the field falls back to Text and a warning is logged", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const fields = new FieldCreator(new CreateModifierHandler()).create({
+      attributes: [
+        { ...bandwidthAttribute, attribute_annotations: { web_presentation: "unit", web_unit: "parsecs" } },
+      ],
+      embedded_entities: [],
+      inter_service_relations: [],
+    });
+
+    expect(fields[0].kind).toBe("Text");
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Unrecognized web_unit "parsecs"'));
+
+    warnSpy.mockRestore();
+  });
+
+  test("GIVEN web_presentation: 'unit' with no web_unit annotation WHEN fields are created THEN the field falls back to Text and a warning is logged", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const fields = new FieldCreator(new CreateModifierHandler()).create({
+      attributes: [{ ...bandwidthAttribute, attribute_annotations: { web_presentation: "unit" } }],
+      embedded_entities: [],
+      inter_service_relations: [],
+    });
+
+    expect(fields[0].kind).toBe("Text");
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("no web_unit annotation"));
+
+    warnSpy.mockRestore();
+  });
+
+  test("GIVEN web_presentation: 'unit' on a non-numeric attribute WHEN fields are created THEN the field falls back to its normal kind and a warning is logged", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const fields = new FieldCreator(new CreateModifierHandler()).create({
+      attributes: [
+        {
+          name: "not_numeric",
+          description: "description",
+          modifier: "rw+",
+          type: "string",
+          default_value: null,
+          default_value_set: false,
+          validation_type: null,
+          validation_parameters: null,
+          attribute_annotations: { web_presentation: "unit", web_unit: "B" },
+        },
+      ],
+      embedded_entities: [],
+      inter_service_relations: [],
+    });
+
+    expect(fields[0].kind).toBe("Text");
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("int/float"));
+
+    warnSpy.mockRestore();
   });
 });

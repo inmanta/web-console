@@ -1,0 +1,6 @@
+description: Attributes annotated with web_presentation "unit" now render the UnitInputField in Create/Edit/Duplicate instance forms and the Composer, instead of a plain number field.
+issue-nr: 7133
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
