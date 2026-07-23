@@ -12,7 +12,9 @@ describe("UnitInputField worked examples", () => {
     const result = resolveUnitConfig({ web_unit: "B", web_unit_scales: "iec" }, "int");
 
     expect(result.ok).toBe(true);
-    if (!result.ok) {return;}
+    if (!result.ok) {
+      return;
+    }
 
     const typed = "512";
 
@@ -28,7 +30,9 @@ describe("UnitInputField worked examples", () => {
     const result = resolveUnitConfig({ web_unit: "kbit/s" }, "int");
 
     expect(result.ok).toBe(true);
-    if (!result.ok) {return;}
+    if (!result.ok) {
+      return;
+    }
 
     const withinBound = validateUnitInput("0.5", "Gbit/s", result.config, { le: 1000000 });
     const overBound = validateUnitInput("2", "Gbit/s", result.config, { le: 1000000 });
@@ -44,7 +48,9 @@ describe("UnitInputField worked examples", () => {
     const result = resolveUnitConfig({ web_unit: "B", web_unit_scales: "both" }, "int");
 
     expect(result.ok).toBe(true);
-    if (!result.ok) {return;}
+    if (!result.ok) {
+      return;
+    }
 
     const apiValue = toApiValue("100", "PB", result.config)!;
     const submittable = toSubmittableNumber(apiValue);
@@ -58,7 +64,9 @@ describe("UnitInputField worked examples", () => {
     const result = resolveUnitConfig({ web_unit: "s" }, "int?");
 
     expect(result.ok).toBe(true);
-    if (!result.ok) {return;}
+    if (!result.ok) {
+      return;
+    }
 
     const validated = validateUnitInput("2", "d", result.config);
 
@@ -70,7 +78,9 @@ describe("UnitInputField worked examples", () => {
     const result = resolveUnitConfig({ web_unit: "s" }, "int?");
 
     expect(result.ok).toBe(true);
-    if (!result.ok) {return;}
+    if (!result.ok) {
+      return;
+    }
 
     expect(validateUnitInput("", "s", result.config)).toEqual({ valid: true, apiValue: null });
   });

@@ -18,7 +18,17 @@ describe("units catalogue", () => {
 
   test("GIVEN unitsOfKind WHEN called for bitrate THEN returns every metric and IEC bit-rate code once", () => {
     expect(unitsOfKind("bitrate").sort()).toEqual(
-      ["bit/s", "kbit/s", "Mbit/s", "Gbit/s", "Tbit/s", "Kibit/s", "Mibit/s", "Gibit/s", "Tibit/s"].sort()
+      [
+        "bit/s",
+        "kbit/s",
+        "Mbit/s",
+        "Gbit/s",
+        "Tbit/s",
+        "Kibit/s",
+        "Mibit/s",
+        "Gibit/s",
+        "Tibit/s",
+      ].sort()
     );
   });
 
@@ -120,16 +130,31 @@ describe("units catalogue", () => {
   describe("findUnit", () => {
     test("GIVEN a recognized code WHEN it is a base unit THEN resolves with family base", () => {
       expect(findUnit("B")).toEqual({ kind: "size", code: "B", family: "base", factor: 1 });
-      expect(findUnit("bit/s")).toEqual({ kind: "bitrate", code: "bit/s", family: "base", factor: 1 });
+      expect(findUnit("bit/s")).toEqual({
+        kind: "bitrate",
+        code: "bit/s",
+        family: "base",
+        factor: 1,
+      });
     });
 
     test("GIVEN a recognized code WHEN it is a metric or IEC unit THEN resolves with the matching family", () => {
       expect(findUnit("GB")).toEqual({ kind: "size", code: "GB", family: "metric", factor: 1e9 });
-      expect(findUnit("GiB")).toEqual({ kind: "size", code: "GiB", family: "iec", factor: 1024 ** 3 });
+      expect(findUnit("GiB")).toEqual({
+        kind: "size",
+        code: "GiB",
+        family: "iec",
+        factor: 1024 ** 3,
+      });
     });
 
     test("GIVEN a duration code WHEN resolved THEN family is base regardless of ladder position", () => {
-      expect(findUnit("h")).toEqual({ kind: "duration", code: "h", family: "base", factor: 3.6e12 });
+      expect(findUnit("h")).toEqual({
+        kind: "duration",
+        code: "h",
+        family: "base",
+        factor: 3.6e12,
+      });
     });
 
     test("GIVEN an unrecognized code WHEN resolved THEN returns undefined", () => {

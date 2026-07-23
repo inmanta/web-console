@@ -1,4 +1,12 @@
-import { defaultDisplay, defaultScales, factorOf, familyOf, findUnit, isBaseUnit, unitsOfKind } from "./units";
+import {
+  defaultDisplay,
+  defaultScales,
+  factorOf,
+  familyOf,
+  findUnit,
+  isBaseUnit,
+  unitsOfKind,
+} from "./units";
 import type { UnitKind, UnitScales } from "./units";
 
 /**
@@ -27,8 +35,7 @@ export interface UnitConfig {
 }
 
 export type ResolveUnitConfigResult =
-  | { ok: true; config: UnitConfig }
-  | { ok: false; reason: string };
+  { ok: true; config: UnitConfig } | { ok: false; reason: string };
 
 function isArrayType(type: string): boolean {
   return type.includes("[]");

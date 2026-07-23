@@ -1,5 +1,11 @@
 import BigNumber from "bignumber.js";
-import { conversionFactor, parseDecimal, toApiValue, toDisplayValue, toSubmittableNumber } from "./convert";
+import {
+  conversionFactor,
+  parseDecimal,
+  toApiValue,
+  toDisplayValue,
+  toSubmittableNumber,
+} from "./convert";
 import { resolveUnitConfig } from "./resolveUnitConfig";
 import type { UnitConfig } from "./resolveUnitConfig";
 

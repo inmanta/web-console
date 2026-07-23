@@ -117,7 +117,8 @@ export const UnitFormInput: React.FC<Props> = ({
     validation.valid && validation.apiValue !== null && otherScale.length > 0
       ? selectDisplayUnit(validation.apiValue, { ...config, offeredUnits: otherScale })
       : null;
-  const equivalentFamily = equivalent && familyOf(config.kind, equivalent.unit) === "iec" ? "binary" : "metric";
+  const equivalentFamily =
+    equivalent && familyOf(config.kind, equivalent.unit) === "iec" ? "binary" : "metric";
 
   return (
     <FormGroup isRequired={!isOptional} fieldId={attributeName} label={attributeName}>

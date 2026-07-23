@@ -1108,9 +1108,11 @@ const dict = {
   "unitInput.error.notExact": (entered: string, unit: string, apiValue: string, apiUnit: string) =>
     `Must be a whole number of ${apiUnit} (${entered} ${unit} = ${apiValue} ${apiUnit}).`,
   "unitInput.error.bound.ge": (limit: string, unit: string) => `Must be at least ${limit} ${unit}.`,
-  "unitInput.error.bound.gt": (limit: string, unit: string) => `Must be more than ${limit} ${unit}.`,
+  "unitInput.error.bound.gt": (limit: string, unit: string) =>
+    `Must be more than ${limit} ${unit}.`,
   "unitInput.error.bound.le": (limit: string, unit: string) => `Must be at most ${limit} ${unit}.`,
-  "unitInput.error.bound.lt": (limit: string, unit: string) => `Must be less than ${limit} ${unit}.`,
+  "unitInput.error.bound.lt": (limit: string, unit: string) =>
+    `Must be less than ${limit} ${unit}.`,
 };
 
 type Key = keyof typeof dict;

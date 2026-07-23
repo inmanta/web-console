@@ -123,9 +123,7 @@ describe("UnitFormInput", () => {
     await userEvent.selectOptions(unitSelect(), "GB");
     await userEvent.type(numberInput(), "2.0001");
 
-    expect(
-      screen.getByText("Must be a whole number of MB (2.0001 GB = 2000.1 MB).")
-    ).toBeVisible();
+    expect(screen.getByText("Must be a whole number of MB (2.0001 GB = 2000.1 MB).")).toBeVisible();
     expect(numberInput()).toHaveAttribute("aria-invalid", "true");
   });
 

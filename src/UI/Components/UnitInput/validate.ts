@@ -25,11 +25,13 @@ export type UnitValidationError =
   | { kind: "bound"; op: BoundOp; limit: BigNumber; limitInUnit: BigNumber; unit: string };
 
 export type UnitValidationResult =
-  | { valid: true; apiValue: BigNumber | null }
-  | { valid: false; error: UnitValidationError };
+  { valid: true; apiValue: BigNumber | null } | { valid: false; error: UnitValidationError };
 
-function firstViolatedBound(apiValue: BigNumber, bounds: UnitBounds): { op: BoundOp; limit: BigNumber } | null {
-  const checks: Array<[BoundOp, ((a: BigNumber, b: BigNumber) => boolean)]> = [
+function firstViolatedBound(
+  apiValue: BigNumber,
+  bounds: UnitBounds
+): { op: BoundOp; limit: BigNumber } | null {
+  const checks: Array<[BoundOp, (a: BigNumber, b: BigNumber) => boolean]> = [
     ["ge", (a, b) => a.isGreaterThanOrEqualTo(b)],
     ["gt", (a, b) => a.isGreaterThan(b)],
     ["le", (a, b) => a.isLessThanOrEqualTo(b)],
@@ -78,7 +80,13 @@ export function validateUnitInput(
   if (config.isInt && !apiValue.isInteger()) {
     return {
       valid: false,
-      error: { kind: "not-exact", entered: entered.trim(), unit, apiValue, apiUnit: config.apiUnit },
+      error: {
+        kind: "not-exact",
+        entered: entered.trim(),
+        unit,
+        apiValue,
+        apiUnit: config.apiUnit,
+      },
     };
   }
 
