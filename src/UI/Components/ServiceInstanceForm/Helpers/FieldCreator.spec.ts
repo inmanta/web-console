@@ -431,7 +431,11 @@ describe("FieldCreator: web_presentation: 'unit' (issue #7022 / #7133)", () => {
           name: "memory_limit",
           type: "int",
           validation_parameters: {},
-          attribute_annotations: { web_presentation: "unit", web_unit: "B", web_unit_scales: "iec" },
+          attribute_annotations: {
+            web_presentation: "unit",
+            web_unit: "B",
+            web_unit_scales: "iec",
+          },
         },
       ],
       embedded_entities: [],
@@ -471,14 +475,19 @@ describe("FieldCreator: web_presentation: 'unit' (issue #7022 / #7133)", () => {
 
     const fields = new FieldCreator(new CreateModifierHandler()).create({
       attributes: [
-        { ...bandwidthAttribute, attribute_annotations: { web_presentation: "unit", web_unit: "parsecs" } },
+        {
+          ...bandwidthAttribute,
+          attribute_annotations: { web_presentation: "unit", web_unit: "parsecs" },
+        },
       ],
       embedded_entities: [],
       inter_service_relations: [],
     });
 
     expect(fields[0].kind).toBe("Text");
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Unrecognized web_unit "parsecs"'));
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Unrecognized web_unit "parsecs"')
+    );
 
     warnSpy.mockRestore();
   });
