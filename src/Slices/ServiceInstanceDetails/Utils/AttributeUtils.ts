@@ -1,4 +1,4 @@
-import { InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
+import { AttributeModel, InstanceAttributeModel, ServiceInstanceModel, ServiceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
 
 // A type for the possible AttributeSets.
@@ -12,6 +12,9 @@ export interface TreeRowData {
   type: "Value" | "Embedded" | "Relation";
   serviceName?: string;
   children?: TreeRowData[];
+
+  /** The attribute's schema, when it could be matched by name at this level — e.g. for unit formatting (issue #7132). */
+  attribute?: AttributeModel;
 }
 
 // The available views mapped to toggleKeys for the AttributesTabContent.
@@ -111,6 +114,7 @@ export const formatTreeRowData = (
         name: key,
         type: "Value",
         children: [],
+        attribute: serviceModel.attributes?.find((attribute) => attribute.name === key),
       };
 
       // we need to check if the item is an inter-service relation
@@ -168,8 +172,16 @@ export const formatTreeRowData = (
           }
         } else {
           // this case is when we are dealing with a normal object. We call the recursion. This often happens when there's only one embedded entity in the list.
+          const embeddedNode = serviceModel.embedded_entities?.find(
+            (embeddedEntity) => embeddedEntity.name === key
+          );
+
           node?.children?.push(
-            ...formatTreeRowData(value as Record<string, unknown>, serviceModel, path + key + ".")
+            ...formatTreeRowData(
+              value as Record<string, unknown>,
+              embeddedNode ?? serviceModel,
+              path + key + "."
+            )
           );
         }
       }
