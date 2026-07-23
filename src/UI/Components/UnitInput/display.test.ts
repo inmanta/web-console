@@ -51,11 +51,25 @@ describe("selectDisplayUnit", () => {
 
 describe("otherScaleCandidates", () => {
   test("GIVEN scales=both and an IEC current unit WHEN queried THEN returns the metric family plus the base unit", () => {
-    expect(otherScaleCandidates(configFor("B", "both"), "GiB")).toEqual(["B", "kB", "MB", "GB", "TB", "PB"]);
+    expect(otherScaleCandidates(configFor("B", "both"), "GiB")).toEqual([
+      "B",
+      "kB",
+      "MB",
+      "GB",
+      "TB",
+      "PB",
+    ]);
   });
 
   test("GIVEN scales=both and a metric current unit WHEN queried THEN returns the IEC family plus the base unit", () => {
-    expect(otherScaleCandidates(configFor("B", "both"), "GB")).toEqual(["B", "KiB", "MiB", "GiB", "TiB", "PiB"]);
+    expect(otherScaleCandidates(configFor("B", "both"), "GB")).toEqual([
+      "B",
+      "KiB",
+      "MiB",
+      "GiB",
+      "TiB",
+      "PiB",
+    ]);
   });
 
   test("GIVEN a single-scale config WHEN queried THEN returns no other-scale candidates", () => {
