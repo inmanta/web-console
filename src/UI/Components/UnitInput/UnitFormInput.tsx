@@ -51,7 +51,7 @@ function initialState(
 // Fixed rather than `width: auto` so the control doesn't resize as the user switches between a
 // short code ("B") and the catalogue's longest ones ("Kibit/s", "Gibit/s", "Tibit/s" — 7 chars).
 const UnitSelect = styled(FormSelect)`
-  width: 7.5rem;
+  width: 6.5rem;
 `;
 
 function errorMessage(error: UnitValidationError): string {
