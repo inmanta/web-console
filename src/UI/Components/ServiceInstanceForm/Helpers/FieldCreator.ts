@@ -9,52 +9,8 @@ import {
   UnitField,
 } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
-import { resolveUnitConfig, UnitBounds } from "@/UI/Components/UnitInput";
+import { resolveUnitField } from "@/UI/Components/UnitInput";
 import { ModifierHandler } from "./ModifierHandler";
-
-const VALID_UNIT_SCALES = new Set(["metric", "iec", "both"]);
-
-/**
- * Narrows the raw `web_unit_scales` annotation string to `resolveUnitConfig`'s expected union,
- * dropping anything else (a typo'd value is ignored — falls back to the default scales — rather
- * than degrading the whole field, since it's a narrower annotation-quality issue than a bad
- * `web_unit`).
- */
-function parseUnitScales(value: string | undefined): "metric" | "iec" | "both" | undefined {
-  return value && VALID_UNIT_SCALES.has(value) ? (value as "metric" | "iec" | "both") : undefined;
-}
-
-/**
- * Reads `ge`/`gt`/`le`/`lt` off an attribute's `validation_parameters`, regardless of
- * `validation_type` — the modeled `AttributeValidation` union only has bounds on
- * `pydantic.conint*`, but the backend can equally send `pydantic.confloat*` bounds for a `float`
- * attribute (not currently modeled anywhere in this union), and the parameter shape is identical.
- * `ParsedNumber` (`number | bigint`) values are narrowed to `number` — `UnitBounds` doesn't carry
- * bigint precision, which matches its current scope (bounds this large aren't a modeled concern
- * yet, only entered values are).
- */
-function extractUnitBounds(attribute: AttributeModel): UnitBounds | undefined {
-  const params = attribute.validation_parameters as
-    | Record<string, number | bigint | undefined>
-    | null
-    | undefined;
-
-  if (!params || typeof params !== "object") {
-    return undefined;
-  }
-
-  const bounds: UnitBounds = {};
-
-  (["ge", "gt", "le", "lt"] as const).forEach((key) => {
-    const value = params[key];
-
-    if (typeof value === "number" || typeof value === "bigint") {
-      bounds[key] = Number(value);
-    }
-  });
-
-  return Object.keys(bounds).length > 0 ? bounds : undefined;
-}
 
 /**
  * Create form fields based on a ServiceModel.
@@ -324,31 +280,14 @@ export class FieldCreator {
    * the only signal, per the spec's "the form never breaks on a bad annotation" contract.
    */
   private tryCreateUnitField(attribute: AttributeModel, defaultValue: unknown): UnitField | null {
-    const annotations = attribute.attribute_annotations;
+    const resolved = resolveUnitField(attribute);
 
-    if (annotations?.web_presentation !== "unit") {
+    if (!resolved) {
       return null;
     }
 
-    if (!annotations.web_unit) {
-      console.warn(
-        `Attribute "${attribute.name}" has web_presentation: "unit" but no web_unit annotation — falling back to a plain field.`
-      );
-
-      return null;
-    }
-
-    const result = resolveUnitConfig(
-      {
-        web_unit: annotations.web_unit,
-        web_unit_scales: parseUnitScales(annotations.web_unit_scales),
-        web_unit_display: annotations.web_unit_display,
-      },
-      attribute.type
-    );
-
-    if (!result.ok) {
-      console.warn(`Attribute "${attribute.name}": ${result.reason} Falling back to a plain field.`);
+    if (!resolved.ok) {
+      console.warn(`${resolved.reason} Falling back to a plain field.`);
 
       return null;
     }
@@ -361,8 +300,8 @@ export class FieldCreator {
       type: attribute.type,
       isOptional: this.isTextFieldOptional(attribute),
       isDisabled: this.shouldFieldBeDisabled(attribute),
-      config: result.config,
-      bounds: extractUnitBounds(attribute),
+      config: resolved.config,
+      bounds: resolved.bounds,
     };
   }
 

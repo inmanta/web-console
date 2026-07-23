@@ -1,6 +1,6 @@
 import { TextInputTypes } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core/Language";
-import { UnitBounds, UnitConfig } from "@/UI/Components/UnitInput";
+import type { UnitBounds, UnitConfig } from "@/UI/Components/UnitInput";
 import { FormSuggestion } from "./ServiceInstanceModel";
 
 /**
