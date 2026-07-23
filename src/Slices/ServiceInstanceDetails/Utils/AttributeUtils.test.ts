@@ -27,7 +27,10 @@ function serviceModel(overrides: Partial<ServiceModel> = {}): Partial<ServiceMod
 describe("formatTreeRowData: attaching the matching AttributeModel", () => {
   test("GIVEN a top-level attribute that matches the schema WHEN formatted THEN the node carries that AttributeModel", () => {
     const bandwidth = attribute("bandwidth", { type: "int" });
-    const nodes = formatTreeRowData({ bandwidth: 150000 }, serviceModel({ attributes: [bandwidth] }));
+    const nodes = formatTreeRowData(
+      { bandwidth: 150000 },
+      serviceModel({ attributes: [bandwidth] })
+    );
 
     expect(nodes[0].attribute).toBe(bandwidth);
   });
