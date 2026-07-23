@@ -1,5 +1,6 @@
 import { TextInputTypes } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core/Language";
+import { UnitBounds, UnitConfig } from "@/UI/Components/UnitInput";
 import { FormSuggestion } from "./ServiceInstanceModel";
 
 /**
@@ -17,7 +18,8 @@ export type Field =
   | DictListField
   | RelationListField
   | InterServiceRelationField
-  | DictField;
+  | DictField
+  | UnitField;
 
 export type FieldLikeWithFormState = Field;
 
@@ -52,6 +54,14 @@ export interface DictField extends BaseField {
   kind: "Dict";
   defaultValue: unknown;
   type: string;
+}
+
+export interface UnitField extends BaseField {
+  kind: "Unit";
+  defaultValue: unknown;
+  type: string;
+  config: UnitConfig;
+  bounds?: UnitBounds;
 }
 
 export interface Textarea extends BaseField {

@@ -11,6 +11,7 @@ import {
   InputGroupItem,
   TextInput,
 } from "@patternfly/react-core";
+import styled from "styled-components";
 import { words } from "@/UI/words";
 import { toSubmittableNumber } from "./convert";
 import { otherScaleCandidates, selectDisplayUnit } from "./display";
@@ -46,6 +47,12 @@ function initialState(
 
   return { unit, typed: value.toFixed() };
 }
+
+// Fixed rather than `width: auto` so the control doesn't resize as the user switches between a
+// short code ("B") and the catalogue's longest ones ("Kibit/s", "Gibit/s", "Tibit/s" — 7 chars).
+const UnitSelect = styled(FormSelect)`
+  width: 7.5rem;
+`;
 
 function errorMessage(error: UnitValidationError): string {
   switch (error.kind) {
@@ -166,7 +173,7 @@ export const UnitFormInput: React.FC<Props> = ({
           </Button>
         </InputGroupItem>
         <InputGroupItem>
-          <FormSelect
+          <UnitSelect
             aria-label={words("unitInput.unitSelect.ariaLabel")}
             value={unit}
             isDisabled={shouldBeDisabled}
@@ -175,7 +182,7 @@ export const UnitFormInput: React.FC<Props> = ({
             {config.offeredUnits.map((code) => (
               <FormSelectOption key={code} value={code} label={code} />
             ))}
-          </FormSelect>
+          </UnitSelect>
         </InputGroupItem>
       </InputGroup>
       <FormHelperText>

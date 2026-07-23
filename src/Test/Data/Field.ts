@@ -8,6 +8,7 @@ import {
   EnumField,
   Textarea,
   DictField,
+  UnitField,
 } from "@/Core";
 
 export const textArea: Textarea = {
@@ -161,6 +162,26 @@ export const numberArr: TextField = {
   type: "int[]",
   isOptional: false,
   isDisabled: false,
+};
+
+export const unit: UnitField = {
+  kind: "Unit",
+  name: "unit_field",
+  description: "description",
+  isOptional: true,
+  isDisabled: false,
+  defaultValue: null,
+  type: "int?",
+  config: {
+    kind: "bitrate",
+    apiUnit: "kbit/s",
+    isInt: true,
+    isOptional: true,
+    scales: "metric",
+    offeredUnits: ["kbit/s", "Mbit/s", "Gbit/s", "Tbit/s"],
+    displayUnit: "kbit/s",
+  },
+  bounds: { le: 1000000 },
 };
 
 export const dictionary: DictField = {
