@@ -87,7 +87,7 @@ describe("AttributesTable", () => {
     expect(screen.getByText("active-name")).toBeVisible();
   });
 
-  describe("unit formatting (issue #7132)", () => {
+  describe("unit formatting", () => {
     const bandwidthServiceModel: ServiceModel = {
       ...serviceModel,
       attributes: [
