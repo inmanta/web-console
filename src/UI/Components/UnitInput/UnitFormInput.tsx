@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Button,
   FormGroup,
   FormHelperText,
   FormSelect,
@@ -112,13 +111,6 @@ export const UnitFormInput: React.FC<Props> = ({
     );
   };
 
-  const step = (delta: number) => {
-    const current = Number(typed || "0");
-    const next = Number.isFinite(current) ? current : 0;
-
-    commit(String(next + delta), unit);
-  };
-
   const otherScale = otherScaleCandidates(config, unit);
   const equivalent =
     validation.valid && validation.apiValue !== null && otherScale.length > 0
@@ -139,7 +131,8 @@ export const UnitFormInput: React.FC<Props> = ({
       <InputGroup>
         <InputGroupItem isFill>
           <TextInput
-            type="text"
+            type="number"
+            step={1}
             id={attributeName}
             name={attributeName}
             aria-label={`UnitInput-${attributeName}`}
@@ -151,26 +144,6 @@ export const UnitFormInput: React.FC<Props> = ({
             validated={error ? "error" : "default"}
             onChange={(_event, value) => commit(value, unit)}
           />
-        </InputGroupItem>
-        <InputGroupItem>
-          <Button
-            variant="control"
-            aria-label={words("unitInput.stepper.decrease")}
-            isDisabled={shouldBeDisabled}
-            onClick={() => step(-1)}
-          >
-            −
-          </Button>
-        </InputGroupItem>
-        <InputGroupItem>
-          <Button
-            variant="control"
-            aria-label={words("unitInput.stepper.increase")}
-            isDisabled={shouldBeDisabled}
-            onClick={() => step(1)}
-          >
-            +
-          </Button>
         </InputGroupItem>
         <InputGroupItem>
           <UnitSelect
