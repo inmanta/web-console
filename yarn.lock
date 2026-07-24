@@ -1469,7 +1469,7 @@ __metadata:
     mochawesome-report-generator: "npm:^6.3.2"
     monaco-editor: "npm:^0.52.2"
     monaco-graphql: "npm:^1.8.0"
-    msw: "npm:^2.14.3"
+    msw: "npm:^2.15.0"
     oidc-client-ts: "npm:^3.5.0"
     prettier: "npm:^3.9.5"
     process: "npm:^0.11.10"
@@ -10111,9 +10111,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:^2.14.3":
-  version: 2.14.3
-  resolution: "msw@npm:2.14.3"
+"msw@npm:^2.15.0":
+  version: 2.15.0
+  resolution: "msw@npm:2.15.0"
   dependencies:
     "@inquirer/confirm": "npm:^6.0.11"
     "@mswjs/interceptors": "npm:^0.41.3"
@@ -10140,7 +10140,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10/e6d24f64f5f9d7225e5dc33fbfdd105dd0785ef1e9ba46025acea1ade0b5c6f985d3fd3b25e7a2fd645b4afda7736cc6e23e922c00f8b610332635b17f8c461f
+  checksum: 10/0c9d2140608a436017a9a38c1c455bce0b880063a1df350245749f63352ee87923b26c71c71cebc4ddaeb29302a3cf148ac4d179a860469006c86a5e0af093ac
   languageName: node
   linkType: hard
 
