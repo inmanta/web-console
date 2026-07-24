@@ -531,6 +531,33 @@ const dict = {
   "dashboard.notifications.tooltip": "Show notifications",
 
   /**
+   * Dashboard V2
+   */
+  "dashboardV2.title": (envName: string) => `Dashboard V2 | ${envName}`,
+  "dashboardV2.navigation.label": "Dashboard V2",
+  "dashboardV2.placeholder.comingSoon": "Coming soon",
+  "dashboardV2.environmentHealth.title": "Environment health",
+  "dashboardV2.environmentHealth.subtitle":
+    "Live status across orchestration, resources, compiles and services · last 7 days",
+  "dashboardV2.environmentHealth.updated": (minutesAgo: string) => `Updated ${minutesAgo} min ago`,
+  "dashboardV2.environmentHealth.rangeLast7Days": "Last 7 days",
+  "dashboardV2.environmentHealth.switch": "Switch",
+  "dashboardV2.environmentHealth.orchestratorLabel": "ORCHESTRATOR",
+  "dashboardV2.environmentHealth.operational": "Operational",
+  "dashboardV2.environmentHealth.degraded": "Attention",
+  "dashboardV2.environmentHealth.checklist.serverOk": "Server OK",
+  "dashboardV2.environmentHealth.checklist.databaseConnected": "Database connected",
+  "dashboardV2.environmentHealth.checklist.schedulerRunning": "Scheduler running",
+  "dashboardV2.environmentHealth.services": "Services",
+  "dashboardV2.environmentHealth.resources": "Resources",
+  "dashboardV2.environmentHealth.compiles": "Compiles",
+  "dashboardV2.environmentHealth.agents": "Agents",
+  "dashboardV2.compileReports.title": "Latest compile reports",
+  "dashboardV2.orchestrator.title": "Orchestrator",
+  "dashboardV2.resourceManager.title": "Resource Manager",
+  "dashboardV2.orchestrationEngine.title": "Orchestration Engine",
+
+  /**
    * Environment controls
    */
   "environment.resume.button": "Resume",
