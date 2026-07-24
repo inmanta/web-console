@@ -80,6 +80,9 @@ if (isIso) {
       cy.get('[aria-label="Expert-Actions-Toggle"]').click();
       cy.get('[role="menuitem"]').contains("creating").click();
 
+      // provide a custom message for the state transfer
+      cy.get("#expert-state-transfer-message").clear().type("forced to creating from e2e");
+
       // add an operation to the force state action
       cy.get("#operation-select").select("clear candidate");
       cy.get("button").contains("Yes").click();

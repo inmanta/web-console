@@ -3,6 +3,7 @@ import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Resource } from "@/Core";
+import { getById } from "@/Test";
 import { words } from "@/UI";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
@@ -156,13 +157,11 @@ describe("FilterWidgetComponent", () => {
       disregardDefault: true,
     });
 
-    await userEvent.click(screen.getByRole("button", { name: "Clear all" }));
-    expect(setFilter).toHaveBeenNthCalledWith(9, {
-      disregardDefault: true,
-    });
+    await userEvent.click(screen.getByRole("button", { name: "Reset Filters" }));
+    expect(setFilter).toHaveBeenNthCalledWith(9, {});
   });
 
-  it("toggles the purged status via the switch in the resource tab", async () => {
+  it("toggles the purged status via the toggle button in the resource tab", async () => {
     const Wrapper = () => {
       const [filter, setFilter] = useState<Resource.Filter>({});
 
@@ -177,16 +176,22 @@ describe("FilterWidgetComponent", () => {
 
     renderWithDrawer(<Wrapper />);
 
-    const purgedSwitch = screen.getByRole("switch", {
-      name: words("resources.filters.desiredState.purged"),
-    });
+    const purgedInclude = getById("purged-include");
+    const purgedExclude = getById("purged-exclude");
 
-    expect(purgedSwitch).not.toBeChecked();
+    expect(purgedInclude).toHaveAttribute("aria-pressed", "false");
+    expect(purgedExclude).toHaveAttribute("aria-pressed", "false");
 
-    await userEvent.click(purgedSwitch);
-    expect(purgedSwitch).toBeChecked();
+    await userEvent.click(purgedInclude);
+    expect(purgedInclude).toHaveAttribute("aria-pressed", "true");
+    expect(purgedExclude).toHaveAttribute("aria-pressed", "false");
 
-    await userEvent.click(purgedSwitch);
-    expect(purgedSwitch).not.toBeChecked();
+    await userEvent.click(purgedExclude);
+    expect(purgedInclude).toHaveAttribute("aria-pressed", "false");
+    expect(purgedExclude).toHaveAttribute("aria-pressed", "true");
+
+    await userEvent.click(purgedExclude);
+    expect(purgedInclude).toHaveAttribute("aria-pressed", "false");
+    expect(purgedExclude).toHaveAttribute("aria-pressed", "false");
   });
 });

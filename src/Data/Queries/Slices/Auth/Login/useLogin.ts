@@ -8,6 +8,8 @@ interface LoginResponse {
       username: string;
       auth_method: string;
     };
+    // Lifetime of the token in seconds, or null when it does not expire. Used to renew before it lapses.
+    expires_in: number | null;
   };
 }
 

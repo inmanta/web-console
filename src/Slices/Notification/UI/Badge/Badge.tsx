@@ -45,31 +45,32 @@ export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
 
   if (hasErrors) {
     return (
-      <>
-        <NotificationBadge
-          aria-label="Badge-Error"
-          variant={NotificationBadgeVariant.read}
-          isDisabled
-        />
-      </>
-    );
-  }
-
-  if (isSuccess) {
-    const variant = getVariantFromNotifications(data.notifications);
-
-    return (
       <NotificationBadge
-        aria-label="Badge-Success"
-        data-variant={variant}
-        variant={variant}
-        onClick={onClick}
+        aria-label="Badge-Error"
+        variant={NotificationBadgeVariant.read}
+        isDisabled
       />
     );
   }
 
+  // No environment selected yet: there is nothing to fetch, so show a disabled placeholder.
+  if (!envID) {
+    return (
+      <NotificationBadge aria-label="Badge" variant={NotificationBadgeVariant.read} isDisabled />
+    );
+  }
+
+  // While a request is in flight (initial load or after an environment switch), default to the
+  // neutral `read` variant and keep the badge enabled, so it doesn't flash from disabled to active.
+  const variant = getVariantFromNotifications(data?.notifications ?? []);
+
   return (
-    <NotificationBadge aria-label="Badge" variant={NotificationBadgeVariant.read} isDisabled />
+    <NotificationBadge
+      aria-label="Badge-Success"
+      data-variant={variant}
+      variant={variant}
+      onClick={onClick}
+    />
   );
 };
 

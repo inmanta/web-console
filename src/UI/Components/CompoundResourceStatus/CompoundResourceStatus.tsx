@@ -2,14 +2,19 @@ import { Content, Flex, FlexItem, Popover } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { words } from "@/UI";
 import { LegendBar } from "../LegendBar";
-import { colorConfig, statusGroupIcons, statusPriority } from "./config";
+import { colorConfig, statusGroupIcons, statusMapping, statusPriority } from "./config";
 
 /** Type guard for Object.entries results on a compound state record.
- * Narrows [string, unknown] to [Resource.CompoundStateType, number]. */
+ * Narrows [string, unknown] to [Resource.CompoundStateKey, number]. */
 const isCompoundStatusEntry = (
   entry: [string, unknown]
 ): entry is [Resource.CompoundStateKey, number] => {
-  return entry[0] in colorConfig && typeof entry[1] === "number";
+  return (
+    (entry[0] in Resource.LAST_HANDLER_RUN ||
+      entry[0] in Resource.COMPLIANCE ||
+      entry[0] in Resource.BLOCKED) &&
+    typeof entry[1] === "number"
+  );
 };
 
 interface CompoundResourceProps {
@@ -33,6 +38,11 @@ export const CompoundResourceStatus = ({
   updateFilter,
 }: CompoundResourceProps) => {
   const compoundState: Resource.CompoundStateSummary = { blocked, compliance, lastHandlerRun };
+
+  const compoundStateEntries = Object.entries(compoundState) as [
+    keyof Resource.CompoundStateSummary,
+    Partial<Record<Resource.CompoundStateKey, number>>,
+  ][];
 
   const onClick = (state: Resource.CompoundStateKey) => {
     updateFilter((filter) => {
@@ -71,7 +81,7 @@ export const CompoundResourceStatus = ({
         id: status,
         value,
         backgroundColor: colorConfig[status],
-        label: status,
+        label: statusMapping[status.toUpperCase()],
         height: "20px",
         onClick,
       }));
@@ -81,11 +91,13 @@ export const CompoundResourceStatus = ({
 
   return (
     <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }} flex={{ default: "flex_1" }}>
-      {Object.entries(compoundState).map(([key, record]) => (
+      {compoundStateEntries.map(([key, record]) => (
         <Flex key={key} flex={{ default: "flex_1" }} alignItems={{ default: "alignItemsCenter" }}>
           <FlexItem style={{ display: "inline-flex" }}>
             <Popover
-              bodyContent={<Content component="p">{key}</Content>}
+              bodyContent={
+                <Content component="p">{words(`resources.status.label.${key}`)}</Content>
+              }
               triggerAction="hover"
               position="left"
             >

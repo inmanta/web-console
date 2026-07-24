@@ -5,7 +5,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
+import { getBooleanFieldOption, MockedDependencyProvider, Service, ServiceInstance } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -28,6 +28,7 @@ vi.mock("@/Data/Queries/Helpers/useQueries", async (importActual) => {
     usePost: () => postMock,
   };
 });
+
 function setup(service) {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -41,6 +42,13 @@ function setup(service) {
 
   return { component };
 }
+
+const getDictValue = (testId: string, container: HTMLElement = document.body) => {
+  const dictContainer = within(container).getByTestId(testId);
+  const content = within(dictContainer).getByTestId("code-editor-content");
+
+  return JSON.parse(content.textContent ?? "{}");
+};
 
 describe("CreateInstance", () => {
   const server = setupServer();
@@ -194,8 +202,8 @@ describe("CreateInstance", () => {
 
     expect(screen.queryByLabelText("Toggle-bool")).toBeChecked();
     expect(screen.queryByLabelText("Toggle-editableBool")).toBeChecked();
-    expect(screen.queryByTestId("bool?-true")).toBeChecked();
-    expect(screen.queryByTestId("editableBool?-true")).toBeChecked();
+    expect(getBooleanFieldOption("bool?", "true")).toHaveAttribute("aria-pressed", "true");
+    expect(getBooleanFieldOption("editableBool?", "true")).toHaveAttribute("aria-pressed", "true");
 
     expect(screen.queryByLabelText("TextFieldInput-string[]")).toHaveTextContent("1.1.1.1");
     expect(screen.queryByLabelText("TextFieldInput-string[]")).toHaveTextContent("8.8.8.8");
@@ -216,10 +224,10 @@ describe("CreateInstance", () => {
     expect(screen.getByTestId("editableEnum-select-toggle")).toHaveTextContent("OPTION_ONE");
     expect(screen.getByTestId("enum?-select-toggle")).toHaveTextContent("OPTION_ONE");
 
-    expect(screen.queryByLabelText("TextInput-dict")).toHaveValue('{"default":"value"}');
-    expect(screen.queryByLabelText("TextInput-editableDict")).toHaveValue('{"default":"value"}');
-    expect(screen.queryByLabelText("TextInput-dict?")).toHaveValue('{"default":"value"}');
-    expect(screen.queryByLabelText("TextInput-editableDict?")).toHaveValue('{"default":"value"}');
+    expect(getDictValue("DictInput-dict")).toEqual({ default: "value" });
+    expect(getDictValue("DictInput-editableDict")).toEqual({ default: "value" });
+    expect(getDictValue("DictInput-dict?")).toEqual({ default: "value" });
+    expect(getDictValue("DictInput-editableDict?")).toEqual({ default: "value" });
 
     //check if embedded entities buttons are correctly displayed
     const embedded_base = screen.getByLabelText("DictListFieldInput-embedded_base");
@@ -245,8 +253,14 @@ describe("CreateInstance", () => {
 
     expect(within(embedded_base).queryByLabelText("Toggle-bool")).toBeChecked();
     expect(within(embedded_base).queryByLabelText("Toggle-editableBool")).toBeChecked();
-    expect(within(embedded_base).queryByTestId("bool?-true")).toBeChecked();
-    expect(within(embedded_base).queryByTestId("editableBool?-true")).toBeChecked();
+    expect(getBooleanFieldOption("bool?", "true", embedded_base)).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+    expect(getBooleanFieldOption("editableBool?", "true", embedded_base)).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
 
     expect(within(embedded_base).queryByLabelText("TextFieldInput-string[]")).toHaveTextContent(
       "1.1.1.1"
@@ -284,18 +298,10 @@ describe("CreateInstance", () => {
       "OPTION_ONE"
     );
 
-    expect(within(embedded_base).queryByLabelText("TextInput-dict")).toHaveValue(
-      '{"default":"value"}'
-    );
-    expect(within(embedded_base).queryByLabelText("TextInput-editableDict")).toHaveValue(
-      '{"default":"value"}'
-    );
-    expect(within(embedded_base).queryByLabelText("TextInput-dict?")).toHaveValue(
-      '{"default":"value"}'
-    );
-    expect(within(embedded_base).queryByLabelText("TextInput-editableDict?")).toHaveValue(
-      '{"default":"value"}'
-    );
+    expect(getDictValue("DictInput-dict", embedded_base)).toEqual({ default: "value" });
+    expect(getDictValue("DictInput-editableDict", embedded_base)).toEqual({ default: "value" });
+    expect(getDictValue("DictInput-dict?", embedded_base)).toEqual({ default: "value" });
+    expect(getDictValue("DictInput-editableDict?", embedded_base)).toEqual({ default: "value" });
   });
 
   test("Given the CreateInstance View When creating an instance with alternative initial states Then dropdown is shown and initial_state is passed", async () => {

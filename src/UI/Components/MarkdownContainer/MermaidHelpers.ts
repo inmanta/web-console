@@ -167,7 +167,7 @@ export function renderMermaidBlocks(
     return;
   }
 
-  const isDarkTheme = document.documentElement.classList.contains("pf-v6-theme-dark");
+  const isDarkTheme = document.documentElement.getAttribute("data-theme") === "dark";
 
   (Mermaid as any).initialize({
     startOnLoad: false,

@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from "react";
-import { Stack, StackItem, Switch, Title } from "@patternfly/react-core";
+import { useMemo, useState } from "react";
+import { FormGroup, Stack, StackItem, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { useGetAgents } from "@/Data/Queries";
 import { useDebounce } from "@/UI";
+import { OptionalToggleGroup, excludeIcons, includeIcons } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { AddableSelectInput, SelectOption } from "./AddableSelectInput";
 import { AddableTextInput } from "./AddableTextInput";
@@ -56,14 +57,6 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
       }))
     );
   }, [data]);
-
-  const handlePurgedChange = (hasChanged: boolean) => {
-    const current = filter.status ?? [];
-
-    const updated = hasChanged ? [...current, "purged"] : current.filter((s) => s !== "purged");
-
-    onChangeStatus(updated);
-  };
 
   return (
     <>
@@ -128,14 +121,26 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
           </Title>
         </StackItem>
         <StackItem>
-          <Switch
-            id={words("resources.filters.desiredState.purged")}
-            aria-label={words("resources.filters.desiredState.purged")}
-            label={words("resources.filters.desiredState.purged")}
-            isChecked={filter.status?.includes("purged") ?? false}
-            onChange={(_event, hasChanged) => handlePurgedChange(hasChanged)}
-            isReversed
-          />
+          <FormGroup label={words("resources.filters.desiredState.purged")}>
+            <OptionalToggleGroup
+              selected={filter.status ?? []}
+              onChange={onChangeStatus}
+              options={[
+                {
+                  value: "purged",
+                  buttonId: "purged-include",
+                  icon: includeIcons,
+                  ariaLabel: `${words("include")} ${words("resources.filters.desiredState.purged")}`,
+                },
+                {
+                  value: "!purged",
+                  buttonId: "purged-exclude",
+                  icon: excludeIcons,
+                  ariaLabel: `${words("exclude")} ${words("resources.filters.desiredState.purged")}`,
+                },
+              ]}
+            />
+          </FormGroup>
         </StackItem>
       </Stack>
     </>

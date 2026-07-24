@@ -1,0 +1,117 @@
+import React, { useContext } from "react";
+import { Button, Label } from "@patternfly/react-core";
+import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import { useGetTokens, useRevokeToken } from "@/Data/Queries";
+import { DateWithTooltip, EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { words } from "@/UI/words";
+
+/**
+ * Lists the registered (revocable) tokens of the current environment and allows revoking them.
+ *
+ * @returns {React.FC} The token registry table.
+ */
+export const TokenTable: React.FC = () => {
+  const { triggerModal, closeModal } = useContext(ModalContext);
+  const { data, isSuccess, isError, error, refetch } = useGetTokens().useOneTime();
+  const revoke = useRevokeToken();
+
+  const confirmRevoke = (jti: string) => {
+    triggerModal({
+      title: words("settings.tabs.token.revoke.title"),
+      iconVariant: "danger",
+      content: words("settings.tabs.token.revoke.confirm")(jti),
+      actions: [
+        <Button
+          key="confirm"
+          variant="danger"
+          aria-label="confirm-revoke"
+          onClick={() => {
+            revoke.mutate(jti);
+            closeModal();
+          }}
+        >
+          {words("settings.tabs.token.revoke")}
+        </Button>,
+        <Button key="cancel" variant="link" onClick={closeModal}>
+          {words("cancel")}
+        </Button>,
+      ],
+    });
+  };
+
+  if (isError) {
+    return (
+      <ErrorView
+        title={words("error")}
+        message={words("error.general")(error.message)}
+        ariaLabel="TokenTable-Failed"
+        retry={refetch}
+      />
+    );
+  }
+
+  if (!isSuccess) {
+    return <LoadingView ariaLabel="TokenTable-Loading" />;
+  }
+
+  if (data.length === 0) {
+    return <EmptyView message={words("settings.tabs.token.empty")} aria-label="TokenTable-Empty" />;
+  }
+
+  return (
+    <Table aria-label="tokens-table" variant="compact">
+      <Thead>
+        <Tr>
+          <Th>{words("settings.tabs.token.column.createdBy")}</Th>
+          <Th>{words("settings.tabs.token.column.clientTypes")}</Th>
+          <Th>{words("settings.tabs.token.column.issuedAt")}</Th>
+          <Th>{words("settings.tabs.token.column.expiresAt")}</Th>
+          <Th>{words("settings.tabs.token.column.lastUsed")}</Th>
+          <Th>{words("settings.tabs.token.column.status")}</Th>
+          <Th>{words("settings.tabs.token.column.revokedAt")}</Th>
+          <Th screenReaderText={words("common.emptyColumnHeader")} />
+        </Tr>
+      </Thead>
+      <Tbody>
+        {data.map((token) => {
+          const isRevoked = token.revoked_at !== null;
+
+          return (
+            <Tr key={token.jti} aria-label={`token-row-${token.jti}`}>
+              <Td>{token.created_by ?? "-"}</Td>
+              <Td>{token.client_types.join(", ")}</Td>
+              <Td>
+                <DateWithTooltip timestamp={token.issued_at} />
+              </Td>
+              <Td>
+                {token.expires_at ? <DateWithTooltip timestamp={token.expires_at} isFull /> : "-"}
+              </Td>
+              <Td>{token.last_used ? <DateWithTooltip timestamp={token.last_used} /> : "-"}</Td>
+              <Td>
+                {isRevoked ? (
+                  <Label color="red">{words("settings.tabs.token.status.revoked")}</Label>
+                ) : (
+                  <Label color="green">{words("settings.tabs.token.status.active")}</Label>
+                )}
+              </Td>
+              <Td>
+                {token.revoked_at ? <DateWithTooltip timestamp={token.revoked_at} isFull /> : "-"}
+              </Td>
+              <Td isActionCell>
+                <Button
+                  variant="danger"
+                  isDisabled={isRevoked}
+                  aria-label={`revoke-${token.jti}`}
+                  onClick={() => confirmRevoke(token.jti)}
+                >
+                  {words("settings.tabs.token.revoke")}
+                </Button>
+              </Td>
+            </Tr>
+          );
+        })}
+      </Tbody>
+    </Table>
+  );
+};

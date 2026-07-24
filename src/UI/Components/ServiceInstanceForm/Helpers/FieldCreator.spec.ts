@@ -210,10 +210,10 @@ test("GIVEN FieldCreator WHEN attributes are processed for edit form THEN the fi
   expect(fields[13].kind).toBe("Enum");
   expect(fields[14].kind).toBe("Enum");
   expect(fields[15].kind).toBe("Enum");
-  expect(fields[16].kind).toBe("Text");
-  expect(fields[17].kind).toBe("Text");
-  expect(fields[18].kind).toBe("Text");
-  expect(fields[19].kind).toBe("Text");
+  expect(fields[16].kind).toBe("Dict");
+  expect(fields[17].kind).toBe("Dict");
+  expect(fields[18].kind).toBe("Dict");
+  expect(fields[19].kind).toBe("Dict");
   expect(fields[20].kind).toBe("Textarea");
   expect(fields[21].kind).toBe("Textarea");
   expect(fields[22].kind).toBe("Textarea");
@@ -297,3 +297,88 @@ test.each`
     expect(entityFields.fields[20].isDisabled).toBeTruthy();
   }
 );
+
+test("GIVEN FieldCreator WHEN top-level attributes, embedded entities and relations carry a web_tab annotation THEN their fields carry the resolved tab key", () => {
+  const fields = new FieldCreator(new CreateModifierHandler()).create({
+    attributes: [
+      {
+        ...attributesList[0],
+        name: "assigned_attribute",
+        attribute_annotations: { web_tab: "network" },
+      },
+      { ...attributesList[0], name: "unassigned_attribute", attribute_annotations: {} },
+    ],
+    embedded_entities: [{ ...editableEmbedded_base, attribute_annotations: { web_tab: "extras" } }],
+    inter_service_relations: [
+      {
+        ...InterServiceRelations.listWithAll[0],
+        name: "assigned_relation",
+        attribute_annotations: { web_tab: "relations" },
+      },
+    ],
+  });
+
+  const byName = (name: string) => fields.find((field) => field.name === name);
+
+  expect(byName("assigned_attribute")?.tab).toEqual("network");
+  expect(byName("unassigned_attribute")).toBeDefined();
+  expect(byName("unassigned_attribute")?.tab).toBeUndefined();
+  expect(byName(editableEmbedded_base.name)?.tab).toEqual("extras");
+  expect(byName("assigned_relation")?.tab).toEqual("relations");
+});
+
+test("GIVEN FieldCreator WHEN web_tab annotations appear below the top level THEN they are ignored", () => {
+  // The nesting structure IS the subject here: a web_tab is placed on each nested kind
+  // (a nested attribute, a deeper embedded entity, and a nested relation) to prove all
+  // three are ignored.
+  const embeddedEntity: EmbeddedEntity = {
+    name: "embedded_entity",
+    type: "embedded_entity",
+    description: "desc",
+    modifier: "rw+",
+    lower_limit: 1,
+    upper_limit: 1,
+    attributes: [
+      {
+        ...attributesList[0],
+        name: "nested_attribute",
+        attribute_annotations: { web_tab: "network" },
+      },
+    ],
+    embedded_entities: [
+      {
+        ...editableEmbedded_base,
+        name: "deeper_entity",
+        attributes: [],
+        embedded_entities: [],
+        inter_service_relations: [],
+        attribute_annotations: { web_tab: "network" },
+      },
+    ],
+    inter_service_relations: [
+      {
+        ...InterServiceRelations.listWithAll[0],
+        name: "nested_relation",
+        attribute_annotations: { web_tab: "network" },
+      },
+    ],
+    attribute_annotations: { web_tab: "extras" },
+  };
+
+  const fields = new FieldCreator(new CreateModifierHandler()).create({
+    attributes: [],
+    embedded_entities: [embeddedEntity],
+    inter_service_relations: [],
+  });
+
+  const embeddedField = fields[0] as NestedField;
+  const nestedByName = (name: string) => embeddedField.fields.find((field) => field.name === name);
+
+  // The top-level embedded entity keeps its tab; every nested field ignores its web_tab.
+  expect(embeddedField.tab).toEqual("extras");
+
+  ["nested_attribute", "deeper_entity", "nested_relation"].forEach((name) => {
+    expect(nestedByName(name)).toBeDefined();
+    expect(nestedByName(name)?.tab).toBeUndefined();
+  });
+});

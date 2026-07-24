@@ -2,6 +2,7 @@ import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort, Parameter } from "@/Core";
 import { SortKey } from "@/Slices/Parameters/Core/Types";
+import { useClassifiedRows } from "@/UI/Components";
 import { ParametersTablePresenter } from "./ParametersTablePresenter";
 import { ParametersTableRow } from "./ParametersTableRow";
 
@@ -25,6 +26,9 @@ export const ParametersTable: React.FC<Props> = ({
       order,
     });
   };
+
+  const { classifiedRows, hasExpandableRows } = useClassifiedRows(rows);
+  const numberOfColumns = tablePresenter.getColumnHeads().length + (hasExpandableRows ? 1 : 0);
 
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
     const sortParams = tablePresenter.getSortableColumnNames().includes(apiName)
@@ -50,10 +54,20 @@ export const ParametersTable: React.FC<Props> = ({
   return (
     <Table {...props} variant={TableVariant.compact}>
       <Thead>
-        <Tr>{heads}</Tr>
+        <Tr>
+          {hasExpandableRows && <Th screenReaderText="Row expansion" />}
+          {heads}
+        </Tr>
       </Thead>
-      {rows.map((row) => (
-        <ParametersTableRow row={row} key={row.id} />
+      {classifiedRows.map(({ row, attribute }, rowIndex) => (
+        <ParametersTableRow
+          row={row}
+          attribute={attribute}
+          key={row.id}
+          rowIndex={rowIndex}
+          numberOfColumns={numberOfColumns}
+          showExpandColumn={hasExpandableRows}
+        />
       ))}
     </Table>
   );

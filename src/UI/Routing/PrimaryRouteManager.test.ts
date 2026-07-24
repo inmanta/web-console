@@ -133,3 +133,20 @@ test("GIVEN '/resources/123' THEN breadcrumbs should be ['Home', 'Resources', 'R
     },
   ]);
 });
+
+test("GIVEN a route param containing a space WHEN building a url with getUrl and reading it back with getCrumbs THEN the value is not double encoded", () => {
+  // Regression test: getUrl used to encodeURIComponent params before handing them to
+  // react-router's generatePath, which encodes them again internally. A value like
+  // "Parent 1" would survive the single decodeURIComponent done by consumers (e.g.
+  // PageBreadcrumbs) as "Parent%201" instead of "Parent 1".
+  const url = routeManager.getUrl("InstanceDetails", {
+    service: "basic-service",
+    instance: "Parent 1",
+    instanceId: "Parent 1",
+  });
+
+  const crumbs = routeManager.getCrumbs(url);
+  const instanceCrumb = crumbs.find((crumb) => crumb.kind === "InstanceDetails");
+
+  expect(decodeURIComponent(instanceCrumb?.label ?? "")).toEqual("Instance Details: Parent 1");
+});

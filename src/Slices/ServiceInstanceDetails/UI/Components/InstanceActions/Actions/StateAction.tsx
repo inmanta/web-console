@@ -11,7 +11,7 @@ interface Props {
   instance_id: string;
   service_entity: string;
   version: ParsedNumber;
-  onClose: () => void;
+  collapseToggle: () => void;
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -24,7 +24,7 @@ interface Props {
  *  @prop {string} instance_id - the hashed id of the instance
  *  @prop {string} service_entity - the service entity type of the instance
  *  @prop {ParsedNumber} version - the current version of the instance
- *  @prop {function} onClose - callback method when the modal gets closed
+ *  @prop {function} collapseToggle - collapses the dropdown toggle when the modal opens
  *  @prop {React.Dispatch<React.SetStateAction<boolean>>} setInterfaceBlocked - setState variable to block the interface when the modal is opened.
  *  This is meant to avoid clickEvents triggering the onOpenChange from the dropdown to shut down the modal.
  * @returns {React.FC<Props>} A React Component displaying the State transfer Dropdown Item
@@ -35,7 +35,7 @@ export const StateAction: React.FC<Props> = ({
   instance_id,
   targets = [],
   version,
-  onClose,
+  collapseToggle,
   setInterfaceBlocked,
 }) => {
   const { triggerModal } = useContext(ModalContext);
@@ -62,10 +62,12 @@ export const StateAction: React.FC<Props> = ({
       iconVariant: "danger",
       cancelCb: () => {
         setInterfaceBlocked(false);
-        onClose();
       },
     });
     setInterfaceBlocked(true);
+    // Collapse the toggle now: setInterfaceBlocked(true) suppresses the dropdown's
+    // onOpenChange, so it can't collapse the toggle itself while the modal is open.
+    collapseToggle();
   };
 
   return (

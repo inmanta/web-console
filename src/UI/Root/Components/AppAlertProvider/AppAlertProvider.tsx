@@ -83,6 +83,7 @@ export const AppAlertProvider: React.FC<PropsWithChildren> = ({ children }) => {
         {alerts?.map(({ id, ...rest }) => (
           <AppAlertComponent
             key={id}
+            component="div"
             //custom but can be overwritten
             timeout={8000}
             onClose={() => remove(id)}

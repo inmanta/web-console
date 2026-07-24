@@ -64,8 +64,8 @@ export const DiscoveredResourceRow: React.FC<Props> = ({ row }) => {
             <Button variant="link">{words("discovered.column.show_details")}</Button>
           </Link>
           <ActionsDropdown
-            managedResourceUri={row.managed_resource_uri}
-            discoveryResourceUri={row.discovery_resource_uri}
+            managedResourceId={row.managed_resource_id}
+            discoveryResourceId={row.discovery_resource_id}
           />
         </Td>
       </Tr>

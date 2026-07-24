@@ -6,7 +6,7 @@ import {
   ServiceInstanceModel,
 } from "@/Core";
 
-export type InputType = TextInputTypes | "bool";
+export type InputType = TextInputTypes | "bool" | "dict";
 
 export interface AttributeInputConverter {
   /**

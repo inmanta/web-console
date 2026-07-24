@@ -217,19 +217,3 @@ export const sortTreeRows = (
 
   return sortData(tableData);
 };
-
-/**
- * Helper method to get the list of versions available in the history logs.
- *
- * @param {InstanceLog[]} instanceLogs
- * @returns string[] An array with the available versions in the history logs.
- */
-export const getAvailableVersions = (instanceLogs: InstanceLog[]): string[] => {
-  const availableVersions: string[] = [];
-
-  instanceLogs.forEach((log) => {
-    availableVersions.push(String(log.version));
-  });
-
-  return availableVersions;
-};

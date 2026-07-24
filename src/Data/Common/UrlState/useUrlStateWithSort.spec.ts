@@ -1,4 +1,5 @@
-import { handleUrlStateWithSort } from "./useUrlStateWithSort";
+import { renderHook } from "@testing-library/react";
+import { useUrlStateWithSortHandler } from "./useUrlStateWithSort";
 
 test.each`
   search                                | searchText      | expectedValue                           | valueText
@@ -7,12 +8,14 @@ test.each`
 `(
   "GIVEN handleUrlState with Sort WHEN search is $searchText THEN returns $valueText",
   async ({ search, expectedValue }) => {
-    const [value] = handleUrlStateWithSort(
-      { default: { name: "timestamp", order: "desc" }, route: "Inventory" },
-      { pathname: "", search, hash: "" },
-      () => undefined
+    const { result } = renderHook(() =>
+      useUrlStateWithSortHandler(
+        { default: { name: "timestamp", order: "desc" }, route: "Inventory" },
+        { pathname: "", search, hash: "" },
+        () => undefined
+      )
     );
 
-    expect(value).toEqual(expectedValue);
+    expect(result.current[0]).toEqual(expectedValue);
   }
 );

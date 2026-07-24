@@ -18,6 +18,24 @@ describe("DiffPageFilter", () => {
     expect(container).toBeDefined();
   });
 
+  it("does not show unmodified as a filter option", () => {
+    render(
+      <DiffPageFilter
+        statuses={Diff.defaultStatuses}
+        setStatuses={() => {}}
+        setSearchFilter={() => {}}
+        searchFilter=""
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
+
+    expect(screen.queryByRole("option", { name: "unmodified" })).toBeNull();
+    Diff.defaultStatuses.forEach((status) => {
+      expect(screen.getByRole("option", { name: status })).toBeInTheDocument();
+    });
+  });
+
   it("updates search filter correctly", () => {
     const setSearchFilterMock = vi.fn();
 

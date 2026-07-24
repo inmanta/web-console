@@ -2,6 +2,7 @@ import { act } from "react";
 import { TextInputTypes } from "@patternfly/react-core";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { SuggestionValue } from "@/Core";
 import { TextListFormInput } from "./TextListFormInput";
 
 describe("TextListInputField", () => {
@@ -95,37 +96,98 @@ describe("TextListInputField", () => {
     expect(handleClick).toHaveBeenCalledWith([], null);
   });
 
-  it("Should render an inputField with suggestions when suggestions are provided.", async () => {
+  it("Should show the selected suggestion's label in the input and store its value as a chip.", async () => {
+    const handleInputChange = vi.fn();
+    const suggestions: SuggestionValue[] = [{ label: "Production network", value: "9f3c1b2a" }];
+
     render(
       <TextListFormInput
         attributeName="text_list"
         type={TextInputTypes.text}
-        attributeValue={["value1", "value2", "value3"]}
+        attributeValue={[]}
         description="a text list input field"
-        handleInputChange={handleClick}
-        suggestions={["apple", "banana", "cherry"]}
+        handleInputChange={handleInputChange}
+        suggestions={suggestions}
       />
     );
 
-    // Open the suggestions popover
     const input = screen.getByRole("textbox");
 
-    //this action require act due to updates within the patternfly component triggering "act warning"
     await act(async () => {
       fireEvent.focus(input);
     });
 
-    // Check if the values are present
-    const firstSuggestion = screen.getByText("apple");
+    // The dropdown shows the label, not the raw value.
+    expect(screen.getByText(suggestions[0].label)).toBeInTheDocument();
+    expect(screen.queryByText(suggestions[0].value)).not.toBeInTheDocument();
 
-    expect(firstSuggestion).toBeInTheDocument();
+    // Selecting puts the label into the input...
+    await act(async () => {
+      fireEvent.click(screen.getByText(suggestions[0].label));
+    });
+    expect(input).toHaveValue(suggestions[0].label);
 
-    const secondSuggestion = screen.getByText("banana");
+    // ...and adding it stores the value, while the chip still shows the label.
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Add" }));
+    });
 
-    expect(secondSuggestion).toBeInTheDocument();
+    expect(handleInputChange).toHaveBeenCalledWith([suggestions[0].value], null);
 
-    const thirdSuggestion = screen.getByText("cherry");
+    const chips = screen.getAllByRole("listitem");
 
-    expect(thirdSuggestion).toBeInTheDocument();
+    expect(chips).toHaveLength(1);
+    expect(chips[0]).toHaveTextContent(suggestions[0].label);
+    expect(chips[0]).not.toHaveTextContent(suggestions[0].value);
+  });
+
+  it("Should store the value when a typed label exactly matches a suggestion (no list pick).", async () => {
+    const handleInputChange = vi.fn();
+    const suggestions: SuggestionValue[] = [{ label: "10 Gbps", value: "10000" }];
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={[]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+        suggestions={suggestions}
+      />
+    );
+
+    const input = screen.getByRole("textbox");
+
+    await userEvent.type(input, "10 Gbps");
+    await userEvent.click(screen.getByRole("button", { name: "Add" }));
+
+    // Typed label links to the value behind it, just like picking it from the list.
+    expect(handleInputChange).toHaveBeenCalledWith(["10000"], null);
+
+    const chips = screen.getAllByRole("listitem");
+
+    expect(chips).toHaveLength(1);
+    expect(chips[0]).toHaveTextContent("10 Gbps");
+  });
+
+  it("Should map stored values back to their labels on load (edit round-trip).", () => {
+    const suggestions: SuggestionValue[] = [{ label: "10 Gbps", value: "10000" }];
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={["10000"]}
+        description="a text list input field"
+        handleInputChange={vi.fn()}
+        suggestions={suggestions}
+      />
+    );
+
+    const chips = screen.getAllByRole("listitem");
+
+    expect(chips).toHaveLength(1);
+    expect(chips[0]).toHaveTextContent("10 Gbps");
+    expect(chips[0]).not.toHaveTextContent("10000");
   });
 });

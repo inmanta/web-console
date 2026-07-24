@@ -1,8 +1,8 @@
 import React from "react";
 import { Tooltip } from "@patternfly/react-core";
-import { MomentDatePresenter, useTickerWithUnixMs } from "@/UI/Utils";
+import { CustomDatePresenter, useTickerWithUnixMs } from "@/UI/Utils";
 
-const datePresenter = new MomentDatePresenter();
+const datePresenter = new CustomDatePresenter();
 
 interface Props {
   timestamp: string;

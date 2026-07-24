@@ -16,10 +16,15 @@ export type Field =
   | NestedField
   | DictListField
   | RelationListField
-  | InterServiceRelationField;
+  | InterServiceRelationField
+  | DictField;
 
 export type FieldLikeWithFormState = Field;
 
+/**
+ * Properties shared by every field kind.
+ * `tab` is the field's `web_tab` key, resolved only for top-level fields.
+ */
 interface BaseField {
   name: string;
   description?: string | null;
@@ -27,6 +32,7 @@ interface BaseField {
   isOptional: boolean;
   isDisabled: boolean;
   suggestion?: FormSuggestion | null;
+  tab?: string;
 }
 
 export interface BooleanField extends BaseField {
@@ -39,6 +45,12 @@ export interface TextField extends BaseField {
   kind: "Text";
   defaultValue: unknown;
   inputType: TextInputTypes;
+  type: string;
+}
+
+export interface DictField extends BaseField {
+  kind: "Dict";
+  defaultValue: unknown;
   type: string;
 }
 

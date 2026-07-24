@@ -1,0 +1,6 @@
+description: Facts table rows now present each value according to its content - JSON, XML, and other long or multi-line values can be expanded inline into a read-only, formatted code editor with copy and download controls, while short text values can be copied directly from the row.
+issue-nr: 6934
+change-type: patch
+destination-branches: [iso9]
+sections:
+  minor-improvement: "{{description}}"

@@ -1,7 +1,7 @@
 import { toggleValueInList } from "@/Core";
 import { isEqual } from "@/Core/Language/collection";
 import { provide, Location, Replace, StateConfig, Update } from "./helpers";
-import { handleUrlState } from "./useUrlState";
+import { useUrlStateHandler } from "./useUrlState";
 
 type IsExpanded = (id: string) => boolean;
 
@@ -9,14 +9,14 @@ type OnExpansion = (id: string) => () => void;
 
 type Config = Pick<StateConfig<string[]>, "route"> & Partial<Pick<StateConfig<string[]>, "key">>;
 
-export const useUrlStateWithExpansion = provide(handleUrlStateWithExpansionWrapped);
+export const useUrlStateWithExpansion = provide(useHandleUrlStateWithExpansionWrapped);
 
-export function handleUrlStateWithExpansion(
+export function useHandleUrlStateWithExpansion(
   config: Config,
   location: Location,
   replace: Replace
 ): [string[], Update<string[]>] {
-  return handleUrlState<string[]>(
+  return useUrlStateHandler<string[]>(
     {
       default: [],
       key: config.key || "expansion",
@@ -30,12 +30,12 @@ export function handleUrlStateWithExpansion(
   );
 }
 
-function handleUrlStateWithExpansionWrapped(
+function useHandleUrlStateWithExpansionWrapped(
   config: Config,
   location: Location,
   replace: Replace
 ): [IsExpanded, OnExpansion] {
-  const [expandedKeys, setExpandedKeys] = handleUrlStateWithExpansion(config, location, replace);
+  const [expandedKeys, setExpandedKeys] = useHandleUrlStateWithExpansion(config, location, replace);
 
   return [
     (id: string) => expandedKeys.includes(id),
