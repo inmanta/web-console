@@ -27,9 +27,9 @@ export const DiffPageFilter: React.FC<Props> = ({
   };
 
   const [allLabel, allCallback] =
-    statuses.length === Diff.statuses.length
+    statuses.length === Diff.defaultStatuses.length
       ? [words("hideAll"), () => setStatuses([])]
-      : [words("showAll"), () => setStatuses(Diff.statuses)];
+      : [words("showAll"), () => setStatuses(Diff.defaultStatuses)];
 
   return (
     <ToolbarGroup align={{ default: "alignStart" }}>
@@ -48,7 +48,7 @@ export const DiffPageFilter: React.FC<Props> = ({
               </Button>
             </MenuFooter>
           }
-          options={Diff.statuses.map((option: Diff.Status) => {
+          options={Diff.defaultStatuses.map((option: Diff.Status) => {
             return {
               value: option,
               children: option,

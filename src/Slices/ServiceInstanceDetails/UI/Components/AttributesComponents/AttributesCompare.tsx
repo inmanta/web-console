@@ -1,21 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { DiffEditor } from "@monaco-editor/react";
-import { Divider, Flex, FlexItem, FormSelect, FormSelectOption } from "@patternfly/react-core";
-import styled from "styled-components";
+import {
+  Divider,
+  Flex,
+  FlexItem,
+  FormSelect,
+  FormSelectOption,
+  SelectOptionProps,
+  Content,
+} from "@patternfly/react-core";
 import { InstanceAttributeModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
-import {
-  AttributeSets,
-  getAvailableAttributesSets,
-  getAvailableVersions,
-} from "@/Slices/ServiceInstanceDetails/Utils";
+import { AttributeSets, getAvailableAttributesSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { words } from "@/UI";
-import { getThemePreference } from "@/UI/Components/DarkmodeOption";
+import { SearchSelect } from "@/UI/Components";
+import { useTheme } from "@/UI/Components/DarkmodeOption";
+import { CustomDatePresenter } from "@/UI/Utils";
 
 interface Props {
   instanceLogs: InstanceLog[];
   selectedVersion: string;
 }
+
+const datePresenter = new CustomDatePresenter();
 
 /**
  * The AttributesCompare Component.
@@ -35,27 +42,36 @@ interface Props {
 export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersion }) => {
   const [leftVersion, setLeftVersion] = useState<string>(selectedVersion);
   const [rightVersion, setRightVersion] = useState<string>(selectedVersion);
-
   const [leftAttributesSets, setLeftAttributesSets] = useState<
     Partial<Record<AttributeSets, InstanceAttributeModel>>
   >({});
   const [rightAttributesSets, setRightAttributesSets] = useState<
     Partial<Record<AttributeSets, InstanceAttributeModel>>
   >({});
-
   const [leftSelectedSet, setLeftSelectedSet] = useState<AttributeSets>("active_attributes");
   const [rightSelectedSet, setRightSelectedSet] = useState<AttributeSets>("candidate_attributes");
 
-  const [availabelVersions, setAvailableVersions] = useState<string[]>([]);
+  const { theme: preferredTheme } = useTheme();
 
-  const preferedTheme = getThemePreference() || "light";
+  const availableVersions: SelectOptionProps[] = useMemo(() => {
+    // Width of the longest version, so every timestamp starts at the same place.
+    const versionColWidth = instanceLogs.length
+      ? Math.max(...instanceLogs.map(({ version }) => String(version).length))
+      : 0;
 
-  useEffect(() => {
-    if (instanceLogs && instanceLogs.length) {
-      const versions = getAvailableVersions(instanceLogs);
-
-      setAvailableVersions(versions);
-    }
+    return instanceLogs.map(({ version, timestamp }) => ({
+      value: version,
+      children: (
+        <Flex
+          gap={{ default: "gapSm" }}
+          alignItems={{ default: "alignItemsCenter" }}
+          flexWrap={{ default: "nowrap" }}
+        >
+          <Content style={{ minWidth: `${versionColWidth}ch` }}>{version}</Content>
+          <Content component="small">{datePresenter.getFull(timestamp)}</Content>
+        </Flex>
+      ),
+    }));
   }, [instanceLogs]);
 
   useEffect(() => {
@@ -93,40 +109,35 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
   return (
     <>
       <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
-        <Flex>
-          <FlexItem>
-            <StyledVersionSelect
-              value={leftVersion}
-              aria-label="left-side-version-select"
-              ouiaId="left-side-version-select"
-              onChange={(_event: React.FormEvent<HTMLSelectElement>, value: string) => {
-                setLeftVersion(value);
-              }}
-            >
-              {availabelVersions.map((option, index) => (
-                <FormSelectOption value={option} key={index} label={option} />
-              ))}
-            </StyledVersionSelect>
-          </FlexItem>
-          <FlexItem>
-            <StyledSetSelect
-              value={leftSelectedSet}
-              aria-label="left-side-attribute-set-select"
-              ouiaId="left-side-attribute-set-select"
-              onChange={(_event: React.FormEvent<HTMLSelectElement>, value: string) => {
-                setLeftSelectedSet(value as AttributeSets);
-              }}
-            >
-              {Object.keys(leftAttributesSets).map((option, index) => (
-                <FormSelectOption
-                  value={option}
-                  key={index}
-                  label={words(option as AttributeSets)}
-                />
-              ))}
-            </StyledSetSelect>
-          </FlexItem>
-        </Flex>
+        <FlexItem flex={{ default: "flex_1" }}>
+          <Flex flexWrap={{ default: "nowrap" }}>
+            <FlexItem flex={{ default: "flex_1" }}>
+              <SearchSelect
+                value={leftVersion}
+                onChange={setLeftVersion}
+                options={availableVersions}
+              />
+            </FlexItem>
+            <FlexItem flex={{ default: "flex_1" }}>
+              <FormSelect
+                value={leftSelectedSet}
+                aria-label="left-side-attribute-set-select"
+                ouiaId="left-side-attribute-set-select"
+                onChange={(_event: React.FormEvent<HTMLSelectElement>, value: string) => {
+                  setLeftSelectedSet(value as AttributeSets);
+                }}
+              >
+                {Object.keys(leftAttributesSets).map((option, index) => (
+                  <FormSelectOption
+                    value={option}
+                    key={index}
+                    label={words(option as AttributeSets)}
+                  />
+                ))}
+              </FormSelect>
+            </FlexItem>
+          </Flex>
+        </FlexItem>
 
         <Divider
           orientation={{
@@ -134,40 +145,35 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
           }}
         />
 
-        <Flex>
-          <FlexItem>
-            <StyledVersionSelect
-              value={rightVersion}
-              aria-label="right-side-version-select"
-              ouiaId="right-side-version-select"
-              onChange={(_event: React.FormEvent<HTMLSelectElement>, value: string) => {
-                setRightVersion(value);
-              }}
-            >
-              {availabelVersions.map((option, index) => (
-                <FormSelectOption value={option} key={index} label={option} />
-              ))}
-            </StyledVersionSelect>
-          </FlexItem>
-          <FlexItem>
-            <StyledSetSelect
-              value={rightSelectedSet}
-              aria-label="right-side-attribute-set-select"
-              ouiaId="right-side-attribute-set-select"
-              onChange={(_event: React.FormEvent<HTMLSelectElement>, value: string) => {
-                setRightSelectedSet(value as AttributeSets);
-              }}
-            >
-              {Object.keys(rightAttributesSets).map((option, index) => (
-                <FormSelectOption
-                  value={option}
-                  key={index}
-                  label={words(option as AttributeSets)}
-                />
-              ))}
-            </StyledSetSelect>
-          </FlexItem>
-        </Flex>
+        <FlexItem flex={{ default: "flex_1" }}>
+          <Flex flexWrap={{ default: "nowrap" }}>
+            <FlexItem flex={{ default: "flex_1" }}>
+              <SearchSelect
+                value={rightVersion}
+                onChange={setRightVersion}
+                options={availableVersions}
+              />
+            </FlexItem>
+            <FlexItem flex={{ default: "flex_1" }}>
+              <FormSelect
+                value={rightSelectedSet}
+                aria-label="right-side-attribute-set-select"
+                ouiaId="right-side-attribute-set-select"
+                onChange={(_event: React.FormEvent<HTMLSelectElement>, value: string) => {
+                  setRightSelectedSet(value as AttributeSets);
+                }}
+              >
+                {Object.keys(rightAttributesSets).map((option, index) => (
+                  <FormSelectOption
+                    value={option}
+                    key={index}
+                    label={words(option as AttributeSets)}
+                  />
+                ))}
+              </FormSelect>
+            </FlexItem>
+          </Flex>
+        </FlexItem>
       </Flex>
       <DiffEditor
         height={"calc(100vh - 525px)"}
@@ -175,7 +181,7 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
           readOnly: true,
           renderSideBySide: true,
         }}
-        theme={`vs-${preferedTheme}`}
+        theme={`vs-${preferredTheme}`}
         language="json"
         original={JSON.stringify(leftAttributesSets[leftSelectedSet], null, 2)}
         modified={JSON.stringify(rightAttributesSets[rightSelectedSet], null, 2)}
@@ -183,11 +189,3 @@ export const AttributesCompare: React.FC<Props> = ({ instanceLogs, selectedVersi
     </>
   );
 };
-
-const StyledSetSelect = styled(FormSelect)`
-  width: 180px;
-`;
-
-const StyledVersionSelect = styled(FormSelect)`
-  width: 100px;
-`;

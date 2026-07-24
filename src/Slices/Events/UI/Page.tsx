@@ -7,7 +7,11 @@ import { words } from "@/UI/words";
 import { Events } from "./Events";
 
 const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children, ...props }) => (
-  <PageContainer {...props} pageTitle={words("events.title")}>
+  <PageContainer
+    {...props}
+    pageTitle={words("events.title")}
+    style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+  >
     {children}
   </PageContainer>
 );

@@ -16,7 +16,7 @@ import {
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
-import { usePaginatedTable } from "@/Data";
+import { usePaginatedTableWithMultiSort } from "@/Data";
 import { useGetResources } from "@/Data/Queries";
 import {
   EmptyView,
@@ -39,9 +39,9 @@ import { createRows } from "./ResourcesTablePresenter";
 export const Page: React.FC = () => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
   const { currentPage, setCurrentPage, pageSize, setPageSize, sort, setSort, filter, setFilter } =
-    usePaginatedTable<Resource.FilterWithDefaultHandling, Resource.SortKey>({
+    usePaginatedTableWithMultiSort<Resource.FilterWithDefaultHandling, Resource.SortKey>({
       route: "Resources",
-      defaultSort: { name: "resource_type", order: "asc" },
+      defaultSort: [{ name: "resource_type", order: "asc" }],
       filterKeys: { disregardDefault: "Boolean" },
     });
 
@@ -71,6 +71,20 @@ export const Page: React.FC = () => {
   const updateFilter = (updater: (filter: Resource.Filter) => Resource.Filter): void =>
     setFilter(updater(filterWithDefaults));
 
+  const onDeployingClick = (): void => {
+    updateFilter((filter) => {
+      const current = filter.status ?? [];
+
+      if (current.includes("isDeploying")) {
+        return { ...filter, status: current.filter((status) => status !== "isDeploying") };
+      }
+
+      return { ...filter, status: [...current, "isDeploying"] };
+    });
+  };
+
+  const rows = useMemo(() => createRows(data?.resources ?? []), [data?.resources]);
+
   if (isError) {
     return <ErrorView message={error.message} ariaLabel="ResourcesPage-Error" retry={refetch} />;
   }
@@ -81,7 +95,6 @@ export const Page: React.FC = () => {
   const resources = data.resources;
   const resourceSummary = data.resourceSummary;
   const deployingCount = resourceSummary.isDeploying["true"];
-  const rows = createRows(resources);
 
   return (
     <>
@@ -110,6 +123,7 @@ export const Page: React.FC = () => {
                 variant="outline"
                 color="blue"
                 data-testid="deploying-label"
+                onClick={deployingCount > 0 ? onDeployingClick : undefined}
               >
                 <span style={{ display: "inline-flex", alignItems: "center", gap: "2px" }}>
                   {deployingCount > 0 && (

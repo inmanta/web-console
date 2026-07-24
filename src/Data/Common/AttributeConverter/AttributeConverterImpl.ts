@@ -25,6 +25,9 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
    * Determines what kind of input should be used for a Service Attribute
    */
   getInputType(attributeModel: AttributeModel): InputType {
+    if (attributeModel.type.includes("dict")) {
+      return "dict";
+    }
     if (attributeModel.type.includes("bool")) {
       return "bool";
     }
@@ -39,11 +42,7 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
     inputType: InputType,
     defaultValueSet: boolean,
     defaultValue:
-      | string
-      | null
-      | boolean
-      | string[]
-      | { [x: string]: string | null | boolean | string[] }
+      string | null | boolean | string[] | { [x: string]: string | null | boolean | string[] }
   ):
     | string
     | null

@@ -10,4 +10,6 @@ export * from "./ClearEnvironment";
 export * from "./ResetEnvironmentSetting";
 export * from "./UpdateEnvironmentSetting";
 export * from "./GenerateToken";
+export * from "./GetTokens";
+export * from "./RevokeToken";
 export * from "./GetEnvironmentPreview";

@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump eslint-import-resolver-typescript from 4.4.4 to 4.4.5
+destination-branches:
+- master
+sections: {}

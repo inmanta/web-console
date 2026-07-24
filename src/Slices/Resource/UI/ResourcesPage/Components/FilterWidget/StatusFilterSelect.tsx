@@ -1,33 +1,21 @@
-import React from "react";
-import { FormGroup, Stack, StackItem, Switch } from "@patternfly/react-core";
-import { Resource, toggleValueInList } from "@/Core";
+import { FormGroup, Stack, StackItem } from "@patternfly/react-core";
+import { Resource, removeInvertedSelection, toggleValueInList } from "@/Core";
 import { uniq } from "@/Core/Language/collection";
+import {
+  IncludeExcludeSelect,
+  OptionalToggleGroup,
+  excludeIcons,
+  includeIcons,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
-import { IncludeExcludeSelect } from "./IncludeExcludeSelect";
-import { removeInvertedSelection } from "./utils";
 
-//As we don't have enums in our type domains this is the best solution for now
-//But can possibly be reworked in:
-//TODO: https://github.com/inmanta/web-console/issues/6814
-const LastHandlerRunValues = [
-  "failed",
-  "skipped",
-  "successful",
-  "new",
-] as const satisfies Resource.LastHandlerRunKey[];
+function typedKeys<T extends object>(obj: T): (keyof T)[] {
+  return Object.keys(obj) as (keyof T)[];
+}
 
-const ComplianceValues = [
-  "compliant",
-  "has_update",
-  "non_compliant",
-  "undefined",
-] as const satisfies Resource.ComplianceKey[];
-
-const BlockedValues = [
-  "blocked",
-  "not_blocked",
-  "temporarily_blocked",
-] as const satisfies Resource.BlockedKey[];
+const LastHandlerRunValues = typedKeys(Resource.LAST_HANDLER_RUN);
+const ComplianceValues = typedKeys(Resource.COMPLIANCE);
+const BlockedValues = typedKeys(Resource.BLOCKED);
 
 export interface StatusFilterSelectProps {
   selectedStatuses?: string[];
@@ -42,14 +30,6 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
     const currentStatuses = selectedStatuses ?? [];
     const safeSelectedStates = removeInvertedSelection(selection, currentStatuses);
     const updatedSelection = uniq(toggleValueInList(selection, safeSelectedStates));
-    onChange(updatedSelection);
-  };
-
-  const handleIsDeploying = (hasChanged: boolean) => {
-    const currentStatuses = selectedStatuses ?? [];
-    const updatedSelection = hasChanged
-      ? [...currentStatuses, "isDeploying"]
-      : currentStatuses.filter((s) => s !== "isDeploying");
     onChange(updatedSelection);
   };
 
@@ -89,14 +69,48 @@ export const StatusFilterSelect: React.FC<StatusFilterSelectProps> = ({
         </FormGroup>
       </StackItem>
       <StackItem>
-        <Switch
-          id={words("resources.filters.status.isDeploying")}
-          aria-label={words("resources.filters.status.isDeploying")}
-          label={words("resources.filters.status.isDeploying")}
-          isChecked={selectedStatuses?.includes("isDeploying") ?? false}
-          onChange={(_event, hasChanged) => handleIsDeploying(hasChanged)}
-          isReversed
-        />
+        <FormGroup label={words("resources.filters.status.orphaned.label")}>
+          <OptionalToggleGroup
+            selected={selectedStatuses ?? []}
+            onChange={onChange}
+            options={[
+              {
+                value: "orphaned",
+                buttonId: "orphaned-include",
+                icon: includeIcons,
+                ariaLabel: `${words("include")} ${words("resources.filters.status.orphaned.label")}`,
+              },
+              {
+                value: "!orphaned",
+                buttonId: "orphaned-exclude",
+                icon: excludeIcons,
+                ariaLabel: `${words("exclude")} ${words("resources.filters.status.orphaned.label")}`,
+              },
+            ]}
+          />
+        </FormGroup>
+      </StackItem>
+      <StackItem>
+        <FormGroup label={words("resources.filters.status.isDeploying")}>
+          <OptionalToggleGroup
+            selected={selectedStatuses ?? []}
+            onChange={onChange}
+            options={[
+              {
+                value: "isDeploying",
+                buttonId: "isDeploying-include",
+                icon: includeIcons,
+                ariaLabel: `${words("include")} ${words("resources.filters.status.isDeploying")}`,
+              },
+              {
+                value: "!isDeploying",
+                buttonId: "isDeploying-exclude",
+                icon: excludeIcons,
+                ariaLabel: `${words("exclude")} ${words("resources.filters.status.isDeploying")}`,
+              },
+            ]}
+          />
+        </FormGroup>
       </StackItem>
     </Stack>
   );

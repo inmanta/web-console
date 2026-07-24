@@ -3,6 +3,12 @@ import { usePatchWithoutEnv } from "@/Data/Queries";
 
 interface ChangeUserPasswordBody {
   password: string;
+
+  /**
+   * The current password. Required by the server when a user changes their own password; omitted when
+   * an administrator changes another user's password.
+   */
+  current_password?: string;
 }
 
 /**

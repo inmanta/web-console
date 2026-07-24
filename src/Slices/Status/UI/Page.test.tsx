@@ -208,12 +208,7 @@ describe("StatusPage", () => {
     expect(within(errorContainer).getByText("error")).toBeVisible();
 
     await act(async () => {
-      const results = await axe(document.body, {
-        // See ticket #6785
-        rules: {
-          "heading-order": { enabled: false },
-        },
-      });
+      const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });

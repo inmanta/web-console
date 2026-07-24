@@ -1,0 +1,3 @@
+description: Dependabot configuration has been updated to group updates for PatternFly and JointJS dependencies together.
+change-type: patch
+destination-branches: [master]

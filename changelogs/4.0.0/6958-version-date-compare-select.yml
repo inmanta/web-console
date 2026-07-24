@@ -1,0 +1,6 @@
+description: The version selects in the compare view of the Service Instance Details page now display the creation date of each version.
+issue-nr: 6958
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

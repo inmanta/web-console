@@ -1,12 +1,12 @@
 import { isEqual } from "@/Core/Language/collection";
 import { provide, Location, Replace, StateConfig, Update } from "./helpers";
-import { handleUrlState } from "./useUrlState";
+import { useUrlStateHandler } from "./useUrlState";
 
 /**
  * Hook that wrap handleUrlStateWithCurrentPage function in provider that feeds function with the useLocation() useNavigation() functions,
  * to simplify reusage of said function
  */
-export const useUrlStateWithCurrentPage = provide(handleUrlStateWithCurrentPage);
+export const useUrlStateWithCurrentPage = provide(useHandleUrlStateWithCurrentPage);
 
 /**
  * Checks whether the value passed is an Array of strings.
@@ -44,12 +44,12 @@ export interface CurrentPage {
  * @param replace function based on reactRouter navigate() to change/update url
  * @returns main handleUrlState instance set up for given configuration
  */
-export function handleUrlStateWithCurrentPage(
+export function useHandleUrlStateWithCurrentPage(
   config: Pick<StateConfig<CurrentPage>, "route">,
   location: Location,
   replace: Replace
 ): [CurrentPage, Update<CurrentPage>] {
-  return handleUrlState<CurrentPage>(
+  return useUrlStateHandler<CurrentPage>(
     {
       default: initialCurrentPage,
       key: "currentPage",

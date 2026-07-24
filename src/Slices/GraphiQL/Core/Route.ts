@@ -1,10 +1,10 @@
-import { Route } from "@/Core";
+﻿import { Route } from "@/Core";
 
 export const path = "/graphiql";
 
 export const route = (base: string): Route<"GraphiQL"> => ({
   kind: "GraphiQL",
-  parent: "Home",
+  parent: "Dashboard",
   path: `${base}${path}`,
   generateLabel: () => "GraphiQL",
   environmentRole: "Optional",

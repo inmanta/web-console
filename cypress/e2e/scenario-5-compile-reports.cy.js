@@ -1,6 +1,6 @@
 import environmentHelpers from "../support/environmentHelpers";
 
-const { clearEnvironment, forceUpdateEnvironment } = environmentHelpers;
+const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
 
@@ -14,14 +14,15 @@ describe("5 Compile reports", () => {
 
   it("5.1 initial state", () => {
     cy.visit("/console/");
-
-    cy.get('[aria-label="Select-environment-test"]').click();
+    selectEnvironment();
 
     // go to compile reports page
     cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
 
     // store initial row count
-    cy.get("tbody tr", { timeout: 30000 }).its("length").as("initialRowCount");
+    cy.get("tbody tr").then(($rows) => {
+      cy.wrap($rows.length).as("initialRowCount");
+    });
 
     // validate initial top row
     cy.get("tbody tr")
@@ -42,7 +43,7 @@ describe("5 Compile reports", () => {
 
     // verify a row was added
     cy.get("@initialRowCount").then((initialRowCount) => {
-      cy.get("tbody tr").should("have.length.at.least", initialRowCount + 1);
+      cy.get("tbody tr").should("have.length", initialRowCount + 1);
     });
 
     cy.get("tbody tr").first().should("contain", "Compile triggered from the console");
@@ -59,7 +60,7 @@ describe("5 Compile reports", () => {
 
     // First assert the table has grown by 1, ensuring the new row is present
     cy.get("@initialRowCount").then((initialRowCount) => {
-      cy.get("tbody tr").should("have.length", initialRowCount + 1);
+      cy.get("tbody tr", { timeout: 15000 }).should("have.length", initialRowCount + 2);
     });
 
     // Assert the new top row content
@@ -109,9 +110,7 @@ describe("5 Compile reports", () => {
     it("5.2 Compile after adding a Service instance", () => {
       // go to home page
       cy.visit("/console/");
-
-      // click on test environment card
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
 
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
@@ -194,9 +193,7 @@ describe("5 Compile reports", () => {
     it("5.3 Compile after adding a rejected Service Instance", () => {
       // go to home page
       cy.visit("/console/");
-
-      // click on test environment card
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
 
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
@@ -274,9 +271,7 @@ describe("5 Compile reports", () => {
     it("5.4 Remove rejected instance should fix compile", () => {
       // go to home page
       cy.visit("/console/");
-
-      // click on test environment card
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
 
       // set initial value first
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();
@@ -339,9 +334,7 @@ describe("5 Compile reports", () => {
     it("5.5 Filter based on status", () => {
       // go to home page
       cy.visit("/console/");
-
-      // click on test environment card
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
 
       // Go to the compile report page
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Compile Reports").click();

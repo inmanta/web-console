@@ -27,8 +27,18 @@ export interface OidcAuthConfig {
   postLogoutRedirectUri?: string;
   scope?: string;
   extraConfig?: Record<string, unknown>;
+
+  /**
+   * When true, the web-console offers a database (break-glass) login as a fallback
+   * if the identity provider is unavailable. inmanta-ui only sets this when a
+   * signing config and at least one database user exist.
+   */
+  localFallback?: boolean;
 }
 
 export interface LocalConfig {
   method: "database" | "jwt";
+
+  /** Whether the database local login fallback is available (relevant for method "jwt"). */
+  localFallback?: boolean;
 }

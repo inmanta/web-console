@@ -62,16 +62,16 @@ export const Page: React.FC<{ resourceId: string }> = ({ resourceId }) => {
                 <Description>{data.discovered_resource_id}</Description>
               </FlexItem>
               <FlexItem>
-                {data.managed_resource_uri && (
+                {data.managed_resource_id && (
                   <DiscoveredResourceLink
-                    resourceUri={data.managed_resource_uri}
+                    resourceId={data.managed_resource_id}
                     resourceType="managed"
                     buttonType={ButtonVariant.primary}
                   />
                 )}
-                {data.discovery_resource_uri && (
+                {data.discovery_resource_id && (
                   <DiscoveredResourceLink
-                    resourceUri={data.discovery_resource_uri}
+                    resourceId={data.discovery_resource_id}
                     resourceType="discovery"
                     buttonType={ButtonVariant.primary}
                   />

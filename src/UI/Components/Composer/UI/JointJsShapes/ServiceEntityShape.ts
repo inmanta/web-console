@@ -12,6 +12,7 @@ import {
 } from "@patternfly/react-tokens";
 import { EmbeddedEntity, Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { sanitizeAttributes } from "@/Data";
+import { SuggestionVariables } from "@/Data/Queries";
 import { ServiceOrderItemAction } from "@/Slices/Orders/Core/Types";
 import { CreateModifierHandler, FieldCreator } from "@/UI/Components/ServiceInstanceForm";
 import { RelationsDictionary } from "../../Data";
@@ -22,6 +23,7 @@ import {
   getInterServiceRelationMissingConnections,
 } from "../../Data/Helpers/connectionValidationUtils";
 import { ComposerServiceOrderItem } from "../../Data/Helpers/deploymentHelpers";
+import { findTopRootInstance } from "../../Data/Helpers/findTopRootInstance";
 import { getEmbeddedEntityKey } from "../../Data/Helpers/shapeUtils";
 
 /**
@@ -392,6 +394,58 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
     return this.serviceModel.name;
   }
 
+  /**
+   * Resolves the top root instance shape: an embedded shape climbs its parent
+   * chain to the first non-embedded ancestor, a top-level shape is its own root.
+   *
+   * @param canvasState - The full canvas state map, keyed by shape id.
+   * @returns The top root instance shape, or undefined if it can't be resolved.
+   */
+  getRootInstance(canvasState: Map<string, ServiceEntityShape>): ServiceEntityShape | undefined {
+    return findTopRootInstance(this, canvasState);
+  }
+
+  /**
+   * Builds the values that resolve `${...}` variables in a suggestion's parameter
+   * name. An embedded shape's suggestions resolve against its owning instance -
+   * entity_type, the identifying attribute, and id all belong to the service
+   * instance, not the embedded part - so we resolve against the top root instance;
+   * a top-level shape uses itself.
+   *
+   * The identifying attribute's value is read from the root's stored attributes,
+   * which the form keeps in sync on every change; the suggestions query debounces,
+   * so the one-render lag behind live typing is not observable.
+   *
+   * @param canvasState - The full canvas state map, keyed by shape id.
+   * @returns The variable values, keyed by namespace (empty if no root resolves).
+   */
+  getSuggestionVariables(canvasState: Map<string, ServiceEntityShape>): SuggestionVariables {
+    const source = this.getRootInstance(canvasState);
+
+    if (!source) {
+      return {};
+    }
+
+    const { serviceModel } = source;
+    // The name of the attribute that identifies the instance (the model's `service_identity`).
+    const identifyingAttributeName =
+      "service_identity" in serviceModel ? serviceModel.service_identity : undefined;
+    const identifyingAttributeValue = identifyingAttributeName
+      ? source.instanceAttributes[identifyingAttributeName]
+      : undefined;
+
+    return {
+      entity_type: serviceModel.name,
+      identifying_attribute:
+        identifyingAttributeValue === undefined ||
+        identifyingAttributeValue === null ||
+        identifyingAttributeValue === ""
+          ? undefined
+          : String(identifyingAttributeValue),
+      instance_id: source.isNew ? undefined : String(source.id),
+    };
+  }
+
   addConnection(relationId: string, relationType: string) {
     const existing = this.connections.get(relationType) || [];
     if (existing.includes(relationId)) {
@@ -424,8 +478,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
   }
 
   private getAllowedRelations():
-    | Record<string, { lower_limit: number; upper_limit: number | null }>
-    | undefined {
+    Record<string, { lower_limit: number; upper_limit: number | null }> | undefined {
     const entityType = this.getEntityType();
     const entityName = this.getEntityName();
 

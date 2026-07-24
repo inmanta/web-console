@@ -3,7 +3,6 @@ import { EnvSelector } from "./EnvSelector";
 
 interface Props {
   selectorItems: EnvironmentSelectorItem[];
-  environmentNames: string[];
   onSelectEnvironment: (selectedProjectAndEnvironment: EnvironmentSelectorItem) => void;
   defaultToggleText: string;
 }
@@ -12,25 +11,23 @@ export interface EnvironmentSelectorItem {
   displayName: string;
   projectId: string;
   environmentId: string;
+  icon?: string;
 }
 
 export const EnvSelectorWrapper: React.FC<Props> = ({
   selectorItems,
   onSelectEnvironment,
   defaultToggleText,
-  environmentNames,
 }) => {
-  const [filteredItems, setFilteredItems] = useState(environmentNames);
   const [isOpen, setIsOpen] = useState(false);
   const [toggleText, setToggleText] = useState(defaultToggleText);
 
   useEffect(() => {
-    setFilteredItems(environmentNames);
     setToggleText(defaultToggleText);
-  }, [environmentNames, defaultToggleText]);
+  }, [defaultToggleText]);
 
   const onSelect = (value: string) => {
-    setIsOpen(!isOpen);
+    setIsOpen(false);
 
     const matchingEnvItem = selectorItems.find((envItem) => envItem.displayName === value);
 
@@ -42,7 +39,7 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
 
   return (
     <EnvSelector
-      items={filteredItems}
+      items={selectorItems}
       onSelect={onSelect}
       isOpen={isOpen}
       setIsOpen={setIsOpen}

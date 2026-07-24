@@ -191,17 +191,7 @@ describe("DesiredStatesView", () => {
 
     expect(initialRows).toHaveLength(9);
 
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
-
-    await userEvent.click(
-      screen.getByRole("option", {
-        name: words("desiredState.columns.status"),
-      })
-    );
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
 
     const input = screen.getByRole("combobox", { name: "StatusFilterInput" });
 
@@ -258,42 +248,25 @@ describe("DesiredStatesView", () => {
 
     expect(initialRows).toHaveLength(9);
 
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
-
-    await userEvent.click(
-      screen.getByRole("option", {
-        name: words("desiredState.columns.date"),
-      })
-    );
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
 
     const fromDatePicker = screen.getByLabelText("From Date Picker");
 
     await userEvent.type(fromDatePicker, "2021-12-06");
 
+    await userEvent.click(screen.getByLabelText("Apply date from filter"));
+
     const toDatePicker = screen.getByLabelText("To Date Picker");
 
     await userEvent.type(toDatePicker, "2021-12-07");
 
-    await userEvent.click(screen.getByLabelText("Apply date filter"));
+    await userEvent.click(screen.getByLabelText("Apply date to filter"));
 
     const rowsAfter = await screen.findAllByRole("row", {
       name: "DesiredStates Table Row",
     });
 
     expect(rowsAfter).toHaveLength(3);
-
-    // The chips are hidden in small windows, so resize it
-    window = Object.assign(window, { innerWidth: 1200 });
-    await act(async () => {
-      window.dispatchEvent(new Event("resize"));
-    });
-
-    expect(await screen.findByText("from | 2021/12/06 00:00:00", { exact: false })).toBeVisible();
-    expect(await screen.findByText("to | 2021/12/07 00:00:00", { exact: false })).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -330,42 +303,25 @@ describe("DesiredStatesView", () => {
 
     expect(initialRows).toHaveLength(9);
 
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
 
-    await userEvent.click(
-      screen.getByRole("option", {
-        name: words("desiredState.columns.version"),
-      })
-    );
+    const fromVersionPicker = await screen.findByLabelText("Version range from");
 
-    const fromDatePicker = await screen.findByLabelText("Version range from");
+    await userEvent.type(fromVersionPicker, "3");
 
-    await userEvent.type(fromDatePicker, "3");
+    await userEvent.click(await screen.findByLabelText("Apply Version from filter"));
 
-    const toDatePicker = await screen.findByLabelText("Version range to");
+    const toVersionPicker = await screen.findByLabelText("Version range to");
 
-    await userEvent.type(toDatePicker, "5");
+    await userEvent.type(toVersionPicker, "5");
 
-    await userEvent.click(await screen.findByLabelText("Apply Version filter"));
+    await userEvent.click(await screen.findByLabelText("Apply Version to filter"));
 
     const rowsAfter = await screen.findAllByRole("row", {
       name: "DesiredStates Table Row",
     });
 
     expect(rowsAfter).toHaveLength(3);
-
-    // The chips are hidden in small windows, so resize it
-    window = Object.assign(window, { innerWidth: 1200 });
-    await act(async () => {
-      await window.dispatchEvent(new Event("resize"));
-    });
-
-    expect(await screen.findByText("from | 3", { exact: false })).toBeVisible();
-    expect(await screen.findByText("to | 5", { exact: false })).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -475,17 +431,7 @@ describe("DesiredStatesView", () => {
 
     expect(initialRows).toHaveLength(9);
 
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
-
-    await userEvent.click(
-      screen.getByRole("option", {
-        name: words("desiredState.columns.status"),
-      })
-    );
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
 
     const input = screen.getByPlaceholderText(words("desiredState.filters.status.placeholder"));
 

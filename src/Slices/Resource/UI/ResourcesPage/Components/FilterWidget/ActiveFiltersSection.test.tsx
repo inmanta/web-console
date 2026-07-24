@@ -1,10 +1,9 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ActiveFiltersSection } from "./ActiveFiltersSection";
 
 const createHandlers = () => ({
-  onClearAll: vi.fn(),
+  onResetFilters: vi.fn(),
   removeTypeChip: vi.fn(),
   removeAgentChip: vi.fn(),
   removeValueChip: vi.fn(),
@@ -29,7 +28,7 @@ describe("ActiveFiltersSection", () => {
     expect(
       screen.getByText("Select filters from the tabs above to refine your results.")
     ).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Clear all" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Reset Filters" })).toBeInTheDocument();
   });
 
   it("renders filter groups and delegates actions to the provided handlers", async () => {
@@ -48,8 +47,8 @@ describe("ActiveFiltersSection", () => {
     expect(screen.getByText("Value")).toBeInTheDocument();
     expect(screen.getByText("Status")).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: "Clear all" }));
-    expect(handlers.onClearAll).toHaveBeenCalledTimes(1);
+    await userEvent.click(screen.getByRole("button", { name: "Reset Filters" }));
+    expect(handlers.onResetFilters).toHaveBeenCalledTimes(1);
 
     await userEvent.click(
       screen.getByRole("button", {

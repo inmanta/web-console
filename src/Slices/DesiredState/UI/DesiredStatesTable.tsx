@@ -20,9 +20,13 @@ export const DesiredStatesTable: React.FC<Props> = ({ rows, ...props }) => {
   const heads = columnNames.map((displayName) => <Th key={displayName}>{displayName}</Th>);
 
   return (
-    <Table {...props} variant={TableVariant.compact}>
+    <Table {...props} isStickyHeader variant={TableVariant.compact}>
       <Thead>
-        <Tr>{heads}</Tr>
+        <Tr>
+          {heads}
+          <Th screenReaderText="Actions" />
+          <Th screenReaderText="Actions" />
+        </Tr>
       </Thead>
       {rows.map((row) => (
         <DesiredStatesTableRow row={row} key={row.version.toString()} />

@@ -32,7 +32,6 @@ import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { GraphiQL } from "@S/GraphiQL";
-import { Home } from "@S/Home";
 import { Notification } from "@S/Notification";
 import { OrderDetails } from "@S/OrderDetails";
 import { Orders } from "@S/Orders";
@@ -46,7 +45,6 @@ import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
 import { UserManagement } from "@S/UserManagement";
-import { encodeParams } from "./Utils";
 
 export function PrimaryRouteManager(baseUrl: string): RouteManager {
   const routeDictionary: RouteDictionary = {
@@ -54,7 +52,6 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
      * Main
      */
     CreateEnvironment: CreateEnvironment.route(baseUrl),
-    Home: Home.route(baseUrl),
     GraphiQL: GraphiQL.route(baseUrl),
     NotificationCenter: Notification.route(baseUrl),
     Settings: Settings.route(baseUrl),
@@ -120,7 +117,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     const routeMatch = getRouteMatchFromUrl(pathname);
 
     if (typeof routeMatch === "undefined") {
-      return getUrl("Home", undefined);
+      return getUrl("Dashboard", undefined);
     }
 
     const { route } = routeMatch;
@@ -132,7 +129,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     const parent = getParentWithoutParams(route);
 
     if (typeof parent === "undefined") {
-      return getUrl("Home", undefined);
+      return getUrl("Dashboard", undefined);
     }
 
     return getUrl(parent.kind, undefined);
@@ -163,7 +160,10 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   function getUrl<K extends RouteKind>(kind: K, params: RouteParams<K>): string {
     const route = getRoute(kind);
 
-    return generatePath(route.path, params === undefined ? params : encodeParams(params));
+    // generatePath already encodeURIComponent's each param; encoding them here too would
+    // double-encode values with special characters (e.g. "Parent 1" -> "Parent%2520" instead
+    // of "Parent%20").
+    return generatePath(route.path, params);
   }
 
   function getUrlForApiUri(uri: string): string | undefined {
@@ -233,7 +233,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
   function useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
     const { search } = useLocation();
     const route = getRoute(kind);
-    const path = generatePath(route.path, params === undefined ? params : encodeParams(params));
+    const path = generatePath(route.path, params);
 
     return `${path}${search}`;
   }

@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import moment from "moment-timezone";
+import dayjs from "@/dayjs";
 
 import "jest-axe/extend-expect";
 
@@ -100,8 +100,14 @@ const linkShapeMock = vi.hoisted(() => ({
   }),
 }));
 
-// Set default timezone
-moment.tz.setDefault("Europe/Brussels");
+// Fix timezone to Europe/Brussels for all tests so date-related assertions are deterministic.
+vi.spyOn(dayjs.tz, "guess").mockReturnValue("Europe/Brussels");
+
+// jsdom does not implement scrollIntoView; provide a no-op so components that call it
+// (e.g. to bring a newly expanded/focused row into view) don't crash in tests.
+if (!window.HTMLElement.prototype.scrollIntoView) {
+  window.HTMLElement.prototype.scrollIntoView = vi.fn();
+}
 
 // Mock window.matchMedia
 Object.defineProperty(window, "matchMedia", {

@@ -1,0 +1,5 @@
+description: The "Clear filter" button in the resource page filter panel has been replaced with a "Reset Filters" button that restores the default !orphaned filter.
+destination-branches: [master, iso9]
+change-type: patch
+sections:
+  minor-improvement: "{{description}}"

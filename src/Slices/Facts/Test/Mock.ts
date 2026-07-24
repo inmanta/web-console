@@ -71,6 +71,24 @@ export const list = [
     source: "fact",
     updated: "2021-03-18T17:10:43.962365",
   },
+  {
+    id: "b3c4d5e6-f7a8-4b9c-0d1e-2f3a4b5c6d7e",
+    name: "jsonValueFact",
+    value: '{"status":"deployed", "diff":{}, "error":""}',
+    environment: "80a8d40c-0323-4305-822d-d377ada8ce04",
+    resource_id: "aws_dc::HostedConnection[aws,hcid=abcd]",
+    source: "fact",
+    updated: "2021-03-18T17:10:43.896300",
+  },
+  {
+    id: "c4d5e6f7-a8b9-4c0d-1e2f-3a4b5c6d7e8f",
+    name: "xmlValueFact",
+    value: "<config><host>localhost</host><port>5432</port></config>",
+    environment: "80a8d40c-0323-4305-822d-d377ada8ce04",
+    resource_id: "aws_dc::HostedConnection[aws,hcid=abcd]",
+    source: "fact",
+    updated: "2021-03-18T17:10:43.896300",
+  },
 ];
 
 export const response = {

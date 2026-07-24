@@ -6,7 +6,7 @@ import { ResourceLink } from "@/UI/Components";
 type ResourceType = "managed" | "discovery";
 
 interface Props {
-  resourceUri: string | null;
+  resourceId: string | null;
   resourceType: ResourceType;
   buttonType?: ButtonVariant;
 }
@@ -25,34 +25,19 @@ interface Props {
  * @returns {React.FC} DiscoveredResourceLink component
  */
 export const DiscoveredResourceLink: React.FC<Props> = ({
-  resourceUri,
+  resourceId,
   resourceType,
   buttonType = ButtonVariant.link,
 }) => {
-  if (!resourceUri) {
-    return <></>;
-  }
-
-  const rid = extractResourceLink(resourceUri);
-
-  if (!rid) {
+  if (!resourceId) {
     return <></>;
   }
 
   return (
     <ResourceLink
-      resourceId={rid}
+      resourceId={resourceId}
       linkText={words(`discovered_resources.show_resource.${resourceType}`)}
       variant={buttonType}
     />
   );
-};
-
-// example url : /api/v2/resource/cloudflare::dns_record::CnameRecord[https://api.cloudflare.com/client/v4/,name=artifacts.ssh.inmanta.com]
-// We only want to keep the adress to the resource, which is everything that comes after /api/v2/resource/
-const extractResourceLink = (uri: string): string | null => {
-  const regex = /\/api\/v2\/resource\/(.+)/;
-  const match = uri.match(regex);
-
-  return match ? match[1] : null;
 };

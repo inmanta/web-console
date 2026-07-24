@@ -1,1 +1,2 @@
-export * from "./EventsFilterWidget";
+export * from "./FilterWidgetComponent";
+export * from "./ConnectedFilterWidget";

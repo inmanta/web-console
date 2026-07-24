@@ -1,8 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { Drawer, DrawerContent, DrawerContentBody, Stack, StackItem } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useDeleteDesiredStateVersion, useGetDesiredStates } from "@/Data/Queries";
 import { Filter } from "@/Slices/DesiredState/Core/Types";
+
 import {
   PageContainer,
   ConfirmUserActionForm,
@@ -10,15 +12,15 @@ import {
   LoadingView,
   ErrorView,
   PaginationWidget,
+  countActiveFilters,
 } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
-import { DesiredStateVersionStatus } from "../Core/Domain";
-import { TableControls } from "./Components";
+import { TableControls, ConnectedFilterWidget } from "./Components";
 import { DesiredStatesTable } from "./DesiredStatesTable";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
-import { CompareSelection } from "./Utils";
+import { CompareSelection, applyFilterDefaults } from "./Utils";
 
 /**
  * The Page component that renders the desired state page.
@@ -30,26 +32,32 @@ export const Page: React.FC = () => {
   const deleteVersion = useDeleteDesiredStateVersion();
   const { notifyError } = useAppAlert();
 
-  const { currentPage, setCurrentPage, pageSize, setPageSize, filter, setFilter } =
-    usePaginatedTable<Filter>({
-      route: "DesiredState",
-      defaultFilter: {
-        status: [
-          DesiredStateVersionStatus.active,
-          DesiredStateVersionStatus.candidate,
-          DesiredStateVersionStatus.retired,
-        ],
-      },
-      filterKeys: { date: "DateRange", version: "IntRange" },
-    });
+  const { currentPage, setCurrentPage, pageSize, setPageSize, filter } = usePaginatedTable<Filter>({
+    route: "DesiredState",
+    filterKeys: { date: "DateRange", version: "IntRange", disregardDefault: "Boolean" },
+  });
+
+  const filterWithDefaults = useMemo(() => applyFilterDefaults(filter), [filter]);
 
   const [compareSelection, setCompareSelection] = useState<CompareSelection>({
     kind: "None",
   });
 
+  const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
+
+  const onCloseFilterWidget = useCallback(() => {
+    setIsDrawerExpanded(false);
+  }, []);
+
+  const activeFilterCount = useMemo(() => {
+    const { disregardDefault: _disregardDefault, ...filterValues } = filterWithDefaults;
+
+    return countActiveFilters(filterValues);
+  }, [filterWithDefaults]);
+
   const { data, refetch, isError, error, isSuccess } = useGetDesiredStates().useContinuous(
     pageSize,
-    filter,
+    filterWithDefaults,
     currentPage
   );
 
@@ -100,10 +108,13 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     return (
-      <PageContainer pageTitle={words("desiredState.title")}>
+      <PageContainer
+        pageTitle={words("desiredState.title")}
+        style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+      >
         <GetDesiredStatesContext.Provider
           value={{
-            filter,
+            filter: filterWithDefaults,
             pageSize,
             currentPage,
             compareSelection,
@@ -112,8 +123,6 @@ export const Page: React.FC = () => {
           }}
         >
           <TableControls
-            filter={filter}
-            setFilter={setFilter}
             paginationWidget={
               <PaginationWidget
                 data={data}
@@ -122,15 +131,39 @@ export const Page: React.FC = () => {
                 setCurrentPage={setCurrentPage}
               />
             }
+            onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
+            isDrawerExpanded={isDrawerExpanded}
+            activeFilterCount={activeFilterCount}
           />
-          {data.data.length <= 0 ? (
-            <EmptyView
-              message={words("desiredState.empty.message")}
-              aria-label="DesiredStatesView-Empty"
-            />
-          ) : (
-            <DesiredStatesTable rows={data.data} aria-label="DesiredStatesView-Success" />
-          )}
+          <Drawer
+            isExpanded={isDrawerExpanded}
+            isInline
+            style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+          >
+            <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
+              <DrawerContentBody
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flex: "1 1 auto",
+                  minHeight: 0,
+                }}
+              >
+                {data.data.length <= 0 ? (
+                  <EmptyView
+                    message={words("desiredState.empty.message")}
+                    aria-label="DesiredStatesView-Empty"
+                  />
+                ) : (
+                  <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+                    <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                      <DesiredStatesTable rows={data.data} aria-label="DesiredStatesView-Success" />
+                    </StackItem>
+                  </Stack>
+                )}
+              </DrawerContentBody>
+            </DrawerContent>
+          </Drawer>
         </GetDesiredStatesContext.Provider>
       </PageContainer>
     );

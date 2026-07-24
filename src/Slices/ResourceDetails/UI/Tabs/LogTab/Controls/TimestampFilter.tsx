@@ -1,7 +1,7 @@
 import React from "react";
 import { DateRange } from "@/Core";
 import { TimestampFilter as TimestampFilterWidget } from "@/UI/Components";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
 
 interface Props {
@@ -18,7 +18,7 @@ export const TimestampFilter: React.FC<Props> = ({ filter, setFilter }) => {
 
   return (
     <TimestampFilterWidget
-      datePresenter={new MomentDatePresenter()}
+      datePresenter={new CustomDatePresenter()}
       timestampFilters={filter.timestamp ? filter.timestamp : []}
       update={update}
       isVisible

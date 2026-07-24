@@ -1,0 +1,4 @@
+description: Default the create-token form in the Settings page to a revocable token
+issue-nr: 7102
+change-type: minor
+destination-branches: [master, iso9]

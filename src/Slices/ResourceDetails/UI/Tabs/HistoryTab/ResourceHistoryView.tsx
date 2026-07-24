@@ -11,7 +11,7 @@ import { Details } from "@/Core/Domain/Resource/Resource";
 import { usePaginatedTable } from "@/Data";
 import { useGetResourceHistory } from "@/Data/Queries";
 import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { ResourceHistoryTable } from "./ResourceHistoryTable";
 import { ResourceTemporalData } from "./ResourceTemporalData";
@@ -40,7 +40,7 @@ export const ResourceHistoryView: React.FC<Props> = ({ resourceId, details }) =>
     return <ErrorView message={error.message} retry={refetch} ariaLabel="ResourceHistory-Error" />;
   }
   if (isSuccess) {
-    const tablePresenter = new ResourceHistoryTablePresenter(new MomentDatePresenter());
+    const tablePresenter = new ResourceHistoryTablePresenter(new CustomDatePresenter());
     const rows = tablePresenter.createRows(data.data);
 
     return (

@@ -1,12 +1,14 @@
 import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
 import { Details } from "@/Core/Domain/Resource/Resource";
-import { JsonFormatter, XmlFormatter } from "@/Data";
-import { AttributeClassifier, AttributeList } from "@/UI/Components";
+import { AttributeClassifier } from "@/Data";
+import { AttributeList } from "@/UI/Components";
 
 interface Props {
   details: Details;
 }
+
+const classifier = new AttributeClassifier();
 
 /**
  * The AttributesTab component.
@@ -18,12 +20,6 @@ interface Props {
  * @returns {React.FC<Props>} A React Component displaying the attributes of a resource
  */
 export const AttributesTab: React.FC<Props> = ({ details }) => {
-  const classifier = new AttributeClassifier(
-    new JsonFormatter(),
-    new XmlFormatter(),
-    (key: string, value: string) => ({ kind: "Code", key, value })
-  );
-
   const classifiedAttributes = classifier.classify(details.attributes);
 
   return (

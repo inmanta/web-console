@@ -30,6 +30,7 @@ interface GqlVariables {
     agent?: { contains?: string[] };
     resourceIdValue?: { contains?: string[] };
     isOrphan?: boolean;
+    isDeploying?: boolean;
   };
   first?: number;
   after?: string;
@@ -262,9 +263,7 @@ describe("ResourcesPage", () => {
     expect(
       within(table).getByRole("button", { name: words("resources.column.value") })
     ).toBeVisible();
-    expect(
-      within(table).getByRole("columnheader", { name: words("resources.column.status") })
-    ).toBeVisible();
+    expect(within(table).getByRole("button", { name: "Sort by status fields" })).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -394,8 +393,7 @@ describe("ResourcesPage", () => {
       server.use(
         queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
           const field = variables.filter?.[filterVariableKey as keyof typeof variables.filter] as
-            | { eq?: string[]; contains?: string[] }
-            | undefined;
+            { eq?: string[]; contains?: string[] } | undefined;
 
           //This is for now until we rework the filtering part where we don't have to manually pass %
           const values = (field?.eq ?? field?.contains ?? []).map((v: string) =>
@@ -448,11 +446,9 @@ describe("ResourcesPage", () => {
       server.use(
         queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
           const fieldOne = variables.filter?.[filterKeyOne as keyof typeof variables.filter] as
-            | { eq?: string[]; contains?: string[] }
-            | undefined;
+            { eq?: string[]; contains?: string[] } | undefined;
           const fieldTwo = variables.filter?.[filterKeyTwo as keyof typeof variables.filter] as
-            | { eq?: string[]; contains?: string[] }
-            | undefined;
+            { eq?: string[]; contains?: string[] } | undefined;
 
           //This is for now until we rework the filtering part where we don't have to manually pass %
           const hasOne = (fieldOne?.eq ?? fieldOne?.contains ?? []).some(
@@ -585,7 +581,8 @@ describe("ResourcesPage", () => {
       expect(results).toHaveNoViolations();
     });
   });
-  test("clear all filters removes default orphan filter", async () => {
+
+  test("reset filters restores default orphan filter", async () => {
     server.use(
       queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) =>
         HttpResponse.json({
@@ -598,18 +595,25 @@ describe("ResourcesPage", () => {
 
     render(component);
 
+    // Default !orphaned filter is active — only non-orphaned resources shown
     const rows = await screen.findAllByLabelText("Resource Table Row");
     expect(rows).toHaveLength(3);
 
     await openFiltersDrawer();
 
-    const clearAllButton = await screen.findByRole("button", {
-      name: words("resources.filters.active.clearAll"),
-    });
-    await userEvent.click(clearAllButton);
+    // Remove the !orphaned chip, which disables the orphaned default and shows all resources
+    await userEvent.click(screen.getByLabelText("Close !orphaned"));
+    const rowsWithoutOrphanFilter = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsWithoutOrphanFilter).toHaveLength(6);
 
-    const rowsAfterClearingFilters = await screen.findAllByLabelText("Resource Table Row");
-    expect(rowsAfterClearingFilters).toHaveLength(6);
+    // Reset Filters should restore the !orphaned default
+    const resetFiltersButton = await screen.findByRole("button", {
+      name: words("resources.filters.active.resetFilters"),
+    });
+    await userEvent.click(resetFiltersButton);
+
+    const rowsAfterReset = await screen.findAllByLabelText("Resource Table Row");
+    expect(rowsAfterReset).toHaveLength(3);
 
     await act(async () => {
       const results = await axe(document.body);
@@ -629,21 +633,21 @@ describe("ResourcesPage", () => {
     await openFiltersDrawer();
 
     // Default filter (orphaned excluded) counts as 1
-    expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("1");
+    expect(screen.getByRole("button", { name: /^\d*\s*Filters$/ })).toHaveTextContent("1");
 
     const agentInput = await screen.findByPlaceholderText(
       words("resources.filters.resource.agent.placeholder")
     );
     await userEvent.type(agentInput, "agent2{enter}");
 
-    expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("2");
+    expect(screen.getByRole("button", { name: /^\d*\s*Filters$/ })).toHaveTextContent("2");
 
     const typeInput = await screen.findByPlaceholderText(
       words("resources.filters.resource.type.placeholder")
     );
     await userEvent.type(typeInput, "std::File{enter}");
 
-    expect(screen.getByRole("button", { name: /Filters/ })).toHaveTextContent("3");
+    expect(screen.getByRole("button", { name: /^\d*\s*Filters$/ })).toHaveTextContent("3");
   });
 
   test("agent filter dropdown shows options fetched from the API", async () => {
@@ -709,6 +713,61 @@ describe("ResourcesPage", () => {
     const label = screen.getByTestId("deploying-label");
 
     expect(label).toHaveTextContent("3");
+  });
+
+  test("clicking the deploying label toggles the isDeploying filter on and off", async () => {
+    let lastVariables: GqlVariables | undefined;
+
+    server.use(
+      queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
+        lastVariables = variables;
+
+        return HttpResponse.json({
+          data: toGqlResponse({
+            ...BASE_DATA,
+            resourceSummary: createMockResourceSummary({ isDeploying: { true: 3, false: 3 } }),
+          }),
+        });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
+
+    // First click adds the isDeploying filter
+    await userEvent.click(within(screen.getByTestId("deploying-label")).getByRole("button"));
+    await waitFor(() => expect(lastVariables?.filter?.isDeploying).toBe(true));
+
+    // Second click removes it again
+    await userEvent.click(within(screen.getByTestId("deploying-label")).getByRole("button"));
+    await waitFor(() => expect(lastVariables?.filter?.isDeploying).toBeUndefined());
+  });
+
+  test("deploying label is not clickable when nothing is deploying", async () => {
+    server.use(
+      queryLink.query("GetResources", () =>
+        HttpResponse.json({
+          data: toGqlResponse({
+            ...BASE_DATA,
+            resourceSummary: createMockResourceSummary({ isDeploying: { true: 0, false: 6 } }),
+          }),
+        })
+      )
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourcesPage-Success" });
+
+    // Without an onClick, PatternFly renders the label as plain content, not a button
+    expect(
+      within(screen.getByTestId("deploying-label")).queryByRole("button")
+    ).not.toBeInTheDocument();
   });
 
   test("toolbar stays visible and updates after navigating to next page", async () => {
