@@ -35,15 +35,18 @@ export interface ResourceAction {
 /**
  * Filters supported server-side by the `get_resource_actions` API.
  *
- * Note: the API does not (yet) support filtering by deploy type (action),
- * deploy outcome (change) or deploy reason. Those columns are displayed but not
- * filterable until the backend gains the corresponding query parameters.
+ * `outcome` holds the deploy outcomes (`change` values) to include; it is
+ * translated to the API's `exclude_changes` parameter (the complement).
+ *
+ * Note: the API does not (yet) support filtering by deploy type (action) or
+ * deploy reason. Those columns are displayed but not filterable until the
+ * backend gains the corresponding query parameters.
  */
 export interface ResourceActionFilter {
   resource_type?: string;
   agent?: string;
   value?: string;
-  log_severity?: string;
+  outcome?: string[];
 }
 
 /**

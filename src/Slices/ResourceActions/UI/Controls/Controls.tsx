@@ -2,7 +2,7 @@ import React from "react";
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { ResourceActionFilter } from "@S/ResourceActions/Core/Domain";
-import { LogLevelFilter } from "./LogLevelFilter";
+import { OutcomeFilter } from "./OutcomeFilter";
 import { SingleTextFilter } from "./SingleTextFilter";
 
 interface Props {
@@ -46,7 +46,7 @@ export const Controls: React.FC<Props> = ({ filter, setFilter, paginationWidget 
         />
       </ToolbarItem>
       <ToolbarItem>
-        <LogLevelFilter filter={filter} setFilter={setFilter} />
+        <OutcomeFilter filter={filter} setFilter={setFilter} />
       </ToolbarItem>
       <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
     </ToolbarContent>

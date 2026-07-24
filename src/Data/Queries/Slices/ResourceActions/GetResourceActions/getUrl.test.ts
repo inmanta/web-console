@@ -20,12 +20,33 @@ describe("getUrl for resource actions", () => {
           resource_type: "std::File",
           agent: "internal",
           value: "/tmp/a",
-          log_severity: "ERROR",
         },
       })
     ).toEqual(
-      "/api/v2/resource_actions?limit=20&resource_type=std%3A%3AFile&agent=internal&attribute_value=%2Ftmp%2Fa&log_severity=ERROR"
+      "/api/v2/resource_actions?limit=20&resource_type=std%3A%3AFile&agent=internal&attribute_value=%2Ftmp%2Fa"
     );
+  });
+
+  it("translates the selected outcomes into exclude_changes for the complement", () => {
+    expect(
+      getUrl({
+        pageSize,
+        currentPage: emptyPage,
+        filter: { outcome: ["created", "updated"] },
+      })
+    ).toEqual(
+      "/api/v2/resource_actions?limit=20&exclude_changes=nochange&exclude_changes=purged"
+    );
+  });
+
+  it("omits exclude_changes when every outcome is selected", () => {
+    expect(
+      getUrl({
+        pageSize,
+        currentPage: emptyPage,
+        filter: { outcome: ["nochange", "created", "purged", "updated"] },
+      })
+    ).toEqual("/api/v2/resource_actions?limit=20");
   });
 
   it("appends the pagination cursor", () => {

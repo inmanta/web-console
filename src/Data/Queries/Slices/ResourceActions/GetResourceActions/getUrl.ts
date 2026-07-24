@@ -1,6 +1,6 @@
 import { PageSize } from "@/Core/Domain";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
-import { ResourceActionFilter } from "@S/ResourceActions/Core/Domain";
+import { changeTypes, ResourceActionFilter } from "@S/ResourceActions/Core/Domain";
 
 export interface GetResourceActionsUrlParams {
   filter?: ResourceActionFilter;
@@ -31,8 +31,12 @@ export function getUrl({ filter, pageSize, currentPage }: GetResourceActionsUrlP
   if (filter?.value) {
     filterParams.push(`attribute_value=${encodeURIComponent(filter.value)}`);
   }
-  if (filter?.log_severity) {
-    filterParams.push(`log_severity=${encodeURIComponent(filter.log_severity)}`);
+  // The API filters outcomes via `exclude_changes`, so translate the selected
+  // outcomes into the set of change values to exclude.
+  if (filter?.outcome && filter.outcome.length > 0) {
+    changeTypes
+      .filter((change) => !filter.outcome?.includes(change))
+      .forEach((change) => filterParams.push(`exclude_changes=${encodeURIComponent(change)}`));
   }
 
   const filterParam = filterParams.length > 0 ? `&${filterParams.join("&")}` : "";
