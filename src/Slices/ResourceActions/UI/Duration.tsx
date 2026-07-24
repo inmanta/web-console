@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { BlinkingDot } from "@/Slices/Resource/UI/ResourcesPage/Components";
 import { CustomDatePresenter } from "@/UI/Utils";
 
 interface Props {
@@ -12,8 +13,8 @@ const datePresenter = new CustomDatePresenter();
  * Displays the duration of a resource action.
  *
  * For a finished action the fixed duration is shown. While an action is still
- * ongoing (no finish time yet, e.g. a deploy in progress) the elapsed time
- * counts up once per second.
+ * ongoing (no finish time yet, e.g. a deploy in progress) a pulsing blue dot is
+ * shown, matching the deploying indication used on the resource page.
  *
  * @props {Props} props - The props of the component.
  *  @prop {string} started - The start time of the action.
@@ -21,23 +22,9 @@ const datePresenter = new CustomDatePresenter();
  * @returns {React.FC<Props>} The duration component.
  */
 export const Duration: React.FC<Props> = ({ started, finished }) => {
-  const [now, setNow] = useState(() => Date.now());
-
-  useEffect(() => {
-    if (finished) {
-      return;
-    }
-
-    const interval = setInterval(() => setNow(Date.now()), 1000);
-
-    return () => clearInterval(interval);
-  }, [finished]);
-
-  if (finished) {
-    return <>{datePresenter.diff(finished, started)}</>;
+  if (!finished) {
+    return <BlinkingDot $size={10} role="presentation" aria-label="DeployingIndication" />;
   }
 
-  const elapsedSeconds = Math.max(0, Math.floor((now - new Date(started).getTime()) / 1000));
-
-  return <>{`${elapsedSeconds} s`}</>;
+  return <>{datePresenter.diff(finished, started)}</>;
 };

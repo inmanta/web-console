@@ -50,7 +50,7 @@ describe("ResourceActionsPage", () => {
     expect(await axe(document.body)).toHaveNoViolations();
   });
 
-  test("GIVEN an ongoing action THEN its duration shows an elapsed counter instead of a dash", async () => {
+  test("GIVEN an ongoing action THEN its duration shows a pulsing dot instead of a value", async () => {
     server.use(
       http.get("/api/v2/resource_actions", () => HttpResponse.json(mockResourceActionsResponse))
     );
@@ -61,9 +61,9 @@ describe("ResourceActionsPage", () => {
     await screen.findByRole("grid", { name: "ResourceActionsTable" });
 
     const ongoingRow = screen.getAllByLabelText("ResourceActionRow")[3];
-    const durationCell = within(ongoingRow).getByText(/^\d+ s$/);
 
-    expect(durationCell).toBeVisible();
+    expect(within(ongoingRow).getByLabelText("DeployingIndication")).toBeVisible();
+    expect(within(ongoingRow).queryByText(/\d+ s/)).not.toBeInTheDocument();
   });
 
   test("GIVEN an action with multiple resources THEN the resource column shows a count", async () => {
