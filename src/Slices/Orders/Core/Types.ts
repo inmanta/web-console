@@ -25,6 +25,8 @@ export interface ServiceOrderItemStatus {
   direct_dependencies: ServiceOrderItemDependencies;
   validation_compile_id: string | null;
   instance_state_label: string | null;
+  service_identity_attribute_value: string | null;
+  service_identity_display_name: string | null;
 }
 
 interface ServiceOrderStatus {

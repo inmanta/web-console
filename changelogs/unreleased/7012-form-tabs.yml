@@ -1,0 +1,6 @@
+description: Service instance forms can now be split into named tabs through annotations. A web_tabs catalog on the service entity defines the tabs (key, label, order, default, optional icon), and a web_tab annotation on a top-level attribute or relation assigns it to a tab; unassigned fields land on the default tab.
+issue-nr: 7012
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

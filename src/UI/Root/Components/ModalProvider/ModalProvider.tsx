@@ -1,7 +1,13 @@
-import React, { PropsWithChildren, createContext, useState } from "react";
+import React, { PropsWithChildren, createContext, useEffect, useState } from "react";
 import { Modal, ModalVariant, ModalBody, ModalFooter, ModalHeader } from "@patternfly/react-core";
 
 type IconVariant = "success" | "danger" | "warning" | "info" | "custom";
+
+/**
+ * Our own class on the modal backdrop so the outside-press handler can detect
+ * the backdrop without relying on PatternFly's version-specific internal class.
+ */
+export const BACKDROP_CLASS = "global-modal-backdrop";
 
 /**
  * `Params` is an interface for the parameters accepted by the `triggerModal` function.
@@ -143,6 +149,33 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    if (!isOpen || !showClose) {
+      return;
+    }
+
+    // Close only when the press starts on the backdrop, not inside the dialog,
+    // so a press that begins in the dialog and ends on the backdrop is ignored.
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.button !== 0) {
+        return;
+      }
+
+      const target = e.target as HTMLElement;
+      if (
+        target.closest(`.${BACKDROP_CLASS}`) !== null &&
+        target.closest('[role="dialog"]') === null
+      ) {
+        closeModal();
+      }
+    };
+
+    document.addEventListener("mousedown", handleMouseDown);
+
+    return () => document.removeEventListener("mousedown", handleMouseDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, showClose]);
+
   return (
     <ModalContext.Provider
       value={{
@@ -153,6 +186,7 @@ export const ModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
       <Modal
         data-testid={dataTestId}
         aria-label={ariaLabel}
+        backdropClassName={BACKDROP_CLASS}
         isOpen={isOpen}
         onClose={showClose ? closeModal : undefined}
         variant={variant}

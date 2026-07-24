@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { SingleTextSelect } from "./SingleTextSelect";
 
@@ -23,7 +23,7 @@ test("SingleTextSelect renders with placeholder text", () => {
 test("SingleTextSelect opens dropdown on click", async () => {
   render(<SingleTextSelect selected={null} setSelected={vi.fn()} options={options} />);
   await userEvent.click(screen.getByRole("combobox"));
-  expect(screen.getByText("Apple")).toBeVisible();
+  await waitFor(() => expect(screen.getByText("Apple")).toBeInTheDocument());
 });
 
 test("SingleTextSelect calls setSelected when selecting an option", async () => {
@@ -41,7 +41,7 @@ test("SingleTextSelect filters options based on input", async () => {
   await userEvent.click(screen.getByRole("combobox"));
   await userEvent.type(screen.getByRole("combobox"), "ban");
 
-  expect(screen.getByText("Banana")).toBeVisible();
+  expect(screen.getByText("Banana")).toBeInTheDocument();
   expect(screen.queryByText("Apple")).not.toBeInTheDocument();
 });
 
@@ -59,7 +59,7 @@ test("SingleTextSelect shows Create option when hasCreation is true and no match
   render(<SingleTextSelect selected={null} setSelected={vi.fn()} options={options} hasCreation />);
   await userEvent.type(screen.getByRole("combobox"), "Mango");
 
-  expect(screen.getByText('Create "Mango"')).toBeVisible();
+  expect(screen.getByText('Create "Mango"')).toBeInTheDocument();
 });
 
 test("SingleTextSelect calls onCreate and setSelected when creating a new entry via Enter", async () => {

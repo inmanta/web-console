@@ -4,7 +4,7 @@ import { CompileStatus, DateRange } from "@/Core";
 import { Filter, Kind, List } from "@/Slices/CompileReports/Core/Types";
 import { FilterPicker } from "@/UI/Components";
 import { TimestampFilter } from "@/UI/Components/Filters";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { StatusFilter } from "./StatusFilter";
 
 interface Props {
@@ -38,7 +38,7 @@ export const CompileReportsFilterWidget: React.FC<Props> = ({ filter, setFilter 
         setSelected={updateCompileStatus}
       />
       <TimestampFilter
-        datePresenter={new MomentDatePresenter()}
+        datePresenter={new CustomDatePresenter()}
         isVisible={filterKind === Kind.Requested}
         timestampFilters={filter.requested ? filter.requested : []}
         update={updateRequested}

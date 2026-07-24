@@ -41,7 +41,9 @@ export const CopyMultiOptions: React.FC<Props> = ({
 
   const tooltipText = copied ? words("copy.feedback") : tooltipContent || words("copy");
 
-  const onToggleClick = () => {
+  const onToggleClick = (event: React.MouseEvent) => {
+    // Prevent triggering click handlers on ancestor elements, e.g. a clickable table row.
+    event.stopPropagation();
     setIsOpen(!isOpen);
   };
 
@@ -49,9 +51,11 @@ export const CopyMultiOptions: React.FC<Props> = ({
    * Handles the selection of an option and copies it to the clipboard.
    */
   const onSelect = (
-    _event: React.MouseEvent<Element, MouseEvent> | undefined,
+    event: React.MouseEvent<Element, MouseEvent> | undefined,
     value: string | number | undefined
   ) => {
+    // Prevent triggering click handlers on ancestor elements, e.g. a clickable table row.
+    event?.stopPropagation();
     // copy value to clipboard
     copy(String(value));
     setCopied(true);

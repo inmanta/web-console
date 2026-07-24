@@ -31,6 +31,26 @@ export function toggleValueInList<T>(value: T, list: T[]): T[] {
   return clone;
 }
 
+/**
+ * Returns the opposite representation of an include/exclude filter entry by toggling the leading `!`.
+ */
+export const invertFilter = (selection: string): string =>
+  selection.startsWith("!") ? selection.slice(1) : `!${selection}`;
+
+/**
+ * Ensures the include and exclude variants of the same value do not coexist by removing the
+ * inverted counterpart of `selection` from `selectedStates` when it is present.
+ */
+export const removeInvertedSelection = (selection: string, selectedStates: string[]): string[] => {
+  const invertedFilter = invertFilter(selection);
+
+  if (selectedStates.includes(invertedFilter)) {
+    return toggleValueInList(invertedFilter, selectedStates);
+  }
+
+  return selectedStates;
+};
+
 export const isNotNull = <T>(value: T | null): value is NonNullable<T> => value !== null;
 
 export const isNotUndefined = <T>(value: T | undefined): value is NonNullable<T> =>

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { memo, useRef } from "react";
 import { Bullseye, Button, Flex, FlexItem, Popover } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import { Resource } from "@/Core";
@@ -18,7 +18,7 @@ export interface ResourceRow {
 
 export const ResourceTableRow: React.FC<{
   row: ResourceRow;
-}> = ({ row }) => {
+}> = memo(({ row }) => {
   const buttonWrapperRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -38,10 +38,7 @@ export const ResourceTableRow: React.FC<{
             gap={{ default: "gapNone" }}
             flexWrap={{ default: "nowrap" }}
             alignItems={{ default: "alignItemsCenter" }}
-            style={{
-              height: "100%",
-              justifySelf: "flex-end",
-            }}
+            style={{ height: "100%", justifySelf: "flex-end" }}
           >
             <Bullseye style={{ width: "20px" }}>
               {row.status.isDeploying && <BlinkingDot $size={10} />}
@@ -94,4 +91,4 @@ export const ResourceTableRow: React.FC<{
       </Tr>
     </Tbody>
   );
-};
+});

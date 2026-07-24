@@ -4,8 +4,8 @@ import { EllipsisVIcon } from "@patternfly/react-icons";
 import { DiscoveredResourceLink } from ".";
 
 interface Props {
-  managedResourceUri: string | null;
-  discoveryResourceUri: string | null;
+  managedResourceId: string | null;
+  discoveryResourceId: string | null;
 }
 
 /**
@@ -14,12 +14,12 @@ interface Props {
  * The dropdown is disabled if both managed and discovery resources are not present.
  *
  * @Props {Props} - The props of the component
- *  @prop {string | null} managedResourceUri - URI of the managed resource
- *  @prop {string | null} discoveryResourceUri - URI of the discovery resource
+ *  @prop {string | null} managedResourceId - ID of the managed resource
+ *  @prop {string | null} discoveryResourceId - ID of the discovery resource
  *
  * @returns {React.FC} ActionsDropdown component
  */
-export const ActionsDropdown: React.FC<Props> = ({ managedResourceUri, discoveryResourceUri }) => {
+export const ActionsDropdown: React.FC<Props> = ({ managedResourceId, discoveryResourceId }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onToggleClick = () => {
@@ -35,7 +35,7 @@ export const ActionsDropdown: React.FC<Props> = ({ managedResourceUri, discovery
           variant="plain"
           onClick={onToggleClick}
           isExpanded={isOpen}
-          isDisabled={!managedResourceUri && !discoveryResourceUri}
+          isDisabled={!managedResourceId && !discoveryResourceId}
           icon={<EllipsisVIcon />}
         />
       )}
@@ -45,11 +45,11 @@ export const ActionsDropdown: React.FC<Props> = ({ managedResourceUri, discovery
       popperProps={{ position: "right" }}
     >
       <DropdownList>
-        {managedResourceUri && (
-          <DiscoveredResourceLink resourceUri={managedResourceUri} resourceType="managed" />
+        {managedResourceId && (
+          <DiscoveredResourceLink resourceId={managedResourceId} resourceType="managed" />
         )}
-        {discoveryResourceUri && (
-          <DiscoveredResourceLink resourceUri={discoveryResourceUri} resourceType="discovery" />
+        {discoveryResourceId && (
+          <DiscoveredResourceLink resourceId={discoveryResourceId} resourceType="discovery" />
         )}
       </DropdownList>
     </Dropdown>

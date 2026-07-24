@@ -14,7 +14,7 @@ import { RouteKindWithId } from "@/Core";
 import { words } from "@/UI";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { Notification, Body } from "@S/Notification/Core/Domain";
 import { getSeverityForNotification } from "@S/Notification/UI/Utils";
 
@@ -56,7 +56,7 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
         <ActionList {...{ notification, onUpdate }} />
       </NotificationDrawerListItemHeader>
       <NotificationDrawerListItemBody
-        timestamp={new MomentDatePresenter().get(notification.created).relative}
+        timestamp={new CustomDatePresenter().get(notification.created).relative}
       >
         {notification.message}
       </NotificationDrawerListItemBody>

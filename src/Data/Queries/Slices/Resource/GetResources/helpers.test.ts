@@ -160,22 +160,34 @@ describe("mapStatusToGraphQLFilter", () => {
 // ─── mapSort ────────────────────────────────────────────────────────────────
 
 describe("mapSort", () => {
-  it("returns undefined when sort is undefined", () => {
-    const result = mapSort(undefined);
+  it("returns an empty array when given an empty array", () => {
+    const result = mapSort([]);
 
-    expect(result).toBeUndefined();
+    expect(result).toEqual([]);
   });
 
-  it("maps a sort object to the GraphQL orderBy format", () => {
-    const result = mapSort({ name: "resource_type", order: "asc" });
+  it("maps a single sort entry to the GraphQL orderBy format", () => {
+    const result = mapSort([{ name: "resource_type", order: "asc" }]);
 
     expect(result).toEqual([{ key: "resource_type", order: "asc" }]);
   });
 
   it("maps descending sort correctly", () => {
-    const result = mapSort({ name: "agent", order: "desc" });
+    const result = mapSort([{ name: "agent", order: "desc" }]);
 
     expect(result).toEqual([{ key: "agent", order: "desc" }]);
+  });
+
+  it("maps multiple sort entries preserving priority order", () => {
+    const result = mapSort([
+      { name: "resource_type", order: "asc" },
+      { name: "agent", order: "desc" },
+    ]);
+
+    expect(result).toEqual([
+      { key: "resource_type", order: "asc" },
+      { key: "agent", order: "desc" },
+    ]);
   });
 });
 

@@ -1,5 +1,7 @@
 import {
   toggleValueInList,
+  invertFilter,
+  removeInvertedSelection,
   stringifyList,
   getKeysExcluding,
   keepKeys,
@@ -12,6 +14,27 @@ test("toggleValueInList", () => {
 
 test("toggleValueInList", () => {
   expect(toggleValueInList("a", ["b"])).toEqual(["b", "a"]);
+});
+
+test("invertFilter adds an exclamation mark when not present", () => {
+  expect(invertFilter("deployed")).toEqual("!deployed");
+});
+
+test("invertFilter removes an exclamation mark when present", () => {
+  expect(invertFilter("!failed")).toEqual("failed");
+});
+
+test("removeInvertedSelection removes the inverse selection if it exists", () => {
+  const selected = ["deployed", "!failed"];
+
+  expect(removeInvertedSelection("!deployed", selected)).toEqual(["!failed"]);
+  expect(removeInvertedSelection("failed", selected)).toEqual(["deployed"]);
+});
+
+test("removeInvertedSelection returns the original list when no inverse is found", () => {
+  const selected = ["deployed", "!failed"];
+
+  expect(removeInvertedSelection("!skipped", selected)).toBe(selected);
 });
 
 test("stringifyList", () => {

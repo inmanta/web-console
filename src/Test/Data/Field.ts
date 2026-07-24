@@ -7,6 +7,7 @@ import {
   BooleanField,
   EnumField,
   Textarea,
+  DictField,
 } from "@/Core";
 
 export const textArea: Textarea = {
@@ -52,6 +53,30 @@ export const textSuggestions2: TextField = {
   defaultValue: "",
   inputType: TextInputTypes.text,
   suggestion: { type: "parameters", parameter_name: "param_name" },
+  type: "string?",
+};
+
+export const textSuggestionsTemplated: TextField = {
+  kind: "Text",
+  name: "text_field",
+  description: "description",
+  isOptional: true,
+  isDisabled: false,
+  defaultValue: "",
+  inputType: TextInputTypes.text,
+  suggestion: { type: "parameters", parameter_name: "param_name_${entity_type}" },
+  type: "string?",
+};
+
+export const textSuggestionsUnknownVariable: TextField = {
+  kind: "Text",
+  name: "text_field",
+  description: "description",
+  isOptional: true,
+  isDisabled: false,
+  defaultValue: "",
+  inputType: TextInputTypes.text,
+  suggestion: { type: "parameters", parameter_name: "param_name_${entity_typo}" },
   type: "string?",
 };
 
@@ -138,15 +163,13 @@ export const numberArr: TextField = {
   isDisabled: false,
 };
 
-export const dictionary: TextField = {
-  kind: "Text",
+export const dictionary: DictField = {
+  kind: "Dict",
   name: "dictionary_field",
   description: "description",
   isOptional: false,
   isDisabled: false,
-
   defaultValue: {},
-  inputType: TextInputTypes.text,
   type: "dict",
 };
 
@@ -223,10 +246,9 @@ export const nestedEditable: Field[] = [
     isDisabled: false,
   },
   {
-    kind: "Text",
+    kind: "Dict",
     name: "other_attr2",
     defaultValue: "",
-    inputType: TextInputTypes.text,
     description: "desc",
     type: "dict?",
     isOptional: true,
@@ -256,10 +278,9 @@ export const nestedEditable: Field[] = [
         isDisabled: false,
       },
       {
-        kind: "Text",
+        kind: "Dict",
         name: "dict_attr",
         defaultValue: "",
-        inputType: TextInputTypes.text,
         type: "dict",
         isOptional: false,
         isDisabled: false,

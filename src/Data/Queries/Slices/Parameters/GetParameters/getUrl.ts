@@ -1,6 +1,6 @@
-import moment from "moment-timezone";
 import qs from "qs";
 import { RangeOperator } from "@/Core";
+import dayjs from "@/dayjs";
 import { GetParametersParams } from "./useGetParameters";
 
 /**
@@ -17,7 +17,7 @@ import { GetParametersParams } from "./useGetParameters";
  */
 export function getUrl(
   { pageSize, filter, sort, currentPage }: GetParametersParams,
-  timezone = moment.tz.guess()
+  timezone = dayjs.tz.guess()
 ): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
@@ -28,8 +28,10 @@ export function getUrl(
               source: filter.source,
               updated: filter.updated?.map(
                 (timestampWithOperator) =>
-                  `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${moment
-                    .tz(timestampWithOperator.date, timezone)
+                  `${RangeOperator.serializeOperator(timestampWithOperator.operator)}:${dayjs(
+                    timestampWithOperator.date
+                  )
+                    .tz(timezone)
                     .utc()
                     .format("YYYY-MM-DD+HH:mm:ss")}`
               ),

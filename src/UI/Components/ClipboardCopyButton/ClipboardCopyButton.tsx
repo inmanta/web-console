@@ -23,7 +23,9 @@ export const ClipboardCopyButton: React.FC<Props> = ({
   ...props
 }) => {
   const [copied, setCopied] = useState(false);
-  const onClick = () => {
+  const onClick = (event: React.MouseEvent) => {
+    // Prevent triggering click handlers on ancestor elements, e.g. a clickable table row.
+    event.stopPropagation();
     copy(value);
     setCopied(true);
     setTimeout(() => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { CodeEditor, Language } from "@patternfly/react-code-editor";
+import { Language } from "@patternfly/react-code-editor";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -10,20 +10,27 @@ import {
 import { InfoAltIcon } from "@patternfly/react-icons";
 import { Tr, Td } from "@patternfly/react-table";
 import styled from "styled-components";
+import { JsonFormatter } from "@/Data";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
 import { OrderStatusLabel } from "@/Slices/Orders/UI/OrderStatusLabel";
-import { TextWithCopy, Toggle } from "@/UI/Components";
-import { CodeEditorCopyControl } from "@/UI/Components/CodeEditorControls";
-import { getThemePreference } from "@/UI/Components/DarkmodeOption";
+import { CodeEditor, Toggle } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { OrderDependencies } from "./OrderDependencies";
+import { OrderInstanceLink } from "./OrderInstanceLink";
 import { OrderStateDetails } from "./OrderStateDetails";
+
+// Same JSON pretty-printer the AttributeClassifier uses console-wide, so config
+// and attribute payloads render with identical formatting everywhere.
+const jsonFormatter = new JsonFormatter();
 
 interface Props {
   row: ServiceOrderItem;
+  orderItems: ServiceOrderItem[];
   isExpanded: boolean;
   onToggle: () => void;
   numberOfColumns: number;
+  rowRef?: (element: HTMLTableRowElement | null) => void;
+  expandInstanceOrderDetailsRow?: (instanceId: string) => void;
 }
 
 /**
@@ -32,25 +39,31 @@ interface Props {
  * Displays all the details in expandable rows about the service_order_item
  *
  * @param row  ServiceOrderItem
+ * @param orderItems all service_order_items of the order, used to resolve the identity of dependencies
  * @param isExpanded boolean
  * @param onToggle callback method
  * @param numberOfColumns number
+ * @param rowRef ref callback used to scroll to and focus this row from a dependency link
+ * @param expandInstanceOrderDetailsRow callback invoked to expand and focus the row for a given instanceId
  * @returns ReactNode
  */
 export const OrderDetailsRow: React.FC<Props> = ({
   row,
+  orderItems,
   isExpanded,
   onToggle,
   numberOfColumns,
+  rowRef,
+  expandInstanceOrderDetailsRow,
 }) => {
   return (
     <>
-      <Tr aria-label="ServiceOrderDetailsRow">
+      <Tr aria-label="ServiceOrderDetailsRow" ref={rowRef} tabIndex={-1}>
         <Td>
           <Toggle expanded={isExpanded} onToggle={onToggle} aria-label={"Toggle-DetailsRow"} />
         </Td>
-        <Td width={35} dataLabel={words("orders.column.instanceId")}>
-          <TextWithCopy value={row.instance_id} tooltipContent={words("serviceIdentity.copy")} />
+        <Td width={35} dataLabel={words("orders.column.instance")}>
+          <OrderInstanceLink row={row} />
         </Td>
         <Td width={25} dataLabel={words("orders.column.serviceEntity")}>
           {row.service_entity}
@@ -81,7 +94,11 @@ export const OrderDetailsRow: React.FC<Props> = ({
               <TopAlignedLayout aria-label="Expanded-Dependencies">
                 <DescriptionListTerm>{words("orders.row.dependencies")}</DescriptionListTerm>
                 <DescriptionListDescription>
-                  <OrderDependencies dependencies={row.status.direct_dependencies} />
+                  <OrderDependencies
+                    dependencies={row.status.direct_dependencies}
+                    orderItems={orderItems}
+                    expandInstanceOrderDetailsRow={expandInstanceOrderDetailsRow}
+                  />
                 </DescriptionListDescription>
               </TopAlignedLayout>
               <TopAlignedLayout aria-label="Expanded-Config">
@@ -89,14 +106,9 @@ export const OrderDetailsRow: React.FC<Props> = ({
                 <DescriptionListDescription>
                   {row.config && Object.keys(row.config).length ? (
                     <CodeEditor
-                      code={JSON.stringify(row.config, null, 2)}
-                      isDarkTheme={getThemePreference() === "dark"}
+                      code={jsonFormatter.format(row.config)}
+                      rawValue={JSON.stringify(row.config)}
                       language={Language.json}
-                      isDownloadEnabled
-                      customControls={
-                        <CodeEditorCopyControl code={JSON.stringify(row.config, null, 2)} />
-                      }
-                      isReadOnly
                       height="400px"
                     />
                   ) : (
@@ -111,15 +123,9 @@ export const OrderDetailsRow: React.FC<Props> = ({
                   <DescriptionListTerm>{words("orders.row.body")}</DescriptionListTerm>
                   <DescriptionListDescription>
                     <CodeEditor
-                      code={JSON.stringify(row.attributes || row.edits, null, 2)}
+                      code={jsonFormatter.format(row.attributes || row.edits)}
+                      rawValue={JSON.stringify(row.attributes || row.edits)}
                       language={Language.json}
-                      isDownloadEnabled
-                      customControls={
-                        <CodeEditorCopyControl
-                          code={JSON.stringify(row.attributes || row.edits, null, 2)}
-                        />
-                      }
-                      isReadOnly
                       height="400px"
                     />
                   </DescriptionListDescription>

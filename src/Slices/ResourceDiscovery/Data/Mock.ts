@@ -2,6 +2,10 @@ export const response = {
   data: [
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=acisim]",
+      discovery_resource_id:
+        "cloudflare::dns_record::CnameRecord[https://api.cloudflare.com/client/v4/,name=artifacts.ssh.inmanta.com]",
+      managed_resource_id:
+        "cloudflare::dns_record::CnameRecord[https://api.cloudflare.com/client/v4/,name=artifacts.ssh.inmanta.com]",
       managed_resource_uri:
         "/api/v2/resource/cloudflare::dns_record::CnameRecord[https://api.cloudflare.com/client/v4/,name=artifacts.ssh.inmanta.com]",
       discovery_resource_uri:
@@ -41,6 +45,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=acisim-5.2-7f]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -78,6 +84,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=acisim-5.7]",
+      discovery_resource_id: "",
+      managed_resource_id: "",
       managed_resource_uri: "invalid/uri1/",
       discovery_resource_uri: "invalid/uri1/",
       resource_type: "VirtualMachine",
@@ -115,6 +123,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=CentOS7Template]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: "",
       discovery_resource_uri: "",
       resource_type: "VirtualMachine",
@@ -146,6 +156,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=CentOS7TestNfvApiTemplate]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -177,6 +189,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=ma-test-1705069110.4363039_1]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -214,6 +228,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=rocky-8]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -245,6 +261,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=t160_srv_example]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -269,6 +287,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=t160_srv_example_2]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -293,6 +313,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=test]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -324,6 +346,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=ubuntu-18.04.6]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -361,6 +385,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=ubuntu-22.04]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -393,6 +419,8 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=vCLS-8d6212c5-a9be-40a9-a99e-f8b563a6f284]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -418,6 +446,8 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=vCLS-a11c52cf-ce5c-438b-a4dc-40ef661f16c3]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -443,6 +473,8 @@ export const response = {
     {
       discovered_resource_id:
         "vcenter::VirtualMachine[lab,name=VMware_Cloud_Director-10.5.1.10593-22821417_OVF10]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -480,6 +512,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=VMware vCenter Server 8]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",
@@ -511,6 +545,8 @@ export const response = {
     },
     {
       discovered_resource_id: "vcenter::VirtualMachine[lab,name=WindowsServer2016Template]",
+      discovery_resource_id: null,
+      managed_resource_id: null,
       managed_resource_uri: null,
       discovery_resource_uri: null,
       resource_type: "VirtualMachine",

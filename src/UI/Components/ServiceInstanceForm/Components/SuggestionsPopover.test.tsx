@@ -1,65 +1,61 @@
 import React, { RefObject } from "react";
 import { Button } from "@patternfly/react-core";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { SuggestionValue } from "@/Core";
 import { SuggestionsPopover } from "./SuggestionsPopover";
 
 describe("SuggestionsPopover", () => {
-  const suggestions = ["apple", "banana", "cherry"];
+  const suggestions: SuggestionValue[] = [
+    { label: "apple", value: "apple" },
+    { label: "banana", value: "banana" },
+    { label: "cherry", value: "cherry" },
+  ];
   const handleSuggestionClick = vi.fn();
   const filter = "a";
-  const setIsOpen = vi.fn();
+  const close = vi.fn();
   const isOpen = true;
   const ref: RefObject<HTMLInputElement | null> = React.createRef();
 
-  it("renders the popover component", () => {
-    render(
-      <SuggestionsPopover
-        suggestions={suggestions}
-        handleSuggestionClick={handleSuggestionClick}
-        filter={filter}
-        setIsOpen={setIsOpen}
-        isOpen={isOpen}
-        ref={ref}
-      />
-    );
+  it("shows the label, filters on the label, and submits the value when label differs from value", () => {
+    const labeled: SuggestionValue[] = [
+      { label: "Production network", value: "9f3c1b2a-prod" },
+      { label: "Staging network", value: "00000000-stag" },
+    ];
 
-    // Assert that the popover component is rendered
-    expect(screen.getByText("apple")).toBeInTheDocument();
-    expect(screen.getByText("banana")).toBeInTheDocument();
-    // the filter contains 'a' so 'cherry' should not be rendered
-    expect(screen.queryByText("cherry")).not.toBeInTheDocument();
-  });
-
-  it("calls handleSuggestionClick when a suggestion is clicked", () => {
     render(
       <>
         <input ref={ref} />
         <SuggestionsPopover
-          suggestions={suggestions}
+          suggestions={labeled}
           handleSuggestionClick={handleSuggestionClick}
-          filter={filter}
-          setIsOpen={setIsOpen}
+          filter="production"
+          close={close}
           isOpen={isOpen}
           ref={ref}
         />
       </>
     );
 
-    // Simulate a click on the 'apple' suggestion
-    fireEvent.click(screen.getByLabelText("apple"));
+    // The human-friendly label is shown, the raw value is not.
+    expect(screen.getByText(labeled[0].label)).toBeInTheDocument();
+    expect(screen.queryByText(labeled[0].value)).not.toBeInTheDocument();
+    // Filtering matches the label, so the non-matching suggestion is hidden.
+    expect(screen.queryByText(labeled[1].label)).not.toBeInTheDocument();
 
-    // Assert that handleSuggestionClick is called with the correct suggestion
-    expect(handleSuggestionClick).toHaveBeenCalledWith("apple");
+    fireEvent.click(screen.getByText(labeled[0].label));
+
+    // Clicking submits the value, not the displayed label.
+    expect(handleSuggestionClick).toHaveBeenCalledWith(labeled[0].value);
   });
 
-  it("calls setIsOpen when the popover is closed", () => {
+  it("calls close when the popover is closed", () => {
     render(
       <>
         <SuggestionsPopover
           suggestions={suggestions}
           handleSuggestionClick={handleSuggestionClick}
           filter={filter}
-          setIsOpen={setIsOpen}
+          close={close}
           isOpen={isOpen}
           ref={ref}
         />
@@ -71,8 +67,8 @@ describe("SuggestionsPopover", () => {
     // Simulate a click outside the popover
     fireEvent.click(screen.getByText("Some button"));
 
-    // Assert that setIsOpen is called with false
-    expect(setIsOpen).toHaveBeenCalledWith(false);
+    // Assert that the popover closes
+    expect(close).toHaveBeenCalled();
   });
 
   it("handles menu key events", () => {
@@ -83,7 +79,7 @@ describe("SuggestionsPopover", () => {
           suggestions={suggestions}
           handleSuggestionClick={handleSuggestionClick}
           filter={filter}
-          setIsOpen={setIsOpen}
+          close={close}
           isOpen={isOpen}
           ref={ref}
         />
@@ -96,25 +92,25 @@ describe("SuggestionsPopover", () => {
     fireEvent.keyDown(input, { key: "ArrowDown" });
 
     // Assert that the first suggestion is focused
-    expect(screen.getByRole("menuitem", { name: "apple" })).toHaveFocus();
+    expect(screen.getByRole("menuitem", { name: suggestions[0].label })).toHaveFocus();
 
     // simulate pressing the escape key
     fireEvent.keyDown(input, { key: "Escape" });
 
-    // Assert that setIsOpen is called with false
-    expect(setIsOpen).toHaveBeenCalledWith(false);
+    // Assert that the popover closes
+    expect(close).toHaveBeenCalled();
 
     // simulate clicking on the input after the popover is closed
     fireEvent.click(input);
 
     // Assert that the popover is opened
-    expect(screen.getByText("apple")).toBeInTheDocument();
+    expect(screen.getByText(suggestions[0].label)).toBeInTheDocument();
 
     // simulate pressing the up tab key
     fireEvent.keyDown(input, { key: "Tab" });
 
     // Assert that the popover is closed
-    expect(setIsOpen).toHaveBeenCalledWith(false);
+    expect(close).toHaveBeenCalled();
 
     // simulate clicking on the input after the popover is closed
     fireEvent.click(input);
@@ -123,11 +119,11 @@ describe("SuggestionsPopover", () => {
     fireEvent.keyDown(input, { key: "ArrowDown" });
 
     // simulate pressing the enter key on the focused suggestion
-    const firstOption = screen.getByText("apple");
+    const firstOption = screen.getByText(suggestions[0].label);
 
     fireEvent.keyDown(firstOption, { key: "Enter" });
 
-    // Assert that handleSuggestionClick is called with the correct suggestion
-    expect(handleSuggestionClick).toHaveBeenCalledWith("apple");
+    // Assert that handleSuggestionClick is called with the correct suggestion value
+    expect(handleSuggestionClick).toHaveBeenCalledWith(suggestions[0].value);
   });
 });

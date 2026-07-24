@@ -2,10 +2,12 @@ import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
+import { CustomDatePresenter } from "@/UI/Utils";
 import {
   DocAttributeDescriptors,
   sortDocAttributeDescriptors,
 } from "../UI/Tabs/DocumentationTabContent";
+import { historyData } from "./mockData";
 import {
   defaultServer,
   errorServerHistory,
@@ -15,6 +17,8 @@ import {
   serverWithMultipleDocumentation,
 } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
+
+const datePresenter = new CustomDatePresenter();
 
 describe("ServiceInstanceDetailsPage", () => {
   it("Should render the view in its loading states", async () => {
@@ -241,14 +245,35 @@ describe("ServiceInstanceDetailsPage", () => {
 
     await userEvent.click(toggleCompare);
 
-    const selects = screen.getAllByRole("combobox");
+    const leftSelect = screen.getByRole("combobox", {
+      name: /left-side-attribute-set-select/i,
+    });
 
-    expect(selects).toHaveLength(4);
-    expect(selects[0]).toHaveValue("4");
-    expect(selects[1]).toHaveValue("active_attributes");
-    expect(selects[2]).toHaveValue("4");
-    // by default, if a candidate set is available it will set it to compare
-    expect(selects[3]).toHaveValue("candidate_attributes");
+    const rightSelect = screen.getByRole("combobox", {
+      name: /right-side-attribute-set-select/i,
+    });
+
+    expect(leftSelect).toHaveValue("active_attributes");
+    expect(rightSelect).toHaveValue("candidate_attributes");
+
+    const versionToggles = screen.getAllByTestId("swm-toggle");
+
+    expect(versionToggles).toHaveLength(2);
+    expect(versionToggles[0]).toHaveTextContent("4");
+    expect(versionToggles[1]).toHaveTextContent("4");
+
+    // each version option should show the creation date of that version as description
+    await userEvent.click(versionToggles[0]);
+
+    const versionOptions = screen.getAllByRole("menuitem");
+
+    historyData.forEach((log) => {
+      const option = versionOptions.find((item) =>
+        item.textContent?.startsWith(String(log.version))
+      );
+
+      expect(option).toHaveTextContent(datePresenter.getFull(log.timestamp));
+    });
 
     // There shouldn't be a documentation tab for this Instance and ServiceModel
     expect(screen.queryByText("Documentation")).not.toBeInTheDocument();

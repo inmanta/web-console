@@ -1,24 +1,44 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
 import { useGet, getParametersKey } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
+import { useDebounce } from "@/UI/Utils";
+import { words } from "@/UI/words";
+import { normalizeSuggestions } from "./helpers";
+import {
+  SUGGESTION_NAMESPACES,
+  SuggestionVariables,
+  extractVariables,
+  getUnknownNamespaces,
+  isKnownNamespace,
+  substituteVariables,
+} from "./suggestionVariables";
 
 interface ResponseData {
-  parameter: Record<string, Record<string, unknown>>;
+  parameter?: { metadata?: { values?: unknown } };
 }
 
 /**
- * React Query hook to handle suggested values for a parameter.
- * If the suggestions are literal, it will return the values directly.
- * If the suggestions are parameters, it will fetch the parameter from the API.
- * if the suggestions are null or undefined, it will return null as data, and a success status.
+ * React Query hook for a field's suggested values, normalized to `{ label, value }[]`:
+ * literal values are normalized inline, parameters are fetched and normalized, and
+ * null/undefined yields null data.
  *
- * @param suggestions - The suggestions for the parameter.
+ * A `parameter_name` may contain `${...}` variables resolved from `suggestionVariables`
+ * before the fetch; the resolved name is the query key, so distinct values cache
+ * separately. A required variable without a value (e.g. `${instance_id}` on a create
+ * form) disables the query instead of fetching a malformed name. An unknown variable
+ * is reported as `modelError` (never fetched) - distinct from the query `error`, a
+ * genuine fetch failure that stays silent.
  *
- * @returns The result of the query, {data, status, error, isLoading}.
+ * @param suggestions - The field's suggestions.
+ * @param suggestionVariables - Values for `${...}` variables, keyed by namespace.
+ * @returns `{ useOneTime }` returning the query result plus `modelError`.
  */
-export const useSuggestedValues = (suggestions: FormSuggestion | null | undefined) => {
+export const useSuggestedValues = (
+  suggestions: FormSuggestion | null | undefined,
+  suggestionVariables: SuggestionVariables = {}
+) => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseData>;
@@ -26,7 +46,7 @@ export const useSuggestedValues = (suggestions: FormSuggestion | null | undefine
   if (!suggestions) {
     return {
       useOneTime: () => {
-        return { data: null, status: "success", error: null, isLoading: false };
+        return { data: null, error: null, isLoading: false, modelError: null };
       },
     };
   }
@@ -34,26 +54,51 @@ export const useSuggestedValues = (suggestions: FormSuggestion | null | undefine
   if (suggestions.type === "literal") {
     return {
       useOneTime: () => {
-        return {
-          data: suggestions.values,
-          status: "success",
-          error: null,
-          isLoading: false,
-        };
+        // Static for the field's lifetime; memoize once for a stable reference.
+        const data = useMemo(() => normalizeSuggestions(suggestions.values), []);
+
+        return { data, error: null, isLoading: false, modelError: null };
       },
     };
   }
 
+  const parameterName = suggestions.parameter_name || "";
+  const variables = extractVariables(parameterName);
+  const unknownNamespaces = getUnknownNamespaces(parameterName);
+  // A broken annotation is a model error, not a fetch failure: reported separately
+  // and never fetched, leaving `error` for genuine fetch failures.
+  const modelError =
+    unknownNamespaces.length > 0
+      ? words("inventory.form.suggestions.unknownVariable")(
+          unknownNamespaces.join(", "),
+          SUGGESTION_NAMESPACES.join(", ")
+        )
+      : null;
+
   return {
-    /**
-     * Custom hook to fetch the parameter from the API once.
-     * @returns The result of the query, including the parameter data.
-     */
-    useOneTime: () =>
-      useQuery({
-        queryKey: getParametersKey.single(suggestions.parameter_name || "no_parameter", [env]),
-        queryFn: () => get(`/api/v1/parameter/${suggestions.parameter_name}`),
-        select: (data) => data.parameter,
-      }),
+    useOneTime: () => {
+      // Gate with `enabled` (not an early return) so hook order stays stable as
+      // form values change across renders.
+      const isResolvable =
+        !modelError &&
+        variables.every(
+          (namespace) => isKnownNamespace(namespace) && suggestionVariables[namespace]
+        );
+      const resolvedName = isResolvable
+        ? substituteVariables(parameterName, suggestionVariables)
+        : "";
+      // Debounce values typed into a field (`${identifying_attribute}`) so they
+      // re-query on settle; the seeded first value keeps static names instant.
+      const debouncedName = useDebounce(resolvedName, 500);
+
+      const query = useQuery({
+        queryKey: getParametersKey.single(debouncedName || "no_parameter", [env]),
+        queryFn: () => get(`/api/v1/parameter/${debouncedName}`),
+        select: (data) => normalizeSuggestions(data.parameter?.metadata?.values),
+        enabled: debouncedName !== "",
+      });
+
+      return { ...query, modelError };
+    },
   };
 };

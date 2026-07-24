@@ -14,8 +14,8 @@ import { words } from "@/UI/words";
 import { ActiveFilterGroup } from "./ActiveFilterGroup";
 
 export interface ActiveFiltersSectionProps {
-  filter: Resource.Filter;
-  onClearAll: () => void;
+  filter: Resource.FilterWithDefaultHandling;
+  onResetFilters: () => void;
   removeTypeChip: (id: string) => void;
   removeAgentChip: (id: string) => void;
   removeValueChip: (id: string) => void;
@@ -34,7 +34,7 @@ export interface ActiveFiltersSectionProps {
  *
  * @Props {ActiveFiltersSectionProps} - Component props.
  *  @prop {Resource.Filter} filter - Current filter state used to determine the active chips.
- *  @prop {() => void} onClearAll - Clears all filters in one action.
+ *  @prop {() => void} onResetFilters - Resets all filters back to the default !orphaned state.
  *  @prop {(id: string) => void} removeTypeChip - Removes a single type chip.
  *  @prop {(id: string) => void} removeAgentChip - Removes a single agent chip.
  *  @prop {(id: string) => void} removeValueChip - Removes a single value chip.
@@ -48,7 +48,7 @@ export interface ActiveFiltersSectionProps {
  */
 export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
   filter,
-  onClearAll,
+  onResetFilters,
   removeTypeChip,
   removeAgentChip,
   removeValueChip,
@@ -75,13 +75,11 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
             {words("resources.filters.active.title")}
           </Title>
         </FlexItem>
-        {hasActiveFilters && (
-          <FlexItem>
-            <Button variant="link" isInline onClick={onClearAll}>
-              {words("resources.filters.active.clearAll")}
-            </Button>
-          </FlexItem>
-        )}
+        <FlexItem>
+          <Button variant="link" isInline onClick={onResetFilters}>
+            {words("resources.filters.active.resetFilters")}
+          </Button>
+        </FlexItem>
       </Flex>
       {hasActiveFilters ? (
         <Stack hasGutter style={{ padding: "1rem 0" }}>

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
+import { Table, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { Order } from "@/Core/Domain/Sort";
+import { useClassifiedRows } from "@/UI/Components";
 import { ColumnHead } from "@/UI/Presenters";
-import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";
+import { FactsRow } from "./FactsRow";
 
 type FactRow = Pick<Fact, "id" | "name" | "updated" | "value">;
 
@@ -22,7 +23,9 @@ const factsColumnHeads: ColumnHead[] = [
 export const FactsTable: React.FC<Props> = ({ facts }) => {
   const [sort, setSort] = useState<Sort.Type>({ name: "name", order: "asc" });
   const [rows, setRows] = useState(sortFactRows(facts, sort.name, sort.order));
-  const onSort = (event, index, direction) => {
+  const { classifiedRows, hasExpandableRows } = useClassifiedRows(rows);
+  const numberOfColumns = factsColumnHeads.length + (hasExpandableRows ? 1 : 0);
+  const onSort = (_event, index, direction) => {
     const updatedSortColumn = indexToColumnName(index);
 
     setSort({ name: updatedSortColumn, order: direction });
@@ -40,6 +43,7 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
     <Table variant="compact" aria-label="Facts-Success">
       <Thead>
         <Tr>
+          {hasExpandableRows && <Th screenReaderText="Row expansion" />}
           {factsColumnHeads.map(({ displayName }, idx) => (
             <Th
               key={displayName}
@@ -58,15 +62,16 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
           ))}
         </Tr>
       </Thead>
-      <Tbody>
-        {rows.map((fact) => (
-          <Tr key={fact.id} aria-label="Facts table row">
-            <Td>{fact.name}</Td>
-            <Td>{fact.updated && new MomentDatePresenter().getFull(fact.updated)}</Td>
-            <Td>{fact.value}</Td>
-          </Tr>
-        ))}
-      </Tbody>
+      {classifiedRows.map(({ row, attribute }, rowIndex) => (
+        <FactsRow
+          row={row}
+          attribute={attribute}
+          key={row.id}
+          rowIndex={rowIndex}
+          numberOfColumns={numberOfColumns}
+          showExpandColumn={hasExpandableRows}
+        />
+      ))}
     </Table>
   );
 };
@@ -84,7 +89,7 @@ function columnNameToIndex(columnName: string): number {
 }
 
 export function sortFactRows(rows: FactRow[], columnName: string, direction: Order): FactRow[] {
-  return rows.sort((a: FactRow, b: FactRow) => {
+  return [...rows].sort((a: FactRow, b: FactRow) => {
     // sort by date
     if (columnName === "updated") {
       const aDate = coalesceDateToMin(a[columnName]);

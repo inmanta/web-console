@@ -1,12 +1,14 @@
 import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
-import { JsonFormatter, XmlFormatter } from "@/Data";
+import { AttributeClassifier } from "@/Data";
 import { DiscoveredResource } from "@/Data/Queries";
-import { AttributeClassifier, AttributeList } from "@/UI/Components";
+import { AttributeList } from "@/UI/Components";
 
 interface Props {
   resource: DiscoveredResource;
 }
+
+const classifier = new AttributeClassifier();
 
 /**
  * The AttributesCard component.
@@ -19,12 +21,6 @@ interface Props {
  * @returns {React.FC<Props>} A React Component displaying the attributes of a discovered resource
  */
 export const AttributesCard: React.FC<Props> = ({ resource }) => {
-  const classifier = new AttributeClassifier(
-    new JsonFormatter(),
-    new XmlFormatter(),
-    (key: string, value: string) => ({ kind: "Code", key, value })
-  );
-
   const classifiedAttributes = classifier.classify(resource.values);
 
   return (

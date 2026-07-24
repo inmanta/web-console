@@ -25,8 +25,6 @@ export function usePaginatedTable<TFilter = undefined, TSort extends string = st
   defaultFilter,
   filterKeys,
 }: UsePaginatedTableOptions<TFilter, TSort>) {
-  //TODO: The useUrlStatexxx should have stable references i between renders so that we don't need to use methods like JSON.stringify
-  //https://github.com/inmanta/web-console/issues/6817
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({ route });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({ route });
   const [filter, setFilter] = useUrlStateWithFilter<TFilter>({
@@ -43,7 +41,7 @@ export function usePaginatedTable<TFilter = undefined, TSort extends string = st
   useEffect(() => {
     setCurrentPage({ kind: "CurrentPage", value: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort.name, sort.order, JSON.stringify(filter)]);
+  }, [sort, filter]);
 
   return {
     currentPage,

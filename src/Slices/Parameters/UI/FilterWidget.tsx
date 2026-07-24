@@ -4,7 +4,7 @@ import { DateRange } from "@/Core";
 import { FilterKind, Filter, FilterList } from "@/Slices/Parameters/Core/Types";
 import { FilterPicker } from "@/UI/Components";
 import { FreeTextFilter, TimestampFilter } from "@/UI/Components/Filters";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -45,7 +45,7 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
         update={updateSource}
       />
       <TimestampFilter
-        datePresenter={new MomentDatePresenter()}
+        datePresenter={new CustomDatePresenter()}
         isVisible={filterKind === FilterKind.Updated}
         timestampFilters={filter.updated ? filter.updated : []}
         update={updateUpdated}

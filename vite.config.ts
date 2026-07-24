@@ -357,7 +357,7 @@ export default defineConfig({
             { name: "jointjs", test: /node_modules[\\/]@joint[\\/]/, priority: 50 },
             {
               name: "utils",
-              test: /node_modules[\\/](uuid|moment|moment-timezone|bignumber\.js)[\\/]/,
+              test: /node_modules[\\/](uuid|dayjs|bignumber\.js)[\\/]/,
               priority: 40,
             },
             {

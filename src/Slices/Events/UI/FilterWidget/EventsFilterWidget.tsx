@@ -4,7 +4,7 @@ import { EventType, DateRange } from "@/Core";
 import { Filter, FilterKind, FilterList } from "@/Slices/Events/Core/Types";
 import { FilterPicker } from "@/UI/Components";
 import { SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { VersionFilter } from "./VersionFilter";
 
@@ -79,7 +79,7 @@ export const EventsFilterWidget: React.FC<Props> = ({ filter, setFilter, states 
         update={updateVersion}
       />
       <TimestampFilter
-        datePresenter={new MomentDatePresenter()}
+        datePresenter={new CustomDatePresenter()}
         isVisible={filterKind === FilterKind.Date}
         timestampFilters={filter.timestamp ? filter.timestamp : []}
         update={updateTimestamp}

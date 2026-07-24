@@ -46,13 +46,15 @@ const dict = {
   "load.previous": "Load previous",
   "load.next": "Load next",
   copy: "Copy",
-  "copy.raw": "Copy raw",
-  "copy.raw.tooltip": "Copy with escaped newlines",
+  "copy.raw": "Copy raw value",
   "copy.clipboard": "Copy to clipboard",
   noData: "There is no data available to display.",
   success: "Success",
   "success.title": "Success",
   "info.title": "Info",
+  noResults: "No results found",
+  include: "Include",
+  exclude: "Exclude",
 
   /**
    * Error related text
@@ -166,6 +168,14 @@ const dict = {
     `Change attributes of instance ${instanceId}`,
   "inventory.duplicateInstance.header": (instanceId: string) =>
     `Create an instance based of instance ${instanceId}`,
+  "inventory.form.suggestions.unknownVariable": (variables: string, supported: string) =>
+    `Unknown variable(s) in the suggested values parameter name: ${variables}. Supported variables: ${supported}.`,
+  "inventory.form.tabs.invalidCatalog":
+    "The web_tabs entity annotation is malformed. Every tab requires a unique string 'key' and a string 'label'.",
+  "inventory.form.tabs.defaultRequired": (count: number) =>
+    `The web_tabs entity annotation must mark exactly one tab as default, but ${count} tabs are marked.`,
+  "inventory.form.tabs.unknownKey": (fieldName: string, tabKey: string) =>
+    `Field "${fieldName}" is assigned to tab "${tabKey}", which is not defined in the web_tabs entity annotation.`,
   "inventory.form.typeHint.list": (listBaseType: string) => `A list of ${listBaseType}s`,
   "inventory.form.typeHint.dict": 'Key-value pairs, following the JSON syntax: {"key": "value"}',
   "inventory.form.placeholder.intList": "1, 2, 3",
@@ -294,6 +304,7 @@ const dict = {
   active_attributes: "Active",
   candidate_attributes: "Candidate",
   rollback_attributes: "Rollback",
+  "instanceDetails.searchPlaceholder": "Search version…",
   "instanceDetails.expandAll": "Expand all",
   "instanceDetails.collapseAll": "Collapse all",
   "instanceDetails.resetSort": "Reset sorting",
@@ -303,6 +314,7 @@ const dict = {
   "instanceDetails.setState.label": "Set state",
   "instanceDetails.forceState.label": "Force state",
   "instanceDetails.stateTransfer.confirmTitle": "Confirm set state transfer",
+  "instanceDetails.stateTransfer.messageLabel": "Message",
   "instanceDetails.expertActions": "Expert Actions",
   "instanceDetails.actions": "Actions",
   "instanceDetails.expert.transfer.options": "Select Operation",
@@ -406,7 +418,7 @@ const dict = {
   "orders.column.option": "Options",
   "orders.column.action": "Action",
   "orders.column.serviceEntity": "Service Entity",
-  "orders.column.instanceId": "Instance Id",
+  "orders.column.instance": "Instance",
   "orders.row.dependencies": "Dependencies",
   "orders.row.config": "Config",
   "orders.row.state": "State",
@@ -419,6 +431,7 @@ const dict = {
   "orderDetails.table.empty": "No orders details could be found.",
   "orders.links.details": "Show Details",
   "orders.row.empty": "Empty",
+  "orders.row.instanceCreationFailed": "Order failed to create instance.",
   "orders.status.failed": "failed",
   "orders.status.acknowledged": "acknowledged",
   "orders.status.completed": "completed",
@@ -445,8 +458,8 @@ const dict = {
     "Are you sure you want to update your Service Catalog? This is an irreversible change and you might want to do a back-up before confirming the update.",
   "catalog.update.confirmation.p2": "This action will:",
   "catalog.update.confirmation.p3": "Update the project",
-  "catalog.update.confirmation.p4": "Export the service definition",
-  "catalog.update.confirmation.p5": "Note: It will not do a regular exporting compile.",
+  "catalog.update.confirmation.p4": "Export the new resources",
+  "catalog.update.confirmation.p5": "Note: It will perform two consecutive compiles.",
   "catalog.update.tooltip": "Update project and export service definition",
   "catalog.API.tooltip": "Catalog API",
   "catalog.button.details": "Show Details",
@@ -540,7 +553,9 @@ const dict = {
   "resources.empty.filterMessage":
     "The given combination of filters didn't match any existing resources, please edit your filter values.",
   "resources.deploying.popover": (count: number) =>
-    `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying`,
+    `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying${
+      count > 0 ? ", click to filter" : ""
+    }`,
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "discoveredResourceDetails.title": "Discovered Resource Details",
@@ -550,6 +565,8 @@ const dict = {
   "resources.column.value": "Value",
   "resources.column.requires": "Requires",
   "resources.column.status": "Status",
+  "resources.column.status.toolTip":
+    "Toggle fields to include them in sorting. Drag active fields to set their priority order.",
   "resources.button.statusDetails": "Show status details",
   "resources.popover.title": "Resource State Summary",
   "resources.popover.deploying": "Deploying",
@@ -558,6 +575,7 @@ const dict = {
   "resources.popover.requirement": "Requirement",
   "resources.popover.requirements": "Requirements",
   "resources.filters.status.isDeploying": "Is Deploying",
+  "resources.filters.status.orphaned.label": "Orphaned",
   "resources.filters.status.blocked.label": "Blocked state(s)",
   "resources.filters.status.blocked.placeholder": "Filter by blocked state",
   "resources.filters.status.compliance.label": "Compliance state(s)",
@@ -585,6 +603,7 @@ const dict = {
   "resources.filters.desiredState.purged": "Purged",
   "resources.filters.active.title": "Active filters",
   "resources.filters.active.clearAll": "Clear all",
+  "resources.filters.active.resetFilters": "Reset Filters",
   "resources.filters.active.empty.title": "No filters applied",
   "resources.filters.active.empty.body":
     "Select filters from the tabs above to refine your results.",
@@ -592,6 +611,13 @@ const dict = {
     "Use the fields above to add filters and refine your results.",
   "resources.filters.active.group.close": (group: string) => `Remove ${group} filters`,
   "resources.filters": "Filters",
+  "resources.sort.label.blocked": "Blocked",
+  "resources.sort.label.compliance": "Compliance",
+  "resources.sort.label.lastHandlerRun": "Last Handler Run",
+  "resources.sort.label.isDeploying": "Is Deploying",
+  "resources.status.label.blocked": "Blocked",
+  "resources.status.label.compliance": "Compliance",
+  "resources.status.label.lastHandlerRun": "Last Handler Run",
   "resources.compoundStateSummary.title": "Compound state summary",
   "resources.compoundStateSummary.deploy": "Deploy",
   "resources.compoundStateSummary.repair": "Repair",
@@ -733,7 +759,10 @@ const dict = {
   "createEnv.description": "Description",
   "createEnv.projectName": "Project Name",
   "createEnv.repository": "Repository",
+  "createEnv.repository.tooltip":
+    "The URL of the repository, for example: https://code.inmanta.com/my_project.git",
   "createEnv.branch": "Branch",
+  "createEnv.branch.tooltip": "The branch of the repository, for example: main",
   "createEnv.icon": "Icon",
 
   /**
@@ -758,9 +787,35 @@ const dict = {
   "settings.tabs.configuration": "Configuration",
   "settings.tabs.tokens": "Tokens",
   "settings.tabs.token.disabledInfo": "An authenticated user is required to create tokens",
+  "settings.tabs.token.title": "Configure New Token",
   "settings.tabs.token.description":
-    "Generate authentication tokens for authorizing agents, api or compiler for this specific environment.",
+    "Generate an authentication token for this environment. By default, generated tokens will provide API access.",
+  "settings.tabs.token.description.details":
+    "Most tokens only need API access. The agent and compiler types are only required for connecting an externally hosted agent or a remote compiler to this environment.",
   "settings.tabs.token.generate": "Generate",
+  "settings.tabs.token.expiry": "Expires after",
+  "settings.tabs.token.expiry.never": "Never",
+  "settings.tabs.token.expiry.custom": "Custom",
+  "settings.tabs.token.advanced": "Advanced options",
+  "settings.tabs.token.clientTypes": "Client types",
+  "settings.tabs.token.clientTypes.api": "API",
+  "settings.tabs.token.clientTypes.agent": "Agent",
+  "settings.tabs.token.clientTypes.compiler": "Compiler",
+  "settings.tabs.token.registered.title": "Registered tokens",
+  "settings.tabs.token.empty": "No revocable tokens have been created for this environment.",
+  "settings.tabs.token.column.createdBy": "Created by",
+  "settings.tabs.token.column.clientTypes": "Client types",
+  "settings.tabs.token.column.issuedAt": "Issued",
+  "settings.tabs.token.column.expiresAt": "Expires at",
+  "settings.tabs.token.column.lastUsed": "Last used",
+  "settings.tabs.token.column.status": "Status",
+  "settings.tabs.token.column.revokedAt": "Revoked at",
+  "settings.tabs.token.status.active": "Active",
+  "settings.tabs.token.status.revoked": "Revoked",
+  "settings.tabs.token.revoke": "Revoke",
+  "settings.tabs.token.revoke.title": "Revoke token",
+  "settings.tabs.token.revoke.confirm": (jti: string) =>
+    `Are you sure you want to revoke token ${jti}? This action cannot be undone.`,
   "settings.update": "Setting Changed",
   "settings.warning.update": "Changed value has not been saved",
   "settings.protected.message": (protected_by: string) =>
@@ -927,6 +982,10 @@ const dict = {
   "login.title": "Log in to your account",
   "login.subtitle": "Enter your credentials",
   "login.login": "Log in",
+  "login.fallback.description":
+    "The identity provider could not sign you in. You can retry, or use a local account.",
+  "login.fallback.idp": "Sign in with your identity provider",
+  "login.fallback.local": "Sign in with a local account",
 
   /**
    * User Management
@@ -935,6 +994,8 @@ const dict = {
   "userManagement.name": "Name",
   "userManagement.changePassword": "Change Password",
   "userManagement.changePassword.placeholder": "New Password...",
+  "userManagement.changePassword.currentPassword": "Current Password",
+  "userManagement.changePassword.currentPassword.placeholder": "Current Password...",
   "userManagement.changePassword.success": "Password changed successfully",
   "userManagement.changePassword.message": (username: string) =>
     `Please provide a new password for user ${username}`,
@@ -961,9 +1022,7 @@ const dict = {
     "This editor is for preview purposes only. Changes made here will not be saved into the service attributes.",
   "markdownPreviewer.pageTitle": (service: string, instance: string) =>
     `Markdown Preview: ${service} - ${instance}`,
-  "markdownPreviewer.download.tooltip": "Download markdown file",
   "markdownPreviewer.route.label": (instance: string) => `Markdown Preview: ${instance}`,
-  "markdownPreviewer.download": "Download",
 
   /**
    * Markdown Container related text
