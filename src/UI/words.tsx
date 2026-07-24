@@ -656,6 +656,7 @@ const dict = {
   "resourceActions.column.finished": "Deploy end",
   "resourceActions.column.duration": "Duration",
   "resourceActions.column.resource": "Resource",
+  "resourceActions.resourceCount": (count: number) => `${count} resources`,
   "resourceActions.column.type": "Type",
   "resourceActions.column.reason": "Reason",
   "resourceActions.column.outcome": "Outcome",

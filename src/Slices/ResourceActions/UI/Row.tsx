@@ -31,7 +31,8 @@ const getDuration = (action: ResourceAction): string =>
  * @returns {React.FC<Props>} The row component.
  */
 export const Row: React.FC<Props> = ({ action, isExpanded, onToggle, numberOfColumns, index }) => {
-  const resourceVersionId = action.resource_version_ids[0];
+  const resourceVersionIds = action.resource_version_ids;
+  const [resourceVersionId] = resourceVersionIds;
 
   return (
     <Tbody isExpanded={false} aria-label="ResourceActionRow">
@@ -50,7 +51,9 @@ export const Row: React.FC<Props> = ({ action, isExpanded, onToggle, numberOfCol
           {getDuration(action)}
         </Td>
         <Td dataLabel={words("resourceActions.column.resource")} modifier="breakWord">
-          {resourceVersionId ? (
+          {resourceVersionIds.length > 1 ? (
+            words("resourceActions.resourceCount")(resourceVersionIds.length)
+          ) : resourceVersionId ? (
             <ResourceLink
               resourceId={getResourceIdFromResourceVersionId(resourceVersionId)}
               linkText={resourceVersionId}

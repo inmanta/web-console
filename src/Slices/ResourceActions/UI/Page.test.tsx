@@ -46,8 +46,24 @@ describe("ResourceActionsPage", () => {
 
     const rows = screen.getAllByLabelText("ResourceActionRow");
 
-    expect(rows).toHaveLength(2);
+    expect(rows).toHaveLength(3);
     expect(await axe(document.body)).toHaveNoViolations();
+  });
+
+  test("GIVEN an action with multiple resources THEN the resource column shows a count", async () => {
+    server.use(
+      http.get("/api/v2/resource_actions", () => HttpResponse.json(mockResourceActionsResponse))
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourceActionsTable" });
+
+    const multiResourceRow = screen.getAllByLabelText("ResourceActionRow")[2];
+
+    expect(within(multiResourceRow).getByText("2 resources")).toBeVisible();
+    expect(within(multiResourceRow).queryByRole("link")).not.toBeInTheDocument();
   });
 
   test("GIVEN the changelog page THEN the default filter excludes only nochange", async () => {
