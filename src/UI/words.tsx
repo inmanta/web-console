@@ -676,6 +676,7 @@ const dict = {
   "resourceActions.reason.event": "Triggered by an event",
   "resourceActions.reason.timer": "Triggered by a timer",
   "resourceActions.reason.operator": "Triggered by an operator",
+  "resourceActions.reason.release": "Triggered by a new released version",
   "resourceActions.reason.unknown": "Unknown trigger",
   "resourceActions.pagination.perPage": (value: string) => `${value} per page`,
   "resources.facts.title": "Facts",

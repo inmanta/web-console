@@ -1,6 +1,12 @@
 import React from "react";
 import { Icon, Tooltip } from "@patternfly/react-core";
-import { BellIcon, OutlinedClockIcon, QuestionCircleIcon, UserIcon } from "@patternfly/react-icons";
+import {
+  BellIcon,
+  OutlinedClockIcon,
+  QuestionCircleIcon,
+  RocketIcon,
+  UserIcon,
+} from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { classifyDeployReason, getDeployReasonText } from "@S/ResourceActions/Core/DeployReason";
 import { ResourceAction } from "@S/ResourceActions/Core/Domain";
@@ -13,6 +19,7 @@ const icons = {
   event: <BellIcon />,
   timer: <OutlinedClockIcon />,
   operator: <UserIcon />,
+  release: <RocketIcon />,
   unknown: <QuestionCircleIcon />,
 };
 

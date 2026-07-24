@@ -1,6 +1,6 @@
 import { ResourceAction } from "./Domain";
 
-export type DeployReasonKind = "event" | "timer" | "operator" | "unknown";
+export type DeployReasonKind = "event" | "timer" | "operator" | "release" | "unknown";
 
 /**
  * The human-readable reason string carried by a resource action, if any.
@@ -29,6 +29,10 @@ export const classifyDeployReason = (action: ResourceAction): DeployReasonKind =
 
   if (!reason) {
     return "unknown";
+  }
+
+  if (reason.includes("new version") || reason.includes("released")) {
+    return "release";
   }
 
   if (reason.includes("event")) {
