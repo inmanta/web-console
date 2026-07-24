@@ -73,6 +73,8 @@ describe("ResourceActionsPage", () => {
 
     expect(href).toContain("state.ResourceDetails.tab=Logs");
     expect(href).toContain("state.ResourceDetails.filter.action[0]=deploy");
+    expect(href).toContain("state.ResourceDetails.filter.timestamp[0]=from__");
+    expect(href).toContain("state.ResourceDetails.filter.timestamp[1]=to__");
   });
 
   test("GIVEN the changelog page WHEN the API errors THEN an error view is shown", async () => {

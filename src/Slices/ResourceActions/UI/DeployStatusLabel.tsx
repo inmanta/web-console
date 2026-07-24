@@ -1,38 +1,26 @@
 import React from "react";
-import { Label } from "@patternfly/react-core";
+import { Resource } from "@/Core";
+import { labelColorConfig, ResourceStatusLabel } from "@/UI/Components/ResourceStatus";
 
 interface Props {
   status: string | null;
 }
 
-const colors: Record<string, React.ComponentProps<typeof Label>["color"]> = {
-  deployed: "green",
-  failed: "red",
-  skipped: "orange",
-  skipped_for_dependency: "orange",
-  cancelled: "grey",
-  unavailable: "grey",
-  undefined: "grey",
-  deploying: "blue",
-  available: "blue",
-  processing_events: "blue",
-};
+const isResourceStatus = (status: string): status is Resource.Status =>
+  status in labelColorConfig;
 
 /**
- * Displays the deploy status of a resource action as a colored label.
+ * Displays the deploy status of a resource action, reusing the same label and
+ * coloring as the resource status shown on the resource page.
  *
  * @props {Props} props - The props of the component.
  *  @prop {string | null} status - The status of the resource action.
  * @returns {React.FC<Props>} The deploy status label.
  */
 export const DeployStatusLabel: React.FC<Props> = ({ status }) => {
-  if (!status) {
-    return <>-</>;
+  if (!status || !isResourceStatus(status)) {
+    return <>{status ?? "-"}</>;
   }
 
-  return (
-    <Label color={colors[status] ?? "grey"} isCompact>
-      {status}
-    </Label>
-  );
+  return <ResourceStatusLabel status={labelColorConfig[status]} label={status} />;
 };

@@ -113,6 +113,8 @@ export const Details: React.FC<Props> = ({ action }) => {
                     <ResourceLogsLink
                       resourceId={getResourceIdFromResourceVersionId(id)}
                       action={action.action}
+                      started={action.started}
+                      finished={action.finished}
                     />
                   </StackItem>
                 ))}
