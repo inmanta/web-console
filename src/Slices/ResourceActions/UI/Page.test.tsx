@@ -50,6 +50,28 @@ describe("ResourceActionsPage", () => {
     expect(await axe(document.body)).toHaveNoViolations();
   });
 
+  test("GIVEN the changelog page THEN the default filter excludes only nochange", async () => {
+    let requestUrl = "";
+
+    server.use(
+      http.get("/api/v2/resource_actions", ({ request }) => {
+        requestUrl = request.url;
+
+        return HttpResponse.json(mockResourceActionsResponse);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourceActionsTable" });
+
+    expect(requestUrl).toContain("exclude_changes=nochange");
+    expect(requestUrl).not.toContain("exclude_changes=created");
+    expect(requestUrl).not.toContain("exclude_changes=updated");
+    expect(requestUrl).not.toContain("exclude_changes=purged");
+  });
+
   test("GIVEN the changelog page WHEN a row is expanded THEN the details and logs link are shown", async () => {
     server.use(
       http.get("/api/v2/resource_actions", () => HttpResponse.json(mockResourceActionsResponse))

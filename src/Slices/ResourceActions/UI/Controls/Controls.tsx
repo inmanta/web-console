@@ -2,7 +2,8 @@ import React from "react";
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { ResourceActionFilter } from "@S/ResourceActions/Core/Domain";
-import { OutcomeFilter } from "./OutcomeFilter";
+import { AgentFilter } from "./AgentFilter";
+import { ChangeFilter } from "./ChangeFilter";
 import { SingleTextFilter } from "./SingleTextFilter";
 
 interface Props {
@@ -30,12 +31,7 @@ export const Controls: React.FC<Props> = ({ filter, setFilter, paginationWidget 
         />
       </ToolbarItem>
       <ToolbarItem>
-        <SingleTextFilter
-          filterPropertyName={words("resourceActions.filter.agent")}
-          placeholder={words("resourceActions.filter.agent.placeholder")}
-          value={filter.agent}
-          update={(value) => setFilter({ ...filter, agent: value })}
-        />
+        <AgentFilter filter={filter} setFilter={setFilter} />
       </ToolbarItem>
       <ToolbarItem>
         <SingleTextFilter
@@ -46,7 +42,7 @@ export const Controls: React.FC<Props> = ({ filter, setFilter, paginationWidget 
         />
       </ToolbarItem>
       <ToolbarItem>
-        <OutcomeFilter filter={filter} setFilter={setFilter} />
+        <ChangeFilter filter={filter} setFilter={setFilter} />
       </ToolbarItem>
       <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
     </ToolbarContent>

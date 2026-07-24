@@ -46,9 +46,6 @@ export const Row: React.FC<Props> = ({ action, isExpanded, onToggle, numberOfCol
         <Td dataLabel={words("resourceActions.column.started")} modifier="fitContent">
           {datePresenter.getFull(action.started)}
         </Td>
-        <Td dataLabel={words("resourceActions.column.finished")} modifier="fitContent">
-          {action.finished ? datePresenter.getFull(action.finished) : "-"}
-        </Td>
         <Td dataLabel={words("resourceActions.column.duration")} modifier="fitContent">
           {getDuration(action)}
         </Td>

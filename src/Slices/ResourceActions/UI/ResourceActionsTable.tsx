@@ -9,7 +9,7 @@ interface Props {
   actions: ResourceAction[];
 }
 
-const NUMBER_OF_COLUMNS = 9;
+const NUMBER_OF_COLUMNS = 8;
 
 /**
  * The changelog table, listing resource actions with expandable rows.
@@ -30,7 +30,6 @@ export const ResourceActionsTable: React.FC<Props> = ({ actions }) => {
         <Tr>
           <Th aria-hidden screenReaderText={words("common.emptyColumnHeader")} />
           <Th>{words("resourceActions.column.started")}</Th>
-          <Th>{words("resourceActions.column.finished")}</Th>
           <Th>{words("resourceActions.column.duration")}</Th>
           <Th>{words("resourceActions.column.resource")}</Th>
           <Th>{words("resourceActions.column.type")}</Th>

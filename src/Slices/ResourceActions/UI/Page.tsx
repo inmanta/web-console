@@ -3,7 +3,7 @@ import { useUrlStateWithCurrentPage, useUrlStateWithFilter, useUrlStateWithPageS
 import { useGetResourceActions } from "@/Data/Queries";
 import { EmptyView, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { ResourceActionFilter } from "@S/ResourceActions/Core/Domain";
+import { changeTypes, ResourceActionFilter } from "@S/ResourceActions/Core/Domain";
 import { Controls } from "./Controls";
 import { CursorPagination } from "./CursorPagination";
 import { ResourceActionsTable } from "./ResourceActionsTable";
@@ -13,16 +13,22 @@ import { ResourceActionsTable } from "./ResourceActionsTable";
  *
  * Displays the environment-wide history of resource actions (deployments) as a
  * table, backed by the `get_resource_actions` API. Supports the server-side
- * filters available on that API (resource type, agent, value, log severity) and
+ * filters available on that API (resource type, agent, value, change) and
  * cursor-based pagination.
  *
  * @returns {React.FC} The changelog page.
  */
+// By default every change except `nochange` is shown.
+const defaultFilter: ResourceActionFilter = {
+  outcome: changeTypes.filter((change) => change !== "nochange"),
+};
+
 export const Page: React.FC = () => {
   const [currentPage, setCurrentPage] = useUrlStateWithCurrentPage({ route: "ResourceActions" });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({ route: "ResourceActions" });
   const [filter, setFilter] = useUrlStateWithFilter<ResourceActionFilter>({
     route: "ResourceActions",
+    default: defaultFilter,
   });
 
   // Reset the pagination cursor whenever the filters change.

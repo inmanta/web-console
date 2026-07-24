@@ -9,26 +9,26 @@ interface Props {
 }
 
 /**
- * Filters resource actions by deploy outcome (the `change` value).
+ * Filters resource actions by change (the deployment outcome).
  *
- * The selected outcomes are the ones to include; they are translated into the
+ * The selected changes are the ones to include; they are translated into the
  * API's `exclude_changes` parameter when the request is built.
  *
  * @props {Props} props - The props of the component.
  * @returns {React.FC<Props>} The filter component.
  */
-export const OutcomeFilter: React.FC<Props> = ({ filter, setFilter }) => {
-  const update = (outcomes: string[]) =>
+export const ChangeFilter: React.FC<Props> = ({ filter, setFilter }) => {
+  const update = (changes: string[]) =>
     setFilter({
       ...filter,
-      outcome: outcomes.length > 0 ? outcomes : undefined,
+      outcome: changes.length > 0 ? changes : undefined,
     });
 
   return (
     <SelectOptionFilter
       isVisible
-      filterPropertyName={words("resourceActions.filter.outcome")}
-      placeholder={words("resourceActions.filter.outcome.placeholder")}
+      filterPropertyName={words("resourceActions.filter.change")}
+      placeholder={words("resourceActions.filter.change.placeholder")}
       possibleStates={[...changeTypes]}
       selectedStates={filter.outcome ?? []}
       update={update}
