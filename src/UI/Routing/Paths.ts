@@ -27,6 +27,7 @@ import { OrderDetails } from "@S/OrderDetails";
 import { Orders } from "@S/Orders";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
+import { ResourceActions } from "@S/ResourceActions";
 import { ResourceDetails } from "@S/ResourceDetails";
 import { DiscoveredResources } from "@S/ResourceDiscovery";
 import { ServiceCatalog } from "@S/ServiceCatalog";
@@ -76,6 +77,7 @@ export const paths: Paths = {
   DiscoveredResources: DiscoveredResources.path,
   DiscoveredResourceDetails: DiscoveredResourceDetails.path,
   Facts: Facts.path,
+  ResourceActions: ResourceActions.path,
   ResourceDetails: ResourceDetails.path,
   Resources: Resource.path,
 
