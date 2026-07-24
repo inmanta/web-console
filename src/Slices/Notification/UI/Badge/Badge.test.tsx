@@ -1,7 +1,7 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
-import { delay, http, HttpResponse } from "msw";
+import { render, screen, waitFor } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
 import { metadata, links } from "@/Test/Data/Pagination";
@@ -25,7 +25,7 @@ function setup() {
     </QueryClientProvider>
   );
 
-  return { component };
+  return { component, queryClient };
 }
 const server = setupServer();
 
@@ -61,7 +61,7 @@ describe("Badge", () => {
           return HttpResponse.json({ data, links, metadata });
         })
       );
-      const { component } = setup();
+      const { component, queryClient } = setup();
 
       render(component);
 
@@ -70,15 +70,16 @@ describe("Badge", () => {
       });
 
       expect(button).toBeVisible();
-      expect(button).toHaveAttribute("data-variant", variant);
+      // Wait for the query to settle first — otherwise the `read` rows pass on the
+      // identical loading default before the response is processed.
+      await waitFor(() => expect(queryClient.isFetching()).toBe(0));
+      await waitFor(() => expect(button).toHaveAttribute("data-variant", variant));
     }
   );
 
-  test("Given Badge WHEN request is loading THEN variant is not shown and badge is disabled", () => {
+  test("Given Badge WHEN request is loading THEN an enabled read badge is shown", () => {
     server.use(
       http.get("/api/v2/notification", () => {
-        delay(100);
-
         return HttpResponse.json({ data: [], links, metadata });
       })
     );
@@ -86,10 +87,10 @@ describe("Badge", () => {
 
     render(component);
 
-    const badge = screen.getByRole("button", { name: "Badge" });
+    const badge = screen.getByRole("button", { name: "Badge-Success" });
 
     expect(badge).toBeVisible();
-    expect(badge).toBeDisabled();
-    expect(badge).not.toHaveAttribute("data-variant");
+    expect(badge).toBeEnabled();
+    expect(badge).toHaveAttribute("data-variant", "read");
   });
 });

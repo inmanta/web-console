@@ -50,14 +50,14 @@ export const DiscoveredResourceRow: React.FC<Props> = ({
           data-testid={words("discovered.column.managed_resource")}
           width={15}
         >
-          <DiscoveredResourceLink resourceUri={row.managed_resource_uri} type="managed" />
+          <DiscoveredResourceLink resourceId={row.managed_resource_id} type="managed" />
         </Td>
         <Td
           dataLabel={words("discovered.column.discovery_resource")}
           data-testid={words("discovered.column.discovery_resource")}
           width={20}
         >
-          <DiscoveredResourceLink resourceUri={row.discovery_resource_uri} type="discovery" />
+          <DiscoveredResourceLink resourceId={row.discovery_resource_id} type="discovery" />
         </Td>
       </Tr>
       {isExpanded && (
