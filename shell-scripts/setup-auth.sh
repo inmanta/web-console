@@ -30,7 +30,7 @@ else
 fi
 
 VERSION=${version:-iso}
-RELEASE=${release:-7-dev}
+RELEASE=${release:-10-dev}
 BRANCH=${branch:-master}
 AUTH=${auth:-keycloak}
 

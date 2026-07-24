@@ -62,9 +62,8 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
               aria-label="Inmanta-logo"
               href={
                 noEnv
-                  ? routeManager.getUrl("Home", undefined)
-                  : routeManager.getUrl("Dashboard", undefined) +
-                    `?env=${environmentHandler.useId()}`
+                  ? routeManager.getUrl("Dashboard", undefined)
+                  : `${routeManager.getUrl("Dashboard", undefined)}?env=${environmentHandler.useId()}`
               }
             >
               <LogoImage />

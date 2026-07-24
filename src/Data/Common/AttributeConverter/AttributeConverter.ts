@@ -6,7 +6,7 @@ import {
   ServiceInstanceModel,
 } from "@/Core";
 
-export type InputType = TextInputTypes | "bool";
+export type InputType = TextInputTypes | "bool" | "dict";
 
 export interface AttributeInputConverter {
   /**
@@ -21,11 +21,7 @@ export interface AttributeInputConverter {
     inputType: InputType,
     defaultValueSet: boolean,
     defaultValue:
-      | string
-      | null
-      | boolean
-      | string[]
-      | { [x: string]: string | null | boolean | string[] }
+      string | null | boolean | string[] | { [x: string]: string | null | boolean | string[] }
   ):
     | string
     | null

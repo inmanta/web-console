@@ -21,7 +21,6 @@ import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { GraphiQL } from "@S/GraphiQL";
-import { Home } from "@S/Home";
 import { InstanceComposerEditor } from "@S/InstanceComposerEditor";
 import { Notification } from "@S/Notification";
 import { OrderDetails } from "@S/OrderDetails";
@@ -44,7 +43,6 @@ export const paths: Paths = {
    * Main
    */
   CreateEnvironment: CreateEnvironment.path,
-  Home: Home.path,
   GraphiQL: GraphiQL.path,
   NotificationCenter: Notification.path,
   Settings: Settings.path,

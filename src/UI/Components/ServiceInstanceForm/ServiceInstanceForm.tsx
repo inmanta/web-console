@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActionList,
   ActionListItem,
@@ -14,17 +14,29 @@ import {
   ToggleGroupItem,
   MenuToggleElement,
   AlertVariant,
+  Flex,
+  Tab,
+  Tabs,
+  TabTitleIcon,
+  TabTitleText,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { InstanceAttributeModel, Field } from "@/Core";
+import { InstanceAttributeModel, EntityAnnotations, Field } from "@/Core";
 import { set as setAtPath } from "@/Core/Language/collection";
+import { SuggestionVariables } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
 import { AppAlert } from "../AppAlert";
+import { DynamicFAIcon } from "../FaIcon";
 import { JSONEditor } from "../JSONEditor";
 import { FieldInput } from "./Components";
-import { createDuplicateFormState, createEditFormState, createFormState } from "./Helpers";
+import {
+  createDuplicateFormState,
+  createEditFormState,
+  createFormState,
+  resolveFormTabs,
+} from "./Helpers";
 
 interface Props {
   service_entity: string;
@@ -42,6 +54,9 @@ interface Props {
   isDirty: boolean;
   setIsDirty: React.Dispatch<React.SetStateAction<boolean>>;
   initialStates?: string[];
+  identifyingAttributeName?: string;
+  instanceId?: string;
+  entityAnnotations?: EntityAnnotations;
 }
 
 /**
@@ -81,6 +96,9 @@ const getFormState = (
  *   @prop {boolean} isSubmitDisabled - Indicates whether the submit button is disabled.
  *   @prop {string} [apiVersion="v1"] - API version ("v1" or "v2"). Default is "v1".
  *   @prop {boolean} [isEdit=false] - Whether the form is in edit mode. Default is false.
+ *   @prop {string} [identifyingAttributeName] - Name of the attribute designated by the service's `service_identity`, if any.
+ *   @prop {string} [instanceId] - Id of the edited instance; absent when creating.
+ *   @prop {EntityAnnotations} [entityAnnotations] - The service entity's annotations; a `web_tabs` catalog splits the top-level fields into tabs.
  * @returns {React.FC<Props>} The rendered ServiceInstanceForm component.
  */
 export const ServiceInstanceForm: React.FC<Props> = ({
@@ -95,6 +113,9 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   isDirty,
   setIsDirty,
   initialStates = [],
+  identifyingAttributeName,
+  instanceId,
+  entityAnnotations,
 }) => {
   const [formState, setFormState] = useState(
     getFormState(fields, apiVersion, originalAttributes, isEdit)
@@ -106,6 +127,34 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   const [isForm, setIsForm] = useState(true);
   const [isEditorValid, setIsEditorValid] = useState(true);
   const [isSubmitDropdownOpen, setIsSubmitDropdownOpen] = useState(false);
+
+  // An "error" resolution surfaces the model error and falls back to the
+  // single-column layout so the form stays usable.
+  const formTabs = useMemo(
+    () => resolveFormTabs(entityAnnotations, fields),
+    [entityAnnotations, fields]
+  );
+  const [activeTab, setActiveTab] = useState(formTabs.kind === "tabs" ? formTabs.defaultKey : "");
+
+  // Values that resolve `${...}` variables in a suggestion's parameter name.
+  // `identifyingAttributeName` is the name of the identifying attribute; its value
+  // is read live from the form state. instance_id is absent on a create form ("no value").
+  const suggestionVariables: SuggestionVariables = useMemo(() => {
+    const identifyingAttributeValue = identifyingAttributeName
+      ? formState[identifyingAttributeName]
+      : undefined;
+
+    return {
+      entity_type: service_entity,
+      identifying_attribute:
+        identifyingAttributeValue === undefined ||
+        identifyingAttributeValue === null ||
+        identifyingAttributeValue === ""
+          ? undefined
+          : String(identifyingAttributeValue),
+      instance_id: instanceId,
+    };
+  }, [service_entity, identifyingAttributeName, instanceId, formState]);
 
   usePrompt(words("notification.instanceForm.prompt"), isDirty);
 
@@ -198,6 +247,19 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     }
   }, [shouldPerformCancel, onCancel]);
 
+  const fieldToInput = (field: Field) => (
+    <FieldInput
+      key={field.name}
+      field={field}
+      formState={formState}
+      originalState={originalState}
+      getUpdate={getUpdate}
+      path={null}
+      suggestions={field.suggestion}
+      suggestionVariables={suggestionVariables}
+    />
+  );
+
   return (
     <StyledForm onSubmit={preventDefault}>
       <ToggleGroup aria-label="form-editor-toggle-group">
@@ -224,18 +286,46 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           data={JSON.stringify(formState, null, 2)}
           onChange={onEditorChange}
         />
+      ) : formTabs.kind === "tabs" ? (
+        <Tabs
+          activeKey={activeTab}
+          onSelect={(_event, tabKey) => setActiveTab(String(tabKey))}
+          aria-label="Instance-Form-Tabs"
+          role="region"
+        >
+          {formTabs.groups.map(({ tab, fields: tabFields }) => (
+            <Tab
+              key={tab.key}
+              eventKey={tab.key}
+              title={
+                <>
+                  {tab.icon && (
+                    <TabTitleIcon>
+                      <DynamicFAIcon icon={tab.icon} />
+                    </TabTitleIcon>
+                  )}
+                  <TabTitleText>{tab.label}</TabTitleText>
+                </>
+              }
+            >
+              <Flex direction={{ default: "column" }} gap={{ default: "gapLg" }}>
+                {tabFields.map(fieldToInput)}
+              </Flex>
+            </Tab>
+          ))}
+        </Tabs>
       ) : (
-        fields.map((field) => (
-          <FieldInput
-            key={field.name}
-            field={field}
-            formState={formState}
-            originalState={originalState}
-            getUpdate={getUpdate}
-            path={null}
-            suggestions={field.suggestion}
-          />
-        ))
+        <>
+          {formTabs.kind === "error" && (
+            <AppAlert
+              title={formTabs.message}
+              variant={AlertVariant.danger}
+              testId="FormTabs-Error"
+              isInline
+            />
+          )}
+          {fields.map(fieldToInput)}
+        </>
       )}
       {fields.length <= 0 && (
         <AppAlert

@@ -1,10 +1,10 @@
-import { Route } from "@/Core";
+﻿import { Route } from "@/Core";
 
 export const path = "/agents";
 
 export const route = (base: string): Route<"Agents"> => ({
   kind: "Agents",
-  parent: "Home",
+  parent: "Dashboard",
   path: `${base}${path}`,
   generateLabel: () => "Agents",
   environmentRole: "Required",

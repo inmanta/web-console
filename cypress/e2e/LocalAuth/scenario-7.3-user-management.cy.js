@@ -5,9 +5,9 @@ if (localAuth) {
     cy.visit("/console/");
 
     cy.get('[id="pf-login-username-id"]').type("admin");
-    cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
+    cy.get('[id="pf-login-password-id"]').type("Str0ng-Pass!{enter}");
 
-    cy.get("h1").contains("Home").should("be.visible");
+    cy.get("h1").contains("Dashboard | env").should("be.visible");
 
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
@@ -121,9 +121,9 @@ if (localAuth) {
     cy.visit("/console/");
 
     cy.get('[id="pf-login-username-id"]').type("admin");
-    cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
+    cy.get('[id="pf-login-password-id"]').type("Str0ng-Pass!{enter}");
 
-    cy.get("h1").contains("Home").should("be.visible");
+    cy.get("h1").contains("Dashboard | env").should("be.visible");
 
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
@@ -143,10 +143,10 @@ if (localAuth) {
     cy.get('[aria-label="confirm-button"]').click();
 
     cy.get("span")
-      .contains("Invalid request: the password should be at least 8 characters long")
+      .contains("Invalid request: the password should be at least 12 characters long")
       .should("be.visible");
 
-    cy.get('[aria-label="input-password"]').clear().type("password");
+    cy.get('[aria-label="input-password"]').clear().type("Str0ng-Pass!");
 
     cy.get('[aria-label="confirm-button"]').click();
 
@@ -157,9 +157,9 @@ if (localAuth) {
     cy.visit("/console/");
 
     cy.get('[id="pf-login-username-id"]').type("admin");
-    cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
+    cy.get('[id="pf-login-password-id"]').type("Str0ng-Pass!{enter}");
 
-    cy.get("h1").contains("Home").should("be.visible");
+    cy.get("h1").contains("Dashboard | env").should("be.visible");
 
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
@@ -181,9 +181,9 @@ if (localAuth) {
     cy.visit("/console/");
 
     cy.get('[id="pf-login-username-id"]').type("admin");
-    cy.get('[id="pf-login-password-id"]').type("adminadmin{enter}");
+    cy.get('[id="pf-login-password-id"]').type("Str0ng-Pass!{enter}");
 
-    cy.get("h1").contains("Home").should("be.visible");
+    cy.get("h1").contains("Dashboard | env").should("be.visible");
 
     cy.get("[id=toggle-button]", { timeout: 20000 }).should("contain", "admin");
     cy.get("[id=toggle-button]").click();
@@ -198,15 +198,19 @@ if (localAuth) {
 
     cy.get("h1").contains("Change Password").should("be.visible");
 
+    // admin is the logged-in user, so this is a self-service change: the current password is required
+    // and the submit button stays disabled until it is filled (PR #7071).
+    cy.get('[aria-label="current-password-input"]').type("Str0ng-Pass!");
+
     cy.get('[aria-label="new-password-input"]').type("123");
 
     cy.get('[data-testid="change-password-button"]').click();
 
     cy.get("span")
-      .contains("Invalid request: the password should be at least 8 characters long")
+      .contains("Invalid request: the password should be at least 12 characters long")
       .should("be.visible");
 
-    cy.get('[aria-label="new-password-input"]').clear().type("12345678");
+    cy.get('[aria-label="new-password-input"]').clear().type("New-Str0ng-Pass!");
 
     cy.get('[data-testid="change-password-button"]').click();
 
@@ -218,8 +222,8 @@ if (localAuth) {
     cy.get('[role="menuitem"]').contains("Logout").click();
 
     cy.get('[id="pf-login-username-id"]').type("admin");
-    cy.get('[id="pf-login-password-id"]').type("12345678{enter}");
+    cy.get('[id="pf-login-password-id"]').type("New-Str0ng-Pass!{enter}");
 
-    cy.get("h1").contains("Home").should("be.visible");
+    cy.get("h1").contains("Dashboard | env").should("be.visible");
   });
 }

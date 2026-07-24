@@ -6,6 +6,7 @@ import {
   FormGroup,
   FormSelect,
   FormSelectOption,
+  TextArea,
   Content,
   Spinner,
   Button,
@@ -25,7 +26,7 @@ interface Props {
   instance_id: string;
   service_entity: string;
   version: ParsedNumber;
-  onClose: () => void;
+  collapseToggle: () => void;
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -38,7 +39,7 @@ interface Props {
  *  @prop {string} instance_id - the UUID of the instance
  *  @prop {string} service_entity - the service entity type of the instance
  *  @prop {ParsedNumber} version - the current version of the instance
- *  @prop {function} onClose - callback method when the modal gets closed
+ *  @prop {function} collapseToggle - collapses the dropdown toggle when the modal opens
  *  @prop {React.Dispatch<React.SetStateAction<boolean>>} setInterfaceBlocked - setState variable to block the interface when the modal is opened.
  *  This is meant to avoid clickEvents triggering the onOpenChange from the dropdown to shut down the modal.
  * @returns {React.FC<Props>} A React Component displaying the Expert State transfer Dropdown Item
@@ -49,7 +50,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
   instance_id,
   targets = [],
   version,
-  onClose,
+  collapseToggle,
   setInterfaceBlocked,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
@@ -78,6 +79,9 @@ export const ExpertStateTransfer: React.FC<Props> = ({
       iconVariant: "danger",
       cancelCb: closeModalCallback,
     });
+    // Collapse the toggle now: setInterfaceBlocked(true) suppresses the dropdown's
+    // onOpenChange, so it can't collapse the toggle itself while the modal is open.
+    collapseToggle();
   };
 
   /**
@@ -86,8 +90,7 @@ export const ExpertStateTransfer: React.FC<Props> = ({
   const closeModalCallback = useCallback(() => {
     closeModal();
     setInterfaceBlocked(false);
-    onClose();
-  }, [closeModal, setInterfaceBlocked, onClose]);
+  }, [closeModal, setInterfaceBlocked]);
 
   return (
     <>
@@ -137,7 +140,9 @@ const ModalContent: React.FC<ModalContentProps> = ({
   const { authHelper } = useContext(DependencyContext);
   const { notifyError } = useAppAlert();
   const username = authHelper.getUser();
-  const message = words("instanceDetails.API.message.update")(username);
+  const [message, setMessage] = useState<string>(
+    words("instanceDetails.API.message.update")(username)
+  );
 
   const { mutate, isError, error, isSuccess, isPending } = usePostExpertStateTransfer(
     instance_id,
@@ -200,6 +205,18 @@ const ModalContent: React.FC<ModalContentProps> = ({
               <FormSelectOption key={index} value={operation} label={operation} />
             ))}
           </FormSelect>
+        </FormGroup>
+        <FormGroup
+          label={words("instanceDetails.stateTransfer.messageLabel")}
+          fieldId="expert-state-transfer-message"
+        >
+          <TextArea
+            id="expert-state-transfer-message"
+            value={message}
+            onChange={(_event, value) => setMessage(value)}
+            aria-label="expert-state-transfer-message-input"
+            data-testid={`${instance_display_identity}-state-message`}
+          />
         </FormGroup>
       </Form>
       <br />

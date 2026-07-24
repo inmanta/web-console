@@ -1,5 +1,14 @@
-import React, { useCallback, useContext } from "react";
-import { Content, Button, Spinner, Flex, FlexItem } from "@patternfly/react-core";
+import React, { useCallback, useContext, useState } from "react";
+import {
+  Content,
+  Button,
+  Spinner,
+  Flex,
+  FlexItem,
+  Form,
+  FormGroup,
+  TextArea,
+} from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
@@ -30,6 +39,9 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
   const username = authHelper.getUser();
   const { notifyError } = useAppAlert();
   const { closeModal } = useContext(ModalContext);
+  const [message, setMessage] = useState<string>(
+    words("instanceDetails.API.message.update")(username)
+  );
 
   const { mutate, isPending } = usePostStateTransfer(instance_id, service_entity, {
     onSuccess: () => {
@@ -49,8 +61,6 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
    * @returns {Promise<void>} A Promise that resolves when the operation is complete.
    */
   const onSubmit = async (): Promise<void> => {
-    const message = words("instanceDetails.API.message.update")(username);
-
     mutate({
       message: message,
       current_version: version,
@@ -71,6 +81,20 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
       <Content component="p">
         {words("inventory.statustab.confirmMessage")(instance_display_identity, targetState)}
       </Content>
+      <Form>
+        <FormGroup
+          label={words("instanceDetails.stateTransfer.messageLabel")}
+          fieldId="state-transfer-message"
+        >
+          <TextArea
+            id="state-transfer-message"
+            value={message}
+            onChange={(_event, value) => setMessage(value)}
+            aria-label="state-transfer-message-input"
+            data-testid={`${instance_display_identity}-state-message`}
+          />
+        </FormGroup>
+      </Form>
       <br />
       <Flex>
         <FlexItem>

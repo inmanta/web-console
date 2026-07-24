@@ -1,15 +1,31 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, FormFieldGroupExpandable, FormFieldGroupHeader } from "@patternfly/react-core";
+import {
+  Button,
+  FormFieldGroupExpandable,
+  FormFieldGroupHeader,
+  FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+} from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { v4 as uuidv4 } from "uuid";
-import { InstanceAttributeModel, DictListField, Field, NestedField, FormSuggestion } from "@/Core";
+import {
+  InstanceAttributeModel,
+  DictListField,
+  Field,
+  NestedField,
+  FormSuggestion,
+  SuggestionValue,
+} from "@/Core";
 import { get } from "@/Core/Language/collection";
 import { toOptionalBoolean } from "@/Data";
-import { useSuggestedValues } from "@/Data/Queries";
+import { SuggestionVariables, useSuggestedValues } from "@/Data/Queries";
+import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { words } from "@/UI/words";
-import { BooleanFormInput } from "./BooleanFormInput";
 import { BooleanToggleInput } from "./BooleanToggleInput";
+import { DictFieldInput } from "./DictFieldInput";
 import { RelatedServiceProvider } from "./RelatedServiceProvider";
 import { SelectFormInput } from "./SelectFormInput";
 import { TextFormInput } from "./TextFormInput";
@@ -23,6 +39,7 @@ interface Props {
   path: string | null;
   isNew?: boolean;
   suggestions?: FormSuggestion | null;
+  suggestionVariables?: SuggestionVariables;
 }
 
 /**
@@ -56,6 +73,7 @@ const makePath = (path: string | null, next: string): string =>
  *   @prop {string} path - The path of the field within the form.
  *   @prop {boolean} isNew - Flag indicating whether the field is newly added. Default is false.
  *   @prop {FormSuggestion | null} suggestions - The suggestions for the field. Default is null.
+ *   @prop {SuggestionVariables} suggestionVariables - The form's values for `${...}` variables in a suggestion's parameter name.
  *
  * @returns {React.FC<Props>} The rendered FieldInput component.
  */
@@ -67,9 +85,14 @@ export const FieldInput: React.FC<Props> = ({
   path,
   isNew = false,
   suggestions,
+  suggestionVariables,
 }) => {
-  const { data, isLoading, error } = useSuggestedValues(suggestions).useOneTime();
-  const [suggestionsList, setSuggestionsList] = useState<string[] | null>(null);
+  const { data, isLoading, error, modelError } = useSuggestedValues(
+    suggestions,
+    suggestionVariables
+  ).useOneTime();
+  // Already normalized to { label, value }[] by useSuggestedValues; just forward it.
+  const suggestionsList: SuggestionValue[] | null = !isLoading && !error ? (data ?? null) : null;
 
   // Get the controlled value for the field
   // If the value is an object or an array, it needs to be converted.
@@ -93,62 +116,54 @@ export const FieldInput: React.FC<Props> = ({
     [getUpdate, path, field.name]
   );
 
-  useEffect(() => {
-    if (!isLoading && !error) {
-      // if the data is of type array, we can use it directly
-      if (Array.isArray(data)) {
-        setSuggestionsList(data);
-      } else if (
-        data &&
-        data.metadata &&
-        data.metadata.values &&
-        Array.isArray(data.metadata.values) &&
-        // TODO: remove this when the API returns a fixed format.
-        data.metadata.values.every((value) => typeof value === "string")
-      ) {
-        setSuggestionsList(data.metadata.values);
-      }
-    } else {
-      setSuggestionsList(null);
-    }
-  }, [suggestions, data, isLoading, error]);
-
   switch (field.kind) {
-    case "Boolean":
-      return field.isOptional ? (
-        <BooleanFormInput
+    case "Boolean": {
+      const booleanPath = makePath(path, field.name);
+
+      if (!field.isOptional) {
+        return (
+          <BooleanToggleInput
+            aria-label={`BooleanToggleInput-${field.name}`}
+            attributeName={field.name}
+            isChecked={get<boolean | undefined>(formState, booleanPath)}
+            handleInputChange={(value, _event) => getUpdate(booleanPath, toOptionalBoolean(value))}
+            description={field.description}
+            key={field.id || field.name}
+            shouldBeDisabled={
+              field.isDisabled && get(originalState, booleanPath) !== undefined && !isNew
+            }
+          />
+        );
+      }
+
+      // The optional boolean maps onto the toggle group as a single nullable value:
+      // a selected option means true/false, an empty selection means null.
+      const booleanValue = get<boolean | null>(formState, booleanPath, null);
+
+      return (
+        <FormGroup
           aria-label={`BooleanFieldInput-${field.name}`}
-          attributeName={field.name}
-          isOptional={field.isOptional}
-          isChecked={get<boolean | null>(formState, makePath(path, field.name), null)}
-          handleInputChange={(value, _event) =>
-            getUpdate(makePath(path, field.name), toOptionalBoolean(value))
-          }
-          description={field.description}
+          fieldId={field.name}
           key={field.id || field.name}
-          shouldBeDisabled={
-            field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined &&
-            !isNew
-          }
-        />
-      ) : (
-        <BooleanToggleInput
-          aria-label={`BooleanToggleInput-${field.name}`}
-          attributeName={field.name}
-          isChecked={get<boolean | undefined>(formState, makePath(path, field.name))}
-          handleInputChange={(value, _event) =>
-            getUpdate(makePath(path, field.name), toOptionalBoolean(value))
-          }
-          description={field.description}
-          key={field.id || field.name}
-          shouldBeDisabled={
-            field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined &&
-            !isNew
-          }
-        />
+          label={field.name}
+        >
+          <FormHelperText>
+            <HelperText>
+              <HelperTextItem>{field.description}</HelperTextItem>
+            </HelperText>
+          </FormHelperText>
+          <OptionalToggleGroup
+            isDisabled={field.isDisabled && get(originalState, booleanPath) !== undefined && !isNew}
+            selected={booleanValue === null ? [] : [booleanValue]}
+            onChange={(next) => getUpdate(booleanPath, next[0] ?? null)}
+            options={[
+              { value: true, buttonId: `${field.name}-true`, label: words("true") },
+              { value: false, buttonId: `${field.name}-false`, label: words("false") },
+            ]}
+          />
+        </FormGroup>
       );
+    }
     case "TextList":
       return (
         <TextListFormInput
@@ -167,6 +182,7 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           suggestions={suggestionsList}
+          errorMessage={modelError}
         />
       );
     case "Textarea":
@@ -190,6 +206,7 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           isTextarea
+          errorMessage={modelError}
         />
       );
     case "Text":
@@ -207,16 +224,29 @@ export const FieldInput: React.FC<Props> = ({
           }
           type={field.inputType}
           handleInputChange={(value, _event) => {
-            if (field.type.includes("dict")) {
-              getUpdate(makePath(path, field.name), tryParseJSON(value));
-            } else {
-              getUpdate(makePath(path, field.name), value);
-            }
+            getUpdate(makePath(path, field.name), value);
           }}
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           suggestions={suggestionsList}
+          errorMessage={modelError}
+        />
+      );
+    case "Dict":
+      return (
+        <DictFieldInput
+          key={field.id || field.name}
+          field={field}
+          value={get(formState, makePath(path, field.name))}
+          readOnly={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
+          }
+          onChange={(value) => {
+            getUpdate(makePath(path, field.name), value);
+          }}
         />
       );
     case "InterServiceRelation":
@@ -260,6 +290,7 @@ export const FieldInput: React.FC<Props> = ({
           getUpdate={getUpdate}
           path={path}
           isNew={isNew}
+          suggestionVariables={suggestionVariables}
         />
       );
     case "DictList":
@@ -271,6 +302,7 @@ export const FieldInput: React.FC<Props> = ({
           getUpdate={getUpdate}
           path={path}
           isNew={isNew}
+          suggestionVariables={suggestionVariables}
         />
       );
     case "RelationList":
@@ -336,6 +368,7 @@ interface NestedProps {
   getUpdate: GetUpdate;
   path: string | null;
   isNew?: boolean;
+  suggestionVariables?: SuggestionVariables;
 }
 
 /**
@@ -356,6 +389,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   getUpdate,
   path,
   isNew = false,
+  suggestionVariables,
 }) => {
   const [showList, setShowList] = useState(
     !field.isOptional || get(formState, makePath(path, field.name)) != null
@@ -424,6 +458,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
             getUpdate={getUpdate}
             path={makePath(path, field.name)}
             suggestions={childField.suggestion}
+            suggestionVariables={suggestionVariables}
             isNew={isNew}
           />
         ))}
@@ -438,6 +473,7 @@ interface DictListProps {
   getUpdate: GetUpdate;
   path: string | null;
   isNew?: boolean;
+  suggestionVariables?: SuggestionVariables;
 }
 
 /**
@@ -458,6 +494,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   getUpdate,
   path,
   isNew = false,
+  suggestionVariables,
 }) => {
   const list = useMemo(
     () => get<Array<unknown>>(formState, makePath(path, field.name), []) ?? [],
@@ -597,6 +634,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               path={makePath(path, `${field.name}.${index}`)}
               isNew={isNew || addedItemsPaths.includes(`${makePath(path, field.name)}.${index}`)}
               suggestions={childField.suggestion}
+              suggestionVariables={suggestionVariables}
             />
           ))}
         </FormFieldGroupExpandable>

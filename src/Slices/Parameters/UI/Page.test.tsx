@@ -1,7 +1,7 @@
 import { act } from "react";
 import { Page } from "@patternfly/react-core";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { http, HttpResponse } from "msw";
@@ -66,6 +66,8 @@ describe("ParametersPage", () => {
 
     expect(initialRows).toHaveLength(10);
 
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
+
     const input = screen.getByPlaceholderText(words("parameters.filters.name.placeholder"));
 
     await userEvent.type(input, "param{enter}");
@@ -107,13 +109,7 @@ describe("ParametersPage", () => {
 
     expect(initialRows).toHaveLength(10);
 
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
-
-    await userEvent.click(screen.getByRole("option", { name: words("parameters.columns.source") }));
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
 
     const input = screen.getByPlaceholderText(words("parameters.filters.source.placeholder"));
 
@@ -160,39 +156,25 @@ describe("ParametersPage", () => {
 
     expect(initialRows).toHaveLength(10);
 
-    await userEvent.click(
-      within(screen.getByRole("toolbar", { name: "FilterBar" })).getByRole("button", {
-        name: "FilterPicker",
-      })
-    );
-
-    await userEvent.click(
-      screen.getByRole("option", {
-        name: words("parameters.columns.updated.tests"),
-      })
-    );
+    await userEvent.click(screen.getByRole("button", { name: /Filters/i }));
 
     const fromDatePicker = screen.getByLabelText("From Date Picker");
 
     await userEvent.type(fromDatePicker, "2022/01/31");
 
+    await userEvent.click(screen.getByLabelText("Apply date from filter"));
+
     const toDatePicker = screen.getByLabelText("To Date Picker");
 
     await userEvent.type(toDatePicker, "2022-02-01");
 
-    await userEvent.click(screen.getByLabelText("Apply date filter"));
+    await userEvent.click(screen.getByLabelText("Apply date to filter"));
 
     const rowsAfter = await screen.findAllByRole("row", {
       name: "Parameters Table Row",
     });
 
     expect(rowsAfter).toHaveLength(3);
-
-    // The chips are hidden in small windows, so resize it
-    window = Object.assign(window, { innerWidth: 1200 });
-    await act(async () => {
-      window.dispatchEvent(new Event("resize"));
-    });
 
     expect(await screen.findByText("from | 2022/01/31 00:00:00", { exact: false })).toBeVisible();
     expect(await screen.findByText("to | 2022/02/01 00:00:00", { exact: false })).toBeVisible();
@@ -261,5 +243,33 @@ describe("ParametersPage", () => {
     });
 
     expect(initialRows2).toHaveLength(10);
+  });
+
+  test("When a parameter has a long value Then it renders an expandable preview that reveals the code editor", async () => {
+    server.use(http.get("/api/v2/parameters", () => HttpResponse.json(Parameters.response)));
+
+    const { component } = setup();
+
+    render(component);
+
+    const longValue =
+      Parameters.response.data.find((parameter) => parameter.name === "different_param")?.value ??
+      "";
+
+    // A long value is now classified as expandable: the cell renders a preview
+    // button (rather than the previous plain truncated cell) that reveals the
+    // value in the mocked code editor (test-setup.ts). The button label is a
+    // middle-truncated form of the value, so match on its distinctive tail.
+    const [preview] = await screen.findAllByRole("button", { name: /long value$/ });
+
+    await userEvent.click(preview);
+
+    // The editor renders the value verbatim (whitespace preserved), so the full
+    // fixture value appears in its content.
+    const editor = screen
+      .getAllByTestId("code-editor-content")
+      .find((element) => element.textContent?.includes(longValue));
+
+    expect(editor).toBeVisible();
   });
 });

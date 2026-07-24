@@ -18,7 +18,7 @@ export const Page: React.FC = () => {
         titleText={<>{words("notFound.title")}</>}
       >
         <EmptyStateFooter>
-          <Link pathname={routeManager.getUrl("Home", undefined)}>
+          <Link pathname={routeManager.getUrl("Dashboard", undefined)}>
             <Button>{words("notFound.home")}</Button>
           </Link>
         </EmptyStateFooter>

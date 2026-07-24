@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump @babel/core from 7.29.0 to 7.29.6
+destination-branches:
+- master
+sections: {}

@@ -1,0 +1,3 @@
+description: The environment handler now syncs local storage whenever the active environment changes, ensuring the default route restores the correct environment on fresh loads.
+change-type: patch
+destination-branches: [master]

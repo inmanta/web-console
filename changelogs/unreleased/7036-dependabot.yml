@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump @graphiql/react from 0.37.3 to 0.37.7
+destination-branches:
+- master
+sections: {}

@@ -46,13 +46,15 @@ const dict = {
   "load.previous": "Load previous",
   "load.next": "Load next",
   copy: "Copy",
-  "copy.raw": "Copy raw",
-  "copy.raw.tooltip": "Copy with escaped newlines",
+  "copy.raw": "Copy raw value",
   "copy.clipboard": "Copy to clipboard",
   noData: "There is no data available to display.",
   success: "Success",
   "success.title": "Success",
   "info.title": "Info",
+  noResults: "No results found",
+  include: "Include",
+  exclude: "Exclude",
 
   /**
    * Error related text
@@ -166,6 +168,14 @@ const dict = {
     `Change attributes of instance ${instanceId}`,
   "inventory.duplicateInstance.header": (instanceId: string) =>
     `Create an instance based of instance ${instanceId}`,
+  "inventory.form.suggestions.unknownVariable": (variables: string, supported: string) =>
+    `Unknown variable(s) in the suggested values parameter name: ${variables}. Supported variables: ${supported}.`,
+  "inventory.form.tabs.invalidCatalog":
+    "The web_tabs entity annotation is malformed. Every tab requires a unique string 'key' and a string 'label'.",
+  "inventory.form.tabs.defaultRequired": (count: number) =>
+    `The web_tabs entity annotation must mark exactly one tab as default, but ${count} tabs are marked.`,
+  "inventory.form.tabs.unknownKey": (fieldName: string, tabKey: string) =>
+    `Field "${fieldName}" is assigned to tab "${tabKey}", which is not defined in the web_tabs entity annotation.`,
   "inventory.form.typeHint.list": (listBaseType: string) => `A list of ${listBaseType}s`,
   "inventory.form.typeHint.dict": 'Key-value pairs, following the JSON syntax: {"key": "value"}',
   "inventory.form.placeholder.intList": "1, 2, 3",
@@ -294,6 +304,7 @@ const dict = {
   active_attributes: "Active",
   candidate_attributes: "Candidate",
   rollback_attributes: "Rollback",
+  "instanceDetails.searchPlaceholder": "Search version…",
   "instanceDetails.expandAll": "Expand all",
   "instanceDetails.collapseAll": "Collapse all",
   "instanceDetails.resetSort": "Reset sorting",
@@ -303,6 +314,7 @@ const dict = {
   "instanceDetails.setState.label": "Set state",
   "instanceDetails.forceState.label": "Force state",
   "instanceDetails.stateTransfer.confirmTitle": "Confirm set state transfer",
+  "instanceDetails.stateTransfer.messageLabel": "Message",
   "instanceDetails.expertActions": "Expert Actions",
   "instanceDetails.actions": "Actions",
   "instanceDetails.expert.transfer.options": "Select Operation",
@@ -361,9 +373,14 @@ const dict = {
   "events.title": "Service Instance Events",
   "events.failed.body": (error: string) => `There was an error retrieving data: ${error}`,
   "events.caption": (id: string) => `Showing events of instance ${id}`,
+  "events.filters": "Filters",
   "events.filters.source.placeholder": "Select a source state...",
   "events.filters.destination.placeholder": "Select a destination state...",
   "events.filters.eventType.placeholder": "Select an Event Type...",
+  "events.filters.version.label": "Version",
+  "events.filters.version.placeholder": "Filter by version...",
+  "events.filters.from": "From",
+  "events.filters.to": "To",
   "events.filters.date.to": "to",
 
   /**
@@ -406,7 +423,7 @@ const dict = {
   "orders.column.option": "Options",
   "orders.column.action": "Action",
   "orders.column.serviceEntity": "Service Entity",
-  "orders.column.instanceId": "Instance Id",
+  "orders.column.instance": "Instance",
   "orders.row.dependencies": "Dependencies",
   "orders.row.config": "Config",
   "orders.row.state": "State",
@@ -419,6 +436,7 @@ const dict = {
   "orderDetails.table.empty": "No orders details could be found.",
   "orders.links.details": "Show Details",
   "orders.row.empty": "Empty",
+  "orders.row.instanceCreationFailed": "Order failed to create instance.",
   "orders.status.failed": "failed",
   "orders.status.acknowledged": "acknowledged",
   "orders.status.completed": "completed",
@@ -445,8 +463,8 @@ const dict = {
     "Are you sure you want to update your Service Catalog? This is an irreversible change and you might want to do a back-up before confirming the update.",
   "catalog.update.confirmation.p2": "This action will:",
   "catalog.update.confirmation.p3": "Update the project",
-  "catalog.update.confirmation.p4": "Export the service definition",
-  "catalog.update.confirmation.p5": "Note: It will not do a regular exporting compile.",
+  "catalog.update.confirmation.p4": "Export the new resources",
+  "catalog.update.confirmation.p5": "Note: It will perform two consecutive compiles.",
   "catalog.update.tooltip": "Update project and export service definition",
   "catalog.API.tooltip": "Catalog API",
   "catalog.button.details": "Show Details",
@@ -540,7 +558,9 @@ const dict = {
   "resources.empty.filterMessage":
     "The given combination of filters didn't match any existing resources, please edit your filter values.",
   "resources.deploying.popover": (count: number) =>
-    `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying`,
+    `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying${
+      count > 0 ? ", click to filter" : ""
+    }`,
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "discoveredResourceDetails.title": "Discovered Resource Details",
@@ -550,6 +570,8 @@ const dict = {
   "resources.column.value": "Value",
   "resources.column.requires": "Requires",
   "resources.column.status": "Status",
+  "resources.column.status.toolTip":
+    "Toggle fields to include them in sorting. Drag active fields to set their priority order.",
   "resources.button.statusDetails": "Show status details",
   "resources.popover.title": "Resource State Summary",
   "resources.popover.deploying": "Deploying",
@@ -558,6 +580,7 @@ const dict = {
   "resources.popover.requirement": "Requirement",
   "resources.popover.requirements": "Requirements",
   "resources.filters.status.isDeploying": "Is Deploying",
+  "resources.filters.status.orphaned.label": "Orphaned",
   "resources.filters.status.blocked.label": "Blocked state(s)",
   "resources.filters.status.blocked.placeholder": "Filter by blocked state",
   "resources.filters.status.compliance.label": "Compliance state(s)",
@@ -584,7 +607,7 @@ const dict = {
   "resources.filters.desiredState.sectionTitle": "Desired State",
   "resources.filters.desiredState.purged": "Purged",
   "resources.filters.active.title": "Active filters",
-  "resources.filters.active.clearAll": "Clear all",
+  "resources.filters.active.resetFilters": "Reset Filters",
   "resources.filters.active.empty.title": "No filters applied",
   "resources.filters.active.empty.body":
     "Select filters from the tabs above to refine your results.",
@@ -592,6 +615,13 @@ const dict = {
     "Use the fields above to add filters and refine your results.",
   "resources.filters.active.group.close": (group: string) => `Remove ${group} filters`,
   "resources.filters": "Filters",
+  "resources.sort.label.blocked": "Blocked",
+  "resources.sort.label.compliance": "Compliance",
+  "resources.sort.label.lastHandlerRun": "Last Handler Run",
+  "resources.sort.label.isDeploying": "Is Deploying",
+  "resources.status.label.blocked": "Blocked",
+  "resources.status.label.compliance": "Compliance",
+  "resources.status.label.lastHandlerRun": "Last Handler Run",
   "resources.compoundStateSummary.title": "Compound state summary",
   "resources.compoundStateSummary.deploy": "Deploy",
   "resources.compoundStateSummary.repair": "Repair",
@@ -690,9 +720,29 @@ const dict = {
   "compileDetails.stages.columns.errstream": "Error Stream",
   "compileDetails.stages.copy": "Copy full command to clipboard",
 
-  "home.title": "Home",
-  "home.navigation.tooltip": "Go to the overview page",
-  "home.navigation.button": "Overview",
+  "home.environmentSwitcher.search.placeholder": "Search by name or project",
+  "home.environmentSwitcher.create.button": "Create new environment",
+  "home.environmentSwitcher.manageProjects.button": "Manage projects",
+  "home.environmentSwitcher.noEnvironments": "No environments available",
+  "home.environmentSwitcher.signedInAs": "Signed in as: ",
+  "home.manageProjects.title": "Manage projects",
+  "home.manageProjects.description":
+    "Projects group related environments. Deleting a project is permanent.",
+  "home.manageProjects.callout.title": "Note",
+  "home.manageProjects.callout": "A project can only be deleted once it has ",
+  "home.manageProjects.callout.bold": "no environments",
+  "home.manageProjects.callout.suffix": ". Delete its environments first to unlock the action.",
+  "home.manageProjects.environments.count": (n: number) => `${n} environment${n === 1 ? "" : "s"}`,
+  "home.manageProjects.environments.remain": (n: number) =>
+    `${n} environment${n === 1 ? "" : "s"} remaining`,
+  "home.manageProjects.environments.empty": "empty",
+  "home.manageProjects.delete.button": "Delete",
+  "home.manageProjects.delete.confirm.button": "Confirm delete",
+  "home.manageProjects.delete.cancel.button": "Cancel",
+  "home.manageProjects.delete.confirm.warning": "This action cannot be undone.",
+  "home.manageProjects.close.button": "Close",
+  "home.noEnvironments.toast.title": "No environments available",
+  "home.noEnvironments.toast.message": "You were redirected to create an environment.",
   "home.empty.message": "No environments found",
   "home.create.env.desciption": "Create new environment",
   "home.create.env": "Create environment",
@@ -733,7 +783,10 @@ const dict = {
   "createEnv.description": "Description",
   "createEnv.projectName": "Project Name",
   "createEnv.repository": "Repository",
+  "createEnv.repository.tooltip":
+    "The URL of the repository, for example: https://code.inmanta.com/my_project.git",
   "createEnv.branch": "Branch",
+  "createEnv.branch.tooltip": "The branch of the repository, for example: main",
   "createEnv.icon": "Icon",
 
   /**
@@ -758,9 +811,35 @@ const dict = {
   "settings.tabs.configuration": "Configuration",
   "settings.tabs.tokens": "Tokens",
   "settings.tabs.token.disabledInfo": "An authenticated user is required to create tokens",
+  "settings.tabs.token.title": "Configure New Token",
   "settings.tabs.token.description":
-    "Generate authentication tokens for authorizing agents, api or compiler for this specific environment.",
+    "Generate an authentication token for this environment. By default, generated tokens will provide API access.",
+  "settings.tabs.token.description.details":
+    "Most tokens only need API access. The agent and compiler types are only required for connecting an externally hosted agent or a remote compiler to this environment.",
   "settings.tabs.token.generate": "Generate",
+  "settings.tabs.token.expiry": "Expires after",
+  "settings.tabs.token.expiry.never": "Never",
+  "settings.tabs.token.expiry.custom": "Custom",
+  "settings.tabs.token.advanced": "Advanced options",
+  "settings.tabs.token.clientTypes": "Client types",
+  "settings.tabs.token.clientTypes.api": "API",
+  "settings.tabs.token.clientTypes.agent": "Agent",
+  "settings.tabs.token.clientTypes.compiler": "Compiler",
+  "settings.tabs.token.registered.title": "Registered tokens",
+  "settings.tabs.token.empty": "No revocable tokens have been created for this environment.",
+  "settings.tabs.token.column.createdBy": "Created by",
+  "settings.tabs.token.column.clientTypes": "Client types",
+  "settings.tabs.token.column.issuedAt": "Issued",
+  "settings.tabs.token.column.expiresAt": "Expires at",
+  "settings.tabs.token.column.lastUsed": "Last used",
+  "settings.tabs.token.column.status": "Status",
+  "settings.tabs.token.column.revokedAt": "Revoked at",
+  "settings.tabs.token.status.active": "Active",
+  "settings.tabs.token.status.revoked": "Revoked",
+  "settings.tabs.token.revoke": "Revoke",
+  "settings.tabs.token.revoke.title": "Revoke token",
+  "settings.tabs.token.revoke.confirm": (jti: string) =>
+    `Are you sure you want to revoke token ${jti}? This action cannot be undone.`,
   "settings.update": "Setting Changed",
   "settings.warning.update": "Changed value has not been saved",
   "settings.protected.message": (protected_by: string) =>
@@ -795,6 +874,7 @@ const dict = {
   "agents.actions.deploy": "Force deploy",
   "agents.actions.repair": "Force repair",
   "agents.actions.onResume": "Unpause agent when environment is resumed",
+  "agents.filters": "Filters",
   "agents.filters.status.placeholder": "Select status...",
   "agents.filters.name.placeholder": "Filter by name",
   "agents.filters.processName.placeholder": "Filter by process name",
@@ -826,6 +906,9 @@ const dict = {
   "desiredState.actions.promote": "Promote",
   "desiredState.actions.promote.failed": "Promoting desired state version failed",
   "desiredState.actions.promote.disabledTooltip": "Promoting this version is not allowed",
+  "desiredState.filters": "Filters",
+  "desiredState.filters.from": "From",
+  "desiredState.filters.to": "To",
   "desiredState.filters.status.placeholder": "Select status...",
   "desiredState.filters.version.placeholder": "Filter by version",
   "desiredState.filters.date.placeholder": "Filter by date",
@@ -864,11 +947,13 @@ const dict = {
   "parameters.empty.message": "No parameters found",
   "parameters.columns.name": "Name",
   "parameters.columns.updated": "Last Updated",
-  "parameters.columns.updated.tests": "Updated",
   "parameters.columns.source": "Source",
   "parameters.columns.value": "Value",
   "parameters.filters.name.placeholder": "Filter by name",
   "parameters.filters.source.placeholder": "Filter by source",
+  "parameters.filters": "Filters",
+  "parameters.filters.from": "From",
+  "parameters.filters.to": "To",
 
   /**
    * Notification
@@ -927,6 +1012,10 @@ const dict = {
   "login.title": "Log in to your account",
   "login.subtitle": "Enter your credentials",
   "login.login": "Log in",
+  "login.fallback.description":
+    "The identity provider could not sign you in. You can retry, or use a local account.",
+  "login.fallback.idp": "Sign in with your identity provider",
+  "login.fallback.local": "Sign in with a local account",
 
   /**
    * User Management
@@ -935,6 +1024,8 @@ const dict = {
   "userManagement.name": "Name",
   "userManagement.changePassword": "Change Password",
   "userManagement.changePassword.placeholder": "New Password...",
+  "userManagement.changePassword.currentPassword": "Current Password",
+  "userManagement.changePassword.currentPassword.placeholder": "Current Password...",
   "userManagement.changePassword.success": "Password changed successfully",
   "userManagement.changePassword.message": (username: string) =>
     `Please provide a new password for user ${username}`,
@@ -961,9 +1052,7 @@ const dict = {
     "This editor is for preview purposes only. Changes made here will not be saved into the service attributes.",
   "markdownPreviewer.pageTitle": (service: string, instance: string) =>
     `Markdown Preview: ${service} - ${instance}`,
-  "markdownPreviewer.download.tooltip": "Download markdown file",
   "markdownPreviewer.route.label": (instance: string) => `Markdown Preview: ${instance}`,
-  "markdownPreviewer.download": "Download",
 
   /**
    * Markdown Container related text
@@ -980,6 +1069,20 @@ const dict = {
   "markdownContainer.download.png": "↓ PNG",
   "markdownContainer.download.png.title": "Download as PNG",
   "markdownContainer.error.mermaid.title": "Error rendering Mermaid diagram:",
+
+  /**
+   * Shared filter-drawer range inputs (TimestampRangeFilter / IntRangeFilter)
+   */
+  "filters.timestamp.from.datePicker": "From Date Picker",
+  "filters.timestamp.from.timePicker": "From Time Picker",
+  "filters.timestamp.to.datePicker": "To Date Picker",
+  "filters.timestamp.to.timePicker": "To Time Picker",
+  "filters.timestamp.from.apply": "Apply date from filter",
+  "filters.timestamp.to.apply": "Apply date to filter",
+  "filters.range.from.input": (label: string) => `${label} range from`,
+  "filters.range.to.input": (label: string) => `${label} range to`,
+  "filters.range.from.apply": (label: string) => `Apply ${label} from filter`,
+  "filters.range.to.apply": (label: string) => `Apply ${label} to filter`,
 
   /**
    * LogViewer related text

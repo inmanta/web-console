@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump react and @types/react
+destination-branches:
+- master
+sections: {}

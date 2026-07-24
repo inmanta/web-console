@@ -1,0 +1,6 @@
+description: Showing unmodified resources on the Compliance Check and Desired State Compare pages is no longer possible in the web-console.
+issue-nr: 6929
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  deprecation-note: "{{description}}"

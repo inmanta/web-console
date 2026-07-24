@@ -3,6 +3,7 @@ import {
   t_global_icon_color_status_danger_default,
   t_global_color_brand_default,
   t_global_icon_color_status_success_default,
+  t_chart_color_blue_100,
 } from "@patternfly/react-tokens";
 import { words } from "@/UI";
 import { LegendBar, LegendItemDetails } from "@/UI/Components";
@@ -64,7 +65,7 @@ const fromProgressToItems = (items: ServiceOrderItem[]): LegendItemDetails[] => 
       id: "acknowledged",
       label: words("orders.status.acknowledged"),
       value: Number(items.filter((item) => item.status.state === "acknowledged").length),
-      backgroundColor: t_global_icon_color_status_success_default.var,
+      backgroundColor: t_chart_color_blue_100.var,
     },
     {
       id: "failed",

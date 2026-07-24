@@ -8,12 +8,14 @@ import { setupServer } from "msw/node";
 import {
   BooleanField,
   DictListField,
+  EntityAnnotations,
   EnumField,
   InstanceAttributeModel,
   NestedField,
   TextField,
   Textarea,
 } from "@/Core";
+import { SUGGESTION_NAMESPACES } from "@/Data/Queries";
 import * as Test from "@/Test";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
@@ -27,7 +29,8 @@ const setup = (
   func: undefined | Mock = undefined,
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined,
-  initialStates: string[] = []
+  initialStates: string[] = [],
+  entityAnnotations: EntityAnnotations | undefined = undefined
 ) => {
   const component = (
     <QueryClientProvider client={testClient}>
@@ -47,6 +50,7 @@ const setup = (
                   isDirty={false}
                   setIsDirty={vi.fn()}
                   initialStates={initialStates}
+                  entityAnnotations={entityAnnotations}
                 />
               }
             />
@@ -198,6 +202,81 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField with parameter suggestio
   expect(suggestions).toHaveLength(0);
 });
 
+test("GIVEN ServiceInstanceForm WHEN a parameter_name contains ${entity_type} THEN the parameter resolved for this form's entity is fetched", async () => {
+  const values = ["value1", "value2", "value3"];
+
+  // Only the name resolved from the form's entity type serves values; fetching
+  // the raw, unresolved template would 404 and yield no suggestions.
+  server.use(
+    http.get("/api/v1/parameter/param_name_service_entity", () => {
+      return HttpResponse.json({
+        parameter: {
+          metadata: { values },
+        },
+      });
+    })
+  );
+
+  const { component } = setup([Test.Field.textSuggestionsTemplated]);
+
+  render(component);
+
+  const textBox = screen.getByRole("textbox", {
+    name: `TextInput-${Test.Field.textSuggestionsTemplated.name}`,
+  });
+
+  // simulate click on the input to show the suggestions
+  await userEvent.click(textBox);
+
+  const suggestions = await screen.findAllByRole("menuitem");
+
+  expect(suggestions).toHaveLength(values.length);
+});
+
+test("GIVEN ServiceInstanceForm WHEN a parameter_name contains an unknown ${...} variable THEN a model error is shown and no suggestions appear", async () => {
+  const { component } = setup([Test.Field.textSuggestionsUnknownVariable]);
+
+  render(component);
+
+  expect(
+    screen.getByText(
+      words("inventory.form.suggestions.unknownVariable")(
+        "entity_typo",
+        SUGGESTION_NAMESPACES.join(", ")
+      )
+    )
+  ).toBeVisible();
+
+  const textBox = screen.getByRole("textbox", {
+    name: `TextInput-${Test.Field.textSuggestionsUnknownVariable.name}`,
+  });
+
+  // simulate click on the input to show the suggestions
+  await userEvent.click(textBox);
+
+  expect(screen.queryAllByRole("menuitem")).toHaveLength(0);
+});
+
+test("GIVEN ServiceInstanceForm WHEN a parameter_name depends on ${instance_id} and there is none (create) THEN no suggestions appear", async () => {
+  const { component } = setup([
+    {
+      ...Test.Field.textSuggestionsTemplated,
+      suggestion: { type: "parameters", parameter_name: "param_name_${instance_id}" },
+    },
+  ]);
+
+  render(component);
+
+  const textBox = screen.getByRole("textbox", {
+    name: `TextInput-${Test.Field.textSuggestionsTemplated.name}`,
+  });
+
+  // simulate click on the input to show the suggestions
+  await userEvent.click(textBox);
+
+  expect(screen.queryAllByRole("menuitem")).toHaveLength(0);
+});
+
 test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field", async () => {
   const { component } = setup([Test.Field.bool]);
 
@@ -209,13 +288,16 @@ test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field
     })
   ).toBeVisible();
 
-  expect(screen.getAllByRole("radio")).toHaveLength(3);
+  const trueButton = screen.getByRole("button", { name: words("true") });
+  const falseButton = screen.getByRole("button", { name: words("false") });
 
-  const trueRadioButton = screen.getByRole("radio", { name: "True" });
+  // An optional boolean starts with neither option selected, representing null.
+  expect(trueButton).toHaveAttribute("aria-pressed", "false");
+  expect(falseButton).toHaveAttribute("aria-pressed", "false");
 
-  await userEvent.click(trueRadioButton);
+  await userEvent.click(trueButton);
 
-  expect(trueRadioButton).toBeChecked();
+  expect(trueButton).toHaveAttribute("aria-pressed", "true");
 });
 
 test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field", async () => {
@@ -635,7 +717,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     "test text"
   );
 
-  await userEvent.click(screen.getByRole("radio", { name: words("true") }));
+  await userEvent.click(screen.getByRole("button", { name: words("true") }));
 
   const group = screen.getByRole("group", {
     name: "nested_field",
@@ -823,4 +905,80 @@ test("GIVEN ServiceInstanceForm without initialStates WHEN no initialStates prov
 
   // Dropdown should not be visible
   expect(screen.queryByLabelText("SubmitDropdownToggle")).not.toBeInTheDocument();
+});
+
+test("GIVEN ServiceInstanceForm WHEN the entity has no web_tabs annotation THEN the form renders as a single column without tabs", () => {
+  const { component } = setup([Test.Field.text, Test.Field.number]);
+
+  render(component);
+
+  expect(screen.queryByRole("tab")).not.toBeInTheDocument();
+  // Fields still render (single column), not swallowed by the tab branch.
+  expect(screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })).toBeVisible();
+});
+
+test("GIVEN ServiceInstanceForm WHEN the entity has a web_tabs catalog THEN fields render in ordered tabs and the default tab shows first with the unassigned fields", async () => {
+  const { general, network, extras, entityAnnotations } = Test.Service.FormTabs;
+  const assigned = { ...Test.Field.text, tab: network.key };
+  const unassigned = Test.Field.number;
+
+  const { component } = setup(
+    [assigned, unassigned],
+    undefined,
+    false,
+    undefined,
+    [],
+    entityAnnotations
+  );
+
+  render(component);
+
+  const tabs = screen.getAllByRole("tab");
+
+  expect(tabs.map((tab) => tab.textContent)).toEqual([general.label, network.label, extras.label]);
+
+  // The default tab is initially shown and catches the unassigned field;
+  // content of the inactive tabs is hidden.
+  expect(screen.getByRole("spinbutton", { name: `TextInput-${unassigned.name}` })).toBeVisible();
+  expect(
+    screen.queryByRole("textbox", { name: `TextInput-${assigned.name}` })
+  ).not.toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole("tab", { name: network.label }));
+
+  expect(screen.getByRole("textbox", { name: `TextInput-${assigned.name}` })).toBeVisible();
+  expect(
+    screen.queryByRole("spinbutton", { name: `TextInput-${unassigned.name}` })
+  ).not.toBeInTheDocument();
+});
+
+test("GIVEN ServiceInstanceForm WHEN the web_tabs catalog does not have exactly one default THEN the model error is surfaced and the form falls back to a single column", () => {
+  const { general, network } = Test.Service.FormTabs;
+  const twoDefaults: EntityAnnotations = {
+    web_tabs: [general, { ...network, default: true }],
+  };
+
+  const { component } = setup([Test.Field.text], undefined, false, undefined, [], twoDefaults);
+
+  render(component);
+
+  expect(screen.getByTestId("FormTabs-Error")).toHaveTextContent(
+    words("inventory.form.tabs.defaultRequired")(2)
+  );
+  expect(screen.queryByRole("tab")).not.toBeInTheDocument();
+  expect(screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })).toBeVisible();
+});
+
+test("GIVEN ServiceInstanceForm WHEN a field is assigned to a tab that is not in the web_tabs catalog THEN the model error is surfaced", () => {
+  const { entityAnnotations } = Test.Service.FormTabs;
+  const assigned = { ...Test.Field.text, tab: "not_in_catalog" };
+
+  const { component } = setup([assigned], undefined, false, undefined, [], entityAnnotations);
+
+  render(component);
+
+  expect(screen.getByTestId("FormTabs-Error")).toHaveTextContent(
+    words("inventory.form.tabs.unknownKey")(assigned.name, "not_in_catalog")
+  );
+  expect(screen.queryByRole("tab")).not.toBeInTheDocument();
 });

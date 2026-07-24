@@ -1,0 +1,6 @@
+description: The Parameters page filters (name, source, last updated) have been moved from the inline toolbar into a side-panel drawer, matching the Resources page.
+issue-nr: 6777
+change-type: minor
+destination-branches: [master]
+sections:
+  minor-improvement: "{{description}}"

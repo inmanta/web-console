@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { PageSize, Pagination, Resource, Sort } from "@/Core/Domain";
+import { PageSize, Pagination, Resource } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
+import { MultiSort } from "@/Data";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGraphQLRequest, REFETCH_INTERVAL } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
@@ -51,7 +52,7 @@ interface GetResources {
 interface GetResourcesParams {
   pageSize: PageSize.PageSize;
   filter: Resource.Filter;
-  sort?: Sort.Type<Resource.SortKey>;
+  sort: MultiSort<Resource.SortKey>;
   currentPage: CurrentPage;
 }
 
@@ -147,18 +148,17 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
     filter: graphqlFilter,
     environment: env,
     ...paginationVariables,
-    ...(sort ? { orderBy: mapSort(sort) } : {}),
+    ...(sort.length > 0 ? { orderBy: mapSort(sort) } : {}),
   };
 
   const filterArray = filter ? Object.values(filter) : [];
-  const sortArray = sort ? [sort] : [];
 
   const queryFn = useGraphQLRequest<ResourcesGraphQLResponse>(GET_RESOURCES_QUERY, variables);
 
   return {
     useContinuous: (): UseQueryResult<GetResourcesResponse, Error> =>
       useQuery({
-        queryKey: getResourcesKey.list([pageSize, ...filterArray, ...sortArray, currentPage, env]),
+        queryKey: getResourcesKey.list([pageSize, ...filterArray, ...sort, currentPage, env]),
         queryFn,
         select: (data) => {
           const { resources, resourceSummary } = data.data;

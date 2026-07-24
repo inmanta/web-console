@@ -1,15 +1,7 @@
 import React from "react";
-import {
-  Badge,
-  Button,
-  Flex,
-  FlexItem,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
-} from "@patternfly/react-core";
-import { FilterIcon } from "@patternfly/react-icons";
+import { Flex, Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { words } from "@/UI";
+import { FilterToggleButton } from "@/UI/Components";
 
 interface Props {
   summaryWidget: React.ReactNode;
@@ -49,30 +41,13 @@ export const ResourceTableControls: React.FC<Props> = ({
           {paginationWidget}
         </ToolbarItem>
         <ToolbarItem>
-          <Button
-            {...(noResourcesFound && { isDanger: true })}
+          <FilterToggleButton
             onClick={onToggleFilters}
-            variant="link"
-            icon={<FilterIcon />}
-            iconPosition="end"
-            aria-pressed={isDrawerExpanded}
-          >
-            <Flex
-              alignItems={{ default: "alignItemsCenter" }}
-              spaceItems={{ default: "spaceItemsSm" }}
-            >
-              <FlexItem>
-                <Badge
-                  {...(noResourcesFound && {
-                    style: { backgroundColor: "var(--pf-t--color--red--60)" },
-                  })}
-                >
-                  {activeFilterCount}
-                </Badge>
-              </FlexItem>
-              <FlexItem>{words("resources.filters")}</FlexItem>
-            </Flex>
-          </Button>
+            isExpanded={isDrawerExpanded}
+            activeFilterCount={activeFilterCount}
+            label={words("resources.filters")}
+            isDanger={noResourcesFound}
+          />
         </ToolbarItem>
       </Flex>
     </ToolbarContent>

@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
 import { Button, Flex } from "@patternfly/react-core";
-import moment from "moment";
 import styled from "styled-components";
 import { useGetMetrics } from "@/Data/Queries";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import dayjs from "@/dayjs";
 import { Section } from "./Section";
 
 /**
@@ -21,8 +21,8 @@ import { Section } from "./Section";
 
 export const Dashboard: React.FC = () => {
   const { orchestratorProvider } = useContext(DependencyContext);
-  const [startDate, setStartDate] = useState(moment().add(-7, "days").toISOString());
-  const [endDate, setEndDate] = useState(moment().toISOString());
+  const [startDate, setStartDate] = useState(dayjs().subtract(7, "days").toISOString());
+  const [endDate, setEndDate] = useState(dayjs().toISOString());
   const {
     data: metrics,
     error,
@@ -36,8 +36,8 @@ export const Dashboard: React.FC = () => {
   });
 
   const updateCharts = () => {
-    setStartDate(moment().add(-7, "days").toISOString());
-    setEndDate(moment().toISOString());
+    setStartDate(dayjs().subtract(7, "days").toISOString());
+    setEndDate(dayjs().toISOString());
   };
 
   if (isError) {

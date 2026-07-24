@@ -25,6 +25,12 @@ const d: ProjectModel = {
   environments: [Environment.e],
 };
 
+export const empty: ProjectModel = {
+  id: "project_id_empty",
+  name: "project_name_empty",
+  environments: [],
+};
+
 export const list = [a, b, c, d];
 
 export const filterable: ProjectModel[] = [

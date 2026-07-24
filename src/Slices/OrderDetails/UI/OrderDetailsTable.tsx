@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Table, TableVariant, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
 import { useExpansion } from "@/Data";
 import { ServiceOrderItem } from "@/Slices/Orders/Core/Types";
@@ -19,7 +19,43 @@ interface Props {
  * @returns ReactNode
  */
 export const OrderDetailsTable: React.FC<Props> = ({ tablePresenter, rows, ...props }) => {
-  const [isExpanded, onExpansion] = useExpansion();
+  const [isExpanded, onExpansion, expand] = useExpansion();
+  const rowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
+
+  // Row content re-renders on expansion, but the row itself stays mounted, so the ref is
+  // already available to scroll to (and, when needed, focus) in the same tick.
+  const scrollInstanceOrderDetailsRowIntoView = (
+    instanceId: string,
+    { focus }: { focus: boolean }
+  ) => {
+    const rowElement = rowRefs.current[instanceId];
+
+    if (rowElement) {
+      rowElement.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      if (focus) {
+        rowElement.focus();
+      }
+    }
+  };
+
+  const expandInstanceOrderDetailsRow = (instanceId: string) => {
+    expand(instanceId);
+    scrollInstanceOrderDetailsRowIntoView(instanceId, { focus: true });
+  };
+
+  // Only scroll when a row transitions from collapsed to expanded: its newly revealed content
+  // (dependencies, config, ...) can extend well below the fold. Focus is left alone here, since
+  // the toggle button the user just clicked already has it.
+  const toggleInstanceOrderDetailsRow = (instanceId: string) => () => {
+    const wasExpanded = isExpanded(instanceId);
+
+    onExpansion(instanceId)();
+
+    if (!wasExpanded) {
+      scrollInstanceOrderDetailsRowIntoView(instanceId, { focus: false });
+    }
+  };
 
   const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }) => {
     return <Th key={apiName}>{displayName}</Th>;
@@ -41,10 +77,15 @@ export const OrderDetailsTable: React.FC<Props> = ({ tablePresenter, rows, ...pr
         {rows.map((row) => (
           <OrderDetailsRow
             row={row}
+            orderItems={rows}
             key={row.instance_id}
             isExpanded={isExpanded(row.instance_id)}
-            onToggle={onExpansion(row.instance_id)}
+            onToggle={toggleInstanceOrderDetailsRow(row.instance_id)}
             numberOfColumns={tablePresenter.getNumberOfColumns()}
+            rowRef={(element) => {
+              rowRefs.current[row.instance_id] = element;
+            }}
+            expandInstanceOrderDetailsRow={expandInstanceOrderDetailsRow}
           />
         ))}
       </Tbody>

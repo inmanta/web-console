@@ -3,9 +3,9 @@ import { words } from "@/UI/words";
 import { MarkdownContainer } from "./MarkdownContainer";
 import type { Mock } from "vitest";
 
-// Mock the theme function
+// Mock the theme hook
 vi.mock("../DarkmodeOption", () => ({
-  getThemePreference: vi.fn(() => "default"),
+  useTheme: vi.fn(() => ({ isDark: false, theme: "light", setTheme: vi.fn() })),
 }));
 
 describe("MarkdownContainer", () => {
@@ -82,8 +82,8 @@ describe("MarkdownContainer", () => {
   });
 
   it("applies theme configuration to Mermaid diagrams", async () => {
-    // Set up dark theme in DOM (the implementation checks document.documentElement.classList)
-    document.documentElement.classList.add("pf-v6-theme-dark");
+    // Set up dark theme in DOM (the implementation checks document.documentElement[data-theme])
+    document.documentElement.setAttribute("data-theme", "dark");
 
     // Import the mermaid mock and set up spies before rendering
     const mermaidMock = await import("mermaid");
@@ -117,12 +117,12 @@ describe("MarkdownContainer", () => {
     });
 
     // Clean up
-    document.documentElement.classList.remove("pf-v6-theme-dark");
+    document.documentElement.removeAttribute("data-theme");
   });
 
   it("uses default theme when no theme preference is set", async () => {
     // Ensure dark theme class is not present (the implementation checks document.documentElement.classList)
-    document.documentElement.classList.remove("pf-v6-theme-dark");
+    document.documentElement.removeAttribute("data-theme");
 
     // Import the mermaid mock and set up spies before rendering
     const mermaidMock = await import("mermaid");

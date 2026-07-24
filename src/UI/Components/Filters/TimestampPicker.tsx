@@ -5,9 +5,10 @@ import {
   isValidDate,
   yyyyMMddFormat,
   InputGroup,
+  InputGroupItem,
 } from "@patternfly/react-core";
-import moment from "moment";
 import styled from "styled-components";
+import dayjs from "@/dayjs";
 
 interface Props {
   timestamp: Date | undefined;
@@ -15,15 +16,16 @@ interface Props {
   from: Date | undefined;
   datePickerLabel: string;
   timePickerLabel: string;
+  action?: React.ReactNode;
 }
 
-/** Both the Date and the Time Picker from Patternfly are in beta stage, e.g. validation doesn't work as expected */
 export const TimestampPicker: React.FC<Props> = ({
   timestamp,
   onChange,
   from,
   datePickerLabel,
   timePickerLabel,
+  action,
 }) => {
   const [timeText, setTimeText] = useState("");
 
@@ -75,13 +77,15 @@ export const TimestampPicker: React.FC<Props> = ({
 
   return (
     <StyledInputGroup>
-      <DatePicker
-        value={timestamp && isValidDate(timestamp) ? yyyyMMddFormat(timestamp) : ""}
-        dateParse={parseDate}
-        onChange={onDateChange}
-        rangeStart={from}
-        aria-label={datePickerLabel}
-      />
+      <InputGroupItem isFill>
+        <DatePicker
+          value={timestamp && isValidDate(timestamp) ? yyyyMMddFormat(timestamp) : ""}
+          dateParse={parseDate}
+          onChange={onDateChange}
+          rangeStart={from}
+          aria-label={datePickerLabel}
+        />
+      </InputGroupItem>
 
       <TimePicker
         style={{ width: "150px" }}
@@ -92,23 +96,27 @@ export const TimestampPicker: React.FC<Props> = ({
         aria-label={timePickerLabel}
         inputProps={{ value: timeText }}
       />
+
+      {action}
     </StyledInputGroup>
   );
 };
 
 const StyledInputGroup = styled(InputGroup)`
-  height: 65px;
+  flex-wrap: wrap;
+  overflow: visible;
+  width: 100%;
 `;
 
 const formatDateWithSlashes = (date: Date): string => {
-  return moment(date).format("YYYY/MM/DD");
+  return dayjs(date).format("YYYY/MM/DD");
 };
 
 const isValidSlashedFormat = (dateString: string): boolean =>
-  moment(dateString, "YYYY/MM/DD", true).isValid();
+  dayjs(dateString, "YYYY/MM/DD", true).isValid();
 
 const isValidDashedFormat = (dateString: string): boolean =>
-  moment(dateString, "YYYY-MM-DD", true).isValid();
+  dayjs(dateString, "YYYY-MM-DD", true).isValid();
 
 const validateDateFormat = (dateString: string, date: Date | string): boolean => {
   let formattedDate;
@@ -127,7 +135,7 @@ const validateDateFormat = (dateString: string, date: Date | string): boolean =>
 
 const parseDate = (val: string): Date => {
   if (isValidSlashedFormat(val)) {
-    return moment(val, "YYYY/MM/DD", true).toDate();
+    return dayjs(val, "YYYY/MM/DD", true).toDate();
   } else if (isValidDashedFormat(val)) {
     return new Date(`${val}T00:00:00`);
   }

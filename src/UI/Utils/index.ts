@@ -1,5 +1,5 @@
 export * from "./Delayed";
-export * from "./MomentDatePresenter";
+export * from "./CustomDatePresenter";
 export * from "./UrlManager";
 export * from "./ScrollRowIntoView";
 export * from "./ResourceId";

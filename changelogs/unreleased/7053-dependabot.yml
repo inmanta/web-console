@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump @babel/plugin-transform-typescript from 7.28.6 to 8.0.1
+destination-branches:
+- master
+sections: {}

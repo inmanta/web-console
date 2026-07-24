@@ -3,7 +3,7 @@ import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Table, Tbody, Th, Thead, Tr } from "@patternfly/react-table";
 import { useGetUsers } from "@/Data/Queries";
 import { UserCredentialsForm } from "@/Slices/UserManagement/UI/Components/AddUserForm";
-import { words } from "@/UI";
+import { DependencyContext, words } from "@/UI";
 import { EmptyView, ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { UserInfoRow } from "./Components/UserInfoRow";
@@ -18,10 +18,11 @@ import { UserInfoRow } from "./Components/UserInfoRow";
  */
 export const UserManagementPage: React.FC = () => {
   const { triggerModal } = useContext(ModalContext);
+  const { authHelper } = useContext(DependencyContext);
   const { data, isSuccess, isError, error, refetch } = useGetUsers().useOneTime();
 
   const authConfig = globalThis && globalThis.auth;
-  const showRoles = authConfig?.provider === "policy-engine" && authConfig?.method === "database";
+  const showRoles = authConfig?.provider === "policy-engine" && authHelper.isDatabaseSession();
 
   /**
    * Opens a modal with a form for user credentials.

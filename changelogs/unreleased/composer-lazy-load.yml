@@ -1,0 +1,3 @@
+description: The instance composer pages are now code-split and loaded lazily, so the JointJS bundle (~270 KB gzipped) is fetched only when a composer route is opened instead of on the initial load of every page.
+change-type: patch
+destination-branches: [master, iso9]

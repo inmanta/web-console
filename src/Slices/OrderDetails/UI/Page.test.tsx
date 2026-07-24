@@ -1,11 +1,12 @@
 import { act } from "react";
 import { Page } from "@patternfly/react-core";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { baseSetup } from "@/Test/Utils/base-setup";
+import { testClient } from "@/Test/Utils/react-query-setup";
 import {
   responseCompletedOrder,
   responseInProgressOrder,
@@ -13,6 +14,7 @@ import {
   responsePartialOrder,
 } from "../Data/Mock";
 import { OrderDetailsPage } from ".";
+import type { Mock } from "vitest";
 
 vi.mock("react-router", async (importOriginal) => {
   const actual = await importOriginal<typeof import("react-router")>();
@@ -37,6 +39,12 @@ describe("Order Details", () => {
   });
   beforeEach(() => {
     server.resetHandlers();
+  });
+  afterEach(() => {
+    // All tests in this file share the same query id ("1234"), so the query cache must be
+    // cleared between tests, otherwise a fresh render can briefly serve a previous test's
+    // cached order data instead of the new mocked response.
+    testClient.clear();
   });
   afterAll(() => {
     server.close();
@@ -268,6 +276,95 @@ describe("Order Details", () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
+    });
+  });
+
+  describe("scrolling a row into view", () => {
+    const originalScrollIntoView = HTMLElement.prototype.scrollIntoView;
+    let scrollIntoViewSpy: Mock<(arg?: boolean | ScrollIntoViewOptions) => void>;
+
+    beforeEach(() => {
+      scrollIntoViewSpy = vi.fn();
+      HTMLElement.prototype.scrollIntoView = scrollIntoViewSpy;
+    });
+
+    afterEach(() => {
+      HTMLElement.prototype.scrollIntoView = originalScrollIntoView;
+    });
+
+    test("GIVEN a row WHEN it is expanded via its own toggle THEN it is scrolled into view without stealing focus from the toggle button", async () => {
+      server.use(
+        http.get("/lsm/v2/order/1234", () => {
+          return HttpResponse.json({ data: responsePartialOrder });
+        })
+      );
+
+      const { component } = baseSetup(DetailsPage);
+
+      render(component);
+
+      expect(
+        await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
+      ).toBeInTheDocument();
+
+      const rows = await screen.findAllByRole("row", { name: "ServiceOrderDetailsRow" });
+
+      expect(rows).toHaveLength(2);
+
+      const toggleButtons = screen.getAllByLabelText("Toggle-DetailsRow");
+
+      await userEvent.click(toggleButtons[0]);
+
+      // Synchronize on the expanded content actually appearing before asserting on the scroll,
+      // since the state update triggered by the click can flush a tick after userEvent resolves.
+      await screen.findByLabelText("Expanded-Details");
+
+      expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+      expect(scrollIntoViewSpy.mock.instances[0]).toBe(rows[0]);
+      expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: "smooth", block: "center" });
+      expect(document.activeElement).not.toBe(rows[0]);
+
+      // Collapsing the row again should not trigger another scroll.
+      await userEvent.click(toggleButtons[0]);
+
+      await waitFor(() =>
+        expect(screen.queryByLabelText("Expanded-Details")).not.toBeInTheDocument()
+      );
+
+      expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+    });
+
+    test("GIVEN an expanded row WHEN a dependency is clicked THEN the matching row is scrolled into view and focused", async () => {
+      server.use(
+        http.get("/lsm/v2/order/1234", () => {
+          return HttpResponse.json({ data: responsePartialOrder });
+        })
+      );
+
+      const { component } = baseSetup(DetailsPage);
+
+      render(component);
+
+      expect(
+        await screen.findByRole("generic", { name: "OrderDetailsView-Success" })
+      ).toBeInTheDocument();
+
+      const rows = await screen.findAllByRole("row", { name: "ServiceOrderDetailsRow" });
+
+      expect(rows).toHaveLength(2);
+
+      await userEvent.click(screen.getAllByLabelText("Toggle-DetailsRow")[0]);
+
+      const dependenciesRegion = await screen.findByLabelText("Expanded-Dependencies");
+      const dependencyButton = within(dependenciesRegion).getByRole("button", {
+        name: /partial_instance_02/,
+      });
+
+      await userEvent.click(dependencyButton);
+
+      expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: "smooth", block: "center" });
+      expect(scrollIntoViewSpy.mock.instances).toContain(rows[1]);
+      expect(document.activeElement).toBe(rows[1]);
     });
   });
 });

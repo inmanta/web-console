@@ -32,4 +32,5 @@ export interface EnvironmentHandler {
   useIsServerCompileEnabled(): boolean;
   useIsProtectedEnvironment(): boolean;
   useIsExpertModeEnabled(): boolean;
+  useAll(): EnvironmentPreview[];
 }

@@ -1,3 +1,7 @@
+import environmentHelpers from "../support/environmentHelpers";
+
+const { selectEnvironment, getDefaultEnvName } = environmentHelpers;
+
 const testProjectName = (id) => "Test Project Name " + id;
 const testName = (id) => "TestName " + id;
 
@@ -67,9 +71,10 @@ const deleteEnv = (name) => {
 
   cy.get('[aria-label="delete environment check"]').type(name);
   cy.get('[aria-label="delete"]').click();
-  cy.url().should("eq", Cypress.config().baseUrl + "/console");
 
-  cy.get(`[aria-label="Select-environment-${name}"]`).should("not.exist");
+  cy.get('[data-testid="env-selector-toggle"]').click();
+  cy.contains('[role="menuitem"]', getDefaultEnvName()).should("be.visible");
+  cy.contains('[role="menuitem"]', name).should("not.exist");
 };
 
 /**
@@ -88,15 +93,15 @@ const isIso = Cypress.expose("edition") === "iso";
 
 describe("Environment", () => {
   it("1.1 cancel creation of an environment", function () {
-    cy.visit("/console/");
-    cy.get('[aria-label="Overview-Success"] > :first-child').click();
-    cy.url().should("eq", Cypress.config().baseUrl + "/console/environment/create");
+    cy.visit("/console/environment/create");
     fillCreateEnvForm({
       envName: testName(1),
       projectName: testProjectName(1),
     });
     cy.get("button").contains("Cancel").click();
-    cy.url().should("eq", Cypress.config().baseUrl + "/console");
+    cy.get('[data-testid="env-selector-toggle"]').click();
+    cy.contains('[role="menuitem"]', getDefaultEnvName()).should("be.visible");
+    cy.get('[data-testid="env-selector-toggle"]').click();
   });
 
   it("1.2 Create new  environment", function () {
@@ -123,16 +128,11 @@ describe("Environment", () => {
       cy.get("h1").contains("Desired State").should("to.be.visible");
     }
 
-    // go back to home and check if env is visible
-    cy.get('[aria-label="BreadcrumbItem"]').contains("Home").click();
-
-    cy.get(`[aria-label="Select-environment-${testName(2)}"]`).click();
-
     openSettings(testName(2));
     deleteEnv(testName(2), testProjectName(2));
   });
 
-  it("1.4 Edit created environment", function () {
+  it("1.3 Edit created environment", function () {
     //Fill The form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
@@ -203,10 +203,10 @@ describe("Environment", () => {
 
   // specific to ISO
   if (isIso) {
-    it("1.5 Clear environment", function () {
+    it("1.4 Clear environment", function () {
       // Fill The form and submit
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+      selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get('[aria-label="ServiceCatalog-Empty"]', {
         timeout: 10000,
@@ -219,7 +219,7 @@ describe("Environment", () => {
       cy.get("button").contains("Clear environment").click();
       cy.get("button").contains("Cancel").click();
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
 
       cy.get('[aria-label="ServiceCatalog-Empty"]', {
@@ -234,7 +234,7 @@ describe("Environment", () => {
       cy.get('[aria-label="clear environment check"]').type("test");
       cy.get("button").contains("I understand the consequences, clear this environment").click();
       cy.visit("/console/");
-      cy.get('[aria-label="Select-environment-test"]').click();
+
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
       cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
 
@@ -248,7 +248,7 @@ describe("Environment", () => {
     });
   }
 
-  it("1.6 Edit environment configuration", function () {
+  it("1.5 Edit environment configuration", function () {
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
       envName: testName(6),
@@ -436,5 +436,45 @@ describe("Environment", () => {
 
     cy.get(".pf-v6-c-tabs__list").find("button").contains("Environment").click();
     deleteEnv(testName(6), testProjectName(6));
+  });
+
+  it("1.6 Last selected environment is loaded when navigating to root path", function () {
+    const envName = testName(7);
+    const projectName = testProjectName(7);
+
+    // Create environment 7
+    cy.visit("/console/environment/create");
+    fillCreateEnvForm({
+      envName,
+      projectName,
+      shouldPassEnvName: true,
+      fillOptionalInputs: true,
+    });
+    cy.get("button").contains("Submit").click();
+
+    // Select the default environment and capture its ID
+    selectEnvironment();
+
+    cy.url().then((defaultUrl) => {
+      const defaultEnvId = new URL(defaultUrl).searchParams.get("env");
+
+      // Load base path and confirm redirect to the default environment
+      cy.visit("/console/");
+      cy.url().should("include", `env=${defaultEnvId}`);
+    });
+
+    // Select environment 7
+    selectEnvironment(envName);
+    cy.url().then((env7Url) => {
+      const env7Id = new URL(env7Url).searchParams.get("env");
+
+      // Load base path and confirm redirect to environment 7
+      cy.visit("/console/");
+      cy.url().should("include", `env=${env7Id}`);
+    });
+
+    // Clean up environment 7
+    openSettings(envName);
+    deleteEnv(envName);
   });
 });

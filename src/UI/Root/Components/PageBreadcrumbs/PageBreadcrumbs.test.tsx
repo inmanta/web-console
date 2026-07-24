@@ -4,6 +4,7 @@ import { render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
+import { PrimaryRouteManager } from "@/UI/Routing";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
@@ -25,10 +26,8 @@ test("GIVEN Breadcrumbs WHEN url is '/' THEN 0 Breadcrumbs are shown", () => {
   const { component } = setup(["/"]);
 
   render(component);
-  const crumb = screen.getByRole("listitem", { name: "BreadcrumbItem" });
 
-  expect(within(crumb).queryByRole("link")).not.toBeInTheDocument();
-  expect(within(crumb).getByText("Home")).toBeInTheDocument();
+  expect(screen.queryByRole("listitem", { name: "BreadcrumbItem" })).not.toBeInTheDocument();
 });
 
 test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog' THEN plain Catalog Breadcrumb is shown", () => {
@@ -128,4 +127,21 @@ test("GIVEN Breadcrumbs WHEN service name is encoded THEN decoded label is shown
   const label = within(inventoryCrumb).getByText(/Service Inventory/);
 
   expect(label).toHaveTextContent("Service Inventory: basic service");
+});
+
+test("GIVEN Breadcrumbs WHEN navigating to a url built by RouteManager.getUrl for a value containing a space THEN the label is not double encoded", () => {
+  // Regression test: getUrl used to encodeURIComponent params before handing them to
+  // react-router's generatePath, which encodes them again internally. A value like
+  // "Parent 1" would come back out as "Parent%201" in the breadcrumbs instead of "Parent 1".
+  const routeManager = PrimaryRouteManager("");
+  const url = routeManager.getUrl("Inventory", { service: "Parent 1" });
+  const { component } = setup([url]);
+  render(component);
+
+  const crumbs = screen.getAllByRole("listitem", { name: "BreadcrumbItem" });
+  const [, , inventoryCrumb] = crumbs;
+
+  const label = within(inventoryCrumb).getByText(/Service Inventory/);
+
+  expect(label).toHaveTextContent("Service Inventory: Parent 1");
 });

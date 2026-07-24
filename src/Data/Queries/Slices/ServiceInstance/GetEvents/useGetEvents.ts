@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { DateRange, EventType, InstanceEvent, PageSize, Pagination, Sort } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
@@ -98,6 +98,7 @@ export const useGetInstanceEvents = (params: GetInstanceEventParams): GetInstanc
         queryKey: getInstanceEventsKey.list([...Object.values(params), env]),
         queryFn: () => get(getUrl(params)),
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
+        placeholderData: keepPreviousData,
         select: (data) => ({
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
