@@ -6,12 +6,20 @@ export interface CursorHandlers {
 }
 
 /**
- * Extracts the cursor fragment (everything except `limit`) from a
- * `get_resource_actions` pagination link.
+ * The query parameters that make up a `get_resource_actions` pagination cursor.
+ * Only these are kept from a link; everything else (`limit` and the echoed
+ * filters such as `agent`, `resource_type`, `attribute_value`) is dropped so it
+ * is not duplicated with the filters re-applied by `getUrl`.
+ */
+const CURSOR_KEYS = ["first_timestamp", "last_timestamp", "action_id"];
+
+/**
+ * Extracts the cursor fragment from a `get_resource_actions` pagination link.
  *
- * The API only echoes `limit` and the timestamp cursor in its `next`/`prev`
- * links (not the active filters), so we keep only the cursor part and re-apply
- * it on top of the filtered URL built by `getUrl`.
+ * The API echoes the active filters into its `next`/`prev` links, so we keep
+ * only the timestamp cursor parameters and re-apply the filters on top of the
+ * filtered URL built by `getUrl`. Keeping the echoed filters here would send
+ * them twice (e.g. `agent=...&agent=...`), which the API rejects.
  *
  * @param {string | undefined} link - A pagination link from the API response.
  * @returns {string | undefined} The cursor fragment (e.g.
@@ -30,7 +38,7 @@ const toCursorFragment = (link: string | undefined): string | undefined => {
 
   const cursor = query
     .split("&")
-    .filter((param) => param.length > 0 && !param.startsWith("limit="));
+    .filter((param) => CURSOR_KEYS.some((key) => param.startsWith(`${key}=`)));
 
   return cursor.length > 0 ? cursor.join("&") : undefined;
 };

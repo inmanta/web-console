@@ -18,6 +18,15 @@ describe("getCursorHandlers", () => {
     });
   });
 
+  it("drops echoed filters, keeping only the cursor keys", () => {
+    const handlers = getCursorHandlers({
+      self: "/api/v2/resource_actions?agent=internal&limit=20",
+      next: "/api/v2/resource_actions?agent=internal&limit=20&last_timestamp=2026-07-23T03%3A49%3A01&action_id=abc",
+    });
+
+    expect(handlers.next).toEqual("last_timestamp=2026-07-23T03%3A49%3A01&action_id=abc");
+  });
+
   it("returns undefined for a link with only a limit", () => {
     expect(
       getCursorHandlers({
