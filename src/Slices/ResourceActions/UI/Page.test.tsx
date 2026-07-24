@@ -50,7 +50,7 @@ describe("ResourceActionsPage", () => {
     expect(await axe(document.body)).toHaveNoViolations();
   });
 
-  test("GIVEN the changelog page WHEN a row is expanded THEN the messages are shown", async () => {
+  test("GIVEN the changelog page WHEN a row is expanded THEN the details and logs link are shown", async () => {
     server.use(
       http.get("/api/v2/resource_actions", () => HttpResponse.json(mockResourceActionsResponse))
     );
@@ -64,9 +64,15 @@ describe("ResourceActionsPage", () => {
 
     await userEvent.click(within(firstRow).getByRole("button", { name: "Details" }));
 
-    expect(
-      await screen.findByText("Start run because previous deploy happened more than 180s ago")
-    ).toBeVisible();
+    const details = await screen.findByLabelText("ResourceAction-Details");
+
+    expect(within(details).getByText("ebea32fe-aec5-409b-ba17-8aac2b51df91")).toBeVisible();
+
+    const logsLink = screen.getByRole("link", { name: /View logs/ });
+    const href = decodeURIComponent(logsLink.getAttribute("href") ?? "");
+
+    expect(href).toContain("state.ResourceDetails.tab=Logs");
+    expect(href).toContain("state.ResourceDetails.filter.action[0]=deploy");
   });
 
   test("GIVEN the changelog page WHEN the API errors THEN an error view is shown", async () => {

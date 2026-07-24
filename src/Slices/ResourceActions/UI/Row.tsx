@@ -7,6 +7,7 @@ import { words } from "@/UI/words";
 import { ResourceAction } from "@S/ResourceActions/Core/Domain";
 import { DeployOutcomeLabel } from "./DeployOutcomeLabel";
 import { DeployReasonIcon } from "./DeployReasonIcon";
+import { DeployStatusLabel } from "./DeployStatusLabel";
 import { Details } from "./Details";
 
 interface Props {
@@ -63,6 +64,9 @@ export const Row: React.FC<Props> = ({ action, isExpanded, onToggle, numberOfCol
         </Td>
         <Td dataLabel={words("resourceActions.column.type")} modifier="fitContent">
           {action.action}
+        </Td>
+        <Td dataLabel={words("resourceActions.column.status")} modifier="fitContent">
+          <DeployStatusLabel status={action.status} />
         </Td>
         <Td dataLabel={words("resourceActions.column.reason")} modifier="fitContent">
           <DeployReasonIcon action={action} />

@@ -7,11 +7,13 @@ import {
   Stack,
   StackItem,
 } from "@patternfly/react-core";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@patternfly/react-table";
-import { CodeText } from "@/UI/Components";
+import { TextWithCopy } from "@/UI/Components";
 import { CustomDatePresenter } from "@/UI/Utils";
+import { getResourceIdFromResourceVersionId } from "@/UI/Utils/ResourceId";
 import { words } from "@/UI/words";
+import { getDeployReasonText } from "@S/ResourceActions/Core/DeployReason";
 import { ResourceAction } from "@S/ResourceActions/Core/Domain";
+import { ResourceLogsLink } from "./ResourceLogsLink";
 
 interface Props {
   action: ResourceAction;
@@ -19,74 +21,105 @@ interface Props {
 
 const datePresenter = new CustomDatePresenter();
 
+const copyTooltip = () => words("attribute.value.copy");
+
+const CopyValue: React.FC<{ value: string }> = ({ value }) => (
+  <TextWithCopy value={value} tooltipContent={copyTooltip()} />
+);
+
 /**
- * The expanded content of a changelog row: the action's log messages plus the
- * remaining fields of the resource action.
+ * The expanded content of a changelog row: the fields of the resource action,
+ * each copy-pastable, together with a link to the resource's filtered logs.
  *
  * @props {Props} props - The props of the component.
  *  @prop {ResourceAction} action - The resource action to detail.
  * @returns {React.FC<Props>} The details component.
  */
 export const Details: React.FC<Props> = ({ action }) => {
-  const messages = action.messages ?? [];
+  const reason = getDeployReasonText(action);
+  const duration = action.finished ? datePresenter.diff(action.finished, action.started) : "-";
 
   return (
     <Stack hasGutter>
       <StackItem>
-        <DescriptionList isHorizontal isCompact>
+        <DescriptionList isHorizontal isCompact aria-label="ResourceAction-Details">
           <DescriptionListGroup>
             <DescriptionListTerm>{words("resourceActions.column.actionId")}</DescriptionListTerm>
             <DescriptionListDescription>
-              <CodeText>{action.action_id}</CodeText>
+              <CopyValue value={action.action_id} />
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>{words("resourceActions.column.version")}</DescriptionListTerm>
-            <DescriptionListDescription>{action.version}</DescriptionListDescription>
+            <DescriptionListDescription>
+              <CopyValue value={String(action.version)} />
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+          <DescriptionListGroup>
+            <DescriptionListTerm>{words("resourceActions.column.type")}</DescriptionListTerm>
+            <DescriptionListDescription>
+              <CopyValue value={action.action} />
+            </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
             <DescriptionListTerm>{words("resourceActions.column.status")}</DescriptionListTerm>
-            <DescriptionListDescription>{action.status ?? "-"}</DescriptionListDescription>
+            <DescriptionListDescription>
+              {action.status ? <CopyValue value={action.status} /> : "-"}
+            </DescriptionListDescription>
           </DescriptionListGroup>
+          <DescriptionListGroup>
+            <DescriptionListTerm>{words("resourceActions.column.outcome")}</DescriptionListTerm>
+            <DescriptionListDescription>
+              {action.change ? <CopyValue value={action.change} /> : "-"}
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+          <DescriptionListGroup>
+            <DescriptionListTerm>{words("resourceActions.column.started")}</DescriptionListTerm>
+            <DescriptionListDescription>
+              <CopyValue value={datePresenter.getFull(action.started)} />
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+          <DescriptionListGroup>
+            <DescriptionListTerm>{words("resourceActions.column.finished")}</DescriptionListTerm>
+            <DescriptionListDescription>
+              {action.finished ? (
+                <CopyValue value={datePresenter.getFull(action.finished)} />
+              ) : (
+                "-"
+              )}
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+          <DescriptionListGroup>
+            <DescriptionListTerm>{words("resourceActions.column.duration")}</DescriptionListTerm>
+            <DescriptionListDescription>
+              <CopyValue value={duration} />
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+          {reason && (
+            <DescriptionListGroup>
+              <DescriptionListTerm>{words("resourceActions.column.reason")}</DescriptionListTerm>
+              <DescriptionListDescription>
+                <CopyValue value={reason} />
+              </DescriptionListDescription>
+            </DescriptionListGroup>
+          )}
           <DescriptionListGroup>
             <DescriptionListTerm>{words("resourceActions.column.resources")}</DescriptionListTerm>
             <DescriptionListDescription>
-              {action.resource_version_ids.map((id) => (
-                <div key={id}>
-                  <CodeText>{id}</CodeText>
-                </div>
-              ))}
+              <Stack hasGutter>
+                {action.resource_version_ids.map((id) => (
+                  <StackItem key={id}>
+                    <CopyValue value={id} />
+                    <ResourceLogsLink
+                      resourceId={getResourceIdFromResourceVersionId(id)}
+                      action={action.action}
+                    />
+                  </StackItem>
+                ))}
+              </Stack>
             </DescriptionListDescription>
           </DescriptionListGroup>
         </DescriptionList>
-      </StackItem>
-      <StackItem>
-        <Table aria-label="ResourceAction-Messages" variant="compact" borders={false}>
-          <Thead>
-            <Tr>
-              <Th width={20}>{words("resourceActions.column.timestamp")}</Th>
-              <Th width={10}>{words("resources.logs.logLevel")}</Th>
-              <Th>{words("resources.logs.message")}</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {messages.length <= 0 ? (
-              <Tr>
-                <Td colSpan={3}>{words("resourceActions.messages.empty")}</Td>
-              </Tr>
-            ) : (
-              messages.map((message, index) => (
-                <Tr key={`${message.timestamp}-${index}`}>
-                  <Td modifier="fitContent">{datePresenter.getFull(message.timestamp)}</Td>
-                  <Td modifier="fitContent">{message.level}</Td>
-                  <Td>
-                    <CodeText>{message.msg}</CodeText>
-                  </Td>
-                </Tr>
-              ))
-            )}
-          </Tbody>
-        </Table>
       </StackItem>
     </Stack>
   );
