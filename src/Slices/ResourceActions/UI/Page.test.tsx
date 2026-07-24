@@ -46,8 +46,24 @@ describe("ResourceActionsPage", () => {
 
     const rows = screen.getAllByLabelText("ResourceActionRow");
 
-    expect(rows).toHaveLength(3);
+    expect(rows).toHaveLength(4);
     expect(await axe(document.body)).toHaveNoViolations();
+  });
+
+  test("GIVEN an ongoing action THEN its duration shows an elapsed counter instead of a dash", async () => {
+    server.use(
+      http.get("/api/v2/resource_actions", () => HttpResponse.json(mockResourceActionsResponse))
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("grid", { name: "ResourceActionsTable" });
+
+    const ongoingRow = screen.getAllByLabelText("ResourceActionRow")[3];
+    const durationCell = within(ongoingRow).getByText(/^\d+ s$/);
+
+    expect(durationCell).toBeVisible();
   });
 
   test("GIVEN an action with multiple resources THEN the resource column shows a count", async () => {

@@ -9,6 +9,7 @@ import { DeployOutcomeLabel } from "./DeployOutcomeLabel";
 import { DeployReasonIcon } from "./DeployReasonIcon";
 import { DeployStatusLabel } from "./DeployStatusLabel";
 import { Details } from "./Details";
+import { Duration } from "./Duration";
 
 interface Props {
   action: ResourceAction;
@@ -19,9 +20,6 @@ interface Props {
 }
 
 const datePresenter = new CustomDatePresenter();
-
-const getDuration = (action: ResourceAction): string =>
-  action.finished ? datePresenter.diff(action.finished, action.started) : "-";
 
 /**
  * A single changelog table row, showing one resource action and an expandable
@@ -48,7 +46,7 @@ export const Row: React.FC<Props> = ({ action, isExpanded, onToggle, numberOfCol
           {datePresenter.getFull(action.started)}
         </Td>
         <Td dataLabel={words("resourceActions.column.duration")} modifier="fitContent">
-          {getDuration(action)}
+          <Duration started={action.started} finished={action.finished} />
         </Td>
         <Td dataLabel={words("resourceActions.column.resource")} modifier="breakWord">
           {resourceVersionIds.length > 1 ? (

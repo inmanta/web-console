@@ -57,6 +57,20 @@ export const mockResourceActions: ResourceAction[] = [
     change: null,
     send_event: null,
   },
+  {
+    environment: "env-1",
+    version: 1706,
+    resource_version_ids: ["std::testing::NullResource[internal,name=five],v=1706"],
+    action_id: "b2c3d4e5-0000-0000-0000-000000000000",
+    action: "deploy",
+    started: "2026-07-23T03:55:00.000000+00:00",
+    finished: null,
+    messages: [],
+    status: "deploying",
+    changes: null,
+    change: null,
+    send_event: null,
+  },
 ];
 
 export const mockResourceActionsResponse = {
