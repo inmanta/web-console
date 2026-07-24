@@ -47,19 +47,6 @@ const View: React.FC<Props> = ({ response, onClick }) => {
     setError(response.error.message);
   }, [response]);
 
-  if (response.isSuccess) {
-    const variant = getVariantFromNotifications(response.data.data);
-
-    return (
-      <NotificationBadge
-        aria-label="Badge-Success"
-        data-variant={variant}
-        variant={variant}
-        onClick={onClick}
-      />
-    );
-  }
-
   if (response.isError) {
     return (
       <>
@@ -78,8 +65,17 @@ const View: React.FC<Props> = ({ response, onClick }) => {
     );
   }
 
+  // While a request is in flight (initial load), default to the neutral `read` variant and keep
+  // the badge enabled, so it doesn't flash from disabled to active on initial load.
+  const variant = getVariantFromNotifications(response.data?.data ?? []);
+
   return (
-    <NotificationBadge aria-label="Badge" variant={NotificationBadgeVariant.read} isDisabled />
+    <NotificationBadge
+      aria-label="Badge-Success"
+      data-variant={variant}
+      variant={variant}
+      onClick={onClick}
+    />
   );
 };
 
