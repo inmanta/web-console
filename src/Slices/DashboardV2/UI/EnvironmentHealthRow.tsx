@@ -2,17 +2,36 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 import { Button, Content, Flex, FlexItem } from "@patternfly/react-core";
 import { OutlinedCalendarAltIcon, RedoIcon } from "@patternfly/react-icons";
+import {
+  useGetAgents,
+  useGetCompileReports,
+  useGetResources,
+  useGetServerStatus,
+  useGetServiceModels,
+} from "@/Data/Queries";
+import { CompileStatus, PageSize, RangeOperator } from "@/Core/Domain";
+import { AgentStatus } from "@/Slices/Agents/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import dayjs from "@/dayjs";
+import { deriveAgentsHealth } from "./agentsHealth";
 import { HealthCardGrid } from "./Components/HealthCardGrid";
 import { HealthColumn } from "./Components/HealthColumn";
 import { OrchestratorCard } from "./Components/OrchestratorCard";
+import { deriveCompilesHealth } from "./compilesHealth";
+import { deriveOrchestratorHealth } from "./orchestratorHealth";
+import { deriveResourcesHealth } from "./resourcesHealth";
+import { aggregateServicesHealth } from "./servicesHealth";
+
+const NO_PAGINATION = {
+  pageSize: PageSize.initial,
+  currentPage: { kind: "CurrentPage" as const, value: "" },
+};
 
 /**
- * Environment Health row. All values below are static scaffolding (Phase 1) matching the
- * design reference — Phases 2-4 replace them with data sourced from the existing
- * useGetServerStatus/useGetServiceModels/useGetResources/useGetCompileReports/useGetAgents hooks.
- * Card clicks already navigate to the relevant existing page.
+ * Environment Health row: orchestrator identity/checklist + 4 health columns, each backed by
+ * the same hooks already used elsewhere in the app (see documentation/7136-plan.md §2).
+ * Card clicks navigate to the relevant existing page.
  */
 export const EnvironmentHealthRow: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
@@ -22,6 +41,57 @@ export const EnvironmentHealthRow: React.FC = () => {
   const resourcesUrl = routeManager.useUrl("Resources", undefined);
   const compileReportsUrl = routeManager.useUrl("CompileReports", undefined);
   const agentsUrl = routeManager.useUrl("Agents", undefined);
+
+  const { data: serverStatus } = useGetServerStatus().useContinuous();
+  const { data: serviceModels } = useGetServiceModels().useContinuous();
+  const { data: resourcesData } = useGetResources({
+    ...NO_PAGINATION,
+    filter: {},
+    sort: [],
+  }).useContinuous();
+  const { data: latestCompileReports } = useGetCompileReports({
+    ...NO_PAGINATION,
+    sort: { name: "requested", order: "desc" },
+  }).useContinuous();
+  const { data: failedCompileReports } = useGetCompileReports({
+    ...NO_PAGINATION,
+    filter: {
+      status: CompileStatus.failed,
+      requested: [
+        { date: dayjs().subtract(7, "days").toDate(), operator: RangeOperator.Operator.From },
+      ],
+    },
+  }).useContinuous();
+  const { data: upAgents } = useGetAgents().useContinuous({
+    ...NO_PAGINATION,
+    filter: { status: [AgentStatus.up] },
+  });
+  const { data: downAgents } = useGetAgents().useContinuous({
+    ...NO_PAGINATION,
+    filter: { status: [AgentStatus.down] },
+  });
+  const { data: pausedAgents } = useGetAgents().useContinuous({
+    ...NO_PAGINATION,
+    filter: { status: [AgentStatus.paused] },
+  });
+
+  const orchestratorHealth = serverStatus ? deriveOrchestratorHealth(serverStatus) : undefined;
+  const servicesHealth = serviceModels ? aggregateServicesHealth(serviceModels) : undefined;
+  const resourcesHealth = resourcesData
+    ? deriveResourcesHealth(resourcesData.resourceSummary)
+    : undefined;
+  const compilesHealth = deriveCompilesHealth(
+    latestCompileReports?.data[0],
+    Number(failedCompileReports?.metadata.total ?? 0)
+  );
+  const agentsHealth =
+    upAgents && downAgents && pausedAgents
+      ? deriveAgentsHealth(
+          Number(upAgents.metadata.total),
+          Number(downAgents.metadata.total),
+          Number(pausedAgents.metadata.total)
+        )
+      : undefined;
 
   return (
     <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsMd" }}>
@@ -57,47 +127,49 @@ export const EnvironmentHealthRow: React.FC = () => {
             icon={<EnvironmentIconPlaceholder />}
             name="prod"
             badge="infra"
-            operational
-            checklist={[
-              { label: words("dashboardV2.environmentHealth.checklist.serverOk"), ok: true },
-              {
-                label: words("dashboardV2.environmentHealth.checklist.databaseConnected"),
-                ok: true,
-              },
-              {
-                label: words("dashboardV2.environmentHealth.checklist.schedulerRunning"),
-                ok: true,
-              },
-            ]}
+            operational={orchestratorHealth?.operational ?? false}
+            checklist={
+              orchestratorHealth?.checklist ?? [
+                { label: words("dashboardV2.environmentHealth.checklist.serverOk"), ok: false },
+                {
+                  label: words("dashboardV2.environmentHealth.checklist.databaseConnected"),
+                  ok: false,
+                },
+                {
+                  label: words("dashboardV2.environmentHealth.checklist.schedulerRunning"),
+                  ok: false,
+                },
+              ]
+            }
           />
         }
         columns={[
           <HealthColumn
             key="services"
             title={words("dashboardV2.environmentHealth.services")}
-            status="attention"
-            statLines={["68 instances · 62 healthy · 4 warning · 2 danger"]}
+            status={servicesHealth?.status ?? "healthy"}
+            statLines={[servicesHealth?.statLine ?? "—"]}
             onClick={() => navigate(catalogUrl)}
           />,
           <HealthColumn
             key="resources"
             title={words("dashboardV2.environmentHealth.resources")}
-            status="attention"
-            statLines={["18 failed to deploy"]}
+            status={resourcesHealth?.status ?? "healthy"}
+            statLines={[resourcesHealth?.statLine ?? "—"]}
             onClick={() => navigate(resourcesUrl)}
           />,
           <HealthColumn
             key="compiles"
             title={words("dashboardV2.environmentHealth.compiles")}
-            status="healthy"
-            statLines={["Latest compile succeeded · 3 failed in 7d"]}
+            status={compilesHealth.status}
+            statLines={[compilesHealth.statLine]}
             onClick={() => navigate(compileReportsUrl)}
           />,
           <HealthColumn
             key="agents"
             title={words("dashboardV2.environmentHealth.agents")}
-            status="attention"
-            statLines={["12 agents · 11 up · 1 down · 0 paused"]}
+            status={agentsHealth?.status ?? "healthy"}
+            statLines={[agentsHealth?.statLine ?? "—"]}
             onClick={() => navigate(agentsUrl)}
           />,
         ]}
