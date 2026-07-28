@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { useNavigate } from "react-router";
 import { Button, Content, Flex, FlexItem } from "@patternfly/react-core";
 import { OutlinedCalendarAltIcon, RedoIcon } from "@patternfly/react-icons";
@@ -42,6 +42,12 @@ export const EnvironmentHealthRow: React.FC = () => {
   const compileReportsUrl = routeManager.useUrl("CompileReports", undefined);
   const agentsUrl = routeManager.useUrl("Agents", undefined);
 
+  // Computed once per mount: recomputing this inline on every render would put a fresh
+  // millisecond-precision Date into the query's filter on every render, changing its query key
+  // each time and causing React Query to treat it as a brand new query — refetching immediately,
+  // every render, in a tight loop instead of respecting the poll interval.
+  const sevenDaysAgo = useMemo(() => dayjs().subtract(7, "days").toDate(), []);
+
   const { data: serverStatus } = useGetServerStatus().useContinuous();
   const { data: serviceModels } = useGetServiceModels().useContinuous();
   const { data: resourcesData } = useGetResources({
@@ -57,9 +63,7 @@ export const EnvironmentHealthRow: React.FC = () => {
     ...NO_PAGINATION,
     filter: {
       status: CompileStatus.failed,
-      requested: [
-        { date: dayjs().subtract(7, "days").toDate(), operator: RangeOperator.Operator.From },
-      ],
+      requested: [{ date: sevenDaysAgo, operator: RangeOperator.Operator.From }],
     },
   }).useContinuous();
   const { data: upAgents } = useGetAgents().useContinuous({
