@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, Content, Flex, FlexItem, Label } from "@patternfly/react-core";
+import { Button, Card, CardBody, Content, Flex, FlexItem, Label } from "@patternfly/react-core";
 import { CheckIcon, ExclamationIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { words } from "@/UI/words";
@@ -16,7 +16,7 @@ interface Props {
   badge?: string;
   operational: boolean;
   checklist: ChecklistItem[];
-  switchAction: React.ReactNode;
+  onSwitchClick: () => void;
 }
 
 const TONE_COLOR = {
@@ -38,7 +38,7 @@ export const OrchestratorCard: React.FC<Props> = ({
   badge,
   operational,
   checklist,
-  switchAction,
+  onSwitchClick,
 }) => {
   const tone = operational ? "success" : "danger";
 
@@ -63,7 +63,11 @@ export const OrchestratorCard: React.FC<Props> = ({
                 </FlexItem>
               )}
             </Flex>
-            <FlexItem>{switchAction}</FlexItem>
+            <FlexItem>
+              <Button variant="link" isInline onClick={onSwitchClick}>
+                {words("dashboardV2.environmentHealth.switch")} &gt;
+              </Button>
+            </FlexItem>
           </Flex>
           <FlexItem>
             <Content component="small">

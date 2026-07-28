@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { EnvSelector } from "./EnvSelector";
+import { EnvSelectorOpenContext } from "./EnvSelectorOpenContext";
 
 interface Props {
   selectorItems: EnvironmentSelectorItem[];
@@ -19,7 +20,7 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
   onSelectEnvironment,
   defaultToggleText,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen } = useContext(EnvSelectorOpenContext);
   const [toggleText, setToggleText] = useState(defaultToggleText);
 
   useEffect(() => {
