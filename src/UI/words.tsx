@@ -542,6 +542,7 @@ const dict = {
   "dashboardV2.environmentHealth.updated": (minutesAgo: string) => `Updated ${minutesAgo} min ago`,
   "dashboardV2.environmentHealth.rangeLast7Days": "Last 7 days",
   "dashboardV2.environmentHealth.switch": "Switch",
+  "dashboardV2.environmentHealth.unknownProject": "Unknown Project",
   "dashboardV2.environmentHealth.orchestratorLabel": "ORCHESTRATOR",
   "dashboardV2.environmentHealth.operational": "Operational",
   "dashboardV2.environmentHealth.degraded": "Attention",

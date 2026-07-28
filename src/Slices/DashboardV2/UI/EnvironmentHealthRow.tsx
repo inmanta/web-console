@@ -1,10 +1,12 @@
 import React, { useContext, useMemo } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Button, Content, Flex, FlexItem } from "@patternfly/react-core";
 import { OutlinedCalendarAltIcon, RedoIcon } from "@patternfly/react-icons";
 import {
   useGetAgents,
   useGetCompileReports,
+  useGetEnvironments,
+  useGetProjects,
   useGetResources,
   useGetServerStatus,
   useGetServiceModels,
@@ -17,6 +19,7 @@ import dayjs from "@/dayjs";
 import { deriveAgentsHealth } from "./agentsHealth";
 import { HealthCardGrid } from "./Components/HealthCardGrid";
 import { HealthColumn } from "./Components/HealthColumn";
+import { EnvironmentSwitchMenu } from "./Components/EnvironmentSwitchMenu";
 import { OrchestratorCard } from "./Components/OrchestratorCard";
 import { deriveCompilesHealth } from "./compilesHealth";
 import { deriveOrchestratorHealth } from "./orchestratorHealth";
@@ -34,8 +37,12 @@ const NO_PAGINATION = {
  * Card clicks navigate to the relevant existing page.
  */
 export const EnvironmentHealthRow: React.FC = () => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, environmentHandler } = useContext(DependencyContext);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const envName = environmentHandler.useName();
+  const selectedEnvironmentId = environmentHandler.useId();
 
   const catalogUrl = routeManager.useUrl("Catalog", undefined);
   const resourcesUrl = routeManager.useUrl("Resources", undefined);
@@ -75,6 +82,20 @@ export const EnvironmentHealthRow: React.FC = () => {
     ...NO_PAGINATION,
     filter: { status: [AgentStatus.paused] },
   });
+  const { data: environments } = useGetEnvironments().useOneTime(true);
+  const { data: projects } = useGetProjects().useOneTime();
+
+  const projectNameById = new Map((projects ?? []).map((project) => [project.id, project.name]));
+  const currentEnvironment = environments?.find((env) => env.id === selectedEnvironmentId);
+  const badge = currentEnvironment
+    ? projectNameById.get(currentEnvironment.project_id)
+    : undefined;
+  const switchOptions = (environments ?? []).map((env) => ({
+    id: env.id,
+    name: env.name,
+    projectName:
+      projectNameById.get(env.project_id) ?? words("dashboardV2.environmentHealth.unknownProject"),
+  }));
 
   const orchestratorHealth = serverStatus ? deriveOrchestratorHealth(serverStatus) : undefined;
   const servicesHealth = serviceModels ? aggregateServicesHealth(serviceModels) : undefined;
@@ -126,8 +147,8 @@ export const EnvironmentHealthRow: React.FC = () => {
         orchestrator={
           <OrchestratorCard
             icon={<EnvironmentIconPlaceholder />}
-            name="prod"
-            badge="infra"
+            name={envName}
+            badge={badge}
             operational={orchestratorHealth?.operational ?? false}
             checklist={
               orchestratorHealth?.checklist ?? [
@@ -141,6 +162,12 @@ export const EnvironmentHealthRow: React.FC = () => {
                   ok: false,
                 },
               ]
+            }
+            switchAction={
+              <EnvironmentSwitchMenu
+                options={switchOptions}
+                onSelect={(environmentId) => environmentHandler.set(navigate, location, environmentId)}
+              />
             }
           />
         }
