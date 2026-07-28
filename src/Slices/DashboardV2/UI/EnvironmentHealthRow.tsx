@@ -14,6 +14,7 @@ import {
 } from "@/Data/Queries";
 import { AgentStatus } from "@/Slices/Agents/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
+import { EnvironmentIcon } from "@/UI/Root/Components/Header/EnvSelector/EnvSelector";
 import { EnvSelectorOpenContext } from "@/UI/Root/Components/Header/EnvSelector/EnvSelectorOpenContext";
 import { words } from "@/UI/words";
 import dayjs from "@/dayjs";
@@ -90,6 +91,9 @@ export const EnvironmentHealthRow: React.FC = () => {
   const badge = currentEnvironment
     ? projectNameById.get(currentEnvironment.project_id)
     : undefined;
+  // The API returns the icon as a bare data URI body (e.g. "image/svg+xml;base64,..."), same as
+  // the header's own environment selector (EnvSelectorWithData.environmentToSelector).
+  const envIcon = currentEnvironment?.icon ? `data:${currentEnvironment.icon}` : undefined;
 
   const orchestratorHealth = serverStatus ? deriveOrchestratorHealth(serverStatus) : undefined;
   const servicesHealth = serviceModels ? aggregateServicesHealth(serviceModels) : undefined;
@@ -140,7 +144,7 @@ export const EnvironmentHealthRow: React.FC = () => {
       <HealthCardGrid
         orchestrator={
           <OrchestratorCard
-            icon={<EnvironmentIconPlaceholder />}
+            icon={<EnvironmentIcon icon={envIcon} />}
             name={envName}
             badge={badge}
             operational={orchestratorHealth?.operational ?? false}
@@ -194,9 +198,3 @@ export const EnvironmentHealthRow: React.FC = () => {
     </Flex>
   );
 };
-
-const EnvironmentIconPlaceholder: React.FC = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-    <polygon points="10,2 18,18 2,18" fill="var(--pf-t--global--icon--color--brand--default)" />
-  </svg>
-);
