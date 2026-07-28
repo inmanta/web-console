@@ -64,7 +64,18 @@ export const OrchestratorCard: React.FC<Props> = ({
               )}
             </Flex>
             <FlexItem>
-              <Button variant="link" isInline onClick={onSwitchClick}>
+              <Button
+                variant="link"
+                isInline
+                onClick={(event) => {
+                  // The header's own env-selector menu closes on any click outside its toggle
+                  // button (a global window click listener). Since this button is a different
+                  // element, without stopping propagation that same click would open the menu
+                  // and immediately close it again as an "outside click".
+                  event.stopPropagation();
+                  onSwitchClick();
+                }}
+              >
                 {words("dashboardV2.environmentHealth.switch")} &gt;
               </Button>
             </FlexItem>
