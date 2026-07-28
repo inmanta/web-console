@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Page } from "@patternfly/react-core";
 import { BlockingModal } from "@/UI/Components/BlockingModal";
 import { ExpertBanner } from "@/UI/Components/ExpertBanner";
 import { LicenseBanner } from "@/UI/Components/LicenseBanner";
 import { Header } from "@/UI/Root/Components/Header";
+import { EnvSelectorOpenContext } from "@/UI/Root/Components/Header/EnvSelector/EnvSelectorOpenContext";
 import { PageBreadcrumbs } from "@/UI/Root/Components/PageBreadcrumbs";
 import { Sidebar } from "@/UI/Root/Components/Sidebar";
 import { useDrawer } from "@S/Notification/UI/Drawer";
@@ -22,9 +23,12 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
     onNotificationDrawerExpand,
     isNotificationDrawerExpanded,
   } = useDrawer(Boolean(environmentId));
+  const [isEnvSelectorOpen, setIsEnvSelectorOpen] = useState(false);
 
   return (
-    <>
+    <EnvSelectorOpenContext.Provider
+      value={{ isOpen: isEnvSelectorOpen, setIsOpen: setIsEnvSelectorOpen }}
+    >
       <div role="alert" aria-label="bannerNotifications">
         {environmentId && <ExpertBanner />}
         <LicenseBanner />
@@ -45,6 +49,6 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
           {children}
         </Page>
       </div>
-    </>
+    </EnvSelectorOpenContext.Provider>
   );
 };

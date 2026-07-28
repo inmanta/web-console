@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { Button, Content, Flex, FlexItem } from "@patternfly/react-core";
 import { OutlinedCalendarAltIcon, RedoIcon } from "@patternfly/react-icons";
 import {
@@ -14,12 +14,12 @@ import {
 import { CompileStatus, PageSize, RangeOperator } from "@/Core/Domain";
 import { AgentStatus } from "@/Slices/Agents/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
+import { EnvSelectorOpenContext } from "@/UI/Root/Components/Header/EnvSelector/EnvSelectorOpenContext";
 import { words } from "@/UI/words";
 import dayjs from "@/dayjs";
 import { deriveAgentsHealth } from "./agentsHealth";
 import { HealthCardGrid } from "./Components/HealthCardGrid";
 import { HealthColumn } from "./Components/HealthColumn";
-import { EnvironmentSwitchMenu } from "./Components/EnvironmentSwitchMenu";
 import { OrchestratorCard } from "./Components/OrchestratorCard";
 import { deriveCompilesHealth } from "./compilesHealth";
 import { deriveOrchestratorHealth } from "./orchestratorHealth";
@@ -38,8 +38,8 @@ const NO_PAGINATION = {
  */
 export const EnvironmentHealthRow: React.FC = () => {
   const { routeManager, environmentHandler } = useContext(DependencyContext);
+  const { setIsOpen: setEnvSelectorOpen } = useContext(EnvSelectorOpenContext);
   const navigate = useNavigate();
-  const location = useLocation();
 
   const envName = environmentHandler.useName();
   const selectedEnvironmentId = environmentHandler.useId();
@@ -90,12 +90,6 @@ export const EnvironmentHealthRow: React.FC = () => {
   const badge = currentEnvironment
     ? projectNameById.get(currentEnvironment.project_id)
     : undefined;
-  const switchOptions = (environments ?? []).map((env) => ({
-    id: env.id,
-    name: env.name,
-    projectName:
-      projectNameById.get(env.project_id) ?? words("dashboardV2.environmentHealth.unknownProject"),
-  }));
 
   const orchestratorHealth = serverStatus ? deriveOrchestratorHealth(serverStatus) : undefined;
   const servicesHealth = serviceModels ? aggregateServicesHealth(serviceModels) : undefined;
@@ -163,12 +157,7 @@ export const EnvironmentHealthRow: React.FC = () => {
                 },
               ]
             }
-            switchAction={
-              <EnvironmentSwitchMenu
-                options={switchOptions}
-                onSelect={(environmentId) => environmentHandler.set(navigate, location, environmentId)}
-              />
-            }
+            onSwitchClick={() => setEnvSelectorOpen(true)}
           />
         }
         columns={[

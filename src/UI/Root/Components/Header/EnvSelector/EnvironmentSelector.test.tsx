@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Router } from "react-router";
 import { createMemoryHistory } from "@remix-run/router";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -13,6 +13,7 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import ErrorBoundary from "@/UI/Utils/ErrorBoundary";
+import { EnvSelectorOpenContext } from "./EnvSelectorOpenContext";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 
@@ -25,14 +26,19 @@ const EnvSelectorWrapper = ({
 }) => {
   const environments = useGetEnvironments().useOneTime(true);
   const projects = useGetProjects().useOneTime();
+  // Production provides this via PageFrame; tests need their own stateful Provider, otherwise
+  // the toggle falls back to the context's default no-op setIsOpen and never actually opens.
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <EnvironmentSelector
-      environments={environments}
-      projects={projects}
-      onSelectEnvironment={onSelectEnvironment}
-      selectedEnvironment={selectedEnvironment}
-    />
+    <EnvSelectorOpenContext.Provider value={{ isOpen, setIsOpen }}>
+      <EnvironmentSelector
+        environments={environments}
+        projects={projects}
+        onSelectEnvironment={onSelectEnvironment}
+        selectedEnvironment={selectedEnvironment}
+      />
+    </EnvSelectorOpenContext.Provider>
   );
 };
 
