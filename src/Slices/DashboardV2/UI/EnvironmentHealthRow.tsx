@@ -66,10 +66,7 @@ export const EnvironmentHealthRow: React.FC = () => {
       requested: [{ date: sevenDaysAgo, operator: RangeOperator.Operator.From }],
     },
   }).useContinuous();
-  const { data: upAgents } = useGetAgents().useContinuous({
-    ...NO_PAGINATION,
-    filter: { status: [AgentStatus.up] },
-  });
+  const { data: totalAgents } = useGetAgents().useContinuous(NO_PAGINATION);
   const { data: downAgents } = useGetAgents().useContinuous({
     ...NO_PAGINATION,
     filter: { status: [AgentStatus.down] },
@@ -89,9 +86,9 @@ export const EnvironmentHealthRow: React.FC = () => {
     Number(failedCompileReports?.metadata.total ?? 0)
   );
   const agentsHealth =
-    upAgents && downAgents && pausedAgents
+    totalAgents && downAgents && pausedAgents
       ? deriveAgentsHealth(
-          Number(upAgents.metadata.total),
+          Number(totalAgents.metadata.total),
           Number(downAgents.metadata.total),
           Number(pausedAgents.metadata.total)
         )
