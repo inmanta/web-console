@@ -552,6 +552,26 @@ const dict = {
   "dashboardV2.environmentHealth.resources": "Resources",
   "dashboardV2.environmentHealth.compiles": "Compiles",
   "dashboardV2.environmentHealth.agents": "Agents",
+  "dashboardV2.environmentHealth.servicesSummary": (
+    total: number,
+    healthy: number,
+    warning: number,
+    danger: number
+  ) => `${total} instances · ${healthy} healthy · ${warning} warning · ${danger} danger`,
+  "dashboardV2.environmentHealth.resourcesSummary": (failedCount: number) =>
+    `${failedCount} failed to deploy`,
+  "dashboardV2.environmentHealth.agentsSummary": (
+    total: number,
+    up: number,
+    down: number,
+    paused: number
+  ) => `${total} agents · ${up} up · ${down} down · ${paused} paused`,
+  "dashboardV2.environmentHealth.compiles.latestSucceeded": "Latest compile succeeded",
+  "dashboardV2.environmentHealth.compiles.latestFailed": "Latest compile failed",
+  "dashboardV2.environmentHealth.compiles.latestRunning": "Latest compile running",
+  "dashboardV2.environmentHealth.compiles.none": "No compiles yet",
+  "dashboardV2.environmentHealth.compiles.failedInWindow": (count: number) =>
+    `${count} failed in 7d`,
   "dashboardV2.compileReports.title": "Latest compile reports",
   "dashboardV2.orchestrator.title": "Orchestrator",
   "dashboardV2.resourceManager.title": "Resource Manager",
