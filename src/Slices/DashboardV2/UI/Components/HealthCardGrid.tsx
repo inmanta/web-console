@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, Divider, Flex, FlexItem } from "@patternfly/react-core";
+import { Flex, FlexItem } from "@patternfly/react-core";
 
 interface Props {
   orchestrator: React.ReactNode;
@@ -7,25 +7,16 @@ interface Props {
 }
 
 /**
- * Layout container for the Environment Health row: the orchestrator card on the left, followed
- * by N equal-width columns, each separated by a vertical divider.
+ * Layout row for the Environment Health cards: the orchestrator card (wider) followed by N
+ * equal-width column cards, each rendering as its own independent Card (see ClickableCard).
  */
 export const HealthCardGrid: React.FC<Props> = ({ orchestrator, columns }) => (
-  <Card>
-    <CardBody>
-      <Flex
-        spaceItems={{ default: "spaceItemsNone" }}
-        alignItems={{ default: "alignItemsStretch" }}
-      >
-        <FlexItem flex={{ default: "flex_1" }}>{orchestrator}</FlexItem>
-        <Divider orientation={{ default: "vertical" }} />
-        {columns.map((column, index) => (
-          <React.Fragment key={index}>
-            <FlexItem flex={{ default: "flex_1" }}>{column}</FlexItem>
-            {index < columns.length - 1 && <Divider orientation={{ default: "vertical" }} />}
-          </React.Fragment>
-        ))}
-      </Flex>
-    </CardBody>
-  </Card>
+  <Flex spaceItems={{ default: "spaceItemsMd" }} alignItems={{ default: "alignItemsStretch" }}>
+    <FlexItem flex={{ default: "flex_2" }}>{orchestrator}</FlexItem>
+    {columns.map((column, index) => (
+      <FlexItem key={index} flex={{ default: "flex_1" }}>
+        {column}
+      </FlexItem>
+    ))}
+  </Flex>
 );

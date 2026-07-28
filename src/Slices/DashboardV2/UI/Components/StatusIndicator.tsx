@@ -1,6 +1,6 @@
 import React from "react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
-import styled from "styled-components";
+import { Dot } from "./Dot";
 
 export type HealthStatus = "healthy" | "attention" | "danger";
 
@@ -35,11 +35,3 @@ export const StatusIndicator: React.FC<Props> = ({ status, label }) => (
     </FlexItem>
   </Flex>
 );
-
-const Dot = styled.span<{ $color: string }>`
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: ${(props) => props.$color};
-`;
