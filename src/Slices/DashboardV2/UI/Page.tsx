@@ -14,14 +14,13 @@ import { DashboardV2 } from "./DashboardV2";
 export const Page: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);
 
-  const envName = environmentHandler.useName();
   const { isSuccess, isError, error, refetch } = useGetEnvironmentDetails().useOneTime(
     environmentHandler.useId()
   );
 
   if (isError) {
     return (
-      <PageContainer pageTitle={words("dashboardV2.title")(envName)}>
+      <PageContainer pageTitle={words("dashboardV2.title")}>
         <ErrorView message={error.message} retry={refetch} ariaLabel="DashboardV2-Failed" />
       </PageContainer>
     );
@@ -29,14 +28,14 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     return (
-      <PageContainer pageTitle={words("dashboardV2.title")(envName)}>
+      <PageContainer pageTitle={words("dashboardV2.title")}>
         <DashboardV2 />
       </PageContainer>
     );
   }
 
   return (
-    <PageContainer pageTitle={words("dashboardV2.title")(envName)}>
+    <PageContainer pageTitle={words("dashboardV2.title")}>
       <LoadingView ariaLabel="DashboardV2-Loading" />
     </PageContainer>
   );

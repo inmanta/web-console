@@ -120,15 +120,9 @@ export const EnvironmentHealthRow: React.FC = () => {
         alignItems={{ default: "alignItemsFlexStart" }}
       >
         <FlexItem>
-          <Content component="h2">{words("dashboardV2.environmentHealth.title")}</Content>
           <Content component="small">{words("dashboardV2.environmentHealth.subtitle")}</Content>
         </FlexItem>
         <Flex alignItems={{ default: "alignItemsCenter" }} spaceItems={{ default: "spaceItemsMd" }}>
-          <FlexItem>
-            <Content component="small">
-              {words("dashboardV2.environmentHealth.updated")("2")}
-            </Content>
-          </FlexItem>
           <FlexItem>
             <Button variant="secondary" icon={<OutlinedCalendarAltIcon />}>
               {words("dashboardV2.environmentHealth.rangeLast7Days")}

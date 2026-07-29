@@ -533,13 +533,11 @@ const dict = {
   /**
    * Dashboard V2
    */
-  "dashboardV2.title": (envName: string) => `Dashboard V2 | ${envName}`,
+  "dashboardV2.title": "Environment Health",
   "dashboardV2.navigation.label": "Dashboard V2",
   "dashboardV2.placeholder.comingSoon": "Coming soon",
-  "dashboardV2.environmentHealth.title": "Environment health",
   "dashboardV2.environmentHealth.subtitle":
-    "Live status across orchestration, resources, compiles and services · last 7 days",
-  "dashboardV2.environmentHealth.updated": (minutesAgo: string) => `Updated ${minutesAgo} min ago`,
+    "Live status across orchestration, resources, compiles and services",
   "dashboardV2.environmentHealth.rangeLast7Days": "Last 7 days",
   "dashboardV2.environmentHealth.switch": "Switch",
   "dashboardV2.environmentHealth.orchestratorLabel": "ORCHESTRATOR",
