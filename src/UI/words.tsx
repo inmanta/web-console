@@ -555,7 +555,12 @@ const dict = {
     healthy: number,
     warning: number,
     danger: number
-  ) => `${total} instances · ${healthy} healthy · ${warning} warning · ${danger} danger`,
+  ): string[] => [
+    `${total} instances`,
+    `${healthy} healthy`,
+    `${warning} warning`,
+    `${danger} danger`,
+  ],
   "dashboardV2.environmentHealth.resourcesSummary": (failedCount: number) =>
     `${failedCount} failed to deploy`,
   "dashboardV2.environmentHealth.agentsSummary": (
@@ -563,7 +568,7 @@ const dict = {
     up: number,
     down: number,
     paused: number
-  ) => `${total} agents · ${up} up · ${down} down · ${paused} paused`,
+  ): string[] => [`${total} agents`, `${up} up`, `${down} down`, `${paused} paused`],
   "dashboardV2.environmentHealth.compiles.latestSucceeded": "Latest compile succeeded",
   "dashboardV2.environmentHealth.compiles.latestFailed": "Latest compile failed",
   "dashboardV2.environmentHealth.compiles.latestRunning": "Latest compile running",
