@@ -4,7 +4,7 @@ import { HealthStatus } from "./Components/StatusIndicator";
 
 export interface ResourcesHealth {
   status: HealthStatus;
-  statLine: string;
+  statLines: string[];
 }
 
 /**
@@ -16,6 +16,6 @@ export const deriveResourcesHealth = (summary: Resource.ResourceSummary): Resour
 
   return {
     status: failedCount > 0 ? "attention" : "healthy",
-    statLine: words("dashboardV2.environmentHealth.resourcesSummary")(failedCount),
+    statLines: [words("dashboardV2.environmentHealth.resourcesSummary")(failedCount)],
   };
 };

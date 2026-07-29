@@ -4,7 +4,7 @@ import { HealthStatus } from "./Components/StatusIndicator";
 
 export interface ServicesHealth {
   status: HealthStatus;
-  statLine: string;
+  statLines: string[];
 }
 
 /**
@@ -32,7 +32,7 @@ export const aggregateServicesHealth = (models: ServiceModel[]): ServicesHealth 
 
   return {
     status,
-    statLine: words("dashboardV2.environmentHealth.servicesSummary")(
+    statLines: words("dashboardV2.environmentHealth.servicesSummary")(
       totals.total,
       totals.healthy,
       totals.warning,

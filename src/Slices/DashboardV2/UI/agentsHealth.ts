@@ -3,7 +3,7 @@ import { HealthStatus } from "./Components/StatusIndicator";
 
 export interface AgentsHealth {
   status: HealthStatus;
-  statLine: string;
+  statLines: string[];
 }
 
 /**
@@ -18,6 +18,6 @@ export const deriveAgentsHealth = (total: number, down: number, paused: number):
 
   return {
     status: down > 0 ? "attention" : "healthy",
-    statLine: words("dashboardV2.environmentHealth.agentsSummary")(total, up, down, paused),
+    statLines: words("dashboardV2.environmentHealth.agentsSummary")(total, up, down, paused),
   };
 };

@@ -5,7 +5,7 @@ import { HealthStatus } from "./Components/StatusIndicator";
 
 export interface CompilesHealth {
   status: HealthStatus;
-  statLine: string;
+  statLines: string[];
 }
 
 /**
@@ -47,6 +47,9 @@ export const deriveCompilesHealth = (
 
   return {
     status,
-    statLine: `${latestResultLabel} · ${words("dashboardV2.environmentHealth.compiles.failedInWindow")(failedInWindowCount)}`,
+    statLines: [
+      latestResultLabel,
+      words("dashboardV2.environmentHealth.compiles.failedInWindow")(failedInWindowCount),
+    ],
   };
 };

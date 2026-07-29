@@ -158,28 +158,28 @@ export const EnvironmentHealthRow: React.FC = () => {
             key="services"
             title={words("dashboardV2.environmentHealth.services")}
             status={servicesHealth?.status ?? "healthy"}
-            statLines={[servicesHealth?.statLine ?? "—"]}
+            statLines={servicesHealth?.statLines ?? ["—"]}
             onClick={() => navigate(catalogUrl)}
           />,
           <HealthColumn
             key="resources"
             title={words("dashboardV2.environmentHealth.resources")}
             status={resourcesHealth?.status ?? "healthy"}
-            statLines={[resourcesHealth?.statLine ?? "—"]}
+            statLines={resourcesHealth?.statLines ?? ["—"]}
             onClick={() => navigate(resourcesUrl)}
           />,
           <HealthColumn
             key="compiles"
             title={words("dashboardV2.environmentHealth.compiles")}
             status={compilesHealth.status}
-            statLines={[compilesHealth.statLine]}
+            statLines={compilesHealth.statLines}
             onClick={() => navigate(compileReportsUrl)}
           />,
           <HealthColumn
             key="agents"
             title={words("dashboardV2.environmentHealth.agents")}
             status={agentsHealth?.status ?? "healthy"}
-            statLines={[agentsHealth?.statLine ?? "—"]}
+            statLines={agentsHealth?.statLines ?? ["—"]}
             onClick={() => navigate(agentsUrl)}
           />,
         ]}
