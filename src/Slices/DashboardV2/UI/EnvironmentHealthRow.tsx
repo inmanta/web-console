@@ -88,9 +88,7 @@ export const EnvironmentHealthRow: React.FC = () => {
 
   const projectNameById = new Map((projects ?? []).map((project) => [project.id, project.name]));
   const currentEnvironment = environments?.find((env) => env.id === selectedEnvironmentId);
-  const badge = currentEnvironment
-    ? projectNameById.get(currentEnvironment.project_id)
-    : undefined;
+  const badge = currentEnvironment ? projectNameById.get(currentEnvironment.project_id) : undefined;
   // The API returns the icon as a bare data URI body (e.g. "image/svg+xml;base64,..."), same as
   // the header's own environment selector (EnvSelectorWithData.environmentToSelector).
   const envIcon = currentEnvironment?.icon ? `data:${currentEnvironment.icon}` : undefined;
