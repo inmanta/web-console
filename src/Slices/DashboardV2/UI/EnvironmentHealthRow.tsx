@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from "react";
 import { useNavigate } from "react-router";
 import { Button, Content, Flex, FlexItem } from "@patternfly/react-core";
-import { OutlinedCalendarAltIcon, RedoIcon } from "@patternfly/react-icons";
+import { OutlinedCalendarAltIcon } from "@patternfly/react-icons";
 import { CompileStatus, PageSize, RangeOperator } from "@/Core/Domain";
 import {
   useGetAgents,
@@ -126,11 +126,6 @@ export const EnvironmentHealthRow: React.FC = () => {
           <FlexItem>
             <Button variant="secondary" icon={<OutlinedCalendarAltIcon />}>
               {words("dashboardV2.environmentHealth.rangeLast7Days")}
-            </Button>
-          </FlexItem>
-          <FlexItem>
-            <Button variant="primary" icon={<RedoIcon />}>
-              {words("dashboard.refresh")}
             </Button>
           </FlexItem>
         </Flex>
