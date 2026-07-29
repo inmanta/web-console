@@ -27,8 +27,12 @@ import { deriveOrchestratorHealth } from "./orchestratorHealth";
 import { deriveResourcesHealth } from "./resourcesHealth";
 import { aggregateServicesHealth } from "./servicesHealth";
 
-const NO_PAGINATION = {
-  pageSize: PageSize.initial,
+// Used for calls that only read metadata.total / a GraphQL summary field / the first row, never
+// the actual page of results — PageSize.minimal ("1") keeps this scoped to these specific calls
+// without touching PageSize.initial ("20"), which the rest of the app's paginated tables rely on
+// as their lower bound.
+const MINIMAL_PAGE = {
+  pageSize: PageSize.minimal,
   currentPage: { kind: "CurrentPage" as const, value: "" },
 };
 
@@ -59,28 +63,28 @@ export const EnvironmentHealthRow: React.FC = () => {
   const { data: serverStatus } = useGetServerStatus().useContinuous();
   const { data: serviceModels } = useGetServiceModels().useContinuous();
   const { data: resourcesData } = useGetResources({
-    ...NO_PAGINATION,
+    ...MINIMAL_PAGE,
     filter: {},
     sort: [],
   }).useContinuous();
   const { data: latestCompileReports } = useGetCompileReports({
-    ...NO_PAGINATION,
+    ...MINIMAL_PAGE,
     sort: { name: "requested", order: "desc" },
   }).useContinuous();
   const { data: failedCompileReports } = useGetCompileReports({
-    ...NO_PAGINATION,
+    ...MINIMAL_PAGE,
     filter: {
       status: CompileStatus.failed,
       requested: [{ date: sevenDaysAgo, operator: RangeOperator.Operator.From }],
     },
   }).useContinuous();
-  const { data: totalAgents } = useGetAgents().useContinuous(NO_PAGINATION);
+  const { data: totalAgents } = useGetAgents().useContinuous(MINIMAL_PAGE);
   const { data: downAgents } = useGetAgents().useContinuous({
-    ...NO_PAGINATION,
+    ...MINIMAL_PAGE,
     filter: { status: [AgentStatus.down] },
   });
   const { data: pausedAgents } = useGetAgents().useContinuous({
-    ...NO_PAGINATION,
+    ...MINIMAL_PAGE,
     filter: { status: [AgentStatus.paused] },
   });
   const { data: environments } = useGetEnvironments().useOneTime(true);
