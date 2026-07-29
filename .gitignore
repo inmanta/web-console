@@ -80,6 +80,9 @@ src/version.json
 # Local dev-only request mocks (kept on-machine, never committed)
 src/Dev/
 
+# Local planning/phase-note docs (kept on-machine, never committed)
+documentation/
+
 # macOS
 .DS_Store
 
