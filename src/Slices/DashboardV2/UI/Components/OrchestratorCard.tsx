@@ -99,7 +99,7 @@ export const OrchestratorCard: React.FC<Props> = ({
                 <Content component="h4">
                   {operational
                     ? words("dashboardV2.environmentHealth.operational")
-                    : words("dashboardV2.environmentHealth.degraded")}
+                    : words("dashboardV2.environmentHealth.status.attention")}
                 </Content>
               </FlexItem>
               {checklist.map((item) => (

@@ -1,12 +1,13 @@
 import React from "react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
+import { words } from "@/UI/words";
 import { ClickableCard } from "./ClickableCard";
 import { HealthStatus, StatusIndicator } from "./StatusIndicator";
 
 const STATUS_LABEL: Record<HealthStatus, string> = {
-  healthy: "Healthy",
-  attention: "Attention",
-  danger: "Danger",
+  healthy: words("dashboardV2.environmentHealth.status.healthy"),
+  attention: words("dashboardV2.environmentHealth.status.attention"),
+  danger: words("dashboardV2.environmentHealth.status.danger"),
 };
 
 const STATUS_TEXT_COLOR: Record<HealthStatus, string> = {
@@ -28,7 +29,10 @@ interface Props {
  * column is a clickable card that drills into the relevant page.
  */
 export const HealthColumn: React.FC<Props> = ({ title, status, statLines, onClick }) => (
-  <ClickableCard ariaLabel={`View ${title} details`} onClick={onClick}>
+  <ClickableCard
+    ariaLabel={words("dashboardV2.environmentHealth.viewDetails")(title)}
+    onClick={onClick}
+  >
     <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsXs" }}>
       <FlexItem>
         <StatusIndicator status={status} label={title} />
