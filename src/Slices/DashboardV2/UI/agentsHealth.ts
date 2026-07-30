@@ -1,5 +1,5 @@
 import { words } from "@/UI/words";
-import { HealthStatus } from "./Components/StatusIndicator";
+import { HealthStatus } from "./Components/EnvironmentHealth/StatusIndicator";
 
 export interface AgentsHealth {
   status: HealthStatus;

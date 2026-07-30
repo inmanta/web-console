@@ -1,6 +1,6 @@
 import { ServerStatus } from "@/Core/Domain/ServerStatus";
 import { words } from "@/UI/words";
-import { ChecklistItem } from "./Components/OrchestratorCard";
+import { ChecklistItem } from "./Components/EnvironmentHealth/OrchestratorCard";
 
 export interface OrchestratorHealth {
   operational: boolean;

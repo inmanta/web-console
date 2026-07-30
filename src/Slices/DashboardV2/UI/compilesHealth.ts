@@ -1,7 +1,7 @@
 import { CompileStatus } from "@/Core/Domain/CompileStatus";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
 import { words } from "@/UI/words";
-import { HealthStatus } from "./Components/StatusIndicator";
+import { HealthStatus } from "./Components/EnvironmentHealth/StatusIndicator";
 
 export interface CompilesHealth {
   status: HealthStatus;
@@ -26,13 +26,10 @@ export const getCompileStatus = ({ completed, success, started }: CompileReport)
 };
 
 /**
- * The Compiles health tile's status word tracks whether the LATEST compile succeeded, not the
- * historical failure count — a 7-day window with past failures can still read "Healthy" today.
+ * The Compiles health tile's status word and stat line both track only whether the LATEST
+ * compile succeeded, failed, or is still running — no historical failure count.
  */
-export const deriveCompilesHealth = (
-  latestReport: CompileReport | undefined,
-  failedInWindowCount: number
-): CompilesHealth => {
+export const deriveCompilesHealth = (latestReport: CompileReport | undefined): CompilesHealth => {
   const latestStatus = latestReport ? getCompileStatus(latestReport) : undefined;
   const status: HealthStatus = latestStatus === CompileStatus.success ? "healthy" : "attention";
 
@@ -47,9 +44,6 @@ export const deriveCompilesHealth = (
 
   return {
     status,
-    statLines: [
-      latestResultLabel,
-      words("dashboardV2.environmentHealth.compiles.failedInWindow")(failedInWindowCount),
-    ],
+    statLines: [latestResultLabel],
   };
 };

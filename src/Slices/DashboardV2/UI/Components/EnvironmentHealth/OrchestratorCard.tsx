@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Card, CardBody, Content, Flex, FlexItem, Label } from "@patternfly/react-core";
 import { CheckIcon, ExclamationIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
 import { words } from "@/UI/words";
+import { IconBadge, TONE_COLOR } from "../IconBadge";
 import { Dot } from "./Dot";
 
 export interface ChecklistItem {
@@ -18,11 +18,6 @@ interface Props {
   checklist: ChecklistItem[];
   onSwitchClick: () => void;
 }
-
-const TONE_COLOR = {
-  success: "var(--pf-t--global--icon--color--status--success--default)",
-  danger: "var(--pf-t--global--icon--color--status--danger--default)",
-};
 
 /**
  * Left-hand card of the Environment Health row: environment identity, an env-switch trigger,
@@ -53,9 +48,7 @@ export const OrchestratorCard: React.FC<Props> = ({
             >
               <FlexItem>{icon}</FlexItem>
               <FlexItem>
-                <Content component="p" style={{ fontWeight: 700 }}>
-                  {name}
-                </Content>
+                <Content component="h3">{name}</Content>
               </FlexItem>
               {badge && (
                 <FlexItem>
@@ -90,7 +83,7 @@ export const OrchestratorCard: React.FC<Props> = ({
             spaceItems={{ default: "spaceItemsMd" }}
           >
             <FlexItem>
-              <IconBadge $tone={tone}>
+              <IconBadge $tone={tone} $size="lg">
                 {operational ? <CheckIcon /> : <ExclamationIcon />}
               </IconBadge>
             </FlexItem>
@@ -124,19 +117,3 @@ export const OrchestratorCard: React.FC<Props> = ({
     </Card>
   );
 };
-
-const IconBadge = styled.div<{ $tone: "success" | "danger" }>`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background-color: color-mix(in srgb, ${(props) => TONE_COLOR[props.$tone]} 15%, transparent);
-  color: color-mix(in srgb, ${(props) => TONE_COLOR[props.$tone]} 70%, white);
-
-  svg {
-    width: 1.375rem;
-    height: 1.375rem;
-  }
-`;
