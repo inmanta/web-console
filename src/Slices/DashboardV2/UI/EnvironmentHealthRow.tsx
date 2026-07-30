@@ -37,8 +37,8 @@ const MINIMAL_PAGE = {
 
 /**
  * Environment Health row: orchestrator identity/checklist + 4 health columns, each backed by
- * the same hooks already used elsewhere in the app (see documentation/7136-plan.md §2).
- * Card clicks navigate to the relevant existing page.
+ * the same hooks already used elsewhere in the app. Card clicks navigate to the relevant
+ * existing page.
  */
 export const EnvironmentHealthRow: React.FC = () => {
   const { routeManager, environmentHandler } = useContext(DependencyContext);
