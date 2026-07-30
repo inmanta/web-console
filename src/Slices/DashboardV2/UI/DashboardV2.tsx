@@ -6,9 +6,8 @@ import { PlaceholderSection } from "./Components/PlaceholderSection";
 import { EnvironmentHealthRow } from "./EnvironmentHealthRow";
 
 /**
- * Dashboard V2 body. Environment Health (block 1) and Latest Compile Reports (block 2) are
- * data-wired; the remaining blocks are layout placeholders filled in during Phases 6-8
- * (see documentation/7136-plan.md).
+ * Dashboard V2 body. Environment Health and Latest Compile Reports are data-wired; the
+ * remaining blocks are layout placeholders until their data wiring is built.
  */
 export const DashboardV2: React.FC = () => (
   <Flex direction={{ default: "column" }} gap={{ default: "gapLg" }}>

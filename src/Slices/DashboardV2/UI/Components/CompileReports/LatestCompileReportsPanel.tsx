@@ -19,8 +19,7 @@ import { IconBadge } from "../IconBadge";
 import { LatestCompileReportRow } from "./LatestCompileReportRow";
 
 /**
- * Latest Compile Reports panel (block 2 of Dashboard V2, see documentation/7136-plan.md Phase 5):
- * title + "View all" link, and the most recent compile reports.
+ * Latest Compile Reports panel: title + "View all" link, and the most recent compile reports.
  */
 export const LatestCompileReportsPanel: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
