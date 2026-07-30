@@ -585,6 +585,16 @@ const dict = {
   "dashboardV2.compileReports.viewProgress": "View progress",
   "dashboardV2.compileReports.viewReport": "View report",
   "dashboardV2.orchestrator.title": "Orchestrator",
+  "dashboardV2.orchestrator.edition": "Edition",
+  "dashboardV2.orchestrator.version": "Version",
+  "dashboardV2.orchestrator.license": "License",
+  "dashboardV2.orchestrator.pythonVersion": "Python",
+  "dashboardV2.orchestrator.postgresqlVersion": "PostgreSQL",
+  "dashboardV2.orchestrator.licenseSummary": (isValid: boolean, expiry: string): string =>
+    `${isValid ? "Valid" : "Expired"} · exp ${expiry}`,
+  "dashboardV2.orchestrator.extensionsLabel": "EXTENSIONS",
+  "dashboardV2.orchestrator.extensionTag": "extension",
+  "dashboardV2.orchestrator.viewFullStatus": "Open full Orchestrator Status page",
   "dashboardV2.resourceManager.title": "Resource Manager",
   "dashboardV2.orchestrationEngine.title": "Orchestration Engine",
 
