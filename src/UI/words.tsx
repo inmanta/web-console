@@ -564,8 +564,15 @@ const dict = {
     `${warning} warning`,
     `${danger} danger`,
   ],
-  "dashboardV2.environmentHealth.resourcesSummary": (failedCount: number) =>
+  "dashboardV2.environmentHealth.resourcesSummary": (
+    total: number,
+    failedCount: number,
+    nonCompliantCount: number
+  ): string[] => [
+    `${total} resources`,
     `${failedCount} failed to deploy`,
+    `${nonCompliantCount} non-compliant`,
+  ],
   "dashboardV2.environmentHealth.agentsSummary": (
     total: number,
     up: number,
@@ -596,6 +603,17 @@ const dict = {
   "dashboardV2.orchestrator.extensionTag": "extension",
   "dashboardV2.orchestrator.viewFullStatus": "Open full Orchestrator Status page",
   "dashboardV2.resourceManager.title": "Resource Manager",
+  "dashboardV2.resourceManager.subtitle": "Deployment state",
+  "dashboardV2.resourceManager.compliance.title": "Compliance",
+  "dashboardV2.resourceManager.deployResult.title": "Deploy result",
+  "dashboardV2.resourceManager.blocked.title": "Blocked",
+  "dashboardV2.resourceManager.summary": "Summary",
+  "dashboardV2.resourceManager.summaryCount": (count: number) =>
+    `${count.toLocaleString()} resources`,
+  "dashboardV2.resourceManager.deployingNow": "Deploying now",
+  "dashboardV2.resourceManager.deployedOk": "Deployed OK",
+  "dashboardV2.resourceManager.failed": "Failed",
+  "dashboardV2.resourceManager.nonCompliant": "Non-compliant",
   "dashboardV2.orchestrationEngine.title": "Orchestration Engine",
 
   /**

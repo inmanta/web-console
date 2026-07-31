@@ -14,6 +14,9 @@ export interface Props {
   onClick?(id: string): void;
   height?: string;
   isEmpty?: boolean;
+
+  /** Hides the in-segment value text, for bars too short to fit it legibly. Default true. */
+  showValue?: boolean;
 }
 
 /**
@@ -27,6 +30,7 @@ export interface Props {
  * @prop {string} color - The color of the item.
  * @prop {string} height - Height of the legendItem.
  * @prop {boolean} isEmpty - Whether the item is a placeholder with no data.
+ * @prop {boolean} showValue - Whether the value text is rendered inside the segment.
  * @prop {() => void} onClick - The function to call when the item is clicked.
  */
 export const Item: React.FC<Props> = ({
@@ -38,6 +42,7 @@ export const Item: React.FC<Props> = ({
   id,
   height = "36px",
   isEmpty = false,
+  showValue = true,
 }) => {
   return (
     <Tooltip content={label} position="top" distance={4} enableFlip>
@@ -51,7 +56,7 @@ export const Item: React.FC<Props> = ({
         onClick={onClick ? () => onClick(id) : undefined}
         aria-label={`LegendItem-${id}`}
       >
-        {value}
+        {showValue ? value : null}
       </Container>
     </Tooltip>
   );
