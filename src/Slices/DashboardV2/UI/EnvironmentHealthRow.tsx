@@ -30,7 +30,7 @@ import { useLatestCompileReports } from "./useLatestCompileReports";
 // the actual page of results — PageSize.minimal ("1") keeps this scoped to these specific calls
 // without touching PageSize.initial ("20"), which the rest of the app's paginated tables rely on
 // as their lower bound.
-const MINIMAL_PAGE = {
+export const MINIMAL_PAGE = {
   pageSize: PageSize.minimal,
   currentPage: { kind: "CurrentPage" as const, value: "" },
 };
