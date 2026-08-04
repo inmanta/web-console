@@ -1498,6 +1498,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@joint/core@npm:~4.3.1":
+  version: 4.3.1
+  resolution: "@joint/core@npm:4.3.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40joint%2Fcore%2F-%2Fcore-4.3.1.tgz"
+  checksum: 10/363c383445c02a64f5eab1b5248e2b3ba61fa8edf172cdcfdcccca8e6dc2575acc740e8da45fcd6ea998152eeddc5451147846f56c118c61e4590e1aaaf555e3
+  languageName: node
+  linkType: hard
+
 "@joint/layout-directed-graph@npm:^4.3.0":
   version: 4.3.0
   resolution: "@joint/layout-directed-graph@npm:4.3.0::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40joint%2Flayout-directed-graph%2F-%2Flayout-directed-graph-4.3.0.tgz"
