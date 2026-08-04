@@ -10,7 +10,6 @@ import {
   RouteKindWithId,
 } from "@/Core";
 import { Dashboard } from "@/Slices/Dashboard";
-import { DashboardV2 } from "@/Slices/DashboardV2";
 import { DuplicateInstance } from "@/Slices/DuplicateInstance";
 import { InstanceComposer } from "@/Slices/InstanceComposerCreator";
 import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
@@ -65,7 +64,6 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     Catalog: ServiceCatalog.route(baseUrl),
     CreateInstance: CreateInstance.route(baseUrl),
     Dashboard: Dashboard.route(baseUrl),
-    DashboardV2: DashboardV2.route(baseUrl),
     Diagnose: Diagnose.route(baseUrl),
     DuplicateInstance: DuplicateInstance.route(baseUrl),
     EditInstance: EditInstance.route(baseUrl),

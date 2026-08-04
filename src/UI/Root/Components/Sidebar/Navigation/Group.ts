@@ -41,14 +41,6 @@ export const envrionment = (routeManager: RouteManager, isEnvPresent: boolean): 
       statusIndication: false,
     },
     {
-      id: "DashboardV2",
-      label: routeManager.getRoute("DashboardV2").generateLabel(undefined),
-      url: routeManager.getRoute("DashboardV2").path,
-      external: false,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
-    {
       id: "Settings",
       label: routeManager.getRoute("Settings").generateLabel(undefined),
       url: routeManager.getRoute("Settings").path,

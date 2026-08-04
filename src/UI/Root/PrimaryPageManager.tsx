@@ -16,7 +16,6 @@ import { ComplianceCheckPage } from "@S/ComplianceCheck/UI";
 import { CreateEnvironmentPage } from "@S/CreateEnvironment/UI";
 import { CreateInstancePage } from "@S/CreateInstance/UI";
 import { DashboardPage } from "@S/Dashboard/UI";
-import { DashboardV2Page } from "@S/DashboardV2/UI";
 import { DesiredStatePage } from "@S/DesiredState/UI";
 import { DesiredStateComparePage } from "@S/DesiredStateCompare/UI";
 import { DesiredStateDetailsPage } from "@S/DesiredStateDetails/UI";
@@ -92,10 +91,6 @@ export class PrimaryPageManager implements PageManager {
       Dashboard: {
         ...this.routeDictionary.Dashboard,
         element: <DashboardPage />,
-      },
-      DashboardV2: {
-        ...this.routeDictionary.DashboardV2,
-        element: <DashboardV2Page />,
       },
       Catalog: {
         ...this.routeDictionary.Catalog,
