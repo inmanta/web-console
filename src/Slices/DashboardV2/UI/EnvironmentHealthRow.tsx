@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router";
-import { Button, Content, Flex, FlexItem } from "@patternfly/react-core";
-import { OutlinedCalendarAltIcon } from "@patternfly/react-icons";
+import { Content, Flex, FlexItem } from "@patternfly/react-core";
 import { PageSize } from "@/Core/Domain";
 import {
   useGetAgents,
@@ -97,21 +96,9 @@ export const EnvironmentHealthRow: React.FC = () => {
 
   return (
     <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsMd" }}>
-      <Flex
-        justifyContent={{ default: "justifyContentSpaceBetween" }}
-        alignItems={{ default: "alignItemsFlexStart" }}
-      >
-        <FlexItem>
-          <Content component="small">{words("dashboardV2.environmentHealth.subtitle")}</Content>
-        </FlexItem>
-        <Flex alignItems={{ default: "alignItemsCenter" }} spaceItems={{ default: "spaceItemsMd" }}>
-          <FlexItem>
-            <Button variant="secondary" icon={<OutlinedCalendarAltIcon />}>
-              {words("dashboardV2.environmentHealth.rangeLast7Days")}
-            </Button>
-          </FlexItem>
-        </Flex>
-      </Flex>
+      <FlexItem>
+        <Content component="small">{words("dashboardV2.environmentHealth.subtitle")}</Content>
+      </FlexItem>
       <HealthCardGrid
         orchestrator={
           <OrchestratorCard
