@@ -10,6 +10,7 @@ export interface GetMetricsParams {
   startDate: string;
   endDate: string;
   isLsmAvailable: boolean;
+  nbDatapoints: number;
 }
 
 /**

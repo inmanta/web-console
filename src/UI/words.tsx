@@ -538,7 +538,6 @@ const dict = {
   "dashboardV2.placeholder.comingSoon": "Coming soon",
   "dashboardV2.environmentHealth.subtitle":
     "Live status across orchestration, resources, compiles and services",
-  "dashboardV2.environmentHealth.rangeLast7Days": "Last 7 days",
   "dashboardV2.environmentHealth.switch": "Switch",
   "dashboardV2.environmentHealth.orchestratorLabel": "ORCHESTRATOR",
   "dashboardV2.environmentHealth.operational": "Operational",
@@ -615,6 +614,24 @@ const dict = {
   "dashboardV2.resourceManager.failed": "Failed",
   "dashboardV2.resourceManager.nonCompliant": "Non-compliant",
   "dashboardV2.orchestrationEngine.title": "Orchestration Engine",
+  "dashboardV2.orchestrationEngine.subtitle": (days: number): string =>
+    `Compile activity · last ${days} days`,
+  "dashboardV2.orchestrationEngine.tabs.rate": "Compile rate",
+  "dashboardV2.orchestrationEngine.tabs.time": "Compile time",
+  "dashboardV2.orchestrationEngine.tabs.waiting": "Waiting time",
+  "dashboardV2.orchestrationEngine.stats.compiles": "Compiles",
+  "dashboardV2.orchestrationEngine.stats.failed": "Failed",
+  "dashboardV2.orchestrationEngine.stats.avgCompile": "Avg compile",
+  "dashboardV2.orchestrationEngine.stats.avgWaiting": "Avg waiting",
+  "dashboardV2.orchestrationEngine.chart.rate.title": "Compiles per day",
+  "dashboardV2.orchestrationEngine.chart.time.title": "Avg compile time (s)",
+  "dashboardV2.orchestrationEngine.chart.waiting.title": "Avg waiting time (s)",
+  "dashboardV2.orchestrationEngine.chart.xStart": (days: number): string => `${days} days ago`,
+  "dashboardV2.orchestrationEngine.chart.xEnd": "Today",
+  "dashboardV2.orchestrationEngine.range.last7Days": "Last 7 days",
+  "dashboardV2.orchestrationEngine.range.last14Days": "Last 14 days",
+  "dashboardV2.orchestrationEngine.range.last30Days": "Last 30 days",
+  "dashboardV2.orchestrationEngine.refresh": "Refresh",
 
   /**
    * Environment controls
