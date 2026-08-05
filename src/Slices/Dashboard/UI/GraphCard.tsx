@@ -39,7 +39,7 @@ export const GraphCard: React.FC<GraphCardProps> = ({ isStacked, timestamps, met
         {(formatedMetrics as Metric[]).length > 0 && (
           <LineChart
             label={words(`dashboard.${metrics.name as MetricName}.label.x`)}
-            title={words(`dashboard.${metrics.name as MetricName}.title`)}
+            ariaLabel={words(`dashboard.${metrics.name as MetricName}.title`)}
             description={words(`dashboard.${metrics.name as MetricName}.description`)}
             isStacked={isStacked}
             legendData={formatLegendData(metrics, isStacked)}
