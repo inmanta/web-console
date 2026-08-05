@@ -43,7 +43,7 @@ export interface GraphCardProps {
   metrics: Metric | StackedMetric;
 }
 export interface LineChartProps {
-  title: string;
+  ariaLabel: string;
   description: string;
   label: string;
   legendData: LegendData[];
