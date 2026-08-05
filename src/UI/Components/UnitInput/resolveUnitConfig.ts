@@ -1,12 +1,4 @@
-import {
-  defaultDisplay,
-  defaultScales,
-  factorOf,
-  familyOf,
-  findUnit,
-  isBaseUnit,
-  unitsOfKind,
-} from "./units";
+import { defaultScales, factorOf, familyOf, findUnit, isBaseUnit, unitsOfKind } from "./units";
 import type { UnitKind, UnitScales } from "./units";
 
 /**
@@ -97,7 +89,7 @@ function resolveDisplayUnit(apiUnit: string, offeredUnits: string[], provided?: 
     return provided;
   }
 
-  return defaultDisplay(apiUnit);
+  return apiUnit;
 }
 
 /**
