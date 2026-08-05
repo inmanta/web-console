@@ -136,3 +136,25 @@ export const interpolateMetrics = (metrics: (number | null)[]) => {
 };
 
 const linearInterpolation = (a, b, amount) => (1 - amount) * a + amount * b;
+
+/**
+ * ChartStack renders its children in reverse of the metrics/legend order (bottom-to-top),
+ * while ChartLegendTooltip pairs hover values to legendData positionally (by index, not by
+ * name). Both arrays must be reordered together so index i of the rendered stack always
+ * corresponds to index i of the tooltip's legend, or hover values get paired with the wrong
+ * label/color.
+ */
+export const alignTooltipLegendData = <
+  T extends { name: string },
+  L extends { childName?: string },
+>(
+  metrics: T[],
+  legendData: L[],
+  isStacked: boolean
+): [T[], L[]] => {
+  if (!isStacked) {
+    return [metrics, legendData];
+  }
+
+  return [[...metrics].reverse(), [...legendData].reverse()];
+};

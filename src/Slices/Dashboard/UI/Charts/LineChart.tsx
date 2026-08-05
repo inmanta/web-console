@@ -14,12 +14,15 @@ import {
   ChartLabelProps,
 } from "@patternfly/react-charts/victory";
 import styled, { css } from "styled-components";
+import { CustomDatePresenter } from "@/UI/Utils";
 import { LineChartProps } from "../../Core/Domain";
-import { interpolateMetrics } from "../helper";
+import { alignTooltipLegendData, interpolateMetrics } from "../helper";
 import { colorTheme } from "../themes";
 
 // Note: Container order is important
 const CursorVoronoiContainer = createContainer("voronoi", "voronoi");
+
+const datePresenter = new CustomDatePresenter();
 
 const formatValueForChart = (value: null | number) => {
   if (value === null) {
@@ -41,7 +44,8 @@ const chooseWhichLabelToUse = (datum, isStacked: boolean) => {
 };
 
 export const LineChart: React.FC<LineChartProps> = ({
-  title,
+  ariaLabel,
+  description,
   label,
   legendData,
   timestamps,
@@ -51,6 +55,12 @@ export const LineChart: React.FC<LineChartProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(0);
+
+  const [stackedMetrics, tooltipLegendData] = alignTooltipLegendData(
+    metrics,
+    legendData,
+    isStacked
+  );
 
   useEffect(() => {
     function handleResize() {
@@ -71,15 +81,18 @@ export const LineChart: React.FC<LineChartProps> = ({
   return (
     <div ref={ref}>
       <Chart
-        ariaDesc={title}
-        ariaTitle={title}
+        ariaDesc={description}
         containerComponent={
           <CursorVoronoiContainer
+            // Deliberately not using ariaTitle: it renders an SVG <title>, which triggers a
+            // native browser tooltip on hover that fights with the custom ChartLegendTooltip.
+            // aria-label gives the same accessible name without adding a <title> element.
+            aria-label={ariaLabel}
             labels={({ datum }) => chooseWhichLabelToUse(datum, isStacked)}
             labelComponent={
               <ChartLegendTooltip
-                legendData={legendData}
-                title={(datum) => (datum.x ? new Date(datum.x).toLocaleString() : "No data")}
+                legendData={tooltipLegendData}
+                title={(datum) => (datum.x ? datePresenter.getFull(String(datum.x)) : "No data")}
                 flyoutWidth={250}
               />
             }
@@ -105,7 +118,7 @@ export const LineChart: React.FC<LineChartProps> = ({
         legendAllowWrap={true}
         maxDomain={{ y: max === 0 ? 5 : max * 1.1 }}
         minDomain={{ y: 0 }}
-        name={`chart-${title}`}
+        name={`chart-${ariaLabel}`}
         padding={{
           bottom: isStacked ? 125 : 60, // Adjusted to accommodate legend
           left: 100,
@@ -122,11 +135,9 @@ export const LineChart: React.FC<LineChartProps> = ({
               lineHeight={1.4}
             />
           }
-          tickFormat={(x) => {
-            const date = new Date(x).toLocaleString().split(",");
-
-            return date[0] + "\n" + date[1];
-          }}
+          tickFormat={(x) =>
+            `${datePresenter.getDate(String(x))}\n${datePresenter.getTime(String(x))}`
+          }
           style={{
             axisLabel: { fill: "var(--pf-t--global--text--color--regular)" },
             tickLabels: { fill: "var(--pf-t--global--text--color--subtle)" },
@@ -147,7 +158,7 @@ export const LineChart: React.FC<LineChartProps> = ({
         />
         {isStacked ? (
           <ChartStack>
-            {metrics.reverse().map(({ name, data }, index) => (
+            {stackedMetrics.map(({ name, data }, index) => (
               <ChartArea
                 data={data.map((value, index) => {
                   return {
