@@ -42,6 +42,7 @@ export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
             isNotificationDrawerExpanded,
           }}
           isManagedSidebar
+          mainContainerId="primary-app-container"
           breadcrumb={<PageBreadcrumbs />}
           masthead={<Header {...{ onNotificationsToggle }} noEnv={!Boolean(environmentId)} />}
           sidebar={<Sidebar environment={environmentId} />}
