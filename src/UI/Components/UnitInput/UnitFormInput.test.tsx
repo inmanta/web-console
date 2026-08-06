@@ -33,7 +33,7 @@ describe("UnitFormInput", () => {
       />
     );
 
-    expect(screen.getByLabelText("UnitInput-memory_limit")).toHaveValue("2");
+    expect(screen.getByLabelText("UnitInput-memory_limit")).toHaveValue(2);
     expect(screen.getByLabelText(/^Unit$/)).toHaveValue("GiB");
     expect(screen.getByText("= 2048 MiB")).toBeVisible();
   });
@@ -78,24 +78,19 @@ describe("UnitFormInput", () => {
     expect(handleInputChange).toHaveBeenLastCalledWith(2500000, null);
   });
 
-  test("the stepper buttons increment and decrement in the currently selected unit", async () => {
-    const handleInputChange = vi.fn();
-
+  test("the number input is a native number field stepping by 1, so the browser's own up/down spinner and arrow keys apply", () => {
     render(
       <UnitFormInput
         attributeName="bandwidth"
         attributeValue={2}
         isOptional={false}
         config={configFor("MB")}
-        handleInputChange={handleInputChange}
+        handleInputChange={vi.fn()}
       />
     );
 
-    await userEvent.click(screen.getByLabelText("Increase"));
-    expect(handleInputChange).toHaveBeenLastCalledWith(3, null);
-
-    await userEvent.click(screen.getByLabelText("Decrease"));
-    expect(handleInputChange).toHaveBeenLastCalledWith(2, null);
+    expect(numberInput()).toHaveAttribute("type", "number");
+    expect(numberInput()).toHaveAttribute("step", "1");
   });
 
   test("an entry that isn't a whole number of API units shows the exactness error", async () => {
@@ -134,7 +129,7 @@ describe("UnitFormInput", () => {
     expect(screen.getByText("Must be at most 1 Gbit/s.")).toBeVisible();
   });
 
-  test("shouldBeDisabled disables the number input, both steppers, and the unit select", () => {
+  test("shouldBeDisabled disables the number input and the unit select", () => {
     render(
       <UnitFormInput
         attributeName="bandwidth"
@@ -147,8 +142,6 @@ describe("UnitFormInput", () => {
     );
 
     expect(numberInput()).toBeDisabled();
-    expect(screen.getByLabelText("Increase")).toBeDisabled();
-    expect(screen.getByLabelText("Decrease")).toBeDisabled();
     expect(unitSelect()).toBeDisabled();
   });
 

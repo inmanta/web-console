@@ -21,7 +21,8 @@ export function sanitizeAttributes(
       case "Boolean":
       case "Textarea":
       case "TextList":
-      case "Text": {
+      case "Text":
+      case "Unit": {
         sanitized[field.name] = converter.ensureAttributeType(formState[field.name], field.type);
 
         return;
