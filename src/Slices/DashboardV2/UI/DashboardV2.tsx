@@ -4,12 +4,13 @@ import { words } from "@/UI/words";
 import { LatestCompileReportsPanel } from "./Components/CompileReports/LatestCompileReportsPanel";
 import { OrchestratorDetailCard } from "./Components/Orchestrator/OrchestratorDetailCard";
 import { PlaceholderSection } from "./Components/PlaceholderSection";
+import { ResourcesCard } from "./Components/Resources/ResourcesCard";
 import { EnvironmentHealthRow } from "./EnvironmentHealthRow";
 
 /**
- * Dashboard V2 body. Environment Health, Latest Compile Reports and the Orchestrator detail
- * card are data-wired; the remaining blocks are layout placeholders until their data wiring
- * is built.
+ * Dashboard V2 body. Environment Health, Latest Compile Reports, the Orchestrator detail card
+ * and the Resource Manager card are data-wired; the remaining block is a layout placeholder
+ * until its data wiring is built.
  */
 export const DashboardV2: React.FC = () => (
   <Flex direction={{ default: "column" }} gap={{ default: "gapLg" }}>
@@ -20,12 +21,12 @@ export const DashboardV2: React.FC = () => (
       <LatestCompileReportsPanel />
     </FlexItem>
     <FlexItem>
-      <Flex gap={{ default: "gapLg" }}>
+      <Flex gap={{ default: "gapLg" }} alignItems={{ default: "alignItemsStretch" }}>
         <FlexItem flex={{ default: "flex_1" }}>
           <OrchestratorDetailCard />
         </FlexItem>
         <FlexItem flex={{ default: "flex_1" }}>
-          <PlaceholderSection title={words("dashboardV2.resourceManager.title")} />
+          <ResourcesCard />
         </FlexItem>
       </Flex>
     </FlexItem>
