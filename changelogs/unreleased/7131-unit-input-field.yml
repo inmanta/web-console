@@ -1,0 +1,6 @@
+description: Added a reusable UnitInputField component for entering quantities (sizes, data rates, durations) with a unit, while the underlying attribute stays a plain int/float.
+issue-nr: 7131
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
