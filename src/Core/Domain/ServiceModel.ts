@@ -34,6 +34,15 @@ export interface AttributeAnnotations {
   web_order?: number;
   web_default_open?: boolean;
   web_tab?: string;
+
+  /** Canonical unit code of the raw API value. Required (with `web_presentation: "unit"`) to opt an int/float attribute into the UnitInputField (issue #7022). */
+  web_unit?: string;
+
+  /** "metric" | "iec" | "both" — which unit families the UnitInputField offers. See issue #7022 for the defaulting rules. */
+  web_unit_scales?: string;
+
+  /** Preferred unit pre-selected in an empty create form. See issue #7022. */
+  web_unit_display?: string;
 }
 
 /**

@@ -756,6 +756,7 @@ export class ServiceEntityShape extends shapes.standard.HeaderedRecord {
           case "Enum":
           case "Text":
           case "Textarea":
+          case "Unit":
             return isEmptyValue(value);
           default:
             return false;

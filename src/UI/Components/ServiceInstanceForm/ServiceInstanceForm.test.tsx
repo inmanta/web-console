@@ -14,6 +14,7 @@ import {
   NestedField,
   TextField,
   Textarea,
+  UnitField,
 } from "@/Core";
 import { SUGGESTION_NAMESPACES } from "@/Data/Queries";
 import * as Test from "@/Test";
@@ -25,7 +26,15 @@ import { ServiceInstanceForm } from "./ServiceInstanceForm";
 import type { Mock } from "vitest";
 
 const setup = (
-  fields: (TextField | BooleanField | NestedField | DictListField | EnumField | Textarea)[],
+  fields: (
+    | TextField
+    | BooleanField
+    | NestedField
+    | DictListField
+    | EnumField
+    | Textarea
+    | UnitField
+  )[],
   func: undefined | Mock = undefined,
   isEdit = false,
   originalAttributes: InstanceAttributeModel | undefined = undefined,
@@ -760,6 +769,38 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     },
     expect.any(Function)
   );
+});
+
+test("GIVEN ServiceInstanceForm WHEN passed a UnitField THEN shows that field and submits the value converted to API units", async () => {
+  const submitCb = vi.fn();
+  const { component } = setup([Test.Field.unit], submitCb);
+
+  render(component);
+
+  const numberInput = screen.getByLabelText(`UnitInput-${Test.Field.unit.name}`);
+
+  expect(screen.getByRole("combobox", { name: "Unit" })).toHaveValue("kbit/s");
+
+  await userEvent.type(numberInput, "500");
+  await userEvent.click(screen.getByText(words("confirm")));
+
+  expect(submitCb).toHaveBeenCalledWith({ [Test.Field.unit.name]: 500 }, expect.any(Function));
+});
+
+test("GIVEN ServiceInstanceForm WHEN a UnitField's unit is switched THEN the same typed digits submit as a different API-unit value", async () => {
+  const submitCb = vi.fn();
+  const { component } = setup([Test.Field.unit], submitCb);
+
+  render(component);
+
+  const numberInput = screen.getByLabelText(`UnitInput-${Test.Field.unit.name}`);
+  const unitSelect = screen.getByRole("combobox", { name: "Unit" });
+
+  await userEvent.type(numberInput, "2");
+  await userEvent.selectOptions(unitSelect, "Mbit/s");
+  await userEvent.click(screen.getByText(words("confirm")));
+
+  expect(submitCb).toHaveBeenCalledWith({ [Test.Field.unit.name]: 2000 }, expect.any(Function));
 });
 
 test.each`

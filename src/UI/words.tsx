@@ -1054,8 +1054,6 @@ const dict = {
   /**
    * UnitInputField (issue #7022 / #7131)
    */
-  "unitInput.stepper.increase": "Increase",
-  "unitInput.stepper.decrease": "Decrease",
   "unitInput.unitSelect.ariaLabel": "Unit",
   "unitInput.helper.stored": (value: string, unit: string) => `= ${value} ${unit}`,
   "unitInput.helper.equivalent": (value: string, unit: string, family: string) =>

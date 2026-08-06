@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Button,
   FormGroup,
   FormHelperText,
   FormSelect,
@@ -11,6 +10,7 @@ import {
   InputGroupItem,
   TextInput,
 } from "@patternfly/react-core";
+import styled from "styled-components";
 import { words } from "@/UI/words";
 import { toSubmittableNumber } from "./convert";
 import { otherScaleCandidates, selectDisplayUnit } from "./display";
@@ -46,6 +46,12 @@ function initialState(
 
   return { unit, typed: value.toFixed() };
 }
+
+// Fixed rather than `width: auto` so the control doesn't resize as the user switches between a
+// short code ("B") and the catalogue's longest ones ("Kibit/s", "Gibit/s", "Tibit/s" — 7 chars).
+const UnitSelect = styled(FormSelect)`
+  width: 6.5rem;
+`;
 
 function errorMessage(error: UnitValidationError): string {
   switch (error.kind) {
@@ -105,13 +111,6 @@ export const UnitFormInput: React.FC<Props> = ({
     );
   };
 
-  const step = (delta: number) => {
-    const current = Number(typed || "0");
-    const next = Number.isFinite(current) ? current : 0;
-
-    commit(String(next + delta), unit);
-  };
-
   const otherScale = otherScaleCandidates(config, unit);
   const equivalent =
     validation.valid && validation.apiValue !== null && otherScale.length > 0
@@ -132,7 +131,8 @@ export const UnitFormInput: React.FC<Props> = ({
       <InputGroup>
         <InputGroupItem isFill>
           <TextInput
-            type="text"
+            type="number"
+            step={1}
             id={attributeName}
             name={attributeName}
             aria-label={`UnitInput-${attributeName}`}
@@ -146,27 +146,7 @@ export const UnitFormInput: React.FC<Props> = ({
           />
         </InputGroupItem>
         <InputGroupItem>
-          <Button
-            variant="control"
-            aria-label={words("unitInput.stepper.decrease")}
-            isDisabled={shouldBeDisabled}
-            onClick={() => step(-1)}
-          >
-            −
-          </Button>
-        </InputGroupItem>
-        <InputGroupItem>
-          <Button
-            variant="control"
-            aria-label={words("unitInput.stepper.increase")}
-            isDisabled={shouldBeDisabled}
-            onClick={() => step(1)}
-          >
-            +
-          </Button>
-        </InputGroupItem>
-        <InputGroupItem>
-          <FormSelect
+          <UnitSelect
             aria-label={words("unitInput.unitSelect.ariaLabel")}
             value={unit}
             isDisabled={shouldBeDisabled}
@@ -175,7 +155,7 @@ export const UnitFormInput: React.FC<Props> = ({
             {config.offeredUnits.map((code) => (
               <FormSelectOption key={code} value={code} label={code} />
             ))}
-          </FormSelect>
+          </UnitSelect>
         </InputGroupItem>
       </InputGroup>
       <FormHelperText>
