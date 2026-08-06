@@ -23,7 +23,11 @@ export const RouteOutlet = () => {
   useEffect(() => {
     // Page content lives in PatternFly's scrollable <main id="primary-app-container">,
     // which doesn't reset on its own when navigating between routes.
-    document.getElementById("primary-app-container")?.scrollTo(0, 0);
+    const container = document.getElementById("primary-app-container");
+
+    if (container) {
+      container.scrollTop = 0;
+    }
   }, [pathname]);
 
   return (
