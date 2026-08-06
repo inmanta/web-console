@@ -1,13 +1,13 @@
 import React from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { words } from "@/UI/words";
+import { LatestCompileReportsPanel } from "./Components/CompileReports/LatestCompileReportsPanel";
 import { PlaceholderSection } from "./Components/PlaceholderSection";
 import { EnvironmentHealthRow } from "./EnvironmentHealthRow";
 
 /**
- * Dashboard V2 body. Only the Environment Health row (block 1) is data-wired so far;
- * the remaining blocks are layout placeholders filled in during Phases 5-8
- * (see documentation/7136-plan.md).
+ * Dashboard V2 body. Environment Health and Latest Compile Reports are data-wired; the
+ * remaining blocks are layout placeholders until their data wiring is built.
  */
 export const DashboardV2: React.FC = () => (
   <Flex direction={{ default: "column" }} gap={{ default: "gapLg" }}>
@@ -15,7 +15,7 @@ export const DashboardV2: React.FC = () => (
       <EnvironmentHealthRow />
     </FlexItem>
     <FlexItem>
-      <PlaceholderSection title={words("dashboardV2.compileReports.title")} />
+      <LatestCompileReportsPanel />
     </FlexItem>
     <FlexItem>
       <Flex gap={{ default: "gapLg" }}>

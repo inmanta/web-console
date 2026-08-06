@@ -1,11 +1,10 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 import { Button, Content, Flex, FlexItem } from "@patternfly/react-core";
 import { OutlinedCalendarAltIcon } from "@patternfly/react-icons";
-import { CompileStatus, PageSize, RangeOperator } from "@/Core/Domain";
+import { PageSize } from "@/Core/Domain";
 import {
   useGetAgents,
-  useGetCompileReports,
   useGetEnvironments,
   useGetProjects,
   useGetResources,
@@ -17,15 +16,15 @@ import { DependencyContext } from "@/UI/Dependency";
 import { EnvironmentIcon } from "@/UI/Root/Components/Header/EnvSelector/EnvSelector";
 import { EnvSelectorOpenContext } from "@/UI/Root/Components/Header/EnvSelector/EnvSelectorOpenContext";
 import { words } from "@/UI/words";
-import dayjs from "@/dayjs";
-import { HealthCardGrid } from "./Components/HealthCardGrid";
-import { HealthColumn } from "./Components/HealthColumn";
-import { OrchestratorCard } from "./Components/OrchestratorCard";
+import { HealthCardGrid } from "./Components/EnvironmentHealth/HealthCardGrid";
+import { HealthColumn } from "./Components/EnvironmentHealth/HealthColumn";
+import { OrchestratorCard } from "./Components/EnvironmentHealth/OrchestratorCard";
 import { deriveAgentsHealth } from "./agentsHealth";
 import { deriveCompilesHealth } from "./compilesHealth";
 import { deriveOrchestratorHealth } from "./orchestratorHealth";
 import { deriveResourcesHealth } from "./resourcesHealth";
 import { aggregateServicesHealth } from "./servicesHealth";
+import { useLatestCompileReports } from "./useLatestCompileReports";
 
 // Used for calls that only read metadata.total / a GraphQL summary field / the first row, never
 // the actual page of results — PageSize.minimal ("1") keeps this scoped to these specific calls
@@ -38,8 +37,8 @@ const MINIMAL_PAGE = {
 
 /**
  * Environment Health row: orchestrator identity/checklist + 4 health columns, each backed by
- * the same hooks already used elsewhere in the app (see documentation/7136-plan.md §2).
- * Card clicks navigate to the relevant existing page.
+ * the same hooks already used elsewhere in the app. Card clicks navigate to the relevant
+ * existing page.
  */
 export const EnvironmentHealthRow: React.FC = () => {
   const { routeManager, environmentHandler } = useContext(DependencyContext);
@@ -54,12 +53,6 @@ export const EnvironmentHealthRow: React.FC = () => {
   const compileReportsUrl = routeManager.useUrl("CompileReports", undefined);
   const agentsUrl = routeManager.useUrl("Agents", undefined);
 
-  // Computed once per mount: recomputing this inline on every render would put a fresh
-  // millisecond-precision Date into the query's filter on every render, changing its query key
-  // each time and causing React Query to treat it as a brand new query — refetching immediately,
-  // every render, in a tight loop instead of respecting the poll interval.
-  const sevenDaysAgo = useMemo(() => dayjs().subtract(7, "days").toDate(), []);
-
   const { data: serverStatus } = useGetServerStatus().useContinuous();
   const { data: serviceModels } = useGetServiceModels().useContinuous();
   const { data: resourcesData } = useGetResources({
@@ -67,17 +60,7 @@ export const EnvironmentHealthRow: React.FC = () => {
     filter: {},
     sort: [],
   }).useContinuous();
-  const { data: latestCompileReports } = useGetCompileReports({
-    ...MINIMAL_PAGE,
-    sort: { name: "requested", order: "desc" },
-  }).useContinuous();
-  const { data: failedCompileReports } = useGetCompileReports({
-    ...MINIMAL_PAGE,
-    filter: {
-      status: CompileStatus.failed,
-      requested: [{ date: sevenDaysAgo, operator: RangeOperator.Operator.From }],
-    },
-  }).useContinuous();
+  const { data: latestCompileReports } = useLatestCompileReports();
   const { data: totalAgents } = useGetAgents().useContinuous(MINIMAL_PAGE);
   const { data: downAgents } = useGetAgents().useContinuous({
     ...MINIMAL_PAGE,
@@ -102,10 +85,7 @@ export const EnvironmentHealthRow: React.FC = () => {
   const resourcesHealth = resourcesData
     ? deriveResourcesHealth(resourcesData.resourceSummary)
     : undefined;
-  const compilesHealth = deriveCompilesHealth(
-    latestCompileReports?.data[0],
-    Number(failedCompileReports?.metadata.total ?? 0)
-  );
+  const compilesHealth = deriveCompilesHealth(latestCompileReports?.data[0]);
   const agentsHealth =
     totalAgents && downAgents && pausedAgents
       ? deriveAgentsHealth(

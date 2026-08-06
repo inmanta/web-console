@@ -31,7 +31,9 @@ export const StatusIndicator: React.FC<Props> = ({ status, label }) => (
       <Dot $color={STATUS_COLOR_TOKEN[status]} />
     </FlexItem>
     <FlexItem>
-      <Content component="small">{label}</Content>
+      <Content component="small">
+        <b>{label}</b>
+      </Content>
     </FlexItem>
   </Flex>
 );
