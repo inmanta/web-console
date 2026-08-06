@@ -24,24 +24,6 @@ import { ResourceStatusBar } from "./ResourceStatusBar";
 
 const searchHelper = new SearchHelper();
 
-const EMPTY_COMPLIANCE: Record<Resource.ComplianceKey, number> = {
-  compliant: 0,
-  has_update: 0,
-  non_compliant: 0,
-  undefined: 0,
-};
-const EMPTY_LAST_HANDLER_RUN: Record<Resource.LastHandlerRunKey, number> = {
-  failed: 0,
-  skipped: 0,
-  successful: 0,
-  new: 0,
-};
-const EMPTY_BLOCKED: Record<Resource.BlockedKey, number> = {
-  blocked: 0,
-  not_blocked: 0,
-  temporarily_blocked: 0,
-};
-
 const STAT_TONE_COLOR = {
   brand: "var(--pf-t--global--text--color--brand--default)",
   success: "var(--pf-t--global--text--color--status--success--default)",
