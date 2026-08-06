@@ -176,7 +176,6 @@ export const unit: UnitField = {
     kind: "bitrate",
     apiUnit: "kbit/s",
     isInt: true,
-    isOptional: true,
     scales: "metric",
     offeredUnits: ["kbit/s", "Mbit/s", "Gbit/s", "Tbit/s"],
     displayUnit: "kbit/s",
