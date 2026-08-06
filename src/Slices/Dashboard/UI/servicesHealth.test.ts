@@ -28,7 +28,9 @@ function makeSummary(overrides: Partial<InstanceSummary["by_label"]> = {}): Inst
       info: 0,
       no_label: 0,
       ...overrides,
-    }).reduce((sum, count) => sum + Number(count), 0),
+    })
+      .map(Number)
+      .reduce((sum, count) => sum + count, 0),
   };
 }
 

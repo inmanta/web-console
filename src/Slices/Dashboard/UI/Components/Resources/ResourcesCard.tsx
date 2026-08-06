@@ -132,7 +132,7 @@ export const ResourcesCard: React.FC = () => {
           <FlexItem>
             <ResourceStatusBar
               title={words("dashboard.resourceManager.compliance.title")}
-              counts={summary?.compliance ?? EMPTY_COMPLIANCE}
+              counts={summary?.compliance}
               totalCount={totalCount}
               onSegmentClick={onSegmentClick}
             />
@@ -140,7 +140,7 @@ export const ResourcesCard: React.FC = () => {
           <FlexItem>
             <ResourceStatusBar
               title={words("dashboard.resourceManager.deployResult.title")}
-              counts={summary?.lastHandlerRun ?? EMPTY_LAST_HANDLER_RUN}
+              counts={summary?.lastHandlerRun}
               totalCount={totalCount}
               onSegmentClick={onSegmentClick}
             />
@@ -148,7 +148,7 @@ export const ResourcesCard: React.FC = () => {
           <FlexItem>
             <ResourceStatusBar
               title={words("dashboard.resourceManager.blocked.title")}
-              counts={summary?.blocked ?? EMPTY_BLOCKED}
+              counts={summary?.blocked}
               totalCount={totalCount}
               onSegmentClick={onSegmentClick}
             />
