@@ -27,7 +27,13 @@ import type { Mock } from "vitest";
 
 const setup = (
   fields: (
-    TextField | BooleanField | NestedField | DictListField | EnumField | Textarea | UnitField
+    | TextField
+    | BooleanField
+    | NestedField
+    | DictListField
+    | EnumField
+    | Textarea
+    | UnitField
   )[],
   func: undefined | Mock = undefined,
   isEdit = false,
