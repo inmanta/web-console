@@ -10,7 +10,6 @@ describe("resolveUnitConfig", () => {
         kind: "size",
         apiUnit: "B",
         isInt: true,
-        isOptional: false,
         scales: "both",
         offeredUnits: ["B", "kB", "KiB", "MB", "MiB", "GB", "GiB", "TB", "TiB", "PB", "PiB"],
         displayUnit: "B",
@@ -104,22 +103,18 @@ describe("resolveUnitConfig", () => {
   });
 
   test.each([
-    ["int", true, false],
-    ["int?", true, true],
-    ["float", false, false],
-    ["float?", false, true],
-  ] as const)(
-    "GIVEN attribute type %s WHEN resolved THEN isInt=%s and isOptional=%s",
-    (type, isInt, isOptional) => {
-      const result = resolveUnitConfig({ web_unit: "B" }, type);
+    ["int", true],
+    ["int?", true],
+    ["float", false],
+    ["float?", false],
+  ] as const)("GIVEN attribute type %s WHEN resolved THEN isInt=%s", (type, isInt) => {
+    const result = resolveUnitConfig({ web_unit: "B" }, type);
 
-      expect(result.ok).toBe(true);
-      if (result.ok) {
-        expect(result.config.isInt).toBe(isInt);
-        expect(result.config.isOptional).toBe(isOptional);
-      }
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.config.isInt).toBe(isInt);
     }
-  );
+  });
 
   test("GIVEN web_unit is unrecognized WHEN resolved THEN degrades gracefully with a reason", () => {
     const result = resolveUnitConfig({ web_unit: "notAUnit" }, "int");
