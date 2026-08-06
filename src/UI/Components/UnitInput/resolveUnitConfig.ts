@@ -27,7 +27,8 @@ export interface UnitConfig {
 }
 
 export type ResolveUnitConfigResult =
-  { ok: true; config: UnitConfig } | { ok: false; reason: string };
+  | { ok: true; config: UnitConfig }
+  | { ok: false; reason: string };
 
 function isArrayType(type: string): boolean {
   return type.includes("[]");
