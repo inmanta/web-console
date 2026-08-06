@@ -173,7 +173,10 @@ export const ResourcesCard: React.FC = () => {
               </Label>
             </FlexItem>
           </Flex>
-          <Flex spaceItems={{ default: "spaceItemsLg" }}>
+          <Flex
+            spaceItems={{ default: "spaceItemsLg" }}
+            alignItems={{ default: "alignItemsStretch" }}
+          >
             {statTiles.map((tile) => (
               <FlexItem key={tile.label} flex={{ default: "flex_1" }}>
                 <StatTile data-testid={`stat-tile-${tile.tone}`}>
@@ -193,13 +196,20 @@ export const ResourcesCard: React.FC = () => {
   );
 };
 
+// min-height (not aspect-ratio) keeps the tile roughly square at typical widths while
+// guaranteeing it grows taller instead of clipping its number+label - aspect-ratio ties height
+// strictly to width, so a tile narrowed by a wide sibling card could end up shorter than its own
+// content needs. height: 100% then fills the row's alignItemsStretch-computed height, so a tile
+// with a longer, wrapping label (e.g. "Non-compliant") doesn't leave its one-line siblings
+// shorter and misaligned.
 const StatTile = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--pf-t--global--spacer--xs);
-  aspect-ratio: 1 / 1;
+  height: 100%;
+  min-height: 8rem;
   border: 1px solid var(--pf-t--global--border--color--default);
   border-radius: var(--pf-t--global--border--radius--small);
   padding: var(--pf-t--global--spacer--md);

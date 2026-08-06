@@ -33,6 +33,7 @@ export const Dashboard: React.FC = () => {
     startDate,
     endDate,
     isLsmAvailable: orchestratorProvider.isLsmEnabled(),
+    nbDatapoints: 15,
   });
 
   const updateCharts = () => {

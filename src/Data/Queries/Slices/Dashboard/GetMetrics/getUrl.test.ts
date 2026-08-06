@@ -5,6 +5,7 @@ describe("buildUrl", () => {
     startDate: "2023-01-01",
     endDate: "2023-01-31",
     isLsmAvailable: false,
+    nbDatapoints: 15,
   };
 
   it("should build URL without LSM metrics when LSM is not available", () => {
@@ -21,6 +22,12 @@ describe("buildUrl", () => {
     expect(url).toContain("round_timestamps=true");
     expect(url).not.toContain("metrics=lsm.service_count");
     expect(url).not.toContain("metrics=lsm.service_instance_count");
+  });
+
+  it("should use the given nbDatapoints", () => {
+    const url = getUrl({ ...params, nbDatapoints: 64 });
+
+    expect(url).toContain("nb_datapoints=64");
   });
 
   it("should include LSM metrics when LSM is available", () => {
