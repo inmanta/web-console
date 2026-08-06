@@ -4,8 +4,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { UnitFormInput } from "./UnitFormInput";
 import { otherScaleCandidates, selectDisplayUnit } from "./display";
-import { resolveUnitConfig } from "./resolveUnitConfig";
-import type { UnitConfig } from "./resolveUnitConfig";
+import { configFor } from "./testUtils";
 
 const axe = configureAxe({
   rules: {
@@ -13,16 +12,6 @@ const axe = configureAxe({
     region: { enabled: false },
   },
 });
-
-function configFor(webUnit: string, type = "int", scales?: "metric" | "iec" | "both"): UnitConfig {
-  const result = resolveUnitConfig({ web_unit: webUnit, web_unit_scales: scales }, type);
-
-  if (!result.ok) {
-    throw new Error(`test fixture unit config could not be resolved: ${result.reason}`);
-  }
-
-  return result.config;
-}
 
 function numberInput(): HTMLElement {
   return screen.getByLabelText("UnitInput-bandwidth", { exact: false });

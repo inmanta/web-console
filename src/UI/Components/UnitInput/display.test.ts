@@ -1,16 +1,5 @@
 import { formatReadOnly, otherScaleCandidates, selectDisplayUnit } from "./display";
-import { resolveUnitConfig } from "./resolveUnitConfig";
-import type { UnitConfig } from "./resolveUnitConfig";
-
-function configFor(webUnit: string, scales?: "metric" | "iec" | "both", type = "int"): UnitConfig {
-  const result = resolveUnitConfig({ web_unit: webUnit, web_unit_scales: scales }, type);
-
-  if (!result.ok) {
-    throw new Error(`test fixture unit config could not be resolved: ${result.reason}`);
-  }
-
-  return result.config;
-}
+import { configFor } from "./testUtils";
 
 describe("selectDisplayUnit", () => {
   test.each([
@@ -35,14 +24,14 @@ describe("selectDisplayUnit", () => {
   });
 
   test("GIVEN a value smaller than any non-API unit WHEN auto-selected THEN falls back to the API unit", () => {
-    const { unit, value } = selectDisplayUnit(500, configFor("B", "iec"));
+    const { unit, value } = selectDisplayUnit(500, configFor("B", "int", "iec"));
 
     expect(unit).toBe("B");
     expect(value.toFixed()).toBe("500");
   });
 
   test("GIVEN the API unit is reached as the fallback WHEN its own value has more than 3 decimals THEN it is still accepted unconditionally", () => {
-    const { unit, value } = selectDisplayUnit("1.23456", configFor("B", "iec", "float"));
+    const { unit, value } = selectDisplayUnit("1.23456", configFor("B", "float", "iec"));
 
     expect(unit).toBe("B");
     expect(value.toFixed()).toBe("1.23456");
@@ -51,7 +40,7 @@ describe("selectDisplayUnit", () => {
 
 describe("otherScaleCandidates", () => {
   test("GIVEN scales=both and an IEC current unit WHEN queried THEN returns the metric family plus the base unit", () => {
-    expect(otherScaleCandidates(configFor("B", "both"), "GiB")).toEqual([
+    expect(otherScaleCandidates(configFor("B", "int", "both"), "GiB")).toEqual([
       "B",
       "kB",
       "MB",
@@ -62,7 +51,7 @@ describe("otherScaleCandidates", () => {
   });
 
   test("GIVEN scales=both and a metric current unit WHEN queried THEN returns the IEC family plus the base unit", () => {
-    expect(otherScaleCandidates(configFor("B", "both"), "GB")).toEqual([
+    expect(otherScaleCandidates(configFor("B", "int", "both"), "GB")).toEqual([
       "B",
       "KiB",
       "MiB",
@@ -73,7 +62,7 @@ describe("otherScaleCandidates", () => {
   });
 
   test("GIVEN a single-scale config WHEN queried THEN returns no other-scale candidates", () => {
-    expect(otherScaleCandidates(configFor("B", "iec"), "GiB")).toEqual([]);
+    expect(otherScaleCandidates(configFor("B", "int", "iec"), "GiB")).toEqual([]);
   });
 
   test("GIVEN a duration config WHEN queried THEN returns no other-scale candidates", () => {

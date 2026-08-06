@@ -1,16 +1,5 @@
-import { resolveUnitConfig } from "./resolveUnitConfig";
+import { configFor } from "./testUtils";
 import { validateUnitInput } from "./validate";
-import type { UnitConfig } from "./resolveUnitConfig";
-
-function configFor(webUnit: string, type: string, scales?: "metric" | "iec" | "both"): UnitConfig {
-  const result = resolveUnitConfig({ web_unit: webUnit, web_unit_scales: scales }, type);
-
-  if (!result.ok) {
-    throw new Error(`test fixture unit config could not be resolved: ${result.reason}`);
-  }
-
-  return result.config;
-}
 
 describe("validateUnitInput", () => {
   test("GIVEN an empty entry WHEN validated THEN is valid with a null apiValue", () => {

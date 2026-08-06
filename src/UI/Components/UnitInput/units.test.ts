@@ -1,6 +1,5 @@
 import {
   baseUnitOf,
-  defaultDisplay,
   defaultScales,
   factorOf,
   familyOf,
@@ -184,13 +183,6 @@ describe("units catalogue", () => {
 
     test("GIVEN web_unit is unrecognized for the kind WHEN defaulted THEN scales are null", () => {
       expect(defaultScales("size", "notAUnit")).toBeNull();
-    });
-  });
-
-  describe("defaultDisplay", () => {
-    test("GIVEN web_unit WHEN defaulted THEN web_unit_display defaults to web_unit itself", () => {
-      expect(defaultDisplay("MiB")).toBe("MiB");
-      expect(defaultDisplay("kbit/s")).toBe("kbit/s");
     });
   });
 });
