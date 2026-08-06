@@ -1,10 +1,10 @@
 import React from "react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
-import styled from "styled-components";
 import { Resource } from "@/Core";
 import { LegendBar, statusMapping, statusPriority } from "@/UI/Components";
 import { colorConfig } from "@/UI/Components/CompoundResourceStatus/config";
 import { words } from "@/UI/words";
+import { Dot } from "../EnvironmentHealth/Dot";
 
 // Slimmer than the Resources page's own 20px bars (CompoundResourceStatus) - a dashboard card
 // row has no room for the in-segment count text, so segments only show their color; counts
@@ -13,7 +13,7 @@ const BAR_HEIGHT = "12px";
 
 interface Props {
   title: string;
-  counts: Resource.CompoundStateSummary[keyof Resource.CompoundStateSummary];
+  counts: Resource.CompoundStateSummary[keyof Resource.CompoundStateSummary] | undefined;
   totalCount: number;
   onSegmentClick: (status: Resource.CompoundStateKey) => void;
 }
@@ -31,7 +31,7 @@ export const ResourceStatusBar: React.FC<Props> = ({
   totalCount,
   onSegmentClick,
 }) => {
-  const presentEntries = (Object.entries(counts) as [Resource.CompoundStateKey, number][])
+  const presentEntries = (Object.entries(counts ?? {}) as [Resource.CompoundStateKey, number][])
     .filter(([, value]) => value > 0)
     .sort(([a], [b]) => statusPriority[a] - statusPriority[b]);
 
@@ -72,7 +72,7 @@ export const ResourceStatusBar: React.FC<Props> = ({
               spaceItems={{ default: "spaceItemsXs" }}
             >
               <FlexItem>
-                <Dot style={{ backgroundColor: colorConfig[status] }} />
+                <Dot $color={colorConfig[status]} />
               </FlexItem>
               <FlexItem>
                 <Content component="small">
@@ -87,11 +87,3 @@ export const ResourceStatusBar: React.FC<Props> = ({
     </Flex>
   );
 };
-
-const Dot = styled.span`
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-`;
