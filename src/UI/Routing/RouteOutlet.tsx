@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { DependencyContext } from "@/UI/Dependency";
 import { Initializer } from "@/UI/Root/Components/Initializer";
 
@@ -11,6 +11,7 @@ import { Initializer } from "@/UI/Root/Components/Initializer";
  */
 export const RouteOutlet = () => {
   const { authHelper } = useContext(DependencyContext);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     //instead of navigating to login page, we trigger login flow which can vary based on the auth provider
@@ -18,6 +19,12 @@ export const RouteOutlet = () => {
       authHelper.login();
     }
   }, [authHelper]);
+
+  useEffect(() => {
+    // Page content lives in PatternFly's scrollable <main id="primary-app-container">,
+    // which doesn't reset on its own when navigating between routes.
+    document.getElementById("primary-app-container")?.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <Initializer>
