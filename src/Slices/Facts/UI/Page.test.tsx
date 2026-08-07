@@ -139,6 +139,8 @@ describe("FactsPage", () => {
 
       expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(10);
 
+      await userEvent.click(screen.getByRole("button", { name: /Filters/, pressed: false }));
+
       const input = await screen.findByPlaceholderText(placeholderText);
 
       await userEvent.type(input, `${filterValue}{enter}`);

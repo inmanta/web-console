@@ -1,0 +1,6 @@
+description: The Facts page filters (name, resource id) have been moved from the inline toolbar into a side-panel drawer, opened from a filter toggle button that shows the number of active filters, matching the Resources page.
+issue-nr: 6780
+change-type: patch
+destination-branches: [master]
+sections:
+  minor-improvement: "{{description}}"

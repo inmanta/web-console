@@ -884,6 +884,7 @@ const dict = {
 
   /** Facts */
   "facts.title": "Facts",
+  "facts.filters": "Filters",
   "facts.filters.name.placeholder": "Name...",
   "facts.filters.resourceId.placeholder": "Resource Id...",
   "facts.column.name": "Name",
