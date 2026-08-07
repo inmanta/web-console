@@ -13,33 +13,45 @@ import {
   DropdownItem,
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
-import { ServiceModel, ServiceInstanceParams } from "@/Core";
-import { Link } from "@/UI/Components";
+import { FilterToggleButton, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { FilterWidget } from "@S/ServiceInventory/UI/Components/FilterWidget";
 
 interface Props {
   serviceName: string;
-  filter: ServiceInstanceParams.Filter;
-  setFilter: (filter: ServiceInstanceParams.Filter) => void;
-  service: ServiceModel;
   paginationWidget: React.ReactNode;
+  onToggleFilters: () => void;
+  isDrawerExpanded: boolean;
+  activeFilterCount: number;
 }
 
+/**
+ * The TableControls component for the Service Inventory page.
+ *
+ * Renders the toolbar with the pagination widget, the filter toggle button that opens the
+ * side-panel filter drawer, and the "Add instance" action (a split button with the composer
+ * option when the composer is enabled).
+ *
+ * @Props {Props} - Component props.
+ *  @prop {string} serviceName - The name of the service, used to build the create/composer routes.
+ *  @prop {React.ReactNode} paginationWidget - The pagination widget.
+ *  @prop {() => void} onToggleFilters - The function to toggle the filter drawer.
+ *  @prop {boolean} isDrawerExpanded - Whether the filter drawer is expanded.
+ *  @prop {number} activeFilterCount - The number of active filters.
+ *
+ * @returns {React.ReactElement} The rendered table controls.
+ */
 export const TableControls: React.FC<Props> = ({
   serviceName,
-  filter,
-  setFilter,
-  service,
   paginationWidget,
+  onToggleFilters,
+  isDrawerExpanded,
+  activeFilterCount,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { routeManager, orchestratorProvider } = useContext(DependencyContext);
 
   const composerEnabled = orchestratorProvider.isComposerEnabled();
-
-  const states = service.lifecycle.states.map((state) => state.name).sort();
 
   const onToggleClick = () => {
     setIsOpen(!isOpen);
@@ -70,10 +82,9 @@ export const TableControls: React.FC<Props> = ({
   );
 
   return (
-    <Toolbar clearAllFilters={() => setFilter({})}>
+    <Toolbar>
       <ToolbarContent>
-        <FilterWidget filter={filter} setFilter={setFilter} states={states} />
-        <ToolbarGroup align={{ default: "alignEnd" }}>
+        <ToolbarGroup>
           {composerEnabled ? (
             <ToolbarItem>
               <Dropdown
@@ -113,6 +124,14 @@ export const TableControls: React.FC<Props> = ({
           )}
         </ToolbarGroup>
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
+        <ToolbarItem>
+          <FilterToggleButton
+            onClick={onToggleFilters}
+            isExpanded={isDrawerExpanded}
+            activeFilterCount={activeFilterCount}
+            label={words("inventory.filters")}
+          />
+        </ToolbarItem>
       </ToolbarContent>
     </Toolbar>
   );

@@ -42,8 +42,24 @@ describe("ServiceInventory", () => {
   const server = setupServer();
 
   beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
+  afterEach(() => {
+    server.resetHandlers();
+    testClient.clear();
+  });
   afterAll(() => server.close());
+
+  // The unfiltered response used as the "before" state of the filter tests: two instances.
+  const twoInstancesResponse = () => ({
+    data: [
+      { ...ServiceInstance.a, id: "a" },
+      { ...ServiceInstance.b, id: "b" },
+    ],
+    links: Pagination.links,
+    metadata: Pagination.metadata,
+  });
+
+  const openFilterDrawer = () =>
+    userEvent.click(screen.getByRole("button", { name: /Filters/, pressed: false }));
 
   test("ServiceInventory shows empty view instances", async () => {
     server.use(
@@ -320,5 +336,179 @@ describe("ServiceInventory", () => {
     const refreshedNextButton2 = await screen.findByLabelText("Go to next page");
 
     expect(refreshedNextButton2).toBeEnabled();
+  });
+
+  test("GIVEN ServiceInventory WHEN the user filters on state 'creating' THEN only matching instances are shown", async () => {
+    server.use(
+      http.get("/lsm/v1/service_inventory/service_name_a", ({ request }) => {
+        const url = new URL(request.url);
+
+        if (url.searchParams.get("filter.state") === "creating") {
+          return HttpResponse.json({
+            ...twoInstancesResponse(),
+            data: [{ ...ServiceInstance.a, id: "a" }],
+          });
+        }
+
+        return HttpResponse.json(twoInstancesResponse());
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(2);
+
+    await openFilterDrawer();
+
+    const stateInput = await screen.findByPlaceholderText(
+      words("inventory.filters.state.placeholder")
+    );
+
+    await userEvent.click(stateInput);
+
+    await userEvent.click(
+      await screen.findByRole("option", { name: words("inventory.test.creating") })
+    );
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(1);
+  });
+
+  test("GIVEN ServiceInventory WHEN the user filters on id THEN only the matching instance is shown", async () => {
+    server.use(
+      http.get("/lsm/v1/service_inventory/service_name_a", ({ request }) => {
+        const url = new URL(request.url);
+
+        if (url.searchParams.get("filter.id_or_service_identity") === ServiceInstance.c.id) {
+          return HttpResponse.json({
+            ...twoInstancesResponse(),
+            data: [ServiceInstance.c],
+          });
+        }
+
+        return HttpResponse.json(twoInstancesResponse());
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(2);
+
+    await openFilterDrawer();
+
+    const idInput = await screen.findByRole("searchbox", {
+      name: words("inventory.filters.id.label"),
+    });
+
+    await userEvent.type(idInput, `${ServiceInstance.c.id}{enter}`);
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(1);
+  });
+
+  test("GIVEN ServiceInventory WHEN the user filters on deleted 'Only' THEN only deleted instances are shown", async () => {
+    server.use(
+      http.get("/lsm/v1/service_inventory/service_name_a", ({ request }) => {
+        const url = new URL(request.url);
+
+        if (url.searchParams.get("filter.deleted") === "true") {
+          return HttpResponse.json({
+            ...twoInstancesResponse(),
+            data: [{ ...ServiceInstance.d, id: "d", state: "terminated", deleted: true }],
+          });
+        }
+
+        return HttpResponse.json(twoInstancesResponse());
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(2);
+
+    await openFilterDrawer();
+
+    const deletedInput = await screen.findByRole("combobox", { name: "DeletedFilterInput" });
+
+    await userEvent.click(deletedInput);
+
+    await userEvent.click(await screen.findByRole("option", { name: "Only" }));
+
+    const rows = await screen.findAllByRole("row", { name: "InstanceRow-Intro" });
+
+    expect(rows).toHaveLength(1);
+    expect(within(rows[0]).getByText("terminated")).toBeInTheDocument();
+  });
+
+  test("GIVEN ServiceInventory WHEN on the 2nd page with an outdated 1st page AND the user clicks prev THEN the first page is shown", async () => {
+    const instances = [
+      { ...ServiceInstance.a, id: "a" },
+      { ...ServiceInstance.b, id: "b" },
+      { ...ServiceInstance.c, id: "c" },
+      { ...ServiceInstance.d, id: "d" },
+    ];
+    const defaultPage = {
+      data: instances,
+      links: { self: "self", next: "fake-link?end=fake-param", last: "last" },
+      metadata: { total: 67, before: 0, after: 47, page_size: 20 },
+    };
+    const firstPage = {
+      ...defaultPage,
+      data: instances.slice(0, 2),
+    };
+    const secondPage = {
+      data: instances.slice(3),
+      links: {
+        first: "first",
+        prev: "/lsm/v1/service_inventory/service_name_a?start=fake-param",
+        self: "self",
+        next: "fake-link?end=fake-param",
+        last: "last",
+      },
+      // before (22) < page_size * 2 (40), so the prev handler resolves to the first page
+      // (no start/end param), which returns the full, up-to-date default page.
+      metadata: { total: 67, before: 22, after: 25, page_size: 20 },
+    };
+
+    server.use(
+      http.get("/lsm/v1/service_inventory/service_name_a", ({ request }) => {
+        const url = new URL(request.url);
+
+        if (url.searchParams.get("start") === "fake-param") {
+          return HttpResponse.json(firstPage);
+        }
+
+        if (url.searchParams.get("end") === "fake-param") {
+          return HttpResponse.json(secondPage);
+        }
+
+        return HttpResponse.json(defaultPage);
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(4);
+
+    const nextButton = screen.getByRole("button", { name: "Go to next page" });
+
+    expect(nextButton).toBeEnabled();
+    await userEvent.click(nextButton);
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(1);
+
+    const prevButton = screen.getByRole("button", { name: "Go to previous page" });
+
+    expect(prevButton).toBeEnabled();
+    await userEvent.click(prevButton);
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(4);
+    expect(screen.getByRole("button", { name: "Go to previous page" })).toBeDisabled();
   });
 });

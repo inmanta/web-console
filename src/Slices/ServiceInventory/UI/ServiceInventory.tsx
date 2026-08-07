@@ -1,10 +1,17 @@
-import React, { ReactElement, createContext } from "react";
+import React, { ReactElement, createContext, useCallback, useMemo, useState } from "react";
+import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetInstances } from "@/Data/Queries";
-import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
+import {
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  PaginationWidget,
+  countActiveFilters,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
-import { TableControls } from "./Components";
+import { ConnectedFilterWidget, TableControls } from "./Components";
 import { TableProvider } from "./TableProvider";
 import { Wrapper } from "./Wrapper";
 
@@ -51,12 +58,25 @@ export const ServiceInventory: React.FunctionComponent<{
       defaultSort: { name: "created_at", order: "desc" },
     });
 
+  const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
+
+  const onCloseFilterWidget = useCallback(() => {
+    setIsDrawerExpanded(false);
+  }, []);
+
+  const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
+
+  const states = useMemo(
+    () => service.lifecycle.states.map((state) => state.name).sort(),
+    [service]
+  );
+
   const { data, isError, error, isSuccess, refetch } = useGetInstances(serviceName, {
     sort,
     filter,
     pageSize,
     currentPage,
-  }).useContinuous();
+  }).useContinuous({ keepPreviousData: true });
 
   /**
    * Filters the service lifecycle states based on the provided label.
@@ -96,9 +116,6 @@ export const ServiceInventory: React.FunctionComponent<{
           {intro}
           <TableControls
             serviceName={serviceName}
-            filter={filter}
-            setFilter={setFilter}
-            service={service}
             paginationWidget={
               <PaginationWidget
                 data={data}
@@ -107,21 +124,32 @@ export const ServiceInventory: React.FunctionComponent<{
                 setCurrentPage={setCurrentPage}
               />
             }
+            onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
+            isDrawerExpanded={isDrawerExpanded}
+            activeFilterCount={activeFilterCount}
           />
-          {data.data.length > 0 ? (
-            <TableProvider
-              aria-label="ServiceInventory-Success"
-              instances={data.data}
-              serviceEntity={service}
-              sort={sort}
-              setSort={setSort}
-            />
-          ) : (
-            <EmptyView
-              message={words("inventory.empty.message")(serviceName)}
-              aria-label="ServiceInventory-Empty"
-            />
-          )}
+          <Drawer isExpanded={isDrawerExpanded} isInline>
+            <DrawerContent
+              panelContent={<ConnectedFilterWidget states={states} onClose={onCloseFilterWidget} />}
+            >
+              <DrawerContentBody>
+                {data.data.length > 0 ? (
+                  <TableProvider
+                    aria-label="ServiceInventory-Success"
+                    instances={data.data}
+                    serviceEntity={service}
+                    sort={sort}
+                    setSort={setSort}
+                  />
+                ) : (
+                  <EmptyView
+                    message={words("inventory.empty.message")(serviceName)}
+                    aria-label="ServiceInventory-Empty"
+                  />
+                )}
+              </DrawerContentBody>
+            </DrawerContent>
+          </Drawer>
         </Wrapper>
       </ServiceInventoryContext.Provider>
     );
