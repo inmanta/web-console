@@ -150,7 +150,7 @@
     "highlight.js": "^11.11.1",
     "keycloak-js": "^26.2.4",
     "markdown-it": "^14.3.0",
-    "mermaid": "^11.15.0",
+    "mermaid": "^11.16.1",
     "monaco-editor": "^0.52.2",
     "monaco-graphql": "^1.8.0",
     "oidc-client-ts": "^3.5.0",
