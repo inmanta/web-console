@@ -444,6 +444,37 @@ describe("ServiceInventory", () => {
     expect(within(rows[0]).getByText("terminated")).toBeInTheDocument();
   });
 
+  test("GIVEN ServiceInventory WHEN the user includes a non-empty attribute set THEN only matching instances are shown", async () => {
+    server.use(
+      http.get("/lsm/v1/service_inventory/service_name_a", ({ request }) => {
+        const url = new URL(request.url);
+
+        if (url.searchParams.get("filter.attribute_set_not_empty") === "active_attributes") {
+          return HttpResponse.json({
+            ...twoInstancesResponse(),
+            data: [{ ...ServiceInstance.a, id: "a" }],
+          });
+        }
+
+        return HttpResponse.json(twoInstancesResponse());
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(2);
+
+    await openFilterDrawer();
+
+    await userEvent.click(screen.getByRole("button", { name: "Attribute set-toggle" }));
+
+    await userEvent.click(await screen.findByRole("button", { name: "Active-include-toggle" }));
+
+    expect(await screen.findAllByRole("row", { name: "InstanceRow-Intro" })).toHaveLength(1);
+  });
+
   test("GIVEN ServiceInventory WHEN on the 2nd page with an outdated 1st page AND the user clicks prev THEN the first page is shown", async () => {
     const instances = [
       { ...ServiceInstance.a, id: "a" },
