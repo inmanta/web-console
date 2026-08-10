@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
+import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
 import { toggleValueInList } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetResourceLogs } from "@/Data/Queries";
-import { EmptyView, ErrorView, LoadingView, PaginationWidget } from "@/UI/Components";
+import {
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  PaginationWidget,
+  countActiveFilters,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
 import { ResourceLogFilter } from "@S/ResourceDetails/Core/ResourceLog";
-import { Controls } from "./Controls";
+import { ConnectedFilterWidget, Controls } from "./Controls";
 import { ResourceLogsTable } from "./ResourceLogsTable";
 
 interface Props {
@@ -16,6 +23,9 @@ interface Props {
  * The LogTab component.
  *
  * This component is responsible of displaying the logs of a resource.
+ *
+ * Filtering is handled in a side panel drawer: the toolbar exposes a toggle button
+ * with an active filter count, and the filter form lives in the drawer panel.
  *
  * @Props {Props} - The props of the component
  *  @prop {string} resourceId - The id of the resource
@@ -29,6 +39,14 @@ export const View: React.FC<Props> = ({ resourceId }) => {
       defaultSort: { name: "timestamp", order: "desc" },
       filterKeys: { timestamp: "DateRange" },
     });
+
+  const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
+
+  const onCloseFilterWidget = useCallback(() => {
+    setIsDrawerExpanded(false);
+  }, []);
+
+  const activeFilterCount = useMemo(() => countActiveFilters(filter), [filter]);
 
   const { data, isSuccess, isError, error, refetch } = useGetResourceLogs({
     id: resourceId,
@@ -63,22 +81,37 @@ export const View: React.FC<Props> = ({ resourceId }) => {
               setCurrentPage={setCurrentPage}
             />
           }
-          filter={filter}
-          setFilter={setFilter}
+          onToggleFilters={() => setIsDrawerExpanded((prev) => !prev)}
+          isDrawerExpanded={isDrawerExpanded}
+          activeFilterCount={activeFilterCount}
         />
-        {data.data.length <= 0 ? (
-          <EmptyView
-            message={words("resources.logs.empty.message")}
-            aria-label="ResourceLogs-Empty"
-          />
-        ) : (
-          <ResourceLogsTable
-            logs={data.data}
-            toggleActionType={toggleActionType}
-            sort={sort}
-            setSort={setSort}
-          />
-        )}
+        <Drawer
+          isExpanded={isDrawerExpanded}
+          isInline
+          style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+        >
+          <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
+            <DrawerContentBody
+              style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
+            >
+              {data.data.length <= 0 ? (
+                <EmptyView
+                  message={words("resources.logs.empty.message")}
+                  aria-label="ResourceLogs-Empty"
+                />
+              ) : (
+                <div style={{ flex: "1 1 auto", minHeight: 0, overflow: "auto" }}>
+                  <ResourceLogsTable
+                    logs={data.data}
+                    toggleActionType={toggleActionType}
+                    sort={sort}
+                    setSort={setSort}
+                  />
+                </div>
+              )}
+            </DrawerContentBody>
+          </DrawerContent>
+        </Drawer>
       </>
     );
   }

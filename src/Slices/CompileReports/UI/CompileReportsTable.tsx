@@ -2,6 +2,7 @@ import React from "react";
 import { OnSort, Table, TableVariant, Th, Thead, Tr } from "@patternfly/react-table";
 import { Sort } from "@/Core";
 import { TablePresenter } from "@/UI/Presenters";
+import { words } from "@/UI/words";
 import { CompileReport, CompileReportRow } from "@S/CompileReports/Core/Domain";
 import { CompileReportsTableRow } from "./CompileReportsTableRow";
 
@@ -46,9 +47,16 @@ export const CompileReportsTable: React.FC<Props> = ({
   });
 
   return (
-    <Table {...props} variant={TableVariant.compact}>
+    <Table {...props} isStickyHeader variant={TableVariant.compact}>
       <Thead noWrap>
-        <Tr>{heads}</Tr>
+        <Tr>
+          {heads}
+          <Th
+            modifier="fitContent"
+            screenReaderText={words("common.emptyColumnHeader")}
+            aria-label={words("compileReports.columns.actions")}
+          />
+        </Tr>
       </Thead>
       {rows.map((row) => (
         <CompileReportsTableRow row={row} key={row.id} />

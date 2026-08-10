@@ -345,6 +345,9 @@ describe("5 Compile reports", () => {
         cy.wrap($rows.length).as("initialRowCount");
       });
 
+      // Open the filter drawer
+      cy.get('[aria-label="CompileReports-toolbar"]').find("button[aria-pressed]").click();
+
       // Click on filter dropdown
       cy.get('[aria-label="StatusFilterInput"]').click();
 
