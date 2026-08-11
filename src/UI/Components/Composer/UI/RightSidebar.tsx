@@ -66,7 +66,7 @@ export const RightSidebar: React.FC = () => {
 
 const Wrapper = styled(Flex)`
   height: 100%;
-  width: 300px;
+  width: 350px;
   position: absolute;
   z-index: 1px;
   top: 1px;

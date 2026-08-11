@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { InstanceAttributeModel } from "@/Core";
+import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { instanceData, serviceModel } from "../../../Test/mockData";
 import { SetupWrapper } from "../../../Test/mockSetup";
@@ -10,14 +10,15 @@ const setup = (
   dropdownOptions: string[] = ["candidate_attributes"],
   attributeSets: Partial<Record<AttributeSets, InstanceAttributeModel>> = {
     candidate_attributes: instanceData.candidate_attributes ?? {},
-  }
+  },
+  customServiceModel: ServiceModel = serviceModel
 ) => {
   return render(
     <SetupWrapper expertMode={false}>
       <AttributesTable
         dropdownOptions={dropdownOptions}
         attributeSets={attributeSets}
-        serviceModel={serviceModel}
+        serviceModel={customServiceModel}
       />
     </SetupWrapper>
   );
@@ -84,5 +85,83 @@ describe("AttributesTable", () => {
     );
 
     expect(screen.getByText("active-name")).toBeVisible();
+  });
+
+  describe("unit formatting", () => {
+    const bandwidthServiceModel: ServiceModel = {
+      ...serviceModel,
+      attributes: [
+        ...serviceModel.attributes,
+        {
+          name: "bandwidth",
+          description: "description",
+          modifier: "rw+",
+          type: "int",
+          default_value: null,
+          default_value_set: false,
+          validation_type: null,
+          validation_parameters: null,
+          attribute_annotations: { web_presentation: "unit", web_unit: "kbit/s" },
+        },
+      ],
+    };
+
+    it("renders a unit-annotated attribute in its auto-selected display unit", () => {
+      setup(
+        ["candidate_attributes"],
+        { candidate_attributes: { bandwidth: 150000 } },
+        bandwidthServiceModel
+      );
+
+      expect(screen.getByText("150 Mbit/s")).toBeVisible();
+    });
+
+    it("shows the raw value and API unit in a tooltip", async () => {
+      const user = userEvent.setup();
+
+      setup(
+        ["candidate_attributes"],
+        { candidate_attributes: { bandwidth: 150000 } },
+        bandwidthServiceModel
+      );
+
+      await user.hover(screen.getByText("150 Mbit/s"));
+
+      expect(await screen.findByText("150000 kbit/s")).toBeInTheDocument();
+    });
+
+    it("falls back to the plain value when web_unit is unrecognized, without crashing", () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      const badServiceModel: ServiceModel = {
+        ...serviceModel,
+        attributes: [
+          ...serviceModel.attributes,
+          {
+            name: "bandwidth",
+            description: "description",
+            modifier: "rw+",
+            type: "int",
+            default_value: null,
+            default_value_set: false,
+            validation_type: null,
+            validation_parameters: null,
+            attribute_annotations: { web_presentation: "unit", web_unit: "parsecs" },
+          },
+        ],
+      };
+
+      setup(
+        ["candidate_attributes"],
+        { candidate_attributes: { bandwidth: 150000 } },
+        badServiceModel
+      );
+
+      expect(screen.getByText("150000")).toBeVisible();
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Unrecognized web_unit "parsecs"')
+      );
+
+      warnSpy.mockRestore();
+    });
   });
 });

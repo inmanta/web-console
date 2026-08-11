@@ -34,7 +34,6 @@ const base: ServerStatus = {
         sessions: 1,
       },
       reported_status: "OK",
-      message: null,
     },
     {
       name: "core.transport",
@@ -44,43 +43,36 @@ const base: ServerStatus = {
         sockets: ["0.0.0.0:8888"],
       },
       reported_status: "OK",
-      message: null,
     },
     {
       name: "lsm.database",
       status: {},
       reported_status: "OK",
-      message: null,
     },
     {
       name: "lsm.service_catalog",
       status: {},
       reported_status: "OK",
-      message: null,
     },
     {
       name: "lsm.service_inventory",
       status: {},
       reported_status: "OK",
-      message: null,
     },
     {
       name: "lsm.callback",
       status: {},
       reported_status: "OK",
-      message: null,
     },
     {
       name: "ui.ui",
       status: {},
       reported_status: "OK",
-      message: null,
     },
     {
       name: "support.support",
       status: {},
       reported_status: "OK",
-      message: null,
     },
     {
       name: "license.license",
@@ -95,25 +87,21 @@ const base: ServerStatus = {
         entitlement_valid_until: "2021-10-07T20:06:38.000000",
       },
       reported_status: "OK",
-      message: null,
     },
     {
       name: "core.server",
       status: {},
       reported_status: "OK",
-      message: null,
     },
     {
       name: "core.database",
       status: { connected: true },
       reported_status: "OK",
-      message: null,
     },
     {
       name: "core.scheduler_manager",
       status: {},
       reported_status: "OK",
-      message: null,
     },
   ],
   features: [

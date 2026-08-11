@@ -23,6 +23,7 @@ import { toOptionalBoolean } from "@/Data";
 import { SuggestionVariables, useSuggestedValues } from "@/Data/Queries";
 import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
+import { UnitFormInput } from "@/UI/Components/UnitInput";
 import { words } from "@/UI/words";
 import { BooleanToggleInput } from "./BooleanToggleInput";
 import { DictFieldInput } from "./DictFieldInput";
@@ -231,6 +232,26 @@ export const FieldInput: React.FC<Props> = ({
           key={field.id || field.name}
           suggestions={suggestionsList}
           errorMessage={modelError}
+        />
+      );
+    case "Unit":
+      return (
+        <UnitFormInput
+          attributeName={field.name}
+          attributeValue={get<number | bigint | null>(formState, makePath(path, field.name), null)}
+          description={field.description}
+          isOptional={field.isOptional}
+          shouldBeDisabled={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined &&
+            !isNew
+          }
+          config={field.config}
+          bounds={field.bounds}
+          handleInputChange={(value, _event) => {
+            getUpdate(makePath(path, field.name), value);
+          }}
+          key={field.id || field.name}
         />
       );
     case "Dict":

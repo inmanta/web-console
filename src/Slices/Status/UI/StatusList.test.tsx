@@ -23,7 +23,6 @@ const status: ServerStatus = {
       name: "lsm.order",
       status: {},
       reported_status: "OK",
-      message: null,
     },
     {
       name: "core.transport",
@@ -33,7 +32,6 @@ const status: ServerStatus = {
         sockets: ["0.0.0.0:8888"],
       },
       reported_status: "OK",
-      message: null,
     },
     {
       name: "core.scheduler_manager",
@@ -58,7 +56,6 @@ const status: ServerStatus = {
         },
       },
       reported_status: "OK",
-      message: null,
     },
   ],
   features: [],
