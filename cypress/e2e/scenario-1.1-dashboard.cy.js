@@ -204,8 +204,13 @@ describe("1.1 Dashboard", () => {
       cy.get("#resource-states").contains("Show inventory").click();
       cy.get('[aria-label="IdentityCell-dashboard-live-check"]')
         .closest('[aria-label="InstanceRow-Intro"]')
-        .find('[aria-label="row actions toggle"]')
-        .click();
+        .as("liveCheckRow");
+      // Wait for the instance to reach the "up" state before deleting, otherwise the delete can
+      // race the creating/validating transitions and flake.
+      cy.get("@liveCheckRow", { timeout: 30000 })
+        .find('[data-label="State"]')
+        .should("have.text", "up");
+      cy.get("@liveCheckRow").find('[aria-label="row actions toggle"]').click();
       cy.get('[role="menuitem"]').contains("Delete").click();
       cy.get("button").contains("Yes").click();
       cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);
