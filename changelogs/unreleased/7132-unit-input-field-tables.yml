@@ -1,0 +1,6 @@
+description: The instance details Attributes table now renders values annotated with web_presentation "unit" in their auto-selected display unit, with the raw value and API unit shown in a tooltip.
+issue-nr: 7132
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
