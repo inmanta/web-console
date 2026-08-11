@@ -16,7 +16,8 @@ export const createFormState = (fields: FieldLikeWithFormState[]): InstanceAttri
       case "Enum":
       case "Text":
       case "Textarea":
-      case "TextList": {
+      case "TextList":
+      case "Unit": {
         acc[curr.name] = convertValueOnType(curr.type, curr.defaultValue);
 
         return acc;
@@ -89,7 +90,8 @@ export const createEditFormState = (
         case "Enum":
         case "Textarea":
         case "TextList":
-        case "Text": {
+        case "Text":
+        case "Unit": {
           acc[curr.name] = convertValueOnType(curr.type, originalAttributes?.[curr.name]);
 
           return acc;
@@ -165,7 +167,8 @@ export const createDuplicateFormState = (
         case "Enum":
         case "Textarea":
         case "TextList":
-        case "Text": {
+        case "Text":
+        case "Unit": {
           acc[curr.name] = convertValueOnType(curr.type, originalAttributes?.[curr.name]);
 
           return acc;

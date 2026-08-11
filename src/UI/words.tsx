@@ -1163,6 +1163,23 @@ const dict = {
   "logViewer.autoscroll.pause": "Pause Autoscroll",
   "logViewer.download": "Download",
   "logViewer.download.aria": "Download current logs",
+
+  /**
+   * UnitInputField (issue #7022 / #7131)
+   */
+  "unitInput.unitSelect.ariaLabel": "Unit",
+  "unitInput.helper.stored": (value: string, unit: string) => `= ${value} ${unit}`,
+  "unitInput.helper.equivalent": (value: string, unit: string, family: string) =>
+    `≈ ${value} ${unit} (${family})`,
+  "unitInput.error.notANumber": "Enter a number.",
+  "unitInput.error.notExact": (entered: string, unit: string, apiValue: string, apiUnit: string) =>
+    `Must be a whole number of ${apiUnit} (${entered} ${unit} = ${apiValue} ${apiUnit}).`,
+  "unitInput.error.bound.ge": (limit: string, unit: string) => `Must be at least ${limit} ${unit}.`,
+  "unitInput.error.bound.gt": (limit: string, unit: string) =>
+    `Must be more than ${limit} ${unit}.`,
+  "unitInput.error.bound.le": (limit: string, unit: string) => `Must be at most ${limit} ${unit}.`,
+  "unitInput.error.bound.lt": (limit: string, unit: string) =>
+    `Must be less than ${limit} ${unit}.`,
 };
 
 type Key = keyof typeof dict;
