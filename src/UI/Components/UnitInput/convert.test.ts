@@ -6,18 +6,7 @@ import {
   toDisplayValue,
   toSubmittableNumber,
 } from "./convert";
-import { resolveUnitConfig } from "./resolveUnitConfig";
-import type { UnitConfig } from "./resolveUnitConfig";
-
-function configFor(webUnit: string, scales?: "metric" | "iec" | "both", type = "int"): UnitConfig {
-  const result = resolveUnitConfig({ web_unit: webUnit, web_unit_scales: scales }, type);
-
-  if (!result.ok) {
-    throw new Error(`test fixture unit config could not be resolved: ${result.reason}`);
-  }
-
-  return result.config;
-}
+import { configFor } from "./testUtils";
 
 describe("conversionFactor", () => {
   test("GIVEN web_unit MB WHEN asked for GB's factor THEN returns the exact integer 1000", () => {
@@ -29,7 +18,7 @@ describe("conversionFactor", () => {
   });
 
   test("GIVEN web_unit B with iec scales WHEN asked for GiB's factor THEN returns 1024^3", () => {
-    expect(conversionFactor(configFor("B", "iec"), "GiB")).toBe(1024 ** 3);
+    expect(conversionFactor(configFor("B", "int", "iec"), "GiB")).toBe(1024 ** 3);
   });
 });
 
@@ -66,7 +55,7 @@ describe("toApiValue", () => {
   });
 
   test("GIVEN 100 PB with web_unit B WHEN converted THEN yields the exact value beyond MAX_SAFE_INTEGER", () => {
-    const value = toApiValue("100", "PB", configFor("B", "both"));
+    const value = toApiValue("100", "PB", configFor("B", "int", "both"));
 
     expect(value?.toFixed()).toBe("100000000000000000");
     expect(Number.isSafeInteger(Number(value!.toFixed()))).toBe(false);
@@ -79,7 +68,7 @@ describe("toApiValue", () => {
 
 describe("toDisplayValue", () => {
   test("GIVEN 1 GiB in bytes WHEN converted to GiB THEN yields exactly 1", () => {
-    const value = toDisplayValue(1024 ** 3, "GiB", configFor("B", "iec"));
+    const value = toDisplayValue(1024 ** 3, "GiB", configFor("B", "int", "iec"));
 
     expect(value.toFixed()).toBe("1");
   });

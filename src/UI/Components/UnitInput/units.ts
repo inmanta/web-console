@@ -165,8 +165,3 @@ export function defaultScales(kind: UnitKind, webUnit: string): UnitScales | nul
 
   return family === "metric" || family === "iec" ? family : null;
 }
-
-/** `web_unit_display` defaulting rule: defaults to `web_unit` itself. */
-export function defaultDisplay(webUnit: string): string {
-  return webUnit;
-}

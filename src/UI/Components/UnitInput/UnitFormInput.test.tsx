@@ -4,8 +4,7 @@ import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { UnitFormInput } from "./UnitFormInput";
 import { otherScaleCandidates, selectDisplayUnit } from "./display";
-import { resolveUnitConfig } from "./resolveUnitConfig";
-import type { UnitConfig } from "./resolveUnitConfig";
+import { configFor } from "./testUtils";
 
 const axe = configureAxe({
   rules: {
@@ -13,16 +12,6 @@ const axe = configureAxe({
     region: { enabled: false },
   },
 });
-
-function configFor(webUnit: string, type = "int", scales?: "metric" | "iec" | "both"): UnitConfig {
-  const result = resolveUnitConfig({ web_unit: webUnit, web_unit_scales: scales }, type);
-
-  if (!result.ok) {
-    throw new Error(`test fixture unit config could not be resolved: ${result.reason}`);
-  }
-
-  return result.config;
-}
 
 function numberInput(): HTMLElement {
   return screen.getByLabelText("UnitInput-bandwidth", { exact: false });
@@ -44,7 +33,7 @@ describe("UnitFormInput", () => {
       />
     );
 
-    expect(screen.getByLabelText("UnitInput-memory_limit")).toHaveValue("2");
+    expect(screen.getByLabelText("UnitInput-memory_limit")).toHaveValue(2);
     expect(screen.getByLabelText(/^Unit$/)).toHaveValue("GiB");
     expect(screen.getByText("= 2048 MiB")).toBeVisible();
   });
@@ -89,24 +78,19 @@ describe("UnitFormInput", () => {
     expect(handleInputChange).toHaveBeenLastCalledWith(2500000, null);
   });
 
-  test("the stepper buttons increment and decrement in the currently selected unit", async () => {
-    const handleInputChange = vi.fn();
-
+  test("the number input is a native number field stepping by 1, so the browser's own up/down spinner and arrow keys apply", () => {
     render(
       <UnitFormInput
         attributeName="bandwidth"
         attributeValue={2}
         isOptional={false}
         config={configFor("MB")}
-        handleInputChange={handleInputChange}
+        handleInputChange={vi.fn()}
       />
     );
 
-    await userEvent.click(screen.getByLabelText("Increase"));
-    expect(handleInputChange).toHaveBeenLastCalledWith(3, null);
-
-    await userEvent.click(screen.getByLabelText("Decrease"));
-    expect(handleInputChange).toHaveBeenLastCalledWith(2, null);
+    expect(numberInput()).toHaveAttribute("type", "number");
+    expect(numberInput()).toHaveAttribute("step", "1");
   });
 
   test("an entry that isn't a whole number of API units shows the exactness error", async () => {
@@ -145,7 +129,7 @@ describe("UnitFormInput", () => {
     expect(screen.getByText("Must be at most 1 Gbit/s.")).toBeVisible();
   });
 
-  test("shouldBeDisabled disables the number input, both steppers, and the unit select", () => {
+  test("shouldBeDisabled disables the number input and the unit select", () => {
     render(
       <UnitFormInput
         attributeName="bandwidth"
@@ -158,8 +142,6 @@ describe("UnitFormInput", () => {
     );
 
     expect(numberInput()).toBeDisabled();
-    expect(screen.getByLabelText("Increase")).toBeDisabled();
-    expect(screen.getByLabelText("Decrease")).toBeDisabled();
     expect(unitSelect()).toBeDisabled();
   });
 
