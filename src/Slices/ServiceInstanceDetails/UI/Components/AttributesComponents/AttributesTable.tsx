@@ -10,6 +10,7 @@ import {
   Dropdown,
   DropdownList,
   DropdownItem,
+  Tooltip,
 } from "@patternfly/react-core";
 import { EllipsisVIcon } from "@patternfly/react-icons";
 import {
@@ -34,6 +35,7 @@ import {
 } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
 import { MultiLinkCell } from "@/UI/Components/TreeTable/TreeRow/CellWithCopy";
+import { formatReadOnly, resolveUnitField } from "@/UI/Components/UnitInput";
 
 interface Props {
   dropdownOptions: string[];
@@ -145,6 +147,69 @@ export const AttributesTable: React.FC<Props> = ({
     }
 
     return "";
+  };
+
+  /**
+   * Formats a leaf's value with its unit (issue #7022/#7132) when its matched AttributeModel
+   * opts into `web_presentation: "unit"`. Returns `null` for anything else — no attribute match,
+   * not opted in, a bad annotation (logged and skipped, never breaking the table), or a value
+   * that isn't actually a number/bigint — so the caller falls back to the plain `printValue` text.
+   */
+  const formatUnitCell = (treeRowCell: TreeRowData): { text: string; tooltip: string } | null => {
+    if (!treeRowCell.attribute) {
+      return null;
+    }
+
+    const resolved = resolveUnitField(treeRowCell.attribute);
+
+    if (!resolved) {
+      return null;
+    }
+
+    if (!resolved.ok) {
+      console.warn(`${resolved.reason} Displaying the raw value instead.`);
+
+      return null;
+    }
+
+    if (typeof treeRowCell.value !== "number" && typeof treeRowCell.value !== "bigint") {
+      return null;
+    }
+
+    const formatted = formatReadOnly(treeRowCell.value, resolved.config);
+
+    return {
+      text: `${formatted.value.toFixed()} ${formatted.unit}`,
+      tooltip: `${formatted.apiValue.toFixed()} ${formatted.apiUnit}`,
+    };
+  };
+
+  /**
+   * Renders a value cell: a relation link, a unit-formatted value with a raw-value tooltip, or
+   * the plain stringified value — in that priority order.
+   */
+  const renderValue = (treeRowCell: TreeRowData): React.ReactNode => {
+    if (treeRowCell.type === "Relation") {
+      return (
+        <MultiLinkCell
+          value={String(treeRowCell.value)}
+          serviceName={treeRowCell.serviceName}
+          onClick={navigateToInstanceDetails}
+        />
+      );
+    }
+
+    const unitCell = formatUnitCell(treeRowCell);
+
+    if (unitCell) {
+      return (
+        <Tooltip content={unitCell.tooltip} entryDelay={200}>
+          <span>{unitCell.text}</span>
+        </Tooltip>
+      );
+    }
+
+    return printValue(treeRowCell);
   };
 
   /**
@@ -310,15 +375,7 @@ export const AttributesTable: React.FC<Props> = ({
           aria-label={node.id + "_value"}
           modifier="truncate"
         >
-          {node.type === "Relation" ? (
-            <MultiLinkCell
-              value={String(node.value)}
-              serviceName={node.serviceName}
-              onClick={navigateToInstanceDetails}
-            />
-          ) : (
-            printValue(node)
-          )}
+          {renderValue(node)}
         </Td>
       </TreeRowWrapper>,
       ...childRows,
