@@ -8,7 +8,6 @@ interface Slice {
   name: string;
   status: Record<string, unknown>;
   reported_status: string;
-  message: string | null;
 }
 
 interface Feature {

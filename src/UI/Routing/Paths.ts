@@ -11,7 +11,6 @@ import { ComplianceCheck } from "@S/ComplianceCheck";
 import { CreateEnvironment } from "@S/CreateEnvironment";
 import { CreateInstance } from "@S/CreateInstance";
 import { Dashboard } from "@S/Dashboard";
-import { DashboardV2 } from "@S/DashboardV2";
 import { DesiredState } from "@S/DesiredState";
 import { DesiredStateCompare } from "@S/DesiredStateCompare";
 import { DesiredStateDetails } from "@S/DesiredStateDetails";
@@ -56,7 +55,6 @@ export const paths: Paths = {
   Catalog: ServiceCatalog.path,
   CreateInstance: CreateInstance.path,
   Dashboard: Dashboard.path,
-  DashboardV2: DashboardV2.path,
   Diagnose: Diagnose.path,
   DuplicateInstance: DuplicateInstance.path,
   EditInstance: EditInstance.path,

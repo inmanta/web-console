@@ -15,7 +15,6 @@ export const kinds = [
   "Catalog",
   "CreateInstance",
   "Dashboard",
-  "DashboardV2",
   "Diagnose",
   "DuplicateInstance",
   "EditInstance",
