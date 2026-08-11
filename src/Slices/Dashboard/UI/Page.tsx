@@ -8,22 +8,19 @@ import { Dashboard } from "./Dashboard";
 /**
  * Dashboard page
  *
- * It handles different states of the project data fetching for Dashboard page (loading, error, success)
- * and renders the appropriate UI for each state.
- *
- * @returns {React.FC} The Dashboard page
+ * Handles the loading/error/success states of the environment-details fetch (needed for the
+ * page title), then renders the Dashboard body.
  */
 export const Page: React.FC = () => {
   const { environmentHandler } = useContext(DependencyContext);
 
-  const envName = environmentHandler.useName();
   const { isSuccess, isError, error, refetch } = useGetEnvironmentDetails().useOneTime(
     environmentHandler.useId()
   );
 
   if (isError) {
     return (
-      <PageContainer pageTitle={words("dashboard.title")(envName)}>
+      <PageContainer pageTitle={words("dashboard.title")}>
         <ErrorView message={error.message} retry={refetch} ariaLabel="Dashboard-Failed" />
       </PageContainer>
     );
@@ -31,14 +28,14 @@ export const Page: React.FC = () => {
 
   if (isSuccess) {
     return (
-      <PageContainer pageTitle={words("dashboard.title")(envName)}>
+      <PageContainer pageTitle={words("dashboard.title")}>
         <Dashboard />
       </PageContainer>
     );
   }
 
   return (
-    <PageContainer pageTitle={words("dashboard.title")(envName)}>
+    <PageContainer pageTitle={words("dashboard.title")}>
       <LoadingView ariaLabel="Dashboard-Loading" />
     </PageContainer>
   );

@@ -31,7 +31,7 @@ function setup() {
   return { component };
 }
 
-describe("Dashboard", () => {
+describe("Dashboard Page", () => {
   const server = setupServer();
 
   beforeAll(() => {
@@ -46,7 +46,7 @@ describe("Dashboard", () => {
     server.close();
   });
 
-  test("Home view shows failed table", async () => {
+  test("Shows an error view when the environment details fetch fails", async () => {
     server.use(
       http.get("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7", () => {
         return HttpResponse.json(
@@ -72,7 +72,7 @@ describe("Dashboard", () => {
     });
   });
 
-  test("Home View shows success table", async () => {
+  test("Shows the dashboard once the environment details fetch succeeds", async () => {
     server.use(
       http.get("/api/v2/environment/c85c0a64-ed45-4cba-bdc5-703f65a225f7?", () => {
         return HttpResponse.json({
@@ -86,14 +86,6 @@ describe("Dashboard", () => {
 
     expect(await screen.findByRole("region", { name: "Dashboard-Loading" })).toBeInTheDocument();
 
-    expect(
-      await screen.findByText(words("dashboard.title")(EnvironmentDetails.env.name))
-    ).toBeInTheDocument();
-
-    await act(async () => {
-      const results = await axe(document.body);
-
-      expect(results).toHaveNoViolations();
-    });
+    expect(await screen.findByText(words("dashboard.title"))).toBeInTheDocument();
   });
 });

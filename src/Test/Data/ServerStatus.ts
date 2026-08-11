@@ -22,6 +22,9 @@ const base: ServerStatus = {
       package: "license",
     },
   ],
+  status: "OK",
+  python_version: "3.11.0",
+  postgresql_version: "13.0",
   slices: [
     {
       name: "core.session",
@@ -30,6 +33,7 @@ const base: ServerStatus = {
         interval: 30,
         sessions: 1,
       },
+      reported_status: "OK",
     },
     {
       name: "core.transport",
@@ -38,30 +42,37 @@ const base: ServerStatus = {
         running: true,
         sockets: ["0.0.0.0:8888"],
       },
+      reported_status: "OK",
     },
     {
       name: "lsm.database",
       status: {},
+      reported_status: "OK",
     },
     {
       name: "lsm.service_catalog",
       status: {},
+      reported_status: "OK",
     },
     {
       name: "lsm.service_inventory",
       status: {},
+      reported_status: "OK",
     },
     {
       name: "lsm.callback",
       status: {},
+      reported_status: "OK",
     },
     {
       name: "ui.ui",
       status: {},
+      reported_status: "OK",
     },
     {
       name: "support.support",
       status: {},
+      reported_status: "OK",
     },
     {
       name: "license.license",
@@ -75,10 +86,22 @@ const base: ServerStatus = {
         cert_valid_until: "2020-10-07T10:01:00.000000",
         entitlement_valid_until: "2021-10-07T20:06:38.000000",
       },
+      reported_status: "OK",
     },
     {
       name: "core.server",
       status: {},
+      reported_status: "OK",
+    },
+    {
+      name: "core.database",
+      status: { connected: true },
+      reported_status: "OK",
+    },
+    {
+      name: "core.scheduler_manager",
+      status: {},
+      reported_status: "OK",
     },
   ],
   features: [
