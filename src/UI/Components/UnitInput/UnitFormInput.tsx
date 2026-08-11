@@ -22,6 +22,9 @@ import type { UnitBounds, UnitValidationError } from "./validate";
 interface Props {
   attributeName: string;
 
+  /** Visible label; defaults to `attributeName` when omitted. Pass `""` to render no label, e.g. when embedding this component inside a caller's own labeled FormGroup. */
+  label?: string;
+
   /** The current value in API units, or `null` when empty/unset. */
   attributeValue: number | bigint | null;
   description?: string | null;
@@ -32,6 +35,9 @@ interface Props {
   /** `validation_parameters` (`ge`/`gt`/`le`/`lt`), expressed in API units. */
   bounds?: UnitBounds;
   handleInputChange: (value: number | bigint | null, event: unknown) => void;
+
+  /** Fires whenever the typed entry's validity changes (e.g. to gate a form's submit button) — an empty, optional field counts as valid, matching `handleInputChange`'s own `null`. */
+  onValidityChange?: (isValid: boolean) => void;
 }
 
 function initialState(
@@ -77,6 +83,7 @@ function errorMessage(error: UnitValidationError): string {
  */
 export const UnitFormInput: React.FC<Props> = ({
   attributeName,
+  label,
   attributeValue,
   description,
   isOptional,
@@ -84,6 +91,7 @@ export const UnitFormInput: React.FC<Props> = ({
   bounds,
   shouldBeDisabled = false,
   handleInputChange,
+  onValidityChange,
 }) => {
   const [{ unit, typed }, setState] = useState(() => initialState(attributeValue, config));
   const editedRef = useRef(false);
@@ -98,6 +106,11 @@ export const UnitFormInput: React.FC<Props> = ({
 
   const validation = validateUnitInput(typed, unit, config, bounds);
   const error = !validation.valid ? validation.error : null;
+
+  useEffect(() => {
+    onValidityChange?.(validation.valid);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validation.valid]);
 
   const commit = (nextTyped: string, nextUnit: string) => {
     editedRef.current = true;
@@ -120,7 +133,7 @@ export const UnitFormInput: React.FC<Props> = ({
     equivalent && familyOf(config.kind, equivalent.unit) === "iec" ? "binary" : "metric";
 
   return (
-    <FormGroup isRequired={!isOptional} fieldId={attributeName} label={attributeName}>
+    <FormGroup isRequired={!isOptional} fieldId={attributeName} label={label ?? attributeName}>
       {description && (
         <FormHelperText>
           <HelperText>

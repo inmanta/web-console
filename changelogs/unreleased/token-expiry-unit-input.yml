@@ -1,0 +1,4 @@
+description: The token expiry's custom amount/unit entry now uses the shared UnitInputField, so an invalid or out-of-range custom expiry shows an inline error instead of silently being treated as "no expiry".
+change-type: patch
+destination-branches: [master, iso9]
+sections:
