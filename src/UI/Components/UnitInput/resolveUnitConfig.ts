@@ -16,7 +16,6 @@ export interface UnitConfig {
   kind: UnitKind;
   apiUnit: string;
   isInt: boolean;
-  isOptional: boolean;
 
   /** `null` for `duration`, where scale families don't apply. */
   scales: UnitScales | null;
@@ -39,10 +38,6 @@ export function isNumericAttributeType(type: string): boolean {
 
 export function isIntAttributeType(type: string): boolean {
   return type.includes("int") && !isArrayType(type);
-}
-
-export function isOptionalAttributeType(type: string): boolean {
-  return type.endsWith("?");
 }
 
 /**
@@ -124,7 +119,6 @@ export function resolveUnitConfig(
       kind,
       apiUnit,
       isInt: isIntAttributeType(attributeType),
-      isOptional: isOptionalAttributeType(attributeType),
       scales,
       offeredUnits,
       displayUnit,
