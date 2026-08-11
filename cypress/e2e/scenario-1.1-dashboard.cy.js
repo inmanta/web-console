@@ -4,13 +4,13 @@ const { selectEnvironment, getDefaultEnvName } = environmentHelpers;
 
 const isIso = Cypress.expose("edition") === "iso";
 
-describe("10 Dashboard", () => {
+describe("1.1 Dashboard", () => {
   beforeEach(() => {
     cy.visit("/console/");
     selectEnvironment();
   });
 
-  it("10.1 Selecting an environment lands on the Dashboard", () => {
+  it("1.1.1 Selecting an environment lands on the Dashboard", () => {
     cy.url().should("contain", "/console/dashboard");
     cy.get("h1").contains("Environment Health").should("be.visible");
 
@@ -23,7 +23,7 @@ describe("10 Dashboard", () => {
     cy.get("h1").contains("Environment Health").should("be.visible");
   });
 
-  it("10.2 Environment Health row", () => {
+  it("1.1.2 Environment Health row", () => {
     // Orchestrator identity card: environment name, Operational verdict and checklist
     cy.get("h3").contains(getDefaultEnvName().split(" ")[0]).should("be.visible");
     cy.get("h4").contains("Operational").should("be.visible");
@@ -53,7 +53,7 @@ describe("10 Dashboard", () => {
     cy.url().should("contain", "/console/compilereports");
   });
 
-  it("10.3 Latest Compile Reports panel", () => {
+  it("1.1.3 Latest Compile Reports panel", () => {
     cy.contains("Latest compile reports").should("be.visible");
 
     cy.get("a").contains("View all compile reports").click();
@@ -66,7 +66,7 @@ describe("10 Dashboard", () => {
     );
   });
 
-  it("10.4 Orchestrator detail card", () => {
+  it("1.1.4 Orchestrator detail card", () => {
     cy.contains("h3", "Orchestrator").closest(".pf-v6-c-card").as("orchestratorCard");
 
     // The detail rows (Edition, Version, License, Python, PostgreSQL) are all present
@@ -82,7 +82,7 @@ describe("10 Dashboard", () => {
     cy.get("h1").contains("Orchestrator Status").scrollIntoView().should("be.visible");
   });
 
-  it("10.5 Resource Manager card", () => {
+  it("1.1.5 Resource Manager card", () => {
     cy.contains("Resource Manager").should("be.visible");
 
     ["brand", "success", "danger", "warning"].forEach((tone) => {
@@ -96,7 +96,7 @@ describe("10 Dashboard", () => {
     });
   });
 
-  it("10.6 Orchestration Engine card", () => {
+  it("1.1.6 Orchestration Engine card", () => {
     cy.contains("Orchestration Engine").should("be.visible");
 
     // Default tab is Compile rate, with its four stats visible
@@ -133,7 +133,7 @@ describe("10 Dashboard", () => {
   });
 
   if (isIso) {
-    it("10.7 Creating an instance with resources updates the health, resource and compile cards", () => {
+    it("1.1.7 Creating an instance with resources updates the health, resource and compile cards", () => {
       const readCardCount = (ariaLabel, pattern) =>
         cy
           .get(`[aria-label="${ariaLabel}"]`)
