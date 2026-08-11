@@ -55,23 +55,42 @@ function initialState(
 
 // Fixed rather than `width: auto` so the control doesn't resize as the user switches between a
 // short code ("B") and the catalogue's longest ones ("Kibit/s", "Gibit/s", "Tibit/s" — 7 chars).
-const UnitSelect = styled(FormSelect)`
-  width: 6.5rem;
+// Duration units are spelled out in full (see DURATION_UNIT_LABELS) and need more room to match.
+const UnitSelect = styled(FormSelect)<{ $isDuration?: boolean }>`
+  width: ${(props) => (props.$isDuration ? "9rem" : "6.5rem")};
 `;
 
-function errorMessage(error: UnitValidationError): string {
+// Duration codes read better spelled out than as the catalogue's terse ("min", "h", "d") codes.
+const DURATION_UNIT_LABELS: Record<string, string> = {
+  ns: words("unitInput.durationUnit.ns"),
+  us: words("unitInput.durationUnit.us"),
+  ms: words("unitInput.durationUnit.ms"),
+  s: words("unitInput.durationUnit.s"),
+  min: words("unitInput.durationUnit.min"),
+  h: words("unitInput.durationUnit.h"),
+  d: words("unitInput.durationUnit.d"),
+};
+
+function unitLabel(kind: UnitConfig["kind"], code: string): string {
+  return kind === "duration" ? (DURATION_UNIT_LABELS[code] ?? code) : code;
+}
+
+function errorMessage(error: UnitValidationError, kind: UnitConfig["kind"]): string {
   switch (error.kind) {
     case "not-a-number":
       return words("unitInput.error.notANumber");
     case "not-exact":
       return words("unitInput.error.notExact")(
         error.entered,
-        error.unit,
+        unitLabel(kind, error.unit),
         error.apiValue.toFixed(),
-        error.apiUnit
+        unitLabel(kind, error.apiUnit)
       );
     case "bound":
-      return words(`unitInput.error.bound.${error.op}`)(error.limitInUnit.toFixed(), error.unit);
+      return words(`unitInput.error.bound.${error.op}`)(
+        error.limitInUnit.toFixed(),
+        unitLabel(kind, error.unit)
+      );
   }
 }
 
@@ -163,10 +182,11 @@ export const UnitFormInput: React.FC<Props> = ({
             aria-label={words("unitInput.unitSelect.ariaLabel")}
             value={unit}
             isDisabled={shouldBeDisabled}
+            $isDuration={config.kind === "duration"}
             onChange={(_event, value) => commit(typed, value)}
           >
             {config.offeredUnits.map((code) => (
-              <FormSelectOption key={code} value={code} label={code} />
+              <FormSelectOption key={code} value={code} label={unitLabel(config.kind, code)} />
             ))}
           </UnitSelect>
         </InputGroupItem>
@@ -174,19 +194,22 @@ export const UnitFormInput: React.FC<Props> = ({
       <FormHelperText>
         <HelperText id={`${attributeName}-helper`}>
           {error ? (
-            <HelperTextItem variant="error">{errorMessage(error)}</HelperTextItem>
+            <HelperTextItem variant="error">{errorMessage(error, config.kind)}</HelperTextItem>
           ) : (
             validation.valid &&
             validation.apiValue !== null && (
               <>
                 <HelperTextItem>
-                  {words("unitInput.helper.stored")(validation.apiValue.toFixed(), config.apiUnit)}
+                  {words("unitInput.helper.stored")(
+                    validation.apiValue.toFixed(),
+                    unitLabel(config.kind, config.apiUnit)
+                  )}
                 </HelperTextItem>
                 {equivalent && (
                   <HelperTextItem variant="indeterminate">
                     {words("unitInput.helper.equivalent")(
                       equivalent.value.toFixed(),
-                      equivalent.unit,
+                      unitLabel(config.kind, equivalent.unit),
                       equivalentFamily
                     )}
                   </HelperTextItem>

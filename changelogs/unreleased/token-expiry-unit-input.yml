@@ -2,3 +2,4 @@ description: The token expiry's custom amount/unit entry now uses the shared Uni
 change-type: patch
 destination-branches: [master, iso9]
 sections:
+  minor-improvement: "{{description}}"
