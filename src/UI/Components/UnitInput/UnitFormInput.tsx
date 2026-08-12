@@ -22,6 +22,9 @@ import type { UnitBounds, UnitValidationError } from "./validate";
 interface Props {
   attributeName: string;
 
+  /** Visible label; defaults to `attributeName` when omitted. Pass `""` to render no label, e.g. when embedding this component inside a caller's own labeled FormGroup. */
+  label?: string;
+
   /** The current value in API units, or `null` when empty/unset. */
   attributeValue: number | bigint | null;
   description?: string | null;
@@ -32,6 +35,9 @@ interface Props {
   /** `validation_parameters` (`ge`/`gt`/`le`/`lt`), expressed in API units. */
   bounds?: UnitBounds;
   handleInputChange: (value: number | bigint | null, event: unknown) => void;
+
+  /** Fires whenever the typed entry's validity changes (e.g. to gate a form's submit button) — an empty, optional field counts as valid, matching `handleInputChange`'s own `null`. */
+  onValidityChange?: (isValid: boolean) => void;
 }
 
 function initialState(
@@ -49,23 +55,42 @@ function initialState(
 
 // Fixed rather than `width: auto` so the control doesn't resize as the user switches between a
 // short code ("B") and the catalogue's longest ones ("Kibit/s", "Gibit/s", "Tibit/s" — 7 chars).
-const UnitSelect = styled(FormSelect)`
-  width: 6.5rem;
+// Duration units are spelled out in full (see DURATION_UNIT_LABELS) and need more room to match.
+const UnitSelect = styled(FormSelect)<{ $isDuration?: boolean }>`
+  width: ${(props) => (props.$isDuration ? "9rem" : "6.5rem")};
 `;
 
-function errorMessage(error: UnitValidationError): string {
+// Duration codes read better spelled out than as the catalogue's terse ("min", "h", "d") codes.
+const DURATION_UNIT_LABELS: Record<string, string> = {
+  ns: words("unitInput.durationUnit.ns"),
+  us: words("unitInput.durationUnit.us"),
+  ms: words("unitInput.durationUnit.ms"),
+  s: words("unitInput.durationUnit.s"),
+  min: words("unitInput.durationUnit.min"),
+  h: words("unitInput.durationUnit.h"),
+  d: words("unitInput.durationUnit.d"),
+};
+
+function unitLabel(kind: UnitConfig["kind"], code: string): string {
+  return kind === "duration" ? (DURATION_UNIT_LABELS[code] ?? code) : code;
+}
+
+function errorMessage(error: UnitValidationError, kind: UnitConfig["kind"]): string {
   switch (error.kind) {
     case "not-a-number":
       return words("unitInput.error.notANumber");
     case "not-exact":
       return words("unitInput.error.notExact")(
         error.entered,
-        error.unit,
+        unitLabel(kind, error.unit),
         error.apiValue.toFixed(),
-        error.apiUnit
+        unitLabel(kind, error.apiUnit)
       );
     case "bound":
-      return words(`unitInput.error.bound.${error.op}`)(error.limitInUnit.toFixed(), error.unit);
+      return words(`unitInput.error.bound.${error.op}`)(
+        error.limitInUnit.toFixed(),
+        unitLabel(kind, error.unit)
+      );
   }
 }
 
@@ -77,6 +102,7 @@ function errorMessage(error: UnitValidationError): string {
  */
 export const UnitFormInput: React.FC<Props> = ({
   attributeName,
+  label,
   attributeValue,
   description,
   isOptional,
@@ -84,6 +110,7 @@ export const UnitFormInput: React.FC<Props> = ({
   bounds,
   shouldBeDisabled = false,
   handleInputChange,
+  onValidityChange,
 }) => {
   const [{ unit, typed }, setState] = useState(() => initialState(attributeValue, config));
   const editedRef = useRef(false);
@@ -98,6 +125,11 @@ export const UnitFormInput: React.FC<Props> = ({
 
   const validation = validateUnitInput(typed, unit, config, bounds);
   const error = !validation.valid ? validation.error : null;
+
+  useEffect(() => {
+    onValidityChange?.(validation.valid);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validation.valid]);
 
   const commit = (nextTyped: string, nextUnit: string) => {
     editedRef.current = true;
@@ -120,7 +152,7 @@ export const UnitFormInput: React.FC<Props> = ({
     equivalent && familyOf(config.kind, equivalent.unit) === "iec" ? "binary" : "metric";
 
   return (
-    <FormGroup isRequired={!isOptional} fieldId={attributeName} label={attributeName}>
+    <FormGroup isRequired={!isOptional} fieldId={attributeName} label={label ?? attributeName}>
       {description && (
         <FormHelperText>
           <HelperText>
@@ -150,36 +182,44 @@ export const UnitFormInput: React.FC<Props> = ({
             aria-label={words("unitInput.unitSelect.ariaLabel")}
             value={unit}
             isDisabled={shouldBeDisabled}
+            $isDuration={config.kind === "duration"}
             onChange={(_event, value) => commit(typed, value)}
           >
             {config.offeredUnits.map((code) => (
-              <FormSelectOption key={code} value={code} label={code} />
+              <FormSelectOption key={code} value={code} label={unitLabel(config.kind, code)} />
             ))}
           </UnitSelect>
         </InputGroupItem>
       </InputGroup>
       <FormHelperText>
+        {/* Both lines are always rendered — even as a blank placeholder — so the helper area's
+            height is reserved from the start instead of popping in once a value validates,
+            which otherwise shifts everything below the field as the user types. */}
         <HelperText id={`${attributeName}-helper`}>
           {error ? (
-            <HelperTextItem variant="error">{errorMessage(error)}</HelperTextItem>
+            <HelperTextItem variant="error">{errorMessage(error, config.kind)}</HelperTextItem>
           ) : (
-            validation.valid &&
-            validation.apiValue !== null && (
-              <>
-                <HelperTextItem>
-                  {words("unitInput.helper.stored")(validation.apiValue.toFixed(), config.apiUnit)}
+            <>
+              <HelperTextItem>
+                {validation.valid && validation.apiValue !== null
+                  ? words("unitInput.helper.stored")(
+                      validation.apiValue.toFixed(),
+                      unitLabel(config.kind, config.apiUnit)
+                    )
+                  : " "}
+              </HelperTextItem>
+              {otherScale.length > 0 && (
+                <HelperTextItem variant="indeterminate">
+                  {equivalent
+                    ? words("unitInput.helper.equivalent")(
+                        equivalent.value.toFixed(),
+                        unitLabel(config.kind, equivalent.unit),
+                        equivalentFamily
+                      )
+                    : " "}
                 </HelperTextItem>
-                {equivalent && (
-                  <HelperTextItem variant="indeterminate">
-                    {words("unitInput.helper.equivalent")(
-                      equivalent.value.toFixed(),
-                      equivalent.unit,
-                      equivalentFamily
-                    )}
-                  </HelperTextItem>
-                )}
-              </>
-            )
+              )}
+            </>
           )}
         </HelperText>
       </FormHelperText>
