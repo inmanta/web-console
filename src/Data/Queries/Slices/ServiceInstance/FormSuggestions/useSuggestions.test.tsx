@@ -250,7 +250,10 @@ describe("useSuggestedValues graphql flavor", () => {
 
     await waitFor(() =>
       expect(result.current.data).toEqual(
-        environmentNodes.map((node) => ({ label: node.candidate_attributes.network_name, value: node.id }))
+        environmentNodes.map((node) => ({
+          label: node.candidate_attributes.network_name,
+          value: node.id,
+        }))
       )
     );
     expect(result.current.modelError).toBeNull();
@@ -324,10 +327,9 @@ describe("useSuggestedValues graphql flavor", () => {
   });
 
   test("GIVEN a graphql flavor without a query THEN a model error is surfaced", async () => {
-    const { result } = renderHook(
-      () => useSuggestedValues(graphql(undefined)).useOneTime(),
-      { wrapper }
-    );
+    const { result } = renderHook(() => useSuggestedValues(graphql(undefined)).useOneTime(), {
+      wrapper,
+    });
 
     expect(result.current.modelError).toEqual(words("inventory.form.suggestions.invalidQuery"));
     expect(sentQueries).toEqual([]);
