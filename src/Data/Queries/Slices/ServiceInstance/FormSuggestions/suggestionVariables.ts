@@ -44,6 +44,15 @@ export const isKnownNamespace = (namespace: string): namespace is SuggestionName
   SUGGESTION_NAMESPACES.some((known) => known === namespace);
 
 /**
+ * Recognizes cascading field references - `${form:<jsonpath>}` /
+ * `${self:<jsonpath>}` (the #7011 grammar). Recognition only: resolving them
+ * against live state is that ticket's work, but recognizing them lets a consumer
+ * leave the field inert instead of flagging a valid reference as malformed.
+ */
+export const isFieldReference = (namespace: string): boolean =>
+  namespace.startsWith("form:") || namespace.startsWith("self:");
+
+/**
  * Extracts the `${...}` variables a parameter name references.
  *
  * Unknown namespaces are extracted too - validating them is the caller's
@@ -79,19 +88,25 @@ export const getUnknownNamespaces = (parameterName: string): string[] =>
   extractVariables(parameterName).filter((namespace) => !isKnownNamespace(namespace));
 
 /**
- * Substitutes every `${...}` variable in a parameter name with its URL-encoded value.
+ * Substitutes every `${...}` variable in a string with its (encoded) value.
  *
- * Purely mechanical: callers are expected to have validated the parameter name with
+ * Purely mechanical: callers are expected to have validated the string with
  * {@link extractVariables} first. A variable without a value substitutes to "".
  *
- * @param parameterName - The parameter name, e.g. `"topology_files_${entity_type}"`.
+ * `encode` defaults to `encodeURIComponent` (the REST path uses the result as a
+ * URL segment); the GraphQL flavor passes identity, since it escapes the value
+ * again as a GraphQL literal.
+ *
+ * @param input - The string, e.g. `"topology_files_${entity_type}"`.
  * @param variables - The values to substitute, keyed by namespace.
+ * @param encode - How to encode each substituted value (default `encodeURIComponent`).
  * @returns The resolved string, e.g. `"topology_files_Connection"`.
  */
 export const substituteVariables = (
-  parameterName: string,
-  variables: SuggestionVariables
+  input: string,
+  variables: SuggestionVariables,
+  encode: (value: string) => string = encodeURIComponent
 ): string =>
-  parameterName.replace(suggestionVariablePattern, (_match, namespace: string) =>
-    encodeURIComponent(variables[namespace] ?? "")
+  input.replace(suggestionVariablePattern, (_match, namespace: string) =>
+    encode(variables[namespace] ?? "")
   );

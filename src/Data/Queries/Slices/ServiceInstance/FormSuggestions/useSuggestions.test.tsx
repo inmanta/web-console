@@ -202,3 +202,159 @@ describe("useSuggestedValues templated parameter names", () => {
     expect(requestedPaths).toEqual([]);
   });
 });
+
+// Each environments node: attributes JSON (snake_case) projected via jsonpath.
+const environmentNodes = [
+  { id: "env-1", candidate_attributes: { network_name: "nw-a" } },
+  { id: "env-2", candidate_attributes: { network_name: "nw-b" } },
+];
+
+const graphql = (query: FormSuggestion["query"]): FormSuggestion => ({ type: "graphql", query });
+
+describe("useSuggestedValues graphql flavor", () => {
+  const sentQueries: string[] = [];
+
+  const server = setupServer(
+    http.post("/api/v2/graphql", async ({ request }) => {
+      const body = (await request.json()) as { query: string };
+
+      sentQueries.push(body.query);
+
+      // The endpoint double-wraps: graphql-request's request() strips the outer
+      // `data`, leaving the `{ data: { <root> }, errors, extensions }` envelope
+      // that consumers (and extractNodes) read via `.data`.
+      const envelope = {
+        data: { environments: { edges: environmentNodes.map((node) => ({ node })) } },
+      };
+
+      return HttpResponse.json({ data: envelope });
+    })
+  );
+
+  beforeAll(() => server.listen());
+  afterEach(() => {
+    server.resetHandlers();
+    testClient.clear();
+    sentQueries.length = 0;
+  });
+  afterAll(() => server.close());
+
+  test("GIVEN label + value projections THEN nodes are projected into { label, value }[]", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({ root: "environments", label: "candidate_attributes.network_name", value: "id" })
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() =>
+      expect(result.current.data).toEqual(
+        environmentNodes.map((node) => ({ label: node.candidate_attributes.network_name, value: node.id }))
+      )
+    );
+    expect(result.current.modelError).toBeNull();
+  });
+
+  test("GIVEN a value-only projection THEN a list of values is produced", async () => {
+    const { result } = renderHook(
+      () => useSuggestedValues(graphql({ root: "environments", value: "id" })).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() =>
+      expect(result.current.data).toEqual(
+        environmentNodes.map((node) => ({ label: node.id, value: node.id }))
+      )
+    );
+  });
+
+  test("GIVEN a ${...} filter value THEN it is resolved into the sent query", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({
+            root: "environments",
+            filter: { name: "${entity_type}" },
+            value: "id",
+          }),
+          { entity_type: "network" }
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() => expect(result.current.data).not.toBeNull());
+    expect(sentQueries[0]).toContain('name: "network"');
+  });
+
+  test("GIVEN a non-navigational projection path THEN a model error is surfaced and nothing is fetched", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({ root: "environments", label: "endpoints[*].name", value: "id" })
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    expect(result.current.modelError).toEqual(
+      words("inventory.form.suggestions.unsupportedPath")("endpoints[*].name")
+    );
+    expect(result.current.error).toBeNull();
+    expect(sentQueries).toEqual([]);
+  });
+
+  test("GIVEN a filter depending on ${instance_id} WHEN absent (create form) THEN nothing is fetched", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({
+            root: "environments",
+            filter: { name: "${instance_id}" },
+            value: "id",
+          }),
+          { entity_type: "network" }
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    expect(result.current.data).toBeUndefined();
+    expect(sentQueries).toEqual([]);
+  });
+
+  test("GIVEN a graphql flavor without a query THEN a model error is surfaced", async () => {
+    const { result } = renderHook(
+      () => useSuggestedValues(graphql(undefined)).useOneTime(),
+      { wrapper }
+    );
+
+    expect(result.current.modelError).toEqual(words("inventory.form.suggestions.invalidQuery"));
+    expect(sentQueries).toEqual([]);
+  });
+
+  test("GIVEN a filter with a cascading ${form:...} reference (not yet resolvable) THEN the field is inert - no model error and no fetch", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({
+            root: "serviceInstances",
+            value: "$.id",
+            filter: {
+              serviceEntity: "uplink",
+              "candidate_attributes.site": "${form:$.site}",
+            },
+          })
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    // A valid (deferred) cascading reference is not a malformed annotation, and
+    // it stays blocked until resolution lands rather than firing a query.
+    expect(result.current.modelError).toBeNull();
+    expect(result.current.data).toBeUndefined();
+    expect(sentQueries).toEqual([]);
+  });
+});

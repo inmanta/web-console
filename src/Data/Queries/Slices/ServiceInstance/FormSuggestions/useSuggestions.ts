@@ -1,16 +1,25 @@
 import { useContext, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FormSuggestion } from "@/Core";
-import { useGet, getParametersKey } from "@/Data/Queries";
+import { useGet, getParametersKey, useGraphQLRequest } from "@/Data/Queries";
+import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
 import { useDebounce } from "@/UI/Utils";
 import { words } from "@/UI/words";
+import {
+  buildSuggestionQuery,
+  extractNodes,
+  getFilterVariables,
+  getUnsupportedPaths,
+  projectNodes,
+} from "./graphqlSuggestions";
 import { normalizeSuggestions } from "./helpers";
 import {
   SUGGESTION_NAMESPACES,
   SuggestionVariables,
   extractVariables,
   getUnknownNamespaces,
+  isFieldReference,
   isKnownNamespace,
   substituteVariables,
 } from "./suggestionVariables";
@@ -62,6 +71,70 @@ export const useSuggestedValues = (
     };
   }
 
+  if (suggestions.type === "graphql") {
+    const graphqlQuery = suggestions.query;
+
+    if (!graphqlQuery || !graphqlQuery.root || !graphqlQuery.value) {
+      return {
+        useOneTime: () => ({
+          data: null,
+          error: null,
+          isLoading: false,
+          modelError: words("inventory.form.suggestions.invalidQuery"),
+        }),
+      };
+    }
+
+    const filterVariables = getFilterVariables(graphqlQuery);
+    // `${form:...}` / `${self:...}` are valid cascading references (#7011); their
+    // resolution isn't implemented yet, so they are not "unknown". Leaving them in
+    // keeps the field blocked (isResolvable is false without a value) rather than
+    // erroring - i.e. inert until cascading lands, not a malformed annotation.
+    const unknownNamespaces = filterVariables.filter(
+      (namespace) => !isFieldReference(namespace) && !isKnownNamespace(namespace)
+    );
+    const unsupportedPaths = getUnsupportedPaths(graphqlQuery);
+    // Broken annotations (unknown `${...}` namespace, non-navigational projection)
+    // are model errors: reported separately and never fetched.
+    const modelError =
+      unknownNamespaces.length > 0
+        ? words("inventory.form.suggestions.unknownVariable")(
+            unknownNamespaces.join(", "),
+            SUGGESTION_NAMESPACES.join(", ")
+          )
+        : unsupportedPaths.length > 0
+          ? words("inventory.form.suggestions.unsupportedPath")(unsupportedPaths.join(", "))
+          : null;
+
+    return {
+      useOneTime: () => {
+        // Gate with `enabled` (not an early return) so hook order stays stable.
+        // A filter referencing a value the form cannot provide yet (e.g.
+        // `${instance_id}` on a create form) disables the query.
+        const isResolvable =
+          !modelError &&
+          filterVariables.every(
+            (namespace) => isKnownNamespace(namespace) && suggestionVariables[namespace]
+          );
+        const queryString = buildSuggestionQuery(graphqlQuery, suggestionVariables);
+        // Debounce so a filter fed by a typed field re-queries on settle rather
+        // than on every keystroke; the resolved query is the cache key.
+        const debouncedQuery = useDebounce(queryString, 500);
+        const fetchSuggestions = useGraphQLRequest<Record<string, unknown>>(debouncedQuery);
+
+        const query = useQuery({
+          queryKey: getGraphQLSuggestionsKey.single(graphqlQuery.root, [debouncedQuery, env]),
+          queryFn: fetchSuggestions,
+          select: (data) =>
+            normalizeSuggestions(projectNodes(extractNodes(data, graphqlQuery.root), graphqlQuery)),
+          enabled: isResolvable,
+        });
+
+        return { ...query, modelError };
+      },
+    };
+  }
+
   const parameterName = suggestions.parameter_name || "";
   const variables = extractVariables(parameterName);
   const unknownNamespaces = getUnknownNamespaces(parameterName);
@@ -102,3 +175,8 @@ export const useSuggestedValues = (
     },
   };
 };
+
+export const getGraphQLSuggestionsKey = new KeyFactory(
+  SliceKeys.serviceInstance,
+  "graphql_suggestions"
+);
