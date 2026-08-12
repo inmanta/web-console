@@ -170,10 +170,13 @@ describe("Token Tab", () => {
       screen.getByRole("combobox", { name: words("settings.tabs.token.expiry") }),
       "custom"
     );
-    await userEvent.type(screen.getByRole("spinbutton", { name: "ExpiryCustomAmount" }), "12");
+    await userEvent.type(
+      screen.getByRole("spinbutton", { name: "UnitInput-token-expiry-custom" }),
+      "12"
+    );
     await userEvent.selectOptions(
-      screen.getByRole("combobox", { name: "ExpiryCustomUnit" }),
-      "hours"
+      screen.getByRole("combobox", { name: words("unitInput.unitSelect.ariaLabel") }),
+      "h"
     );
     await userEvent.click(
       screen.getByRole("button", { name: words("settings.tabs.token.generate") })
@@ -207,6 +210,34 @@ describe("Token Tab", () => {
     );
 
     await waitFor(() => expect(requestBody).toEqual({ client_types: ["api"], idempotent: false }));
+  });
+
+  test("GIVEN a custom expiry with an invalid amount THEN generate is disabled until it's fixed", async () => {
+    const { component } = setup();
+
+    render(component);
+
+    const generateButton = screen.getByRole("button", {
+      name: words("settings.tabs.token.generate"),
+    });
+
+    await userEvent.selectOptions(
+      screen.getByRole("combobox", { name: words("settings.tabs.token.expiry") }),
+      "custom"
+    );
+    await userEvent.type(
+      screen.getByRole("spinbutton", { name: "UnitInput-token-expiry-custom" }),
+      "-5"
+    );
+
+    await waitFor(() => expect(generateButton).toBeDisabled());
+
+    await userEvent.selectOptions(
+      screen.getByRole("combobox", { name: words("settings.tabs.token.expiry") }),
+      "3600"
+    );
+
+    await waitFor(() => expect(generateButton).toBeEnabled());
   });
 
   test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {

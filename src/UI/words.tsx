@@ -1055,6 +1055,13 @@ const dict = {
    * UnitInputField (issue #7022 / #7131)
    */
   "unitInput.unitSelect.ariaLabel": "Unit",
+  "unitInput.durationUnit.ns": "nanoseconds",
+  "unitInput.durationUnit.us": "microseconds",
+  "unitInput.durationUnit.ms": "milliseconds",
+  "unitInput.durationUnit.s": "seconds",
+  "unitInput.durationUnit.min": "minutes",
+  "unitInput.durationUnit.h": "hours",
+  "unitInput.durationUnit.d": "days",
   "unitInput.helper.stored": (value: string, unit: string) => `= ${value} ${unit}`,
   "unitInput.helper.equivalent": (value: string, unit: string, family: string) =>
     `≈ ${value} ${unit} (${family})`,
