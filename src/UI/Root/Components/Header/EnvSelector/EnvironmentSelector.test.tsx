@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Router } from "react-router";
 import { createMemoryHistory } from "@remix-run/router";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http } from "msw";
@@ -115,6 +115,29 @@ describe("EnvironmentSelector", () => {
 
     expect(await screen.findByText("Select an environment")).toBeVisible();
     expect(history.location.pathname).toEqual("/");
+  });
+
+  test("GIVEN EnvironmentSelector WHEN environments fail to load THEN a dismissible toast is shown instead of a permanent inline alert", async () => {
+    server.use(
+      http.get("/api/v2/environment", async () => HttpResponse.error()),
+      http.get("/api/v2/project", async () => HttpResponse.json({ data: Project.filterable }))
+    );
+
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const history = createMemoryHistory();
+
+    render(
+      <Router location={history.location} navigator={history}>
+        <QueryClientProvider client={queryClient}>
+          <MockedDependencyProvider>
+            <EnvSelectorWrapper onSelectEnvironment={() => {}} />
+          </MockedDependencyProvider>
+        </QueryClientProvider>
+      </Router>
+    );
+
+    expect(await screen.findByTestId("ToastAlert")).toBeVisible();
+    expect(screen.queryByTestId("AlertError")).not.toBeInTheDocument();
   });
 
   test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", async () => {
