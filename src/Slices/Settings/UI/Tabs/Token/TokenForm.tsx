@@ -82,6 +82,8 @@ interface Props {
   getClientTypeSelector(clientType: ClientType): (selected: boolean) => void;
   isClientTypeSelected(clientType: ClientType): boolean;
   onExpireChange(value: number | null): void;
+  onExpiryValidityChange(isValid: boolean): void;
+  isExpiryValid: boolean;
   token: string | null;
   error: string | null;
   isBusy: boolean;
@@ -92,6 +94,8 @@ export const TokenForm: React.FC<Props> = ({
   getClientTypeSelector,
   isClientTypeSelected,
   onExpireChange,
+  onExpiryValidityChange,
+  isExpiryValid,
   token,
   error,
   onErrorClose,
@@ -102,7 +106,11 @@ export const TokenForm: React.FC<Props> = ({
       {words("settings.tabs.token.title")}
     </Title>
     <Description>{words("settings.tabs.token.description")}</Description>
-    <ExpiryInput onChange={onExpireChange} isDisabled={isBusy} />
+    <ExpiryInput
+      onChange={onExpireChange}
+      onValidityChange={onExpiryValidityChange}
+      isDisabled={isBusy}
+    />
     <AdvancedSection
       toggleText={words("settings.tabs.token.advanced")}
       getClientTypeSelector={getClientTypeSelector}
@@ -125,7 +133,7 @@ export const TokenForm: React.FC<Props> = ({
         aria-label="CopyTokenToClipboard"
         style={{ alignItems: "center" }}
       />
-      <Button variant="primary" onClick={onGenerate} isDisabled={isBusy}>
+      <Button variant="primary" onClick={onGenerate} isDisabled={isBusy || !isExpiryValid}>
         {words("settings.tabs.token.generate")}
       </Button>
     </StyledInputGroup>
