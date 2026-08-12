@@ -4,10 +4,13 @@ import * as Maybe from "@/Core/Language/Maybe";
 /**
  * Shared read-only jsonpath evaluator (RFC 9535, via the eval-free `jsonpathly`).
  * Paths arrive as annotation data, so being eval-free removes the injection
- * surface; usage is further pinned to the navigational subset (member access,
- * array index, single equality-filter selection), and everything else -
- * wildcards, recursion, slices, unions, functions, non-equality comparisons - is
- * rejected. A leading `$` is optional (`a.b` is read as `$.a.b`).
+ * surface: the other RFC 9535 evaluators considered - `jsonpath-plus` and dchester
+ * `jsonpath` - run filter/script expressions through `eval`, so an attacker-supplied
+ * path could execute arbitrary code; `jsonpathly` has no such surface by design.
+ * Usage is further pinned to the navigational subset (member access, array index,
+ * single equality-filter selection), and everything else - wildcards, recursion,
+ * slices, unions, functions, non-equality comparisons - is rejected. A leading `$`
+ * is optional (`a.b` is read as `$.a.b`).
  */
 
 type AstNode = { type: string; [key: string]: unknown };
@@ -29,11 +32,23 @@ const normalizePath = (path: string): string => {
 };
 
 /**
- * The jsonpathly AST node types that make up plain navigation (structural spine,
- * member access, a single equality filter and its literal leaves). It is an
- * allowlist on purpose: `isNavigational` rejects any node type not listed here,
- * so unrecognized constructs - wildcards, recursion, slices, unions, functions,
- * or anything a future jsonpathly adds - fail closed rather than slipping through.
+ * The jsonpathly AST node types that make up plain navigation: the structural
+ * spine, member access, array index, and a single equality filter with its literal
+ * leaves. This is the exact subset #7013 pins the evaluator to - "member access,
+ * array index, equality-filter selection; reject anything beyond navigation".
+ *
+ * Why only these: a projection has to address exactly one node, and these are the
+ * three ways to do that - a member (`a.b`), an array index (`endpoints[0]`), or an
+ * equality filter (`endpoints[?@.name=='ep1']`). Everything left out - wildcards,
+ * recursion, slices, unions, functions, and non-equality/logical filters - selects
+ * a *set* of nodes rather than one, so it cannot target a single value (and
+ * `evaluate` rejects a multi-valued result anyway). In particular a slice is not how
+ * you reach an embedded-entity element - an index or an equality filter is; and
+ * jsonpathly parses those apart (`[0]` is a `bracketMember`, `[0:1]` is a separate
+ * `slices` node), so admitting index does not admit slices.
+ *
+ * It is an allowlist on purpose: `isNavigational` rejects any node type not listed
+ * here, so a future jsonpathly construct fails closed rather than slipping through.
  */
 const NAVIGATIONAL_TYPES = new Set([
   "root",

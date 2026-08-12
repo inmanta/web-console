@@ -172,6 +172,8 @@ const dict = {
     `Unknown variable(s) in the suggested values parameter name: ${variables}. Supported variables: ${supported}.`,
   "inventory.form.suggestions.unsupportedPath": (paths: string) =>
     `Unsupported jsonpath in the suggested values projection: ${paths}. Only navigational paths (member access, array index, equality-filter selection) are supported.`,
+  "inventory.form.suggestions.invalidFilterKey": (keys: string) =>
+    `Invalid filter field(s) in the suggested values query: ${keys}. A filter key must be a plain GraphQL field name; nested fields are expressed as nested objects, not dotted paths.`,
   "inventory.form.suggestions.invalidQuery":
     "The graphql suggested values annotation is malformed. It requires a 'query' with a 'root' and a 'value' projection.",
   "inventory.form.tabs.invalidCatalog":

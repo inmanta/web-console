@@ -306,6 +306,26 @@ describe("useSuggestedValues graphql flavor", () => {
     expect(sentQueries).toEqual([]);
   });
 
+  test("GIVEN a filter key that isn't a valid GraphQL field name THEN a model error is surfaced and nothing is fetched", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({
+            root: "environments",
+            filter: { "candidate_attributes.site": "brussels" },
+            value: "id",
+          })
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    expect(result.current.modelError).toEqual(
+      words("inventory.form.suggestions.invalidFilterKey")("candidate_attributes.site")
+    );
+    expect(result.current.error).toBeNull();
+    expect(sentQueries).toEqual([]);
+  });
+
   test("GIVEN a filter depending on ${instance_id} WHEN absent (create form) THEN nothing is fetched", async () => {
     const { result } = renderHook(
       () =>
@@ -335,7 +355,7 @@ describe("useSuggestedValues graphql flavor", () => {
     expect(sentQueries).toEqual([]);
   });
 
-  test("GIVEN a filter with a cascading ${form:...} reference (not yet resolvable) THEN the field is inert - no model error and no fetch", async () => {
+  test("GIVEN a filter with a cascading ${form:...} reference (not yet handled) THEN it surfaces as an unknown variable until #7011", async () => {
     const { result } = renderHook(
       () =>
         useSuggestedValues(
@@ -344,19 +364,21 @@ describe("useSuggestedValues graphql flavor", () => {
             value: "$.id",
             filter: {
               serviceEntity: "uplink",
-              "candidate_attributes.site": "${form:$.site}",
+              candidateAttributes: { site: "${form:$.site}" },
             },
           })
         ).useOneTime(),
       { wrapper }
     );
 
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
-
-    // A valid (deferred) cascading reference is not a malformed annotation, and
-    // it stays blocked until resolution lands rather than firing a query.
-    expect(result.current.modelError).toBeNull();
-    expect(result.current.data).toBeUndefined();
+    // Cascading references aren't resolved yet (#7011); until then they are treated
+    // as unknown variables rather than fetched. To be revisited when T4 lands.
+    expect(result.current.modelError).toEqual(
+      words("inventory.form.suggestions.unknownVariable")(
+        "form:$.site",
+        SUGGESTION_NAMESPACES.join(", ")
+      )
+    );
     expect(sentQueries).toEqual([]);
   });
 });

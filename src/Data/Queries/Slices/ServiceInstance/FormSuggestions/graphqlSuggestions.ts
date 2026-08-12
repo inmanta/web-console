@@ -13,41 +13,52 @@ import { SuggestionVariables, extractVariables, substituteVariables } from "./su
  * flavor, whose query is generated from annotation data rather than a static
  * `gql`. Two languages meet in one annotation: `filter` keys are camelCase GraphQL
  * schema fields (sent to the server), while `label`/`value` are snake_case
- * jsonpath projections into each returned node (evaluated client-side). Paging is
- * bounded by {@link SUGGESTION_PAGE_SIZE}; server-side search-as-you-type is a follow-up.
+ * jsonpath projections into each returned node (evaluated client-side). Paging and
+ * ordering (`first`, `orderBy`, ...) are the author's / backend's concern - the
+ * console imposes none, so a query gets whatever the server defaults to unless the
+ * annotation asks for more.
  */
 
-/** Upper bound on nodes fetched for one suggestion query. */
-export const SUGGESTION_PAGE_SIZE = 250;
+/** A valid GraphQL name; a `filter` key is emitted as one, so it must match. */
+const GRAPHQL_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
 /**
- * Serializes a filter value into a GraphQL literal. Strings go through
- * `JSON.stringify`, whose output is a valid, escaped GraphQL string literal, so a
- * form-supplied value with quotes or newlines can't break out of the query
- * (injection-safe).
+ * Serializes a filter value into GraphQL argument syntax, resolving `${...}` in
+ * string leaves as it goes. Strings go through `JSON.stringify` (a valid, escaped
+ * GraphQL string literal, so a form-supplied value with quotes or braces can't break
+ * out of the query); numbers/booleans/null are emitted bare; arrays and nested
+ * objects recurse, so a filter faithfully mirrors whatever GraphQL filter input the
+ * author writes (e.g. `resourceType: {contains: ["%vm%"]}`).
+ *
+ * Injection-safe at any depth: the only values emitted unquoted are structural
+ * tokens this function writes and the number/boolean/null primitives - never a
+ * data-derived string, which is the only place a `${...}` substitution lands. A
+ * consequence is that a bare GraphQL *enum* argument (`eq: COMPLIANT`) can't be
+ * produced here, since a string is always quoted; that needs an explicit marker and
+ * validation, deferred until a filter needs one. Whether the resulting shape is
+ * valid for the target root is the author's / backend schema's concern.
  */
-const serializeGraphQLValue = (value: GraphQLFilterValue): string => {
+const serializeFilterValue = (
+  value: GraphQLFilterValue,
+  variables: SuggestionVariables
+): string => {
   if (value === null) {
     return "null";
   }
   if (typeof value === "string") {
-    return JSON.stringify(value);
+    // identity encoder: JSON.stringify escapes it as a GraphQL literal below
+    return JSON.stringify(substituteVariables(value, variables, (raw) => raw));
+  }
+  if (typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
+  if (Array.isArray(value)) {
+    return `[${value.map((item) => serializeFilterValue(item, variables)).join(", ")}]`;
   }
 
-  return String(value); // number | boolean
-};
-
-/**
- * Resolves `${...}` references in a filter value and serializes it to a GraphQL
- * literal. Substitution uses an identity encoder (not the URL-encoding default),
- * because the value is escaped again as a GraphQL literal below.
- */
-const resolveFilterValue = (value: GraphQLFilterValue, variables: SuggestionVariables): string => {
-  if (typeof value === "string") {
-    return serializeGraphQLValue(substituteVariables(value, variables, (raw) => raw));
-  }
-
-  return serializeGraphQLValue(value);
+  return `{${Object.entries(value)
+    .map(([key, nested]) => `${key}: ${serializeFilterValue(nested, variables)}`)
+    .join(", ")}}`;
 };
 
 /**
@@ -90,15 +101,17 @@ export const buildSuggestionQuery = (
   variables: SuggestionVariables
 ): string => {
   const filterEntries = Object.entries(query.filter ?? {});
-  const filterArgument =
+  // Omit the argument list entirely when there is no filter: `root()` is invalid
+  // GraphQL. Paging/ordering are left to the author's query, not imposed here.
+  const args =
     filterEntries.length > 0
-      ? `filter: {${filterEntries
-          .map(([key, value]) => `${key}: ${resolveFilterValue(value, variables)}`)
-          .join(", ")}}, `
+      ? `(filter: {${filterEntries
+          .map(([key, value]) => `${key}: ${serializeFilterValue(value, variables)}`)
+          .join(", ")}})`
       : "";
   const fields = selectionFields(query).join(" ");
 
-  return `query { ${query.root}(${filterArgument}first: ${SUGGESTION_PAGE_SIZE}) { edges { node { ${fields} } } } }`;
+  return `query { ${query.root}${args} { edges { node { ${fields} } } } }`;
 };
 
 const asRecord = (value: unknown): Record<string, unknown> | null =>
@@ -164,14 +177,47 @@ export const projectNodes = (
  */
 export const getFilterVariables = (query: GraphQLSuggestionQuery): string[] => {
   const namespaces = new Set<string>();
-
-  for (const value of Object.values(query.filter ?? {})) {
+  const walk = (value: GraphQLFilterValue): void => {
     if (typeof value === "string") {
       extractVariables(value).forEach((namespace) => namespaces.add(namespace));
+    } else if (Array.isArray(value)) {
+      value.forEach(walk);
+    } else if (typeof value === "object" && value !== null) {
+      Object.values(value).forEach(walk);
     }
-  }
+  };
+
+  Object.values(query.filter ?? {}).forEach(walk);
 
   return [...namespaces];
+};
+
+/**
+ * The filter keys - at any depth - that are not valid GraphQL names, so they can't
+ * be emitted as field names. The usual mistake is a dotted jsonpath used as a filter
+ * key (`candidate_attributes.site`): filter keys are GraphQL fields (nested fields
+ * are nested objects), not projection paths. A non-empty result means the annotation
+ * is broken and should surface as a model error rather than be sent as a query the
+ * server rejects with a syntax error.
+ */
+export const getInvalidFilterKeys = (query: GraphQLSuggestionQuery): string[] => {
+  const invalid: string[] = [];
+  const walk = (value: GraphQLFilterValue): void => {
+    if (Array.isArray(value)) {
+      value.forEach(walk);
+    } else if (typeof value === "object" && value !== null) {
+      for (const [key, nested] of Object.entries(value)) {
+        if (!GRAPHQL_NAME_PATTERN.test(key)) {
+          invalid.push(key);
+        }
+        walk(nested);
+      }
+    }
+  };
+
+  walk(query.filter ?? {});
+
+  return invalid;
 };
 
 /**

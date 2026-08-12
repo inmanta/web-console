@@ -44,15 +44,6 @@ export const isKnownNamespace = (namespace: string): namespace is SuggestionName
   SUGGESTION_NAMESPACES.some((known) => known === namespace);
 
 /**
- * Recognizes cascading field references - `${form:<jsonpath>}` /
- * `${self:<jsonpath>}` (the #7011 grammar). Recognition only: resolving them
- * against live state is that ticket's work, but recognizing them lets a consumer
- * leave the field inert instead of flagging a valid reference as malformed.
- */
-export const isFieldReference = (namespace: string): boolean =>
-  namespace.startsWith("form:") || namespace.startsWith("self:");
-
-/**
  * Extracts the `${...}` variables a parameter name references.
  *
  * Unknown namespaces are extracted too - validating them is the caller's
