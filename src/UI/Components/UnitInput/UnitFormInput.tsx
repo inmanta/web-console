@@ -192,30 +192,34 @@ export const UnitFormInput: React.FC<Props> = ({
         </InputGroupItem>
       </InputGroup>
       <FormHelperText>
+        {/* Both lines are always rendered — even as a blank placeholder — so the helper area's
+            height is reserved from the start instead of popping in once a value validates,
+            which otherwise shifts everything below the field as the user types. */}
         <HelperText id={`${attributeName}-helper`}>
           {error ? (
             <HelperTextItem variant="error">{errorMessage(error, config.kind)}</HelperTextItem>
           ) : (
-            validation.valid &&
-            validation.apiValue !== null && (
-              <>
-                <HelperTextItem>
-                  {words("unitInput.helper.stored")(
-                    validation.apiValue.toFixed(),
-                    unitLabel(config.kind, config.apiUnit)
-                  )}
+            <>
+              <HelperTextItem>
+                {validation.valid && validation.apiValue !== null
+                  ? words("unitInput.helper.stored")(
+                      validation.apiValue.toFixed(),
+                      unitLabel(config.kind, config.apiUnit)
+                    )
+                  : " "}
+              </HelperTextItem>
+              {otherScale.length > 0 && (
+                <HelperTextItem variant="indeterminate">
+                  {equivalent
+                    ? words("unitInput.helper.equivalent")(
+                        equivalent.value.toFixed(),
+                        unitLabel(config.kind, equivalent.unit),
+                        equivalentFamily
+                      )
+                    : " "}
                 </HelperTextItem>
-                {equivalent && (
-                  <HelperTextItem variant="indeterminate">
-                    {words("unitInput.helper.equivalent")(
-                      equivalent.value.toFixed(),
-                      unitLabel(config.kind, equivalent.unit),
-                      equivalentFamily
-                    )}
-                  </HelperTextItem>
-                )}
-              </>
-            )
+              )}
+            </>
           )}
         </HelperText>
       </FormHelperText>
