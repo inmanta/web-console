@@ -39,16 +39,16 @@ export const invertFilter = (selection: string): string =>
 
 /**
  * Ensures the include and exclude variants of the same value do not coexist by removing the
- * inverted counterpart of `selection` from `selectedStates` when it is present.
+ * inverted counterpart of `selection` from `selectedItems` when it is present.
  */
-export const removeInvertedSelection = (selection: string, selectedStates: string[]): string[] => {
+export const removeInvertedSelection = (selection: string, selectedItems: string[]): string[] => {
   const invertedFilter = invertFilter(selection);
 
-  if (selectedStates.includes(invertedFilter)) {
-    return toggleValueInList(invertedFilter, selectedStates);
+  if (selectedItems.includes(invertedFilter)) {
+    return toggleValueInList(invertedFilter, selectedItems);
   }
 
-  return selectedStates;
+  return selectedItems;
 };
 
 export const isNotNull = <T>(value: T | null): value is NonNullable<T> => value !== null;

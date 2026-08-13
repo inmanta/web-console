@@ -1,9 +1,10 @@
-import { ToggleGroup, ToggleGroupItem } from "@patternfly/react-core";
+import { ToggleGroup, ToggleGroupItem, Tooltip } from "@patternfly/react-core";
 import { IncludeExcludeIconPair } from "../IncludeExcludeIcons";
 
 export type OptionalToggleGroupOption<T extends string | boolean = string> = {
   value: T;
   buttonId: string;
+  tooltip?: string;
 } & (
   | { label: string; icon?: never; ariaLabel?: never }
   | { icon: IncludeExcludeIconPair; ariaLabel: string; label?: never }
@@ -23,7 +24,7 @@ export interface OptionalToggleGroupProps<T extends string | boolean = string> {
  *  @prop {OptionalToggleGroupOption[]} options - The toggle options to render. Each option is shown
  *    in one of two ways: provide a `label` to render it as text, or provide an active/inactive
  *    `icon` pair together with an `ariaLabel` (the icons are decorative, so the `ariaLabel` supplies
- *    the accessible name).
+ *    the accessible name). An optional `tooltip` wraps the option in a tooltip with that text.
  *  @prop {T[]} selected - The full list of currently active values (`T` is the option value type,
  *    `string | boolean`). Only values matching this group's options are considered.
  *  @prop {function} onChange - Called with the updated `T[]` list after applying mutual-exclusion logic.
@@ -60,10 +61,10 @@ export const OptionalToggleGroup = <T extends string | boolean>({
 
   return (
     <ToggleGroup>
-      {options.map(({ value, buttonId, label, icon, ariaLabel }) => {
+      {options.map(({ value, buttonId, label, icon, ariaLabel, tooltip }) => {
         const isSelected = selected.includes(value);
 
-        return (
+        const item = (
           <ToggleGroupItem
             key={buttonId}
             aria-label={icon ? ariaLabel : undefined}
@@ -74,6 +75,14 @@ export const OptionalToggleGroup = <T extends string | boolean>({
             isDisabled={isDisabled}
             onChange={(event) => handleChange(value, event.currentTarget)}
           />
+        );
+
+        return tooltip ? (
+          <Tooltip key={buttonId} content={tooltip}>
+            {item}
+          </Tooltip>
+        ) : (
+          item
         );
       })}
     </ToggleGroup>

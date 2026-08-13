@@ -432,11 +432,7 @@ describe("ServiceInventory", () => {
 
     await openFilterDrawer();
 
-    const deletedInput = await screen.findByRole("combobox", { name: "DeletedFilterInput" });
-
-    await userEvent.click(deletedInput);
-
-    await userEvent.click(await screen.findByRole("option", { name: "Only" }));
+    await userEvent.click(await screen.findByRole("button", { name: "Only" }));
 
     const rows = await screen.findAllByRole("row", { name: "InstanceRow-Intro" });
 

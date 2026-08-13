@@ -14,16 +14,25 @@ import {
   FilterDrawerPanelContent,
   IncludeExcludeSelect,
   MultiTextSelect,
-  SingleTextSelect,
+  OptionalToggleGroup,
   getFilterActions,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 /** The attribute sets, paired with the label shown to the user. */
 const ATTRIBUTE_SETS: { value: ServiceInstanceParams.AttributeSet; label: string }[] = [
-  { value: ServiceInstanceParams.AttributeSet.Active, label: "Active" },
-  { value: ServiceInstanceParams.AttributeSet.Candidate, label: "Candidate" },
-  { value: ServiceInstanceParams.AttributeSet.Rollback, label: "Rollback" },
+  {
+    value: ServiceInstanceParams.AttributeSet.Active,
+    label: words("inventory.filters.attributeSet.active"),
+  },
+  {
+    value: ServiceInstanceParams.AttributeSet.Candidate,
+    label: words("inventory.filters.attributeSet.candidate"),
+  },
+  {
+    value: ServiceInstanceParams.AttributeSet.Rollback,
+    label: words("inventory.filters.attributeSet.rollback"),
+  },
 ];
 
 const prettyAttributeSet = (value: string): string =>
@@ -33,13 +42,22 @@ const rawAttributeSet = (label: string): ServiceInstanceParams.AttributeSet =>
   ATTRIBUTE_SETS.find((set) => set.label === label)?.value ??
   (label as ServiceInstanceParams.AttributeSet);
 
-/** The deleted-instance rules, paired with the description shown under each option. */
+/** The deleted-instance rules, paired with the label and tooltip shown for each option. */
 const DELETED_RULES: {
   value: Exclude<ServiceInstanceParams.DeletedRule, undefined>;
-  description: string;
+  label: string;
+  tooltip: string;
 }[] = [
-  { value: "Include", description: words("inventory.filters.deleted.include.description") },
-  { value: "Only", description: words("inventory.filters.deleted.only.description") },
+  {
+    value: "Include",
+    label: words("inventory.filters.deleted.include.label"),
+    tooltip: words("inventory.filters.deleted.include.description"),
+  },
+  {
+    value: "Only",
+    label: words("inventory.filters.deleted.only.label"),
+    tooltip: words("inventory.filters.deleted.only.description"),
+  },
 ];
 
 interface Props {
@@ -79,9 +97,8 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
   ];
 
   const onAttributeSetClick = (selection: string) => {
-    const next = uniq(
-      toggleValueInList(selection, removeInvertedSelection(selection, attributeSetSelected))
-    );
+    const safeSelection = removeInvertedSelection(selection, attributeSetSelected);
+    const next = uniq(toggleValueInList(selection, safeSelection));
     const notEmpty = next.filter((entry) => !entry.startsWith("!")).map(rawAttributeSet);
     const empty = next
       .filter((entry) => entry.startsWith("!"))
@@ -154,20 +171,15 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
 
           <StackItem>
             <FormGroup label={words("inventory.filters.deleted.label")}>
-              <SingleTextSelect
-                toggleAriaLabel="Deleted"
+              <OptionalToggleGroup
+                selected={filter.deleted ? [filter.deleted] : []}
+                onChange={(next) => updateDeleted(next[0] as ServiceInstanceParams.DeletedRule)}
                 options={DELETED_RULES.map((rule) => ({
                   value: rule.value,
-                  children: rule.value,
-                  description: rule.description,
-                  "aria-label": rule.value,
-                  isSelected: filter.deleted === rule.value,
+                  buttonId: `deleted-${rule.value.toLowerCase()}`,
+                  label: rule.label,
+                  tooltip: rule.tooltip,
                 }))}
-                selected={filter.deleted ?? null}
-                setSelected={(selection) =>
-                  updateDeleted(selection as ServiceInstanceParams.DeletedRule)
-                }
-                placeholderText={words("inventory.filters.deleted.placeholder")}
               />
             </FormGroup>
           </StackItem>
