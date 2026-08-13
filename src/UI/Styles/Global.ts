@@ -8,14 +8,6 @@ export const GlobalStyles = createGlobalStyle`
     --pf-v5-chart-global--label--Fill: var(--pf-t--global--text--color--regular);
   }
 
-  /** This solves the issue where whenever a banner is present we have this
-   small scrollbar which really shouldn't be present at all **/
-  html,
-  body,
-  #root {
-    height: 100%;
-  }
-
   /** 
    * The standard file upload from patternfly 6 is adding a default inline padding that is different than the ones from other input fields. 
    * This override aligns it with the other fields. 

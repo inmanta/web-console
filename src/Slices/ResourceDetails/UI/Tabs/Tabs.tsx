@@ -1,15 +1,8 @@
 import React from "react";
-import {
-  PageSection,
-  Tab,
-  TabContent,
-  Tabs as PFTabs,
-  TabTitleIcon,
-  TabTitleText,
-} from "@patternfly/react-core";
+import { PageSection, TabContent } from "@patternfly/react-core";
 import { ColumnsIcon, HistoryIcon, ListIcon, ModuleIcon, TableIcon } from "@patternfly/react-icons";
 import { Details } from "@/Core/Domain/Resource/Resource";
-import { TabDescriptor } from "@/UI/Components";
+import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
 import { FactsTab } from "./FactsTab";
@@ -40,11 +33,10 @@ const tabContentId = (key: TabKey): string => `resource-details-tabcontent-${key
  * This component is responsible of displaying the tabs of the resource details.
  *
  * The tab bar sits in a fixed <PageSection type="tabs"> while the active tab's
- * content lives in a separate <PageSection isFilled hasOverflowScroll>. The
- * content section fills the remaining page height and owns the vertical scroll,
- * so the tab bar (and the resource header above it) stay in place while only the
- * tab content scrolls. Only the active tab is rendered, matching the previous
- * mountOnEnter/unmountOnExit behaviour.
+ * content lives in a separate <PageSection isFilled hasOverflowScroll>. The content
+ * section fills the remaining page height and owns the vertical scroll, so the tab
+ * bar (and the resource header above it) stay in place while only the tab content
+ * scrolls. Only the active tab is rendered.
  *
  * @Props {Props} - The props of the component
  *  @prop {string} id - The id of the resource
@@ -67,25 +59,12 @@ export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab, data }) => 
   return (
     <>
       <PageSection hasBodyWrapper={false} type="tabs">
-        <PFTabs
-          activeKey={activeTab}
-          onSelect={(_event, eventKey) => setActiveTab(eventKey as TabKey)}
-        >
-          {tabs.map((tab) => (
-            <Tab
-              key={tab.id}
-              eventKey={tab.id}
-              tabContentId={tabContentId(tab.id)}
-              isAriaDisabled={tab.isDisabled}
-              title={
-                <>
-                  <TabTitleIcon>{tab.icon}</TabTitleIcon>
-                  <TabTitleText>{tab.title}</TabTitleText>
-                </>
-              }
-            />
-          ))}
-        </PFTabs>
+        <IconTabs
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          tabs={tabs}
+          tabContentId={tabContentId}
+        />
       </PageSection>
       <PageSection
         hasBodyWrapper={false}
