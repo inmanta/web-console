@@ -9,7 +9,21 @@ import {
   EXTENSION_LIST,
   FEATURE_LIST,
 } from "@/Core";
-import { words } from "@/UI";
+
+/**
+ * Safe default returned by get() before the serverstatus response has been received,
+ * so that consumers reading feature flags before initialization degrade instead of throwing.
+ */
+const DEFAULT_FEATURES: Pick<
+  ServerStatus,
+  "features" | "extensions" | "version" | "edition" | "slices"
+> = {
+  features: [],
+  extensions: [],
+  version: "",
+  edition: "",
+  slices: [],
+};
 
 /**
  * Represents the primary feature manager.
@@ -43,7 +57,7 @@ export const OrchestratorProvider = (
 
   function get(): Pick<ServerStatus, "features" | "extensions" | "version" | "edition" | "slices"> {
     if (!features) {
-      throw new Error(words("features.missing"));
+      return DEFAULT_FEATURES;
     }
 
     return features;

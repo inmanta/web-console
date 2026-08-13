@@ -35,7 +35,24 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [EnvironmentPreview.data]);
 
-  if (serverStatus.isError) {
+  // Notify the header status indicator of background refetch failures (e.g. on window focus),
+  // without tearing down the shell, once both queries have loaded successfully at least once.
+  useEffect(() => {
+    if (isInitialized && isEnvironmentPreviewInitialized) {
+      const hasError = serverStatus.isError || EnvironmentPreview.isError;
+
+      document.dispatchEvent(new CustomEvent(hasError ? "status-down" : "status-up"));
+    }
+  }, [
+    serverStatus.isError,
+    EnvironmentPreview.isError,
+    isInitialized,
+    isEnvironmentPreviewInitialized,
+  ]);
+
+  // Only treat these as fatal if they have never loaded successfully. Once we have
+  // last-known-good data, a later background refetch failure shouldn't blank the shell.
+  if (serverStatus.isError && !isInitialized) {
     return (
       <ErrorView
         ariaLabel="Initializer-Error"
@@ -45,7 +62,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     );
   }
 
-  if (EnvironmentPreview.isError) {
+  if (EnvironmentPreview.isError && !isEnvironmentPreviewInitialized) {
     return (
       <ErrorView
         ariaLabel="Initializer-Error"
@@ -55,12 +72,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
     );
   }
 
-  if (
-    serverStatus.isSuccess &&
-    EnvironmentPreview.isSuccess &&
-    isInitialized &&
-    isEnvironmentPreviewInitialized
-  ) {
+  if (isInitialized && isEnvironmentPreviewInitialized) {
     return <>{children}</>;
   }
 
