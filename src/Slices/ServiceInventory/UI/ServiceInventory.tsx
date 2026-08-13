@@ -1,5 +1,5 @@
 import React, { ReactElement, createContext, useCallback, useMemo, useState } from "react";
-import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
+import { Drawer, DrawerContent, DrawerContentBody, Flex, FlexItem } from "@patternfly/react-core";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetInstances } from "@/Data/Queries";
@@ -11,7 +11,7 @@ import {
   countActiveFilters,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { ConnectedFilterWidget, TableControls } from "./Components";
+import { AddInstanceButton, ConnectedFilterWidget, TableControls } from "./Components";
 import { TableProvider } from "./TableProvider";
 import { Wrapper } from "./Wrapper";
 
@@ -113,9 +113,16 @@ export const ServiceInventory: React.FunctionComponent<{
         }}
       >
         <Wrapper name={serviceName}>
-          {intro}
+          <Flex
+            justifyContent={{ default: "justifyContentSpaceBetween" }}
+            alignItems={{ default: "alignItemsFlexStart" }}
+          >
+            <FlexItem>{intro}</FlexItem>
+            <FlexItem>
+              <AddInstanceButton serviceName={serviceName} />
+            </FlexItem>
+          </Flex>
           <TableControls
-            serviceName={serviceName}
             paginationWidget={
               <PaginationWidget
                 data={data}
