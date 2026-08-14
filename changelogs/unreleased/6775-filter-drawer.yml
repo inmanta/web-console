@@ -1,0 +1,8 @@
+description: |
+  Migrated the Compile Reports page filters from an inline toolbar widget to a side-panel drawer, with a toolbar button showing the active filter count.
+  Migrated the Resource Details log tab filters to the same side-panel drawer pattern.
+issue-nr: 6775
+change-type: minor
+destination-branches: [master]
+sections:
+  minor-improvement: "{{description}}"

@@ -380,7 +380,6 @@ const dict = {
   "events.filters.version.placeholder": "Filter by version...",
   "events.filters.from": "From",
   "events.filters.to": "To",
-  "events.filters.date.to": "to",
 
   /**
    * History related text
@@ -709,6 +708,7 @@ const dict = {
   "resources.history.empty.message": "No requirements found",
   "resources.attributes.title": "Desired State",
   "resources.logs.title": "Logs",
+  "resources.logs.filters": "Filters",
   "resources.logs.empty.message": "No logs found",
   "resources.logs.filterOnAction": (actionType: string) => `Filter on '${actionType}'`,
   "resources.logs.timestamp": "Timestamp",
@@ -744,6 +744,7 @@ const dict = {
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",
+  "compileReports.filters": "Filters",
   "compileReports.empty.message": "No compile reports found",
   "compileReports.columns.requested": "Requested",
   "compileReports.columns.status": "Status",
@@ -1148,6 +1149,8 @@ const dict = {
   "filters.timestamp.to.timePicker": "To Time Picker",
   "filters.timestamp.from.apply": "Apply date from filter",
   "filters.timestamp.to.apply": "Apply date to filter",
+  "filters.from": "From",
+  "filters.to": "To",
   "filters.range.from.input": (label: string) => `${label} range from`,
   "filters.range.to.input": (label: string) => `${label} range to`,
   "filters.range.from.apply": (label: string) => `Apply ${label} from filter`,

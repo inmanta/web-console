@@ -140,6 +140,9 @@ describe("Scenario 6 : Resources", () => {
         cy.wrap($rows.length).as("initialRowCount");
       });
 
+      // Open the filter drawer
+      cy.get('[aria-label="ResourceLogs-toolbar"]').find("button[aria-pressed]").click();
+
       // Apply INFO filter and verify count decreases
       cy.get('[aria-label="MinimalLogLevelFilterInput"]').click();
       cy.get('[role="option"]').contains("INFO").click();

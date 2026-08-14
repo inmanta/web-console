@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, FlexItem } from "@patternfly/react-core";
+import { Content, Flex, FlexItem, PageSection } from "@patternfly/react-core";
 import { useUrlStateWithString } from "@/Data";
 import { useGetResourceDetails } from "@/Data/Queries";
 import {
@@ -46,21 +46,24 @@ export const View: React.FC<Props> = ({ id }) => {
 
   if (isSuccess) {
     return (
-      <PageContainer
-        pageTitle={words("resources.details.title")}
-        aria-label="ResourceDetails-Success"
-      >
-        <Flex>
-          <FlexItem aria-label={`resourceName-${id}`}>
-            <Description>{id}</Description>
-          </FlexItem>
-          <FlexItem>
-            <ResourceStatusLabel status={labelColorConfig[data.status]} label={data.status} />
-          </FlexItem>
-        </Flex>
-
+      <>
+        <PageSection hasBodyWrapper={false}>
+          <Content>
+            <Content component="h1">{words("resources.details.title")}</Content>
+          </Content>
+        </PageSection>
+        <PageSection hasBodyWrapper={false} aria-label="ResourceDetails-Success">
+          <Flex>
+            <FlexItem aria-label={`resourceName-${id}`}>
+              <Description>{id}</Description>
+            </FlexItem>
+            <FlexItem>
+              <ResourceStatusLabel status={labelColorConfig[data.status]} label={data.status} />
+            </FlexItem>
+          </Flex>
+        </PageSection>
         <Tabs {...{ id, data, activeTab, setActiveTab }} />
-      </PageContainer>
+      </>
     );
   }
 

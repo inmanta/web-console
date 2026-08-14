@@ -41,6 +41,7 @@ export const ResourceLogsTable: React.FC<Props> = ({ logs, toggleActionType, sor
           <Th width={15}>{words("resources.logs.actionType")}</Th>
           <Th width={15}>{words("resources.logs.logLevel")}</Th>
           <Th>{words("resources.logs.message")}</Th>
+          <Th aria-hidden screenReaderText={words("common.emptyColumnHeader")} />
         </Tr>
       </Thead>
       {logs.map((log, index) => (
