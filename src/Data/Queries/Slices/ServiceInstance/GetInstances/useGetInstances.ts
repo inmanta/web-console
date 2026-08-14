@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Pagination, ServiceInstanceModelWithTargetStates } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { ServiceInstanceParams } from "@/Core/Domain/ServiceInstanceParams";
@@ -21,10 +21,22 @@ interface HookResponse {
 }
 
 /**
+ * Options for the useContinuous query.
+ */
+interface UseContinuousOptions {
+  /**
+   * Keep the previous data visible while the next query loads (e.g. after a filter or page change),
+   * avoiding a flash to the loading state. Suited to a paginated table, but not to a typeahead where
+   * the previous results should clear on every keystroke.
+   */
+  keepPreviousData?: boolean;
+}
+
+/**
  * Return Signature of the useGetInstances React Query
  */
 interface GetInstance {
-  useContinuous: () => UseQueryResult<HookResponse, CustomError>;
+  useContinuous: (options?: UseContinuousOptions) => UseQueryResult<HookResponse, CustomError>;
 }
 
 /**
@@ -57,7 +69,7 @@ export const useGetInstances = (
   const sortArray = sort ? [sort.name, sort.order] : [];
 
   return {
-    useContinuous: (): UseQueryResult<HookResponse, CustomError> =>
+    useContinuous: (options): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
         queryKey: getInstanceKey.list([
           serviceName,
@@ -73,6 +85,7 @@ export const useGetInstances = (
           ...data,
           handlers: getPaginationHandlers(data.links, data.metadata),
         }),
+        placeholderData: options?.keepPreviousData ? keepPreviousData : undefined,
       }),
   };
 };

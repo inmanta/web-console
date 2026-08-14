@@ -25,12 +25,3 @@ export interface Filter {
 }
 
 export type DeletedRule = "Include" | "Only" | undefined;
-
-export enum Kind {
-  State = "State",
-  Id = "Id",
-  AttributeSet = "AttributeSet",
-  Deleted = "Deleted",
-}
-
-export const List: Kind[] = [Kind.State, Kind.Id, Kind.AttributeSet, Kind.Deleted];
