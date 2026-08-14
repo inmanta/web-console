@@ -1,6 +1,6 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
@@ -157,6 +157,35 @@ describe("OrchestrationEngineCard", () => {
       })
     ).toBeVisible();
     expect(screen.getByText(words("dashboard.orchestrationEngine.subtitle")(14))).toBeVisible();
+  });
+
+  it("colors the title icon success when there are no failed compiles in range", async () => {
+    respondWith(142, 0);
+
+    render(setup());
+
+    // The icon renders on first paint with its pre-fetch fallback tone, so the assertion has to
+    // wait for the query to resolve and the tone to update, rather than just for the element to
+    // exist (findByTestId would resolve on the very first, pre-data render).
+    await waitFor(() =>
+      expect(screen.getByTestId("orchestration-engine-title-icon")).toHaveStyle({
+        color:
+          "color-mix(in srgb, var(--pf-t--global--icon--color--status--success--default) 70%, white)",
+      })
+    );
+  });
+
+  it("colors the title icon warning when there are failed compiles in range", async () => {
+    respondWith(142, 3);
+
+    render(setup());
+
+    await waitFor(() =>
+      expect(screen.getByTestId("orchestration-engine-title-icon")).toHaveStyle({
+        color:
+          "color-mix(in srgb, var(--pf-t--global--icon--color--status--warning--default) 70%, white)",
+      })
+    );
   });
 
   it("refetches the metrics when the refresh button is clicked", async () => {

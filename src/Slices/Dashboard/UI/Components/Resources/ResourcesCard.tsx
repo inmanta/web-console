@@ -19,7 +19,8 @@ import { DependencyContext } from "@/UI/Dependency";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 import { words } from "@/UI/words";
 import { MINIMAL_PAGE } from "../../EnvironmentHealthRow";
-import { IconBadge } from "../IconBadge";
+import { deriveResourcesHealth } from "../../resourcesHealth";
+import { HEALTH_TONE, IconBadge } from "../IconBadge";
 import { ResourceStatusBar } from "./ResourceStatusBar";
 
 const searchHelper = new SearchHelper();
@@ -74,6 +75,7 @@ export const ResourcesCard: React.FC = () => {
   const { data } = useGetResources({ ...MINIMAL_PAGE, filter: {}, sort: [] }).useContinuous();
   const summary = data?.resourceSummary;
   const totalCount = summary?.totalCount ?? 0;
+  const resourcesHealth = summary ? deriveResourcesHealth(summary) : undefined;
 
   const onSegmentClick = (status: Resource.CompoundStateKey): void => {
     navigate(buildFilteredResourcesUrl(resourcesUrl, status));
@@ -111,7 +113,10 @@ export const ResourcesCard: React.FC = () => {
             spaceItems={{ default: "spaceItemsSm" }}
           >
             <FlexItem>
-              <IconBadge $tone="danger">
+              <IconBadge
+                data-testid="resource-manager-title-icon"
+                $tone={HEALTH_TONE[resourcesHealth?.status ?? "healthy"]}
+              >
                 <CubeIcon />
               </IconBadge>
             </FlexItem>

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { HealthStatus } from "./EnvironmentHealth/StatusIndicator";
 
 export type IconTone = "success" | "danger" | "info" | "warning" | "brand";
 
@@ -9,6 +10,16 @@ export const TONE_COLOR: Record<IconTone, string> = {
   warning: "var(--pf-t--global--icon--color--status--warning--default)",
   // The same blue used by links elsewhere in this UI (Button variant="link", e.g. "View report >").
   brand: "var(--pf-t--global--icon--color--brand--default)",
+};
+
+/**
+ * Maps EnvironmentHealthRow's healthy/attention/danger vocabulary onto IconTone, so cards that
+ * derive a HealthStatus can color their title icon consistently with the top health row.
+ */
+export const HEALTH_TONE: Record<HealthStatus, IconTone> = {
+  healthy: "success",
+  attention: "warning",
+  danger: "danger",
 };
 
 const BADGE_SIZE = { sm: "1.75rem", md: "2rem", lg: "2.5rem" };

@@ -166,6 +166,7 @@ export const OrchestrationEngineCard: React.FC = () => {
   const activeTab = TABS.find((candidate) => candidate.key === tab) ?? TABS[0];
   const activeRangeLabel = RANGE_OPTIONS.find((option) => option.value === days)?.label ?? "";
   const trend = getTrendSeries(metrics, tab);
+  const tone = (Number(failedCompiles?.metadata.total) || 0) > 0 ? "warning" : "success";
   const avgCompileSeconds = average(metrics?.metrics["orchestrator.compile_time"]);
   const avgWaitingSeconds = average(metrics?.metrics["orchestrator.compile_waiting_time"]);
 
@@ -238,7 +239,7 @@ export const OrchestrationEngineCard: React.FC = () => {
                 spaceItems={{ default: "spaceItemsSm" }}
               >
                 <FlexItem>
-                  <IconBadge $tone="warning">
+                  <IconBadge data-testid="orchestration-engine-title-icon" $tone={tone}>
                     <CodeIcon />
                   </IconBadge>
                 </FlexItem>
