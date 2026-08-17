@@ -57,7 +57,6 @@ export const useSuggestedValues = (
   // it overrides any caller value so an author can scope roots like `resources`
   // without knowing the id.
   const resolvedVariables: SuggestionVariables = { ...suggestionVariables, environment: env };
-  console.log("resolvedVariables", resolvedVariables);
 
   if (!suggestions) {
     return {
