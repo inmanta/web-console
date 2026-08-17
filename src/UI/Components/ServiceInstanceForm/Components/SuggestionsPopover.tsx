@@ -65,9 +65,6 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
       handleSuggestionClick(suggestion.value);
       // Return focus to the input the list was opened from, so tab navigation
       // continues from that field instead of resetting to the top of the page.
-      // focus() must run before close(): focusing the input synchronously fires
-      // its open-on-focus handler, and the trailing close() is what then leaves
-      // the popover collapsed.
       reference.current?.focus();
       close();
     };
