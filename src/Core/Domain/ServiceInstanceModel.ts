@@ -133,13 +133,9 @@ type FormSuggestionType = "literal" | "parameters" | "graphql";
  * A value usable in a `graphql` suggestion filter: a scalar or `${...}` reference
  * (resolved, then quoted, before the query runs), a list, or a nested input object.
  * Objects and lists let a filter mirror any GraphQL filter input the author writes,
- * e.g. `{ resourceType: { contains: ["%vm%"] } }`.
- *
- * Note: strings are always emitted quoted, so a bare GraphQL *enum* value
- * (`eq: COMPLIANT`) cannot be expressed here - that would need an explicit marker
- * plus validation and is deferred until a concrete filter needs it. Providing the
- * correct filter shape is the annotation author's / backend schema's concern; a
- * shape the server rejects surfaces as a query error.
+ * e.g. `{ resourceType: { contains: ["%vm%"] } }`. Providing the correct filter
+ * shape is the annotation author's / backend schema's concern; a shape the server
+ * rejects surfaces as a query error.
  */
 export type GraphQLFilterValue =
   string | number | boolean | null | GraphQLFilterValue[] | { [key: string]: GraphQLFilterValue };

@@ -15,12 +15,17 @@
  */
 
 /**
- * The namespaces the form can currently provide a value for.
+ * The namespaces a suggestion may reference via `${...}`. The first three are
+ * form-derived (supplied by the caller from the instance being edited);
+ * `environment` is FE-derived - the suggestions hook fills it with the active
+ * environment's UUID, so an annotation author can scope an environment-scoped
+ * root (e.g. `resources`) with `${environment}` without knowing the id.
  */
 export const SUGGESTION_NAMESPACES = [
   "entity_type",
   "identifying_attribute",
   "instance_id",
+  "environment",
 ] as const;
 
 export type SuggestionNamespace = (typeof SUGGESTION_NAMESPACES)[number];

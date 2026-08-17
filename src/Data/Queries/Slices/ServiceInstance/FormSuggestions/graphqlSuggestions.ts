@@ -32,11 +32,9 @@ const GRAPHQL_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
  *
  * Injection-safe at any depth: the only values emitted unquoted are structural
  * tokens this function writes and the number/boolean/null primitives - never a
- * data-derived string, which is the only place a `${...}` substitution lands. A
- * consequence is that a bare GraphQL *enum* argument (`eq: COMPLIANT`) can't be
- * produced here, since a string is always quoted; that needs an explicit marker and
- * validation, deferred until a filter needs one. Whether the resulting shape is
- * valid for the target root is the author's / backend schema's concern.
+ * data-derived string, which is the only place a `${...}` substitution lands.
+ * Whether the resulting shape is valid for the target root is the author's /
+ * backend schema's concern.
  */
 const serializeFilterValue = (
   value: GraphQLFilterValue,

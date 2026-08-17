@@ -41,7 +41,9 @@ interface ResponseData {
  * genuine fetch failure that stays silent.
  *
  * @param suggestions - The field's suggestions.
- * @param suggestionVariables - Values for `${...}` variables, keyed by namespace.
+ * @param suggestionVariables - Caller-provided values for `${...}` variables, keyed
+ *   by namespace. The `environment` namespace is filled in automatically from the
+ *   active environment, so callers need not supply it.
  * @returns `{ useOneTime }` returning the query result plus `modelError`.
  */
 export const useSuggestedValues = (
@@ -51,6 +53,11 @@ export const useSuggestedValues = (
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const get = useGet(env)<ResponseData>;
+  // Fill `${environment}` with the active env UUID (FE-supplied, not form-derived);
+  // it overrides any caller value so an author can scope roots like `resources`
+  // without knowing the id.
+  const resolvedVariables: SuggestionVariables = { ...suggestionVariables, environment: env };
+  console.log("resolvedVariables", resolvedVariables);
 
   if (!suggestions) {
     return {
@@ -114,9 +121,9 @@ export const useSuggestedValues = (
         const isResolvable =
           !modelError &&
           filterVariables.every(
-            (namespace) => isKnownNamespace(namespace) && suggestionVariables[namespace]
+            (namespace) => isKnownNamespace(namespace) && resolvedVariables[namespace]
           );
-        const queryString = buildSuggestionQuery(graphqlQuery, suggestionVariables);
+        const queryString = buildSuggestionQuery(graphqlQuery, resolvedVariables);
         // Debounce so a filter fed by a typed field re-queries on settle rather
         // than on every keystroke; the resolved query is the cache key.
         const debouncedQuery = useDebounce(queryString, 500);
@@ -154,11 +161,9 @@ export const useSuggestedValues = (
       // form values change across renders.
       const isResolvable =
         !modelError &&
-        variables.every(
-          (namespace) => isKnownNamespace(namespace) && suggestionVariables[namespace]
-        );
+        variables.every((namespace) => isKnownNamespace(namespace) && resolvedVariables[namespace]);
       const resolvedName = isResolvable
-        ? substituteVariables(parameterName, suggestionVariables)
+        ? substituteVariables(parameterName, resolvedVariables)
         : "";
       // Debounce values typed into a field (`${identifying_attribute}`) so they
       // re-query on settle; the seeded first value keeps static names instant.

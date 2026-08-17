@@ -4,7 +4,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { FormSuggestion } from "@/Core";
-import { MockedDependencyProvider } from "@/Test";
+import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI/words";
 import { SUGGESTION_NAMESPACES } from "./suggestionVariables";
@@ -288,6 +288,25 @@ describe("useSuggestedValues graphql flavor", () => {
 
     await waitFor(() => expect(result.current.data).not.toBeNull());
     expect(sentQueries[0]).toContain('name: "network"');
+  });
+
+  test("GIVEN a ${environment} filter value THEN the active environment UUID is filled in without a caller-supplied value", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({
+            root: "environments",
+            filter: { environment: "${environment}" },
+            value: "id",
+          })
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() => expect(result.current.data).not.toBeNull());
+    // Resolved from the active environment by the hook, not passed in by the caller.
+    expect(sentQueries[0]).toContain(`environment: ${JSON.stringify(EnvironmentDetails.env.id)}`);
+    expect(result.current.modelError).toBeNull();
   });
 
   test("GIVEN a non-navigational projection path THEN a model error is surfaced and nothing is fetched", async () => {
