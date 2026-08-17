@@ -48,6 +48,30 @@ describe("SuggestionsPopover", () => {
     expect(handleSuggestionClick).toHaveBeenCalledWith(labeled[0].value);
   });
 
+  it("returns focus to the input when a suggestion is selected", () => {
+    render(
+      <>
+        <input ref={ref} />
+        <SuggestionsPopover
+          suggestions={suggestions}
+          handleSuggestionClick={handleSuggestionClick}
+          filter={filter}
+          close={close}
+          isOpen={isOpen}
+          ref={ref}
+        />
+      </>
+    );
+
+    const input = screen.getByRole("textbox");
+
+    fireEvent.click(screen.getByText(suggestions[0].label));
+
+    // Selecting hands focus back to the field so tab navigation resumes there.
+    expect(input).toHaveFocus();
+    expect(close).toHaveBeenCalled();
+  });
+
   it("calls close when the popover is closed", () => {
     render(
       <>
