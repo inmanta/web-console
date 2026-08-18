@@ -32,7 +32,17 @@ const ICON_SIZE = { sm: "1rem", md: "1.125rem", lg: "1.375rem" };
  * per-row icons, or $size="lg" for the larger card-level icon (e.g. the Orchestrator card's
  * operational verdict).
  */
-export const IconBadge = styled.div<{ $tone: IconTone; $size?: "sm" | "md" | "lg" }>`
+interface IconBadgeProps {
+  $tone: IconTone;
+  $size?: "sm" | "md" | "lg";
+  "data-tone"?: IconTone;
+}
+
+export const IconBadge = styled.div.attrs<IconBadgeProps>(({ $tone }) => ({
+  // Exposes the semantic tone as a plain DOM attribute so tests can assert "which tone is this"
+  // without matching IconBadge's exact color-mix/PF-token CSS recipe.
+  "data-tone": $tone,
+}))<IconBadgeProps>`
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;

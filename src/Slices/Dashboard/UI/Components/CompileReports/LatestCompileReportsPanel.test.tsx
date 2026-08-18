@@ -1,6 +1,6 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
@@ -81,14 +81,15 @@ describe("LatestCompileReportsPanel", () => {
 
     render(setup());
 
-    // The icon renders on first paint with its pre-fetch fallback tone, so the assertion has to
-    // wait for the query to resolve and the tone to update, rather than just for the element to
-    // exist (findByTestId would resolve on the very first, pre-data render).
-    await waitFor(() =>
-      expect(screen.getByTestId("compile-reports-title-icon")).toHaveStyle({
-        color:
-          "color-mix(in srgb, var(--pf-t--global--icon--color--status--success--default) 70%, white)",
-      })
+    // The icon renders on first paint with its pre-fetch fallback tone (warning), so waiting on
+    // the row itself first proves the fixture was actually read, before asserting the tone that
+    // fixture should have flipped it to - rather than a bare waitFor that'd also pass if the
+    // query never resolved.
+    await screen.findAllByText("message");
+
+    expect(screen.getByTestId("compile-reports-title-icon")).toHaveAttribute(
+      "data-tone",
+      "success"
     );
   });
 
@@ -98,11 +99,11 @@ describe("LatestCompileReportsPanel", () => {
 
     render(setup());
 
-    await waitFor(() =>
-      expect(screen.getByTestId("compile-reports-title-icon")).toHaveStyle({
-        color:
-          "color-mix(in srgb, var(--pf-t--global--icon--color--status--warning--default) 70%, white)",
-      })
+    await screen.findAllByText("message");
+
+    expect(screen.getByTestId("compile-reports-title-icon")).toHaveAttribute(
+      "data-tone",
+      "warning"
     );
   });
 });

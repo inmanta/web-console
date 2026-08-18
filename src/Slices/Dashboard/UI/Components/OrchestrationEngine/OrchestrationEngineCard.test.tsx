@@ -164,14 +164,14 @@ describe("OrchestrationEngineCard", () => {
 
     render(setup());
 
-    // The icon renders on first paint with its pre-fetch fallback tone, so the assertion has to
-    // wait for the query to resolve and the tone to update, rather than just for the element to
-    // exist (findByTestId would resolve on the very first, pre-data render).
-    await waitFor(() =>
-      expect(screen.getByTestId("orchestration-engine-title-icon")).toHaveStyle({
-        color:
-          "color-mix(in srgb, var(--pf-t--global--icon--color--status--success--default) 70%, white)",
-      })
+    // The pre-fetch fallback tone is *also* success, so a bare wait on the tone would pass even
+    // if the query never resolved. Gate on the resolved compiles count first (its fallback is
+    // "0", so seeing "142" proves the fixture was actually read), then assert the tone.
+    await expectStat("compiles", "142", words("dashboard.orchestrationEngine.stats.compiles"));
+
+    expect(screen.getByTestId("orchestration-engine-title-icon")).toHaveAttribute(
+      "data-tone",
+      "success"
     );
   });
 
@@ -180,11 +180,14 @@ describe("OrchestrationEngineCard", () => {
 
     render(setup());
 
+    // The icon renders on first paint with its pre-fetch fallback tone (success), so the
+    // assertion has to wait for the query to resolve and the tone to update, rather than just
+    // for the element to exist (findByTestId would resolve on the very first, pre-data render).
     await waitFor(() =>
-      expect(screen.getByTestId("orchestration-engine-title-icon")).toHaveStyle({
-        color:
-          "color-mix(in srgb, var(--pf-t--global--icon--color--status--warning--default) 70%, white)",
-      })
+      expect(screen.getByTestId("orchestration-engine-title-icon")).toHaveAttribute(
+        "data-tone",
+        "warning"
+      )
     );
   });
 
