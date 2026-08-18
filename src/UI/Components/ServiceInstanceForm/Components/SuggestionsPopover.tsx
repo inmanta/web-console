@@ -1,7 +1,17 @@
 import React, { useEffect, forwardRef } from "react";
-import { Menu, MenuContent, MenuGroup, MenuItem, MenuList, Popper } from "@patternfly/react-core";
-import styled from "styled-components";
+import {
+  Menu,
+  MenuContent,
+  MenuFooter,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+  Popper,
+} from "@patternfly/react-core";
 import { SuggestionValue } from "@/Core";
+import { words } from "@/UI/words";
+
+export const MAX_VISIBLE_SUGGESTIONS = 50;
 
 interface Props {
   suggestions: SuggestionValue[];
@@ -9,6 +19,7 @@ interface Props {
   handleSuggestionClick: (value: string) => void;
   isOpen: boolean;
   close: () => void;
+  maxVisible?: number;
 }
 
 /**
@@ -32,11 +43,22 @@ interface Props {
  * @param {string} props.filter - The filter string matched against each suggestion's `label`.
  * @param {Function} props.close - Callback to close the popover (selection, click-outside, keyboard dismiss).
  * @param {boolean} props.isOpen - The current open state of the popover.
+ * @param {number} [props.maxVisible] - How many matches to render at once (defaults to {@link MAX_VISIBLE_SUGGESTIONS}). Extra matches are hidden behind the "more results" footer.
  * @param {React.RefObject<NonNullable<HTMLInputElement>>} props.ref - The ref for the input element.
  * @returns {React.FC} The rendered SuggestionsPopover component.
  */
 export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Props>(
-  ({ suggestions, handleSuggestionClick, filter, close, isOpen }, ref) => {
+  (
+    {
+      suggestions,
+      handleSuggestionClick,
+      filter,
+      close,
+      isOpen,
+      maxVisible = MAX_VISIBLE_SUGGESTIONS,
+    },
+    ref
+  ) => {
     if (!ref) {
       throw new Error("You need to define a ref for the SuggestionsPopover component.");
     }
@@ -49,6 +71,8 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
     const autocompleteOptions = suggestions.filter((suggestion) =>
       suggestion.label.toLowerCase().includes(filter.toLowerCase())
     );
+    const visibleOptions = autocompleteOptions.slice(0, maxVisible);
+    const hasMore = autocompleteOptions.length > visibleOptions.length;
 
     /**
      * Handles the suggestion click event.
@@ -143,11 +167,11 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
     };
 
     const autoCompleteSuggestions = (
-      <Menu ref={autocompleteRef}>
+      <Menu ref={autocompleteRef} isScrollable>
         <MenuContent>
-          <StyledMenu label="Suggested values" labelHeadingLevel="h3">
+          <MenuGroup label="Suggested values" labelHeadingLevel="h3">
             <MenuList>
-              {autocompleteOptions.map((suggestion) => (
+              {visibleOptions.map((suggestion) => (
                 <MenuItem
                   aria-label={suggestion.label}
                   key={`${suggestion.label}::${suggestion.value}`}
@@ -157,8 +181,16 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
                 </MenuItem>
               ))}
             </MenuList>
-          </StyledMenu>
+          </MenuGroup>
         </MenuContent>
+        {hasMore && (
+          <MenuFooter role="status" aria-live="polite">
+            {words("inventory.form.suggestions.moreResults")(
+              visibleOptions.length,
+              autocompleteOptions.length
+            )}
+          </MenuFooter>
+        )}
       </Menu>
     );
 
@@ -184,8 +216,3 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
     );
   }
 );
-
-const StyledMenu = styled(MenuGroup)`
-  max-height: 400px;
-  overflow-y: auto;
-`;

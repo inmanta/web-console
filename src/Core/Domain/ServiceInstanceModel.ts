@@ -113,18 +113,45 @@ export type RawFormSuggestion =
 /**
  * Interface representing the suggestions that are stored in the web_suggested_values.
  *
- * `values` holds the raw entries (see {@link RawFormSuggestion}): each is a plain
- * scalar (label and value are identical) or a `{ label, value }` pair where the
- * displayed/searched label differs from the submitted value.
+ * The active field depends on `type`: `values` holds the raw entries for the
+ * `literal` flavor (see {@link RawFormSuggestion}), `parameter_name` names the
+ * parameter to fetch for the `parameters` flavor, and `query` declares the live
+ * GraphQL query for the `graphql` flavor (see {@link GraphQLSuggestionQuery}).
  */
 export interface FormSuggestion {
   type: FormSuggestionType;
   values?: RawFormSuggestion[];
   parameter_name?: string;
+  query?: GraphQLSuggestionQuery;
 }
 
 /**
  * Type representing a form suggestion type.
- * Can be either "literal" or "parameters".
+ * Can be "literal", "parameters" or "graphql".
  */
-type FormSuggestionType = "literal" | "parameters";
+type FormSuggestionType = "literal" | "parameters" | "graphql";
+
+/**
+ * A value usable in a `graphql` suggestion filter: a scalar or `${...}` reference
+ * (resolved, then quoted, before the query runs), a list, or a nested input object.
+ * Objects and lists let a filter mirror any GraphQL filter input the author writes,
+ * e.g. `{ resourceType: { contains: ["%vm%"] } }`. Providing the correct filter
+ * shape is the annotation author's / backend schema's concern; a shape the server
+ * rejects surfaces as a query error.
+ */
+export type GraphQLFilterValue =
+  string | number | boolean | null | GraphQLFilterValue[] | { [key: string]: GraphQLFilterValue };
+
+/**
+ * Declares the live GraphQL query behind a `graphql` suggestion. `root` is the
+ * connection to query and `filter` narrows it (keys are camelCase GraphQL fields,
+ * values are literals or `${...}` references); `label`/`value` are snake_case
+ * jsonpath projections into each returned node - `value`-only yields values,
+ * `label` + `value` yields labels mapped to values.
+ */
+export interface GraphQLSuggestionQuery {
+  root: string;
+  filter?: Record<string, GraphQLFilterValue>;
+  label?: string;
+  value: string;
+}
