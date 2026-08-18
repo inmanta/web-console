@@ -4,7 +4,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { FormSuggestion } from "@/Core";
-import { MockedDependencyProvider } from "@/Test";
+import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI/words";
 import { SUGGESTION_NAMESPACES } from "./suggestionVariables";
@@ -200,5 +200,204 @@ describe("useSuggestedValues templated parameter names", () => {
     );
     expect(result.current.error).toBeNull();
     expect(requestedPaths).toEqual([]);
+  });
+});
+
+// Each environments node: attributes JSON (snake_case) projected via jsonpath.
+const environmentNodes = [
+  { id: "env-1", candidate_attributes: { network_name: "nw-a" } },
+  { id: "env-2", candidate_attributes: { network_name: "nw-b" } },
+];
+
+const graphql = (query: FormSuggestion["query"]): FormSuggestion => ({ type: "graphql", query });
+
+describe("useSuggestedValues graphql flavor", () => {
+  const sentQueries: string[] = [];
+
+  const server = setupServer(
+    http.post("/api/v2/graphql", async ({ request }) => {
+      const body = (await request.json()) as { query: string };
+
+      sentQueries.push(body.query);
+
+      // The endpoint double-wraps: graphql-request's request() strips the outer
+      // `data`, leaving the `{ data: { <root> }, errors, extensions }` envelope
+      // that consumers (and extractNodes) read via `.data`.
+      const envelope = {
+        data: { environments: { edges: environmentNodes.map((node) => ({ node })) } },
+      };
+
+      return HttpResponse.json({ data: envelope });
+    })
+  );
+
+  beforeAll(() => server.listen());
+  afterEach(() => {
+    server.resetHandlers();
+    testClient.clear();
+    sentQueries.length = 0;
+  });
+  afterAll(() => server.close());
+
+  test("GIVEN label + value projections THEN nodes are projected into { label, value }[]", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({ root: "environments", label: "candidate_attributes.network_name", value: "id" })
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() =>
+      expect(result.current.data).toEqual(
+        environmentNodes.map((node) => ({
+          label: node.candidate_attributes.network_name,
+          value: node.id,
+        }))
+      )
+    );
+    expect(result.current.modelError).toBeNull();
+  });
+
+  test("GIVEN a value-only projection THEN a list of values is produced", async () => {
+    const { result } = renderHook(
+      () => useSuggestedValues(graphql({ root: "environments", value: "id" })).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() =>
+      expect(result.current.data).toEqual(
+        environmentNodes.map((node) => ({ label: node.id, value: node.id }))
+      )
+    );
+  });
+
+  test("GIVEN a ${...} filter value THEN it is resolved into the sent query", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({
+            root: "environments",
+            filter: { name: "${entity_type}" },
+            value: "id",
+          }),
+          { entity_type: "network" }
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() => expect(result.current.data).not.toBeNull());
+    expect(sentQueries[0]).toContain('name: "network"');
+  });
+
+  test("GIVEN a ${environment} filter value THEN the active environment UUID is filled in without a caller-supplied value", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({
+            root: "environments",
+            filter: { environment: "${environment}" },
+            value: "id",
+          })
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() => expect(result.current.data).not.toBeNull());
+    // Resolved from the active environment by the hook, not passed in by the caller.
+    expect(sentQueries[0]).toContain(`environment: ${JSON.stringify(EnvironmentDetails.env.id)}`);
+    expect(result.current.modelError).toBeNull();
+  });
+
+  test("GIVEN a non-navigational projection path THEN a model error is surfaced and nothing is fetched", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({ root: "environments", label: "endpoints[*].name", value: "id" })
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    expect(result.current.modelError).toEqual(
+      words("inventory.form.suggestions.unsupportedPath")("endpoints[*].name")
+    );
+    expect(result.current.error).toBeNull();
+    expect(sentQueries).toEqual([]);
+  });
+
+  test("GIVEN a filter key that isn't a valid GraphQL field name THEN a model error is surfaced and nothing is fetched", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({
+            root: "environments",
+            filter: { "candidate_attributes.site": "brussels" },
+            value: "id",
+          })
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    expect(result.current.modelError).toEqual(
+      words("inventory.form.suggestions.invalidFilterKey")("candidate_attributes.site")
+    );
+    expect(result.current.error).toBeNull();
+    expect(sentQueries).toEqual([]);
+  });
+
+  test("GIVEN a filter depending on ${instance_id} WHEN absent (create form) THEN nothing is fetched", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({
+            root: "environments",
+            filter: { name: "${instance_id}" },
+            value: "id",
+          }),
+          { entity_type: "network" }
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    expect(result.current.data).toBeUndefined();
+    expect(sentQueries).toEqual([]);
+  });
+
+  test("GIVEN a graphql flavor without a query THEN a model error is surfaced", async () => {
+    const { result } = renderHook(() => useSuggestedValues(graphql(undefined)).useOneTime(), {
+      wrapper,
+    });
+
+    expect(result.current.modelError).toEqual(words("inventory.form.suggestions.invalidQuery"));
+    expect(sentQueries).toEqual([]);
+  });
+
+  test("GIVEN a filter with a cascading ${form:...} reference (not yet handled) THEN it surfaces as an unknown variable until #7011", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({
+            root: "serviceInstances",
+            value: "$.id",
+            filter: {
+              serviceEntity: "uplink",
+              candidateAttributes: { site: "${form:$.site}" },
+            },
+          })
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    // Cascading references aren't resolved yet (#7011); until then they are treated
+    // as unknown variables rather than fetched. To be revisited when T4 lands.
+    expect(result.current.modelError).toEqual(
+      words("inventory.form.suggestions.unknownVariable")(
+        "form:$.site",
+        SUGGESTION_NAMESPACES.join(", ")
+      )
+    );
+    expect(sentQueries).toEqual([]);
   });
 });

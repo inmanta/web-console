@@ -6,7 +6,7 @@ import { SuggestionValue } from "@/Core";
  * @param value - The value to check.
  * @returns Whether the value is a string or a number.
  */
-const isStringOrNumber = (value: unknown): value is string | number =>
+export const isStringOrNumber = (value: unknown): value is string | number =>
   typeof value === "string" || typeof value === "number";
 
 /**
