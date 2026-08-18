@@ -1,0 +1,6 @@
+description: Fixed the resource status bars on the Resources page rendering taller in their empty state than when they contain resources.
+issue-nr: 7128
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"
