@@ -16,6 +16,31 @@ describe("CompoundResourceStatus", () => {
     expect(emptyItems).toHaveLength(3); // blocked, compliance, lastHandlerRun
   });
 
+  it("renders the empty legend item at the same height as the filled items", () => {
+    const { unmount } = render(
+      <CompoundResourceStatus
+        resourceSummary={createMockResourceSummary()}
+        updateFilter={vi.fn()}
+      />
+    );
+
+    const filledHeight = getComputedStyle(screen.getAllByLabelText(/^LegendItem-/)[0]).height;
+
+    unmount();
+
+    render(
+      <CompoundResourceStatus
+        resourceSummary={createMockResourceSummary({ totalCount: 0 })}
+        updateFilter={vi.fn()}
+      />
+    );
+
+    const emptyHeight = getComputedStyle(screen.getAllByLabelText("LegendItem-empty")[0]).height;
+
+    expect(emptyHeight).not.toBe("");
+    expect(emptyHeight).toBe(filledHeight);
+  });
+
   it("renders all 3 legend bars when totalCount > 0", () => {
     render(
       <CompoundResourceStatus
