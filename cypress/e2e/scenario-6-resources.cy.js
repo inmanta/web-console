@@ -676,7 +676,7 @@ describe("Scenario 6 : Resources", () => {
         .last()
         .should("contain", "Successfully stored version");
       cy.get('[aria-label="Details"]').last().click();
-      cy.contains("Successfully stored version").should("be.visible");
+      cy.contains("Successfully stored version").scrollIntoView().should("be.visible");
     });
 
     it("6.3 OSS basic status sort menu", () => {
