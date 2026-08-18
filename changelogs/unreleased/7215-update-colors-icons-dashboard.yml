@@ -1,0 +1,6 @@
+description: The Compile Reports, Resource Manager and Orchestration Engine dashboard cards now color their title icon to match the environment health row's healthy/attention scheme, instead of a fixed color regardless of the actual status.
+issue-nr: 7215
+change-type: patch
+destination-branches: [master]
+sections:
+  bugfix: "{{description}}"

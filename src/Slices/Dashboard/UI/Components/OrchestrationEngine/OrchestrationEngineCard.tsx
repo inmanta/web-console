@@ -33,7 +33,8 @@ import {
   getTrendSeries,
   OrchestrationEngineTab,
 } from "../../orchestrationEngineMetrics";
-import { IconBadge } from "../IconBadge";
+import { HealthStatus } from "../EnvironmentHealth/StatusIndicator";
+import { HEALTH_TONE, IconBadge } from "../IconBadge";
 import { TrendChart } from "./TrendChart";
 
 type RangeDays = 7 | 14 | 30;
@@ -166,6 +167,11 @@ export const OrchestrationEngineCard: React.FC = () => {
   const activeTab = TABS.find((candidate) => candidate.key === tab) ?? TABS[0];
   const activeRangeLabel = RANGE_OPTIONS.find((option) => option.value === days)?.label ?? "";
   const trend = getTrendSeries(metrics, tab);
+  // Tracks failures across the whole selected date range, unlike deriveCompilesHealth (latest
+  // single report), so it doesn't reuse that derivation - but it does route through the same
+  // HealthStatus/HEALTH_TONE vocabulary as the other cards for a consistent tone mapping.
+  const health: HealthStatus =
+    (Number(failedCompiles?.metadata.total) || 0) > 0 ? "attention" : "healthy";
   const avgCompileSeconds = average(metrics?.metrics["orchestrator.compile_time"]);
   const avgWaitingSeconds = average(metrics?.metrics["orchestrator.compile_waiting_time"]);
 
@@ -238,7 +244,10 @@ export const OrchestrationEngineCard: React.FC = () => {
                 spaceItems={{ default: "spaceItemsSm" }}
               >
                 <FlexItem>
-                  <IconBadge $tone="warning">
+                  <IconBadge
+                    data-testid="orchestration-engine-title-icon"
+                    $tone={HEALTH_TONE[health]}
+                  >
                     <CodeIcon />
                   </IconBadge>
                 </FlexItem>

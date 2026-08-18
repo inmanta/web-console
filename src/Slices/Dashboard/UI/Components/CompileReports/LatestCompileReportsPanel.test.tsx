@@ -74,4 +74,36 @@ describe("LatestCompileReportsPanel", () => {
     expect(rows).toHaveLength(3);
     expect(screen.queryByText(words("dashboard.compileReports.empty"))).not.toBeInTheDocument();
   });
+
+  it("colors the title icon success when the latest compile succeeded", async () => {
+    // index 4 in the fixture: started, completed and success: true - a finished, successful compile.
+    respondWith(Mock.response.data.slice(4, 5));
+
+    render(setup());
+
+    // The icon renders on first paint with its pre-fetch fallback tone (warning), so waiting on
+    // the row itself first proves the fixture was actually read, before asserting the tone that
+    // fixture should have flipped it to - rather than a bare waitFor that'd also pass if the
+    // query never resolved.
+    await screen.findAllByText("message");
+
+    expect(screen.getByTestId("compile-reports-title-icon")).toHaveAttribute(
+      "data-tone",
+      "success"
+    );
+  });
+
+  it("colors the title icon warning when the latest compile did not succeed", async () => {
+    // index 0 in the fixture: started but not completed - still in progress, so not a success.
+    respondWith(Mock.response.data.slice(0, 1));
+
+    render(setup());
+
+    await screen.findAllByText("message");
+
+    expect(screen.getByTestId("compile-reports-title-icon")).toHaveAttribute(
+      "data-tone",
+      "warning"
+    );
+  });
 });

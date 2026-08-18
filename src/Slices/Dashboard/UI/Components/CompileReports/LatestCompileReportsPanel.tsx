@@ -14,8 +14,9 @@ import {
 import { CodeIcon } from "@patternfly/react-icons";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { deriveCompilesHealth } from "../../compilesHealth";
 import { useLatestCompileReports } from "../../useLatestCompileReports";
-import { IconBadge } from "../IconBadge";
+import { HEALTH_TONE, IconBadge } from "../IconBadge";
 import { LatestCompileReportRow } from "./LatestCompileReportRow";
 
 /**
@@ -28,6 +29,7 @@ export const LatestCompileReportsPanel: React.FC = () => {
   const { data } = useLatestCompileReports();
 
   const reports = data?.data ?? [];
+  const compilesHealth = deriveCompilesHealth(reports[0]);
 
   return (
     <Card>
@@ -51,7 +53,10 @@ export const LatestCompileReportsPanel: React.FC = () => {
             spaceItems={{ default: "spaceItemsSm" }}
           >
             <FlexItem>
-              <IconBadge $tone="warning">
+              <IconBadge
+                data-testid="compile-reports-title-icon"
+                $tone={HEALTH_TONE[compilesHealth.status]}
+              >
                 <CodeIcon />
               </IconBadge>
             </FlexItem>

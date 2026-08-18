@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { graphql, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
@@ -147,5 +147,41 @@ describe("ResourcesCard", () => {
       env: "aaa",
       state: { Resources: { filter: { status: ["blocked", "!orphaned"] } } },
     });
+  });
+
+  it("colors the title icon warning when resources have failed handler runs", async () => {
+    respondWith(createMockResourceSummary());
+
+    render(setup());
+
+    // The icon renders on first paint with its pre-fetch fallback tone (success), so the
+    // assertion has to wait for the query to resolve and the tone to update, rather than just
+    // for the element to exist (findByTestId would resolve on the very first, pre-data render).
+    await waitFor(() =>
+      expect(screen.getByTestId("resource-manager-title-icon")).toHaveAttribute(
+        "data-tone",
+        "warning"
+      )
+    );
+  });
+
+  it("colors the title icon success when no resources have failed handler runs", async () => {
+    respondWith(
+      createMockResourceSummary({
+        lastHandlerRun: { successful: 3, new: 0, failed: 0, skipped: 0 },
+      })
+    );
+
+    render(setup());
+
+    // The pre-fetch fallback tone is *also* success, so a bare wait on the tone would pass even
+    // if the query never resolved. Gate on the resolved tile value first to prove the fixture was
+    // actually read, then assert the tone.
+    await within(screen.getByTestId("stat-tile-success")).findByText("3");
+
+    expect(screen.getByTestId("resource-manager-title-icon")).toHaveAttribute(
+      "data-tone",
+      "success"
+    );
   });
 });
