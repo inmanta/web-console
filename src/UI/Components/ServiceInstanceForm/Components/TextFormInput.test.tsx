@@ -1,6 +1,6 @@
 import { act, useState } from "react";
 import { TextInputTypes } from "@patternfly/react-core";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { SuggestionValue } from "@/Core";
 import { TextFormInput } from "./TextFormInput";
 
@@ -42,6 +42,36 @@ describe("TextFormInput", () => {
     expect(input).toHaveValue(suggestions[0].label);
     // ...while the value is what gets submitted.
     expect(handleInputChange).toHaveBeenCalledWith(suggestions[0].value, null);
+  });
+
+  it("returns focus to the input and closes the list after selecting a suggestion", async () => {
+    const suggestions: SuggestionValue[] = [{ label: "10 Gbps", value: "10000" }];
+    const { handleInputChange } = setup(suggestions);
+
+    const input = screen.getByRole("textbox");
+
+    // Tabbing into the field opens the suggestion list.
+    await act(async () => {
+      fireEvent.focus(input);
+    });
+
+    // Arrow navigation moves focus off the input and into the list.
+    await act(async () => {
+      fireEvent.keyDown(input, { key: "ArrowDown" });
+    });
+    const option = screen.getByRole("menuitem", { name: suggestions[0].label });
+    expect(option).toHaveFocus();
+
+    await act(async () => {
+      fireEvent.click(option);
+    });
+
+    // Focus returns to the field so tab navigation continues from there...
+    expect(input).toHaveFocus();
+    expect(handleInputChange).toHaveBeenCalledWith(suggestions[0].value, null);
+    // ...and the list collapses rather than reopening on the refocus. Were it
+    // to reopen, it would stay open (never unmount) and this would time out.
+    await waitFor(() => expect(screen.queryByRole("menuitem")).not.toBeInTheDocument());
   });
 
   it("submits a plain string suggestion unchanged (label === value)", async () => {

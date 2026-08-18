@@ -63,6 +63,9 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
     ) => {
       event.stopPropagation();
       handleSuggestionClick(suggestion.value);
+      // Return focus to the input the list was opened from, so tab navigation
+      // continues from that field instead of resetting to the top of the page.
+      reference.current?.focus();
       close();
     };
 
