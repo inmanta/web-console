@@ -13,6 +13,7 @@ import {
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { AgentsTableControls } from "./AgentsTableControls";
+import { AgentsActionsButton } from "./Components";
 import { ConnectedFilterWidget } from "./FilterWidget";
 import { GetAgentsContext } from "./GetAgentsContext";
 import { TableProvider } from "./TableProvider";
@@ -52,7 +53,7 @@ export const Page: React.FC = () => {
 
   if (isError) {
     return (
-      <PageContainer pageTitle={words("agents.title")}>
+      <PageContainer pageTitle={words("agents.title")} actions={<AgentsActionsButton isDisabled />}>
         <ErrorView ariaLabel="AgentsView-Error" retry={refetch} message={error.message} />
       </PageContainer>
     );
@@ -62,6 +63,7 @@ export const Page: React.FC = () => {
     return (
       <PageContainer
         pageTitle={words("agents.title")}
+        actions={<AgentsActionsButton isDisabled={data.data.length <= 0} />}
         style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
       >
         <GetAgentsContext.Provider value={{ filter, sort, pageSize, currentPage }}>
@@ -103,7 +105,7 @@ export const Page: React.FC = () => {
   }
 
   return (
-    <PageContainer pageTitle={words("agents.title")}>
+    <PageContainer pageTitle={words("agents.title")} actions={<AgentsActionsButton isDisabled />}>
       <LoadingView ariaLabel="AgentsView-Loading" />
     </PageContainer>
   );

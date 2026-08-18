@@ -958,6 +958,26 @@ const dict = {
   "agents.actions.deploy": "Force deploy",
   "agents.actions.repair": "Force repair",
   "agents.actions.onResume": "Unpause agent when environment is resumed",
+  "agents.actions.menu.label": "Actions",
+  "agents.actions.pauseAll": "Pause all",
+  "agents.actions.resumeAll": "Resume all",
+  "agents.actions.keepPausedOnResumeAll": "Keep paused on resume",
+  "agents.actions.unpauseOnResumeAll": "Unpause on resume",
+  "agents.actions.removeAllVenvs": "Remove all agent venvs",
+  "agents.actions.pauseAll.requested": "Pausing all agents has been requested",
+  "agents.actions.resumeAll.requested": "Resuming all agents has been requested",
+  "agents.actions.keepPausedOnResumeAll.requested":
+    "Keep paused on resume has been requested for all agents",
+  "agents.actions.unpauseOnResumeAll.requested":
+    "Unpause on resume has been requested for all agents",
+  "agents.actions.removeAllVenvs.requested": "Removal of all agent venvs has been requested",
+  "agents.actions.removeAllVenvs.modal.title": "Remove all agent venvs",
+  "agents.actions.removeAllVenvs.confirmation.p1":
+    "This will remove the virtual environments (venvs) of all agents.",
+  "agents.actions.removeAllVenvs.confirmation.p2":
+    "This action is asynchronous and might take a long time until the venvs are actually removed, because all executing agent operations will be allowed to finish first.",
+  "agents.actions.removeAllVenvs.confirmation.p3":
+    "As such, a long deploy operation might delay the removal of the venvs considerably.",
   "agents.filters": "Filters",
   "agents.filters.status.placeholder": "Select status...",
   "agents.filters.name.placeholder": "Filter by name",
