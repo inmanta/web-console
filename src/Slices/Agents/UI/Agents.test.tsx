@@ -8,6 +8,7 @@ import { setupServer } from "msw/node";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as AgentsMock from "@S/Agents/Core/Mock";
 import { Page } from "./Page";
@@ -22,11 +23,13 @@ const axe = configureAxe({
 function setup(halted: boolean = false) {
   const component = (
     <QueryClientProvider client={testClient}>
-      <TestMemoryRouter>
-        <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
-          <Page />
-        </MockedDependencyProvider>
-      </TestMemoryRouter>
+      <ModalProvider>
+        <TestMemoryRouter>
+          <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
+            <Page />
+          </MockedDependencyProvider>
+        </TestMemoryRouter>
+      </ModalProvider>
     </QueryClientProvider>
   );
 
@@ -69,6 +72,8 @@ describe("Agents", () => {
 
     expect(await screen.findByRole("generic", { name: "AgentsView-Empty" })).toBeInTheDocument();
 
+    expect(screen.getByRole("button", { name: words("agents.actions.menu.label") })).toBeDisabled();
+
     await act(async () => {
       const results = await axe(document.body);
 
@@ -87,6 +92,8 @@ describe("Agents", () => {
     render(component);
 
     expect(await screen.findByRole("region", { name: "AgentsView-Error" })).toBeInTheDocument();
+
+    expect(screen.getByRole("button", { name: words("agents.actions.menu.label") })).toBeDisabled();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -107,6 +114,10 @@ describe("Agents", () => {
     render(component);
 
     expect(await screen.findByRole("grid", { name: "AgentsView-Success" })).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("button", { name: words("agents.actions.menu.label") })
+    ).not.toBeDisabled();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -534,5 +545,62 @@ describe("Agents", () => {
     });
 
     expect(updatedRows2).toHaveLength(6);
+  });
+
+  test("Given the Agents view, the bulk Actions dropdown is shown next to the title", async () => {
+    server.use(
+      http.get("/api/v2/agents", () => {
+        return HttpResponse.json(AgentsMock.response);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(
+      await screen.findByRole("button", { name: words("agents.actions.menu.label") })
+    ).toBeVisible();
+
+    await act(async () => {
+      const results = await axe(document.body);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+
+  test("Given the Agents view, when triggering Pause all from the Actions dropdown, then the correct request is fired and the table refreshes", async () => {
+    const data = JSON.parse(JSON.stringify(AgentsMock.response));
+    server.use(
+      http.post("/api/v2/agents/pause", () => {
+        data.data.forEach((agent: { status: string; paused: string }) => {
+          agent.status = "paused";
+          agent.paused = "true";
+        });
+
+        return HttpResponse.json();
+      }),
+      http.get("/api/v2/agents", () => {
+        return HttpResponse.json(data);
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    await userEvent.click(
+      await screen.findByRole("button", { name: words("agents.actions.menu.label") })
+    );
+
+    await userEvent.click(screen.getByRole("menuitem", { name: words("agents.actions.pauseAll") }));
+
+    expect(await screen.findByText(words("agents.actions.pauseAll.requested"))).toBeVisible();
+
+    const updatedRows = await screen.findAllByRole("row", {
+      name: "Agents Table Row",
+    });
+
+    for (const row of updatedRows) {
+      expect(await within(row).findByText("paused")).toBeVisible();
+    }
   });
 });
