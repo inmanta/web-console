@@ -1,0 +1,6 @@
+description: Form fields can now cascade. A field's suggested values can depend on another field through ${form.<path>}/${self.<path>} references; the dependent field is blocked until its source has a value, then re-queries and clears its stale value when the source changes. Dependency cycles and missing references surface as model errors.
+issue-nr: 7011
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

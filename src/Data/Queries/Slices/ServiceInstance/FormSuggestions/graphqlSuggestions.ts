@@ -6,40 +6,35 @@ import {
   RawFormSuggestion,
 } from "@/Core";
 import { isStringOrNumber } from "./helpers";
-import { SuggestionVariables, extractVariables, substituteVariables } from "./suggestionVariables";
+import { SubstitutionValues, substituteVariables } from "./suggestionVariables";
 
 /**
- * Runtime construction, projection and validation for the `graphql` suggestion
- * flavor, whose query is generated from annotation data rather than a static
- * `gql`. Two languages meet in one annotation: `filter` keys are camelCase GraphQL
- * schema fields (sent to the server), while `label`/`value` are snake_case
- * jsonpath projections into each returned node (evaluated client-side). Paging and
- * ordering (`first`, `orderBy`, ...) are the author's / backend's concern - the
- * console imposes none, so a query gets whatever the server defaults to unless the
- * annotation asks for more.
+ * The `graphql` suggestion flavor: its query is generated from annotation data at runtime
+ * rather than a static `gql`. Two languages meet - `filter` keys are camelCase GraphQL fields
+ * (sent to the server); `label`/`value` are jsonpath projections into each returned node
+ * (evaluated client-side).
+ *
+ *   buildSuggestionQuery   query decl + resolved ${...} values -> a GraphQL query string
+ *   extractNodes           GraphQL response -> the Relay connection's nodes ([] on any bad shape)
+ *   projectNodes           nodes -> raw {label,value} suggestions (jsonpath, drops non-scalars)
+ *   getInvalidFilterKeys   query decl -> filter keys that aren't valid GraphQL names (model error)
+ *   getUnsupportedPaths    query decl -> label/value paths we can't evaluate (model error)
  */
 
 /** A valid GraphQL name; a `filter` key is emitted as one, so it must match. */
 const GRAPHQL_NAME_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
 /**
- * Serializes a filter value into GraphQL argument syntax, resolving `${...}` in
- * string leaves as it goes. Strings go through `JSON.stringify` (a valid, escaped
- * GraphQL string literal, so a form-supplied value with quotes or braces can't break
- * out of the query); numbers/booleans/null are emitted bare; arrays and nested
- * objects recurse, so a filter faithfully mirrors whatever GraphQL filter input the
- * author writes (e.g. `resourceType: {contains: ["%vm%"]}`).
+ * Serializes a filter value into GraphQL argument syntax, resolving `${...}` in string
+ * leaves as it goes. Strings are `JSON.stringify`d (an escaped literal, so a form-supplied
+ * value can't break out of the query); numbers/booleans/null are bare; arrays and objects
+ * recurse. Injection-safe at any depth: only structural tokens and primitives are emitted
+ * unquoted, never a data-derived string.
  *
- * Injection-safe at any depth: the only values emitted unquoted are structural
- * tokens this function writes and the number/boolean/null primitives - never a
- * data-derived string, which is the only place a `${...}` substitution lands.
- * Whether the resulting shape is valid for the target root is the author's /
- * backend schema's concern.
+ * @example
+ * serializeFilterValue({ contains: ["%${form.site}%"] }, { "form.site": "a" }) // => '{contains: ["%a%"]}'
  */
-const serializeFilterValue = (
-  value: GraphQLFilterValue,
-  variables: SuggestionVariables
-): string => {
+const serializeFilterValue = (value: GraphQLFilterValue, variables: SubstitutionValues): string => {
   if (value === null) {
     return "null";
   }
@@ -60,43 +55,30 @@ const serializeFilterValue = (
 };
 
 /**
- * Extracts the top-level GraphQL field a projection path reads from, so it can be
- * added to the selection set (e.g. `candidate_attributes.network_name` selects
- * `candidate_attributes`, `id` selects `id`). Returns null when the path does not
- * start with a member (e.g. a leading array index), which cannot map to a field.
- */
-const topLevelField = (path: string): string | null => {
-  const member = path
-    .trim()
-    .replace(/^\$/, "")
-    .replace(/^\./, "")
-    .match(/^[A-Za-z_][A-Za-z0-9_]*/);
-
-  return member ? member[0] : null;
-};
-
-/**
- * The GraphQL fields to request, derived from the projection paths. Deduplicated
- * and order-stable (value before label).
+ * The GraphQL fields to request, derived from each projection path's root member,
+ * deduplicated and order-stable (value before label).
+ *
+ * @example
+ * selectionFields({ value: "id", label: "candidate_attributes.name" }) // => ["id", "candidate_attributes"]
  */
 const selectionFields = ({ label, value }: GraphQLSuggestionQuery): string[] => {
   const fields = [value, ...(label ? [label] : [])]
-    .map(topLevelField)
+    .map(JsonPath.rootMember)
     .filter((field): field is string => field !== null);
 
   return [...new Set(fields)];
 };
 
 /**
- * Builds the runtime GraphQL query string for a `graphql` suggestion.
+ * Builds the runtime GraphQL query string for a `graphql` suggestion, targeting a Relay
+ * connection root. Omits the argument list when there is no filter.
  *
- * @param query - The annotation's query declaration.
- * @param variables - Values for `${...}` filter references, keyed by namespace.
- * @returns A GraphQL query string targeting a Relay connection root.
+ * @example
+ * buildSuggestionQuery({ root: "environments", value: "id" }, {}) // => "query { environments { edges { node { id } } } }"
  */
 export const buildSuggestionQuery = (
   query: GraphQLSuggestionQuery,
-  variables: SuggestionVariables
+  variables: SubstitutionValues
 ): string => {
   const filterEntries = Object.entries(query.filter ?? {});
   // Omit the argument list entirely when there is no filter: `root()` is invalid
@@ -116,11 +98,11 @@ const asRecord = (value: unknown): Record<string, unknown> | null =>
   typeof value === "object" && value !== null ? (value as Record<string, unknown>) : null;
 
 /**
- * Pulls the nodes out of a Relay connection response for `root`. `useGraphQLRequest`
- * hands back the GraphQL envelope `{ data: { <root>: ... } }` (read via
- * `data.data.<root>`, like `useGetEnvironmentPreview`/`useGetResources`). Any
- * missing/malformed shape - including the `{ data: null }` of an errored query -
- * collapses to an empty list instead of throwing.
+ * Pulls the nodes out of a Relay connection response for `root` (read via the envelope
+ * `data.data.<root>.edges[].node`). Any missing or malformed shape collapses to `[]`.
+ *
+ * @example
+ * extractNodes({ data: { environments: { edges: [{ node: { id: "e1" } }] } } }, "environments") // => [{ id: "e1" }]
  */
 export const extractNodes = (data: unknown, root: string): unknown[] => {
   const response = asRecord(data);
@@ -135,11 +117,11 @@ export const extractNodes = (data: unknown, root: string): unknown[] => {
 };
 
 /**
- * Projects each node into a raw suggestion via the shared jsonpath evaluator. A
- * node is dropped when its `value` path yields no single scalar; a declared
- * `label` is projected too, falling back to the value when it yields no scalar.
- * Output stays {@link RawFormSuggestion} for `normalizeSuggestions` to coerce, like
- * the other flavors.
+ * Projects each node into a raw suggestion by jsonpath: a node is dropped when its `value`
+ * path yields no single scalar, and a declared `label` falls back to the value when it does.
+ *
+ * @example
+ * projectNodes([{ id: "e1", name: "prod" }], { value: "id", label: "name" }) // => [{ label: "prod", value: "e1" }]
  */
 export const projectNodes = (
   nodes: unknown[],
@@ -169,34 +151,11 @@ export const projectNodes = (
   }, []);
 
 /**
- * The `${...}` namespaces referenced across all filter values, deduplicated.
- * Mirrors `extractVariables` for the parameters flavor, so the hook can gate the
- * fetch on their presence and flag unknown ones as a model error.
- */
-export const getFilterVariables = (query: GraphQLSuggestionQuery): string[] => {
-  const namespaces = new Set<string>();
-  const walk = (value: GraphQLFilterValue): void => {
-    if (typeof value === "string") {
-      extractVariables(value).forEach((namespace) => namespaces.add(namespace));
-    } else if (Array.isArray(value)) {
-      value.forEach(walk);
-    } else if (typeof value === "object" && value !== null) {
-      Object.values(value).forEach(walk);
-    }
-  };
-
-  Object.values(query.filter ?? {}).forEach(walk);
-
-  return [...namespaces];
-};
-
-/**
- * The filter keys - at any depth - that are not valid GraphQL names, so they can't
- * be emitted as field names. The usual mistake is a dotted jsonpath used as a filter
- * key (`candidate_attributes.site`): filter keys are GraphQL fields (nested fields
- * are nested objects), not projection paths. A non-empty result means the annotation
- * is broken and should surface as a model error rather than be sent as a query the
- * server rejects with a syntax error.
+ * The filter keys at any depth that are not valid GraphQL names (the usual mistake is a
+ * dotted jsonpath used as a filter key) - a non-empty result is a model error.
+ *
+ * @example
+ * getInvalidFilterKeys({ root: "r", value: "id", filter: { "a.b": 1 } }) // => ["a.b"]
  */
 export const getInvalidFilterKeys = (query: GraphQLSuggestionQuery): string[] => {
   const invalid: string[] = [];
@@ -219,9 +178,11 @@ export const getInvalidFilterKeys = (query: GraphQLSuggestionQuery): string[] =>
 };
 
 /**
- * The projection paths (`label`/`value`) that fall outside the evaluator's
- * supported navigational subset. A non-empty result means the annotation is
- * broken and should surface as a model error rather than silently yield nothing.
+ * The projection paths (`label`/`value`) that fall outside the evaluator's supported
+ * navigational subset - a non-empty result is a model error.
+ *
+ * @example
+ * getUnsupportedPaths({ root: "r", value: "items[*].id" }) // => ["items[*].id"]
  */
 export const getUnsupportedPaths = (query: GraphQLSuggestionQuery): string[] =>
   [query.value, ...(query.label ? [query.label] : [])].filter(
