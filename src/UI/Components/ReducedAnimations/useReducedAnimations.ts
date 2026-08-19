@@ -41,6 +41,7 @@ export const useReducedAnimations = (): {
     const handleChange = (): void => setReducedAnimationsState(getReducedAnimationsPreference());
 
     window.addEventListener(CHANGE_EVENT, handleChange);
+
     return () => window.removeEventListener(CHANGE_EVENT, handleChange);
   }, []);
 
