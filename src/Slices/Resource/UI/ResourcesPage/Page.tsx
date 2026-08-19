@@ -32,6 +32,7 @@ import {
   ConnectedFilterWidget,
   DeployButton,
   RepairButton,
+  DeployingAnimationBanner,
 } from "./Components";
 import { ResourcesTable } from "./ResourcesTable";
 import { createRows } from "./ResourcesTablePresenter";
@@ -222,6 +223,7 @@ export const Page: React.FC = () => {
           </DrawerContent>
         </Drawer>
       </PageSection>
+      <DeployingAnimationBanner deployingCount={deployingCount} />
     </>
   );
 };
