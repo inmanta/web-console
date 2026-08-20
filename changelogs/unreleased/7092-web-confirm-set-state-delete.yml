@@ -1,0 +1,6 @@
+description: Transfers that carry a `web_confirm` annotation now show that text as the confirmation prompt for set-state and delete actions, instead of the default message.
+issue-nr: 7092
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

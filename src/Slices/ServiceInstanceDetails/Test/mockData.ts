@@ -894,6 +894,7 @@ export const serviceModel: ServiceModel = {
         description: "up to update_start",
         target_operation: null,
         error_operation: null,
+        annotations: { web_confirm: "Apply the updated attributes to the running service?" },
       },
       {
         source: "update_start",
@@ -1254,6 +1255,9 @@ export const serviceModel: ServiceModel = {
         description: "up to deleting",
         target_operation: null,
         error_operation: null,
+        annotations: {
+          web_confirm: "Delete this service and all its resources? This cannot be undone.",
+        },
       },
       {
         source: "creating",

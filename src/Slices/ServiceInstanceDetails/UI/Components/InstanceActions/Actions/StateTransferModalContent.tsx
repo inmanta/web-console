@@ -22,6 +22,9 @@ export interface StateTransferModalContentProps {
   instance_display_identity: string;
   version: ParsedNumber;
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
+
+  /** Custom confirmation prompt from the transfer's `web_confirm` annotation. Falls back to the default confirmation text when absent. */
+  webConfirm?: string;
 }
 
 /**
@@ -34,6 +37,7 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
   instance_display_identity,
   version,
   setInterfaceBlocked,
+  webConfirm,
 }) => {
   const { authHelper } = useContext(DependencyContext);
   const username = authHelper.getUser();
@@ -79,7 +83,8 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
   return (
     <>
       <Content component="p">
-        {words("inventory.statustab.confirmMessage")(instance_display_identity, targetState)}
+        {webConfirm ??
+          words("inventory.statustab.confirmMessage")(instance_display_identity, targetState)}
       </Content>
       <Form>
         <FormGroup
