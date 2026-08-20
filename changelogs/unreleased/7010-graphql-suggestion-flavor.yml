@@ -1,6 +1,6 @@
 description: Form fields can now suggest values from a live GraphQL query via a new "graphql" web_suggested_values flavor, projecting each result node into the suggestion dropdown with jsonpath label/value paths.
 issue-nr: 7010
 change-type: minor
-destination-branches: [master, iso9]
+destination-branches: [iso9]
 sections:
   feature: "{{description}}"
