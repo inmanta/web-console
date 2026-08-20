@@ -235,6 +235,11 @@ export const useSuggestedValues = (
           // Keep the previous source's options while the new ones load, so the shown label
           // doesn't flash to its raw value between a source change and the refreshed list.
           placeholderData: keepPreviousData,
+          // The resolved query string is the freshness boundary: identical query = identical
+          // result for the form's lifetime. Marking it fresh stops a background refetch when a
+          // second field subscribes to the same key, which would otherwise toggle `isFetching`
+          // on the shared cache entry and flash every field sharing that query.
+          staleTime: Infinity,
         });
 
         // A source change has not reached the query until the debounce settles: during that
@@ -266,6 +271,11 @@ export const useSuggestedValues = (
         // Keep the previous source's options while the new ones load, so the shown label
         // doesn't flash to its raw value between a source change and the refreshed list.
         placeholderData: keepPreviousData,
+        // The resolved parameter name is the freshness boundary: identical name = identical
+        // result for the form's lifetime. Marking it fresh stops a background refetch when a
+        // second field subscribes to the same key, which would otherwise toggle `isFetching`
+        // on the shared cache entry and flash every field sharing that query.
+        staleTime: Infinity,
       });
 
       // A source change has not reached the query until the debounce settles: during that
