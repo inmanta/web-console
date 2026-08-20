@@ -49,7 +49,11 @@ describe("getAvailableStateTargets", () => {
 
     const result = getAvailableStateTargets("up", serviceEntity);
 
-    expect(result.map((stateTarget) => stateTarget.target)).toEqual(["update_start"]);
+    // "setting_start" (the web_button_* example transfer, issue #7093) sorts before "update_start"
+    expect(result.map((stateTarget) => stateTarget.target)).toEqual([
+      "setting_start",
+      "update_start",
+    ]);
   });
 
   it("should return multiple targets if there are multiple matching transfers", () => {
@@ -67,8 +71,9 @@ describe("getAvailableStateTargets", () => {
     const serviceEntity: ServiceModel = serviceModel;
 
     const result = getAvailableStateTargets("up", serviceEntity);
+    const updateStart = result.find((stateTarget) => stateTarget.target === "update_start");
 
-    expect(result[0].transfer.annotations?.web_confirm).toBe(
+    expect(updateStart?.transfer.annotations?.web_confirm).toBe(
       "Apply the updated attributes to the running service?"
     );
   });
@@ -93,6 +98,7 @@ describe("getExpertStateTargets", () => {
       "failed",
       "rejected",
       "rollback",
+      "setting_start",
       "start",
       "terminated",
       "up",

@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
 import { DropdownGroup, DropdownItem } from "@patternfly/react-core";
+import styled, { css } from "styled-components";
 import { ParsedNumber } from "@/Core";
 import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { words } from "@/UI";
+import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { StateTransferModalContent } from "./StateTransferModalContent";
 
@@ -76,11 +78,57 @@ export const StateAction: React.FC<Props> = ({
     <>
       <DropdownGroup label={words("instanceDetails.setState.label")}>
         {targets.map((stateTarget) => (
-          <DropdownItem onClick={() => onSelect(stateTarget)} key={stateTarget.target}>
-            {stateTarget.target}
-          </DropdownItem>
+          <StyledDropdownItem
+            onClick={() => onSelect(stateTarget)}
+            key={stateTarget.target}
+            isDanger={stateTarget.buttonVariant === "danger"}
+            $buttonVariant={stateTarget.buttonVariant}
+            icon={
+              stateTarget.buttonIcon && (
+                <DynamicFAIcon
+                  icon={stateTarget.buttonIcon}
+                  color={iconColorFor(stateTarget.buttonVariant)}
+                />
+              )
+            }
+          >
+            {stateTarget.buttonLabel}
+          </StyledDropdownItem>
         ))}
       </DropdownGroup>
     </>
   );
 };
+
+/**
+ * PatternFly's `Icon` sets its own `--pf-v6-c-icon__content--Color` default directly
+ * on the icon wrapper, which shadows any inherited `color` from an ancestor (e.g. a
+ * CSS custom-property override placed on the menu item). react-icons does honor an
+ * explicit `color`, applying it as an inline style that wins regardless - so icon
+ * coloring goes through `DynamicFAIcon`'s `color` prop, not CSS (issue #7093).
+ */
+const iconColorFor = (variant?: string): string | undefined => {
+  if (variant === "danger") {
+    return "var(--pf-t--global--icon--color--status--danger--default)";
+  }
+
+  if (variant === "warning") {
+    return "var(--pf-t--global--icon--color--status--warning--default)";
+  }
+
+  return undefined;
+};
+
+/**
+ * PatternFly's `isDanger` on DropdownItem already colors the text for `danger`
+ * (icon coloring is handled separately, see `iconColorFor`). `warning` has no
+ * PatternFly modifier at all, so its text color is set here explicitly - unlike
+ * the design mock, which only tints the icon for warning (issue #7093).
+ */
+const StyledDropdownItem = styled(DropdownItem)<{ $buttonVariant?: string }>`
+  ${({ $buttonVariant }) =>
+    $buttonVariant === "warning" &&
+    css`
+      --pf-v6-c-menu__item--Color: var(--pf-t--global--text--color--status--warning--default);
+    `}
+`;
