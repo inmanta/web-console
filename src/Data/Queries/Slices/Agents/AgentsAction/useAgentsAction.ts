@@ -13,11 +13,7 @@ import { getAgentKey } from "../GetAgents/useGetAgents";
  * The bulk actions that can be applied to all agents at once.
  */
 export type AgentsBulkAction =
-  | "pause"
-  | "unpause"
-  | "keep_paused_on_resume"
-  | "unpause_on_resume"
-  | "remove_all_agent_venvs";
+  "pause" | "unpause" | "keep_paused_on_resume" | "unpause_on_resume" | "remove_all_agent_venvs";
 
 /**
  * Interface for the bulk agents action parameters

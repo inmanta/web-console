@@ -1203,6 +1203,7 @@ __metadata:
     highlight.js: "npm:^11.11.1"
     jest-axe: "npm:^10.0.0"
     jsdom: "npm:^29.0.2"
+    jsonpathly: "npm:^3.0.0"
     keycloak-js: "npm:^26.2.4"
     lint-staged: "npm:^16.4.0"
     madge: "npm:^6.1.0"
@@ -1214,9 +1215,10 @@ __metadata:
     mochawesome: "npm:^7.1.4"
     mochawesome-report-generator: "npm:^6.3.2"
     monaco-editor: "npm:^0.52.2"
+    monaco-graphql: "npm:^1.8.0"
     msw: "npm:^2.14.3"
     oidc-client-ts: "npm:^3.5.0"
-    prettier: "npm:^3.8.3"
+    prettier: "npm:^3.9.5"
     process: "npm:^0.11.10"
     qs: "npm:^6.15.2"
     react: "npm:^19.2.5"
@@ -7673,6 +7675,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphql-language-service@npm:^5.5.1":
+  version: 5.5.2
+  resolution: "graphql-language-service@npm:5.5.2"
+  dependencies:
+    debounce-promise: "npm:^3.1.2"
+    nullthrows: "npm:^1.0.0"
+    vscode-languageserver-types: "npm:^3.17.1"
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
+  bin:
+    graphql: dist/temp-bin.js
+  checksum: 10/0b921718005fafdba7a2a4b269f832469ba435417526aa8993f490453e1e7f6dc1508ae49a780a40089c20a4815f1e75c6ce4e0b128daee390a7e055f0a77082
+  languageName: node
+  linkType: hard
+
 "graphql-request@npm:^7.4.0":
   version: 7.4.0
   resolution: "graphql-request@npm:7.4.0"
@@ -8764,6 +8781,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsonpathly@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "jsonpathly@npm:3.0.0"
+  checksum: 10/606729d7ea924376fcbd2d5b0a99f200cbbe350825af3cbcd549b51435b92a796d28613174c3ab87da9ad629d5cd657a8a6d8d88c94535db42b9e67f9ab7f014
+  languageName: node
+  linkType: hard
+
 "jsprim@npm:^2.0.2":
   version: 2.0.2
   resolution: "jsprim@npm:2.0.2"
@@ -9766,6 +9790,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"monaco-graphql@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "monaco-graphql@npm:1.8.0"
+  dependencies:
+    graphql-language-service: "npm:^5.5.1"
+    picomatch-browser: "npm:^2.2.6"
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
+    monaco-editor: ">= 0.20.0 < 0.53"
+    prettier: ^2.8.0 || ^3.0.0
+  checksum: 10/23943301b122ba7398128ca842038b26f67024b7a50abdbf898e425e9628b64224da206c9f1e62559254f5d2f0eb5cb26423da8ed84d35306ab950ad5ec7f23e
+  languageName: node
+  linkType: hard
+
 "motion-dom@npm:^12.35.2":
   version: 12.35.2
   resolution: "motion-dom@npm:12.35.2"
@@ -10512,12 +10550,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.5.3, prettier@npm:^3.8.3":
+"prettier@npm:^3.5.3":
   version: 3.8.3
   resolution: "prettier@npm:3.8.3"
   bin:
     prettier: bin/prettier.cjs
   checksum: 10/4b3b12cbb29e4c96bed936e5d070167552500c18d37676fb3e0caae6199c42860662608e4dc116230698f6e2bb0267ef2548158224c92d40f188d309d72fdd6f
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^3.9.5":
+  version: 3.9.6
+  resolution: "prettier@npm:3.9.6"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 10/1dd1a1e0e40ec3b91cda9d294c4a95022aef61880ca3f441aad99b1252279f58a766c4cece81132c01550dcff1fd445efbd8812ea4a2374313e7fc6c8136f11f
   languageName: node
   linkType: hard
 

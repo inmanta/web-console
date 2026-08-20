@@ -393,8 +393,7 @@ describe("ResourcesPage", () => {
       server.use(
         queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
           const field = variables.filter?.[filterVariableKey as keyof typeof variables.filter] as
-            | { eq?: string[]; contains?: string[] }
-            | undefined;
+            { eq?: string[]; contains?: string[] } | undefined;
 
           //This is for now until we rework the filtering part where we don't have to manually pass %
           const values = (field?.eq ?? field?.contains ?? []).map((v: string) =>
@@ -447,11 +446,9 @@ describe("ResourcesPage", () => {
       server.use(
         queryLink.query("GetResources", ({ variables }: { variables: GqlVariables }) => {
           const fieldOne = variables.filter?.[filterKeyOne as keyof typeof variables.filter] as
-            | { eq?: string[]; contains?: string[] }
-            | undefined;
+            { eq?: string[]; contains?: string[] } | undefined;
           const fieldTwo = variables.filter?.[filterKeyTwo as keyof typeof variables.filter] as
-            | { eq?: string[]; contains?: string[] }
-            | undefined;
+            { eq?: string[]; contains?: string[] } | undefined;
 
           //This is for now until we rework the filtering part where we don't have to manually pass %
           const hasOne = (fieldOne?.eq ?? fieldOne?.contains ?? []).some(

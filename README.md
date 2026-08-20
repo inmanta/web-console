@@ -66,7 +66,6 @@ To enable authentication with keycloak, you can use environment variables, e.g. 
 
     VITE_SHOULD_USE_AUTH=true
 
-
 The keycloak parameters need to be specified in an external file in the production environment, called config.js, following the example src/config.js file.
 
 The base url of the backend services can also be specified here, e.g.:

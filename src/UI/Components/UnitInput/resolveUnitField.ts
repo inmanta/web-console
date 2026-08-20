@@ -25,9 +25,7 @@ function parseUnitScales(value: string | undefined): "metric" | "iec" | "both" |
  */
 function extractUnitBounds(attribute: AttributeModel): UnitBounds | undefined {
   const params = attribute.validation_parameters as
-    | Record<string, number | bigint | undefined>
-    | null
-    | undefined;
+    Record<string, number | bigint | undefined> | null | undefined;
 
   if (!params || typeof params !== "object") {
     return undefined;
@@ -47,8 +45,7 @@ function extractUnitBounds(attribute: AttributeModel): UnitBounds | undefined {
 }
 
 export type ResolveUnitFieldResult =
-  | { ok: true; config: UnitConfig; bounds?: UnitBounds }
-  | { ok: false; reason: string };
+  { ok: true; config: UnitConfig; bounds?: UnitBounds } | { ok: false; reason: string };
 
 /**
  * Resolves an attribute's `web_unit*` annotations (issue #7022) into a `UnitConfig` + bounds.

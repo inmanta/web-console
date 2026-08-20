@@ -33,7 +33,6 @@ You can list the unused exports by running:
 yarn ts-prune
 ```
 
-
 ## JSDOM & screen width
 
 Jest uses JSDOM. JSDOM defines the window innerWidth and innerHeight to be 1024 x 768 by default.

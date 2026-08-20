@@ -28,4 +28,3 @@ Is there an impact expected on existing features/workflows/user-groups?
 ### Additional Context
 
 Add any other context, sketches, links, or implementation notes that might be helpful for the frontend team.
-

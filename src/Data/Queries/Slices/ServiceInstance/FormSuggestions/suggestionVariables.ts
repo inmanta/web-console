@@ -15,12 +15,17 @@
  */
 
 /**
- * The namespaces the form can currently provide a value for.
+ * The namespaces a suggestion may reference via `${...}`. The first three are
+ * form-derived (supplied by the caller from the instance being edited);
+ * `environment` is FE-derived - the suggestions hook fills it with the active
+ * environment's UUID, so an annotation author can scope an environment-scoped
+ * root (e.g. `resources`) with `${environment}` without knowing the id.
  */
 export const SUGGESTION_NAMESPACES = [
   "entity_type",
   "identifying_attribute",
   "instance_id",
+  "environment",
 ] as const;
 
 export type SuggestionNamespace = (typeof SUGGESTION_NAMESPACES)[number];
@@ -79,19 +84,25 @@ export const getUnknownNamespaces = (parameterName: string): string[] =>
   extractVariables(parameterName).filter((namespace) => !isKnownNamespace(namespace));
 
 /**
- * Substitutes every `${...}` variable in a parameter name with its URL-encoded value.
+ * Substitutes every `${...}` variable in a string with its (encoded) value.
  *
- * Purely mechanical: callers are expected to have validated the parameter name with
+ * Purely mechanical: callers are expected to have validated the string with
  * {@link extractVariables} first. A variable without a value substitutes to "".
  *
- * @param parameterName - The parameter name, e.g. `"topology_files_${entity_type}"`.
+ * `encode` defaults to `encodeURIComponent` (the REST path uses the result as a
+ * URL segment); the GraphQL flavor passes identity, since it escapes the value
+ * again as a GraphQL literal.
+ *
+ * @param input - The string, e.g. `"topology_files_${entity_type}"`.
  * @param variables - The values to substitute, keyed by namespace.
+ * @param encode - How to encode each substituted value (default `encodeURIComponent`).
  * @returns The resolved string, e.g. `"topology_files_Connection"`.
  */
 export const substituteVariables = (
-  parameterName: string,
-  variables: SuggestionVariables
+  input: string,
+  variables: SuggestionVariables,
+  encode: (value: string) => string = encodeURIComponent
 ): string =>
-  parameterName.replace(suggestionVariablePattern, (_match, namespace: string) =>
-    encodeURIComponent(variables[namespace] ?? "")
+  input.replace(suggestionVariablePattern, (_match, namespace: string) =>
+    encode(variables[namespace] ?? "")
   );

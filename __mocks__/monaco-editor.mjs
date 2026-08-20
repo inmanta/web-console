@@ -98,11 +98,5 @@ const KeyCode = {
   KEY_IN: 0,
 };
 
-export {
-  editor,
-  languages,
-  Uri,
-  KeyMod,
-  KeyCode,
-};
+export { editor, languages, Uri, KeyMod, KeyCode };
 export default { editor, languages, Uri, KeyMod, KeyCode };
