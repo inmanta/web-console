@@ -1,14 +1,49 @@
-import { ServiceInstanceModel, ServiceModel, TransferModel } from "@/Core";
+import {
+  ServiceInstanceModel,
+  ServiceModel,
+  StateModel,
+  TransferAnnotations,
+  TransferModel,
+} from "@/Core";
 
 /**
  * A target state reachable from the current state, paired with the transfer that
  * produces it. Carrying the transfer forward (rather than just its target string)
- * lets callers read its `annotations` (e.g. `web_confirm`).
+ * lets callers read its `annotations` (e.g. `web_confirm`). The button* fields are
+ * resolved once here (issue #7093) so `StateAction` can stay presentational.
  */
 export interface StateTarget {
   target: string;
   transfer: TransferModel;
+
+  /** Resolved Actions-dropdown label. Fallback chain: the transfer's
+   * `web_button_label` -> the target state's `web_label` -> the target state name. */
+  buttonLabel: string;
+
+  /** Font Awesome icon name for the Actions-dropdown item, straight from the
+   * transfer's `web_icon` annotation. No fallback. */
+  buttonIcon?: string;
+
+  buttonVariant?: TransferAnnotations["web_button_variant"];
 }
+
+/**
+ * Resolves the Actions-dropdown label for a transfer, per the fallback chain
+ * described on `StateTarget.buttonLabel`.
+ *
+ * @param {TransferModel} transfer - the transfer producing the target state
+ * @param {StateModel[]} states - the service model's lifecycle states, to look up the target's `web_label`
+ * @returns {string} the resolved label
+ */
+const resolveButtonLabel = (transfer: TransferModel, states: StateModel[]): string => {
+  if (transfer.annotations?.web_button_label) {
+    return transfer.annotations.web_button_label;
+  }
+
+  const targetState = states.find((state) => state.name === transfer.target);
+
+  return targetState?.annotations?.web_label || transfer.target;
+};
 
 /**
  * Method to find the transfer, if any, that allows on_update or on_delete from the
@@ -74,7 +109,13 @@ export const getAvailableStateTargets = (
   );
 
   return possibleStatesTransfers
-    .map((transfer: TransferModel) => ({ target: transfer.target, transfer }))
+    .map((transfer: TransferModel) => ({
+      target: transfer.target,
+      transfer,
+      buttonLabel: resolveButtonLabel(transfer, serviceEntity.lifecycle.states),
+      buttonIcon: transfer.annotations?.web_icon,
+      buttonVariant: transfer.annotations?.web_button_variant,
+    }))
     .sort((a, b) => (a.target < b.target ? -1 : a.target > b.target ? 1 : 0));
 };
 
