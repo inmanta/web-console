@@ -1215,6 +1215,7 @@ __metadata:
     mochawesome: "npm:^7.1.4"
     mochawesome-report-generator: "npm:^6.3.2"
     monaco-editor: "npm:^0.52.2"
+    monaco-graphql: "npm:^1.8.0"
     msw: "npm:^2.14.3"
     oidc-client-ts: "npm:^3.5.0"
     prettier: "npm:^3.9.5"
@@ -7674,6 +7675,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphql-language-service@npm:^5.5.1":
+  version: 5.5.2
+  resolution: "graphql-language-service@npm:5.5.2"
+  dependencies:
+    debounce-promise: "npm:^3.1.2"
+    nullthrows: "npm:^1.0.0"
+    vscode-languageserver-types: "npm:^3.17.1"
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
+  bin:
+    graphql: dist/temp-bin.js
+  checksum: 10/0b921718005fafdba7a2a4b269f832469ba435417526aa8993f490453e1e7f6dc1508ae49a780a40089c20a4815f1e75c6ce4e0b128daee390a7e055f0a77082
+  languageName: node
+  linkType: hard
+
 "graphql-request@npm:^7.4.0":
   version: 7.4.0
   resolution: "graphql-request@npm:7.4.0"
@@ -9771,6 +9787,20 @@ __metadata:
     monaco-editor: ">= 0.20.0 < 0.53"
     prettier: ^2.8.0 || ^3.0.0
   checksum: 10/1d0ae9642ba8599e78275395f53cafba473e87272f0027f74fc05dda56a57267715dc0f6eee38b9e18b9c7f9ccc4107dda33862063d069ca3597ad0fd1e4cf5a
+  languageName: node
+  linkType: hard
+
+"monaco-graphql@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "monaco-graphql@npm:1.8.0"
+  dependencies:
+    graphql-language-service: "npm:^5.5.1"
+    picomatch-browser: "npm:^2.2.6"
+  peerDependencies:
+    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
+    monaco-editor: ">= 0.20.0 < 0.53"
+    prettier: ^2.8.0 || ^3.0.0
+  checksum: 10/23943301b122ba7398128ca842038b26f67024b7a50abdbf898e425e9628b64224da206c9f1e62559254f5d2f0eb5cb26423da8ed84d35306ab950ad5ec7f23e
   languageName: node
   linkType: hard
 
