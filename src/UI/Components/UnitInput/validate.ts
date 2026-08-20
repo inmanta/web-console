@@ -25,8 +25,7 @@ export type UnitValidationError =
   | { kind: "bound"; op: BoundOp; limit: BigNumber; limitInUnit: BigNumber; unit: string };
 
 export type UnitValidationResult =
-  | { valid: true; apiValue: BigNumber | null }
-  | { valid: false; error: UnitValidationError };
+  { valid: true; apiValue: BigNumber | null } | { valid: false; error: UnitValidationError };
 
 function firstViolatedBound(
   apiValue: BigNumber,

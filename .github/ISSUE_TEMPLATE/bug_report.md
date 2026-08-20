@@ -37,4 +37,3 @@ If applicable, add screenshots or screen recordings to help explain your problem
 ### Additional Context
 
 Add any other context, logs, or implementation notes that might be helpful for the frontend team.
-
