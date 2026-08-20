@@ -79,8 +79,8 @@ describe("collectSuggestionReferences", () => {
     };
 
     expect(collectSuggestionReferences(suggestion)).toEqual([
-      { kind: "context", namespace: "entity_type", raw: "entity_type" },
-      { kind: "field", scope: "form", path: "site", raw: "form.site" },
+      { kind: "Context", namespace: "entity_type", raw: "entity_type" },
+      { kind: "Field", scope: "form", path: "site", raw: "form.site" },
     ]);
   });
 
@@ -98,7 +98,7 @@ describe("collectSuggestionReferences", () => {
     };
 
     expect(collectSuggestionReferences(suggestion)).toEqual([
-      { kind: "field", scope: "form", path: "site", raw: "form.site" },
+      { kind: "Field", scope: "form", path: "site", raw: "form.site" },
     ]);
   });
 });

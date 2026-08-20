@@ -111,12 +111,12 @@ export const extractVariables = (parameterName: string): string[] => {
  * original `${...}` content in every case.
  *
  * @example
- * { kind: "field", scope: "form", path: "site", raw: "form.site" }
+ * { kind: "Field", scope: "form", path: "site", raw: "form.site" }
  */
 export type ParsedReference =
-  | { kind: "context"; namespace: SuggestionNamespace; raw: string }
-  | ({ kind: "field" } & FieldReference)
-  | { kind: "unknown"; raw: string };
+  | { kind: "Context"; namespace: SuggestionNamespace; raw: string }
+  | ({ kind: "Field" } & FieldReference)
+  | { kind: "Unknown"; raw: string };
 
 /**
  * Narrows a parsed reference to a field reference (drops context/unknown).
@@ -126,27 +126,27 @@ export type ParsedReference =
  */
 export const isFieldReference = (
   reference: ParsedReference
-): reference is { kind: "field" } & FieldReference => reference.kind === "field";
+): reference is { kind: "Field" } & FieldReference => reference.kind === "Field";
 
 /**
  * Classifies one raw `${...}` content: `form.`/`self.` (with a non-empty path) is a field
  * reference, a known namespace is `context`, anything else is `unknown`.
  *
  * @example
- * parseReference("form.site")   // => { kind: "field", scope: "form", path: "site", raw: "form.site" }
- * parseReference("entity_type") // => { kind: "context", namespace: "entity_type", raw: "entity_type" }
+ * parseReference("form.site")   // => { kind: "Field", scope: "form", path: "site", raw: "form.site" }
+ * parseReference("entity_type") // => { kind: "Context", namespace: "entity_type", raw: "entity_type" }
  */
 export const parseReference = (raw: string): ParsedReference => {
   const match = raw.match(fieldReferencePattern);
 
   if (match) {
-    return { kind: "field", scope: match[1] as FieldScope, path: match[2], raw };
+    return { kind: "Field", scope: match[1] as FieldScope, path: match[2], raw };
   }
   if (isKnownNamespace(raw)) {
-    return { kind: "context", namespace: raw, raw };
+    return { kind: "Context", namespace: raw, raw };
   }
 
-  return { kind: "unknown", raw };
+  return { kind: "Unknown", raw };
 };
 
 /**
@@ -154,7 +154,7 @@ export const parseReference = (raw: string): ParsedReference => {
  * This is the structural extract step the dependency graph and blocking build on.
  *
  * @example
- * extractReferences("f_${form.site}") // => [{ kind: "field", scope: "form", path: "site", raw: "form.site" }]
+ * extractReferences("f_${form.site}") // => [{ kind: "Field", scope: "form", path: "site", raw: "form.site" }]
  */
 export const extractReferences = (input: string): ParsedReference[] =>
   extractVariables(input).map(parseReference);

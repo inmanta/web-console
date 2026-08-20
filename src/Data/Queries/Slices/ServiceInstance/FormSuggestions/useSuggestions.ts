@@ -85,9 +85,9 @@ const resolveReferences = (
   let hasUnresolvedContext = false;
 
   for (const reference of references) {
-    if (reference.kind === "unknown") {
+    if (reference.kind === "Unknown") {
       unknown.push(reference.raw);
-    } else if (reference.kind === "context") {
+    } else if (reference.kind === "Context") {
       if (!contextValues[reference.namespace]) {
         hasUnresolvedContext = true;
       }

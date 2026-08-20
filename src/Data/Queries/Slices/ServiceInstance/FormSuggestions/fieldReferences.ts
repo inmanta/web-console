@@ -65,7 +65,7 @@ export const resolveFieldReference = (
  * flavor). The one collector the hook, blocking, and dependency graph all read.
  *
  * @example
- * collectSuggestionReferences({ type: "parameters", parameter_name: "r_${form.site}" }) // => [{ kind: "field", ... }]
+ * collectSuggestionReferences({ type: "parameters", parameter_name: "r_${form.site}" }) // => [{ kind: "Field", ... }]
  */
 export const collectSuggestionReferences = (
   suggestion: FormSuggestion | null | undefined
@@ -90,7 +90,7 @@ export const collectSuggestionReferences = (
  * navigational subset - a non-empty result is a model error.
  *
  * @example
- * getUnsupportedFieldPaths([{ kind: "field", scope: "form", path: "a[*]", raw: "form.a[*]" }]) // => ["form.a[*]"]
+ * getUnsupportedFieldPaths([{ kind: "Field", scope: "form", path: "a[*]", raw: "form.a[*]" }]) // => ["form.a[*]"]
  */
 export const getUnsupportedFieldPaths = (references: ParsedReference[]): string[] =>
   references
@@ -131,7 +131,7 @@ export const getFieldDependencyNames = (
  * classifying each (context / field / unknown).
  *
  * @example
- * collectFilterReferences({ site: "${form.site}" }) // => [{ kind: "field", ... }]
+ * collectFilterReferences({ site: "${form.site}" }) // => [{ kind: "Field", ... }]
  */
 const collectFilterReferences = (
   filter?: Record<string, GraphQLFilterValue>

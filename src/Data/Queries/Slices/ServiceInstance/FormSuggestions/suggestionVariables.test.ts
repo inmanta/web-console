@@ -91,12 +91,12 @@ describe("substituteVariables", () => {
 
 describe("parseReference", () => {
   it.each(SUGGESTION_NAMESPACES)("classifies the context namespace %s", (namespace) => {
-    expect(parseReference(namespace)).toEqual({ kind: "context", namespace, raw: namespace });
+    expect(parseReference(namespace)).toEqual({ kind: "Context", namespace, raw: namespace });
   });
 
   it("classifies a form field reference, splitting scope from path on the first dot", () => {
     expect(parseReference("form.candidate_attributes.name")).toEqual({
-      kind: "field",
+      kind: "Field",
       scope: "form",
       path: "candidate_attributes.name",
       raw: "form.candidate_attributes.name",
@@ -105,7 +105,7 @@ describe("parseReference", () => {
 
   it("classifies a self field reference", () => {
     expect(parseReference("self.site")).toEqual({
-      kind: "field",
+      kind: "Field",
       scope: "self",
       path: "site",
       raw: "self.site",
@@ -114,7 +114,7 @@ describe("parseReference", () => {
 
   it("keeps a leading $ in the field reference path", () => {
     expect(parseReference("form.$.site")).toEqual({
-      kind: "field",
+      kind: "Field",
       scope: "form",
       path: "$.site",
       raw: "form.$.site",
@@ -122,12 +122,12 @@ describe("parseReference", () => {
   });
 
   it("treats a scope keyword without a path as unknown", () => {
-    expect(parseReference("form.")).toEqual({ kind: "unknown", raw: "form." });
-    expect(parseReference("form")).toEqual({ kind: "unknown", raw: "form" });
+    expect(parseReference("form.")).toEqual({ kind: "Unknown", raw: "form." });
+    expect(parseReference("form")).toEqual({ kind: "Unknown", raw: "form" });
   });
 
   it("treats an unsupported namespace as unknown", () => {
-    expect(parseReference("entity_typo")).toEqual({ kind: "unknown", raw: "entity_typo" });
+    expect(parseReference("entity_typo")).toEqual({ kind: "Unknown", raw: "entity_typo" });
   });
 });
 
@@ -138,14 +138,14 @@ describe("extractReferences", () => {
 
   it("classifies each reference, deduplicated and stable in order", () => {
     expect(extractReferences("${entity_type}_${form.site}_${entity_type}")).toEqual([
-      { kind: "context", namespace: "entity_type", raw: "entity_type" },
-      { kind: "field", scope: "form", path: "site", raw: "form.site" },
+      { kind: "Context", namespace: "entity_type", raw: "entity_type" },
+      { kind: "Field", scope: "form", path: "site", raw: "form.site" },
     ]);
   });
 
   it("finds a reference embedded in a larger value", () => {
     expect(extractReferences("%${form.site}%")).toEqual([
-      { kind: "field", scope: "form", path: "site", raw: "form.site" },
+      { kind: "Field", scope: "form", path: "site", raw: "form.site" },
     ]);
   });
 });

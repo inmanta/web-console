@@ -289,7 +289,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         <AppAlert
           key={message}
           title={message}
-          variant={AlertVariant.danger}
+          variant={AlertVariant.warning}
           testId="FieldDependencies-Error"
           isInline
         />
