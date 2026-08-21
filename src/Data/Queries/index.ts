@@ -14,6 +14,7 @@ export * from "./Slices/Order";
 export * from "./Slices/Parameters";
 export * from "./Slices/Project";
 export * from "./Slices/Resource";
+export * from "./Slices/ResourceActions";
 export * from "./Slices/Server";
 export * from "./Slices/Service";
 export * from "./Slices/ServiceInstance";

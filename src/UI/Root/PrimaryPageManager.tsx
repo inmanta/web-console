@@ -29,6 +29,7 @@ import { GraphiQLPage } from "@S/GraphiQL/UI";
 import { NotificationCenterPage } from "@S/Notification/UI/Center";
 import { ParametersPage } from "@S/Parameters/UI";
 import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
+import { ResourceActionsPage } from "@S/ResourceActions/UI";
 import { ResourceDetailsPage } from "@S/ResourceDetails/UI";
 import { ServiceCatalogPage } from "@S/ServiceCatalog/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
@@ -161,6 +162,10 @@ export class PrimaryPageManager implements PageManager {
         element: <DiscoveredResourceDetailsPage />,
       },
       Facts: { ...this.routeDictionary.Facts, element: <FactsPage /> },
+      ResourceActions: {
+        ...this.routeDictionary.ResourceActions,
+        element: <ResourceActionsPage />,
+      },
       ResourceDetails: {
         ...this.routeDictionary.ResourceDetails,
         element: <ResourceDetailsPage />,

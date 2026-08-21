@@ -36,6 +36,7 @@ export const kinds = [
   "DiscoveredResources",
   "DiscoveredResourceDetails",
   "Facts",
+  "ResourceActions",
   "ResourceDetails",
   "Resources",
 

@@ -180,5 +180,13 @@ export const resourceManager = (
       locked: !isEnvPresent,
       statusIndication: false,
     },
+    {
+      id: "ResourceActions",
+      label: routeManager.getRoute("ResourceActions").generateLabel(undefined),
+      url: routeManager.getRoute("ResourceActions").path,
+      external: false,
+      locked: !isEnvPresent,
+      statusIndication: false,
+    },
   ],
 });
