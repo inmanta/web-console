@@ -19,6 +19,7 @@ import { getFilterActions } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { ActiveFiltersSection } from "./ActiveFiltersSection";
 import { ResourceFilterForm } from "./ResourceFilterForm";
+import { ServiceFilterForm } from "./ServiceFilterForm";
 import { StatusFilterSelect } from "./StatusFilterSelect";
 
 interface FilterWidgetComponentProps {
@@ -72,6 +73,25 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
   };
   const clearStatusFilters = () => clearStringGroup("status", { disregardDefault: true });
 
+  const setServiceEntity = (entity: string | null) => {
+    setFilter({
+      ...filter,
+      serviceEntity: entity ?? undefined,
+      serviceInstance: undefined,
+      includeOwned: undefined,
+    });
+  };
+  const setServiceInstance = (instance: string | null) => {
+    setFilter({
+      ...filter,
+      serviceInstance: instance ?? undefined,
+      includeOwned: instance ? filter.includeOwned : undefined,
+    });
+  };
+  const setIncludeOwned = (includeOwned: boolean) => {
+    setFilter({ ...filter, includeOwned: includeOwned || undefined });
+  };
+
   return (
     <DrawerPanelContent isResizable minSize="300px">
       <DrawerHead>
@@ -108,6 +128,17 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
                     onChange={handleStatusChange}
                   />
                 </Tab>
+                <Tab
+                  eventKey={2}
+                  title={<TabTitleText>{words("resources.filters.tabs.service")}</TabTitleText>}
+                >
+                  <ServiceFilterForm
+                    filter={filter}
+                    onChangeServiceEntity={setServiceEntity}
+                    onChangeServiceInstance={setServiceInstance}
+                    onChangeIncludeOwned={setIncludeOwned}
+                  />
+                </Tab>
               </Tabs>
             </StackItem>
             <Divider />
@@ -122,6 +153,9 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
               clearAgentFilters={clearAgentFilters}
               clearValueFilters={clearValueFilters}
               clearStatusFilters={clearStatusFilters}
+              removeServiceEntity={() => setServiceEntity(null)}
+              removeServiceInstance={() => setServiceInstance(null)}
+              removeIncludeOwned={() => setIncludeOwned(false)}
             />
           </Stack>
         </Form>

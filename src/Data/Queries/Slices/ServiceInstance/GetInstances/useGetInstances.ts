@@ -30,6 +30,11 @@ interface UseContinuousOptions {
    * the previous results should clear on every keystroke.
    */
   keepPreviousData?: boolean;
+
+  /**
+   * Whether the query is allowed to run. Defaults to true.
+   */
+  enabled?: boolean;
 }
 
 /**
@@ -80,6 +85,7 @@ export const useGetInstances = (
           env,
         ]),
         queryFn: () => get(url),
+        enabled: options?.enabled ?? true,
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
         select: (data) => ({
           ...data,

@@ -24,6 +24,7 @@ interface Props {
   placeholderText?: string;
   hasCreation?: boolean;
   toggleIcon?: React.ReactNode;
+  maxMenuHeight?: string;
 }
 
 /**
@@ -40,6 +41,7 @@ interface Props {
  * @param hasCreation Wheter the component supports creating a new option when it's not yet available in the list
  * @param onCreate callback state function when the user selects to create a new option
  * @param toggleIcon Custom Icon component if you want a different toggleIcon
+ * @param maxMenuHeight When set, caps the options menu at this height and makes it scrollable (e.g. "300px")
  *
  * @returns SingleTextSelect Component
  */
@@ -294,6 +296,7 @@ export const SingleTextSelect: React.FC<Props> = ({
       }}
       toggle={toggle}
       selected={selected}
+      {...(props.maxMenuHeight ? { isScrollable: true, maxMenuHeight: props.maxMenuHeight } : {})}
     >
       <SelectList id="select-typeahead-listbox">
         {selectOptions.map((option, index) => (

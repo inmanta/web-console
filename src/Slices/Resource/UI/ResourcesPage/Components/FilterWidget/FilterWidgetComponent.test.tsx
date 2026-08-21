@@ -17,6 +17,12 @@ vi.mock("@/Data/Queries", () => ({
       fetchNextPage: vi.fn(),
     }),
   }),
+  useGetServiceModels: () => ({
+    useContinuousNoRefetch: () => ({ data: [] }),
+  }),
+  useGetInstances: () => ({
+    useContinuous: () => ({ data: { data: [] }, isLoading: false }),
+  }),
 }));
 
 const renderWithDrawer = (ui: React.ReactElement) =>
