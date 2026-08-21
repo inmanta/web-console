@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { words } from "@/UI";
 import { ActiveFiltersSection } from "./ActiveFiltersSection";
 
 const createHandlers = () => ({
@@ -12,6 +13,9 @@ const createHandlers = () => ({
   clearAgentFilters: vi.fn(),
   clearValueFilters: vi.fn(),
   clearStatusFilters: vi.fn(),
+  removeServiceEntity: vi.fn(),
+  removeServiceInstance: vi.fn(),
+  removeIncludeOwned: vi.fn(),
 });
 
 describe("ActiveFiltersSection", () => {
@@ -84,5 +88,36 @@ describe("ActiveFiltersSection", () => {
       })
     );
     expect(handlers.removeStatusChip).toHaveBeenCalledWith("deployed");
+  });
+
+  it("renders service scope chips and delegates their removal", async () => {
+    const filter = {
+      serviceEntity: "l2Connect",
+      serviceInstance: "e0f1b3d2-0000-0000-0000-000000000000",
+      includeOwned: true,
+    };
+
+    render(<ActiveFiltersSection filter={filter} {...handlers} />);
+
+    expect(screen.getByText(words("resources.filters.service.entity.label"))).toBeInTheDocument();
+    expect(screen.getByText(words("resources.filters.service.instance.label"))).toBeInTheDocument();
+    expect(
+      screen.getByText(words("resources.filters.service.includeOwned.label"))
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: /close l2Connect/i }));
+    expect(handlers.removeServiceEntity).toHaveBeenCalledTimes(1);
+
+    await userEvent.click(
+      screen.getByRole("button", { name: /close e0f1b3d2-0000-0000-0000-000000000000/i })
+    );
+    expect(handlers.removeServiceInstance).toHaveBeenCalledTimes(1);
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: new RegExp(`close ${words("resources.filters.service.includeOwned.chipValue")}`, "i"),
+      })
+    );
+    expect(handlers.removeIncludeOwned).toHaveBeenCalledTimes(1);
   });
 });

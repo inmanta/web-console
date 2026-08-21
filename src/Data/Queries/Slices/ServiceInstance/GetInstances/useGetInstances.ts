@@ -33,10 +33,21 @@ interface UseContinuousOptions {
 }
 
 /**
+ * Options for the useOneTime query.
+ */
+interface UseOneTimeOptions {
+  /**
+   * Whether the query is allowed to run. Defaults to true.
+   */
+  enabled?: boolean;
+}
+
+/**
  * Return Signature of the useGetInstances React Query
  */
 interface GetInstance {
   useContinuous: (options?: UseContinuousOptions) => UseQueryResult<HookResponse, CustomError>;
+  useOneTime: (options?: UseOneTimeOptions) => UseQueryResult<HookResponse, CustomError>;
 }
 
 /**
@@ -47,6 +58,7 @@ interface GetInstance {
  *
  * @returns {GetInstance} An object containing the different available queries.
  * @returns {UseQueryResult<HookResponse, CustomError>} returns.useContinuous - Fetch the instances with a recurrent query with an interval of 5s.
+ * @returns {UseQueryResult<HookResponse, CustomError>} returns.useOneTime - Fetch the instances once (no polling), refetching only when the query key changes.
  */
 export const useGetInstances = (
   serviceName: string,
@@ -68,24 +80,36 @@ export const useGetInstances = (
   const filterArray = filter ? Object.values(filter) : [];
   const sortArray = sort ? [sort.name, sort.order] : [];
 
+  const queryKey = getInstanceKey.list([
+    serviceName,
+    ...filterArray,
+    ...sortArray,
+    pageSize,
+    currentPage,
+    env,
+  ]);
+
+  const select = (data: ResponseBody): HookResponse => ({
+    ...data,
+    handlers: getPaginationHandlers(data.links, data.metadata),
+  });
+
   return {
     useContinuous: (options): UseQueryResult<HookResponse, CustomError> =>
       useQuery({
-        queryKey: getInstanceKey.list([
-          serviceName,
-          ...filterArray,
-          ...sortArray,
-          pageSize,
-          currentPage,
-          env,
-        ]),
+        queryKey,
         queryFn: () => get(url),
         refetchInterval: (query) => (query.state.error ? false : REFETCH_INTERVAL),
-        select: (data) => ({
-          ...data,
-          handlers: getPaginationHandlers(data.links, data.metadata),
-        }),
+        select,
         placeholderData: options?.keepPreviousData ? keepPreviousData : undefined,
+      }),
+    useOneTime: (options): UseQueryResult<HookResponse, CustomError> =>
+      useQuery({
+        queryKey,
+        queryFn: () => get(url),
+        enabled: options?.enabled ?? true,
+        refetchOnWindowFocus: false,
+        select,
       }),
   };
 };

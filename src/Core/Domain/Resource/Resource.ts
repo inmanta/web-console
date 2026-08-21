@@ -199,6 +199,9 @@ export interface Filter {
   agent?: string[];
   value?: string[];
   status?: string[];
+  serviceEntity?: string;
+  serviceInstance?: string;
+  includeOwned?: boolean;
 }
 
 export interface FilterWithDefaultHandling extends Filter {
@@ -228,7 +231,10 @@ export const isStatusSortKey = (key: SortKey): key is StatusSortKey => STATUS_SO
 
 export type SortKeyFromVersion = Exclude<SortKey, StatusSortKey>;
 
-export type FilterFromVersion = Omit<Filter, "status">;
+export type FilterFromVersion = Omit<
+  Filter,
+  "status" | "serviceEntity" | "serviceInstance" | "includeOwned"
+>;
 
 export interface IdDetails {
   resource_type: string;
