@@ -66,17 +66,36 @@ const isNavigational = (node: unknown): boolean => {
 };
 
 /**
+ * Parsing a jsonpath string into its AST is the expensive step, and annotation paths are a
+ * small, fixed set that always parse to the same result. So the support check is memoized by
+ * normalized path string: the map only grows by the number of distinct annotation paths, and a
+ * path's result never changes, so it never needs invalidating. This keeps the per-keystroke
+ * cascading work (a form can re-validate every field's paths on every edit) off the parser.
+ */
+const supportedPathCache = new Map<string, boolean>();
+
+/**
  * Whether `path` is within the supported navigational subset - validate an annotation path
- * with this before relying on `evaluate`.
+ * with this before relying on `evaluate`. Memoized by normalized path string.
  *
  * @example
  * isSupportedPath("endpoints[?@.name=='ep1'].region") // => true
  * isSupportedPath("items[*].id")                       // => false
  */
 export const isSupportedPath = (path: string): boolean => {
-  const ast = parse(normalizePath(path), { hideExceptions: true });
+  const normalized = normalizePath(path);
+  const cached = supportedPathCache.get(normalized);
 
-  return ast !== null && isNavigational(ast);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  const ast = parse(normalized, { hideExceptions: true });
+  const supported = ast !== null && isNavigational(ast);
+
+  supportedPathCache.set(normalized, supported);
+
+  return supported;
 };
 
 /**

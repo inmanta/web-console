@@ -35,7 +35,7 @@ interface Props {
   placeholder?: string;
   handleInputChange: (value: string[], event: React.FormEvent<HTMLInputElement> | null) => void;
   suggestions?: SuggestionValue[] | null;
-  errorMessage?: string | null;
+  warningMessage?: string | null;
   hint?: string | null;
   loading?: boolean;
 }
@@ -68,7 +68,7 @@ export const TextListFormInput: React.FC<Props> = ({
   placeholder,
   handleInputChange,
   suggestions = [],
-  errorMessage,
+  warningMessage,
   hint,
   loading = false,
   ...props
@@ -225,17 +225,11 @@ export const TextListFormInput: React.FC<Props> = ({
           />
         </TextInputGroupUtilities>
       </TextInputGroup>
-      {errorMessage && (
+      {(warningMessage || hint) && (
         <FormHelperText>
           <HelperText>
-            <HelperTextItem variant="error">{errorMessage}</HelperTextItem>
-          </HelperText>
-        </FormHelperText>
-      )}
-      {hint && (
-        <FormHelperText>
-          <HelperText>
-            <HelperTextItem>{hint}</HelperTextItem>
+            {warningMessage && <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>}
+            {hint && <HelperTextItem>{hint}</HelperTextItem>}
           </HelperText>
         </FormHelperText>
       )}

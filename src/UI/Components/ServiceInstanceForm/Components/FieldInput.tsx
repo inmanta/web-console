@@ -109,7 +109,7 @@ export const FieldInput: React.FC<Props> = ({
   // A cascading dependent field is "busy" from the instant its source changes until the new
   // query settles: the debounce window (isRefreshing) then the fetch (isFetching). While busy the
   // control is disabled (and shows a spinner) so its options can't be picked mid-change.
-  const dependencyNames = getFieldDependencyNames(suggestions);
+  const dependencyNames = useMemo(() => getFieldDependencyNames(suggestions), [suggestions]);
   const isCascading = dependencyNames.length > 0;
   const isLoadingSuggestions = !isBlocked && (isFetching || isRefreshing);
   const isRefreshingDependent = isCascading && isLoadingSuggestions;
@@ -152,7 +152,10 @@ export const FieldInput: React.FC<Props> = ({
   // instance are handled locally; a cleared value in turn changes its own dependents' sources,
   // cascading onward.
   const fieldPath = makePath(path, field.name);
-  const dependencySignature = getFieldReferences(suggestions)
+  // The references are structural (they change only with the annotation), so memoize them; the
+  // signature below resolves them against the live form values, so it necessarily reruns per render.
+  const fieldReferences = useMemo(() => getFieldReferences(suggestions), [suggestions]);
+  const dependencySignature = fieldReferences
     .map((reference) => {
       const resolved = resolveFieldReference(reference, fieldScopes);
 
@@ -245,7 +248,7 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           suggestions={suggestionsList}
-          errorMessage={modelError}
+          warningMessage={modelError}
           hint={blockedHint}
           loading={isLoadingSuggestions}
         />
@@ -271,7 +274,7 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           isTextarea
-          errorMessage={modelError}
+          warningMessage={modelError}
         />
       );
     case "Text":
@@ -297,7 +300,7 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           suggestions={suggestionsList}
-          errorMessage={modelError}
+          warningMessage={modelError}
           hint={blockedHint}
           loading={isLoadingSuggestions}
         />

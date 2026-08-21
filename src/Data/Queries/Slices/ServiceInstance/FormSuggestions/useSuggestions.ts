@@ -145,6 +145,12 @@ export const useSuggestedValues = (
   // without knowing the id.
   const resolvedVariables: SuggestionVariables = { ...suggestionVariables, environment: env };
 
+  // The `${...}` references a suggestion declares are structural: they change only with the
+  // annotation, never with the form's values. Memoize them so this parsing runs once per
+  // suggestion instead of on every keystroke across every field. Kept before the early returns
+  // below so the hook order stays stable.
+  const references = useMemo(() => collectSuggestionReferences(suggestions), [suggestions]);
+
   if (!suggestions) {
     return {
       useOneTime: () => ({
@@ -178,7 +184,6 @@ export const useSuggestedValues = (
     };
   }
 
-  const references = collectSuggestionReferences(suggestions);
   const { substitution, isResolvable, isBlocked, referenceError } = resolveReferences(
     references,
     resolvedVariables,

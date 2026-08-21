@@ -29,7 +29,7 @@ interface Props {
   isTextarea?: boolean;
   handleInputChange: (value, event) => void;
   suggestions?: SuggestionValue[] | null;
-  errorMessage?: string | null;
+  warningMessage?: string | null;
   hint?: string | null;
   loading?: boolean;
 }
@@ -51,7 +51,7 @@ export const TextFormInput: React.FC<Props> = ({
   isTextarea = false,
   shouldBeDisabled = false,
   suggestions = [],
-  errorMessage,
+  warningMessage,
   hint,
   loading = false,
   ...props
@@ -142,7 +142,7 @@ export const TextFormInput: React.FC<Props> = ({
           placeholder={placeholder}
           isRequired={!isOptional}
           isDisabled={shouldBeDisabled}
-          validated={errorMessage ? "error" : "default"}
+          validated={warningMessage ? "warning" : "default"}
           aria-describedby={`${attributeName}-helper`}
           aria-label={`TextareaInput-${attributeName}`}
         />
@@ -165,7 +165,7 @@ export const TextFormInput: React.FC<Props> = ({
             value={displayValue}
             onChange={(_event, value) => handleType(value)}
             isDisabled={shouldBeDisabled}
-            validated={errorMessage ? "error" : "default"}
+            validated={warningMessage ? "warning" : "default"}
             onFocus={() => hasSuggestions && setIsOpen(true)}
             onBlur={handleBlur}
             customIcon={
@@ -186,17 +186,11 @@ export const TextFormInput: React.FC<Props> = ({
           )}
         </>
       )}
-      {errorMessage && (
+      {(warningMessage || hint) && (
         <FormHelperText>
           <HelperText>
-            <HelperTextItem variant="error">{errorMessage}</HelperTextItem>
-          </HelperText>
-        </FormHelperText>
-      )}
-      {hint && (
-        <FormHelperText>
-          <HelperText>
-            <HelperTextItem>{hint}</HelperTextItem>
+            {warningMessage && <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>}
+            {hint && <HelperTextItem>{hint}</HelperTextItem>}
           </HelperText>
         </FormHelperText>
       )}
