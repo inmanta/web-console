@@ -37,8 +37,7 @@ interface UseContinuousOptions {
  */
 interface UseOneTimeOptions {
   /**
-   * Whether the query is allowed to run. Defaults to true. Set to false while a required input
-   * (e.g. the service entity) is still missing, so no request fires with an incomplete URL.
+   * Whether the query is allowed to run. Defaults to true.
    */
   enabled?: boolean;
 }
