@@ -60,7 +60,7 @@
     "@babel/plugin-transform-react-jsx": "^8.0.1",
     "@babel/plugin-transform-typescript": "^8.0.1",
     "@eslint/compat": "^2.1.0",
-    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/eslintrc": "^3.3.6",
     "@eslint/js": "^10.0.1",
     "@remix-run/router": "^1.23.3",
     "@stylistic/eslint-plugin-ts": "^4.4.1",
