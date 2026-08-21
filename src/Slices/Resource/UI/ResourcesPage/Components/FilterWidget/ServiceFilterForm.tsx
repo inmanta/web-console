@@ -44,10 +44,11 @@ export const ServiceFilterForm: React.FC<ServiceFilterFormProps> = ({
   onChangeServiceInstance,
   onChangeIncludeOwned,
 }) => {
+  const [entitySearch, setEntitySearch] = useState("");
   const [instanceSearch, setInstanceSearch] = useState("");
   const debouncedInstanceSearch = useDebounce(instanceSearch, 500);
 
-  const { data: serviceModels } = useGetServiceModels().useContinuousNoRefetch();
+  const { data: serviceModels } = useGetServiceModels().useOneTime();
 
   const { data: instancesData, isLoading: isLoadingInstances } = useGetInstances(
     filter.serviceEntity ?? "",
@@ -58,11 +59,14 @@ export const ServiceFilterForm: React.FC<ServiceFilterFormProps> = ({
       pageSize: { kind: "PageSize", value: "20" },
       currentPage: { kind: "CurrentPage", value: "" },
     }
-  ).useContinuous({ enabled: Boolean(filter.serviceEntity) });
+  ).useOneTime({ enabled: Boolean(filter.serviceEntity) });
 
   const entityOptions = useMemo<SelectOptionProps[]>(
-    () => (serviceModels ?? []).map((model) => ({ value: model.name, children: model.name })),
-    [serviceModels]
+    () =>
+      (serviceModels ?? [])
+        .filter((model) => model.name.toLowerCase().includes(entitySearch.toLowerCase()))
+        .map((model) => ({ value: model.name, children: model.name })),
+    [serviceModels, entitySearch]
   );
 
   const instanceOptions = useMemo<SelectOptionProps[]>(
@@ -88,6 +92,7 @@ export const ServiceFilterForm: React.FC<ServiceFilterFormProps> = ({
             selected={filter.serviceEntity ?? null}
             setSelected={(value) => onChangeServiceEntity(value || null)}
             options={entityOptions}
+            onSearchTextChanged={setEntitySearch}
             toggleAriaLabel="service-entity"
             maxMenuHeight="300px"
             placeholderText={words("resources.filters.service.entity.placeholder")}

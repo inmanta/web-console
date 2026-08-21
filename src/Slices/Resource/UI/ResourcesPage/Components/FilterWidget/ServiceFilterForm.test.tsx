@@ -6,12 +6,12 @@ import { ServiceFilterForm } from "./ServiceFilterForm";
 
 vi.mock("@/Data/Queries", () => ({
   useGetServiceModels: () => ({
-    useContinuousNoRefetch: () => ({
+    useOneTime: () => ({
       data: [{ name: "l2Connect" }, { name: "DirectInternetAccess" }],
     }),
   }),
   useGetInstances: () => ({
-    useContinuous: () => ({
+    useOneTime: () => ({
       data: { data: [{ id: "uuid-1", service_identity_attribute_value: "demo-cpe-ring" }] },
       isLoading: false,
     }),
@@ -45,15 +45,18 @@ describe("ServiceFilterForm", () => {
     expect(handlers.onChangeServiceEntity).toHaveBeenCalledWith("l2Connect");
   });
 
-  it("selects an instance once an entity is set", async () => {
+  it("filters the service entity options as you type", async () => {
     const handlers = createHandlers();
 
-    renderForm({ serviceEntity: "l2Connect" }, handlers);
+    renderForm({}, handlers);
 
-    await userEvent.click(screen.getByRole("combobox", { name: "service-instanceFilterInput" }));
-    await userEvent.click(screen.getByText("demo-cpe-ring"));
+    await userEvent.type(
+      screen.getByRole("combobox", { name: "service-entityFilterInput" }),
+      "Direct"
+    );
 
-    expect(handlers.onChangeServiceInstance).toHaveBeenCalledWith("uuid-1");
+    expect(screen.getByText("DirectInternetAccess")).toBeInTheDocument();
+    expect(screen.queryByText("l2Connect")).not.toBeInTheDocument();
   });
 
   it("clears the entity field when the entity is reset from outside", () => {

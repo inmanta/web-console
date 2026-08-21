@@ -18,10 +18,10 @@ vi.mock("@/Data/Queries", () => ({
     }),
   }),
   useGetServiceModels: () => ({
-    useContinuousNoRefetch: () => ({ data: [] }),
+    useOneTime: () => ({ data: [] }),
   }),
   useGetInstances: () => ({
-    useContinuous: () => ({ data: { data: [] }, isLoading: false }),
+    useOneTime: () => ({ data: { data: [] }, isLoading: false }),
   }),
 }));
 
