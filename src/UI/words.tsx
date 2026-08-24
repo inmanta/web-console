@@ -651,6 +651,7 @@ const dict = {
     `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying${
       count > 0 ? ", click to filter" : ""
     }`,
+  "resources.deploying.spinner": "Resources deploying",
   "resources.banner.manyDeploying": (count: number) =>
     `${count} resources are currently deploying. The deploying indicators may increase CPU usage.`,
   "resources.banner.disableAnimations": "Reduce animations",

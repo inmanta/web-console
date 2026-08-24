@@ -29,6 +29,7 @@ export * from "./ImageUpload";
 export * from "./IncludeExcludeIcons";
 export * from "./IncludeExcludeSelect";
 export * from "./InlineEditable";
+export * from "./InlineSpinner";
 export * from "./InstanceState";
 export * from "./LegendBar";
 export * from "./Link";
