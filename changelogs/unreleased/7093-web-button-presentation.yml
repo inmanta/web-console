@@ -1,0 +1,6 @@
+description: A set-state transfer in the Actions dropdown now renders as a labelled, iconed, styled menu item driven by the transfer's `web_button_label` / `web_icon` / `web_button_type` / `web_button_variant` annotations, instead of the raw target-state name.
+issue-nr: 7093
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"
