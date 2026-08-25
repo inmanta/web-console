@@ -53,8 +53,8 @@ describe("Page Actions - Success", () => {
 
     await userEvent.click(expertDropdown);
 
-    // expect 20 menu items (1 for the destroy action, and 19 others for state options)
-    expect(screen.getAllByRole("menuitem")).toHaveLength(20);
+    // expect 21 menu items (1 for the destroy action, and 20 others for state options)
+    expect(screen.getAllByRole("menuitem")).toHaveLength(21);
 
     const stateUp = screen.getByRole("menuitem", { name: "up" });
 
@@ -177,7 +177,7 @@ describe("Page Actions - Success", () => {
 
     const actions = screen.getAllByRole("menuitem");
 
-    expect(actions).toHaveLength(5);
+    expect(actions).toHaveLength(6);
 
     actions.forEach((action) => {
       expect(action).toBeEnabled();
@@ -243,6 +243,35 @@ describe("Page Actions - Success", () => {
 
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(screen.queryByTestId("error-toast-expert-state-message")).toBeNull();
+  });
+
+  it("Normal Instance Actions Enabled - set-state transfer with web_button_* annotations (issue #7093)", async () => {
+    const component = setupServiceInstanceDetails();
+
+    render(component);
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "Actions-Toggle" }));
+
+    // web_button_label overrides the raw target-state name ("setting_start"), and
+    // the transfer's web_icon is rendered on the item
+    const pushSettings = screen.getByRole("menuitem", { name: "Push settings" });
+
+    expect(pushSettings).toBeVisible();
+    expect(pushSettings).toContainElement(screen.getByTestId("FaSlidersH"));
+
+    // web_button_variant: "warning" does not apply the danger styling reserved for "danger"
+    expect(pushSettings.closest("li")).not.toHaveClass("pf-m-danger");
+
+    await userEvent.click(pushSettings);
+
+    // the transfer's own web_confirm annotation still replaces the default prompt
+    expect(screen.getByText(/push the current settings to the running service\?/i)).toBeVisible();
+
+    await userEvent.click(screen.getByRole("button", { name: /no/i }));
   });
 
   it("Normal Instance Actions - sends the user provided message on state transfer", async () => {
@@ -368,8 +397,8 @@ describe("Page Actions - Failed", () => {
 
     await userEvent.click(expertDropdown);
 
-    // expect 20 menu items (1 for the destroy action, and 19 others for state options)
-    expect(screen.getAllByRole("menuitem")).toHaveLength(20);
+    // expect 21 menu items (1 for the destroy action, and 20 others for state options)
+    expect(screen.getAllByRole("menuitem")).toHaveLength(21);
 
     const stateUp = screen.getByRole("menuitem", { name: "up" });
 
@@ -463,7 +492,7 @@ describe("Page Actions - Failed", () => {
 
     const actions = screen.getAllByRole("menuitem");
 
-    expect(actions).toHaveLength(5);
+    expect(actions).toHaveLength(6);
 
     actions.forEach((action) => {
       expect(action).toBeEnabled();
