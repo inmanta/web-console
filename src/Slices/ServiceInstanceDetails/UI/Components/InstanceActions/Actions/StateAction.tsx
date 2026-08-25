@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { DropdownGroup, DropdownItem } from "@patternfly/react-core";
 import styled, { css } from "styled-components";
 import { ParsedNumber } from "@/Core";
-import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
+import { StateTarget, iconColorFor } from "@/Slices/ServiceInstanceDetails/Utils";
 import { words } from "@/UI";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -77,10 +77,10 @@ export const StateAction: React.FC<Props> = ({
   return (
     <>
       <DropdownGroup label={words("instanceDetails.setState.label")}>
-        {targets.map((stateTarget) => (
+        {targets.map((stateTarget, index) => (
           <StyledDropdownItem
             onClick={() => onSelect(stateTarget)}
-            key={stateTarget.target}
+            key={`${stateTarget.target}-${index}`}
             isDanger={stateTarget.buttonVariant === "danger"}
             $buttonVariant={stateTarget.buttonVariant}
             icon={
@@ -98,25 +98,6 @@ export const StateAction: React.FC<Props> = ({
       </DropdownGroup>
     </>
   );
-};
-
-/**
- * PatternFly's `Icon` sets its own `--pf-v6-c-icon__content--Color` default directly
- * on the icon wrapper, which shadows any inherited `color` from an ancestor (e.g. a
- * CSS custom-property override placed on the menu item). react-icons does honor an
- * explicit `color`, applying it as an inline style that wins regardless - so icon
- * coloring goes through `DynamicFAIcon`'s `color` prop, not CSS (issue #7093).
- */
-const iconColorFor = (variant?: string): string | undefined => {
-  if (variant === "danger") {
-    return "var(--pf-t--global--icon--color--status--danger--default)";
-  }
-
-  if (variant === "warning") {
-    return "var(--pf-t--global--icon--color--status--warning--default)";
-  }
-
-  return undefined;
 };
 
 /**

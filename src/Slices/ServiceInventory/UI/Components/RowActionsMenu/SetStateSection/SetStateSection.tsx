@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
 import { Button, MenuItem, Content } from "@patternfly/react-core";
+import styled, { css } from "styled-components";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Queries";
-import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
+import { StateTarget, iconColorFor } from "@/Slices/ServiceInstanceDetails/Utils";
 import { ActionDisabledTooltip } from "@/UI/Components";
+import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -109,14 +111,24 @@ export const SetStateSection: React.FC<Props> = ({
 
   return (
     <>
-      {targets?.map((stateTarget) => (
-        <MenuItem
-          key={stateTarget.target}
+      {targets?.map((stateTarget, index) => (
+        <StyledMenuItem
+          key={`${stateTarget.target}-${index}`}
           isDisabled={isDisabled || isHalted}
           value={stateTarget.target}
           itemId={stateTarget.target}
           onClick={() => onSelect(stateTarget)}
           data-testid={`${id}-${stateTarget.target}`}
+          isDanger={stateTarget.buttonVariant === "danger"}
+          $buttonVariant={stateTarget.buttonVariant}
+          icon={
+            stateTarget.buttonIcon && (
+              <DynamicFAIcon
+                icon={stateTarget.buttonIcon}
+                color={iconColorFor(stateTarget.buttonVariant)}
+              />
+            )
+          }
         >
           <ActionDisabledTooltip
             isDisabled={isDisabled || isHalted}
@@ -127,9 +139,9 @@ export const SetStateSection: React.FC<Props> = ({
                 : words("inventory.statustab.actionDisabled")
             }
           >
-            {stateTarget.target}
+            {stateTarget.buttonLabel}
           </ActionDisabledTooltip>
-        </MenuItem>
+        </StyledMenuItem>
       ))}
       {(!targets || targets.length < 1) && (
         <MenuItem key={"no value"} value={"no value"} itemId={"no value"} isDisabled>
@@ -139,3 +151,17 @@ export const SetStateSection: React.FC<Props> = ({
     </>
   );
 };
+
+/**
+ * PatternFly's `isDanger` on MenuItem already colors the text for `danger`
+ * (icon coloring is handled separately, see `iconColorFor`). `warning` has no
+ * PatternFly modifier at all, so its text color is set here explicitly - unlike
+ * the design mock, which only tints the icon for warning (issue #7093).
+ */
+const StyledMenuItem = styled(MenuItem)<{ $buttonVariant?: string }>`
+  ${({ $buttonVariant }) =>
+    $buttonVariant === "warning" &&
+    css`
+      --pf-v6-c-menu__item--Color: var(--pf-t--global--text--color--status--warning--default);
+    `}
+`;

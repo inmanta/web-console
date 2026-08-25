@@ -118,4 +118,23 @@ describe("StateAction", () => {
 
     expect(screen.getAllByRole("menuitem")).toHaveLength(2);
   });
+
+  it("renders both entries when two targets share the same target state but come from differently-annotated transfers", () => {
+    renderStateAction([
+      buildTarget({
+        target: "update_acknowledged",
+        buttonLabel: "Acknowledge (fast)",
+        transfer: { ...baseTransfer, target: "update_acknowledged", error: "fast_rejected" },
+      }),
+      buildTarget({
+        target: "update_acknowledged",
+        buttonLabel: "Acknowledge (slow)",
+        transfer: { ...baseTransfer, target: "update_acknowledged", error: "slow_rejected" },
+      }),
+    ]);
+
+    expect(screen.getAllByRole("menuitem")).toHaveLength(2);
+    expect(screen.getByRole("menuitem", { name: "Acknowledge (fast)" })).toBeVisible();
+    expect(screen.getByRole("menuitem", { name: "Acknowledge (slow)" })).toBeVisible();
+  });
 });
