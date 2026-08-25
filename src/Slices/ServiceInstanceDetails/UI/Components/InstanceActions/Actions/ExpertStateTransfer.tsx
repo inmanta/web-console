@@ -8,7 +8,6 @@ import {
   FormSelectOption,
   TextArea,
   Content,
-  Spinner,
   Button,
   Flex,
   FlexItem,
@@ -16,7 +15,7 @@ import {
 import { ParsedNumber } from "@/Core";
 import { usePostExpertStateTransfer } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
-import { AppAlert } from "@/UI/Components";
+import { AppAlert, InlineSpinner } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
@@ -232,7 +231,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
             isDisabled={isPending}
           >
             {words("yes")}
-            {isPending && <Spinner size="sm" />}
+            {isPending && <InlineSpinner />}
           </Button>
         </FlexItem>
         <FlexItem>

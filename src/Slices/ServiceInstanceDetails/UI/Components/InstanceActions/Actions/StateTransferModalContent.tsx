@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useState } from "react";
 import {
   Content,
   Button,
-  Spinner,
   Flex,
   FlexItem,
   Form,
@@ -12,6 +11,7 @@ import {
 import { ParsedNumber } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
+import { InlineSpinner } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
@@ -106,7 +106,7 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
             isDisabled={isPending}
           >
             {words("yes")}
-            {isPending && <Spinner size="sm" />}
+            {isPending && <InlineSpinner />}
           </Button>
         </FlexItem>
         <FlexItem>

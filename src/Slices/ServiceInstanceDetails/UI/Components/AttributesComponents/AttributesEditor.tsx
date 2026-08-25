@@ -6,7 +6,6 @@ import {
   FormSelect,
   FormSelectOption,
   Content,
-  Spinner,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
@@ -15,6 +14,7 @@ import { ExpertPatchAttributes, usePatchAttributesExpert } from "@/Data/Queries"
 import { InstanceDetailsContext } from "@/Slices/ServiceInstanceDetails/Core/Context";
 import { AttributeSets } from "@/Slices/ServiceInstanceDetails/Utils";
 import { DependencyContext, words } from "@/UI";
+import { InlineSpinner } from "@/UI/Components";
 import { JSONEditor } from "@/UI/Components/JSONEditor";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
@@ -225,7 +225,7 @@ const ModalContent: React.FC<ModalContentProps> = ({ instance, selectedSet, edit
             isDisabled={isPending}
           >
             {words("yes")}
-            {isPending && <Spinner size="sm" />}
+            {isPending && <InlineSpinner />}
           </Button>
         </FlexItem>
         <FlexItem>
