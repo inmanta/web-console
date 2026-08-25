@@ -1,5 +1,5 @@
 description: |
-  Added a "Service" tab to the Resources page filter drawer. It narrows the resource list to a chosen service entity and, optionally, a specific instance, with an "include owned services" switch to also match the resources of the services that instance owns. These service filters are applied on top of any filters set on the Resource and Status tabs, and each chosen entity or instance is listed as an individually removable chip in the active filters, like the other filters.
+  Added a "Service" tab to the Resources page filter drawer. It narrows the resource list to a chosen service entity and, optionally, a specific instance, with an "include owned services" switch to also match the resources of the services that instance owns.
 issue-nr: 6506
 change-type: minor
 destination-branches: [master, iso9]
