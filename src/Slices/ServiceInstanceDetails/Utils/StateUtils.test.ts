@@ -1,4 +1,4 @@
-import { ServiceInstanceModel, ServiceModel, TransferModel } from "@/Core";
+import { ServiceInstanceModel, ServiceModel, StateModel, TransferModel } from "@/Core";
 import { getAvailableStateTargets, getExpertStateTargets, isTransferDisabled } from "./StateUtils";
 
 // Helper to create transfer objects with minimal properties
@@ -23,11 +23,23 @@ const createTransfer = (
   ...options,
 });
 
+// Helper to create a state object with minimal properties
+const createState = (name: string, options: Partial<StateModel> = {}): StateModel => ({
+  name,
+  export_resources: false,
+  purge_resources: false,
+  deleted: false,
+  ...options,
+});
+
 // Helper to create service model with transfers
-const createServiceModel = (transfers: TransferModel[] = []): ServiceModel => ({
+const createServiceModel = (
+  transfers: TransferModel[] = [],
+  states: StateModel[] = []
+): ServiceModel => ({
   name: "testService",
   environment: "test-env",
-  lifecycle: { initial_state: "start", states: [], transfers },
+  lifecycle: { initial_state: "start", states, transfers },
   attributes: [],
   config: {},
   embedded_entities: [],
@@ -162,6 +174,78 @@ describe("StateUtils", () => {
 
       expect(result).toHaveLength(1);
       expect(result[0].transfer.annotations?.web_confirm).toBe("Are you sure?");
+    });
+
+    describe("button presentation (issue #7093)", () => {
+      it("should resolve buttonLabel from the transfer's web_button_label first", () => {
+        const serviceModel = createServiceModel(
+          [
+            createTransfer("test_state", "target1", {
+              api_set_state: true,
+              annotations: { web_button_label: "Push settings" },
+            }),
+          ],
+          [createState("target1", { annotations: { web_label: "Ignored, state label" } })]
+        );
+
+        expect(getAvailableStateTargets("test_state", serviceModel)[0].buttonLabel).toBe(
+          "Push settings"
+        );
+      });
+
+      it("should fall back to the target state's web_label when the transfer has no web_button_label", () => {
+        const serviceModel = createServiceModel(
+          [createTransfer("test_state", "target1", { api_set_state: true })],
+          [createState("target1", { annotations: { web_label: "Target label" } })]
+        );
+
+        expect(getAvailableStateTargets("test_state", serviceModel)[0].buttonLabel).toBe(
+          "Target label"
+        );
+      });
+
+      it("should fall back to the target state name when neither web_button_label nor the state's web_label are set", () => {
+        const serviceModel = createServiceModel(
+          [createTransfer("test_state", "target1", { api_set_state: true })],
+          [createState("target1")]
+        );
+
+        expect(getAvailableStateTargets("test_state", serviceModel)[0].buttonLabel).toBe("target1");
+      });
+
+      it("should fall back to the target state name when the target state isn't in the lifecycle's states", () => {
+        const serviceModel = createServiceModel([
+          createTransfer("test_state", "target1", { api_set_state: true }),
+        ]);
+
+        expect(getAvailableStateTargets("test_state", serviceModel)[0].buttonLabel).toBe("target1");
+      });
+
+      it("should resolve buttonIcon and buttonVariant straight from the transfer's annotations", () => {
+        const serviceModel = createServiceModel([
+          createTransfer("test_state", "target1", {
+            api_set_state: true,
+            annotations: {
+              web_icon: "FaSlidersH",
+              web_button_variant: "warning",
+            },
+          }),
+        ]);
+        const result = getAvailableStateTargets("test_state", serviceModel)[0];
+
+        expect(result.buttonIcon).toBe("FaSlidersH");
+        expect(result.buttonVariant).toBe("warning");
+      });
+
+      it("should leave buttonIcon and buttonVariant undefined when the transfer has no annotations", () => {
+        const serviceModel = createServiceModel([
+          createTransfer("test_state", "target1", { api_set_state: true }),
+        ]);
+        const result = getAvailableStateTargets("test_state", serviceModel)[0];
+
+        expect(result.buttonIcon).toBeUndefined();
+        expect(result.buttonVariant).toBeUndefined();
+      });
     });
   });
 
