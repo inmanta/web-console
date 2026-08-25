@@ -1,22 +1,29 @@
 import { SuggestionValue } from "@/Core";
 
 /**
+ * Normalizing raw suggestion entries into the form's single `{ label, value }[]` contract,
+ * shared by every flavor.
+ *
+ *   normalizeSuggestions  raw values (unknown) -> { label, value }[] (or null if not an array)
+ *   isStringOrNumber      type guard for a scalar leaf
+ */
+
+/**
  * Type guard for a string or number scalar.
  *
- * @param value - The value to check.
- * @returns Whether the value is a string or a number.
+ * @example
+ * isStringOrNumber(3)  // => true
+ * isStringOrNumber({}) // => false
  */
 export const isStringOrNumber = (value: unknown): value is string | number =>
   typeof value === "string" || typeof value === "number";
 
 /**
- * Type guard for an explicit `{ label, value }` suggestion pair.
+ * Type guard for an explicit `{ label, value }` pair (each field a string or number, coerced to
+ * strings when normalized).
  *
- * Both fields may be a string or a number (e.g. numeric attributes); they are
- * coerced to strings when normalized.
- *
- * @param entry - The raw entry to check.
- * @returns Whether the entry is a `{ label, value }` pair of scalars.
+ * @example
+ * isLabelValuePair({ label: "1 Gbps", value: 1000 }) // => true
  */
 const isLabelValuePair = (
   entry: unknown
@@ -29,15 +36,12 @@ const isLabelValuePair = (
   isStringOrNumber(entry.value);
 
 /**
- * Normalizes a raw list of suggestion entries into a single `{ label, value }[]` shape.
+ * Normalizes raw suggestion entries into `{ label, value }[]`: a bare scalar becomes a pair with
+ * `label === value`, an explicit pair is string-coerced, anything else is dropped. Returns null
+ * when `values` is not an array.
  *
- * Every flavor (literal, parameters, ...) is reduced to this shape so the rest
- * of the form only deals with one contract. A bare scalar normalizes to a pair
- * where `label === value`; an explicit pair has its (possibly numeric) fields
- * coerced to strings; anything else is dropped.
- *
- * @param values - The raw values, of unknown shape.
- * @returns The normalized suggestions, or null when `values` is not an array.
+ * @example
+ * normalizeSuggestions(["dot1q", { label: "10 Gbps", value: 10000 }]) // => [{label:"dot1q",value:"dot1q"}, {label:"10 Gbps",value:"10000"}]
  */
 export const normalizeSuggestions = (values: unknown): SuggestionValue[] | null => {
   if (!Array.isArray(values)) {

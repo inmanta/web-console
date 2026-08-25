@@ -1,5 +1,5 @@
 import * as Maybe from "@/Core/Language/Maybe";
-import { evaluate, isSupportedPath } from "./JsonPath";
+import { evaluate, isSupportedPath, rootMember } from "./JsonPath";
 
 const data = {
   id: "instance-1",
@@ -90,5 +90,25 @@ describe("JsonPath.isSupportedPath", () => {
     "endpoints[invalid", // syntax error
   ])("rejects non-navigational path %s", (path) => {
     expect(isSupportedPath(path)).toBe(false);
+  });
+});
+
+describe("rootMember", () => {
+  it.each([
+    ["id", "id"],
+    ["candidate_attributes.network_name", "candidate_attributes"],
+    ["$.id", "id"],
+    ["$.candidate_attributes.network_name", "candidate_attributes"],
+    ["endpoints[?@.name=='ep1'].region", "endpoints"],
+    ["  site  ", "site"],
+  ])("reads the root member of %s as %s", (path, expected) => {
+    expect(rootMember(path)).toBe(expected);
+  });
+
+  it.each([
+    ["[0].region", "a leading array index"],
+    ["", "an empty path"],
+  ])("returns null for %s (%s)", (path) => {
+    expect(rootMember(path)).toBeNull();
   });
 });

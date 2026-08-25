@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -14,13 +14,21 @@ import {
   InstanceAttributeModel,
   DictListField,
   Field,
+  Maybe,
   NestedField,
   FormSuggestion,
   SuggestionValue,
 } from "@/Core";
 import { get } from "@/Core/Language/collection";
 import { toOptionalBoolean } from "@/Data";
-import { SuggestionVariables, useSuggestedValues } from "@/Data/Queries";
+import {
+  FieldScopes,
+  SuggestionVariables,
+  getFieldDependencyNames,
+  getFieldReferences,
+  resolveFieldReference,
+  useSuggestedValues,
+} from "@/Data/Queries";
 import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { UnitFormInput } from "@/UI/Components/UnitInput";
@@ -44,24 +52,25 @@ interface Props {
 }
 
 /**
- * function to update the state within the form.
+ * Updates form state at `path` with `value`; `multi` marks a multi-value update.
  *
- * @param {string} path - The path within the form state to update.
- * @param {unknown} value - The new value to set at the specified path.
- * @param {boolean} [multi] - Optional flag indicating if the update is for multiple values. Default is false.
- * @returns {void}
+ * @example
+ * getUpdate("endpoints.0.region", "r1") // sets that field in form state
  */
 type GetUpdate = (path: string, value: unknown, multi?: boolean) => void;
 
 /**
- * Combines the current path with the next path segment to create a new path.
+ * Joins a parent path with the next segment (parent may be null at the root).
  *
- * @param {string | null} path - The current path (can be null).
- * @param {string} next - The next path segment to append.
- * @returns {string} The new combined path.
+ * @example
+ * makePath("endpoints.0", "region") // => "endpoints.0.region"
  */
 const makePath = (path: string | null, next: string): string =>
   path === null ? next : `${path}.${next}`;
+
+/** The emptied value a field clears to, matched to its kind (list fields to `[]`, else `null`). */
+const emptyValueForField = (kind: Field["kind"]): unknown =>
+  kind === "TextList" || kind === "RelationList" ? [] : null;
 
 /**
  * FieldInput component for managing form input related to a specific field.
@@ -88,12 +97,32 @@ export const FieldInput: React.FC<Props> = ({
   suggestions,
   suggestionVariables,
 }) => {
-  const { data, isLoading, error, modelError } = useSuggestedValues(
-    suggestions,
-    suggestionVariables
-  ).useOneTime();
-  // Already normalized to { label, value }[] by useSuggestedValues; just forward it.
+  // Cascading fields: `form` resolves `${form.*}` from the form root; `self`
+  // resolves `${self.*}` within this field's own embedded instance (its own siblings only).
+  const fieldScopes: FieldScopes = {
+    form: formState,
+    self: path === null ? formState : get(formState, path),
+  };
+  const { data, isLoading, error, isFetching, modelError, isBlocked, isRefreshing } =
+    useSuggestedValues(suggestions, suggestionVariables, fieldScopes).useOneTime();
+
+  // A cascading dependent field is "busy" from the instant its source changes until the new
+  // query settles: the debounce window (isRefreshing) then the fetch (isFetching). While busy the
+  // control is disabled (and shows a spinner) so its options can't be picked mid-change.
+  const dependencyNames = useMemo(() => getFieldDependencyNames(suggestions), [suggestions]);
+  const isCascading = dependencyNames.length > 0;
+  const isLoadingSuggestions = !isBlocked && (isFetching || isRefreshing);
+  const isRefreshingDependent = isCascading && isLoadingSuggestions;
+
+  // Already normalized to { label, value }[] by useSuggestedValues; just forward it. The previous
+  // list is kept while refreshing (keepPreviousData in the hook), so the shown label stays stable
+  // instead of flashing its raw value between a source change and the refreshed list.
   const suggestionsList: SuggestionValue[] | null = !isLoading && !error ? (data ?? null) : null;
+  // While a cascading dependency has no value the control is blocked: disabled, no
+  // suggestions, with a hint naming the field to fill in first.
+  const blockedHint = isBlocked
+    ? words("inventory.form.suggestions.blocked")(dependencyNames.join(", "))
+    : undefined;
 
   // Get the controlled value for the field
   // If the value is an object or an array, it needs to be converted.
@@ -116,6 +145,40 @@ export const FieldInput: React.FC<Props> = ({
     },
     [getUpdate, path, field.name]
   );
+
+  // Cascading fields: clear this field's own value whenever a source it depends on changes, so a
+  // now-stale entry can't linger with a label its refreshed suggestions can no longer resolve.
+  // Everything is resolved against this field's own scopes, so `self`/`form` and each embedded
+  // instance are handled locally; a cleared value in turn changes its own dependents' sources,
+  // cascading onward.
+  const fieldPath = makePath(path, field.name);
+  // The references are structural (they change only with the annotation), so memoize them; the
+  // signature below resolves them against the live form values, so it necessarily reruns per render.
+  const fieldReferences = useMemo(() => getFieldReferences(suggestions), [suggestions]);
+  const dependencySignature = fieldReferences
+    .map((reference) => {
+      const resolved = resolveFieldReference(reference, fieldScopes);
+
+      return Maybe.isSome(resolved) ? resolved.value : "";
+    })
+    .join("\u0000");
+  const previousSignatureRef = useRef(dependencySignature);
+  // A locked existing attribute (edit mode, not newly added): the user can't re-pick a value, so
+  // clearing it would strand the form with an empty locked field. Mirrors the per-input disabled check.
+  const isLockedField = field.isDisabled && !isNew && get(originalState, fieldPath) !== undefined;
+
+  useEffect(() => {
+    // Skip the initial render (nothing changed yet) so an edit form keeps its stored values.
+    if (previousSignatureRef.current === dependencySignature) {
+      return;
+    }
+
+    previousSignatureRef.current = dependencySignature;
+
+    if (!isLockedField) {
+      getUpdate(fieldPath, emptyValueForField(field.kind));
+    }
+  }, [dependencySignature, getUpdate, fieldPath, field.kind, isLockedField]);
 
   switch (field.kind) {
     case "Boolean": {
@@ -173,9 +236,11 @@ export const FieldInput: React.FC<Props> = ({
           attributeValue={get<string[]>(formState, makePath(path, field.name), []) ?? []}
           description={field.description}
           shouldBeDisabled={
-            field.isDisabled &&
-            get(originalState, makePath(path, field.name).split(".")) !== undefined &&
-            !isNew
+            isBlocked ||
+            isRefreshingDependent ||
+            (field.isDisabled &&
+              get(originalState, makePath(path, field.name).split(".")) !== undefined &&
+              !isNew)
           }
           type={field.inputType}
           handleInputChange={(value, _event) => getUpdate(makePath(path, field.name), value)}
@@ -183,7 +248,9 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           suggestions={suggestionsList}
-          errorMessage={modelError}
+          warningMessage={modelError}
+          hint={blockedHint}
+          loading={isLoadingSuggestions}
         />
       );
     case "Textarea":
@@ -207,7 +274,7 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           isTextarea
-          errorMessage={modelError}
+          warningMessage={modelError}
         />
       );
     case "Text":
@@ -219,9 +286,11 @@ export const FieldInput: React.FC<Props> = ({
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
-            field.isDisabled &&
-            get(originalState, makePath(path, field.name)) !== undefined &&
-            !isNew
+            isBlocked ||
+            isRefreshingDependent ||
+            (field.isDisabled &&
+              get(originalState, makePath(path, field.name)) !== undefined &&
+              !isNew)
           }
           type={field.inputType}
           handleInputChange={(value, _event) => {
@@ -231,7 +300,9 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           suggestions={suggestionsList}
-          errorMessage={modelError}
+          warningMessage={modelError}
+          hint={blockedHint}
+          loading={isLoadingSuggestions}
         />
       );
     case "Unit":
@@ -347,7 +418,7 @@ export const FieldInput: React.FC<Props> = ({
 };
 
 /**
- * Get a placeholder for the given data type.
+ * The placeholder text for a field type, or undefined when the type needs none.
  *
  * @param {string} typeName - The data type name.
  * @returns {string | undefined} The placeholder string for the given data type, or undefined if not found.
@@ -367,7 +438,7 @@ const getPlaceholderForType = (typeName: string): string | undefined => {
 };
 
 /**
- * Get a type hint for the given data type.
+ * The type-hint text for a list or dict field type, or undefined for others.
  *
  * @param {string} typeName - The data type name.
  * @returns {string | undefined} The type hint string for the given data type, or undefined if not found.
@@ -534,8 +605,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   }, [list, itemIds.length]);
 
   /**
-   * Add a new formField group of the same type to the list.
-   * Stores the paths of the newly added elements.
+   * Appends a new empty sub-form of this type to the list and records its path.
    *
    * @returns void
    */
@@ -553,7 +623,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   };
 
   /**
-   * Delete method that also handles the update of the stored paths
+   * Returns a handler that removes item `index`, re-indexing the stored added-item paths.
    *
    * @param {index} number
    * @returns void
@@ -665,8 +735,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
 };
 
 /**
- * Attempts to parse a value as JSON, returning the original value if parsing fails.
- * This is a safe wrapper around JSON.parse that prevents throwing errors for invalid JSON.
+ * Parses `value` as JSON, returning the original value if parsing fails (never throws).
  *
  * @param {unknown} value - The value to attempt to parse as JSON
  * @returns The parsed JSON value if successful, or the original value if parsing fails
