@@ -8,6 +8,7 @@ import {
   HelperText,
   HelperTextItem,
   Popover,
+  Spinner,
   TextInputGroup,
   TextInputGroupMain,
   TextInputGroupUtilities,
@@ -34,7 +35,9 @@ interface Props {
   placeholder?: string;
   handleInputChange: (value: string[], event: React.FormEvent<HTMLInputElement> | null) => void;
   suggestions?: SuggestionValue[] | null;
-  errorMessage?: string | null;
+  warningMessage?: string | null;
+  hint?: string | null;
+  loading?: boolean;
 }
 
 /**
@@ -65,7 +68,9 @@ export const TextListFormInput: React.FC<Props> = ({
   placeholder,
   handleInputChange,
   suggestions = [],
-  errorMessage,
+  warningMessage,
+  hint,
+  loading = false,
   ...props
 }) => {
   const [inputValue, setInputValue] = React.useState("");
@@ -131,9 +136,10 @@ export const TextListFormInput: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (attributeValue && attributeValue.length) {
-      setCurrentChips(attributeValue);
-    }
+    // Fully controlled by the stored value: syncing on every change (not only a non-empty one)
+    // lets a cascade-cleared source empty the chips instead of leaving stale ones displayed.
+    // The stored value can momentarily be a non-array (e.g. a cleared scalar), so guard it.
+    setCurrentChips(Array.isArray(attributeValue) ? attributeValue : []);
   }, [attributeValue]);
 
   return (
@@ -183,6 +189,10 @@ export const TextListFormInput: React.FC<Props> = ({
           onChange={handleChangeInput}
           onFocus={() => hasSuggestions && setIsOpen(true)}
           onKeyDown={handleKeyDown}
+          // With suggestions this is a custom typeahead, so suppress the browser's own autofill
+          // dropdown - it overlaps and competes with the suggestions popover. `inputProps` targets
+          // the real <input>; a bare `autoComplete` would land on the wrapping element instead.
+          inputProps={hasSuggestions ? { autoComplete: "off" } : undefined}
         >
           <LabelGroup>
             {currentChips.map((currentChip) => (
@@ -199,6 +209,7 @@ export const TextListFormInput: React.FC<Props> = ({
           </LabelGroup>
         </TextInputGroupMain>
         <TextInputGroupUtilities>
+          {loading && <Spinner isInline aria-label={words("inventory.form.suggestions.loading")} />}
           <Button
             icon={words("catalog.callbacks.add")}
             variant="plain"
@@ -214,10 +225,11 @@ export const TextListFormInput: React.FC<Props> = ({
           />
         </TextInputGroupUtilities>
       </TextInputGroup>
-      {errorMessage && (
+      {(warningMessage || hint) && (
         <FormHelperText>
           <HelperText>
-            <HelperTextItem variant="error">{errorMessage}</HelperTextItem>
+            {warningMessage && <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>}
+            {hint && <HelperTextItem>{hint}</HelperTextItem>}
           </HelperText>
         </FormHelperText>
       )}

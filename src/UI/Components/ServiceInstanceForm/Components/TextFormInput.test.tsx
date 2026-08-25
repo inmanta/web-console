@@ -135,7 +135,7 @@ describe("TextFormInput", () => {
       fireEvent.change(input, { target: { value: "10000" } });
     });
 
-    // While editing, the raw value stays visible — it must not flip mid-typing.
+    // While editing, the raw value stays visible - it must not flip mid-typing.
     expect(input).toHaveValue("10000");
 
     // Leaving the field is the commit point: the value resolves to its label.
