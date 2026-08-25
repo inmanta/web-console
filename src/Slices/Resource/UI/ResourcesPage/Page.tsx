@@ -23,7 +23,7 @@ import {
   ErrorView,
   LoadingView,
   CompoundResourceStatus,
-  InlineSpinner,
+  Spinner,
   countActiveFilters,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -129,7 +129,7 @@ export const Page: React.FC = () => {
                   {deployingCount > 0 && (
                     <>
                       {deployingCount}
-                      <InlineSpinner aria-label={words("resources.deploying.spinner")} />
+                      <Spinner aria-label={words("resources.deploying.spinner")} />
                       <span>/</span>
                     </>
                   )}

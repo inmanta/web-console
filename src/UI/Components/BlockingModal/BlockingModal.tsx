@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useContext } from "react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
-import { InlineSpinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 
@@ -18,7 +18,7 @@ const SpinnerContent = ({ message }: { message: string }) => (
       </Content>
     </FlexItem>
     <FlexItem>
-      <InlineSpinner size={24} />
+      <Spinner size={24} />
     </FlexItem>
   </Flex>
 );

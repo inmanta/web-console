@@ -15,7 +15,7 @@ import {
 import { ParsedNumber } from "@/Core";
 import { usePostExpertStateTransfer } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
-import { AppAlert, InlineSpinner } from "@/UI/Components";
+import { AppAlert, Spinner } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
@@ -231,7 +231,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
             isDisabled={isPending}
           >
             {words("yes")}
-            {isPending && <InlineSpinner />}
+            {isPending && <Spinner />}
           </Button>
         </FlexItem>
         <FlexItem>

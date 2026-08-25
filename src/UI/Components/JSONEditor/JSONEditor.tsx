@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Editor, OnValidate, useMonaco } from "@monaco-editor/react";
 import { useGetJSONSchema } from "@/Data/Queries";
 import { words } from "@/UI";
-import { InlineSpinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components";
 import { useTheme } from "../DarkmodeOption";
 import { ErrorMessageContainer } from "../ErrorMessageContainer";
 
@@ -187,7 +187,7 @@ export const JSONEditor: React.FC<Props> = ({
   };
 
   return isLoading ? (
-    <InlineSpinner size={56} data-testid="loading-spinner" />
+    <Spinner size={56} data-testid="loading-spinner" />
   ) : (
     <div data-testid="JSON-Editor-Wrapper">
       <Editor

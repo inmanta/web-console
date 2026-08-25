@@ -4,7 +4,7 @@ import { Button, Content, Flex, FlexItem, Truncate } from "@patternfly/react-cor
 import { CheckCircleIcon, InfoAltIcon, TimesCircleIcon } from "@patternfly/react-icons";
 import { CompileStatus } from "@/Core/Domain";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
-import { DateWithTooltip, InlineSpinner } from "@/UI/Components";
+import { DateWithTooltip, Spinner } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
@@ -26,7 +26,7 @@ const STATUS_ICON: Record<CompileStatus, React.ReactNode> = {
   ),
   [CompileStatus.inprogress]: (
     <IconBadge $tone="brand" $size="sm">
-      <InlineSpinner />
+      <Spinner />
     </IconBadge>
   ),
   [CompileStatus.queued]: (

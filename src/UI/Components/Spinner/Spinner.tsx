@@ -18,7 +18,7 @@ const rotate = keyframes`
  * (`--pf-t--global--icon--color--brand--default`) rather than `currentColor`,
  * so it always renders the same brand blue regardless of ambient text color.
  */
-const StyledInlineSpinner = styled.span<{ $size: number; $ringWidth: number }>`
+const StyledSpinner = styled.span<{ $size: number; $ringWidth: number }>`
   display: inline-block;
   flex: none;
   width: ${({ $size }) => $size}px;
@@ -53,8 +53,8 @@ interface Props extends React.ComponentPropsWithoutRef<"span"> {
  *
  * @param size - Diameter in pixels, defaults to 12.
  */
-export const InlineSpinner: React.FC<Props> = ({ size = 12, ...rest }) => (
-  <StyledInlineSpinner
+export const Spinner: React.FC<Props> = ({ size = 12, ...rest }) => (
+  <StyledSpinner
     $size={size}
     $ringWidth={size / 8}
     role="progressbar"

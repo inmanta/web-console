@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@patternfly/react-core";
 import { useGetInstance } from "@/Data/Queries";
-import { InlineSpinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components";
 
 interface Props {
   id: string;
@@ -20,7 +20,7 @@ export const InstanceCellButton: React.FC<Props> = ({ id, serviceName, onClick }
   const { data, isLoading, isError, isSuccess } = useGetInstance(serviceName, id).useOneTime();
 
   if (isLoading) {
-    return <InlineSpinner />;
+    return <Spinner />;
   }
 
   if (isError) {

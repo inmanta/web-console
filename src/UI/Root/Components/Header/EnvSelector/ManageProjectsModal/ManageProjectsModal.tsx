@@ -16,7 +16,7 @@ import {
 import { FolderIcon, LockIcon } from "@patternfly/react-icons";
 import { ProjectModel } from "@/Core";
 import { useDeleteProject, useGetProjects } from "@/Data/Queries";
-import { InlineSpinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 /**
@@ -30,7 +30,7 @@ export const ManageProjectsModal: React.FC = () => {
     return (
       <Flex justifyContent={{ default: "justifyContentCenter" }}>
         <FlexItem>
-          <InlineSpinner size={24} />
+          <Spinner size={24} />
         </FlexItem>
       </Flex>
     );

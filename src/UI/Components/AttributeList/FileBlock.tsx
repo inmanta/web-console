@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@patternfly/react-core";
 import { DownloadIcon } from "@patternfly/react-icons";
 import { useGetFile } from "@/Data/Queries";
-import { InlineSpinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { Delayed } from "@/UI/Utils";
 import { words } from "@/UI/words";
@@ -74,7 +74,7 @@ export const FileBlock: React.FC<Props> = ({ hash }) => {
         {copyAndButton}
         <Delayed delay={500}>
           <div>
-            <InlineSpinner />
+            <Spinner />
           </div>
         </Delayed>
       </>

@@ -9,7 +9,7 @@ import {
   ToolbarGroup,
 } from "@patternfly/react-core";
 import { DryRun } from "@/Data/Queries";
-import { InlineSpinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { Progress as DomainProgress } from "@S/ComplianceCheck/Core/Domain";
 
@@ -142,7 +142,7 @@ const Progress: React.FC<{ report: DomainProgress }> = ({ report }) => {
       {current} / {tot}
     </Label>
   ) : (
-    <Label variant="outline" color="blue" icon={<InlineSpinner />}>
+    <Label variant="outline" color="blue" icon={<Spinner />}>
       {current} / {tot}
     </Label>
   );

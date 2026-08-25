@@ -2,7 +2,7 @@ import React from "react";
 import { Label } from "@patternfly/react-core";
 import { InfoAltIcon } from "@patternfly/react-icons";
 import { CompileStatus } from "@/Core";
-import { InlineSpinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components";
 
 /**
  * CompileStatusLabel component
@@ -31,7 +31,7 @@ export const CompileStatusLabel: React.FC<{ status: CompileStatus }> = ({ status
       );
     case CompileStatus.inprogress:
       return (
-        <Label color="blue" icon={<InlineSpinner />} variant="outline">
+        <Label color="blue" icon={<Spinner />} variant="outline">
           {status}
         </Label>
       );

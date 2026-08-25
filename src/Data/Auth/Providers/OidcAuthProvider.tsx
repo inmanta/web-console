@@ -3,7 +3,7 @@ import { AuthProvider as OidcContextProvider, useAuth } from "react-oidc-context
 import { useLocation, useNavigate } from "react-router";
 import { Bullseye, Button, Content, Stack, StackItem, Title } from "@patternfly/react-core";
 import { words } from "@/UI";
-import { InlineSpinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components";
 import { PrimaryBaseUrlManager } from "@/UI/Routing";
 import { AuthContext } from "../AuthContext";
 import { OidcAuthConfig } from "../types";
@@ -149,7 +149,7 @@ const OidcInnerProvider: React.FC<React.PropsWithChildren<InnerProps>> = ({
   if (auth.isLoading) {
     return (
       <Bullseye>
-        <InlineSpinner size={56} />
+        <Spinner size={56} />
       </Bullseye>
     );
   }
@@ -172,7 +172,7 @@ const OidcInnerProvider: React.FC<React.PropsWithChildren<InnerProps>> = ({
 
     return (
       <Bullseye>
-        <InlineSpinner size={56} />
+        <Spinner size={56} />
       </Bullseye>
     );
   }

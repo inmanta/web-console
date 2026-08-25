@@ -5,7 +5,7 @@ import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
 import { useDestroyInstance } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
-import { InlineSpinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
@@ -159,7 +159,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
             isDisabled={isPending}
           >
             {words("yes")}
-            {isPending && <InlineSpinner />}
+            {isPending && <Spinner />}
           </Button>
         </FlexItem>
         <FlexItem>

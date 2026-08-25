@@ -1,6 +1,6 @@
 import React from "react";
 import { EmptyState, Title } from "@patternfly/react-core";
-import { InlineSpinner } from "@/UI/Components";
+import { Spinner } from "@/UI/Components";
 import { Delayed } from "@/UI/Utils";
 import { words } from "@/UI/words";
 
@@ -9,7 +9,7 @@ interface Props {
   ariaLabel?: string;
 }
 
-const LoadingIcon = () => <InlineSpinner size={56} />;
+const LoadingIcon = () => <Spinner size={56} />;
 
 export const LoadingView: React.FC<Props> = ({ instant, ariaLabel, ...props }) => (
   <EmptyState isFullHeight {...props} aria-label={ariaLabel} role="region" icon={LoadingIcon}>
