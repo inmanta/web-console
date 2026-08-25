@@ -29,6 +29,7 @@ const parameterValues: Record<string, string[]> = {
   files_Router: ["router-1"],
   "files_site A/berlin": ["encoded-1"],
   files_0fd8d40c: ["instance-1"],
+  files_brussels: ["uplink-1", "uplink-2"],
 };
 
 const toSuggestions = (values: string[]) => values.map((value) => ({ label: value, value }));
@@ -199,6 +200,43 @@ describe("useSuggestedValues templated parameter names", () => {
       )
     );
     expect(result.current.error).toBeNull();
+    expect(requestedPaths).toEqual([]);
+  });
+
+  test("GIVEN a ${form.*} reference WHEN the form provides the value THEN the resolved parameter is fetched", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          parameters("files_${form.site}"),
+          {},
+          { form: { site: "brussels" }, self: {} }
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() =>
+      expect(result.current.data).toEqual(toSuggestions(parameterValues.files_brussels))
+    );
+
+    expect(result.current.isBlocked).toBe(false);
+    expect(requestedPaths).toEqual(["/api/v1/parameter/files_brussels"]);
+  });
+
+  test("GIVEN a ${form.*} reference WHEN the source has no value THEN the control is blocked and nothing is fetched", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          parameters("files_${form.site}"),
+          {},
+          { form: {}, self: {} }
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    expect(result.current.isBlocked).toBe(true);
+    expect(result.current.data).toBeUndefined();
     expect(requestedPaths).toEqual([]);
   });
 });
@@ -374,30 +412,75 @@ describe("useSuggestedValues graphql flavor", () => {
     expect(sentQueries).toEqual([]);
   });
 
-  test("GIVEN a filter with a cascading ${form:...} reference (not yet handled) THEN it surfaces as an unknown variable until #7011", async () => {
+  test("GIVEN a ${form.*} filter reference WHEN the form provides the value THEN it is resolved into the sent query", async () => {
     const { result } = renderHook(
       () =>
         useSuggestedValues(
-          graphql({
-            root: "serviceInstances",
-            value: "$.id",
-            filter: {
-              serviceEntity: "uplink",
-              candidateAttributes: { site: "${form:$.site}" },
-            },
-          })
+          graphql({ root: "environments", filter: { name: "${form.site}" }, value: "id" }),
+          {},
+          { form: { site: "brussels" }, self: {} }
         ).useOneTime(),
       { wrapper }
     );
 
-    // Cascading references aren't resolved yet (#7011); until then they are treated
-    // as unknown variables rather than fetched. To be revisited when T4 lands.
-    expect(result.current.modelError).toEqual(
-      words("inventory.form.suggestions.unknownVariable")(
-        "form:$.site",
-        SUGGESTION_NAMESPACES.join(", ")
-      )
+    await waitFor(() => expect(result.current.data).not.toBeNull());
+    expect(sentQueries[0]).toContain('name: "brussels"');
+    expect(result.current.isBlocked).toBe(false);
+    expect(result.current.modelError).toBeNull();
+  });
+
+  test("GIVEN a ${form.*} filter reference WHEN the source has no value THEN the control is blocked and nothing is fetched", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({ root: "environments", filter: { name: "${form.site}" }, value: "id" }),
+          {},
+          { form: {}, self: {} }
+        ).useOneTime(),
+      { wrapper }
     );
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    expect(result.current.isBlocked).toBe(true);
+    expect(result.current.data).toBeUndefined();
     expect(sentQueries).toEqual([]);
+  });
+
+  test("GIVEN a ${self.*} reference THEN it resolves against the field's own sub-tree, not the form root", async () => {
+    const { result } = renderHook(
+      () =>
+        useSuggestedValues(
+          graphql({ root: "environments", filter: { name: "${self.site}" }, value: "id" }),
+          {},
+          { form: { site: "form-level" }, self: { site: "self-level" } }
+        ).useOneTime(),
+      { wrapper }
+    );
+
+    await waitFor(() => expect(result.current.data).not.toBeNull());
+    // `self` reads its own sub-tree; the form-root value is never used (no outward search).
+    expect(sentQueries[0]).toContain('name: "self-level"');
+    expect(sentQueries[0]).not.toContain("form-level");
+  });
+
+  test("GIVEN a cascading source changing THEN the query re-runs with the new value (debounced)", async () => {
+    const { rerender } = renderHook(
+      ({ scopes }) =>
+        useSuggestedValues(
+          graphql({ root: "environments", filter: { name: "${form.site}" }, value: "id" }),
+          {},
+          scopes
+        ).useOneTime(),
+      { wrapper, initialProps: { scopes: { form: { site: "brussels" }, self: {} } } }
+    );
+
+    await waitFor(() => expect(sentQueries).toEqual([expect.stringContaining('name: "brussels"')]));
+
+    rerender({ scopes: { form: { site: "antwerp" }, self: {} } });
+
+    await waitFor(() =>
+      expect(sentQueries.some((query) => query.includes('name: "antwerp"'))).toBe(true)
+    );
   });
 });
