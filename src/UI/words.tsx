@@ -652,11 +652,6 @@ const dict = {
       count > 0 ? ", click to filter" : ""
     }`,
   "resources.deploying.spinner": "Resources deploying",
-  "resources.banner.manyDeploying": (count: number) =>
-    `${count} resources are currently deploying. The deploying indicators may increase CPU usage.`,
-  "resources.banner.disableAnimations": "Reduce animations",
-  "resources.banner.backToNormal": "Deploy load is back to normal.",
-  "resources.banner.enableAnimations": "Turn animations back on",
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "discoveredResourceDetails.title": "Discovered Resource Details",
