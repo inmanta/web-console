@@ -84,9 +84,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
     );
   }
 
-  return (
-    <Dropdown toggle={() => <Spinner />} aria-label="EnvSelector-Loading"></Dropdown>
-  );
+  return <Dropdown toggle={() => <Spinner />} aria-label="EnvSelector-Loading"></Dropdown>;
 };
 
 /**
