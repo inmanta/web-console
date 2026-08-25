@@ -1,9 +1,9 @@
 import "@testing-library/jest-dom";
 import { Route, Routes } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import {
   BooleanField,
@@ -1016,4 +1016,151 @@ test("GIVEN ServiceInstanceForm WHEN a field is assigned to a tab that is not in
     words("inventory.form.tabs.unknownKey")(assigned.name, "not_in_catalog")
   );
   expect(screen.queryByRole("tab")).not.toBeInTheDocument();
+});
+
+describe("cascading fields", () => {
+  const site = { ...Test.Field.text, name: "site" };
+  const uplink = {
+    ...Test.Field.text,
+    name: "uplink",
+    suggestion: { type: "parameters" as const, parameter_name: "files_${form.site}" },
+  };
+
+  const parameter = (values: string[]) =>
+    HttpResponse.json({ parameter: { metadata: { values } } });
+
+  test("GIVEN a field referencing ${form.*} WHEN the source is empty THEN it is blocked, and it unblocks once the source has a value", async () => {
+    server.use(http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])));
+
+    const { component } = setup([site, uplink]);
+
+    render(component);
+
+    const uplinkBox = screen.getByRole("textbox", { name: "TextInput-uplink" });
+
+    // Blocked until the source (site) has a value: disabled, with a hint naming it.
+    expect(uplinkBox).toBeDisabled();
+    expect(screen.getByText(words("inventory.form.suggestions.blocked")("site"))).toBeVisible();
+
+    await userEvent.type(screen.getByRole("textbox", { name: "TextInput-site" }), "brussels");
+
+    await waitFor(() => expect(uplinkBox).toBeEnabled());
+  });
+
+  test("GIVEN a dependent field WHEN its source changes THEN it is disabled and shows loading until the new query settles", async () => {
+    server.use(
+      http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])),
+      // Hold the second query in flight so the transient busy state is observable.
+      http.get("/api/v1/parameter/files_antwerp", async () => {
+        await delay(100);
+
+        return parameter(["uplink-9"]);
+      })
+    );
+
+    const { component } = setup([site, uplink]);
+
+    render(component);
+
+    const siteBox = screen.getByRole("textbox", { name: "TextInput-site" });
+    const uplinkBox = screen.getByRole("textbox", { name: "TextInput-uplink" });
+
+    await userEvent.type(siteBox, "brussels");
+    await waitFor(() => expect(uplinkBox).toBeEnabled());
+
+    await userEvent.clear(siteBox);
+    await userEvent.type(siteBox, "antwerp");
+
+    // While its source-driven query is settling the dependent is disabled and shows an in-input
+    // spinner, so a now-stale option cannot be picked.
+    await waitFor(() => {
+      expect(uplinkBox).toBeDisabled();
+      expect(
+        screen.getByRole("progressbar", { name: words("inventory.form.suggestions.loading") })
+      ).toBeVisible();
+    });
+
+    // Once the new options arrive it re-enables.
+    await waitFor(() => expect(uplinkBox).toBeEnabled(), { timeout: 5000 });
+  });
+
+  test("GIVEN a dependent field with a chosen value WHEN its source changes THEN the dependent is cleared", async () => {
+    server.use(
+      http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])),
+      http.get("/api/v1/parameter/files_antwerp", () => parameter(["uplink-9"]))
+    );
+
+    const { component } = setup([site, uplink]);
+
+    render(component);
+
+    const siteBox = screen.getByRole("textbox", { name: "TextInput-site" });
+    const uplinkBox = screen.getByRole("textbox", { name: "TextInput-uplink" });
+
+    await userEvent.type(siteBox, "brussels");
+    await waitFor(() => expect(uplinkBox).toBeEnabled());
+
+    // Pick a suggestion so the dependent holds a value tied to the current source.
+    await userEvent.click(uplinkBox);
+    await userEvent.click(await screen.findByRole("menuitem", { name: "uplink-1" }));
+    expect(uplinkBox).toHaveValue("uplink-1");
+
+    // Changing the source clears the now-stale dependent value.
+    await userEvent.clear(siteBox);
+    await userEvent.type(siteBox, "antwerp");
+
+    await waitFor(() => expect(uplinkBox).toHaveValue(""));
+  });
+
+  test("GIVEN a locked dependent field in edit mode WHEN its source changes THEN its value is kept", async () => {
+    server.use(
+      http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])),
+      http.get("/api/v1/parameter/files_antwerp", () => parameter(["uplink-9"]))
+    );
+
+    const editableSite = { ...site, isDisabled: false };
+    const lockedUplink = { ...uplink, isDisabled: true };
+
+    const { component } = setup([editableSite, lockedUplink], undefined, true, {
+      site: "brussels",
+      uplink: "uplink-1",
+    });
+
+    render(component);
+
+    const siteBox = screen.getByRole("textbox", { name: "TextInput-site" });
+    const uplinkBox = screen.getByRole("textbox", { name: "TextInput-uplink" });
+
+    // The locked dependent shows its stored value and is disabled (can't be re-picked).
+    await waitFor(() => expect(uplinkBox).toHaveValue("uplink-1"));
+    expect(uplinkBox).toBeDisabled();
+
+    // Changing the source must NOT wipe the locked value.
+    await userEvent.clear(siteBox);
+    await userEvent.type(siteBox, "antwerp");
+    await waitFor(() => expect(siteBox).toHaveValue("antwerp"));
+
+    expect(uplinkBox).toHaveValue("uplink-1");
+  });
+
+  test("GIVEN field suggestions that form a dependency cycle THEN the model error is surfaced", () => {
+    const a = {
+      ...Test.Field.text,
+      name: "a",
+      suggestion: { type: "parameters" as const, parameter_name: "x_${form.b}" },
+    };
+    const b = {
+      ...Test.Field.text,
+      name: "b",
+      suggestion: { type: "parameters" as const, parameter_name: "x_${form.a}" },
+    };
+
+    const { component } = setup([a, b]);
+
+    render(component);
+
+    expect(screen.getByTestId("FieldDependencies-Error")).toHaveTextContent(
+      words("inventory.form.suggestions.dependencyCycle")("a -> b -> a")
+    );
+  });
 });
