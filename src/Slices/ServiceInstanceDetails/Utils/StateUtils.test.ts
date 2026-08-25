@@ -103,6 +103,10 @@ describe("StateUtils", () => {
   });
 
   describe("getAvailableStateTargets", () => {
+    // helper to compare the returned StateTarget[] against the expected target names
+    const targetsOf = (result: ReturnType<typeof getAvailableStateTargets>) =>
+      result.map((stateTarget) => stateTarget.target);
+
     it("should return empty array when serviceEntity is undefined or has no matching transfers", () => {
       expect(getAvailableStateTargets("up", undefined)).toEqual([]);
       expect(getAvailableStateTargets("up", mockServiceModelEmpty)).toEqual([]);
@@ -114,12 +118,12 @@ describe("StateUtils", () => {
         createTransfer("test_state", "target1", { api_set_state: false }),
         createTransfer("test_state", "target2", { api_set_state: true }),
       ]);
-      expect(getAvailableStateTargets("test_state", serviceModel)).toEqual(["target2"]);
+      expect(targetsOf(getAvailableStateTargets("test_state", serviceModel))).toEqual(["target2"]);
     });
 
     it("should return sorted array of available targets", () => {
-      expect(getAvailableStateTargets("up", mockServiceModel)).toEqual(["update_start"]);
-      expect(getAvailableStateTargets("update_start", mockServiceModel)).toEqual([
+      expect(targetsOf(getAvailableStateTargets("up", mockServiceModel))).toEqual(["update_start"]);
+      expect(targetsOf(getAvailableStateTargets("update_start", mockServiceModel))).toEqual([
         "update_acknowledged",
         "update_acknowledged_failed",
       ]);
@@ -129,7 +133,7 @@ describe("StateUtils", () => {
         createTransfer("test_state", "alpha", { api_set_state: true }),
         createTransfer("test_state", "beta", { api_set_state: true }),
       ]);
-      expect(getAvailableStateTargets("test_state", serviceModel)).toEqual([
+      expect(targetsOf(getAvailableStateTargets("test_state", serviceModel))).toEqual([
         "alpha",
         "beta",
         "zebra",
@@ -141,10 +145,23 @@ describe("StateUtils", () => {
         createTransfer("test_state", "same_target", { api_set_state: true }),
         createTransfer("test_state", "same_target", { api_set_state: true }),
       ]);
-      expect(getAvailableStateTargets("test_state", serviceModel)).toEqual([
+      expect(targetsOf(getAvailableStateTargets("test_state", serviceModel))).toEqual([
         "same_target",
         "same_target",
       ]);
+    });
+
+    it("should carry the transfer, including its annotations, forward on each target", () => {
+      const serviceModel = createServiceModel([
+        createTransfer("test_state", "target1", {
+          api_set_state: true,
+          annotations: { web_confirm: "Are you sure?" },
+        }),
+      ]);
+      const result = getAvailableStateTargets("test_state", serviceModel);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].transfer.annotations?.web_confirm).toBe("Are you sure?");
     });
   });
 

@@ -186,10 +186,9 @@ describe("Page Actions - Success", () => {
     // delete instance
     await userEvent.click(actions[3]);
 
+    // the on_delete transfer carries a web_confirm annotation, which replaces the default prompt
     expect(
-      screen.getByText(
-        /are you sure you want to delete instance core1 of service entity mobilecore\?/i
-      )
+      screen.getByText(/delete this service and all its resources\? this cannot be undone\.?/i)
     ).toBeVisible();
 
     const confirmButton = screen.getByRole("button", {
@@ -235,8 +234,9 @@ describe("Page Actions - Success", () => {
       name: /yes/i,
     });
 
+    // the on_update transfer carries a web_confirm annotation, which replaces the default prompt
     expect(
-      screen.getByText(/are you sure you want to set state of instance core1 to update_start\?/i)
+      screen.getByText(/apply the updated attributes to the running service\?/i)
     ).toBeVisible();
 
     await userEvent.click(confirmButton);
@@ -472,10 +472,9 @@ describe("Page Actions - Failed", () => {
     // delete instance
     await userEvent.click(actions[3]);
 
+    // the on_delete transfer carries a web_confirm annotation, which replaces the default prompt
     expect(
-      screen.getByText(
-        /are you sure you want to delete instance core1 of service entity mobilecore\?/i
-      )
+      screen.getByText(/delete this service and all its resources\? this cannot be undone\.?/i)
     ).toBeVisible();
 
     const confirmButton = screen.getByRole("button", {
@@ -523,8 +522,9 @@ describe("Page Actions - Failed", () => {
       name: /yes/i,
     });
 
+    // the on_update transfer carries a web_confirm annotation, which replaces the default prompt
     expect(
-      screen.getByText(/are you sure you want to set state of instance core1 to update_start\?/i)
+      screen.getByText(/apply the updated attributes to the running service\?/i)
     ).toBeVisible();
 
     await userEvent.click(confirmButton);
