@@ -49,7 +49,7 @@ describe("getAvailableStateTargets", () => {
 
     const result = getAvailableStateTargets("up", serviceEntity);
 
-    expect(result).toEqual(["update_start"]);
+    expect(result.map((stateTarget) => stateTarget.target)).toEqual(["update_start"]);
   });
 
   it("should return multiple targets if there are multiple matching transfers", () => {
@@ -57,7 +57,20 @@ describe("getAvailableStateTargets", () => {
 
     const result = getAvailableStateTargets("update_start", serviceEntity);
 
-    expect(result).toEqual(["update_acknowledged", "update_acknowledged_failed"]);
+    expect(result.map((stateTarget) => stateTarget.target)).toEqual([
+      "update_acknowledged",
+      "update_acknowledged_failed",
+    ]);
+  });
+
+  it("should carry the transfer's annotations forward on the returned target", () => {
+    const serviceEntity: ServiceModel = serviceModel;
+
+    const result = getAvailableStateTargets("up", serviceEntity);
+
+    expect(result[0].transfer.annotations?.web_confirm).toBe(
+      "Apply the updated attributes to the running service?"
+    );
   });
 });
 

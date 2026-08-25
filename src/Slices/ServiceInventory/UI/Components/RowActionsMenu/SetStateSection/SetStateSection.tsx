@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Button, MenuItem, Content } from "@patternfly/react-core";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Queries";
+import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
@@ -9,7 +10,7 @@ import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 
 interface Props extends VersionedServiceInstanceIdentifier {
-  targets: string[] | null;
+  targets: StateTarget[] | null;
   instance_identity: string;
   onClose: () => void;
 }
@@ -22,7 +23,7 @@ interface Props extends VersionedServiceInstanceIdentifier {
  * @prop {string} id - The id of the service instance.
  * @prop {string} instance_identity - The instance identity of the service instance.
  * @prop {string} version - The version of the service instance.
- * @prop {string[]} targets - The available states of the service instance.
+ * @prop {StateTarget[]} targets - The available target states of the service instance, paired with the transfer that produces each one.
  *
  * @returns {React.FC<Props>} A React component that allows the user to set a state on a service instance.
  */
@@ -46,21 +47,21 @@ export const SetStateSection: React.FC<Props> = ({
       });
     },
   });
-  const onSelect = (value: string) => {
-    openModal(value);
+  const onSelect = (stateTarget: StateTarget) => {
+    openModal(stateTarget);
   };
 
   /**
    * Opens a modal with a confirmation buttons.
-   * @param {string} targetState - The target state to be used in the operation.
+   * @param {StateTarget} stateTarget - The target state and its transfer to be used in the operation.
    *
    *  @returns {void}
    */
-  const openModal = (targetState: string): void => {
+  const openModal = (stateTarget: StateTarget): void => {
+    const { target: targetState, transfer } = stateTarget;
+
     /**
      * Handles the submission of the form.
-     *
-     * @param {string} targetState - The target state to be used in the operation.
      *
      * @returns {Promise<void>} A Promise that resolves when the operation is complete.
      */
@@ -99,7 +100,8 @@ export const SetStateSection: React.FC<Props> = ({
       ],
       content: (
         <Content component="p">
-          {words("inventory.statustab.confirmMessage")(instance_identity, targetState)}
+          {transfer.annotations?.web_confirm ??
+            words("inventory.statustab.confirmMessage")(instance_identity, targetState)}
         </Content>
       ),
     });
@@ -107,14 +109,14 @@ export const SetStateSection: React.FC<Props> = ({
 
   return (
     <>
-      {targets?.map((target) => (
+      {targets?.map((stateTarget) => (
         <MenuItem
-          key={target}
+          key={stateTarget.target}
           isDisabled={isDisabled || isHalted}
-          value={target}
-          itemId={target}
-          onClick={() => onSelect(target)}
-          data-testid={`${id}-${target}`}
+          value={stateTarget.target}
+          itemId={stateTarget.target}
+          onClick={() => onSelect(stateTarget)}
+          data-testid={`${id}-${stateTarget.target}`}
         >
           <ActionDisabledTooltip
             isDisabled={isDisabled || isHalted}
@@ -125,7 +127,7 @@ export const SetStateSection: React.FC<Props> = ({
                 : words("inventory.statustab.actionDisabled")
             }
           >
-            {target}
+            {stateTarget.target}
           </ActionDisabledTooltip>
         </MenuItem>
       ))}

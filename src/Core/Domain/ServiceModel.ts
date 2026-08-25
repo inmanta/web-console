@@ -106,6 +106,16 @@ export interface TransferModel {
   target: string;
   target_operation: string | null;
   validate: boolean;
+  annotations?: TransferAnnotations;
+}
+
+/**
+ * Interface that represents annotations for a transfer.
+ */
+export interface TransferAnnotations {
+  /** Custom confirmation prompt shown before the transfer is invoked (set-state /
+   * delete). Falls back to the default confirmation text when absent. */
+  web_confirm?: string;
 }
 
 /**
