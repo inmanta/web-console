@@ -73,21 +73,14 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
   };
   const clearStatusFilters = () => clearStringGroup("status", { disregardDefault: true });
 
-  const setServiceEntity = (entity: string | null) => {
-    setFilter({
-      ...filter,
-      serviceEntity: entity ?? undefined,
-      serviceInstance: undefined,
-      includeOwned: undefined,
-    });
-  };
-  const setServiceInstance = (instance: string | null) => {
-    setFilter({
-      ...filter,
-      serviceInstance: instance ?? undefined,
-      includeOwned: instance ? filter.includeOwned : undefined,
-    });
-  };
+  const addServiceEntity = (entity: string) => addString("serviceEntity", entity);
+  const removeServiceEntityChip = (entity: string) => removeStringChip("serviceEntity", entity);
+  const clearServiceEntities = () => clearStringGroup("serviceEntity");
+
+  const addServiceInstance = (value: string) => addString("serviceInstance", value);
+  const removeServiceInstanceChip = (value: string) => removeStringChip("serviceInstance", value);
+  const clearServiceInstances = () => clearStringGroup("serviceInstance");
+
   const setIncludeOwned = (includeOwned: boolean) => {
     setFilter({ ...filter, includeOwned: includeOwned || undefined });
   };
@@ -134,8 +127,8 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
                 >
                   <ServiceFilterForm
                     filter={filter}
-                    onChangeServiceEntity={setServiceEntity}
-                    onChangeServiceInstance={setServiceInstance}
+                    onAddServiceEntity={addServiceEntity}
+                    onAddServiceInstance={addServiceInstance}
                     onChangeIncludeOwned={setIncludeOwned}
                   />
                 </Tab>
@@ -153,8 +146,10 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
               clearAgentFilters={clearAgentFilters}
               clearValueFilters={clearValueFilters}
               clearStatusFilters={clearStatusFilters}
-              removeServiceEntity={() => setServiceEntity(null)}
-              removeServiceInstance={() => setServiceInstance(null)}
+              removeServiceEntityChip={removeServiceEntityChip}
+              clearServiceEntities={clearServiceEntities}
+              removeServiceInstanceChip={removeServiceInstanceChip}
+              clearServiceInstances={clearServiceInstances}
               removeIncludeOwned={() => setIncludeOwned(false)}
             />
           </Stack>

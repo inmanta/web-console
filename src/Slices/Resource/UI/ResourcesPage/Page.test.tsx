@@ -137,6 +137,22 @@ async function openFiltersDrawer() {
   }
 }
 
+// Applies a Resource-tab filter by placeholder. The agent field is a typeahead, so free-text
+// values (agents not in the catalog) are entered through its text-input toggle; type and value are
+// plain text inputs.
+async function applyResourceFilter(placeholderText: string, value: string) {
+  if (placeholderText === words("resources.filters.resource.agent.placeholder")) {
+    await userEvent.click(
+      within(screen.getByRole("tabpanel")).getByRole("button", {
+        name: words("resources.filters.resource.agent.selectInfoLabel"),
+      })
+    );
+  }
+
+  const input = await screen.findByPlaceholderText(placeholderText);
+  await userEvent.type(input, `${value}{enter}`);
+}
+
 async function openStatusFiltersTab() {
   await openFiltersDrawer();
 
@@ -371,10 +387,7 @@ describe("ResourcesPage", () => {
 
     await openFiltersDrawer();
 
-    const agentInput = await screen.findByPlaceholderText(
-      words("resources.filters.resource.agent.placeholder")
-    );
-    await userEvent.type(agentInput, "agent2{enter}");
+    await applyResourceFilter(words("resources.filters.resource.agent.placeholder"), "agent2");
 
     const rowsAfterAgentFilter = await screen.findAllByLabelText("Resource Table Row");
     expect(rowsAfterAgentFilter).toHaveLength(3);
@@ -415,8 +428,7 @@ describe("ResourcesPage", () => {
 
       await openFiltersDrawer();
 
-      const filterInput = await screen.findByPlaceholderText(placeholderText);
-      await userEvent.type(filterInput, `${filterValue}{enter}`);
+      await applyResourceFilter(placeholderText, filterValue);
 
       const rowsAfterFilter = await screen.findAllByLabelText("Resource Table Row");
       expect(rowsAfterFilter).toHaveLength(3);
@@ -471,10 +483,8 @@ describe("ResourcesPage", () => {
 
       await openFiltersDrawer();
 
-      const filterInputOne = await screen.findByPlaceholderText(placeholderTextOne);
-      await userEvent.type(filterInputOne, `${filterValueOne}{enter}`);
-      const filterInputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
-      await userEvent.type(filterInputTwo, `${filterValueTwo}{enter}`);
+      await applyResourceFilter(placeholderTextOne, filterValueOne);
+      await applyResourceFilter(placeholderTextTwo, filterValueTwo);
 
       const rowsAfterFiltering = await screen.findAllByLabelText("Resource Table Row");
       expect(rowsAfterFiltering).toHaveLength(3);
@@ -517,14 +527,8 @@ describe("ResourcesPage", () => {
 
     await openFiltersDrawer();
 
-    const agentInput = await screen.findByPlaceholderText(
-      words("resources.filters.resource.agent.placeholder")
-    );
-    await userEvent.type(agentInput, `${agentValue}{enter}`);
-    const typeInput = await screen.findByPlaceholderText(
-      words("resources.filters.resource.type.placeholder")
-    );
-    await userEvent.type(typeInput, `${typeValue}{enter}`);
+    await applyResourceFilter(words("resources.filters.resource.agent.placeholder"), agentValue);
+    await applyResourceFilter(words("resources.filters.resource.type.placeholder"), typeValue);
 
     const idInput = await screen.findByPlaceholderText(
       words("resources.filters.resource.value.placeholder")
@@ -635,17 +639,11 @@ describe("ResourcesPage", () => {
     // Default filter (orphaned excluded) counts as 1
     expect(screen.getByRole("button", { name: /^\d*\s*Filters$/ })).toHaveTextContent("1");
 
-    const agentInput = await screen.findByPlaceholderText(
-      words("resources.filters.resource.agent.placeholder")
-    );
-    await userEvent.type(agentInput, "agent2{enter}");
+    await applyResourceFilter(words("resources.filters.resource.agent.placeholder"), "agent2");
 
     expect(screen.getByRole("button", { name: /^\d*\s*Filters$/ })).toHaveTextContent("2");
 
-    const typeInput = await screen.findByPlaceholderText(
-      words("resources.filters.resource.type.placeholder")
-    );
-    await userEvent.type(typeInput, "std::File{enter}");
+    await applyResourceFilter(words("resources.filters.resource.type.placeholder"), "std::File");
 
     expect(screen.getByRole("button", { name: /^\d*\s*Filters$/ })).toHaveTextContent("3");
   });

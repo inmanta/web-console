@@ -15,8 +15,10 @@ export interface ActiveFiltersSectionProps {
   clearAgentFilters: () => void;
   clearValueFilters: () => void;
   clearStatusFilters: () => void;
-  removeServiceEntity: () => void;
-  removeServiceInstance: () => void;
+  removeServiceEntityChip: (entity: string) => void;
+  clearServiceEntities: () => void;
+  removeServiceInstanceChip: (id: string) => void;
+  clearServiceInstances: () => void;
   removeIncludeOwned: () => void;
 }
 
@@ -37,8 +39,10 @@ export interface ActiveFiltersSectionProps {
  *  @prop {() => void} clearAgentFilters - Clears the entire set of agent filters.
  *  @prop {() => void} clearValueFilters - Clears the entire set of value filters.
  *  @prop {() => void} clearStatusFilters - Clears the entire set of status filters.
- *  @prop {() => void} removeServiceEntity - Clears the service entity (and its dependents).
- *  @prop {() => void} removeServiceInstance - Clears the service instance (and its dependents).
+ *  @prop {(entity: string) => void} removeServiceEntityChip - Removes a single service entity chip.
+ *  @prop {() => void} clearServiceEntities - Clears the entire set of service entity filters.
+ *  @prop {(id: string) => void} removeServiceInstanceChip - Removes a single service instance chip (by id).
+ *  @prop {() => void} clearServiceInstances - Clears the entire set of service instance filters.
  *  @prop {() => void} removeIncludeOwned - Clears the include-owned scope.
  *
  * @returns {React.ReactElement} The rendered active filters panel.
@@ -54,8 +58,10 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
   clearAgentFilters,
   clearValueFilters,
   clearStatusFilters,
-  removeServiceEntity,
-  removeServiceInstance,
+  removeServiceEntityChip,
+  clearServiceEntities,
+  removeServiceInstanceChip,
+  clearServiceInstances,
   removeIncludeOwned,
 }) => {
   const hasActiveFilters =
@@ -63,8 +69,8 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
     (filter.agent && filter.agent.length > 0) ||
     (filter.value && filter.value.length > 0) ||
     (filter.status && filter.status.length > 0) ||
-    Boolean(filter.serviceEntity) ||
-    Boolean(filter.serviceInstance) ||
+    (filter.serviceEntity && filter.serviceEntity.length > 0) ||
+    (filter.serviceInstance && filter.serviceInstance.length > 0) ||
     Boolean(filter.includeOwned);
 
   return (
@@ -113,23 +119,24 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
           />
         </StackItem>
       )}
-      {filter.serviceEntity && (
+      {filter.serviceEntity && filter.serviceEntity.length > 0 && (
         <StackItem>
           <ActiveFilterGroup
             title={words("resources.filters.service.entity.label")}
-            values={[filter.serviceEntity]}
-            onRemove={removeServiceEntity}
-            onRemoveGroup={removeServiceEntity}
+            values={filter.serviceEntity}
+            onRemove={removeServiceEntityChip}
+            onRemoveGroup={clearServiceEntities}
           />
         </StackItem>
       )}
-      {filter.serviceInstance && (
+      {filter.serviceInstance && filter.serviceInstance.length > 0 && (
         <StackItem>
           <ActiveFilterGroup
             title={words("resources.filters.service.instance.label")}
-            values={[filter.serviceInstance]}
-            onRemove={removeServiceInstance}
-            onRemoveGroup={removeServiceInstance}
+            values={filter.serviceInstance}
+            onRemove={removeServiceInstanceChip}
+            onRemoveGroup={clearServiceInstances}
+            renderValue={(value) => Resource.parseServiceInstanceFilterValue(value).label}
           />
         </StackItem>
       )}

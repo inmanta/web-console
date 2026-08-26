@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Resource } from "@/Core";
 import { words } from "@/UI";
@@ -8,78 +8,116 @@ vi.mock("@/Data/Queries", () => ({
   useGetServiceModels: () => ({
     useOneTime: () => ({
       data: [{ name: "l2Connect" }, { name: "DirectInternetAccess" }],
+      isLoading: false,
     }),
   }),
   useGetInstances: () => ({
-    useOneTime: () => ({
-      data: { data: [{ id: "uuid-1", service_identity_attribute_value: "demo-cpe-ring" }] },
+    useInfiniteScroll: () => ({
+      data: {
+        pages: [{ data: [{ id: "uuid-1", service_identity_attribute_value: "demo-cpe-ring" }] }],
+      },
       isLoading: false,
+      isFetchingNextPage: false,
+      hasNextPage: false,
+      fetchNextPage: vi.fn(),
     }),
   }),
 }));
 
 const createHandlers = () => ({
-  onChangeServiceEntity: vi.fn(),
-  onChangeServiceInstance: vi.fn(),
+  onAddServiceEntity: vi.fn(),
+  onAddServiceInstance: vi.fn(),
   onChangeIncludeOwned: vi.fn(),
 });
 
 const renderForm = (filter: Resource.Filter, handlers: ReturnType<typeof createHandlers>) =>
   render(<ServiceFilterForm filter={filter} {...handlers} />);
 
+const entityInput = () =>
+  screen.getByRole("combobox", {
+    name: `${words("resources.filters.service.entity.label")}-input`,
+  });
+
+const instanceInput = () =>
+  screen.getByRole("combobox", {
+    name: `${words("resources.filters.service.instance.label")}-input`,
+  });
+
 describe("ServiceFilterForm", () => {
-  it("selects a service entity from the catalog", async () => {
+  it("disables the instance field and include-owned switch until the entity input has a value", () => {
     const handlers = createHandlers();
 
     renderForm({}, handlers);
 
-    // The instance field stays visible but disabled until an entity is chosen.
-    expect(screen.getByTestId("service-instance-toggle")).toHaveAttribute("disabled");
+    expect(instanceInput()).toBeDisabled();
     expect(
       screen.getByRole("switch", { name: words("resources.filters.service.includeOwned.label") })
     ).toBeDisabled();
 
-    await userEvent.click(screen.getByRole("combobox", { name: "service-entityFilterInput" }));
-    await userEvent.click(screen.getByText("l2Connect"));
+    fireEvent.change(entityInput(), { target: { value: "l2" } });
 
-    expect(handlers.onChangeServiceEntity).toHaveBeenCalledWith("l2Connect");
+    expect(instanceInput()).toBeEnabled();
   });
 
-  it("filters the service entity options as you type", async () => {
+  it("adds a service entity that matches an option", () => {
     const handlers = createHandlers();
 
     renderForm({}, handlers);
 
-    await userEvent.type(
-      screen.getByRole("combobox", { name: "service-entityFilterInput" }),
-      "Direct"
+    fireEvent.change(entityInput(), { target: { value: "l2Connect" } });
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: `Add filter-${words("resources.filters.service.entity.label")}`,
+      })
     );
 
-    expect(screen.getByText("DirectInternetAccess")).toBeInTheDocument();
-    expect(screen.queryByText("l2Connect")).not.toBeInTheDocument();
+    expect(handlers.onAddServiceEntity).toHaveBeenCalledWith("l2Connect");
   });
 
-  it("clears the entity field when the entity is reset from outside", () => {
+  it("adds a service instance as an id|name value when its name is selected", () => {
     const handlers = createHandlers();
 
-    const { rerender } = render(
-      <ServiceFilterForm filter={{ serviceEntity: "l2Connect" }} {...handlers} />
+    renderForm({}, handlers);
+
+    // A known entity in the entity input enables and populates the instance field.
+    fireEvent.change(entityInput(), { target: { value: "l2Connect" } });
+
+    fireEvent.change(instanceInput(), { target: { value: "demo-cpe-ring" } });
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: `Add filter-${words("resources.filters.service.instance.label")}`,
+      })
     );
 
-    expect(screen.getByRole("combobox", { name: "service-entityFilterInput" })).toHaveValue(
-      "l2Connect"
+    // The filter value keeps both the id (for the API) and the name (for display).
+    expect(handlers.onAddServiceInstance).toHaveBeenCalledWith(
+      Resource.encodeServiceInstanceFilterValue("uuid-1", "demo-cpe-ring")
+    );
+  });
+
+  it("lets the service entity switch to a free-text input", async () => {
+    const handlers = createHandlers();
+
+    renderForm({}, handlers);
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: words("resources.filters.service.entity.selectInfoLabel"),
+      })
     );
 
-    // Simulate the value being cleared elsewhere (e.g. removing its active-filter chip).
-    rerender(<ServiceFilterForm filter={{}} {...handlers} />);
+    const textInput = screen.getByPlaceholderText(
+      words("resources.filters.service.entity.placeholder")
+    );
+    await userEvent.type(textInput, "custom-entity{enter}");
 
-    expect(screen.getByRole("combobox", { name: "service-entityFilterInput" })).toHaveValue("");
+    expect(handlers.onAddServiceEntity).toHaveBeenCalledWith("custom-entity");
   });
 
   it("toggles include-owned once an instance is set", async () => {
     const handlers = createHandlers();
 
-    renderForm({ serviceEntity: "l2Connect", serviceInstance: "uuid-1" }, handlers);
+    renderForm({ serviceInstance: ["uuid-1"] }, handlers);
 
     await userEvent.click(
       screen.getByRole("switch", {

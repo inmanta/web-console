@@ -1,5 +1,12 @@
 import { useContext } from "react";
-import { UseQueryResult, keepPreviousData, useQuery } from "@tanstack/react-query";
+import {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  UseQueryResult,
+  keepPreviousData,
+  useInfiniteQuery,
+  useQuery,
+} from "@tanstack/react-query";
 import { Pagination, ServiceInstanceModelWithTargetStates } from "@/Core";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { ServiceInstanceParams } from "@/Core/Domain/ServiceInstanceParams";
@@ -33,9 +40,9 @@ interface UseContinuousOptions {
 }
 
 /**
- * Options for the useOneTime query.
+ * Options for the useInfiniteScroll query.
  */
-interface UseOneTimeOptions {
+interface UseInfiniteScrollOptions {
   /**
    * Whether the query is allowed to run. Defaults to true.
    */
@@ -47,7 +54,9 @@ interface UseOneTimeOptions {
  */
 interface GetInstance {
   useContinuous: (options?: UseContinuousOptions) => UseQueryResult<HookResponse, CustomError>;
-  useOneTime: (options?: UseOneTimeOptions) => UseQueryResult<HookResponse, CustomError>;
+  useInfiniteScroll: (
+    options?: UseInfiniteScrollOptions
+  ) => UseInfiniteQueryResult<InfiniteData<ResponseBody>, CustomError>;
 }
 
 /**
@@ -58,7 +67,7 @@ interface GetInstance {
  *
  * @returns {GetInstance} An object containing the different available queries.
  * @returns {UseQueryResult<HookResponse, CustomError>} returns.useContinuous - Fetch the instances with a recurrent query with an interval of 5s.
- * @returns {UseQueryResult<HookResponse, CustomError>} returns.useOneTime - Fetch the instances once (no polling), refetching only when the query key changes.
+ * @returns {UseInfiniteQueryResult<InfiniteData<ResponseBody>, CustomError>} returns.useInfiniteScroll - Fetch the instances page by page (cursor-based), for a typeahead that loads more on scroll.
  */
 export const useGetInstances = (
   serviceName: string,
@@ -89,6 +98,17 @@ export const useGetInstances = (
     env,
   ]);
 
+  // Distinct from queryKey: an infinite query caches an InfiniteData<pages> shape, so it must not
+  // share a cache entry with the plain useContinuous query.
+  const infiniteQueryKey = getInstanceKey.list([
+    "infinite",
+    serviceName,
+    ...filterArray,
+    ...sortArray,
+    pageSize,
+    env,
+  ]);
+
   const select = (data: ResponseBody): HookResponse => ({
     ...data,
     handlers: getPaginationHandlers(data.links, data.metadata),
@@ -103,13 +123,24 @@ export const useGetInstances = (
         select,
         placeholderData: options?.keepPreviousData ? keepPreviousData : undefined,
       }),
-    useOneTime: (options): UseQueryResult<HookResponse, CustomError> =>
-      useQuery({
-        queryKey,
-        queryFn: () => get(url),
+    useInfiniteScroll: (options): UseInfiniteQueryResult<InfiniteData<ResponseBody>, CustomError> =>
+      useInfiniteQuery({
+        queryKey: infiniteQueryKey,
+        queryFn: ({ pageParam }) =>
+          get(
+            getUrl({
+              name: serviceName,
+              sort,
+              filter,
+              pageSize,
+              currentPage: { kind: "CurrentPage", value: pageParam },
+            })
+          ),
+        initialPageParam: "",
         enabled: options?.enabled ?? true,
         refetchOnWindowFocus: false,
-        select,
+        getNextPageParam: (lastPage) =>
+          getPaginationHandlers(lastPage.links, lastPage.metadata).next || undefined,
       }),
   };
 };

@@ -21,7 +21,13 @@ vi.mock("@/Data/Queries", () => ({
     useOneTime: () => ({ data: [] }),
   }),
   useGetInstances: () => ({
-    useOneTime: () => ({ data: { data: [] }, isLoading: false }),
+    useInfiniteScroll: () => ({
+      data: { pages: [] },
+      isLoading: false,
+      isFetchingNextPage: false,
+      hasNextPage: false,
+      fetchNextPage: vi.fn(),
+    }),
   }),
 }));
 
@@ -66,6 +72,11 @@ describe("FilterWidgetComponent", () => {
       value: ["new-value"],
     });
 
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: words("resources.filters.resource.agent.selectInfoLabel"),
+      })
+    );
     const agentInput = screen.getByPlaceholderText(
       words("resources.filters.resource.agent.placeholder")
     );
