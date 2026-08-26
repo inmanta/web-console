@@ -45,11 +45,11 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
   ...props
 }) => {
   const [filter, setFilter] = useState<ServiceInstanceParams.Filter>({});
-  const { data, isLoading, isSuccess } = useGetInstances(serviceName, {
+  const { data, isLoading, isSuccess } = useGetInstances(serviceName).useContinuous({
     filter,
     pageSize: PageSize.from("250"),
     currentPage: initialCurrentPage,
-  }).useContinuous();
+  });
 
   const onSearchTextChanged = (searchText: string) => {
     setFilter({ id_or_service_identity: [searchText] });

@@ -204,35 +204,24 @@ export interface Filter {
   includeOwned?: boolean;
 }
 
-/** Separates a service instance id from its display label in a filter value. Absent from any UUID. */
-const SERVICE_INSTANCE_LABEL_SEPARATOR = "|";
-
 /**
- * Builds a `serviceInstance` filter value from an instance id and optional label, keeping the label
- * only when it adds information over the id.
+ * Encodes a `serviceInstance` filter value from an instance id and optional label as JSON, so the
+ * label can contain any character without colliding with a separator. Falls back to the id as label.
  *
- * @example encodeServiceInstanceFilterValue("abc", "cpe-1") => "abc|cpe-1"
- * @example encodeServiceInstanceFilterValue("abc") => "abc"
+ * @example encodeServiceInstanceFilterValue("abc", "cpe-1") => '{"id":"abc","label":"cpe-1"}'
+ * @example encodeServiceInstanceFilterValue("abc") => '{"id":"abc","label":"abc"}'
  */
 export const encodeServiceInstanceFilterValue = (id: string, label?: string): string =>
-  label && label !== id ? `${id}${SERVICE_INSTANCE_LABEL_SEPARATOR}${label}` : id;
+  JSON.stringify({ id, label: label ?? id });
 
 /**
- * Splits a `serviceInstance` filter value into its id and display label, falling back to the id when
- * no label is present. Splits on the first separator only, so labels may contain it.
+ * Decodes a `serviceInstance` filter value back into its id and display label.
  *
- * @example parseServiceInstanceFilterValue("abc|cpe-1") => { id: "abc", label: "cpe-1" }
- * @example parseServiceInstanceFilterValue("abc") => { id: "abc", label: "abc" }
+ * @example parseServiceInstanceFilterValue('{"id":"abc","label":"cpe-1"}') => { id: "abc", label: "cpe-1" }
+ * @example parseServiceInstanceFilterValue('{"id":"abc","label":"abc"}') => { id: "abc", label: "abc" }
  */
-export const parseServiceInstanceFilterValue = (value: string): { id: string; label: string } => {
-  const separatorIndex = value.indexOf(SERVICE_INSTANCE_LABEL_SEPARATOR);
-
-  if (separatorIndex === -1) {
-    return { id: value, label: value };
-  }
-
-  return { id: value.slice(0, separatorIndex), label: value.slice(separatorIndex + 1) };
-};
+export const parseServiceInstanceFilterValue = (value: string): { id: string; label: string } =>
+  JSON.parse(value);
 
 export interface FilterWithDefaultHandling extends Filter {
   disregardDefault?: boolean;

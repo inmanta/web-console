@@ -117,7 +117,10 @@ describe("ServiceFilterForm", () => {
   it("toggles include-owned once an instance is set", async () => {
     const handlers = createHandlers();
 
-    renderForm({ serviceInstance: ["uuid-1"] }, handlers);
+    renderForm(
+      { serviceInstance: [Resource.encodeServiceInstanceFilterValue("uuid-1")] },
+      handlers
+    );
 
     await userEvent.click(
       screen.getByRole("switch", {

@@ -20,13 +20,13 @@ export interface ServiceFilterFormProps {
  * and an "include owned services" switch. The entity is a typeahead select that can toggle to a
  * free-text input; the instance is a typeahead select only (no free text) and stays disabled until
  * the entity input holds a value. Each pick is added as a removable chip. Instance options carry the
- * "id|label" filter value (see {@link Resource.encodeServiceInstanceFilterValue}) as their value and
- * the service identity (falling back to the id) as their label.
+ * encoded id/label filter value (see {@link Resource.encodeServiceInstanceFilterValue}) as their
+ * value and the service identity (falling back to the id) as their label.
  *
  * @Props {ServiceFilterFormProps} - Component props.
  *  @prop {Resource.Filter} filter - Current filter state supplied by the parent.
  *  @prop {(entity: string) => void} onAddServiceEntity - Adds a service entity to the filter.
- *  @prop {(value: string) => void} onAddServiceInstance - Adds a service instance ("id|label" value) to the filter.
+ *  @prop {(value: string) => void} onAddServiceInstance - Adds a service instance (encoded id/label value) to the filter.
  *  @prop {(includeOwned: boolean) => void} onChangeIncludeOwned - Toggles the include-owned scope.
  *
  * @returns {React.ReactElement} The rendered service filter form.
@@ -53,14 +53,18 @@ export const ServiceFilterForm: React.FC<ServiceFilterFormProps> = ({
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
-  } = useGetInstances(entitySearch, {
-    filter: debouncedInstanceSearch
-      ? { id_or_service_identity: [debouncedInstanceSearch] }
-      : undefined,
-    pageSize: { kind: "PageSize", value: "20" },
-    currentPage: { kind: "CurrentPage", value: "" },
-  }).useInfiniteScroll({ enabled: isEntitySelected });
+  } = useGetInstances(entitySearch).useInfiniteScroll(
+    {
+      filter: debouncedInstanceSearch
+        ? { id_or_service_identity: [debouncedInstanceSearch] }
+        : undefined,
+      pageSize: { kind: "PageSize", value: "20" },
+    },
+    { enabled: isEntitySelected }
+  );
 
+  // Unlike instanceOptions, entityOptions intentionally keeps already-added entities selectable: the
+  // entity field both adds entities to the filter and selects one to look up its instances.
   const entityOptions = useMemo<AddableSelectOption[]>(
     () =>
       (serviceModels ?? [])
