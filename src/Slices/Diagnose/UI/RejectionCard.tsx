@@ -42,7 +42,7 @@ interface Props {
  * @param location {CompileErrorLocation} - The location to format.
  * @returns {string} The formatted location.
  */
-const formatLocation = (location: CompileErrorLocation): string =>
+export const formatLocation = (location: CompileErrorLocation): string =>
   location.range
     ? `${location.uri}:${location.range.start.line}:${location.range.start.character}`
     : location.uri;

@@ -7,7 +7,7 @@ import { MockedDependencyProvider } from "@/Test";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { words } from "@/UI/words";
 import { Rejection } from "@S/Diagnose/Core/Domain";
-import { RejectionCard } from "./RejectionCard";
+import { formatLocation, RejectionCard } from "./RejectionCard";
 
 const axe = configureAxe({
   rules: {
@@ -15,6 +15,11 @@ const axe = configureAxe({
     region: { enabled: false },
   },
 });
+
+// formatLocation(...) of the errors' locations below - written out rather than derived, so
+// the "hides the error details" test doesn't call the function it's supposed to be checking.
+const firstErrorLocationText = "./main.cf:29:4";
+const secondErrorLocationText = "./other.cf:12:1";
 
 const singleError: CompileError[] = [
   {
@@ -35,7 +40,7 @@ const twoErrors: CompileError[] = [
     category: "plugin_exception",
     message: "Could not set attribute name",
     location: {
-      uri: "./main.cf",
+      uri: "./other.cf",
       range: { start: { line: 12, character: 1 }, end: { line: 12, character: 10 } },
     },
   },
@@ -61,13 +66,32 @@ function setup(rejection: Rejection) {
   );
 }
 
+describe("formatLocation", () => {
+  // Asserted directly, with hardcoded expected strings: RejectionCard's own tests reuse
+  // formatLocation to build their expected text, which only proves the DOM matches
+  // whatever the function returns - not that the function itself formats correctly. That
+  // has to be verified here, in isolation, against known input/output pairs.
+  it("formats a location with a range as uri:line:character", () => {
+    expect(
+      formatLocation({
+        uri: "./main.cf",
+        range: { start: { line: 29, character: 4 }, end: { line: 29, character: 5 } },
+      })
+    ).toEqual("./main.cf:29:4");
+  });
+
+  it("formats a location without a range as just the uri", () => {
+    expect(formatLocation({ uri: "./main.cf" })).toEqual("./main.cf");
+  });
+});
+
 describe("RejectionCard", () => {
   it("shows the instance version and, for a single error, its message directly without needing to expand anything", () => {
     render(setup(createRejection()));
 
     expect(screen.getByText(words("diagnose.rejection.instanceVersion")(4))).toBeVisible();
 
-    expect(screen.getByText("value set twice")).toBeVisible();
+    expect(screen.getByText(singleError[0].message)).toBeVisible();
 
     // a single error isn't counted - there's nothing to distinguish it from.
     expect(screen.queryByText(words("diagnose.rejection.errorsCount")(1))).not.toBeInTheDocument();
@@ -78,8 +102,8 @@ describe("RejectionCard", () => {
 
     expect(screen.getByText(words("diagnose.rejection.errorsCount")(2))).toBeVisible();
 
-    expect(screen.getByText("value set twice")).toBeVisible();
-    expect(screen.getByText("Could not set attribute name")).toBeVisible();
+    expect(screen.getByText(twoErrors[0].message)).toBeVisible();
+    expect(screen.getByText(twoErrors[1].message)).toBeVisible();
   });
 
   it("hides the error details behind a 'Show details' toggle, and reveals type/category/location for the right error on expand", async () => {
@@ -87,8 +111,8 @@ describe("RejectionCard", () => {
 
     render(setup(createRejection({ errors: twoErrors })));
 
-    expect(screen.queryByText("inmanta.ast.DoubleSetException")).not.toBeVisible();
-    expect(screen.queryByText("inmanta.ast.AttributeException")).not.toBeVisible();
+    expect(screen.queryByText(twoErrors[0].type)).not.toBeVisible();
+    expect(screen.queryByText(twoErrors[1].type)).not.toBeVisible();
 
     // Each toggle renders the same visible "Show details" text, but is given a distinct
     // aria-label (error 1, error 2, ...) - both so screen reader users can tell them apart,
@@ -103,16 +127,16 @@ describe("RejectionCard", () => {
     // expanding the first error's details doesn't reveal the second error's details.
     await user.click(firstToggle);
 
-    expect(screen.getByText("inmanta.ast.DoubleSetException")).toBeVisible();
-    expect(screen.getByText("runtime_error")).toBeVisible();
-    expect(screen.getByText("./main.cf:29:4")).toBeVisible();
-    expect(screen.queryByText("inmanta.ast.AttributeException")).not.toBeVisible();
+    expect(screen.getByText(twoErrors[0].type)).toBeVisible();
+    expect(screen.getByText(twoErrors[0].category!)).toBeVisible();
+    expect(screen.getByText(firstErrorLocationText)).toBeVisible();
+    expect(screen.queryByText(twoErrors[1].type)).not.toBeVisible();
 
     await user.click(secondToggle);
 
-    expect(screen.getByText("inmanta.ast.AttributeException")).toBeVisible();
-    expect(screen.getByText("plugin_exception")).toBeVisible();
-    expect(screen.getByText("./main.cf:12:1")).toBeVisible();
+    expect(screen.getByText(twoErrors[1].type)).toBeVisible();
+    expect(screen.getByText(twoErrors[1].category!)).toBeVisible();
+    expect(screen.getByText(secondErrorLocationText)).toBeVisible();
   });
 
   it("shows the traceback, collapsed by default, in the card footer", async () => {
