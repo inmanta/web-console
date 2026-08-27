@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Divider,
   DrawerActions,
@@ -16,9 +16,11 @@ import {
 } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { getFilterActions } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ActiveFiltersSection } from "./ActiveFiltersSection";
 import { ResourceFilterForm } from "./ResourceFilterForm";
+import { ServiceFilterForm } from "./ServiceFilterForm";
 import { StatusFilterSelect } from "./StatusFilterSelect";
 
 interface FilterWidgetComponentProps {
@@ -45,6 +47,8 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
   setFilter,
 }) => {
   const [activeTabKey, setActiveTabKey] = useState<string | number>(0);
+  const { orchestratorProvider } = useContext(DependencyContext);
+  const isLsmEnabled = orchestratorProvider.isLsmEnabled();
   const { addString, setStrings, removeStringChip, clearStringGroup } = getFilterActions(
     filter,
     setFilter
@@ -71,6 +75,18 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
     removeStringChip("status", id, { disregardDefault: true });
   };
   const clearStatusFilters = () => clearStringGroup("status", { disregardDefault: true });
+
+  const addServiceEntity = (entity: string) => addString("serviceEntity", entity);
+  const removeServiceEntityChip = (entity: string) => removeStringChip("serviceEntity", entity);
+  const clearServiceEntities = () => clearStringGroup("serviceEntity");
+
+  const addServiceInstance = (value: string) => addString("serviceInstance", value);
+  const removeServiceInstanceChip = (value: string) => removeStringChip("serviceInstance", value);
+  const clearServiceInstances = () => clearStringGroup("serviceInstance");
+
+  const setIncludeOwned = (includeOwned: boolean) => {
+    setFilter({ ...filter, includeOwned: includeOwned || undefined });
+  };
 
   return (
     <DrawerPanelContent isResizable minSize="300px">
@@ -108,6 +124,19 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
                     onChange={handleStatusChange}
                   />
                 </Tab>
+                {isLsmEnabled && (
+                  <Tab
+                    eventKey={2}
+                    title={<TabTitleText>{words("resources.filters.tabs.service")}</TabTitleText>}
+                  >
+                    <ServiceFilterForm
+                      filter={filter}
+                      onAddServiceEntity={addServiceEntity}
+                      onAddServiceInstance={addServiceInstance}
+                      onChangeIncludeOwned={setIncludeOwned}
+                    />
+                  </Tab>
+                )}
               </Tabs>
             </StackItem>
             <Divider />
@@ -122,6 +151,11 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
               clearAgentFilters={clearAgentFilters}
               clearValueFilters={clearValueFilters}
               clearStatusFilters={clearStatusFilters}
+              removeServiceEntityChip={removeServiceEntityChip}
+              clearServiceEntities={clearServiceEntities}
+              removeServiceInstanceChip={removeServiceInstanceChip}
+              clearServiceInstances={clearServiceInstances}
+              removeIncludeOwned={() => setIncludeOwned(false)}
             />
           </Stack>
         </Form>
