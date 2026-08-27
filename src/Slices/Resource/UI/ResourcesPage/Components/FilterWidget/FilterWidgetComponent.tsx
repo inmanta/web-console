@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Divider,
   DrawerActions,
@@ -16,6 +16,7 @@ import {
 } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { getFilterActions } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ActiveFiltersSection } from "./ActiveFiltersSection";
 import { ResourceFilterForm } from "./ResourceFilterForm";
@@ -46,6 +47,8 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
   setFilter,
 }) => {
   const [activeTabKey, setActiveTabKey] = useState<string | number>(0);
+  const { orchestratorProvider } = useContext(DependencyContext);
+  const isLsmEnabled = orchestratorProvider.isLsmEnabled();
   const { addString, setStrings, removeStringChip, clearStringGroup } = getFilterActions(
     filter,
     setFilter
@@ -121,17 +124,19 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
                     onChange={handleStatusChange}
                   />
                 </Tab>
-                <Tab
-                  eventKey={2}
-                  title={<TabTitleText>{words("resources.filters.tabs.service")}</TabTitleText>}
-                >
-                  <ServiceFilterForm
-                    filter={filter}
-                    onAddServiceEntity={addServiceEntity}
-                    onAddServiceInstance={addServiceInstance}
-                    onChangeIncludeOwned={setIncludeOwned}
-                  />
-                </Tab>
+                {isLsmEnabled && (
+                  <Tab
+                    eventKey={2}
+                    title={<TabTitleText>{words("resources.filters.tabs.service")}</TabTitleText>}
+                  >
+                    <ServiceFilterForm
+                      filter={filter}
+                      onAddServiceEntity={addServiceEntity}
+                      onAddServiceInstance={addServiceInstance}
+                      onChangeIncludeOwned={setIncludeOwned}
+                    />
+                  </Tab>
+                )}
               </Tabs>
             </StackItem>
             <Divider />

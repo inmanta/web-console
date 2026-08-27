@@ -711,6 +711,12 @@ describe("Scenario 6 : Resources", () => {
         cy.wrap($row).should("contain", "frontend_model::TestResource");
       });
 
+      // The Service filter tab is LSM-only, so it must not appear on OSS
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+      cy.contains('[role="tab"]', "Resource").should("be.visible");
+      cy.contains('[role="tab"]', "Service").should("not.exist");
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+
       // Navigate to the first resource details
       cy.get('[aria-label="Resource Table Row"]')
         .first()

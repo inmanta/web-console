@@ -4,7 +4,9 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Resource } from "@/Core";
 import { getById } from "@/Test";
+import { MockOrchestratorProvider } from "@/Test/Mock";
 import { words } from "@/UI";
+import { DependencyProvider } from "@/UI/Dependency";
 import { FilterWidgetComponent } from "./FilterWidgetComponent";
 
 vi.mock("@/Data/Queries", () => ({
@@ -31,15 +33,20 @@ vi.mock("@/Data/Queries", () => ({
   }),
 }));
 
-const renderWithDrawer = (ui: React.ReactElement) =>
+const renderWithDrawer = (
+  ui: React.ReactElement,
+  orchestratorProvider = new MockOrchestratorProvider()
+) =>
   render(
-    <Drawer isInline isExpanded>
-      <DrawerContent panelContent={ui}>
-        <DrawerContentBody>
-          <div />
-        </DrawerContentBody>
-      </DrawerContent>
-    </Drawer>
+    <DependencyProvider dependencies={{ orchestratorProvider }}>
+      <Drawer isInline isExpanded>
+        <DrawerContent panelContent={ui}>
+          <DrawerContentBody>
+            <div />
+          </DrawerContentBody>
+        </DrawerContent>
+      </Drawer>
+    </DependencyProvider>
   );
 
 describe("FilterWidgetComponent", () => {
@@ -88,6 +95,33 @@ describe("FilterWidgetComponent", () => {
       value: undefined,
       agent: ["new-agent"],
     });
+  });
+
+  it("shows the Service tab when LSM is enabled (ISO)", () => {
+    renderWithDrawer(<FilterWidgetComponent filter={{}} onClose={vi.fn()} setFilter={vi.fn()} />);
+
+    expect(
+      screen.getByRole("tab", { name: words("resources.filters.tabs.service") })
+    ).toBeInTheDocument();
+  });
+
+  it("does not show the Service tab when LSM is disabled (OSS)", () => {
+    const oss = new MockOrchestratorProvider();
+
+    oss.isLsmEnabled = () => false;
+
+    renderWithDrawer(
+      <FilterWidgetComponent filter={{}} onClose={vi.fn()} setFilter={vi.fn()} />,
+      oss
+    );
+
+    // The other tabs still render; only the LSM-only Service tab is gone.
+    expect(
+      screen.getByRole("tab", { name: words("resources.filters.tabs.resource") })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("tab", { name: words("resources.filters.tabs.service") })
+    ).not.toBeInTheDocument();
   });
 
   it("updates status filters via the status selector", async () => {
