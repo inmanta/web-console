@@ -6,12 +6,14 @@ import {
   HelperText,
   HelperTextItem,
   Popover,
+  Spinner,
   TextArea,
   TextInput,
   TextInputTypes,
 } from "@patternfly/react-core";
 import { HelpIcon } from "@patternfly/react-icons";
 import { SuggestionValue } from "@/Core";
+import { words } from "@/UI/words";
 import { SuggestionsPopover } from "./SuggestionsPopover";
 import { resolveLabel, resolveValue } from "./suggestionResolvers";
 
@@ -27,7 +29,9 @@ interface Props {
   isTextarea?: boolean;
   handleInputChange: (value, event) => void;
   suggestions?: SuggestionValue[] | null;
-  errorMessage?: string | null;
+  warningMessage?: string | null;
+  hint?: string | null;
+  loading?: boolean;
 }
 
 /**
@@ -47,7 +51,9 @@ export const TextFormInput: React.FC<Props> = ({
   isTextarea = false,
   shouldBeDisabled = false,
   suggestions = [],
-  errorMessage,
+  warningMessage,
+  hint,
+  loading = false,
   ...props
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -72,9 +78,11 @@ export const TextFormInput: React.FC<Props> = ({
     }
   };
 
-  // Selecting a suggestion shows its label and submits its value.
+  // Selecting a suggestion shows its label and submits its value. This is a commit, not
+  // in-progress typing, so editing is cleared: the field stays controlled and a later external
+  // change (e.g. a cascading source clearing it) can still resync the display.
   const handleSelect = (value: string) => {
-    editedRef.current = true;
+    editedRef.current = false;
     setDisplayValue(resolveLabel(suggestions, value));
     handleInputChange(value, null);
   };
@@ -134,7 +142,7 @@ export const TextFormInput: React.FC<Props> = ({
           placeholder={placeholder}
           isRequired={!isOptional}
           isDisabled={shouldBeDisabled}
-          validated={errorMessage ? "error" : "default"}
+          validated={warningMessage ? "warning" : "default"}
           aria-describedby={`${attributeName}-helper`}
           aria-label={`TextareaInput-${attributeName}`}
         />
@@ -151,12 +159,20 @@ export const TextFormInput: React.FC<Props> = ({
             placeholder={placeholder}
             aria-describedby={`${attributeName}-helper`}
             aria-label={`TextInput-${attributeName}`}
+            // With suggestions this is a custom typeahead, so suppress the browser's own
+            // autofill dropdown - it overlaps and competes with the suggestions popover.
+            autoComplete={hasSuggestions ? "off" : undefined}
             value={displayValue}
             onChange={(_event, value) => handleType(value)}
             isDisabled={shouldBeDisabled}
-            validated={errorMessage ? "error" : "default"}
+            validated={warningMessage ? "warning" : "default"}
             onFocus={() => hasSuggestions && setIsOpen(true)}
             onBlur={handleBlur}
+            customIcon={
+              loading ? (
+                <Spinner isInline aria-label={words("inventory.form.suggestions.loading")} />
+              ) : null
+            }
           />
           {hasSuggestions && (
             <SuggestionsPopover
@@ -170,10 +186,11 @@ export const TextFormInput: React.FC<Props> = ({
           )}
         </>
       )}
-      {errorMessage && (
+      {(warningMessage || hint) && (
         <FormHelperText>
           <HelperText>
-            <HelperTextItem variant="error">{errorMessage}</HelperTextItem>
+            {warningMessage && <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>}
+            {hint && <HelperTextItem>{hint}</HelperTextItem>}
           </HelperText>
         </FormHelperText>
       )}

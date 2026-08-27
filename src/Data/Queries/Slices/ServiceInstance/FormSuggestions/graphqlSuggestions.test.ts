@@ -2,7 +2,6 @@ import { GraphQLSuggestionQuery } from "@/Core";
 import {
   buildSuggestionQuery,
   extractNodes,
-  getFilterVariables,
   getInvalidFilterKeys,
   getUnsupportedPaths,
   projectNodes,
@@ -175,35 +174,6 @@ describe("projectNodes", () => {
 
     // candidate_attributes is an object, not a submittable scalar
     expect(projectNodes(nodes, query)).toEqual([]);
-  });
-});
-
-describe("getFilterVariables", () => {
-  it("collects the ${...} namespaces across all string filter values, deduplicated", () => {
-    const query: GraphQLSuggestionQuery = {
-      root: "r",
-      filter: { a: "${entity_type}", b: "${instance_id}-${entity_type}", c: 5 },
-      value: "id",
-    };
-
-    expect(getFilterVariables(query)).toEqual(["entity_type", "instance_id"]);
-  });
-
-  it("collects ${...} namespaces from nested filter values", () => {
-    const query: GraphQLSuggestionQuery = {
-      root: "r",
-      filter: {
-        service: "${entity_type}",
-        attributes: { name: { eq: "${identifying_attribute}" } },
-      },
-      value: "id",
-    };
-
-    expect(getFilterVariables(query)).toEqual(["entity_type", "identifying_attribute"]);
-  });
-
-  it("returns an empty list when there is no filter", () => {
-    expect(getFilterVariables({ root: "r", value: "id" })).toEqual([]);
   });
 });
 

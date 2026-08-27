@@ -1,9 +1,10 @@
 import React, { useCallback, useContext } from "react";
-import { DropdownItem, Content, Spinner, Button, Flex, FlexItem } from "@patternfly/react-core";
+import { DropdownItem, Content, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
 import { useDeleteInstance } from "@/Data/Queries";
 import { words } from "@/UI";
+import { Spinner } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
@@ -15,6 +16,9 @@ interface Props {
   version: ParsedNumber;
   collapseToggle: () => void;
   setInterfaceBlocked: React.Dispatch<React.SetStateAction<boolean>>;
+
+  /** Custom confirmation prompt from the on_delete transfer's `web_confirm` annotation. Falls back to the default confirmation text when absent. */
+  webConfirm?: string;
 }
 
 /**
@@ -29,6 +33,7 @@ interface Props {
  *  @prop {function} collapseToggle - collapses the dropdown toggle when the modal opens
  *  @prop {React.Dispatch<React.SetStateAction<boolean>>} setInterfaceBlocked - setState variable to block the interface when the modal is opened.
  *  This is meant to avoid clickEvents triggering the onOpenChange from the dropdown to shut down the modal.
+ *  @prop {string} [webConfirm] - custom confirmation prompt from the on_delete transfer's `web_confirm` annotation
  * @returns {React.FC<Props>} A React Component displaying the Delete Dropdown Item
  */
 export const DeleteAction: React.FC<Props> = ({
@@ -39,6 +44,7 @@ export const DeleteAction: React.FC<Props> = ({
   version,
   collapseToggle,
   setInterfaceBlocked,
+  webConfirm,
 }) => {
   const { triggerModal, closeModal } = useContext(ModalContext);
 
@@ -59,6 +65,7 @@ export const DeleteAction: React.FC<Props> = ({
           service_entity={service_entity}
           instance_display_identity={instance_display_identity}
           version={version}
+          webConfirm={webConfirm}
           closeCallback={closeCallback}
         />
       ),
@@ -96,6 +103,7 @@ interface ModalContentProps {
   service_entity: string;
   instance_display_identity: string;
   version: ParsedNumber;
+  webConfirm?: string;
   closeCallback: () => void;
 }
 
@@ -116,6 +124,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
   service_entity,
   instance_display_identity,
   version,
+  webConfirm,
   closeCallback,
 }) => {
   const { notifyError } = useAppAlert();
@@ -142,7 +151,8 @@ const ModalContent: React.FC<ModalContentProps> = ({
   return (
     <>
       <Content component="p">
-        {words("inventory.deleteInstance.header")(instance_display_identity, service_entity)}
+        {webConfirm ??
+          words("inventory.deleteInstance.header")(instance_display_identity, service_entity)}
       </Content>
       <br />
 
@@ -156,7 +166,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
             isDisabled={isPending}
           >
             {words("yes")}
-            {isPending && <Spinner size="sm" />}
+            {isPending && <Spinner />}
           </Button>
         </FlexItem>
         <FlexItem>

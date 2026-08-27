@@ -175,6 +175,15 @@ const dict = {
     `Invalid filter field(s) in the suggested values query: ${keys}. A filter key must be a plain GraphQL field name; nested fields are expressed as nested objects, not dotted paths.`,
   "inventory.form.suggestions.invalidQuery":
     "The graphql suggested values annotation is malformed. It requires a 'query' with a 'root' and a 'value' projection.",
+  "inventory.form.suggestions.unsupportedFieldPath": (paths: string) =>
+    `Unsupported jsonpath in a cascading field reference: ${paths}. Only navigational paths (member access, array index, equality-filter selection) are supported.`,
+  "inventory.form.suggestions.blocked": (dependencies: string) =>
+    `Waiting on ${dependencies} before suggestions become available.`,
+  "inventory.form.suggestions.loading": "Loading suggestions...",
+  "inventory.form.suggestions.missingDependency": (field: string, reference: string) =>
+    `The suggested values for '${field}' reference '${reference}', which is not a field in scope.`,
+  "inventory.form.suggestions.dependencyCycle": (cycle: string) =>
+    `The suggested values form a dependency cycle: ${cycle}. Dependencies between fields must be acyclic.`,
   "inventory.form.suggestions.moreResults": (shown: number, total: number) =>
     `Showing the first ${shown} of ${total} suggestions. Refine your search to narrow the results.`,
   "inventory.form.tabs.invalidCatalog":
@@ -651,11 +660,7 @@ const dict = {
     `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying${
       count > 0 ? ", click to filter" : ""
     }`,
-  "resources.banner.manyDeploying": (count: number) =>
-    `${count} resources are currently deploying. The deploying indicators may increase CPU usage.`,
-  "resources.banner.disableAnimations": "Reduce animations",
-  "resources.banner.backToNormal": "Deploy load is back to normal.",
-  "resources.banner.enableAnimations": "Turn animations back on",
+  "resources.deploying.spinner": "Resources deploying",
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "discoveredResourceDetails.title": "Discovered Resource Details",

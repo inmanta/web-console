@@ -1,12 +1,15 @@
 import React, { useContext } from "react";
 import { DropdownGroup, DropdownItem } from "@patternfly/react-core";
+import styled, { css } from "styled-components";
 import { ParsedNumber } from "@/Core";
+import { StateTarget, iconColorFor } from "@/Slices/ServiceInstanceDetails/Utils";
 import { words } from "@/UI";
+import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { StateTransferModalContent } from "./StateTransferModalContent";
 
 interface Props {
-  targets: string[];
+  targets: StateTarget[];
   instance_display_identity: string;
   instance_id: string;
   service_entity: string;
@@ -19,7 +22,7 @@ interface Props {
  * The StateTransfer Component
  *
  * @props {Props} props - The props of the components
- *  @prop {string[]} targets - a list of available states targets for the expert mode
+ *  @prop {StateTarget[]} targets - a list of available target states, paired with the transfer that produces each one
  *  @prop {string} instance_display_identity - the display value of the instance Id
  *  @prop {string} instance_id - the hashed id of the instance
  *  @prop {string} service_entity - the service entity type of the instance
@@ -44,16 +47,17 @@ export const StateAction: React.FC<Props> = ({
    * When a state is selected, block the interface, open the modal,
    * and set the selected state
    *
-   * @param {string} value - the selected state
+   * @param {StateTarget} stateTarget - the selected target state and its transfer
    */
-  const onSelect = (value: string) => {
+  const onSelect = (stateTarget: StateTarget) => {
     triggerModal({
       title: words("instanceDetails.stateTransfer.confirmTitle"),
       content: (
         <StateTransferModalContent
           instance_id={instance_id}
           service_entity={service_entity}
-          targetState={value}
+          targetState={stateTarget.target}
+          webConfirm={stateTarget.transfer.annotations?.web_confirm}
           instance_display_identity={instance_display_identity}
           version={version}
           setInterfaceBlocked={setInterfaceBlocked}
@@ -73,12 +77,39 @@ export const StateAction: React.FC<Props> = ({
   return (
     <>
       <DropdownGroup label={words("instanceDetails.setState.label")}>
-        {targets.map((target) => (
-          <DropdownItem onClick={() => onSelect(target)} key={target}>
-            {target}
-          </DropdownItem>
+        {targets.map((stateTarget, index) => (
+          <StyledDropdownItem
+            onClick={() => onSelect(stateTarget)}
+            key={`${stateTarget.target}-${index}`}
+            isDanger={stateTarget.buttonVariant === "danger"}
+            $buttonVariant={stateTarget.buttonVariant}
+            icon={
+              stateTarget.buttonIcon && (
+                <DynamicFAIcon
+                  icon={stateTarget.buttonIcon}
+                  color={iconColorFor(stateTarget.buttonVariant)}
+                />
+              )
+            }
+          >
+            {stateTarget.buttonLabel}
+          </StyledDropdownItem>
         ))}
       </DropdownGroup>
     </>
   );
 };
+
+/**
+ * PatternFly's `isDanger` on DropdownItem already colors the text for `danger`
+ * (icon coloring is handled separately, see `iconColorFor`). `warning` has no
+ * PatternFly modifier at all, so its text color is set here explicitly - unlike
+ * the design mock, which only tints the icon for warning (issue #7093).
+ */
+const StyledDropdownItem = styled(DropdownItem)<{ $buttonVariant?: string }>`
+  ${({ $buttonVariant }) =>
+    $buttonVariant === "warning" &&
+    css`
+      --pf-v6-c-menu__item--Color: var(--pf-t--global--text--color--status--warning--default);
+    `}
+`;
