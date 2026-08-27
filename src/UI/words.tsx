@@ -432,6 +432,13 @@ const dict = {
   "diagnose.links.compileReport": "Compile Report",
   "diagnose.rejection.title": "Validation failure",
   "diagnose.rejection.traceback": "Show full traceback",
+  "diagnose.rejection.errorsCount": (amount: number) => `${amount} errors`,
+  "diagnose.rejection.errorType": "Type",
+  "diagnose.rejection.errorMessage": "Message",
+  "diagnose.rejection.errorCategory": "Category",
+  "diagnose.rejection.errorLocation": "Location",
+  "diagnose.rejection.showDetails": "Show details",
+  "diagnose.rejection.instanceVersion": (version: ParsedNumber) => `Instance version: ${version}`,
   "diagnose.main.subtitle": (instanceId: string) =>
     `The following errors were found related to instance ${instanceId}`,
   "diagnose.title": "Diagnose Service Instance",
