@@ -44,6 +44,7 @@ export * from "./ServiceInstanceForm";
 export * from "./ServiceProvider";
 export * from "./SettingsList";
 export * from "./SingleTextSelect";
+export * from "./Spinner";
 export * from "./SummaryChart";
 export * from "./TextWithCopy";
 export * from "./DateWithTimeDiffTooltip";
