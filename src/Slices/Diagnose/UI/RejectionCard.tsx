@@ -40,7 +40,7 @@ const formatLocation = (location: CompileErrorLocation): string =>
     ? `${location.uri}:${location.range.start.line}:${location.range.start.character}`
     : location.uri;
 
-const ErrorBlock: React.FC<{ error: CompileError }> = ({ error }) => (
+const ErrorBlock: React.FC<{ error: CompileError; index: number }> = ({ error, index }) => (
   <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsSm" }}>
     <FlexItem>
       <DescriptionList isCompact>
@@ -55,7 +55,11 @@ const ErrorBlock: React.FC<{ error: CompileError }> = ({ error }) => (
       </DescriptionList>
     </FlexItem>
     <FlexItem>
-      <ExpandableSection toggleText={words("diagnose.rejection.showDetails")} isIndented>
+      <ExpandableSection
+        toggleText={words("diagnose.rejection.showDetails")}
+        toggleAriaLabel={words("diagnose.rejection.showDetailsAriaLabel")(index + 1)}
+        isIndented
+      >
         <DescriptionList isCompact>
           <DescriptionListGroup>
             <DescriptionListTerm>{words("diagnose.rejection.errorType")}</DescriptionListTerm>
@@ -178,7 +182,7 @@ export const RejectionCard: React.FC<Props> = ({
         <Flex direction={{ default: "column" }} spaceItems={{ default: "spaceItemsLg" }}>
           {errors?.map((error, idx) => (
             <FlexItem key={`error-${idx}`}>
-              <ErrorBlock error={error} />
+              <ErrorBlock error={error} index={idx} />
             </FlexItem>
           ))}
         </Flex>

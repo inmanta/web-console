@@ -438,6 +438,7 @@ const dict = {
   "diagnose.rejection.errorCategory": "Category",
   "diagnose.rejection.errorLocation": "Location",
   "diagnose.rejection.showDetails": "Show details",
+  "diagnose.rejection.showDetailsAriaLabel": (index: number) => `Show details for error ${index}`,
   "diagnose.rejection.instanceVersion": (version: ParsedNumber) => `Instance version: ${version}`,
   "diagnose.main.subtitle": (instanceId: string) =>
     `The following errors were found related to instance ${instanceId}`,

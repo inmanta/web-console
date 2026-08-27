@@ -90,21 +90,25 @@ describe("RejectionCard", () => {
     expect(screen.queryByText("inmanta.ast.DoubleSetException")).not.toBeVisible();
     expect(screen.queryByText("inmanta.ast.AttributeException")).not.toBeVisible();
 
-    const toggles = screen.getAllByRole("button", {
-      name: words("diagnose.rejection.showDetails"),
+    // Each toggle renders the same visible "Show details" text, but is given a distinct
+    // aria-label (error 1, error 2, ...) - both so screen reader users can tell them apart,
+    // and so their linked content regions don't collide on axe's landmark-unique rule.
+    const firstToggle = screen.getByRole("button", {
+      name: words("diagnose.rejection.showDetailsAriaLabel")(1),
+    });
+    const secondToggle = screen.getByRole("button", {
+      name: words("diagnose.rejection.showDetailsAriaLabel")(2),
     });
 
-    expect(toggles).toHaveLength(2);
-
     // expanding the first error's details doesn't reveal the second error's details.
-    await user.click(toggles[0]);
+    await user.click(firstToggle);
 
     expect(screen.getByText("inmanta.ast.DoubleSetException")).toBeVisible();
     expect(screen.getByText("runtime_error")).toBeVisible();
     expect(screen.getByText("./main.cf:29:4")).toBeVisible();
     expect(screen.queryByText("inmanta.ast.AttributeException")).not.toBeVisible();
 
-    await user.click(toggles[1]);
+    await user.click(secondToggle);
 
     expect(screen.getByText("inmanta.ast.AttributeException")).toBeVisible();
     expect(screen.getByText("plugin_exception")).toBeVisible();
@@ -113,25 +117,26 @@ describe("RejectionCard", () => {
 
   it("shows the traceback, collapsed by default, in the card footer", async () => {
     const user = userEvent.setup();
+    const trace =
+      'Traceback (most recent call last):\n  raise DoubleSetException("value set twice")';
 
-    render(
-      setup(
-        createRejection({
-          trace:
-            'Traceback (most recent call last):\n  raise DoubleSetException("value set twice")',
-        })
-      )
-    );
+    render(setup(createRejection({ trace })));
 
     const traceToggle = screen.getByRole("button", {
       name: words("diagnose.rejection.traceback"),
     });
+    // The traceback is rendered through a monaco mock that doesn't expose the code as text, so
+    // visibility of its region (rather than its content) is what we can assert on here. A
+    // collapsed region's accessible name computes to "" (aria-labelledby isn't resolved for
+    // hidden nodes), so it has to be located via the toggle's aria-controls id, not by role+name.
+    const contentId = traceToggle.getAttribute("aria-controls");
+    const traceRegion = document.getElementById(contentId ?? "");
 
-    expect(traceToggle).toHaveAttribute("aria-expanded", "false");
+    expect(traceRegion).not.toBeVisible();
 
     await user.click(traceToggle);
 
-    expect(traceToggle).toHaveAttribute("aria-expanded", "true");
+    expect(traceRegion).toBeVisible();
   });
 
   it("does not show a traceback toggle when there is no trace", () => {
@@ -155,10 +160,12 @@ describe("RejectionCard", () => {
 
     const user = userEvent.setup();
 
-    for (const toggle of screen.getAllByRole("button", {
-      name: words("diagnose.rejection.showDetails"),
-    })) {
-      await user.click(toggle);
+    for (const index of [1, 2]) {
+      await user.click(
+        screen.getByRole("button", {
+          name: words("diagnose.rejection.showDetailsAriaLabel")(index),
+        })
+      );
     }
 
     await user.click(screen.getByRole("button", { name: words("diagnose.rejection.traceback") }));
