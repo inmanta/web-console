@@ -1,6 +1,0 @@
-description: Reduced the CPU cost of the animated deploying-resource indicators on the Resources page, and added a banner shown when many resources are deploying at once, letting the user opt to render the indicators statically instead of animated.
-issue-nr: 7228
-change-type: minor
-destination-branches: [master, iso9]
-sections:
-  minor-improvement: "{{description}}"

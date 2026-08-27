@@ -1,9 +1,10 @@
 import React, { useCallback, useContext } from "react";
-import { DropdownItem, Content, Spinner, Button, Flex, FlexItem } from "@patternfly/react-core";
+import { DropdownItem, Content, Button, Flex, FlexItem } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { ParsedNumber } from "@/Core";
 import { useDeleteInstance } from "@/Data/Queries";
 import { words } from "@/UI";
+import { Spinner } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
@@ -165,7 +166,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
             isDisabled={isPending}
           >
             {words("yes")}
-            {isPending && <Spinner size="sm" />}
+            {isPending && <Spinner />}
           </Button>
         </FlexItem>
         <FlexItem>

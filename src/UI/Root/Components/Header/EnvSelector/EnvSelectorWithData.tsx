@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import { Dropdown, Spinner, MenuToggle } from "@patternfly/react-core";
+import { Dropdown, MenuToggle } from "@patternfly/react-core";
 import { UseQueryResult } from "@tanstack/react-query";
 import { Environment, FlatEnvironment, ProjectModel } from "@/Core";
 import { EnvironmentPreview } from "@/Data/Queries";
+import { Spinner } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
 import { EnvironmentSelectorItem, EnvSelectorWrapper } from "./EnvSelectorWrapper";
@@ -83,9 +84,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
     );
   }
 
-  return (
-    <Dropdown toggle={() => <Spinner size="sm" />} aria-label="EnvSelector-Loading"></Dropdown>
-  );
+  return <Dropdown toggle={() => <Spinner />} aria-label="EnvSelector-Loading"></Dropdown>;
 };
 
 /**
