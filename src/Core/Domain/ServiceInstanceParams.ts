@@ -2,19 +2,15 @@ import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { PageSize } from "./PageSize";
 import { Sort } from "./Sort";
 
-export interface ServiceInstanceBaseParams {
+export interface ServiceInstanceParams {
   filter?: Filter;
   sort?: Sort;
   pageSize: PageSize;
-}
-
-/** Standard paginated query */
-export interface ServiceInstanceParams extends ServiceInstanceBaseParams {
   currentPage: CurrentPage;
 }
 
 /** Infinite scroll query, which manages its own cursor and so needs no currentPage */
-export type ServiceInstanceInfiniteParams = ServiceInstanceBaseParams;
+export type ServiceInstanceInfiniteParams = Omit<ServiceInstanceParams, "currentPage">;
 
 export enum AttributeSet {
   Active = "active_attributes",
