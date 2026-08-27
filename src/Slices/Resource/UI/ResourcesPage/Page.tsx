@@ -11,7 +11,6 @@ import {
   StackItem,
   ToolbarItem,
   Label,
-  Spinner,
   Tooltip,
 } from "@patternfly/react-core";
 import { CubesIcon } from "@patternfly/react-icons";
@@ -24,6 +23,7 @@ import {
   ErrorView,
   LoadingView,
   CompoundResourceStatus,
+  Spinner,
   countActiveFilters,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -32,7 +32,6 @@ import {
   ConnectedFilterWidget,
   DeployButton,
   RepairButton,
-  DeployingAnimationBanner,
 } from "./Components";
 import { ResourcesTable } from "./ResourcesTable";
 import { createRows } from "./ResourcesTablePresenter";
@@ -130,7 +129,7 @@ export const Page: React.FC = () => {
                   {deployingCount > 0 && (
                     <>
                       {deployingCount}
-                      <Spinner size="sm" isInline />
+                      <Spinner aria-label={words("resources.deploying.spinner")} />
                       <span>/</span>
                     </>
                   )}
@@ -223,7 +222,6 @@ export const Page: React.FC = () => {
           </DrawerContent>
         </Drawer>
       </PageSection>
-      <DeployingAnimationBanner deployingCount={deployingCount} />
     </>
   );
 };

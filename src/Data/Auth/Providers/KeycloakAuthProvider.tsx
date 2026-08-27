@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { Bullseye, Spinner } from "@patternfly/react-core";
+import { Bullseye } from "@patternfly/react-core";
 import { useKeycloak, ReactKeycloakProvider } from "@react-keycloak/web";
 import Keycloak from "keycloak-js";
+import { Spinner } from "@/UI/Components";
 import { AuthContext } from "../AuthContext";
 import { KeycloakAuthConfig } from "../types";
 
@@ -103,7 +104,7 @@ export const KeycloakAuthProvider: React.FC<React.PropsWithChildren<Props>> = ({
       }}
       LoadingComponent={
         <Bullseye>
-          <Spinner />
+          <Spinner size={56} />
         </Bullseye>
       }
     >

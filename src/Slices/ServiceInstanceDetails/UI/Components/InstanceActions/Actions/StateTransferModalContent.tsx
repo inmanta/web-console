@@ -1,17 +1,9 @@
 import React, { useCallback, useContext, useState } from "react";
-import {
-  Content,
-  Button,
-  Spinner,
-  Flex,
-  FlexItem,
-  Form,
-  FormGroup,
-  TextArea,
-} from "@patternfly/react-core";
+import { Content, Button, Flex, FlexItem, Form, FormGroup, TextArea } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Queries";
 import { DependencyContext, words } from "@/UI";
+import { Spinner } from "@/UI/Components";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 
@@ -111,7 +103,7 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
             isDisabled={isPending}
           >
             {words("yes")}
-            {isPending && <Spinner size="sm" />}
+            {isPending && <Spinner />}
           </Button>
         </FlexItem>
         <FlexItem>

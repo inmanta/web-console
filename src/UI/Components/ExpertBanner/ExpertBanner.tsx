@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Banner, Button, Flex, Spinner } from "@patternfly/react-core";
+import { Banner, Button, Flex } from "@patternfly/react-core";
 import { useUpdateEnvironmentSetting } from "@/Data/Queries";
+import { Spinner } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
@@ -48,7 +49,7 @@ export const ExpertBanner: React.FC = () => {
           >
             {words("banner.disableExpertMode")}
           </Button>
-          {isLoading && <Spinner isInline size="sm" />}
+          {isLoading && <Spinner />}
         </Flex>
       </Banner>
     </>

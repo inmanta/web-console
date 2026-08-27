@@ -9,7 +9,6 @@ import {
   Select,
   SelectList,
   SelectOption,
-  Spinner,
   Flex,
   TextInputGroup,
   TextInputGroupMain,
@@ -17,6 +16,7 @@ import {
 } from "@patternfly/react-core";
 import { PlusIcon, TimesIcon } from "@patternfly/react-icons";
 import { words } from "@/UI";
+import { Spinner } from "@/UI/Components";
 
 export interface SelectOption {
   value: string;
@@ -255,7 +255,7 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
                 <SelectOption value="__loading__" isDisabled>
                   <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
                     {words("resources.filters.resource.agent.loading")}
-                    <Spinner size="sm" />
+                    <Spinner />
                   </Flex>
                 </SelectOption>
               )}

@@ -1,6 +1,4 @@
-import React from "react";
-import styled, { css, keyframes } from "styled-components";
-import { useReducedAnimations } from "@/UI/Components/ReducedAnimations/useReducedAnimations";
+import styled, { keyframes } from "styled-components";
 
 //Indication colors based on <Label color="blue" /> component
 const pendingAnimation = keyframes`
@@ -9,9 +7,8 @@ const pendingAnimation = keyframes`
  100% { opacity: .2}
 `;
 
-const StyledBlinkingDot = styled.span<{
+export const BlinkingDot = styled.span<{
   $size?: number;
-  $reducedAnimations: boolean;
 }>`
   display: inline-flex;
   align-items: center;
@@ -25,31 +22,6 @@ const StyledBlinkingDot = styled.span<{
     height: ${({ $size = 8 }) => $size - 2}px;
     border-radius: 50%;
     border: 1px solid var(--pf-t--global--border--color--nonstatus--blue--default);
-    ${({ $reducedAnimations }) =>
-      $reducedAnimations
-        ? css`
-            opacity: 1;
-          `
-        : css`
-            animation: ${pendingAnimation} 2s infinite;
-            will-change: opacity;
-          `}
+    animation: ${pendingAnimation} 2s infinite;
   }
 `;
-
-interface Props extends React.ComponentPropsWithoutRef<"span"> {
-  $size?: number;
-}
-
-/**
- * A small blue dot indicating an in-progress/deploying state.
- *
- * Pulses continuously unless the user has opted into the "reduce animations"
- * preference (offered via a banner when many resources are deploying at once),
- * in which case it renders as a static, fully-opaque dot instead.
- */
-export const BlinkingDot: React.FC<Props> = ({ $size, ...rest }) => {
-  const { reducedAnimations } = useReducedAnimations();
-
-  return <StyledBlinkingDot $size={$size} $reducedAnimations={reducedAnimations} {...rest} />;
-};
