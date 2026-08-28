@@ -42,6 +42,22 @@ const e: StateModel = {
 
 export const list = [a, b, c, d, e];
 
+/**
+ * A state carrying `web_label` / `web_icon` / `web_description` (issue #7094),
+ * mirroring the example seeded on the `basic-service` dev model's `creating` state.
+ */
+export const withAnnotations: StateModel = {
+  name: "creating",
+  export_resources: false,
+  purge_resources: false,
+  deleted: false,
+  annotations: {
+    web_label: "Creating",
+    web_icon: "FaCogs",
+    web_description: "The service is being deployed for the first time.",
+  },
+};
+
 export const nestedEditable: StateModel[] = [
   {
     name: "a",

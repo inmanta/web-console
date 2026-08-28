@@ -3,8 +3,11 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ServiceModel } from "@/Core";
 import { InstanceLog } from "@/Core/Domain/HistoryLog";
+import * as Service from "@/Test/Data/Service";
+import * as State from "@/Test/Data/Service/State";
 import { InstanceDetailsContext } from "../Core/Context";
 import { HistorySection } from "../UI/Components/Sections";
+import { StateLabel } from "../UI/Components/Sections/HistorySection";
 import { historyData, instanceData } from "./mockData";
 import { SetupWrapper } from "./mockSetup";
 
@@ -85,5 +88,30 @@ describe("HistorySection infinite query", () => {
 
     await userEvent.click(button);
     expect(fetchNextPage).toHaveBeenCalled();
+  });
+});
+
+describe("StateLabel", () => {
+  it("renders the matching lifecycle state's web_label, web_icon and web_description (issue #7094)", async () => {
+    const service: ServiceModel = {
+      ...Service.a,
+      lifecycle: {
+        ...Service.a.lifecycle,
+        states: Service.a.lifecycle.states.map((state) =>
+          state.name === State.withAnnotations.name ? State.withAnnotations : state
+        ),
+      },
+    };
+
+    render(<StateLabel service={service} state="creating" />);
+
+    expect(screen.getByText("Creating")).toBeVisible();
+    expect(screen.getByTestId("FaCogs")).toBeVisible();
+
+    await userEvent.hover(screen.getByText("Creating"));
+
+    expect(await screen.findByRole("tooltip")).toHaveTextContent(
+      "The service is being deployed for the first time."
+    );
   });
 });
