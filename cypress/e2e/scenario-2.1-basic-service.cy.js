@@ -126,7 +126,8 @@ if (isIso) {
       cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should("have.length", 3);
 
       // Check the state of the instance is up in the history section.
-      cy.get('[aria-label="History-Row"]').eq(0).should("contain", "up");
+      // "Up" (not "up"): the up state carries a web_label annotation (issue #7094).
+      cy.get('[aria-label="History-Row"]').eq(0).should("contain", "Up");
 
       // Selecting a version in the table should change the tags in the heading of the page.
       cy.get('[id="version-2"]').within(() => {
@@ -391,8 +392,9 @@ if (isIso) {
       cy.get("button").contains("Yes").click();
 
       // expect to find in the history table,
+      // "Up" (not "up"): the up state carries a web_label annotation (issue #7094).
       cy.get('[aria-label="History-Row"]').should(($rows) => {
-        expect($rows[0]).to.contain("up");
+        expect($rows[0]).to.contain("Up");
         expect($rows[1]).to.contain("setting_inprogress");
         expect($rows[2]).to.contain("setting_start");
       });
@@ -485,7 +487,8 @@ if (isIso) {
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).first().click();
 
       // Check the state of the instance is up in the history section.
-      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should("contain", "up");
+      // "Up" (not "up"): the up state carries a web_label annotation (issue #7094).
+      cy.get('[aria-label="History-Row"]', { timeout: 60000 }).should("contain", "Up");
 
       // Go back to inventory using the breadcrumbs
       cy.get('[aria-label="BreadcrumbItem"]').contains("Service Inventory: basic-service").click();
