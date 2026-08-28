@@ -2,14 +2,14 @@ import { useContext } from "react";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { CustomError, useGet } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
-import { RawDiagnostics } from "@/Slices/Diagnose/Core/Domain";
+import { Diagnostics } from "@/Slices/Diagnose/Core/Domain";
 import { DependencyContext } from "@/UI/Dependency";
 
 /**
  * Return Signature of the useGetDiagnostics React Query
  */
 interface GetDiagnostics {
-  useOneTime: (lookBehind: string) => UseQueryResult<RawDiagnostics, CustomError>;
+  useOneTime: (lookBehind: string) => UseQueryResult<Diagnostics, CustomError>;
 }
 
 /**
@@ -18,18 +18,18 @@ interface GetDiagnostics {
  * @param service {string} - the service entity
  * @param instanceId {string} - the instance ID for which the data needs to be fetched.
  *
- * @returns {GetInstance} An object containing the different available queries.
- * @returns {UseQueryResult<ServiceInstanceModel, CustomError>} returns.useOneTime - Fetch the diagnose report with a single query.
+ * @returns {GetDiagnostics} An object containing the different available queries.
+ * @returns {UseQueryResult<Diagnostics, CustomError>} returns.useOneTime - Fetch the diagnose report with a single query.
  */
 export const useGetDiagnostics = (service: string, instanceId: string): GetDiagnostics => {
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const url = (lookBehind) =>
     `/lsm/v1/service_inventory/${service}/${instanceId}/diagnose?rejection_lookbehind=${lookBehind}&failure_lookbehind=${lookBehind}`;
-  const get = useGet(env)<{ data: RawDiagnostics }>;
+  const get = useGet(env)<{ data: Diagnostics }>;
 
   return {
-    useOneTime: (lookBehind: string): UseQueryResult<RawDiagnostics, CustomError> =>
+    useOneTime: (lookBehind: string): UseQueryResult<Diagnostics, CustomError> =>
       useQuery({
         queryKey: getDiagnosticsKey.single(instanceId, [{ service }, { lookBehind }, env]),
         queryFn: () => get(url(lookBehind)),
