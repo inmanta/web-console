@@ -668,11 +668,7 @@ const dict = {
     `${count} ${count === 1 ? "resource is" : "resources are"} currently deploying${
       count > 0 ? ", click to filter" : ""
     }`,
-  "resources.banner.manyDeploying": (count: number) =>
-    `${count} resources are currently deploying. The deploying indicators may increase CPU usage.`,
-  "resources.banner.disableAnimations": "Reduce animations",
-  "resources.banner.backToNormal": "Deploy load is back to normal.",
-  "resources.banner.enableAnimations": "Turn animations back on",
+  "resources.deploying.spinner": "Resources deploying",
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
   "discoveredResourceDetails.title": "Discovered Resource Details",
@@ -706,6 +702,22 @@ const dict = {
   "resources.filters.filter": "Add filter",
   "resources.filters.tabs.resource": "Resource",
   "resources.filters.tabs.status": "Status",
+  "resources.filters.tabs.service": "Service",
+  "resources.filters.service.sectionTitle": "Service",
+  "resources.filters.service.entity.label": "Service entity",
+  "resources.filters.service.entity.placeholder": "Select a service entity",
+  "resources.filters.service.entity.selectInfoLabel": "Use text input",
+  "resources.filters.service.entity.textInfoLabel": "Use select input",
+  "resources.filters.service.entity.loading": "Loading service entities...",
+  "resources.filters.service.entity.empty": "No service entities found",
+  "resources.filters.service.instance.label": "Instance",
+  "resources.filters.service.instance.placeholder": "Select an instance",
+  "resources.filters.service.instance.loading": "Loading instances...",
+  "resources.filters.service.instance.empty": "No instances found",
+  "resources.filters.service.includeOwned.label": "Include owned services",
+  "resources.filters.service.includeOwned.description":
+    "Also match resources of services owned by the selected instances",
+  "resources.filters.service.includeOwned.chipValue": "Included",
   "resources.filters.resource.sectionTitle": "Resource Id",
   "resources.filters.resource.type.label": "Type",
   "resources.filters.resource.type.placeholder": "Resource type...",

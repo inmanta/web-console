@@ -136,6 +136,15 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
     ...(filter?.value?.length
       ? { resourceIdValue: { contains: filter.value.map((value) => `%${value}%`) } }
       : {}),
+    ...(filter?.serviceEntity?.length ? { serviceEntity: filter.serviceEntity } : {}),
+    ...(filter?.serviceInstance?.length
+      ? {
+          serviceInstance: filter.serviceInstance.map(
+            (value) => Resource.parseServiceInstanceFilterValue(value).id
+          ),
+        }
+      : {}),
+    ...(filter?.includeOwned ? { includeOwned: true } : {}),
     ...statusFilter,
   };
 

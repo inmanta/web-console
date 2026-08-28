@@ -622,6 +622,82 @@ describe("Scenario 6 : Resources", () => {
       // only one active item remains
       cy.get('[data-testid="status-sort-item-blocked-active"]').should("exist");
     });
+
+    it("6.9 Service filters", () => {
+      cy.visit("/console/");
+      selectEnvironment();
+
+      // Reuses the fully-deployed resource-states instance left behind by 6.5 (pagination-test)
+      cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+      cy.get('[aria-label="ResourcesPage-Success"]', { timeout: 20000 }).should("be.visible");
+
+      // Store initial row count
+      cy.get('[aria-label="Resource Table Row"]').then(($rows) => {
+        cy.wrap($rows.length).as("initialRowCount");
+      });
+
+      // Open the filter drawer and switch to the Service tab
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+      cy.get('[role="tab"]').contains("Service").click();
+
+      // The instance field and include-owned switch stay disabled until their prerequisites are met.
+      // The typeahead toggle carries its disabled state on the inner input, not the chevron button.
+      cy.get('[aria-label="Instance-input"]').should("be.disabled");
+      cy.get("#resources-filter-include-owned").should("be.disabled");
+
+      // --- Service entity filter ---
+      cy.get('[aria-label="Service entity-input"]').click().type("resource-states");
+      cy.get('[aria-label="Service entity options"]').contains("button", "resource-states").click();
+      cy.get('[aria-label="Add filter-Service entity"]').should("not.be.disabled").click();
+
+      // The entity chip appears and the table filters down to the resources that belong to the service
+      cy.get('[aria-label="Close resource-states"]').should("exist");
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      expectFilteredLessThan("initialRowCount");
+
+      // Removing the entity chip restores the full set
+      cy.get('[aria-label="Close resource-states"]').click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      expectRowCountRestored("initialRowCount");
+
+      // --- Service instance filter ---
+      // Selecting (without adding) an entity in the input enables and populates the instance field
+      cy.get('[aria-label="Service entity-input"]').click().type("resource-states");
+      cy.get('[aria-label="Service entity options"]').contains("button", "resource-states").click();
+
+      cy.get('[aria-label="Instance-input"]').should("not.be.disabled");
+      cy.get('[aria-label="Instance-menuToggle"]').click();
+      cy.get('[aria-label="Instance options"]', { timeout: 20000 })
+        .find("button")
+        .should("have.length.at.least", 1);
+      cy.get('[aria-label="Instance options"]')
+        .find("button")
+        .first()
+        .then(($option) => {
+          const instanceLabel = $option.text().trim();
+
+          cy.wrap($option).click();
+          cy.get('[aria-label="Add filter-Instance"]').should("not.be.disabled").click();
+
+          // The instance chip appears (labelled by service identity, falling back to the id)
+          cy.get(`[aria-label="Close ${instanceLabel}"]`).should("exist");
+          cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+          expectFilteredLessThan("initialRowCount");
+
+          // --- Include owned services ---
+          // The switch becomes enabled once an instance is set; toggling it adds its own chip
+          cy.get("#resources-filter-include-owned")
+            .should("not.be.disabled")
+            .click({ force: true });
+          cy.get('[aria-label="Close Included"]').should("exist");
+          cy.get('[aria-label="ResourcesPage-Success"]', { timeout: 20000 }).should("be.visible");
+        });
+
+      // Reset all filters and verify the table is restored
+      cy.get("button").contains("Reset Filters").click();
+      cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+      expectRowCountRestored("initialRowCount");
+    });
   } else {
     it("6.2 Resources for OSS", () => {
       cy.visit("/console/");
@@ -634,6 +710,12 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="Resource Table Row"]').each(($row) => {
         cy.wrap($row).should("contain", "frontend_model::TestResource");
       });
+
+      // The Service filter tab is LSM-only, so it must not appear on OSS
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+      cy.contains('[role="tab"]', "Resource").should("be.visible");
+      cy.contains('[role="tab"]', "Service").should("not.exist");
+      cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
 
       // Navigate to the first resource details
       cy.get('[aria-label="Resource Table Row"]')

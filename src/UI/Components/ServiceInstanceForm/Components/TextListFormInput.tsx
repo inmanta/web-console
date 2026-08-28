@@ -123,8 +123,15 @@ export const TextListFormInput: React.FC<Props> = ({
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" || event.key === "Tab") {
+    if (event.key === "Enter") {
+      // Enter commits the pending text and keeps the field focused so more chips
+      // can be added;
       event.preventDefault();
+      addChip();
+    } else if (event.key === "Tab") {
+      // Tab commits any pending text as well, but must NOT preventDefault: doing so
+      // trapped keyboard focus on the field and blocked tab navigation to the next
+      // input.
       addChip();
     }
   };

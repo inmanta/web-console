@@ -71,12 +71,15 @@ export const ServiceInventory: React.FunctionComponent<{
     [service]
   );
 
-  const { data, isError, error, isSuccess, refetch } = useGetInstances(serviceName, {
-    sort,
-    filter,
-    pageSize,
-    currentPage,
-  }).useContinuous({ keepPreviousData: true });
+  const { data, isError, error, isSuccess, refetch } = useGetInstances(serviceName).useContinuous(
+    {
+      sort,
+      filter,
+      pageSize,
+      currentPage,
+    },
+    { keepPreviousData: true }
+  );
 
   /**
    * Filters the service lifecycle states based on the provided label.

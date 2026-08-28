@@ -1248,7 +1248,7 @@ __metadata:
     "@eslint/js": "npm:^10.0.1"
     "@graphiql/react": "npm:^0.37.7"
     "@joint/layout-directed-graph": "npm:^4.3.0"
-    "@joint/plus": "npm:^4.3.1"
+    "@joint/plus": "npm:^4.3.2"
     "@loadable/component": "npm:^5.16.7"
     "@monaco-editor/react": "npm:^4.7.0"
     "@patternfly/react-charts": "npm:^8.6.1"
@@ -1275,7 +1275,7 @@ __metadata:
     "@types/markdown-it-emoji": "npm:^3.0.1"
     "@types/node": "npm:^25.6.0"
     "@types/qs": "npm:^6.15.1"
-    "@types/react": "npm:^19.2.17"
+    "@types/react": "npm:^19.2.18"
     "@types/react-dom": "npm:^19.2.4"
     "@types/styled-components": "npm:^5.1.36"
     "@types/uuid": "npm:^11.0.0"
@@ -1501,10 +1501,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joint/core@npm:~4.3.0, @joint/core@npm:~4.3.1":
-  version: 4.3.1
-  resolution: "@joint/core@npm:4.3.1::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40joint%2Fcore%2F-%2Fcore-4.3.1.tgz"
-  checksum: 10/363c383445c02a64f5eab1b5248e2b3ba61fa8edf172cdcfdcccca8e6dc2575acc740e8da45fcd6ea998152eeddc5451147846f56c118c61e4590e1aaaf555e3
+"@joint/core@npm:~4.3.0, @joint/core@npm:~4.3.2":
+  version: 4.3.2
+  resolution: "@joint/core@npm:4.3.2::__archiveUrl=https%3A%2F%2Fregistry.npmjs.org%2F%40joint%2Fcore%2F-%2Fcore-4.3.2.tgz"
+  checksum: 10/5defb2808daac2a767de860f2f149db140ccd65e307a013fe695633586b7c52392230af204a572c1ad9afb4f65bd1d87c3f0f88bd1fe31acccf4f5e04b0b5b44
   languageName: node
   linkType: hard
 
@@ -1519,12 +1519,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joint/plus@npm:^4.3.1":
-  version: 4.3.1
-  resolution: "@joint/plus@npm:4.3.1::__archiveUrl=https%3A%2F%2Fnpm.jointjs.com%2Fapi%2Fv4%2Fprojects%2F77690663%2Fpackages%2Fnpm%2F%40joint%2Fplus%2F-%2F%40joint%2Fplus-4.3.1.tgz"
+"@joint/plus@npm:^4.3.2":
+  version: 4.3.2
+  resolution: "@joint/plus@npm:4.3.2::__archiveUrl=https%3A%2F%2Fnpm.jointjs.com%2Fapi%2Fv4%2Fprojects%2F77690663%2Fpackages%2Fnpm%2F%40joint%2Fplus%2F-%2F%40joint%2Fplus-4.3.2.tgz"
   dependencies:
-    "@joint/core": "npm:~4.3.1"
-  checksum: 10/cba829a3980e6250af99552af20680dc1ab7f97c7766a1abb45cbc0fbf50eec5314d96fd59773b25fbfae268937fe328785b4ecf243c5e3cee767fdb7cd99f4c
+    "@joint/core": "npm:~4.3.2"
+  checksum: 10/f1ebfd49d82754825f85c0b6f86cbcc5480c500a490685d8d6058ca97d38af4a18849c4fe5e2a30c292ca6fb6f10bbb2cab613411f88d8b58fdc3a98ab3bb8e6
   languageName: node
   linkType: hard
 
@@ -3611,12 +3611,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^19.2.17":
+"@types/react@npm:*":
   version: 19.2.17
   resolution: "@types/react@npm:19.2.17"
   dependencies:
     csstype: "npm:^3.2.2"
   checksum: 10/8debb092bd0bb9c99176a31824c7587c27c775a6526b60060e7b9e8dc2af53aee2ffadc7a1e3845953792437db5699d34a9054e198c9d4e54a74728ff47c6725
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^19.2.18":
+  version: 19.2.18
+  resolution: "@types/react@npm:19.2.18"
+  dependencies:
+    csstype: "npm:^3.2.2"
+  checksum: 10/c718ec5c5272ef5c1c77fcdd07f567c77197b593583539459b4bdaea89ca55ad7c814b7eb2151dccfa459b2c384b599a45e7e35550b789883d66b363d30c94d8
   languageName: node
   linkType: hard
 
