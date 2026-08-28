@@ -55,7 +55,11 @@ test("GIVEN State label WHEN the state has a web_description annotation THEN it 
 
 test("GIVEN State label WHEN the state has a status color and a web_icon THEN the icon is colored to match the status instead of the neutral default (issue #7094)", async () => {
   render(
-    <InstanceStateLabel name="failed" label="danger" annotations={{ web_icon: "FaExclamationTriangle" }} />
+    <InstanceStateLabel
+      name="failed"
+      label="danger"
+      annotations={{ web_icon: "FaExclamationTriangle" }}
+    />
   );
 
   const iconWrapper = await screen.findByTestId("FaExclamationTriangle");
