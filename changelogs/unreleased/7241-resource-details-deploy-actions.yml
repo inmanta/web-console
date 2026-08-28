@@ -1,0 +1,7 @@
+description: |
+  You can now deploy or repair a single resource directly from its Resource Details page. A new Deploy split button runs an incremental deploy by default, with Repair (a full deploy) available from its menu. The button is disabled for orphaned resources, which are no longer part of the latest desired state.
+issue-nr: 7241
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"
