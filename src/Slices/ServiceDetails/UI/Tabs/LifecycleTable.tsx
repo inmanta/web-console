@@ -24,7 +24,9 @@ const renderState = (stateName: string | null, states: StateModel[]): React.Reac
     return stateName;
   }
 
-  return <InstanceStateLabel name={state.name} label={state.label} annotations={state.annotations} />;
+  return (
+    <InstanceStateLabel name={state.name} label={state.label} annotations={state.annotations} />
+  );
 };
 
 export const LifecycleTable: React.FunctionComponent<{

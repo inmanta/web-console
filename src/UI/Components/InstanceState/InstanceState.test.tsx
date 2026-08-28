@@ -19,9 +19,7 @@ test("GIVEN State label WHEN (name,label) is ('ordered',undefined) THEN name is 
 });
 
 test("GIVEN State label WHEN the state has a web_label annotation THEN the annotation is shown instead of the raw name", async () => {
-  render(
-    <InstanceStateLabel name="creating" annotations={{ web_label: "Creating" }} />
-  );
+  render(<InstanceStateLabel name="creating" annotations={{ web_label: "Creating" }} />);
 
   expect(screen.getByText("Creating")).toBeVisible();
   expect(screen.queryByText("creating")).not.toBeInTheDocument();
