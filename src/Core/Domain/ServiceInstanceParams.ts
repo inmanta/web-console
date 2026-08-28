@@ -9,6 +9,9 @@ export interface ServiceInstanceParams {
   currentPage: CurrentPage;
 }
 
+/** Infinite scroll query, which manages its own cursor and so needs no currentPage */
+export type ServiceInstanceInfiniteParams = Omit<ServiceInstanceParams, "currentPage">;
+
 export enum AttributeSet {
   Active = "active_attributes",
   Candidate = "candidate_attributes",

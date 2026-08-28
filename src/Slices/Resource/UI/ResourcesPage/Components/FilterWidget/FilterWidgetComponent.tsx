@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Divider,
   DrawerActions,
@@ -15,9 +15,12 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { Resource } from "@/Core";
+import { uniq } from "@/Core/Language/collection";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ActiveFiltersSection } from "./ActiveFiltersSection";
 import { ResourceFilterForm } from "./ResourceFilterForm";
+import { ServiceFilterForm } from "./ServiceFilterForm";
 import { StatusFilterSelect } from "./StatusFilterSelect";
 
 interface FilterWidgetComponentProps {
@@ -44,6 +47,8 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
   setFilter,
 }) => {
   const [activeTabKey, setActiveTabKey] = useState<string | number>(0);
+  const { orchestratorProvider } = useContext(DependencyContext);
+  const isLsmEnabled = orchestratorProvider.isLsmEnabled();
 
   const handleAddType = (type: string) => {
     setFilter({
@@ -132,6 +137,62 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
     });
   };
 
+  const addServiceEntity = (entity: string) => {
+    setFilter({
+      ...filter,
+      serviceEntity: uniq([...(filter.serviceEntity ?? []), entity]),
+    });
+  };
+
+  const removeServiceEntityChip = (entity: string) => {
+    setFilter({
+      ...filter,
+      serviceEntity: filter.serviceEntity?.filter((value) => value !== entity),
+    });
+  };
+
+  const clearServiceEntities = () => {
+    setFilter({
+      ...filter,
+      serviceEntity: undefined,
+    });
+  };
+
+  const addServiceInstance = (value: string) => {
+    setFilter({
+      ...filter,
+      serviceInstance: uniq([...(filter.serviceInstance ?? []), value]),
+    });
+  };
+
+  const removeServiceInstanceChip = (value: string) => {
+    setFilter({
+      ...filter,
+      serviceInstance: filter.serviceInstance?.filter((current) => current !== value),
+    });
+  };
+
+  const clearServiceInstances = () => {
+    setFilter({
+      ...filter,
+      serviceInstance: undefined,
+    });
+  };
+
+  const setIncludeOwned = (includeOwned: boolean) => {
+    setFilter({
+      ...filter,
+      includeOwned: includeOwned || undefined,
+    });
+  };
+
+  const removeIncludeOwned = () => {
+    setFilter({
+      ...filter,
+      includeOwned: undefined,
+    });
+  };
+
   const onResetFilters = () => {
     setFilter({});
   };
@@ -172,6 +233,19 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
                     onChange={handleStatusChange}
                   />
                 </Tab>
+                {isLsmEnabled && (
+                  <Tab
+                    eventKey={2}
+                    title={<TabTitleText>{words("resources.filters.tabs.service")}</TabTitleText>}
+                  >
+                    <ServiceFilterForm
+                      filter={filter}
+                      onAddServiceEntity={addServiceEntity}
+                      onAddServiceInstance={addServiceInstance}
+                      onChangeIncludeOwned={setIncludeOwned}
+                    />
+                  </Tab>
+                )}
               </Tabs>
             </StackItem>
             <Divider />
@@ -186,6 +260,11 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
               clearAgentFilters={clearAgentFilters}
               clearValueFilters={clearValueFilters}
               clearStatusFilters={clearStatusFilters}
+              removeServiceEntityChip={removeServiceEntityChip}
+              clearServiceEntities={clearServiceEntities}
+              removeServiceInstanceChip={removeServiceInstanceChip}
+              clearServiceInstances={clearServiceInstances}
+              removeIncludeOwned={removeIncludeOwned}
             />
           </Stack>
         </Form>
