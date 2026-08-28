@@ -618,7 +618,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.9 Service filters", () => {
       cy.visit("/console/");
-      selectEnvironment();
+      cy.get('[aria-label="Select-environment-test"]').click();
 
       // Reuses the fully-deployed resource-states instance left behind by 6.5 (pagination-test)
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
