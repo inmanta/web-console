@@ -199,7 +199,29 @@ export interface Filter {
   agent?: string[];
   value?: string[];
   status?: string[];
+  serviceEntity?: string[];
+  serviceInstance?: string[];
+  includeOwned?: boolean;
 }
+
+/**
+ * Encodes a `serviceInstance` filter value from an instance id and optional label as JSON, so the
+ * label can contain any character without colliding with a separator. Falls back to the id as label.
+ *
+ * @example encodeServiceInstanceFilterValue("abc", "cpe-1") => '{"id":"abc","label":"cpe-1"}'
+ * @example encodeServiceInstanceFilterValue("abc") => '{"id":"abc","label":"abc"}'
+ */
+export const encodeServiceInstanceFilterValue = (id: string, label?: string): string =>
+  JSON.stringify({ id, label: label ?? id });
+
+/**
+ * Decodes a `serviceInstance` filter value back into its id and display label.
+ *
+ * @example parseServiceInstanceFilterValue('{"id":"abc","label":"cpe-1"}') => { id: "abc", label: "cpe-1" }
+ * @example parseServiceInstanceFilterValue('{"id":"abc","label":"abc"}') => { id: "abc", label: "abc" }
+ */
+export const parseServiceInstanceFilterValue = (value: string): { id: string; label: string } =>
+  JSON.parse(value);
 
 export interface FilterWithDefaultHandling extends Filter {
   disregardDefault?: boolean;
@@ -228,7 +250,10 @@ export const isStatusSortKey = (key: SortKey): key is StatusSortKey => STATUS_SO
 
 export type SortKeyFromVersion = Exclude<SortKey, StatusSortKey>;
 
-export type FilterFromVersion = Omit<Filter, "status">;
+export type FilterFromVersion = Omit<
+  Filter,
+  "status" | "serviceEntity" | "serviceInstance" | "includeOwned"
+>;
 
 export interface IdDetails {
   resource_type: string;

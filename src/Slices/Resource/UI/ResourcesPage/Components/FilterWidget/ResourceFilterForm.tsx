@@ -5,7 +5,7 @@ import { useGetAgents } from "@/Data/Queries";
 import { useDebounce } from "@/UI";
 import { OptionalToggleGroup, excludeIcons, includeIcons } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { AddableSelectInput, SelectOption } from "./AddableSelectInput";
+import { AddableSelectInput, AddableSelectOption } from "./AddableSelectInput";
 import { AddableTextInput } from "./AddableTextInput";
 
 export interface ResourceFilterFormProps {
@@ -45,7 +45,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
       filter: debouncedSearch ? { name: [debouncedSearch] } : undefined,
     });
 
-  const agentOptions = useMemo<SelectOption[]>(() => {
+  const agentOptions = useMemo<AddableSelectOption[]>(() => {
     if (!data?.pages) {
       return [];
     }
@@ -101,6 +101,9 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               }}
               isLoading={isLoading || isFetchingNextPage}
               onToggleInputMode={() => setInputMode("text")}
+              toggleLabel={words("resources.filters.resource.agent.selectInfoLabel")}
+              loadingLabel={words("resources.filters.resource.agent.loading")}
+              emptyLabel={words("agents.empty.message")}
             />
           ) : (
             <AddableTextInput
@@ -108,6 +111,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               placeholder={words("resources.filters.resource.agent.placeholder")}
               onAdd={onAddAgent}
               onToggleInputMode={() => setInputMode("select")}
+              toggleLabel={words("resources.filters.resource.agent.textInfoLabel")}
 
               /* hint={words("resources.filters.resource.agent.hint")} */
             />

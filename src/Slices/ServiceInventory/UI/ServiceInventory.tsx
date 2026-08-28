@@ -51,12 +51,15 @@ export const ServiceInventory: React.FunctionComponent<{
       defaultSort: { name: "created_at", order: "desc" },
     });
 
-  const { data, isError, error, isSuccess, refetch } = useGetInstances(serviceName, {
-    sort,
-    filter,
-    pageSize,
-    currentPage,
-  }).useContinuous();
+  const { data, isError, error, isSuccess, refetch } = useGetInstances(serviceName).useContinuous(
+    {
+      sort,
+      filter,
+      pageSize,
+      currentPage,
+    },
+    { keepPreviousData: true }
+  );
 
   /**
    * Filters the service lifecycle states based on the provided label.
