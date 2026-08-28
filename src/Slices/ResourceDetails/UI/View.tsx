@@ -1,8 +1,10 @@
 import React from "react";
 import { Content, Flex, FlexItem, PageSection } from "@patternfly/react-core";
+import { Resource } from "@/Core/Domain";
 import { useUrlStateWithString } from "@/Data";
-import { useGetResourceDetails } from "@/Data/Queries";
+import { ResourceActionFilter, useGetResourceDetails } from "@/Data/Queries";
 import {
+  DeployActions,
   Description,
   ErrorView,
   labelColorConfig,
@@ -45,12 +47,38 @@ export const View: React.FC<Props> = ({ id }) => {
   }
 
   if (isSuccess) {
+    // A single resource is a filter of one: pin its identity (type/agent/value) on the latest
+    // released intent, so deploy and repair act on exactly this resource.
+    const resourceFilter: ResourceActionFilter = {
+      isOrphan: false,
+      resourceType: { eq: [data.resource_type] },
+      agent: { eq: [data.agent] },
+      resourceIdValue: { eq: [data.id_attribute_value] },
+    };
+
     return (
       <>
         <PageSection hasBodyWrapper={false}>
-          <Content>
-            <Content component="h1">{words("resources.details.title")}</Content>
-          </Content>
+          <Flex
+            justifyContent={{ default: "justifyContentSpaceBetween" }}
+            alignItems={{ default: "alignItemsCenter" }}
+          >
+            <FlexItem>
+              <Content>
+                <Content component="h1">{words("resources.details.title")}</Content>
+              </Content>
+            </FlexItem>
+            <FlexItem>
+              <DeployActions
+                filter={resourceFilter}
+                disabledReason={
+                  Resource.isOrphanedStatus(data.status)
+                    ? words("resources.deployActions.orphaned.disabled")
+                    : undefined
+                }
+              />
+            </FlexItem>
+          </Flex>
         </PageSection>
         <PageSection hasBodyWrapper={false} aria-label="ResourceDetails-Success">
           <Flex>
