@@ -153,8 +153,10 @@ describe("EnvironmentSelector", () => {
     await userEvent.click(toggle);
 
     const listItem = screen.getAllByText(`${envB.name} (${envB.projectName})`)[0];
-
-    expect(listItem).toBeVisible();
+    // The menu fades in, so wait for it to become visible instead of checking instantly (which is flaky on CI).
+    await waitFor(() => {
+      expect(listItem).toBeVisible();
+    });
   });
 
   test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item THEN selected environment is changed", async () => {
@@ -184,9 +186,12 @@ describe("EnvironmentSelector", () => {
 
     await userEvent.click(toggle);
 
-    const listItem = screen.getAllByText(`${envB.name} (${envB.projectName})`)[0];
+    // Wait for the menu to fade in before clicking, otherwise this is flaky on CI.
+    await waitFor(() => {
+      expect(screen.getAllByText(`${envB.name} (${envB.projectName})`)[0]).toBeVisible();
+    });
 
-    expect(listItem).toBeVisible();
+    const listItem = screen.getAllByText(`${envB.name} (${envB.projectName})`)[0];
 
     await userEvent.click(listItem);
 
