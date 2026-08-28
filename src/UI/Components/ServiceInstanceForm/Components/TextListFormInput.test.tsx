@@ -49,6 +49,78 @@ describe("TextListInputField", () => {
     expect(handleClick).toHaveBeenCalledWith(["value1", "value2", "value3", "test"], null);
   });
 
+  it("Should commit pending text on Tab without trapping focus", async () => {
+    const handleInputChange = vi.fn();
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={["value1"]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+      />
+    );
+
+    const input = screen.getByRole("textbox");
+
+    await userEvent.type(input, "test");
+
+    // Tab commits the typed text as a chip...
+    const notPrevented = fireEvent.keyDown(input, { key: "Tab" });
+
+    // ...but does not call preventDefault, so the browser is free to move focus
+    // to the next input instead of the navigation getting stuck on this field.
+    expect(notPrevented).toBe(true);
+    expect(handleInputChange).toHaveBeenCalledWith(["value1", "test"], null);
+  });
+
+  it("Should let Tab move focus straight through an empty field (#7235).", () => {
+    const handleInputChange = vi.fn();
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={["value1"]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+      />
+    );
+
+    const input = screen.getByRole("textbox");
+
+    // With nothing typed, Tab neither adds a chip nor blocks the default focus move.
+    const notPrevented = fireEvent.keyDown(input, { key: "Tab" });
+
+    expect(notPrevented).toBe(true);
+    expect(handleInputChange).not.toHaveBeenCalled();
+  });
+
+  it("Should commit pending text on Enter while preventing form submission.", async () => {
+    const handleInputChange = vi.fn();
+
+    render(
+      <TextListFormInput
+        attributeName="text_list"
+        type={TextInputTypes.text}
+        attributeValue={["value1"]}
+        description="a text list input field"
+        handleInputChange={handleInputChange}
+      />
+    );
+
+    const input = screen.getByRole("textbox");
+
+    await userEvent.type(input, "test");
+
+    // Enter commits the chip and preventDefault keeps the surrounding form from submitting.
+    const notPrevented = fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(notPrevented).toBe(false);
+    expect(handleInputChange).toHaveBeenCalledWith(["value1", "test"], null);
+  });
+
   it("Should remove one chip from the input on delete.", async () => {
     render(
       <TextListFormInput
