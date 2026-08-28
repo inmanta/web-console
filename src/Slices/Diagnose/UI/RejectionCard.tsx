@@ -72,8 +72,7 @@ const ErrorBlock: React.FC<{ error: CompileError; index: number }> = ({ error, i
     </FlexItem>
     <FlexItem>
       <ExpandableSection
-        toggleText={words("diagnose.rejection.showDetails")}
-        toggleAriaLabel={words("diagnose.rejection.showDetailsAriaLabel")(index + 1)}
+        toggleText={words("diagnose.rejection.showDetailsAriaLabel")(index + 1)}
         isIndented
       >
         <DescriptionList isCompact>

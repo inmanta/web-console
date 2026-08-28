@@ -114,9 +114,10 @@ describe("RejectionCard", () => {
     expect(screen.queryByText(twoErrors[0].type)).not.toBeVisible();
     expect(screen.queryByText(twoErrors[1].type)).not.toBeVisible();
 
-    // Each toggle renders the same visible "Show details" text, but is given a distinct
-    // aria-label (error 1, error 2, ...) - both so screen reader users can tell them apart,
-    // and so their linked content regions don't collide on axe's landmark-unique rule.
+    // Each toggle gets a distinct label (error 1, error 2, ...) - both so screen reader
+    // users can tell them apart, and so their linked content regions don't collide on
+    // axe's landmark-unique rule. The installed PatternFly version has no toggleAriaLabel
+    // prop, so the distinct text is used as the toggle's visible text directly.
     const firstToggle = screen.getByRole("button", {
       name: words("diagnose.rejection.showDetailsAriaLabel")(1),
     });
