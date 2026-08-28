@@ -1,0 +1,6 @@
+description: Pressing Tab in a service instance list field now commits the pending text and moves keyboard focus on to the next input, instead of trapping focus on the field.
+issue-nr: 7235
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"
