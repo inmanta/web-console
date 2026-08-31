@@ -5,12 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import {
-  AgentTriggerMethod,
-  DeployAgentsAction,
-  toAgentTriggerMethod,
-  usePost,
-} from "@/Data/Queries";
+import { DeployAgentsAction, usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
 import { getResourceDetailsKey } from "../GetResourceDetails";
 import { getResourcesKey } from "../GetResources";
@@ -41,9 +36,9 @@ export interface ResourceActionFilter {
   resourceIdValue?: StringMatch;
   agent?: StringMatch;
   purged?: boolean;
-  blocked?: { eq?: string[]; neq?: string[] };
-  compliance?: { eq?: string[]; neq?: string[] };
-  lastHandlerRun?: { eq?: string[]; neq?: string[] };
+  blocked?: StringMatch;
+  compliance?: StringMatch;
+  lastHandlerRun?: StringMatch;
   isDeploying?: boolean;
   modelVersion?: number;
   serviceEntity?: string[];
@@ -58,7 +53,7 @@ export interface ResourceActionFilter {
  */
 interface Body {
   filter: ResourceActionFilter;
-  agent_trigger_method: AgentTriggerMethod;
+  agent_trigger_method: DeployAgentsAction;
 }
 
 /**
@@ -91,14 +86,12 @@ export const useDeployFiltered = (
   return useMutation({
     mutationFn: ({ method, filter }) =>
       post("/api/v2/deploy_filtered", {
-        // Default to excluding orphans; they are no longer part of the latest desired state.
         filter: { isOrphan: false, ...filter },
-        agent_trigger_method: toAgentTriggerMethod(method),
+        agent_trigger_method: method,
       }),
     mutationKey: ["deploy_filtered", env],
     ...options,
     onSuccess: (...args) => {
-      // Refresh both the list and the single-resource details so the new deploying state shows.
       client.refetchQueries({ queryKey: getResourcesKey.root() });
       client.refetchQueries({ queryKey: getResourceDetailsKey.root() });
       options?.onSuccess?.(...args);
