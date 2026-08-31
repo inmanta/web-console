@@ -1,0 +1,7 @@
+description: |
+  The Resources page now has a single Deploy split button in place of the separate Deploy and Repair buttons. It acts on the resources matching the active filter (or the whole environment when no filter is set), and a confirmation dialog lets you pick between the filtered set and the whole environment before it runs. Repair (a full deploy) lives in its menu.
+issue-nr: 7240
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

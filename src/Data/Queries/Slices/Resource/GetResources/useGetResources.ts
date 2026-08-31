@@ -8,7 +8,7 @@ import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGraphQLRequest, REFETCH_INTERVAL } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
-import { buildHandlers, mapSort, mapStatusToGraphQLFilter, parseCurrentPage } from "./helpers";
+import { buildHandlers, mapSort, mapToResourceActionFilter, parseCurrentPage } from "./helpers";
 
 export interface PageInfo {
   hasNextPage: boolean;
@@ -123,29 +123,10 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
     currentPage || { kind: "CurrentPage", value: "" }
   );
 
-  const statusFilter = mapStatusToGraphQLFilter(filter?.status);
+  //TODO: https://github.com/inmanta/web-console/issues/6823 => same as in ResourceFilterForm.tsx
   const graphqlFilter: Record<string, unknown> = {
     environment: env,
-    //TODO: https://github.com/inmanta/web-console/issues/6823 => same as in ResourceFilterForm.tsx
-    ...(filter?.type?.length
-      ? { resourceType: { contains: filter.type.map((type) => `%${type}%`) } }
-      : {}),
-    ...(filter?.agent?.length
-      ? { agent: { contains: filter.agent.map((agent) => `%${agent}%`) } }
-      : {}),
-    ...(filter?.value?.length
-      ? { resourceIdValue: { contains: filter.value.map((value) => `%${value}%`) } }
-      : {}),
-    ...(filter?.serviceEntity?.length ? { serviceEntity: filter.serviceEntity } : {}),
-    ...(filter?.serviceInstance?.length
-      ? {
-          serviceInstance: filter.serviceInstance.map(
-            (value) => Resource.parseServiceInstanceFilterValue(value).id
-          ),
-        }
-      : {}),
-    ...(filter?.includeOwned ? { includeOwned: true } : {}),
-    ...statusFilter,
+    ...mapToResourceActionFilter(filter),
   };
 
   const pageSizeNum = Number(pageSize.value);

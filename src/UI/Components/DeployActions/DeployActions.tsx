@@ -16,6 +16,7 @@ import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { words } from "@/UI/words";
+import { ResourceActionConfirmModal } from "./ResourceActionConfirmModal";
 
 const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 
@@ -29,6 +30,9 @@ interface ActionConfig {
 
 interface Props {
   filter: ResourceActionFilter;
+  requireConfirm?: boolean;
+  filteredCount?: number;
+  environmentCount?: number;
   disabledReason?: string;
 }
 
@@ -37,17 +41,29 @@ interface Props {
  *
  * Deploy is the default action; the caret opens a menu repeating Deploy and adding Repair. Both act
  * on the resources matching {@link Props.filter} through the deploy_filtered endpoint, so the same
- * control serves a single resource, the active list filter or a whole environment. It disables
- * itself while the environment is halted. (Dry run joins the menu with #7243.)
+ * control serves a single resource, the active list filter or a whole environment. With
+ * {@link Props.requireConfirm} the action opens a confirmation dialog first (letting the operator
+ * widen the scope to the whole environment); without it, it runs immediately (the single-resource
+ * case). It disables itself while the environment is halted. (Dry run joins the menu with #7243.)
  *
  * @Props {Props} - The props of the component
  *  @prop {ResourceActionFilter} filter - The scope the actions act on
+ *  @prop {boolean} [requireConfirm] - When set, actions open a confirmation dialog before running
+ *  @prop {number} [filteredCount] - Resources matching the filter, shown in the confirm dialog
+ *  @prop {number} [environmentCount] - Resources in the whole environment, shown in the confirm dialog
  *  @prop {string} [disabledReason] - When set, disables the control and shows this as its tooltip
  *
  * @returns {React.FC<Props>} The rendered split button
  */
-export const DeployActions: React.FC<Props> = ({ filter, disabledReason }) => {
+export const DeployActions: React.FC<Props> = ({
+  filter,
+  requireConfirm,
+  filteredCount = 0,
+  environmentCount = 0,
+  disabledReason,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [pending, setPending] = useState<ActionKey | null>(null);
   const { environmentHandler } = useContext(DependencyContext);
   const isHalted = environmentHandler.useIsHalted();
   const { notifySuccess, notifyError } = useAppAlert();
@@ -70,13 +86,12 @@ export const DeployActions: React.FC<Props> = ({ filter, disabledReason }) => {
     },
   };
 
-  const run = (key: ActionKey) => {
+  const run = (key: ActionKey, scopeFilter: ResourceActionFilter) => {
     const method = DeployAgentsAction[key];
     const { label } = actions[key];
 
-    setIsOpen(false);
     deploy.mutate(
-      { method, filter },
+      { method, filter: scopeFilter },
       {
         onSuccess: () => notifySuccess({ title: words("resources.deployActions.success")(label) }),
         onError: (error) =>
@@ -88,6 +103,15 @@ export const DeployActions: React.FC<Props> = ({ filter, disabledReason }) => {
     );
   };
 
+  const onAction = (key: ActionKey) => {
+    setIsOpen(false);
+    if (requireConfirm) {
+      setPending(key);
+    } else {
+      run(key, filter);
+    }
+  };
+
   const toggle = (ref: React.Ref<MenuToggleElement>) => (
     <MenuToggle
       ref={ref}
@@ -97,7 +121,11 @@ export const DeployActions: React.FC<Props> = ({ filter, disabledReason }) => {
       onClick={() => setIsOpen(!isOpen)}
       aria-label={words("resources.deployActions.toggle")}
       splitButtonItems={[
-        <MenuToggleAction key="deploy-action" isDisabled={isDisabled} onClick={() => run("deploy")}>
+        <MenuToggleAction
+          key="deploy-action"
+          isDisabled={isDisabled}
+          onClick={() => onAction("deploy")}
+        >
           <OutlinedPlayCircleIcon /> {actions.deploy.label}
         </MenuToggleAction>,
       ]}
@@ -116,7 +144,7 @@ export const DeployActions: React.FC<Props> = ({ filter, disabledReason }) => {
           const { icon, label, hint } = actions[key];
 
           return (
-            <DropdownItem key={key} icon={icon} onClick={() => run(key)}>
+            <DropdownItem key={key} icon={icon} onClick={() => onAction(key)}>
               <Flex
                 justifyContent={{ default: "justifyContentSpaceBetween" }}
                 alignItems={{ default: "alignItemsCenter" }}
@@ -134,11 +162,28 @@ export const DeployActions: React.FC<Props> = ({ filter, disabledReason }) => {
     </Dropdown>
   );
 
-  return tooltip ? (
-    <ActionDisabledTooltip testingId="DeployActions" tooltipContent={tooltip} isDisabled>
-      {dropdown}
-    </ActionDisabledTooltip>
-  ) : (
-    dropdown
+  return (
+    <>
+      {tooltip ? (
+        <ActionDisabledTooltip testingId="DeployActions" tooltipContent={tooltip} isDisabled>
+          {dropdown}
+        </ActionDisabledTooltip>
+      ) : (
+        dropdown
+      )}
+      {pending && (
+        <ResourceActionConfirmModal
+          actionLabel={actions[pending].label}
+          filter={filter}
+          filteredCount={filteredCount}
+          environmentCount={environmentCount}
+          onConfirm={(scopeFilter) => {
+            run(pending, scopeFilter);
+            setPending(null);
+          }}
+          onClose={() => setPending(null)}
+        />
+      )}
+    </>
   );
 };
