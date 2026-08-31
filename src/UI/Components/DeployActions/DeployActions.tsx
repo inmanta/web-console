@@ -44,7 +44,7 @@ interface Props {
  * control serves a single resource, the active list filter or a whole environment. With
  * {@link Props.requireConfirm} the action opens a confirmation dialog first (letting the operator
  * widen the scope to the whole environment); without it, it runs immediately (the single-resource
- * case). It disables itself while the environment is halted. (Dry run joins the menu with #7243.)
+ * case). It disables itself while the environment is halted.
  *
  * @Props {Props} - The props of the component
  *  @prop {ResourceActionFilter} filter - The scope the actions act on
