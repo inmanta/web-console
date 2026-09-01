@@ -139,8 +139,24 @@ export const Page: React.FC = () => {
               <DeployActions
                 filter={mapToResourceActionFilter(filterWithDefaults)}
                 requireConfirm
-                filteredCount={Number(data.metadata.total)}
-                environmentCount={resourceSummary.totalCount}
+                scopes={[
+                  {
+                    id: "filtered",
+                    title: words("resources.deployActions.confirm.filtered.title"),
+                    filter: mapToResourceActionFilter(filterWithDefaults),
+                    detail: words("resources.deployActions.confirm.filtered.count")(
+                      Number(data.metadata.total)
+                    ),
+                  },
+                  {
+                    id: "environment",
+                    title: words("resources.deployActions.confirm.environment.title"),
+                    filter: { isOrphan: false },
+                    detail: words("resources.deployActions.confirm.environment.count")(
+                      resourceSummary.totalCount
+                    ),
+                  },
+                ]}
               />
             </ToolbarItem>
           </Flex>

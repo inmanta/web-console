@@ -795,6 +795,13 @@ const dict = {
   "resources.deployActions.confirm.environment.title": "All resources in this environment",
   "resources.deployActions.confirm.environment.count": (count: number) =>
     `${count} total · ignores the active filter`,
+  "resources.deployActions.instance.deleted.disabled":
+    "This instance is deleted, so its resources can no longer be deployed or repaired.",
+  "resources.deployActions.confirm.instance.title": "This instance only",
+  "resources.deployActions.confirm.instance.count": (count: number) => `${count} resources`,
+  "resources.deployActions.confirm.owned.title": "This instance and owned services",
+  "resources.deployActions.confirm.owned.description": (services: string) =>
+    `Also acts on the owned services: ${services}.`,
   "resources.deployActions.confirm.orphanNote":
     "Orphaned resources (in no released version) are skipped.",
 

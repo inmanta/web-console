@@ -1,0 +1,7 @@
+description: |
+  The service instance details page now has a Deploy split button beside the Actions menu. It deploys (incremental) or repairs (full) the resources of that instance through the filtered scheduler endpoint. When the instance's service can own other services, the confirmation dialog offers a second scope that extends the action to the owned services as well.
+issue-nr: 7242
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"

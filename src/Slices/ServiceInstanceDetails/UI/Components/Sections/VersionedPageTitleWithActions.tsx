@@ -1,7 +1,9 @@
 import React, { useContext } from "react";
 import { Flex, FlexItem, Label } from "@patternfly/react-core";
 import { useUrlStateWithString } from "@/Data";
+import { ResourceActionFilter } from "@/Data/Queries";
 import { words } from "@/UI";
+import { DeployActions, ScopeOption } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../../Core/Context";
 import { InstanceActions } from "../InstanceActions";
 
@@ -26,7 +28,7 @@ interface Props {
  * @returns {React.FC<Props>} A React Component that displays the page title with the correct version tag
  */
 export const VersionedPageTitleWithActions: React.FC<Props> = ({ title }) => {
-  const { instance } = useContext(InstanceDetailsContext);
+  const { instance, serviceModelQuery } = useContext(InstanceDetailsContext);
 
   const [selectedVersion] = useUrlStateWithString<string>({
     default: String(instance.version),
@@ -36,8 +38,40 @@ export const VersionedPageTitleWithActions: React.FC<Props> = ({ title }) => {
 
   const isLatest = selectedVersion === String(instance.version);
 
+  // Offer the owned scope only when the service type can own another (owned_entities).
+  const instanceFilter: ResourceActionFilter = { serviceInstance: [instance.id] };
+  const total = instance.deployment_progress?.total;
+  const ownedEntities = serviceModelQuery.data?.owned_entities ?? [];
+
+  const scopes: ScopeOption[] = [
+    {
+      id: "instance",
+      title: words("resources.deployActions.confirm.instance.title"),
+      filter: instanceFilter,
+      detail:
+        total == null
+          ? undefined
+          : words("resources.deployActions.confirm.instance.count")(Number(total)),
+    },
+    ...(ownedEntities.length > 0
+      ? [
+          {
+            id: "owned",
+            title: words("resources.deployActions.confirm.owned.title"),
+            filter: { serviceInstance: [instance.id], includeOwned: true },
+            detail: words("resources.deployActions.confirm.owned.description")(
+              ownedEntities.join(", ")
+            ),
+          },
+        ]
+      : []),
+  ];
+
   return (
-    <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
+    <Flex
+      justifyContent={{ default: "justifyContentSpaceBetween" }}
+      alignItems={{ default: "alignItemsCenter" }}
+    >
       <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
         {title}
         {!isLatest && [
@@ -51,7 +85,25 @@ export const VersionedPageTitleWithActions: React.FC<Props> = ({ title }) => {
           </Label>
         )}
       </Flex>
-      <FlexItem>{isLatest && <InstanceActions />}</FlexItem>
+      {isLatest && (
+        <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapMd" }}>
+          <FlexItem>
+            <DeployActions
+              filter={instanceFilter}
+              requireConfirm
+              scopes={scopes}
+              disabledReason={
+                instance.deleted
+                  ? words("resources.deployActions.instance.deleted.disabled")
+                  : undefined
+              }
+            />
+          </FlexItem>
+          <FlexItem>
+            <InstanceActions />
+          </FlexItem>
+        </Flex>
+      )}
     </Flex>
   );
 };

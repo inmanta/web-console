@@ -3,46 +3,46 @@ import { Button, Card, CardHeader, CardTitle, Content, Flex } from "@patternfly/
 import { ResourceActionFilter } from "@/Data/Queries";
 import { words } from "@/UI/words";
 
+export interface ScopeOption {
+  id: string;
+  title: string;
+  filter: ResourceActionFilter;
+  detail?: string;
+}
+
 interface Props {
   actionLabel: string;
-  filter: ResourceActionFilter;
-  filteredCount: number;
-  environmentCount: number;
+  scopes: ScopeOption[];
   onConfirm: (filter: ResourceActionFilter) => void;
   onClose: () => void;
 }
 
-type Scope = "filtered" | "environment";
-
-/** The whole-environment scope: every resource, orphans excluded. */
-const ENVIRONMENT_FILTER: ResourceActionFilter = { isOrphan: false };
-
 interface ScopeCardProps {
-  scope: Scope;
+  id: string;
   isSelected: boolean;
-  onSelect: (scope: Scope) => void;
+  onSelect: (id: string) => void;
   title: string;
-  label: string;
+  detail?: string;
 }
 
 /**
  * A selectable card acting as one radio option in the scope picker.
  */
-const ScopeCard: React.FC<ScopeCardProps> = ({ scope, isSelected, onSelect, title, label }) => (
-  <Card id={`deploy-scope-${scope}`} isSelectable isSelected={isSelected}>
+const ScopeCard: React.FC<ScopeCardProps> = ({ id, isSelected, onSelect, title, detail }) => (
+  <Card id={`deploy-scope-${id}`} isSelectable isSelected={isSelected}>
     <CardHeader
       selectableActions={{
         variant: "single",
         name: "deploy-scope",
-        selectableActionId: `deploy-scope-${scope}-input`,
-        selectableActionAriaLabelledby: `deploy-scope-${scope}-title`,
+        selectableActionId: `deploy-scope-${id}-input`,
+        selectableActionAriaLabelledby: `deploy-scope-${id}-title`,
         isChecked: isSelected,
-        onChange: () => onSelect(scope),
+        onChange: () => onSelect(id),
       }}
     >
       <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }}>
-        <CardTitle id={`deploy-scope-${scope}-title`}>{title}</CardTitle>
-        <Content component="small">{label}</Content>
+        <CardTitle id={`deploy-scope-${id}-title`}>{title}</CardTitle>
+        {detail && <Content component="small">{detail}</Content>}
       </Flex>
     </CardHeader>
   </Card>
@@ -50,17 +50,16 @@ const ScopeCard: React.FC<ScopeCardProps> = ({ scope, isSelected, onSelect, titl
 
 /**
  * ResourceActionConfirmModal is the confirm content for a filter-scoped deploy/repair. It is passed
- * to the shared ModalProvider's triggerModal, which supplies the surrounding dialog, title and description.
+ * to the shared ModalProvider's triggerModal, which supplies the surrounding dialog, title and
+ * description.
  *
- * It offers two selectable cards - the current filter or the whole environment - each showing how
- * many resources it matches, so acting on everything never requires clearing the filter first. The
- * counts come from the calling view (which already has them), so the dialog makes no extra request.
+ * It offers the given scopes as selectable cards (the first is the default), so acting on a wider
+ * set never requires changing the filter first. Each card can show a resource count or a short note.
+ * The counts come from the calling view, so the dialog makes no extra request.
  *
  * @Props {Props} - The props of the component
  *  @prop {string} actionLabel - The verb being confirmed (Deploy/Repair)
- *  @prop {ResourceActionFilter} filter - The current filter scope
- *  @prop {number} filteredCount - How many resources the current filter matches
- *  @prop {number} environmentCount - How many resources the whole environment holds
+ *  @prop {ScopeOption[]} scopes - The selectable scopes; the first one is selected by default
  *  @prop {(filter: ResourceActionFilter) => void} onConfirm - Called with the chosen scope's filter
  *  @prop {() => void} onClose - Called when the dialog is dismissed
  *
@@ -68,36 +67,30 @@ const ScopeCard: React.FC<ScopeCardProps> = ({ scope, isSelected, onSelect, titl
  */
 export const ResourceActionConfirmModal: React.FC<Props> = ({
   actionLabel,
-  filter,
-  filteredCount,
-  environmentCount,
+  scopes,
   onConfirm,
   onClose,
 }) => {
-  const [scope, setScope] = useState<Scope>("filtered");
-  const chosenFilter = scope === "environment" ? ENVIRONMENT_FILTER : filter;
+  const [selectedId, setSelectedId] = useState(scopes[0]?.id);
+  const chosen = scopes.find((scope) => scope.id === selectedId) ?? scopes[0];
 
   return (
     <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
       <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }}>
-        <ScopeCard
-          scope="filtered"
-          isSelected={scope === "filtered"}
-          onSelect={setScope}
-          title={words("resources.deployActions.confirm.filtered.title")}
-          label={words("resources.deployActions.confirm.filtered.count")(filteredCount)}
-        />
-        <ScopeCard
-          scope="environment"
-          isSelected={scope === "environment"}
-          onSelect={setScope}
-          title={words("resources.deployActions.confirm.environment.title")}
-          label={words("resources.deployActions.confirm.environment.count")(environmentCount)}
-        />
+        {scopes.map((scope) => (
+          <ScopeCard
+            key={scope.id}
+            id={scope.id}
+            isSelected={scope.id === selectedId}
+            onSelect={setSelectedId}
+            title={scope.title}
+            detail={scope.detail}
+          />
+        ))}
         <Content component="small">{words("resources.deployActions.confirm.orphanNote")}</Content>
       </Flex>
       <Flex gap={{ default: "gapSm" }}>
-        <Button key="confirm" variant="primary" autoFocus onClick={() => onConfirm(chosenFilter)}>
+        <Button key="confirm" variant="primary" autoFocus onClick={() => onConfirm(chosen.filter)}>
           {actionLabel}
         </Button>
         <Button key="cancel" variant="link" onClick={onClose}>
