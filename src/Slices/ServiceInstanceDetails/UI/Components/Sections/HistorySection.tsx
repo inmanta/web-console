@@ -185,5 +185,6 @@ export const StateLabel: React.FC<StateLabelProps> = ({ service, state }) => {
   return InstanceStateLabel({
     name: lifecycleState.name,
     label: lifecycleState.label,
+    annotations: lifecycleState.annotations,
   });
 };

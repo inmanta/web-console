@@ -209,13 +209,14 @@ if (isIso) {
 
       // Check if the newly added instance has failed.
       // long timeout justified by the fact that a few compiles are already queued at this point and status change will only be changed after.
-      cy.get(".pf-v6-c-label", { timeout: 120000 }).should("contain", "failed");
+      // "Failed" (not "failed"): the failed state carries a web_label annotation (issue #7094).
+      cy.get(".pf-v6-c-label", { timeout: 120000 }).should("contain", "Failed");
 
       // Check Instance Details page
       cy.get('[aria-label="instance-details-link"]', { timeout: 50000 }).first().click();
 
       // Check the state of the instance is failed in the history section.
-      cy.get('[aria-label="History-Row"]').eq(0).should("contain", "failed");
+      cy.get('[aria-label="History-Row"]').eq(0).should("contain", "Failed");
 
       // go back to Service Catalog
       cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
