@@ -76,7 +76,8 @@ if (isIso) {
       cy.get('[aria-label="attributes-content"]').should("have.attr", "aria-selected", "true");
 
       // Check the state of the instance is up in the history section.
-      cy.get('[aria-label="History-Row"]').eq(0).should("contain", "up");
+      // "Up" (not "up"): the up state carries a web_label annotation (issue #7094).
+      cy.get('[aria-label="History-Row"]').eq(0).should("contain", "Up");
 
       // Go back to inventory using the breadcrumbs
       cy.get('[aria-label="BreadcrumbItem"]')

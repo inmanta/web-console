@@ -97,6 +97,12 @@ export interface StateAnnotations {
   /** Display label used as the fallback for a transfer button leading to this
    * state when the transfer itself has no `web_button_label` (issue #7093). */
   web_label?: string;
+
+  /** Font Awesome icon name for the state badge (issue #7094). No fallback. */
+  web_icon?: string;
+
+  /** Tooltip/blurb shown on hover over the state badge (issue #7094). No fallback. */
+  web_description?: string;
 }
 
 /**
