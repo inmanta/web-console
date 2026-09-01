@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  ActionGroup,
   Button,
   Card,
   CardBody,
@@ -7,11 +8,6 @@ import {
   CardTitle,
   Content,
   Flex,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  ModalVariant,
 } from "@patternfly/react-core";
 import { ResourceActionFilter } from "@/Data/Queries";
 import { words } from "@/UI/words";
@@ -62,7 +58,8 @@ const ScopeCard: React.FC<ScopeCardProps> = ({ scope, isSelected, onSelect, titl
 );
 
 /**
- * ResourceActionConfirmModal confirms a filter-scoped deploy/repair before it runs.
+ * ResourceActionConfirmModal is the confirm content for a filter-scoped deploy/repair. It is passed
+ * to the shared ModalProvider's triggerModal, which supplies the surrounding dialog and title.
  *
  * It offers two selectable cards - the current filter or the whole environment - each showing how
  * many resources it matches, so acting on everything never requires clearing the filter first. The
@@ -76,7 +73,7 @@ const ScopeCard: React.FC<ScopeCardProps> = ({ scope, isSelected, onSelect, titl
  *  @prop {(filter: ResourceActionFilter) => void} onConfirm - Called with the chosen scope's filter
  *  @prop {() => void} onClose - Called when the dialog is dismissed
  *
- * @returns {React.FC<Props>} The confirmation dialog
+ * @returns {React.FC<Props>} The confirmation content
  */
 export const ResourceActionConfirmModal: React.FC<Props> = ({
   actionLabel,
@@ -90,36 +87,33 @@ export const ResourceActionConfirmModal: React.FC<Props> = ({
   const chosenFilter = scope === "environment" ? ENVIRONMENT_FILTER : filter;
 
   return (
-    <Modal isOpen variant={ModalVariant.small} onClose={onClose} aria-label="DeployActionsConfirm">
-      <ModalHeader title={words("resources.deployActions.confirm.title")(actionLabel)} />
-      <ModalBody>
-        <Content component="p">{words("resources.deployActions.confirm.description")}</Content>
-        <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
-          <ScopeCard
-            scope="filtered"
-            isSelected={scope === "filtered"}
-            onSelect={setScope}
-            title={words("resources.deployActions.confirm.filtered.title")}
-            label={words("resources.deployActions.confirm.filtered.count")(filteredCount)}
-          />
-          <ScopeCard
-            scope="environment"
-            isSelected={scope === "environment"}
-            onSelect={setScope}
-            title={words("resources.deployActions.confirm.environment.title")}
-            label={words("resources.deployActions.confirm.environment.count")(environmentCount)}
-          />
-        </Flex>
-        <Content component="small">{words("resources.deployActions.confirm.orphanNote")}</Content>
-      </ModalBody>
-      <ModalFooter>
-        <Button key="cancel" variant="link" onClick={onClose}>
-          {words("cancel")}
-        </Button>
+    <>
+      <Content component="p">{words("resources.deployActions.confirm.description")}</Content>
+      <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
+        <ScopeCard
+          scope="filtered"
+          isSelected={scope === "filtered"}
+          onSelect={setScope}
+          title={words("resources.deployActions.confirm.filtered.title")}
+          label={words("resources.deployActions.confirm.filtered.count")(filteredCount)}
+        />
+        <ScopeCard
+          scope="environment"
+          isSelected={scope === "environment"}
+          onSelect={setScope}
+          title={words("resources.deployActions.confirm.environment.title")}
+          label={words("resources.deployActions.confirm.environment.count")(environmentCount)}
+        />
+      </Flex>
+      <Content component="small">{words("resources.deployActions.confirm.orphanNote")}</Content>
+      <ActionGroup>
         <Button key="confirm" variant="primary" autoFocus onClick={() => onConfirm(chosenFilter)}>
           {actionLabel}
         </Button>
-      </ModalFooter>
-    </Modal>
+        <Button key="cancel" variant="link" onClick={onClose}>
+          {words("cancel")}
+        </Button>
+      </ActionGroup>
+    </>
   );
 };

@@ -15,6 +15,7 @@ import { DeployAgentsAction, ResourceActionFilter, useDeployFiltered } from "@/D
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
+import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
 import { ResourceActionConfirmModal } from "./ResourceActionConfirmModal";
 
@@ -63,8 +64,8 @@ export const DeployActions: React.FC<Props> = ({
   disabledReason,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [pending, setPending] = useState<ActionKey | null>(null);
   const { environmentHandler } = useContext(DependencyContext);
+  const { triggerModal, closeModal } = useContext(ModalContext);
   const isHalted = environmentHandler.useIsHalted();
   const { notifySuccess, notifyError } = useAppAlert();
 
@@ -105,11 +106,29 @@ export const DeployActions: React.FC<Props> = ({
 
   const onAction = (key: ActionKey) => {
     setIsOpen(false);
-    if (requireConfirm) {
-      setPending(key);
-    } else {
+
+    if (!requireConfirm) {
       run(key, filter);
+
+      return;
     }
+
+    triggerModal({
+      title: words("resources.deployActions.confirm.title")(actions[key].label),
+      content: (
+        <ResourceActionConfirmModal
+          actionLabel={actions[key].label}
+          filter={filter}
+          filteredCount={filteredCount}
+          environmentCount={environmentCount}
+          onConfirm={(scopeFilter) => {
+            closeModal();
+            run(key, scopeFilter);
+          }}
+          onClose={closeModal}
+        />
+      ),
+    });
   };
 
   const toggle = (ref: React.Ref<MenuToggleElement>) => (
@@ -162,28 +181,11 @@ export const DeployActions: React.FC<Props> = ({
     </Dropdown>
   );
 
-  return (
-    <>
-      {tooltip ? (
-        <ActionDisabledTooltip testingId="DeployActions" tooltipContent={tooltip} isDisabled>
-          {dropdown}
-        </ActionDisabledTooltip>
-      ) : (
-        dropdown
-      )}
-      {pending && (
-        <ResourceActionConfirmModal
-          actionLabel={actions[pending].label}
-          filter={filter}
-          filteredCount={filteredCount}
-          environmentCount={environmentCount}
-          onConfirm={(scopeFilter) => {
-            run(pending, scopeFilter);
-            setPending(null);
-          }}
-          onClose={() => setPending(null)}
-        />
-      )}
-    </>
+  return tooltip ? (
+    <ActionDisabledTooltip testingId="DeployActions" tooltipContent={tooltip} isDisabled>
+      {dropdown}
+    </ActionDisabledTooltip>
+  ) : (
+    dropdown
   );
 };

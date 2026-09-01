@@ -10,6 +10,7 @@ import { response } from "@/Slices/Agents";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
 import { createMockResourceSummary } from "@/Test/Data/Resource";
 import { words } from "@/UI";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
 
@@ -117,7 +118,9 @@ function setup(entries?: string[], halted = false) {
       <QueryClientProvider client={client}>
         <TestMemoryRouter initialEntries={entries}>
           <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
-            <Page />
+            <ModalProvider>
+              <Page />
+            </ModalProvider>
           </MockedDependencyProvider>
         </TestMemoryRouter>
       </QueryClientProvider>

@@ -100,25 +100,36 @@ export function mapStatusToGraphQLFilter(statusses?: string[]): GraphQLStateFilt
  * the list query adds it as a variable and the deploy endpoint scopes by URL.
  */
 export function mapToResourceActionFilter(filter?: Resource.Filter): ResourceActionFilter {
+  const result: ResourceActionFilter = {};
+
+  if (filter?.type?.length) {
+    result.resourceType = { contains: filter.type.map((type) => `%${type}%`) };
+  }
+
+  if (filter?.agent?.length) {
+    result.agent = { contains: filter.agent.map((agent) => `%${agent}%`) };
+  }
+
+  if (filter?.value?.length) {
+    result.resourceIdValue = { contains: filter.value.map((value) => `%${value}%`) };
+  }
+
+  if (filter?.serviceEntity?.length) {
+    result.serviceEntity = filter.serviceEntity;
+  }
+
+  if (filter?.serviceInstance?.length) {
+    result.serviceInstance = filter.serviceInstance.map(
+      (value) => Resource.parseServiceInstanceFilterValue(value).id
+    );
+  }
+
+  if (filter?.includeOwned) {
+    result.includeOwned = true;
+  }
+
   return {
-    ...(filter?.type?.length
-      ? { resourceType: { contains: filter.type.map((type) => `%${type}%`) } }
-      : {}),
-    ...(filter?.agent?.length
-      ? { agent: { contains: filter.agent.map((agent) => `%${agent}%`) } }
-      : {}),
-    ...(filter?.value?.length
-      ? { resourceIdValue: { contains: filter.value.map((value) => `%${value}%`) } }
-      : {}),
-    ...(filter?.serviceEntity?.length ? { serviceEntity: filter.serviceEntity } : {}),
-    ...(filter?.serviceInstance?.length
-      ? {
-          serviceInstance: filter.serviceInstance.map(
-            (value) => Resource.parseServiceInstanceFilterValue(value).id
-          ),
-        }
-      : {}),
-    ...(filter?.includeOwned ? { includeOwned: true } : {}),
+    ...result,
     ...mapStatusToGraphQLFilter(filter?.status),
   };
 }

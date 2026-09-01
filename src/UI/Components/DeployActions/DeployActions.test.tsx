@@ -8,6 +8,7 @@ import { ResourceActionFilter } from "@/Data/Queries";
 import { EnvironmentDetails, MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { DeployActions } from "./DeployActions";
 
@@ -21,9 +22,11 @@ function setup(props: Partial<React.ComponentProps<typeof DeployActions>> = {}) 
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider env={EnvironmentDetails.env}>
-          <Page>
-            <DeployActions filter={filter} {...props} />
-          </Page>
+          <ModalProvider>
+            <Page>
+              <DeployActions filter={filter} {...props} />
+            </Page>
+          </ModalProvider>
         </MockedDependencyProvider>
       </TestMemoryRouter>
     </QueryClientProvider>
