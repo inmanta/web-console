@@ -385,7 +385,7 @@ if (isIso) {
       cy.get(".codicon-diff-insert, .codicon-diff-remove").should("exist");
 
       // Update the state to setting_start: the transfer is flagged web_advanced_state
-      // (issue #7095), so its "Push settings" button is demoted behind the "Advanced" disclosure.
+      // so its "Push settings" button is demoted behind the "Advanced" disclosure.
       cy.get('[aria-label="Actions-Toggle"]').click();
       cy.get('[role="menuitem"]').contains("Advanced").click();
       cy.get('[role="menuitem"]').contains("Push settings").click();
