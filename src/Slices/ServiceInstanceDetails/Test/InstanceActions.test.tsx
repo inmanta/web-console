@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { words } from "@/UI";
-import { instanceData } from "./mockData";
+import { instanceData, serviceModel } from "./mockData";
 import { defaultServer, serverFailedActions } from "./mockServer";
 import { setupServiceInstanceDetails } from "./mockSetup";
 
@@ -272,6 +272,77 @@ describe("Page Actions - Success", () => {
     expect(screen.getByText(/push the current settings to the running service\?/i)).toBeVisible();
 
     await userEvent.click(screen.getByRole("button", { name: /no/i }));
+  });
+
+  it("Normal Instance Actions Enabled - web_advanced_state demotes a transfer into the Advanced disclosure (issue #7095)", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog/mobileCore", () => {
+        return HttpResponse.json({
+          data: {
+            ...serviceModel,
+            lifecycle: {
+              ...serviceModel.lifecycle,
+              transfers: [
+                ...serviceModel.lifecycle.transfers,
+                {
+                  source: "up",
+                  target: "maintenance",
+                  error: null,
+                  on_update: false,
+                  on_delete: false,
+                  api_set_state: true,
+                  resource_based: false,
+                  auto: false,
+                  validate: false,
+                  config_name: null,
+                  description: "up to maintenance",
+                  target_operation: null,
+                  error_operation: null,
+                  annotations: {
+                    web_button_label: "Enter maintenance mode",
+                    web_advanced_state: true,
+                  },
+                },
+              ],
+            },
+          },
+        });
+      })
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    const actionDropdown = screen.getByRole("button", { name: "Actions-Toggle" });
+
+    await userEvent.click(actionDropdown);
+
+    // decluttered: not shown directly in the primary Set-state group
+    expect(
+      screen.queryByRole("menuitem", { name: "Enter maintenance mode" })
+    ).not.toBeInTheDocument();
+
+    const advancedToggle = screen.getByRole("menuitem", { name: "Advanced" });
+
+    await userEvent.click(advancedToggle);
+
+    // expanding the disclosure only reveals it in place, it doesn't collapse the outer dropdown
+    expect(actionDropdown).toHaveAttribute("aria-expanded", "true");
+
+    const maintenanceItem = screen.getByRole("menuitem", { name: "Enter maintenance mode" });
+
+    await userEvent.click(maintenanceItem);
+
+    // reachable and still triggers the same confirm modal as any other state transfer
+    expect(screen.getByRole("dialog")).toBeVisible();
+    expect(actionDropdown).toHaveAttribute("aria-expanded", "false");
+
+    await userEvent.click(screen.getByRole("button", { name: /yes/i }));
+
+    expect(screen.queryByRole("dialog")).toBeNull();
   });
 
   it("Normal Instance Actions - sends the user provided message on state transfer", async () => {

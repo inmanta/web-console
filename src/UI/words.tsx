@@ -343,6 +343,7 @@ const dict = {
   "instanceDetails.table.valueKey": "Value",
   "instanceDetails.table.sorting.tooltip": "The sorting can be resetted in the table options.",
   "instanceDetails.setState.label": "Set state",
+  "instanceDetails.setState.advanced": "Advanced",
   "instanceDetails.forceState.label": "Force state",
   "instanceDetails.stateTransfer.confirmTitle": "Confirm set state transfer",
   "instanceDetails.stateTransfer.messageLabel": "Message",
