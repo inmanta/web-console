@@ -1,5 +1,6 @@
 import { ParsedNumber } from "@/Core/Language";
 import { DeploymentProgress } from "./ServiceInstanceModel";
+import { StateAnnotations } from "./ServiceModel";
 import { Uuid } from "./Uuid";
 
 export interface DateInfo {
@@ -40,4 +41,5 @@ export interface Row {
 export interface State {
   name: string;
   label?: "info" | "success" | "danger" | "warning" | null;
+  annotations?: StateAnnotations;
 }
