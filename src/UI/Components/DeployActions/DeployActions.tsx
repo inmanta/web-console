@@ -19,9 +19,7 @@ import { words } from "@/UI/words";
 
 const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 
-// The keys match the DeployAgentsAction members, so DeployAgentsAction[key] gives the
-// trigger method. Dry run joins the menu with #7243.
-type ActionKey = "deploy" | "repair";
+type ActionKey = keyof typeof DeployAgentsAction;
 
 interface ActionConfig {
   icon: React.ReactNode;
