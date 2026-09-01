@@ -175,7 +175,7 @@ describe("MarkdownContainer", () => {
     });
   });
 
-  it("resolves setState button label/icon from stateTransferDefaults (issue #7096)", async () => {
+  it("resolves setState button label/icon from stateTransferDefaults", async () => {
     const markdownContent = '```setState\n{"targetState":"setting_start"}\n```';
     const webTitle = "Container_id";
 

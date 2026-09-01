@@ -412,7 +412,7 @@ describe("StateTransferPlugin", () => {
     });
   });
 
-  describe("annotation-derived defaults (issue #7096)", () => {
+  describe("annotation-derived defaults", () => {
     const withDefaults = (
       stateTransferDefaults: Record<string, SetStateButtonDefaults>
     ): MarkdownIt => {

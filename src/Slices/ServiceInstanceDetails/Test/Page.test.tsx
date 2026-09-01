@@ -495,7 +495,7 @@ describe("ServiceInstanceDetailsPage", () => {
     server.close();
   }, 25000);
 
-  it("Resolves the doc-tab setState button's label/style/confirm-prompt from the transfer's annotations (issue #7096)", async () => {
+  it("Resolves the doc-tab setState button's label/style/confirm-prompt from the transfer's annotations", async () => {
     const server = serverWithDocumentation;
 
     server.listen();
