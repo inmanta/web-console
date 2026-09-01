@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  ActionGroup,
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  CardTitle,
-  Content,
-  Flex,
-} from "@patternfly/react-core";
+import { Button, Card, CardHeader, CardTitle, Content, Flex } from "@patternfly/react-core";
 import { ResourceActionFilter } from "@/Data/Queries";
 import { words } from "@/UI/words";
 
@@ -49,17 +40,17 @@ const ScopeCard: React.FC<ScopeCardProps> = ({ scope, isSelected, onSelect, titl
         onChange: () => onSelect(scope),
       }}
     >
-      <CardTitle id={`deploy-scope-${scope}-title`}>{title}</CardTitle>
+      <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }}>
+        <CardTitle id={`deploy-scope-${scope}-title`}>{title}</CardTitle>
+        <Content component="small">{label}</Content>
+      </Flex>
     </CardHeader>
-    <CardBody>
-      <Content component="small">{label}</Content>
-    </CardBody>
   </Card>
 );
 
 /**
  * ResourceActionConfirmModal is the confirm content for a filter-scoped deploy/repair. It is passed
- * to the shared ModalProvider's triggerModal, which supplies the surrounding dialog and title.
+ * to the shared ModalProvider's triggerModal, which supplies the surrounding dialog, title and description.
  *
  * It offers two selectable cards - the current filter or the whole environment - each showing how
  * many resources it matches, so acting on everything never requires clearing the filter first. The
@@ -87,9 +78,8 @@ export const ResourceActionConfirmModal: React.FC<Props> = ({
   const chosenFilter = scope === "environment" ? ENVIRONMENT_FILTER : filter;
 
   return (
-    <>
-      <Content component="p">{words("resources.deployActions.confirm.description")}</Content>
-      <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
+    <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
+      <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }}>
         <ScopeCard
           scope="filtered"
           isSelected={scope === "filtered"}
@@ -104,16 +94,16 @@ export const ResourceActionConfirmModal: React.FC<Props> = ({
           title={words("resources.deployActions.confirm.environment.title")}
           label={words("resources.deployActions.confirm.environment.count")(environmentCount)}
         />
+        <Content component="small">{words("resources.deployActions.confirm.orphanNote")}</Content>
       </Flex>
-      <Content component="small">{words("resources.deployActions.confirm.orphanNote")}</Content>
-      <ActionGroup>
+      <Flex gap={{ default: "gapSm" }}>
         <Button key="confirm" variant="primary" autoFocus onClick={() => onConfirm(chosenFilter)}>
           {actionLabel}
         </Button>
         <Button key="cancel" variant="link" onClick={onClose}>
           {words("cancel")}
         </Button>
-      </ActionGroup>
-    </>
+      </Flex>
+    </Flex>
   );
 };

@@ -115,6 +115,7 @@ export const DeployActions: React.FC<Props> = ({
 
     triggerModal({
       title: words("resources.deployActions.confirm.title")(actions[key].label),
+      description: words("resources.deployActions.confirm.description"),
       content: (
         <ResourceActionConfirmModal
           actionLabel={actions[key].label}
