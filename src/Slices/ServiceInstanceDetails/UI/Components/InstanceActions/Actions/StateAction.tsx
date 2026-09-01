@@ -2,10 +2,11 @@ import React, { useContext } from "react";
 import { DropdownGroup, DropdownItem } from "@patternfly/react-core";
 import styled, { css } from "styled-components";
 import { ParsedNumber } from "@/Core";
-import { StateTarget, iconColorFor } from "@/Slices/ServiceInstanceDetails/Utils";
+import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { words } from "@/UI";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { iconColorFor } from "@/UI/Utils";
 import { StateTransferModalContent } from "./StateTransferModalContent";
 
 interface Props {

@@ -2,9 +2,12 @@ import { act } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { axe } from "jest-axe";
+import { TransferModel } from "@/Core";
+import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { CustomDatePresenter } from "@/UI/Utils";
 import {
   DocAttributeDescriptors,
+  resolveFirstStateTargetByTarget,
   sortDocAttributeDescriptors,
 } from "../UI/Tabs/DocumentationTabContent";
 import { historyData } from "./mockData";
@@ -492,6 +495,33 @@ describe("ServiceInstanceDetailsPage", () => {
     server.close();
   }, 25000);
 
+  it("Resolves the doc-tab setState button's label/style/confirm-prompt from the transfer's annotations (issue #7096)", async () => {
+    const server = serverWithDocumentation;
+
+    server.listen();
+    const component = setupServiceInstanceDetails();
+
+    render(component);
+
+    await screen.findByRole("region", { name: "Instance-Details-Success" });
+
+    // The fixture's `setState` fence only sets `targetState: "setting_start"` - its label,
+    // icon and variant come from the `up -> setting_start` transfer's `web_button_label`/
+    // `web_icon`/`web_button_variant` annotations, not a hard-coded default.
+    const button = await screen.findByRole("button", { name: "Push settings" });
+
+    expect(button).toHaveClass("pf-m-warning");
+    expect(button.querySelector('[data-testid="FaSlidersH"]')).toBeInTheDocument();
+
+    await userEvent.click(button);
+
+    expect(
+      await screen.findByText("Push the current settings to the running service?")
+    ).toBeVisible();
+
+    server.close();
+  }, 15000);
+
   it("Should render documentation sections in web_order sort order with the default-open section expanded", async () => {
     const server = serverWithMultipleDocumentation;
 
@@ -577,6 +607,55 @@ describe("ServiceInstanceDetailsPage", () => {
 
     server.close();
   }, 15000);
+});
+
+describe("resolveFirstStateTargetByTarget", () => {
+  const baseTransfer: TransferModel = {
+    source: "up",
+    target: "setting_start",
+    error: null,
+    on_update: false,
+    on_delete: false,
+    api_set_state: true,
+    resource_based: false,
+    auto: false,
+    validate: false,
+    config_name: null,
+    description: "",
+    target_operation: null,
+    error_operation: null,
+  };
+
+  const buildTarget = (overrides: Partial<StateTarget> = {}): StateTarget => ({
+    target: "setting_start",
+    transfer: baseTransfer,
+    buttonLabel: "setting_start",
+    ...overrides,
+  });
+
+  it("keys the map by target state", () => {
+    const a = buildTarget({ target: "a", buttonLabel: "A" });
+    const b = buildTarget({ target: "b", buttonLabel: "B" });
+
+    expect(resolveFirstStateTargetByTarget([a, b])).toEqual({ a, b });
+  });
+
+  it("keeps the first entry when two transfers share a target state", () => {
+    const first = buildTarget({
+      buttonLabel: "First",
+      transfer: { ...baseTransfer, annotations: { web_confirm: "First confirm" } },
+    });
+    const second = buildTarget({
+      buttonLabel: "Second",
+      transfer: { ...baseTransfer, annotations: { web_confirm: "Second confirm" } },
+    });
+
+    const result = resolveFirstStateTargetByTarget([first, second]);
+
+    expect(result.setting_start).toBe(first);
+    expect(result.setting_start.buttonLabel).toBe("First");
+    expect(result.setting_start.transfer.annotations?.web_confirm).toBe("First confirm");
+  });
 });
 
 describe("sortDocAttributeDescriptors", () => {

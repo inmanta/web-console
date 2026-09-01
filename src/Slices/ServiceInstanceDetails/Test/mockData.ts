@@ -1355,11 +1355,16 @@ export const serviceModelWithConfig: ServiceModel = {
   config: { option1: true },
 };
 
+// The `setState` fence targets `setting_start`, which `serviceModel.lifecycle.transfers`
+// (the `up -> setting_start` transfer) annotates with `web_button_label: "Push settings"`
+// etc. - so its button defaults are annotation-derived rather than hard-coded (issue #7096).
+const documentationMarkdown =
+  '# Getting started\n\nThis is some markdown\n\n```setState\n{\n  "targetState": "setting_start"\n}\n```\n';
+
 export const instanceDataWithDocumentation: ServiceInstanceModel = {
   ...instanceData,
   candidate_attributes: {
-    topography:
-      '# Getting started\n\nThis is some markdown\n\n```setState\n{\n  "displayText": "Transfer State",\n  "type": "default"\n}\n```\n',
+    topography: documentationMarkdown,
   },
 };
 
@@ -1377,8 +1382,7 @@ export const serviceModelWithDocumentation: ServiceModel = {
         web_presentation: "documentation",
       },
       type: "string",
-      default_value:
-        '# Getting started\n\nThis is some markdown\n\n```setState\n{\n  "displayText": "Transfer State",\n  "type": "default"\n}\n```\n',
+      default_value: documentationMarkdown,
       default_value_set: true,
       validation_type: null,
       validation_parameters: null,
