@@ -15,7 +15,7 @@ export * from "./CompileWidget";
 export * from "./ConfirmUserActionForm";
 export * from "./DateWithTooltip";
 export * from "./DefaultSwitch";
-export * from "./DeployActions";
+export * from "./ResourceActions";
 export * from "./Description";
 export * from "./DictEditor";
 export * from "./EmptyView";

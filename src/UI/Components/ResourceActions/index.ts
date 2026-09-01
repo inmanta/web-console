@@ -1,2 +1,2 @@
-export * from "./DeployActions";
+export * from "./ResourceActions";
 export * from "./ResourceActionConfirmModal";

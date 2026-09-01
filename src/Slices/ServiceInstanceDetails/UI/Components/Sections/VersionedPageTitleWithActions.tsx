@@ -3,7 +3,7 @@ import { Flex, FlexItem, Label } from "@patternfly/react-core";
 import { useUrlStateWithString } from "@/Data";
 import { ResourceActionFilter } from "@/Data/Queries";
 import { words } from "@/UI";
-import { DeployActions, ScopeOption } from "@/UI/Components";
+import { ResourceActions, ResourceActionScope } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../../Core/Context";
 import { InstanceActions } from "../InstanceActions";
 
@@ -12,13 +12,14 @@ interface Props {
 }
 
 /**
- * The PageTitleWithVersion Component
+ * The VersionedPageTitleWithActions Component
  *
  * When the version is the latest active version, we don't display a tag.
  * When the version is not the latest active version, we display a tag with the version number.
  * If the instance is deleted, we display a label with the terminated-state.
  *
- * The title section also contains InstanceActions
+ * On the latest version, the title section also contains the Deploy split button (ResourceActions)
+ * and the InstanceActions menu.
  *
  * @note This component requires the ServiceInstanceDetails context to exist in one of its parents.
  *
@@ -43,23 +44,23 @@ export const VersionedPageTitleWithActions: React.FC<Props> = ({ title }) => {
   const total = instance.deployment_progress?.total;
   const ownedEntities = serviceModelQuery.data?.owned_entities ?? [];
 
-  const scopes: ScopeOption[] = [
+  const scopes: ResourceActionScope[] = [
     {
       id: "instance",
-      title: words("resources.deployActions.confirm.instance.title"),
+      title: words("resources.resourceActions.confirm.instance.title"),
       filter: instanceFilter,
       detail:
         total == null
           ? undefined
-          : words("resources.deployActions.confirm.instance.count")(Number(total)),
+          : words("resources.resourceActions.confirm.instance.count")(Number(total)),
     },
     ...(ownedEntities.length > 0
       ? [
           {
             id: "owned",
-            title: words("resources.deployActions.confirm.owned.title"),
+            title: words("resources.resourceActions.confirm.owned.title"),
             filter: { serviceInstance: [instance.id], includeOwned: true },
-            detail: words("resources.deployActions.confirm.owned.description")(
+            detail: words("resources.resourceActions.confirm.owned.description")(
               ownedEntities.join(", ")
             ),
           },
@@ -88,13 +89,13 @@ export const VersionedPageTitleWithActions: React.FC<Props> = ({ title }) => {
       {isLatest && (
         <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapMd" }}>
           <FlexItem>
-            <DeployActions
+            <ResourceActions
               filter={instanceFilter}
               requireConfirm
               scopes={scopes}
               disabledReason={
                 instance.deleted
-                  ? words("resources.deployActions.instance.deleted.disabled")
+                  ? words("resources.resourceActions.instance.deleted.disabled")
                   : undefined
               }
             />

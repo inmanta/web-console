@@ -17,7 +17,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
-import { ResourceActionConfirmModal, ScopeOption } from "./ResourceActionConfirmModal";
+import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
 
 const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 
@@ -32,12 +32,12 @@ interface ActionConfig {
 interface Props {
   filter: ResourceActionFilter;
   requireConfirm?: boolean;
-  scopes?: ScopeOption[];
+  scopes?: ResourceActionScope[];
   disabledReason?: string;
 }
 
 /**
- * DeployActions is the shared "Deploy split button".
+ * ResourceActions is the shared split button for running an action on a set of resources.
  *
  * Deploy is the default action; the caret opens a menu repeating Deploy and adding Repair. Both act
  * on the resources matching {@link Props.filter} through the deploy_filtered endpoint, so the same
@@ -49,12 +49,12 @@ interface Props {
  * @Props {Props} - The props of the component
  *  @prop {ResourceActionFilter} filter - The scope acted on when no confirmation is required
  *  @prop {boolean} [requireConfirm] - When set, actions open a confirmation dialog before running
- *  @prop {ScopeOption[]} [scopes] - The scopes offered in the confirm dialog (first is the default)
+ *  @prop {ResourceActionScope[]} [scopes] - The scopes offered in the confirm dialog (first is the default)
  *  @prop {string} [disabledReason] - When set, disables the control and shows this as its tooltip
  *
  * @returns {React.FC<Props>} The rendered split button
  */
-export const DeployActions: React.FC<Props> = ({
+export const ResourceActions: React.FC<Props> = ({
   filter,
   requireConfirm,
   scopes,
@@ -75,12 +75,12 @@ export const DeployActions: React.FC<Props> = ({
     deploy: {
       icon: <OutlinedPlayCircleIcon style={iconStyle} />,
       label: words("resources.compoundStateSummary.deploy"),
-      hint: words("resources.deployActions.deploy.hint"),
+      hint: words("resources.resourceActions.deploy.hint"),
     },
     repair: {
       icon: <WrenchIcon style={iconStyle} />,
       label: words("resources.compoundStateSummary.repair"),
-      hint: words("resources.deployActions.repair.hint"),
+      hint: words("resources.resourceActions.repair.hint"),
     },
   };
 
@@ -91,10 +91,11 @@ export const DeployActions: React.FC<Props> = ({
     deploy.mutate(
       { method, filter: scopeFilter },
       {
-        onSuccess: () => notifySuccess({ title: words("resources.deployActions.success")(label) }),
+        onSuccess: () =>
+          notifySuccess({ title: words("resources.resourceActions.success")(label) }),
         onError: (error) =>
           notifyError({
-            title: words("resources.deployActions.failed")(label),
+            title: words("resources.resourceActions.failed")(label),
             message: error.message,
           }),
       }
@@ -111,8 +112,8 @@ export const DeployActions: React.FC<Props> = ({
     }
 
     triggerModal({
-      title: words("resources.deployActions.confirm.title")(actions[key].label),
-      description: words("resources.deployActions.confirm.description"),
+      title: words("resources.resourceActions.confirm.title")(actions[key].label),
+      description: words("resources.resourceActions.confirm.description"),
       content: (
         <ResourceActionConfirmModal
           actionLabel={actions[key].label}
@@ -134,7 +135,7 @@ export const DeployActions: React.FC<Props> = ({
       isExpanded={isOpen}
       isDisabled={isDisabled}
       onClick={() => setIsOpen(!isOpen)}
-      aria-label={words("resources.deployActions.toggle")}
+      aria-label={words("resources.resourceActions.toggle")}
       splitButtonItems={[
         <MenuToggleAction
           key="deploy-action"
@@ -178,7 +179,7 @@ export const DeployActions: React.FC<Props> = ({
   );
 
   return tooltip ? (
-    <ActionDisabledTooltip testingId="DeployActions" tooltipContent={tooltip} isDisabled>
+    <ActionDisabledTooltip testingId="ResourceActions" tooltipContent={tooltip} isDisabled>
       {dropdown}
     </ActionDisabledTooltip>
   ) : (

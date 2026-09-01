@@ -41,8 +41,8 @@ const deployFilteredWithConfirm = () => {
   // The confirm dialog offers the filtered and whole-environment scopes
   cy.get('[role="dialog"]').within(() => {
     cy.contains("Deploy resources").should("be.visible");
-    cy.get("#deploy-scope-filtered").should("be.visible");
-    cy.get("#deploy-scope-environment").should("be.visible");
+    cy.get("#resource-action-scope-filtered").should("be.visible");
+    cy.get("#resource-action-scope-environment").should("be.visible");
     cy.contains("button", "Deploy").click();
   });
 

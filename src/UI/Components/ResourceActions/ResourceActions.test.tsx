@@ -10,37 +10,37 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import { DeployActions } from "./DeployActions";
-import { ScopeOption } from "./ResourceActionConfirmModal";
+import { ResourceActionScope } from "./ResourceActionConfirmModal";
+import { ResourceActions } from "./ResourceActions";
 
 const filter: ResourceActionFilter = { isOrphan: false, agent: { eq: ["internal"] } };
 const deployLabel = words("resources.compoundStateSummary.deploy");
 const repairLabel = words("resources.compoundStateSummary.repair");
-const toggleLabel = words("resources.deployActions.toggle");
+const toggleLabel = words("resources.resourceActions.toggle");
 
-const filteredScopes: ScopeOption[] = [
+const filteredScopes: ResourceActionScope[] = [
   {
     id: "filtered",
-    title: words("resources.deployActions.confirm.filtered.title"),
+    title: words("resources.resourceActions.confirm.filtered.title"),
     filter,
-    detail: words("resources.deployActions.confirm.filtered.count")(3),
+    detail: words("resources.resourceActions.confirm.filtered.count")(3),
   },
   {
     id: "environment",
-    title: words("resources.deployActions.confirm.environment.title"),
+    title: words("resources.resourceActions.confirm.environment.title"),
     filter: { isOrphan: false },
-    detail: words("resources.deployActions.confirm.environment.count")(99),
+    detail: words("resources.resourceActions.confirm.environment.count")(99),
   },
 ];
 
-function setup(props: Partial<React.ComponentProps<typeof DeployActions>> = {}) {
+function setup(props: Partial<React.ComponentProps<typeof ResourceActions>> = {}) {
   return (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider env={EnvironmentDetails.env}>
           <ModalProvider>
             <Page>
-              <DeployActions filter={filter} {...props} />
+              <ResourceActions filter={filter} {...props} />
             </Page>
           </ModalProvider>
         </MockedDependencyProvider>
@@ -49,7 +49,7 @@ function setup(props: Partial<React.ComponentProps<typeof DeployActions>> = {}) 
   );
 }
 
-describe("DeployActions", () => {
+describe("ResourceActions", () => {
   const server = setupServer();
 
   beforeAll(() => server.listen());
@@ -141,7 +141,7 @@ describe("DeployActions", () => {
     const dialog = await screen.findByRole("dialog");
     await userEvent.click(
       within(dialog).getByRole("radio", {
-        name: new RegExp(words("resources.deployActions.confirm.environment.title"), "i"),
+        name: new RegExp(words("resources.resourceActions.confirm.environment.title"), "i"),
       })
     );
     await userEvent.click(within(dialog).getByRole("button", { name: deployLabel }));
@@ -157,18 +157,18 @@ describe("DeployActions", () => {
   test("WHEN a service-instance owned scope is chosen THEN it deploys with includeOwned", async () => {
     let body: unknown;
 
-    const instanceScopes: ScopeOption[] = [
+    const instanceScopes: ResourceActionScope[] = [
       {
         id: "instance",
-        title: words("resources.deployActions.confirm.instance.title"),
+        title: words("resources.resourceActions.confirm.instance.title"),
         filter: { serviceInstance: ["abc"] },
-        detail: words("resources.deployActions.confirm.instance.count")(3),
+        detail: words("resources.resourceActions.confirm.instance.count")(3),
       },
       {
         id: "owned",
-        title: words("resources.deployActions.confirm.owned.title"),
+        title: words("resources.resourceActions.confirm.owned.title"),
         filter: { serviceInstance: ["abc"], includeOwned: true },
-        detail: words("resources.deployActions.confirm.owned.description")("l2Connect"),
+        detail: words("resources.resourceActions.confirm.owned.description")("l2Connect"),
       },
     ];
 
@@ -188,13 +188,13 @@ describe("DeployActions", () => {
     // The owned scope has no count, only a note naming the owned service types.
     expect(
       within(dialog).getByText(
-        words("resources.deployActions.confirm.owned.description")("l2Connect")
+        words("resources.resourceActions.confirm.owned.description")("l2Connect")
       )
     ).toBeVisible();
 
     await userEvent.click(
       within(dialog).getByRole("radio", {
-        name: new RegExp(words("resources.deployActions.confirm.owned.title"), "i"),
+        name: new RegExp(words("resources.resourceActions.confirm.owned.title"), "i"),
       })
     );
     await userEvent.click(within(dialog).getByRole("button", { name: deployLabel }));

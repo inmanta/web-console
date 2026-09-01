@@ -58,7 +58,7 @@ describe("Page Actions - Success", () => {
     const dialog = await screen.findByRole("dialog");
 
     expect(
-      within(dialog).getByText(words("resources.deployActions.confirm.instance.title"))
+      within(dialog).getByText(words("resources.resourceActions.confirm.instance.title"))
     ).toBeVisible();
 
     await userEvent.click(

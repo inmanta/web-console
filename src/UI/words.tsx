@@ -781,28 +781,29 @@ const dict = {
   "resources.facts.columns.value": "Value",
   "resources.file.get": "Get file",
   "resources.file.error": "Error fetching file content",
-  "resources.deployActions.toggle": "Deploy actions",
-  "resources.deployActions.deploy.hint": "default - incremental",
-  "resources.deployActions.repair.hint": "full",
-  "resources.deployActions.orphaned.disabled":
+  "resources.resourceActions.toggle": "Deploy actions",
+  "resources.resourceActions.deploy.hint": "default - incremental",
+  "resources.resourceActions.repair.hint": "full",
+  "resources.resourceActions.orphaned.disabled":
     "Orphaned resources are no longer part of the latest desired state, so they cannot be deployed or repaired.",
-  "resources.deployActions.success": (action: string) => `${action} triggered`,
-  "resources.deployActions.failed": (action: string) => `Triggering ${action.toLowerCase()} failed`,
-  "resources.deployActions.confirm.title": (action: string) => `${action} resources`,
-  "resources.deployActions.confirm.description": "Choose the scope, then confirm.",
-  "resources.deployActions.confirm.filtered.title": "Filtered resources",
-  "resources.deployActions.confirm.filtered.count": (count: number) => `${count} matched`,
-  "resources.deployActions.confirm.environment.title": "All resources in this environment",
-  "resources.deployActions.confirm.environment.count": (count: number) =>
+  "resources.resourceActions.success": (action: string) => `${action} triggered`,
+  "resources.resourceActions.failed": (action: string) =>
+    `Triggering ${action.toLowerCase()} failed`,
+  "resources.resourceActions.confirm.title": (action: string) => `${action} resources`,
+  "resources.resourceActions.confirm.description": "Choose the scope, then confirm.",
+  "resources.resourceActions.confirm.filtered.title": "Filtered resources",
+  "resources.resourceActions.confirm.filtered.count": (count: number) => `${count} matched`,
+  "resources.resourceActions.confirm.environment.title": "All resources in this environment",
+  "resources.resourceActions.confirm.environment.count": (count: number) =>
     `${count} total · ignores the active filter`,
-  "resources.deployActions.instance.deleted.disabled":
+  "resources.resourceActions.instance.deleted.disabled":
     "This instance is deleted, so its resources can no longer be deployed or repaired.",
-  "resources.deployActions.confirm.instance.title": "This instance only",
-  "resources.deployActions.confirm.instance.count": (count: number) => `${count} resources`,
-  "resources.deployActions.confirm.owned.title": "This instance and owned services",
-  "resources.deployActions.confirm.owned.description": (services: string) =>
+  "resources.resourceActions.confirm.instance.title": "This instance only",
+  "resources.resourceActions.confirm.instance.count": (count: number) => `${count} resources`,
+  "resources.resourceActions.confirm.owned.title": "This instance and owned services",
+  "resources.resourceActions.confirm.owned.description": (services: string) =>
     `Also acts on the owned services: ${services}.`,
-  "resources.deployActions.confirm.orphanNote":
+  "resources.resourceActions.confirm.orphanNote":
     "Orphaned resources (in no released version) are skipped.",
 
   /** Discovered Resources related text */

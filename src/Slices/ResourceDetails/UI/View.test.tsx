@@ -180,17 +180,23 @@ describe("ResourceDetailsView", () => {
       await screen.findByLabelText("ResourceDetails-Success");
 
       await userEvent.click(
-        screen.getByRole("button", { name: words("resources.deployActions.toggle") })
+        screen.getByRole("button", { name: words("resources.resourceActions.toggle") })
       );
 
       expect(
         await screen.findByRole("menuitem", {
-          name: new RegExp(`${deployLabel}.*${words("resources.deployActions.deploy.hint")}`, "i"),
+          name: new RegExp(
+            `${deployLabel}.*${words("resources.resourceActions.deploy.hint")}`,
+            "i"
+          ),
         })
       ).toBeVisible();
       expect(
         screen.getByRole("menuitem", {
-          name: new RegExp(`${repairLabel}.*${words("resources.deployActions.repair.hint")}`, "i"),
+          name: new RegExp(
+            `${repairLabel}.*${words("resources.resourceActions.repair.hint")}`,
+            "i"
+          ),
         })
       ).toBeVisible();
     });
@@ -222,7 +228,7 @@ describe("ResourceDetailsView", () => {
 
       // The user gets confirmation the action was accepted.
       expect(
-        await screen.findByText(words("resources.deployActions.success")(deployLabel))
+        await screen.findByText(words("resources.resourceActions.success")(deployLabel))
       ).toBeVisible();
     });
 
@@ -243,7 +249,7 @@ describe("ResourceDetailsView", () => {
       await screen.findByLabelText("ResourceDetails-Success");
 
       await userEvent.click(
-        screen.getByRole("button", { name: words("resources.deployActions.toggle") })
+        screen.getByRole("button", { name: words("resources.resourceActions.toggle") })
       );
       await userEvent.click(
         await screen.findByRole("menuitem", { name: new RegExp(`^${repairLabel}`, "i") })
