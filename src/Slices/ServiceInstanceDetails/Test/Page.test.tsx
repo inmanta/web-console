@@ -630,6 +630,7 @@ describe("resolveFirstStateTargetByTarget", () => {
     target: "setting_start",
     transfer: baseTransfer,
     buttonLabel: "setting_start",
+    advanced: false,
     ...overrides,
   });
 
