@@ -25,6 +25,10 @@ export interface StateTarget {
   buttonIcon?: string;
 
   buttonVariant?: TransferAnnotations["web_button_variant"];
+
+  /** Whether the transfer's `web_advanced_state` annotation demotes it into the
+   * Actions-dropdown's secondary "Advanced" disclosure (issue #7095). */
+  advanced: boolean;
 }
 
 /**
@@ -115,6 +119,7 @@ export const getAvailableStateTargets = (
       buttonLabel: resolveButtonLabel(transfer, serviceEntity.lifecycle.states),
       buttonIcon: transfer.annotations?.web_icon,
       buttonVariant: transfer.annotations?.web_button_variant,
+      advanced: transfer.annotations?.web_advanced_state === true,
     }))
     .sort((a, b) => (a.target < b.target ? -1 : a.target > b.target ? 1 : 0));
 };

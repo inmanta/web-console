@@ -386,9 +386,11 @@ if (isIso) {
       // Check for the presence of diff markers (insert/delete signs)
       cy.get(".codicon-diff-insert, .codicon-diff-remove").should("exist");
 
-      // Update the state to setting_start
+      // Update the state to setting_start: the transfer is flagged web_advanced_state
+      // so its "Push settings" button is demoted behind the "Advanced" disclosure.
       cy.get('[aria-label="Actions-Toggle"]').click();
-      cy.get('[role="menuitem"]').last().click();
+      cy.get('[role="menuitem"]').contains("Advanced").click();
+      cy.get('[role="menuitem"]').contains("Push settings").click();
 
       // Confirm in the modal
       cy.get("button").contains("Yes").click();
