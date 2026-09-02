@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump @humanfs/node from 0.16.6 to 0.16.8
+destination-branches:
+- master
+sections: {}
