@@ -30,7 +30,6 @@ interface Props {
   handleInputChange: (value, event) => void;
   suggestions?: SuggestionValue[] | null;
   warningMessage?: string | null;
-  hint?: string | null;
   loading?: boolean;
 }
 
@@ -52,7 +51,6 @@ export const TextFormInput: React.FC<Props> = ({
   shouldBeDisabled = false,
   suggestions = [],
   warningMessage,
-  hint,
   loading = false,
   ...props
 }) => {
@@ -186,11 +184,10 @@ export const TextFormInput: React.FC<Props> = ({
           )}
         </>
       )}
-      {(warningMessage || hint) && (
+      {warningMessage && (
         <FormHelperText>
           <HelperText>
-            {warningMessage && <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>}
-            {hint && <HelperTextItem>{hint}</HelperTextItem>}
+            <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>
           </HelperText>
         </FormHelperText>
       )}

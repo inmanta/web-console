@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -14,7 +14,6 @@ import {
   InstanceAttributeModel,
   DictListField,
   Field,
-  Maybe,
   NestedField,
   FormSuggestion,
   SuggestionValue,
@@ -25,8 +24,6 @@ import {
   FieldScopes,
   SuggestionVariables,
   getFieldDependencyNames,
-  getFieldReferences,
-  resolveFieldReference,
   useSuggestedValues,
 } from "@/Data/Queries";
 import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
@@ -67,10 +64,6 @@ type GetUpdate = (path: string, value: unknown, multi?: boolean) => void;
  */
 const makePath = (path: string | null, next: string): string =>
   path === null ? next : `${path}.${next}`;
-
-/** The emptied value a field clears to, matched to its kind (list fields to `[]`, else `null`). */
-const emptyValueForField = (kind: Field["kind"]): unknown =>
-  kind === "TextList" || kind === "RelationList" ? [] : null;
 
 /**
  * FieldInput component for managing form input related to a specific field.
@@ -118,11 +111,18 @@ export const FieldInput: React.FC<Props> = ({
   // list is kept while refreshing (keepPreviousData in the hook), so the shown label stays stable
   // instead of flashing its raw value between a source change and the refreshed list.
   const suggestionsList: SuggestionValue[] | null = !isLoading && !error ? (data ?? null) : null;
-  // While a cascading dependency has no value the control is blocked: disabled, no
-  // suggestions, with a hint naming the field to fill in first.
-  const blockedHint = isBlocked
+  // While a cascading dependency has no value the field has no suggestions yet. The input stays
+  // editable (free typing is always allowed); we only warn, naming the field to fill in first.
+  const blockedWarning = isBlocked
     ? words("inventory.form.suggestions.blocked")(dependencyNames.join(", "))
     : undefined;
+  // The dependency is filled and its query has settled, yet returned no suggestions. Warn (naming
+  // the source field so the user knows which value produced nothing) so the feedback is
+  // unambiguous: a filled dependent field with no warning means options are available.
+  const noSuggestionsWarning =
+    isCascading && !isBlocked && !isLoadingSuggestions && !modelError && !suggestionsList?.length
+      ? words("inventory.form.suggestions.empty")(dependencyNames.join(", "))
+      : undefined;
 
   // Get the controlled value for the field
   // If the value is an object or an array, it needs to be converted.
@@ -145,40 +145,6 @@ export const FieldInput: React.FC<Props> = ({
     },
     [getUpdate, path, field.name]
   );
-
-  // Cascading fields: clear this field's own value whenever a source it depends on changes, so a
-  // now-stale entry can't linger with a label its refreshed suggestions can no longer resolve.
-  // Everything is resolved against this field's own scopes, so `self`/`form` and each embedded
-  // instance are handled locally; a cleared value in turn changes its own dependents' sources,
-  // cascading onward.
-  const fieldPath = makePath(path, field.name);
-  // The references are structural (they change only with the annotation), so memoize them; the
-  // signature below resolves them against the live form values, so it necessarily reruns per render.
-  const fieldReferences = useMemo(() => getFieldReferences(suggestions), [suggestions]);
-  const dependencySignature = fieldReferences
-    .map((reference) => {
-      const resolved = resolveFieldReference(reference, fieldScopes);
-
-      return Maybe.isSome(resolved) ? resolved.value : "";
-    })
-    .join("\u0000");
-  const previousSignatureRef = useRef(dependencySignature);
-  // A locked existing attribute (edit mode, not newly added): the user can't re-pick a value, so
-  // clearing it would strand the form with an empty locked field. Mirrors the per-input disabled check.
-  const isLockedField = field.isDisabled && !isNew && get(originalState, fieldPath) !== undefined;
-
-  useEffect(() => {
-    // Skip the initial render (nothing changed yet) so an edit form keeps its stored values.
-    if (previousSignatureRef.current === dependencySignature) {
-      return;
-    }
-
-    previousSignatureRef.current = dependencySignature;
-
-    if (!isLockedField) {
-      getUpdate(fieldPath, emptyValueForField(field.kind));
-    }
-  }, [dependencySignature, getUpdate, fieldPath, field.kind, isLockedField]);
 
   switch (field.kind) {
     case "Boolean": {
@@ -236,7 +202,6 @@ export const FieldInput: React.FC<Props> = ({
           attributeValue={get<string[]>(formState, makePath(path, field.name), []) ?? []}
           description={field.description}
           shouldBeDisabled={
-            isBlocked ||
             isRefreshingDependent ||
             (field.isDisabled &&
               get(originalState, makePath(path, field.name).split(".")) !== undefined &&
@@ -248,8 +213,7 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           suggestions={suggestionsList}
-          warningMessage={modelError}
-          hint={blockedHint}
+          warningMessage={modelError ?? blockedWarning ?? noSuggestionsWarning}
           loading={isLoadingSuggestions}
         />
       );
@@ -286,7 +250,6 @@ export const FieldInput: React.FC<Props> = ({
           description={field.description}
           isOptional={field.isOptional}
           shouldBeDisabled={
-            isBlocked ||
             isRefreshingDependent ||
             (field.isDisabled &&
               get(originalState, makePath(path, field.name)) !== undefined &&
@@ -300,8 +263,7 @@ export const FieldInput: React.FC<Props> = ({
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
           suggestions={suggestionsList}
-          warningMessage={modelError}
-          hint={blockedHint}
+          warningMessage={modelError ?? blockedWarning ?? noSuggestionsWarning}
           loading={isLoadingSuggestions}
         />
       );

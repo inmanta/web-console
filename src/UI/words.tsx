@@ -179,6 +179,8 @@ const dict = {
     `Unsupported jsonpath in a cascading field reference: ${paths}. Only navigational paths (member access, array index, equality-filter selection) are supported.`,
   "inventory.form.suggestions.blocked": (dependencies: string) =>
     `Waiting on ${dependencies} before suggestions become available.`,
+  "inventory.form.suggestions.empty": (dependencies: string) =>
+    `No suggested values are available for the current ${dependencies} value.`,
   "inventory.form.suggestions.loading": "Loading suggestions...",
   "inventory.form.suggestions.missingDependency": (field: string, reference: string) =>
     `The suggested values for '${field}' reference '${reference}', which is not a field in scope.`,

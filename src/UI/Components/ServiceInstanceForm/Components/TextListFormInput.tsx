@@ -36,7 +36,6 @@ interface Props {
   handleInputChange: (value: string[], event: React.FormEvent<HTMLInputElement> | null) => void;
   suggestions?: SuggestionValue[] | null;
   warningMessage?: string | null;
-  hint?: string | null;
   loading?: boolean;
 }
 
@@ -69,7 +68,6 @@ export const TextListFormInput: React.FC<Props> = ({
   handleInputChange,
   suggestions = [],
   warningMessage,
-  hint,
   loading = false,
   ...props
 }) => {
@@ -144,8 +142,9 @@ export const TextListFormInput: React.FC<Props> = ({
 
   useEffect(() => {
     // Fully controlled by the stored value: syncing on every change (not only a non-empty one)
-    // lets a cascade-cleared source empty the chips instead of leaving stale ones displayed.
-    // The stored value can momentarily be a non-array (e.g. a cleared scalar), so guard it.
+    // keeps the chips in step when the value is cleared or replaced from outside, instead of
+    // leaving stale ones displayed. The stored value can momentarily be a non-array (e.g. a
+    // cleared scalar), so guard it.
     setCurrentChips(Array.isArray(attributeValue) ? attributeValue : []);
   }, [attributeValue]);
 
@@ -232,11 +231,10 @@ export const TextListFormInput: React.FC<Props> = ({
           />
         </TextInputGroupUtilities>
       </TextInputGroup>
-      {(warningMessage || hint) && (
+      {warningMessage && (
         <FormHelperText>
           <HelperText>
-            {warningMessage && <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>}
-            {hint && <HelperTextItem>{hint}</HelperTextItem>}
+            <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>
           </HelperText>
         </FormHelperText>
       )}
