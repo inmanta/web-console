@@ -147,6 +147,12 @@ export interface TransferAnnotations {
   /** Status styling for the Actions-dropdown item: danger maps to the existing
    * DropdownItem `isDanger` styling, warning tints the icon only (issue #7093). */
   web_button_variant?: "danger" | "warning";
+
+  /** Demotes an api_set_state transfer's Actions-dropdown item into a secondary
+   * "Advanced" disclosure, collapsed by default. Rendering hint only - the
+   * transfer is still invocable via the API. Ignored for non-api_set_state
+   * transfers (issue #7095). */
+  web_advanced_state?: boolean;
 }
 
 /**

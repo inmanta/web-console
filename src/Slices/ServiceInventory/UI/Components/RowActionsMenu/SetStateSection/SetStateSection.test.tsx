@@ -33,6 +33,7 @@ const buildTarget = (overrides: Partial<StateTarget> = {}): StateTarget => ({
   target: "update_acknowledged",
   transfer: baseTransfer,
   buttonLabel: "update_acknowledged",
+  advanced: false,
   ...overrides,
 });
 
