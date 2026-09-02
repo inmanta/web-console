@@ -1,6 +1,6 @@
 import MarkdownIt from "markdown-it";
 import { words } from "@/UI";
-import stateTransferPlugin from "./StateTransferPlugin";
+import stateTransferPlugin, { SetStateButtonDefaults } from "./StateTransferPlugin";
 
 describe("StateTransferPlugin", () => {
   let md: MarkdownIt;
@@ -409,6 +409,103 @@ describe("StateTransferPlugin", () => {
 
       // Empty string is falsy, so attribute should not be added
       expect(html).not.toContain("data-setstate-target=");
+    });
+  });
+
+  describe("annotation-derived defaults", () => {
+    const withDefaults = (
+      stateTransferDefaults: Record<string, SetStateButtonDefaults>
+    ): MarkdownIt => {
+      const instance = new MarkdownIt();
+
+      stateTransferPlugin(instance, "test-base-id", { stateTransferDefaults });
+
+      return instance;
+    };
+
+    it("uses the annotation default for a field the codeblock omits", () => {
+      const defaultsMd = withDefaults({
+        setting_start: { displayText: "Push settings", type: "secondary", variant: "warning" },
+      });
+      const markdown = '```setState\n{"targetState":"setting_start"}\n```';
+      const html = defaultsMd.render(markdown);
+
+      expect(html).toContain("Push settings");
+      expect(html).toContain('class="pf-v6-c-button pf-m-secondary pf-m-warning"');
+    });
+
+    it("lets an explicit codeblock value win over the annotation default", () => {
+      const defaultsMd = withDefaults({
+        setting_start: { displayText: "Push settings", type: "secondary", variant: "warning" },
+      });
+      const markdown =
+        '```setState\n{"targetState":"setting_start","displayText":"Custom label","type":"tertiary"}\n```';
+      const html = defaultsMd.render(markdown);
+
+      expect(html).toContain("Custom label");
+      expect(html).not.toContain("Push settings");
+      expect(html).toContain('class="pf-v6-c-button pf-m-tertiary pf-m-warning"');
+    });
+
+    it("falls back to the hard-coded default when neither the codeblock nor the annotations set a field", () => {
+      const defaultsMd = withDefaults({});
+      const markdown = '```setState\n{"targetState":"setting_start"}\n```';
+      const html = defaultsMd.render(markdown);
+
+      expect(html).toContain('class="pf-v6-c-button pf-m-primary"');
+    });
+
+    it("renders the annotation-derived icon", () => {
+      const defaultsMd = withDefaults({
+        setting_start: { icon: "FaSlidersH" },
+      });
+      const markdown = '```setState\n{"targetState":"setting_start"}\n```';
+      const html = defaultsMd.render(markdown);
+
+      expect(html).toContain('class="pf-v6-c-button__icon pf-m-start"');
+      expect(html).toContain('data-testid="FaSlidersH"');
+      expect(html).toContain("<svg");
+    });
+
+    it("does not render an icon when neither the codeblock nor the annotations set one", () => {
+      const defaultsMd = withDefaults({});
+      const markdown = '```setState\n{"targetState":"setting_start"}\n```';
+      const html = defaultsMd.render(markdown);
+
+      expect(html).not.toContain("pf-v6-c-button__icon");
+      expect(html).not.toContain("<svg");
+    });
+
+    it("lets an explicit codeblock icon win over the annotation default", () => {
+      const defaultsMd = withDefaults({
+        setting_start: { icon: "FaSlidersH" },
+      });
+      const markdown = '```setState\n{"targetState":"setting_start","icon":"FaBook"}\n```';
+      const html = defaultsMd.render(markdown);
+
+      expect(html).toContain('data-testid="FaBook"');
+      expect(html).not.toContain('data-testid="FaSlidersH"');
+    });
+
+    it("ignores an unrecognized icon name", () => {
+      const defaultsMd = withDefaults({
+        setting_start: { icon: "NotARealIcon" },
+      });
+      const markdown = '```setState\n{"targetState":"setting_start"}\n```';
+      const html = defaultsMd.render(markdown);
+
+      expect(html).not.toContain("pf-v6-c-button__icon");
+    });
+
+    it("does not apply defaults for a different target state", () => {
+      const defaultsMd = withDefaults({
+        setting_start: { displayText: "Push settings" },
+      });
+      const markdown = '```setState\n{"targetState":"other_state"}\n```';
+      const html = defaultsMd.render(markdown);
+
+      expect(html).not.toContain("Push settings");
+      expect(html).toContain(">other_state<");
     });
   });
 });
