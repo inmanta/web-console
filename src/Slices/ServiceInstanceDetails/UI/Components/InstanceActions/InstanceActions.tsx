@@ -52,6 +52,8 @@ export const InstanceActions: React.FC = () => {
     instance.state,
     serviceModelQuery.data
   );
+  const primaryStateTargets = stateTargets.filter((target) => !target.advanced);
+  const advancedStateTargets = stateTargets.filter((target) => target.advanced);
   const expertStateTargets: string[] = getExpertStateTargets(serviceModelQuery.data);
 
   const toggle = (toggleRef: React.Ref<MenuToggleElement>) => (
@@ -194,7 +196,8 @@ export const InstanceActions: React.FC = () => {
               <Divider component="li" />
               <DropdownGroup>
                 <StateAction
-                  targets={stateTargets}
+                  targets={primaryStateTargets}
+                  advancedTargets={advancedStateTargets}
                   instance_display_identity={
                     instance.service_identity_attribute_value ?? instance.id
                   }
