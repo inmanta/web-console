@@ -3,12 +3,13 @@ import { Button, MenuItem, Content } from "@patternfly/react-core";
 import styled, { css } from "styled-components";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
 import { usePostStateTransfer } from "@/Data/Queries";
-import { StateTarget, iconColorFor } from "@/Slices/ServiceInstanceDetails/Utils";
+import { StateTarget } from "@/Slices/ServiceInstanceDetails/Utils";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DynamicFAIcon } from "@/UI/Components/FaIcon";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
+import { iconColorFor } from "@/UI/Utils";
 import { words } from "@/UI/words";
 
 interface Props extends VersionedServiceInstanceIdentifier {

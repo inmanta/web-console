@@ -5,8 +5,11 @@ import { full } from "markdown-it-emoji";
 import { useTheme } from "../DarkmodeOption";
 import { renderMermaidBlocks } from "./MermaidHelpers";
 import mermaidPlugin from "./MermaidPlugin";
-import setStatePlugin from "./StateTransferPlugin";
+import setStatePlugin, { SetStateButtonDefaults } from "./StateTransferPlugin";
+import type MarkdownIt from "markdown-it";
 import "./styles.css";
+
+export type { SetStateButtonDefaults } from "./StateTransferPlugin";
 
 export interface SetStateClickDetail {
   content: string;
@@ -25,6 +28,12 @@ interface Props {
    */
   onSetStateClick?: (detail: SetStateClickDetail) => void;
   isVisible?: boolean;
+
+  /** Annotation-derived setState button defaults, keyed by target state. */
+  stateTransferDefaults?: Record<string, SetStateButtonDefaults>;
+
+  /** Disables every rendered setState button, e.g. for a historical instance version. */
+  disableStateTransfer?: boolean;
 }
 
 /**
@@ -43,10 +52,13 @@ export const MarkdownContainer: React.FC<Props> = ({
   web_title,
   onSetStateClick,
   isVisible = true,
+  stateTransferDefaults,
+  disableStateTransfer = false,
 }) => {
   const { theme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const lastProcessedText = useRef<string>("");
+  const lastProcessedMd = useRef<MarkdownIt | undefined>(undefined);
 
   // Memoize the markdown-it instance to prevent it from changing on every render
   // This prevents the useEffect dependency array from changing unnecessarily
@@ -74,10 +86,10 @@ export const MarkdownContainer: React.FC<Props> = ({
 
     markdownInstance.use(full);
     markdownInstance.use((md) => mermaidPlugin(md, web_title, { theme }));
-    markdownInstance.use((md) => setStatePlugin(md, web_title, {}));
+    markdownInstance.use((md) => setStatePlugin(md, web_title, { stateTransferDefaults }));
 
     return markdownInstance;
-  }, [web_title, theme]);
+  }, [web_title, theme, stateTransferDefaults]);
 
   useEffect(() => {
     if (!isVisible) {
@@ -93,11 +105,21 @@ export const MarkdownContainer: React.FC<Props> = ({
     // Render markdown to HTML string (includes <pre class="mermaid"> blocks)
     const result = md.render(text);
 
-    // Only update if the text has actually changed to prevent unnecessary re-processing
-    if (text !== lastProcessedText.current) {
+    // Also re-render when `md` changes (e.g. stateTransferDefaults updated) - otherwise
+    // newly-resolved defaults wouldn't reach the DOM when `text` itself is unchanged.
+    if (text !== lastProcessedText.current || md !== lastProcessedMd.current) {
       lastProcessedText.current = text;
+      lastProcessedMd.current = md;
       container.innerHTML = result;
     }
+
+    // Not gated on the innerHTML update above, so toggling disableStateTransfer alone
+    // (e.g. switching instance version) still takes effect.
+    container
+      .querySelectorAll<HTMLButtonElement>(".pf-v6-c-button[data-setstate-content]")
+      .forEach((button) => {
+        button.disabled = disableStateTransfer || button.hasAttribute("data-setstate-error");
+      });
 
     const handleImageClick = (event: Event) => {
       const target = event.target as HTMLElement;
@@ -179,8 +201,7 @@ export const MarkdownContainer: React.FC<Props> = ({
 
       event.stopPropagation();
 
-      // Don't handle clicks on buttons with configuration errors
-      if (button.hasAttribute("data-setstate-error")) {
+      if (button.hasAttribute("data-setstate-error") || (button as HTMLButtonElement).disabled) {
         return;
       }
 
@@ -266,7 +287,7 @@ export const MarkdownContainer: React.FC<Props> = ({
         });
       document.body.style.overflow = "";
     };
-  }, [text, md, onSetStateClick, isVisible]);
+  }, [text, md, onSetStateClick, isVisible, disableStateTransfer]);
 
   return <div ref={containerRef} className="markdown-body" />;
 };

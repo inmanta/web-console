@@ -125,28 +125,6 @@ export const getAvailableStateTargets = (
 };
 
 /**
- * PatternFly's `Icon` sets its own `--pf-v6-c-icon__content--Color` default directly
- * on the icon wrapper, which shadows any inherited `color` from an ancestor (e.g. a
- * CSS custom-property override placed on the menu item). react-icons does honor an
- * explicit `color`, applying it as an inline style that wins regardless - so icon
- * coloring goes through `DynamicFAIcon`'s `color` prop, not CSS (issue #7093).
- *
- * @param {string} [variant] - the transfer's `web_button_variant` annotation
- * @returns {string | undefined} the CSS color for the icon, or undefined for no override
- */
-export const iconColorFor = (variant?: string): string | undefined => {
-  if (variant === "danger") {
-    return "var(--pf-t--global--icon--color--status--danger--default)";
-  }
-
-  if (variant === "warning") {
-    return "var(--pf-t--global--icon--color--status--warning--default)";
-  }
-
-  return undefined;
-};
-
-/**
  * Method to get the available set of states for the expert mode
  * In Expert mode, all states are possible targets.
  *

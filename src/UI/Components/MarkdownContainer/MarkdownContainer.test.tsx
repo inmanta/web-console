@@ -175,6 +175,50 @@ describe("MarkdownContainer", () => {
     });
   });
 
+  it("resolves setState button label/icon from stateTransferDefaults", async () => {
+    const markdownContent = '```setState\n{"targetState":"setting_start"}\n```';
+    const webTitle = "Container_id";
+
+    render(
+      <MarkdownContainer
+        text={markdownContent}
+        web_title={webTitle}
+        stateTransferDefaults={{
+          setting_start: { displayText: "Push settings", icon: "FaSlidersH", variant: "warning" },
+        }}
+      />
+    );
+
+    const button = await screen.findByRole("button", { name: "Push settings" });
+
+    expect(button).toHaveAttribute("data-setstate-target", "setting_start");
+    expect(button.querySelector('[data-testid="FaSlidersH"]')).toBeInTheDocument();
+  });
+
+  it("disables setState buttons and ignores clicks when disableStateTransfer is set", async () => {
+    const markdownContent =
+      '```setState\n{"displayText":"Apply state","targetState":"desired-state"}\n```';
+    const webTitle = "Container_id";
+    const handleSetStateClick = vi.fn();
+
+    render(
+      <MarkdownContainer
+        text={markdownContent}
+        web_title={webTitle}
+        onSetStateClick={handleSetStateClick}
+        disableStateTransfer
+      />
+    );
+
+    const button = await screen.findByRole("button", { name: "Apply state" });
+
+    expect(button).toBeDisabled();
+
+    fireEvent.click(button);
+
+    expect(handleSetStateClick).not.toHaveBeenCalled();
+  });
+
   describe("Mermaid download toolbar", () => {
     // Minimal SVG that mermaid would normally inject into a rendered block.
     const SVG_MARKUP =
