@@ -1,4 +1,4 @@
-import environmentHelpers from "../support/environmentHelpers";
+import environmentHelpers from "../support/environmentHelpers.js";
 
 const { clearEnvironment, forceUpdateEnvironment, selectEnvironment } = environmentHelpers;
 
