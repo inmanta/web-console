@@ -156,7 +156,7 @@
     "monaco-graphql": "^1.8.0",
     "oidc-client-ts": "^3.5.0",
     "process": "^0.11.10",
-    "qs": "^6.15.3",
+    "qs": "^6.16.0",
     "react": "^19.2.8",
     "react-diff-viewer-continued": "^3.4.0",
     "react-dom": "^19.2.8",
@@ -174,7 +174,7 @@
     "glob": "^10.5.0",
     "json5": "^2.2.2",
     "serialize-javascript": "^7.0.3",
-    "qs": "^6.15.3",
+    "qs": "^6.16.0",
     "uuid@^8.3.2": "11.1.1",
     "tar": "^7.5.19"
   },
