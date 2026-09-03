@@ -1,0 +1,6 @@
+description: Add a changelog page listing the environment-wide history of resource actions (deployments), with filtering and cursor-based pagination.
+issue-nr: 7159
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
