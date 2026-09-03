@@ -1,6 +1,7 @@
 import { Resource } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage, MultiSort } from "@/Data";
+import { ResourceActionFilter } from "../DeployFiltered";
 import { PageInfo } from "./useGetResources";
 
 type GraphQLStateFilter = Partial<{
@@ -91,6 +92,46 @@ export function mapStatusToGraphQLFilter(statusses?: string[]): GraphQLStateFilt
   }
 
   return filter;
+}
+
+/**
+ * Maps the resources page UI filter to the GraphQL/deploy_filtered ResourceActionFilter, so the
+ * list query and a filter-scoped deploy act on exactly the same set. The environment is left out;
+ * the list query adds it as a variable and the deploy endpoint scopes by URL.
+ */
+export function mapToResourceActionFilter(filter?: Resource.Filter): ResourceActionFilter {
+  const result: ResourceActionFilter = {};
+
+  if (filter?.type?.length) {
+    result.resourceType = { contains: filter.type.map((type) => `%${type}%`) };
+  }
+
+  if (filter?.agent?.length) {
+    result.agent = { contains: filter.agent.map((agent) => `%${agent}%`) };
+  }
+
+  if (filter?.value?.length) {
+    result.resourceIdValue = { contains: filter.value.map((value) => `%${value}%`) };
+  }
+
+  if (filter?.serviceEntity?.length) {
+    result.serviceEntity = filter.serviceEntity;
+  }
+
+  if (filter?.serviceInstance?.length) {
+    result.serviceInstance = filter.serviceInstance.map(
+      (value) => Resource.parseServiceInstanceFilterValue(value).id
+    );
+  }
+
+  if (filter?.includeOwned) {
+    result.includeOwned = true;
+  }
+
+  return {
+    ...result,
+    ...mapStatusToGraphQLFilter(filter?.status),
+  };
 }
 
 /**
