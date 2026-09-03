@@ -159,6 +159,12 @@ export enum Status {
   orphaned = "orphaned",
 }
 
+/**
+ * Whether a resource details status marks it as an orphan - no longer part of the latest intent
+ * (see {@link ResourceState.isOrphan}).
+ */
+export const isOrphanedStatus = (status: string): boolean => status === "orphaned";
+
 interface BaseDetails {
   resource_id: string;
   resource_type: string;
