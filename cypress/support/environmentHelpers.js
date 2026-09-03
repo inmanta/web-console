@@ -88,7 +88,7 @@ const forceUpdateEnvironment = (nameEnvironment = "test") => {
   });
 };
 
-module.exports = {
+export default {
   getDefaultEnvName,
   selectEnvironment,
   clearEnvironment,
