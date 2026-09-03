@@ -1,0 +1,7 @@
+description: |
+  Polished the Resources page Deploy split button after review: the filtered deploy now targets exactly the set the confirm dialog counts, the confirm button is disabled when nothing matches, the dialog notes that orphaned resources can't be deployed, the Deploy and Repair buttons regained their explanatory tooltips, and the scope cards announce their counts to screen readers.
+issue-nr: 7240
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

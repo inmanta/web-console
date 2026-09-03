@@ -22,27 +22,29 @@ interface ScopeCardProps {
   isSelected: boolean;
   onSelect: (scope: Scope) => void;
   title: string;
-  label: string;
+  count: string;
 }
 
 /**
  * A selectable card acting as one radio option in the scope picker.
  */
-const ScopeCard: React.FC<ScopeCardProps> = ({ scope, isSelected, onSelect, title, label }) => (
+const ScopeCard: React.FC<ScopeCardProps> = ({ scope, isSelected, onSelect, title, count }) => (
   <Card id={`deploy-scope-${scope}`} isSelectable isSelected={isSelected}>
     <CardHeader
       selectableActions={{
         variant: "single",
         name: "deploy-scope",
         selectableActionId: `deploy-scope-${scope}-input`,
-        selectableActionAriaLabelledby: `deploy-scope-${scope}-title`,
+        selectableActionAriaLabelledby: `deploy-scope-${scope}-title deploy-scope-${scope}-count`,
         isChecked: isSelected,
         onChange: () => onSelect(scope),
       }}
     >
       <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }}>
         <CardTitle id={`deploy-scope-${scope}-title`}>{title}</CardTitle>
-        <Content component="small">{label}</Content>
+        <Content component="small" id={`deploy-scope-${scope}-count`}>
+          {count}
+        </Content>
       </Flex>
     </CardHeader>
   </Card>
@@ -76,6 +78,7 @@ export const ResourceActionConfirmModal: React.FC<Props> = ({
 }) => {
   const [scope, setScope] = useState<Scope>("filtered");
   const chosenFilter = scope === "environment" ? ENVIRONMENT_FILTER : filter;
+  const chosenCount = scope === "environment" ? environmentCount : filteredCount;
 
   return (
     <Flex direction={{ default: "column" }} gap={{ default: "gapMd" }}>
@@ -85,19 +88,24 @@ export const ResourceActionConfirmModal: React.FC<Props> = ({
           isSelected={scope === "filtered"}
           onSelect={setScope}
           title={words("resources.deployActions.confirm.filtered.title")}
-          label={words("resources.deployActions.confirm.filtered.count")(filteredCount)}
+          count={words("resources.deployActions.confirm.filtered.count")(filteredCount)}
         />
         <ScopeCard
           scope="environment"
           isSelected={scope === "environment"}
           onSelect={setScope}
           title={words("resources.deployActions.confirm.environment.title")}
-          label={words("resources.deployActions.confirm.environment.count")(environmentCount)}
+          count={words("resources.deployActions.confirm.environment.count")(environmentCount)}
         />
         <Content component="small">{words("resources.deployActions.confirm.orphanNote")}</Content>
       </Flex>
       <Flex gap={{ default: "gapSm" }}>
-        <Button key="confirm" variant="primary" autoFocus onClick={() => onConfirm(chosenFilter)}>
+        <Button
+          key="confirm"
+          variant="primary"
+          isDisabled={chosenCount === 0}
+          onClick={() => onConfirm(chosenFilter)}
+        >
           {actionLabel}
         </Button>
         <Button key="cancel" variant="link" onClick={onClose}>

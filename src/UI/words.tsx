@@ -785,6 +785,10 @@ const dict = {
   "resources.deployActions.toggle": "Deploy actions",
   "resources.deployActions.deploy.hint": "default - incremental",
   "resources.deployActions.repair.hint": "full",
+  "resources.deployActions.deploy.tooltip":
+    "Request the agents to check the current state of each resource in a state different from the deployed state and make the current state of those resources in line with the desired state.",
+  "resources.deployActions.repair.tooltip":
+    "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
   "resources.deployActions.orphaned.disabled":
     "Orphaned resources are no longer part of the latest desired state, so they cannot be deployed or repaired.",
   "resources.deployActions.success": (action: string) => `${action} triggered`,
@@ -797,7 +801,7 @@ const dict = {
   "resources.deployActions.confirm.environment.count": (count: number) =>
     `${count} total · ignores the active filter`,
   "resources.deployActions.confirm.orphanNote":
-    "Orphaned resources (in no released version) are skipped.",
+    "Orphaned resources (in no released version) can't be deployed or repaired.",
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",

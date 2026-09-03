@@ -9,6 +9,7 @@ import {
   MenuToggle,
   MenuToggleAction,
   MenuToggleElement,
+  Tooltip,
 } from "@patternfly/react-core";
 import { OutlinedPlayCircleIcon, WrenchIcon } from "@patternfly/react-icons";
 import { DeployAgentsAction, ResourceActionFilter, useDeployFiltered } from "@/Data/Queries";
@@ -27,42 +28,43 @@ interface ActionConfig {
   icon: React.ReactNode;
   label: string;
   hint: string;
+  tooltip: string;
 }
 
-interface Props {
+interface BaseProps {
   filter: ResourceActionFilter;
-  requireConfirm?: boolean;
-  filteredCount?: number;
-  environmentCount?: number;
   disabledReason?: string;
 }
+
+/**
+ * The counts feed the confirm dialog, so they only make sense with requireConfirm. The union keeps
+ * them and requireConfirm together: with it both counts are required, without it neither is allowed.
+ */
+type Props =
+  | (BaseProps & { requireConfirm: true; filteredCount: number; environmentCount: number })
+  | (BaseProps & { requireConfirm?: false; filteredCount?: never; environmentCount?: never });
 
 /**
  * DeployActions is the shared "Deploy split button".
  *
  * Deploy is the default action; the caret opens a menu repeating Deploy and adding Repair. Both act
- * on the resources matching {@link Props.filter} through the deploy_filtered endpoint, so the same
+ * on the resources matching {@link BaseProps.filter} through the deploy_filtered endpoint, so the same
  * control serves a single resource, the active list filter or a whole environment. With
- * {@link Props.requireConfirm} the action opens a confirmation dialog first (letting the operator
- * widen the scope to the whole environment); without it, it runs immediately (the single-resource
- * case). It disables itself while the environment is halted.
+ * requireConfirm the action opens a confirmation dialog first (letting the operator widen the scope
+ * to the whole environment); without it, it runs immediately (the single-resource case). It disables
+ * itself while the environment is halted.
  *
  * @Props {Props} - The props of the component
  *  @prop {ResourceActionFilter} filter - The scope the actions act on
- *  @prop {boolean} [requireConfirm] - When set, actions open a confirmation dialog before running
- *  @prop {number} [filteredCount] - Resources matching the filter, shown in the confirm dialog
- *  @prop {number} [environmentCount] - Resources in the whole environment, shown in the confirm dialog
  *  @prop {string} [disabledReason] - When set, disables the control and shows this as its tooltip
+ *  @prop {boolean} [requireConfirm] - When set, actions open a confirmation dialog before running
+ *  @prop {number} [filteredCount] - Resources matching the filter, shown in the confirm dialog (requireConfirm only)
+ *  @prop {number} [environmentCount] - Resources in the whole environment, shown in the confirm dialog (requireConfirm only)
  *
  * @returns {React.FC<Props>} The rendered split button
  */
-export const DeployActions: React.FC<Props> = ({
-  filter,
-  requireConfirm,
-  filteredCount = 0,
-  environmentCount = 0,
-  disabledReason,
-}) => {
+export const DeployActions: React.FC<Props> = (props) => {
+  const { filter, disabledReason } = props;
   const [isOpen, setIsOpen] = useState(false);
   const { environmentHandler } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
@@ -79,15 +81,17 @@ export const DeployActions: React.FC<Props> = ({
       icon: <OutlinedPlayCircleIcon style={iconStyle} />,
       label: words("resources.compoundStateSummary.deploy"),
       hint: words("resources.deployActions.deploy.hint"),
+      tooltip: words("resources.deployActions.deploy.tooltip"),
     },
     repair: {
       icon: <WrenchIcon style={iconStyle} />,
       label: words("resources.compoundStateSummary.repair"),
       hint: words("resources.deployActions.repair.hint"),
+      tooltip: words("resources.deployActions.repair.tooltip"),
     },
   };
 
-  const run = (key: ActionKey, scopeFilter: ResourceActionFilter) => {
+  const run = (key: ActionKey, scopeFilter: ResourceActionFilter): void => {
     const method = DeployAgentsAction[key];
     const { label } = actions[key];
 
@@ -104,10 +108,10 @@ export const DeployActions: React.FC<Props> = ({
     );
   };
 
-  const onAction = (key: ActionKey) => {
+  const onAction = (key: ActionKey): void => {
     setIsOpen(false);
 
-    if (!requireConfirm) {
+    if (!props.requireConfirm) {
       run(key, filter);
 
       return;
@@ -120,8 +124,8 @@ export const DeployActions: React.FC<Props> = ({
         <ResourceActionConfirmModal
           actionLabel={actions[key].label}
           filter={filter}
-          filteredCount={filteredCount}
-          environmentCount={environmentCount}
+          filteredCount={props.filteredCount}
+          environmentCount={props.environmentCount}
           onConfirm={(scopeFilter) => {
             closeModal();
             run(key, scopeFilter);
@@ -146,7 +150,11 @@ export const DeployActions: React.FC<Props> = ({
           isDisabled={isDisabled}
           onClick={() => onAction("deploy")}
         >
-          <OutlinedPlayCircleIcon /> {actions.deploy.label}
+          <Tooltip content={actions.deploy.tooltip}>
+            <span>
+              <OutlinedPlayCircleIcon /> {actions.deploy.label}
+            </span>
+          </Tooltip>
         </MenuToggleAction>,
       ]}
     />
@@ -161,10 +169,15 @@ export const DeployActions: React.FC<Props> = ({
     >
       <DropdownList>
         {(Object.keys(actions) as ActionKey[]).map((key) => {
-          const { icon, label, hint } = actions[key];
+          const { icon, label, hint, tooltip: itemTooltip } = actions[key];
 
           return (
-            <DropdownItem key={key} icon={icon} onClick={() => onAction(key)}>
+            <DropdownItem
+              key={key}
+              icon={icon}
+              onClick={() => onAction(key)}
+              tooltipProps={{ content: itemTooltip }}
+            >
               <Flex
                 justifyContent={{ default: "justifyContentSpaceBetween" }}
                 alignItems={{ default: "alignItemsCenter" }}

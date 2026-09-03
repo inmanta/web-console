@@ -17,14 +17,18 @@ const deployLabel = words("resources.compoundStateSummary.deploy");
 const repairLabel = words("resources.compoundStateSummary.repair");
 const toggleLabel = words("resources.deployActions.toggle");
 
-function setup(props: Partial<React.ComponentProps<typeof DeployActions>> = {}) {
+type SetupProps =
+  | { requireConfirm?: false; disabledReason?: string }
+  | { requireConfirm: true; filteredCount: number; environmentCount: number };
+
+function setup(props: SetupProps = {}, filterProp: ResourceActionFilter = filter) {
   return (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
         <MockedDependencyProvider env={EnvironmentDetails.env}>
           <ModalProvider>
             <Page>
-              <DeployActions filter={filter} {...props} />
+              <DeployActions filter={filterProp} {...props} />
             </Page>
           </ModalProvider>
         </MockedDependencyProvider>
@@ -133,6 +137,67 @@ describe("DeployActions", () => {
     await waitFor(() =>
       expect(body).toEqual({
         filter: { isOrphan: false },
+        agent_trigger_method: "push_incremental_deploy",
+      })
+    );
+  });
+
+  test("WHEN the chosen scope matches no resources THEN its confirm button is disabled", async () => {
+    render(setup({ requireConfirm: true, filteredCount: 0, environmentCount: 5 }));
+
+    await userEvent.click(screen.getByRole("button", { name: deployLabel }));
+
+    const dialog = await screen.findByRole("dialog");
+    const confirm = within(dialog).getByRole("button", { name: deployLabel });
+
+    // Filtered scope matches nothing, so confirming (an empty deploy) is blocked.
+    expect(confirm).toBeDisabled();
+
+    // The whole-environment scope still has resources, so it re-enables confirm.
+    await userEvent.click(
+      within(dialog).getByRole("radio", {
+        name: new RegExp(words("resources.deployActions.confirm.environment.title"), "i"),
+      })
+    );
+    expect(confirm).toBeEnabled();
+  });
+
+  test("WHEN the confirm dialog is open THEN it notes that orphaned resources can't be deployed", async () => {
+    const orphanNote = words("resources.deployActions.confirm.orphanNote");
+
+    render(setup({ requireConfirm: true, filteredCount: 3, environmentCount: 9 }));
+
+    await userEvent.click(screen.getByRole("button", { name: deployLabel }));
+
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByText(orphanNote)).toBeVisible();
+  });
+
+  test("WHEN the filter includes orphans THEN it is sent as-is, leaving the scheduler to reject it", async () => {
+    let body: unknown;
+
+    server.use(
+      http.post("/api/v2/deploy_filtered", async ({ request }) => {
+        body = await request.json();
+
+        return HttpResponse.json({});
+      })
+    );
+
+    // The filter is passed through unchanged; an orphan filter reaches the backend, which rejects it
+    // (surfaced as an error toast), rather than being silently rewritten here.
+    render(
+      setup({ requireConfirm: true, filteredCount: 3, environmentCount: 9 }, { isOrphan: true })
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: deployLabel }));
+
+    const dialog = await screen.findByRole("dialog");
+    await userEvent.click(within(dialog).getByRole("button", { name: deployLabel }));
+
+    await waitFor(() =>
+      expect(body).toEqual({
+        filter: { isOrphan: true },
         agent_trigger_method: "push_incremental_deploy",
       })
     );
