@@ -715,7 +715,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.10 Deploy the filtered resources from the toolbar", () => {
       cy.visit("/console/");
-      selectEnvironment();
+      cy.get('[aria-label="Select-environment-test"]').click();
 
       deployFilteredWithConfirm();
     });
@@ -826,7 +826,7 @@ describe("Scenario 6 : Resources", () => {
 
     it("6.4 Deploy the filtered resources from the toolbar", () => {
       cy.visit("/console/");
-      selectEnvironment();
+      cy.get('[aria-label="Select-environment-test"]').click();
 
       deployFilteredWithConfirm();
     });
