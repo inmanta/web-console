@@ -1,4 +1,4 @@
-description: A field whose suggested values depend on another, not-yet-filled field is no longer disabled: the input stays editable so free typing is always allowed, and a warning explains that suggestions are waiting on the other field, or that no suggestions are available for the current selection. Changing a source field also no longer clears the dependent fields that referenced it.
+description: A field whose suggested values depend on another, not-yet-filled field is no longer disabled: the input stays editable so free typing is always allowed, and a neutral hint explains that suggestions are waiting on the other field or that it has no options. Changing a source field also no longer clears the dependent fields that referenced it. A warning is shown when a kept value is no longer among the suggested values, or when the annotation is broken or the suggestions request fails.
 issue-nr: 7277
 change-type: patch
 destination-branches: [master, iso9]

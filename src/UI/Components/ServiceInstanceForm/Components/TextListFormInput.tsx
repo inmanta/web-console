@@ -21,6 +21,7 @@ import { SuggestionValue } from "@/Core";
 import { words } from "@/UI/words";
 import { SuggestionsPopover } from "./SuggestionsPopover";
 import { resolveLabel, resolveValue } from "./suggestionResolvers";
+import { useStableFeedback } from "./useStableFeedback";
 
 /**
  * Props for the TextListFormInput component.
@@ -36,6 +37,7 @@ interface Props {
   handleInputChange: (value: string[], event: React.FormEvent<HTMLInputElement> | null) => void;
   suggestions?: SuggestionValue[] | null;
   warningMessage?: string | null;
+  hint?: string | null;
   loading?: boolean;
 }
 
@@ -68,6 +70,7 @@ export const TextListFormInput: React.FC<Props> = ({
   handleInputChange,
   suggestions = [],
   warningMessage,
+  hint,
   loading = false,
   ...props
 }) => {
@@ -147,6 +150,10 @@ export const TextListFormInput: React.FC<Props> = ({
     // cleared scalar), so guard it.
     setCurrentChips(Array.isArray(attributeValue) ? attributeValue : []);
   }, [attributeValue]);
+
+  // One feedback slot: a warning wins over a hint, and the last one is held across a refresh so it
+  // swaps in place instead of blanking out and shifting the layout while new data loads.
+  const feedback = useStableFeedback(warningMessage, hint, loading);
 
   return (
     <FormGroup
@@ -231,10 +238,12 @@ export const TextListFormInput: React.FC<Props> = ({
           />
         </TextInputGroupUtilities>
       </TextInputGroup>
-      {warningMessage && (
+      {feedback && (
         <FormHelperText>
           <HelperText>
-            <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>
+            <HelperTextItem variant={feedback.isWarning ? "warning" : "default"}>
+              {feedback.message}
+            </HelperTextItem>
           </HelperText>
         </FormHelperText>
       )}

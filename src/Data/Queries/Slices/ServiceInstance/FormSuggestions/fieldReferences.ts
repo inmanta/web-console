@@ -14,12 +14,12 @@ import {
  *
  *   collectSuggestionReferences  annotation -> every ${...} ref, classified (context/field/unknown)
  *   getFieldReferences           annotation -> just the field refs (input to the dependency graph)
- *   getFieldDependencyNames      annotation -> the source field names (for the "blocked" hint)
+ *   getFieldDependencyNames      annotation -> the source field names (named in the waiting hint)
  *   getUnsupportedFieldPaths     refs       -> field refs whose jsonpath we can't evaluate (model error)
- *   resolveFieldReference        one ref + form values -> its current value, or none (blocked)
+ *   resolveFieldReference        one ref + form values -> its current value, or none (unresolved)
  *
  * `form` reads from the form root, `self` from the field's own embedded instance. A reference
- * that matches no single non-empty scalar is "not ready yet", so the control blocks.
+ * that matches no single non-empty scalar is "not ready yet", so the dependency is unresolved.
  */
 
 /**
@@ -111,7 +111,7 @@ export const getFieldReferences = (
 
 /**
  * The names of the source fields a suggestion depends on (root member of each field-ref
- * path), deduplicated - used to tell the operator which field to fill in first.
+ * path), deduplicated - named in the hint telling the operator which field to fill in first.
  *
  * @example
  * getFieldDependencyNames({ type: "parameters", parameter_name: "r_${form.site}" }) // => ["site"]

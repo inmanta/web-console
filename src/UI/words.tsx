@@ -177,10 +177,13 @@ const dict = {
     "The graphql suggested values annotation is malformed. It requires a 'query' with a 'root' and a 'value' projection.",
   "inventory.form.suggestions.unsupportedFieldPath": (paths: string) =>
     `Unsupported jsonpath in a cascading field reference: ${paths}. Only navigational paths (member access, array index, equality-filter selection) are supported.`,
-  "inventory.form.suggestions.blocked": (dependencies: string) =>
+  "inventory.form.suggestions.waitingOnSource": (dependencies: string) =>
     `Waiting on ${dependencies} before suggestions become available.`,
   "inventory.form.suggestions.empty": (dependencies: string) =>
-    `No suggested values are available for the current ${dependencies} value.`,
+    `No suggested values are available for the current values of ${dependencies}.`,
+  "inventory.form.suggestions.notInList": (dependencies: string) =>
+    `The current value is not among the suggested values for ${dependencies}.`,
+  "inventory.form.suggestions.fetchError": "Could not load the suggested values. Please try again.",
   "inventory.form.suggestions.loading": "Loading suggestions...",
   "inventory.form.suggestions.missingDependency": (field: string, reference: string) =>
     `The suggested values for '${field}' reference '${reference}', which is not a field in scope.`,
