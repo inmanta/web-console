@@ -10,6 +10,7 @@ import { response } from "@/Slices/Agents";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
 import { createMockResourceSummary } from "@/Test/Data/Resource";
 import { words } from "@/UI";
+import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { Page } from "./Page";
 
@@ -117,7 +118,9 @@ function setup(entries?: string[], halted = false) {
       <QueryClientProvider client={client}>
         <TestMemoryRouter initialEntries={entries}>
           <MockedDependencyProvider env={{ ...EnvironmentDetails.env, halted }}>
-            <Page />
+            <ModalProvider>
+              <Page />
+            </ModalProvider>
           </MockedDependencyProvider>
         </TestMemoryRouter>
       </QueryClientProvider>
@@ -803,15 +806,15 @@ describe("ResourcesPage", () => {
     });
     expect(legendBars[0]).toBeVisible();
 
-    const repairButton = screen.getByRole("button", {
-      name: words("resources.compoundStateSummary.repair"),
-    });
-    expect(repairButton).toBeVisible();
-
     const deployButton = screen.getByRole("button", {
       name: words("resources.compoundStateSummary.deploy"),
     });
     expect(deployButton).toBeVisible();
+
+    const deployToggle = screen.getByRole("button", {
+      name: words("resources.deployActions.toggle"),
+    });
+    expect(deployToggle).toBeVisible();
 
     expect(screen.getByRole("navigation", { name: "top-Pagination" })).toBeVisible();
     expect(screen.getByRole("navigation", { name: "bottom-Pagination" })).toBeInTheDocument();
@@ -866,15 +869,17 @@ describe("ResourcesPage", () => {
     });
   });
 
-  // --- Deploy / Repair buttons ---
+  // --- Deploy actions ---
 
-  test("deploy button fires correct request", async () => {
+  test("deploy confirms against the filtered scope and fires a filtered deploy", async () => {
     let body: unknown = {};
 
     server.use(
       queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })),
-      http.post("/api/v1/deploy", async ({ request }) => {
+      http.post("/api/v2/deploy_filtered", async ({ request }) => {
         body = await request.json();
+
+        return HttpResponse.json({});
       })
     );
 
@@ -884,14 +889,21 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    const deployButton = await screen.findByRole("button", {
-      name: words("resources.compoundStateSummary.deploy"),
-    });
-    await userEvent.click(deployButton);
+    await userEvent.click(
+      screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+    );
 
-    expect(deployButton).toBeDisabled();
-    expect(screen.getByTestId("dot-indication")).toBeInTheDocument();
-    expect(body).toEqual({ agent_trigger_method: "push_incremental_deploy" });
+    const dialog = await screen.findByRole("dialog");
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+    );
+
+    await waitFor(() =>
+      expect(body).toEqual({
+        filter: { isOrphan: false },
+        agent_trigger_method: "push_incremental_deploy",
+      })
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -899,13 +911,15 @@ describe("ResourcesPage", () => {
     });
   });
 
-  test("repair button fires correct request", async () => {
+  test("repair from the menu confirms and fires a filtered full deploy", async () => {
     let body: unknown = {};
 
     server.use(
       queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })),
-      http.post("/api/v1/deploy", async ({ request }) => {
+      http.post("/api/v2/deploy_filtered", async ({ request }) => {
         body = await request.json();
+
+        return HttpResponse.json({});
       })
     );
 
@@ -915,13 +929,26 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    const repairButton = await screen.findByRole("button", {
-      name: words("resources.compoundStateSummary.repair"),
-    });
-    await userEvent.click(repairButton);
+    await userEvent.click(
+      screen.getByRole("button", { name: words("resources.deployActions.toggle") })
+    );
+    await userEvent.click(
+      screen.getByRole("menuitem", {
+        name: new RegExp(words("resources.compoundStateSummary.repair"), "i"),
+      })
+    );
 
-    expect(repairButton).toBeDisabled();
-    expect(body).toEqual({ agent_trigger_method: "push_full_deploy" });
+    const dialog = await screen.findByRole("dialog");
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: words("resources.compoundStateSummary.repair") })
+    );
+
+    await waitFor(() =>
+      expect(body).toEqual({
+        filter: { isOrphan: false },
+        agent_trigger_method: "push_full_deploy",
+      })
+    );
 
     await act(async () => {
       const results = await axe(document.body);
@@ -929,7 +956,7 @@ describe("ResourcesPage", () => {
     });
   });
 
-  test("deploy and repair buttons are disabled when environment is halted", async () => {
+  test("deploy actions are disabled when environment is halted", async () => {
     server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })));
 
     const { component } = setup(undefined, true);
@@ -938,15 +965,12 @@ describe("ResourcesPage", () => {
 
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    const repairButton = screen.getByRole("button", {
-      name: words("resources.compoundStateSummary.repair"),
-    });
-    expect(repairButton).toBeDisabled();
-
-    const deployButton = await screen.findByRole("button", {
-      name: words("resources.compoundStateSummary.deploy"),
-    });
-    expect(deployButton).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+    ).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: words("resources.deployActions.toggle") })
+    ).toBeDisabled();
 
     await act(async () => {
       const results = await axe(document.body);
