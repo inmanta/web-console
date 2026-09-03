@@ -303,9 +303,16 @@ describe("Scenario 6 : Resources", () => {
       }).should("have.text", "21 - 40");
 
       cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
-      // Filtering on type input with "lsm" will return 2 results
-      cy.get('[aria-label="Type"]').type("lsm");
-      cy.get('[aria-label="Add filter-Type"]').click();
+      // Filtering on type input with "lsm" will return 2 results.
+      // Wait for the drawer input to be ready, and only add once the button is enabled: it is
+      // disabled while the value is empty, so an enabled button proves "lsm" reached React state
+      // (typing can otherwise race the drawer animation and commit a partial value).
+      cy.get('[aria-label="Type"]').should("be.visible").type("lsm");
+      cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
+      // Wait for the filtered rows to render before asserting the footer. Adding a filter resets
+      // to page 1, so the pre-filter count ("1 - 20") is briefly shown while the request is in
+      // flight; gating on the 2 filtered rows avoids latching onto that transient value.
+      cy.get('[aria-label="Resource Table Row"]').should("have.length", 2);
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
       }).should("have.text", "1 - 2");

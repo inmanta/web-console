@@ -1,0 +1,4 @@
+description: Fixed a batch of flaky unit and e2e tests (environment selector menu, compliance check status filter, resources pagination filter, and the Monaco duplicate-instance editor) by waiting for async rendering instead of racing it.
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}
