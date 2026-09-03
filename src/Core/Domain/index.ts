@@ -4,6 +4,7 @@ import { Pagination } from "./Pagination";
 import { Resource } from "./Resource";
 export { Pagination, Resource, Diff };
 
+export * from "./AnnotationWarnings";
 export * from "./Config";
 export * as EnvironmentSettings from "./EnvironmentSettings";
 export * from "./EventModel";
