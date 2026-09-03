@@ -1,4 +1,4 @@
-import "./monacoHelpers";
+import "./monacoHelpers.js";
 
 // Wrap in before() to ensure it runs before any test
 beforeEach(() => {

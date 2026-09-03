@@ -5,7 +5,7 @@
  * Note: Several interactions use force:true because SVG/canvas drag handles
  * can intermittently fail Cypress actionability checks (overlap/re-render timing).
  */
-import environmentHelpers from "../support/environmentHelpers";
+import environmentHelpers from "../support/environmentHelpers.js";
 
 const { checkStatusCompile, selectEnvironment } = environmentHelpers;
 
