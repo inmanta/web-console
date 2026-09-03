@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump browserslist from 4.25.1 to 4.28.8
+destination-branches:
+- master
+sections: {}
