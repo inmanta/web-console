@@ -1,0 +1,6 @@
+description: An unrecognised `web_*` key on a lifecycle state or transfer annotation now logs a dev-console warning (with a "Did you mean" suggestion for likely typos), as a best-effort typo aid. Dev builds only, no user-facing UI change - the annotation is still passed through and ignored keys are skipped silently.
+issue-nr: 7097
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
