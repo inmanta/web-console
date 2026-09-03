@@ -152,10 +152,8 @@ describe("EnvironmentSelector", () => {
 
     await userEvent.click(toggle);
 
-    const listItem = screen.getAllByText(`${envB.name} (${envB.projectName})`)[0];
-    // The menu fades in, so wait for it to become visible instead of checking instantly (which is flaky on CI).
     await waitFor(() => {
-      expect(listItem).toBeVisible();
+      expect(screen.getAllByText(`${envB.name} (${envB.projectName})`)[0]).toBeVisible();
     });
   });
 

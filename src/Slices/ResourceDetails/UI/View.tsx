@@ -1,8 +1,10 @@
 import React from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
+import { Resource } from "@/Core/Domain";
 import { useUrlStateWithString } from "@/Data";
-import { useGetResourceDetails } from "@/Data/Queries";
+import { ResourceActionFilter, useGetResourceDetails } from "@/Data/Queries";
 import {
+  DeployActions,
   Description,
   ErrorView,
   labelColorConfig,
@@ -45,10 +47,29 @@ export const View: React.FC<Props> = ({ id }) => {
   }
 
   if (isSuccess) {
+    // A single resource is a filter of one: pin its identity (type/agent/value) on the latest
+    // released intent, so deploy and repair act on exactly this resource.
+    const resourceFilter: ResourceActionFilter = {
+      isOrphan: false,
+      resourceType: { eq: [data.resource_type] },
+      agent: { eq: [data.agent] },
+      resourceIdValue: { eq: [data.id_attribute_value] },
+    };
+
     return (
       <PageContainer
         pageTitle={words("resources.details.title")}
         aria-label="ResourceDetails-Success"
+        actions={
+          <DeployActions
+            filter={resourceFilter}
+            disabledReason={
+              Resource.isOrphanedStatus(data.status)
+                ? words("resources.deployActions.orphaned.disabled")
+                : undefined
+            }
+          />
+        }
       >
         <Flex>
           <FlexItem aria-label={`resourceName-${id}`}>
@@ -58,7 +79,6 @@ export const View: React.FC<Props> = ({ id }) => {
             <ResourceStatusLabel status={labelColorConfig[data.status]} label={data.status} />
           </FlexItem>
         </Flex>
-
         <Tabs {...{ id, data, activeTab, setActiveTab }} />
       </PageContainer>
     );

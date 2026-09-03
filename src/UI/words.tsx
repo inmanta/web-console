@@ -698,6 +698,13 @@ const dict = {
     "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
   "resources.file.get": "Get file",
   "resources.file.error": "Error fetching file content",
+  "resources.deployActions.toggle": "Deploy actions",
+  "resources.deployActions.deploy.hint": "default - incremental",
+  "resources.deployActions.repair.hint": "full",
+  "resources.deployActions.orphaned.disabled":
+    "Orphaned resources are no longer part of the latest desired state, so they cannot be deployed or repaired.",
+  "resources.deployActions.success": (action: string) => `${action} triggered`,
+  "resources.deployActions.failed": (action: string) => `Triggering ${action.toLowerCase()} failed`,
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",
