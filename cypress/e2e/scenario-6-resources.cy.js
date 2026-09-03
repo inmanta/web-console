@@ -29,6 +29,27 @@ const expectRowCountRestored = (alias) => {
   });
 };
 
+// Opens the Deploy split button, confirms the filtered-scope deploy and asserts the success toast.
+const deployFilteredWithConfirm = () => {
+  cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+  cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+  // Open the Deploy split button menu and pick Deploy
+  cy.get('button[aria-label="Deploy actions"]').click();
+  cy.get('[role="menuitem"]').contains("Deploy").click();
+
+  // The confirm dialog offers the filtered and whole-environment scopes
+  cy.get('[role="dialog"]').within(() => {
+    cy.contains("Deploy resources").should("be.visible");
+    cy.get("#deploy-scope-filtered").should("be.visible");
+    cy.get("#deploy-scope-environment").should("be.visible");
+    cy.contains("button", "Deploy").click();
+  });
+
+  // A success toast confirms the deploy was triggered
+  cy.get('[data-testid="ToastAlert"]').should("contain", "Deploy triggered");
+};
+
 describe("Scenario 6 : Resources", () => {
   if (isIso) {
     before(() => {
@@ -286,9 +307,16 @@ describe("Scenario 6 : Resources", () => {
       }).should("have.text", "21 - 40");
 
       cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
-      // Filtering on type input with "lsm" will return 2 results
-      cy.get('[aria-label="Type"]').type("lsm");
-      cy.get('[aria-label="Add filter-Type"]').click();
+      // Filtering on type input with "lsm" will return 2 results.
+      // Wait for the drawer input to be ready, and only add once the button is enabled: it is
+      // disabled while the value is empty, so an enabled button proves "lsm" reached React state
+      // (typing can otherwise race the drawer animation and commit a partial value).
+      cy.get('[aria-label="Type"]').should("be.visible").type("lsm");
+      cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
+      // Wait for the filtered rows to render before asserting the footer. Adding a filter resets
+      // to page 1, so the pre-filter count ("1 - 20") is briefly shown while the request is in
+      // flight; gating on the 2 filtered rows avoids latching onto that transient value.
+      cy.get('[aria-label="Resource Table Row"]').should("have.length", 2);
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
       }).should("have.text", "1 - 2");
@@ -698,6 +726,13 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       expectRowCountRestored("initialRowCount");
     });
+
+    it("6.10 Deploy the filtered resources from the toolbar", () => {
+      cy.visit("/console/");
+      selectEnvironment();
+
+      deployFilteredWithConfirm();
+    });
   } else {
     it("6.2 Resources for OSS", () => {
       cy.visit("/console/");
@@ -803,6 +838,13 @@ describe("Scenario 6 : Resources", () => {
       // Verify removed and badge resets
       cy.get('[data-testid="status-sort-item-blocked-inactive"]').should("exist");
       cy.get('[data-testid="status-sort-badge"]').should("have.text", "0");
+    });
+
+    it("6.4 Deploy the filtered resources from the toolbar", () => {
+      cy.visit("/console/");
+      selectEnvironment();
+
+      deployFilteredWithConfirm();
     });
   }
 });

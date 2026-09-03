@@ -16,7 +16,7 @@ import {
 import { CubesIcon } from "@patternfly/react-icons";
 import { Resource } from "@/Core";
 import { usePaginatedTableWithMultiSort } from "@/Data";
-import { useGetResources } from "@/Data/Queries";
+import { useGetResources, mapToResourceActionFilter } from "@/Data/Queries";
 import {
   EmptyView,
   PaginationWidget,
@@ -25,14 +25,10 @@ import {
   CompoundResourceStatus,
   Spinner,
   countActiveFilters,
+  DeployActions,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import {
-  ResourceTableControls,
-  ConnectedFilterWidget,
-  DeployButton,
-  RepairButton,
-} from "./Components";
+import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
 import { ResourcesTable } from "./ResourcesTable";
 import { createRows } from "./ResourcesTablePresenter";
 
@@ -140,10 +136,12 @@ export const Page: React.FC = () => {
           </Flex>
           <Flex>
             <ToolbarItem>
-              <DeployButton />
-            </ToolbarItem>
-            <ToolbarItem>
-              <RepairButton />
+              <DeployActions
+                filter={mapToResourceActionFilter(filterWithDefaults)}
+                requireConfirm
+                filteredCount={Number(data.metadata.total)}
+                environmentCount={resourceSummary.totalCount}
+              />
             </ToolbarItem>
           </Flex>
         </Flex>
