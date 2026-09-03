@@ -29,6 +29,27 @@ const expectRowCountRestored = (alias) => {
   });
 };
 
+// Opens the Deploy split button, confirms the filtered-scope deploy and asserts the success toast.
+const deployFilteredWithConfirm = () => {
+  cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
+  cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
+
+  // Open the Deploy split button menu and pick Deploy
+  cy.get('button[aria-label="Deploy actions"]').click();
+  cy.get('[role="menuitem"]').contains("Deploy").click();
+
+  // The confirm dialog offers the filtered and whole-environment scopes
+  cy.get('[role="dialog"]').within(() => {
+    cy.contains("Deploy resources").should("be.visible");
+    cy.get("#deploy-scope-filtered").should("be.visible");
+    cy.get("#deploy-scope-environment").should("be.visible");
+    cy.contains("button", "Deploy").click();
+  });
+
+  // A success toast confirms the deploy was triggered
+  cy.get('[data-testid="ToastAlert"]').should("contain", "Deploy triggered");
+};
+
 describe("Scenario 6 : Resources", () => {
   if (isIso) {
     before(() => {
@@ -698,6 +719,13 @@ describe("Scenario 6 : Resources", () => {
       cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
       expectRowCountRestored("initialRowCount");
     });
+
+    it("6.10 Deploy the filtered resources from the toolbar", () => {
+      cy.visit("/console/");
+      selectEnvironment();
+
+      deployFilteredWithConfirm();
+    });
   } else {
     it("6.2 Resources for OSS", () => {
       cy.visit("/console/");
@@ -803,6 +831,13 @@ describe("Scenario 6 : Resources", () => {
       // Verify removed and badge resets
       cy.get('[data-testid="status-sort-item-blocked-inactive"]').should("exist");
       cy.get('[data-testid="status-sort-badge"]').should("have.text", "0");
+    });
+
+    it("6.4 Deploy the filtered resources from the toolbar", () => {
+      cy.visit("/console/");
+      selectEnvironment();
+
+      deployFilteredWithConfirm();
     });
   }
 });

@@ -780,10 +780,6 @@ const dict = {
   "resources.facts.columns.name": "Name",
   "resources.facts.columns.updated": "Last Updated",
   "resources.facts.columns.value": "Value",
-  "resources.deploy.tooltip":
-    "Request the agents to check the current state of each resource in a state different from the deployed state and make the current state of those resources in line with the desired state.",
-  "resources.repair.tooltip":
-    "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
   "resources.file.get": "Get file",
   "resources.file.error": "Error fetching file content",
   "resources.deployActions.toggle": "Deploy actions",
@@ -793,6 +789,15 @@ const dict = {
     "Orphaned resources are no longer part of the latest desired state, so they cannot be deployed or repaired.",
   "resources.deployActions.success": (action: string) => `${action} triggered`,
   "resources.deployActions.failed": (action: string) => `Triggering ${action.toLowerCase()} failed`,
+  "resources.deployActions.confirm.title": (action: string) => `${action} resources`,
+  "resources.deployActions.confirm.description": "Choose the scope, then confirm.",
+  "resources.deployActions.confirm.filtered.title": "Filtered resources",
+  "resources.deployActions.confirm.filtered.count": (count: number) => `${count} matched`,
+  "resources.deployActions.confirm.environment.title": "All resources in this environment",
+  "resources.deployActions.confirm.environment.count": (count: number) =>
+    `${count} total · ignores the active filter`,
+  "resources.deployActions.confirm.orphanNote":
+    "Orphaned resources (in no released version) are skipped.",
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",
