@@ -199,7 +199,7 @@ describe("ComplianceCheck page", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
 
-    expect(screen.getByRole("listbox", { name: "StatusFilterOptions" })).toBeVisible();
+    expect(await screen.findByRole("listbox", { name: "StatusFilterOptions" })).toBeVisible();
 
     const statusOptions = screen.getAllByRole("option");
 
