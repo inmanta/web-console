@@ -25,7 +25,7 @@ import {
   CompoundResourceStatus,
   Spinner,
   countActiveFilters,
-  DeployActions,
+  ResourceActions,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
@@ -136,11 +136,27 @@ export const Page: React.FC = () => {
           </Flex>
           <Flex>
             <ToolbarItem>
-              <DeployActions
+              <ResourceActions
                 filter={mapToResourceActionFilter(filterWithDefaults)}
                 requireConfirm
-                filteredCount={Number(data.metadata.total)}
-                environmentCount={resourceSummary.totalCount}
+                scopes={[
+                  {
+                    id: "filtered",
+                    title: words("resources.resourceActions.confirm.filtered.title"),
+                    filter: mapToResourceActionFilter(filterWithDefaults),
+                    detail: words("resources.resourceActions.confirm.filtered.count")(
+                      Number(data.metadata.total)
+                    ),
+                  },
+                  {
+                    id: "environment",
+                    title: words("resources.resourceActions.confirm.environment.title"),
+                    filter: { isOrphan: false },
+                    detail: words("resources.resourceActions.confirm.environment.count")(
+                      resourceSummary.totalCount
+                    ),
+                  },
+                ]}
               />
             </ToolbarItem>
           </Flex>

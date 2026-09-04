@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { words } from "@/UI";
@@ -32,6 +32,46 @@ describe("Page Actions - Success", () => {
 
   // Clean up after the tests are finished.
   afterAll(() => server.close());
+
+  it("Deploy actions - deploys the instance's resources through deploy_filtered", async () => {
+    let body: unknown;
+
+    server.use(
+      http.post("/api/v2/deploy_filtered", async ({ request }) => {
+        body = await request.json();
+
+        return HttpResponse.json({});
+      })
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    // The Deploy split button sits beside the Actions menu.
+    await userEvent.click(
+      screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+    );
+
+    const dialog = await screen.findByRole("dialog");
+
+    expect(
+      within(dialog).getByText(words("resources.resourceActions.confirm.instance.title"))
+    ).toBeVisible();
+
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+    );
+
+    await waitFor(() =>
+      expect(body).toEqual({
+        filter: { isOrphan: false, serviceInstance: [instanceData.id] },
+        agent_trigger_method: "push_incremental_deploy",
+      })
+    );
+  });
 
   it("Expert actions - Force State", async () => {
     const component = setupServiceInstanceDetails(true);
