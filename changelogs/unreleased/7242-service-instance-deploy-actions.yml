@@ -5,3 +5,4 @@ change-type: minor
 destination-branches: [master, iso9]
 sections:
   feature: "{{description}}"
+  bugfix: "Polished the Resources page Deploy split button: the filtered deploy now targets exactly the set the dialog counts, confirm is disabled when nothing matches, orphaned resources are flagged as non-deployable, and the Deploy and Repair buttons regained their tooltips."

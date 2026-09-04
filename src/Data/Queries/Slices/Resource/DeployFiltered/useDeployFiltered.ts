@@ -1,14 +1,7 @@
 import { useContext } from "react";
-import {
-  UseMutationOptions,
-  UseMutationResult,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { DeployAgentsAction, usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-import { getResourceDetailsKey } from "../GetResourceDetails";
-import { getResourcesKey } from "../GetResources";
 
 /**
  * A single string-valued field of a {@link ResourceActionFilter}.
@@ -73,12 +66,15 @@ type Params = {
  * filter-based scheduler endpoint, so a single resource, the active list filter or a whole
  * environment are all expressed as one {@link ResourceActionFilter}.
  *
+ * The filter is sent as given, so the deployed set matches the filter (and the count derived from
+ * the same mapping). Callers that want orphans excluded pass isOrphan: false themselves; anything
+ * the scheduler rejects (such as an explicit orphan filter) surfaces as an error toast.
+ *
  * @returns {Mutation} The mutation object for sending the request.
  */
 export const useDeployFiltered = (
   options?: UseMutationOptions<void, Error, Params>
 ): UseMutationResult<void, Error, Params> => {
-  const client = useQueryClient();
   const { environmentHandler } = useContext(DependencyContext);
   const env = environmentHandler.useId();
   const post = usePost(env)<Body>;
@@ -86,15 +82,10 @@ export const useDeployFiltered = (
   return useMutation({
     mutationFn: ({ method, filter }) =>
       post("/api/v2/deploy_filtered", {
-        filter: { isOrphan: false, ...filter },
+        filter,
         agent_trigger_method: method,
       }),
     mutationKey: ["deploy_filtered", env],
     ...options,
-    onSuccess: (...args) => {
-      client.refetchQueries({ queryKey: getResourcesKey.root() });
-      client.refetchQueries({ queryKey: getResourceDetailsKey.root() });
-      options?.onSuccess?.(...args);
-    },
   });
 };

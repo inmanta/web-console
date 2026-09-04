@@ -50,10 +50,13 @@ describe("Page Actions - Success", () => {
       await screen.findByRole("region", { name: "Instance-Details-Success" })
     ).toBeInTheDocument();
 
-    // The Deploy split button sits beside the Actions menu.
-    await userEvent.click(
-      screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
-    );
+    // The Deploy split button sits beside the Actions menu. It stays disabled until the service
+    // catalog settles, so the confirm dialog always offers the full scope set.
+    const deployButton = screen.getByRole("button", {
+      name: words("resources.compoundStateSummary.deploy"),
+    });
+    await waitFor(() => expect(deployButton).toBeEnabled());
+    await userEvent.click(deployButton);
 
     const dialog = await screen.findByRole("dialog");
 
@@ -70,6 +73,121 @@ describe("Page Actions - Success", () => {
         filter: { isOrphan: false, serviceInstance: [instanceData.id] },
         agent_trigger_method: "push_incremental_deploy",
       })
+    );
+  });
+
+  it("Deploy actions - offers the owned-services scope when the service type owns entities", async () => {
+    let body: unknown;
+
+    server.use(
+      http.get("/lsm/v1/service_catalog/mobileCore", () =>
+        HttpResponse.json({ data: { ...serviceModel, owned_entities: ["l2Connect"] } })
+      ),
+      http.post("/api/v2/deploy_filtered", async ({ request }) => {
+        body = await request.json();
+
+        return HttpResponse.json({});
+      })
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    const deployButton = screen.getByRole("button", {
+      name: words("resources.compoundStateSummary.deploy"),
+    });
+    await waitFor(() => expect(deployButton).toBeEnabled());
+    await userEvent.click(deployButton);
+
+    const dialog = await screen.findByRole("dialog");
+
+    // The catalog declares an owned entity, so the dialog offers the wider "owned services" scope.
+    await userEvent.click(
+      within(dialog).getByRole("radio", {
+        name: new RegExp(words("resources.resourceActions.confirm.owned.title"), "i"),
+      })
+    );
+
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+    );
+
+    await waitFor(() =>
+      expect(body).toEqual({
+        filter: { isOrphan: false, serviceInstance: [instanceData.id], includeOwned: true },
+        agent_trigger_method: "push_incremental_deploy",
+      })
+    );
+  });
+
+  it.each`
+    scenario                    | deployment_progress
+    ${"an explicit zero total"} | ${{ deployed: 0, waiting: 0, failed: 0, total: 0 }}
+    ${"no deployment progress"} | ${null}
+  `(
+    "Deploy actions - disables the split button when the instance has no resources ($scenario)",
+    async ({ deployment_progress }) => {
+      server.use(
+        http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", () =>
+          HttpResponse.json({ data: { ...instanceData, deployment_progress } })
+        )
+      );
+
+      render(setupServiceInstanceDetails());
+
+      expect(
+        await screen.findByRole("region", { name: "Instance-Details-Success" })
+      ).toBeInTheDocument();
+
+      // The service type owns nothing and the instance reports no resources, so nothing to act on.
+      await waitFor(() =>
+        expect(
+          screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+        ).toBeDisabled()
+      );
+    }
+  );
+
+  it("Deploy actions - disables the split button when the instance is deleted", async () => {
+    server.use(
+      http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", () =>
+        HttpResponse.json({ data: { ...instanceData, deleted: true } })
+      )
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    // The instance still has resources, but a deleted instance can't be deployed or repaired.
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+      ).toBeDisabled()
+    );
+  });
+
+  it("Deploy actions - keeps the split button disabled while the service catalog is loading", async () => {
+    // The catalog never answers, so serviceModelQuery stays pending for the whole test.
+    server.use(http.get("/lsm/v1/service_catalog/mobileCore", () => new Promise(() => {})));
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    // The scope set can't be built until the catalog settles, so the button stays disabled.
+    // (The happy path - it enables once the catalog is present - is covered by the deploy test above.)
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+      ).toBeDisabled()
     );
   });
 

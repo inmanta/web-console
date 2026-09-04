@@ -137,8 +137,6 @@ export const Page: React.FC = () => {
           <Flex>
             <ToolbarItem>
               <ResourceActions
-                filter={mapToResourceActionFilter(filterWithDefaults)}
-                requireConfirm
                 scopes={[
                   {
                     id: "filtered",
@@ -147,6 +145,7 @@ export const Page: React.FC = () => {
                     detail: words("resources.resourceActions.confirm.filtered.count")(
                       Number(data.metadata.total)
                     ),
+                    count: Number(data.metadata.total),
                   },
                   {
                     id: "environment",
@@ -155,6 +154,7 @@ export const Page: React.FC = () => {
                     detail: words("resources.resourceActions.confirm.environment.count")(
                       resourceSummary.totalCount
                     ),
+                    count: resourceSummary.totalCount,
                   },
                 ]}
               />

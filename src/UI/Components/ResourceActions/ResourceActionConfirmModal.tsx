@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Card, CardHeader, CardTitle, Content, Flex } from "@patternfly/react-core";
+import { NonEmptyArray } from "@/Core/Language";
 import { ResourceActionFilter } from "@/Data/Queries";
 import { words } from "@/UI/words";
 
@@ -8,11 +9,12 @@ export interface ResourceActionScope {
   title: string;
   filter: ResourceActionFilter;
   detail?: string;
+  count?: number;
 }
 
 interface Props {
   actionLabel: string;
-  scopes: ResourceActionScope[];
+  scopes: NonEmptyArray<ResourceActionScope>;
   onConfirm: (filter: ResourceActionFilter) => void;
   onClose: () => void;
 }
@@ -35,14 +37,20 @@ const ScopeCard: React.FC<ScopeCardProps> = ({ id, isSelected, onSelect, title, 
         variant: "single",
         name: "resource-action-scope",
         selectableActionId: `resource-action-scope-${id}-input`,
-        selectableActionAriaLabelledby: `resource-action-scope-${id}-title`,
+        selectableActionAriaLabelledby: detail
+          ? `resource-action-scope-${id}-title resource-action-scope-${id}-detail`
+          : `resource-action-scope-${id}-title`,
         isChecked: isSelected,
         onChange: () => onSelect(id),
       }}
     >
       <Flex direction={{ default: "column" }} gap={{ default: "gapSm" }}>
         <CardTitle id={`resource-action-scope-${id}-title`}>{title}</CardTitle>
-        {detail && <Content component="small">{detail}</Content>}
+        {detail && (
+          <Content component="small" id={`resource-action-scope-${id}-detail`}>
+            {detail}
+          </Content>
+        )}
       </Flex>
     </CardHeader>
   </Card>
@@ -59,7 +67,7 @@ const ScopeCard: React.FC<ScopeCardProps> = ({ id, isSelected, onSelect, title, 
  *
  * @Props {Props} - The props of the component
  *  @prop {string} actionLabel - The verb being confirmed (Deploy/Repair)
- *  @prop {ResourceActionScope[]} scopes - The selectable scopes; the first one is selected by default
+ *  @prop {NonEmptyArray<ResourceActionScope>} scopes - The selectable scopes; the first one is selected by default
  *  @prop {(filter: ResourceActionFilter) => void} onConfirm - Called with the chosen scope's filter
  *  @prop {() => void} onClose - Called when the dialog is dismissed
  *
@@ -71,7 +79,7 @@ export const ResourceActionConfirmModal: React.FC<Props> = ({
   onConfirm,
   onClose,
 }) => {
-  const [selectedId, setSelectedId] = useState(scopes[0]?.id);
+  const [selectedId, setSelectedId] = useState(scopes[0].id);
   const chosen = scopes.find((scope) => scope.id === selectedId) ?? scopes[0];
 
   return (
@@ -90,7 +98,13 @@ export const ResourceActionConfirmModal: React.FC<Props> = ({
         <Content component="small">{words("resources.resourceActions.confirm.orphanNote")}</Content>
       </Flex>
       <Flex gap={{ default: "gapSm" }}>
-        <Button key="confirm" variant="primary" autoFocus onClick={() => onConfirm(chosen.filter)}>
+        <Button
+          key="confirm"
+          variant="primary"
+          autoFocus
+          isDisabled={chosen.count === 0}
+          onClick={() => onConfirm(chosen.filter)}
+        >
           {actionLabel}
         </Button>
         <Button key="cancel" variant="link" onClick={onClose}>

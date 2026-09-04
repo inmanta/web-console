@@ -1,2 +1,2 @@
 export * from "./ResourceActions";
-export * from "./ResourceActionConfirmModal";
+export type { ResourceActionScope } from "./ResourceActionConfirmModal";

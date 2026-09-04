@@ -9,8 +9,10 @@ import {
   MenuToggle,
   MenuToggleAction,
   MenuToggleElement,
+  Tooltip,
 } from "@patternfly/react-core";
 import { OutlinedPlayCircleIcon, WrenchIcon } from "@patternfly/react-icons";
+import { NonEmptyArray } from "@/Core/Language";
 import { DeployAgentsAction, ResourceActionFilter, useDeployFiltered } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
@@ -27,39 +29,33 @@ interface ActionConfig {
   icon: React.ReactNode;
   label: string;
   hint: string;
+  tooltip: string;
 }
 
-interface Props {
-  filter: ResourceActionFilter;
-  requireConfirm?: boolean;
-  scopes?: ResourceActionScope[];
+interface BaseProps {
   disabledReason?: string;
 }
+
+type Props =
+  | (BaseProps & { filter: ResourceActionFilter; scopes?: never })
+  | (BaseProps & { scopes: NonEmptyArray<ResourceActionScope>; filter?: never });
 
 /**
  * ResourceActions is the shared split button for running an action on a set of resources.
  *
- * Deploy is the default action; the caret opens a menu repeating Deploy and adding Repair. Both act
- * on the resources matching {@link Props.filter} through the deploy_filtered endpoint, so the same
- * control serves a single resource, the active list filter, a whole environment or a service
- * instance. With {@link Props.requireConfirm} the action opens a confirmation dialog first, where
- * the operator picks one of {@link Props.scopes}; without it, it runs immediately against
- * {@link Props.filter} (the single-resource case). It disables itself while the environment is halted.
+ * Deploy is the default action; the caret adds Repair. Both hit the deploy_filtered endpoint, so one
+ * control serves a single resource, the active filter, a whole environment or a service instance. It
+ * disables itself while the environment is halted.
  *
  * @Props {Props} - The props of the component
- *  @prop {ResourceActionFilter} filter - The scope acted on when no confirmation is required
- *  @prop {boolean} [requireConfirm] - When set, actions open a confirmation dialog before running
- *  @prop {ResourceActionScope[]} [scopes] - The scopes offered in the confirm dialog (first is the default)
+ *  @prop {ResourceActionFilter} filter - Runs immediately against this filter (mutually exclusive with scopes)
+ *  @prop {NonEmptyArray<ResourceActionScope>} scopes - Opens a confirm dialog offering these scopes (first is the default)
  *  @prop {string} [disabledReason] - When set, disables the control and shows this as its tooltip
  *
  * @returns {React.FC<Props>} The rendered split button
  */
-export const ResourceActions: React.FC<Props> = ({
-  filter,
-  requireConfirm,
-  scopes,
-  disabledReason,
-}) => {
+export const ResourceActions: React.FC<Props> = (props) => {
+  const { disabledReason } = props;
   const [isOpen, setIsOpen] = useState(false);
   const { environmentHandler } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
@@ -76,11 +72,13 @@ export const ResourceActions: React.FC<Props> = ({
       icon: <OutlinedPlayCircleIcon style={iconStyle} />,
       label: words("resources.compoundStateSummary.deploy"),
       hint: words("resources.resourceActions.deploy.hint"),
+      tooltip: words("resources.resourceActions.deploy.tooltip"),
     },
     repair: {
       icon: <WrenchIcon style={iconStyle} />,
       label: words("resources.compoundStateSummary.repair"),
       hint: words("resources.resourceActions.repair.hint"),
+      tooltip: words("resources.resourceActions.repair.tooltip"),
     },
   };
 
@@ -105,11 +103,13 @@ export const ResourceActions: React.FC<Props> = ({
   const onAction = (key: ActionKey) => {
     setIsOpen(false);
 
-    if (!requireConfirm) {
-      run(key, filter);
+    if (!props.scopes) {
+      run(key, props.filter);
 
       return;
     }
+
+    const { scopes } = props;
 
     triggerModal({
       title: words("resources.resourceActions.confirm.title")(actions[key].label),
@@ -117,7 +117,7 @@ export const ResourceActions: React.FC<Props> = ({
       content: (
         <ResourceActionConfirmModal
           actionLabel={actions[key].label}
-          scopes={scopes ?? [{ id: "filter", title: actions[key].label, filter }]}
+          scopes={scopes}
           onConfirm={(scopeFilter) => {
             closeModal();
             run(key, scopeFilter);
@@ -142,7 +142,11 @@ export const ResourceActions: React.FC<Props> = ({
           isDisabled={isDisabled}
           onClick={() => onAction("deploy")}
         >
-          <OutlinedPlayCircleIcon /> {actions.deploy.label}
+          <Tooltip content={actions.deploy.tooltip}>
+            <span>
+              <OutlinedPlayCircleIcon /> {actions.deploy.label}
+            </span>
+          </Tooltip>
         </MenuToggleAction>,
       ]}
     />
@@ -157,10 +161,15 @@ export const ResourceActions: React.FC<Props> = ({
     >
       <DropdownList>
         {(Object.keys(actions) as ActionKey[]).map((key) => {
-          const { icon, label, hint } = actions[key];
+          const { icon, label, hint, tooltip: itemTooltip } = actions[key];
 
           return (
-            <DropdownItem key={key} icon={icon} onClick={() => onAction(key)}>
+            <DropdownItem
+              key={key}
+              icon={icon}
+              onClick={() => onAction(key)}
+              tooltipProps={{ content: itemTooltip }}
+            >
               <Flex
                 justifyContent={{ default: "justifyContentSpaceBetween" }}
                 alignItems={{ default: "alignItemsCenter" }}

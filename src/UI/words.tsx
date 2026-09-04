@@ -785,6 +785,10 @@ const dict = {
   "resources.resourceActions.toggle": "Deploy actions",
   "resources.resourceActions.deploy.hint": "default - incremental",
   "resources.resourceActions.repair.hint": "full",
+  "resources.resourceActions.deploy.tooltip":
+    "Request the agents to check the current state of each resource in a state different from the deployed state and make the current state of those resources in line with the desired state.",
+  "resources.resourceActions.repair.tooltip":
+    "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
   "resources.resourceActions.orphaned.disabled":
     "Orphaned resources are no longer part of the latest desired state, so they cannot be deployed or repaired.",
   "resources.resourceActions.success": (action: string) => `${action} triggered`,
@@ -799,13 +803,18 @@ const dict = {
     `${count} total · ignores the active filter`,
   "resources.resourceActions.instance.deleted.disabled":
     "This instance is deleted, so its resources can no longer be deployed or repaired.",
+  "resources.resourceActions.instance.empty.disabled":
+    "This instance has no resources to deploy or repair.",
+  "resources.resourceActions.catalog.loading":
+    "Loading the service catalog to work out the deploy scope.",
   "resources.resourceActions.confirm.instance.title": "This instance only",
-  "resources.resourceActions.confirm.instance.count": (count: number) => `${count} resources`,
+  "resources.resourceActions.confirm.instance.count": (count: number) =>
+    `${count} resource${count === 1 ? "" : "s"}`,
   "resources.resourceActions.confirm.owned.title": "This instance and owned services",
   "resources.resourceActions.confirm.owned.description": (services: string) =>
-    `Also acts on the owned services: ${services}.`,
+    `May also act on owned services of these types: ${services}.`,
   "resources.resourceActions.confirm.orphanNote":
-    "Orphaned resources (in no released version) are skipped.",
+    "Orphaned resources (in no released version) can't be deployed or repaired.",
 
   /** Discovered Resources related text */
   "discovered.column.resource_id": "Resource Id",
