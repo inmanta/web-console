@@ -289,8 +289,10 @@ if (Cypress.env("edition") === "iso") {
       cy.get("#address_r1").clear();
       cy.get("#editorButton").click();
 
-      // expect the value for address_r1 to be empty
-      cy.get(".view-line > :nth-child(1) > .mtk5").first().should("contain", '""');
+      // expect the value for address_r1 to be empty. address_r1 is the only cleared field, so an
+      // empty string ("") is unique in the JSON. Assert on Monaco's stable .view-lines container
+      // and retry until it renders, instead of a positional, theme-generated .mtk5 token span.
+      cy.get(".view-lines").should("contain.text", '""');
 
       // empty value should be valid and allow going back to form.
       cy.get("#formButton").click();
