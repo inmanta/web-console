@@ -21,6 +21,7 @@ import { SuggestionValue } from "@/Core";
 import { words } from "@/UI/words";
 import { SuggestionsPopover } from "./SuggestionsPopover";
 import { resolveLabel, resolveValue } from "./suggestionResolvers";
+import { useStableFeedback } from "./useStableFeedback";
 
 /**
  * Props for the TextListFormInput component.
@@ -144,10 +145,15 @@ export const TextListFormInput: React.FC<Props> = ({
 
   useEffect(() => {
     // Fully controlled by the stored value: syncing on every change (not only a non-empty one)
-    // lets a cascade-cleared source empty the chips instead of leaving stale ones displayed.
-    // The stored value can momentarily be a non-array (e.g. a cleared scalar), so guard it.
+    // keeps the chips in step when the value is cleared or replaced from outside, instead of
+    // leaving stale ones displayed. The stored value can momentarily be a non-array (e.g. a
+    // cleared scalar), so guard it.
     setCurrentChips(Array.isArray(attributeValue) ? attributeValue : []);
   }, [attributeValue]);
+
+  // One feedback slot: a warning wins over a hint, and the last one is held across a refresh so it
+  // swaps in place instead of blanking out and shifting the layout while new data loads.
+  const feedback = useStableFeedback(warningMessage, hint, loading);
 
   return (
     <FormGroup
@@ -232,11 +238,12 @@ export const TextListFormInput: React.FC<Props> = ({
           />
         </TextInputGroupUtilities>
       </TextInputGroup>
-      {(warningMessage || hint) && (
+      {feedback && (
         <FormHelperText>
           <HelperText>
-            {warningMessage && <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>}
-            {hint && <HelperTextItem>{hint}</HelperTextItem>}
+            <HelperTextItem variant={feedback.isWarning ? "warning" : "default"}>
+              {feedback.message}
+            </HelperTextItem>
           </HelperText>
         </FormHelperText>
       )}

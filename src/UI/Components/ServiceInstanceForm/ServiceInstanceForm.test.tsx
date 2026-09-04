@@ -10,6 +10,7 @@ import {
   DictListField,
   EntityAnnotations,
   EnumField,
+  Field,
   InstanceAttributeModel,
   NestedField,
   TextField,
@@ -27,7 +28,14 @@ import type { Mock } from "vitest";
 
 const setup = (
   fields: (
-    TextField | BooleanField | NestedField | DictListField | EnumField | Textarea | UnitField
+    | TextField
+    | BooleanField
+    | NestedField
+    | DictListField
+    | EnumField
+    | Textarea
+    | UnitField
+    | Field
   )[],
   func: undefined | Mock = undefined,
   isEdit = false,
@@ -1029,7 +1037,7 @@ describe("cascading fields", () => {
   const parameter = (values: string[]) =>
     HttpResponse.json({ parameter: { metadata: { values } } });
 
-  test("GIVEN a field referencing ${form.*} WHEN the source is empty THEN it is blocked, and it unblocks once the source has a value", async () => {
+  test("GIVEN a field referencing ${form.*} WHEN the source is empty THEN it stays editable and warns, and the warning clears once the source has a value", async () => {
     server.use(http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])));
 
     const { component } = setup([site, uplink]);
@@ -1038,13 +1046,25 @@ describe("cascading fields", () => {
 
     const uplinkBox = screen.getByRole("textbox", { name: "TextInput-uplink" });
 
-    // Blocked until the source (site) has a value: disabled, with a hint naming it.
-    expect(uplinkBox).toBeDisabled();
-    expect(screen.getByText(words("inventory.form.suggestions.blocked")("site"))).toBeVisible();
+    // No suggestions until the source (site) has a value, but the field stays editable and only
+    // hints, naming the field to fill in first.
+    expect(uplinkBox).toBeEnabled();
+    expect(
+      screen.getByText(words("inventory.form.suggestions.waitingOnSource")("site"))
+    ).toBeVisible();
+
+    // Free typing is always allowed, even while waiting on the source.
+    await userEvent.type(uplinkBox, "free-form");
+    expect(uplinkBox).toHaveValue("free-form");
+    await userEvent.clear(uplinkBox);
 
     await userEvent.type(screen.getByRole("textbox", { name: "TextInput-site" }), "brussels");
 
-    await waitFor(() => expect(uplinkBox).toBeEnabled());
+    await waitFor(() =>
+      expect(
+        screen.queryByText(words("inventory.form.suggestions.waitingOnSource")("site"))
+      ).not.toBeInTheDocument()
+    );
   });
 
   test("GIVEN a dependent field WHEN its source changes THEN it is disabled and shows loading until the new query settles", async () => {
@@ -1084,7 +1104,7 @@ describe("cascading fields", () => {
     await waitFor(() => expect(uplinkBox).toBeEnabled(), { timeout: 5000 });
   });
 
-  test("GIVEN a dependent field with a chosen value WHEN its source changes THEN the dependent is cleared", async () => {
+  test("GIVEN a dependent field with a chosen value WHEN its source changes THEN the value is kept and a hint flags it is no longer among the options", async () => {
     server.use(
       http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])),
       http.get("/api/v1/parameter/files_antwerp", () => parameter(["uplink-9"]))
@@ -1105,14 +1125,20 @@ describe("cascading fields", () => {
     await userEvent.click(await screen.findByRole("menuitem", { name: "uplink-1" }));
     expect(uplinkBox).toHaveValue("uplink-1");
 
-    // Changing the source clears the now-stale dependent value.
+    // Changing the source no longer clears the dependent: its value is left untouched.
     await userEvent.clear(siteBox);
     await userEvent.type(siteBox, "antwerp");
+    await waitFor(() => expect(siteBox).toHaveValue("antwerp"));
 
-    await waitFor(() => expect(uplinkBox).toHaveValue(""));
+    // Wait for antwerp's refreshed list to actually land: its options are ["uplink-9"], so the
+    // kept "uplink-1" is no longer among them and the field surfaces the "not in list" hint.
+    await waitFor(() =>
+      expect(screen.getByText(words("inventory.form.suggestions.notInList")("site"))).toBeVisible()
+    );
+    expect(uplinkBox).toHaveValue("uplink-1");
   });
 
-  test("GIVEN a locked dependent field in edit mode WHEN its source changes THEN its value is kept", async () => {
+  test("GIVEN a locked dependent field in edit mode WHEN its source changes THEN its stored value is kept with no spurious warning", async () => {
     server.use(
       http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])),
       http.get("/api/v1/parameter/files_antwerp", () => parameter(["uplink-9"]))
@@ -1131,16 +1157,84 @@ describe("cascading fields", () => {
     const siteBox = screen.getByRole("textbox", { name: "TextInput-site" });
     const uplinkBox = screen.getByRole("textbox", { name: "TextInput-uplink" });
 
-    // The locked dependent shows its stored value and is disabled (can't be re-picked).
+    // The locked dependent shows its stored value and is disabled (it can't be re-picked).
     await waitFor(() => expect(uplinkBox).toHaveValue("uplink-1"));
     expect(uplinkBox).toBeDisabled();
 
-    // Changing the source must NOT wipe the locked value.
+    // Changing the source must not wipe the locked value, nor flag a value the user can't change.
     await userEvent.clear(siteBox);
     await userEvent.type(siteBox, "antwerp");
     await waitFor(() => expect(siteBox).toHaveValue("antwerp"));
 
     expect(uplinkBox).toHaveValue("uplink-1");
+    expect(
+      screen.queryByText(words("inventory.form.suggestions.notInList")("site"))
+    ).not.toBeInTheDocument();
+  });
+
+  test("GIVEN a cascading TextList field WHEN its source changes THEN kept chips stay and a hint flags one no longer among the options", async () => {
+    server.use(
+      http.get("/api/v1/parameter/files_brussels", () => parameter(["uplink-1"])),
+      http.get("/api/v1/parameter/files_antwerp", () => parameter(["uplink-9"]))
+    );
+
+    const uplinkList = {
+      ...Test.Field.text,
+      kind: "TextList" as const,
+      name: "uplink",
+      suggestion: uplink.suggestion,
+    };
+
+    // Edit mode seeds a chip (uplink-1) tied to the current source (brussels) without typing into
+    // the list input; the field stays editable so its hint is not suppressed.
+    const { component } = setup([site, uplinkList], undefined, true, {
+      site: "brussels",
+      uplink: ["uplink-1"],
+    });
+
+    render(component);
+
+    const siteBox = screen.getByRole("textbox", { name: "TextInput-site" });
+
+    // The chip renders and, since uplink-1 is among brussels' options, no hint yet.
+    await waitFor(() => expect(screen.getByText("uplink-1")).toBeVisible());
+    expect(
+      screen.queryByText(words("inventory.form.suggestions.notInList")("site"))
+    ).not.toBeInTheDocument();
+
+    // Changing the source keeps the chip, and the kept value isn't among antwerp's options, so the
+    // three-way feedback wired into TextListFormInput surfaces the "not in list" hint.
+    await userEvent.clear(siteBox);
+    await userEvent.type(siteBox, "antwerp");
+    await waitFor(() => expect(siteBox).toHaveValue("antwerp"));
+
+    await waitFor(() =>
+      expect(screen.getByText(words("inventory.form.suggestions.notInList")("site"))).toBeVisible()
+    );
+    expect(screen.getByText("uplink-1")).toBeVisible();
+  });
+
+  test("GIVEN a dependent field WHEN its source is filled but yields no suggestions THEN it stays editable and warns", async () => {
+    server.use(http.get("/api/v1/parameter/files_brussels", () => parameter([])));
+
+    const { component } = setup([site, uplink]);
+
+    render(component);
+
+    const uplinkBox = screen.getByRole("textbox", { name: "TextInput-uplink" });
+
+    await userEvent.type(screen.getByRole("textbox", { name: "TextInput-site" }), "brussels");
+
+    // The query settled with no options: no blocked warning, but an explicit "no suggestions"
+    // warning so the empty result isn't mistaken for still-loading.
+    await waitFor(() =>
+      expect(screen.getByText(words("inventory.form.suggestions.empty")("site"))).toBeVisible()
+    );
+    expect(uplinkBox).toBeEnabled();
+
+    // Free typing still works even with no suggestions.
+    await userEvent.type(uplinkBox, "free-form");
+    expect(uplinkBox).toHaveValue("free-form");
   });
 
   test("GIVEN field suggestions that form a dependency cycle THEN the model error is surfaced", () => {
