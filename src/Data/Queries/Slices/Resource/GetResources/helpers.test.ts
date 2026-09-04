@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { mapStatusToGraphQLFilter, mapSort, parseCurrentPage, buildHandlers } from "./helpers";
+import { Resource } from "@/Core/Domain";
+import {
+  mapStatusToGraphQLFilter,
+  mapToResourceActionFilter,
+  mapSort,
+  parseCurrentPage,
+  buildHandlers,
+} from "./helpers";
 
 // ─── mapStatusToGraphQLFilter ───────────────────────────────────────────────
 
@@ -154,6 +161,79 @@ describe("mapStatusToGraphQLFilter", () => {
       compliance: { neq: ["COMPLIANT"] },
       blocked: { neq: ["BLOCKED"] },
     });
+  });
+});
+
+// ─── mapToResourceActionFilter ──────────────────────────────────────────────
+
+describe("mapToResourceActionFilter", () => {
+  it("returns an empty filter for undefined or empty input", () => {
+    expect(mapToResourceActionFilter(undefined)).toEqual({});
+    expect(mapToResourceActionFilter({})).toEqual({});
+  });
+
+  it("wraps type, agent and value in a contains match with %…% markers", () => {
+    const result = mapToResourceActionFilter({
+      type: ["std::File"],
+      agent: ["internal"],
+      value: ["/tmp/f"],
+    });
+
+    expect(result).toEqual({
+      resourceType: { contains: ["%std::File%"] },
+      agent: { contains: ["%internal%"] },
+      resourceIdValue: { contains: ["%/tmp/f%"] },
+    });
+  });
+
+  it("keeps every value of a multi-value field", () => {
+    const result = mapToResourceActionFilter({ type: ["a", "b"] });
+
+    expect(result).toEqual({ resourceType: { contains: ["%a%", "%b%"] } });
+  });
+
+  it("passes serviceEntity through untouched", () => {
+    expect(mapToResourceActionFilter({ serviceEntity: ["vlan"] })).toEqual({
+      serviceEntity: ["vlan"],
+    });
+  });
+
+  it("projects each serviceInstance value to its parsed id", () => {
+    const value = Resource.encodeServiceInstanceFilterValue("abc", "cpe-1");
+
+    expect(mapToResourceActionFilter({ serviceInstance: [value] })).toEqual({
+      serviceInstance: ["abc"],
+    });
+  });
+
+  it("maps includeOwned only when truthy", () => {
+    expect(mapToResourceActionFilter({ includeOwned: true })).toEqual({ includeOwned: true });
+    expect(mapToResourceActionFilter({ includeOwned: false })).toEqual({});
+  });
+
+  it("folds the status filter in via mapStatusToGraphQLFilter", () => {
+    expect(mapToResourceActionFilter({ status: ["orphaned"] })).toEqual({ isOrphan: true });
+    expect(mapToResourceActionFilter({ status: ["!orphaned"] })).toEqual({ isOrphan: false });
+  });
+
+  it("leaves isOrphan unset when no status is given, so the deploy matches the listed set", () => {
+    // Regression guard: a status-less filter must not inject isOrphan, or the deployed set would
+    // silently diverge from the count derived from the same filter.
+    const result = mapToResourceActionFilter({ type: ["std::File"] });
+
+    expect(result.isOrphan).toBeUndefined();
+  });
+
+  it("never emits an environment field", () => {
+    const result = mapToResourceActionFilter({ type: ["std::File"], status: ["orphaned"] });
+
+    expect(result).not.toHaveProperty("environment");
+  });
+
+  it("combines match fields and status into one filter", () => {
+    const result = mapToResourceActionFilter({ agent: ["internal"], status: ["!orphaned"] });
+
+    expect(result).toEqual({ agent: { contains: ["%internal%"] }, isOrphan: false });
   });
 });
 

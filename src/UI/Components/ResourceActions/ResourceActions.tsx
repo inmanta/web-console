@@ -9,15 +9,17 @@ import {
   MenuToggle,
   MenuToggleAction,
   MenuToggleElement,
+  Tooltip,
 } from "@patternfly/react-core";
 import { OutlinedPlayCircleIcon, WrenchIcon } from "@patternfly/react-icons";
+import { NonEmptyArray } from "@/Core/Language";
 import { DeployAgentsAction, ResourceActionFilter, useDeployFiltered } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { DependencyContext } from "@/UI/Dependency";
 import { useAppAlert } from "@/UI/Root/Components/AppAlertProvider";
 import { ModalContext } from "@/UI/Root/Components/ModalProvider";
 import { words } from "@/UI/words";
-import { ResourceActionConfirmModal } from "./ResourceActionConfirmModal";
+import { ResourceActionConfirmModal, ResourceActionScope } from "./ResourceActionConfirmModal";
 
 const iconStyle = { color: "var(--pf-t--global--icon--color--subtle)" };
 
@@ -27,42 +29,33 @@ interface ActionConfig {
   icon: React.ReactNode;
   label: string;
   hint: string;
+  tooltip: string;
 }
 
-interface Props {
-  filter: ResourceActionFilter;
-  requireConfirm?: boolean;
-  filteredCount?: number;
-  environmentCount?: number;
+interface BaseProps {
   disabledReason?: string;
 }
 
+type Props =
+  | (BaseProps & { filter: ResourceActionFilter; scopes?: never })
+  | (BaseProps & { scopes: NonEmptyArray<ResourceActionScope>; filter?: never });
+
 /**
- * DeployActions is the shared "Deploy split button".
+ * ResourceActions is the shared split button for running an action on a set of resources.
  *
- * Deploy is the default action; the caret opens a menu repeating Deploy and adding Repair. Both act
- * on the resources matching {@link Props.filter} through the deploy_filtered endpoint, so the same
- * control serves a single resource, the active list filter or a whole environment. With
- * {@link Props.requireConfirm} the action opens a confirmation dialog first (letting the operator
- * widen the scope to the whole environment); without it, it runs immediately (the single-resource
- * case). It disables itself while the environment is halted.
+ * Deploy is the default action; the caret adds Repair. Both hit the deploy_filtered endpoint, so one
+ * control serves a single resource, the active filter, a whole environment or a service instance. It
+ * disables itself while the environment is halted.
  *
  * @Props {Props} - The props of the component
- *  @prop {ResourceActionFilter} filter - The scope the actions act on
- *  @prop {boolean} [requireConfirm] - When set, actions open a confirmation dialog before running
- *  @prop {number} [filteredCount] - Resources matching the filter, shown in the confirm dialog
- *  @prop {number} [environmentCount] - Resources in the whole environment, shown in the confirm dialog
+ *  @prop {ResourceActionFilter} filter - Runs immediately against this filter (mutually exclusive with scopes)
+ *  @prop {NonEmptyArray<ResourceActionScope>} scopes - Opens a confirm dialog offering these scopes (first is the default)
  *  @prop {string} [disabledReason] - When set, disables the control and shows this as its tooltip
  *
  * @returns {React.FC<Props>} The rendered split button
  */
-export const DeployActions: React.FC<Props> = ({
-  filter,
-  requireConfirm,
-  filteredCount = 0,
-  environmentCount = 0,
-  disabledReason,
-}) => {
+export const ResourceActions: React.FC<Props> = (props) => {
+  const { disabledReason } = props;
   const [isOpen, setIsOpen] = useState(false);
   const { environmentHandler } = useContext(DependencyContext);
   const { triggerModal, closeModal } = useContext(ModalContext);
@@ -78,12 +71,14 @@ export const DeployActions: React.FC<Props> = ({
     deploy: {
       icon: <OutlinedPlayCircleIcon style={iconStyle} />,
       label: words("resources.compoundStateSummary.deploy"),
-      hint: words("resources.deployActions.deploy.hint"),
+      hint: words("resources.resourceActions.deploy.hint"),
+      tooltip: words("resources.resourceActions.deploy.tooltip"),
     },
     repair: {
       icon: <WrenchIcon style={iconStyle} />,
       label: words("resources.compoundStateSummary.repair"),
-      hint: words("resources.deployActions.repair.hint"),
+      hint: words("resources.resourceActions.repair.hint"),
+      tooltip: words("resources.resourceActions.repair.tooltip"),
     },
   };
 
@@ -94,10 +89,11 @@ export const DeployActions: React.FC<Props> = ({
     deploy.mutate(
       { method, filter: scopeFilter },
       {
-        onSuccess: () => notifySuccess({ title: words("resources.deployActions.success")(label) }),
+        onSuccess: () =>
+          notifySuccess({ title: words("resources.resourceActions.success")(label) }),
         onError: (error) =>
           notifyError({
-            title: words("resources.deployActions.failed")(label),
+            title: words("resources.resourceActions.failed")(label),
             message: error.message,
           }),
       }
@@ -107,21 +103,21 @@ export const DeployActions: React.FC<Props> = ({
   const onAction = (key: ActionKey) => {
     setIsOpen(false);
 
-    if (!requireConfirm) {
-      run(key, filter);
+    if (!props.scopes) {
+      run(key, props.filter);
 
       return;
     }
 
+    const { scopes } = props;
+
     triggerModal({
-      title: words("resources.deployActions.confirm.title")(actions[key].label),
-      description: words("resources.deployActions.confirm.description"),
+      title: words("resources.resourceActions.confirm.title")(actions[key].label),
+      description: words("resources.resourceActions.confirm.description"),
       content: (
         <ResourceActionConfirmModal
           actionLabel={actions[key].label}
-          filter={filter}
-          filteredCount={filteredCount}
-          environmentCount={environmentCount}
+          scopes={scopes}
           onConfirm={(scopeFilter) => {
             closeModal();
             run(key, scopeFilter);
@@ -139,14 +135,18 @@ export const DeployActions: React.FC<Props> = ({
       isExpanded={isOpen}
       isDisabled={isDisabled}
       onClick={() => setIsOpen(!isOpen)}
-      aria-label={words("resources.deployActions.toggle")}
+      aria-label={words("resources.resourceActions.toggle")}
       splitButtonItems={[
         <MenuToggleAction
           key="deploy-action"
           isDisabled={isDisabled}
           onClick={() => onAction("deploy")}
         >
-          <OutlinedPlayCircleIcon /> {actions.deploy.label}
+          <Tooltip content={actions.deploy.tooltip}>
+            <span>
+              <OutlinedPlayCircleIcon /> {actions.deploy.label}
+            </span>
+          </Tooltip>
         </MenuToggleAction>,
       ]}
     />
@@ -161,10 +161,15 @@ export const DeployActions: React.FC<Props> = ({
     >
       <DropdownList>
         {(Object.keys(actions) as ActionKey[]).map((key) => {
-          const { icon, label, hint } = actions[key];
+          const { icon, label, hint, tooltip: itemTooltip } = actions[key];
 
           return (
-            <DropdownItem key={key} icon={icon} onClick={() => onAction(key)}>
+            <DropdownItem
+              key={key}
+              icon={icon}
+              onClick={() => onAction(key)}
+              tooltipProps={{ content: itemTooltip }}
+            >
               <Flex
                 justifyContent={{ default: "justifyContentSpaceBetween" }}
                 alignItems={{ default: "alignItemsCenter" }}
@@ -183,7 +188,7 @@ export const DeployActions: React.FC<Props> = ({
   );
 
   return tooltip ? (
-    <ActionDisabledTooltip testingId="DeployActions" tooltipContent={tooltip} isDisabled>
+    <ActionDisabledTooltip testingId="ResourceActions" tooltipContent={tooltip} isDisabled>
       {dropdown}
     </ActionDisabledTooltip>
   ) : (

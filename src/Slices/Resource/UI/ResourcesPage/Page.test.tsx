@@ -812,7 +812,7 @@ describe("ResourcesPage", () => {
     expect(deployButton).toBeVisible();
 
     const deployToggle = screen.getByRole("button", {
-      name: words("resources.deployActions.toggle"),
+      name: words("resources.resourceActions.toggle"),
     });
     expect(deployToggle).toBeVisible();
 
@@ -930,7 +930,7 @@ describe("ResourcesPage", () => {
     await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
     await userEvent.click(
-      screen.getByRole("button", { name: words("resources.deployActions.toggle") })
+      screen.getByRole("button", { name: words("resources.resourceActions.toggle") })
     );
     await userEvent.click(
       screen.getByRole("menuitem", {
@@ -969,7 +969,7 @@ describe("ResourcesPage", () => {
       screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
     ).toBeDisabled();
     expect(
-      screen.getByRole("button", { name: words("resources.deployActions.toggle") })
+      screen.getByRole("button", { name: words("resources.resourceActions.toggle") })
     ).toBeDisabled();
 
     await act(async () => {

@@ -1,0 +1,8 @@
+description: |
+  The service instance details page now has a Deploy split button beside the Actions menu. Deploy runs an incremental deploy on the resources of that instance; the button's menu adds Repair, a full deploy. When the instance's service can own other services, the confirmation dialog offers a second scope that extends the action to the owned services as well.
+issue-nr: 7242
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"
+  bugfix: "Polished the Resources page Deploy split button: the filtered deploy now targets exactly the set the dialog counts, confirm is disabled when nothing matches, orphaned resources are flagged as non-deployable, and the Deploy and Repair buttons regained their tooltips."

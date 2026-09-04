@@ -12,6 +12,9 @@
  */
 export type ParsedNumber = number | bigint;
 
+/** An array with at least one element, so its first index is always defined. */
+export type NonEmptyArray<T> = [T, ...T[]];
+
 /**
  * Toggles a value in the list.
  * - If it is present, remove it.

@@ -29,20 +29,30 @@ const expectRowCountRestored = (alias) => {
   });
 };
 
-// Opens the Deploy split button, confirms the filtered-scope deploy and asserts the success toast.
+// Deploys a filtered subset from the toolbar's primary Deploy action and asserts the success toast.
+// It first narrows the list with a type filter so this triggers a small real deploy rather than an
+// environment-wide one (which later specs could otherwise observe mid-deploy), and it clicks the
+// primary split-button action - the one-click path users take - instead of the caret menu.
 const deployFilteredWithConfirm = () => {
+  const typeFilter = isIso ? "lsm" : "TestResource";
+
   cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
   cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
-  // Open the Deploy split button menu and pick Deploy
-  cy.get('button[aria-label="Deploy actions"]').click();
-  cy.get('[role="menuitem"]').contains("Deploy").click();
+  // Narrow the filter so the deploy targets only these resources, not the whole environment
+  cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
+  cy.get('[aria-label="Type"]').should("be.visible").type(typeFilter);
+  cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
+  cy.get('[aria-label="Resource Table Row"]').should("have.length.at.least", 1);
 
-  // The confirm dialog offers the filtered and whole-environment scopes
+  // Trigger the primary Deploy action of the split button (not the caret menu)
+  cy.contains("button", "Deploy").click();
+
+  // The confirm dialog offers the filtered and whole-environment scopes; confirm the filtered one
   cy.get('[role="dialog"]').within(() => {
     cy.contains("Deploy resources").should("be.visible");
-    cy.get("#deploy-scope-filtered").should("be.visible");
-    cy.get("#deploy-scope-environment").should("be.visible");
+    cy.get("#resource-action-scope-filtered").should("be.visible");
+    cy.get("#resource-action-scope-environment").should("be.visible");
     cy.contains("button", "Deploy").click();
   });
 
