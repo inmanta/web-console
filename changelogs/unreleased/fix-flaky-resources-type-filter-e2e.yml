@@ -1,0 +1,4 @@
+description: Made the resources type filter e2e (scenario 6.5) less flaky by waiting for the filtered GraphQL response before checking the table, instead of polling the DOM while the previous page of rows is still shown.
+change-type: patch
+destination-branches: [master, iso9]
+sections: {}

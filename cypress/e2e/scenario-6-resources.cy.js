@@ -306,6 +306,16 @@ describe("Scenario 6 : Resources", () => {
         timeout: 20000,
       }).should("have.text", "21 - 40");
 
+      // The list query keeps the previous 20 rows on screen while the next request is in flight
+      // (keepPreviousData), so waiting on the DOM alone can outlast the default timeout on a slow
+      // CI and latch onto that stale count. Alias the filtered resources request (a GraphQL POST
+      // whose body carries the "%lsm%" resourceType filter) so we can wait for it to actually land.
+      cy.intercept("POST", "**/api/v2/graphql", (req) => {
+        if (req.body?.variables?.filter?.resourceType?.contains?.includes("%lsm%")) {
+          req.alias = "resourcesFilteredByType";
+        }
+      });
+
       cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
       // Filtering on type input with "lsm" will return 2 results.
       // Wait for the drawer input to be ready, and only add once the button is enabled: it is
@@ -313,10 +323,13 @@ describe("Scenario 6 : Resources", () => {
       // (typing can otherwise race the drawer animation and commit a partial value).
       cy.get('[aria-label="Type"]').should("be.visible").type("lsm");
       cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
-      // Wait for the filtered rows to render before asserting the footer. Adding a filter resets
-      // to page 1, so the pre-filter count ("1 - 20") is briefly shown while the request is in
-      // flight; gating on the 2 filtered rows avoids latching onto that transient value.
-      cy.get('[aria-label="Resource Table Row"]').should("have.length", 2);
+      // Wait for the filtered response to land before asserting, so we gate on real data rather
+      // than the retained pre-filter rows. Adding a filter resets to page 1, so the pre-filter
+      // count ("1 - 20") is briefly shown while the request is in flight.
+      cy.wait("@resourcesFilteredByType", { timeout: 20000 })
+        .its("response.statusCode")
+        .should("eq", 200);
+      cy.get('[aria-label="Resource Table Row"]', { timeout: 20000 }).should("have.length", 2);
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
       }).should("have.text", "1 - 2");
