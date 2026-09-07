@@ -218,11 +218,11 @@ describe("useSuggestedValues templated parameter names", () => {
       expect(result.current.data).toEqual(toSuggestions(parameterValues.files_brussels))
     );
 
-    expect(result.current.isBlocked).toBe(false);
+    expect(result.current.hasUnresolvedDependency).toBe(false);
     expect(requestedPaths).toEqual(["/api/v1/parameter/files_brussels"]);
   });
 
-  test("GIVEN a ${form.*} reference WHEN the source has no value THEN the control is blocked and nothing is fetched", async () => {
+  test("GIVEN a ${form.*} reference WHEN the source has no value THEN the dependency is unresolved and nothing is fetched", async () => {
     const { result } = renderHook(
       () =>
         useSuggestedValues(
@@ -235,7 +235,7 @@ describe("useSuggestedValues templated parameter names", () => {
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.isBlocked).toBe(true);
+    expect(result.current.hasUnresolvedDependency).toBe(true);
     expect(result.current.data).toBeUndefined();
     expect(requestedPaths).toEqual([]);
   });
@@ -425,11 +425,11 @@ describe("useSuggestedValues graphql flavor", () => {
 
     await waitFor(() => expect(result.current.data).not.toBeNull());
     expect(sentQueries[0]).toContain('name: "brussels"');
-    expect(result.current.isBlocked).toBe(false);
+    expect(result.current.hasUnresolvedDependency).toBe(false);
     expect(result.current.modelError).toBeNull();
   });
 
-  test("GIVEN a ${form.*} filter reference WHEN the source has no value THEN the control is blocked and nothing is fetched", async () => {
+  test("GIVEN a ${form.*} filter reference WHEN the source has no value THEN the dependency is unresolved and nothing is fetched", async () => {
     const { result } = renderHook(
       () =>
         useSuggestedValues(
@@ -442,7 +442,7 @@ describe("useSuggestedValues graphql flavor", () => {
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.isBlocked).toBe(true);
+    expect(result.current.hasUnresolvedDependency).toBe(true);
     expect(result.current.data).toBeUndefined();
     expect(sentQueries).toEqual([]);
   });

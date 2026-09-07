@@ -16,6 +16,7 @@ import { SuggestionValue } from "@/Core";
 import { words } from "@/UI/words";
 import { SuggestionsPopover } from "./SuggestionsPopover";
 import { resolveLabel, resolveValue } from "./suggestionResolvers";
+import { useStableFeedback } from "./useStableFeedback";
 
 interface Props {
   attributeName: string;
@@ -106,6 +107,10 @@ export const TextFormInput: React.FC<Props> = ({
     }
   }, [attributeValue, suggestions]);
 
+  // One feedback slot: a warning wins over a hint, and the last one is held across a refresh so it
+  // swaps in place instead of blanking out and shifting the layout while new data loads.
+  const feedback = useStableFeedback(warningMessage, hint, loading);
+
   return (
     <FormGroup
       {...props}
@@ -142,7 +147,7 @@ export const TextFormInput: React.FC<Props> = ({
           placeholder={placeholder}
           isRequired={!isOptional}
           isDisabled={shouldBeDisabled}
-          validated={warningMessage ? "warning" : "default"}
+          validated={feedback?.isWarning ? "warning" : "default"}
           aria-describedby={`${attributeName}-helper`}
           aria-label={`TextareaInput-${attributeName}`}
         />
@@ -165,7 +170,7 @@ export const TextFormInput: React.FC<Props> = ({
             value={displayValue}
             onChange={(_event, value) => handleType(value)}
             isDisabled={shouldBeDisabled}
-            validated={warningMessage ? "warning" : "default"}
+            validated={feedback?.isWarning ? "warning" : "default"}
             onFocus={() => hasSuggestions && setIsOpen(true)}
             onBlur={handleBlur}
             customIcon={
@@ -186,11 +191,12 @@ export const TextFormInput: React.FC<Props> = ({
           )}
         </>
       )}
-      {(warningMessage || hint) && (
+      {feedback && (
         <FormHelperText>
           <HelperText>
-            {warningMessage && <HelperTextItem variant="warning">{warningMessage}</HelperTextItem>}
-            {hint && <HelperTextItem>{hint}</HelperTextItem>}
+            <HelperTextItem variant={feedback.isWarning ? "warning" : "default"}>
+              {feedback.message}
+            </HelperTextItem>
           </HelperText>
         </FormHelperText>
       )}
