@@ -24,13 +24,14 @@ const filteredScopes: NonEmptyArray<ResourceActionScope> = [
     id: "filtered",
     title: words("resources.resourceActions.confirm.filtered.title"),
     filter,
-    detail: words("resources.resourceActions.confirm.filtered.count")(3),
+    count: 3,
   },
   {
     id: "environment",
     title: words("resources.resourceActions.confirm.environment.title"),
     filter: { isOrphan: false },
-    detail: words("resources.resourceActions.confirm.environment.count")(99),
+    detail: words("resources.resourceActions.confirm.environment.note"),
+    count: 99,
   },
 ];
 
@@ -113,9 +114,9 @@ describe("ResourceActions", () => {
     await userEvent.click(screen.getByRole("button", { name: deployLabel }));
 
     const dialog = await screen.findByRole("dialog");
-    // The details come straight from the scopes the view passes, no extra request.
-    expect(within(dialog).getByText(/3 matched/)).toBeVisible();
-    expect(within(dialog).getByText(/99 total/)).toBeVisible();
+    // The counts come straight from the scopes the view passes, no extra request.
+    expect(within(dialog).getByText(/3 resources/)).toBeVisible();
+    expect(within(dialog).getByText(/99 resources/)).toBeVisible();
 
     await userEvent.click(within(dialog).getByRole("button", { name: deployLabel }));
 
@@ -163,7 +164,7 @@ describe("ResourceActions", () => {
         id: "instance",
         title: words("resources.resourceActions.confirm.instance.title"),
         filter: { isOrphan: false, serviceInstance: ["abc"] },
-        detail: words("resources.resourceActions.confirm.instance.count")(3),
+        count: 3,
       },
       {
         id: "owned",
@@ -208,20 +209,19 @@ describe("ResourceActions", () => {
     );
   });
 
-  test("WHEN the chosen scope matches no resources THEN its confirm button is disabled", async () => {
+  test("WHEN a scope matches no resources THEN it preselects an actionable scope and blocks the empty one", async () => {
     const emptyThenFull: NonEmptyArray<ResourceActionScope> = [
       {
         id: "filtered",
         title: words("resources.resourceActions.confirm.filtered.title"),
         filter,
-        detail: words("resources.resourceActions.confirm.filtered.count")(0),
         count: 0,
       },
       {
         id: "environment",
         title: words("resources.resourceActions.confirm.environment.title"),
         filter: { isOrphan: false },
-        detail: words("resources.resourceActions.confirm.environment.count")(5),
+        detail: words("resources.resourceActions.confirm.environment.note"),
         count: 5,
       },
     ];
@@ -233,24 +233,59 @@ describe("ResourceActions", () => {
     const dialog = await screen.findByRole("dialog");
     const confirm = within(dialog).getByRole("button", { name: deployLabel });
 
-    // The filtered scope matches nothing, so confirming (an empty deploy) is blocked.
-    expect(confirm).toBeDisabled();
+    // The first scope matches nothing, so the dialog opens on the first actionable one instead of
+    // opening with a dead confirm button.
+    expect(
+      within(dialog).getByRole("radio", {
+        name: new RegExp(words("resources.resourceActions.confirm.environment.title"), "i"),
+      })
+    ).toBeChecked();
+    expect(confirm).toBeEnabled();
 
-    // The whole-environment scope still has resources, so it re-enables confirm.
+    // Picking the empty scope blocks confirming (an empty deploy).
+    await userEvent.click(
+      within(dialog).getByRole("radio", {
+        name: new RegExp(words("resources.resourceActions.confirm.filtered.title"), "i"),
+      })
+    );
+    expect(confirm).toBeDisabled();
+  });
+
+  test("WHEN the chosen scope's filter does not exclude orphans THEN it notes they are skipped", async () => {
+    // The note follows the selected scope's filter: it appears only when that filter can match
+    // orphans (isOrphan true or unset), since only then does the counted set contain skipped orphans.
+    const mixedScopes: NonEmptyArray<ResourceActionScope> = [
+      {
+        id: "excludes-orphans",
+        title: words("resources.resourceActions.confirm.filtered.title"),
+        filter: { isOrphan: false },
+        count: 3,
+      },
+      {
+        id: "includes-orphans",
+        title: words("resources.resourceActions.confirm.environment.title"),
+        filter: { isOrphan: true },
+        count: 2,
+      },
+    ];
+
+    render(setup({ scopes: mixedScopes }));
+
+    await userEvent.click(screen.getByRole("button", { name: deployLabel }));
+
+    const dialog = await screen.findByRole("dialog");
+
+    // The preselected scope excludes orphans, so the note does not apply.
+    expect(
+      within(dialog).queryByText(words("resources.resourceActions.confirm.orphanNote"))
+    ).not.toBeInTheDocument();
+
+    // Selecting a scope whose filter can match orphans surfaces the note.
     await userEvent.click(
       within(dialog).getByRole("radio", {
         name: new RegExp(words("resources.resourceActions.confirm.environment.title"), "i"),
       })
     );
-    expect(confirm).toBeEnabled();
-  });
-
-  test("WHEN the confirm dialog is open THEN it notes that orphaned resources can't be deployed", async () => {
-    render(setup({ scopes: filteredScopes }));
-
-    await userEvent.click(screen.getByRole("button", { name: deployLabel }));
-
-    const dialog = await screen.findByRole("dialog");
     expect(
       within(dialog).getByText(words("resources.resourceActions.confirm.orphanNote"))
     ).toBeVisible();
@@ -264,7 +299,6 @@ describe("ResourceActions", () => {
         id: "filtered",
         title: words("resources.resourceActions.confirm.filtered.title"),
         filter: { isOrphan: true },
-        detail: words("resources.resourceActions.confirm.filtered.count")(3),
         count: 3,
       },
     ];

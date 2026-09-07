@@ -802,19 +802,19 @@ const dict = {
   "resources.resourceActions.confirm.title": (action: string) => `${action} resources`,
   "resources.resourceActions.confirm.description": "Choose the scope, then confirm.",
   "resources.resourceActions.confirm.filtered.title": "Filtered resources",
-  "resources.resourceActions.confirm.filtered.count": (count: number) => `${count} matched`,
   "resources.resourceActions.confirm.environment.title": "All resources in this environment",
-  "resources.resourceActions.confirm.environment.count": (count: number) =>
-    `${count} total · ignores the active filter`,
+  "resources.resourceActions.confirm.environment.note": "Ignores the active filter",
+  "resources.resourceActions.confirm.scope.count": (count: number) =>
+    `${count} resource${count === 1 ? "" : "s"}`,
   "resources.resourceActions.instance.deleted.disabled":
     "This instance is deleted, so its resources can no longer be deployed or repaired.",
   "resources.resourceActions.instance.empty.disabled":
     "This instance has no resources to deploy or repair.",
   "resources.resourceActions.catalog.loading":
     "Loading the service catalog to work out the deploy scope.",
+  "resources.resourceActions.catalog.error":
+    "The service catalog couldn't be loaded, so the deploy scope is unavailable.",
   "resources.resourceActions.confirm.instance.title": "This instance only",
-  "resources.resourceActions.confirm.instance.count": (count: number) =>
-    `${count} resource${count === 1 ? "" : "s"}`,
   "resources.resourceActions.confirm.owned.title": "This instance and owned services",
   "resources.resourceActions.confirm.owned.description": (services: string) =>
     `May also act on owned services of these types: ${services}.`,

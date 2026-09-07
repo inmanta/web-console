@@ -142,18 +142,15 @@ export const Page: React.FC = () => {
                     id: "filtered",
                     title: words("resources.resourceActions.confirm.filtered.title"),
                     filter: mapToResourceActionFilter(filterWithDefaults),
-                    detail: words("resources.resourceActions.confirm.filtered.count")(
-                      Number(data.metadata.total)
-                    ),
                     count: Number(data.metadata.total),
                   },
                   {
                     id: "environment",
                     title: words("resources.resourceActions.confirm.environment.title"),
+                    // The whole environment minus orphans. resourceSummary.totalCount already
+                    // excludes orphans, so the count matches this filter exactly.
                     filter: { isOrphan: false },
-                    detail: words("resources.resourceActions.confirm.environment.count")(
-                      resourceSummary.totalCount
-                    ),
+                    detail: words("resources.resourceActions.confirm.environment.note"),
                     count: resourceSummary.totalCount,
                   },
                 ]}

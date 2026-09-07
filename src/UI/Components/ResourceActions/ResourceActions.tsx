@@ -6,12 +6,13 @@ import {
   DropdownList,
   Flex,
   FlexItem,
+  Icon,
   MenuToggle,
   MenuToggleAction,
   MenuToggleElement,
   Tooltip,
 } from "@patternfly/react-core";
-import { OutlinedPlayCircleIcon, WrenchIcon } from "@patternfly/react-icons";
+import { WrenchIcon, PlayIcon } from "@patternfly/react-icons";
 import { NonEmptyArray } from "@/Core/Language";
 import { DeployAgentsAction, ResourceActionFilter, useDeployFiltered } from "@/Data/Queries";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
@@ -69,13 +70,21 @@ export const ResourceActions: React.FC<Props> = (props) => {
 
   const actions: Record<ActionKey, ActionConfig> = {
     deploy: {
-      icon: <OutlinedPlayCircleIcon style={iconStyle} />,
+      icon: (
+        <Icon size="sm">
+          <PlayIcon style={iconStyle} />
+        </Icon>
+      ),
       label: words("resources.compoundStateSummary.deploy"),
       hint: words("resources.resourceActions.deploy.hint"),
       tooltip: words("resources.resourceActions.deploy.tooltip"),
     },
     repair: {
-      icon: <WrenchIcon style={iconStyle} />,
+      icon: (
+        <Icon size="sm">
+          <WrenchIcon style={iconStyle} />
+        </Icon>
+      ),
       label: words("resources.compoundStateSummary.repair"),
       hint: words("resources.resourceActions.repair.hint"),
       tooltip: words("resources.resourceActions.repair.tooltip"),
@@ -143,8 +152,15 @@ export const ResourceActions: React.FC<Props> = (props) => {
           onClick={() => onAction("deploy")}
         >
           <Tooltip content={actions.deploy.tooltip}>
-            <span>
-              <OutlinedPlayCircleIcon /> {actions.deploy.label}
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "var(--pf-t--global--spacer--sm)",
+              }}
+            >
+              <PlayIcon />
+              {actions.deploy.label}
             </span>
           </Tooltip>
         </MenuToggleAction>,

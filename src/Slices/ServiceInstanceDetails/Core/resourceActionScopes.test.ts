@@ -15,7 +15,6 @@ describe("buildInstanceResourceActionScopes", () => {
         id: "instance",
         title: words("resources.resourceActions.confirm.instance.title"),
         filter: { isOrphan: false, serviceInstance: ["abc"] },
-        detail: words("resources.resourceActions.confirm.instance.count")(3),
         count: 3,
       },
     ]);
@@ -44,7 +43,6 @@ describe("buildInstanceResourceActionScopes", () => {
       ownedEntities: [],
     });
 
-    expect(scopes[0].detail).toBeUndefined();
     expect(scopes[0].count).toBeUndefined();
   });
 });

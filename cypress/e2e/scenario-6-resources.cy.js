@@ -30,19 +30,36 @@ const expectRowCountRestored = (alias) => {
 };
 
 // Deploys a filtered subset from the toolbar's primary Deploy action and asserts the success toast.
-// It first narrows the list with a type filter so this triggers a small real deploy rather than an
-// environment-wide one (which later specs could otherwise observe mid-deploy), and it clicks the
-// primary split-button action - the one-click path users take - instead of the caret menu.
+// It first narrows the list with a type filter, then clicks the primary split-button action - the
+// one-click path users take - instead of the caret menu.
 const deployFilteredWithConfirm = () => {
   const typeFilter = isIso ? "lsm" : "TestResource";
 
   cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
   cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
-  // Narrow the filter so the deploy targets only these resources, not the whole environment
+  // Alias the filtered resources request (a GraphQL POST whose body carries the typed resourceType
+  // filter) so we can wait for it to land. The list keeps the previous rows on screen while the
+  // next request is in flight (keepPreviousData), so a DOM-only gate can latch onto the stale
+  // pre-filter count and open the dialog against numbers that are about to change.
+  cy.intercept("POST", "**/api/v2/graphql", (req) => {
+    if (req.body?.variables?.filter?.resourceType?.contains?.includes(`%${typeFilter}%`)) {
+      req.alias = "resourcesFilteredByType";
+    }
+  });
+
+  // Narrow the list before deploying. On iso this genuinely shrinks the set, so the deploy stays
+  // small; on OSS every resource is a frontend_model::TestResource, so the filter matches them all
+  // and the deploy is effectively environment-wide (only 5 resources there, so still small).
   cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
   cy.get('[aria-label="Type"]').should("be.visible").type(typeFilter);
   cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
+
+  // Wait for the filtered response to land before opening the dialog, so its resource count and
+  // confirm button gate on real data rather than the retained pre-filter rows.
+  cy.wait("@resourcesFilteredByType", { timeout: 20000 })
+    .its("response.statusCode")
+    .should("eq", 200);
   cy.get('[aria-label="Resource Table Row"]').should("have.length.at.least", 1);
 
   // Trigger the primary Deploy action of the split button (not the caret menu)

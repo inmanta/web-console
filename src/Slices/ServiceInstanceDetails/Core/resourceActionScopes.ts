@@ -4,8 +4,12 @@ import { words } from "@/UI/words";
 
 /**
  * Builds the deploy/repair scopes offered for a service instance: always the instance itself, and an
- * "owned services" scope only when the service type declares owned_entities. The owned label is an
- * upper bound, since owned_entities is a property of the service type, not a count for this instance.
+ * "owned services" scope only when the service type declares owned_entities.
+ *
+ * The owned label is an upper bound: owned_entities is a property of the service type, not a count
+ * for this instance, and it is read from the latest catalog version, which may differ from the
+ * instance's own service_entity_version. So the owned scope carries no count and only names the
+ * entity types it may touch.
  *
  * @example buildInstanceResourceActionScopes({ instanceId: "abc", total: 3, ownedEntities: ["l2Connect"] })
  *   => [{ id: "instance", ... }, { id: "owned", ... }]
@@ -23,10 +27,6 @@ export function buildInstanceResourceActionScopes({
     id: "instance",
     title: words("resources.resourceActions.confirm.instance.title"),
     filter: { isOrphan: false, serviceInstance: [instanceId] },
-    detail:
-      total == null
-        ? undefined
-        : words("resources.resourceActions.confirm.instance.count")(Number(total)),
     count: total == null ? undefined : Number(total),
   };
 

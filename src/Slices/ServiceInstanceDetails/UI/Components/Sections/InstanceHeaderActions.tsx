@@ -4,8 +4,8 @@ import { useUrlStateWithString } from "@/Data";
 import { words } from "@/UI";
 import { ResourceActions } from "@/UI/Components";
 import { InstanceDetailsContext } from "../../../Core/Context";
+import { buildInstanceResourceActionScopes } from "../../../Core/resourceActionScopes";
 import { InstanceActions } from "../InstanceActions";
-import { buildInstanceResourceActionScopes } from "./resourceActionScopes";
 
 /**
  * The Service Instance Details header actions: the Deploy/Repair split button (scoped to this
@@ -36,9 +36,10 @@ export const InstanceHeaderActions: React.FC = () => {
     ownedEntities,
   });
 
-  // Nothing to act on: no instance resources and no owned services (an owned scope may hold some).
-  const instanceResourceCount = total == null ? 0 : Number(total);
-  const hasNothingToDeploy = ownedEntities.length === 0 && instanceResourceCount === 0;
+  // A null total is unknown, not zero, so only an explicit zero counts as "no resources".
+  const hasNoResources = total != null && Number(total) === 0;
+  // Disable only when there is nothing to act on: no resources and no owned services.
+  const hasNothingToDeploy = ownedEntities.length === 0 && hasNoResources;
 
   // Reasons are checked in priority order: the first one that applies wins.
   const resolveDisabledReason = (): string | undefined => {
@@ -47,6 +48,9 @@ export const InstanceHeaderActions: React.FC = () => {
     }
     if (serviceModelQuery.isLoading) {
       return words("resources.resourceActions.catalog.loading");
+    }
+    if (serviceModelQuery.isError) {
+      return words("resources.resourceActions.catalog.error");
     }
     if (hasNothingToDeploy) {
       return words("resources.resourceActions.instance.empty.disabled");

@@ -123,33 +123,86 @@ describe("Page Actions - Success", () => {
     );
   });
 
-  it.each`
-    scenario                    | deployment_progress
-    ${"an explicit zero total"} | ${{ deployed: 0, waiting: 0, failed: 0, total: 0 }}
-    ${"no deployment progress"} | ${null}
-  `(
-    "Deploy actions - disables the split button when the instance has no resources ($scenario)",
-    async ({ deployment_progress }) => {
-      server.use(
-        http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", () =>
-          HttpResponse.json({ data: { ...instanceData, deployment_progress } })
-        )
-      );
+  it("Deploy actions - disables the split button when the instance explicitly has zero resources", async () => {
+    server.use(
+      http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", () =>
+        HttpResponse.json({
+          data: {
+            ...instanceData,
+            deployment_progress: { deployed: 0, waiting: 0, failed: 0, total: 0 },
+          },
+        })
+      )
+    );
 
-      render(setupServiceInstanceDetails());
+    render(setupServiceInstanceDetails());
 
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    // The service type owns nothing and the instance reports an explicit zero total, so there is
+    // genuinely nothing to act on.
+    await waitFor(() =>
       expect(
-        await screen.findByRole("region", { name: "Instance-Details-Success" })
-      ).toBeInTheDocument();
+        screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+      ).toBeDisabled()
+    );
+  });
 
-      // The service type owns nothing and the instance reports no resources, so nothing to act on.
-      await waitFor(() =>
-        expect(
-          screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
-        ).toBeDisabled()
-      );
-    }
-  );
+  it("Deploy actions - offers the instance scope without a count when deployment progress is unknown", async () => {
+    // deployment_progress null means the count is unknown, not that there are zero resources, so
+    // the action stays available and the dialog offers the instance scope with no count.
+    server.use(
+      http.get("/lsm/v1/service_inventory/mobileCore/1d96a1ab", () =>
+        HttpResponse.json({ data: { ...instanceData, deployment_progress: null } })
+      )
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    const deployButton = screen.getByRole("button", {
+      name: words("resources.compoundStateSummary.deploy"),
+    });
+    await waitFor(() => expect(deployButton).toBeEnabled());
+    await userEvent.click(deployButton);
+
+    const dialog = await screen.findByRole("dialog");
+
+    expect(
+      within(dialog).getByRole("radio", {
+        name: new RegExp(words("resources.resourceActions.confirm.instance.title"), "i"),
+      })
+    ).toBeVisible();
+    // The total is unknown, so no "N resources" count line is shown.
+    expect(within(dialog).queryByText(/\d+ resource/i)).not.toBeInTheDocument();
+  });
+
+  it("Deploy actions - disables the split button when the service catalog fails to load", async () => {
+    server.use(
+      http.get("/lsm/v1/service_catalog/mobileCore", () =>
+        HttpResponse.json({ message: "catalog unavailable" }, { status: 500 })
+      )
+    );
+
+    render(setupServiceInstanceDetails());
+
+    expect(
+      await screen.findByRole("region", { name: "Instance-Details-Success" })
+    ).toBeInTheDocument();
+
+    // Without the catalog the deploy scope can't be resolved, so the action is disabled rather than
+    // silently offering only the instance scope and hiding that a wider one might exist.
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: words("resources.compoundStateSummary.deploy") })
+      ).toBeDisabled()
+    );
+  });
 
   it("Deploy actions - disables the split button when the instance is deleted", async () => {
     server.use(
