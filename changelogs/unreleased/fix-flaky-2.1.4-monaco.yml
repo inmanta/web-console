@@ -1,0 +1,4 @@
+description: Fixed the flaky 2.1.4 duplicate-instance Monaco e2e test by asserting the empty value on Monaco's stable .view-lines container instead of a positional, theme-generated token span.
+change-type: patch
+destination-branches: [iso8]
+sections: {}
