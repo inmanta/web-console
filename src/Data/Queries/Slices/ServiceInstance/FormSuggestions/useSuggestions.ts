@@ -38,8 +38,9 @@ import {
  *
  * Before any fetch it resolves the suggestion's ${...} references (context vars + cascading
  * ${form.*}/${self.*}); the resolved name/query is the React Query key, an unresolvable ref
- * disables the fetch, an unresolved field dependency also blocks the control, and a broken
- * annotation surfaces as `modelError` (never fetched).
+ * disables the fetch, an unresolved field dependency sets `hasUnresolvedDependency` (the field
+ * stays editable, we only surface a hint), and a broken annotation surfaces as `modelError`
+ * (never fetched).
  */
 
 interface ResponseData {
@@ -48,30 +49,31 @@ interface ResponseData {
 
 /**
  * The default field scopes for a caller with no cascading references: both roots undefined,
- * so any `${form.*}`/`${self.*}` reference fails to resolve and blocks rather than throwing.
+ * so any `${form.*}`/`${self.*}` reference stays unresolved rather than throwing.
  */
 const NO_FIELD_SCOPES: FieldScopes = { form: undefined, self: undefined };
 
 /**
  * The outcome of resolving a suggestion's `${...}` references. `substitution` maps every
- * reference to its value; `isResolvable` means safe to fetch; `isBlocked` means a cascading
- * dependency has no value yet; `referenceError` is a model error from the references alone.
+ * reference to its value; `isResolvable` means safe to fetch; `hasUnresolvedDependency` means a
+ * cascading source field has no value yet; `referenceError` is a model error from the references
+ * alone.
  */
 interface ResolvedReferences {
   substitution: SubstitutionValues;
   isResolvable: boolean;
-  isBlocked: boolean;
+  hasUnresolvedDependency: boolean;
   referenceError: string | null;
 }
 
 /**
  * Resolves a suggestion's `${...}` references in one pass shared by both flavors: context
  * namespaces from `contextValues`, `${form.*}`/`${self.*}` from `fieldScopes` via jsonpath.
- * An absent context value yields no suggestions but does not block; an unresolved field
- * dependency blocks the control.
+ * An absent context value yields no suggestions; an unresolved field dependency sets
+ * `hasUnresolvedDependency` (the field stays editable, we only hint).
  *
  * @example
- * resolveReferences(refs, { entity_type: "network" }, { form: { site: "a" }, self: {} }) // => { isResolvable: true, isBlocked: false, ... }
+ * resolveReferences(refs, { entity_type: "network" }, { form: { site: "a" }, self: {} }) // => { isResolvable: true, hasUnresolvedDependency: false, ... }
  */
 const resolveReferences = (
   references: ParsedReference[],
@@ -117,7 +119,7 @@ const resolveReferences = (
   return {
     substitution,
     isResolvable: !referenceError && !hasUnresolvedContext && !hasUnresolvedField,
-    isBlocked: !referenceError && hasFieldReference && hasUnresolvedField,
+    hasUnresolvedDependency: !referenceError && hasFieldReference && hasUnresolvedField,
     referenceError,
   };
 };
@@ -127,10 +129,11 @@ const resolveReferences = (
  * literal inline, parameters fetched, graphql built and projected. `${...}` references
  * resolve first (context vars from `suggestionVariables` + cascading `${form.*}`/`${self.*}`
  * from `fieldScopes`); an unresolvable reference disables the fetch, an unresolved field
- * dependency also sets `isBlocked`, and an unknown/unsupported reference is a `modelError`.
+ * dependency also sets `hasUnresolvedDependency`, and an unknown/unsupported reference is a
+ * `modelError`.
  *
  * @example
- * useSuggestedValues(field.suggestion, { entity_type: "network" }, fieldScopes).useOneTime() // => { data, isBlocked, isRefreshing, modelError, ... }
+ * useSuggestedValues(field.suggestion, { entity_type: "network" }, fieldScopes).useOneTime() // => { data, hasUnresolvedDependency, isRefreshing, modelError, ... }
  */
 export const useSuggestedValues = (
   suggestions: FormSuggestion | null | undefined,
@@ -159,7 +162,7 @@ export const useSuggestedValues = (
         isLoading: false,
         isFetching: false,
         modelError: null,
-        isBlocked: false,
+        hasUnresolvedDependency: false,
         isRefreshing: false,
       }),
     };
@@ -177,14 +180,14 @@ export const useSuggestedValues = (
           isLoading: false,
           isFetching: false,
           modelError: null,
-          isBlocked: false,
+          hasUnresolvedDependency: false,
           isRefreshing: false,
         };
       },
     };
   }
 
-  const { substitution, isResolvable, isBlocked, referenceError } = resolveReferences(
+  const { substitution, isResolvable, hasUnresolvedDependency, referenceError } = resolveReferences(
     references,
     resolvedVariables,
     fieldScopes
@@ -201,7 +204,7 @@ export const useSuggestedValues = (
           isLoading: false,
           isFetching: false,
           modelError: words("inventory.form.suggestions.invalidQuery"),
-          isBlocked: false,
+          hasUnresolvedDependency: false,
           isRefreshing: false,
         }),
       };
@@ -252,7 +255,7 @@ export const useSuggestedValues = (
         // stale. Combined with the query's own `isFetching`, this is the field's "busy" window.
         const isRefreshing = queryString !== debouncedQuery;
 
-        return { ...query, modelError, isBlocked, isRefreshing };
+        return { ...query, modelError, hasUnresolvedDependency, isRefreshing };
       },
     };
   }
@@ -288,7 +291,7 @@ export const useSuggestedValues = (
       // stale. Combined with the query's own `isFetching`, this is the field's "busy" window.
       const isRefreshing = resolvedName !== debouncedName;
 
-      return { ...query, modelError, isBlocked, isRefreshing };
+      return { ...query, modelError, hasUnresolvedDependency, isRefreshing };
     },
   };
 };

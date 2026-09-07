@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -14,7 +14,6 @@ import {
   InstanceAttributeModel,
   DictListField,
   Field,
-  Maybe,
   NestedField,
   FormSuggestion,
   SuggestionValue,
@@ -25,8 +24,6 @@ import {
   FieldScopes,
   SuggestionVariables,
   getFieldDependencyNames,
-  getFieldReferences,
-  resolveFieldReference,
   useSuggestedValues,
 } from "@/Data/Queries";
 import { OptionalToggleGroup } from "@/UI/Components/OptionalToggleGroup";
@@ -68,10 +65,6 @@ type GetUpdate = (path: string, value: unknown, multi?: boolean) => void;
 const makePath = (path: string | null, next: string): string =>
   path === null ? next : `${path}.${next}`;
 
-/** The emptied value a field clears to, matched to its kind (list fields to `[]`, else `null`). */
-const emptyValueForField = (kind: Field["kind"]): unknown =>
-  kind === "TextList" || kind === "RelationList" ? [] : null;
-
 /**
  * FieldInput component for managing form input related to a specific field.
  *
@@ -97,32 +90,81 @@ export const FieldInput: React.FC<Props> = ({
   suggestions,
   suggestionVariables,
 }) => {
-  // Cascading fields: `form` resolves `${form.*}` from the form root; `self`
-  // resolves `${self.*}` within this field's own embedded instance (its own siblings only).
+  // --- Resolve suggestions ---
+  // `form` resolves `${form.*}` from the form root; `self` resolves `${self.*}` from this field's
+  // own embedded instance (its siblings only).
   const fieldScopes: FieldScopes = {
     form: formState,
     self: path === null ? formState : get(formState, path),
   };
-  const { data, isLoading, error, isFetching, modelError, isBlocked, isRefreshing } =
+  const { data, isLoading, error, isFetching, modelError, hasUnresolvedDependency, isRefreshing } =
     useSuggestedValues(suggestions, suggestionVariables, fieldScopes).useOneTime();
 
-  // A cascading dependent field is "busy" from the instant its source changes until the new
-  // query settles: the debounce window (isRefreshing) then the fetch (isFetching). While busy the
-  // control is disabled (and shows a spinner) so its options can't be picked mid-change.
+  // --- Dependency and loading state ---
   const dependencyNames = useMemo(() => getFieldDependencyNames(suggestions), [suggestions]);
+  const dependencyLabel = dependencyNames.join(", ");
   const isCascading = dependencyNames.length > 0;
-  const isLoadingSuggestions = !isBlocked && (isFetching || isRefreshing);
+  // Busy while a source change settles (debounce, then fetch): disabled so a stale option can't be picked.
+  const isLoadingSuggestions = !hasUnresolvedDependency && (isFetching || isRefreshing);
   const isRefreshingDependent = isCascading && isLoadingSuggestions;
+  // A stored value this form can't edit (edit mode): its value is fixed, so feedback would be noise.
+  const isLocked =
+    field.isDisabled && get(originalState, makePath(path, field.name)) !== undefined && !isNew;
 
-  // Already normalized to { label, value }[] by useSuggestedValues; just forward it. The previous
-  // list is kept while refreshing (keepPreviousData in the hook), so the shown label stays stable
-  // instead of flashing its raw value between a source change and the refreshed list.
-  const suggestionsList: SuggestionValue[] | null = !isLoading && !error ? (data ?? null) : null;
-  // While a cascading dependency has no value the control is blocked: disabled, no
-  // suggestions, with a hint naming the field to fill in first.
-  const blockedHint = isBlocked
-    ? words("inventory.form.suggestions.blocked")(dependencyNames.join(", "))
-    : undefined;
+  // --- Options offered in the popover ---
+  // Keep the previous list while refreshing (keepPreviousData) so the label stays stable, but drop
+  // it while a source is unresolved so a stale source's options can't be offered.
+  const suggestionsList: SuggestionValue[] | null =
+    !isLoading && !error && !hasUnresolvedDependency ? (data ?? null) : null;
+
+  // --- Feedback ---
+  // Two non-blocking weights (no red/danger, which would read as a block): warnings (yellow) need
+  // attention, hints (neutral) are routine guidance.
+
+  // The query has come back clean (filled source, done loading, no error): only now is an empty or
+  // stale result real rather than a passing state, so the settled hints/warnings gate on it.
+  const isSettled =
+    isCascading && !hasUnresolvedDependency && !isLoadingSuggestions && !modelError && !error;
+  const hasNoSuggestions = isSettled && !suggestionsList?.length;
+  const currentValue = get(formState, makePath(path, field.name));
+  const currentValues = (Array.isArray(currentValue) ? currentValue : [currentValue])
+    .filter((value) => value !== null && value !== undefined && value !== "")
+    .map(String);
+  const hasUnlistedValue =
+    isSettled &&
+    !!suggestionsList?.length &&
+    currentValues.some(
+      (value) => !suggestionsList.some((suggestion) => suggestion.value === value)
+    );
+
+  // Warning: broken annotation, then failed fetch, then a kept value no longer among the options
+  // (`notInList` suppressed on a locked field).
+  let warningMessage: string | undefined;
+  if (modelError) {
+    warningMessage = modelError;
+  } else if (isCascading && !!error) {
+    warningMessage = words("inventory.form.suggestions.fetchError");
+  } else if (!isLocked && hasUnlistedValue) {
+    warningMessage = words("inventory.form.suggestions.notInList")(dependencyLabel);
+  }
+
+  // Hint: waiting on a source, then a source that returned no options (both suppressed on a locked field).
+  let suggestionHint: string | undefined;
+  if (isLocked) {
+    suggestionHint = undefined;
+  } else if (hasUnresolvedDependency) {
+    suggestionHint = words("inventory.form.suggestions.waitingOnSource")(dependencyLabel);
+  } else if (hasNoSuggestions) {
+    suggestionHint = words("inventory.form.suggestions.empty")(dependencyLabel);
+  }
+
+  // Hoisted so the warning/hint precedence is shared by both suggestion inputs (Text, TextList).
+  const suggestionInputProps = {
+    suggestions: suggestionsList,
+    warningMessage,
+    hint: suggestionHint,
+    loading: isLoadingSuggestions,
+  };
 
   // Get the controlled value for the field
   // If the value is an object or an array, it needs to be converted.
@@ -145,40 +187,6 @@ export const FieldInput: React.FC<Props> = ({
     },
     [getUpdate, path, field.name]
   );
-
-  // Cascading fields: clear this field's own value whenever a source it depends on changes, so a
-  // now-stale entry can't linger with a label its refreshed suggestions can no longer resolve.
-  // Everything is resolved against this field's own scopes, so `self`/`form` and each embedded
-  // instance are handled locally; a cleared value in turn changes its own dependents' sources,
-  // cascading onward.
-  const fieldPath = makePath(path, field.name);
-  // The references are structural (they change only with the annotation), so memoize them; the
-  // signature below resolves them against the live form values, so it necessarily reruns per render.
-  const fieldReferences = useMemo(() => getFieldReferences(suggestions), [suggestions]);
-  const dependencySignature = fieldReferences
-    .map((reference) => {
-      const resolved = resolveFieldReference(reference, fieldScopes);
-
-      return Maybe.isSome(resolved) ? resolved.value : "";
-    })
-    .join("\u0000");
-  const previousSignatureRef = useRef(dependencySignature);
-  // A locked existing attribute (edit mode, not newly added): the user can't re-pick a value, so
-  // clearing it would strand the form with an empty locked field. Mirrors the per-input disabled check.
-  const isLockedField = field.isDisabled && !isNew && get(originalState, fieldPath) !== undefined;
-
-  useEffect(() => {
-    // Skip the initial render (nothing changed yet) so an edit form keeps its stored values.
-    if (previousSignatureRef.current === dependencySignature) {
-      return;
-    }
-
-    previousSignatureRef.current = dependencySignature;
-
-    if (!isLockedField) {
-      getUpdate(fieldPath, emptyValueForField(field.kind));
-    }
-  }, [dependencySignature, getUpdate, fieldPath, field.kind, isLockedField]);
 
   switch (field.kind) {
     case "Boolean": {
@@ -235,22 +243,13 @@ export const FieldInput: React.FC<Props> = ({
           attributeName={field.name}
           attributeValue={get<string[]>(formState, makePath(path, field.name), []) ?? []}
           description={field.description}
-          shouldBeDisabled={
-            isBlocked ||
-            isRefreshingDependent ||
-            (field.isDisabled &&
-              get(originalState, makePath(path, field.name).split(".")) !== undefined &&
-              !isNew)
-          }
+          shouldBeDisabled={isRefreshingDependent || isLocked}
           type={field.inputType}
           handleInputChange={(value, _event) => getUpdate(makePath(path, field.name), value)}
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
-          suggestions={suggestionsList}
-          warningMessage={modelError}
-          hint={blockedHint}
-          loading={isLoadingSuggestions}
+          {...suggestionInputProps}
         />
       );
     case "Textarea":
@@ -285,13 +284,7 @@ export const FieldInput: React.FC<Props> = ({
           attributeValue={getControlledValue(get(formState, makePath(path, field.name)))}
           description={field.description}
           isOptional={field.isOptional}
-          shouldBeDisabled={
-            isBlocked ||
-            isRefreshingDependent ||
-            (field.isDisabled &&
-              get(originalState, makePath(path, field.name)) !== undefined &&
-              !isNew)
-          }
+          shouldBeDisabled={isRefreshingDependent || isLocked}
           type={field.inputType}
           handleInputChange={(value, _event) => {
             getUpdate(makePath(path, field.name), value);
@@ -299,10 +292,7 @@ export const FieldInput: React.FC<Props> = ({
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.id || field.name}
-          suggestions={suggestionsList}
-          warningMessage={modelError}
-          hint={blockedHint}
-          loading={isLoadingSuggestions}
+          {...suggestionInputProps}
         />
       );
     case "Unit":
