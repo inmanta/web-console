@@ -7,7 +7,12 @@ interface Props {
 }
 
 export const Wrapper: React.FC<React.PropsWithChildren<Props>> = ({ children, name, ...props }) => (
-  <PageContainer {...props} pageTitle={words("inventory.title")(name)}>
+  <PageContainer
+    {...props}
+    hasOverflowScroll
+    aria-label={words("inventory.title")(name)}
+    pageTitle={words("inventory.title")(name)}
+  >
     {children}
   </PageContainer>
 );

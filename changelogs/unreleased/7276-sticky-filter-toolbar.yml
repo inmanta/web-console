@@ -1,0 +1,6 @@
+description: On the Service Inventory page and the Resource Logs tab the filter toolbar and drawer now stay in view while the table scrolls, instead of scrolling away with the results.
+issue-nr: 7276
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  bugfix: "{{description}}"

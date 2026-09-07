@@ -77,6 +77,7 @@ export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab, data }) => 
           eventKey={activeDescriptor.id}
           id={tabContentId(activeDescriptor.id)}
           activeKey={activeTab}
+          style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
         >
           {activeDescriptor.view}
         </TabContent>
