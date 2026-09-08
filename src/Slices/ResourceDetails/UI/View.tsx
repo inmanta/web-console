@@ -4,7 +4,7 @@ import { Resource } from "@/Core/Domain";
 import { useUrlStateWithString } from "@/Data";
 import { ResourceActionFilter, useGetResourceDetails } from "@/Data/Queries";
 import {
-  DeployActions,
+  ResourceActions,
   Description,
   ErrorView,
   labelColorConfig,
@@ -69,11 +69,11 @@ export const View: React.FC<Props> = ({ id }) => {
               </Content>
             </FlexItem>
             <FlexItem>
-              <DeployActions
+              <ResourceActions
                 filter={resourceFilter}
                 disabledReason={
                   Resource.isOrphanedStatus(data.status)
-                    ? words("resources.deployActions.orphaned.disabled")
+                    ? words("resources.resourceActions.orphaned.disabled")
                     : undefined
                 }
               />
