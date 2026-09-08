@@ -40,36 +40,13 @@ const openAddInstanceForm = () => {
 };
 
 /**
- * Every tab's fields stay in the DOM (PatternFly only hides the inactive panels), so we key off
- * visibility, not existence: open whichever tab makes the given field visible. Does nothing if the
- * field is already visible.
+ * Open a form tab by name. Each call site names the tab the field's `web_tab` annotation promises,
+ * so a field on the wrong tab fails the test rather than being searched for and found anyway.
  *
- * @param {string} selector - a css selector for the field (e.g. "#region")
+ * @param {string} name - the tab label (e.g. "Network")
  */
-const openTabWithField = (selector) => {
-  cy.get("body").then(($body) => {
-    if ($body.find(`${selector}:visible`).length > 0) {
-      return;
-    }
-
-    const clickThrough = (index) => {
-      cy.get('[aria-label="Instance-Form-Tabs"]')
-        .find('[role="tab"]')
-        .then(($tabs) => {
-          if (index >= $tabs.length) {
-            return;
-          }
-          cy.wrap($tabs.eq(index)).click();
-          cy.get("body").then(($after) => {
-            if ($after.find(`${selector}:visible`).length === 0) {
-              clickThrough(index + 1);
-            }
-          });
-        });
-    };
-
-    clickThrough(0);
-  });
+const openTab = (name) => {
+  cy.contains('[aria-label="Instance-Form-Tabs"] [role="tab"]', name).click();
 };
 
 /**
@@ -134,7 +111,7 @@ if (isIso) {
 
       // bandwidth carries {label, value} pairs: the option and the input show the label, the form
       // stores the value.
-      openTabWithField("#bandwidth");
+      openTab("Network");
       openSuggestions("#bandwidth");
       cy.contains('[role="menuitem"]', "10 Gbps").click();
       cy.get("#bandwidth").should("have.value", "10 Gbps");
@@ -151,8 +128,9 @@ if (isIso) {
       cy.get('[aria-label="TextFieldInput-tags"]').find("input").first().type("{enter}");
       cy.get('[aria-label="TextFieldInput-tags"]').should("contain", "Production");
 
-      // Fill the required identifiers and submit.
-      openTabWithField("#name");
+      // Fill the required identifiers and submit. name and service_id carry no web_tab, so they fall
+      // on the default General tab.
+      openTab("General");
       cy.get("#name").type("annotations-showcase");
       cy.get("#service_id").type("0001");
       cy.get('[aria-label="submit"]').should("be.enabled").click();
@@ -177,8 +155,8 @@ if (isIso) {
 
       openAddInstanceForm();
 
-      // region: static parameter name `showcase_regions`, populated in the model.
-      openTabWithField("#region");
+      // region: static parameter name `showcase_regions`, populated in the model. web_tab "general",
+      // the default tab, so it is visible on open without switching (as is template_name below).
       cy.wait("@regionParam");
       openSuggestions("#region");
       cy.contains('[role="menuitem"]', "us-east").click();
@@ -211,7 +189,7 @@ if (isIso) {
 
       // environment_ref queries the `environments` root and projects name/id into the dropdown.
       // The DOM is identical to the parameter flavor; only the data source differs.
-      openTabWithField("#environment_ref");
+      openTab("Advanced");
       cy.wait("@EnvRefSuggestions");
       cy.get("#environment_ref").click();
 
@@ -222,23 +200,35 @@ if (isIso) {
     });
 
     it("2.5.5 - a dependent field waits on its source, stays editable, and refreshes when the source changes", () => {
+      // Once site resolves, uplink's re-query carries the value into its `resourceIdValue` filter
+      // (`%test%`); the query is disabled until then, so the first `%test%` request is the refresh.
+      cy.intercept("POST", "/api/v2/graphql", (req) => {
+        const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+        const query = typeof body?.query === "string" ? body.query : "";
+        if (query.includes("%test%")) {
+          req.alias = "UplinkRequery";
+        }
+      });
+
       openAddInstanceForm();
 
       // uplink depends on ${form.site}. With site still empty it shows a neutral "waiting" hint and
       // stays editable (never hard-disabled, free typing is always allowed). site and uplink share
       // the Network tab, so both are visible together.
-      openTabWithField("#uplink");
+      openTab("Network");
       cy.contains("Waiting on site before suggestions become available").should("be.visible");
       cy.get("#uplink").should("not.be.disabled");
       cy.get("#uplink").type("free-text");
       cy.get("#uplink").should("have.value", "free-text");
       cy.get("#uplink").clear();
 
-      // Giving site a value resolves the dependency: the "waiting" hint clears and uplink re-queries.
+      // Giving site a value clears the hint and re-queries uplink. Waiting on the aliased request
+      // proves the refresh fired with `site=test`, guarding the stale-key regression.
       openSuggestions("#site");
       cy.contains('[role="menuitem"]', "test").click();
       cy.get("#site").should("have.value", "test");
       cy.contains("Waiting on site before suggestions become available").should("not.exist");
+      cy.wait("@UplinkRequery");
 
       cy.get("button").contains("Cancel").click();
     });
@@ -270,36 +260,38 @@ if (isIso) {
       openAddInstanceForm();
 
       // web_unit "B" with web_unit_scales "iec": stored in bytes, only IEC units offered (no metric).
-      openTabWithField("#memory_limit");
+      openTab("Network");
       cy.get("#memory_limit-helper").should("contain", "= 2147483648 B");
       unitSelect("memory_limit").find('option[value="GiB"]').should("exist");
       unitSelect("memory_limit").find('option[value="GB"]').should("not.exist");
 
       // web_unit "B" with web_unit_scales "metric": stored in bytes, only metric units offered.
-      openTabWithField("#disk_quota");
+      openTab("Network");
       cy.get("#disk_quota-helper").should("contain", "= 100000000000 B");
       unitSelect("disk_quota").find('option[value="GB"]').should("exist");
       unitSelect("disk_quota").find('option[value="GiB"]').should("not.exist");
 
       // web_unit "kbit/s" with web_unit_display "Mbit/s": stored in kbit/s, shown in Mbit/s.
-      openTabWithField("#bandwidth_limit");
+      openTab("Network");
       cy.get("#bandwidth_limit-helper").should("contain", "= 100000 kbit/s");
       unitSelect("bandwidth_limit").should("have.value", "Mbit/s");
 
       // web_unit "B/s" with web_unit_scales omitted (defaults to "both"): metric and IEC offered.
-      openTabWithField("#transfer_rate");
+      // web_tab "general", so switch back from the Network tab above.
+      openTab("General");
       cy.get("#transfer_rate-helper").should("contain", "= 125000000 B/s");
       unitSelect("transfer_rate").find('option[value="MB/s"]').should("exist");
       unitSelect("transfer_rate").find('option[value="MiB/s"]').should("exist");
 
       // web_unit "s": duration ladder, units spelled out (ns..d), scale families do not apply.
-      openTabWithField("#session_timeout");
+      openTab("Advanced");
       cy.get("#session_timeout-helper").should("contain", "= 3600 s");
       unitSelect("session_timeout").find('option[value="h"]').should("exist");
       unitSelect("session_timeout").should("contain", "hours");
 
       // float attribute in a non-base IEC unit (MiB): stored in MiB, IEC-only units offered.
-      openTabWithField("#average_throughput");
+      // web_tab "general", so switch back from the Advanced tab above.
+      openTab("General");
       cy.get("#average_throughput-helper").should("contain", "= 512 MiB");
       unitSelect("average_throughput").find('option[value="MiB"]').should("exist");
       unitSelect("average_throughput").find('option[value="MB"]').should("not.exist");
