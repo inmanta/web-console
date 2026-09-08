@@ -138,11 +138,16 @@ export const ServiceInventory: React.FunctionComponent<{
             isDrawerExpanded={isDrawerExpanded}
             activeFilterCount={activeFilterCount}
           />
-          <Drawer isExpanded={isDrawerExpanded} isInline>
+          <Drawer
+            isExpanded={isDrawerExpanded}
+            isInline
+            style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+          >
             <DrawerContent
               panelContent={<ConnectedFilterWidget states={states} onClose={onCloseFilterWidget} />}
+              style={{ display: "flex", flexDirection: "column", minHeight: 0 }}
             >
-              <DrawerContentBody>
+              <DrawerContentBody style={{ flex: "1 1 auto", minHeight: 0, overflow: "auto" }}>
                 {data.data.length > 0 ? (
                   <TableProvider
                     aria-label="ServiceInventory-Success"

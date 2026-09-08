@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Drawer, DrawerContent, DrawerContentBody, Stack, StackItem } from "@patternfly/react-core";
+import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
 import { toggleValueInList } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetResourceLogs } from "@/Data/Queries";
@@ -90,26 +90,23 @@ export const View: React.FC<Props> = ({ resourceId }) => {
           isInline
           style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
         >
-          <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
-            <DrawerContentBody
-              style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
-            >
+          <DrawerContent
+            panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
+            style={{ display: "flex", flexDirection: "column", minHeight: 0 }}
+          >
+            <DrawerContentBody style={{ flex: "1 1 auto", minHeight: 0, overflow: "auto" }}>
               {data.data.length <= 0 ? (
                 <EmptyView
                   message={words("resources.logs.empty.message")}
                   aria-label="ResourceLogs-Empty"
                 />
               ) : (
-                <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
-                  <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
-                    <ResourceLogsTable
-                      logs={data.data}
-                      toggleActionType={toggleActionType}
-                      sort={sort}
-                      setSort={setSort}
-                    />
-                  </StackItem>
-                </Stack>
+                <ResourceLogsTable
+                  logs={data.data}
+                  toggleActionType={toggleActionType}
+                  sort={sort}
+                  setSort={setSort}
+                />
               )}
             </DrawerContentBody>
           </DrawerContent>
