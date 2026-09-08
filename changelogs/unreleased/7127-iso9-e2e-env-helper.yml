@@ -1,0 +1,5 @@
+description: Modernized the iso9 Cypress environment helper to match master (adds a shared selectEnvironment/getDefaultEnvName that selects via the header env-selector-toggle), so annotation e2e coverage can be backported to iso9.
+issue-nr: 7127
+change-type: patch
+destination-branches: [iso9]
+sections: {}
