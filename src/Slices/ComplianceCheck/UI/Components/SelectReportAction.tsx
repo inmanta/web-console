@@ -138,11 +138,11 @@ const Progress: React.FC<{ report: DomainProgress }> = ({ report }) => {
   }, [tot, current, report.total, report.todo, done]);
 
   return done ? (
-    <Label variant="outline">
+    <Label isCompact variant="outline">
       {current} / {tot}
     </Label>
   ) : (
-    <Label variant="outline" color="blue" icon={<Spinner />}>
+    <Label isCompact variant="outline" color="blue" icon={<Spinner size={8} />}>
       {current} / {tot}
     </Label>
   );
