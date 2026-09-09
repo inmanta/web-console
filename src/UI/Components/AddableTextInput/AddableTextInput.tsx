@@ -10,6 +10,7 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
+import { preventNumberInputScroll } from "@/UI/Utils";
 
 export interface AddableTextInputProps {
   label: string;
@@ -96,6 +97,7 @@ export const AddableTextInput: React.FC<AddableTextInputProps> = ({
             value={value}
             onChange={(_, nextValue) => setValue(nextValue)}
             onKeyPress={handleKeyPress}
+            onWheel={preventNumberInputScroll}
             aria-label={label}
           />
         </InputGroupItem>
