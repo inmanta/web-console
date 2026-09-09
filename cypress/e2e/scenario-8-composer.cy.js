@@ -39,10 +39,18 @@ if (isIso) {
 
     it("Should create pxsdc project from a repo url and create instances", () => {
       // Step 1: Create a new environment from repository.
+      // The project was deleted in before(), so picking it from the select creates it
+      // (PUT /api/v2/project), which then refetches the project list and re-renders the form.
+      cy.intercept("PUT", "/api/v2/project").as("createProject");
       cy.visit("/console/environment/create");
 
+      cy.get('[aria-label="CreateEnvironment-Success"]').should("be.visible");
       cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(PXSDC_PROJECT_NAME);
       cy.get('[role="option"]').contains(PXSDC_PROJECT_NAME).click();
+      // Wait for the create + list refresh to finish before filling the rest, so the inputs are not
+      // queried while the form is re-rendering (which intermittently lost the Repository field).
+      cy.wait("@createProject");
+      cy.get('[aria-label="CreateEnvironment-Success"]').should("be.visible");
 
       cy.get('[aria-label="Name-input"]').type(PXSDC_ENV_NAME);
       cy.get('[aria-label="Description-input"]').type("Environment for PXSDC test model");

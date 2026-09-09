@@ -8,6 +8,21 @@ beforeEach(() => {
 
 const isIso = Cypress.expose("edition") === "iso";
 
+/**
+ * Click a version row and confirm the selection reached the URL. The instance and history queries
+ * both poll continuously (.useContinuous), so the context - and with it the history rows - re-render
+ * on every poll; a click that lands in that render window is dropped and the version query param is
+ * never set. If the click did not commit, the row was mid-render, so click once more.
+ */
+const selectHistoryVersion = (version) => {
+  cy.get(`[id="version-${version}"]`).find('[data-label="version"]').click();
+  cy.location("search").then((search) => {
+    if (!search.includes(`InstanceDetails.version=${version}`)) {
+      cy.get(`[id="version-${version}"]`).find('[data-label="version"]').click();
+    }
+  });
+};
+
 if (isIso) {
   describe("Scenario 2.1 Service Catalog - basic-service", () => {
     before(() => {
@@ -130,9 +145,7 @@ if (isIso) {
       cy.get('[aria-label="History-Row"]').eq(0).should("contain", "Up");
 
       // Selecting a version in the table should change the tags in the heading of the page.
-      cy.get('[id="version-2"]').within(() => {
-        cy.get('[data-label="version"]').click();
-      });
+      selectHistoryVersion(2);
 
       cy.get('[data-testid="selected-version"]', { timeout: 30000 }).should(
         "have.text",
@@ -207,8 +220,14 @@ if (isIso) {
       // platform specific command to select all and delete the content of the editor
       const deleteShortcut =
         Cypress.platform === "darwin" ? "{meta+a}{backspace}" : "{ctrl+a}{backspace}";
-      // delete the JSON entirely
-      cy.get(".monaco-editor").click().focused().type(deleteShortcut);
+      // Focus the editor and confirm it took focus (Monaco adds .focused) before clearing, so the
+      // select-all/delete isn't dropped onto an unfocused editor - which leaves the JSON intact and
+      // no validation error appears.
+      cy.get(".monaco-editor").click();
+      cy.get(".monaco-editor.focused").should("exist");
+      cy.focused().type(deleteShortcut);
+      // Confirm the content was actually removed before expecting the error.
+      cy.get(".view-lines").should("not.contain.text", "ip_r1");
 
       // expect the JSON to be invalid
       cy.get('[data-testid="Error-container"]').should("contain", "Errors found");
@@ -221,8 +240,12 @@ if (isIso) {
 
       // platform specific undo command to restore the JSON
       const undoShortcut = Cypress.platform === "darwin" ? "{meta+z}" : "{ctrl+z}";
-      // ctrl+z to undo the deletion
-      cy.get(".monaco-editor").click().focused().type(undoShortcut);
+      // ctrl+z to undo the deletion - focus the editor first, same as the delete above.
+      cy.get(".monaco-editor").click();
+      cy.get(".monaco-editor.focused").should("exist");
+      cy.focused().type(undoShortcut);
+      // Confirm the JSON is back before expecting it to be valid again.
+      cy.get(".view-lines").should("contain.text", "ip_r1");
 
       // expect the JSON to be valid
       cy.get('[data-testid="Error-container"]').should("not.exist");
@@ -328,8 +351,11 @@ if (isIso) {
       cy.visit("/console/");
       selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      // Expect to find one badges on the basic-service row.
-      cy.get("#basic-service", { timeout: 40000 }).should(($parent) => {
+      // One label badge: both basic-service instances (the original and the "-copy" duplicate from
+      // 2.1.4) are grouped under a single state label once settled. The duplicate still has to deploy
+      // to "up" though, and that isn't awaited, so it can briefly carry a second label - give the
+      // deploy room to settle instead of the 40s that occasionally ran out.
+      cy.get("#basic-service", { timeout: 90000 }).should(($parent) => {
         const target = $parent.find('[aria-label="Number of instances by label"]');
         const children = target.children();
         expect(children).to.have.length(1);
@@ -397,7 +423,9 @@ if (isIso) {
 
       // expect to find in the history table,
       // "Up" (not "up"): the up state carries a web_label annotation (issue #7094).
-      cy.get('[aria-label="History-Row"]').should(($rows) => {
+      // Pushing settings runs the instance through setting_start -> setting_inprogress -> up on the
+      // backend, which includes a compile, so give it room to settle instead of the default 10s.
+      cy.get('[aria-label="History-Row"]', { timeout: 90000 }).should(($rows) => {
         expect($rows[0]).to.contain("Up");
         expect($rows[1]).to.contain("setting_inprogress");
         expect($rows[2]).to.contain("setting_start");
@@ -427,12 +455,11 @@ if (isIso) {
       cy.get('[aria-label="instance-details-link"]', { timeout: 20000 }).last().click();
 
       // change version and go to events page. The second version should contain a validation report.
-      cy.get('[aria-label="History-Row"]')
-        .eq(7)
-        .within(() => {
-          cy.get('[data-label="version"]').click(); //it's done to avoid flake where the tooltip comes in a way and click ins't triggered
-        });
-      cy.get('[data-testid="selected-version"]').should("have.text", "Version: 2");
+      selectHistoryVersion(2);
+      cy.get('[data-testid="selected-version"]', { timeout: 30000 }).should(
+        "have.text",
+        "Version: 2"
+      );
 
       cy.get('[aria-label="events-content"]').click();
 
