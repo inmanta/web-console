@@ -18,34 +18,27 @@ const data = {
   ],
 };
 
-const expectSome = (result: unknown): unknown => {
-  // a genuine match is never `undefined`; only a miss is (JSON has no `undefined`)
-  expect(result).not.toBeUndefined();
-
-  return result;
-};
-
 describe("JsonPath.evaluate", () => {
   it("reads a nested member path", () => {
-    expect(expectSome(evaluate(data, "candidate_attributes.network_name"))).toBe("nw-a");
+    expect(evaluate(data, "candidate_attributes.network_name")).toBe("nw-a");
   });
 
   it("reads an array element by index", () => {
-    expect(expectSome(evaluate(data, "endpoints[0].region"))).toBe("eu");
+    expect(evaluate(data, "endpoints[0].region")).toBe("eu");
   });
 
   it("selects an array element by an equality filter (RFC 9535, no parentheses)", () => {
-    expect(expectSome(evaluate(data, "endpoints[?@.name=='ep2'].region"))).toBe("us");
+    expect(evaluate(data, "endpoints[?@.name=='ep2'].region")).toBe("us");
   });
 
   it("accepts an explicit leading root identifier", () => {
-    expect(expectSome(evaluate(data, "$.candidate_attributes.network_name"))).toBe("nw-a");
+    expect(evaluate(data, "$.candidate_attributes.network_name")).toBe("nw-a");
   });
 
   it("preserves falsy scalars including a genuine null", () => {
-    expect(expectSome(evaluate(data, "candidate_attributes.vlan"))).toBe(0);
-    expect(expectSome(evaluate(data, "candidate_attributes.enabled"))).toBe(false);
-    expect(expectSome(evaluate(data, "candidate_attributes.owner"))).toBe(null);
+    expect(evaluate(data, "candidate_attributes.vlan")).toBe(0);
+    expect(evaluate(data, "candidate_attributes.enabled")).toBe(false);
+    expect(evaluate(data, "candidate_attributes.owner")).toBe(null);
   });
 
   it("returns none when the path matches nothing", () => {

@@ -51,7 +51,9 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
     const match = projects.find((project) => project.name === projectName);
 
     if (!match) {
-      return `No matching project found for name '${projectName}'`;
+      setError(`No matching project found for name '${projectName}'`);
+
+      return;
     }
 
     return mutate({

@@ -3,25 +3,23 @@ import { IdParser } from "./Resource";
 test("Parse resource id with valid resource id", () => {
   const id = IdParser.parse("std::File[internal,path=/tmp/dir1/file2]");
 
-  expect(id).toBeDefined();
-
-  if (id !== undefined) {
-    expect(id.entityType).toEqual("std::File");
-    expect(id.agentName).toEqual("internal");
-    expect(id.attributeValue).toEqual("/tmp/dir1/file2");
-  }
+  expect(id).toEqual({
+    entityType: "std::File",
+    agentName: "internal",
+    attribute: "path",
+    attributeValue: "/tmp/dir1/file2",
+  });
 });
 
 test("Parse resource id with valid resource version id", () => {
   const id = IdParser.parse("std::File[internal,path=/tmp/dir1/file2],v=2");
 
-  expect(id).toBeDefined();
-
-  if (id !== undefined) {
-    expect(id.entityType).toEqual("std::File");
-    expect(id.agentName).toEqual("internal");
-    expect(id.attributeValue).toEqual("/tmp/dir1/file2");
-  }
+  expect(id).toEqual({
+    entityType: "std::File",
+    agentName: "internal",
+    attribute: "path",
+    attributeValue: "/tmp/dir1/file2",
+  });
 });
 
 test("Parse resource id with partial resource id", () => {
