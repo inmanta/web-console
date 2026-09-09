@@ -83,6 +83,17 @@ test.each`
 
 // ── currentPage auto-reset ───────────────────────────────────────────────────
 
+test("GIVEN usePaginatedTableWithMultiSort WHEN mounted with a currentPage cursor in the URL THEN it is kept (issue #7218)", () => {
+  const cursor = "start=some_resource";
+
+  const { result } = renderHook(
+    () => usePaginatedTableWithMultiSort<undefined, Resource.SortKey>({ route: "Resources" }),
+    { wrapper: wrapper(`?state.Resources.currentPage[0]=${cursor}`) }
+  );
+
+  expect(result.current.currentPage.value).toBe(cursor);
+});
+
 test("GIVEN usePaginatedTableWithMultiSort WHEN sort changes THEN currentPage resets to empty", async () => {
   const { result } = renderHook(
     () => usePaginatedTableWithMultiSort<undefined, Resource.SortKey>({ route: "Resources" }),
