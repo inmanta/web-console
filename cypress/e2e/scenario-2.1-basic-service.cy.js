@@ -9,10 +9,8 @@ beforeEach(() => {
 const isIso = Cypress.expose("edition") === "iso";
 
 /**
- * Click a version row and confirm the selection reached the URL. The instance and history queries
- * both poll continuously (.useContinuous), so the context - and with it the history rows - re-render
- * on every poll; a click that lands in that render window is dropped and the version query param is
- * never set. If the click did not commit, the row was mid-render, so click once more.
+ * Click a version row and confirm the selection reached the URL. The history queries poll
+ * (.useContinuous), so a click landing during a re-render can be dropped; if so, click once more.
  */
 const selectHistoryVersion = (version) => {
   cy.get(`[id="version-${version}"]`).find('[data-label="version"]').click();
@@ -220,9 +218,8 @@ if (isIso) {
       // platform specific command to select all and delete the content of the editor
       const deleteShortcut =
         Cypress.platform === "darwin" ? "{meta+a}{backspace}" : "{ctrl+a}{backspace}";
-      // Focus the editor and confirm it took focus (Monaco adds .focused) before clearing, so the
-      // select-all/delete isn't dropped onto an unfocused editor - which leaves the JSON intact and
-      // no validation error appears.
+      // Confirm the editor took focus (Monaco adds .focused) before clearing, so the delete isn't
+      // dropped onto an unfocused editor (which leaves the JSON valid and no error appears).
       cy.get(".monaco-editor").click();
       cy.get(".monaco-editor.focused").should("exist");
       cy.focused().type(deleteShortcut);
@@ -351,10 +348,8 @@ if (isIso) {
       cy.visit("/console/");
       selectEnvironment();
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Service Catalog").click();
-      // One label badge: both basic-service instances (the original and the "-copy" duplicate from
-      // 2.1.4) are grouped under a single state label once settled. The duplicate still has to deploy
-      // to "up" though, and that isn't awaited, so it can briefly carry a second label - give the
-      // deploy room to settle instead of the 40s that occasionally ran out.
+      // One badge once both instances settle to "up". The 2.1.4 "-copy" still has to deploy there
+      // (not awaited) and briefly shows a second label, so allow time instead of the default 40s.
       cy.get("#basic-service", { timeout: 90000 }).should(($parent) => {
         const target = $parent.find('[aria-label="Number of instances by label"]');
         const children = target.children();
@@ -423,8 +418,7 @@ if (isIso) {
 
       // expect to find in the history table,
       // "Up" (not "up"): the up state carries a web_label annotation (issue #7094).
-      // Pushing settings runs the instance through setting_start -> setting_inprogress -> up on the
-      // backend, which includes a compile, so give it room to settle instead of the default 10s.
+      // Pushing settings runs setting_start -> setting_inprogress -> up (a compile), so allow time.
       cy.get('[aria-label="History-Row"]', { timeout: 90000 }).should(($rows) => {
         expect($rows[0]).to.contain("Up");
         expect($rows[1]).to.contain("setting_inprogress");

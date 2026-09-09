@@ -29,6 +29,22 @@ const expectRowCountRestored = (alias) => {
   });
 };
 
+// Add a Type filter and confirm its chip appears. The "Add filter" click can be swallowed by the
+// drawer's open animation, so if no chip shows, add once more (re-adding the same value is harmless).
+const addTypeFilter = (value) => {
+  cy.get('[aria-label="Type"]').should("be.visible").clear().type(value);
+  cy.get('[aria-label="Type"]').should("have.value", value);
+  cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
+  cy.wait(500);
+  cy.get("body").then(($body) => {
+    if (!$body.find(`[aria-label="Close ${value}"]`).length) {
+      cy.get('[aria-label="Type"]').clear().type(value);
+      cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
+    }
+  });
+  cy.get(`[aria-label="Close ${value}"]`, { timeout: 10000 }).should("be.visible");
+};
+
 // Deploys a filtered subset from the toolbar's primary Deploy action and asserts the success toast.
 // It first narrows the list with a type filter, then clicks the primary split-button action - the
 // one-click path users take - instead of the caret menu.
@@ -42,16 +58,9 @@ const deployFilteredWithConfirm = () => {
   // small; on OSS every resource is a frontend_model::TestResource, so the filter matches them all
   // and the deploy is effectively environment-wide (only 5 resources there, so still small).
   cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
-  cy.get('[aria-label="Type"]').should("be.visible").type(typeFilter);
-  cy.get('[aria-label="Type"]').should("have.value", typeFilter);
-  cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
-
-  // The applied filter renders a removable chip; asserting it proves the add committed (and the
-  // filtered request went out) before we open the dialog, so its resource count and confirm button
-  // gate on real data rather than the retained pre-filter rows. The list keeps the previous rows on
-  // screen while the filtered request is in flight (keepPreviousData), so the row assertion below
-  // retries past that transient state.
-  cy.get(`[aria-label="Close ${typeFilter}"]`).should("be.visible");
+  // Filter before opening the dialog so its count gates on real data, not the retained pre-filter
+  // rows (keepPreviousData keeps them briefly; the assertion below retries past that).
+  addTypeFilter(typeFilter);
   cy.get('[aria-label="Resource Table Row"]', { timeout: 20000 }).should("have.length.at.least", 1);
 
   // Trigger the primary Deploy action of the split button (not the caret menu)
@@ -326,21 +335,10 @@ describe("Scenario 6 : Resources", () => {
       }).should("have.text", "21 - 40");
 
       cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
-      // Filtering on type input with "lsm" will return 2 results.
-      // Wait for the drawer input to be ready and confirm "lsm" reached React state (an enabled
-      // Add button and the value read back) before adding, so typing never races the drawer
-      // animation and commits a partial value.
-      cy.get('[aria-label="Type"]').should("be.visible").type("lsm");
-      cy.get('[aria-label="Type"]').should("have.value", "lsm");
-      cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
-      // The applied filter renders a removable chip; asserting it proves the add committed (and the
-      // filtered request went out) before we gate on the rows - a missed click fails here clearly
-      // instead of hanging on data that never changes.
-      cy.get('[aria-label="Close lsm"]').should("be.visible");
-      // The list keeps the previous 20 rows on screen while the filtered request is in flight
-      // (keepPreviousData), and adding a filter resets to page 1, so "1 - 20"/20 rows are briefly
-      // shown. The 20s-timeout assertions retry past that transient state onto the filtered result;
-      // the pre-filter values (20 rows, "1 - 20") differ from the targets, so they never latch.
+      // Filtering on "lsm" returns 2 results.
+      addTypeFilter("lsm");
+      // keepPreviousData keeps the 20 pre-filter rows briefly; the 20s assertions retry past that
+      // onto the filtered result (20/"1 - 20" differ from 2/"1 - 2", so they never latch early).
       cy.get('[aria-label="Resource Table Row"]', { timeout: 20000 }).should("have.length", 2);
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,

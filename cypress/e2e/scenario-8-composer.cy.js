@@ -39,16 +39,14 @@ if (isIso) {
 
     it("Should create pxsdc project from a repo url and create instances", () => {
       // Step 1: Create a new environment from repository.
-      // The project was deleted in before(), so picking it from the select creates it
-      // (PUT /api/v2/project), which then refetches the project list and re-renders the form.
+      // Picking the (just-deleted) project creates it, which refetches the list and re-renders the
+      // form. Wait for that before filling the rest, or the re-render can drop the Repository field.
       cy.intercept("PUT", "/api/v2/project").as("createProject");
       cy.visit("/console/environment/create");
 
       cy.get('[aria-label="CreateEnvironment-Success"]').should("be.visible");
       cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(PXSDC_PROJECT_NAME);
       cy.get('[role="option"]').contains(PXSDC_PROJECT_NAME).click();
-      // Wait for the create + list refresh to finish before filling the rest, so the inputs are not
-      // queried while the form is re-rendering (which intermittently lost the Repository field).
       cy.wait("@createProject");
       cy.get('[aria-label="CreateEnvironment-Success"]').should("be.visible");
 
@@ -108,7 +106,9 @@ if (isIso) {
         .should("be.visible")
         .and("have.text", "l3out");
 
-      cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "project", { timeout: 10000 })
+      // The related entities render only after the composer's compile finishes (l3out shows first),
+      // so give these canvas shapes room to appear instead of the default 10s.
+      cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "project", { timeout: 60000 })
         .closest('g[data-type="app.ServiceEntityShape"]')
         .as("projectEntity")
         .within(() => {
@@ -116,7 +116,7 @@ if (isIso) {
         });
 
       cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "ProjectNaming", {
-        timeout: 10000,
+        timeout: 60000,
       })
         .closest('g[data-type="app.ServiceEntityShape"]')
         .as("projectNamingEntity");

@@ -56,10 +56,8 @@ const openTab = (name) => {
  * @param {string} selector - the field selector (e.g. "#bandwidth")
  */
 const openSuggestions = (selector) => {
-  // The popover opens on focus, but only if the suggestions are already loaded, and it never
-  // reopens when they arrive later. The field shows a "Loading suggestions..." spinner while they
-  // are still being fetched, so wait for that to clear (suggestions committed to the field) before
-  // focusing - otherwise a focus mid-load leaves the popover shut.
+  // The popover opens on focus only if suggestions are already loaded, and never reopens later.
+  // Wait for the "Loading suggestions..." spinner to clear before focusing, so they are ready.
   cy.get(selector)
     .closest(".pf-v6-c-form__group")
     .find('[aria-label="Loading suggestions..."]')
