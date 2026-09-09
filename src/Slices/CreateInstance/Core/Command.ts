@@ -1,5 +1,4 @@
 import { InstanceAttributeModel, ServiceInstanceModel, Field } from "@/Core/Domain";
-import { Either } from "@/Core/Language";
 
 export interface Command {
   kind: "CreateInstance";
@@ -14,5 +13,7 @@ export interface Manifest {
   trigger: (
     fields: Field[],
     formState: InstanceAttributeModel
-  ) => Promise<Either.Type<string, { data: ServiceInstanceModel }>>;
+  ) => Promise<
+    { kind: "error"; message: string } | { kind: "success"; data: ServiceInstanceModel }
+  >;
 }

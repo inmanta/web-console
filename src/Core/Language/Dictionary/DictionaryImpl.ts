@@ -1,19 +1,18 @@
-import * as Maybe from "@/Core/Language/Maybe";
 import { Dictionary } from "./Dictionary";
 
 export class DictionaryImpl<Value> implements Dictionary<Value> {
   private state: Record<string, { value: Value }> = {};
 
-  get(key: string): Maybe.Type<Value> {
+  get(key: string): Value | undefined {
     const lookup = this.state[key];
 
     if (typeof lookup === "undefined") {
       console.error(`key ${key} could not be found in dictionary`);
 
-      return Maybe.none();
+      return undefined;
     }
 
-    return Maybe.some(lookup.value);
+    return lookup.value;
   }
 
   set(key: string, value: Value): boolean {

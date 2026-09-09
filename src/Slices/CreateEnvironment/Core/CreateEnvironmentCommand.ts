@@ -1,5 +1,4 @@
 import { EnvironmentModel } from "@/Core/Domain";
-import { Either } from "@/Core/Language";
 
 export interface Command {
   kind: "CreateEnvironment";
@@ -12,7 +11,7 @@ export interface Manifest {
   command: Command;
   trigger: (
     body: CreateEnvironmentParams
-  ) => Promise<Either.Type<string, { data: EnvironmentModel }>>;
+  ) => Promise<{ kind: "error"; message: string } | { kind: "success"; data: EnvironmentModel }>;
 }
 
 export interface CreateEnvironmentParams {

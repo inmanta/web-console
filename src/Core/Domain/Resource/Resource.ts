@@ -1,5 +1,5 @@
 import { Pagination } from "@/Core/Domain/Pagination";
-import { Maybe, ParsedNumber } from "@/Core/Language";
+import { ParsedNumber } from "@/Core/Language";
 
 /**
  * --- General explanation of compound state ---
@@ -294,24 +294,22 @@ export class IdParser {
   private static readonly parseIdRegex =
     /^(?<id>(?<type>(?<ns>[\w-]+(::[\w-]+)*)::(?<class>[\w-]+))\[(?<hostname>[^,]+),(?<attr>[^=]+)=(?<value>[^\]]+)\])(,v=(?<version>[0-9]+))?$/;
 
-  public static parse(idStr: string): Maybe.Maybe<Id> {
+  public static parse(idStr: string): Id | undefined {
     const groups = idStr.match(IdParser.parseIdRegex)?.groups;
 
     if (!groups) {
-      return Maybe.none();
+      return undefined;
     }
 
-    return Maybe.some({
+    return {
       entityType: groups.type,
       agentName: groups.hostname,
       attribute: groups.attr,
       attributeValue: groups.value,
-    });
+    };
   }
 
-  public static getAgentName(idStr: string): Maybe.Maybe<Id["agentName"]> {
-    const id = IdParser.parse(idStr);
-
-    return Maybe.isSome(id) ? Maybe.some(id.value.agentName) : Maybe.none();
+  public static getAgentName(idStr: string): Id["agentName"] | undefined {
+    return IdParser.parse(idStr)?.agentName;
   }
 }

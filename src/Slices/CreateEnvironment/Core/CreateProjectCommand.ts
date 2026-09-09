@@ -1,5 +1,4 @@
 import { ProjectModel } from "@/Core/Domain";
-import { Either } from "@/Core/Language";
 
 export interface Command {
   kind: "CreateProject";
@@ -9,5 +8,7 @@ export interface Manifest {
   apiData: string;
   body: { name: string };
   command: Command;
-  trigger: (name: string) => Promise<Either.Type<string, { data: ProjectModel }>>;
+  trigger: (
+    name: string
+  ) => Promise<{ kind: "error"; message: string } | { kind: "success"; data: ProjectModel }>;
 }

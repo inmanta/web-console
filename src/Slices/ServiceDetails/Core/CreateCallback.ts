@@ -1,4 +1,3 @@
-import { Maybe } from "@/Core/Language";
 import { CreateCallbackBody } from "./Callback";
 
 export interface Command extends CreateCallbackBody {
@@ -10,5 +9,5 @@ export interface Manifest {
   apiData: { data: string };
   body: CreateCallbackBody;
   command: Command;
-  trigger: () => Promise<Maybe.Type<string>>;
+  trigger: () => Promise<string | undefined>;
 }

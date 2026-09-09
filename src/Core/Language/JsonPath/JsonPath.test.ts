@@ -1,4 +1,3 @@
-import * as Maybe from "@/Core/Language/Maybe";
 import { evaluate, isSupportedPath, rootMember } from "./JsonPath";
 
 const data = {
@@ -19,11 +18,11 @@ const data = {
   ],
 };
 
-const expectSome = (result: Maybe.Type<unknown>): unknown => {
-  expect(Maybe.isSome(result)).toBe(true);
+const expectSome = (result: unknown): unknown => {
+  // a genuine match is never `undefined`; only a miss is (JSON has no `undefined`)
+  expect(result).not.toBeUndefined();
 
-  // narrow for the caller; guarded by the assertion above
-  return (result as { value: unknown }).value;
+  return result;
 };
 
 describe("JsonPath.evaluate", () => {
@@ -50,20 +49,20 @@ describe("JsonPath.evaluate", () => {
   });
 
   it("returns none when the path matches nothing", () => {
-    expect(Maybe.isNone(evaluate(data, "candidate_attributes.missing"))).toBe(true);
+    expect(evaluate(data, "candidate_attributes.missing")).toBeUndefined();
   });
 
   it("returns none when a filter matches more than one element (ambiguous)", () => {
-    expect(Maybe.isNone(evaluate(data, "duplicates[?@.name=='dup'].region"))).toBe(true);
+    expect(evaluate(data, "duplicates[?@.name=='dup'].region")).toBeUndefined();
   });
 
   it("returns none for unsupported constructs rather than dumping multiple values", () => {
-    expect(Maybe.isNone(evaluate(data, "endpoints[*].region"))).toBe(true);
-    expect(Maybe.isNone(evaluate(data, "$..region"))).toBe(true);
+    expect(evaluate(data, "endpoints[*].region")).toBeUndefined();
+    expect(evaluate(data, "$..region")).toBeUndefined();
   });
 
   it("returns none for a syntactically invalid path", () => {
-    expect(Maybe.isNone(evaluate(data, "endpoints[invalid"))).toBe(true);
+    expect(evaluate(data, "endpoints[invalid")).toBeUndefined();
   });
 });
 

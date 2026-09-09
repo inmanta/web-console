@@ -1,10 +1,4 @@
-import {
-  GraphQLFilterValue,
-  GraphQLSuggestionQuery,
-  JsonPath,
-  Maybe,
-  RawFormSuggestion,
-} from "@/Core";
+import { GraphQLFilterValue, GraphQLSuggestionQuery, JsonPath, RawFormSuggestion } from "@/Core";
 import { isStringOrNumber } from "./helpers";
 import { SubstitutionValues, substituteVariables } from "./suggestionVariables";
 
@@ -128,11 +122,10 @@ export const projectNodes = (
   { label, value }: GraphQLSuggestionQuery
 ): RawFormSuggestion[] =>
   nodes.reduce<RawFormSuggestion[]>((acc, node) => {
-    const valueResult = JsonPath.evaluate(node, value);
-    if (Maybe.isNone(valueResult) || !isStringOrNumber(valueResult.value)) {
+    const resolvedValue = JsonPath.evaluate(node, value);
+    if (!isStringOrNumber(resolvedValue)) {
       return acc;
     }
-    const resolvedValue = valueResult.value;
 
     if (label === undefined) {
       acc.push(resolvedValue);
@@ -141,10 +134,7 @@ export const projectNodes = (
     }
 
     const labelResult = JsonPath.evaluate(node, label);
-    const resolvedLabel =
-      Maybe.isSome(labelResult) && isStringOrNumber(labelResult.value)
-        ? labelResult.value
-        : resolvedValue;
+    const resolvedLabel = isStringOrNumber(labelResult) ? labelResult : resolvedValue;
     acc.push({ label: resolvedLabel, value: resolvedValue });
 
     return acc;

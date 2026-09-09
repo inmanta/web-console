@@ -1,5 +1,3 @@
-import { Maybe } from "@/Core/Language";
-
 export interface Command {
   kind: "ClearEnvironment";
   id: string;
@@ -10,5 +8,5 @@ export interface Manifest {
   apiData: string;
   body: null;
   command: Command;
-  trigger: () => Promise<Maybe.Type<string>>;
+  trigger: () => Promise<string | undefined>;
 }
