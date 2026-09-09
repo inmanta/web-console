@@ -1,0 +1,5 @@
+change-type: patch
+description: Patch security vulnerability in transitive dependency (extract-zip) by upgrading Cypress from 15 to 16
+destination-branches:
+- master
+sections: {}
