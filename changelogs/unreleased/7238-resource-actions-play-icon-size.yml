@@ -1,0 +1,4 @@
+description: The deploy play icon in the ResourceActions split button no longer forces the button taller than its neighbours, and now matches the button's text colour.
+issue-nr: 7238
+change-type: patch
+destination-branches: [master, iso9]
