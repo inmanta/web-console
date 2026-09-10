@@ -9,6 +9,7 @@ import {
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 import { IntRange, RangeOperator } from "@/Core";
+import { preventNumberInputScroll } from "@/UI/Utils";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -81,6 +82,7 @@ export const IntRangeFilter: React.FC<Props> = ({
                   onChange={(_event, value: string) => onFromChange(value)}
                   type="number"
                   aria-label={`${categoryName} range from`}
+                  onWheel={preventNumberInputScroll}
                 />
               </ToolbarItem>
             </FlexItem>
@@ -94,6 +96,7 @@ export const IntRangeFilter: React.FC<Props> = ({
                   onChange={(_event, value: string) => onToChange(value)}
                   type="number"
                   aria-label={`${categoryName} range to`}
+                  onWheel={preventNumberInputScroll}
                 />
               </ToolbarItem>
             </FlexItem>

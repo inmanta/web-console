@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Icon, Switch, TextInput, TextInputTypes } from "@patternfly/react-core";
 import { CheckIcon } from "@patternfly/react-icons";
+import { preventNumberInputScroll } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { TextListFormInput } from "../../ServiceInstanceForm/Components/TextListFormInput";
 
@@ -66,6 +67,7 @@ export const InlineInput: React.FC<Props> = ({
         value={value as string | number | undefined}
         type={type.toLowerCase().includes("int") ? "number" : "text"}
         onChange={(event, value) => onChange(event, value)}
+        onWheel={preventNumberInputScroll}
         aria-label="new-attribute-input"
         placeholder={words("inventory.editAttribute.placeholder")}
       />

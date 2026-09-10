@@ -1,0 +1,6 @@
+description: Number and integer input fields no longer change their value when you scroll the mouse wheel over them while focused; the wheel now scrolls the page instead.
+issue-nr: 7314
+change-type: patch
+destination-branches: [iso9]
+sections:
+  bugfix: "{{description}}"
