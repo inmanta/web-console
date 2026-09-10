@@ -1,0 +1,8 @@
+description: |
+  Made several recurring end-to-end tests less flaky - the resources type filter and filtered
+  deploy (scenario 6), the annotation suggestions popover (2.5), and the basic-service version
+  selection, Monaco editor, and instance details checks (2.1) - by gating on the signals the app
+  already exposes instead of racing them.
+change-type: patch
+destination-branches: [iso9]
+sections: {}

@@ -46,8 +46,13 @@ if (isIso) {
       // Step 1: Create a new environment from repository.
       cy.visit("/console/environment/create");
 
+      // Picking the (just-deleted) project creates it; useCreateProject then refetches the project
+      // list (GET /api/v2/project), and that re-render is what can drop the Repository field. Alias
+      // the refetch after the initial load (so cy.wait gates on it, not the load) and wait for it.
       cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(projectName);
+      cy.intercept("GET", "**/api/v2/project?environment_details=*").as("projectsRefetch");
       cy.get('[role="option"]').contains(projectName).click();
+      cy.wait("@projectsRefetch");
 
       cy.get('[aria-label="Name-input"]').type(envName);
       cy.get('[aria-label="Description-input"]').type("Environment for PXSDC test model");
@@ -56,6 +61,7 @@ if (isIso) {
         const repoUrl = `https://demo:${GITLAB_TOKEN}@code.inmanta.com/solutions/demos/front-end-pxsdc-test-model.git`;
 
         cy.get('[aria-label="Repository-input"]').type(repoUrl);
+        cy.get('[aria-label="Repository-input"]').should("have.value", repoUrl);
         cy.get('[aria-label="Branch-input"]').type("master");
       });
 
@@ -105,7 +111,9 @@ if (isIso) {
         .should("be.visible")
         .and("have.text", "l3out");
 
-      cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "project", { timeout: 10000 })
+      // The related entities render only after the composer's compile finishes (l3out shows first),
+      // so give these canvas shapes room to appear instead of the default 10s.
+      cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "project", { timeout: 60000 })
         .closest('g[data-type="app.ServiceEntityShape"]')
         .as("projectEntity")
         .within(() => {
@@ -113,7 +121,7 @@ if (isIso) {
         });
 
       cy.contains('g[data-type="app.ServiceEntityShape"] tspan', "ProjectNaming", {
-        timeout: 10000,
+        timeout: 60000,
       })
         .closest('g[data-type="app.ServiceEntityShape"]')
         .as("projectNamingEntity");
