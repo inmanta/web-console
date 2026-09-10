@@ -159,7 +159,9 @@ export const ResourceActions: React.FC<Props> = (props) => {
                 gap: "var(--pf-t--global--spacer--sm)",
               }}
             >
-              <PlayIcon />
+              <Icon isInline size="sm">
+                <PlayIcon />
+              </Icon>
               {actions.deploy.label}
             </span>
           </Tooltip>
