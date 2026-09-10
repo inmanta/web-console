@@ -9,15 +9,20 @@ beforeEach(() => {
 const isIso = Cypress.expose("edition") === "iso";
 
 /**
- * Click a version row and confirm the selection reached the URL. The history queries poll
- * (.useContinuous), so a click landing during a re-render can be dropped; if so, click once more.
+ * Click a version row and confirm the selection reached the URL. The click is occasionally dropped
+ * entirely (the version param never appears - exact cause not pinned down); re-selecting the same
+ * version is idempotent, so click again until it lands. `(&|$)` avoids version=2 matching version=20.
  */
-const selectHistoryVersion = (version) => {
+const selectHistoryVersion = (version, attempt = 1) => {
   cy.get(`[id="version-${version}"]`).find('[data-label="version"]').click();
   cy.location("search").then((search) => {
-    if (!search.includes(`InstanceDetails.version=${version}`)) {
-      cy.get(`[id="version-${version}"]`).find('[data-label="version"]').click();
+    if (new RegExp(`InstanceDetails\\.version=${version}(&|$)`).test(search)) {
+      return;
     }
+    if (attempt >= 5) {
+      throw new Error(`version ${version} was not selected after ${attempt} clicks`);
+    }
+    selectHistoryVersion(version, attempt + 1);
   });
 };
 
@@ -223,7 +228,7 @@ if (isIso) {
       cy.get(".monaco-editor").click();
       cy.get(".monaco-editor.focused").should("exist");
       cy.focused().type(deleteShortcut);
-      // Confirm the content was actually removed before expecting the error.
+      // Confirm the delete landed before expecting the error (also a sync point for the steps below).
       cy.get(".view-lines").should("not.contain.text", "ip_r1");
 
       // expect the JSON to be invalid
@@ -241,7 +246,7 @@ if (isIso) {
       cy.get(".monaco-editor").click();
       cy.get(".monaco-editor.focused").should("exist");
       cy.focused().type(undoShortcut);
-      // Confirm the JSON is back before expecting it to be valid again.
+      // Confirm the JSON is back before proceeding (sync point for the search/replace steps below).
       cy.get(".view-lines").should("contain.text", "ip_r1");
 
       // expect the JSON to be valid

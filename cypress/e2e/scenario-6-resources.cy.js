@@ -29,13 +29,13 @@ const expectRowCountRestored = (alias) => {
   });
 };
 
-// Add a Type filter and confirm its chip appears. The "Add filter" click can be swallowed by the
-// drawer's open animation, so if no chip shows, add once more (re-adding the same value is harmless).
+// Add a Type filter and confirm its chip. handleAdd clears the input on a committed add
+// (AddableTextInput.tsx), so wait for that; on CI the add has occasionally cleared without rendering
+// a chip, so if the chip is still missing, add once more (harmless - addString dedupes via uniq).
 const addTypeFilter = (value) => {
   cy.get('[aria-label="Type"]').should("be.visible").clear().type(value);
-  cy.get('[aria-label="Type"]').should("have.value", value);
   cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
-  cy.wait(500);
+  cy.get('[aria-label="Type"]').should("have.value", "");
   cy.get("body").then(($body) => {
     if (!$body.find(`[aria-label="Close ${value}"]`).length) {
       cy.get('[aria-label="Type"]').clear().type(value);
@@ -57,19 +57,31 @@ const deployFilteredWithConfirm = () => {
   // Narrow the list before deploying. On iso this genuinely shrinks the set, so the deploy stays
   // small; on OSS every resource is a frontend_model::TestResource, so the filter matches them all
   // and the deploy is effectively environment-wide (only 5 resources there, so still small).
+  // Alias the filtered resources request so we can wait for it to land before opening the dialog.
+  // The dialog freezes its default scope at mount (ResourceActionConfirmModal.tsx:107, first
+  // non-zero-count scope), so opening against a stale/0 filtered count would silently default to
+  // the whole-environment scope and confirm an environment-wide deploy while the toast still passes.
+  cy.intercept("POST", "**/api/v2/graphql", (req) => {
+    if (req.body?.variables?.filter?.resourceType?.contains?.includes(`%${typeFilter}%`)) {
+      req.alias = "resourcesFilteredByType";
+    }
+  });
+
   cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
-  // Filter before opening the dialog so its count gates on real data, not the retained pre-filter
-  // rows (keepPreviousData keeps them briefly; the assertion below retries past that).
   addTypeFilter(typeFilter);
+  cy.wait("@resourcesFilteredByType", { timeout: 20000 })
+    .its("response.statusCode")
+    .should("eq", 200);
   cy.get('[aria-label="Resource Table Row"]', { timeout: 20000 }).should("have.length.at.least", 1);
 
   // Trigger the primary Deploy action of the split button (not the caret menu)
   cy.contains("button", "Deploy").click();
 
-  // The confirm dialog offers the filtered and whole-environment scopes; confirm the filtered one
+  // Confirm the filtered scope, and assert it is the chosen default - otherwise we would deploy the
+  // whole environment while every assertion below still passes.
   cy.get('[role="dialog"]').within(() => {
     cy.contains("Deploy resources").should("be.visible");
-    cy.get("#resource-action-scope-filtered").should("be.visible");
+    cy.get("#resource-action-scope-filtered").should("have.class", "pf-m-selected");
     cy.get("#resource-action-scope-environment").should("be.visible");
     cy.contains("button", "Deploy").click();
   });

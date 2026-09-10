@@ -39,16 +39,15 @@ if (isIso) {
 
     it("Should create pxsdc project from a repo url and create instances", () => {
       // Step 1: Create a new environment from repository.
-      // Picking the (just-deleted) project creates it, which refetches the list and re-renders the
-      // form. Wait for that before filling the rest, or the re-render can drop the Repository field.
-      cy.intercept("PUT", "/api/v2/project").as("createProject");
       cy.visit("/console/environment/create");
 
-      cy.get('[aria-label="CreateEnvironment-Success"]').should("be.visible");
+      // Picking the (just-deleted) project creates it; useCreateProject then refetches the project
+      // list (GET /api/v2/project), and that re-render is what can drop the Repository field. Alias
+      // the refetch after the initial load (so cy.wait gates on it, not the load) and wait for it.
       cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(PXSDC_PROJECT_NAME);
+      cy.intercept("GET", "**/api/v2/project?environment_details=*").as("projectsRefetch");
       cy.get('[role="option"]').contains(PXSDC_PROJECT_NAME).click();
-      cy.wait("@createProject");
-      cy.get('[aria-label="CreateEnvironment-Success"]').should("be.visible");
+      cy.wait("@projectsRefetch");
 
       cy.get('[aria-label="Name-input"]').type(PXSDC_ENV_NAME);
       cy.get('[aria-label="Description-input"]').type("Environment for PXSDC test model");
@@ -57,6 +56,7 @@ if (isIso) {
         const repoUrl = `https://demo:${GITLAB_TOKEN}@code.inmanta.com/solutions/demos/front-end-pxsdc-test-model.git`;
 
         cy.get('[aria-label="Repository-input"]').type(repoUrl);
+        cy.get('[aria-label="Repository-input"]').should("have.value", repoUrl);
         cy.get('[aria-label="Branch-input"]').type("master");
       });
 
