@@ -1322,7 +1322,7 @@ __metadata:
     lint-staged: "npm:^17.2.0"
     madge: "npm:^6.1.0"
     markdown-it: "npm:^15.0.1"
-    markdown-it-emoji: "npm:^3.0.0"
+    markdown-it-emoji: "npm:^3.1.0"
     mermaid: "npm:^11.16.1"
     mocha: "npm:^11.7.6"
     mocha-junit-reporter: "npm:^2.2.1"
@@ -9401,10 +9401,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"markdown-it-emoji@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "markdown-it-emoji@npm:3.0.0"
-  checksum: 10/31cb31d2f3c89367ead154b6073100f05ef1172cf2ef50306efbcbfdc7ae3c7b191ee05a3b45777959e61aae349acbed6fb4057bb51c7923594f37712ec223ab
+"markdown-it-emoji@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "markdown-it-emoji@npm:3.1.0"
+  checksum: 10/9a20891b028fc0f140c4d6a80145d0414e1e6e17d2c59a671304655397c38e77de88513d9e7ae6b8b88e1626c4f0b9a9ddb1e5fab1849ba7340e6b175d732777
   languageName: node
   linkType: hard
 

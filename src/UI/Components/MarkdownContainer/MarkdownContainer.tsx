@@ -6,7 +6,7 @@ import { useTheme } from "../DarkmodeOption";
 import { renderMermaidBlocks } from "./MermaidHelpers";
 import mermaidPlugin from "./MermaidPlugin";
 import setStatePlugin, { SetStateButtonDefaults } from "./StateTransferPlugin";
-import type MarkdownIt from "markdown-it";
+import type { MarkdownIt } from "markdown-it";
 import "./styles.css";
 
 export type { SetStateButtonDefaults } from "./StateTransferPlugin";

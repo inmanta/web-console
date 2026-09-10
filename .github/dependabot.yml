@@ -30,3 +30,8 @@ updates:
         patterns:
           - "vitest"
           - "@vitest/*"
+      markdown-it:
+        patterns:
+          - "markdown-it"
+          - "markdown-it-*"
+          - "@types/markdown-it-*"
