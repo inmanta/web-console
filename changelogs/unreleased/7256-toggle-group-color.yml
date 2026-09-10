@@ -1,0 +1,6 @@
+description: The selected include/exclude filter toggles now use a soft light blue instead of a strong saturated blue, so the check and cross icons stay readable.
+issue-nr: 7256
+change-type: patch
+destination-branches: [iso9]
+sections:
+  bugfix: "{{description}}"
