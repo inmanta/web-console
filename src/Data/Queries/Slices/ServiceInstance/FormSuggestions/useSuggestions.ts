@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { FormSuggestion, Maybe } from "@/Core";
+import { FormSuggestion } from "@/Core";
 import { useGet, getParametersKey, useGraphQLRequest } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
@@ -97,8 +97,8 @@ const resolveReferences = (
       hasFieldReference = true;
       const resolved = resolveFieldReference(reference, fieldScopes);
 
-      if (Maybe.isSome(resolved)) {
-        substitution[reference.raw] = resolved.value;
+      if (resolved !== undefined) {
+        substitution[reference.raw] = resolved;
       } else {
         hasUnresolvedField = true;
       }

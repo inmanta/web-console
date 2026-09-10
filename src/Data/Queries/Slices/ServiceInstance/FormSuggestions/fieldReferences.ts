@@ -1,4 +1,4 @@
-import { FormSuggestion, GraphQLFilterValue, JsonPath, Maybe } from "@/Core";
+import { FormSuggestion, GraphQLFilterValue, JsonPath } from "@/Core";
 import { isStringOrNumber } from "./helpers";
 import {
   FieldReference,
@@ -36,27 +36,27 @@ export interface FieldScopes {
 
 /**
  * Resolves one field reference to its current value against the given scopes.
- * Returns `some(value)` only when the path matches exactly one non-empty scalar, else `none`.
+ * Returns the value only when the path matches exactly one non-empty scalar, else `undefined`.
  *
  * @example
- * resolveFieldReference({ scope: "form", path: "site", raw: "form.site" }, { form: { site: "a" }, self: {} }) // => some("a")
+ * resolveFieldReference({ scope: "form", path: "site", raw: "form.site" }, { form: { site: "a" }, self: {} }) // => "a"
  */
 export const resolveFieldReference = (
   reference: FieldReference,
   scopes: FieldScopes
-): Maybe.Type<string> => {
+): string | undefined => {
   const root = reference.scope === "self" ? scopes.self : scopes.form;
   const result = JsonPath.evaluate(root, reference.path);
 
-  if (Maybe.isSome(result) && isStringOrNumber(result.value)) {
-    const value = String(result.value);
+  if (isStringOrNumber(result)) {
+    const value = String(result);
 
     if (value !== "") {
-      return Maybe.some(value);
+      return value;
     }
   }
 
-  return Maybe.none();
+  return undefined;
 };
 
 /**

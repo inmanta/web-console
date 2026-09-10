@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DropEvent, FileRejection } from "react-dropzone";
 import { FileUpload, FileUploadProps } from "@patternfly/react-core";
-import { Maybe } from "@/Core";
 import { ImageHelper } from "@/Data";
 import { words } from "@/UI/words";
 import { AppAlert } from "../AppAlert";
@@ -66,13 +65,13 @@ export const ImageUpload: React.FC<Props> = ({
       const file = FileRejection.file;
       const errors = ImageHelper.validateFile(file);
 
-      if (Maybe.isNone(errors)) {
+      if (errors === undefined) {
         setError(words("error.image.unknown")(file.name));
 
         return;
       }
 
-      if (errors.value === "TYPE") {
+      if (errors === "TYPE") {
         setError(words("error.image.type")(file.name, file.type));
 
         return;

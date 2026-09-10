@@ -39,9 +39,7 @@ export const Page: React.FC = () => {
 
   const filterWithDefaults = useMemo(() => applyFilterDefaults(filter), [filter]);
 
-  const [compareSelection, setCompareSelection] = useState<CompareSelection>({
-    kind: "None",
-  });
+  const [compareSelection, setCompareSelection] = useState<CompareSelection>(undefined);
 
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
 
