@@ -1314,7 +1314,7 @@ __metadata:
     graphiql: "npm:^5.2.4"
     graphql: "npm:^17.0.2"
     graphql-request: "npm:^7.4.0"
-    highlight.js: "npm:^11.11.1"
+    highlight.js: "npm:^11.12.0"
     jest-axe: "npm:^11.0.0"
     jsdom: "npm:^29.1.1"
     jsonpathly: "npm:^3.0.0"
@@ -7999,10 +7999,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"highlight.js@npm:^11.11.1":
-  version: 11.11.1
-  resolution: "highlight.js@npm:11.11.1"
-  checksum: 10/205272f12f2c8ab1760452a75c58b043b11129cf3a5d2a9c0c90d43993580d0f5c385a73a4b8aba197eef20c0ec37d64000e6b35c4ed5991324f4c2dc78f4e43
+"highlight.js@npm:^11.12.0":
+  version: 11.12.0
+  resolution: "highlight.js@npm:11.12.0"
+  checksum: 10/1aecfae8aaf230bc38daa81b91fdd3b3e2765b5d18fd1d83dbc85513552336028e71f0e827417ebec2b88ac2e6c903ac6ccfca0772a471768d9236a99f3f540d
   languageName: node
   linkType: hard
 
