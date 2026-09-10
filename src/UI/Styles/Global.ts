@@ -107,5 +107,23 @@ export const GlobalStyles = createGlobalStyle`
      --pf-v6-c-label--BorderColor: var(--pf-t--color--blue--50);
   }
 
+  /**
+   * PatternFly 6.4 (pinned on iso9) fills a selected ToggleGroupItem with the full brand
+   * blue (--pf-t--global--color--brand--default, #0066cc) and white text. For our
+   * include/exclude filter toggles that reads as a big saturated blue block, and the
+   * coloured icons on top of it have poor contrast. PF 6.6 (on master) softened the
+   * selected state to the pale brand--subtle background. That token does not exist in 6.4,
+   * so we backport its light/dark values here so iso9 matches master.
+   *
+   * If iso9 ever does move to 6.6+, drop it - PF then applies these same values itself.
+   */
+  .pf-v6-c-toggle-group__button {
+    --pf-v6-c-toggle-group__button--m-selected--BackgroundColor: var(--pf-t--color--blue--10);
+    --pf-v6-c-toggle-group__button--m-selected--Color: var(--pf-t--global--text--color--regular);
+  }
+  :where(.pf-v6-theme-dark) .pf-v6-c-toggle-group__button {
+    --pf-v6-c-toggle-group__button--m-selected--BackgroundColor: var(--pf-t--color--blue--70);
+  }
+
   ${MarkdownStyles}
 `;
