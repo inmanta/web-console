@@ -11,6 +11,7 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import styled from "styled-components";
+import { preventNumberInputScroll } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { toSubmittableNumber } from "./convert";
 import { otherScaleCandidates, selectDisplayUnit } from "./display";
@@ -175,6 +176,7 @@ export const UnitFormInput: React.FC<Props> = ({
             isDisabled={shouldBeDisabled}
             validated={error ? "error" : "default"}
             onChange={(_event, value) => commit(value, unit)}
+            onWheel={preventNumberInputScroll}
           />
         </InputGroupItem>
         <InputGroupItem>

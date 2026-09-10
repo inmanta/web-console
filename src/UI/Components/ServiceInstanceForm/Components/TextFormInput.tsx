@@ -13,6 +13,7 @@ import {
 } from "@patternfly/react-core";
 import { HelpIcon } from "@patternfly/react-icons";
 import { SuggestionValue } from "@/Core";
+import { preventNumberInputScroll } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { SuggestionsPopover } from "./SuggestionsPopover";
 import { resolveLabel, resolveValue } from "./suggestionResolvers";
@@ -169,6 +170,7 @@ export const TextFormInput: React.FC<Props> = ({
             autoComplete={hasSuggestions ? "off" : undefined}
             value={displayValue}
             onChange={(_event, value) => handleType(value)}
+            onWheel={preventNumberInputScroll}
             isDisabled={shouldBeDisabled}
             validated={feedback?.isWarning ? "warning" : "default"}
             onFocus={() => hasSuggestions && setIsOpen(true)}
