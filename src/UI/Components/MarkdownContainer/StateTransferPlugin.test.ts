@@ -1,4 +1,4 @@
-import MarkdownIt from "markdown-it";
+import markdownit, { type MarkdownIt } from "markdown-it";
 import { words } from "@/UI";
 import stateTransferPlugin, { SetStateButtonDefaults } from "./StateTransferPlugin";
 
@@ -6,7 +6,7 @@ describe("StateTransferPlugin", () => {
   let md: MarkdownIt;
 
   beforeEach(() => {
-    md = new MarkdownIt();
+    md = new markdownit();
     stateTransferPlugin(md, "test-base-id", {});
   });
 
@@ -416,7 +416,7 @@ describe("StateTransferPlugin", () => {
     const withDefaults = (
       stateTransferDefaults: Record<string, SetStateButtonDefaults>
     ): MarkdownIt => {
-      const instance = new MarkdownIt();
+      const instance = new markdownit();
 
       stateTransferPlugin(instance, "test-base-id", { stateTransferDefaults });
 

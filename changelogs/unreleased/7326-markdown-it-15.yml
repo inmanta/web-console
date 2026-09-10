@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump markdown-it from 14.3.0 to 15.0.1, and markdown-it-emoji to 3.1.0 so it stays compatible with the new major.
+destination-branches:
+- master
+sections: {}

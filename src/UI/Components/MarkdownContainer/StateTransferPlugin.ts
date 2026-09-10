@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createElement } from "react";
-import MarkdownIt from "markdown-it";
 import { renderToStaticMarkup } from "react-dom/server";
 import * as fa from "react-icons/fa";
 import { words } from "@/UI";
 import type { ButtonProps } from "@patternfly/react-core";
+import type { MarkdownIt } from "markdown-it";
 
 type PfButtonVariant = NonNullable<ButtonProps["variant"]>;
 type PfStatusButtonVariant = Extract<PfButtonVariant, "danger" | "warning">;
