@@ -56,8 +56,22 @@ const openTab = (name) => {
  * @param {string} selector - the field selector (e.g. "#bandwidth")
  */
 const openSuggestions = (selector) => {
+  // The popover opens on focus only once suggestions are loaded, and never reopens later. Wait for
+  // the "Loading suggestions..." spinner to clear, then focus. If suggestions had not started
+  // loading yet (nothing to wait on), the popover won't open on that first focus - blur and refocus
+  // once it has, so this holds even at call sites with no preceding network wait.
+  cy.get(selector)
+    .closest(".pf-v6-c-form__group")
+    .find('[aria-label="Loading suggestions..."]')
+    .should("not.exist");
   cy.get(selector).click();
   cy.get(selector).clear();
+  cy.get("body").then(($body) => {
+    if (!$body.find('h3:contains("Suggested values")').length) {
+      cy.get(selector).blur();
+      cy.get(selector).click();
+    }
+  });
   cy.contains("h3", "Suggested values").should("be.visible");
 };
 

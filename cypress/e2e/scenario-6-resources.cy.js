@@ -29,6 +29,22 @@ const expectRowCountRestored = (alias) => {
   });
 };
 
+// Add a Type filter and confirm its chip. handleAdd clears the input on a committed add
+// (AddableTextInput.tsx), so wait for that; on CI the add has occasionally cleared without rendering
+// a chip, so if the chip is still missing, add once more (harmless - addString dedupes via uniq).
+const addTypeFilter = (value) => {
+  cy.get('[aria-label="Type"]').should("be.visible").clear().type(value);
+  cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
+  cy.get('[aria-label="Type"]').should("have.value", "");
+  cy.get("body").then(($body) => {
+    if (!$body.find(`[aria-label="Close ${value}"]`).length) {
+      cy.get('[aria-label="Type"]').clear().type(value);
+      cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
+    }
+  });
+  cy.get(`[aria-label="Close ${value}"]`, { timeout: 10000 }).should("be.visible");
+};
+
 // Deploys a filtered subset from the toolbar's primary Deploy action and asserts the success toast.
 // It first narrows the list with a type filter, then clicks the primary split-button action - the
 // one-click path users take - instead of the caret menu.
@@ -38,37 +54,34 @@ const deployFilteredWithConfirm = () => {
   cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
   cy.get('[aria-label="ResourcesPage-Success"]').should("be.visible");
 
-  // Alias the filtered resources request (a GraphQL POST whose body carries the typed resourceType
-  // filter) so we can wait for it to land. The list keeps the previous rows on screen while the
-  // next request is in flight (keepPreviousData), so a DOM-only gate can latch onto the stale
-  // pre-filter count and open the dialog against numbers that are about to change.
+  // Narrow the list before deploying. On iso this genuinely shrinks the set, so the deploy stays
+  // small; on OSS every resource is a frontend_model::TestResource, so the filter matches them all
+  // and the deploy is effectively environment-wide (only 5 resources there, so still small).
+  // Alias the filtered resources request so we can wait for it to land before opening the dialog.
+  // The dialog freezes its default scope at mount (ResourceActionConfirmModal.tsx:107, first
+  // non-zero-count scope), so opening against a stale/0 filtered count would silently default to
+  // the whole-environment scope and confirm an environment-wide deploy while the toast still passes.
   cy.intercept("POST", "**/api/v2/graphql", (req) => {
     if (req.body?.variables?.filter?.resourceType?.contains?.includes(`%${typeFilter}%`)) {
       req.alias = "resourcesFilteredByType";
     }
   });
 
-  // Narrow the list before deploying. On iso this genuinely shrinks the set, so the deploy stays
-  // small; on OSS every resource is a frontend_model::TestResource, so the filter matches them all
-  // and the deploy is effectively environment-wide (only 5 resources there, so still small).
   cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
-  cy.get('[aria-label="Type"]').should("be.visible").type(typeFilter);
-  cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
-
-  // Wait for the filtered response to land before opening the dialog, so its resource count and
-  // confirm button gate on real data rather than the retained pre-filter rows.
+  addTypeFilter(typeFilter);
   cy.wait("@resourcesFilteredByType", { timeout: 20000 })
     .its("response.statusCode")
     .should("eq", 200);
-  cy.get('[aria-label="Resource Table Row"]').should("have.length.at.least", 1);
+  cy.get('[aria-label="Resource Table Row"]', { timeout: 20000 }).should("have.length.at.least", 1);
 
   // Trigger the primary Deploy action of the split button (not the caret menu)
   cy.contains("button", "Deploy").click();
 
-  // The confirm dialog offers the filtered and whole-environment scopes; confirm the filtered one
+  // Confirm the filtered scope, and assert it is the chosen default - otherwise we would deploy the
+  // whole environment while every assertion below still passes.
   cy.get('[role="dialog"]').within(() => {
     cy.contains("Deploy resources").should("be.visible");
-    cy.get("#resource-action-scope-filtered").should("be.visible");
+    cy.get("#resource-action-scope-filtered").should("have.class", "pf-m-selected");
     cy.get("#resource-action-scope-environment").should("be.visible");
     cy.contains("button", "Deploy").click();
   });
@@ -329,29 +342,11 @@ describe("Scenario 6 : Resources", () => {
         timeout: 20000,
       }).should("have.text", "21 - 40");
 
-      // The list query keeps the previous 20 rows on screen while the next request is in flight
-      // (keepPreviousData), so waiting on the DOM alone can outlast the default timeout on a slow
-      // CI and latch onto that stale count. Alias the filtered resources request (a GraphQL POST
-      // whose body carries the "%lsm%" resourceType filter) so we can wait for it to actually land.
-      cy.intercept("POST", "**/api/v2/graphql", (req) => {
-        if (req.body?.variables?.filter?.resourceType?.contains?.includes("%lsm%")) {
-          req.alias = "resourcesFilteredByType";
-        }
-      });
-
       cy.get('[aria-label="Resources-toolbar"]').find("button[aria-pressed]").click();
-      // Filtering on type input with "lsm" will return 2 results.
-      // Wait for the drawer input to be ready, and only add once the button is enabled: it is
-      // disabled while the value is empty, so an enabled button proves "lsm" reached React state
-      // (typing can otherwise race the drawer animation and commit a partial value).
-      cy.get('[aria-label="Type"]').should("be.visible").type("lsm");
-      cy.get('[aria-label="Add filter-Type"]').should("not.be.disabled").click();
-      // Wait for the filtered response to land before asserting, so we gate on real data rather
-      // than the retained pre-filter rows. Adding a filter resets to page 1, so the pre-filter
-      // count ("1 - 20") is briefly shown while the request is in flight.
-      cy.wait("@resourcesFilteredByType", { timeout: 20000 })
-        .its("response.statusCode")
-        .should("eq", 200);
+      // Filtering on "lsm" returns 2 results.
+      addTypeFilter("lsm");
+      // keepPreviousData keeps the 20 pre-filter rows briefly; the 20s assertions retry past that
+      // onto the filtered result (20/"1 - 20" differ from 2/"1 - 2", so they never latch early).
       cy.get('[aria-label="Resource Table Row"]', { timeout: 20000 }).should("have.length", 2);
       cy.get("#PaginationWidget-top-top-toggle > .pf-v6-c-menu-toggle__text > b:first-of-type", {
         timeout: 20000,
