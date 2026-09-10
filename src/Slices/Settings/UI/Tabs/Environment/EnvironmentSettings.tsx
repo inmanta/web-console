@@ -97,8 +97,12 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
       <EditableMultiTextField
         groupName={words("settings.tabs.environment.repoSettings")}
         initialValues={{
-          repo_branch: environment.repo_branch,
           repo_url: environment.repo_url,
+          repo_branch: environment.repo_branch,
+        }}
+        tooltips={{
+          repo_url: words("createEnv.repository.tooltip"),
+          repo_branch: words("createEnv.branch.tooltip"),
         }}
         onSubmit={onRepoSubmit}
         setError={setError}
