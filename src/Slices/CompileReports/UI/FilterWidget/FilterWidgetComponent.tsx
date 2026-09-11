@@ -52,13 +52,13 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
   const hasActiveFilters = Boolean(filter.status) || (filter.requested?.length ?? 0) > 0;
 
   return (
-    <FilterDrawerPanelContent title={words("compileReports.filters")} onClose={onClose}>
+    <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
       <Stack hasGutter>
         <Form onSubmit={(e) => e.preventDefault()}>
           <StackItem>
-            <FormGroup label={words("compileReports.columns.status")}>
+            <FormGroup label={words("status")}>
               <SingleTextSelect
-                toggleAriaLabel={words("compileReports.columns.status")}
+                toggleAriaLabel={words("status")}
                 placeholderText={words("compileReports.filters.status.placeholder")}
                 options={statusOptions}
                 selected={filter.status ?? null}
@@ -86,7 +86,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           {filter.status && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("compileReports.columns.status")}
+                title={words("status")}
                 values={[filter.status]}
                 onRemove={() => setFilter({ ...filter, status: undefined })}
                 onRemoveGroup={() => setFilter({ ...filter, status: undefined })}

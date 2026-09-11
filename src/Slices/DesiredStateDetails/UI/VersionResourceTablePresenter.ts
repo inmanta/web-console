@@ -12,17 +12,17 @@ export class VersionResourceTablePresenter implements TablePresenter<
 
   constructor() {
     this.columnHeads = [
-      { displayName: words("resources.column.type"), apiName: "resource_type" },
+      { displayName: words("type"), apiName: "resource_type" },
       {
         displayName: words("resources.column.agent"),
         apiName: "agent",
       },
       {
-        displayName: words("resources.column.value"),
+        displayName: words("value"),
         apiName: "resource_id_value",
       },
       {
-        displayName: words("resources.column.requires"),
+        displayName: words("requires"),
         apiName: "requires",
       },
     ];

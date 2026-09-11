@@ -67,7 +67,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
     (filter.timestamp?.length ?? 0) > 0;
 
   return (
-    <FilterDrawerPanelContent title={words("resources.logs.filters")} onClose={onClose}>
+    <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
       <Stack hasGutter>
         <Form onSubmit={(e) => e.preventDefault()}>
           <StackItem>
@@ -100,7 +100,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
           <StackItem>
             <AddableTextInput
-              label={words("resources.logs.message")}
+              label={words("message")}
               placeholder={words("resources.logs.message.placeholder")}
               onAdd={(value) => addString("message", value)}
               type="search"
@@ -109,7 +109,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
           <StackItem>
             <TimestampRangeFilter
-              label={words("resources.logs.timestamp")}
+              label={words("timestamp")}
               fromLabel={words("filters.from")}
               toLabel={words("filters.to")}
               value={filter.timestamp ?? []}
@@ -146,7 +146,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           {(filter.message?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("resources.logs.message")}
+                title={words("message")}
                 values={filter.message}
                 onRemove={(value) => removeStringChip("message", value)}
                 onRemoveGroup={() => clearStringGroup("message")}
@@ -156,7 +156,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           {(filter.timestamp?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("resources.logs.timestamp")}
+                title={words("timestamp")}
                 values={dateChips("timestamp", datePresenter)}
                 onRemove={(label) => removeDateChip("timestamp", label)}
                 onRemoveGroup={() => clearDateRange("timestamp")}

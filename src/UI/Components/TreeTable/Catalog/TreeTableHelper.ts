@@ -8,10 +8,10 @@ import { BaseTreeTableHelper } from "../Helpers/BaseTreeTableHelper";
 
 export class CatalogTreeTableHelper extends BaseTreeTableHelper<CatalogAttributeTree> {
   private readonly columns = [
-    words("attribute.name"),
-    words("catalog.table.type"),
+    words("name"),
+    words("type"),
     words("catalog.table.modifier"),
-    words("catalog.table.description"),
+    words("description"),
   ];
 
   constructor(

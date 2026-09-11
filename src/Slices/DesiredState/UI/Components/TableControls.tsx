@@ -31,7 +31,7 @@ export const TableControls: React.FC<Props> = ({
           onClick={onToggleFilters}
           isExpanded={isDrawerExpanded}
           activeFilterCount={activeFilterCount}
-          label={words("desiredState.filters")}
+          label={words("filters")}
         />
       </ToolbarItem>
     </ToolbarContent>

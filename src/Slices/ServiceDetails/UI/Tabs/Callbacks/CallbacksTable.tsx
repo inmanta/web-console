@@ -37,10 +37,10 @@ export const CallbacksTable: React.FC<Props> = ({ callbacks, service_entity }) =
       <Thead>
         <Tr>
           <Th>{words("catalog.callbacks.url")}</Th>
-          <Th>{words("catalog.callbacks.id")}</Th>
+          <Th>{words("id")}</Th>
           <Th>{words("catalog.callbacks.minimalLogLevel")}</Th>
           <Th>{words("catalog.callbacks.eventTypes")}</Th>
-          <Th>{words("catalog.callbacks.actions")}</Th>
+          <Th>{words("actions")}</Th>
         </Tr>
       </Thead>
       <CreateCallbackForm service_entity={service_entity} numberOfColumns={5} />

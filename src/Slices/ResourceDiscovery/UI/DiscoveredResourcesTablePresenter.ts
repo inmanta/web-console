@@ -19,7 +19,7 @@ export class DiscoveredResourcesTablePresenter implements TablePresenter<
   constructor() {
     this.columnHeads = [
       {
-        displayName: words("discovered.column.type"),
+        displayName: words("type"),
         apiName: "type",
       },
       {
@@ -27,7 +27,7 @@ export class DiscoveredResourcesTablePresenter implements TablePresenter<
         apiName: "agent",
       },
       {
-        displayName: words("discovered.column.value"),
+        displayName: words("value"),
         apiName: "value",
       },
     ];

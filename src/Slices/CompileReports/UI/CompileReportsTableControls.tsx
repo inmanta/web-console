@@ -42,7 +42,7 @@ export const CompileReportsTableControls: React.FC<Props> = ({
             onClick={onToggleFilters}
             isExpanded={isDrawerExpanded}
             activeFilterCount={activeFilterCount}
-            label={words("compileReports.filters")}
+            label={words("filters")}
           />
         </ToolbarItem>
       </ToolbarContent>

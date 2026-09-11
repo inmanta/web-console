@@ -132,7 +132,7 @@ export const EnvironmentHealthRow: React.FC = () => {
           />,
           <HealthColumn
             key="resources"
-            title={words("dashboard.environmentHealth.resources")}
+            title={words("resources")}
             status={resourcesHealth?.status ?? "healthy"}
             statLines={resourcesHealth?.statLines ?? ["—"]}
             onClick={() => navigate(resourcesUrl)}

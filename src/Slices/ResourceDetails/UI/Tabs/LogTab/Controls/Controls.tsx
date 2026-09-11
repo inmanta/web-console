@@ -36,7 +36,7 @@ export const Controls: React.FC<Props> = ({
           onClick={onToggleFilters}
           isExpanded={isDrawerExpanded}
           activeFilterCount={activeFilterCount}
-          label={words("resources.logs.filters")}
+          label={words("filters")}
         />
       </ToolbarItem>
     </ToolbarContent>

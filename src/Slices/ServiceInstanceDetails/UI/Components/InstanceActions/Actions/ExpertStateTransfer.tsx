@@ -205,10 +205,7 @@ const ModalContent: React.FC<ModalContentProps> = ({
             ))}
           </FormSelect>
         </FormGroup>
-        <FormGroup
-          label={words("instanceDetails.stateTransfer.messageLabel")}
-          fieldId="expert-state-transfer-message"
-        >
+        <FormGroup label={words("message")} fieldId="expert-state-transfer-message">
           <TextArea
             id="expert-state-transfer-message"
             value={message}

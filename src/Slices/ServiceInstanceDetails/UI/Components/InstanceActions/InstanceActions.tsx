@@ -64,7 +64,7 @@ export const InstanceActions: React.FC = () => {
       aria-label="Actions-Toggle"
       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
     >
-      {words("instanceDetails.actions")}
+      {words("actions")}
     </MenuToggle>
   );
 

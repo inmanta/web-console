@@ -15,9 +15,9 @@ interface Props {
 }
 
 const factsColumnHeads: ColumnHead[] = [
-  { apiName: "name", displayName: words("resources.facts.columns.name") },
-  { apiName: "updated", displayName: words("resources.facts.columns.updated") },
-  { apiName: "value", displayName: words("resources.facts.columns.value") },
+  { apiName: "name", displayName: words("name") },
+  { apiName: "updated", displayName: words("lastUpdated") },
+  { apiName: "value", displayName: words("value") },
 ];
 
 export const FactsTable: React.FC<Props> = ({ facts }) => {

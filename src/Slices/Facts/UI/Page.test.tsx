@@ -98,7 +98,7 @@ describe("FactsPage", () => {
     render(component);
 
     const resourceIdButton = await screen.findByRole("button", {
-      name: words("facts.column.resourceId"),
+      name: words("resourceId"),
     });
 
     expect(resourceIdButton).toBeVisible();

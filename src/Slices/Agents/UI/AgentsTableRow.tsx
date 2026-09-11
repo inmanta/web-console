@@ -16,8 +16,8 @@ export const AgentsTableRow: React.FC<Props> = ({ row }) => {
   return (
     <Tbody isExpanded={false}>
       <Tr aria-label="Agents Table Row">
-        <Td dataLabel={words("agents.columns.name")}>{row.name}</Td>
-        <Td dataLabel={words("agents.columns.status")}>
+        <Td dataLabel={words("name")}>{row.name}</Td>
+        <Td dataLabel={words("status")}>
           <AgentStatusLabel status={row.status} />
         </Td>
         {isHalted && (

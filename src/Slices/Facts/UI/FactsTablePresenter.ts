@@ -8,10 +8,10 @@ export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
 
   constructor() {
     this.columnHeads = [
-      { displayName: words("facts.column.name"), apiName: "name" },
-      { displayName: words("facts.column.updated"), apiName: "updated" },
-      { displayName: words("facts.column.value"), apiName: "value" },
-      { displayName: words("facts.column.resourceId"), apiName: "resource_id" },
+      { displayName: words("name"), apiName: "name" },
+      { displayName: words("updated"), apiName: "updated" },
+      { displayName: words("value"), apiName: "value" },
+      { displayName: words("resourceId"), apiName: "resource_id" },
     ];
     this.numberOfColumns = this.columnHeads.length;
   }

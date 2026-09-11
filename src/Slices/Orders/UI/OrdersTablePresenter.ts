@@ -24,7 +24,7 @@ export class OrdersTablePresenter implements TablePresenter<ServiceOrder, Servic
         apiName: "completed_at",
       },
       {
-        displayName: words("orders.column.status"),
+        displayName: words("status"),
         apiName: "status",
       },
       {

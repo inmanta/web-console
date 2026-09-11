@@ -25,18 +25,16 @@ export const Row: React.FC<Props> = ({ row, version }) => {
   return (
     <Tbody>
       <Tr aria-label="Resource Table Row">
-        <Td modifier="truncate" dataLabel={words("resources.column.type")}>
+        <Td modifier="truncate" dataLabel={words("type")}>
           {row.type}
         </Td>
         <Td modifier="truncate" dataLabel={words("resources.column.agent")}>
           {row.agent}
         </Td>
-        <Td modifier="truncate" dataLabel={words("resources.column.value")}>
+        <Td modifier="truncate" dataLabel={words("value")}>
           {row.value}
         </Td>
-        <Td dataLabel={words("resources.column.requires")}>
-          {row.numberOfDependencies as React.ReactNode}
-        </Td>
+        <Td dataLabel={words("requires")}>{row.numberOfDependencies as React.ReactNode}</Td>
         <Td modifier="fitContent" isActionCell>
           <Link
             pathname={routeManager.getUrl("DesiredStateResourceDetails", {
@@ -44,7 +42,7 @@ export const Row: React.FC<Props> = ({ row, version }) => {
               version,
             })}
           >
-            <Button variant="link">{words("resources.link.details")}</Button>
+            <Button variant="link">{words("showDetails")}</Button>
           </Link>
         </Td>
       </Tr>
