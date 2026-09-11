@@ -1,4 +1,4 @@
-import { FormSuggestion, Maybe } from "@/Core";
+import { FormSuggestion } from "@/Core";
 import {
   collectSuggestionReferences,
   getUnsupportedFieldPaths,
@@ -23,46 +23,40 @@ describe("resolveFieldReference", () => {
   };
 
   it("resolves a form reference against the form root", () => {
-    expect(resolveFieldReference(ref("form", "site"), { form, self: {} })).toEqual(
-      Maybe.some("brussels")
-    );
+    expect(resolveFieldReference(ref("form", "site"), { form, self: {} })).toBe("brussels");
   });
 
   it("resolves a keyed jsonpath across a multi-cardinality relation", () => {
     expect(
       resolveFieldReference(ref("form", "endpoints[?@.name=='ep2'].region"), { form, self: {} })
-    ).toEqual(Maybe.some("us"));
+    ).toBe("us");
   });
 
   it("resolves a self reference against the field's own sub-tree, not the form root", () => {
     // `self` reads exactly the passed sub-tree: instance 2's site, never the form's.
     const self = { site: "antwerp" };
 
-    expect(resolveFieldReference(ref("self", "site"), { form, self })).toEqual(
-      Maybe.some("antwerp")
-    );
+    expect(resolveFieldReference(ref("self", "site"), { form, self })).toBe("antwerp");
   });
 
   it("coerces a numeric value to a string", () => {
-    expect(
-      resolveFieldReference(ref("form", "version"), { form: { version: 3 }, self: {} })
-    ).toEqual(Maybe.some("3"));
+    expect(resolveFieldReference(ref("form", "version"), { form: { version: 3 }, self: {} })).toBe(
+      "3"
+    );
   });
 
   it("yields none when the path resolves to no value (blocking)", () => {
-    expect(resolveFieldReference(ref("form", "missing"), { form, self: {} })).toEqual(Maybe.none());
+    expect(resolveFieldReference(ref("form", "missing"), { form, self: {} })).toBeUndefined();
   });
 
   it("treats an empty-string value as no value (blocking), like an absent field", () => {
-    expect(resolveFieldReference(ref("form", "site"), { form: { site: "" }, self: {} })).toEqual(
-      Maybe.none()
-    );
+    expect(
+      resolveFieldReference(ref("form", "site"), { form: { site: "" }, self: {} })
+    ).toBeUndefined();
   });
 
   it("yields none when the path resolves to a non-scalar", () => {
-    expect(resolveFieldReference(ref("form", "endpoints"), { form, self: {} })).toEqual(
-      Maybe.none()
-    );
+    expect(resolveFieldReference(ref("form", "endpoints"), { form, self: {} })).toBeUndefined();
   });
 });
 
