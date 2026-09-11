@@ -151,7 +151,7 @@
     "jsonpathly": "^3.0.0",
     "keycloak-js": "^26.2.4",
     "markdown-it": "^15.0.1",
-    "mermaid": "^11.16.1",
+    "mermaid": "^11.17.2",
     "monaco-editor": "^0.52.2",
     "monaco-graphql": "^1.8.0",
     "oidc-client-ts": "^3.5.0",
