@@ -1,5 +1,4 @@
 import { parse, query } from "jsonpathly";
-import * as Maybe from "@/Core/Language/Maybe";
 
 /**
  * Shared read-only jsonpath evaluator (RFC 9535, via the eval-free `jsonpathly`, chosen so
@@ -99,25 +98,25 @@ export const isSupportedPath = (path: string): boolean => {
 };
 
 /**
- * Reads the value at `path` out of `data`, returning `some(value)` only when the path is
+ * Reads the value at `path` out of `data`, returning the value only when the path is
  * supported and matches exactly one value; every other case (no/multiple matches,
- * unsupported syntax, parse error) returns `none`.
+ * unsupported syntax, parse error) returns `undefined`.
  *
  * @example
- * evaluate({ a: { b: 1 } }, "a.b") // => some(1)
+ * evaluate({ a: { b: 1 } }, "a.b") // => 1
  */
-export const evaluate = (data: unknown, path: string): Maybe.Type<unknown> => {
+export const evaluate = (data: unknown, path: string): unknown => {
   const normalized = normalizePath(path);
   if (!isSupportedPath(normalized)) {
-    return Maybe.none();
+    return undefined;
   }
 
   const result = query(data, normalized, { hideExceptions: true, returnArray: true });
   if (!Array.isArray(result) || result.length !== 1) {
-    return Maybe.none();
+    return undefined;
   }
 
-  return Maybe.some(result[0]);
+  return result[0];
 };
 
 /**

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { DescriptionList } from "@patternfly/react-core";
-import { FlatEnvironment, Maybe, ProjectModel } from "@/Core";
+import { FlatEnvironment, ProjectModel } from "@/Core";
 import { useModifyEnvironment, useCreateProject } from "@/Data/Queries";
 import {
   EditableTextField,
@@ -51,7 +51,9 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
     const match = projects.find((project) => project.name === projectName);
 
     if (!match) {
-      return Maybe.some(`No matching project found for name '${projectName}'`);
+      setError(`No matching project found for name '${projectName}'`);
+
+      return;
     }
 
     return mutate({
@@ -97,8 +99,12 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
       <EditableMultiTextField
         groupName={words("settings.tabs.environment.repoSettings")}
         initialValues={{
-          repo_branch: environment.repo_branch,
           repo_url: environment.repo_url,
+          repo_branch: environment.repo_branch,
+        }}
+        tooltips={{
+          repo_url: words("createEnv.repository.tooltip"),
+          repo_branch: words("createEnv.branch.tooltip"),
         }}
         onSubmit={onRepoSubmit}
         setError={setError}
