@@ -43,9 +43,7 @@ export const Page: React.FC = () => {
       filterKeys: { date: "DateRange", version: "IntRange" },
     });
 
-  const [compareSelection, setCompareSelection] = useState<CompareSelection>({
-    kind: "None",
-  });
+  const [compareSelection, setCompareSelection] = useState<CompareSelection>(undefined);
 
   const { data, refetch, isError, error, isSuccess } = useGetDesiredStates().useContinuous(
     pageSize,

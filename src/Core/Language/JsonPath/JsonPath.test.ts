@@ -1,4 +1,3 @@
-import * as Maybe from "@/Core/Language/Maybe";
 import { evaluate, isSupportedPath, rootMember } from "./JsonPath";
 
 const data = {
@@ -19,51 +18,44 @@ const data = {
   ],
 };
 
-const expectSome = (result: Maybe.Type<unknown>): unknown => {
-  expect(Maybe.isSome(result)).toBe(true);
-
-  // narrow for the caller; guarded by the assertion above
-  return (result as { value: unknown }).value;
-};
-
 describe("JsonPath.evaluate", () => {
   it("reads a nested member path", () => {
-    expect(expectSome(evaluate(data, "candidate_attributes.network_name"))).toBe("nw-a");
+    expect(evaluate(data, "candidate_attributes.network_name")).toBe("nw-a");
   });
 
   it("reads an array element by index", () => {
-    expect(expectSome(evaluate(data, "endpoints[0].region"))).toBe("eu");
+    expect(evaluate(data, "endpoints[0].region")).toBe("eu");
   });
 
   it("selects an array element by an equality filter (RFC 9535, no parentheses)", () => {
-    expect(expectSome(evaluate(data, "endpoints[?@.name=='ep2'].region"))).toBe("us");
+    expect(evaluate(data, "endpoints[?@.name=='ep2'].region")).toBe("us");
   });
 
   it("accepts an explicit leading root identifier", () => {
-    expect(expectSome(evaluate(data, "$.candidate_attributes.network_name"))).toBe("nw-a");
+    expect(evaluate(data, "$.candidate_attributes.network_name")).toBe("nw-a");
   });
 
   it("preserves falsy scalars including a genuine null", () => {
-    expect(expectSome(evaluate(data, "candidate_attributes.vlan"))).toBe(0);
-    expect(expectSome(evaluate(data, "candidate_attributes.enabled"))).toBe(false);
-    expect(expectSome(evaluate(data, "candidate_attributes.owner"))).toBe(null);
+    expect(evaluate(data, "candidate_attributes.vlan")).toBe(0);
+    expect(evaluate(data, "candidate_attributes.enabled")).toBe(false);
+    expect(evaluate(data, "candidate_attributes.owner")).toBe(null);
   });
 
   it("returns none when the path matches nothing", () => {
-    expect(Maybe.isNone(evaluate(data, "candidate_attributes.missing"))).toBe(true);
+    expect(evaluate(data, "candidate_attributes.missing")).toBeUndefined();
   });
 
   it("returns none when a filter matches more than one element (ambiguous)", () => {
-    expect(Maybe.isNone(evaluate(data, "duplicates[?@.name=='dup'].region"))).toBe(true);
+    expect(evaluate(data, "duplicates[?@.name=='dup'].region")).toBeUndefined();
   });
 
   it("returns none for unsupported constructs rather than dumping multiple values", () => {
-    expect(Maybe.isNone(evaluate(data, "endpoints[*].region"))).toBe(true);
-    expect(Maybe.isNone(evaluate(data, "$..region"))).toBe(true);
+    expect(evaluate(data, "endpoints[*].region")).toBeUndefined();
+    expect(evaluate(data, "$..region")).toBeUndefined();
   });
 
   it("returns none for a syntactically invalid path", () => {
-    expect(Maybe.isNone(evaluate(data, "endpoints[invalid"))).toBe(true);
+    expect(evaluate(data, "endpoints[invalid")).toBeUndefined();
   });
 });
 

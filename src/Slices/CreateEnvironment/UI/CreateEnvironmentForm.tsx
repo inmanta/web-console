@@ -13,7 +13,7 @@ import { AppAlert, CreatableSelectInput } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
+import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentParams";
 import { ImageField } from "./ImageField";
 import { TextAreaField } from "./TextAreaField";
 import { TextField } from "./TextField";

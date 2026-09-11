@@ -74,9 +74,10 @@ export const ConfirmationForm: React.FC<Props> = ({ environment, type }) => {
   /**
    * Handles the confirmation of the form based on the provided type.
    *
-   * This function sets the component to a busy state, resets the error message, and triggers either a delete or clear operation based on the provided type.
-   * If the operation is successful (i.e., the result is a `None` variant of a `Maybe`), it redirects to home (if the type is "delete") and closes the modal.
-   * If the operation fails (i.e., the result is a `Some` variant of a `Maybe`), it sets the component to a non-busy state and sets the error message.
+   * Sets the component to a busy state, clears any error message, and triggers the delete or clear
+   * mutation. Success and error are handled in the mutation's own `onSuccess`/`onError` callbacks:
+   * success redirects (for delete) and closes the modal, while an error sets the message and clears
+   * the busy state.
    *
    * @param {EnvActions} type - The type of operation to perform.
    *
