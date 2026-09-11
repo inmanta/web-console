@@ -1,0 +1,8 @@
+change-type: patch
+description: |
+  Patch security vulnerability in transitive dependency (extract-zip) by upgrading Cypress from
+  15 to 16. Cypress 16 sets the cy.type() keystroke delay to 0ms; the e2e suite restores the
+  previous 10ms so fast typing does not crash the create-environment form.
+destination-branches:
+- master
+sections: {}

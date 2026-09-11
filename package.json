@@ -82,7 +82,7 @@
     "@vitejs/plugin-react": "^6.0.3",
     "@vitest/coverage-v8": "^5.0.0",
     "@vitest/ui": "^5.0.0",
-    "cypress": "^15.14.1",
+    "cypress": "^16.0.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-multi-reporters": "^2.0.5",
     "dotenv": "^17.4.2",

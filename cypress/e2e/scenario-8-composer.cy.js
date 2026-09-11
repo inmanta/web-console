@@ -42,8 +42,8 @@ if (isIso) {
       cy.visit("/console/environment/create");
 
       // Picking the (just-deleted) project creates it; useCreateProject then refetches the project
-      // list (GET /api/v2/project), and that re-render is what can drop the Repository field. Alias
-      // the refetch after the initial load (so cy.wait gates on it, not the load) and wait for it.
+      // list (GET /api/v2/project). Alias that refetch after the initial load (so cy.wait gates on
+      // it, not the load) and wait for it, so the project exists before we fill in the rest.
       cy.get('[aria-label="Project Name-select-toggleFilterInput"]').type(PXSDC_PROJECT_NAME);
       cy.intercept("GET", "**/api/v2/project?environment_details=*").as("projectsRefetch");
       cy.get('[role="option"]').contains(PXSDC_PROJECT_NAME).click();
