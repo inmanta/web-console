@@ -24,11 +24,11 @@ export const CompileErrorsSection: React.FC<Props> = ({ errors }) => (
   <DescriptionList isAutoFit>
     {errors.map((compileError, idx) => [
       <DescriptionListGroup key={`type-${idx}`}>
-        <DescriptionListTerm>{words("compileDetails.errors.type")}</DescriptionListTerm>
+        <DescriptionListTerm>{words("type")}</DescriptionListTerm>
         <DescriptionListDescription>{compileError.type}</DescriptionListDescription>
       </DescriptionListGroup>,
       <DescriptionListGroup key={`message-${idx}`}>
-        <DescriptionListTerm>{words("compileDetails.errors.message")}</DescriptionListTerm>
+        <DescriptionListTerm>{words("message")}</DescriptionListTerm>
         <DescriptionListDescription>
           <CodeBlock>
             <CodeBlockCode>{JSON.stringify(compileError.message, null, 2)}</CodeBlockCode>

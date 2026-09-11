@@ -8,8 +8,8 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
 
   constructor(isHalted: boolean) {
     this.columnHeads = [
-      { displayName: words("agents.columns.name"), apiName: "name" },
-      { displayName: words("agents.columns.status"), apiName: "status" },
+      { displayName: words("name"), apiName: "name" },
+      { displayName: words("status"), apiName: "status" },
       {
         displayName: words("agents.columns.unpause"),
         apiName: "unpause_on_resume",

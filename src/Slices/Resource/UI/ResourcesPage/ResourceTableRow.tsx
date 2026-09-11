@@ -24,16 +24,16 @@ export const ResourceTableRow: React.FC<{
   return (
     <Tbody>
       <Tr aria-label="Resource Table Row" isStriped={row.status.isOrphan}>
-        <Td dataLabel={words("resources.column.type")} modifier="breakWord">
+        <Td dataLabel={words("type")} modifier="breakWord">
           {row.type}
         </Td>
         <Td dataLabel={words("resources.column.agent")} modifier="breakWord">
           {row.agent}
         </Td>
-        <Td dataLabel={words("resources.column.value")} modifier="breakWord">
+        <Td dataLabel={words("value")} modifier="breakWord">
           {row.value}
         </Td>
-        <Td dataLabel={words("resources.column.status")}>
+        <Td dataLabel={words("status")}>
           <Flex
             gap={{ default: "gapNone" }}
             flexWrap={{ default: "nowrap" }}
@@ -86,7 +86,7 @@ export const ResourceTableRow: React.FC<{
           </Flex>
         </Td>
         <Td isActionCell width={10}>
-          <ResourceLink resourceId={row.id} linkText={words("resources.link.details")} />
+          <ResourceLink resourceId={row.id} linkText={words("showDetails")} />
         </Td>
       </Tr>
     </Tbody>

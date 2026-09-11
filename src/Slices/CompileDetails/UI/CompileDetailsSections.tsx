@@ -13,7 +13,7 @@ interface Props {
 export const CompileDetailsSections: React.FC<Props> = ({ compileDetails, ...props }) => {
   return (
     <div {...props}>
-      <PageSectionWithTitle title={words("compileDetails.status.title")}>
+      <PageSectionWithTitle title={words("status")}>
         <StatusSection compileDetails={compileDetails} />
       </PageSectionWithTitle>
       {compileDetails.compile_data && compileDetails.compile_data.errors.length > 0 && (

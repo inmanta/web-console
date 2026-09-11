@@ -7,10 +7,10 @@ import { ResourceRow } from "./ResourceTableRow";
 // https://github.com/inmanta/web-console/issues/6809
 
 export const columnHeads: ColumnHead[] = [
-  { displayName: words("resources.column.type"), apiName: "resource_type" },
+  { displayName: words("type"), apiName: "resource_type" },
   { displayName: words("resources.column.agent"), apiName: "agent" },
-  { displayName: words("resources.column.value"), apiName: "resource_id_value" },
-  { displayName: words("resources.column.status"), apiName: "status" },
+  { displayName: words("value"), apiName: "resource_id_value" },
+  { displayName: words("status"), apiName: "status" },
 ];
 
 export const sortableColumns = ["resource_type", "agent", "resource_id_value"];

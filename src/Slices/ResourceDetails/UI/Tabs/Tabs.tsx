@@ -88,7 +88,7 @@ export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab, data }) => 
 
 const requiresTab = (data: Details): TabDescriptor<TabKey> => ({
   id: TabKey.Requires,
-  title: words("resources.requires.title"),
+  title: words("requires"),
   icon: <ModuleIcon />,
   view: <RequiresTab details={data} />,
 });
@@ -102,7 +102,7 @@ const attributesTab = (data: Details): TabDescriptor<TabKey> => ({
 
 const historyTab = (id: string, data: Details): TabDescriptor<TabKey> => ({
   id: TabKey.History,
-  title: words("resources.history.title"),
+  title: words("history"),
   icon: <HistoryIcon />,
   view: <ResourceHistoryView resourceId={id} details={data} />,
 });

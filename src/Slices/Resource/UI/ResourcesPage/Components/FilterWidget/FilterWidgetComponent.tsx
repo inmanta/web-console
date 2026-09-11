@@ -92,7 +92,7 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
     <DrawerPanelContent isResizable minSize="300px">
       <DrawerHead>
         <Title headingLevel="h2" size="xl">
-          {words("resources.filters")}
+          {words("filters")}
         </Title>
         <DrawerActions>
           <DrawerCloseButton onClick={onClose} />
@@ -115,10 +115,7 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
                     filter={filter}
                   />
                 </Tab>
-                <Tab
-                  eventKey={1}
-                  title={<TabTitleText>{words("resources.filters.tabs.status")}</TabTitleText>}
-                >
+                <Tab eventKey={1} title={<TabTitleText>{words("status")}</TabTitleText>}>
                   <StatusFilterSelect
                     selectedStatuses={filter.status}
                     onChange={handleStatusChange}

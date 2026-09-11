@@ -11,9 +11,9 @@ interface Props {
 
 export const DesiredStatesTable: React.FC<Props> = ({ rows, ...props }) => {
   const columnNames = [
-    words("desiredState.columns.date"),
-    words("desiredState.columns.version"),
-    words("desiredState.columns.status"),
+    words("date"),
+    words("version"),
+    words("status"),
     words("desiredState.columns.resources"),
     words("desiredState.columns.labels"),
   ];

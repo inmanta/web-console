@@ -50,7 +50,7 @@ export const DetailsSection: React.FC = () => {
             "aria-expanded": isExpanded,
           }}
         >
-          <Title headingLevel="h2">{words("instanceDetails.details.title")}</Title>
+          <Title headingLevel="h2">{words("details")}</Title>
         </CardHeader>
         <CardExpandableContent>
           <CardBody>

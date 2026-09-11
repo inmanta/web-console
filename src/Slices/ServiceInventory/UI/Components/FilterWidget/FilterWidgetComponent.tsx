@@ -125,7 +125,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
     Boolean(filter.deleted);
 
   return (
-    <FilterDrawerPanelContent title={words("inventory.filters")} onClose={onClose}>
+    <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
       <Stack hasGutter>
         <Form onSubmit={(e) => e.preventDefault()}>
           <StackItem>

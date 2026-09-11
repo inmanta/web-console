@@ -101,7 +101,7 @@ export const UserInfoRow: React.FC<Props> = ({ user }) => {
             </Button>
           </Td>
         )}
-        <Td id={`${user.username}-actions`} dataLabel={words("userManagement.actions")}>
+        <Td id={`${user.username}-actions`} dataLabel={words("actions")}>
           <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
             <FlexItem>
               <Button variant="primary" onClick={openChangePasswordModal} size="sm">

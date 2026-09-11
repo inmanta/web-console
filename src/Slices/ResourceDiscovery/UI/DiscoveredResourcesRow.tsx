@@ -21,11 +21,7 @@ export const DiscoveredResourceRow: React.FC<Props> = ({ row }) => {
   return (
     <Tbody>
       <Tr aria-label="DiscoveredResourceRow">
-        <Td
-          dataLabel={words("discovered.column.type")}
-          data-testid={words("discovered.column.type")}
-          modifier="truncate"
-        >
+        <Td dataLabel={words("type")} data-testid={words("type")} modifier="truncate">
           {type}
         </Td>
         <Td
@@ -35,11 +31,7 @@ export const DiscoveredResourceRow: React.FC<Props> = ({ row }) => {
         >
           {agent}
         </Td>
-        <Td
-          dataLabel={words("discovered.column.value")}
-          data-testid={words("discovered.column.value")}
-          modifier="truncate"
-        >
+        <Td dataLabel={words("value")} data-testid={words("value")} modifier="truncate">
           {value}
         </Td>
         <Td
@@ -61,7 +53,7 @@ export const DiscoveredResourceRow: React.FC<Props> = ({ row }) => {
               search: location.search,
             }}
           >
-            <Button variant="link">{words("discovered.column.show_details")}</Button>
+            <Button variant="link">{words("showDetails")}</Button>
           </Link>
           <ActionsDropdown
             managedResourceId={row.managed_resource_id}

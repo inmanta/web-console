@@ -107,7 +107,7 @@ export const Page: React.FC = () => {
         >
           <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
             <Content component="h1" style={{ marginBottom: 0 }}>
-              {words("inventory.tabs.resources")}
+              {words("resources")}
             </Content>
             <Tooltip
               content={words("resources.deploying.popover")(deployingCount)}

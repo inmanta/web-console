@@ -35,12 +35,12 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
   const hasActiveFilters = (filter.name?.length ?? 0) > 0 || (filter.resource_id?.length ?? 0) > 0;
 
   return (
-    <FilterDrawerPanelContent title={words("facts.filters")} onClose={onClose}>
+    <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
       <Stack hasGutter>
         <Form onSubmit={(e) => e.preventDefault()}>
           <StackItem>
             <AddableTextInput
-              label={words("facts.column.name")}
+              label={words("name")}
               placeholder={words("facts.filters.name.placeholder")}
               onAdd={(value) => addString("name", value)}
               type="search"
@@ -49,7 +49,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
           <StackItem>
             <AddableTextInput
-              label={words("facts.column.resourceId")}
+              label={words("resourceId")}
               placeholder={words("facts.filters.resourceId.placeholder")}
               onAdd={(value) => addString("resource_id", value)}
               type="search"
@@ -63,7 +63,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           {(filter.name?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("facts.column.name")}
+                title={words("name")}
                 values={filter.name}
                 onRemove={(value) => removeStringChip("name", value)}
                 onRemoveGroup={() => clearStringGroup("name")}
@@ -73,7 +73,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           {(filter.resource_id?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("facts.column.resourceId")}
+                title={words("resourceId")}
                 values={filter.resource_id}
                 onRemove={(value) => removeStringChip("resource_id", value)}
                 onRemoveGroup={() => clearStringGroup("resource_id")}

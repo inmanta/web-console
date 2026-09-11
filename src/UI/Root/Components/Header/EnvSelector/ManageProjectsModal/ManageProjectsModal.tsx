@@ -195,7 +195,7 @@ const ProjectRow: React.FC<ProjectRowProps> = ({ project }) => {
                 onClick={handleDeleteClick}
                 data-testid={`delete-project-${project.id}`}
               >
-                {words("home.manageProjects.delete.button")}
+                {words("delete")}
               </Button>
             </FlexItem>
           </Flex>

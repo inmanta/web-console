@@ -39,16 +39,16 @@ export const ParametersTableRow: React.FC<Props> = ({
             onToggle={toggleExpanded}
           />
         )}
-        <Td dataLabel={words("parameters.columns.name")} width={20}>
+        <Td dataLabel={words("name")} width={20}>
           {row.name}
         </Td>
-        <Td dataLabel={words("parameters.columns.updated")} width={10}>
+        <Td dataLabel={words("lastUpdated")} width={10}>
           {row.updated ? <DateWithTooltip timestamp={row.updated} /> : ""}
         </Td>
         <Td dataLabel={words("parameters.columns.source")} width={10}>
           {row.source}
         </Td>
-        <Td modifier="breakWord" dataLabel={words("parameters.columns.value")}>
+        <Td modifier="breakWord" dataLabel={words("value")}>
           <AttributeValueCell
             value={row.value}
             attribute={attribute}

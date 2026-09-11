@@ -50,12 +50,12 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
     (filter.updated?.length ?? 0) > 0;
 
   return (
-    <FilterDrawerPanelContent title={words("parameters.filters")} onClose={onClose}>
+    <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
       <Stack hasGutter>
         <Form onSubmit={(e) => e.preventDefault()}>
           <StackItem>
             <AddableTextInput
-              label={words("parameters.columns.name")}
+              label={words("name")}
               placeholder={words("parameters.filters.name.placeholder")}
               onAdd={(value) => addString("name", value)}
             />
@@ -71,9 +71,9 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
           <StackItem>
             <TimestampRangeFilter
-              label={words("parameters.columns.updated")}
-              fromLabel={words("parameters.filters.from")}
-              toLabel={words("parameters.filters.to")}
+              label={words("lastUpdated")}
+              fromLabel={words("filters.from")}
+              toLabel={words("filters.to")}
               value={filter.updated ?? []}
               onChange={(updated) => setFilter({ ...filter, updated })}
             />
@@ -86,7 +86,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           {(filter.name?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("parameters.columns.name")}
+                title={words("name")}
                 values={filter.name}
                 onRemove={(value) => removeStringChip("name", value)}
                 onRemoveGroup={() => clearStringGroup("name")}
@@ -106,7 +106,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           {(filter.updated?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("parameters.columns.updated")}
+                title={words("lastUpdated")}
                 values={dateChips("updated", datePresenter)}
                 onRemove={(label) => removeDateChip("updated", label)}
                 onRemoveGroup={() => clearDateRange("updated")}

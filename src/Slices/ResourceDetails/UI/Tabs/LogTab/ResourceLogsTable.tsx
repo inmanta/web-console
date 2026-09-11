@@ -36,11 +36,11 @@ export const ResourceLogsTable: React.FC<Props> = ({ logs, toggleActionType, sor
               columnIndex: 0,
             }}
           >
-            {words("resources.logs.timestamp")}
+            {words("timestamp")}
           </Th>
           <Th width={15}>{words("resources.logs.actionType")}</Th>
           <Th width={15}>{words("resources.logs.logLevel")}</Th>
-          <Th>{words("resources.logs.message")}</Th>
+          <Th>{words("message")}</Th>
           <Th aria-hidden screenReaderText={words("common.emptyColumnHeader")} />
         </Tr>
       </Thead>

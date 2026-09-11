@@ -160,7 +160,7 @@ async function openStatusFiltersTab() {
   await openFiltersDrawer();
 
   const statusTab = await screen.findByRole("tab", {
-    name: words("resources.filters.tabs.status"),
+    name: words("status"),
   });
   await userEvent.click(statusTab);
 }
@@ -273,15 +273,11 @@ describe("ResourcesPage", () => {
 
     const table = await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
-    expect(
-      within(table).getByRole("button", { name: words("resources.column.type") })
-    ).toBeVisible();
+    expect(within(table).getByRole("button", { name: words("type") })).toBeVisible();
     expect(
       within(table).getByRole("button", { name: words("resources.column.agent") })
     ).toBeVisible();
-    expect(
-      within(table).getByRole("button", { name: words("resources.column.value") })
-    ).toBeVisible();
+    expect(within(table).getByRole("button", { name: words("value") })).toBeVisible();
     expect(within(table).getByRole("button", { name: "Sort by status fields" })).toBeVisible();
 
     await act(async () => {

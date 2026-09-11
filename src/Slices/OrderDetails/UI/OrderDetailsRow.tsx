@@ -71,7 +71,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
         <Td width={20} dataLabel={words("orders.column.action")}>
           {row.action.toUpperCase()}
         </Td>
-        <Td style={{ width: "50px" }} dataLabel={words("orders.column.status")}>
+        <Td style={{ width: "50px" }} dataLabel={words("status")}>
           <OrderStatusLabel status={row.status.state} />
         </Td>
       </Tr>
@@ -87,7 +87,7 @@ export const OrderDetailsRow: React.FC<Props> = ({
               }}
             >
               <TopAlignedLayout aria-label="Expanded-Details">
-                <DescriptionListTerm>{words("orders.row.details")}</DescriptionListTerm>
+                <DescriptionListTerm>{words("details")}</DescriptionListTerm>
                 <DescriptionListDescription>
                   <OrderStateDetails state={row.status} />
                 </DescriptionListDescription>

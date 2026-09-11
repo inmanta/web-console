@@ -11,7 +11,7 @@ import { BaseTreeTableHelper } from "../Helpers/BaseTreeTableHelper";
 
 export class InventoryTreeTableHelper extends BaseTreeTableHelper<InventoryAttributeTree> {
   private readonly columns = [
-    words("attribute.name"),
+    words("name"),
     words("attributesTab.candidate"),
     words("attributesTab.active"),
     words("attributesTab.rollback"),
