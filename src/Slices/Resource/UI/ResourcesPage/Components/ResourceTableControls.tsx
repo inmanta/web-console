@@ -45,7 +45,7 @@ export const ResourceTableControls: React.FC<Props> = ({
             onClick={onToggleFilters}
             isExpanded={isDrawerExpanded}
             activeFilterCount={activeFilterCount}
-            label={words("resources.filters")}
+            label={words("filters")}
             isDanger={noResourcesFound}
           />
         </ToolbarItem>

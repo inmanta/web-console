@@ -13,8 +13,8 @@ export class CompileReportsTablePresenter implements TablePresenter<
   constructor(private datePresenter: DatePresenter) {
     this.columnHeads = [
       words("compileReports.columns.requested"),
-      words("compileReports.columns.status"),
-      words("compileReports.columns.message"),
+      words("status"),
+      words("message"),
       words("compileReports.columns.waitTime"),
       words("compileReports.columns.compileTime"),
     ];

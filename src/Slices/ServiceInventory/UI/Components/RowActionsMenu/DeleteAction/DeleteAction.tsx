@@ -76,7 +76,7 @@ export const DeleteAction: React.FC<Props> = ({
     <>
       <ActionDisabledTooltip
         isDisabled={isDisabled || isHalted}
-        testingId={words("inventory.deleteInstance.button")}
+        testingId={words("delete")}
         tooltipContent={
           isHalted ? words("environment.halt.tooltip") : words("inventory.statustab.actionDisabled")
         }
@@ -89,7 +89,7 @@ export const DeleteAction: React.FC<Props> = ({
           icon={<TrashAltIcon />}
           {...(!isDisabled && !isHalted && { isDanger: true })}
         >
-          {words("inventory.deleteInstance.button")}
+          {words("delete")}
         </MenuItem>
       </ActionDisabledTooltip>
     </>

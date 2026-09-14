@@ -55,7 +55,7 @@ export const TableControls: React.FC<Props> = ({
             <FlexItem>
               <Badge>{activeFilterCount}</Badge>
             </FlexItem>
-            <FlexItem>{words("resources.filters")}</FlexItem>
+            <FlexItem>{words("filters")}</FlexItem>
           </Flex>
         </Button>
       </ToolbarItem>

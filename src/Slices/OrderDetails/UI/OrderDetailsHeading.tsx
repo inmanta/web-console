@@ -36,7 +36,7 @@ export const OrderDetailsHeading: React.FC<Props> = ({ serviceOrder }) => {
         aria-label="OrderDetails-Heading"
       >
         <DescriptionListGroup aria-label="OrderState">
-          <DescriptionListTerm>{words("orders.column.status")}</DescriptionListTerm>
+          <DescriptionListTerm>{words("status")}</DescriptionListTerm>
           <DescriptionListDescription>
             <OrderStatusLabel status={serviceOrder.status.state} />
           </DescriptionListDescription>

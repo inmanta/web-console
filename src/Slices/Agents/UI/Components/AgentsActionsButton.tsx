@@ -89,12 +89,12 @@ export const AgentsActionsButton: React.FC<Props> = ({ isDisabled = false }) => 
         <MenuToggle
           ref={toggleRef}
           variant="primary"
-          aria-label={words("agents.actions.menu.label")}
+          aria-label={words("actions")}
           onClick={() => setIsOpen(!isOpen)}
           isExpanded={isOpen}
           isDisabled={isDisabled}
         >
-          {words("agents.actions.menu.label")}
+          {words("actions")}
         </MenuToggle>
       )}
     >

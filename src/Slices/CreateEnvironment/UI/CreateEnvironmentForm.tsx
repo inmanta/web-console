@@ -169,12 +169,12 @@ export const CreateEnvironmentForm: React.FC<Props> = ({ projects, ...props }) =
       <TextField
         isRequired
         value={createEnvironmentBody.name}
-        label={words("createEnv.name")}
+        label={words("name")}
         onChange={setName}
       />
       <TextAreaField
         value={createEnvironmentBody.description || ""}
-        label={words("createEnv.description")}
+        label={words("description")}
         onChange={(_event, value) => setDescription(value)}
       />
       <TextField

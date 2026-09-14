@@ -68,7 +68,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
     (filter.timestamp?.length ?? 0) > 0;
 
   return (
-    <FilterDrawerPanelContent title={words("events.filters")} onClose={onClose}>
+    <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
       <Stack hasGutter>
         <Form onSubmit={(e) => e.preventDefault()}>
           <StackItem>
@@ -121,7 +121,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
 
           <StackItem>
             <AddableTextInput
-              label={words("events.filters.version.label")}
+              label={words("version")}
               placeholder={words("events.filters.version.placeholder")}
               onAdd={(value) => addString("version", value)}
               type="number"
@@ -130,9 +130,9 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
 
           <StackItem>
             <TimestampRangeFilter
-              label={words("events.column.date")}
-              fromLabel={words("events.filters.from")}
-              toLabel={words("events.filters.to")}
+              label={words("date")}
+              fromLabel={words("filters.from")}
+              toLabel={words("filters.to")}
               value={filter.timestamp ?? []}
               onChange={(timestamp) => setFilter({ ...filter, timestamp })}
             />
@@ -175,7 +175,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
           {(filter.version?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("events.filters.version.label")}
+                title={words("version")}
                 values={filter.version}
                 onRemove={(value) => removeStringChip("version", value)}
                 onRemoveGroup={() => clearStringGroup("version")}
@@ -185,7 +185,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, stat
           {(filter.timestamp?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("events.column.date")}
+                title={words("date")}
                 values={dateChips("timestamp", datePresenter)}
                 onRemove={(label) => removeDateChip("timestamp", label)}
                 onRemoveGroup={() => clearDateRange("timestamp")}

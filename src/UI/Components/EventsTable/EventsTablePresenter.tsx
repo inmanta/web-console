@@ -5,7 +5,7 @@ import { words } from "@/UI/words";
 export class EventsTablePresenter implements TablePresenter<InstanceEvent, EventRow> {
   readonly columnHeads = [
     words("events.column.eventType"),
-    words("events.column.date"),
+    words("date"),
     words("events.column.instanceVersion"),
     words("events.column.sourceState"),
     words("events.column.destinationState"),

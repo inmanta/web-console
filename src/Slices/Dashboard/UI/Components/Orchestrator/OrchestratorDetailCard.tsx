@@ -173,10 +173,7 @@ export const OrchestratorDetailCard: React.FC = () => {
             label={words("dashboard.orchestrator.edition")}
             value={serverStatus?.edition ?? "—"}
           />
-          <DetailRow
-            label={words("dashboard.orchestrator.version")}
-            value={serverStatus?.version ?? "—"}
-          />
+          <DetailRow label={words("version")} value={serverStatus?.version ?? "—"} />
           <DetailRow
             label={words("dashboard.orchestrator.license")}
             value={serverStatus ? formatLicenseValue(serverStatus) : "—"}

@@ -79,10 +79,7 @@ export const StateTransferModalContent: React.FC<StateTransferModalContentProps>
           words("inventory.statustab.confirmMessage")(instance_display_identity, targetState)}
       </Content>
       <Form>
-        <FormGroup
-          label={words("instanceDetails.stateTransfer.messageLabel")}
-          fieldId="state-transfer-message"
-        >
+        <FormGroup label={words("message")} fieldId="state-transfer-message">
           <TextArea
             id="state-transfer-message"
             value={message}

@@ -106,7 +106,7 @@ test("GIVEN CatalogDataList WHEN service THEN service details has correct link",
   await userEvent.click(dropdown);
 
   const link = screen.getByRole("link", {
-    name: words("catalog.button.details"),
+    name: words("showDetails"),
   });
 
   expect(link).toBeInTheDocument();

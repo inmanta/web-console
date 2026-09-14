@@ -29,7 +29,7 @@ export const VersionedPageTitle: React.FC<Props> = ({ title }) => {
       {title}
       {!isLatest && [
         <Label data-testid="selected-version" key="selected-version" color="purple">
-          {words("instanceDetails.title.tag")(selectedVersion)}
+          {words("versionLabel")(selectedVersion)}
         </Label>,
       ]}
       {instance.deleted && (

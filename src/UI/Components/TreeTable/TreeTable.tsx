@@ -71,10 +71,10 @@ export const TreeTable: React.FC<Props> = ({
             >
               <DropdownList>
                 <DropdownItem key="openAll" component="button" onClick={openAll}>
-                  {words("inventory.tabs.expand")}
+                  {words("expandAll")}
                 </DropdownItem>
                 <DropdownItem key="closeAll" component="button" onClick={closeAll}>
-                  {words("inventory.tabs.collapse")}
+                  {words("collapseAll")}
                 </DropdownItem>
               </DropdownList>
             </Dropdown>

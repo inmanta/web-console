@@ -166,7 +166,7 @@ export const ServiceItem: React.FC<Props> = ({ service }) => {
                     search: location.search,
                   }}
                 >
-                  {words("catalog.button.details")}
+                  {words("showDetails")}
                 </Link>
               </DropdownItem>
               <DropdownItem

@@ -61,7 +61,7 @@ const ErrorBlock: React.FC<{ error: CompileError; index: number }> = ({ error, i
     <FlexItem>
       <DescriptionList isCompact>
         <DescriptionListGroup>
-          <DescriptionListTerm>{words("diagnose.rejection.errorMessage")}</DescriptionListTerm>
+          <DescriptionListTerm>{words("message")}</DescriptionListTerm>
           <DescriptionListDescription>
             <CodeBlock>
               <CodeBlockCode>{error.message}</CodeBlockCode>
@@ -78,7 +78,7 @@ const ErrorBlock: React.FC<{ error: CompileError; index: number }> = ({ error, i
       >
         <DescriptionList isCompact>
           <DescriptionListGroup>
-            <DescriptionListTerm>{words("diagnose.rejection.errorType")}</DescriptionListTerm>
+            <DescriptionListTerm>{words("type")}</DescriptionListTerm>
             <DescriptionListDescription>{error.type}</DescriptionListDescription>
           </DescriptionListGroup>
           {error.category && (

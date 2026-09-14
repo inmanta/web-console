@@ -57,13 +57,10 @@ export const ResourceHistoryTableRow: React.FC<Props> = ({
             onToggle,
           }}
         />
-        <Td dataLabel={words("resources.history.column.date")}>
+        <Td dataLabel={words("date")}>
           <DateWithTooltip timestamp={row.date} />
         </Td>
-        <Td
-          dataLabel={words("resources.column.requires")}
-          onClick={openTabAndScrollTo(TabKey.Requires)}
-        >
+        <Td dataLabel={words("requires")} onClick={openTabAndScrollTo(TabKey.Requires)}>
           <span ref={rowRef} style={{ cursor: "pointer" }}>
             {row.numberOfDependencies as React.ReactNode}
           </span>

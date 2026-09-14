@@ -33,11 +33,11 @@ export class InventoryTablePresenter implements TablePresenter<ServiceInstanceMo
         apiName: "deployment_progress",
       },
       {
-        displayName: words("inventory.column.createdAt"),
+        displayName: words("created"),
         apiName: "created_at",
       },
       {
-        displayName: words("inventory.column.updatedAt"),
+        displayName: words("updated"),
         apiName: "last_updated",
       },
     ];
@@ -87,7 +87,7 @@ export class InventoryTablePresenter implements TablePresenter<ServiceInstanceMo
     } else if (this.serviceIdentity) {
       return this.serviceIdentity;
     } else {
-      return words("inventory.column.id");
+      return words("id");
     }
   }
 

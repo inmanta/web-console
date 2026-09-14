@@ -82,7 +82,7 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
       {filter.type && filter.type.length > 0 && (
         <StackItem>
           <ActiveFilterGroup
-            title={words("resources.filters.resource.type.label")}
+            title={words("type")}
             values={filter.type}
             onRemove={removeTypeChip}
             onRemoveGroup={clearTypeFilters}
@@ -102,7 +102,7 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
       {filter.value && filter.value.length > 0 && (
         <StackItem>
           <ActiveFilterGroup
-            title={words("resources.filters.resource.value.label")}
+            title={words("value")}
             values={filter.value}
             onRemove={removeValueChip}
             onRemoveGroup={clearValueFilters}
@@ -112,7 +112,7 @@ export const ActiveFiltersSection: React.FC<ActiveFiltersSectionProps> = ({
       {filter.status && filter.status.length > 0 && (
         <StackItem>
           <ActiveFilterGroup
-            title={words("resources.column.status")}
+            title={words("status")}
             values={filter.status}
             onRemove={removeStatusChip}
             onRemoveGroup={clearStatusFilters}

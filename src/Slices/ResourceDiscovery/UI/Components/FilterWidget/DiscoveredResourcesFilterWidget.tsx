@@ -22,7 +22,7 @@ type TextFilterKey = "type" | "agent" | "value";
 const FIELDS: { key: TextFilterKey; label: string; placeholder: string }[] = [
   {
     key: "type",
-    label: words("resources.filters.resource.type.label"),
+    label: words("type"),
     placeholder: words("resources.filters.resource.type.placeholder"),
   },
   {
@@ -32,7 +32,7 @@ const FIELDS: { key: TextFilterKey; label: string; placeholder: string }[] = [
   },
   {
     key: "value",
-    label: words("resources.filters.resource.value.label"),
+    label: words("value"),
     placeholder: words("resources.filters.resource.value.placeholder"),
   },
 ];
@@ -62,12 +62,12 @@ export const DiscoveredResourcesFilterWidget: React.FC<DiscoveredResourcesFilter
     const hasActiveFilters = FIELDS.some(({ key }) => (filter[key]?.length ?? 0) > 0);
 
     return (
-      <FilterDrawerPanelContent title={words("resources.filters")} onClose={onClose}>
+      <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
         <Stack hasGutter>
           <Form onSubmit={(e) => e.preventDefault()}>
             <StackItem>
               <Title headingLevel="h3" size="md">
-                {words("resources.filters.resource.sectionTitle")}
+                {words("resourceId")}
               </Title>
             </StackItem>
             {FIELDS.map(({ key, label, placeholder }) => (

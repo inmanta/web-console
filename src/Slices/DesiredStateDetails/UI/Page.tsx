@@ -73,9 +73,9 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
         >
           <Content component="h1">
             <Flex gap={{ default: "gapSm" }} alignItems={{ default: "alignItemsCenter" }}>
-              {words("desiredState.details.title")}
+              {words("details")}
               <Label color="purple" data-testid="version-label">
-                {words("desiredState.details.title.tag")(version)}
+                {words("versionLabel")(version)}
               </Label>
             </Flex>
           </Content>

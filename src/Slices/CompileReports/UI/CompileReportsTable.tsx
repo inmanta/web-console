@@ -54,7 +54,7 @@ export const CompileReportsTable: React.FC<Props> = ({
           <Th
             modifier="fitContent"
             screenReaderText={words("common.emptyColumnHeader")}
-            aria-label={words("compileReports.columns.actions")}
+            aria-label={words("actions")}
           />
         </Tr>
       </Thead>

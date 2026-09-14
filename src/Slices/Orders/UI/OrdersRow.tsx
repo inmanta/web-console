@@ -34,7 +34,7 @@ export const OrdersRow: React.FC<Props> = ({ row }) => {
         <Td width={15} dataLabel={words("orders.column.completed_at")}>
           {row.completed_at ? <DateWithTooltip timestamp={row.completed_at} /> : ""}
         </Td>
-        <Td width={10} dataLabel={words("orders.column.status")}>
+        <Td width={10} dataLabel={words("status")}>
           <OrderStatusLabel status={row.status.state} />
         </Td>
         <Td width={20} dataLabel={words("orders.column.progress")}>
@@ -43,7 +43,7 @@ export const OrdersRow: React.FC<Props> = ({ row }) => {
         <Td width={25} dataLabel={words("orders.column.description")}>
           {row.description || row.id}
         </Td>
-        <Td dataLabel={words("orders.column.option")} modifier="fitContent" isActionCell>
+        <Td dataLabel={words("options")} modifier="fitContent" isActionCell>
           <Link
             to={{
               pathname: routeManager.getUrl("OrderDetails", {
@@ -52,7 +52,7 @@ export const OrdersRow: React.FC<Props> = ({ row }) => {
               search: location.search,
             }}
           >
-            <Button variant="link">{words("orders.links.details")}</Button>
+            <Button variant="link">{words("showDetails")}</Button>
           </Link>
         </Td>
       </Tr>

@@ -33,7 +33,7 @@ function setup(halted: boolean = false, isDisabled: boolean = false) {
 }
 
 async function openDropdown() {
-  await userEvent.click(screen.getByRole("button", { name: words("agents.actions.menu.label") }));
+  await userEvent.click(screen.getByRole("button", { name: words("actions") }));
 }
 
 describe("AgentsActionsButton", () => {
@@ -194,7 +194,7 @@ describe("AgentsActionsButton", () => {
 
     render(component);
 
-    expect(screen.getByRole("button", { name: words("agents.actions.menu.label") })).toBeDisabled();
+    expect(screen.getByRole("button", { name: words("actions") })).toBeDisabled();
 
     await act(async () => {
       const results = await axe(document.body);

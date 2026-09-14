@@ -8,9 +8,9 @@ export class ParametersTablePresenter implements TablePresenter<Parameter, Param
 
   constructor() {
     this.columnHeads = [
-      { displayName: words("parameters.columns.name"), apiName: "name" },
+      { displayName: words("name"), apiName: "name" },
       {
-        displayName: words("parameters.columns.updated"),
+        displayName: words("lastUpdated"),
         apiName: "updated",
       },
       {
@@ -18,7 +18,7 @@ export class ParametersTablePresenter implements TablePresenter<Parameter, Param
         apiName: "source",
       },
       {
-        displayName: words("parameters.columns.value"),
+        displayName: words("value"),
         apiName: "value",
       },
     ];
