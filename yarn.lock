@@ -1320,7 +1320,7 @@ __metadata:
     keycloak-js: "npm:^26.2.4"
     lint-staged: "npm:^17.2.0"
     madge: "npm:^6.1.0"
-    markdown-it: "npm:^15.0.1"
+    markdown-it: "npm:^15.0.2"
     markdown-it-emoji: "npm:^3.1.0"
     mermaid: "npm:^11.17.2"
     mocha: "npm:^11.7.6"
@@ -9427,9 +9427,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"markdown-it@npm:^15.0.1":
-  version: 15.0.1
-  resolution: "markdown-it@npm:15.0.1"
+"markdown-it@npm:^15.0.2":
+  version: 15.0.2
+  resolution: "markdown-it@npm:15.0.2"
   dependencies:
     argparse: "npm:^3.0.0"
     entities: "npm:^8.0.0"
@@ -9439,7 +9439,7 @@ __metadata:
     uc.micro: "npm:^3.0.0"
   bin:
     markdown-it: bin/markdown-it.mjs
-  checksum: 10/d37c26b1d4c96f8894fc5524133acd3b408b936fb862beebd348f350bedaa4c58efd522164398690986be6de565a123d3e7049279c2219ef28347565247d6279
+  checksum: 10/55dd86dbcdab89b910e21773c363e492a41f45e5edb095d05029e43125c5250a891c73becf6504a412cf6fdcdd93ac9629949d3932968347ef36dc1d444d776a
   languageName: node
   linkType: hard
 

@@ -150,7 +150,7 @@
     "highlight.js": "^11.12.0",
     "jsonpathly": "^3.0.0",
     "keycloak-js": "^26.2.4",
-    "markdown-it": "^15.0.1",
+    "markdown-it": "^15.0.2",
     "mermaid": "^11.17.2",
     "monaco-editor": "^0.52.2",
     "monaco-graphql": "^1.8.0",
