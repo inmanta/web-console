@@ -1,13 +1,6 @@
 import React from "react";
 import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
 
-/**
- * Props for the FilterDrawer component.
- *
- * isExpanded - whether the filter side panel is currently shown.
- * panelContent - the filter widget rendered in the side panel, e.g. a ConnectedFilterWidget.
- * children - the main page content (table, empty view, ...) shown beside the panel.
- */
 interface Props {
   isExpanded: boolean;
   panelContent: React.ReactNode;
