@@ -1,12 +1,23 @@
+import { Resource } from "@/Core/Domain";
+
 /**
- * A single string-valued field of a {@link ResourceActionFilter}.
- * Mirrors the GraphQL ResourceFilter operators accepted by the filtered scheduler endpoints.
+ * A single string-valued field of a {@link ResourceActionFilter} (GraphQL StrFilter).
+ * Mirrors the operators accepted by the filtered scheduler endpoints.
  */
 export interface StringMatch {
   eq?: string[];
   neq?: string[];
   contains?: string[];
   notContains?: string[];
+}
+
+/**
+ * An enum-valued field of a {@link ResourceActionFilter} (GraphQL *EnumFilter). Enum filters only
+ * match on equality, against the enum's own value type rather than a free string.
+ */
+export interface EnumMatch<T> {
+  eq?: T[];
+  neq?: T[];
 }
 
 /**
@@ -23,9 +34,9 @@ export interface ResourceActionFilter {
   resourceIdValue?: StringMatch;
   agent?: StringMatch;
   purged?: boolean;
-  blocked?: StringMatch;
-  compliance?: StringMatch;
-  lastHandlerRun?: StringMatch;
+  blocked?: EnumMatch<Resource.BlockedValue>;
+  compliance?: EnumMatch<Resource.ComplianceValue>;
+  lastHandlerRun?: EnumMatch<Resource.LastHandlerRunValue>;
   isDeploying?: boolean;
   modelVersion?: number;
   serviceEntity?: string[];

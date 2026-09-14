@@ -4,14 +4,10 @@ import { CurrentPage, MultiSort } from "@/Data";
 import { ResourceActionFilter } from "../ResourceActionFilter";
 import { PageInfo } from "./useGetResources";
 
-type GraphQLStateFilter = Partial<{
-  purged: boolean;
-  isOrphan: boolean;
-  isDeploying: boolean;
-  lastHandlerRun: { eq?: Resource.LastHandlerRunValue[]; neq?: Resource.LastHandlerRunValue[] };
-  compliance: { eq?: Resource.ComplianceValue[]; neq?: Resource.ComplianceValue[] };
-  blocked: { eq?: Resource.BlockedValue[]; neq?: Resource.BlockedValue[] };
-}>;
+type GraphQLStateFilter = Pick<
+  ResourceActionFilter,
+  "purged" | "isOrphan" | "isDeploying" | "lastHandlerRun" | "compliance" | "blocked"
+>;
 
 /**
  * Maps a filter.status array to GraphQL ResourceFilter fields.
