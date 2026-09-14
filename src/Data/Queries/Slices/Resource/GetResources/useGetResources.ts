@@ -8,6 +8,7 @@ import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGraphQLRequest, REFETCH_INTERVAL } from "@/Data/Queries";
 import { KeyFactory, SliceKeys } from "@/Data/Queries/Helpers/KeyFactory";
 import { DependencyContext } from "@/UI/Dependency";
+import { ResourceActionFilter } from "../ResourceActionFilter";
 import { buildHandlers, mapSort, mapToResourceActionFilter, parseCurrentPage } from "./helpers";
 
 export interface PageInfo {
@@ -124,7 +125,7 @@ export const useGetResources = (params: GetResourcesParams): GetResources => {
   );
 
   //TODO: https://github.com/inmanta/web-console/issues/6823 => same as in ResourceFilterForm.tsx
-  const graphqlFilter: Record<string, unknown> = {
+  const graphqlFilter: ResourceActionFilter & { environment: string } = {
     environment: env,
     ...mapToResourceActionFilter(filter),
   };
