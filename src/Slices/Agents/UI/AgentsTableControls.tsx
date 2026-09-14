@@ -36,7 +36,7 @@ export const AgentsTableControls: React.FC<Props> = ({
           onClick={onToggleFilters}
           isExpanded={isDrawerExpanded}
           activeFilterCount={activeFilterCount}
-          label={words("agents.filters")}
+          label={words("filters")}
         />
       </ToolbarItem>
     </ToolbarContent>

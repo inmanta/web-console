@@ -62,7 +62,7 @@ const attributesTab = (attributes: Record<string, unknown>): TabDescriptor<TabKe
 
 const requiresTab = (requires: string[]): TabDescriptor<TabKey> => ({
   id: TabKey.Requires,
-  title: words("resources.history.tabs.requires"),
+  title: words("requires"),
   icon: <ModuleIcon />,
   view: <RequiresTab requires={requires} />,
 });
@@ -100,10 +100,10 @@ const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({ attr
  * @returns {React.FC<{ requires: string[] }>} A React Component displaying the requires of the resource
  */
 const RequiresTab: React.FC<{ requires: string[] }> = ({ requires }) => (
-  <Table aria-label={words("resources.history.tabs.requires")}>
+  <Table aria-label={words("requires")}>
     <Thead>
       <Tr>
-        <Th>{words("resources.history.tabs.requires")}</Th>
+        <Th>{words("requires")}</Th>
       </Tr>
     </Thead>
     <Tbody>

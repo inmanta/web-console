@@ -43,11 +43,11 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
   const hasActiveFilters = (filter.name?.length ?? 0) > 0 || (filter.status?.length ?? 0) > 0;
 
   return (
-    <FilterDrawerPanelContent title={words("agents.filters")} onClose={onClose}>
+    <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
       <Stack hasGutter>
         <Form onSubmit={(e) => e.preventDefault()}>
           <StackItem>
-            <FormGroup label={words("agents.columns.status")}>
+            <FormGroup label={words("status")}>
               <MultiTextSelect
                 toggleAriaLabel="Status"
                 options={agentStatuses.map((status) => ({
@@ -68,7 +68,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
 
           <StackItem>
             <AddableTextInput
-              label={words("agents.columns.name")}
+              label={words("name")}
               placeholder={words("agents.filters.name.placeholder")}
               onAdd={(value) => addString("name", value)}
               type="search"
@@ -82,7 +82,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           {(filter.name?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("agents.columns.name")}
+                title={words("name")}
                 values={filter.name}
                 onRemove={(value) => removeStringChip("name", value)}
                 onRemoveGroup={() => clearStringGroup("name")}
@@ -92,7 +92,7 @@ export const FilterWidgetComponent: React.FC<Props> = ({ filter, setFilter, onCl
           {(filter.status?.length ?? 0) > 0 && (
             <StackItem>
               <ActiveFilterGroup
-                title={words("agents.columns.status")}
+                title={words("status")}
                 values={filter.status}
                 onRemove={(value) => removeStringChip("status", value)}
                 onRemoveGroup={() => clearStringGroup("status")}

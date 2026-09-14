@@ -68,12 +68,12 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
       <Stack hasGutter style={{ padding: "1rem 0" }}>
         <StackItem>
           <Title headingLevel="h3" size="md">
-            {words("resources.filters.resource.sectionTitle")}
+            {words("resourceId")}
           </Title>
         </StackItem>
         <StackItem>
           <AddableTextInput
-            label={words("resources.filters.resource.type.label")}
+            label={words("type")}
             placeholder={words("resources.filters.resource.type.placeholder")}
             onAdd={onAddType}
 
@@ -84,7 +84,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
         </StackItem>
         <StackItem>
           <AddableTextInput
-            label={words("resources.filters.resource.value.label")}
+            label={words("value")}
             placeholder={words("resources.filters.resource.value.placeholder")}
             onAdd={onAddValue}
 

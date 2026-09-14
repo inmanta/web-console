@@ -75,7 +75,7 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
   };
 
   return (
-    <FilterDrawerPanelContent title={words("resources.filters")} onClose={onClose}>
+    <FilterDrawerPanelContent title={words("filters")} onClose={onClose}>
       <Form onSubmit={(e) => e.preventDefault()}>
         <Stack hasGutter>
           <StackItem isFilled>
@@ -92,10 +92,7 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
                   filter={filter}
                 />
               </Tab>
-              <Tab
-                eventKey={1}
-                title={<TabTitleText>{words("resources.filters.tabs.status")}</TabTitleText>}
-              >
+              <Tab eventKey={1} title={<TabTitleText>{words("status")}</TabTitleText>}>
                 <StatusFilterSelect
                   selectedStatuses={filter.status}
                   onChange={handleStatusChange}

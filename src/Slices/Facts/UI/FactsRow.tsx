@@ -38,11 +38,11 @@ export const FactsRow: React.FC<Props> = memo(
               onToggle={toggleExpanded}
             />
           )}
-          <Td dataLabel={words("facts.column.name")}>{row.name}</Td>
-          <Td dataLabel={words("facts.column.updated")}>
+          <Td dataLabel={words("name")}>{row.name}</Td>
+          <Td dataLabel={words("updated")}>
             {row.updated && <DateWithTooltip timestamp={row.updated} />}
           </Td>
-          <Td modifier="breakWord" dataLabel={words("facts.column.value")}>
+          <Td modifier="breakWord" dataLabel={words("value")}>
             <AttributeValueCell
               value={row.value}
               attribute={attribute}
@@ -50,7 +50,7 @@ export const FactsRow: React.FC<Props> = memo(
               onToggle={toggleExpanded}
             />
           </Td>
-          <Td modifier="breakWord" dataLabel={words("facts.column.resourceId")}>
+          <Td modifier="breakWord" dataLabel={words("resourceId")}>
             <Link
               pathname={routeManager.getUrl("ResourceDetails", {
                 resourceId: row.resource_id,

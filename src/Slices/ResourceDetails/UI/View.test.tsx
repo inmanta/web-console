@@ -72,7 +72,7 @@ describe("ResourceDetailsView", () => {
 
     await userEvent.click(
       screen.getAllByRole("tab", {
-        name: words("resources.requires.title"),
+        name: words("requires"),
       })[0]
     );
 
@@ -98,7 +98,7 @@ describe("ResourceDetailsView", () => {
 
     await userEvent.click(
       screen.getAllByRole("tab", {
-        name: words("resources.requires.title"),
+        name: words("requires"),
       })[0]
     );
     expect(await screen.findByRole("grid", { name: "ResourceRequires-Success" })).toBeVisible();

@@ -431,10 +431,10 @@ export const AttributesTable: React.FC<Props> = ({
           >
             <DropdownList>
               <DropdownItem aria-label="Collapse-all" value="Collapse-all" key="Collapse-all">
-                {words("instanceDetails.collapseAll")}
+                {words("collapseAll")}
               </DropdownItem>
               <DropdownItem aria-label="Expand-all" value="Expand-all" key="Expand-all">
-                {words("instanceDetails.expandAll")}
+                {words("expandAll")}
               </DropdownItem>
               <DropdownItem aria-label="Reset-sort" value="Reset-sort" key="Reset-sort">
                 {words("instanceDetails.resetSort")}
@@ -455,7 +455,7 @@ export const AttributesTable: React.FC<Props> = ({
             >
               {words("instanceDetails.table.attributeKey")}
             </Th>
-            <Th width={60}>{words("instanceDetails.table.valueKey")}</Th>
+            <Th width={60}>{words("value")}</Th>
           </Tr>
         </Thead>
         <Tbody>{renderRows(tableData)}</Tbody>

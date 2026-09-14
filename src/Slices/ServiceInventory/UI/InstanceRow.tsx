@@ -63,10 +63,10 @@ export const InstanceRow: React.FC<Props> = ({
             <DeploymentProgressBar progress={row.deploymentProgress} />
           </ActionWrapper>
         </Td>
-        <Td dataLabel={words("inventory.column.createdAt")}>
+        <Td dataLabel={words("created")}>
           <DateWithTooltip timestamp={row.createdAt} />
         </Td>
-        <Td dataLabel={words("inventory.column.updatedAt")}>
+        <Td dataLabel={words("updated")}>
           <DateWithTooltip timestamp={row.updatedAt} />
         </Td>
         <Td dataLabel="actions" isActionCell>

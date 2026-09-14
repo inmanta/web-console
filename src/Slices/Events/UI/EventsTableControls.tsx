@@ -36,7 +36,7 @@ export const EventsTableControls: React.FC<Props> = ({
           onClick={onToggleFilters}
           isExpanded={isDrawerExpanded}
           activeFilterCount={activeFilterCount}
-          label={words("events.filters")}
+          label={words("filters")}
         />
       </ToolbarItem>
     </ToolbarContent>

@@ -68,7 +68,7 @@ export const TokenTable: React.FC = () => {
           <Th>{words("settings.tabs.token.column.issuedAt")}</Th>
           <Th>{words("settings.tabs.token.column.expiresAt")}</Th>
           <Th>{words("settings.tabs.token.column.lastUsed")}</Th>
-          <Th>{words("settings.tabs.token.column.status")}</Th>
+          <Th>{words("status")}</Th>
           <Th>{words("settings.tabs.token.column.revokedAt")}</Th>
           <Th screenReaderText={words("common.emptyColumnHeader")} />
         </Tr>

@@ -12,11 +12,11 @@ export class ResourceHistoryTablePresenter implements TablePresenter<
   constructor(private readonly datePresenter: DatePresenter) {
     this.columnHeads = [
       {
-        displayName: words("resources.history.column.date"),
+        displayName: words("date"),
         apiName: "date",
       },
       {
-        displayName: words("resources.column.requires"),
+        displayName: words("requires"),
         apiName: "requires",
       },
     ];

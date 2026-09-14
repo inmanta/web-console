@@ -49,7 +49,7 @@ export const Actions: React.FC<Props> = ({ environment }) => {
   return (
     <>
       <DescriptionListGroup>
-        <DescriptionListTerm>{words("settings.tabs.environment.id")}</DescriptionListTerm>
+        <DescriptionListTerm>{words("id")}</DescriptionListTerm>
         <DescriptionListDescription>
           <TextWithCopy value={environment.id} tooltipContent={words("home.environment.copy")} />
         </DescriptionListDescription>

@@ -31,7 +31,7 @@ export class OrderDetailsTablePresenter implements TablePresenter<
         apiName: "action",
       },
       {
-        displayName: words("orders.column.status"),
+        displayName: words("status"),
         apiName: "status",
       },
     ];

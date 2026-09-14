@@ -1,0 +1,5 @@
+description: Clean up the words dictionary. Values that were repeated across views (generic column headers, tabs and common actions) now reuse a single shared key, a few unused keys were removed, and some misplaced keys were moved under the right section.
+issue-nr: 7206
+change-type: patch
+destination-branches: [master]
+sections: {}

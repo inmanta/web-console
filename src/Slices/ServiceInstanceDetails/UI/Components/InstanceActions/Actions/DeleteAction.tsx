@@ -92,7 +92,7 @@ export const DeleteAction: React.FC<Props> = ({
         icon={<TrashAltIcon />}
         onClick={() => onDeleteSelect()}
       >
-        {words("inventory.deleteInstance.button")}
+        {words("delete")}
       </DropdownItem>
     </>
   );

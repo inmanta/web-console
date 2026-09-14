@@ -13,13 +13,13 @@ interface Props {
 export const DesiredStatesTableRow: React.FC<Props> = ({ row }) => (
   <Tbody isExpanded={false}>
     <Tr aria-label="DesiredStates Table Row">
-      <Td dataLabel={words("desiredState.columns.date")} width={20}>
+      <Td dataLabel={words("date")} width={20}>
         <DateWithTooltip timestamp={row.date} />
       </Td>
-      <Td dataLabel={words("desiredState.columns.version")} width={20}>
+      <Td dataLabel={words("version")} width={20}>
         {row.version as React.ReactNode}
       </Td>
-      <Td dataLabel={words("desiredState.columns.status")} width={20}>
+      <Td dataLabel={words("status")} width={20}>
         <DesiredStateStatusLabel status={row.status} />
       </Td>
       <Td dataLabel={words("desiredState.columns.resources")} width={20}>

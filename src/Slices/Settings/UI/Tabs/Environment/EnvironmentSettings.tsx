@@ -86,13 +86,13 @@ export const EnvironmentSettings: React.FC<Props> = ({ environment, projects }) 
       )}
       <EditableTextField
         initialValue={environment.name}
-        label={words("settings.tabs.environment.name")}
+        label={words("name")}
         onSubmit={onNameSubmit}
         setError={setError}
       />
       <EditableTextAreaField
         initialValue={environment.description || ""}
-        label={words("settings.tabs.environment.description")}
+        label={words("description")}
         onSubmit={onDescriptionSubmit}
         setError={setError}
       />

@@ -168,7 +168,7 @@ export const StatusSortMenu: React.FC<Props> = ({ sort, setSort }): React.ReactE
         </Badge>
       }
     >
-      {words("resources.column.status")}
+      {words("status")}
     </MenuToggle>
   );
 

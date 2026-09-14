@@ -169,13 +169,13 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                   {words("instanceDetails.events.column.eventType")}
                 </Th>
                 <Th width={20} key="timestamp">
-                  {words("instanceDetails.events.column.timestamp")}
+                  {words("timestamp")}
                 </Th>
                 <Th width={20} key="source-state">
-                  {words("instanceDetails.events.column.sourceState")}
+                  {words("events.column.sourceState")}
                 </Th>
                 <Th width={20} key="destination-state">
-                  {words("instanceDetails.events.column.destinationState")}
+                  {words("events.column.destinationState")}
                 </Th>
                 <Th width={25} key="report">
                   {words("instanceDetails.events.column.report")}
@@ -226,9 +226,7 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                     <ExpandableRowContent>
                       <DescriptionList>
                         <DescriptionListGroup>
-                          <DescriptionListTerm>
-                            {words("events.column.message")}
-                          </DescriptionListTerm>
+                          <DescriptionListTerm>{words("message")}</DescriptionListTerm>
                           <DescriptionListDescription aria-label={`Event-message-${index}`}>
                             {event.message}
                           </DescriptionListDescription>

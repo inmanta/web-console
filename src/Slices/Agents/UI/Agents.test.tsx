@@ -72,7 +72,7 @@ describe("Agents", () => {
 
     expect(await screen.findByRole("generic", { name: "AgentsView-Empty" })).toBeInTheDocument();
 
-    expect(screen.getByRole("button", { name: words("agents.actions.menu.label") })).toBeDisabled();
+    expect(screen.getByRole("button", { name: words("actions") })).toBeDisabled();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -93,7 +93,7 @@ describe("Agents", () => {
 
     expect(await screen.findByRole("region", { name: "AgentsView-Error" })).toBeInTheDocument();
 
-    expect(screen.getByRole("button", { name: words("agents.actions.menu.label") })).toBeDisabled();
+    expect(screen.getByRole("button", { name: words("actions") })).toBeDisabled();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -115,9 +115,7 @@ describe("Agents", () => {
 
     expect(await screen.findByRole("grid", { name: "AgentsView-Success" })).toBeInTheDocument();
 
-    expect(
-      screen.getByRole("button", { name: words("agents.actions.menu.label") })
-    ).not.toBeDisabled();
+    expect(screen.getByRole("button", { name: words("actions") })).not.toBeDisabled();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -549,9 +547,7 @@ describe("Agents", () => {
 
     render(component);
 
-    expect(
-      await screen.findByRole("button", { name: words("agents.actions.menu.label") })
-    ).toBeVisible();
+    expect(await screen.findByRole("button", { name: words("actions") })).toBeVisible();
 
     await act(async () => {
       const results = await axe(document.body);
@@ -579,9 +575,7 @@ describe("Agents", () => {
 
     render(component);
 
-    await userEvent.click(
-      await screen.findByRole("button", { name: words("agents.actions.menu.label") })
-    );
+    await userEvent.click(await screen.findByRole("button", { name: words("actions") }));
 
     await userEvent.click(screen.getByRole("menuitem", { name: words("agents.actions.pauseAll") }));
 
