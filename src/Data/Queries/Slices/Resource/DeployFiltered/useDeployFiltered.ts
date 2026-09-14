@@ -2,44 +2,7 @@ import { useContext } from "react";
 import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
 import { DeployAgentsAction, usePost } from "@/Data/Queries";
 import { DependencyContext } from "@/UI";
-
-/**
- * A single string-valued field of a {@link ResourceActionFilter}.
- * Mirrors the GraphQL ResourceFilter operators accepted by the filtered scheduler endpoints.
- */
-interface StringMatch {
-  eq?: string[];
-  neq?: string[];
-  contains?: string[];
-  notContains?: string[];
-}
-
-/**
- * The filter that scopes a filtered scheduler action (deploy/repair/dry run) to a set of resources.
- *
- * It is the same shape the resources GraphQL query understands, so an entry point composes the
- * scope once and the server resolves it. A single resource is expressed as a filter of one, by
- * pinning resourceType/agent/resourceIdValue with the eq operator.
- *
- * @example { resourceType: { eq: ["std::File"] }, agent: { eq: ["internal"] }, resourceIdValue: { eq: ["/tmp/f"] }, isOrphan: false }
- */
-export interface ResourceActionFilter {
-  isOrphan?: boolean;
-  resourceType?: StringMatch;
-  resourceIdValue?: StringMatch;
-  agent?: StringMatch;
-  purged?: boolean;
-  blocked?: StringMatch;
-  compliance?: StringMatch;
-  lastHandlerRun?: StringMatch;
-  isDeploying?: boolean;
-  modelVersion?: number;
-  serviceEntity?: string[];
-  serviceInstance?: string[];
-  lifecycleState?: string[];
-  includeOwned?: boolean;
-  instanceVersion?: number;
-}
+import { ResourceActionFilter } from "../ResourceActionFilter";
 
 /**
  * Request body for the deploy_filtered endpoint.
