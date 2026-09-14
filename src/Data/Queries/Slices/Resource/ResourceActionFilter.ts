@@ -1,23 +1,21 @@
 import { Resource } from "@/Core/Domain";
 
 /**
- * A single string-valued field of a {@link ResourceActionFilter} (GraphQL StrFilter).
- * Mirrors the operators accepted by the filtered scheduler endpoints.
- */
-export interface StringMatch {
-  eq?: string[];
-  neq?: string[];
-  contains?: string[];
-  notContains?: string[];
-}
-
-/**
  * An enum-valued field of a {@link ResourceActionFilter} (GraphQL *EnumFilter). Enum filters only
  * match on equality, against the enum's own value type rather than a free string.
  */
 export interface EnumMatch<T> {
   eq?: T[];
   neq?: T[];
+}
+
+/**
+ * A string-valued field of a {@link ResourceActionFilter} (GraphQL StrFilter). Adds substring
+ * operators on top of the equality operators a string can also be matched by.
+ */
+export interface StringMatch extends EnumMatch<string> {
+  contains?: string[];
+  notContains?: string[];
 }
 
 /**
