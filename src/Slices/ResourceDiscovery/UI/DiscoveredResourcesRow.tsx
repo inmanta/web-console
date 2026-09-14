@@ -24,11 +24,7 @@ export const DiscoveredResourceRow: React.FC<Props> = ({ row }) => {
         <Td dataLabel={words("type")} data-testid={words("type")} modifier="truncate">
           {type}
         </Td>
-        <Td
-          dataLabel={words("discovered.column.agent")}
-          data-testid={words("discovered.column.agent")}
-          modifier="truncate"
-        >
+        <Td dataLabel={words("agent")} data-testid={words("agent")} modifier="truncate">
           {agent}
         </Td>
         <Td dataLabel={words("value")} data-testid={words("value")} modifier="truncate">

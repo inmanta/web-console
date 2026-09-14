@@ -8,7 +8,7 @@ import { ResourceRow } from "./ResourceTableRow";
 
 export const columnHeads: ColumnHead[] = [
   { displayName: words("type"), apiName: "resource_type" },
-  { displayName: words("resources.column.agent"), apiName: "agent" },
+  { displayName: words("agent"), apiName: "agent" },
   { displayName: words("value"), apiName: "resource_id_value" },
   { displayName: words("status"), apiName: "status" },
 ];

@@ -28,7 +28,7 @@ export const Row: React.FC<Props> = ({ row, version }) => {
         <Td modifier="truncate" dataLabel={words("type")}>
           {row.type}
         </Td>
-        <Td modifier="truncate" dataLabel={words("resources.column.agent")}>
+        <Td modifier="truncate" dataLabel={words("agent")}>
           {row.agent}
         </Td>
         <Td modifier="truncate" dataLabel={words("value")}>

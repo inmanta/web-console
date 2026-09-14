@@ -274,9 +274,7 @@ describe("ResourcesPage", () => {
     const table = await screen.findByRole("grid", { name: "ResourcesPage-Success" });
 
     expect(within(table).getByRole("button", { name: words("type") })).toBeVisible();
-    expect(
-      within(table).getByRole("button", { name: words("resources.column.agent") })
-    ).toBeVisible();
+    expect(within(table).getByRole("button", { name: words("agent") })).toBeVisible();
     expect(within(table).getByRole("button", { name: words("value") })).toBeVisible();
     expect(within(table).getByRole("button", { name: "Sort by status fields" })).toBeVisible();
 

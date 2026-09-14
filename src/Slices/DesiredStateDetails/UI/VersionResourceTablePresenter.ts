@@ -14,7 +14,7 @@ export class VersionResourceTablePresenter implements TablePresenter<
     this.columnHeads = [
       { displayName: words("type"), apiName: "resource_type" },
       {
-        displayName: words("resources.column.agent"),
+        displayName: words("agent"),
         apiName: "agent",
       },
       {

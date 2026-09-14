@@ -63,6 +63,7 @@ const dict = {
   value: "Value",
   type: "Type",
   id: "Id",
+  agent: "Agent",
   message: "Message",
   description: "Description",
   version: "Version",
@@ -362,8 +363,6 @@ const dict = {
   "instanceDetails.state.noOperation": "no operation",
   "instanceDetails.operation.selectLabel": "Select an operation",
   "instanceDetails.events.column.eventType": "Event type",
-  "instanceDetails.events.column.sourceState": "Source state",
-  "instanceDetails.events.column.destinationState": "Destination state",
   "instanceDetails.events.column.report": "Compile Report",
   "instanceDetails.events.rowDetails.details": "Event details",
   "instanceDetails.events.validationReport": "Validation",
@@ -647,7 +646,6 @@ const dict = {
   "resources.deploying.spinner": "Resources deploying",
   "resources.discovery.disabled":
     "Your licence doesn't give you access to the Resource Discovery Feature, please contact support for more details.",
-  "resources.column.agent": "Agent",
   "resources.column.status.toolTip":
     "Toggle fields to include them in sorting. Drag active fields to set their priority order.",
   "resources.button.statusDetails": "Show status details",
@@ -770,7 +768,6 @@ const dict = {
   /** Discovered Resources related text */
   "discoveredResourceDetails.title": "Discovered Resource Details",
   "discoveredResourceDetails.empty": "No discovered resource details found",
-  "discovered.column.agent": "Agent",
   "discovered.column.managed_resource": "Managed resource",
   "discovered.column.discovery_resource": "Discovery resource",
   "discovered_resources.title": "Discovered Resources",

@@ -172,10 +172,10 @@ export const EventsTabContent: React.FC<Props> = ({ selectedVersion }) => {
                   {words("timestamp")}
                 </Th>
                 <Th width={20} key="source-state">
-                  {words("instanceDetails.events.column.sourceState")}
+                  {words("events.column.sourceState")}
                 </Th>
                 <Th width={20} key="destination-state">
-                  {words("instanceDetails.events.column.destinationState")}
+                  {words("events.column.destinationState")}
                 </Th>
                 <Th width={25} key="report">
                   {words("instanceDetails.events.column.report")}

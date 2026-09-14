@@ -23,7 +23,7 @@ export class DiscoveredResourcesTablePresenter implements TablePresenter<
         apiName: "type",
       },
       {
-        displayName: words("discovered.column.agent"),
+        displayName: words("agent"),
         apiName: "agent",
       },
       {

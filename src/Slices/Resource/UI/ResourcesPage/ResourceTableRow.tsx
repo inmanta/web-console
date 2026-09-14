@@ -27,7 +27,7 @@ export const ResourceTableRow: React.FC<{
         <Td dataLabel={words("type")} modifier="breakWord">
           {row.type}
         </Td>
-        <Td dataLabel={words("resources.column.agent")} modifier="breakWord">
+        <Td dataLabel={words("agent")} modifier="breakWord">
           {row.agent}
         </Td>
         <Td dataLabel={words("value")} modifier="breakWord">
