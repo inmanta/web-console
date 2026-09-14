@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
 import { usePaginatedTable } from "@/Data";
 import { useGetAgents } from "@/Data/Queries";
 import { Filter } from "@/Slices/Agents/Core/Types";
 import {
   EmptyView,
+  FilterDrawer,
   PageContainer,
   PaginationWidget,
   LoadingView,
@@ -80,25 +80,21 @@ export const Page: React.FC = () => {
             isDrawerExpanded={isDrawerExpanded}
             activeFilterCount={activeFilterCount}
           />
-          <Drawer isExpanded={isDrawerExpanded} isInline>
-            <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
-              <DrawerContentBody>
-                {data.data.length <= 0 ? (
-                  <EmptyView
-                    message={words("agents.empty.message")}
-                    aria-label="AgentsView-Empty"
-                  />
-                ) : (
-                  <TableProvider
-                    agents={data.data}
-                    aria-label="AgentsView-Success"
-                    sort={sort}
-                    setSort={setSort}
-                  />
-                )}
-              </DrawerContentBody>
-            </DrawerContent>
-          </Drawer>
+          <FilterDrawer
+            isExpanded={isDrawerExpanded}
+            panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
+          >
+            {data.data.length <= 0 ? (
+              <EmptyView message={words("agents.empty.message")} aria-label="AgentsView-Empty" />
+            ) : (
+              <TableProvider
+                agents={data.data}
+                aria-label="AgentsView-Success"
+                sort={sort}
+                setSort={setSort}
+              />
+            )}
+          </FilterDrawer>
         </GetAgentsContext.Provider>
       </PageContainer>
     );

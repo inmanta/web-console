@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Drawer, DrawerContent, DrawerContentBody, Stack, StackItem } from "@patternfly/react-core";
+import { Stack, StackItem } from "@patternfly/react-core";
 import { usePaginatedTable } from "@/Data";
 import { useGetCompileReports } from "@/Data/Queries";
 import { Filter } from "@/Slices/CompileReports/Core/Types";
 import {
   EmptyView,
+  FilterDrawer,
   PageContainer,
   ErrorView,
   PaginationWidget,
@@ -71,40 +72,28 @@ export const Page: React.FC = () => {
           isDrawerExpanded={isDrawerExpanded}
           activeFilterCount={activeFilterCount}
         />
-        <Drawer
+        <FilterDrawer
           isExpanded={isDrawerExpanded}
-          isInline
-          style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+          panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
         >
-          <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
-            <DrawerContentBody
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                flex: "1 1 auto",
-                minHeight: 0,
-              }}
-            >
-              {data.data.length <= 0 ? (
-                <EmptyView
-                  message={words("compileReports.empty.message")}
-                  aria-label="CompileReportsView-Empty"
+          {data.data.length <= 0 ? (
+            <EmptyView
+              message={words("compileReports.empty.message")}
+              aria-label="CompileReportsView-Empty"
+            />
+          ) : (
+            <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+              <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                <TableProvider
+                  compileReports={data.data}
+                  aria-label="CompileReportsView-Success"
+                  sort={sort}
+                  setSort={setSort}
                 />
-              ) : (
-                <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
-                  <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
-                    <TableProvider
-                      compileReports={data.data}
-                      aria-label="CompileReportsView-Success"
-                      sort={sort}
-                      setSort={setSort}
-                    />
-                  </StackItem>
-                </Stack>
-              )}
-            </DrawerContentBody>
-          </DrawerContent>
-        </Drawer>
+              </StackItem>
+            </Stack>
+          )}
+        </FilterDrawer>
       </PageContainer>
     );
   }

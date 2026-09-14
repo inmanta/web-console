@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Drawer, DrawerContent, DrawerContentBody } from "@patternfly/react-core";
 import { ServiceModel } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetInstanceEvents } from "@/Data/Queries";
@@ -8,6 +7,7 @@ import {
   EventsTablePresenter,
   EventsTableWrapper,
   EmptyView,
+  FilterDrawer,
   EventsTableBody,
   PaginationWidget,
   LoadingView,
@@ -87,34 +87,27 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
           isDrawerExpanded={isDrawerExpanded}
           activeFilterCount={activeFilterCount}
         />
-        <Drawer isExpanded={isDrawerExpanded} isInline>
-          <DrawerContent
-            panelContent={<ConnectedFilterWidget states={states} onClose={onCloseFilterWidget} />}
-          >
-            <DrawerContentBody>
-              {data.data.length === 0 ? (
-                <EmptyView
-                  title={words("events.empty.title")}
-                  message={words("events.empty.body")}
-                  aria-label="EventTable-Empty"
-                />
-              ) : (
-                <EventsTableWrapper
-                  tablePresenter={tablePresenter}
-                  aria-label="EventTable-Success"
-                  sort={sort}
-                  setSort={setSort}
-                >
-                  <EventsTableBody
-                    route="Events"
-                    events={data.data}
-                    tablePresenter={tablePresenter}
-                  />
-                </EventsTableWrapper>
-              )}
-            </DrawerContentBody>
-          </DrawerContent>
-        </Drawer>
+        <FilterDrawer
+          isExpanded={isDrawerExpanded}
+          panelContent={<ConnectedFilterWidget states={states} onClose={onCloseFilterWidget} />}
+        >
+          {data.data.length === 0 ? (
+            <EmptyView
+              title={words("events.empty.title")}
+              message={words("events.empty.body")}
+              aria-label="EventTable-Empty"
+            />
+          ) : (
+            <EventsTableWrapper
+              tablePresenter={tablePresenter}
+              aria-label="EventTable-Success"
+              sort={sort}
+              setSort={setSort}
+            >
+              <EventsTableBody route="Events" events={data.data} tablePresenter={tablePresenter} />
+            </EventsTableWrapper>
+          )}
+        </FilterDrawer>
       </>
     );
   }

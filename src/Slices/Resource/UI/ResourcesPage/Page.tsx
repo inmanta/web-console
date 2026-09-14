@@ -2,9 +2,6 @@ import React, { useCallback, useMemo, useState } from "react";
 import {
   Flex,
   FlexItem,
-  Drawer,
-  DrawerContent,
-  DrawerContentBody,
   Content,
   PageSection,
   Stack,
@@ -19,6 +16,7 @@ import { usePaginatedTableWithMultiSort } from "@/Data";
 import { useGetResources, mapToResourceActionFilter } from "@/Data/Queries";
 import {
   EmptyView,
+  FilterDrawer,
   PaginationWidget,
   ErrorView,
   LoadingView,
@@ -184,54 +182,42 @@ export const Page: React.FC = () => {
         padding={{ default: "padding" }}
         style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
       >
-        <Drawer
+        <FilterDrawer
           isExpanded={isDrawerExpanded}
-          isInline
-          style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+          panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
         >
-          <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
-            <DrawerContentBody
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                flex: "1 1 auto",
-                minHeight: 0,
-              }}
-            >
-              {resources.length <= 0 ? (
-                <EmptyView
-                  message={words("resources.empty.filterMessage")}
-                  aria-label="ResourcesPage-Empty"
+          {resources.length <= 0 ? (
+            <EmptyView
+              message={words("resources.empty.filterMessage")}
+              aria-label="ResourcesPage-Empty"
+            />
+          ) : (
+            <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+              <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                <ResourcesTable
+                  aria-label="ResourcesPage-Success"
+                  rows={rows}
+                  sort={sort}
+                  setSort={setSort}
                 />
-              ) : (
-                <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
-                  <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
-                    <ResourcesTable
-                      aria-label="ResourcesPage-Success"
-                      rows={rows}
-                      sort={sort}
-                      setSort={setSort}
+              </StackItem>
+              <StackItem>
+                <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+                  <FlexItem>
+                    <PaginationWidget
+                      data={data}
+                      pageSize={pageSize}
+                      setPageSize={setPageSize}
+                      setCurrentPage={setCurrentPage}
+                      isDisabled={isFetching}
+                      variant="bottom"
                     />
-                  </StackItem>
-                  <StackItem>
-                    <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
-                      <FlexItem>
-                        <PaginationWidget
-                          data={data}
-                          pageSize={pageSize}
-                          setPageSize={setPageSize}
-                          setCurrentPage={setCurrentPage}
-                          isDisabled={isFetching}
-                          variant="bottom"
-                        />
-                      </FlexItem>
-                    </Flex>
-                  </StackItem>
-                </Stack>
-              )}
-            </DrawerContentBody>
-          </DrawerContent>
-        </Drawer>
+                  </FlexItem>
+                </Flex>
+              </StackItem>
+            </Stack>
+          )}
+        </FilterDrawer>
       </PageSection>
     </>
   );

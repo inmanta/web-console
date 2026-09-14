@@ -1,21 +1,7 @@
 import { useContext, useState } from "react";
-import {
-  Divider,
-  DrawerActions,
-  DrawerCloseButton,
-  DrawerHead,
-  DrawerPanelBody,
-  DrawerPanelContent,
-  Form,
-  Stack,
-  StackItem,
-  Tab,
-  TabTitleText,
-  Tabs,
-  Title,
-} from "@patternfly/react-core";
+import { Divider, Form, Stack, StackItem, Tab, TabTitleText, Tabs } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { getFilterActions } from "@/UI/Components";
+import { FilterDrawerPanelContent, getFilterActions } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ActiveFiltersSection } from "./ActiveFiltersSection";
@@ -89,77 +75,67 @@ export const FilterWidgetComponent: React.FC<FilterWidgetComponentProps> = ({
   };
 
   return (
-    <DrawerPanelContent isResizable minSize="300px">
-      <DrawerHead>
-        <Title headingLevel="h2" size="xl">
-          {words("resources.filters")}
-        </Title>
-        <DrawerActions>
-          <DrawerCloseButton onClick={onClose} />
-        </DrawerActions>
-      </DrawerHead>
-      <DrawerPanelBody>
-        <Form onSubmit={(e) => e.preventDefault()}>
-          <Stack hasGutter>
-            <StackItem isFilled>
-              <Tabs activeKey={activeTabKey} onSelect={(_, tabIndex) => setActiveTabKey(tabIndex)}>
+    <FilterDrawerPanelContent title={words("resources.filters")} onClose={onClose}>
+      <Form onSubmit={(e) => e.preventDefault()}>
+        <Stack hasGutter>
+          <StackItem isFilled>
+            <Tabs activeKey={activeTabKey} onSelect={(_, tabIndex) => setActiveTabKey(tabIndex)}>
+              <Tab
+                eventKey={0}
+                title={<TabTitleText>{words("resources.filters.tabs.resource")}</TabTitleText>}
+              >
+                <ResourceFilterForm
+                  onAddType={handleAddType}
+                  onAddValue={handleAddValue}
+                  onAddAgent={handleAddAgent}
+                  onChangeStatus={handleStatusChange}
+                  filter={filter}
+                />
+              </Tab>
+              <Tab
+                eventKey={1}
+                title={<TabTitleText>{words("resources.filters.tabs.status")}</TabTitleText>}
+              >
+                <StatusFilterSelect
+                  selectedStatuses={filter.status}
+                  onChange={handleStatusChange}
+                />
+              </Tab>
+              {isLsmEnabled && (
                 <Tab
-                  eventKey={0}
-                  title={<TabTitleText>{words("resources.filters.tabs.resource")}</TabTitleText>}
+                  eventKey={2}
+                  title={<TabTitleText>{words("resources.filters.tabs.service")}</TabTitleText>}
                 >
-                  <ResourceFilterForm
-                    onAddType={handleAddType}
-                    onAddValue={handleAddValue}
-                    onAddAgent={handleAddAgent}
-                    onChangeStatus={handleStatusChange}
+                  <ServiceFilterForm
                     filter={filter}
+                    onAddServiceEntity={addServiceEntity}
+                    onAddServiceInstance={addServiceInstance}
+                    onChangeIncludeOwned={setIncludeOwned}
                   />
                 </Tab>
-                <Tab
-                  eventKey={1}
-                  title={<TabTitleText>{words("resources.filters.tabs.status")}</TabTitleText>}
-                >
-                  <StatusFilterSelect
-                    selectedStatuses={filter.status}
-                    onChange={handleStatusChange}
-                  />
-                </Tab>
-                {isLsmEnabled && (
-                  <Tab
-                    eventKey={2}
-                    title={<TabTitleText>{words("resources.filters.tabs.service")}</TabTitleText>}
-                  >
-                    <ServiceFilterForm
-                      filter={filter}
-                      onAddServiceEntity={addServiceEntity}
-                      onAddServiceInstance={addServiceInstance}
-                      onChangeIncludeOwned={setIncludeOwned}
-                    />
-                  </Tab>
-                )}
-              </Tabs>
-            </StackItem>
-            <Divider />
-            <ActiveFiltersSection
-              filter={filter}
-              onResetFilters={() => setFilter({})}
-              removeTypeChip={removeTypeChip}
-              removeAgentChip={removeAgentChip}
-              removeValueChip={removeValueChip}
-              removeStatusChip={removeStatusChip}
-              clearTypeFilters={clearTypeFilters}
-              clearAgentFilters={clearAgentFilters}
-              clearValueFilters={clearValueFilters}
-              clearStatusFilters={clearStatusFilters}
-              removeServiceEntityChip={removeServiceEntityChip}
-              clearServiceEntities={clearServiceEntities}
-              removeServiceInstanceChip={removeServiceInstanceChip}
-              clearServiceInstances={clearServiceInstances}
-              removeIncludeOwned={() => setIncludeOwned(false)}
-            />
-          </Stack>
-        </Form>
-      </DrawerPanelBody>
-    </DrawerPanelContent>
+              )}
+            </Tabs>
+          </StackItem>
+          <Divider />
+          <ActiveFiltersSection
+            filter={filter}
+            onResetFilters={() => setFilter({})}
+            removeTypeChip={removeTypeChip}
+            removeAgentChip={removeAgentChip}
+            removeValueChip={removeValueChip}
+            removeStatusChip={removeStatusChip}
+            clearTypeFilters={clearTypeFilters}
+            clearAgentFilters={clearAgentFilters}
+            clearValueFilters={clearValueFilters}
+            clearStatusFilters={clearStatusFilters}
+            removeServiceEntityChip={removeServiceEntityChip}
+            clearServiceEntities={clearServiceEntities}
+            removeServiceInstanceChip={removeServiceInstanceChip}
+            clearServiceInstances={clearServiceInstances}
+            removeIncludeOwned={() => setIncludeOwned(false)}
+          />
+        </Stack>
+      </Form>
+    </FilterDrawerPanelContent>
   );
 };
