@@ -1,19 +1,12 @@
 import React, { useCallback, useMemo, useState } from "react";
-import {
-  Content,
-  Drawer,
-  DrawerContent,
-  DrawerContentBody,
-  Flex,
-  Label,
-  PageSection,
-} from "@patternfly/react-core";
+import { Content, Flex, Label, PageSection } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetVersionResources } from "@/Data/Queries";
 import {
   EmptyView,
   ErrorView,
+  FilterDrawer,
   LoadingView,
   PaginationWidget,
   countActiveFilters,
@@ -99,40 +92,26 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
           padding={{ default: "padding" }}
           style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
         >
-          <Drawer
+          <FilterDrawer
             isExpanded={isDrawerExpanded}
-            isInline
-            style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+            panelContent={<DesiredStateDetailsFilterWidget onClose={onCloseFilterWidget} />}
           >
-            <DrawerContent
-              panelContent={<DesiredStateDetailsFilterWidget onClose={onCloseFilterWidget} />}
-            >
-              <DrawerContentBody
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  flex: "1 1 auto",
-                  minHeight: 0,
-                }}
-              >
-                {data.data.length <= 0 ? (
-                  <EmptyView
-                    message={words("resources.empty.message")}
-                    aria-label="VersionResourcesTable-Empty"
-                  />
-                ) : (
-                  <VersionResourceTable
-                    aria-label="VersionResourcesTable-Success"
-                    version={version}
-                    rows={presenter.createRows(data.data)}
-                    tablePresenter={new VersionResourceTablePresenter()}
-                    sort={sort}
-                    setSort={setSort}
-                  />
-                )}
-              </DrawerContentBody>
-            </DrawerContent>
-          </Drawer>
+            {data.data.length <= 0 ? (
+              <EmptyView
+                message={words("resources.empty.message")}
+                aria-label="VersionResourcesTable-Empty"
+              />
+            ) : (
+              <VersionResourceTable
+                aria-label="VersionResourcesTable-Success"
+                version={version}
+                rows={presenter.createRows(data.data)}
+                tablePresenter={new VersionResourceTablePresenter()}
+                sort={sort}
+                setSort={setSort}
+              />
+            )}
+          </FilterDrawer>
         </PageSection>
       </>
     );

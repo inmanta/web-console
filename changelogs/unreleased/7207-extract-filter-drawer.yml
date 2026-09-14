@@ -1,0 +1,9 @@
+description: |
+  Extracted the repeated Drawer, DrawerContent and DrawerContentBody boilerplate on pages with a
+  filter panel into a single shared FilterDrawer component, and switched the Resources filter widget
+  to the shared FilterDrawerPanelContent so it matches the other filter widgets.
+issue-nr: 7207
+change-type: patch
+destination-branches: [master]
+sections:
+  other-note: "{{description}}"

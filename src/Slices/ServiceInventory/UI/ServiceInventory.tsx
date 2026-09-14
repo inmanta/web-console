@@ -1,11 +1,12 @@
 import React, { ReactElement, createContext, useCallback, useMemo, useState } from "react";
-import { Drawer, DrawerContent, DrawerContentBody, Flex, FlexItem } from "@patternfly/react-core";
+import { Flex, FlexItem } from "@patternfly/react-core";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { usePaginatedTable } from "@/Data";
 import { useGetInstances } from "@/Data/Queries";
 import {
   EmptyView,
   ErrorView,
+  FilterDrawer,
   LoadingView,
   PaginationWidget,
   countActiveFilters,
@@ -138,33 +139,25 @@ export const ServiceInventory: React.FunctionComponent<{
             isDrawerExpanded={isDrawerExpanded}
             activeFilterCount={activeFilterCount}
           />
-          <Drawer
+          <FilterDrawer
             isExpanded={isDrawerExpanded}
-            isInline
-            style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+            panelContent={<ConnectedFilterWidget states={states} onClose={onCloseFilterWidget} />}
           >
-            <DrawerContent
-              panelContent={<ConnectedFilterWidget states={states} onClose={onCloseFilterWidget} />}
-              style={{ display: "flex", flexDirection: "column", minHeight: 0 }}
-            >
-              <DrawerContentBody style={{ flex: "1 1 auto", minHeight: 0, overflow: "auto" }}>
-                {data.data.length > 0 ? (
-                  <TableProvider
-                    aria-label="ServiceInventory-Success"
-                    instances={data.data}
-                    serviceEntity={service}
-                    sort={sort}
-                    setSort={setSort}
-                  />
-                ) : (
-                  <EmptyView
-                    message={words("inventory.empty.message")(serviceName)}
-                    aria-label="ServiceInventory-Empty"
-                  />
-                )}
-              </DrawerContentBody>
-            </DrawerContent>
-          </Drawer>
+            {data.data.length > 0 ? (
+              <TableProvider
+                aria-label="ServiceInventory-Success"
+                instances={data.data}
+                serviceEntity={service}
+                sort={sort}
+                setSort={setSort}
+              />
+            ) : (
+              <EmptyView
+                message={words("inventory.empty.message")(serviceName)}
+                aria-label="ServiceInventory-Empty"
+              />
+            )}
+          </FilterDrawer>
         </Wrapper>
       </ServiceInventoryContext.Provider>
     );

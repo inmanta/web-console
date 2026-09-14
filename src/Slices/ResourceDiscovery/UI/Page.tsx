@@ -1,17 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
-import {
-  Content,
-  Drawer,
-  DrawerContent,
-  DrawerContentBody,
-  PageSection,
-  Stack,
-  StackItem,
-} from "@patternfly/react-core";
+import { Content, PageSection, Stack, StackItem } from "@patternfly/react-core";
 import { usePaginatedTable } from "@/Data";
 import { Filter, SortKey, useGetDiscoveredResources } from "@/Data/Queries";
 import {
   EmptyView,
+  FilterDrawer,
   PaginationWidget,
   LoadingView,
   ErrorView,
@@ -97,47 +90,33 @@ export const Page: React.FC = () => {
           padding={{ default: "padding" }}
           style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", minHeight: 0 }}
         >
-          <Drawer
+          <FilterDrawer
             isExpanded={isDrawerExpanded}
-            isInline
-            style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+            panelContent={<DiscoveredResourcesFilterWidget onClose={onCloseFilterWidget} />}
           >
-            <DrawerContent
-              panelContent={<DiscoveredResourcesFilterWidget onClose={onCloseFilterWidget} />}
-            >
-              <DrawerContentBody
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  flex: "1 1 auto",
-                  minHeight: 0,
-                }}
-              >
-                {disabledDiscoveredResourcesView || data.data.length <= 0 ? (
-                  <EmptyView
-                    message={
-                      disabledDiscoveredResourcesView
-                        ? words("resources.discovery.disabled")
-                        : words("resources.empty.message")
-                    }
-                    aria-label="DiscoveredResourcesView-Empty"
+            {disabledDiscoveredResourcesView || data.data.length <= 0 ? (
+              <EmptyView
+                message={
+                  disabledDiscoveredResourcesView
+                    ? words("resources.discovery.disabled")
+                    : words("resources.empty.message")
+                }
+                aria-label="DiscoveredResourcesView-Empty"
+              />
+            ) : (
+              <Stack style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+                <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                  <DiscoveredResourcesTable
+                    rows={data.data}
+                    aria-label="DiscoveredResourcesView-Success"
+                    tablePresenter={new DiscoveredResourcesTablePresenter()}
+                    sort={sort}
+                    setSort={setSort}
                   />
-                ) : (
-                  <Stack style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
-                    <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
-                      <DiscoveredResourcesTable
-                        rows={data.data}
-                        aria-label="DiscoveredResourcesView-Success"
-                        tablePresenter={new DiscoveredResourcesTablePresenter()}
-                        sort={sort}
-                        setSort={setSort}
-                      />
-                    </StackItem>
-                  </Stack>
-                )}
-              </DrawerContentBody>
-            </DrawerContent>
-          </Drawer>
+                </StackItem>
+              </Stack>
+            )}
+          </FilterDrawer>
         </PageSection>
       </>
     );

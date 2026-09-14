@@ -1,11 +1,12 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Drawer, DrawerContent, DrawerContentBody, Stack, StackItem } from "@patternfly/react-core";
+import { Stack, StackItem } from "@patternfly/react-core";
 import { usePaginatedTable } from "@/Data";
 import { useGetFacts } from "@/Data/Queries";
 import { Filter, SortKey } from "@/Slices/Facts/Core/Types";
 import {
   EmptyView,
   ErrorView,
+  FilterDrawer,
   LoadingView,
   PageContainer,
   PaginationWidget,
@@ -72,38 +73,26 @@ export const Page: React.FC = () => {
           isDrawerExpanded={isDrawerExpanded}
           activeFilterCount={activeFilterCount}
         />
-        <Drawer
+        <FilterDrawer
           isExpanded={isDrawerExpanded}
-          isInline
-          style={{ display: "flex", flexDirection: "column", flex: "1 1 auto" }}
+          panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}
         >
-          <DrawerContent panelContent={<ConnectedFilterWidget onClose={onCloseFilterWidget} />}>
-            <DrawerContentBody
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                flex: "1 1 auto",
-                minHeight: 0,
-              }}
-            >
-              {data.data.length <= 0 ? (
-                <EmptyView message={words("facts.empty.message")} aria-label="FactsView-Empty" />
-              ) : (
-                <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
-                  <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
-                    <FactsTable
-                      aria-label="Facts-Success"
-                      rows={tablePresenter.createRows(data.data)}
-                      tablePresenter={tablePresenter}
-                      sort={sort}
-                      setSort={setSort}
-                    />
-                  </StackItem>
-                </Stack>
-              )}
-            </DrawerContentBody>
-          </DrawerContent>
-        </Drawer>
+          {data.data.length <= 0 ? (
+            <EmptyView message={words("facts.empty.message")} aria-label="FactsView-Empty" />
+          ) : (
+            <Stack hasGutter style={{ flex: "1 1 auto", minHeight: 0, height: "100%" }}>
+              <StackItem isFilled style={{ minHeight: 0, height: "100%", overflow: "auto" }}>
+                <FactsTable
+                  aria-label="Facts-Success"
+                  rows={tablePresenter.createRows(data.data)}
+                  tablePresenter={tablePresenter}
+                  sort={sort}
+                  setSort={setSort}
+                />
+              </StackItem>
+            </Stack>
+          )}
+        </FilterDrawer>
       </PageContainer>
     );
   }
