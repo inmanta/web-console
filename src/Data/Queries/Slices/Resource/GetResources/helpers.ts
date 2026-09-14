@@ -1,7 +1,7 @@
 import { Resource } from "@/Core/Domain";
 import { Handlers } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage, MultiSort } from "@/Data";
-import { ResourceActionFilter } from "../DeployFiltered";
+import { ResourceActionFilter } from "../ResourceActionFilter";
 import { PageInfo } from "./useGetResources";
 
 type GraphQLStateFilter = Partial<{
