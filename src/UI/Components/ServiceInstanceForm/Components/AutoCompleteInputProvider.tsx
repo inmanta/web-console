@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { PageSize, ServiceInstanceParams } from "@/Core";
 import { initialCurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
 import { useGetInstances } from "@/Data/Queries";
+import { useDebounce } from "@/UI";
 import { AutoCompleteInput } from "./AutoCompleteInput";
 
 interface Props {
@@ -44,15 +45,19 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
   multi,
   ...props
 }) => {
-  const [filter, setFilter] = useState<ServiceInstanceParams.Filter>({});
+  const [searchText, setSearchText] = useState("");
+  const debouncedSearch = useDebounce(searchText, 500);
+  const filter: ServiceInstanceParams.Filter = debouncedSearch
+    ? { id_or_service_identity: [debouncedSearch] }
+    : {};
   const { data, isLoading, isSuccess } = useGetInstances(serviceName).useContinuous({
     filter,
     pageSize: PageSize.from("250"),
     currentPage: initialCurrentPage,
   });
 
-  const onSearchTextChanged = (searchText: string) => {
-    setFilter({ id_or_service_identity: [searchText] });
+  const onSearchTextChanged = (value: string) => {
+    setSearchText(value);
   };
 
   if (isLoading) {
