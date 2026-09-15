@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Dropdown, MenuToggle, MenuToggleElement } from "@patternfly/react-core";
 
-import { Spinner } from "@/UI/Components";
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
 import { SummaryList } from "./SummaryList";
@@ -31,14 +30,6 @@ export const JumpToAction: React.FC<Props> = ({ items, refs }) => {
     </Dropdown>
   );
 };
-
-export const LoadingJumpToAction: React.FC = () => (
-  <Dropdown
-    toggle={(toggleref: React.Ref<MenuToggleElement>) => (
-      <MenuToggle ref={toggleref} isDisabled icon={<Spinner />} />
-    )}
-  ></Dropdown>
-);
 
 export const EmptyJumpToAction: React.FC = () => (
   <Dropdown

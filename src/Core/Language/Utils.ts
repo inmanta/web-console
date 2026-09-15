@@ -59,11 +59,6 @@ export const isNotNull = <T>(value: T | null): value is NonNullable<T> => value 
 export const isNotUndefined = <T>(value: T | undefined): value is NonNullable<T> =>
   typeof value !== "undefined";
 
-export const objectHasKey = <X extends Record<string, unknown>, Y extends PropertyKey>(
-  obj: X,
-  prop: Y
-): obj is X & Record<Y, unknown> => prop in obj;
-
 export const isObject = (value: unknown): value is Record<string, unknown> => {
   if (typeof value !== "object") {
     return false;
@@ -127,10 +122,6 @@ export const resolvePromiseRecord = async (
 
     return acc;
   }, {});
-};
-
-export const stringifyObjectOrUndefined = (obj: unknown): string => {
-  return typeof obj === "undefined" ? "undefined" : JSON.stringify(obj);
 };
 
 export const stringToBoolean = (value: unknown): boolean | undefined => {
