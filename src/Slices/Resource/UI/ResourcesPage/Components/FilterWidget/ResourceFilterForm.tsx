@@ -87,6 +87,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
             <AddableSelectInput
               label={words("resources.filters.resource.agent.label")}
               placeholder={words("resources.filters.resource.agent.placeholder")}
+              hint={words("resources.filters.resource.agent.hint")}
               onAdd={onAddAgent}
               options={agentOptions.filter((option) => !filter.agent?.includes(option.value))}
               onFilter={setAgentSearch}
