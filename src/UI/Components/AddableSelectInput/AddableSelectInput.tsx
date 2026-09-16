@@ -1,11 +1,14 @@
 import React, { useId, useRef, useState } from "react";
 import {
   Button,
+  Content,
   FormGroup,
+  FormGroupLabelHelp,
   InputGroup,
   InputGroupItem,
   MenuToggle,
   MenuToggleElement,
+  Popover,
   Select,
   SelectList,
   SelectOption,
@@ -25,6 +28,7 @@ export interface AddableSelectOption {
 export interface AddableSelectInputProps {
   label: string;
   placeholder?: string;
+  hint?: string;
   options: AddableSelectOption[];
   onAdd: (value: string) => void;
   onFilter: (value: string) => void;
@@ -51,6 +55,7 @@ export interface AddableSelectInputProps {
  * @Props {AddableSelectInputProps} - Component props.
  *  @prop {string} label - Label shown above the select field.
  *  @prop {string} [placeholder] - Optional placeholder text shown in the input when no value is entered.
+ *  @prop {string} [hint] - Hint displayed in a popover when the help icon is clicked.
  *  @prop {AddableSelectOption[]} options - The list of selectable options.
  *  @prop {(value: string) => void} onAdd - Callback executed with the matched option's value when the add action is triggered.
  *  @prop {(value: string) => void} onFilter - Callback executed when the search input value changes, used to filter options externally.
@@ -66,6 +71,7 @@ export interface AddableSelectInputProps {
 export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
   label,
   placeholder,
+  hint,
   options,
   onAdd,
   onFilter,
@@ -223,6 +229,13 @@ export const AddableSelectInput: React.FC<AddableSelectInputProps> = ({
     <FormGroup
       label={label}
       fieldId={selectId}
+      labelHelp={
+        hint ? (
+          <Popover bodyContent={<Content component="p">{hint}</Content>} position="right">
+            <FormGroupLabelHelp aria-label={`help-${label}`} />
+          </Popover>
+        ) : undefined
+      }
       labelInfo={
         onToggleInputMode && toggleLabel ? (
           <Button
