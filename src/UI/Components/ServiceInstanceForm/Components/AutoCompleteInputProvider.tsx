@@ -72,6 +72,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
         description={description}
         handleInputChange={handleInputChange}
         onSearchTextChanged={onSearchTextChanged}
+        multi={multi}
         {...props}
       />
     );

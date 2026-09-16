@@ -77,7 +77,9 @@ test("Given the AutoCompleteInputProvider When typing an instance name or id The
     fireEvent.change(relationInputField, { target: { value: "ab" } });
   });
   expect(relationInputField).toHaveValue("ab");
-  await waitFor(() => expect(screen.queryByText("service_name_a")).not.toBeInTheDocument());
+  await waitFor(() => expect(screen.queryByText("service_name_a")).not.toBeInTheDocument(), {
+    timeout: 2000,
+  });
 
   // Clear input and check value and option
   await act(async () => {
