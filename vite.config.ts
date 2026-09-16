@@ -15,9 +15,6 @@ const getGitCommitHash = () => {
   }
 };
 
-// Get package version
-const packageJson = require("./package.json");
-
 const PROTOCOL_REWRITE = process.env.HTTPS === "true" ? "https" : "http";
 
 // Custom plugin to move assets to root and rewrite references
@@ -195,7 +192,6 @@ export default defineConfig({
   publicDir: "public",
   define: {
     COMMITHASH: JSON.stringify(getGitCommitHash()),
-    APP_VERSION: JSON.stringify(packageJson.version),
     global: "globalThis",
     ...(process.env.VITEST || process.env.NODE_ENV === "production"
       ? {

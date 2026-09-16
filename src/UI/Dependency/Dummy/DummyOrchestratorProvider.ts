@@ -4,9 +4,6 @@ export class DummyOrchestratorProvider implements OrchestratorProvider {
   getCommitHash(): string {
     throw new Error("Method not implemented.");
   }
-  getAppVersion(): string {
-    throw new Error("Method not implemented");
-  }
   getJsonParser(): JsonParserId {
     throw new Error("Method not implemented.");
   }

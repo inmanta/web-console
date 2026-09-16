@@ -30,11 +30,7 @@ export const Injector: React.FC<React.PropsWithChildren> = ({ children }) => {
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl();
   const routeManager = PrimaryRouteManager(basePathname);
-  const orchestratorProvider = OrchestratorProvider(
-    getJsonParserId(globalThis),
-    COMMITHASH,
-    APP_VERSION
-  );
+  const orchestratorProvider = OrchestratorProvider(getJsonParserId(globalThis), COMMITHASH);
   const urlManager = new UrlManagerImpl(orchestratorProvider, baseUrl);
   const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
   const fileManager = new PrimaryFileManager();
