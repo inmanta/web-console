@@ -639,10 +639,16 @@ const dict = {
   "resources.filters.resource.sectionTitle": "Resource Id",
   "resources.filters.resource.type.label": "Type",
   "resources.filters.resource.type.placeholder": "Resource type...",
+  "resources.filters.resource.type.hint":
+    "Matches any resource whose type contains this text, ignoring case.",
   "resources.filters.resource.value.label": "Value",
   "resources.filters.resource.value.placeholder": "Value...",
+  "resources.filters.resource.value.hint":
+    "Matches any resource whose value contains this text, ignoring case.",
   "resources.filters.resource.agent.label": "Agent(s)",
   "resources.filters.resource.agent.placeholder": "Select Agent(s)",
+  "resources.filters.resource.agent.hint":
+    "Matches any resource whose agent contains this text, ignoring case.",
   "resources.filters.resource.agent.selectInfoLabel": "Use text input",
   "resources.filters.resource.agent.textInfoLabel": "Use select input",
   "resources.filters.resource.agent.loading": "Loading agents...",

@@ -71,10 +71,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
             label={words("resources.filters.resource.type.label")}
             placeholder={words("resources.filters.resource.type.placeholder")}
             onAdd={onAddType}
-
-            //TODO: decide what to do with the hints for these inputs, releated to:
-            // https://github.com/inmanta/web-console/issues/6823
-            /* hint={words("resources.filters.resource.type.hint")} */
+            hint={words("resources.filters.resource.type.hint")}
           />
         </StackItem>
         <StackItem>
@@ -82,8 +79,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
             label={words("resources.filters.resource.value.label")}
             placeholder={words("resources.filters.resource.value.placeholder")}
             onAdd={onAddValue}
-
-            /* hint={words("resources.filters.resource.value.hint")} */
+            hint={words("resources.filters.resource.value.hint")}
           />
         </StackItem>
         <StackItem>
@@ -91,6 +87,7 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
             <AddableSelectInput
               label={words("resources.filters.resource.agent.label")}
               placeholder={words("resources.filters.resource.agent.placeholder")}
+              hint={words("resources.filters.resource.agent.hint")}
               onAdd={onAddAgent}
               options={agentOptions.filter((option) => !filter.agent?.includes(option.value))}
               onFilter={setAgentSearch}
@@ -110,10 +107,9 @@ export const ResourceFilterForm: React.FC<ResourceFilterFormProps> = ({
               label={words("resources.filters.resource.agent.label")}
               placeholder={words("resources.filters.resource.agent.placeholder")}
               onAdd={onAddAgent}
+              hint={words("resources.filters.resource.agent.hint")}
               onToggleInputMode={() => setInputMode("select")}
               toggleLabel={words("resources.filters.resource.agent.textInfoLabel")}
-
-              /* hint={words("resources.filters.resource.agent.hint")} */
             />
           )}
         </StackItem>

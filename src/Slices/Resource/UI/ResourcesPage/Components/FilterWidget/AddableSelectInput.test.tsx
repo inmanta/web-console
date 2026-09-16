@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import { AddableSelectInput } from "./AddableSelectInput";
 
 const options = [
@@ -113,5 +114,22 @@ describe("AddableSelectInput", () => {
     renderInput({ onToggleInputMode: undefined, toggleLabel: undefined });
 
     expect(screen.queryByRole("button", { name: "Use text input" })).not.toBeInTheDocument();
+  });
+
+  it("shows the hint in a popover when clicking the help icon", async () => {
+    const user = userEvent.setup();
+
+    renderInput({ hint: "This is a helpful hint" });
+
+    const helpIcon = screen.getByLabelText("help-Test");
+    await user.click(helpIcon);
+    const hint = await screen.findByText("This is a helpful hint");
+    expect(hint).toBeInTheDocument();
+  });
+
+  it("omits the help icon when no hint is provided", () => {
+    renderInput();
+
+    expect(screen.queryByLabelText("help-Test")).not.toBeInTheDocument();
   });
 });
