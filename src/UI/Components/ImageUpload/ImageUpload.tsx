@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { DropEvent, FileRejection } from "react-dropzone";
 import { FileUpload, FileUploadProps } from "@patternfly/react-core";
 import { ImageHelper } from "@/Data";
 import { words } from "@/UI/words";
 import { AppAlert } from "../AppAlert";
 import { ImagePreview } from "./ImagePreview";
+
+// Derive the dropzone callback types from PatternFly so we stay in sync with the
+// react-dropzone version it bundles, instead of depending on react-dropzone directly.
+type OnDropRejected = NonNullable<NonNullable<FileUploadProps["dropzoneProps"]>["onDropRejected"]>;
+type FileRejection = Parameters<OnDropRejected>[0][number];
 
 interface Props {
   "aria-label"?: string;
@@ -60,9 +64,9 @@ export const ImageUpload: React.FC<Props> = ({
     setIsLoading(false);
   };
 
-  const onDropRejected = (fileRejections: FileRejection[], _event: DropEvent) => {
-    fileRejections.forEach((FileRejection: FileRejection) => {
-      const file = FileRejection.file;
+  const onDropRejected: OnDropRejected = (fileRejections, _event) => {
+    fileRejections.forEach((fileRejection: FileRejection) => {
+      const file = fileRejection.file;
       const errors = ImageHelper.validateFile(file);
 
       if (errors === undefined) {
