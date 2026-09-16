@@ -32,7 +32,7 @@ export interface AddableTextInputProps {
  *  @prop {string} label - Label shown above the input field.
  *  @prop {string} placeholder - Placeholder text displayed within the input.
  *  @prop {(value: string) => void} onAdd - Callback executed with the trimmed value when the add action is triggered.
- *  @prop {string} [hint] - Hint displayed on hover of the help label.
+ *  @prop {string} [hint] - Hint displayed in a popover when the help icon is clicked.
  *  @prop {string} [toggleLabel] - Label for the input-mode toggle link; only rendered when onToggleInputMode is provided.
  *  @prop {(event) => void} [onToggleInputMode] - Callback executed whenever we press on the labelInfo of the FormGroup.
  * @returns {React.ReactElement} The rendered addable text input.
@@ -71,12 +71,8 @@ export const AddableTextInput: React.FC<AddableTextInputProps> = ({
       fieldId={inputId}
       labelHelp={
         hint ? (
-          <Popover
-            bodyContent={<Content component="p">{hint}</Content>}
-            triggerAction="hover"
-            position="right"
-          >
-            <FormGroupLabelHelp aria-label="help" />
+          <Popover bodyContent={<Content component="p">{hint}</Content>} position="right">
+            <FormGroupLabelHelp aria-label={`help-${label}`} />
           </Popover>
         ) : undefined
       }
