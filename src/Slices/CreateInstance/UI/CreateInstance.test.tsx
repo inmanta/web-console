@@ -149,7 +149,7 @@ describe("CreateInstance", () => {
 
     render(component);
 
-    await screen.findByPlaceholderText("Select an instance of test_entity"); // await for the relation input be rendered
+    await screen.findByPlaceholderText("Select instances of test_entity"); // await for the relation input be rendered
 
     const relationInputField = await screen.findByRole("button", {
       name: "test_entity-select-toggle",
