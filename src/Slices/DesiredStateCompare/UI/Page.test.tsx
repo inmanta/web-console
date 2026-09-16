@@ -8,6 +8,7 @@ import { setupServer } from "msw/node";
 import { MockedDependencyProvider, DesiredStateDiff } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { View } from "./Page";
 
 const axe = configureAxe({
@@ -19,11 +20,13 @@ const axe = configureAxe({
 
 function setup() {
   const component = (
-    <QueryClientProvider client={testClient}>
-      <MockedDependencyProvider>
-        <View from="123" to="456" />
-      </MockedDependencyProvider>
-    </QueryClientProvider>
+    <TestMemoryRouter>
+      <QueryClientProvider client={testClient}>
+        <MockedDependencyProvider>
+          <View from="123" to="456" />
+        </MockedDependencyProvider>
+      </QueryClientProvider>
+    </TestMemoryRouter>
   );
 
   return { component };
@@ -69,6 +72,15 @@ describe("DesiredStateCompare", () => {
     const blocks = await screen.findAllByTestId("DiffBlock");
 
     expect(blocks).toHaveLength(11);
+
+    const resourceId = DesiredStateDiff.response.data[0].resource_id;
+    const link = screen.getByRole("link", { name: resourceId });
+    const href = link.getAttribute("href") ?? "";
+
+    // Each diff entry links to the resource details page, keeping the environment.
+    expect(href).toMatch(/^\/resources\//);
+    expect(decodeURIComponent(href)).toContain(resourceId);
+    expect(href).toContain("env=aaa");
 
     await act(async () => {
       const results = await axe(document.body);

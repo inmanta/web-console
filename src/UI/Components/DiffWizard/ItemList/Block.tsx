@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { Link as RouterLink, useLocation } from "react-router";
 import {
   Bullseye,
   Button,
@@ -9,10 +10,13 @@ import {
   CardTitle,
   Divider,
 } from "@patternfly/react-core";
+import { ExternalLinkAltIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Resource } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { Classification, Item, Refs } from "@/UI/Components/DiffWizard/types";
+import { DependencyContext } from "@/UI/Dependency";
+import { SearchHelper } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Entry } from "./Entry/Entry";
 
@@ -51,7 +55,7 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
         >
           <CardTitle id={item.id}>
             <StatusDescriptor status={item.status} />
-            {item.id}
+            <ResourceTitleLink resourceId={item.id} />
           </CardTitle>
         </CardHeader>
         <CardExpandableContent>
@@ -137,6 +141,35 @@ const BodyWithMessage: React.FC<{ message: string }> = ({ message }) => {
     <CardBody>
       <Bullseye>{message}</Bullseye>
     </CardBody>
+  );
+};
+
+/**
+ * Renders the resource id as a link to its resource details page, keeping the
+ * current environment. Lets each diff entry jump to the full desired state and
+ * logs of the matching resource.
+ */
+const ResourceTitleLink: React.FC<{ resourceId: string }> = ({ resourceId }) => {
+  const { routeManager } = useContext(DependencyContext);
+  const { search } = useLocation();
+
+  const to = {
+    pathname: routeManager.getUrl("ResourceDetails", { resourceId }),
+    search: new SearchHelper().keepEnvOnly(search),
+  };
+
+  return (
+    <Button
+      variant="link"
+      isInline
+      icon={<ExternalLinkAltIcon />}
+      iconPosition="end"
+      component={(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+        <RouterLink {...props} to={to} />
+      )}
+    >
+      {resourceId}
+    </Button>
   );
 };
 
