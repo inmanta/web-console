@@ -1,0 +1,7 @@
+description: |
+  Removed the banner asking users to hard-reload for a new web-console version. The console is already served with cache-control and ETag headers, so browsers revalidate and stay in sync on their own, making the banner redundant. Also dropped the unused build step that generated version.json for it.
+issue-nr: 6482
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

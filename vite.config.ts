@@ -15,37 +15,7 @@ const getGitCommitHash = () => {
   }
 };
 
-// Get package version
-const packageJson = require("./package.json");
-
 const PROTOCOL_REWRITE = process.env.HTTPS === "true" ? "https" : "http";
-
-// Custom plugin to generate version.json
-const versionPlugin = () => {
-  return {
-    name: "version-generator",
-    closeBundle() {
-      const distDir = resolve(__dirname, "dist");
-      const buildDate = new Date().toISOString();
-      const version = packageJson.version;
-      const commitHash = getGitCommitHash();
-
-      const versionJson = {
-        version_info: {
-          buildDate: buildDate,
-          version: version,
-          commitHash: commitHash,
-        },
-      };
-
-      try {
-        writeFileSync(resolve(distDir, "version.json"), JSON.stringify(versionJson, null, 2));
-      } catch (error) {
-        console.error("Failed to generate version.json:", error);
-      }
-    },
-  };
-};
 
 // Custom plugin to move assets to root and rewrite references
 function moveAssetsToRootPlugin() {
@@ -211,7 +181,6 @@ const plugins: PluginOption = [
   react(),
   stripBrokenSourcemapsPlugin(),
   blockMonacoCDNPlugin(),
-  versionPlugin(),
   moveAssetsToRootPlugin(),
   copyConfigPlugin(),
   process.env.HTTPS === "true" ? mkcert() : undefined,
@@ -223,7 +192,6 @@ export default defineConfig({
   publicDir: "public",
   define: {
     COMMITHASH: JSON.stringify(getGitCommitHash()),
-    APP_VERSION: JSON.stringify(packageJson.version),
     global: "globalThis",
     ...(process.env.VITEST || process.env.NODE_ENV === "production"
       ? {

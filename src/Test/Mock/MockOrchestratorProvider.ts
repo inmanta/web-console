@@ -9,10 +9,6 @@ export class MockOrchestratorProvider implements OrchestratorProvider {
     return "123456abcdef";
   }
 
-  getAppVersion(): string {
-    return "1.10.11";
-  }
-
   getJsonParser(): JsonParserId {
     return "Native";
   }
@@ -76,10 +72,6 @@ export class MockEditableOrchestratorProvider implements OrchestratorProvider {
     return "123456abcdef";
   }
 
-  getAppVersion(): string {
-    return "@inmanta/1.10.11";
-  }
-
   getJsonParser(): JsonParserId {
     return "Native";
   }
@@ -141,10 +133,6 @@ export class MockEditableOrchestratorProvider implements OrchestratorProvider {
 export class MockLimitedOrchestratorProvider implements OrchestratorProvider {
   getCommitHash(): string {
     return "123456abcdef";
-  }
-
-  getAppVersion(): string {
-    return "@inmanta/1.10.11";
   }
 
   getJsonParser(): JsonParserId {
