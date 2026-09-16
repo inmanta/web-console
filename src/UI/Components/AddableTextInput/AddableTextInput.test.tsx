@@ -58,7 +58,7 @@ describe("AddableTextInput", () => {
     expect(input).toHaveValue("");
   });
 
-  it("shows the hint in a popover when hovering the help icon", async () => {
+  it("shows the hint in a popover when clicking the help icon", async () => {
     const user = userEvent.setup();
 
     render(
@@ -69,8 +69,8 @@ describe("AddableTextInput", () => {
         hint="This is a helpful hint"
       />
     );
-    const helpIcon = screen.getByLabelText("help");
-    await user.hover(helpIcon);
+    const helpIcon = screen.getByLabelText("help-Type");
+    await user.click(helpIcon);
     const hint = await screen.findByText("This is a helpful hint");
     expect(hint).toBeInTheDocument();
   });
