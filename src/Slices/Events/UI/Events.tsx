@@ -4,7 +4,7 @@ import { usePaginatedTable } from "@/Data";
 import { useGetInstanceEvents } from "@/Data/Queries";
 import { Filter } from "@/Slices/Events/Core/Types";
 import {
-  EventsTablePresenter,
+  createEventsTablePresenter,
   EventsTableWrapper,
   EmptyView,
   FilterDrawer,
@@ -65,7 +65,7 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
     currentPage,
   }).useContinuous();
 
-  const tablePresenter = new EventsTablePresenter();
+  const tablePresenter = createEventsTablePresenter();
 
   if (isError) {
     return <ErrorView message={error.message} ariaLabel="EventTable-Error" retry={refetch} />;

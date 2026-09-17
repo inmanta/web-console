@@ -1,62 +1,32 @@
-import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 import { Agent, AgentRow } from "@S/Agents/Core/Domain";
 
-export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
-  readonly columnHeads: ColumnHead[];
-  readonly numberOfColumns: number;
+/**
+ * Table presenter for the Agents view. The "unpause on resume" column only shows
+ * when the environment is halted.
+ *
+ * @example createAgentsTablePresenter(true).getColumnHeadDisplayNames().length // 3
+ */
+export const createAgentsTablePresenter = (isHalted: boolean) => {
+  const columnHeads: ColumnHead[] = [
+    { displayName: words("name"), apiName: "name" },
+    { displayName: words("status"), apiName: "status" },
+  ];
 
-  constructor(isHalted: boolean) {
-    this.columnHeads = [
-      { displayName: words("name"), apiName: "name" },
-      { displayName: words("status"), apiName: "status" },
-      {
-        displayName: words("agents.columns.unpause"),
-        apiName: "unpause_on_resume",
-      },
-    ];
-
-    if (!isHalted) {
-      this.columnHeads.pop();
-    }
-
-    this.numberOfColumns = this.columnHeads.length + 3;
-  }
-
-  createRows(sourceData: Agent[]): AgentRow[] {
-    return sourceData.map((agent) => {
-      const { environment: _environment, ...rest } = agent;
-
-      return rest;
+  if (isHalted) {
+    columnHeads.push({
+      displayName: words("agents.columns.unpause"),
+      apiName: "unpause_on_resume",
     });
   }
 
-  getColumnHeadDisplayNames(): string[] {
-    return this.columnHeads.map((columnHead) => columnHead.displayName);
-  }
+  return createTablePresenter<Agent, AgentRow>({
+    columnHeads,
+    sortableColumns: ["name", "status"],
+    extraColumns: 3,
+    createRows: (agents) => agents.map(({ environment: _environment, ...rest }) => rest),
+  });
+};
 
-  getNumberOfColumns(): number {
-    return this.numberOfColumns;
-  }
-  getColumnHeads(): ColumnHead[] {
-    return this.columnHeads;
-  }
-
-  getColumnNameForIndex(index: number): string | undefined {
-    if (index > -1 && index < this.getNumberOfColumns()) {
-      return this.getColumnHeads()[index].apiName;
-    }
-
-    return undefined;
-  }
-
-  getIndexForColumnName(columnName?: string): number {
-    return this.columnHeads.findIndex((columnHead) => columnHead.apiName === columnName);
-  }
-
-  getSortableColumnNames(): string[] {
-    const sortableColumns = ["name", "status"];
-
-    return sortableColumns;
-  }
-}
+export type AgentsTablePresenter = ReturnType<typeof createAgentsTablePresenter>;

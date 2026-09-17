@@ -12,7 +12,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { SortKey } from "../Core/Types";
 import { OrdersTable } from "./OrdersTable";
-import { OrdersTablePresenter } from "./OrdersTablePresenter";
+import { createOrdersTablePresenter } from "./OrdersTablePresenter";
 import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
@@ -63,7 +63,7 @@ export const Page: React.FC = () => {
           <div aria-label="OrdersView-Success">
             <OrdersTable
               rows={data.data}
-              tablePresenter={new OrdersTablePresenter()}
+              tablePresenter={createOrdersTablePresenter()}
               sort={sort}
               setSort={setSort}
             />

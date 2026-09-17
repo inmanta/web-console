@@ -1,50 +1,24 @@
-import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 import { Fact } from "@S/Facts/Core/Domain";
 
-export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
-  readonly columnHeads: ColumnHead[];
-  readonly numberOfColumns: number;
+const columnHeads: ColumnHead[] = [
+  { displayName: words("name"), apiName: "name" },
+  { displayName: words("updated"), apiName: "updated" },
+  { displayName: words("value"), apiName: "value" },
+  { displayName: words("resourceId"), apiName: "resource_id" },
+];
 
-  constructor() {
-    this.columnHeads = [
-      { displayName: words("name"), apiName: "name" },
-      { displayName: words("updated"), apiName: "updated" },
-      { displayName: words("value"), apiName: "value" },
-      { displayName: words("resourceId"), apiName: "resource_id" },
-    ];
-    this.numberOfColumns = this.columnHeads.length;
-  }
+/**
+ * Table presenter for the Facts view. Rows are the facts unchanged.
+ *
+ * @example createFactsTablePresenter().getSortableColumnNames() // ["name", "resource_id"]
+ */
+export const createFactsTablePresenter = () =>
+  createTablePresenter<Fact, Fact>({
+    columnHeads,
+    sortableColumns: ["name", "resource_id"],
+    createRows: (facts) => facts,
+  });
 
-  createRows(sourceData: Fact[]): Fact[] {
-    return sourceData;
-  }
-
-  getColumnHeadDisplayNames(): string[] {
-    return this.columnHeads.map((columnHead) => columnHead.displayName);
-  }
-
-  public getColumnHeads(): ColumnHead[] {
-    return this.columnHeads;
-  }
-
-  public getColumnNameForIndex(index: number): string | undefined {
-    if (index > -1 && index < this.getNumberOfColumns()) {
-      return this.getColumnHeads()[index].apiName;
-    }
-
-    return undefined;
-  }
-
-  public getIndexForColumnName(columnName?: string): number {
-    return this.columnHeads.findIndex((columnHead) => columnHead.apiName === columnName);
-  }
-
-  public getSortableColumnNames(): string[] {
-    return ["name", "resource_id"];
-  }
-
-  getNumberOfColumns(): number {
-    return this.numberOfColumns;
-  }
-}
+export type FactsTablePresenter = ReturnType<typeof createFactsTablePresenter>;

@@ -14,7 +14,7 @@ import {
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { FactsTable } from "./FactsTable";
-import { FactsTablePresenter } from "./FactsTablePresenter";
+import { createFactsTablePresenter } from "./FactsTablePresenter";
 import { ConnectedFilterWidget } from "./FilterWidget";
 import { TableControls } from "./TableControls";
 
@@ -44,7 +44,7 @@ export const Page: React.FC = () => {
     currentPage,
   }).useContinuous();
 
-  const tablePresenter = new FactsTablePresenter();
+  const tablePresenter = createFactsTablePresenter();
 
   if (isError) {
     return (
