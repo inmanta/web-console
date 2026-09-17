@@ -31,21 +31,12 @@ const DEFAULT_FEATURES: Pick<
  */
 export const OrchestratorProvider = (
   jsonParserId: JsonParserId = "Native",
-  commitHash: string = "",
-  appVersion: string = ""
+  commitHash: string = ""
 ): OrchestratorProviderType => {
   const [features, setFeatures] = useState<Pick<
     ServerStatus,
     "features" | "extensions" | "version" | "edition" | "slices"
   > | null>(null);
-
-  /**
-   * Gets the version of the application.
-   * @returns The version of the application.
-   */
-  function getAppVersion(): string {
-    return appVersion;
-  }
 
   /**
    * Gets the commit hash of the application.
@@ -195,12 +186,11 @@ export const OrchestratorProvider = (
 
   useEffect(() => {
     console.info(
-      `[inmanta-web-console] Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
+      `[inmanta-web-console] Application configured with ${jsonParserId} JSON parser, Commit: ${commitHash}`
     );
-  }, [jsonParserId, appVersion, commitHash]);
+  }, [jsonParserId, commitHash]);
 
   return {
-    getAppVersion,
     getCommitHash,
     isLicencedFeatureEnabled,
     getJsonParser,
