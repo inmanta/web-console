@@ -3,7 +3,12 @@ import styled from "styled-components";
 export const ZoomControlsContainer = styled.div`
   position: absolute;
   bottom: 25px;
-  right: 316px;
+  // Centre the toolbar in the canvas, clear of the 240px left sidebar and the 350px
+  // (plus 1px offset) right details sidebar so it never overlaps the details form.
+  left: 240px;
+  right: 351px;
+  margin-inline: auto;
+  width: max-content;
   display: flex;
   align-items: center;
   gap: 0.375rem;

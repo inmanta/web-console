@@ -268,11 +268,18 @@ export const useCanvasInteractions = ({
       }, 0);
     };
 
+    // Expose the paper zoom to CSS so the selection halo scales with the shape.
+    const syncZoomVar = () => {
+      paper.el.style.setProperty("--composer-zoom", String(paper.scale().sx));
+    };
+    syncZoomVar();
+
     paper.on("blank:pointerdown", handleBlankPointerDown);
     paper.on("blank:pointerup", handleBlankClick);
     paper.on("cell:pointerup", handleCellClick);
     paper.on("cell:contextmenu", handleCellContextMenu);
     paper.on("link:connect", scheduleHaloRefresh);
+    paper.on("scale", syncZoomVar);
     graph.on("remove", handleLinkRemovedForHalo);
 
     return () => {
@@ -281,6 +288,7 @@ export const useCanvasInteractions = ({
       paper.off("cell:pointerup", handleCellClick);
       paper.off("cell:contextmenu", handleCellContextMenu);
       paper.off("link:connect", scheduleHaloRefresh);
+      paper.off("scale", syncZoomVar);
       graph.off("remove", handleLinkRemovedForHalo);
       if (contextMenuRef.current) {
         contextMenuRef.current.remove();
