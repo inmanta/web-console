@@ -7,35 +7,36 @@ interface Props {
   resourceId: string;
   linkText?: string;
   variant?: ButtonVariant;
+  isInline?: boolean;
 }
 
 /**
- * The ResourceLink component.
+ * Renders a link to a resource's details page, keeping the current environment.
+ * Blocks (tables) get a button-styled link that truncates long ids; inline links
+ * (e.g. inside a title) flow with and inherit the surrounding text.
  *
- * This component is responsible of displaying a link to a resource.
- *
- * @Props {Props} - The props of the component
- *  @prop {string} resourceId - The id of the resource
- *  @prop {string} linkText - The text of the link
- *  @prop {ButtonVariant} variant - The variant of the button
- *
- * @returns {React.FC} ResourceLink component
+ * @example <ResourceLink resourceId="std::File[a,path=/tmp]" /> -> link to /resources/std::File...?env=...
  */
 export const ResourceLink: React.FC<Props> = ({
   resourceId,
   linkText,
   variant = ButtonVariant.link,
+  isInline = false,
 }) => {
   const { routeManager } = useContext(DependencyContext);
+  const pathname = routeManager.getUrl("ResourceDetails", { resourceId });
+
+  if (isInline) {
+    return (
+      <Link pathname={pathname} envOnly isInline>
+        {linkText ? linkText : resourceId}
+      </Link>
+    );
+  }
 
   return (
-    <Link
-      pathname={routeManager.getUrl("ResourceDetails", {
-        resourceId,
-      })}
-      envOnly
-    >
-      <Button variant={variant}>
+    <Link pathname={pathname} envOnly>
+      <Button variant={variant} component="span">
         <Truncate content={linkText ? linkText : resourceId} />
       </Button>
     </Link>

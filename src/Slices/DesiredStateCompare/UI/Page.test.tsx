@@ -73,20 +73,28 @@ describe("DesiredStateCompare", () => {
 
     expect(blocks).toHaveLength(11);
 
-    const resourceId = DesiredStateDiff.response.data[0].resource_id;
-    const link = screen.getByRole("link", { name: resourceId });
-    const href = link.getAttribute("href") ?? "";
-
-    // Each diff entry links to the resource details page, keeping the environment.
-    expect(href).toMatch(/^\/resources\//);
-    expect(decodeURIComponent(href)).toContain(resourceId);
-    expect(href).toContain("env=aaa");
-
     await act(async () => {
       const results = await axe(document.body);
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("GIVEN DesiredStateCompare THEN each diff entry links to its resource details page", async () => {
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findAllByTestId("DiffBlock");
+
+    const resourceId = DesiredStateDiff.response.data[0].resource_id;
+    const link = screen.getByRole("link", { name: resourceId });
+    const href = link.getAttribute("href") ?? "";
+
+    // The link points at the resource details page for this resource, keeping the environment.
+    expect(href).toMatch(/^\/resources\//);
+    expect(decodeURIComponent(href)).toContain(resourceId);
+    expect(href).toContain("env=aaa");
   });
 
   test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", async () => {

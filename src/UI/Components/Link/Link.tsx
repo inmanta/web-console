@@ -11,11 +11,21 @@ interface Props {
   className?: string;
   children?: React.ReactNode;
   variant?: "plain" | "default";
+  isInline?: boolean;
 }
 
 export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
   (
-    { children, isDisabled, pathname, envOnly, search: newSearch, className, variant = "default" },
+    {
+      children,
+      isDisabled,
+      pathname,
+      envOnly,
+      search: newSearch,
+      className,
+      variant = "default",
+      isInline = false,
+    },
     ref
   ) => {
     const { search: currentSearch } = useLocation();
@@ -28,16 +38,22 @@ export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
     return isDisabled ? (
       <>{children}</>
     ) : (
-      <StyledRRLink to={{ pathname, search }} className={className} ref={ref} $variant={variant}>
+      <StyledRRLink
+        to={{ pathname, search }}
+        className={className}
+        ref={ref}
+        $variant={variant}
+        $isInline={isInline}
+      >
         {children}
       </StyledRRLink>
     );
   }
 );
 
-const StyledRRLink = styled(RRLink)<{ $variant?: "plain" | "default" }>`
+const StyledRRLink = styled(RRLink)<{ $variant?: "plain" | "default"; $isInline?: boolean }>`
   display: inline-block;
-  width: 100%;
+  ${({ $isInline }) => (!$isInline ? "width: 100%;" : "")}
   color: ${({ $variant }) =>
     $variant === "plain" ? "inherit" : "var(--pf-t--global--text--color--link--default)"};
   ${({ $variant }) => ($variant === "plain" ? "text-decoration:none" : "")};
