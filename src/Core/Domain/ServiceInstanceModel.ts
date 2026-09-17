@@ -6,16 +6,6 @@ import { ParsedNumber } from "@/Core/Language";
 export type InstanceAttributeModel = Record<string, unknown>;
 
 /**
- * Interface representing a patch field. This is meant to be used with V2 of the PATCH API.
- */
-export interface PatchField {
-  edit_id: string;
-  operation: string;
-  target: string;
-  value: InstanceAttributeModel | null;
-}
-
-/**
  * Interface representing the progress of a deployment.
  */
 export interface DeploymentProgress {

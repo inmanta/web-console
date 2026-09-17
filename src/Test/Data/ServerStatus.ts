@@ -128,8 +128,6 @@ const base: ServerStatus = {
   ],
 };
 
-export const withoutFeatures = base;
-
 export const withLsm: ServerStatus = {
   ...base,
   extensions: [
@@ -141,8 +139,6 @@ export const withLsm: ServerStatus = {
     },
   ],
 };
-
-export const withoutSupport = base;
 
 export const withSupport: ServerStatus = {
   ...base,

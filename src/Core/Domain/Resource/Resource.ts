@@ -185,17 +185,10 @@ export interface Details extends ReleasedDetails {
   requires_status: Record<string, Status>;
 }
 
-export interface RawDetails extends ReleasedDetails {
-  status: string;
-  requires_status: Record<string, string>;
-}
-
 export interface VersionedDetails extends BaseDetails {
   version: ParsedNumber;
   resource_version_id: string;
 }
-
-export const TRANSIENT_STATES = ["available", "deploying", "processing_events"];
 
 /**
  * Interface for filtering resources
@@ -231,13 +224,6 @@ export const parseServiceInstanceFilterValue = (value: string): { id: string; la
 
 export interface FilterWithDefaultHandling extends Filter {
   disregardDefault?: boolean;
-}
-
-export enum FilterKind {
-  Type = "Type",
-  Agent = "Agent",
-  Value = "Value",
-  Status = "Status",
 }
 
 export const STATUS_SORT_KEYS = ["blocked", "compliance", "lastHandlerRun", "isDeploying"] as const;
