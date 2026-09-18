@@ -35,6 +35,7 @@ import {
   createDuplicateFormState,
   createEditFormState,
   createFormState,
+  isSingleRelationTab,
   resolveFieldDependencies,
   resolveFormTabs,
 } from "./Helpers";
@@ -252,7 +253,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     }
   }, [shouldPerformCancel, onCancel]);
 
-  const fieldToInput = (field: Field) => (
+  const fieldToInput = (field: Field, isFlat = false) => (
     <FieldInput
       key={field.name}
       field={field}
@@ -262,6 +263,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       path={null}
       suggestions={field.suggestion}
       suggestionVariables={suggestionVariables}
+      isFlat={isFlat}
     />
   );
 
@@ -324,7 +326,9 @@ export const ServiceInstanceForm: React.FC<Props> = ({
               }
             >
               <Flex direction={{ default: "column" }} gap={{ default: "gapLg" }}>
-                {tabFields.map(fieldToInput)}
+                {/* A tab holding one embedded relation is that relation's group, so it
+                    renders flat: no expandable to open before the sub-form shows. */}
+                {tabFields.map((field) => fieldToInput(field, isSingleRelationTab(tabFields)))}
               </Flex>
             </Tab>
           ))}
@@ -339,7 +343,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
               isInline
             />
           )}
-          {fields.map(fieldToInput)}
+          {fields.map((field) => fieldToInput(field))}
         </>
       )}
       {fields.length <= 0 && (

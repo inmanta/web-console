@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -46,6 +46,7 @@ interface Props {
   isNew?: boolean;
   suggestions?: FormSuggestion | null;
   suggestionVariables?: SuggestionVariables;
+  isFlat?: boolean;
 }
 
 /**
@@ -77,6 +78,7 @@ const makePath = (path: string | null, next: string): string =>
  *   @prop {boolean} isNew - Flag indicating whether the field is newly added. Default is false.
  *   @prop {FormSuggestion | null} suggestions - The suggestions for the field. Default is null.
  *   @prop {SuggestionVariables} suggestionVariables - The form's values for `${...}` variables in a suggestion's parameter name.
+ *   @prop {boolean} isFlat - Renders an embedded relation without its expandable group, for a tab that holds nothing else. Default is false.
  *
  * @returns {React.FC<Props>} The rendered FieldInput component.
  */
@@ -89,6 +91,7 @@ export const FieldInput: React.FC<Props> = ({
   isNew = false,
   suggestions,
   suggestionVariables,
+  isFlat = false,
 }) => {
   // --- Resolve suggestions ---
   // `form` resolves `${form.*}` from the form root; `self` resolves `${self.*}` from this field's
@@ -373,6 +376,7 @@ export const FieldInput: React.FC<Props> = ({
           path={path}
           isNew={isNew}
           suggestionVariables={suggestionVariables}
+          isFlat={isFlat}
         />
       );
     case "DictList":
@@ -385,6 +389,7 @@ export const FieldInput: React.FC<Props> = ({
           path={path}
           isNew={isNew}
           suggestionVariables={suggestionVariables}
+          isFlat={isFlat}
         />
       );
     case "RelationList":
@@ -451,6 +456,7 @@ interface NestedProps {
   path: string | null;
   isNew?: boolean;
   suggestionVariables?: SuggestionVariables;
+  isFlat?: boolean;
 }
 
 /**
@@ -472,6 +478,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   path,
   isNew = false,
   suggestionVariables,
+  isFlat = false,
 }) => {
   const [showList, setShowList] = useState(
     !field.isOptional || get(formState, makePath(path, field.name)) != null
@@ -491,59 +498,80 @@ const NestedFieldInput: React.FC<NestedProps> = ({
     return getUpdate(makePath(path, field.name), null);
   };
 
+  const header = (
+    <FormFieldGroupHeader
+      // A flat relation is titled by its tab already, so repeating the field name is noise.
+      titleText={
+        isFlat
+          ? undefined
+          : {
+              text: field.name,
+              id: `NestedFieldInput-${makePath(path, field.name)}`,
+            }
+      }
+      titleDescription={field.description}
+      actions={
+        field.isOptional && (
+          <>
+            <Button
+              variant="link"
+              icon={<PlusIcon />}
+              onClick={onAdd}
+              isDisabled={
+                (!isNew &&
+                  field.isDisabled &&
+                  get(originalState, makePath(path, field.name)) !== undefined) ||
+                showList
+              }
+            >
+              {words("add")}
+            </Button>
+            <Button
+              variant="link"
+              onClick={getOnDelete()}
+              isDisabled={!isNew && (field.isDisabled || !showList)}
+            >
+              {words("delete")}
+            </Button>
+          </>
+        )
+      }
+    />
+  );
+
+  const subForm =
+    showList &&
+    field.fields.map((childField) => (
+      <FieldInput
+        field={childField}
+        key={makePath(path, `${field.name}.${childField.name}`)}
+        formState={formState}
+        originalState={originalState}
+        getUpdate={getUpdate}
+        path={makePath(path, field.name)}
+        suggestions={childField.suggestion}
+        suggestionVariables={suggestionVariables}
+        isNew={isNew}
+      />
+    ));
+
+  // Flat: the tab is the group. Header and sub-form become siblings in the tab's own
+  // column, so there is nothing left to expand.
+  if (isFlat) {
+    return (
+      <>
+        {header}
+        {subForm}
+      </>
+    );
+  }
+
   return (
     <FormFieldGroupExpandable
       aria-label={`NestedFieldInput-${makePath(path, field.name)}`}
-      header={
-        <FormFieldGroupHeader
-          titleText={{
-            text: field.name,
-            id: `NestedFieldInput-${makePath(path, field.name)}`,
-          }}
-          titleDescription={field.description}
-          actions={
-            field.isOptional && (
-              <>
-                <Button
-                  variant="link"
-                  icon={<PlusIcon />}
-                  onClick={onAdd}
-                  isDisabled={
-                    (!isNew &&
-                      field.isDisabled &&
-                      get(originalState, makePath(path, field.name)) !== undefined) ||
-                    showList
-                  }
-                >
-                  {words("add")}
-                </Button>
-                <Button
-                  variant="link"
-                  onClick={getOnDelete()}
-                  isDisabled={!isNew && (field.isDisabled || !showList)}
-                >
-                  {words("delete")}
-                </Button>
-              </>
-            )
-          }
-        />
-      }
+      header={header}
     >
-      {showList &&
-        field.fields.map((childField) => (
-          <FieldInput
-            field={childField}
-            key={makePath(path, `${field.name}.${childField.name}`)}
-            formState={formState}
-            originalState={originalState}
-            getUpdate={getUpdate}
-            path={makePath(path, field.name)}
-            suggestions={childField.suggestion}
-            suggestionVariables={suggestionVariables}
-            isNew={isNew}
-          />
-        ))}
+      {subForm}
     </FormFieldGroupExpandable>
   );
 };
@@ -556,6 +584,7 @@ interface DictListProps {
   path: string | null;
   isNew?: boolean;
   suggestionVariables?: SuggestionVariables;
+  isFlat?: boolean;
 }
 
 /**
@@ -577,6 +606,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   path,
   isNew = false,
   suggestionVariables,
+  isFlat = false,
 }) => {
   const list = useMemo(
     () => get<Array<unknown>>(formState, makePath(path, field.name), []) ?? [],
@@ -585,14 +615,9 @@ const DictListFieldInput: React.FC<DictListProps> = ({
 
   const [addedItemsPaths, setAddedItemPaths] = useState<string[]>([]);
 
-  const [itemIds, setItemIds] = useState<string[]>([]);
-
-  useEffect(() => {
-    // Initialize itemIds with unique IDs if not already set
-    if (itemIds.length === 0 && list.length > 0) {
-      setItemIds(list.map(() => uuidv4()));
-    }
-  }, [list, itemIds.length]);
+  // Seeded from the list the component mounts with: an item rendered on that first pass
+  // would otherwise take its React key from a missing id, giving every item the same key.
+  const [itemIds, setItemIds] = useState<string[]>(() => list.map(() => uuidv4()));
 
   /**
    * Appends a new empty sub-form of this type to the list and records its path.
@@ -649,77 +674,96 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     getUpdate(makePath(path, field.name), [...list.filter((_, i) => i !== index)]);
   };
 
-  return (
+  const header = (
+    <FormFieldGroupHeader
+      // A flat relation is titled by its tab already, so repeating the field name is noise.
+      titleText={
+        isFlat
+          ? undefined
+          : {
+              text: field.name,
+              id: `DictListFieldInput-${makePath(path, field.name)}`,
+            }
+      }
+      titleDescription={`${
+        field.description !== null ? field.description : ""
+      } (${words("inventory.createInstance.items")(list.length)})`}
+      actions={
+        <Button
+          variant="link"
+          icon={<PlusIcon />}
+          onClick={onAdd}
+          isDisabled={
+            (field.isDisabled && get(originalState, makePath(path, field.name)) !== undefined) ||
+            (!!field.max && list.length >= field.max)
+          }
+        >
+          {words("add")}
+        </Button>
+      }
+    />
+  );
+
+  const items = list.map((_item, index) => (
     <FormFieldGroupExpandable
-      aria-label={`DictListFieldInput-${makePath(path, field.name)}`}
+      aria-label={`DictListFieldInputItem-${makePath(path, `${field.name}.${index}`)}`}
+      key={makePath(path, `${field.name}.${itemIds[index]}`)}
       header={
         <FormFieldGroupHeader
           titleText={{
-            text: field.name,
-            id: `DictListFieldInput-${makePath(path, field.name)}`,
+            text: index,
+            id: `DictListFieldInputItem-${makePath(path, `${field.name}.${index}`)}`,
           }}
-          titleDescription={`${
-            field.description !== null ? field.description : ""
-          } (${words("inventory.createInstance.items")(list.length)})`}
           actions={
             <Button
               variant="link"
-              icon={<PlusIcon />}
-              onClick={onAdd}
+              onClick={getOnDelete(index)}
               isDisabled={
-                (field.isDisabled &&
+                (!isNew &&
+                  field.isDisabled &&
                   get(originalState, makePath(path, field.name)) !== undefined) ||
-                (!!field.max && list.length >= field.max)
+                list.length <= field.min
               }
             >
-              {words("add")}
+              {words("delete")}
             </Button>
           }
         />
       }
     >
-      {list.map((_item, index) => (
-        <FormFieldGroupExpandable
-          aria-label={`DictListFieldInputItem-${makePath(path, `${field.name}.${index}`)}`}
-          key={makePath(path, `${field.name}.${itemIds[index]}`)}
-          header={
-            <FormFieldGroupHeader
-              titleText={{
-                text: index,
-                id: `DictListFieldInputItem-${makePath(path, `${field.name}.${index}`)}`,
-              }}
-              actions={
-                <Button
-                  variant="link"
-                  onClick={getOnDelete(index)}
-                  isDisabled={
-                    (!isNew &&
-                      field.isDisabled &&
-                      get(originalState, makePath(path, field.name)) !== undefined) ||
-                    list.length <= field.min
-                  }
-                >
-                  {words("delete")}
-                </Button>
-              }
-            />
-          }
-        >
-          {field.fields.map((childField) => (
-            <FieldInput
-              field={childField}
-              key={makePath(path, `${field.name}.${index}.${childField.name}`)}
-              formState={formState}
-              originalState={originalState}
-              getUpdate={getUpdate}
-              path={makePath(path, `${field.name}.${index}`)}
-              isNew={isNew || addedItemsPaths.includes(`${makePath(path, field.name)}.${index}`)}
-              suggestions={childField.suggestion}
-              suggestionVariables={suggestionVariables}
-            />
-          ))}
-        </FormFieldGroupExpandable>
+      {field.fields.map((childField) => (
+        <FieldInput
+          field={childField}
+          key={makePath(path, `${field.name}.${index}.${childField.name}`)}
+          formState={formState}
+          originalState={originalState}
+          getUpdate={getUpdate}
+          path={makePath(path, `${field.name}.${index}`)}
+          isNew={isNew || addedItemsPaths.includes(`${makePath(path, field.name)}.${index}`)}
+          suggestions={childField.suggestion}
+          suggestionVariables={suggestionVariables}
+        />
       ))}
+    </FormFieldGroupExpandable>
+  ));
+
+  // Flat: the tab is the group. Header and items become siblings in the tab's own
+  // column, so there is nothing left to expand.
+  if (isFlat) {
+    return (
+      <>
+        {header}
+        {items}
+      </>
+    );
+  }
+
+  return (
+    <FormFieldGroupExpandable
+      aria-label={`DictListFieldInput-${makePath(path, field.name)}`}
+      header={header}
+    >
+      {items}
     </FormFieldGroupExpandable>
   );
 };
