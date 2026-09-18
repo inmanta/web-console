@@ -995,6 +995,79 @@ test("GIVEN ServiceInstanceForm WHEN the entity has a web_tabs catalog THEN fiel
   ).not.toBeInTheDocument();
 });
 
+test("GIVEN ServiceInstanceForm WHEN a tab holds a single embedded relation THEN the relation renders flat, without a group to expand first", async () => {
+  const { network, entityAnnotations } = Test.Service.FormTabs;
+  const relation = { ...Test.Field.dictList([Test.Field.text]), min: 0, tab: network.key };
+
+  const { component } = setup(
+    [Test.Field.number, relation],
+    undefined,
+    false,
+    undefined,
+    [],
+    entityAnnotations
+  );
+
+  render(component);
+
+  await userEvent.click(screen.getByRole("tab", { name: network.label }));
+
+  // The tab is the relation's group: its description and Add action sit on the tab itself.
+  expect(screen.queryByLabelText(`DictListFieldInput-${relation.name}`)).not.toBeInTheDocument();
+  expect(
+    screen.getByText(`${relation.description} (${words("inventory.createInstance.items")(0)})`)
+  ).toBeVisible();
+
+  await userEvent.click(screen.getByRole("button", { name: words("add") }));
+
+  // The added item shows straight away, without opening anything first.
+  expect(screen.getByLabelText(`DictListFieldInputItem-${relation.name}.0`)).toBeVisible();
+  expect(
+    screen.getByText(`${relation.description} (${words("inventory.createInstance.items")(1)})`)
+  ).toBeVisible();
+});
+
+test("GIVEN ServiceInstanceForm WHEN a flat relation tab opens on a list that already has items THEN every item renders exactly once", async () => {
+  const { network, entityAnnotations } = Test.Service.FormTabs;
+  const relation = { ...Test.Field.dictList([Test.Field.text]), min: 2, tab: network.key };
+
+  const { component } = setup(
+    [Test.Field.number, relation],
+    undefined,
+    false,
+    undefined,
+    [],
+    entityAnnotations
+  );
+
+  render(component);
+
+  await userEvent.click(screen.getByRole("tab", { name: network.label }));
+
+  expect(screen.getAllByLabelText(/^DictListFieldInputItem-/)).toHaveLength(relation.min);
+});
+
+test("GIVEN ServiceInstanceForm WHEN a tab holds an embedded relation next to another field THEN the relation keeps its expandable group", async () => {
+  const { network, entityAnnotations } = Test.Service.FormTabs;
+  const relation = { ...Test.Field.dictList([Test.Field.text]), tab: network.key };
+  const sibling = { ...Test.Field.text, tab: network.key };
+
+  const { component } = setup(
+    [relation, sibling],
+    undefined,
+    false,
+    undefined,
+    [],
+    entityAnnotations
+  );
+
+  render(component);
+
+  await userEvent.click(screen.getByRole("tab", { name: network.label }));
+
+  expect(screen.getByLabelText(`DictListFieldInput-${relation.name}`)).toBeVisible();
+});
+
 test("GIVEN ServiceInstanceForm WHEN the web_tabs catalog does not have exactly one default THEN the model error is surfaced and the form falls back to a single column", () => {
   const { general, network } = Test.Service.FormTabs;
   const twoDefaults: EntityAnnotations = {
