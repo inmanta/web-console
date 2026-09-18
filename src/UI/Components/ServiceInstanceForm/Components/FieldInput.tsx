@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -618,13 +618,6 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   // Seeded from the list the component mounts with: an item rendered on that first pass
   // would otherwise take its React key from a missing id, giving every item the same key.
   const [itemIds, setItemIds] = useState<string[]>(() => list.map(() => uuidv4()));
-
-  useEffect(() => {
-    // Initialize itemIds with unique IDs if not already set
-    if (itemIds.length === 0 && list.length > 0) {
-      setItemIds(list.map(() => uuidv4()));
-    }
-  }, [list, itemIds.length]);
 
   /**
    * Appends a new empty sub-form of this type to the list and records its path.
