@@ -6,6 +6,7 @@ import { Inventories } from "@/Data/Queries";
 import { words } from "@/UI/words";
 import { RelationsDictionary } from "../Data";
 import { ComposerContext } from "../Data/Context";
+import { LEFT_SIDEBAR_WIDTH } from "../config";
 import { InstanceTabElement, InventoryTabElement, ServiceEntityShape } from "./JointJsShapes";
 
 export const LeftSidebar: React.FC = () => {
@@ -205,7 +206,7 @@ class LeftSidebarElement {
 
 const LeftSidebarStyling = styled.div`
   position: relative;
-  width: 240px;
+  width: ${LEFT_SIDEBAR_WIDTH}px;
   height: 100%;
   background: var(--pf-t--global--background--color--secondary--default);
   filter: drop-shadow(0.1rem 0.1rem 0.15rem var(--pf-t--global--box-shadow--color--100));

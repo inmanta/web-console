@@ -170,9 +170,9 @@ export const ComposerContainer = styled.div`
 
   // Dashed selection ring, scaled with the zoom to stay concentric with the card.
   .joint-halo::after {
+    --halo-gap: calc(6px * var(--composer-zoom, 1));
     content: "";
     position: absolute;
-    --halo-gap: calc(6px * var(--composer-zoom, 1));
     top: calc(-1 * var(--halo-gap));
     left: calc(-1 * var(--halo-gap));
     width: calc(100% + 2 * var(--halo-gap));
