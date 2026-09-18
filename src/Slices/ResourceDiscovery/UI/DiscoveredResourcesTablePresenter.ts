@@ -1,68 +1,25 @@
 import { DiscoveredResource } from "@/Data/Queries";
-import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 
+const columnHeads: ColumnHead[] = [
+  { displayName: words("type"), apiName: "type" },
+  { displayName: words("agent"), apiName: "agent" },
+  { displayName: words("value"), apiName: "value" },
+];
+
 /**
- * The DiscoveredResourcesTablePresenter class.
+ * Table presenter for the discovered resources view. Rows are the resources
+ * unchanged, and no columns are sortable yet as the API does not support it.
  *
- * This class is responsible of presenting the discovered resources.
- *
- * @returns {DiscoveredResourcesTablePresenter} DiscoveredResourcesTablePresenter class
+ * @example createDiscoveredResourcesTablePresenter().getSortableColumnNames() // []
  */
-export class DiscoveredResourcesTablePresenter implements TablePresenter<
-  DiscoveredResource,
-  DiscoveredResource
-> {
-  readonly columnHeads: ColumnHead[];
-  readonly numberOfColumns: number;
+export const createDiscoveredResourcesTablePresenter = () =>
+  createTablePresenter<DiscoveredResource, DiscoveredResource>({
+    columnHeads,
+    createRows: (resources) => resources,
+  });
 
-  constructor() {
-    this.columnHeads = [
-      {
-        displayName: words("type"),
-        apiName: "type",
-      },
-      {
-        displayName: words("agent"),
-        apiName: "agent",
-      },
-      {
-        displayName: words("value"),
-        apiName: "value",
-      },
-    ];
-    this.numberOfColumns = this.columnHeads.length + 1;
-  }
-
-  createRows(sourceData: DiscoveredResource[]): DiscoveredResource[] {
-    return sourceData;
-  }
-  getColumnHeadDisplayNames(): string[] {
-    return this.columnHeads.map(({ displayName }) => displayName);
-  }
-  getSortableColumnNames(): string[] {
-    // The api doesn't yet support sorting on type;agent;value, so we don't return any sortable columns for now.
-    const sortableColumns = [];
-
-    return sortableColumns;
-  }
-  getColumnHeads(): ColumnHead[] {
-    return this.columnHeads;
-  }
-
-  getNumberOfColumns(): number {
-    return this.numberOfColumns;
-  }
-
-  getColumnNameForIndex(index: number): string | undefined {
-    if (index > -1 && index < this.getNumberOfColumns()) {
-      return this.getColumnHeads()[index].apiName;
-    }
-
-    return undefined;
-  }
-
-  getIndexForColumnName(columnName?: string): number {
-    return this.columnHeads.findIndex((columnHead) => columnHead.apiName === columnName);
-  }
-}
+export type DiscoveredResourcesTablePresenter = ReturnType<
+  typeof createDiscoveredResourcesTablePresenter
+>;

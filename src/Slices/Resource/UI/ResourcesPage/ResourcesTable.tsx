@@ -5,12 +5,10 @@ import { MultiSort } from "@/Data";
 import { words } from "@/UI";
 import { StatusSortMenu } from "./Components";
 import { ResourceTableRow, ResourceRow } from "./ResourceTableRow";
-import {
-  columnHeads,
-  getColumnNameForIndex,
-  getIndexForColumnName,
-  sortableColumns,
-} from "./ResourcesTablePresenter";
+import { createResourcesTablePresenter } from "./ResourcesTablePresenter";
+
+const tablePresenter = createResourcesTablePresenter();
+const sortableColumns = tablePresenter.getSortableColumnNames();
 
 interface Props {
   rows: ResourceRow[];
@@ -21,7 +19,7 @@ interface Props {
 export const ResourcesTable: React.FC<Props> = memo(({ rows, sort, setSort, ...props }) => {
   const onSort: OnSort = useCallback(
     (_event, index, order) => {
-      const name = getColumnNameForIndex(index) as Resource.SortKey;
+      const name = tablePresenter.getColumnNameForIndex(index) as Resource.SortKey;
       setSort([{ name, order }]);
     },
     [setSort]
@@ -29,7 +27,7 @@ export const ResourcesTable: React.FC<Props> = memo(({ rows, sort, setSort, ...p
 
   const activeRegularSort = sort.find((sortEntry) => !Resource.isStatusSortKey(sortEntry.name));
 
-  const heads = columnHeads.map(({ apiName, displayName }, columnIndex) => {
+  const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
     if (apiName === "status") {
       return (
         <Th style={{ textAlign: "end", overflow: "visible" }} key={displayName}>
@@ -43,7 +41,9 @@ export const ResourcesTable: React.FC<Props> = memo(({ rows, sort, setSort, ...p
       ? {
           sort: {
             sortBy: {
-              index: activeRegularSort ? getIndexForColumnName(activeRegularSort.name) : undefined,
+              index: activeRegularSort
+                ? tablePresenter.getIndexForColumnName(activeRegularSort.name)
+                : undefined,
               direction: activeRegularSort?.order ?? "asc",
             },
             onSort,

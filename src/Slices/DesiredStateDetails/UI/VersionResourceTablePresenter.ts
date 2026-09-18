@@ -1,68 +1,32 @@
 import { Resource } from "@/Core";
-import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 import { RowFromVersion } from "./Row";
 
-export class VersionResourceTablePresenter implements TablePresenter<
-  Resource.FromVersionResource,
-  RowFromVersion
-> {
-  readonly columnHeads: ColumnHead[];
-  readonly numberOfColumns: number;
+const columnHeads: ColumnHead[] = [
+  { displayName: words("type"), apiName: "resource_type" },
+  { displayName: words("agent"), apiName: "agent" },
+  { displayName: words("value"), apiName: "resource_id_value" },
+  { displayName: words("requires"), apiName: "requires" },
+];
 
-  constructor() {
-    this.columnHeads = [
-      { displayName: words("type"), apiName: "resource_type" },
-      {
-        displayName: words("agent"),
-        apiName: "agent",
-      },
-      {
-        displayName: words("value"),
-        apiName: "resource_id_value",
-      },
-      {
-        displayName: words("requires"),
-        apiName: "requires",
-      },
-    ];
-    this.numberOfColumns = this.columnHeads.length + 2;
-  }
+/**
+ * Table presenter for the resources of a desired state version.
+ *
+ * @example createVersionResourceTablePresenter().getSortableColumnNames() // ["resource_type", "agent", "resource_id_value"]
+ */
+export const createVersionResourceTablePresenter = () =>
+  createTablePresenter<Resource.FromVersionResource, RowFromVersion>({
+    columnHeads,
+    sortableColumns: ["resource_type", "agent", "resource_id_value"],
+    createRows: (resources) =>
+      resources.map((resource) => ({
+        type: resource.id_details.resource_type,
+        value: resource.id_details.resource_id_value,
+        agent: resource.id_details.agent,
+        numberOfDependencies: resource.requires.length,
+        id: resource.resource_id,
+      })),
+  });
 
-  createRows(sourceData: Resource.FromVersionResource[]): RowFromVersion[] {
-    return sourceData.map((resource) => ({
-      type: resource.id_details.resource_type,
-      value: resource.id_details.resource_id_value,
-      agent: resource.id_details.agent,
-      numberOfDependencies: resource.requires.length,
-      id: resource.resource_id,
-    }));
-  }
-  getColumnHeadDisplayNames(): string[] {
-    return this.columnHeads.map((columnHead) => columnHead.displayName);
-  }
-
-  public getColumnHeads(): ColumnHead[] {
-    return this.columnHeads;
-  }
-
-  public getColumnNameForIndex(index: number): string | undefined {
-    if (index > -1 && index < this.getNumberOfColumns()) {
-      return this.getColumnHeads()[index].apiName;
-    }
-
-    return undefined;
-  }
-
-  public getIndexForColumnName(columnName?: string): number {
-    return this.columnHeads.findIndex((columnHead) => columnHead.apiName === columnName);
-  }
-
-  public getSortableColumnNames(): string[] {
-    return ["resource_type", "agent", "resource_id_value"];
-  }
-
-  getNumberOfColumns(): number {
-    return this.numberOfColumns;
-  }
-}
+export type VersionResourceTablePresenter = ReturnType<typeof createVersionResourceTablePresenter>;

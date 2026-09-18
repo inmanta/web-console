@@ -28,7 +28,9 @@ import {
 import { words } from "@/UI/words";
 import { ResourceTableControls, ConnectedFilterWidget } from "./Components";
 import { ResourcesTable } from "./ResourcesTable";
-import { createRows } from "./ResourcesTablePresenter";
+import { createResourcesTablePresenter } from "./ResourcesTablePresenter";
+
+const tablePresenter = createResourcesTablePresenter();
 
 export const Page: React.FC = () => {
   const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
@@ -77,7 +79,7 @@ export const Page: React.FC = () => {
     });
   };
 
-  const rows = useMemo(() => createRows(data?.resources ?? []), [data?.resources]);
+  const rows = useMemo(() => tablePresenter.createRows(data?.resources ?? []), [data?.resources]);
 
   if (isError) {
     return <ErrorView message={error.message} ariaLabel="ResourcesPage-Error" retry={refetch} />;

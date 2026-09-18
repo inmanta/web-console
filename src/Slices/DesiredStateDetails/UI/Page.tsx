@@ -15,7 +15,7 @@ import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Controls, DesiredStateDetailsFilterWidget } from "./Controls";
 import { VersionResourceTable } from "./VersionResourceTable";
-import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
+import { createVersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 
 export const Provider: React.FC = () => {
   const { version } = useRouteParams<"DesiredStateDetails">();
@@ -43,7 +43,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
     currentPage,
   }).useContinuous();
 
-  const presenter = new VersionResourceTablePresenter();
+  const presenter = createVersionResourceTablePresenter();
 
   if (isError) {
     return (
@@ -106,7 +106,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
                 aria-label="VersionResourcesTable-Success"
                 version={version}
                 rows={presenter.createRows(data.data)}
-                tablePresenter={new VersionResourceTablePresenter()}
+                tablePresenter={createVersionResourceTablePresenter()}
                 sort={sort}
                 setSort={setSort}
               />
