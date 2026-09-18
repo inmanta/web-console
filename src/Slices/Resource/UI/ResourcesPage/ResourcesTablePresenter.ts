@@ -19,7 +19,6 @@ export const createResourcesTablePresenter = () =>
   createTablePresenter<Resource.Resource, ResourceRow>({
     columnHeads,
     sortableColumns: ["resource_type", "agent", "resource_id_value"],
-    extraColumns: 1,
     createRows: (resources) =>
       resources.map((resource) => ({
         type: resource.resourceType,

@@ -19,7 +19,6 @@ export const createOrdersTablePresenter = () =>
   createTablePresenter<ServiceOrder, ServiceOrder>({
     columnHeads,
     sortableColumns: ["created_at"],
-    extraColumns: 1,
     createRows: (orders) => orders,
   });
 

@@ -17,7 +17,6 @@ const columnHeads: ColumnHead[] = [
 export const createDiscoveredResourcesTablePresenter = () =>
   createTablePresenter<DiscoveredResource, DiscoveredResource>({
     columnHeads,
-    extraColumns: 1,
     createRows: (resources) => resources,
   });
 

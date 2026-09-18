@@ -1,8 +1,7 @@
-import { Agent } from "@S/Agents/Core/Domain";
 import { response } from "@S/Agents/Core/Mock";
 import { createAgentsTablePresenter } from "./AgentsTablePresenter";
 
-const agents = response.data as unknown as Agent[];
+const agents = response.data;
 
 test("createRows drops the environment field from each agent", () => {
   const rows = createAgentsTablePresenter(true).createRows(agents);

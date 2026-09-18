@@ -10,7 +10,7 @@ const columnHeads: ColumnHead[] = [
   { displayName: words("events.column.destinationState"), apiName: "destination" },
 ];
 
-const instanceToRow = (event: InstanceEvent): EventRow => ({
+const eventToRow = (event: InstanceEvent): EventRow => ({
   id: event.id,
   serviceInstanceId: event.service_instance_id,
   serviceInstanceVersion: event.service_instance_version,
@@ -36,7 +36,7 @@ export const createEventsTablePresenter = () =>
   createTablePresenter<InstanceEvent, EventRow>({
     columnHeads,
     extraColumns: 1,
-    createRows: (events) => events.map(instanceToRow),
+    createRows: (events) => events.map(eventToRow),
   });
 
 export type EventsTablePresenter = ReturnType<typeof createEventsTablePresenter>;

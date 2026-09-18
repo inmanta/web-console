@@ -9,7 +9,7 @@ import { isTransferDisabled } from "@/Slices/ServiceInstanceDetails/Utils";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 
-const instanceToRow = (instance: ServiceInstanceModel, service: ServiceModel | undefined): Row => {
+const instanceToRow = (instance: ServiceInstanceModel, service: ServiceModel): Row => {
   const {
     id,
     created_at,
@@ -79,10 +79,9 @@ export const createInventoryTablePresenter = (
     sortableColumns.push(serviceIdentity);
   }
 
-  const base = createTablePresenter<ServiceInstanceModelWithTargetStates, Row>({
+  const base = createTablePresenter<ServiceInstanceModelWithTargetStates, Row, ServiceModel>({
     columnHeads,
     sortableColumns,
-    extraColumns: 1,
     createRows: (instances, service) =>
       instances.map((instance) => instanceToRow(instance, service)),
   });

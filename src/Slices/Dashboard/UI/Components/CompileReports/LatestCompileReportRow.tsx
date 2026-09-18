@@ -4,11 +4,11 @@ import { Button, Content, Flex, FlexItem, Truncate } from "@patternfly/react-cor
 import { CheckCircleIcon, InfoAltIcon, TimesCircleIcon } from "@patternfly/react-icons";
 import { CompileStatus } from "@/Core/Domain";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
+import { getStatusFromReport } from "@/Slices/CompileReports/UI/CompileReportsTablePresenter";
 import { DateWithTooltip, Spinner } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import { getCompileStatus } from "../../compilesHealth";
 import { IconBadge } from "../IconBadge";
 
 const datePresenter = new CustomDatePresenter();
@@ -47,7 +47,7 @@ interface Props {
  */
 export const LatestCompileReportRow: React.FC<Props> = ({ report }) => {
   const { routeManager } = useContext(DependencyContext);
-  const status = getCompileStatus(report);
+  const status = getStatusFromReport(report);
   const isInProgress = status === CompileStatus.inprogress;
   const isRunning = isInProgress || status === CompileStatus.queued;
   const detailsUrl = routeManager.getUrl("CompileDetails", { id: report.id });

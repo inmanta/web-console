@@ -27,7 +27,7 @@ export const ResourcesTable: React.FC<Props> = memo(({ rows, sort, setSort, ...p
 
   const activeRegularSort = sort.find((sortEntry) => !Resource.isStatusSortKey(sortEntry.name));
 
-  const heads = tablePresenter.columnHeads.map(({ apiName, displayName }, columnIndex) => {
+  const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
     if (apiName === "status") {
       return (
         <Th style={{ textAlign: "end", overflow: "visible" }} key={displayName}>

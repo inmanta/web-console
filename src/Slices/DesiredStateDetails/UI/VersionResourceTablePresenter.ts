@@ -19,7 +19,6 @@ export const createVersionResourceTablePresenter = () =>
   createTablePresenter<Resource.FromVersionResource, RowFromVersion>({
     columnHeads,
     sortableColumns: ["resource_type", "agent", "resource_id_value"],
-    extraColumns: 2,
     createRows: (resources) =>
       resources.map((resource) => ({
         type: resource.id_details.resource_type,

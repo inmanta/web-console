@@ -1,11 +1,9 @@
 import { CompileStatus } from "@/Core";
-import { CustomDatePresenter } from "@/UI/Utils";
 import { response } from "@S/CompileReports/Core/Mock";
 import { createCompileReportsTablePresenter } from "./CompileReportsTablePresenter";
 
 const reports = response.data;
 const rows = createCompileReportsTablePresenter().createRows(reports);
-const datePresenter = new CustomDatePresenter();
 
 const rowFor = (report: (typeof reports)[number]) => rows[reports.indexOf(report)];
 
@@ -23,7 +21,8 @@ test("a started, not yet completed report is in progress with a wait time only",
   const row = rowFor(report);
 
   expect(row.status).toBe(CompileStatus.inprogress);
-  expect(row.waitTime).toBe(datePresenter.diff(report.started!, report.requested));
+  // requested 09:07:00 -> started 09:07:20 is a 20 second wait.
+  expect(row.waitTime).toBe("20 s");
   expect(row.compileTime).toBe("");
 });
 
@@ -34,7 +33,8 @@ test("a completed successful report has status success and a compile time", () =
   const row = rowFor(report);
 
   expect(row.status).toBe(CompileStatus.success);
-  expect(row.compileTime).toBe(datePresenter.diff(report.completed!, report.started!));
+  // started 09:03:20 -> completed 09:03:40 is a 20 second compile.
+  expect(row.compileTime).toBe("20 s");
 });
 
 test("a completed unsuccessful report has status failed", () => {

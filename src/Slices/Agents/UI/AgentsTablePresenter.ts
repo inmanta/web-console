@@ -24,7 +24,6 @@ export const createAgentsTablePresenter = (isHalted: boolean) => {
   return createTablePresenter<Agent, AgentRow>({
     columnHeads,
     sortableColumns: ["name", "status"],
-    extraColumns: 3,
     createRows: (agents) => agents.map(({ environment: _environment, ...rest }) => rest),
   });
 };

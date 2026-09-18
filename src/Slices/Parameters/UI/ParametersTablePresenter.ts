@@ -18,7 +18,6 @@ export const createParametersTablePresenter = () =>
   createTablePresenter<Parameter, Parameter>({
     columnHeads,
     sortableColumns: ["name", "source", "updated"],
-    extraColumns: 1,
     createRows: (parameters) => parameters,
   });
 

@@ -4,9 +4,9 @@ import { CustomDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { CompileReport, CompileReportRow } from "@S/CompileReports/Core/Domain";
 
-const datePresenter = new CustomDatePresenter();
+const defaultDatePresenter = new CustomDatePresenter();
 
-const columnHeads: ColumnHead[] = [
+const columnHeads: readonly ColumnHead[] = [
   { displayName: words("compileReports.columns.requested"), apiName: "requested" },
   { displayName: words("status"), apiName: "status" },
   { displayName: words("message"), apiName: "message" },
@@ -14,11 +14,21 @@ const columnHeads: ColumnHead[] = [
   { displayName: words("compileReports.columns.compileTime"), apiName: "compile_time" },
 ];
 
-const getStatusFromReport = ({ completed, success, started }: CompileReport): CompileStatus => {
+/**
+ * Derives a compile's status from its timestamps and success flag. Exported so the Dashboard
+ * compiles-health tile derives the status exactly the way this table does.
+ *
+ * @example getStatusFromReport({ started: null, ... }) // CompileStatus.queued
+ */
+export const getStatusFromReport = ({
+  completed,
+  success,
+  started,
+}: CompileReport): CompileStatus => {
   if (!started) {
     return CompileStatus.queued;
   }
-  if (started && !completed) {
+  if (!completed) {
     return CompileStatus.inprogress;
   }
   if (success) {
@@ -32,12 +42,13 @@ const getStatusFromReport = ({ completed, success, started }: CompileReport): Co
  * Table presenter for the compile reports view. Derives wait and compile times
  * from the report timestamps and maps its status to a CompileStatus.
  *
- * @example createCompileReportsTablePresenter().getNumberOfColumns() // 7
+ * @example createCompileReportsTablePresenter().getNumberOfColumns() // 5
  */
-export const createCompileReportsTablePresenter = () =>
+export const createCompileReportsTablePresenter = (
+  datePresenter: CustomDatePresenter = defaultDatePresenter
+) =>
   createTablePresenter<CompileReport, CompileReportRow>({
     columnHeads,
-    extraColumns: 2,
     createRows: (reports) =>
       reports.map((report) => ({
         id: report.id,
