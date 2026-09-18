@@ -11,7 +11,7 @@ interface Props {
   className?: string;
   children?: React.ReactNode;
   variant?: "plain" | "default";
-  isInline?: boolean;
+  fitContent?: boolean;
 }
 
 export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
@@ -24,7 +24,7 @@ export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
       search: newSearch,
       className,
       variant = "default",
-      isInline = false,
+      fitContent = false,
     },
     ref
   ) => {
@@ -43,7 +43,7 @@ export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
         className={className}
         ref={ref}
         $variant={variant}
-        $isInline={isInline}
+        $fitContent={fitContent}
       >
         {children}
       </StyledRRLink>
@@ -51,9 +51,9 @@ export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
   }
 );
 
-const StyledRRLink = styled(RRLink)<{ $variant?: "plain" | "default"; $isInline?: boolean }>`
+const StyledRRLink = styled(RRLink)<{ $variant?: "plain" | "default"; $fitContent?: boolean }>`
   display: inline-block;
-  ${({ $isInline }) => (!$isInline ? "width: 100%;" : "")}
+  ${({ $fitContent }) => (!$fitContent ? "width: 100%;" : "")}
   color: ${({ $variant }) =>
     $variant === "plain" ? "inherit" : "var(--pf-t--global--text--color--link--default)"};
   ${({ $variant }) => ($variant === "plain" ? "text-decoration:none" : "")};

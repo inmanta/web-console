@@ -18,9 +18,11 @@ const axe = configureAxe({
   },
 });
 
+const environment = "aaa";
+
 function setup() {
   const component = (
-    <TestMemoryRouter>
+    <TestMemoryRouter initialEntries={[`/?env=${environment}`]}>
       <QueryClientProvider client={testClient}>
         <MockedDependencyProvider>
           <View from="123" to="456" />
@@ -94,7 +96,7 @@ describe("DesiredStateCompare", () => {
     // The link points at the resource details page for this resource, keeping the environment.
     expect(href).toMatch(/^\/resources\//);
     expect(decodeURIComponent(href)).toContain(resourceId);
-    expect(href).toContain("env=aaa");
+    expect(href).toContain(`env=${environment}`);
   });
 
   test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", async () => {

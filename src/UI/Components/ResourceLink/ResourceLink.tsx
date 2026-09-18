@@ -13,7 +13,7 @@ interface Props {
 /**
  * Renders a link to a resource's details page, keeping the current environment.
  * Blocks (tables) get a button-styled link that truncates long ids; inline links
- * (e.g. inside a title) flow with and inherit the surrounding text.
+ * (e.g. inside a title) size to their content instead of filling the container.
  *
  * @example <ResourceLink resourceId="std::File[a,path=/tmp]" /> -> link to /resources/std::File...?env=...
  */
@@ -28,7 +28,7 @@ export const ResourceLink: React.FC<Props> = ({
 
   if (isInline) {
     return (
-      <Link pathname={pathname} envOnly isInline>
+      <Link pathname={pathname} envOnly fitContent>
         {linkText ? linkText : resourceId}
       </Link>
     );
