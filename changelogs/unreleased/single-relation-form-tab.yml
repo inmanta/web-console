@@ -1,0 +1,6 @@
+description: |
+  A form tab that holds a single embedded relation now renders that relation directly on the tab: its description, "Add" action and items sit in the tab body instead of behind an expandable group, so there is nothing to expand before the sub-form shows. Tabs with anything else keep the expandable group they had.
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
