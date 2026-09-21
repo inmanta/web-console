@@ -12,6 +12,7 @@ import { CubesIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { words } from "@/UI/words";
 import { ComposerContext } from "../Data/Context";
+import { RIGHT_SIDEBAR_WIDTH } from "../config";
 import { EntityForm } from "./EntityForm";
 
 export const RightSidebar: React.FC = () => {
@@ -66,7 +67,7 @@ export const RightSidebar: React.FC = () => {
 
 const Wrapper = styled(Flex)`
   height: 100%;
-  width: 350px;
+  width: ${RIGHT_SIDEBAR_WIDTH}px;
   position: absolute;
   z-index: 1px;
   top: 1px;
