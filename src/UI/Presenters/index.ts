@@ -1,2 +1,2 @@
 export * from "./DatePresenter";
-export * from "./TablePresenter";
+export * from "./createTablePresenter";

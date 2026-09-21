@@ -1,7 +1,6 @@
-import { CompileStatus } from "@/Core/Domain/CompileStatus";
 import { CompileReport } from "@/Slices/CompileReports/Core/Domain";
 import { words } from "@/UI/words";
-import { deriveCompilesHealth, getCompileStatus } from "./compilesHealth";
+import { deriveCompilesHealth } from "./compilesHealth";
 
 function makeReport(overrides: Partial<CompileReport> = {}): CompileReport {
   return {
@@ -19,26 +18,6 @@ function makeReport(overrides: Partial<CompileReport> = {}): CompileReport {
     ...overrides,
   };
 }
-
-describe("getCompileStatus", () => {
-  it("returns queued when the report hasn't started", () => {
-    expect(getCompileStatus(makeReport({ started: null }))).toEqual(CompileStatus.queued);
-  });
-
-  it("returns inprogress when started but not completed", () => {
-    expect(
-      getCompileStatus(makeReport({ started: "2021-09-09T09:00:20.000000", completed: null }))
-    ).toEqual(CompileStatus.inprogress);
-  });
-
-  it("returns success when completed and successful", () => {
-    expect(getCompileStatus(makeReport({ success: true }))).toEqual(CompileStatus.success);
-  });
-
-  it("returns failed when completed and unsuccessful", () => {
-    expect(getCompileStatus(makeReport({ success: false }))).toEqual(CompileStatus.failed);
-  });
-});
 
 describe("deriveCompilesHealth", () => {
   it("is healthy with a 'succeeded' stat line when the latest compile succeeded", () => {

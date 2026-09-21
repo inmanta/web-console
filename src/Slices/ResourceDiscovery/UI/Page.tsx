@@ -14,7 +14,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { DiscoveredResourcesFilterWidget } from "./Components";
 import { DiscoveredResourcesTable } from "./DiscoveredResourcesTable";
-import { DiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
+import { createDiscoveredResourcesTablePresenter } from "./DiscoveredResourcesTablePresenter";
 import { TableControls } from "./TableControls";
 
 /**
@@ -109,7 +109,7 @@ export const Page: React.FC = () => {
                   <DiscoveredResourcesTable
                     rows={data.data}
                     aria-label="DiscoveredResourcesView-Success"
-                    tablePresenter={new DiscoveredResourcesTablePresenter()}
+                    tablePresenter={createDiscoveredResourcesTablePresenter()}
                     sort={sort}
                     setSort={setSort}
                   />

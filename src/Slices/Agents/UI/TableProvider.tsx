@@ -3,7 +3,7 @@ import { Sort } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { Agent } from "@S/Agents/Core/Domain";
 import { AgentsTable } from "./AgentsTable";
-import { AgentsTablePresenter } from "./AgentsTablePresenter";
+import { createAgentsTablePresenter } from "./AgentsTablePresenter";
 
 interface Props {
   agents: Agent[];
@@ -14,7 +14,7 @@ interface Props {
 export const TableProvider: React.FC<Props> = ({ agents, ...props }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const isHalted = environmentHandler.useIsHalted();
-  const tablePresenter = new AgentsTablePresenter(isHalted);
+  const tablePresenter = createAgentsTablePresenter(isHalted);
   const rows = tablePresenter.createRows(agents);
 
   return <AgentsTable {...props} tablePresenter={tablePresenter} rows={rows} />;

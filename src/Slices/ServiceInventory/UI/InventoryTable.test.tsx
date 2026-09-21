@@ -7,13 +7,13 @@ import { testClient } from "@/Test/Utils/react-query-setup";
 import { ModalProvider } from "@/UI/Root/Components/ModalProvider";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { InventoryTable } from "./InventoryTable";
-import { InventoryTablePresenter } from "./Presenters";
+import { createInventoryTablePresenter } from "./Presenters";
 
 const dummySetter = () => {
   return;
 };
 
-const tablePresenterWithIdentity = () => new InventoryTablePresenter("service_id", "Service ID");
+const tablePresenterWithIdentity = () => createInventoryTablePresenter("service_id", "Service ID");
 
 function setup(expertMode = false, setSortFn: (props) => void = dummySetter) {
   const component = (

@@ -15,7 +15,7 @@ import {
 import { words } from "@/UI/words";
 import { ConnectedFilterWidget } from "./FilterWidget";
 import { ParametersTable } from "./ParametersTable";
-import { ParametersTablePresenter } from "./ParametersTablePresenter";
+import { createParametersTablePresenter } from "./ParametersTablePresenter";
 import { TableControls } from "./TableControls";
 
 /**
@@ -87,7 +87,7 @@ export const Page: React.FC = () => {
                 <ParametersTable
                   rows={data.data}
                   aria-label="ParametersView-Success"
-                  tablePresenter={new ParametersTablePresenter()}
+                  tablePresenter={createParametersTablePresenter()}
                   sort={sort}
                   setSort={setSort}
                 />
