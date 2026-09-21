@@ -141,7 +141,7 @@ describe("Scenario 6 : Resources", () => {
       const resourceName = "test-compliant-successful-not-blocked-0";
       cy.contains('[aria-label="Resource Table Row"]', resourceName).should("be.visible");
       cy.contains('[aria-label="Resource Table Row"]', resourceName)
-        .find("button")
+        .find("a")
         .contains("Show Details")
         .click();
 
@@ -191,7 +191,7 @@ describe("Scenario 6 : Resources", () => {
       // Navigate to the target resource logs
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.contains('[aria-label="Resource Table Row"]', "test-compliant-successful-not-blocked-0")
-        .find("button")
+        .find("a")
         .contains("Show Details")
         .click();
       cy.get("button").contains("Logs").click();
@@ -237,7 +237,7 @@ describe("Scenario 6 : Resources", () => {
 
       // Navigate to details and verify both requirements are listed
       cy.contains('[aria-label="Resource Table Row"]', resourceName)
-        .find("button")
+        .find("a")
         .contains("Show Details")
         .click();
       cy.get("button").contains("Requires").click();
@@ -245,8 +245,8 @@ describe("Scenario 6 : Resources", () => {
         // 2 requirement rows + 1 header row
         expect($table.find("tr")).to.have.length(3);
       });
-      cy.get("button").contains(requireA).should("exist");
-      cy.get("button").contains(requireB).should("exist");
+      cy.get("a").contains(requireA).should("exist");
+      cy.get("a").contains(requireB).should("exist");
 
       // History tab should have 2 entries, one of which has 2 requires
       cy.get("button").contains("History").click();
@@ -255,17 +255,17 @@ describe("Scenario 6 : Resources", () => {
 
       // Navigate to requireA from the requires tab and verify landing page
       cy.get("button").contains("Requires").click();
-      cy.get("button").contains(requireA).click();
+      cy.get("a").contains(requireA).click();
       cy.get(`[aria-label="resourceName-${requireA}"]`).should("be.visible");
 
       // Go back and verify navigation works a second time
       cy.get('[aria-label="Sidebar-Navigation-Item"]').contains("Resources").click();
       cy.contains('[aria-label="Resource Table Row"]', resourceName)
-        .find("button")
+        .find("a")
         .contains("Show Details")
         .click();
       cy.get("button").contains("Requires").click();
-      cy.get("button").contains(requireA).click();
+      cy.get("a").contains(requireA).click();
       cy.get(`[aria-label="resourceName-${requireA}"]`).should("be.visible");
     });
 
@@ -782,7 +782,7 @@ describe("Scenario 6 : Resources", () => {
       // Navigate to the first resource details
       cy.get('[aria-label="Resource Table Row"]')
         .first()
-        .find("button")
+        .find("a")
         .contains("Show Details")
         .click();
 

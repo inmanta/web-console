@@ -163,10 +163,10 @@ describe("ResourceDiscoveryDetailsPage", () => {
 
     // Check that both resource links are present
     expect(
-      screen.getByRole("button", { name: words("discovered_resources.show_resource.managed") })
+      screen.getByRole("link", { name: words("discovered_resources.show_resource.managed") })
     ).toBeVisible();
     expect(
-      screen.getByRole("button", { name: words("discovered_resources.show_resource.discovery") })
+      screen.getByRole("link", { name: words("discovered_resources.show_resource.discovery") })
     ).toBeVisible();
 
     // Check that AttributesCard is rendered
@@ -196,10 +196,10 @@ describe("ResourceDiscoveryDetailsPage", () => {
 
     // Check that only managed resource link is present
     expect(
-      screen.getByRole("button", { name: words("discovered_resources.show_resource.managed") })
+      screen.getByRole("link", { name: words("discovered_resources.show_resource.managed") })
     ).toBeVisible();
     expect(
-      screen.queryByRole("button", { name: words("discovered_resources.show_resource.discovery") })
+      screen.queryByRole("link", { name: words("discovered_resources.show_resource.discovery") })
     ).not.toBeInTheDocument();
 
     await act(async () => {
@@ -225,10 +225,10 @@ describe("ResourceDiscoveryDetailsPage", () => {
 
     // Check that only discovery resource link is present
     expect(
-      screen.queryByRole("button", { name: words("discovered_resources.show_resource.managed") })
+      screen.queryByRole("link", { name: words("discovered_resources.show_resource.managed") })
     ).not.toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: words("discovered_resources.show_resource.discovery") })
+      screen.getByRole("link", { name: words("discovered_resources.show_resource.discovery") })
     ).toBeVisible();
 
     await act(async () => {
@@ -254,10 +254,10 @@ describe("ResourceDiscoveryDetailsPage", () => {
 
     // Check that no resource links are present
     expect(
-      screen.queryByRole("button", { name: words("discovered_resources.show_resource.managed") })
+      screen.queryByRole("link", { name: words("discovered_resources.show_resource.managed") })
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: words("discovered_resources.show_resource.discovery") })
+      screen.queryByRole("link", { name: words("discovered_resources.show_resource.discovery") })
     ).not.toBeInTheDocument();
 
     await act(async () => {
