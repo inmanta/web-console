@@ -133,6 +133,10 @@ export const ComposerContainer = styled.div`
     padding-bottom: 20px;
     top: 20px;
     gap: 4px;
+    // Scale with the zoom around the shape's top-right corner (right, 30px) so the
+    // icons stay glued to the shape at any zoom.
+    transform: scale(var(--composer-zoom, 1));
+    transform-origin: right 30px;
 
     &:after {
       display: none;
@@ -164,19 +168,22 @@ export const ComposerContainer = styled.div`
     }
   }
 
-  .joint-halo {
-    position: relative;
-    &:after {
-      position: relative;
-      border: 1px dashed var(--pf-t--global--border--color--brand--default);
-      border-radius: var(--pf-t--global--border--radius--medium);
-      content: "";
-      display: inline-block;
-      width: calc(100% + 18px);
-      height: calc(100% + 20px);
-      left: -9px;
-      top: -5px;
-    }
+  // Dashed selection ring, scaled with the zoom to stay concentric with the card.
+  .joint-halo::after {
+    --halo-gap: calc(6px * var(--composer-zoom, 1));
+    content: "";
+    position: absolute;
+    top: calc(-1 * var(--halo-gap));
+    left: calc(-1 * var(--halo-gap));
+    width: calc(100% + 2 * var(--halo-gap));
+    height: calc(100% + 2 * var(--halo-gap));
+    box-sizing: border-box;
+    border: 1px dashed var(--pf-t--global--border--color--brand--default);
+    // card radius + gap, so the ring stays parallel to the card outline.
+    border-radius: calc(
+      var(--pf-t--global--border--radius--small) * var(--composer-zoom, 1) + var(--halo-gap)
+    );
+    pointer-events: none;
   }
 
   .joint-link_remove-circle {
