@@ -8,6 +8,7 @@ import { setupServer } from "msw/node";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { words } from "@/UI";
+import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { CustomDatePresenter } from "@/UI/Utils";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { View } from "./Page";
@@ -19,15 +20,19 @@ const axe = configureAxe({
   },
 });
 
+const environment = "aaa";
+
 function setup() {
   const datePresenter = new CustomDatePresenter();
 
   const component = (
-    <QueryClientProvider client={testClient}>
-      <MockedDependencyProvider>
-        <View version="123" />
-      </MockedDependencyProvider>
-    </QueryClientProvider>
+    <TestMemoryRouter initialEntries={[`/?env=${environment}`]}>
+      <QueryClientProvider client={testClient}>
+        <MockedDependencyProvider>
+          <View version="123" />
+        </MockedDependencyProvider>
+      </QueryClientProvider>
+    </TestMemoryRouter>
   );
 
   return { component, datePresenter };
@@ -87,6 +92,23 @@ describe("ComplianceCheck page", () => {
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("GIVEN ComplianceCheck page THEN each dry run entry links to its resource details page", async () => {
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findAllByTestId("DiffBlock");
+
+    const resourceId = Mock.reportResponse.data.diff[0].resource_id;
+    const link = screen.getByRole("link", { name: resourceId });
+    const href = link.getAttribute("href") ?? "";
+
+    // The link points at the resource details page for this resource, keeping the environment.
+    expect(href).toMatch(/^\/resources\//);
+    expect(decodeURIComponent(href)).toContain(resourceId);
+    expect(href).toContain(`env=${environment}`);
   });
 
   test("GIVEN ComplianceCheck page When a report is selected from the list THEN the user sees the selected dry run report", async () => {

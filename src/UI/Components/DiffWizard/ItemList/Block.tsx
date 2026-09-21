@@ -13,6 +13,7 @@ import styled from "styled-components";
 import { Resource } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { Classification, Item, Refs } from "@/UI/Components/DiffWizard/types";
+import { ResourceLink } from "@/UI/Components/ResourceLink";
 import { words } from "@/UI/words";
 import { Entry } from "./Entry/Entry";
 
@@ -51,7 +52,7 @@ export const Block: React.FC<Props> = ({ item, refs, classify }) => {
         >
           <CardTitle id={item.id}>
             <StatusDescriptor status={item.status} />
-            {item.id}
+            <ResourceLink resourceId={item.id} isInline />
           </CardTitle>
         </CardHeader>
         <CardExpandableContent>
