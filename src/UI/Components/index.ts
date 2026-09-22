@@ -34,6 +34,7 @@ export * from "./MultiTextSelect";
 export * from "./PageContainer";
 export * from "./PageSectionWithTitle";
 export * from "./PaginationWidget";
+export * from "./References";
 export * from "./RequiresTable";
 export * from "./ResourceActions";
 export * from "./ResourceLink";

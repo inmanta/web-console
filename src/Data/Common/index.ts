@@ -4,6 +4,7 @@ export * from "./OrchestratorProvider";
 export * from "./PrimaryFileManager";
 export * from "./AttributeClassifier";
 export * from "./AttributeConverter";
+export * from "./References";
 export * from "./JsonFormatter";
 export * from "./UrlState";
 export * from "./useExpansion";
