@@ -948,7 +948,7 @@ __metadata:
     "@vitest/ui": "npm:^5.0.1"
     bignumber.js: "npm:^11.1.5"
     copy-to-clipboard: "npm:^4.0.2"
-    cypress: "npm:^16.0.0"
+    cypress: "npm:^16.1.0"
     dayjs: "npm:^1.11.21"
     dotenv: "npm:^17.4.2"
     dotenv-cli: "npm:^11.0.0"
@@ -4943,9 +4943,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:^16.0.0":
-  version: 16.0.0
-  resolution: "cypress@npm:16.0.0"
+"cypress@npm:^16.1.0":
+  version: 16.1.0
+  resolution: "cypress@npm:16.1.0"
   dependencies:
     "@cypress/request": "npm:^4.0.0"
     "@cypress/xvfb": "npm:^1.2.4"
@@ -4988,7 +4988,7 @@ __metadata:
     yauzl: "npm:^3.3.1"
   bin:
     cypress: bin/cypress
-  checksum: 10/6d20f74df488647be466d90b21c1d6ed10b91e9ea5a0ab538d9ecd52a6318099720c468234fc4fe48cba1a7807d1d55e108e9f9522886af297ea6671e6b35b52
+  checksum: 10/6ec1514621e16c320a66868305bd987eeb5c3235f1ad11ff1b07df7eac2259564320c40ba407c95302617fbf9c21613e07a4d436f959754ab7325ee10b769f97
   languageName: node
   linkType: hard
 
