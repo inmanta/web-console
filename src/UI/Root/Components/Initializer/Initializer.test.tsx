@@ -71,6 +71,17 @@ describe("Initializer", () => {
     expect(await screen.findByText("shell-content")).toBeVisible();
   });
 
+  test("GIVEN serverStatus succeeds THEN the page title is set to the product name", async () => {
+    server.use(
+      http.get("/api/v1/serverstatus", () => HttpResponse.json({ data: ServerStatus.withLsm })),
+      queryBase.operation(environmentPreviewSuccess)
+    );
+
+    render(setup(createQueryClient()));
+
+    await waitFor(() => expect(document.title).toBe(ServerStatus.withLsm.product));
+  });
+
   test("GIVEN serverStatus fails on first load THEN the shell is replaced by an error view", async () => {
     server.use(
       http.get("/api/v1/serverstatus", () => HttpResponse.error()),
