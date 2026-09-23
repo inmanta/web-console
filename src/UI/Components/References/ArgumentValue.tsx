@@ -59,7 +59,7 @@ export const ArgumentValue: React.FC<Props> = ({
               index={index}
               isExpanded={isExpanded}
               onToggle={onToggle}
-              depth={depth}
+              depth={depth + 1}
               ancestors={ancestors}
               parentPath={`${path}/${argument.name}`}
             />

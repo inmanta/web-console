@@ -23,7 +23,7 @@ interface Props {
  * @prop {Reference.ReferenceIndex} index - Lookup from reference id to normalized node.
  * @prop {(key: string) => boolean} isExpanded - Whether the node at a path is expanded.
  * @prop {(key: string) => () => void} onToggle - Returns the toggle handler for a path.
- * @prop {number} depth - Current nesting depth, checked against the depth cap.
+ * @prop {number} depth - Depth of the listed nodes, checked against the depth cap.
  * @prop {string[]} ancestors - Reference ids on the path here, for cycle detection.
  * @prop {string} parentPath - The owning attribute or argument's path, extended per row.
  */
@@ -45,7 +45,7 @@ export const ReplacementList: React.FC<Props> = ({
           index={index}
           isExpanded={isExpanded}
           onToggle={onToggle}
-          depth={depth + 1}
+          depth={depth}
           ancestors={ancestors}
           path={`${parentPath}/${replacement.destination}`}
         />

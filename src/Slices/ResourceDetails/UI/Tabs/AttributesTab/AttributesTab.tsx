@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Language } from "@patternfly/react-code-editor";
 import {
   Card,
@@ -40,6 +40,9 @@ type ViewMode = "structured" | "json";
 
 const classifier = new AttributeClassifier();
 
+// Measured so the editor ends on the tab's 16px bottom spacer, like the structured view.
+const JSON_EDITOR_HEIGHT = "calc(100vh - 459px)";
+
 /**
  * The Desired State tab. A whole-attribute reference replaces the null with an
  * expandable node; a nested one keeps the value and lists its replacements below.
@@ -56,16 +59,28 @@ export const AttributesTab: React.FC<Props> = ({ details }) => {
     route: "ResourceDetails",
   });
 
-  const index = indexReferences(extractReferences(details.attributes));
-  const { replacements, undisplayedCount } = collectReplacements(
-    extractMutators(details.attributes)
-  );
-  const replacementsByKey = groupReplacements(replacements);
+  // Derived once per payload, not on every expansion toggle or refetch render.
+  const { index, replacementsByKey, model, framework, undisplayedCount, json } = useMemo(() => {
+    const { replacements, undisplayedCount } = collectReplacements(
+      extractMutators(details.attributes)
+    );
+    const shownAttributes = Object.fromEntries(
+      Object.entries(details.attributes).filter(([key]) => !MACHINERY_KEYS.includes(key))
+    );
+    const classified = classifier.classify(shownAttributes);
+    const shownKeys = new Set(classified.map((attribute) => attribute.key));
+    const orphanedCount = replacements.filter(
+      (replacement) => !shownKeys.has(replacement.attributeKey)
+    ).length;
 
-  const shownAttributes = Object.fromEntries(
-    Object.entries(details.attributes).filter(([key]) => !MACHINERY_KEYS.includes(key))
-  );
-  const { model, framework } = partitionFramework(classifier.classify(shownAttributes));
+    return {
+      index: indexReferences(extractReferences(details.attributes)),
+      replacementsByKey: groupReplacements(replacements),
+      ...partitionFramework(classified),
+      undisplayedCount: undisplayedCount + orphanedCount,
+      json: JSON.stringify(details.attributes, null, 2),
+    };
+  }, [details.attributes]);
 
   const renderAttribute = (attribute: ClassifiedAttribute) => (
     <DescriptionListGroup key={attribute.key}>
@@ -122,7 +137,7 @@ export const AttributesTab: React.FC<Props> = ({ details }) => {
         </ToggleGroup>
       </Flex>
       {mode === "json" ? (
-        <CodeEditor code={JSON.stringify(details.attributes, null, 2)} language={Language.json} />
+        <CodeEditor code={json} language={Language.json} height={JSON_EDITOR_HEIGHT} />
       ) : (
         <>
           <Card isCompact>
@@ -156,15 +171,15 @@ export const AttributesTab: React.FC<Props> = ({ details }) => {
  * @prop {ClassifiedAttribute} attribute - The classified attribute for this cell.
  * @prop {Reference.Replacement[]} replacements - Replacements targeting this attribute.
  * @prop {Reference.ReferenceIndex} index - Lookup from reference id to normalized node.
- * @prop {(id: string) => boolean} isExpanded - Whether the node at a path is expanded.
- * @prop {(id: string) => () => void} onToggle - Returns the toggle handler for a path.
+ * @prop {(key: string) => boolean} isExpanded - Whether the node at a path is expanded.
+ * @prop {(key: string) => () => void} onToggle - Returns the toggle handler for a path.
  */
 const AttributeCell: React.FC<{
   attribute: ClassifiedAttribute;
   replacements: Reference.Replacement[];
   index: Reference.ReferenceIndex;
-  isExpanded: (id: string) => boolean;
-  onToggle: (id: string) => () => void;
+  isExpanded: (key: string) => boolean;
+  onToggle: (key: string) => () => void;
 }> = ({ attribute, replacements, index, isExpanded, onToggle }) => {
   const wholeAttribute = replacements.find((replacement) => replacement.isWholeAttribute);
 
