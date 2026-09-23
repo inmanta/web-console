@@ -35,6 +35,7 @@ export * from "./PageContainer";
 export * from "./PageSectionWithTitle";
 export * from "./PaginationWidget";
 export * from "./RequiresTable";
+export * from "./ResizeHandle";
 export * from "./ResourceActions";
 export * from "./ResourceLink";
 export * from "./ResourceStatus";

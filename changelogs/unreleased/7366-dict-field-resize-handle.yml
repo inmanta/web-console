@@ -1,0 +1,6 @@
+description: The JSON editor for dict fields on the service instance form can now be resized by dragging the handle below it, or with the arrow keys once the handle is focused.
+issue-nr: 7366
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"

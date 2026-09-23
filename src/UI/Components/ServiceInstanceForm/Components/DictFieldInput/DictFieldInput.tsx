@@ -4,7 +4,10 @@ import { FormGroup, FormHelperText, HelperText, HelperTextItem } from "@patternf
 import { DictField } from "@/Core";
 import { words } from "@/UI";
 import { CodeEditor } from "@/UI/Components/CodeEditor";
+import { ResizeHandle } from "@/UI/Components/ResizeHandle";
 import { DictValue, toDict, toText } from "./helpers";
+
+const MAX_AUTO_HEIGHT = 350;
 
 interface Props {
   field: DictField;
@@ -18,8 +21,9 @@ interface Props {
  *
  * A JSON editor for dictionary-type service instance fields, backed by the
  * PatternFly CodeEditor (Monaco). It auto-resizes line-by-line as content
- * grows (capped at 350 px), validates JSON in real time, and surfaces parse
- * errors through a helper-text row below the editor.
+ * grows (capped at 350 px) until the user drags the resize handle, after which
+ * the user's height sticks. The handle can't go below one line of the editor.
+ * It validates JSON in real time and surfaces parse errors below the editor.
  *
  * @prop {DictField} field - Field metadata: name, description, isOptional.
  * @prop {unknown} value - Current value; synced into the editor when changed externally (e.g. form reset).
@@ -32,6 +36,10 @@ export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOn
   const [text, setText] = useState<string>(() => toText(value));
   const [isInvalid, setIsInvalid] = useState(false);
   const [height, setHeight] = useState(100);
+  // One line of the editor, read from Monaco on mount.
+  const [minHeight, setMinHeight] = useState<number | undefined>(undefined);
+  // Once the user resizes the editor by hand, stop auto-sizing it to its content.
+  const isManuallyResizedRef = useRef(false);
 
   // Tracks the serialized form of the last value we emitted via onChange so we
   // can distinguish a parent re-render carrying our own round-tripped value from
@@ -48,12 +56,23 @@ export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOn
     }
   }, [value]);
 
-  const handleEditorDidMount: ComponentProps<typeof CodeEditor>["onEditorDidMount"] = (editor) => {
-    setHeight(Math.min(editor.getContentHeight(), 350));
+  const handleEditorDidMount: ComponentProps<typeof CodeEditor>["onEditorDidMount"] = (
+    editor,
+    monaco
+  ) => {
+    setMinHeight(editor.getOption(monaco.editor.EditorOption.lineHeight));
+    setHeight(Math.min(editor.getContentHeight(), MAX_AUTO_HEIGHT));
 
     editor.onDidContentSizeChange((e) => {
-      setHeight(Math.min(e.contentHeight, 350));
+      if (!isManuallyResizedRef.current) {
+        setHeight(Math.min(e.contentHeight, MAX_AUTO_HEIGHT));
+      }
     });
+  };
+
+  const handleResize = (newHeight: number) => {
+    isManuallyResizedRef.current = true;
+    setHeight(newHeight);
   };
 
   const handleChange = (val: string) => {
@@ -85,6 +104,7 @@ export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOn
         onEditorDidMount={handleEditorDidMount}
         onChange={readOnly ? undefined : handleChange}
       />
+      <ResizeHandle height={height} onResize={handleResize} minHeight={minHeight} />
       <FormHelperText>
         <HelperText>
           <HelperTextItem>{field.description}</HelperTextItem>
