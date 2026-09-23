@@ -21,6 +21,7 @@ export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({ childr
   useEffect(() => {
     if (serverStatus.data) {
       orchestratorProvider.setAllFeatures(serverStatus.data);
+      document.title = serverStatus.data.product;
       setIsInitialized(true); // This is used to sync the component rendering with updating hooks
     }
 
