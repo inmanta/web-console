@@ -1,0 +1,5 @@
+description: The browser page title now shows the product name reported by the server status (e.g. "Inmanta Service Orchestrator") instead of "Web Console".
+change-type: patch
+destination-branches: [master, iso9]
+sections:
+  minor-improvement: "{{description}}"
