@@ -1,10 +1,8 @@
 import { Reference } from "@/Core/Domain";
 
-type RawEntry = { args: unknown[] } & Record<string, unknown>;
-
 // Every entry needs an `args` array; the engine maps and searches it without checks.
-const hasArgs = (entry: unknown): entry is RawEntry =>
-  typeof entry === "object" && entry !== null && Array.isArray((entry as RawEntry).args);
+const hasArgs = (entry: unknown): entry is { args: unknown[] } & Record<string, unknown> =>
+  typeof entry === "object" && entry !== null && "args" in entry && Array.isArray(entry.args);
 
 const isRawReference = (entry: unknown): entry is Reference.RawReference =>
   hasArgs(entry) && typeof entry.id === "string";

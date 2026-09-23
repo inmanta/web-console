@@ -40,9 +40,6 @@ type ViewMode = "structured" | "json";
 
 const classifier = new AttributeClassifier();
 
-// Measured so the editor ends on the tab's 16px bottom spacer, like the structured view.
-const JSON_EDITOR_HEIGHT = "calc(100vh - 459px)";
-
 /**
  * The Desired State tab. A whole-attribute reference replaces the null with an
  * expandable node; a nested one keeps the value and lists its replacements below.
@@ -110,15 +107,19 @@ export const AttributesTab: React.FC<Props> = ({ details }) => {
     </Flex>
   );
 
-  // flexNone keeps this at content height inside the tab's flex column, so the page
-  // section owns the scroll and cards grow to full content instead of clipping; the
-  // bottom spacer keeps the last element off the scroll edge.
+  // The structured view keeps its content height, so the page section owns the scroll.
+  // The JSON view starts at 100vh and shrinks to the height left in the page section,
+  // so the full-height editor tracks banners and viewport changes without a measured
+  // offset. The bottom spacer keeps the last element off the scroll edge.
   return (
     <Flex
       direction={{ default: "column" }}
+      flexWrap={{ default: "nowrap" }}
       gap={{ default: "gapMd" }}
-      flex={{ default: "flexNone" }}
-      style={{ paddingBottom: "var(--pf-t--global--spacer--md)" }}
+      style={{
+        paddingBottom: "var(--pf-t--global--spacer--md)",
+        ...(mode === "json" && { flex: "1 1 100vh" }),
+      }}
     >
       <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
         <ToggleGroup aria-label={words("resources.attributes.view.label")}>
@@ -137,7 +138,7 @@ export const AttributesTab: React.FC<Props> = ({ details }) => {
         </ToggleGroup>
       </Flex>
       {mode === "json" ? (
-        <CodeEditor code={json} language={Language.json} height={JSON_EDITOR_HEIGHT} />
+        <CodeEditor code={json} language={Language.json} height="100%" />
       ) : (
         <>
           <Card isCompact>
