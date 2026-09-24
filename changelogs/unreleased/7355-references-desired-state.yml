@@ -2,6 +2,6 @@ description: |
   The Desired State tab now explains values that resolve on the agent at deploy time (a secret, a credential, a fact) instead of showing a bare null next to raw reference data. It shows where each value comes from - an expandable entry when the whole value is a reference, or listed beneath the value when only part of it is - and a Structured / JSON toggle keeps the exact payload one click away. The console only shows where a value comes from; it never resolves it.
 issue-nr: 7355
 change-type: minor
-destination-branches: [master, iso9]
+destination-branches: [iso9]
 sections:
   feature: "{{description}}"
