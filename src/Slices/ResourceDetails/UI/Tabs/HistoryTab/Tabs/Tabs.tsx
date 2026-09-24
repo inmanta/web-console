@@ -49,30 +49,29 @@ export const Tabs: React.FC<Props> = ({
       activeTab={activeTab}
       onChange={setActiveTab}
       tabs={[
-        attributesTab(
-          <ResourceAttributes
-            attributes={attributes}
-            classifier={classifier}
-            isExpanded={isReferenceExpanded}
-            onToggle={onReferenceToggle}
-          />
-        ),
+        attributesTab(attributes, isReferenceExpanded, onReferenceToggle),
         requiresTab(requires),
       ]}
     />
   );
 };
 
-/**
- * The descriptor of the attributes tab, wrapping the given attribute view.
- *
- * @example attributesTab(<ResourceAttributes ... />) => { id: TabKey.Attributes, ... }
- */
-const attributesTab = (view: React.ReactNode): TabDescriptor<TabKey> => ({
+const attributesTab = (
+  attributes: Record<string, unknown>,
+  isExpanded: (key: string) => boolean,
+  onToggle: (key: string) => () => void
+): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("resources.history.tabs.attributes"),
   icon: <ListIcon />,
-  view,
+  view: (
+    <ResourceAttributes
+      attributes={attributes}
+      classifier={classifier}
+      isExpanded={isExpanded}
+      onToggle={onToggle}
+    />
+  ),
 });
 
 const requiresTab = (requires: string[]): TabDescriptor<TabKey> => ({

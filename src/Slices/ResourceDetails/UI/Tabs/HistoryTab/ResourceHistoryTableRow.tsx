@@ -38,6 +38,8 @@ export const ResourceHistoryTableRow: React.FC<Props> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Attributes);
   // Kept on the row, not the tab, so switching to Requires and back keeps what was expanded.
+  // Local state rather than the URL: every row shares the same reference paths, so one
+  // URL key would open the same node in all rows.
   const [isReferenceExpanded, onReferenceToggle] = useExpansion();
   const rowRef = useRef<HTMLSpanElement>(null);
   const openTabAndScrollTo = (tab: TabKey) => () => {

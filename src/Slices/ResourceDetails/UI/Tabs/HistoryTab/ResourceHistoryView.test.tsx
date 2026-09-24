@@ -4,13 +4,12 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { HttpResponse, http, delay } from "msw";
 import { setupServer } from "msw/node";
-import { environmentReferences } from "@/Data/Common/References/Mock";
+import { environmentReferences, referenceAttributes } from "@/Data/Common/References/Mock";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import { ResourceHistory } from "@S/ResourceDetails/Data/Mock";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
-import { withReferences } from "@S/ResourceDetails/Data/Mock/ResourceDetails";
 import { ResourceHistoryView } from "./ResourceHistoryView";
 
 function setup() {
@@ -147,7 +146,7 @@ describe("ResourceHistoryView", () => {
       http.get("/api/v2/resource/abc/history", () => {
         return HttpResponse.json({
           ...ResourceHistory.response,
-          data: [{ ...first, attributes: withReferences.attributes }, ...rest],
+          data: [{ ...first, attributes: referenceAttributes }, ...rest],
         });
       })
     );
