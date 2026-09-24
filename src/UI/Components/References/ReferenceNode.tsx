@@ -104,7 +104,6 @@ export const ReferenceNode: React.FC<Props> = ({
   return (
     <ExpandableSection
       toggleContent={<ReferenceChip label={summarize(node)} />}
-      toggleAriaLabel={summarize(node)}
       isExpanded={expanded}
       onToggle={onToggle(nodePath)}
     >
