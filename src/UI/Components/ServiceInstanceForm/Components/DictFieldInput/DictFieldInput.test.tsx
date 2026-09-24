@@ -125,7 +125,7 @@ describe("DictFieldInput", () => {
     const editor = screen.getByTestId("DictInput-dict");
     const initialHeight = parseInt(editor.style.height);
 
-    fireEvent.keyDown(screen.getByRole("separator", { name: words("resize") }), {
+    fireEvent.keyDown(screen.getByRole("separator", { name: words("resize")(field.name) }), {
       key: "ArrowDown",
     });
 

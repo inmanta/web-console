@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { words } from "@/UI/words";
 
 interface Props {
   height: number;
   onResize: (height: number) => void;
   minHeight?: number;
+  label: string;
 }
 
 export const KEYBOARD_STEP = 20;
@@ -17,8 +17,9 @@ export const KEYBOARD_STEP = 20;
  * @prop {number} height - The current height in px of the element being resized.
  * @prop {(height: number) => void} onResize - Called with the new height in px while resizing.
  * @prop {number} [minHeight=0] - The smallest height in px the handle allows.
+ * @prop {string} label - The accessible name of the handle.
  */
-export const ResizeHandle: React.FC<Props> = ({ height, onResize, minHeight = 0 }) => {
+export const ResizeHandle: React.FC<Props> = ({ height, onResize, minHeight = 0, label }) => {
   // Ends the drag in progress, so its listeners don't outlive an unmount mid-drag.
   const stopDragRef = useRef<(() => void) | undefined>(undefined);
 
@@ -62,9 +63,10 @@ export const ResizeHandle: React.FC<Props> = ({ height, onResize, minHeight = 0 
     <Handle
       role="separator"
       aria-orientation="horizontal"
-      aria-label={words("resize")}
+      aria-label={label}
       aria-valuenow={height}
       aria-valuemin={minHeight}
+      aria-valuetext={`${height}px`}
       tabIndex={0}
       onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}

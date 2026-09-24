@@ -8,6 +8,12 @@ import { ResizeHandle } from "@/UI/Components/ResizeHandle";
 import { DictValue, toDict, toText } from "./helpers";
 
 const MAX_AUTO_HEIGHT = 350;
+// Kept stable so resizing doesn't push new options to Monaco on every render. No scrolling past
+// the last line keeps the content height equal to the text, and no folding keeps the gutter empty.
+const EDITOR_OPTIONS: ComponentProps<typeof CodeEditor>["options"] = {
+  scrollBeyondLastLine: false,
+  folding: false,
+};
 
 interface Props {
   field: DictField;
@@ -37,7 +43,7 @@ export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOn
   const [isInvalid, setIsInvalid] = useState(false);
   const [height, setHeight] = useState(100);
   // One line of the editor, read from Monaco on mount.
-  const [minHeight, setMinHeight] = useState<number | undefined>(undefined);
+  const [minHeight, setMinHeight] = useState<number>();
   // Once the user resizes the editor by hand, stop auto-sizing it to its content.
   const isManuallyResizedRef = useRef(false);
 
@@ -100,11 +106,16 @@ export const DictFieldInput: React.FC<Props> = ({ field, value, onChange, readOn
         isLineNumbersVisible={false}
         isLanguageLabelVisible={false}
         isHeaderPlain
-        options={{ scrollBeyondLastLine: false, folding: false }}
+        options={EDITOR_OPTIONS}
         onEditorDidMount={handleEditorDidMount}
         onChange={readOnly ? undefined : handleChange}
       />
-      <ResizeHandle height={height} onResize={handleResize} minHeight={minHeight} />
+      <ResizeHandle
+        height={height}
+        onResize={handleResize}
+        minHeight={minHeight}
+        label={words("resize")(field.name)}
+      />
       <FormHelperText>
         <HelperText>
           <HelperTextItem>{field.description}</HelperTextItem>

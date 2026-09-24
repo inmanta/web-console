@@ -1,16 +1,16 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { words } from "@/UI/words";
 import { KEYBOARD_STEP, ResizeHandle } from "./ResizeHandle";
 
 const height = 100;
 const minHeight = 40;
+const label = "Resize editor";
 
 const setup = () => {
   const onResize = vi.fn();
 
-  render(<ResizeHandle height={height} onResize={onResize} minHeight={minHeight} />);
+  render(<ResizeHandle height={height} onResize={onResize} minHeight={minHeight} label={label} />);
 
-  return { onResize, handle: screen.getByRole("separator", { name: words("resize") }) };
+  return { onResize, handle: screen.getByRole("separator", { name: label }) };
 };
 
 describe("ResizeHandle", () => {
