@@ -137,56 +137,21 @@ describe("Scenario 4 Desired State", () => {
 
       cy.get("tbody").eq(0).contains("Show Details").click();
 
-      // Check all values in the description list
-      cy.get(".pf-v6-c-description-list").within(() => {
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("next_desired_state_version")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("have.text", "4");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("next_version")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("have.text", "4");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("purge_on_delete")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("have.text", "false");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("purged")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("have.text", "false");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("receive_events")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("include.text", "true");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("requires")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("include.text", "frontend_model::TestResource[internal,name=default-0001]");
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("resources")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("include.text", '"frontend_model::TestResource[internal,name=default-0001]"');
-
-        cy.get(".pf-v6-c-description-list__term")
-          .contains("service_entity")
-          .closest(".pf-v6-c-description-list__group")
-          .find(".pf-v6-c-description-list__description")
-          .should("have.text", "basic-service");
-      });
+      // Check all values of the attributes
+      cy.get('[data-testid="attribute-next_desired_state_version"]').should("have.text", "4");
+      cy.get('[data-testid="attribute-next_version"]').should("have.text", "4");
+      cy.get('[data-testid="attribute-purge_on_delete"]').should("have.text", "false");
+      cy.get('[data-testid="attribute-purged"]').should("have.text", "false");
+      cy.get('[data-testid="attribute-receive_events"]').should("include.text", "true");
+      cy.get('[data-testid="attribute-requires"]').should(
+        "include.text",
+        "frontend_model::TestResource[internal,name=default-0001]"
+      );
+      cy.get('[data-testid="attribute-resources"]').should(
+        "include.text",
+        '"frontend_model::TestResource[internal,name=default-0001]"'
+      );
+      cy.get('[data-testid="attribute-service_entity"]').should("have.text", "basic-service");
     }
 
     // Go back to the Desired State page.
