@@ -1,4 +1,10 @@
 import { Details, Status } from "@/Core/Domain/Resource/Resource";
+import {
+  complianceMutators,
+  complianceReferences,
+  environmentMutators,
+  environmentReferences,
+} from "@/Data/Common/References/Mock";
 import { id } from "@/Test/Data/Resource";
 
 export const a: Details = {
@@ -29,4 +35,23 @@ export const a: Details = {
 
 export const response = {
   data: a,
+};
+
+/**
+ * A resource whose desired state exercises the reference feature: a whole
+ * attribute replaced by a reference (`value`), a reference nested inside a value
+ * (`api.'api_token'`), a plain attribute (`url`), a framework attribute
+ * (`send_event`), and the machinery keys that the structured view hides but the
+ * JSON view keeps.
+ */
+export const withReferences: Details = {
+  ...a,
+  attributes: {
+    value: null,
+    api: { base_url: "https://api.cloudsmith.io/", api_token: null },
+    url: "/v1/entitlements/inmanta/proximus-iso9/",
+    send_event: true,
+    mutators: [...complianceMutators, ...environmentMutators],
+    references: [...complianceReferences, ...environmentReferences],
+  },
 };
