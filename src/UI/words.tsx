@@ -754,10 +754,18 @@ const dict = {
   "resources.resourceActions.toggle": "Deploy actions",
   "resources.resourceActions.deploy.hint": "default - incremental",
   "resources.resourceActions.repair.hint": "full",
-  "resources.resourceActions.deploy.tooltip":
-    "Request the agents to check the current state of each resource in a state different from the deployed state and make the current state of those resources in line with the desired state.",
-  "resources.resourceActions.repair.tooltip":
-    "Request the agents to check the current state of each resource and make the current state in-line with the desired state.",
+  "resources.resourceActions.deploy.tooltip.resource":
+    "Enforce the compliance of this resource. Does nothing if it is already compliant.",
+  "resources.resourceActions.repair.tooltip.resource":
+    "(Re-)enforce the intent of this resource. Fixes any drift from the desired state, even if it is marked as compliant.",
+  "resources.resourceActions.deploy.tooltip.resources":
+    "Enforce the compliance of the resources in the chosen scope. Resources that are already compliant are skipped.",
+  "resources.resourceActions.repair.tooltip.resources":
+    "(Re-)enforce the intent of every resource in the chosen scope. Fixes any drift from the desired state, even for resources marked as compliant.",
+  "resources.resourceActions.deploy.tooltip.instance":
+    "Enforce the compliance of the resources of this service instance. Resources that are already compliant are skipped.",
+  "resources.resourceActions.repair.tooltip.instance":
+    "(Re-)enforce the intent of every resource of this service instance. Fixes any drift from the desired state, even for resources marked as compliant.",
   "resources.resourceActions.orphaned.disabled":
     "Orphaned resources are no longer part of the latest desired state, so they cannot be deployed or repaired.",
   "resources.resourceActions.success": (action: string) => `${action} triggered`,

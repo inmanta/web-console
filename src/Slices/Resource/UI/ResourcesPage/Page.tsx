@@ -137,6 +137,10 @@ export const Page: React.FC = () => {
           <Flex>
             <ToolbarItem>
               <ResourceActions
+                tooltips={{
+                  deploy: words("resources.resourceActions.deploy.tooltip.resources"),
+                  repair: words("resources.resourceActions.repair.tooltip.resources"),
+                }}
                 scopes={[
                   {
                     id: "filtered",

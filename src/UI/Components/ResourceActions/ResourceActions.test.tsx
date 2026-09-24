@@ -35,7 +35,12 @@ const filteredScopes: NonEmptyArray<ResourceActionScope> = [
   },
 ];
 
-function setup(props: React.ComponentProps<typeof ResourceActions> = { filter }) {
+const tooltips = {
+  deploy: words("resources.resourceActions.deploy.tooltip.resources"),
+  repair: words("resources.resourceActions.repair.tooltip.resources"),
+};
+
+function setup(props: React.ComponentProps<typeof ResourceActions> = { filter, tooltips }) {
   return (
     <QueryClientProvider client={testClient}>
       <TestMemoryRouter>
@@ -109,7 +114,7 @@ describe("ResourceActions", () => {
       })
     );
 
-    render(setup({ scopes: filteredScopes }));
+    render(setup({ scopes: filteredScopes, tooltips }));
 
     await userEvent.click(screen.getByRole("button", { name: deployLabel }));
 
@@ -136,7 +141,7 @@ describe("ResourceActions", () => {
       })
     );
 
-    render(setup({ scopes: filteredScopes }));
+    render(setup({ scopes: filteredScopes, tooltips }));
 
     await userEvent.click(screen.getByRole("button", { name: deployLabel }));
 
@@ -182,7 +187,7 @@ describe("ResourceActions", () => {
       })
     );
 
-    render(setup({ scopes: instanceScopes }));
+    render(setup({ scopes: instanceScopes, tooltips }));
 
     await userEvent.click(screen.getByRole("button", { name: deployLabel }));
 
@@ -226,7 +231,7 @@ describe("ResourceActions", () => {
       },
     ];
 
-    render(setup({ scopes: emptyThenFull }));
+    render(setup({ scopes: emptyThenFull, tooltips }));
 
     await userEvent.click(screen.getByRole("button", { name: deployLabel }));
 
@@ -269,7 +274,7 @@ describe("ResourceActions", () => {
       },
     ];
 
-    render(setup({ scopes: mixedScopes }));
+    render(setup({ scopes: mixedScopes, tooltips }));
 
     await userEvent.click(screen.getByRole("button", { name: deployLabel }));
 
@@ -313,7 +318,7 @@ describe("ResourceActions", () => {
 
     // The filter is passed through unchanged; an orphan filter reaches the backend (which rejects it
     // and surfaces an error toast) rather than being silently rewritten here.
-    render(setup({ scopes: orphanScope }));
+    render(setup({ scopes: orphanScope, tooltips }));
 
     await userEvent.click(screen.getByRole("button", { name: deployLabel }));
 
@@ -329,9 +334,21 @@ describe("ResourceActions", () => {
   });
 
   test("WHEN a disabledReason is given THEN the control is disabled", async () => {
-    render(setup({ filter, disabledReason: "nope" }));
+    render(setup({ filter, disabledReason: "nope", tooltips }));
 
     expect(screen.getByRole("button", { name: toggleLabel })).toBeDisabled();
     expect(screen.getByRole("button", { name: deployLabel })).toBeDisabled();
+  });
+
+  test("WHEN Deploy and Repair are hovered THEN they show the tooltips the page passed in", async () => {
+    render(setup());
+
+    await userEvent.hover(screen.getByText(deployLabel));
+    expect(await screen.findByRole("tooltip")).toHaveTextContent(tooltips.deploy);
+
+    await userEvent.click(screen.getByRole("button", { name: toggleLabel }));
+    await userEvent.hover(screen.getByRole("menuitem", { name: new RegExp(repairLabel, "i") }));
+
+    await waitFor(() => expect(screen.getByText(tooltips.repair)).toBeVisible());
   });
 });
