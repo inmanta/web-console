@@ -37,6 +37,7 @@ export * from "./PaginationWidget";
 export * from "./References";
 export * from "./RequiresTable";
 export * from "./ResourceActions";
+export * from "./ResourceAttributes";
 export * from "./ResourceLink";
 export * from "./ResourceStatus";
 export * from "./ResourceTable";

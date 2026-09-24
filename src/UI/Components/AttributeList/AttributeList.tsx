@@ -28,7 +28,7 @@ interface Props {
  * @returns {React.FC} A component that displays a list of attributes.
  */
 export const AttributeList: React.FC<Props> = ({ attributes, variant = "default" }) => (
-  <DescriptionList isHorizontal>
+  <DescriptionList>
     {attributes.map((attribute) => (
       <DescriptionListGroup key={attribute.key}>
         <DescriptionListTerm>{attribute.key}</DescriptionListTerm>

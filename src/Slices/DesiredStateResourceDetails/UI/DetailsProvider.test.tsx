@@ -4,6 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { withReferences } from "@/Slices/ResourceDetails/Data/Mock/ResourceDetails";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -41,6 +42,10 @@ describe("DetailsProvider", () => {
   beforeAll(() => {
     server.listen();
   });
+  afterEach(() => {
+    server.resetHandlers();
+    testClient.clear();
+  });
   afterAll(() => {
     server.close();
   });
@@ -58,5 +63,22 @@ describe("DetailsProvider", () => {
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("GIVEN DesiredStateResourceDetails page WHEN the resource has references THEN they are rendered", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate/123/resource/abc", () => {
+        return HttpResponse.json({
+          data: { ...VersionedResourceDetails.a, attributes: withReferences.attributes },
+        });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(
+      await screen.findByRole("button", { name: /future::std::ComplianceReport/ })
+    ).toBeInTheDocument();
   });
 });

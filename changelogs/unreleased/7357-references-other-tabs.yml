@@ -1,0 +1,7 @@
+description: |
+  The versioned resource page and the resource history tab now show where reference-backed values come from, the same way the Desired State tab does, instead of a bare null next to raw reference data.
+issue-nr: 7357
+change-type: minor
+destination-branches: [master, iso9]
+sections:
+  feature: "{{description}}"
