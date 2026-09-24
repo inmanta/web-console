@@ -1,29 +1,19 @@
 import React from "react";
 import { render } from "@testing-library/react";
+import { Resource } from "@/Core";
+import { Resource as ResourceData } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
 import * as wordsModule from "@/UI/words";
-import { ResourceRow, ResourceTableRow } from "./ResourceTableRow";
+import { ResourceTableRowView } from "./ResourceTableRow";
 
 const routeManager = PrimaryRouteManager("");
+const [{ node }] = ResourceData.response.data.resources.edges;
 
-function makeRow(id: string, overrides: Partial<ResourceRow> = {}): ResourceRow {
-  return {
-    id,
-    type: "std::File",
-    agent: "agent1",
-    value: `/tmp/${id}`,
-    requiresLength: 0,
-    status: {
-      isDeploying: false,
-      isOrphan: false,
-      lastHandlerRun: "SUCCESSFUL",
-      compliance: "COMPLIANT",
-      blocked: "NOT_BLOCKED",
-    },
-    ...overrides,
-  };
+/** A resource from the mock fixture, shaped like the row fragment. */
+function makeResource(overrides: Partial<Resource.Resource> = {}): Resource.Resource {
+  return { ...node, ...overrides };
 }
 
 function Wrapper({ children }: { children: React.ReactNode }) {
@@ -34,7 +24,7 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-describe("ResourceTableRow — re-render prevention", () => {
+describe("ResourceTableRowView - re-render prevention", () => {
   let wordsSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
@@ -45,13 +35,13 @@ describe("ResourceTableRow — re-render prevention", () => {
     wordsSpy.mockRestore();
   });
 
-  it("does not re-render when the parent re-renders with the same row reference", () => {
-    const row = makeRow("1");
+  it("does not re-render when the parent re-renders with the same resource reference", () => {
+    const resource = makeResource();
 
     function Parent({ version: _version }: { version: number }) {
       return (
         <Wrapper>
-          <ResourceTableRow row={row} />
+          <ResourceTableRowView resource={resource} />
         </Wrapper>
       );
     }
@@ -64,19 +54,19 @@ describe("ResourceTableRow — re-render prevention", () => {
     expect(wordsSpy).not.toHaveBeenCalled();
   });
 
-  it("re-renders when the row object reference changes", () => {
-    function Parent({ row }: { row: ResourceRow }) {
+  it("re-renders when the resource object reference changes", () => {
+    function Parent({ resource }: { resource: Resource.Resource }) {
       return (
         <Wrapper>
-          <ResourceTableRow row={row} />
+          <ResourceTableRowView resource={resource} />
         </Wrapper>
       );
     }
 
-    const { rerender } = render(<Parent row={makeRow("1")} />);
+    const { rerender } = render(<Parent resource={makeResource()} />);
     wordsSpy.mockClear();
 
-    rerender(<Parent row={makeRow("1", { type: "std::Directory" })} />);
+    rerender(<Parent resource={makeResource({ resourceType: "std::Directory" })} />);
 
     expect(wordsSpy).toHaveBeenCalled();
   });

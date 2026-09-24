@@ -4,7 +4,6 @@ import { Resource } from "@/Core";
 import { words } from "@/UI";
 import { DateWithTooltip, statusGroupIcons, statusMapping } from "@/UI/Components";
 import { BlinkingDot } from "./Components";
-import { ResourceRow } from "./ResourceTableRow";
 
 const COMPOUND_STATE_KEYS: (keyof Resource.CompoundStateSummary)[] = [
   "blocked",
@@ -14,12 +13,12 @@ const COMPOUND_STATE_KEYS: (keyof Resource.CompoundStateSummary)[] = [
 
 const StatusListItem = ({
   compoundStateKey,
-  row,
+  resource,
 }: {
   compoundStateKey: keyof Resource.CompoundStateSummary;
-  row: ResourceRow;
+  resource: Resource.Resource;
 }) => {
-  const state = row.status[compoundStateKey];
+  const state = Resource.toCompoundState(resource.state?.[compoundStateKey]);
 
   return (
     <ListItem
@@ -36,14 +35,16 @@ const StatusListItem = ({
       }
       style={{ alignItems: "flex-end" }}
     >
-      <Content>{statusMapping[state]}</Content>
+      <Content>{state && statusMapping[state]}</Content>
     </ListItem>
   );
 };
 
-export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
+export const ResourceStateInfo = ({ resource }: { resource: Resource.Resource }) => {
+  const lastHandlerRunAt = resource.state?.lastHandlerRunAt || "";
+
   /** Orphans are not actively a part of the latest intent anymore so limited information is displayed for them. */
-  if (row.status.isOrphan) {
+  if (resource.state?.isOrphan) {
     return (
       <List isPlain>
         <ListItem
@@ -66,7 +67,7 @@ export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
         >
           <Content>
             {words("resources.popover.lastDeployed")}
-            <DateWithTooltip timestamp={row.status.lastHandlerRunAt || ""} isFull />
+            <DateWithTooltip timestamp={lastHandlerRunAt} isFull />
           </Content>
         </ListItem>
       </List>
@@ -76,7 +77,11 @@ export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
   return (
     <List isPlain>
       {COMPOUND_STATE_KEYS.map((compoundStateKey) => (
-        <StatusListItem key={compoundStateKey} compoundStateKey={compoundStateKey} row={row} />
+        <StatusListItem
+          key={compoundStateKey}
+          compoundStateKey={compoundStateKey}
+          resource={resource}
+        />
       ))}
 
       <ListItem
@@ -89,7 +94,7 @@ export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
       >
         <Content>
           {words("resources.popover.lastDeployed")}
-          <DateWithTooltip timestamp={row.status.lastHandlerRunAt || ""} isFull />
+          <DateWithTooltip timestamp={lastHandlerRunAt} isFull />
         </Content>
       </ListItem>
 
@@ -102,14 +107,14 @@ export const ResourceStateInfo = ({ row }: { row: ResourceRow }) => {
         style={{ alignItems: "flex-end" }}
       >
         <Content>
-          {row.requiresLength}{" "}
-          {row.requiresLength === 1
+          {resource.requiresLength}{" "}
+          {resource.requiresLength === 1
             ? words("resources.popover.requirement")
             : words("resources.popover.requirements")}
         </Content>
       </ListItem>
 
-      {row.status.isDeploying && (
+      {resource.state?.isDeploying && (
         <Flex alignItems={{ default: "alignItemsCenter" }} gap={{ default: "gapSm" }}>
           <FlexItem style={{ margin: "0px 5px", display: "inline-flex" }}>
             <BlinkingDot $size={10} />

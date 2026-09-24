@@ -115,8 +115,10 @@ export const createMockResourceSummary = (overrides?: Overrides): Resource.Resou
 export const response = {
   data: {
     resources: {
+      __typename: "ResourceConnection",
       totalCount: 106,
       pageInfo: {
+        __typename: "PageInfo",
         hasNextPage: false,
         hasPreviousPage: false,
         endCursor: "",
@@ -125,12 +127,15 @@ export const response = {
       edges: [
         {
           node: {
+            __typename: "Resource",
             resourceId: "std::File[agent2,path=/tmp/file4]",
             resourceType: "std::File",
             agent: "agent2",
             resourceIdValue: "/tmp/file4",
             requiresLength: 2,
             state: {
+              __typename: "ResourcePersistentState",
+              resourceId: "std::File[agent2,path=/tmp/file4]",
               isDeploying: false,
               lastHandlerRun: "FAILED",
               compliance: "NON_COMPLIANT",
@@ -142,12 +147,15 @@ export const response = {
         },
         {
           node: {
+            __typename: "Resource",
             resourceId: "std::File[agent2,path=/etc/file3]",
             resourceType: "std::File",
             agent: "agent2",
             resourceIdValue: "/etc/file3",
             requiresLength: 0,
             state: {
+              __typename: "ResourcePersistentState",
+              resourceId: "std::File[agent2,path=/etc/file3]",
               isDeploying: false,
               lastHandlerRun: "SKIPPED",
               compliance: "NON_COMPLIANT",
@@ -159,12 +167,15 @@ export const response = {
         },
         {
           node: {
+            __typename: "Resource",
             resourceId: "std::File[agent1,path=/etc/file2]",
             resourceType: "std::File",
             agent: "agent1",
             resourceIdValue: "/etc/file2",
             requiresLength: 0,
             state: {
+              __typename: "ResourcePersistentState",
+              resourceId: "std::File[agent1,path=/etc/file2]",
               isDeploying: true,
               lastHandlerRun: "FAILED",
               compliance: "NON_COMPLIANT",
@@ -176,12 +187,15 @@ export const response = {
         },
         {
           node: {
+            __typename: "Resource",
             resourceId: "std::File[agent1,path=/etc/file1]",
             resourceType: "std::File",
             agent: "agent1",
             resourceIdValue: "/etc/file1",
             requiresLength: 0,
             state: {
+              __typename: "ResourcePersistentState",
+              resourceId: "std::File[agent1,path=/etc/file1]",
               isDeploying: false,
               lastHandlerRun: "SUCCESSFUL",
               compliance: "COMPLIANT",
@@ -193,12 +207,15 @@ export const response = {
         },
         {
           node: {
+            __typename: "Resource",
             resourceId: "std::Directory[agent3,path=/tmp/dir6]",
             resourceType: "std::Directory",
             agent: "agent3",
             resourceIdValue: "/tmp/dir6",
             requiresLength: 0,
             state: {
+              __typename: "ResourcePersistentState",
+              resourceId: "std::Directory[agent3,path=/tmp/dir6]",
               isDeploying: false,
               lastHandlerRun: "SUCCESSFUL",
               compliance: "COMPLIANT",
@@ -210,12 +227,15 @@ export const response = {
         },
         {
           node: {
+            __typename: "Resource",
             resourceId: "std::Directory[agent2,path=/tmp/dir5]",
             resourceType: "std::Directory",
             agent: "agent2",
             resourceIdValue: "/tmp/dir5",
             requiresLength: 0,
             state: {
+              __typename: "ResourcePersistentState",
+              resourceId: "std::Directory[agent2,path=/tmp/dir5]",
               isDeploying: false,
               lastHandlerRun: "SKIPPED",
               compliance: "HAS_UPDATE",
@@ -225,7 +245,7 @@ export const response = {
             },
           },
         },
-      ],
+      ] satisfies { node: Resource.Resource }[],
     },
 
     resourceSummary: createMockResourceSummary(),

@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router";
+import { useQuery } from "@apollo/client/react";
 import { Content, Flex, FlexItem } from "@patternfly/react-core";
-import { PageSize } from "@/Core/Domain";
+import { PageSize, Resource } from "@/Core/Domain";
 import {
   useGetAgents,
   useGetEnvironments,
   useGetProjects,
-  useGetResources,
   useGetServerStatus,
   useGetServiceModels,
 } from "@/Data/Queries";
@@ -21,6 +21,7 @@ import { OrchestratorCard } from "./Components/EnvironmentHealth/OrchestratorCar
 import { deriveAgentsHealth } from "./agentsHealth";
 import { deriveCompilesHealth } from "./compilesHealth";
 import { deriveOrchestratorHealth } from "./orchestratorHealth";
+import { GET_DASHBOARD_RESOURCE_SUMMARY } from "./resourceSummaryQuery";
 import { deriveResourcesHealth } from "./resourcesHealth";
 import { aggregateServicesHealth } from "./servicesHealth";
 import { useLatestCompileReports } from "./useLatestCompileReports";
@@ -54,11 +55,10 @@ export const EnvironmentHealthRow: React.FC = () => {
 
   const { data: serverStatus } = useGetServerStatus().useContinuous();
   const { data: serviceModels } = useGetServiceModels().useContinuous();
-  const { data: resourcesData } = useGetResources({
-    ...MINIMAL_PAGE,
-    filter: {},
-    sort: [],
-  }).useContinuous();
+  const { data: resourcesData } = useQuery(GET_DASHBOARD_RESOURCE_SUMMARY, {
+    variables: { environment: selectedEnvironmentId },
+    refetchOn: { poll: true },
+  });
   const { data: latestCompileReports } = useLatestCompileReports();
   const { data: totalAgents } = useGetAgents().useContinuous(MINIMAL_PAGE);
   const { data: downAgents } = useGetAgents().useContinuous({
@@ -82,7 +82,7 @@ export const EnvironmentHealthRow: React.FC = () => {
   const orchestratorHealth = serverStatus ? deriveOrchestratorHealth(serverStatus) : undefined;
   const servicesHealth = serviceModels ? aggregateServicesHealth(serviceModels) : undefined;
   const resourcesHealth = resourcesData
-    ? deriveResourcesHealth(resourcesData.resourceSummary)
+    ? deriveResourcesHealth(Resource.toResourceSummary(resourcesData.resourceSummary))
     : undefined;
   const compilesHealth = deriveCompilesHealth(latestCompileReports?.data[0]);
   const agentsHealth =

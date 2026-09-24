@@ -4,77 +4,94 @@ import { Resource } from "@/Core";
 import { MultiSort } from "@/Data";
 import { words } from "@/UI";
 import { StatusSortMenu } from "./Components";
-import { ResourceTableRow, ResourceRow } from "./ResourceTableRow";
+import {
+  ResourceTableRow,
+  ResourceTableRowSkeleton,
+  ResourceTableRow_Fragment,
+} from "./ResourceTableRow";
 import { createResourcesTablePresenter } from "./ResourcesTablePresenter";
+import type { FragmentType } from "@apollo/client";
 
 const tablePresenter = createResourcesTablePresenter();
 const sortableColumns = tablePresenter.getSortableColumnNames();
 
+/**
+ * Props of the resources table. Each resource is a masked ref that its row reads through its own fragment.
+ * While `resources` is undefined, the table shows `loadingRowCount` placeholder rows under the real headers.
+ */
 interface Props {
-  rows: ResourceRow[];
+  resources:
+    (FragmentType<typeof ResourceTableRow_Fragment> & { resourceId: string })[] | undefined;
+  loadingRowCount: number;
   sort: MultiSort<Resource.SortKey>;
   setSort: (sort: MultiSort<Resource.SortKey>) => void;
 }
 
-export const ResourcesTable: React.FC<Props> = memo(({ rows, sort, setSort, ...props }) => {
-  const onSort: OnSort = useCallback(
-    (_event, index, order) => {
-      const name = tablePresenter.getColumnNameForIndex(index) as Resource.SortKey;
-      setSort([{ name, order }]);
-    },
-    [setSort]
-  );
+export const ResourcesTable: React.FC<Props> = memo(
+  ({ resources, loadingRowCount, sort, setSort, ...props }) => {
+    const onSort: OnSort = useCallback(
+      (_event, index, order) => {
+        const name = tablePresenter.getColumnNameForIndex(index) as Resource.SortKey;
+        setSort([{ name, order }]);
+      },
+      [setSort]
+    );
 
-  const activeRegularSort = sort.find((sortEntry) => !Resource.isStatusSortKey(sortEntry.name));
+    const activeRegularSort = sort.find((sortEntry) => !Resource.isStatusSortKey(sortEntry.name));
 
-  const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
-    if (apiName === "status") {
+    const heads = tablePresenter.getColumnHeads().map(({ apiName, displayName }, columnIndex) => {
+      if (apiName === "status") {
+        return (
+          <Th style={{ textAlign: "end", overflow: "visible" }} key={displayName}>
+            <StatusSortMenu sort={sort} setSort={setSort} />
+          </Th>
+        );
+      }
+
+      const hasSort = sortableColumns.includes(apiName);
+      const sortParams = hasSort
+        ? {
+            sort: {
+              sortBy: {
+                index: activeRegularSort
+                  ? tablePresenter.getIndexForColumnName(activeRegularSort.name)
+                  : undefined,
+                direction: activeRegularSort?.order ?? "asc",
+              },
+              onSort,
+              columnIndex,
+            },
+            "data-testid": `sort-${displayName}`,
+          }
+        : {};
+
       return (
-        <Th style={{ textAlign: "end", overflow: "visible" }} key={displayName}>
-          <StatusSortMenu sort={sort} setSort={setSort} />
+        <Th key={displayName} {...sortParams} modifier="nowrap">
+          {displayName}
         </Th>
       );
-    }
-
-    const hasSort = sortableColumns.includes(apiName);
-    const sortParams = hasSort
-      ? {
-          sort: {
-            sortBy: {
-              index: activeRegularSort
-                ? tablePresenter.getIndexForColumnName(activeRegularSort.name)
-                : undefined,
-              direction: activeRegularSort?.order ?? "asc",
-            },
-            onSort,
-            columnIndex,
-          },
-          "data-testid": `sort-${displayName}`,
-        }
-      : {};
+    });
 
     return (
-      <Th key={displayName} {...sortParams} modifier="nowrap">
-        {displayName}
-      </Th>
+      <Table {...props} isStickyHeader variant={TableVariant.compact}>
+        <Thead>
+          <Tr>
+            {heads}
+            <Th
+              modifier="fitContent"
+              screenReaderText={words("common.emptyColumnHeader")}
+              aria-label="Details"
+            />
+          </Tr>
+        </Thead>
+        {resources
+          ? resources.map((resource) => (
+              <ResourceTableRow resource={resource} key={resource.resourceId} />
+            ))
+          : Array.from({ length: loadingRowCount }, (_, index) => (
+              <ResourceTableRowSkeleton key={index} index={index} />
+            ))}
+      </Table>
     );
-  });
-
-  return (
-    <Table {...props} isStickyHeader variant={TableVariant.compact}>
-      <Thead>
-        <Tr>
-          {heads}
-          <Th
-            modifier="fitContent"
-            screenReaderText={words("common.emptyColumnHeader")}
-            aria-label="Details"
-          />
-        </Tr>
-      </Thead>
-      {rows.map((row) => (
-        <ResourceTableRow row={row} key={row.id} />
-      ))}
-    </Table>
-  );
-});
+  }
+);

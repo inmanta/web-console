@@ -1,8 +1,22 @@
 import React from "react";
 import { Pagination as PaginationComponent } from "@patternfly/react-core";
+import styled from "styled-components";
 import { PageSize, Pagination } from "@/Core";
 import { PaginationPageSizes } from "@/Core/Domain/PageSize";
 import { CurrentPage } from "@/Data/Common/UrlState/useUrlStateWithCurrentPage";
+
+/**
+ * Stand-in for the total while it loads. The font's digits differ in width and 8 is about the average,
+ * so this is as wide as a typical 5-digit total and the widget barely shifts when the total arrives.
+ */
+const LOADING_COUNT_GHOST = "88888";
+
+/** A bold, invisible total on a placeholder background, as wide as the total it stands in for. */
+const LoadingCount = styled.b`
+  color: transparent;
+  border-radius: var(--pf-t--global--border--radius--small);
+  background-color: var(--pf-t--global--background--color--secondary--default);
+`;
 
 type Data = {
   handlers: Pagination.Handlers;
@@ -15,6 +29,7 @@ interface Props {
   setPageSize: (size: PageSize.Type) => void;
   setCurrentPage: (currentPage: CurrentPage) => void;
   isDisabled?: boolean;
+  isLoading?: boolean;
   variant?: "top" | "bottom";
 }
 
@@ -32,6 +47,7 @@ interface Props {
  *  @prop {(size: PageSize.Type) => void} setPageSize - Updates the number of items per page.
  *  @prop {(currentPage: CurrentPage) => void} setCurrentPage - Updates pagination cursor/page.
  *  @prop {boolean} [isDisabled] - Disables pagination interactions during loading states.
+ *  @prop {boolean} [isLoading] - Shows the range of the page with a placeholder for the total, and disables the controls.
  *  @prop {"top" | "bottom"} [variant] - Visual placement variant of the pagination component.
  */
 export const Provider: React.FC<Props> = ({
@@ -40,6 +56,7 @@ export const Provider: React.FC<Props> = ({
   setPageSize,
   setCurrentPage,
   isDisabled = false,
+  isLoading = false,
   variant = "top",
 }) => {
   const { handlers, metadata } = data;
@@ -80,6 +97,20 @@ export const Provider: React.FC<Props> = ({
       }}
       perPageOptions={PaginationPageSizes}
       isCompact
+      isDisabled={isLoading}
+      toggleTemplate={
+        isLoading
+          ? ({ firstIndex, lastIndex, ofWord, itemsTitle }) => (
+              // Same markup as PatternFly's default template, with the total swapped for a placeholder.
+              <>
+                <b>
+                  {firstIndex} - {lastIndex}
+                </b>{" "}
+                {ofWord} <LoadingCount>{LOADING_COUNT_GHOST}</LoadingCount> {itemsTitle}
+              </>
+            )
+          : undefined
+      }
       variant={variant}
     />
   );

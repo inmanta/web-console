@@ -8,6 +8,8 @@ node_modules
 .yarn
 
 # Generated files
+src/Data/Apollo/gql
+schema.graphql
 *.min.js
 *.min.css
 

@@ -10,6 +10,9 @@
     "build": "vite build",
     "build:ci": "node --max-old-space-size=6144 ./node_modules/.bin/vite build",
     "start": "dotenv vite",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "codegen:watch": "graphql-codegen --watch --config codegen.ts",
+    "codegen:schema": "node scripts/dump-graphql-schema.mjs",
     "start:https": "HTTPS=true dotenv vite",
     "test": "vitest --run",
     "test:ci": "CI=true vitest --silent",
@@ -51,6 +54,10 @@
   "type": "module",
   "devDependencies": {
     "@eslint/compat": "^2.1.0",
+    "@graphql-codegen/cli": "^7.4.2",
+    "@graphql-codegen/client-preset": "^6.2.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@parcel/watcher": "^2.6.0",
     "@remix-run/router": "^1.23.3",
     "@stylistic/eslint-plugin-ts": "^4.4.1",
     "@tanstack/react-query-devtools": "^5.100.14",
@@ -97,6 +104,7 @@
     "crypto": false
   },
   "dependencies": {
+    "@apollo/client": "^4.3.1",
     "@graphiql/react": "^0.37.7",
     "@joint/plus": "^4.3.3",
     "@loadable/component": "^5.16.7",
@@ -136,6 +144,7 @@
     "react-is": "^19.2.8",
     "react-oidc-context": "^3.3.1",
     "react-router": "^8.3.1",
+    "rxjs": "^7.8.2",
     "styled-components": "^6.5.1",
     "uuid": "^14.0.0",
     "victory": "^37.3.6",

@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as monaco from "monaco-editor";
 import { createRoot } from "react-dom/client";
 import { Root } from "@/UI/Root";
+import { ApolloClientProvider } from "./Data/Apollo";
 import { AuthProvider } from "./Data/Auth/AuthProvider";
 import { QueryControlProvider } from "./Data/Queries";
 import { Injector } from "./Injector";
@@ -101,9 +102,11 @@ root.render(
               direction={{ default: "column" }}
               style={{ height: "100%" }}
             >
-              <Injector>
-                <Root />
-              </Injector>
+              <ApolloClientProvider>
+                <Injector>
+                  <Root />
+                </Injector>
+              </ApolloClientProvider>
             </Flex>
           </AuthProvider>
         </CustomRouter>

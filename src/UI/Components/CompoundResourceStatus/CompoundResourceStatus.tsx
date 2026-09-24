@@ -4,8 +4,8 @@ import { words } from "@/UI";
 import { LegendBar } from "../LegendBar";
 import { colorConfig, statusGroupIcons, statusMapping, statusPriority } from "./config";
 
-/** Height of every legend bar segment, shared by the empty and filled states so they stay aligned. */
-const BAR_ITEM_HEIGHT = "20px";
+/** Height of every legend bar segment, shared by the empty and filled states and the skeleton so they stay aligned. */
+export const BAR_ITEM_HEIGHT = "20px";
 
 /** Type guard for Object.entries results on a compound state record.
  * Narrows [string, unknown] to [Resource.CompoundStateKey, number]. */

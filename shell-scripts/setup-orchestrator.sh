@@ -34,6 +34,7 @@ RELEASE=${release:-10-dev}
 DOCKER_FLAG=${flag:-}
 BRANCH=${branch:-master}
 PROJECT_REPO=${project:-default}
+CORE_BRANCH=${core:-}
 
 if [[ "$VERSION" == "oss" ]]
 then
@@ -51,6 +52,20 @@ cd local-setup
 
 echo "Pulling $VERSION - $RELEASE"
 yarn run pull $VERSION $RELEASE
+
+# Optionally swap inmanta-core in the pulled image for a branch from GitHub.
+# docker-compose always starts the image tagged iso-image, so we rebuild that tag.
+if [[ -n "$CORE_BRANCH" ]]
+then
+    echo "Installing inmanta-core from branch $CORE_BRANCH..."
+    docker build -t iso-image - <<EOF
+FROM iso-image
+USER 0
+RUN /opt/inmanta/bin/pip install https://github.com/inmanta/inmanta-core/archive/refs/heads/$CORE_BRANCH.tar.gz
+RUN /opt/inmanta/bin/inmanta --help
+USER inmanta:inmanta
+EOF
+fi
 
 sleep 2
 echo "Starting container..."

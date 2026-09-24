@@ -1,0 +1,19 @@
+"""
+Marks a field that Apollo resolves in the browser instead of sending it to the orchestrator.
+"""
+directive @client on FIELD
+
+"""
+Makes the fields of a spread fragment visible to the parent despite data masking. Apollo strips it before sending.
+"""
+directive @unmask(mode: String) on FRAGMENT_SPREAD
+
+"""
+Mutations that Apollo resolves in the browser. The orchestrator has no mutations yet.
+"""
+type Mutation {
+  """
+  Sets every compound state of a resource to healthy (all green) or failing (all red), in the Apollo cache only.
+  """
+  setResourceHealth(resourceId: String!, healthy: Boolean!): Resource!
+}

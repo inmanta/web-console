@@ -1,96 +1,102 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { Resource, Sort } from "@/Core";
+import { ApolloProvider } from "@apollo/client/react";
+import { act, render, screen, within } from "@testing-library/react";
+import { Sort, Resource as ResourceDomain } from "@/Core";
+import { createApolloClient } from "@/Data/Apollo";
+import { Resource } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
-import * as wordsModule from "@/UI/words";
-import { ResourceRow } from "./ResourceTableRow";
+import { ResourceTableRow_Fragment } from "./ResourceTableRow";
 import { ResourcesTable } from "./ResourcesTable";
+import { createResourcesTablePresenter } from "./ResourcesTablePresenter";
 
 const routeManager = PrimaryRouteManager("");
+const defaultSort: Sort.Sort<ResourceDomain.SortKey>[] = [{ name: "resource_type", order: "asc" }];
+const nodes = Resource.response.data.resources.edges.slice(0, 3).map(({ node }) => node);
 
-function makeRow(id: string): ResourceRow {
-  return {
-    id,
-    type: "std::File",
-    agent: "agent1",
-    value: `/tmp/${id}`,
-    requiresLength: 0,
-    status: {
-      isDeploying: false,
-      isOrphan: false,
-      lastHandlerRun: "SUCCESSFUL",
-      compliance: "COMPLIANT",
-      blocked: "NOT_BLOCKED",
-    },
-  };
+/** Writes a fixture resource to the cache the way the page query would normalize it. */
+function writeResource(
+  client: ReturnType<typeof createApolloClient>,
+  node: (typeof nodes)[number]
+) {
+  client.cache.writeFragment({ fragment: ResourceTableRow_Fragment, data: node });
 }
 
-const defaultSort: Sort.Sort<Resource.SortKey>[] = [{ name: "resource_type", order: "asc" }];
+function setup() {
+  const client = createApolloClient({ getToken: () => null });
+  nodes.forEach((node) => writeResource(client, node));
 
-function Wrapper({ children }: { children: React.ReactNode }) {
-  return (
-    <TestMemoryRouter initialEntries={["/"]}>
-      <DependencyProvider dependencies={{ routeManager }}>{children}</DependencyProvider>
-    </TestMemoryRouter>
+  const refs = nodes.map(({ resourceId }) => ({ __typename: "Resource" as const, resourceId }));
+  const component = (
+    <ApolloProvider client={client}>
+      <TestMemoryRouter initialEntries={["/"]}>
+        <DependencyProvider dependencies={{ routeManager }}>
+          <ResourcesTable
+            resources={refs}
+            loadingRowCount={nodes.length}
+            sort={defaultSort}
+            setSort={vi.fn()}
+          />
+        </DependencyProvider>
+      </TestMemoryRouter>
+    </ApolloProvider>
   );
+
+  return { client, component };
 }
 
 describe("ResourcesTable", () => {
-  it("renders each row on initial mount", () => {
-    const rows = [makeRow("a"), makeRow("b"), makeRow("c")];
+  it("renders a row for each resource from the cache", () => {
+    const { component } = setup();
+
+    render(component);
+
+    nodes.forEach(({ resourceIdValue }) => {
+      expect(screen.getByText(resourceIdValue)).toBeInTheDocument();
+    });
+  });
+
+  it("updates a row when its resource changes in the cache", async () => {
+    const { client, component } = setup();
+    const [first] = nodes;
+    const updatedValue = `${first.resourceIdValue}-updated`;
+
+    render(component);
+
+    act(() => writeResource(client, { ...first, resourceIdValue: updatedValue }));
+
+    expect(await screen.findByText(updatedValue)).toBeInTheDocument();
+    expect(screen.queryByText(first.resourceIdValue)).not.toBeInTheDocument();
+  });
+
+  it("shows the column headers with placeholder rows while the resources load", () => {
+    const loadingRowCount = 4;
 
     render(
-      <Wrapper>
-        <ResourcesTable rows={rows} sort={defaultSort} setSort={vi.fn()} />
-      </Wrapper>
+      <TestMemoryRouter initialEntries={["/"]}>
+        <DependencyProvider dependencies={{ routeManager }}>
+          <ResourcesTable
+            aria-label="ResourcesPage-Loading"
+            resources={undefined}
+            loadingRowCount={loadingRowCount}
+            sort={defaultSort}
+            setSort={vi.fn()}
+          />
+        </DependencyProvider>
+      </TestMemoryRouter>
     );
 
-    expect(screen.getByText("/tmp/a")).toBeInTheDocument();
-    expect(screen.getByText("/tmp/b")).toBeInTheDocument();
-    expect(screen.getByText("/tmp/c")).toBeInTheDocument();
-  });
+    const table = screen.getByRole("grid", { name: "ResourcesPage-Loading" });
 
-  it("skips re-renders when rows and sort references are stable", () => {
-    const rows = [makeRow("a"), makeRow("b")];
-    const setSort = vi.fn();
-    const wordsSpy = vi.spyOn(wordsModule, "words");
-
-    const { rerender } = render(
-      <Wrapper>
-        <ResourcesTable rows={rows} sort={defaultSort} setSort={setSort} />
-      </Wrapper>
-    );
-    wordsSpy.mockClear();
-
-    rerender(
-      <Wrapper>
-        <ResourcesTable rows={rows} sort={defaultSort} setSort={setSort} />
-      </Wrapper>
-    );
-
-    expect(wordsSpy).not.toHaveBeenCalled();
-    wordsSpy.mockRestore();
-  });
-
-  it("shows updated rows when the rows array reference changes", () => {
-    const setSort = vi.fn();
-
-    const { rerender } = render(
-      <Wrapper>
-        <ResourcesTable rows={[makeRow("a")]} sort={defaultSort} setSort={setSort} />
-      </Wrapper>
-    );
-
-    expect(screen.queryByText("/tmp/b")).not.toBeInTheDocument();
-
-    rerender(
-      <Wrapper>
-        <ResourcesTable rows={[makeRow("a"), makeRow("b")]} sort={defaultSort} setSort={setSort} />
-      </Wrapper>
-    );
-
-    expect(screen.getByText("/tmp/b")).toBeInTheDocument();
+    createResourcesTablePresenter()
+      .getColumnHeads()
+      .filter(({ apiName }) => apiName !== "status")
+      .forEach(({ displayName }) => {
+        expect(within(table).getByRole("columnheader", { name: displayName })).toBeInTheDocument();
+      });
+    // The placeholder rows are hidden from assistive technology, so count them in the DOM.
+    expect(table.querySelectorAll("tbody tr")).toHaveLength(loadingRowCount);
+    expect(screen.queryByLabelText("Resource Table Row")).not.toBeInTheDocument();
   });
 });

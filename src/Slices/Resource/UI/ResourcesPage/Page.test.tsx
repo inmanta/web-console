@@ -3,9 +3,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
-import { graphql, http, HttpResponse } from "msw";
+import { delay, graphql, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { PageInfo } from "@/Data/Queries";
+import { Pagination } from "@/Core/Domain";
+import { REFETCH_INTERVAL } from "@/Data/Queries";
 import { response } from "@/Slices/Agents";
 import { EnvironmentDetails, MockedDependencyProvider, Resource } from "@/Test";
 import { createMockResourceSummary } from "@/Test/Data/Resource";
@@ -46,20 +47,19 @@ type ResourceData = (typeof Resource.response)["data"];
 // GraphQL response helpers
 // ---------------------------------------------------------------------------
 
+/** Builds a GetResources response from the fixture, which is already shaped like the orchestrator's response. */
 function toGqlResponse(
   data: ResourceData,
   total = data.resources.totalCount,
-  pageInfo: PageInfo = data.resources.pageInfo
+  pageInfo: Pagination.PageInfo = data.resources.pageInfo
 ) {
   return {
-    data: {
-      resources: {
-        totalCount: total,
-        pageInfo,
-        edges: data?.resources?.edges || [],
-      },
-      resourceSummary: data?.resourceSummary,
+    resources: {
+      ...data.resources,
+      totalCount: total,
+      pageInfo: { ...pageInfo, __typename: "PageInfo" },
     },
+    resourceSummary: { ...data.resourceSummary, __typename: "ComposedResourceSummary" },
   };
 }
 
@@ -87,8 +87,15 @@ const gqlUpdatedSummary = toGqlResponse({
 
 const emptyGql = toGqlResponse({
   resources: {
+    __typename: "ResourceConnection",
     totalCount: 0,
-    pageInfo: { hasNextPage: false, hasPreviousPage: false, endCursor: "", startCursor: "" },
+    pageInfo: {
+      __typename: "PageInfo",
+      hasNextPage: false,
+      hasPreviousPage: false,
+      endCursor: "",
+      startCursor: "",
+    },
     edges: [],
   },
   resourceSummary: createMockResourceSummary(),
@@ -190,7 +197,7 @@ describe("ResourcesPage", () => {
 
     render(component);
 
-    expect(screen.getByRole("region", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
+    expect(screen.getByRole("grid", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
     expect(
       await screen.findByRole("generic", { name: "ResourcesPage-Empty" }, { timeout: 5000 })
     ).toBeInTheDocument();
@@ -208,7 +215,7 @@ describe("ResourcesPage", () => {
 
     render(component);
 
-    expect(screen.getByRole("region", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
+    expect(screen.getByRole("grid", { name: "ResourcesPage-Loading" })).toBeInTheDocument();
     expect(await screen.findByRole("region", { name: "ResourcesPage-Error" })).toBeInTheDocument();
 
     await act(async () => {
@@ -216,6 +223,59 @@ describe("ResourcesPage", () => {
       expect(results).toHaveNoViolations();
     });
   });
+
+  test("keeps the summary and shows the error in place of the table when only the resources fail", async () => {
+    const message = "Incorrect padding";
+
+    server.use(
+      queryLink.query("GetResources", () =>
+        HttpResponse.json({
+          data: { resourceSummary: gqlFull.resourceSummary },
+          errors: [{ message, path: ["resources"] }],
+        })
+      )
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    const tableError = await screen.findByRole("region", { name: "ResourcesPage-TableError" });
+
+    expect(within(tableError).getByText(message, { exact: false })).toBeVisible();
+    expect(
+      screen.getAllByRole("generic", { name: words("resources.compoundStateSummary.title") })
+    ).not.toHaveLength(0);
+    expect(screen.queryByRole("region", { name: "ResourcesPage-Error" })).not.toBeInTheDocument();
+  });
+
+  test("keeps the table error on screen while a poll refetches the query", async () => {
+    let callCount = 0;
+
+    server.use(
+      queryLink.query("GetResources", async () => {
+        callCount++;
+
+        if (callCount > 1) {
+          await delay("infinite");
+        }
+
+        return HttpResponse.json({
+          data: { resourceSummary: gqlFull.resourceSummary },
+          errors: [{ message: "Incorrect padding", path: ["resources"] }],
+        });
+      })
+    );
+
+    const { component } = setup();
+
+    render(component);
+
+    await screen.findByRole("region", { name: "ResourcesPage-TableError" });
+    await waitFor(() => expect(callCount).toBe(2), { timeout: REFETCH_INTERVAL + 2000 });
+
+    expect(screen.getByRole("region", { name: "ResourcesPage-TableError" })).toBeVisible();
+  }, 10000);
 
   test("shows success table", async () => {
     server.use(queryLink.query("GetResources", () => HttpResponse.json({ data: gqlFull })));
@@ -253,8 +313,10 @@ describe("ResourcesPage", () => {
     const nextPageButton = screen.getAllByRole("button", { name: "Go to next page" })[0];
     await userEvent.click(nextPageButton);
 
-    const rowsAfterNextPage = await screen.findAllByLabelText("Resource Table Row");
-    expect(rowsAfterNextPage).toHaveLength(6);
+    // The previous page stays on screen until the next one has arrived.
+    await waitFor(() => {
+      expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(6);
+    });
 
     await act(async () => {
       const results = await axe(document.body);
@@ -342,8 +404,10 @@ describe("ResourcesPage", () => {
     const nextPageButton = screen.getAllByLabelText("Go to next page")[0];
     await userEvent.click(nextPageButton);
 
-    const rowsAfterNextPage = await screen.findAllByLabelText("Resource Table Row");
-    expect(rowsAfterNextPage).toHaveLength(6);
+    // The previous page stays on screen until the next one has arrived.
+    await waitFor(() => {
+      expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(6);
+    });
 
     const typeButton = screen.getByRole("button", { name: "Type" });
     await userEvent.click(typeButton);
@@ -379,8 +443,10 @@ describe("ResourcesPage", () => {
     const nextPageButton = screen.getAllByLabelText("Go to next page")[0];
     await userEvent.click(nextPageButton);
 
-    const rowsAfterNextPage = await screen.findAllByLabelText("Resource Table Row");
-    expect(rowsAfterNextPage).toHaveLength(6);
+    // The previous page stays on screen until the next one has arrived.
+    await waitFor(() => {
+      expect(screen.getAllByLabelText("Resource Table Row")).toHaveLength(6);
+    });
 
     await openFiltersDrawer();
 
@@ -835,7 +901,7 @@ describe("ResourcesPage", () => {
       })
     );
 
-    const { component, client } = setup();
+    const { component } = setup();
 
     render(component);
 
@@ -847,21 +913,19 @@ describe("ResourcesPage", () => {
     });
     expect(compliantLegendItem).toHaveAttribute("data-value", "3");
 
-    // Refetch the query
-    await act(async () => {
-      await client.refetchQueries();
-    });
-
-    // Wait for the DOM to reflect the updated value
-    await waitFor(() => {
-      expect(compliantLegendItem).toHaveAttribute("data-value", "4");
-    });
+    // The poll fires once the network has been quiet for REFETCH_INTERVAL, checked every half second.
+    await waitFor(
+      () => {
+        expect(compliantLegendItem).toHaveAttribute("data-value", "4");
+      },
+      { timeout: REFETCH_INTERVAL + 2000 }
+    );
 
     await act(async () => {
       const results = await axe(document.body);
       expect(results).toHaveNoViolations();
     });
-  });
+  }, 10000);
 
   // --- Deploy actions ---
 

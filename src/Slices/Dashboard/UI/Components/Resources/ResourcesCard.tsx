@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router";
+import { useQuery } from "@apollo/client/react";
 import {
   Card,
   CardBody,
@@ -14,11 +15,10 @@ import {
 import { CubeIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { isObject, Resource } from "@/Core";
-import { useGetResources } from "@/Data/Queries";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 import { words } from "@/UI/words";
-import { MINIMAL_PAGE } from "../../EnvironmentHealthRow";
+import { GET_DASHBOARD_RESOURCE_SUMMARY } from "../../resourceSummaryQuery";
 import { deriveResourcesHealth } from "../../resourcesHealth";
 import { HEALTH_TONE, IconBadge } from "../IconBadge";
 import { ResourceStatusBar } from "./ResourceStatusBar";
@@ -63,17 +63,20 @@ const buildFilteredResourcesUrl = (
 
 /**
  * Resource Manager card: Compliance / Deploy result / Blocked stacked bars plus a 4-tile
- * deployment summary. Sourced from the same `useGetResources` call/params as the Environment
- * Health row's Resources column, so React Query dedupes the two into a single network request.
+ * deployment summary. Sourced from the same query as the Environment Health row's Resources
+ * column, so Apollo dedupes the two into a single network request.
  * Clicking a bar segment navigates to the Resources page, pre-filtered by that status.
  */
 export const ResourcesCard: React.FC = () => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, environmentHandler } = useContext(DependencyContext);
   const navigate = useNavigate();
   const resourcesUrl = routeManager.useUrl("Resources", undefined);
 
-  const { data } = useGetResources({ ...MINIMAL_PAGE, filter: {}, sort: [] }).useContinuous();
-  const summary = data?.resourceSummary;
+  const { data } = useQuery(GET_DASHBOARD_RESOURCE_SUMMARY, {
+    variables: { environment: environmentHandler.useId() },
+    refetchOn: { poll: true },
+  });
+  const summary = data && Resource.toResourceSummary(data.resourceSummary);
   const totalCount = summary?.totalCount ?? 0;
   const resourcesHealth = summary ? deriveResourcesHealth(summary) : undefined;
 

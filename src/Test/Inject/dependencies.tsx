@@ -1,6 +1,7 @@
 import React from "react";
 import { FlatEnvironment } from "@/Core";
 import { AuthContextInterface, PrimaryArchiveHelper, defaultAuthContext } from "@/Data";
+import { ApolloClientProvider } from "@/Data/Apollo";
 import { EnvironmentPreview } from "@/Data/Queries";
 import { EnvironmentDetails } from "@/Test";
 import { MockEnvironmentHandler, MockOrchestratorProvider, MockFileManager } from "@/Test/Mock";
@@ -47,7 +48,9 @@ export const MockedDependencyProvider: React.FC<React.PropsWithChildren<Props>> 
         authHelper,
       }}
     >
-      <AppAlertProvider>{children}</AppAlertProvider>
+      <ApolloClientProvider>
+        <AppAlertProvider>{children}</AppAlertProvider>
+      </ApolloClientProvider>
     </DependencyProvider>
   );
 };

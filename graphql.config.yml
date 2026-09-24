@@ -1,0 +1,7 @@
+# Used by the GraphQL editor extension for autocomplete and validation in `graphql()` documents.
+schema:
+  - schema.graphql
+  - src/Data/Apollo/clientSchema.graphql
+documents:
+  - src/**/*.{ts,tsx}
+  - "!src/Data/Apollo/gql/**"

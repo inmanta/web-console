@@ -1,0 +1,450 @@
+"""
+Directs the executor to defer this fragment when the `if` argument is true or undefined.
+"""
+directive @defer(
+  """Deferred when true or undefined."""
+  if: Boolean! = true
+
+  """Unique name"""
+  label: String
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"""
+Directs the executor to stream plural fields when the `if` argument is true or undefined.
+"""
+directive @stream(
+  """Stream when true or undefined."""
+  if: Boolean! = true
+
+  """Unique name"""
+  label: String
+
+  """Number of items to return immediately"""
+  initialCount: Int = 0
+) on FIELD
+
+type Query {
+  """Fetches a paginated list of environments"""
+  environments(first: Int, after: String, last: Int, before: String, filter: EnvironmentFilter, orderBy: [EnvironmentOrder!]): EnvironmentConnection!
+
+  """Fetches a paginated list of notifications"""
+  notifications(filter: NotificationFilter!, first: Int, after: String, last: Int, before: String, orderBy: [StrawberryOrder!]): NotificationConnection!
+
+  """Fetches a paginated list of resources"""
+  resources(filter: ResourceFilter!, first: Int, after: String, last: Int, before: String, orderBy: [StrawberryOrder!]): ResourceConnection!
+
+  """
+  Fetches a summary of the state of all resources in a specific environment
+  """
+  resourceSummary(environment: String!): ComposedResourceSummary!
+}
+
+"""My connection to a list of items."""
+type EnvironmentConnection {
+  """Pagination data for this connection"""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection"""
+  edges: [EnvironmentEdge!]!
+
+  """Total number of results for this connection"""
+  totalCount: Int
+}
+
+"""Information to aid in pagination."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+"""An edge in a connection."""
+type EnvironmentEdge {
+  """A cursor for use in pagination"""
+  cursor: String!
+
+  """The item at the end of the edge"""
+  node: Environment!
+}
+
+type Environment {
+  """A unique, machine generated id"""
+  id: UUID!
+
+  """The name of the deployment environment."""
+  name: String!
+
+  """The project this environment belongs to."""
+  project: UUID!
+
+  """Whether the environment is halted"""
+  halted: Boolean!
+
+  """
+  The repository url that contains the configuration model code for this environment.
+  """
+  repoUrl: String
+
+  """
+  The repository branch that contains the configuration model code for this environment.
+  """
+  repoBranch: String
+
+  """The last version number that was reserved for this environment"""
+  lastVersion: Int
+
+  """The description of the environment"""
+  description: String
+
+  """An icon for the environment"""
+  icon: String
+
+  """Whether this environment is marked for deletion"""
+  isMarkedForDeletion: Boolean
+
+  """Is the expert mode enabled on this environment?"""
+  isExpertMode: Boolean!
+
+  """Is there a compile running on this environment?"""
+  isCompiling: Boolean!
+
+  """The settings for this environment."""
+  settings: JSON!
+}
+
+scalar UUID
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](https://ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf).
+"""
+scalar JSON
+
+input EnvironmentFilter {
+  id: UUID
+}
+
+input EnvironmentOrder {
+  key: String!
+  order: String! = "asc"
+}
+
+"""My connection to a list of items."""
+type NotificationConnection {
+  """Pagination data for this connection"""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection"""
+  edges: [NotificationEdge!]!
+
+  """Total number of results for this connection"""
+  totalCount: Int
+}
+
+"""An edge in a connection."""
+type NotificationEdge {
+  """A cursor for use in pagination"""
+  cursor: String!
+
+  """The item at the end of the edge"""
+  node: Notification!
+}
+
+type Notification {
+  """The id of this notification"""
+  id: UUID!
+
+  """The environment this notification belongs to"""
+  environment: UUID!
+
+  """The date the notification was created at"""
+  created: DateTime!
+
+  """The title of the notification"""
+  title: String!
+
+  """The actual text of the notification"""
+  message: String!
+
+  """Whether the notification was read or not"""
+  read: Boolean!
+
+  """Whether the notification was cleared or not"""
+  cleared: Boolean!
+
+  """The severity of the notification"""
+  severity: String
+
+  """
+  A link to an api endpoint of the server, that is relevant to the message,
+  and can be used to get further information about the problem.
+  For example a compile related problem should have the uri: `/api/v2/compilereport/<compile_id>`
+  """
+  uri: String
+
+  """The id of the compile related to this notification, if any"""
+  compileId: UUID
+}
+
+"""Date with time (isoformat)"""
+scalar DateTime
+
+input NotificationFilter {
+  environment: UUID!
+  cleared: Boolean
+}
+
+input StrawberryOrder {
+  key: String!
+  order: String! = "asc"
+}
+
+"""My connection to a list of items."""
+type ResourceConnection {
+  """Pagination data for this connection"""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection"""
+  edges: [ResourceEdge!]!
+
+  """Total number of results for this connection"""
+  totalCount: Int
+}
+
+"""An edge in a connection."""
+type ResourceEdge {
+  """A cursor for use in pagination"""
+  cursor: String!
+
+  """The item at the end of the edge"""
+  node: Resource!
+}
+
+type Resource {
+  """The environment this resource version is defined in"""
+  environment: UUID!
+
+  """The id of the resource (without the version)"""
+  resourceId: String!
+
+  """The name of the agent responsible for running this resource"""
+  agent: String!
+
+  """The type of the resource"""
+  resourceType: String!
+
+  """The attribute value from the resource id"""
+  resourceIdValue: String!
+
+  """The id of the resource set this resource belongs to."""
+  resourceSet: UUID!
+
+  """
+  The desired state for this version of the resource as a dict of attributes
+  """
+  attributes: JSON
+
+  """
+  hash of the attributes, excluding requires, provides and version,
+  used to determine if a resource describes the same state across versions
+  """
+  attributeHash: String
+
+  """If the desired state for resource is undefined"""
+  isUndefined: Boolean
+
+  """The persistent state of this resource"""
+  state: ResourcePersistentState
+
+  """The length of the requires of this resource."""
+  requiresLength: Int!
+
+  """Checks the state of the purged attribute on this resource"""
+  purged: Boolean!
+
+  """
+  The LSM service instances this resource belongs to. Empty for a resource not tied to any service instance.
+  """
+  serviceInstances: [LsmResourceServiceInstance!]!
+}
+
+type ResourcePersistentState {
+  """The environment this resource belongs to"""
+  environment: UUID!
+
+  """The id of the resource"""
+  resourceId: String!
+
+  """The last status of the resource that is not a deploying status"""
+  lastNonDeployingStatus: String!
+
+  """The type of the resource"""
+  resourceType: String!
+
+  """The name of the agent responsible for running this resource"""
+  agent: String!
+
+  """The attribute value from the resource id"""
+  resourceIdValue: String!
+
+  """Whether the desired state for this resource is undefined"""
+  isUndefined: Boolean!
+
+  """The last version where this resource was seen before being orphaned"""
+  orphanedAfter: Int
+
+  """The result of the last handler run for this resource"""
+  lastHandlerRun: String!
+
+  """The blocked state of this resource"""
+  blocked: String!
+
+  """When this resource was first created"""
+  created: DateTime!
+
+  """The timestamp of the last handler run for this resource"""
+  lastHandlerRunAt: DateTime
+
+  """The start time of the last handler run that completed without failure"""
+  lastSuccess: DateTime
+
+  """
+  The end time of the last handler run where an effective change was produced
+  """
+  lastProducedEvents: DateTime
+
+  """The attribute hash of the last completed handler run"""
+  lastDeployedAttributeHash: String
+
+  """The model version of the last completed handler run"""
+  lastDeployedVersion: Int
+
+  """The attribute hash of the latest released version"""
+  currentIntentAttributeHash: String
+
+  """Whether this resource is currently being run by the handler"""
+  isDeploying: Boolean
+
+  """Whether the last handler run reported the resource as compliant"""
+  lastHandlerRunCompliant: Boolean
+
+  """
+  Is this resource not present in the latest released version of the model?
+  Kept for backwards compatibility.
+  """
+  isOrphan: Boolean!
+
+  """
+  Is this resource not present in the latest released version of the model?
+  Kept for backwards compatibility.
+  """
+  IsOrphanExpression: Boolean!
+
+  """Compliance status of this resource"""
+  compliance: Compliance
+
+  """Compliance status of this resource"""
+  ComplianceExpression: Compliance
+}
+
+enum Compliance {
+  COMPLIANT
+  HAS_UPDATE
+  NON_COMPLIANT
+  UNDEFINED
+}
+
+"""
+An LSM service instance a resource belongs to, together with its service entity, lifecycle state and version.
+"""
+type LsmResourceServiceInstance {
+  """The LSM service entity of this service instance."""
+  serviceEntity: String!
+
+  """The id of this LSM service instance."""
+  serviceInstance: UUID!
+
+  """The lifecycle state of this LSM service instance."""
+  lifecycleState: String!
+
+  """The version of this LSM service instance."""
+  instanceVersion: Int!
+}
+
+input ResourceFilter {
+  environment: UUID!
+  isOrphan: Boolean
+  resourceType: StrFilter
+  resourceIdValue: StrFilter
+  agent: StrFilter
+  purged: Boolean
+  blocked: BlockedEnumFilter
+  compliance: ComplianceEnumFilter
+  lastHandlerRun: HandlerResultEnumFilter
+  isDeploying: Boolean
+  modelVersion: Int
+  serviceEntity: [String!]
+  serviceInstance: [UUID!]
+  lifecycleState: [String!]
+  includeOwned: Boolean
+  instanceVersion: Int
+}
+
+input StrFilter {
+  eq: [String!]
+  neq: [String!]
+  contains: [String!]
+  notContains: [String!]
+}
+
+input BlockedEnumFilter {
+  eq: [Blocked!]
+  neq: [Blocked!]
+}
+
+enum Blocked {
+  BLOCKED
+  NOT_BLOCKED
+  TEMPORARILY_BLOCKED
+}
+
+input ComplianceEnumFilter {
+  eq: [Compliance!]
+  neq: [Compliance!]
+}
+
+input HandlerResultEnumFilter {
+  eq: [HandlerResult!]
+  neq: [HandlerResult!]
+}
+
+enum HandlerResult {
+  NEW
+  SUCCESSFUL
+  FAILED
+  SKIPPED
+}
+
+type ComposedResourceSummary {
+  """The total number of resources in the environment."""
+  totalCount: Int!
+
+  """Summary of the last handler run for all resources in the environment."""
+  lastHandlerRun: JSON!
+
+  """Summary of the blocked status of all resources in the environment."""
+  blocked: JSON!
+
+  """Summary of the compliance status of all resources in the environment."""
+  compliance: JSON!
+
+  """Summary of the execution status of all resources in the environment."""
+  isDeploying: JSON!
+}

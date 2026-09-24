@@ -1,7 +1,6 @@
 import { Resource } from "@/Core";
 import { ColumnHead, createTablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
-import { ResourceRow } from "./ResourceTableRow";
 
 const columnHeads: ColumnHead[] = [
   { displayName: words("type"), apiName: "resource_type" },
@@ -11,30 +10,16 @@ const columnHeads: ColumnHead[] = [
 ];
 
 /**
- * Table presenter for the resources page.
+ * Table presenter for the resources page. Each row reads its own resource through its fragment,
+ * so the rows are the resources themselves and the presenter mainly describes the columns.
  *
  * @example createResourcesTablePresenter().getSortableColumnNames() // ["resource_type", "agent", "resource_id_value"]
  */
 export const createResourcesTablePresenter = () =>
-  createTablePresenter<Resource.Resource, ResourceRow>({
+  createTablePresenter<Resource.Resource, Resource.Resource>({
     columnHeads,
     sortableColumns: ["resource_type", "agent", "resource_id_value"],
-    createRows: (resources) =>
-      resources.map((resource) => ({
-        type: resource.resourceType,
-        value: resource.resourceIdValue,
-        agent: resource.agent,
-        status: {
-          blocked: resource.state?.blocked,
-          compliance: resource.state?.compliance,
-          lastHandlerRun: resource.state?.lastHandlerRun,
-          lastHandlerRunAt: resource.state?.lastHandlerRunAt,
-          isDeploying: resource.state?.isDeploying,
-          isOrphan: resource.state?.isOrphan,
-        },
-        requiresLength: resource.requiresLength,
-        id: resource.resourceId,
-      })),
+    createRows: (resources) => resources,
   });
 
 export type ResourcesTablePresenter = ReturnType<typeof createResourcesTablePresenter>;

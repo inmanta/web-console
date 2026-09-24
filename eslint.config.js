@@ -11,7 +11,7 @@ import tseslint from "typescript-eslint";
 export default [
   {
     // Ignore files/folders
-    ignores: ["**/dist", "**/.yarn"],
+    ignores: ["**/dist", "**/.yarn", "src/Data/Apollo/gql"],
   },
 
   // Apply recommended configurations

@@ -1,8 +1,21 @@
 import { Resource } from "@/Core/Domain";
-import { Handlers } from "@/Core/Domain/Pagination/Pagination";
+import { Handlers, PageInfo } from "@/Core/Domain/Pagination/Pagination";
 import { CurrentPage, MultiSort } from "@/Data";
+import { graphql } from "@/Data/Apollo/gql";
 import { ResourceActionFilter } from "../ResourceActionFilter";
-import { PageInfo } from "./useGetResources";
+
+/**
+ * The page info of a GraphQL connection that buildHandlers turns into next/previous links.
+ * Spread it with `@unmask`, since the component that queries the connection reads it itself.
+ */
+export const PageInfo_Fragment = graphql(`
+  fragment PageInfo_Fragment on PageInfo {
+    hasNextPage
+    hasPreviousPage
+    endCursor
+    startCursor
+  }
+`);
 
 type GraphQLStateFilter = Pick<
   ResourceActionFilter,
