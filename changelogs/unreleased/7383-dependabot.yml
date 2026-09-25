@@ -1,0 +1,5 @@
+change-type: patch
+description: Bump uuid from 14.0.0 to 14.0.2
+destination-branches:
+- master
+sections: {}
