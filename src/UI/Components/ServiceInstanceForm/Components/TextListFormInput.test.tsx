@@ -247,6 +247,33 @@ describe("TextListInputField", () => {
     expect(handleInputChange).not.toHaveBeenCalled();
   });
 
+  it("Should commit pending text when focus leaves the field from the suggestions.", async () => {
+    const handleInputChange = vi.fn();
+    const suggestions: SuggestionValue[] = [{ label: "Production network", value: "9f3c1b2a" }];
+    const typed = "Pro";
+
+    render(
+      <>
+        <TextListFormInput
+          attributeName="text_list"
+          type={TextInputTypes.text}
+          attributeValue={[]}
+          description="a text list input field"
+          handleInputChange={handleInputChange}
+          suggestions={suggestions}
+        />
+        <button>outside</button>
+      </>
+    );
+
+    await userEvent.type(screen.getByRole("textbox"), typed);
+    await userEvent.keyboard("{ArrowDown}");
+    await userEvent.click(screen.getByRole("button", { name: "outside" }));
+
+    expect(handleInputChange).toHaveBeenCalledWith([typed], null);
+    expect(screen.getByRole("textbox")).toHaveValue("");
+  });
+
   it("Should remove one chip from the input on delete.", async () => {
     render(
       <TextListFormInput

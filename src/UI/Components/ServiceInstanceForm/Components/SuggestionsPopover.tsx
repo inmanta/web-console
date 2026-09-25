@@ -21,6 +21,7 @@ interface Props {
   close: () => void;
   maxVisible?: number;
   menuRef?: React.RefObject<HTMLDivElement | null>;
+  onMenuBlur?: (event: React.FocusEvent<HTMLElement>) => void;
 }
 
 /**
@@ -46,6 +47,7 @@ interface Props {
  * @param {boolean} props.isOpen - The current open state of the popover.
  * @param {number} [props.maxVisible] - How many matches to render at once (defaults to {@link MAX_VISIBLE_SUGGESTIONS}). Extra matches are hidden behind the "more results" footer.
  * @param {React.RefObject<HTMLDivElement | null>} [props.menuRef] - Optional ref to the suggestions menu, so the field can tell when focus moves into it.
+ * @param {Function} [props.onMenuBlur] - Optional callback for when focus leaves a menu item, so the field can react when focus leaves it from the menu.
  * @param {React.RefObject<NonNullable<HTMLInputElement>>} props.ref - The ref for the input element.
  * @returns {React.FC} The rendered SuggestionsPopover component.
  */
@@ -59,6 +61,7 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
       isOpen,
       maxVisible = MAX_VISIBLE_SUGGESTIONS,
       menuRef,
+      onMenuBlur,
     },
     ref
   ) => {
@@ -176,6 +179,7 @@ export const SuggestionsPopover = forwardRef<NonNullable<HTMLInputElement>, Prop
         isScrollable
         // Keep focus on the input while clicking a suggestion, so the field doesn't see a blur.
         onMouseDown={(event) => event.preventDefault()}
+        onBlur={onMenuBlur}
       >
         <MenuContent>
           <MenuGroup label="Suggested values" labelHeadingLevel="h3">

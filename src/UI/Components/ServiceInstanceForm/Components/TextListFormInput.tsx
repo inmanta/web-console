@@ -148,11 +148,17 @@ export const TextListFormInput: React.FC<Props> = ({
     }
   };
 
-  /** Commits pending text when focus leaves the field, unless it moves into the suggestions menu. */
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  /**
+   * Commits pending text when focus leaves the field, from the input or from the suggestions menu.
+   * Moving between the input and the menu doesn't count as leaving.
+   */
+  const handleBlur = (event: React.FocusEvent<HTMLElement>) => {
     // Arrowing into the suggestions is still editing this field: the picked suggestion replaces
     // the typed filter, so committing that filter as a chip would be wrong.
-    if (menuRef.current?.contains(event.relatedTarget)) {
+    if (
+      event.relatedTarget === inputRef.current ||
+      menuRef.current?.contains(event.relatedTarget)
+    ) {
       return;
     }
 
@@ -220,6 +226,7 @@ export const TextListFormInput: React.FC<Props> = ({
             }}
             ref={inputRef}
             menuRef={menuRef}
+            onMenuBlur={handleBlur}
             isOpen={isOpen}
             close={() => setIsOpen(false)}
           />
