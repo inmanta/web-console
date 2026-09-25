@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
+import { useExpansion } from "@/Data";
 import { DateWithTooltip } from "@/UI/Components";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { words } from "@/UI/words";
@@ -36,6 +37,10 @@ export const ResourceHistoryTableRow: React.FC<Props> = ({
   numberOfColumns,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Attributes);
+  // Kept on the row, not the tab, so switching to Requires and back keeps what was expanded.
+  // Local state rather than the URL: every row shares the same reference paths, so one
+  // URL key would open the same node in all rows.
+  const [isReferenceExpanded, onReferenceToggle] = useExpansion();
   const rowRef = useRef<HTMLSpanElement>(null);
   const openTabAndScrollTo = (tab: TabKey) => () => {
     setActiveTab(tab);
@@ -74,6 +79,8 @@ export const ResourceHistoryTableRow: React.FC<Props> = ({
               requires={row.requires}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
+              isReferenceExpanded={isReferenceExpanded}
+              onReferenceToggle={onReferenceToggle}
             />
           </Td>
         </Tr>
