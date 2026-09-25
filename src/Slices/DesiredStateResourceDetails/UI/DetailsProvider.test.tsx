@@ -1,9 +1,11 @@
 import { act } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { configureAxe } from "jest-axe";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
+import { referenceAttributes } from "@/Data/Common/References/Mock";
 import { MockedDependencyProvider } from "@/Test";
 import { testClient } from "@/Test/Utils/react-query-setup";
 import { TestMemoryRouter } from "@/UI/Routing/TestMemoryRouter";
@@ -41,6 +43,10 @@ describe("DetailsProvider", () => {
   beforeAll(() => {
     server.listen();
   });
+  afterEach(() => {
+    server.resetHandlers();
+    testClient.clear();
+  });
   afterAll(() => {
     server.close();
   });
@@ -58,5 +64,26 @@ describe("DetailsProvider", () => {
 
       expect(results).toHaveNoViolations();
     });
+  });
+
+  test("GIVEN DesiredStateResourceDetails page WHEN the resource has references THEN they are rendered and the JSON view shows the raw mutators", async () => {
+    server.use(
+      http.get("/api/v2/desiredstate/123/resource/abc", () => {
+        return HttpResponse.json({
+          data: { ...VersionedResourceDetails.a, attributes: referenceAttributes },
+        });
+      })
+    );
+    const { component } = setup();
+
+    render(component);
+
+    expect(
+      await screen.findByRole("button", { name: /future::std::ComplianceReport/ })
+    ).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "JSON" }));
+
+    expect(screen.getByTestId("code-editor-content")).toHaveTextContent("mutators");
   });
 });
